@@ -146,4 +146,3 @@ extern void USBDDriverCallbacks_InterfaceSettingChanged(uint8_t interface,
 /**@}*/
 
 #endif /*#ifndef USBDDRIVER_H*/
-

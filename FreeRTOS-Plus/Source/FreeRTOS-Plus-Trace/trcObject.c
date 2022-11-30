@@ -270,7 +270,7 @@ traceResult xTraceObjectSetSpecificStateWithoutHandle(void* pvObject, uint32_t u
 	}
 
 	xResult = xTraceObjectSetSpecificState((TraceObjectHandle_t)xEntryHandle, uiIndex, uxState);
-	
+
 	TRACE_EXIT_CRITICAL_SECTION();
 
 	return xResult;

@@ -512,6 +512,3 @@ vRegTest2Loop:
 	nop
 
 	.end	vRegTest2
-
-
-

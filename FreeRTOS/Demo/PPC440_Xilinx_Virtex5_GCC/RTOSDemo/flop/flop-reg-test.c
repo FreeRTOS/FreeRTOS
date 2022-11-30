@@ -218,4 +218,3 @@ static unsigned long ulLastFlop1CycleCount = 0, ulLastFlop2CycleCount = 0;
 
 	return xReturn;
 }
-

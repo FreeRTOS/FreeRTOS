@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace task APIs.
  */
 
@@ -57,10 +57,10 @@ typedef struct TraceTaskInfoBuffer
 
 /**
  * @internal Initialize trace task system.
- * 
+ *
  * @param[in] pxBuffer Pointer to memory that will be used by the
  * trace task system.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -68,34 +68,34 @@ traceResult xTraceTaskInitialize(TraceTaskInfoBuffer_t* pxBuffer);
 
 /**
  * @brief Register trace task in the trace.
- * 
+ *
  * @param[in] pvTask Task.
  * @param[in] szName Name.
  * @param[in] uxPriority Priority.
  * @param[out] pxTaskHandle Pointer to uninitialized trace task.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 #define xTraceTaskRegister(pvTask, szName, uxPriority, pxTaskHandle) ((((pvTask) != 0) && (xTraceObjectRegister(PSF_EVENT_TASK_CREATE, pvTask, szName, uxPriority, (TraceObjectHandle_t*)(pxTaskHandle)) == TRC_SUCCESS)) ? (xTraceStackMonitorAdd(pvTask), TRC_SUCCESS) : TRC_FAIL)
 
 /**
- * @brief Unregister trace task from trace. 
- * 
+ * @brief Unregister trace task from trace.
+ *
  * @param[in] xTaskHandle Pointer to initialized trace task.
  * @param[in] uxPriority Priority.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceTaskUnregister(TraceTaskHandle_t xTaskHandle, TraceUnsignedBaseType_t uxPriority);
 
 /**
- * @brief Sets trace task name. 
- * 
+ * @brief Sets trace task name.
+ *
  * @param[in] pvTask Task.
  * @param[in] szName Name.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -103,10 +103,10 @@ traceResult xTraceTaskUnregister(TraceTaskHandle_t xTaskHandle, TraceUnsignedBas
 
 /**
  * @brief Sets trace task priority.
- * 
- * @param[in] xTaskHandle Pointer to initialized trace task. 
+ *
+ * @param[in] xTaskHandle Pointer to initialized trace task.
  * @param[in] uxPriority Priority.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -114,11 +114,11 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
 
 /**
  * @brief Registers trace task without trace task handle.
- * 
+ *
  * @param[in] pvTask Task.
  * @param[in] szName Name.
  * @param[in] uxPriority Priority.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -126,10 +126,10 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
 
 /**
  * @brief Unregisters trace task without trace task handle.
- * 
+ *
  * @param[in] pvTask Task.
  * @param[in] uxPriority Priority.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -137,10 +137,10 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
 
 /**
  * @brief Sets trace task name without trace task handle.
- * 
+ *
  * @param[in] pvTask Task.
  * @param[in] szName Name.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -148,10 +148,10 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
 
 /**
  * @brief Sets trace task priority without trace task handle.
- * 
+ *
  * @param[in] pvTask Task.
  * @param[in] uxPriority Priority.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -159,10 +159,10 @@ traceResult xTraceTaskSetPriorityWithoutHandle(void* pvTask, TraceUnsignedBaseTy
 
 /**
  * @brief Registers trace task switch event.
- * 
+ *
  * @param[in] pvTask Task.
  * @param[in] uxPriority Priority.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -171,9 +171,9 @@ traceResult xTraceTaskSwitch(void* pvTask, TraceUnsignedBaseType_t uxPriority);
 #if (TRC_CFG_INCLUDE_READY_EVENTS == 1)
 /**
  * @brief Registers trace task ready event.
- * 
+ *
  * @param[in] pvTask Task.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -184,9 +184,9 @@ traceResult xTraceTaskReady(void* pvTask);
 
 /**
  * @brief Sets current trace task.
- * 
+ *
  * @param[in] pvTask Task.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -194,9 +194,9 @@ traceResult xTraceTaskReady(void* pvTask);
 
 /**
  * @brief Gets current trace task.
- * 
+ *
  * @param[out] ppvTask Task.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -204,12 +204,12 @@ traceResult xTraceTaskReady(void* pvTask);
 
 /**
  * @brief Registers trace task instance finished event.
- * 
+ *
  * This routine creates a trace event that ends the current task instance at
- * this very instant. This makes the viewer split the current fragment at 
- * this point and begin a new actor instance, even if no task-switch has 
+ * this very instant. This makes the viewer split the current fragment at
+ * this point and begin a new actor instance, even if no task-switch has
  * occurred
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -218,13 +218,13 @@ traceResult xTraceTaskInstanceFinishedNow(void);
 /**
  * @brief Marks the current trace task instance as finished on the next
  * kernel call.
- * 
+ *
  * If that kernel call is blocking, the instance ends after the blocking event
  * and the corresponding return event is then the start of the next instance.
  * If the kernel call is not blocking, the viewer instead splits the current
  * fragment right before the kernel call, which makes this call the first event
  * of the next instance.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

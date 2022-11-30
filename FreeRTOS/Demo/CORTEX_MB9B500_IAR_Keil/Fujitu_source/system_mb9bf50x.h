@@ -36,7 +36,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /*
  *  Clock
@@ -60,4 +60,3 @@ extern void SystemCoreClockUpdate(void);
 #endif
 
 #endif /* _SYSTEM_MB9B5XX_H_ */
-

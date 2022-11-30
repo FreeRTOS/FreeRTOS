@@ -10,4 +10,3 @@
 
 print "patch reset vector to \"__start\"\n";
 SET MEMORY/WORD 0xFFFFC=__start
-  

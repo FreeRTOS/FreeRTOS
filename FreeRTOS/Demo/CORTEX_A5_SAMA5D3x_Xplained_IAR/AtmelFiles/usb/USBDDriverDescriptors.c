@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -254,7 +254,7 @@ const CDCDSerialDriverConfigurationDescriptors otherSpeedDescriptorsFS = {
     },
     /* Notification endpoint standard descriptor */
     {
-        sizeof(USBEndpointDescriptor), 
+        sizeof(USBEndpointDescriptor),
         USBGenericDescriptor_ENDPOINT,
         USBEndpointDescriptor_ADDRESS(USBEndpointDescriptor_IN,
                                       CDCDSerialDriverDescriptors_NOTIFICATION),
@@ -277,7 +277,7 @@ const CDCDSerialDriverConfigurationDescriptors otherSpeedDescriptorsFS = {
     },
     /* Bulk-OUT endpoint standard descriptor */
     {
-        sizeof(USBEndpointDescriptor), 
+        sizeof(USBEndpointDescriptor),
         USBGenericDescriptor_ENDPOINT,
         USBEndpointDescriptor_ADDRESS(USBEndpointDescriptor_OUT,
                                       CDCDSerialDriverDescriptors_DATAOUT),
@@ -357,7 +357,7 @@ const CDCDSerialDriverConfigurationDescriptors configurationDescriptorsHS = {
     },
     /* Notification endpoint standard descriptor */
     {
-        sizeof(USBEndpointDescriptor), 
+        sizeof(USBEndpointDescriptor),
         USBGenericDescriptor_ENDPOINT,
         USBEndpointDescriptor_ADDRESS(USBEndpointDescriptor_IN,
                                       CDCDSerialDriverDescriptors_NOTIFICATION),
@@ -380,7 +380,7 @@ const CDCDSerialDriverConfigurationDescriptors configurationDescriptorsHS = {
     },
     /* Bulk-OUT endpoint standard descriptor */
     {
-        sizeof(USBEndpointDescriptor), 
+        sizeof(USBEndpointDescriptor),
         USBGenericDescriptor_ENDPOINT,
         USBEndpointDescriptor_ADDRESS(USBEndpointDescriptor_OUT,
                                       CDCDSerialDriverDescriptors_DATAOUT),
@@ -460,7 +460,7 @@ const CDCDSerialDriverConfigurationDescriptors otherSpeedDescriptorsHS = {
     },
     /* Notification endpoint standard descriptor */
     {
-        sizeof(USBEndpointDescriptor), 
+        sizeof(USBEndpointDescriptor),
         USBGenericDescriptor_ENDPOINT,
         USBEndpointDescriptor_ADDRESS(USBEndpointDescriptor_IN,
                                       CDCDSerialDriverDescriptors_NOTIFICATION),
@@ -483,7 +483,7 @@ const CDCDSerialDriverConfigurationDescriptors otherSpeedDescriptorsHS = {
     },
     /* Bulk-OUT endpoint standard descriptor */
     {
-        sizeof(USBEndpointDescriptor), 
+        sizeof(USBEndpointDescriptor),
         USBGenericDescriptor_ENDPOINT,
         USBEndpointDescriptor_ADDRESS(USBEndpointDescriptor_OUT,
                                       CDCDSerialDriverDescriptors_DATAOUT),

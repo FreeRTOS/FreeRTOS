@@ -38,19 +38,19 @@
 **         only.
 ** ===================================================================
 */
-bool PE_Timer_LngHi1(dword High, dword Low, word *Out) 
+bool PE_Timer_LngHi1(dword High, dword Low, word *Out)
 {
-  if ((High == 0) && ((Low >> 24) == 0)) 
+  if ((High == 0) && ((Low >> 24) == 0))
     if ((Low & 0x80) != 0) {
       if ((Low >> 8) < 0xFFFF) {
         *Out = ((unsigned int)(Low >> 8))+1;
         return FALSE;
-      }  
-    }   
+      }
+    }
     else {
       *Out = (unsigned int)(Low >> 8);
       return FALSE;
-    }  
+    }
   *Out = (unsigned int)(Low >> 8);
   return TRUE;
 }
@@ -62,7 +62,7 @@ bool PE_Timer_LngHi1(dword High, dword Low, word *Out)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

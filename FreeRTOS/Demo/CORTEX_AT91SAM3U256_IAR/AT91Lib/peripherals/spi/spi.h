@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,7 +30,7 @@
 //------------------------------------------------------------------------------
 /// \dir
 /// !Purpose
-/// 
+///
 /// Definitions for SPI peripheral usage.
 ///
 /// !Usage
@@ -64,7 +64,7 @@
 /// \page "SPI configuration macros"
 /// This page lists several macros which should be used when configuring a SPI
 /// peripheral.
-/// 
+///
 /// !Macros
 /// - SPI_PCS
 /// - SPI_SCBR
@@ -111,4 +111,3 @@ extern unsigned char SPI_ReadBuffer(AT91S_SPI *spi,
                                            unsigned int length);
 
 #endif //#ifndef SPI_H
-

@@ -157,7 +157,7 @@ _start:
 2:
 
   /* Set TLS pointer */
-  .weak __tls_base	
+  .weak __tls_base
   la tp, __tls_base
 
   /* At this point we're in an environment that can execute C code.  The first
@@ -299,4 +299,3 @@ envp:
 .dc.a 0
 name:
 .asciz "libgloss"
-

@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace error APIs.
  */
 

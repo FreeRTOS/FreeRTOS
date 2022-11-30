@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,7 +25,7 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
@@ -50,4 +50,3 @@ void Dummy(void){/* brk(); */}
 
 // BRK
 void Excep_BRK(void){ wait(); }
-

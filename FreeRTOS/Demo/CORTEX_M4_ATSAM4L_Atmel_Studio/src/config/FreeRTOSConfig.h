@@ -137,4 +137,3 @@ standard names. */
 #define xPortSysTickHandler SysTick_Handler
 
 #endif /* FREERTOS_CONFIG_H */
-

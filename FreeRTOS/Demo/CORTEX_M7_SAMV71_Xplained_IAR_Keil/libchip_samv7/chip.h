@@ -121,8 +121,8 @@
 
 #define ENABLE_PERIPHERAL(dwId)         PMC_EnablePeripheral( dwId )
 #define DISABLE_PERIPHERAL(dwId)        PMC_DisablePeripheral( dwId )
-   
-   
+
+
 /* SCB Interrupt Control State Register Definitions */
 #ifndef SCB_VTOR_TBLBASE_Pos
 #define SCB_VTOR_TBLBASE_Pos               29                                             /*!< SCB VTOR: TBLBASE Position */

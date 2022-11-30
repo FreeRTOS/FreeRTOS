@@ -12,7 +12,7 @@
 **         When the bean and its events are enabled, the "OnInterrupt"
 **         event is called periodically with the period that you specify.
 **         TimerInt supports also changing the period in runtime.
-**         The source of periodic interrupt can be timer compare or reload 
+**         The source of periodic interrupt can be timer compare or reload
 **         register or timer-overflow interrupt (of free running counter).
 **     Settings  :
 **         Timer name                  : ECT (16-bit)
@@ -269,7 +269,7 @@ void TickTimer_Init(void);
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

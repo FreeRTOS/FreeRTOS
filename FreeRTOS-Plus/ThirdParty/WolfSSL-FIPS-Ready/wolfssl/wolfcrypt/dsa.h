@@ -102,4 +102,3 @@ WOLFSSL_API int wc_DsaExportKeyRaw(DsaKey* dsa, byte* x, word32* xSz, byte* y,
 
 #endif /* NO_DSA */
 #endif /* WOLF_CRYPT_DSA_H */
-

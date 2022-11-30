@@ -72,4 +72,3 @@ void SUPC_EnablesWakeupMode(uint32_t Regs, uint8_t enable);
 #endif
 
 #endif /* #ifndef _PMC_ */
-

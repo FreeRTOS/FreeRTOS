@@ -24,7 +24,7 @@
 #define SPI_FLASH_PageSize 256
 
 #define WRITE      0x02  /* Write to Memory instruction */
-#define WRSR       0x01  /* Write Status Register instruction */ 
+#define WRSR       0x01  /* Write Status Register instruction */
 #define WREN       0x06  /* Write enable instruction */
 
 #define READ       0x03  /* Read from Memory instruction */
@@ -54,10 +54,10 @@ void SPI_FLASH_Init(void)
 {
   SPI_InitTypeDef  SPI_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
-   
+
   /* Enable SPI1 and GPIOA clocks */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1 | RCC_APB2Periph_GPIOA, ENABLE);
-  
+
   /* Configure SPI1 pins: NSS, SCK, MISO and MOSI */
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -73,7 +73,7 @@ void SPI_FLASH_Init(void)
   /* Deselect the FLASH: Chip Select high */
   SPI_FLASH_ChipSelect(High);
 
-  /* SPI1 configuration */ 
+  /* SPI1 configuration */
   SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
   SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
   SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
@@ -84,9 +84,9 @@ void SPI_FLASH_Init(void)
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
   SPI_InitStructure.SPI_CRCPolynomial = 7;
   SPI_Init(SPI1, &SPI_InitStructure);
-  
+
   /* Enable SPI1  */
-  SPI_Cmd(SPI1, ENABLE);   
+  SPI_Cmd(SPI1, ENABLE);
 }
 
 /*******************************************************************************
@@ -100,10 +100,10 @@ void SPI_FLASH_SectorErase(u32 SectorAddr)
 {
   /* Send write enable instruction */
   SPI_FLASH_WriteEnable();
-			
-  /* Sector Erase */ 
+
+  /* Sector Erase */
   /* Select the FLASH: Chip Select low */
-  SPI_FLASH_ChipSelect(Low);		
+  SPI_FLASH_ChipSelect(Low);
   /* Send Sector Erase instruction  */
   SPI_FLASH_SendByte(SE);
   /* Send SectorAddr high nibble address byte */
@@ -113,10 +113,10 @@ void SPI_FLASH_SectorErase(u32 SectorAddr)
   /* Send SectorAddr low nibble address byte */
   SPI_FLASH_SendByte(SectorAddr & 0xFF);
   /* Deselect the FLASH: Chip Select high */
-  SPI_FLASH_ChipSelect(High);	
+  SPI_FLASH_ChipSelect(High);
 
   /* Wait the end of Flash writing */
-  SPI_FLASH_WaitForWriteEnd();	
+  SPI_FLASH_WaitForWriteEnd();
 }
 
 /*******************************************************************************
@@ -127,20 +127,20 @@ void SPI_FLASH_SectorErase(u32 SectorAddr)
 * Return         : None
 *******************************************************************************/
 void SPI_FLASH_BulkErase(void)
-{ 	
+{
   /* Send write enable instruction */
-  SPI_FLASH_WriteEnable();	
-	
-  /* Bulk Erase */ 
+  SPI_FLASH_WriteEnable();
+
+  /* Bulk Erase */
   /* Select the FLASH: Chip Select low */
-  SPI_FLASH_ChipSelect(Low);		
+  SPI_FLASH_ChipSelect(Low);
   /* Send Bulk Erase instruction  */
   SPI_FLASH_SendByte(BE);
   /* Deselect the FLASH: Chip Select high */
-  SPI_FLASH_ChipSelect(High);	
-		
+  SPI_FLASH_ChipSelect(High);
+
   /* Wait the end of Flash writing */
-  SPI_FLASH_WaitForWriteEnd();		
+  SPI_FLASH_WaitForWriteEnd();
 }
 
 /*******************************************************************************
@@ -148,51 +148,51 @@ void SPI_FLASH_BulkErase(void)
 * Description    : Writes more than one byte to the FLASH with a single WRITE
 *                  cycle(Page WRITE sequence). The number of byte can't exceed
 *                  the FLASH page size.
-* Input          : - pBuffer : pointer to the buffer  containing the data to be 
+* Input          : - pBuffer : pointer to the buffer  containing the data to be
 *                    written to the FLASH.
 *                  - WriteAddr : FLASH's internal address to write to.
 *                  - NumByteToWrite : number of bytes to write to the FLASH,
-*                    must be equal or less than "SPI_FLASH_PageSize" value. 
+*                    must be equal or less than "SPI_FLASH_PageSize" value.
 * Output         : None
 * Return         : None
 *******************************************************************************/
 void SPI_FLASH_PageWrite(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
 {
   /* Enable the write access to the FLASH */
-  SPI_FLASH_WriteEnable();		
-  
+  SPI_FLASH_WriteEnable();
+
   /* Select the FLASH: Chip Select low */
-  SPI_FLASH_ChipSelect(Low);	   
-  /* Send "Write to Memory " instruction */    
-  SPI_FLASH_SendByte(WRITE);	
+  SPI_FLASH_ChipSelect(Low);
+  /* Send "Write to Memory " instruction */
+  SPI_FLASH_SendByte(WRITE);
   /* Send WriteAddr high nibble address byte to write to */
   SPI_FLASH_SendByte((WriteAddr & 0xFF0000) >> 16);
   /* Send WriteAddr medium nibble address byte to write to */
-  SPI_FLASH_SendByte((WriteAddr & 0xFF00) >> 8);  
+  SPI_FLASH_SendByte((WriteAddr & 0xFF00) >> 8);
   /* Send WriteAddr low nibble address byte to write to */
-  SPI_FLASH_SendByte(WriteAddr & 0xFF);             
-  
+  SPI_FLASH_SendByte(WriteAddr & 0xFF);
+
   /* while there is data to be written on the FLASH */
-  while(NumByteToWrite--) 
+  while(NumByteToWrite--)
   {
-    /* Send the current byte */			
-    SPI_FLASH_SendByte(*pBuffer); 	               
+    /* Send the current byte */
+    SPI_FLASH_SendByte(*pBuffer);
     /* Point on the next byte to be written */
-    pBuffer++; 
-  }		
-  
+    pBuffer++;
+  }
+
   /* Deselect the FLASH: Chip Select high */
   SPI_FLASH_ChipSelect(High);
-  
+
   /* Wait the end of Flash writing */
-  SPI_FLASH_WaitForWriteEnd();	
+  SPI_FLASH_WaitForWriteEnd();
 }
 
 /*******************************************************************************
 * Function Name  : SPI_FLASH_BufferWrite
 * Description    : Writes block of data to the FLASH. In this function, the
 *                  number of WRITE cycles are reduced, using Page WRITE sequence.
-* Input          : - pBuffer : pointer to the buffer  containing the data to be 
+* Input          : - pBuffer : pointer to the buffer  containing the data to be
 *                    written to the FLASH.
 *                  - WriteAddr : FLASH's internal address to write to.
 *                  - NumByteToWrite : number of bytes to write to the FLASH.
@@ -207,23 +207,23 @@ void SPI_FLASH_BufferWrite(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
   count = SPI_FLASH_PageSize - Addr;
   NumOfPage =  NumByteToWrite / SPI_FLASH_PageSize;
   NumOfSingle = NumByteToWrite % SPI_FLASH_PageSize;
-  
+
   if(Addr == 0) /* WriteAddr is SPI_FLASH_PageSize aligned  */
   {
     if(NumOfPage == 0) /* NumByteToWrite < SPI_FLASH_PageSize */
     {
       SPI_FLASH_PageWrite(pBuffer, WriteAddr, NumByteToWrite);
     }
-    else /* NumByteToWrite > SPI_FLASH_PageSize */ 
+    else /* NumByteToWrite > SPI_FLASH_PageSize */
     {
       while(NumOfPage--)
       {
         SPI_FLASH_PageWrite(pBuffer, WriteAddr, SPI_FLASH_PageSize);
         WriteAddr +=  SPI_FLASH_PageSize;
-        pBuffer += SPI_FLASH_PageSize;  
-      }    
-     
-      SPI_FLASH_PageWrite(pBuffer, WriteAddr, NumOfSingle);      
+        pBuffer += SPI_FLASH_PageSize;
+      }
+
+      SPI_FLASH_PageWrite(pBuffer, WriteAddr, NumOfSingle);
    }
   }
   else /* WriteAddr is not SPI_FLASH_PageSize aligned  */
@@ -233,12 +233,12 @@ void SPI_FLASH_BufferWrite(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
       if(NumOfSingle > count) /* (NumByteToWrite + WriteAddr) > SPI_FLASH_PageSize */
       {
       	temp = NumOfSingle - count;
-      	
+
       	SPI_FLASH_PageWrite(pBuffer, WriteAddr, count);
         WriteAddr +=  count;
-        pBuffer += count; 
-        
-        SPI_FLASH_PageWrite(pBuffer, WriteAddr, temp);       	
+        pBuffer += count;
+
+        SPI_FLASH_PageWrite(pBuffer, WriteAddr, temp);
       }
       else
       {
@@ -249,31 +249,31 @@ void SPI_FLASH_BufferWrite(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
     {
       NumByteToWrite -= count;
       NumOfPage =  NumByteToWrite / SPI_FLASH_PageSize;
-      NumOfSingle = NumByteToWrite % SPI_FLASH_PageSize;	
-      
+      NumOfSingle = NumByteToWrite % SPI_FLASH_PageSize;
+
       SPI_FLASH_PageWrite(pBuffer, WriteAddr, count);
       WriteAddr +=  count;
-      pBuffer += count;  
-     
+      pBuffer += count;
+
       while(NumOfPage--)
       {
         SPI_FLASH_PageWrite(pBuffer, WriteAddr, SPI_FLASH_PageSize);
         WriteAddr +=  SPI_FLASH_PageSize;
-        pBuffer += SPI_FLASH_PageSize;  
+        pBuffer += SPI_FLASH_PageSize;
       }
-      
+
       if(NumOfSingle != 0)
       {
         SPI_FLASH_PageWrite(pBuffer, WriteAddr, NumOfSingle);
       }
     }
-  }      	
+  }
 }
 
 /*******************************************************************************
 * Function Name  : SPI_FLASH_BufferRead
 * Description    : Reads a block of data from the FLASH.
-* Input          : - pBuffer : pointer to the buffer that receives the data read 
+* Input          : - pBuffer : pointer to the buffer that receives the data read
 *                    from the FLASH.
 *                  - ReadAddr : FLASH's internal address to read from.
 *                  - NumByteToRead : number of bytes to read from the FLASH.
@@ -283,28 +283,28 @@ void SPI_FLASH_BufferWrite(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
 void SPI_FLASH_BufferRead(u8* pBuffer, u32 ReadAddr, u16 NumByteToRead)
 {
   /* Select the FLASH: Chip Select low */
-  SPI_FLASH_ChipSelect(Low);	   
-  
+  SPI_FLASH_ChipSelect(Low);
+
   /* Send "Read from Memory " instruction */
-  SPI_FLASH_SendByte(READ);	 
-  
+  SPI_FLASH_SendByte(READ);
+
   /* Send ReadAddr high nibble address byte to read from */
   SPI_FLASH_SendByte((ReadAddr & 0xFF0000) >> 16);
   /* Send ReadAddr medium nibble address byte to read from */
-  SPI_FLASH_SendByte((ReadAddr& 0xFF00) >> 8);  
+  SPI_FLASH_SendByte((ReadAddr& 0xFF00) >> 8);
   /* Send ReadAddr low nibble address byte to read from */
-  SPI_FLASH_SendByte(ReadAddr & 0xFF);     
-   	
+  SPI_FLASH_SendByte(ReadAddr & 0xFF);
+
   while(NumByteToRead--) /* while there is data to be read */
   {
-    /* Read a byte from the FLASH */			
-    *pBuffer = SPI_FLASH_SendByte(Dummy_Byte);   
+    /* Read a byte from the FLASH */
+    *pBuffer = SPI_FLASH_SendByte(Dummy_Byte);
     /* Point to the next location where the byte read will be saved */
     pBuffer++;
-  }	
-  
+  }
+
   /* Deselect the FLASH: Chip Select high */
-  SPI_FLASH_ChipSelect(High);		
+  SPI_FLASH_ChipSelect(High);
 }
 
 /*******************************************************************************
@@ -315,27 +315,27 @@ void SPI_FLASH_BufferRead(u8* pBuffer, u32 ReadAddr, u16 NumByteToRead)
 * Return         : FLASH identification
 *******************************************************************************/
 u32 SPI_FLASH_ReadID(void)
-{   	 
+{
   u32 Temp = 0, Temp0 = 0, Temp1 = 0, Temp2 = 0;
 
   /* Select the FLASH: Chip Select low */
-  SPI_FLASH_ChipSelect(Low);	   
-  
+  SPI_FLASH_ChipSelect(Low);
+
   /* Send "RDID " instruction */
   SPI_FLASH_SendByte(0x9F);
 
-  /* Read a byte from the FLASH */			
+  /* Read a byte from the FLASH */
   Temp0 = SPI_FLASH_SendByte(Dummy_Byte);
 
-  /* Read a byte from the FLASH */			
+  /* Read a byte from the FLASH */
   Temp1 = SPI_FLASH_SendByte(Dummy_Byte);
 
-  /* Read a byte from the FLASH */			
+  /* Read a byte from the FLASH */
   Temp2 = SPI_FLASH_SendByte(Dummy_Byte);
 
   /* Deselect the FLASH: Chip Select high */
   SPI_FLASH_ChipSelect(High);
-         
+
   Temp = (Temp0 << 16) | (Temp1 << 8) | Temp2;
 
   return Temp;
@@ -356,18 +356,18 @@ u32 SPI_FLASH_ReadID(void)
 void SPI_FLASH_StartReadSequence(u32 ReadAddr)
 {
   /* Select the FLASH: Chip Select low */
-  SPI_FLASH_ChipSelect(Low);	   
-  
-  /* Send "Read from Memory " instruction */
-  SPI_FLASH_SendByte(READ);	 
+  SPI_FLASH_ChipSelect(Low);
 
-/* Send the 24-bit address of the address to read from -----------------------*/  
+  /* Send "Read from Memory " instruction */
+  SPI_FLASH_SendByte(READ);
+
+/* Send the 24-bit address of the address to read from -----------------------*/
   /* Send ReadAddr high nibble address byte */
   SPI_FLASH_SendByte((ReadAddr & 0xFF0000) >> 16);
   /* Send ReadAddr medium nibble address byte */
-  SPI_FLASH_SendByte((ReadAddr& 0xFF00) >> 8);  
+  SPI_FLASH_SendByte((ReadAddr& 0xFF00) >> 8);
   /* Send ReadAddr low nibble address byte */
-  SPI_FLASH_SendByte(ReadAddr & 0xFF);  
+  SPI_FLASH_SendByte(ReadAddr & 0xFF);
 }
 
 /*******************************************************************************
@@ -399,7 +399,7 @@ void SPI_FLASH_ChipSelect(u8 State)
 
 /*******************************************************************************
 * Function Name  : SPI_FLASH_SendByte
-* Description    : Sends a byte through the SPI interface and return the byte 
+* Description    : Sends a byte through the SPI interface and return the byte
 *                  received from the SPI bus.
 * Input          : byte : byte to send.
 * Output         : None
@@ -408,21 +408,21 @@ void SPI_FLASH_ChipSelect(u8 State)
 u8 SPI_FLASH_SendByte(u8 byte)
 {
   /* Loop while DR register in not emplty */
-  while(SPI_GetFlagStatus(SPI1, SPI_FLAG_TXE) == RESET); 
+  while(SPI_GetFlagStatus(SPI1, SPI_FLAG_TXE) == RESET);
 
-  /* Send byte through the SPI1 peripheral */	
-  SPI_SendData(SPI1, byte);	
+  /* Send byte through the SPI1 peripheral */
+  SPI_SendData(SPI1, byte);
 
   /* Wait to receive a byte */
   while(SPI_GetFlagStatus(SPI1, SPI_FLAG_RXNE) == RESET);
 
-  /* Return the byte read from the SPI bus */  
-  return SPI_ReceiveData(SPI1); 
+  /* Return the byte read from the SPI bus */
+  return SPI_ReceiveData(SPI1);
 }
 
 /*******************************************************************************
 * Function Name  : SPI_FLASH_SendHalfWord
-* Description    : Sends a Half Word through the SPI interface and return the  
+* Description    : Sends a Half Word through the SPI interface and return the
 *                  Half Word received from the SPI bus.
 * Input          : Half Word : Half Word to send.
 * Output         : None
@@ -431,16 +431,16 @@ u8 SPI_FLASH_SendByte(u8 byte)
 u16 SPI_FLASH_SendHalfWord(u16 HalfWord)
 {
   /* Loop while DR register in not emplty */
-  while(SPI_GetFlagStatus(SPI1, SPI_FLAG_TXE) == RESET); 
+  while(SPI_GetFlagStatus(SPI1, SPI_FLAG_TXE) == RESET);
 
-  /* Send Half Word through the SPI1 peripheral */	
-  SPI_SendData(SPI1, HalfWord);	
+  /* Send Half Word through the SPI1 peripheral */
+  SPI_SendData(SPI1, HalfWord);
 
   /* Wait to receive a Half Word */
   while(SPI_GetFlagStatus(SPI1, SPI_FLAG_RXNE) == RESET);
 
-  /* Return the Half Word read from the SPI bus */  
-  return SPI_ReceiveData(SPI1); 
+  /* Return the Half Word read from the SPI bus */
+  return SPI_ReceiveData(SPI1);
 }
 
 /*******************************************************************************
@@ -450,49 +450,49 @@ u16 SPI_FLASH_SendHalfWord(u16 HalfWord)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SPI_FLASH_WriteEnable(void)  
+void SPI_FLASH_WriteEnable(void)
 {
   /* Select the FLASH: Chip Select low */
-  SPI_FLASH_ChipSelect(Low);	
-  
+  SPI_FLASH_ChipSelect(Low);
+
   /* Send "Write Enable" instruction */
   SPI_FLASH_SendByte(WREN);
-  
+
   /* Deselect the FLASH: Chip Select high */
-  SPI_FLASH_ChipSelect(High);	
+  SPI_FLASH_ChipSelect(High);
 }
 
 /*******************************************************************************
 * Function Name  : SPI_FLASH_WaitForWriteEnd
-* Description    : Polls the status of the Write In Progress (WIP) flag in the  
+* Description    : Polls the status of the Write In Progress (WIP) flag in the
 *                  FLASH's status  register  and  loop  until write  opertaion
-*                  has completed.  
+*                  has completed.
 * Input          : None
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SPI_FLASH_WaitForWriteEnd(void) 
+void SPI_FLASH_WaitForWriteEnd(void)
 {
   u8 FLASH_Status = 0;
-  
+
   /* Select the FLASH: Chip Select low */
   SPI_FLASH_ChipSelect(Low);
-  	
+
   /* Send "Read Status Register" instruction */
   SPI_FLASH_SendByte(RDSR);
-  
-  /* Loop as long as the memory is busy with a write cycle */ 		
+
+  /* Loop as long as the memory is busy with a write cycle */
   do
-  { 	
-	 
-    /* Send a dummy byte to generate the clock needed by the FLASH 
+  {
+
+    /* Send a dummy byte to generate the clock needed by the FLASH
     and put the value of the status register in FLASH_Status variable */
-    FLASH_Status = SPI_FLASH_SendByte(Dummy_Byte);  
-																	
-  } while((FLASH_Status & WIP_Flag) == SET); /* Write in progress */  
+    FLASH_Status = SPI_FLASH_SendByte(Dummy_Byte);
+
+  } while((FLASH_Status & WIP_Flag) == SET); /* Write in progress */
 
   /* Deselect the FLASH: Chip Select high */
-  SPI_FLASH_ChipSelect(High);	 	
+  SPI_FLASH_ChipSelect(High);
 }
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

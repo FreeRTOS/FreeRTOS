@@ -92,4 +92,3 @@ void BootNonSecure( uint32_t ulNonSecureStartAddress )
 	pxNonSecureResetHandler();
 }
 /*-----------------------------------------------------------*/
-

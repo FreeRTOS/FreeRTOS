@@ -188,4 +188,3 @@ signed char cChar, cTaskWoken = pdFALSE;
 		vInterruptOff();
 	}
 }
-

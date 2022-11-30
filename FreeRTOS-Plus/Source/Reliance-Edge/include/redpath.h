@@ -35,4 +35,3 @@ REDSTATUS RedPathToName(const char *pszLocalPath, uint32_t *pulPInode, const cha
 
 
 #endif
-

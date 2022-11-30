@@ -19,14 +19,14 @@ TraceStaticBufferTable_t *pxTraceStaticBufferTable;
 traceResult xTraceStaticBufferInitialize(TraceStaticBufferBuffer_t *pxBuffer)
 {
 	TRC_ASSERT_EQUAL_SIZE(TraceStaticBufferBuffer_t, TraceStaticBufferTable_t);
-	
+
 	/* This should never fail */
 	TRC_ASSERT(pxBuffer != 0);
 
 	pxTraceStaticBufferTable = (TraceStaticBufferTable_t*)pxBuffer;
 
 	xTraceSetComponentInitialized(TRC_RECORDER_COMPONENT_STATIC_BUFFER);
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -41,9 +41,9 @@ traceResult xTraceStaticBufferGet(void **ppvBuffer)
 	TRC_ASSERT(xTraceIsComponentInitialized(TRC_RECORDER_COMPONENT_STATIC_BUFFER));
 
 	TRC_ASSERT(ppvBuffer != 0);
-	
+
 	TRC_ASSERT(xTraceISRGetCurrentNesting(&ISR_nesting) ==  TRC_SUCCESS);
-	
+
 	/* Task dummy events begin at 0, ISR dummy events begin at index 1 */
 	*ppvBuffer = (void*)&pxTraceStaticBufferTable->coreDummyEvents[TRC_CFG_GET_CURRENT_CORE()].dummyEvents[ISR_nesting + 1];
 

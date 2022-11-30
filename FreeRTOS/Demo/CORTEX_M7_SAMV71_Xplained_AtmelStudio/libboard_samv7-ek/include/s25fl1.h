@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -102,24 +102,24 @@
 #define STATUS_SPRL_UNLOCKED   (0 << 7)
 /** Sector protection registers are locked. */
 #define STATUS_SPRL_LOCKED     (1 << 7)
-   
+
 /** Quad enable bit */
 #define STATUS_QUAD_ENABLE     (1 << 1)
    /** Quad enable bit */
 #define STATUS_WRAP_ENABLE     (0 << 4)
-   
+
    /** Latency control bits */
-#define STATUS_LATENCY_CTRL    (0xF << 0)   
-   
+#define STATUS_LATENCY_CTRL    (0xF << 0)
+
 #define STATUS_WRAP_BYTE       (1 << 5)
-   
+
 #define BLOCK_PROTECT_Msk      (7 << 2)
-   
+
 #define TOP_BTM_PROTECT_Msk    (1 << 5)
-   
-#define SEC_PROTECT_Msk        (1 << 6)   
-   
-#define CHIP_PROTECT_Msk       (0x1F << 2)    
+
+#define SEC_PROTECT_Msk        (1 << 6)
+
+#define CHIP_PROTECT_Msk       (0x1F << 2)
 
 /** Read array command code. */
 #define READ_ARRAY             0x0B
@@ -128,11 +128,11 @@
 /** Fast Read array  command code. */
 #define READ_ARRAY_DUAL        0x3B
 /** Fast Read array  command code. */
-#define READ_ARRAY_QUAD        0x6B   
+#define READ_ARRAY_QUAD        0x6B
 /** Fast Read array  command code. */
 #define READ_ARRAY_DUAL_IO     0xBB
 /** Fast Read array  command code. */
-#define READ_ARRAY_QUAD_IO     0xEB   
+#define READ_ARRAY_QUAD_IO     0xEB
 /** Block erase command code (4K block). */
 #define BLOCK_ERASE_4K         0x20
 /** Block erase command code (32K block). */
@@ -249,4 +249,3 @@ extern unsigned char S25FL1D_ReadQuadIO(
 				uint8_t Secure);
 
 #endif // #ifndef S25FL1_H
-

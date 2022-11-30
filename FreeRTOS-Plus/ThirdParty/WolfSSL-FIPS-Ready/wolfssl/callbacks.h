@@ -90,4 +90,3 @@ typedef struct timeoutInfo_st {
 
 
 #endif /* WOLFSSL_CALLBACKS_H */
-

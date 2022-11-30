@@ -43,7 +43,7 @@ PROVIDE( _GPIO2 = (APB_BASE + 0x6480) );
 PROVIDE( _RTC   = (APB_BASE + 0x7000) );
 PROVIDE( _EXTIT = (APB_BASE + 0x7400) );
 
-/* default stack sizes. 
+/* default stack sizes.
 
 These are used by the startup in order to allocate stacks for the different modes.
 */
@@ -80,7 +80,7 @@ _Minimum_Stack_Size = 0xC00 ;
 
 
 
-/* default ISR addresses. 
+/* default ISR addresses.
 
 The startup needs these addresses defined from another object file.
 In case they are not, these PROVIDEs redirect them to the Reset.

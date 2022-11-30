@@ -285,4 +285,3 @@ uint8_t *pucRxBuffer;
 
 /* The whole file is excluded if TCP is not compiled in. */
 #endif /* ipconfigUSE_TCP */
-

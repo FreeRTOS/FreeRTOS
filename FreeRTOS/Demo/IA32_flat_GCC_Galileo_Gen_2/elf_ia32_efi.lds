@@ -5,7 +5,7 @@ ENTRY(_start)
 physbase = 0x00100000;
 
 SECTIONS
-{	
+{
  	. = physbase;
 	. = ALIGN(4096);
  	.text :
@@ -21,12 +21,12 @@ SECTIONS
  	    __text_end =  ABSOLUTE(.);
   		. = ALIGN(4096);
 	}
-	
+
 	/* Read-write data (initialised) */
  	.data :
 	{
  		__data_start = ABSOLUTE(.);
-  		__data_lma = LOADADDR(.data); 
+  		__data_lma = LOADADDR(.data);
   		__data_vma =  ABSOLUTE(.);
  		*(.data)
  		*(.data.*)
@@ -43,7 +43,7 @@ SECTIONS
     	__bss_end =  ABSOLUTE(.);
    		. = ALIGN(1024);
  	}
-	
+
 	/* stack used before the scheduler starts */
  	.boot_stack :
 	{
@@ -59,7 +59,7 @@ SECTIONS
 
 	/* function exports */
  	.drectve : { KEEP (*(.drectve)) }
-  	
+
    	.comment 0 : { *(.comment) }
 
 }

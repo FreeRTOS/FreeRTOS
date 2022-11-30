@@ -234,8 +234,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* End the interrupt in the AIC. */
 	AT91C_BASE_AIC->AIC_EOICR = 0;
 }
-
-
-
-
-

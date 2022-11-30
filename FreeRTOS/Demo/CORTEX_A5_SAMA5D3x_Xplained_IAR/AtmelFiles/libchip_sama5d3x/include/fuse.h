@@ -59,4 +59,3 @@ extern void FUSE_Write (uint32_t data, uint8_t wordPosition );
 #endif
 
 #endif /* #ifndef _FUSE_ */
-

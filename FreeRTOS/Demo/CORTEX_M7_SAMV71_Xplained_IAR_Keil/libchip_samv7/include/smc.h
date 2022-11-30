@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /**
 *  \file
 *
@@ -143,4 +143,3 @@ extern void SMC_ECC_GetValue(uint32_t *ecc);
 extern void SMC_ECC_GetEccParity(uint32_t pageDataSize, uint8_t *code, uint8_t busWidth);
 extern uint8_t SMC_ECC_VerifyHsiao(uint8_t *data, uint32_t size, const uint8_t *originalCode, const uint8_t *verifyCode, uint8_t busWidth);
 #endif /* #ifndef _SMC_ */
-

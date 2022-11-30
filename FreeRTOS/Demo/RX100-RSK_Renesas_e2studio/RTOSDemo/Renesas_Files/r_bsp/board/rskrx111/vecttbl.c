@@ -200,7 +200,3 @@ PowerON_Reset_PC
 #else
 	const unsigned long _MDEreg = 0xffffffff; // little
 #endif
-
-
-
-

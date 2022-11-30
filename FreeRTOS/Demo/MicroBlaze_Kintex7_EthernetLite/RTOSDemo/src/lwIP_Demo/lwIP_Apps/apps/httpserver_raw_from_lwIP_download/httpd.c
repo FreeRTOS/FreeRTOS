@@ -385,7 +385,7 @@ strnstr(const char* buffer, const char* token, size_t n)
     }
   }
   return NULL;
-} 
+}
 #endif /* LWIP_HTTPD_STRNSTR_PRIVATE */
 
 /** Allocate a struct http_state. */
@@ -467,7 +467,7 @@ http_write(struct tcp_pcb *pcb, const void* ptr, u16_t *length, u8_t apiflags)
        } else {
          len /= 2;
        }
-       LWIP_DEBUGF(HTTPD_DEBUG | LWIP_DBG_TRACE, 
+       LWIP_DEBUGF(HTTPD_DEBUG | LWIP_DBG_TRACE,
                    ("Send failed, trying less (%d bytes)\n", len));
      }
    } while ((err == ERR_MEM) && (len > 1));
@@ -700,7 +700,7 @@ get_http_headers(struct http_state *pState, char *pszURI)
       pState->hdrs[0] = g_psHTTPHeaderStrings[HTTP_HDR_OK];
     }
 
-    /* Determine if the URI has any variables and, if so, temporarily remove 
+    /* Determine if the URI has any variables and, if so, temporarily remove
        them. */
     pszVars = strchr(pszURI, '?');
     if(pszVars) {
@@ -2175,7 +2175,7 @@ http_set_cgi_handlers(const tCGI *cgis, int num_handlers)
 {
   LWIP_ASSERT("no cgis given", cgis != NULL);
   LWIP_ASSERT("invalid number of handlers", num_handlers > 0);
-  
+
   g_pCGIs = cgis;
   g_iNumCGIs = num_handlers;
 }

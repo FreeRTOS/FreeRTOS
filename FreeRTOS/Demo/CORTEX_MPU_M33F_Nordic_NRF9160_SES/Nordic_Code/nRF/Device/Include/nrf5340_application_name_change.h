@@ -41,7 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
  * nrf5340_application_bitfields.h. The macros defined in this file were available previously. Do not use these
  * macros on purpose. Use the ones defined in nrf5340_application.h and nrf5340_application_bitfields.h instead.
  */
- 
+
 /* The serial box interrupt ISRs were renamed. Adding old names as macros. */
 #define SPIM0_SPIS0_TWIM0_TWIS0_UARTE0_IRQHandler          SERIAL0_IRQHandler
 #define SPIM0_SPIS0_TWIM0_TWIS0_UARTE0_IRQn                SERIAL0_IRQn
@@ -51,7 +51,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SPIM2_SPIS2_TWIM2_TWIS2_UARTE2_IRQn                SERIAL2_IRQn
 #define SPIM3_SPIS3_TWIM3_TWIS3_UARTE3_IRQHandler          SERIAL3_IRQHandler
 #define SPIM3_SPIS3_TWIM3_TWIS3_UARTE3_IRQn                SERIAL3_IRQn
- 
+
  /*lint --flb "Leave library region" */
 
 #endif /* NRF5340_APPLICATION_NAME_CHANGE_H */

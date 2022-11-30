@@ -253,4 +253,3 @@ volatile unsigned char ucIn;
 	ucIn = SSR1;
 	SSR1 = 0;
 }
-

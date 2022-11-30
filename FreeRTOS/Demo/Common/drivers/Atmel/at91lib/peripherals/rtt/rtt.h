@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -59,4 +59,3 @@ extern unsigned int RTT_GetStatus(AT91S_RTTC *rtt);
 extern void RTT_SetAlarm(AT91S_RTTC *pRtt, unsigned int time);
 
 #endif //#ifndef RTT_H
-

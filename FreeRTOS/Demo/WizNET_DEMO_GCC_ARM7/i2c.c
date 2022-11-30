@@ -200,4 +200,3 @@ extern void ( vI2C_ISR_Wrapper )( void );
 	}
 	portEXIT_CRITICAL();
 }
-

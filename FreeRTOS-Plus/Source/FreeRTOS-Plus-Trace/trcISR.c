@@ -37,11 +37,11 @@ traceResult xTraceISRInitialize(TraceISRInfoBuffer_t *pxBuffer)
 		{
 			pxCoreInfo->handleStack[uiStackIndex] = 0;
 		}
-		
+
 		pxCoreInfo->stackIndex = -1;
 		pxCoreInfo->isPendingContextSwitch = 0;
 	}
-	
+
 	xTraceSetComponentInitialized(TRC_RECORDER_COMPONENT_ISR);
 
 	return TRC_SUCCESS;
@@ -122,7 +122,7 @@ traceResult xTraceISRBegin(TraceISRHandle_t xISRHandle)
 	 * No context switches should have been triggered now.
 	 */
 	TraceISRCoreInfo_t* pxCoreInfo = &pxTraceISRInfo->coreInfos[TRC_CFG_GET_CURRENT_CORE()];
-	
+
 	if (pxCoreInfo->stackIndex == -1)
 	{
 		pxCoreInfo->isPendingContextSwitch = 0;
@@ -147,7 +147,7 @@ traceResult xTraceISRBegin(TraceISRHandle_t xISRHandle)
 		TRACE_EXIT_CRITICAL_SECTION();
 
 		xTraceError(TRC_ERROR_ISR_NESTING_OVERFLOW);
-		
+
 		return TRC_FAIL;
 	}
 
@@ -167,7 +167,7 @@ traceResult xTraceISREnd(TraceBaseType_t xIsTaskSwitchRequired)
 	TRC_ASSERT(xTraceIsComponentInitialized(TRC_RECORDER_COMPONENT_ISR));
 
 	TRACE_ENTER_CRITICAL_SECTION();
-	
+
 	TraceISRCoreInfo_t* pxCoreInfo = &pxTraceISRInfo->coreInfos[TRC_CFG_GET_CURRENT_CORE()];
 
 	/* Is there a pending task-switch? (perhaps from an earlier ISR) */

@@ -64,7 +64,7 @@
 //
 // SoCAL stand in for DMA Controller registers
 //
-// The base can be one of the following: 
+// The base can be one of the following:
 //  - ALT_DMANONSECURE_ADDR
 //  - ALT_DMASECURE_ADDR
 //
@@ -213,7 +213,7 @@ ALT_STATUS_CODE alt_dma_init(const ALT_DMA_CFG_t * dma_cfg)
     }
 
     // Update the System Manager DMA configuration items
-    
+
     uint32_t dmactrl = 0;
 
     // Handle FPGA / CAN muxing
@@ -478,7 +478,7 @@ ALT_STATUS_CODE alt_dma_channel_exec(ALT_DMA_CHANNEL_t channel, ALT_DMA_PROGRAM_
     // For information on DMAGO, see PL330, section 4.3.5.
 
     alt_write_word(ALT_DMA_DBGINST0_ADDR(ALT_DMASECURE_ADDR),
-                   ALT_DMA_DBGINST0_INSTRUCTIONBYTE0_SET(0xa0) | 
+                   ALT_DMA_DBGINST0_INSTRUCTIONBYTE0_SET(0xa0) |
                    ALT_DMA_DBGINST0_INSTRUCTIONBYTE1_SET(channel));
 
     alt_write_word(ALT_DMA_DBGINST1_ADDR(ALT_DMASECURE_ADDR), start);
@@ -886,7 +886,7 @@ ALT_STATUS_CODE alt_dma_memory_to_memory(ALT_DMA_CHANNEL_t channel,
         dprintf("DMA[M->M]: dst  = %p.\n", dst);
         dprintf("DMA[M->M]: src  = %p.\n", src);
         dprintf("DMA[M->M]: size = 0x%x.\n", size);
-        
+
         // Detect if memory regions overshoots the address space.
 
         if (udst + size - 1 < udst)
@@ -2539,7 +2539,7 @@ static ALT_STATUS_CODE alt_dma_qspi_to_memory(ALT_DMA_PROGRAM_t * program,
         // uint32_t src_length = 1; // src_length is always 1 because the address is fixed.
         uint32_t src_multiple = qspi_burst_size >> 2; // divide by sizeof(uint32_t)
 
-        dprintf("DMA[P->M][QSPI][B]: dst_size = %u bits, dst_length = %lu, dst_multiple = %lu.\n", 
+        dprintf("DMA[P->M][QSPI][B]: dst_size = %u bits, dst_length = %lu, dst_multiple = %lu.\n",
                 (1 << dst_size_log2) * 8, dst_length, dst_multiple);
         dprintf("DMA[P->M][QSPI][B]: src_size = %u bits, src_length = %u, src_multiple = %lu.\n",
                 32,                       1,          src_multiple);
@@ -3267,7 +3267,7 @@ static ALT_STATUS_CODE alt_dma_16550_to_memory_single(ALT_DMA_PROGRAM_t * progra
     }
 
     return status;
-}                                              
+}
 
 static ALT_STATUS_CODE alt_dma_16550_to_memory_burst(ALT_DMA_PROGRAM_t * program,
                                                      ALT_DMA_PERIPH_t periph,

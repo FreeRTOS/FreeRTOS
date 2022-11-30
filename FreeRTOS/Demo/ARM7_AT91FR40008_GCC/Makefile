@@ -96,4 +96,3 @@ clean :
 	touch Makefile
 	rm $(ARM_OBJ)
 	rm $(THUMB_OBJ)
-

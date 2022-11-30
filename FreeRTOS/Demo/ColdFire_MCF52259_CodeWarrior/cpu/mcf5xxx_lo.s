@@ -2,7 +2,7 @@
  * File:    mcf5xxx.s
  * Purpose: Lowest level routines for all ColdFire processors.
  *
- * Notes:   
+ * Notes:
  *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
@@ -78,7 +78,7 @@
 /********************************************************************
  * This routine is the lowest-level exception handler.
  */
- 
+
 asm_exception_handler:
 _asm_exception_handler:
     lea     -16(SP),SP
@@ -135,12 +135,12 @@ mcf5xxx_exe_wdebug:
 _mcf5xxx_exe_wdebug:
     move.l   4(sp),a0
     wdebug.l (a0)
-    rts    
- 
+    rts
+
  mcf5xxx_move_line:
 _mcf5xxx_move_line:
     lea.l   -24(sp),sp
-    movem.l d0-d3/a0-a1,(sp) 
+    movem.l d0-d3/a0-a1,(sp)
     movea.l 28(sp),a0       /* source in a0 */
     movea.l 32(sp),a1       /* destination in a1 */
     movem.l (a0),d0-d3      /* move line from source */
@@ -148,21 +148,21 @@ _mcf5xxx_move_line:
     movem.l (sp),d0-d3/a0-a1
     lea.l   24(sp),sp
     rts
- 
- 
+
+
 /********************************************************************/
 /*
  * These routines write to the special purpose registers in the ColdFire
  * core.  Since these registers are write-only in the supervisor model,
  * no corresponding read routines exist.
  */
- 
+
 mcf5xxx_wr_sr:
 _mcf5xxx_wr_sr:
     move.l  4(SP),D0
     move.w  D0,SR
     rts
-    
+
 mcf5xxx_wr_cacr:
 _mcf5xxx_wr_cacr:
     move.l  4(SP),D0
@@ -218,7 +218,7 @@ _mcf5xxx_wr_other_a7:
     .long   0x4e7b0800      /* movec d0,OTHER_A7 */
     nop
     rts
-    
+
 mcf5xxx_wr_vbr:
 _mcf5xxx_wr_vbr:
     move.l  4(SP),D0

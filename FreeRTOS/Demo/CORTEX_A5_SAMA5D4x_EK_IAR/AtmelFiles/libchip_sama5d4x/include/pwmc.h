@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -93,4 +93,3 @@ extern void PWMC_SetDutyCycle( Pwm* pPwm, uint8_t channel, uint16_t duty);
 #endif
 
 #endif /* #ifndef _PWMC_ */
-

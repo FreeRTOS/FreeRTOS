@@ -245,4 +245,3 @@ uint16_t SetVCore(uint8_t level)
 
     return status;
 }
-

@@ -203,7 +203,7 @@ typedef struct
                                                  ((HANDLER) == SystemHandler_MemoryManage) || \
                                                  ((HANDLER) == SystemHandler_BusFault) || \
                                                  ((HANDLER) == SystemHandler_UsageFault) || \
-                                                 ((HANDLER) == SystemHandler_DebugMonitor)) 
+                                                 ((HANDLER) == SystemHandler_DebugMonitor))
 
 #define IS_FAULT_ADDRESS_SYSTEM_HANDLER(HANDLER) (((HANDLER) == SystemHandler_MemoryManage) || \
                                                   ((HANDLER) == SystemHandler_BusFault))

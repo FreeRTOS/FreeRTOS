@@ -114,6 +114,3 @@ void vParTestToggleLED( unsigned char ucLED )
 	}
 	xTaskResumeAll();
 }
-
-
-

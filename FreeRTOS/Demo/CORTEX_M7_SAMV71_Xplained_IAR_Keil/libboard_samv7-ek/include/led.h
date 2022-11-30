@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -31,16 +31,16 @@
  * \file
  *
  *  \section Purpose
- * 
+ *
  *  Small set of functions for simple and portable LED usage.
- * 
+ *
  *  \section Usage
- * 
+ *
  *  -# Configure one or more LEDs using LED_Configure and
  *     LED_ConfigureAll.
  *  -# Set, clear and toggle LEDs using LED_Set, LED_Clear and
  *     LED_Toggle.
- * 
+ *
  *  LEDs are numbered starting from 0; the number of LEDs depend on the
  *  board being used. All the functions defined here will compile properly
  *  regardless of whether the LED is defined or not; they will simply
@@ -69,4 +69,3 @@ extern uint32_t LED_Clear( uint32_t dwLed ) ;
 extern uint32_t LED_Toggle( uint32_t dwLed ) ;
 
 #endif /* #ifndef LED_H */
-

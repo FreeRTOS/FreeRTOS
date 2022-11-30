@@ -53,4 +53,3 @@ void RedOsAssertFail(
 }
 
 #endif
-

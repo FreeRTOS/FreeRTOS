@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -59,8 +59,8 @@
  *    - CAN_SetMessage() : setup _MDLx and _MDHx.
  *    - CAN_MessageControl() : setup _MCRx.
  *  - The following get status and data from mailbox:
- *    - CAN_GetMessage() : 
- *    - CAN_GetMessageStatus() : 
+ *    - CAN_GetMessage() :
+ *    - CAN_GetMessageStatus() :
  */
 
 #ifndef _CAN_H_

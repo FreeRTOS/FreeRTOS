@@ -57,16 +57,16 @@
  *        Macros
  *----------------------------------------------------------------------------*/
 
-/** Calculates the value of the SCBR field of the Chip Select Register 
+/** Calculates the value of the SCBR field of the Chip Select Register
 	given MCK and SPCK.*/
 #define SPID_CSR_SCBR(mck, spck)    SPI_CSR_SCBR((mck) / (spck))
 
-/** Calculates the value of the DLYBS field of the Chip Select Register 
+/** Calculates the value of the DLYBS field of the Chip Select Register
 	given delay in ns and MCK.*/
 #define SPID_CSR_DLYBS(mck, delay)  SPI_CSR_DLYBS((((delay) * \
 									((mck) / 1000000)) / 1000) + 1)
 
-/** Calculates the value of the DLYBCT field of the Chip Select Register 
+/** Calculates the value of the DLYBCT field of the Chip Select Register
 	given delay in ns and MCK.*/
 #define SPID_CSR_DLYBCT(mck, delay) SPI_CSR_DLYBCT((((delay) / 32 * \
 									((mck) / 1000000)) / 1000) + 1)

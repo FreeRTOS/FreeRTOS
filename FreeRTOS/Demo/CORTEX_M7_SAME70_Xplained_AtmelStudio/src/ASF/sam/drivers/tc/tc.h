@@ -50,8 +50,8 @@
 /**
  * \defgroup asfdoc_sam_drivers_tc_group SAM3/4S/4L/4E/4N/4CM/4C/G Timer Counter (TC) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
- * provides an interface for the configuration and management of the 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers
+ * provides an interface for the configuration and management of the
  * device's Timer Counter functionality.
  *
  * The Timer Counter (TC) includes several identical 16-bit or 32-bit
@@ -283,7 +283,7 @@ uint32_t tc_get_version(Tc *p_tc);
  *	</tr>
  * </table>
  */
- 
+
 /**
  * \page asfdoc_sam_drivers_tc_exqsg Examples for Timer Counter
  *
@@ -317,14 +317,14 @@ uint32_t tc_get_version(Tc *p_tc);
  * </table>
  *
  */
- 
+
 /**
  * \page asfdoc_sam_drivers_tc_qsg Quick Start Guide for the TC driver
  *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_tc_group, with
  * step-by-step instructions on how to configure and use the driver for
- * a specific use case. The code examples can be copied into the main 
- * application loop or any other function that will need to control the 
+ * a specific use case. The code examples can be copied into the main
+ * application loop or any other function that will need to control the
  * AST module.
  *
  * \section asfdoc_sam_drivers_tc_qsg_use_cases Use Cases

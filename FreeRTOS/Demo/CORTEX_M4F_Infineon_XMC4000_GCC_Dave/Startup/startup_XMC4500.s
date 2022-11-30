@@ -7,18 +7,18 @@
 V1.0 , July 2011, First version for XIP profile
 V1.1 , Oct  2011, Program loading code included (GH: b to main changed)
 V1.2 , Nov, 01, 2011 GH :Removed second definition of section .Xmc4500.reset
-                         at line 186. 
+                         at line 186.
 V1.3 , Nov, 16, 2011 GH :Removed PMU0_1_IRQHandler and respective weak function
                          declaration.
 V1.4 , Dec, 16, 2011 PKB:Jump to __Xmc4500_start_c reinstated for RTOS integration
 V1.5 , Jan, 10, 2012 PKB:Migrated to GCC from ARM
 V1.6 , Jan, 16, 2012 PKB:Branch prediction turned off, Parity errors cleared.
-V1.7 , Apr, 17, 2012 PKB:Added decision function for PLL initialization  
-V1.8 , Apr, 20, 2012 PKB:Handshake with DAVE code engine added  
-V1.9 , Jun, 14, 2012 PKB:Removed the handshake protocol towards simplification  
-V1.10, Aug, 13, 2012 PKB:Flash Wait states handling  
-V1.11, Oct, 11, 2012 PKB:C++ support. Call to global constructors  
-V1.12, Jan, 23, 2013 PKB:XMC4 Prefetch bug workaround  
+V1.7 , Apr, 17, 2012 PKB:Added decision function for PLL initialization
+V1.8 , Apr, 20, 2012 PKB:Handshake with DAVE code engine added
+V1.9 , Jun, 14, 2012 PKB:Removed the handshake protocol towards simplification
+V1.10, Aug, 13, 2012 PKB:Flash Wait states handling
+V1.11, Oct, 11, 2012 PKB:C++ support. Call to global constructors
+V1.12, Jan, 23, 2013 PKB:XMC4 Prefetch bug workaround
 **************************************************************************** */
 /**
 * @file     Startup_XMC4500.s
@@ -30,7 +30,7 @@ Copyright (C) 2013 Infineon Technologies AG. All rights reserved.
 *
 *
 * @par
-* Infineon Technologies AG (Infineon) is supplying this software for use with 
+* Infineon Technologies AG (Infineon) is supplying this software for use with
 * Infineon's microcontrollers.  This file can be freely distributed
 * within development tools that are supporting such microcontrollers.
 *
@@ -48,12 +48,12 @@ Copyright (C) 2013 Infineon Technologies AG. All rights reserved.
 /*
  * STEP_AB and below have the prefetch bug. A veneer defined below will first
  * be executed which in turn branches to the final exception handler.
- * 
+ *
  * In addition to defining the veneers, the vector table must for these buggy
- * devices contain the veneers. 
+ * devices contain the veneers.
  */
- 
-/* A macro to setup a vector table entry based on STEP ID */ 
+
+/* A macro to setup a vector table entry based on STEP ID */
 .macro Entry Handler
  #if (UC_STEP > STEP_AB)
    .long \Handler
@@ -65,7 +65,7 @@ Copyright (C) 2013 Infineon Technologies AG. All rights reserved.
 /* A macro to ease definition of the various handlers based on STEP ID */
 #if (UC_STEP <= STEP_AB)
  /* First define the final exception handler */
- .macro Insert_ExceptionHandler Handler_Func 
+ .macro Insert_ExceptionHandler Handler_Func
   .weak \Handler_Func
   .type \Handler_Func, %function
   \Handler_Func:
@@ -84,14 +84,14 @@ Copyright (C) 2013 Infineon Technologies AG. All rights reserved.
  .endm
 #else
  /* No prefetch bug, hence define only the final exception handler */
- .macro Insert_ExceptionHandler Handler_Func 
+ .macro Insert_ExceptionHandler Handler_Func
   .weak \Handler_Func
   .type \Handler_Func, %function
   \Handler_Func:
   B .
   .size \Handler_Func, . - \Handler_Func
  .endm
-#endif 
+#endif
 /* =============END : MACRO DEFINITION MACRO DEFINITION ================== */
 
 /* ================== START OF VECTOR TABLE DEFINITION ====================== */
@@ -126,7 +126,7 @@ __Xmc4500_interrupt_vector_cortex_m:
     Entry   ERU0_0_IRQHandler           /* Handler name for SR ERU0_0    */
     Entry   ERU0_1_IRQHandler           /* Handler name for SR ERU0_1    */
     Entry   ERU0_2_IRQHandler           /* Handler name for SR ERU0_2    */
-    Entry   ERU0_3_IRQHandler           /* Handler name for SR ERU0_3    */ 
+    Entry   ERU0_3_IRQHandler           /* Handler name for SR ERU0_3    */
     Entry   ERU1_0_IRQHandler           /* Handler name for SR ERU1_0    */
     Entry   ERU1_1_IRQHandler           /* Handler name for SR ERU1_1    */
     Entry   ERU1_2_IRQHandler           /* Handler name for SR ERU1_2    */
@@ -250,22 +250,22 @@ __Xmc4500_reset_cortex_m:
     .fnstart
 
     /* C routines are likely to be called. Setup the stack now */
-    /* This is already setup by BootROM,hence this step is optional */ 
+    /* This is already setup by BootROM,hence this step is optional */
     LDR SP,=__Xmc4500_stack
 
-    /* Clock tree, External memory setup etc may be done here */    
+    /* Clock tree, External memory setup etc may be done here */
     LDR     R0, =SystemInit
     BLX     R0
 
-/* 
-   SystemInit_DAVE3() is provided by DAVE3 code generation engine. It is  
+/*
+   SystemInit_DAVE3() is provided by DAVE3 code generation engine. It is
    weakly defined here though for a potential override.
 */
-    LDR     R0, =SystemInit_DAVE3     
+    LDR     R0, =SystemInit_DAVE3
     BLX     R0
 
-    B       __Xmc4500_Program_Loader 
-    
+    B       __Xmc4500_Program_Loader
+
     .pool
     .cantunwind
     .fnend
@@ -277,7 +277,7 @@ __Xmc4500_reset_cortex_m:
    __Xmc4500_Program_Loader:
    .fnstart
    /* Memories are accessible now*/
-   
+
    /* DATA COPY */
    /* R0 = Start address, R1 = Destination address, R2 = Size */
    LDR R0, =eROData
@@ -287,17 +287,17 @@ __Xmc4500_reset_cortex_m:
    /* Is there anything to be copied? */
    CMP R2,#0
    BEQ SKIPCOPY
-   
+
    /* For bytecount less than 4, at least 1 word must be copied */
    CMP R2,#4
    BCS STARTCOPY
-   
+
    /* Byte count < 4 ; so bump it up */
    MOV R2,#4
 
 STARTCOPY:
-   /* 
-      R2 contains byte count. Change it to word count. It is ensured in the 
+   /*
+      R2 contains byte count. Change it to word count. It is ensured in the
       linker script that the length is always word aligned.
    */
    LSR R2,R2,#2 /* Divide by 4 to obtain word count */
@@ -311,26 +311,26 @@ COPYLOOP:
    ADD R0,#4
    ADD R1,#4
    B COPYLOOP
-    
+
 SKIPCOPY:
    /* BSS CLEAR */
    LDR R0, =__Xmc4500_sBSS     /* Start of BSS */
    LDR R1, =__Xmc4500_BSS_Size /* BSS size in bytes */
 
-   /* Find out if there are items assigned to BSS */   
-   CMP R1,#0 
+   /* Find out if there are items assigned to BSS */
+   CMP R1,#0
    BEQ SKIPCLEAR
 
    /* At least 1 word must be copied */
    CMP R1,#4
    BCS STARTCLEAR
-   
+
    /* Byte count < 4 ; so bump it up to a word*/
    MOV R1,#4
 
 STARTCLEAR:
    LSR R1,R1,#2            /* BSS size in words */
-   
+
    MOV R2,#0
 CLEARLOOP:
    STR R2,[R0]
@@ -338,24 +338,24 @@ CLEARLOOP:
    BEQ SKIPCLEAR
    ADD R0,#4
    B CLEARLOOP
-    
+
 SKIPCLEAR:
    /* Remap vector table */
-   /* This is already setup by BootROM,hence this step is optional */ 
-   LDR R0, =__Xmc4500_interrupt_vector_cortex_m 
+   /* This is already setup by BootROM,hence this step is optional */
+   LDR R0, =__Xmc4500_interrupt_vector_cortex_m
    LDR R1, =SCB_VTOR
    STR R0,[R1]
-   
+
    /* Update System Clock */
    LDR R0,=SystemCoreClockUpdate
    BLX R0
- 
+
    /* C++ : Call global constructors */
    LDR R0,=__libc_init_array
    BLX R0
 
    /* Reset stack pointer before zipping off to user application, Optional */
-   LDR SP,=__Xmc4500_stack 
+   LDR SP,=__Xmc4500_stack
    MOV R0,#0
    MOV R1,#0
    LDR PC, =main
@@ -602,14 +602,14 @@ SKIPCLEAR:
 /* ============= END OF INTERRUPT HANDLER DEFINITION ====================== */
 
 /* ======== Decision function queried by CMSIS startup for PLL setup ====== */
-/* In the absence of DAVE code engine, CMSIS SystemInit() must perform clock 
-   tree setup. 
-   
+/* In the absence of DAVE code engine, CMSIS SystemInit() must perform clock
+   tree setup.
+
    This decision routine defined here will always return TRUE.
-   
+
    When overridden by a definition defined in DAVE code engine, this routine
    returns FALSE indicating that the code engine has performed the clock setup
-*/   
+*/
     .weak   AllowPLLInitByStartup
     .type   AllowPLLInitByStartup, %function
 AllowPLLInitByStartup:

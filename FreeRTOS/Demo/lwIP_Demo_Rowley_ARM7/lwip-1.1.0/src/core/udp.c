@@ -97,7 +97,7 @@ udp_input(struct pbuf *p, struct netif *inp)
   int reuse_port_1 = 0;
   int reuse_port_2 = 0;
 #endif /* SO_REUSE */
-  
+
   PERF_START;
 
   UDP_STATS_INC(udp.recv);
@@ -132,15 +132,15 @@ udp_input(struct pbuf *p, struct netif *inp)
 
 #if SO_REUSE
   pcb_temp = udp_pcbs;
-  
+
  again_1:
-  
+
   /* Iterate through the UDP pcb list for a fully matching pcb */
   for (pcb = pcb_temp; pcb != NULL; pcb = pcb->next) {
-#else  /* SO_REUSE */ 
+#else  /* SO_REUSE */
   /* Iterate through the UDP pcb list for a fully matching pcb */
   for (pcb = udp_pcbs; pcb != NULL; pcb = pcb->next) {
-#endif  /* SO_REUSE */ 
+#endif  /* SO_REUSE */
     /* print the PCB local and remote address */
     LWIP_DEBUGF(UDP_DEBUG, ("pcb (%u.%u.%u.%u, %u) --- (%u.%u.%u.%u, %u)\n",
       ip4_addr1(&pcb->local_ip), ip4_addr2(&pcb->local_ip),
@@ -170,8 +170,8 @@ udp_input(struct pbuf *p, struct netif *inp)
           LWIP_DEBUGF(UDP_DEBUG, ("udp_input: first PCB and SOF_REUSEPORT set.\n"));
           reuse = 1;
         }
-        
-        reuse_port_1 = 1; 
+
+        reuse_port_1 = 1;
         p->ref++;
         LWIP_DEBUGF(UDP_DEBUG, ("udp_input: reference counter on PBUF set to %i\n", p->ref));
       } else {
@@ -191,13 +191,13 @@ udp_input(struct pbuf *p, struct netif *inp)
 
 #if SO_REUSE
     pcb_temp = udp_pcbs;
-    
+
   again_2:
 
     for (pcb = pcb_temp; pcb != NULL; pcb = pcb->next) {
-#else  /* SO_REUSE */ 
+#else  /* SO_REUSE */
     for (pcb = udp_pcbs; pcb != NULL; pcb = pcb->next) {
-#endif  /* SO_REUSE */ 
+#endif  /* SO_REUSE */
       LWIP_DEBUGF(UDP_DEBUG, ("pcb (%u.%u.%u.%u, %u) --- (%u.%u.%u.%u, %u)\n",
         ip4_addr1(&pcb->local_ip), ip4_addr2(&pcb->local_ip),
         ip4_addr3(&pcb->local_ip), ip4_addr4(&pcb->local_ip), pcb->local_port,
@@ -221,8 +221,8 @@ udp_input(struct pbuf *p, struct netif *inp)
             LWIP_DEBUGF(UDP_DEBUG, ("udp_input: first PCB and SOF_REUSEPORT set.\n"));
             reuse = 1;
           }
-          
-          reuse_port_2 = 1; 
+
+          reuse_port_2 = 1;
           p->ref++;
           LWIP_DEBUGF(UDP_DEBUG, ("udp_input: reference counter on PBUF set to %i\n", p->ref));
         } else {
@@ -286,7 +286,7 @@ udp_input(struct pbuf *p, struct netif *inp)
       if(reuse_port_1 || reuse_port_2) {
         /* We want to search on next socket after receiving */
         pcb_temp = pcb->next;
-        
+
         if(reuse_port_1) {
           /* We are searching connected sockets */
           reuse_port_1 = 0;
@@ -299,7 +299,7 @@ udp_input(struct pbuf *p, struct netif *inp)
           goto again_2;
         }
       }
-#endif /* SO_REUSE */ 
+#endif /* SO_REUSE */
     } else {
 #if SO_REUSE
       if(reuse) {
@@ -343,7 +343,7 @@ udp_input(struct pbuf *p, struct netif *inp)
  *
  * If the PCB already has a remote address association, it will
  * be restored after the data is sent.
- * 
+ *
  * @return lwIP error code.
  * - ERR_OK. Successful. No error occured.
  * - ERR_MEM. Out of memory.
@@ -431,7 +431,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
   udphdr->src = htons(pcb->local_port);
   udphdr->dest = htons(pcb->remote_port);
   /* in UDP, 0 checksum means 'no checksum' */
-  udphdr->chksum = 0x0000; 
+  udphdr->chksum = 0x0000;
 
   /* find the outgoing network interface for this packet */
   netif = ip_route(&(pcb->remote_ip));
@@ -468,7 +468,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
 #endif
     /* output to IP */
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: ip_output_if (,,,,IP_PROTO_UDPLITE,)\n"));
-    err = ip_output_if (q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDPLITE, netif);    
+    err = ip_output_if (q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDPLITE, netif);
   /* UDP */
   } else {
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: UDP packet length %u\n", q->tot_len));
@@ -486,7 +486,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: UDP checksum 0x%04x\n", udphdr->chksum));
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: ip_output_if (,,,,IP_PROTO_UDP,)\n"));
     /* output to IP */
-    err = ip_output_if(q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDP, netif);    
+    err = ip_output_if(q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDP, netif);
   }
   /* TODO: must this be increased even if error occured? */
   snmp_inc_udpoutdatagrams();
@@ -559,17 +559,17 @@ udp_bind(struct udp_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
 #endif
 
 #else /* SO_REUSE */
-      /* Search through list of PCB's. 
-         
+      /* Search through list of PCB's.
+
       If there is a PCB bound to specified port and IP_ADDR_ANY another PCB can be bound to the interface IP
-      or to the loopback address on the same port if SOF_REUSEADDR is set. Any combination of PCB's bound to 
+      or to the loopback address on the same port if SOF_REUSEADDR is set. Any combination of PCB's bound to
       the same local port, but to one address out of {IP_ADDR_ANY, 127.0.0.1, interface IP} at a time is valid.
       But no two PCB's bound to same local port and same local address is valid.
-      
-      If SOF_REUSEPORT is set several PCB's can be bound to same local port and same local address also. But then 
+
+      If SOF_REUSEPORT is set several PCB's can be bound to same local port and same local address also. But then
       all PCB's must have the SOF_REUSEPORT option set.
-      
-      When the two options aren't set and specified port is already bound, ERR_USE is returned saying that 
+
+      When the two options aren't set and specified port is already bound, ERR_USE is returned saying that
       address is already in use. */
     else if (ipcb->local_port == port) {
       if(ip_addr_cmp(&(ipcb->local_ip), ipaddr)) {
@@ -587,7 +587,7 @@ udp_bind(struct udp_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
         if(!(pcb->so_options & SOF_REUSEADDR) && !(pcb->so_options & SOF_REUSEPORT)) {
           LWIP_DEBUGF(UDP_DEBUG, ("udp_bind: in UDP PCB's SO_REUSEPORT or SO_REUSEADDR not set and not the same address.\n"));
           return ERR_USE;
-        }           
+        }
       }
     }
 #endif /* SO_REUSE */
@@ -595,7 +595,7 @@ udp_bind(struct udp_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
   }
 
 #if SO_REUSE
-  /* If SOF_REUSEPORT isn't set in all PCB's bound to specified port and local address specified then 
+  /* If SOF_REUSEPORT isn't set in all PCB's bound to specified port and local address specified then
      {IP, port} can't be reused. */
   if(!reuse_port_all_set) {
     LWIP_DEBUGF(UDP_DEBUG, ("udp_bind: not all sockets have SO_REUSEPORT set.\n"));
@@ -768,8 +768,8 @@ udp_new(void) {
     memset(pcb, 0, sizeof(struct udp_pcb));
     pcb->ttl = UDP_TTL;
   }
-  
-  
+
+
   return pcb;
 }
 
@@ -790,12 +790,3 @@ udp_debug_print(struct udp_hdr *udphdr)
 #endif /* UDP_DEBUG */
 
 #endif /* LWIP_UDP */
-
-
-
-
-
-
-
-
-

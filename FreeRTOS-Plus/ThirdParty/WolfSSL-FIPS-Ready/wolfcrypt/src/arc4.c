@@ -146,4 +146,3 @@ void wc_Arc4Free(Arc4* arc4)
 }
 
 #endif /* NO_RC4 */
-

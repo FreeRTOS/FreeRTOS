@@ -55,4 +55,3 @@ void charput (char output_char);
 char charget (void);
 
 #endif  /* End of multiple inclusion prevention macro */
-

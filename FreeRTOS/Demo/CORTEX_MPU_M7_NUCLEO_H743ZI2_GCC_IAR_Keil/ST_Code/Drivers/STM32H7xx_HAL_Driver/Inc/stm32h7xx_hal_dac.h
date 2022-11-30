@@ -543,4 +543,3 @@ void DAC_DMAHalfConvCpltCh1(DMA_HandleTypeDef *hdma);
 #endif /*STM32H7xx_HAL_DAC_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

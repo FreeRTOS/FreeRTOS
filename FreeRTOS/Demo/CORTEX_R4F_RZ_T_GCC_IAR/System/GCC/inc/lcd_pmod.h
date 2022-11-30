@@ -43,7 +43,7 @@
 *                 display. The offset is set as LEFT MARGIN and TOP MARGIN.
 *                 This offset is catered for internally, so as far as the user
 *                 is concerned, cursor position 0,0 is the top left pixel.
-* 
+*
 *                 The simplest procedure to run the display is as follows:
 *                 Init_LCD(); Initialise the serial port and set up the display.
 *
@@ -92,21 +92,21 @@ Macro Definitions for Okaya display on PMOD connector
 *
 ***********************************************************************************************************************/
 /* 16 lines @ 8 bits = 128. */
-#define SCREEN_HEIGHT             (128)            
+#define SCREEN_HEIGHT             (128)
 #define SCREEN_WIDTH              (128)
 
 #ifndef USE_PMOD2
 /* DATA/COMMAND select pin */
 #define DATA_CMD_PIN              (PORT7.PODR.BIT.B6)
 /* Backlight enable pin */
-#define BL_ENABLE_PIN             (PORT7.PODR.BIT.B4)  
+#define BL_ENABLE_PIN             (PORT7.PODR.BIT.B4)
 /* Reset pin */
 #define RESET_PIN                 (PORT6.PODR.BIT.B7)
 #else
 /* DATA/COMMAND select pin */
 #define DATA_CMD_PIN              (PORTM.PODR.BIT.B2)
 /* Backlight enable pin */
-#define BL_ENABLE_PIN             (PORTM.PODR.BIT.B3) 
+#define BL_ENABLE_PIN             (PORTM.PODR.BIT.B3)
 /* Reset pin */
 #define RESET_PIN                 (PORT5.PODR.BIT.B1)
 #endif
@@ -224,4 +224,3 @@ void display_off (void);
 
 /* LCD_PMOD_H */
 #endif
-

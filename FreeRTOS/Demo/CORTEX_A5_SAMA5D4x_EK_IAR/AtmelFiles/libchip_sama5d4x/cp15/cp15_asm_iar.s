@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -26,17 +26,17 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 
 /** \file */
 
 
-/** 
+/**
  * \addtogroup cp15_cache Cache Operations
  *
  * \section Usage
  *
- * They are performed as MCR instructions and only operate on a level 1 cache associated with 
+ * They are performed as MCR instructions and only operate on a level 1 cache associated with
  * ATM v7 processor.
  * The supported operations are:
  * <ul>
@@ -61,7 +61,7 @@
  * \ref cp15.h\n
  * \ref cp15_arm_iar.s \n
  */
- 
+
 
         MODULE  ?cp15
 
@@ -83,7 +83,7 @@
         PUBLIC  CP15_NonExclusiveCache
         PUBLIC  CP15_ISB
         PUBLIC  CP15_DSB
-        PUBLIC  CP15_DMB        
+        PUBLIC  CP15_DMB
         PUBLIC  CP15_SelectICache
         PUBLIC  CP15_SelectDCache
         PUBLIC  CP15_ReadControl
@@ -96,27 +96,27 @@
         PUBLIC  CP15_InvalidateIcacheByMva
         PUBLIC  CP15_InvalidateBTB
         PUBLIC  CP15_InvalidateBTBbyMva
-        
+
         PUBLIC  CP15_InvalidateDcacheBySetWay
         PUBLIC  CP15_CleanDCacheBySetWay
         PUBLIC  CP15_CleanInvalidateDCacheBySetWay
-        
-        PUBLIC  CP15_InvalidateDcacheByMva        
-        PUBLIC  CP15_CleanDCacheByMva             
+
+        PUBLIC  CP15_InvalidateDcacheByMva
+        PUBLIC  CP15_CleanDCacheByMva
         PUBLIC  CP15_CleanDCacheUMva
         PUBLIC  CP15_CleanInvalidateDcacheByMva
         PUBLIC  CP15_InvalidateTranslationTable
-        
+
         PUBLIC  CP15_coherent_dcache_for_dma
         PUBLIC  CP15_invalidate_dcache_for_dma
         PUBLIC  CP15_clean_dcache_for_dma
         PUBLIC  CP15_flush_dcache_for_dma
         PUBLIC  CP15_flush_kern_dcache_for_dma
 
-/** 
+/**
  * \brief Register c0 accesses the ID Register, Cache Type Register, and TCM Status Registers.
  *  Reading from this register returns the device ID, the cache type, or the TCM status
- *   depending on the value of Opcode_2 used. 
+ *   depending on the value of Opcode_2 used.
  */
         SECTION .CP15_ReadID:DATA:NOROOT(2)
         PUBLIC   CP15_ReadID
@@ -124,9 +124,9 @@ CP15_ReadID:
         mov     r0, #0
         mrc     p15, 0, r0, c0, c0, 0
         bx      lr
-     
 
-/** 
+
+/**
  * \brief Register c7 accesses the ACTLR Register, to indicate cpu that L2 is in exclusive mode
  */
         SECTION .CP15_ISB:DATA:NOROOT(2)
@@ -136,8 +136,8 @@ CP15_ISB:
         mcr     p15, 0, r0, c7, c5, 4
         nop
         bx      lr
-        
-/** 
+
+/**
  * \brief Register c7 accesses the ACTLR Register, to indicate cpu that L2 is in exclusive mode
  */
         SECTION .CP15_DSB:DATA:NOROOT(2)
@@ -148,7 +148,7 @@ CP15_DSB:
         nop
         bx      lr
 
-/** 
+/**
  * \brief Register c7 accesses the ACTLR Register, to indicate cpu that L2 is in exclusive mode
  */
         SECTION .CP15_DMB:DATA:NOROOT(2)
@@ -159,7 +159,7 @@ CP15_DMB:
         nop
         bx      lr
 
-/** 
+/**
  * \brief Register c1 accesses the ACTLR Register, to indicate cpu that L2 is in exclusive mode
  */
         SECTION .CP15_ExclusiveCache:DATA:NOROOT(2)
@@ -171,9 +171,9 @@ CP15_ExclusiveCache:
         mcr     p15, 0, r0, c1, c0, 1 ; Write ACTLR
         nop
         bx      lr
-       
-       
-/** 
+
+
+/**
  * \brief Register c1 accesses the ACTLR Register, to indicate cpu that L2 is in exclusive mode
  */
         SECTION .CP15_NonExclusiveCache:DATA:NOROOT(2)
@@ -184,10 +184,10 @@ CP15_NonExclusiveCache:
         bic     r0, r0, #0x00000080
         mcr     p15, 0, r0, c1, c0, 1 ; Write ACTLR
         nop
-        bx      lr       
-        
-/** 
- * \brief Register c1 accesses the CSSELR Register, to select ICache 
+        bx      lr
+
+/**
+ * \brief Register c1 accesses the CSSELR Register, to select ICache
  */
         SECTION .CP15_SelectICache:DATA:NOROOT(2)
         PUBLIC   CP15_SelectICache
@@ -197,8 +197,8 @@ CP15_SelectICache:
         mcr     p15, 2, r0, c0, c0, 0           ; Write CSSELR
         nop
         bx      lr
-        
-/** 
+
+/**
  * \brief Register c1 accesses the CSSELR Register, to select DCache
  */
         SECTION .CP15_SelectDCache:DATA:NOROOT(2)
@@ -209,10 +209,10 @@ CP15_SelectDCache:
         mcr     p15, 2, r0, c0, c0, 0           ; Write CSSELR
         nop
         bx      lr
-        
 
 
-/** 
+
+/**
  * \brief Register c1 is the Control Register for the ARM926EJ-S processor.
  * This register specifies the configuration used to enable and disable the
  * caches and MMU. It is recommended that you access this register using a
@@ -222,7 +222,7 @@ CP15_SelectDCache:
         PUBLIC   CP15_ReadControl
 CP15_ReadControl:
         mov     r0, #0
-        mrc     p15, 0, r0, c1, c0, 0   
+        mrc     p15, 0, r0, c1, c0, 0
         bx      lr
 
         SECTION .CP15_WriteControl:CODE:NOROOT(2)
@@ -240,8 +240,8 @@ CP15_WriteDomainAccessControl:
         dsb
         isb
         bx      lr
- 
-/** 
+
+/**
  * \brief  ARMv7A architecture supports two translation tables
  * Configure translation table base (TTB) control register cp15,c2
  * to a value of all zeros, indicates we are using TTB register 0.
@@ -324,7 +324,7 @@ CP15_InvalidateBTBbyMva:
 **************************************************************/
 
 
-//      ===Data Cache maintenance by SetWay  === 
+//      ===Data Cache maintenance by SetWay  ===
 
 /**
  * \brief Invalidate entire data cache by set/way
@@ -336,11 +336,11 @@ CP15_InvalidateDcacheBySetWay:
         mov     r1, r0, lsr #3          ; Num of ways
         and     r1, r1, #3              ; 3 is specific to CortexA5 with 32 KB
         mov     r2, r0, lsr #13         ; Num of stes
-        and     r2, r2, #0xFF           ; 8bit is specific to CortexA5 with 32 KB        
+        and     r2, r2, #0xFF           ; 8bit is specific to CortexA5 with 32 KB
         mov     r0, #0                  ; 0:SHL:5
 inv_way_loop
         lsl     r4, r1, #30
-        sub     r1, r1, #1              ; 
+        sub     r1, r1, #1              ;
         mov     r3, r2
 inv_line_loop
         orr     r0, r4, r3, lsl #5
@@ -351,9 +351,9 @@ inv_line_loop
         cmp     r1, #-1
         bne     inv_way_loop
         nop
-        bx      lr        
-        
-        
+        bx      lr
+
+
 /**
  * \brief Clean entire data cache by set/way
  */
@@ -364,11 +364,11 @@ CP15_CleanDCacheBySetWay:
         mov     r1, r0, lsr #3          ; Num of ways
         and     r1, r1, #3              ; 3 is specific to CortexA5 with 32 KB
         mov     r2, r0, lsr #13         ; Num of stes
-        and     r2, r2, #0xFF           ; 8bit is specific to CortexA5 with 32 KB        
+        and     r2, r2, #0xFF           ; 8bit is specific to CortexA5 with 32 KB
         mov     r0, #0                  ; 0:SHL:5
 clean_way_loop
         lsl     r4, r1, #30
-        sub     r1, r1, #1              ; 
+        sub     r1, r1, #1              ;
         mov     r3, r2
 clean_line_loop
         orr     r0, r4, r3, lsl #5
@@ -379,8 +379,8 @@ clean_line_loop
         cmp     r1, #-1
         bne     clean_way_loop
         nop
-        bx      lr 
-        
+        bx      lr
+
 /**
  * \brief Clean and Invalidate entire data cache by set/way
  */
@@ -391,11 +391,11 @@ CP15_CleanInvalidateDCacheBySetWay:
         mov     r1, r0, lsr #3          ; Num of ways
         and     r1, r1, #3              ; 3 is specific to CortexA5 with 32 KB
         mov     r2, r0, lsr #13         ; Num of stes
-        and     r2, r2, #0xFF           ; 8bit is specific to CortexA5 with 32 KB        
+        and     r2, r2, #0xFF           ; 8bit is specific to CortexA5 with 32 KB
         mov     r0, #0                  ; 0:SHL:5
 clinv_way_loop
         lsl     r4, r1, #30
-        sub     r1, r1, #1              ; 
+        sub     r1, r1, #1              ;
         mov     r3, r2
 clinv_line_loop
         orr     r0, r4, r3, lsl #5
@@ -407,11 +407,11 @@ clinv_line_loop
         bne     clinv_way_loop
         dsb
         isb
-        bx      lr    
-        
-        
-        
-//      ===Data Cache maintenance by VA  === 
+        bx      lr
+
+
+
+//      ===Data Cache maintenance by VA  ===
 
 
 /**
@@ -419,14 +419,14 @@ clinv_line_loop
  */
         SECTION .CP15_InvalidateDcacheByMva:CODE:NOROOT(2)
         PUBLIC   CP15_InvalidateDcacheByMva
-CP15_InvalidateDcacheByMva: 
+CP15_InvalidateDcacheByMva:
         mov     r2, #0x20                          ;Eight words per line, Cortex-A5 L1 Line Size 32 Bytes
         mov     r3, r0
 inv_loop
         mcr     p15, 0, r0, c7, c6, 1
         add     r3, r3, r2
-        cmp     r3, r1        
-        bls     inv_loop        
+        cmp     r3, r1
+        bls     inv_loop
         bx      lr
 
 
@@ -435,18 +435,18 @@ inv_loop
  */
         SECTION .CP15_CleanDCacheByMva:CODE:NOROOT(2)
         PUBLIC   CP15_CleanDCacheByMva
-CP15_CleanDCacheByMva:   
+CP15_CleanDCacheByMva:
         mov     r2, #0x20                          ;Eight words per line, Cortex-A5 L1 Line Size 32 Bytes
         mov     r3, r0
 clean_loop
         mcr     p15, 0, r0, c7, c10, 1
         add     r3, r3, r2
-        cmp     r3, r1        
-        bls     clean_loop        
+        cmp     r3, r1
+        bls     clean_loop
         bx      lr
-       
+
 /**
- * \brief Clean unified cache by MVA 
+ * \brief Clean unified cache by MVA
  */
         SECTION .CP15_CleanDCacheUMva:CODE:NOROOT(2)
         PUBLIC   CP15_CleanDCacheUMva
@@ -466,11 +466,11 @@ CP15_CleanInvalidateDcacheByMva:
 clinv_loop
         mcr     p15, 0, r0, c7, c14, 1
         add     r3, r3, r2
-        cmp     r3, r1        
-        bls     clinv_loop        
+        cmp     r3, r1
+        bls     clinv_loop
         bx      lr
-        
-        
+
+
 /**
  * \brief Invalidate translation table
  */
@@ -482,9 +482,9 @@ CP15_InvalidateTranslationTable:
         isb
         mcr      p15, 0, r0, c8, c7,  0
         dsb
-        isb   
-        bx      lr        
-        
+        isb
+        bx      lr
+
 /**
  * \brief flush translation table
  */
@@ -493,8 +493,8 @@ CP15_InvalidateTranslationTable:
 CP15_FlushTranslationTable:
         mcr      p15, 0, r0, c8, c3,  0
         dsb
-        isb    
-        bx      lr          
+        isb
+        bx      lr
 
 
 /**
@@ -508,7 +508,7 @@ CP15_FlushTranslationTable:
         PUBLIC   CP15_coherent_dcache_for_dma
 CP15_coherent_dcache_for_dma:
 //      dcache_line_size r2, r3
- 
+
         mrc     p15, 0, r3, c0, c0, 1         // read ctr
         lsr     r3, r3, #16
         and     r3, r3, #0xf                  // cache line size encoding
@@ -659,4 +659,3 @@ CP15_flush_kern_dcache_for_dma:
         dsb
         bx      lr
         END
-

@@ -183,4 +183,3 @@ reg2_error_loop:
 	The loop ensures the loop counter stops incrementing. */
 	b reg2_error_loop
 	nop
-

@@ -2643,6 +2643,3 @@ BaseType_t xLength = strlen( pxClient->pcRootDir );
 /*-----------------------------------------------------------*/
 
 #endif /* ipconfigUSE_FTP */
-
-
-

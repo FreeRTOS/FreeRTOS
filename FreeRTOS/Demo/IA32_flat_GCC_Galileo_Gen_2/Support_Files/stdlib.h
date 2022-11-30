@@ -17,4 +17,3 @@ void *memcpy( void *pvDest, const void *pvSource, unsigned long ulBytes );
 int memcmp( const void *pvMem1, const void *pvMem2, unsigned long ulBytes );
 
 #endif /* STDLIB_H */
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -87,4 +87,3 @@ extern void RTC_ClearSCCR(unsigned int mask);
 
 extern unsigned int RTC_GetSR(unsigned int mask);
 #endif //#ifndef RTC_H
-

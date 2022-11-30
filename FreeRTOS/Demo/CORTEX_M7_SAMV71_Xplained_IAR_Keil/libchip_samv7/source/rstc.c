@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -185,4 +185,3 @@ uint32_t RSTC_GetStatus(void)
     Rstc *pHw = RSTC;
     return (pHw->RSTC_SR);
 }
-

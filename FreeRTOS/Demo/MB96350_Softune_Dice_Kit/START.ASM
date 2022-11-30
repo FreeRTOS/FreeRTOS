@@ -1,18 +1,18 @@
 ;====================================================================
 ; $Id: START.ASM,v 1.31 2008/02/27 10:23:34 mcuae Exp $
 ;====================================================================
-; THIS SAMPLE CODE IS PROVIDED AS IS AND IS SUBJECT TO ALTERATIONS.  
-;  FUJITSU MICROELECTRONICS ACCEPTS NO RESPONSIBILITY OR LIABILITY   
-;         FOR ANY ERRORS OR ELIGIBILITY FOR ANY PURPOSES.            
-;                                                                    
-;    Startup file for memory and basic controller initialisation     
-;                                                                    
+; THIS SAMPLE CODE IS PROVIDED AS IS AND IS SUBJECT TO ALTERATIONS.
+;  FUJITSU MICROELECTRONICS ACCEPTS NO RESPONSIBILITY OR LIABILITY
+;         FOR ANY ERRORS OR ELIGIBILITY FOR ANY PURPOSES.
+;
+;    Startup file for memory and basic controller initialisation
+;
 ;    MB96300 Family C Compiler
-;                                                                    
-;    (C) FUJITSU MICROELECTRONICS EUROPE 1998-2008                   
+;
+;    (C) FUJITSU MICROELECTRONICS EUROPE 1998-2008
 ;====================================================================
 
-          .PROGRAM  STARTUP  
+          .PROGRAM  STARTUP
           .TITLE    "STARTUP FILE FOR MEMORY INITIALISATION"
 
 ;====================================================================
@@ -76,20 +76,20 @@
 ; 2  Disclaimer
 ;====================================================================
 ;                  FUJITSU MICROELECTRONICS EUROPE GMBH
-;                  Pittlerstrasse 47, 63225 Langen, Germany 
+;                  Pittlerstrasse 47, 63225 Langen, Germany
 ;                  Tel.:++49 6103 690-0, Fax -122
-;                                                               
-;    The following software is for demonstration purposes only. 
-;    It is not fully tested, nor validated in order to fulfil 
-;    its task under all circumstances. Therefore, this software 
-;    or any part of it must only be used in an evaluation       
-;    laboratory environment.                                    
-;    This software is subject to the rules of our standard      
-;    DISCLAIMER, that is delivered with our SW-tools on the 
+;
+;    The following software is for demonstration purposes only.
+;    It is not fully tested, nor validated in order to fulfil
+;    its task under all circumstances. Therefore, this software
+;    or any part of it must only be used in an evaluation
+;    laboratory environment.
+;    This software is subject to the rules of our standard
+;    DISCLAIMER, that is delivered with our SW-tools on the
 ;    Fujitsu Microcontrollers DVD (V5.0 or higher "\START.HTM") or
-;    on our Internet Pages:                                      
+;    on our Internet Pages:
 ;    http://www.fme.gsdc.de/gsdc.htm
-;    http://emea.fujitsu.com/microelectronics 
+;    http://emea.fujitsu.com/microelectronics
 ;
 ;====================================================================
 ; 3  History
@@ -265,30 +265,30 @@ Revision 0.4  2006/08/07 15:35:35  phu
 ; MB96340 series
 #set      MB96348HxA   1
 #set      MB96348TxA   2
-#set      MB96346RxA   3 
-#set      MB96346YxA   4 
+#set      MB96346RxA   3
+#set      MB96346YxA   4
 #set      MB96346AxA   5
-#set      MB96347RxA   6 
-#set      MB96347YxA   7 
+#set      MB96347RxA   6
+#set      MB96347YxA   7
 #set      MB96347AxA   8
-#set      MB96348RxA   9 
-#set      MB96348YxA  10 
+#set      MB96348RxA   9
+#set      MB96348YxA  10
 #set      MB96348AxA  11
-#set      MB96346RxB  12 
+#set      MB96346RxB  12
 #set      MB96346AxB  13
-#set      MB96346YxB  14 
-#set      MB96347RxB  15 
+#set      MB96346YxB  14
+#set      MB96347RxB  15
 #set      MB96347AxB  16
-#set      MB96347YxB  17 
+#set      MB96347YxB  17
 #set      MB96348CxA  18
-#set      MB96348HxB  19 
-#set      MB96348TxB  20 
-#set      MB96348RxB  21 
+#set      MB96348HxB  19
+#set      MB96348TxB  20
+#set      MB96348RxB  21
 #set      MB96348AxB  22
-#set      MB96348YxB  23 
+#set      MB96348YxB  23
 #set      MB96348CxC  24
-#set      MB96348HxC  25 
-#set      MB96348TxC  26 
+#set      MB96348HxC  25
+#set      MB96348TxC  26
 
 ; MB96350 series
 #set      MB96356RxA   1
@@ -318,7 +318,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 
 ; MB96390 series
 #set      MB96395RxA   1
-    
+
 
 #set      DEVICE    MB96356RxA      ; <<< select device
 
@@ -326,7 +326,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 ; 4.2  C-language Memory model
 ;====================================================================
 
-                                   ;      data      code   
+                                   ;      data      code
 #set      SMALL     0              ;     16 Bit    16 Bit
 #set      MEDIUM    1              ;     16 Bit    24 Bit
 #set      COMPACT   2              ;     24 Bit    16 Bit
@@ -338,7 +338,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      MEMMODEL  AUTOMODEL      ; <<< C-memory model
 
 ; The selected memory model should be set in order to fit to the
-; model selected for the compiler. 
+; model selected for the compiler.
 ; Note, in this startup version AUTOMODEL will work for all
 ; C-models. However, if the compiler is configured for SMALL or
 ; COMPACT, two additional bytes on stack are occupied. If this is not
@@ -347,7 +347,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 ;====================================================================
 ; 4.3  Function-Call Interface
 ;====================================================================
- 
+
           #if __REG_PASS__
             .REG_PASS
           #endif
@@ -369,24 +369,24 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      ROMCONST    0            ; works only with compiler ROMCONST
 #set      RAMCONST    1            ; works with BOTH compiler settings
 #set      AUTOCONST   RAMCONST     ; works with BOTH compiler settings
-                              
+
 #set      CONSTDATA   AUTOCONST    ; <<< set RAM/ROM/AUTOCONST
 
 ; - AUTOCONST (default) is the same as RAMCONST
 ; - RAMCONST/AUTOCONST should always work, even if compiler is set to
 ;   ROMCONST. If compiler is set to ROMCONST and this startup file is
 ;   set to RAMCONST or AUTOCONST, this startup file will generate an
-;   empty section CINIT in RAM. However, the code, which copies from 
+;   empty section CINIT in RAM. However, the code, which copies from
 ;   CONST to CINIT will not have any effect, because size of section is 0.
-; - It is highly recommended to set the compiler to ROMCONST for 
-;   single-chip mode or internal ROM+ext bus. The start-up file 
+; - It is highly recommended to set the compiler to ROMCONST for
+;   single-chip mode or internal ROM+ext bus. The start-up file
 ;   should be set to AUTOCONST.
 ; - ROMCONST setting on systems with full external bus requires exter-
 ;   nal address mapping.
 ;   Single-chip can be emulated by the emulator debugger.
 ;   ROM mirror can also be used with simulator.
 ;
-; see also ROM MIRROR options 
+; see also ROM MIRROR options
 
 ;====================================================================
 ; 4.5  Stack Type and Stack Size
@@ -399,7 +399,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 
 #set      STACK_RESERVE  ON     ; <<< reserve stack area in this module
 #set      STACK_SYS_SIZE 200   ; <<< byte size of System stack
-#set      STACK_USR_SIZE 2      ; <<< byte size of User stack 
+#set      STACK_USR_SIZE 2      ; <<< byte size of User stack
 
 #set      STACK_FILL     ON     ; <<< fills the stack area with pattern
 #set      STACK_PATTERN  0x55AA ; <<< the pattern to write to stack
@@ -410,20 +410,20 @@ Revision 0.4  2006/08/07 15:35:35  phu
 ;   If the active stack is set to user stack, it is used for the main
 ;   program but the system stack is automatically activated, if an inter-
 ;   rupt is serviced. Both stack areas must have a reasonable size.
-; - If STACK_RESERVE is ON, the sections USTACK and SSTACK are reserved 
+; - If STACK_RESERVE is ON, the sections USTACK and SSTACK are reserved
 ;   in this module. Otherwise, they have to be reserved in other modules.
-;   If STACK_RESERVE is OFF, the size definitions STACK_SYS_SIZE and 
+;   If STACK_RESERVE is OFF, the size definitions STACK_SYS_SIZE and
 ;   STACK_USR_SIZE have no meaning.
 ; - Even if they are reserved in other modules, they are still initialised
 ;   in this start-up file.
-; - Filling the stack with a pattern allows to dynamically check the stack 
+; - Filling the stack with a pattern allows to dynamically check the stack
 ;   area, which had already been used.
 ;
 ; - If only system stack is used and SSB is linked to a different bank
-;   than USB, make sure that all C-modules (which generate far pointers 
+;   than USB, make sure that all C-modules (which generate far pointers
 ;   to stack data) have "#pragma SSB". Applies only to exclusive confi-
 ;   gurations.
-; - Note, several library functions require quite a big stack (due to 
+; - Note, several library functions require quite a big stack (due to
 ;   ANSI). Check the stack information files (*.stk) in the LIB\907
 ;   directory.
 
@@ -449,8 +449,8 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      CLIBINIT       OFF    ; <<< select extended library usage
 
 ; This option has only to be set, if stream-IO/standard-IO function of
-; the C-library have to be used (printf(), fopen()...). This also 
-; requires low-level functions to be defined by the application 
+; the C-library have to be used (printf(), fopen()...). This also
+; requires low-level functions to be defined by the application
 ; software.
 ; For other library functions (like e.g. sprintf()) all this is not
 ; necessary. However, several functions consume a large amount of stack.
@@ -466,13 +466,13 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      CLOCKWAIT      ON     ; <<< wait for stabilized clock, if
                                 ;     Main Clock or PLL is used
 
-; The clock is set quite early. However, if CLOCKWAIT is ON, polling 
-; for machine clock to be switched to Main Clock or PLL is done at 
-; the end of this file. Therefore, the stabilization time is not 
-; wasted. Main() will finally start at correct speed. Resources can 
+; The clock is set quite early. However, if CLOCKWAIT is ON, polling
+; for machine clock to be switched to Main Clock or PLL is done at
+; the end of this file. Therefore, the stabilization time is not
+; wasted. Main() will finally start at correct speed. Resources can
 ; be used immediately.
 ; Note: Some frequency settings (below) necessarily need a stabilized
-; PLL for final settings. In these cases, the CLOCKWAIT setting above 
+; PLL for final settings. In these cases, the CLOCKWAIT setting above
 ; does not have any effect.
 ;
 ; This startup file version does not support subclock.
@@ -522,11 +522,11 @@ Revision 0.4  2006/08/07 15:35:35  phu
 
 #set      SINGLE_CHIP     0        ; all internal
 #set      INTROM_EXTBUS   1        ; mask ROM or FLASH memory used
-#set      EXTROM_EXTBUS   2        ; full external bus (INROM not used) 
+#set      EXTROM_EXTBUS   2        ; full external bus (INROM not used)
 
 #set      BUSMODE SINGLE_CHIP      ; <<< set bus mode (see mode pins)
 
-#set      MULTIPLEXED     0        ; 
+#set      MULTIPLEXED     0        ;
 #set      NON_MULTIPLEXED 1        ; only if supported by the device
 
 #set      ADDRESSMODE MULTIPLEXED  ; <<< set address-mode
@@ -564,11 +564,11 @@ Revision 0.4  2006/08/07 15:35:35  phu
 
 #set      EXT_CLOCK_DIVISION  EXT_CLOCK_DIV1 ; <<< select clock divider
 
-#set      ADDR_PINS_23_16    B'00000000     ; <<< select used address lines 
+#set      ADDR_PINS_23_16    B'00000000     ; <<< select used address lines
                                             ;     A23..A16 to be output.
-#set      ADDR_PINS_15_8     B'00000000     ; <<< select used address lines 
+#set      ADDR_PINS_15_8     B'00000000     ; <<< select used address lines
                                             ;     A15..A8 to be output.
-#set      ADDR_PINS_7_0      B'00000000     ; <<< select used address lines 
+#set      ADDR_PINS_7_0      B'00000000     ; <<< select used address lines
                                             ;     A7..A0 to be output.
 
 #set      LOW_BYTE_SIGNAL    OFF   ; <<< select low byte signal LBX
@@ -691,7 +691,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 ; This is necessary to get the compiler ROMCONST option working. This is intended
 ; to increase performance, if a lot of dynamic data have to be accessed.
 ; In SMALL and MEDIUM model these data can be accessed within bank 0,
-; which allows to use near addressing. Please make sure to have the linker 
+; which allows to use near addressing. Please make sure to have the linker
 ; setting adjusted accordingly!
 
 
@@ -783,7 +783,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 ;                        set address of this start code.
 ;   BOOT_VECTOR_FIXED: - Instead of table entry, a special marker is set in
 ;                        ROM Configuration Block, which enables the fixed
-;                        start address 0xDF0080. This is prefered setting 
+;                        start address 0xDF0080. This is prefered setting
 ;                        for user boot loaders.
 ;                 OFF: - Do not set table entry and marker. This might be used
 ;                        for application to be loaded by boot loader.
@@ -800,7 +800,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
           .DATA.E _start
           .SECTION        BOOT_SELECT, CONST, LOCATE=H'DF0030
           .DATA.L 0xFFFFFFFF
-          
+
 #else
 #  if BOOT_VECTOR == BOOT_VECTOR_FIXED
           .SECTION        BOOT_SELECT, CONST, LOCATE=H'DF0030
@@ -818,10 +818,10 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      UART_SCANNING   OFF        ; <<< enable UART scanning in
                                      ;     Internal Vector Mode
 ;
-; By default, the MCU scans in Internal Vector Mode for a UART 
-; communication after reset. This enables to establish a serial 
+; By default, the MCU scans in Internal Vector Mode for a UART
+; communication after reset. This enables to establish a serial
 ; communication without switching to Serial Communication Mode.
-; For the final application, set this switch to OFF to achieve the 
+; For the final application, set this switch to OFF to achieve the
 ; fastest start-up time.
 
 #if UART_SCANNING == ON
@@ -831,7 +831,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
           .SECTION        UART_SCAN_SELECT, CONST, LOCATE=H'DF0034
           .DATA.L 0xFFFFFFFF
 #  endif ; (SERIES == MB96340 && DEVICE < 3)
-#else          
+#else
           .SECTION        UART_SCAN_SELECT, CONST, LOCATE=H'DF0034
           .DATA.L 0x292D3A7B        ; Decativation "Magic Word"
 #endif
@@ -860,7 +860,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 
 #if VERSION_STAMP == ON
           .SECTION  VERSIONS, CONST ; change name, if necessary
-          .SDATA    "Start ", VERSION, "\n\0" 
+          .SDATA    "Start ", VERSION, "\n\0"
 #endif
 
 ;====================================================================
@@ -890,7 +890,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      BDM_WD_PATTERN  0x00     ; <<< set watchdog pattern
 
 #set      BDM_PFCS0       0x0000   ; <<< set default breakpoint
-#set      BDM_PFCS1       0x0000   ;     configurations 
+#set      BDM_PFCS1       0x0000   ;     configurations
 #set      BDM_PFCS2       0x0000
 #set      BDM_PFCS3       0x0000
 
@@ -903,7 +903,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      BDM_PFA6        0xFFFFFF
 #set      BDM_PFA7        0xFFFFFF
 
-#set      BDM_PFD0        0xFFFF   ; <<< set patch data 
+#set      BDM_PFD0        0xFFFF   ; <<< set patch data
 #set      BDM_PFD1        0xFFFF   ;     configurations
 #set      BDM_PFD2        0xFFFF
 #set      BDM_PFD3        0xFFFF
@@ -1007,7 +1007,7 @@ EBCS       .EQU      0x06F5
 ;====================================================================
 
 #if COPY_RAMCODE == ON
-          .SECTION  RAMCODE,   CODE,  ALIGN=1  
+          .SECTION  RAMCODE,   CODE,  ALIGN=1
           .IMPORT _RAM_RAMCODE                  ; provided by linker
           .IMPORT _ROM_RAMCODE                  ; provided by linker
 #endif
@@ -1018,10 +1018,10 @@ EBCS       .EQU      0x06F5
 ;====================================================================
 
 ; DCLEAR contains start address and size of all sections to be cleared
-; DTRANS contains source and destination address and size of all 
+; DTRANS contains source and destination address and size of all
 ; sections to be initialised with start-up values
 ; The compiler automatically adds a descriptor for each __far addressed
-; data section to DCLEAR or DTRANS. These __far sections are separated 
+; data section to DCLEAR or DTRANS. These __far sections are separated
 ; for each C-module.
 
 ; In addition the start-up file adds the descriptors of the previously
@@ -1036,12 +1036,12 @@ EBCS       .EQU      0x06F5
 
    .SECTION  DTRANS,    CONST,  ALIGN=2  ; copy table
    ;    Address         Bank               Address     Bank          Size
-   .DATA.H DCONST,   BNKSEC DCONST,   INIT,   BNKSEC INIT,   SIZEOF INIT   
+   .DATA.H DCONST,   BNKSEC DCONST,   INIT,   BNKSEC INIT,   SIZEOF INIT
    .DATA.H DIRCONST, BNKSEC DIRCONST, DIRINIT,BNKSEC DIRINIT,SIZEOF DIRINIT
    .DATA.H LIBDCONST,BNKSEC LIBDCONST,LIBINIT,BNKSEC LIBINIT,SIZEOF LIBINIT
 
 #if CONSTDATA == RAMCONST
-   .DATA.H CONST,    BNKSEC CONST,    CINIT,  BNKSEC CINIT,  SIZEOF CINIT  
+   .DATA.H CONST,    BNKSEC CONST,    CINIT,  BNKSEC CINIT,  SIZEOF CINIT
    .DATA.H CONST2,   BNKSEC CONST,    CINIT2, BNKSEC CINIT2, SIZEOF CINIT2
 #endif
 
@@ -1083,14 +1083,14 @@ USTACK_TOP:
 ;====================================================================
 
           .SECTION  DIRDATA  ; zero clear direct
-DIRDATA_S:                                      ; label for DPR init       
+DIRDATA_S:                                      ; label for DPR init
 
 ; This label is used to get the page of the __direct data.
 ; Depending on the linkage order of this startup file the label is
 ; placed anywhere within the __direct data page. However, the
-; statement "PAGE (DIRDATA_S)" is processed. Therefore, the lower 
-; 8 Bit of the address of DIRDATA_S are not relevant and this feature 
-; becomes linkage order independent. 
+; statement "PAGE (DIRDATA_S)" is processed. Therefore, the lower
+; 8 Bit of the address of DIRDATA_S are not relevant and this feature
+; becomes linkage order independent.
 ; Note, the linker settings have to make sure that all __direct
 ; data are located within the same physical page (256 Byte block).
 
@@ -1112,7 +1112,7 @@ DIRDATA_S:                                      ; label for DPR init
 	      .DATA.W ((FLASH_A_UNLOCK_11 << 8) | FLASH_A_UNLOCK_10)
 	      .DATA.W ((FLASH_A_UNLOCK_13 << 8) | FLASH_A_UNLOCK_12)
 	      .DATA.W ((FLASH_A_UNLOCK_15 << 8) | FLASH_A_UNLOCK_14)
-#endif      
+#endif
 	      .SKIP   4
 	      .SKIP   6
 
@@ -1131,7 +1131,7 @@ DIRDATA_S:                                      ; label for DPR init
 	      .DATA.W ((FLASH_B_UNLOCK_11 << 8) | FLASH_B_UNLOCK_10)
 	      .DATA.W ((FLASH_B_UNLOCK_13 << 8) | FLASH_B_UNLOCK_12)
 	      .DATA.W ((FLASH_B_UNLOCK_15 << 8) | FLASH_B_UNLOCK_14)
-#  endif      
+#  endif
 	      .SKIP   4
 	      .SKIP   6
 #endif ; FLASH_B_AVAILABLE == ON
@@ -1176,53 +1176,53 @@ DIRDATA_S:                                      ; label for DPR init
 ; configuration by e.g. debugger tool or (special) programmer tool.
 
           .SECTION BDM_CONFIG, CONST, LOCATE=H'DF0040
-         
+
 #if BACKGROUND_DEBUGGING == ON
-          
+
           .DATA.L 0x292D3A7B
-          
+
           .ORG    H'DF0044
           .DATA.W BDM_CONFIGURATION
-          
+
           .ORG    H'DF0046
 #  if ((SERIES == MB96340) && (DEVICE < 3))
 #    error Device does not support background debugging
 #  endif ; ((SERIES == MB96340) && (DEVICE < 3))
-          
+
 #  if ((SERIES == MB96340) && (DEVICE < 12))
           .DATA.W (D'16 * CRYSTAL + BDM_BAUDRATE) / BDM_BAUDRATE
 #  else
           .DATA.W (D'32 * CRYSTAL + BDM_BAUDRATE) / BDM_BAUDRATE
 #  endif ; ((SERIES == MB96340) && (DEVICE < 12))
-                                                 
+
           .ORG    H'DF0048
-          .DATA.E BDM_EXT_CONFIG                              
+          .DATA.E BDM_EXT_CONFIG
 
           .ORG    H'DF004B
           .DATA.B BDM_WD_PATTERN
-          
+
           .ORG    H'DF0050
           .DATA.W BDM_PFCS0
           .DATA.W BDM_PFCS1
-          .DATA.W BDM_PFCS2                       
-          .DATA.W BDM_PFCS3                      
-          
+          .DATA.W BDM_PFCS2
+          .DATA.W BDM_PFCS3
+
           .DATA.E BDM_PFA0, BDM_PFA1
           .DATA.E BDM_PFA2, BDM_PFA3
-          .DATA.E BDM_PFA4, BDM_PFA5           
-          .DATA.E BDM_PFA6, BDM_PFA7           
-          
+          .DATA.E BDM_PFA4, BDM_PFA5
+          .DATA.E BDM_PFA6, BDM_PFA7
+
           .DATA.W BDM_PFD0, BDM_PFD1
           .DATA.W BDM_PFD2, BDM_PFD3
-          .DATA.W BDM_PFD4, BDM_PFD5           
-          .DATA.W BDM_PFD6, BDM_PFD7                  
+          .DATA.W BDM_PFD4, BDM_PFD5
+          .DATA.W BDM_PFD6, BDM_PFD7
 #else
           .DATAB.B 64, 0xFF        ; fill section with 0xFF
-          
+
 #endif ; BACKGROUND_DEBUGGING == ON
 
           .ORG    0xDF0080
-          
+
 ;====================================================================
 ; 6  Start-Up Code
 ;====================================================================
@@ -1236,14 +1236,14 @@ DIRDATA_S:                                      ; label for DPR init
           .IMPORT   __stream_init
           .IMPORT   _exit
           .EXPORT   __exit
-#endif          
+#endif
           .EXPORT   _start
 
 ;====================================================================
 ;   ___  _____   __    ___  _____
-;  /       |    /  \  |   \   |                  
-;  \___    |   |    | |___/   |   
-;      \   |   |----| |  \    |   
+;  /       |    /  \  |   \   |
+;  \___    |   |    | |___/   |
+;      \   |   |----| |  \    |
 ;   ___/   |   |    | |   \   |      Begin of actual code section
 ;
 ;====================================================================
@@ -1267,7 +1267,7 @@ notresetyet:
 ; However, if no reset vector has been defined on purpose, this start
 ; address can also be used.
 ; This mechanism is using the .END instruction at the end of this mo-
-; dule. It is not necessary for controller operation but improves 
+; dule. It is not necessary for controller operation but improves
 ; security during debugging (mainly emulator debugger).
 ; If the debugger stays here after a single step from label "_start"
 ; to label "notresetyet", this note can be ignored.
@@ -1277,14 +1277,14 @@ notresetyet:
 ;====================================================================
           AND  CCR, #0x80          ; disable interrupts
           MOV  ILM,#7              ; set interrupt level mask to ALL
-          MOV  RP,#REGBANK         ; set register bank pointer 
+          MOV  RP,#REGBANK         ; set register bank pointer
 
 ;====================================================================
 ; 6.5  Set clock ratio (ignore subclock)
 ;====================================================================
           MOVN A, #0               ; set bank 0 in DTB for the case that
           MOV  DTB, A              ; start-up code was not jumped by reset
-		  
+
           MOV  CKSSR, #(0xF8 | MC_STAB_TIME)  ; set clock stabilization time
 
 #if (CRYSTAL == FREQ_4MHZ) && (CLOCK_SPEED == CPU_4MHZ_MAIN_CLKP2_4MHZ)
@@ -1455,7 +1455,7 @@ notresetyet:
           MOV  CKSR,  #0xFA
 #  endif ; ((SERIES == MB96340) && (DEVICE < 3))
 #endif ; (CRYSTAL == FREQ_4MHZ) && (CLOCK_SPEED == CPU_24MHZ_CLKP2_12MHZ)
-					
+
 #if (CRYSTAL == FREQ_8MHZ) && (CLOCK_SPEED == CPU_24MHZ_CLKP2_12MHZ)
 #  if ((SERIES == MB96340) && (DEVICE < 3))
           MOVW PLLCR, #0x0082
@@ -1471,7 +1471,7 @@ notresetyet:
           MOV  CKSR,  #0xFA
 #  endif ; ((SERIES == MB96340) && (DEVICE < 3))
 #endif ; (CRYSTAL == FREQ_8MHZ) && (CLOCK_SPEED == CPU_24MHZ_CLKP2_12MHZ)
-					
+
 #if (CRYSTAL == FREQ_4MHZ) && (CLOCK_SPEED == CPU_32MHZ_CLKP2_16MHZ)
 #  if ((SERIES == MB96340) && (DEVICE < 3))
 #    error Setting prohibited due to 16FXFL0014
@@ -1488,7 +1488,7 @@ notresetyet:
           MOV  CKSR,  #0xFA
 #  endif ; ((SERIES == MB96340) && (DEVICE < 3))
 #endif ; (CRYSTAL == FREQ_4MHZ) && (CLOCK_SPEED == CPU_32MHZ_CLKP2_16MHZ)
-					
+
 #if (CRYSTAL == FREQ_8MHZ) && (CLOCK_SPEED == CPU_32MHZ_CLKP2_16MHZ)
 #  if ((SERIES == MB96340) && (DEVICE < 3))
 #    error Setting prohibited due to 16FXFL0014
@@ -1604,7 +1604,7 @@ notresetyet:
           MOV  VRCR,  #0xF6
           MOV  CKSR,  #0xFA
 #endif ; (CRYSTAL == FREQ_4MHZ) && (CLOCK_SPEED == CPU_56MHZ_CLKP2_14MHZ)
-	
+
 #if (CRYSTAL == FREQ_8MHZ) && (CLOCK_SPEED == CPU_56MHZ_CLKP2_14MHZ)
           MOVW PLLCR, #0x0006
           MOVW CKFCR, #0x3001
@@ -1666,7 +1666,7 @@ notresetyet:
 #    endif
 #  endif
 
-#endif 
+#endif
 
 #if BUSMODE == INTROM_EXTBUS     ; EXTBUS and INTROM/EXTROM
 #  if ROMMIRROR == OFF && CONSTDATA == ROMCONST
@@ -1683,7 +1683,7 @@ ROMM_CONFIG    .EQU     ((MIRROR_BANK << 4) | (MIRROR_SIZE << 1) | (ROMMIRROR))
 ;====================================================================
 
           AND  CCR,#H'DF            ; clear system stack flag
-          MOVL A, #(__userstack_top) & ~1   
+          MOVL A, #(__userstack_top) & ~1
           MOVW SP,A                 ; load offset of stack top to pointer
           SWAPW                     ; swap higher word to AL
           MOV  USB, A               ; set bank
@@ -1697,7 +1697,7 @@ ROMM_CONFIG    .EQU     ((MIRROR_BANK << 4) | (MIRROR_SIZE << 1) | (ROMMIRROR))
 #endif
 
           OR   CCR,#H'20            ; set System stack flag
-          MOVL A, #(__systemstack_top) & ~1   
+          MOVL A, #(__systemstack_top) & ~1
           MOVW SP,A                 ; load offset of stack top to pointer
           SWAPW                     ; swap higher word to AL
           MOV  SSB, A               ; set bank
@@ -1716,7 +1716,7 @@ ROMM_CONFIG    .EQU     ((MIRROR_BANK << 4) | (MIRROR_SIZE << 1) | (ROMMIRROR))
 
 
 ;   The following macro is needed because of the AUTOMODEL option. If the
-;   model is not known while assembling the module, one has to expect 
+;   model is not known while assembling the module, one has to expect
 ;   completion of streaminit() by RET or RETP. Because RET removes 2 bytes
 ;   from stack and RETP removes 4 bytes from stack, SP is reloaded.
 
@@ -1724,10 +1724,10 @@ ROMM_CONFIG    .EQU     ((MIRROR_BANK << 4) | (MIRROR_SIZE << 1) | (ROMMIRROR))
 
 #if STACKUSE == USRSTACK
           MOVW A, #(__userstack_top) & ~1
-#else 
+#else
           MOVW A, #(__systemstack_top) & ~1
 #endif
-          MOVW SP,A                         
+          MOVW SP,A
 #  endm
 
 
@@ -1739,8 +1739,8 @@ ROMM_CONFIG    .EQU     ((MIRROR_BANK << 4) | (MIRROR_SIZE << 1) | (ROMMIRROR))
 ; DCONST_module contains the initializers for the far data of the one
 ; module. INIT_module reserves the RAM area, which has to be loaded
 ; with the data from DCONST_module. ("module" is the name of the *.c
-; file) 
-; All separated DCONST_module/INIT_module areas are described in 
+; file)
+; All separated DCONST_module/INIT_module areas are described in
 ; DTRANS section by start addresses and length of each far section.
 ;   0000 1. source address (ROM)
 ;   0004 1. destination address (RAM)
@@ -1749,8 +1749,8 @@ ROMM_CONFIG    .EQU     ((MIRROR_BANK << 4) | (MIRROR_SIZE << 1) | (ROMMIRROR))
 ;   000E 2. destination address (RAM)
 ;   0012 length of sections 2
 ;   0014 3. source address ...
-; In addition the start-up file adds the descriptors of the __near 
-; sections to this table. The order of the descriptors in this table 
+; In addition the start-up file adds the descriptors of the __near
+; sections to this table. The order of the descriptors in this table
 ; depends on the linkage order.
 ;====================================================================
           MOV  A, #BNKSEC DTRANS   ; get bank of table
@@ -1764,12 +1764,12 @@ LABEL1:
           MOVW A, @RW1+2           ; get source bank
           MOV  ADB, A              ; save source bank in ADB
           MOVW A, @RW1+4           ; move destination addr in AL
-          MOVW A, @RW1             ; AL -> AH, src addr -> AL 
+          MOVW A, @RW1             ; AL -> AH, src addr -> AL
           MOVW RW0, @RW1+8         ; number of bytes to copy -> RW0
           MOVSI     SPB, ADB       ; copy data
           MOVN A, #10              ; length of one table entry is 10
           ADDW RW1, A              ; set pointer to next table entry
-LABEL2:                             
+LABEL2:
           MOVW A, RW1              ; get address of next block
           SUBW A, #DTRANS          ; sub address of first block
           CMPW A, #SIZEOF (DTRANS) ; all blocks processed ?
@@ -1782,7 +1782,7 @@ LABEL2:
 ;
 ; Each C-module has its own __far DATA section. The names are generic.
 ; DATA_module contains the reserved area (RAM) to be cleared.
-; ("module" is the name of the *.c file) 
+; ("module" is the name of the *.c file)
 ; All separated DATA_module areas are described in DCLEAR section by
 ; start addresses and length of all far section.
 ;   0000 1. section address (RAM)
@@ -1791,20 +1791,20 @@ LABEL2:
 ;   000A length of section 2
 ;   000C 3. section address (RAM)
 ;   0010 length of section 3 ...
-; In addition the start-up file adds the descriptors of the __near 
-; sections to this table. The order of the descriptors in this table 
+; In addition the start-up file adds the descriptors of the __near
+; sections to this table. The order of the descriptors in this table
 ; depends on the linkage order.
 ;====================================================================
           MOV  A, #BNKSEC DCLEAR   ; get bank of table
           MOV  DTB, A              ; store bank in DTB
           MOVW RW1, #DCLEAR        ; get start offset of table
           BRA  LABEL4              ; branch to loop condition
-LABEL3:                            
+LABEL3:
           MOV  A, @RW1+2           ; get section bank
           MOV  ADB, A              ; save section bank in ADB
           MOVW RW0, @RW1+4         ; number of bytes to copy -> RW0
           MOVW A, @RW1             ; move section addr in AL
-          MOVN A, #0               ; AL -> AH, init value -> AL 
+          MOVN A, #0               ; AL -> AH, init value -> AL
           FILSI     ADB            ; write 0 to section
           MOVN A, #6               ; length of one table entry is 6
           ADDW RW1, A              ; set pointer to next table entry
@@ -1909,7 +1909,7 @@ no_PLL_yet:
           CALL __stream_init       ; initialise library IO
 #  else                            ; MEDIUM, LARGE, AUTOMODEL
           CALLP __stream_init      ; initialise library IO
-#    if MEMMODEL == AUTOMODEL          
+#    if MEMMODEL == AUTOMODEL
           RELOAD_SP                ; reload stack since stream_init was
                                    ; possibly left by RET (not RETP)
 #    endif  ; AUTOMODEL
@@ -1923,7 +1923,7 @@ no_PLL_yet:
           CALL _main               ; Start main function
 #else                              ; MEDIUM, LARGE, AUTOMODEL
           CALLP _main              ; Start main function
-                                   ; ignore remaining word on stack, 
+                                   ; ignore remaining word on stack,
                                    ; if main was completed by RET
 #endif
 ;====================================================================
@@ -1931,13 +1931,13 @@ no_PLL_yet:
 ;====================================================================
 #if CLIBINIT == ON
 #  if MEMMODEL == SMALL || MEMMODEL == COMPACT
-          CALL _exit               
+          CALL _exit
 #  else                            ; MEDIUM, LARGE, AUTOMODEL
-          CALLP _exit              ; ignore remaining word on stack, 
+          CALLP _exit              ; ignore remaining word on stack,
                                    ; if main was completed by RET
 #  endif
 __exit:
-#endif          
+#endif
 
 ;====================================================================
 ; 6.16  Program end loop

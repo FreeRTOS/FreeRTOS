@@ -159,4 +159,3 @@ trap_entry:
 #endif /* 0 */
 
 #endif
-

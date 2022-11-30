@@ -1,6 +1,6 @@
 /* Interrupt Vectors
    Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
-   Written by Stephane Carrez (stcarrez@nerim.fr)	
+   Written by Stephane Carrez (stcarrez@nerim.fr)
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -45,7 +45,7 @@ Boston, MA 02111-1307, USA.  */
     Install the interrupt handler for an exception.  The handler
     is installed for \b bootstrap mode and also for \b normal operating
     mode.
-    
+
     @param id the interrupt number to be installed
     @param handler the interrupt handler entry point
 */

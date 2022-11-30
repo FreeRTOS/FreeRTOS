@@ -7,13 +7,13 @@
 * The authors hereby grant permission to use, copy, modify, distribute,
 * and license this software and its documentation for any purpose, provided
 * that existing copyright notices are retained in all copies and that this
-* notice and the following disclaimer are included verbatim in any 
+* notice and the following disclaimer are included verbatim in any
 * distributions. No written agreement, license, or royalty fee is required
 * for any of the authorized uses.
 *
 * THIS SOFTWARE IS PROVIDED BY THE CONTRIBUTORS *AS IS* AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
 * IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
 * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
@@ -91,7 +91,7 @@
 #define CHAP_PEER   8
 
 
-                                                                    
+
 /************************/
 /*** LOCAL DATA TYPES ***/
 /************************/
@@ -188,7 +188,7 @@ void link_required(int unit)
 void link_terminated(int unit)
 {
     AUTHDEBUG((LOG_INFO, "link_terminated: %d\n", unit));
-    
+
     if (lcp_phase[unit] == PHASE_DEAD)
         return;
     if (logged_in)
@@ -205,7 +205,7 @@ void link_down(int unit)
 {
     int i;
     struct protent *protp;
-    
+
     AUTHDEBUG((LOG_INFO, "link_down: %d\n", unit));
     if (did_authup) {
         /* XXX Do link down processing. */
@@ -240,7 +240,7 @@ void link_established(int unit)
 #if PAP_SUPPORT > 0 || CHAP_SUPPORT > 0
     lcp_options *ho = &lcp_hisoptions[unit];
 #endif
-    
+
     AUTHDEBUG((LOG_INFO, "link_established: %d\n", unit));
     /*
      * Tell higher-level protocols that LCP is up.
@@ -249,7 +249,7 @@ void link_established(int unit)
         if (protp->protocol != PPP_LCP && protp->enabled_flag
                 && protp->lowerup != NULL)
             (*protp->lowerup)(unit);
-    
+
     if (ppp_settings.auth_required && !(go->neg_chap || go->neg_upap)) {
         /*
          * We wanted the peer to authenticate itself, and it refused:
@@ -262,14 +262,14 @@ void link_established(int unit)
             return;
         }
     }
-    
+
     lcp_phase[unit] = PHASE_AUTHENTICATE;
     auth = 0;
 #if CHAP_SUPPORT > 0
     if (go->neg_chap) {
         ChapAuthPeer(unit, ppp_settings.our_name, go->chap_mdtype);
         auth |= CHAP_PEER;
-    } 
+    }
 #endif
 #if PAP_SUPPORT > 0 && CHAP_SUPPORT > 0
     else
@@ -301,7 +301,7 @@ void link_established(int unit)
     }
 #endif
     auth_pending[unit] = auth;
-    
+
     if (!auth)
         network_phase(unit);
 }
@@ -327,7 +327,7 @@ void auth_peer_fail(int unit, u16_t protocol)
 void auth_peer_success(int unit, u16_t protocol, char *name, int namelen)
 {
     int pbit;
-    
+
     AUTHDEBUG((LOG_INFO, "auth_peer_success: %d proto=%X\n", unit, protocol));
     switch (protocol) {
     case PPP_CHAP:
@@ -341,7 +341,7 @@ void auth_peer_success(int unit, u16_t protocol, char *name, int namelen)
                protocol));
         return;
     }
-    
+
     /*
      * Save the authenticated name of the peer for later.
      */
@@ -349,7 +349,7 @@ void auth_peer_success(int unit, u16_t protocol, char *name, int namelen)
         namelen = sizeof(peer_authname) - 1;
     BCOPY(name, peer_authname, namelen);
     peer_authname[namelen] = 0;
-    
+
     /*
      * If there is no more authentication still to be done,
      * proceed to the network (or callback) phase.
@@ -364,11 +364,11 @@ void auth_peer_success(int unit, u16_t protocol, char *name, int namelen)
 void auth_withpeer_fail(int unit, u16_t protocol)
 {
     int errCode = PPPERR_AUTHFAIL;
-    
+
     AUTHDEBUG((LOG_INFO, "auth_withpeer_fail: %d proto=%X\n", unit, protocol));
     if (passwd_from_file)
         BZERO(ppp_settings.passwd, MAXSECRETLEN);
-    /* 
+    /*
      * XXX Warning: the unit number indicates the interface which is
      * not necessarily the PPP connection.  It works here as long
      * as we are only supporting PPP interfaces.
@@ -388,7 +388,7 @@ void auth_withpeer_fail(int unit, u16_t protocol)
 void auth_withpeer_success(int unit, u16_t protocol)
 {
     int pbit;
-    
+
     AUTHDEBUG((LOG_INFO, "auth_withpeer_success: %d proto=%X\n", unit, protocol));
     switch (protocol) {
     case PPP_CHAP:
@@ -404,7 +404,7 @@ void auth_withpeer_success(int unit, u16_t protocol)
                protocol));
         pbit = 0;
     }
-    
+
     /*
      * If there is no more authentication still being done,
      * proceed to the network (or callback) phase.
@@ -428,7 +428,7 @@ void np_up(int unit, u16_t proto)
          */
         if (ppp_settings.idle_time_limit > 0)
             TIMEOUT(check_idle, NULL, ppp_settings.idle_time_limit);
-        
+
         /*
          * Set a timeout to close the connection once the maximum
          * connect time has expired.
@@ -473,11 +473,11 @@ void auth_reset(int unit)
     lcp_options *ao = &lcp_allowoptions[0];
     ipcp_options *ipwo = &ipcp_wantoptions[0];
     u32_t remote;
-    
+
     AUTHDEBUG((LOG_INFO, "auth_reset: %d\n", unit));
     ao->neg_upap = !ppp_settings.refuse_pap && (ppp_settings.passwd[0] != 0 || get_pap_passwd(unit, NULL, NULL));
     ao->neg_chap = !ppp_settings.refuse_chap && ppp_settings.passwd[0] != 0 /*have_chap_secret(ppp_settings.user, ppp_settings.remote_name, (u32_t)0)*/;
-    
+
     if (go->neg_upap && !have_pap_secret())
         go->neg_upap = 0;
     if (go->neg_chap) {
@@ -518,7 +518,7 @@ int check_passwd(
     char passwd[256], user[256];
     char secret[MAXWORDLEN];
     static u_short attempts = 0;
-    
+
     /*
      * Make copies of apasswd and auser, then null-terminate them.
      */
@@ -530,7 +530,7 @@ int check_passwd(
 
     /* XXX Validate user name and password. */
     ret = UPAP_AUTHACK;     /* XXX Assume all entries OK. */
-        
+
     if (ret == UPAP_AUTHNAK) {
         if (*msg == (char *) 0)
             *msg = "Login incorrect";
@@ -557,10 +557,10 @@ int check_passwd(
         *msglen = strlen(*msg);
         set_allowed_addrs(unit, addrs);
     }
-    
+
     BZERO(passwd, sizeof(passwd));
     BZERO(secret, sizeof(secret));
-    
+
     return ret;
 #endif
 }
@@ -607,7 +607,7 @@ int get_secret(
 #if 1
     int len;
     struct wordlist *addrs;
-    
+
     addrs = NULL;
 
     if(!client || !client[0] || strcmp(client, ppp_settings.user)) {
@@ -621,23 +621,23 @@ int get_secret(
     }
     BCOPY(ppp_settings.passwd, secret, len);
     *secret_len = len;
-    
+
     return 1;
 #else
     int ret = 0, len;
     struct wordlist *addrs;
     char secbuf[MAXWORDLEN];
-    
+
     addrs = NULL;
     secbuf[0] = 0;
 
-    /* XXX Find secret. */  
+    /* XXX Find secret. */
     if (ret < 0)
         return 0;
-    
+
     if (save_addrs)
         set_allowed_addrs(unit, addrs);
-    
+
     len = strlen(secbuf);
     if (len > MAXSECRETLEN) {
         AUTHDEBUG((LOG_ERR, "Secret for %s on %s is too long\n", client, server));
@@ -646,7 +646,7 @@ int get_secret(
     BCOPY(secbuf, secret, len);
     BZERO(secbuf, sizeof(secbuf));
     *secret_len = len;
-    
+
     return 1;
 #endif
 }
@@ -663,19 +663,19 @@ void auth_check_options(void)
     int can_auth;
     ipcp_options *ipwo = &ipcp_wantoptions[0];
     u32_t remote;
-    
+
     /* Default our_name to hostname, and user to our_name */
     if (ppp_settings.our_name[0] == 0 || ppp_settings.usehostname)
         strcpy(ppp_settings.our_name, ppp_settings.hostname);
     if (ppp_settings.user[0] == 0)
         strcpy(ppp_settings.user, ppp_settings.our_name);
-    
+
     /* If authentication is required, ask peer for CHAP or PAP. */
     if (ppp_settings.auth_required && !wo->neg_chap && !wo->neg_upap) {
         wo->neg_chap = 1;
         wo->neg_upap = 1;
     }
-    
+
     /*
      * Check whether we have appropriate secrets to use
      * to authenticate the peer.
@@ -685,7 +685,7 @@ void auth_check_options(void)
         remote = ipwo->accept_remote? 0: ipwo->hisaddr;
         can_auth = have_chap_secret(ppp_settings.remote_name, ppp_settings.our_name, remote);
     }
-    
+
     if (ppp_settings.auth_required && !can_auth) {
         ppp_panic("No auth secret");
     }
@@ -704,7 +704,7 @@ static void network_phase(int unit)
     int i;
     struct protent *protp;
     lcp_options *go = &lcp_gotoptions[unit];
-    
+
     /*
      * If the peer had to authenticate, run the auth-up script now.
      */
@@ -712,7 +712,7 @@ static void network_phase(int unit)
         /* XXX Do setup for peer authentication. */
         did_authup = 1;
     }
-    
+
 #if CBCP_SUPPORT > 0
     /*
      * If we negotiated callback, do it now.
@@ -723,7 +723,7 @@ static void network_phase(int unit)
         return;
     }
 #endif
-    
+
     lcp_phase[unit] = PHASE_NETWORK;
     for (i = 0; (protp = ppp_protocols[i]) != NULL; ++i)
         if (protp->protocol < 0xC000 && protp->enabled_flag
@@ -732,7 +732,7 @@ static void network_phase(int unit)
             if (protp->protocol != PPP_CCP)
                 ++num_np_open;
         }
-    
+
     if (num_np_open == 0)
         /* nothing to do */
         lcp_close(0, "No network protocols running");
@@ -746,7 +746,7 @@ static void check_idle(void *arg)
 {
     struct ppp_idle idle;
     u_short itime;
-    
+
 	(void)arg;
     if (!get_idle_time(0, &idle))
         return;
@@ -878,7 +878,7 @@ static void set_allowed_addrs(int unit, struct wordlist *addrs)
         struct ipcp_options *wo = &ipcp_wantoptions[unit];
         u32_t a;
         struct hostent *hp;
-        
+
         if (wo->hisaddr == 0 && *p != '!' && *p != '-'
                 && strchr(p, '/') == NULL) {
             hp = gethostbyname(p);
@@ -896,14 +896,14 @@ static void set_allowed_addrs(int unit, struct wordlist *addrs)
 
 static int ip_addr_check(u32_t addr, struct wordlist *addrs)
 {
-    
+
     /* don't allow loopback or multicast address */
     if (bad_ip_adrs(addr))
         return 0;
-    
+
     if (addrs == NULL)
         return !ppp_settings.auth_required;      /* no addresses authorized */
-    
+
     /* XXX All other addresses allowed. */
     return 1;
 }
@@ -915,7 +915,7 @@ static int ip_addr_check(u32_t addr, struct wordlist *addrs)
 static void free_wordlist(struct wordlist *wp)
 {
     struct wordlist *next;
-    
+
     while (wp != NULL) {
         next = wp->next;
         free(wp);

@@ -59,4 +59,3 @@ extern void SUPC_SelectExtCrystal32K(void);
 #endif
 
 #endif /* #ifndef _PMC_ */
-

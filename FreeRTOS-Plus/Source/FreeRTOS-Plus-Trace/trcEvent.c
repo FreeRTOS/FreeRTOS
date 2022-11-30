@@ -219,13 +219,13 @@ traceResult xTraceEventGetSize(void *pvAddress, uint32_t* puiSize)
 {
 	/* This should never fail */
 	TRC_ASSERT(pvAddress != 0);
-	
+
 	/* This should never fail */
 	TRC_ASSERT(puiSize != 0);
 
 	/* This should never fail */
 	TRC_ASSERT((sizeof(TraceBaseEvent_t) + (TRC_EVENT_GET_PARAM_COUNT(((TraceBaseEvent_t*)pvAddress)->EventID)) * sizeof(uint32_t)) <= TRC_MAX_BLOB_SIZE);
-	
+
 	return TRC_EVENT_GET_SIZE(pvAddress, puiSize);
 }
 

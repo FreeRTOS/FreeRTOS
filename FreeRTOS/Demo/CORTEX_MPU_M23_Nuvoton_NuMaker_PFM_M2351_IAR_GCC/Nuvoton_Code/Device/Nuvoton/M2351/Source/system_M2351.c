@@ -193,6 +193,3 @@ void __TZ_set_PRIMASK_NS(uint32_t priMask)
 
 
 #endif
-
-
-

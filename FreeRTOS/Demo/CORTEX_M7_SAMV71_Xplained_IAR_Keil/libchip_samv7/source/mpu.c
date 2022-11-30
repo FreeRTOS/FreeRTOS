@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -29,7 +29,7 @@
 
 /** \file */
 
-/** 
+/**
  * \addtogroup mmu MMU Initialization
  *
  * \section Usage
@@ -38,7 +38,7 @@
  * translation table entries. TLBs avoid the requirement for every memory access to perform a translation table
  * lookup. The ARM architecture does not specify the exact form of the TLB structures for any design. In a
  * similar way to the requirements for caches, the architecture only defines certain principles for TLBs:
- * 
+ *
  * The MMU supports memory accesses based on memory sections or pages:
  * Supersections Consist of 16MB blocks of memory. Support for Supersections is optional.
  * -# Sections Consist of 1MB blocks of memory.
@@ -96,7 +96,7 @@ extern void MPU_DisableRegion( void )
  * \brief Setup a memory region.
  *
  * \param dwRegionBaseAddr  Memory region base address.
- * \param dwRegionAttr  Memory region attributes.  
+ * \param dwRegionAttr  Memory region attributes.
  */
 void MPU_SetRegion( uint32_t dwRegionBaseAddr, uint32_t dwRegionAttr )
 {
@@ -160,7 +160,7 @@ void MPU_UpdateRegions( uint32_t dwRegionNum, uint32_t dwRegionBaseAddr,
     /* Update region attribute */
     MPU_SetRegion( dwRegionBaseAddr, dwRegionAttr);
 
-    /* Clean up data and instruction buffer to make the new region taking 
+    /* Clean up data and instruction buffer to make the new region taking
        effect at once */
     __DSB();
     __ISB();
@@ -171,4 +171,3 @@ void MPU_UpdateRegions( uint32_t dwRegionNum, uint32_t dwRegionBaseAddr,
     /* Reset to thread mode */
     __set_CONTROL(USER_MODE);
 }
-

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -11,21 +11,21 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission. 
+ *    derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
- * 
+ *
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
@@ -79,7 +79,7 @@ recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p,
   (void)pcb;
 
   conn = arg;
-  
+
   if (conn == NULL) {
     pbuf_free(p);
     return;
@@ -122,7 +122,7 @@ recv_tcp(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
   }
 
   if (conn->recvmbox != SYS_MBOX_NULL) {
-        
+
     conn->err = err;
     if (p != NULL) {
         len = p->tot_len;
@@ -134,7 +134,7 @@ recv_tcp(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
     if (conn->callback)
         (*conn->callback)(conn, NETCONN_EVT_RCVPLUS, len);
     sys_mbox_post(conn->recvmbox, p);
-  }  
+  }
   return ERR_OK;
 }
 
@@ -170,7 +170,7 @@ sent_tcp(void *arg, struct tcp_pcb *pcb, u16_t len)
   if (conn && conn->callback)
       if (tcp_sndbuf(conn->pcb.tcp) > TCP_SNDLOWAT)
           (*conn->callback)(conn, NETCONN_EVT_SENDPLUS, len);
-  
+
   return ERR_OK;
 }
 
@@ -183,7 +183,7 @@ err_tcp(void *arg, err_t err)
 
   conn->pcb.tcp = NULL;
 
-  
+
   conn->err = err;
   if (conn->recvmbox != SYS_MBOX_NULL) {
     /* Register event with callback */
@@ -209,7 +209,7 @@ static void
 setup_tcp(struct netconn *conn)
 {
   struct tcp_pcb *pcb;
-  
+
   pcb = conn->pcb.tcp;
   tcp_arg(pcb, conn);
   tcp_recv(pcb, recv_tcp);
@@ -224,7 +224,7 @@ accept_function(void *arg, struct tcp_pcb *newpcb, err_t err)
   sys_mbox_t mbox;
   struct netconn *newconn;
   struct netconn *conn;
-  
+
 #if API_MSG_DEBUG
 #if TCP_DEBUG
   tcp_debug_print_state(newpcb->state);
@@ -268,7 +268,7 @@ accept_function(void *arg, struct tcp_pcb *newpcb, err_t err)
     newconn->callback = conn->callback;
     newconn->socket = -1;
   }
-  
+
   sys_mbox_post(mbox, newconn);
   return ERR_OK;
 }
@@ -279,7 +279,7 @@ do_newconn(struct api_msg_msg *msg)
 {
    if(msg->conn->pcb.tcp != NULL) {
    /* This "new" connection already has a PCB allocated. */
-   /* Is this an error condition? Should it be deleted? 
+   /* Is this an error condition? Should it be deleted?
       We currently just are happy and return. */
      sys_mbox_post(msg->conn->mbox, NULL);
      return;
@@ -334,8 +334,8 @@ do_newconn(struct api_msg_msg *msg)
       break;
 #endif
    }
-   
-  
+
+
   sys_mbox_post(msg->conn->mbox, NULL);
 }
 
@@ -360,16 +360,16 @@ do_delconn(struct api_msg_msg *msg)
       udp_remove(msg->conn->pcb.udp);
       break;
 #endif /* LWIP_UDP */
-#if LWIP_TCP      
+#if LWIP_TCP
     case NETCONN_TCP:
       if (msg->conn->pcb.tcp->state == LISTEN) {
   tcp_arg(msg->conn->pcb.tcp, NULL);
-  tcp_accept(msg->conn->pcb.tcp, NULL);  
+  tcp_accept(msg->conn->pcb.tcp, NULL);
   tcp_close(msg->conn->pcb.tcp);
       } else {
   tcp_arg(msg->conn->pcb.tcp, NULL);
   tcp_sent(msg->conn->pcb.tcp, NULL);
-  tcp_recv(msg->conn->pcb.tcp, NULL);  
+  tcp_recv(msg->conn->pcb.tcp, NULL);
   tcp_poll(msg->conn->pcb.tcp, NULL, 0);
   tcp_err(msg->conn->pcb.tcp, NULL);
   if (tcp_close(msg->conn->pcb.tcp) != ERR_OK) {
@@ -377,7 +377,7 @@ do_delconn(struct api_msg_msg *msg)
   }
       }
 #endif
-    default:  
+    default:
     break;
     }
   }
@@ -387,7 +387,7 @@ do_delconn(struct api_msg_msg *msg)
       (*msg->conn->callback)(msg->conn, NETCONN_EVT_RCVPLUS, 0);
       (*msg->conn->callback)(msg->conn, NETCONN_EVT_SENDPLUS, 0);
   }
-  
+
   if (msg->conn->mbox != SYS_MBOX_NULL) {
     sys_mbox_post(msg->conn->mbox, NULL);
   }
@@ -420,12 +420,12 @@ do_bind(struct api_msg_msg *msg)
       udp_recv(msg->conn->pcb.udp, recv_udp, msg->conn);
       break;
 #endif /* LWIP_UDP */
-#if LWIP_TCP      
+#if LWIP_TCP
     case NETCONN_TCP:
       msg->conn->pcb.tcp = tcp_new();
       setup_tcp(msg->conn);
 #endif /* LWIP_TCP */
-    default:  
+    default:
     break;
     }
   }
@@ -468,15 +468,15 @@ do_connected(void *arg, struct tcp_pcb *pcb, err_t err)
   if (conn == NULL) {
     return ERR_VAL;
   }
-  
+
   conn->err = err;
   if (conn->type == NETCONN_TCP && err == ERR_OK) {
     setup_tcp(conn);
-  }    
+  }
   sys_mbox_post(conn->mbox, NULL);
   return ERR_OK;
 }
-#endif  
+#endif
 
 static void
 do_connect(struct api_msg_msg *msg)
@@ -520,9 +520,9 @@ do_connect(struct api_msg_msg *msg)
       udp_recv(msg->conn->pcb.udp, recv_udp, msg->conn);
       break;
 #endif /* LWIP_UDP */
-#if LWIP_TCP      
+#if LWIP_TCP
     case NETCONN_TCP:
-      msg->conn->pcb.tcp = tcp_new();      
+      msg->conn->pcb.tcp = tcp_new();
       if (msg->conn->pcb.tcp == NULL) {
   msg->conn->err = ERR_MEM;
   sys_mbox_post(msg->conn->mbox, NULL);
@@ -549,8 +549,8 @@ do_connect(struct api_msg_msg *msg)
     udp_connect(msg->conn->pcb.udp, msg->msg.bc.ipaddr, msg->msg.bc.port);
     sys_mbox_post(msg->conn->mbox, NULL);
     break;
-#endif 
-#if LWIP_TCP      
+#endif
+#if LWIP_TCP
   case NETCONN_TCP:
     /*    tcp_arg(msg->conn->pcb.tcp, msg->conn);*/
     setup_tcp(msg->conn);
@@ -582,7 +582,7 @@ do_disconnect(struct api_msg_msg *msg)
   case NETCONN_UDP:
     udp_disconnect(msg->conn->pcb.udp);
     break;
-#endif 
+#endif
   case NETCONN_TCP:
     break;
   }
@@ -609,7 +609,7 @@ do_listen(struct api_msg_msg *msg)
       LWIP_DEBUGF(API_MSG_DEBUG, ("api_msg: listen UDP: cannot listen for UDP.\n"));
       break;
 #endif /* LWIP_UDP */
-#if LWIP_TCP      
+#if LWIP_TCP
     case NETCONN_TCP:
       msg->conn->pcb.tcp = tcp_listen(msg->conn->pcb.tcp);
       if (msg->conn->pcb.tcp == NULL) {
@@ -648,7 +648,7 @@ do_accept(struct api_msg_msg *msg)
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
       /* FALLTHROUGH */
-    case NETCONN_UDP:    
+    case NETCONN_UDP:
       LWIP_DEBUGF(API_MSG_DEBUG, ("api_msg: accept UDP: cannot accept for UDP.\n"));
       break;
 #endif /* LWIP_UDP */
@@ -693,16 +693,16 @@ do_recv(struct api_msg_msg *msg)
       tcp_recved(msg->conn->pcb.tcp, msg->msg.len);
     }
   }
-#endif  
+#endif
   sys_mbox_post(msg->conn->mbox, NULL);
 }
 
 static void
 do_write(struct api_msg_msg *msg)
 {
-#if LWIP_TCP  
+#if LWIP_TCP
   err_t err;
-#endif  
+#endif
   if (msg->conn->pcb.tcp != NULL) {
     switch (msg->conn->type) {
 #if LWIP_RAW
@@ -710,7 +710,7 @@ do_write(struct api_msg_msg *msg)
       msg->conn->err = ERR_VAL;
       break;
 #endif
-#if LWIP_UDP 
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -719,8 +719,8 @@ do_write(struct api_msg_msg *msg)
       msg->conn->err = ERR_VAL;
       break;
 #endif /* LWIP_UDP */
-#if LWIP_TCP 
-    case NETCONN_TCP:      
+#if LWIP_TCP
+    case NETCONN_TCP:
       err = tcp_write(msg->conn->pcb.tcp, msg->msg.w.dataptr,
                       msg->msg.w.len, msg->msg.w.copy);
       /* This is the Nagle algorithm: inhibit the sending of new TCP
@@ -771,9 +771,9 @@ do_close(struct api_msg_msg *msg)
       if (msg->conn->pcb.tcp->state == LISTEN) {
   err = tcp_close(msg->conn->pcb.tcp);
       }
-      msg->conn->err = err;      
+      msg->conn->err = err;
 #endif
-    default:      
+    default:
       break;
     }
   }
@@ -796,7 +796,7 @@ static api_msg_decode decode[API_MSG_MAX] = {
   };
 void
 api_msg_input(struct api_msg *msg)
-{  
+{
   decode[msg->type](&(msg->msg));
 }
 
@@ -805,6 +805,3 @@ api_msg_post(struct api_msg *msg)
 {
   tcpip_apimsg(msg);
 }
-
-
-

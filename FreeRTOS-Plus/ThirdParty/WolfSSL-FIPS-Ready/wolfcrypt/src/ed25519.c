@@ -811,4 +811,3 @@ int wc_ed25519_sig_size(ed25519_key* key)
 }
 
 #endif /* HAVE_ED25519 */
-

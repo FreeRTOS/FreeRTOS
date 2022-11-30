@@ -117,4 +117,3 @@ void TC1_Handler( void )
 	and independent timer. */
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-

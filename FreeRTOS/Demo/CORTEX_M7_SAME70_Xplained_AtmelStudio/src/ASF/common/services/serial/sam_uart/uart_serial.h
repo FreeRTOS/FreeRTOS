@@ -56,7 +56,7 @@
 #endif
 #include "usart.h"
 
-/** 
+/**
  * \name Serial Management Configuration
  */
 //! @{
@@ -87,7 +87,7 @@ typedef usart_rs232_options_t usart_serial_options_t;
 
 typedef Usart *usart_if;
 
-/** 
+/**
  * \brief Initializes the Usart in master mode.
  *
  * \param p_usart  Base address of the USART instance.
@@ -110,7 +110,7 @@ static inline void usart_serial_init(usart_if p_usart,
 	usart_settings.parity_type = opt->paritytype;
 	usart_settings.stop_bits= opt->stopbits;
 	usart_settings.channel_mode= US_MR_CHMODE_NORMAL;
-	
+
 #ifdef UART
 	if (UART == (Uart*)p_usart) {
 		sysclk_enable_peripheral_clock(ID_UART);

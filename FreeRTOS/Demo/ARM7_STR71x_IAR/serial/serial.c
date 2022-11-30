@@ -228,9 +228,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* End the interrupt in the EIC. */
 	portCLEAR_EIC();
 }
-
-
-
-
-
-

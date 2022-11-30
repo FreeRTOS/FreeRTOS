@@ -18,4 +18,3 @@ Jean-Christophe Dubois (jcdubois)
 Created a user-space Linux port of Reliance Edge, ported the open-source host
 tools (including the formatter and image builder) to Linux, and created a FUSE
 (File System in User Space) implementation for Reliance Edge.
-

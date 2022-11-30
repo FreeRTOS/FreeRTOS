@@ -79,6 +79,3 @@ unsigned portBASE_TYPE uxLEDBit;
 	/* Use of the PORTAINV register removes the need to use a critical section. */
 	PORTAINV = uxLEDBit;
 }
-
-
-

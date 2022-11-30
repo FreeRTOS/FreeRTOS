@@ -1,10 +1,10 @@
 		RSEG ICODE:CODE
 
 		EXTERN vUARTRxISRHandler
-		EXTERN vUARTTxISRHandler		
-		
+		EXTERN vUARTTxISRHandler
+
 		PUBLIC vUARTRxISRWrapper
-		PUBLIC vUARTTxISRWrapper		
+		PUBLIC vUARTTxISRWrapper
 
 ; Wrappers for the serial port interrupt service routines.  These can cause a
 ; context switch so requires an assembly wrapper.
@@ -44,4 +44,3 @@ vUARTTxISRWrapper:
         JR vUARTTxISRWrapper
 
 	END
-

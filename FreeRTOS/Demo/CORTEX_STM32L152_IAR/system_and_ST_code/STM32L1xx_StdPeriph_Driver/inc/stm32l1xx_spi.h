@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    07/02/2010
-  * @brief   This file contains all the functions prototypes for the SPI 
+  * @brief   This file contains all the functions prototypes for the SPI
   *          firmware library.
   ******************************************************************************
   * @copy
@@ -17,7 +17,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32L1xx_SPI_H
@@ -36,14 +36,14 @@
 
 /** @addtogroup SPI
   * @{
-  */ 
+  */
 
 /** @defgroup SPI_Exported_Types
   * @{
   */
 
-/** 
-  * @brief  SPI Init structure definition  
+/**
+  * @brief  SPI Init structure definition
   */
 
 typedef struct
@@ -66,7 +66,7 @@ typedef struct
   uint16_t SPI_NSS;                 /*!< Specifies whether the NSS signal is managed by
                                          hardware (NSS pin) or by software using the SSI bit.
                                          This parameter can be any combination of @ref SPI_Slave_Select_management */
- 
+
   uint16_t SPI_BaudRatePrescaler;   /*!< Specifies the Baud Rate prescaler value which will be
                                          used to configure the transmit and receive SCK clock.
                                          This parameter can be any combination of @ref SPI_BaudRate_Prescaler.
@@ -90,10 +90,10 @@ typedef struct
 #define IS_SPI_ALL_PERIPH(PERIPH) (((PERIPH) == SPI1) || \
                                    ((PERIPH) == SPI2))
 
-/** @defgroup SPI_data_direction 
+/** @defgroup SPI_data_direction
   * @{
   */
-  
+
 #define SPI_Direction_2Lines_FullDuplex ((uint16_t)0x0000)
 #define SPI_Direction_2Lines_RxOnly     ((uint16_t)0x0400)
 #define SPI_Direction_1Line_Rx          ((uint16_t)0x8000)
@@ -106,7 +106,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_mode 
+/** @defgroup SPI_mode
   * @{
   */
 
@@ -118,7 +118,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_data_size 
+/** @defgroup SPI_data_size
   * @{
   */
 
@@ -128,9 +128,9 @@ typedef struct
                                    ((DATASIZE) == SPI_DataSize_8b))
 /**
   * @}
-  */ 
+  */
 
-/** @defgroup SPI_Clock_Polarity 
+/** @defgroup SPI_Clock_Polarity
   * @{
   */
 
@@ -142,7 +142,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_Clock_Phase 
+/** @defgroup SPI_Clock_Phase
   * @{
   */
 
@@ -154,7 +154,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_Slave_Select_management 
+/** @defgroup SPI_Slave_Select_management
   * @{
   */
 
@@ -164,9 +164,9 @@ typedef struct
                          ((NSS) == SPI_NSS_Hard))
 /**
   * @}
-  */ 
+  */
 
-/** @defgroup SPI_BaudRate_Prescaler 
+/** @defgroup SPI_BaudRate_Prescaler
   * @{
   */
 
@@ -188,9 +188,9 @@ typedef struct
                                               ((PRESCALER) == SPI_BaudRatePrescaler_256))
 /**
   * @}
-  */ 
+  */
 
-/** @defgroup SPI_MSB_LSB_transmission 
+/** @defgroup SPI_MSB_LSB_transmission
   * @{
   */
 
@@ -202,7 +202,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_DMA_transfer_requests 
+/** @defgroup SPI_DMA_transfer_requests
   * @{
   */
 
@@ -213,7 +213,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_NSS_internal_software_mangement 
+/** @defgroup SPI_NSS_internal_software_mangement
   * @{
   */
 
@@ -225,7 +225,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_CRC_Transmit_Receive 
+/** @defgroup SPI_CRC_Transmit_Receive
   * @{
   */
 
@@ -236,7 +236,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_direction_transmit_receive 
+/** @defgroup SPI_direction_transmit_receive
   * @{
   */
 
@@ -248,7 +248,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_interrupts_definition 
+/** @defgroup SPI_interrupts_definition
   * @{
   */
 
@@ -269,7 +269,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_flags_definition 
+/** @defgroup SPI_flags_definition
   * @{
   */
 
@@ -287,7 +287,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_CRC_polynomial 
+/** @defgroup SPI_CRC_polynomial
   * @{
   */
 
@@ -296,7 +296,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SPI_Legacy 
+/** @defgroup SPI_Legacy
   * @{
   */
 
@@ -322,7 +322,7 @@ typedef struct
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

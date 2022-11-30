@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -225,4 +225,3 @@ void TDES_SetVector(const unsigned int *pVector)
     AT91C_BASE_TDES->TDES_IVxR[0] = pVector[0];
     AT91C_BASE_TDES->TDES_IVxR[1] = pVector[1];
 }
-

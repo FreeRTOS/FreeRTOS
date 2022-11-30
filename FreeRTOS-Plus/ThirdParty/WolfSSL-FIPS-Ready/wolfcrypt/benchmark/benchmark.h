@@ -108,4 +108,3 @@ void bench_stats_print(void);
 
 
 #endif /* WOLFCRYPT_BENCHMARK_H */
-

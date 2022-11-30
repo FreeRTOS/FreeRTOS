@@ -217,4 +217,3 @@ girq25_b27(void)
 /* end girq25.c */
 /**   @}
  */
-

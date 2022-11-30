@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the COMP firmware 
+  * @brief   This file contains all the functions prototypes for the COMP firmware
   *          library.
   ******************************************************************************
   * @attention
@@ -44,10 +44,10 @@
 
 /* Exported types ------------------------------------------------------------*/
 
-/** 
-  * @brief  COMP Init structure definition  
+/**
+  * @brief  COMP Init structure definition
   */
-  
+
 typedef struct
 {
 
@@ -70,10 +70,10 @@ typedef struct
 }COMP_InitTypeDef;
 
 /* Exported constants --------------------------------------------------------*/
-   
+
 /** @defgroup COMP_Exported_Constants
   * @{
-  */ 
+  */
 
 /** @defgroup COMP_Selection
   * @{
@@ -84,10 +84,10 @@ typedef struct
 
 #define IS_COMP_ALL_PERIPH(PERIPH) (((PERIPH) == COMP_Selection_COMP1) || \
                                     ((PERIPH) == COMP_Selection_COMP2))
- 
+
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup COMP_InvertingInput
   * @{
@@ -109,8 +109,8 @@ typedef struct
                                         ((INPUT) == COMP_InvertingInput_IO))
 /**
   * @}
-  */ 
-  
+  */
+
 /** @defgroup COMP_Output
   * @{
   */
@@ -135,7 +135,7 @@ typedef struct
                                 ((OUTPUT) == COMP_Output_TIM3OCREFCLR))
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup COMP_OutputPolarity
   * @{
@@ -148,7 +148,7 @@ typedef struct
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup COMP_Hysteresis
   * @{
@@ -188,7 +188,7 @@ typedef struct
 
 /** @defgroup COMP_OutputLevel
   * @{
-  */ 
+  */
 /* When output polarity is not inverted, comparator output is high when
    the non-inverting input is at a higher voltage than the inverting input */
 #define COMP_OutputLevel_High                   COMP_CSR_COMP1OUT
@@ -198,11 +198,11 @@ typedef struct
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
@@ -231,7 +231,7 @@ void COMP_LockConfig(uint32_t COMP_Selection);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

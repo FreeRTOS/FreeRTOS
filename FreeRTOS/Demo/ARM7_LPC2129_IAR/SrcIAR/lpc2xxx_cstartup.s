@@ -59,7 +59,7 @@ __vector_0x14
 
 undef_handler
     b         undef_handler
-	
+
 prefetch_handler
     b         prefetch_handler
 
@@ -180,7 +180,7 @@ SYS_MODE  DEFINE  0x1F    ; System mode
         BIC     r0, r0, #MODE_BITS      ; Clear the mode bits
         ORR     r0, r0, #SVC_MODE       ; Set SVC mode bits
         MSR     cpsr_c, r0              ; Change the mode
-		
+
 ; Continue to ?main for C-level initialization.
 
         LDR     r0, =?main

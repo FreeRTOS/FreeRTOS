@@ -252,5 +252,3 @@ __RAM_FUNC HAL_FLASHEx_OB_DBankConfig(uint32_t DBankConfig)
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
-

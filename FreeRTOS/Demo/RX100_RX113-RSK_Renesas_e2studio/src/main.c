@@ -210,6 +210,3 @@ const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500
     /* Reneable register protection. */
     SYSTEM.PRCR.WORD = ulDisableRegisterWrite;
 }
-
-
-

@@ -38,7 +38,7 @@
   #define WC_RSA_PSS
   #define HAVE_HKDF
 
-  
+
   #define HAVE_AESGCM
   #define WOLFSSL_AES_128
   #define HAVE_AES_CBC

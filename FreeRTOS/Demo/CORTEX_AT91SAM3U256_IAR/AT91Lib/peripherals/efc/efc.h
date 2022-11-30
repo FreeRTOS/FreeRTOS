@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -37,11 +37,11 @@
 ///
 /// -# Initialize system master clock of the EFC with EFC_SetMasterClock().
 /// -# Enable/disable interrupt sources using EFC_EnableIt() and EFC_DisableIt().
-/// -# Enables or disable the "Erase before programming" feature using 
+/// -# Enables or disable the "Erase before programming" feature using
 ///    EFC_SetEraseBeforeProgramming().
-/// -# Translates the given address into which EFC, page and offset values for 
+/// -# Translates the given address into which EFC, page and offset values for
 ///    difference density %flash memory using EFC_TranslateAddress().
-/// -# Computes the address of a %flash access given the EFC, page and offset 
+/// -# Computes the address of a %flash access given the EFC, page and offset
 ///    for difference density %flash memory using EFC_ComputeAddress().
 /// -# Start the executing command with EFC_StartCommand()
 /// -# Retrieve the current status of the EFC using EFC_GetStatus().
@@ -103,8 +103,8 @@ typedef struct _AT91S_EFC {
     AT91_REG EFC_FSR;
 
 } AT91S_EFC, *AT91PS_EFC;
-	#define AT91C_BASE_EFC       (AT91_CAST(AT91PS_EFC)	0xFFFFFF60) 
-#endif	
+	#define AT91C_BASE_EFC       (AT91_CAST(AT91PS_EFC)	0xFFFFFF60)
+#endif
 
 //------------------------------------------------------------------------------
 //         Functions
@@ -144,4 +144,3 @@ extern unsigned int EFC_GetStatus(AT91S_EFC *pEfc);
 
 #endif //#ifdef BOARD_FLASH_EFC
 #endif //#ifndef EFC_H
-

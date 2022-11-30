@@ -48,27 +48,27 @@
 #endif
 
 #if (configUSE_TICKLESS_IDLE != 0 && (TRC_HWTC_TYPE == TRC_OS_TIMER_INCR || TRC_HWTC_TYPE == TRC_OS_TIMER_DECR))
-/* 	
+/*
 	The below error message is to alert you on the following issue:
-	
-	The hardware port selected in trcConfig.h uses the operating system timer for the 
+
+	The hardware port selected in trcConfig.h uses the operating system timer for the
 	timestamping, i.e., the periodic interrupt timer that drives the OS tick interrupt.
-			
+
 	When using "tickless idle" mode, the recorder needs an independent time source in
 	order to correctly record the durations of the idle times. Otherwise, the trace may appear
 	to have a different length than in reality, and the reported CPU load is also affected.
-	
+
 	You may override this warning by defining the TRC_CFG_ACKNOWLEDGE_TICKLESS_IDLE_WARNING
 	macro in your trcConfig.h file. But then the time scale may be incorrect during
 	tickless idle periods.
-	
+
 	To get this correct, override the default timestamping by setting TRC_CFG_HARDWARE_PORT
 	in trcConfig.h to TRC_HARDWARE_PORT_APPLICATION_DEFINED and define the HWTC macros
 	accordingly, using a free running counter or an independent periodic interrupt timer.
 	See trcHardwarePort.h for details.
-			
-	For ARM Cortex-M3, M4 and M7 MCUs this is not an issue, since the recorder uses the 
-	DWT cycle counter for timestamping in these cases.		
+
+	For ARM Cortex-M3, M4 and M7 MCUs this is not an issue, since the recorder uses the
+	DWT cycle counter for timestamping in these cases.
 */
 
 #ifndef TRC_CFG_ACKNOWLEDGE_TICKLESS_IDLE_WARNING
@@ -76,7 +76,7 @@
 #endif
 
 #endif
-	
+
 #include <task.h>
 #include <queue.h>
 
@@ -171,17 +171,17 @@ static TraceKernelPortData_t* pxKernelPortData;
 traceResult xTraceKernelPortInitialize(TraceKernelPortDataBuffer_t* pxBuffer)
 {
 	TRC_ASSERT_EQUAL_SIZE(TraceKernelPortDataBuffer_t, TraceKernelPortData_t);
-	
+
 	if (pxBuffer == 0)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	pxKernelPortData = (TraceKernelPortData_t*)pxBuffer;
 
 	pxKernelPortData->xSystemHeapHandle = 0;
 	pxKernelPortData->xTzCtrlHandle = 0;
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -189,7 +189,7 @@ traceResult xTraceKernelPortEnable(void)
 {
 	HeapStats_t xHeapStats;
 	void* pvAlloc;
-	
+
 	if (pxKernelPortData->xSystemHeapHandle == 0)
 	{
 		/* Some magic to make sure the heap has been initialized! */
@@ -202,7 +202,7 @@ traceResult xTraceKernelPortEnable(void)
 		vPortGetHeapStats(&xHeapStats);
 		xTraceHeapCreate("System Heap", configTOTAL_HEAP_SIZE - xHeapStats.xAvailableHeapSpaceInBytes, configTOTAL_HEAP_SIZE - xHeapStats.xMinimumEverFreeBytesRemaining, configTOTAL_HEAP_SIZE, &pxKernelPortData->xSystemHeapHandle);
 	}
-	
+
 	if (pxKernelPortData->xTzCtrlHandle == 0)
 	{
 		/* Creates the TzCtrl task - receives trace commands (start, stop, ...) */
@@ -219,7 +219,7 @@ traceResult xTraceKernelPortEnable(void)
 			return TRC_FAIL;
 		}
 	}
-	
+
 	return TRC_SUCCESS;
 }
 

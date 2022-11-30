@@ -4689,4 +4689,3 @@ static uint8_t ddr_manual_addcmd_refclk_offset(DDR_TYPE ddr_type, uint8_t * refc
 
 
 #endif /* DDR_SUPPORT */
-

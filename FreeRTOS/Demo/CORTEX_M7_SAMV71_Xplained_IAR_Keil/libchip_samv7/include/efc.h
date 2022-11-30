@@ -32,7 +32,7 @@
  *
  * \section Purpose
  *
- * Interface for configuration the Enhanced Embedded Flash Controller (EEFC) 
+ * Interface for configuration the Enhanced Embedded Flash Controller (EEFC)
  * peripheral.
  *
  * \section Usage
@@ -105,13 +105,13 @@ extern void EFC_DisableFrdyIt( Efc* efc ) ;
 
 extern void EFC_SetWaitState( Efc* efc, uint8_t cycles ) ;
 
-extern void EFC_TranslateAddress( Efc** pEfc, uint32_t dwAddress, 
+extern void EFC_TranslateAddress( Efc** pEfc, uint32_t dwAddress,
 		uint16_t *pwPage, uint16_t *pwOffset ) ;
 
-extern void EFC_ComputeAddress( Efc* efc, uint16_t wPage, uint16_t wOffset, 
+extern void EFC_ComputeAddress( Efc* efc, uint16_t wPage, uint16_t wOffset,
 		uint32_t *pdwAddress ) ;
 
-extern uint32_t EFC_PerformCommand( Efc* efc, uint32_t dwCommand, 
+extern uint32_t EFC_PerformCommand( Efc* efc, uint32_t dwCommand,
 		uint32_t dwArgument, uint32_t dwUseIAP ) ;
 
 extern uint32_t EFC_GetStatus( Efc* efc ) ;
@@ -125,4 +125,3 @@ extern void EFC_SetFlashAccessMode(Efc* efc, uint32_t dwMode) ;
 #endif
 
 #endif /* #ifndef _EEFC_ */
-

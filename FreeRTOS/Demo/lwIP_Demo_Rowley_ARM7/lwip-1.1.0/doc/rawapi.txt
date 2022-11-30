@@ -53,7 +53,7 @@ The function for setting the application connection state is:
   connection control block, and the "arg" argument is the argument
   that will be passed to the callbacks.
 
-  
+
 --- TCP connection setup
 
 The functions used for setting up connections is similar to that of
@@ -101,14 +101,14 @@ incoming connections or be explicitly connected to another host.
 
   Specified the callback function that should be called when a new
   connection arrives on a listening connection.
-      
+
 - err_t tcp_connect(struct tcp_pcb *pcb, struct ip_addr *ipaddr,
                     u16_t port, err_t (* connected)(void *arg,
                                                     struct tcp_pcb *tpcb,
                                                     err_t err));
 
   Sets up the pcb to connect to the remote host and sends the
-  initial SYN segment which opens the connection. 
+  initial SYN segment which opens the connection.
 
   The tcp_connect() function returns immediately; it does not wait for
   the connection to be properly setup. Instead, it will call the
@@ -122,7 +122,7 @@ incoming connections or be explicitly connected to another host.
   available for enqueueing the SYN segment. If the SYN indeed was
   enqueued successfully, the tcp_connect() function returns ERR_OK.
 
-  
+
 --- Sending TCP data
 
 TCP data is sent by enqueueing the data with a call to
@@ -160,7 +160,7 @@ callback function.
   host. The len argument passed to the callback function gives the
   amount bytes that was acknowledged by the last acknowledgment.
 
-  
+
 --- Receiving TCP data
 
 TCP data reception is callback based - an application specified
@@ -181,7 +181,7 @@ window.
 
   Must be called when the application has received the data. The len
   argument indicates the length of the received data.
-    
+
 
 --- Application polling
 
@@ -214,7 +214,7 @@ again when the connection has been idle for a while.
   callback or the polling functionality. If the close succeeds, the
   function returns ERR_OK.
 
-  The pcb is deallocated by the TCP code after a call to tcp_close(). 
+  The pcb is deallocated by the TCP code after a call to tcp_close().
 
 - void tcp_abort(struct tcp_pcb *pcb)
 
@@ -241,7 +241,7 @@ to be called before any other TCP function is called. When the system
 is running, the two timer functions tcp_fasttmr() and tcp_slowtmr()
 must be called with regular intervals. The tcp_fasttmr() should be
 called every TCP_FAST_INTERVAL milliseconds (defined in tcp.h) and
-tcp_slowtmr() should be called every TCP_SLOW_INTERVAL milliseconds. 
+tcp_slowtmr() should be called every TCP_SLOW_INTERVAL milliseconds.
 
 
 --- UDP interface
@@ -257,8 +257,8 @@ level of complexity of UDP, the interface is significantly simpler.
 
 - void udp_remove(struct udp_pcb *pcb)
 
-  Removes and deallocates the pcb.  
-  
+  Removes and deallocates the pcb.
+
 - err_t udp_bind(struct udp_pcb *pcb, struct ip_addr *ipaddr,
                  u16_t port)
 

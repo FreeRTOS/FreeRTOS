@@ -25,26 +25,26 @@
         board on the RK043FN48H-CT672B 480x272 LCD screen with capacitive touch screen.
       - The FT5336 component driver must be included in project files according to
         the touch screen driver present on this board.
-   
+
    2. Driver description:
    ---------------------
      + Initialization steps:
-        o Initialize the TS module using the BSP_TS_Init() function. This 
+        o Initialize the TS module using the BSP_TS_Init() function. This
           function includes the MSP layer hardware resources initialization and the
           communication layer configuration to start the TS use. The LCD size properties
           (x and y) are passed as parameters.
         o If TS interrupt mode is desired, you must configure the TS interrupt mode
           by calling the function BSP_TS_ITConfig(). The TS interrupt mode is generated
-          as an external interrupt whenever a touch is detected. 
+          as an external interrupt whenever a touch is detected.
           The interrupt mode internally uses the IO functionalities driver driven by
           the IO expander, to configure the IT line.
-     
+
      + Touch screen use
-        o The touch screen state is captured whenever the function BSP_TS_GetState() is 
+        o The touch screen state is captured whenever the function BSP_TS_GetState() is
           used. This function returns information about the last LCD touch occurred
           in the TS_StateTypeDef structure.
         o If TS interrupt mode is used, the function BSP_TS_ITGetStatus() is needed to get
-          the interrupt status. To clear the IT pending bits, you should call the 
+          the interrupt status. To clear the IT pending bits, you should call the
           function BSP_TS_ITClear().
         o The IT is handled using the corresponding external interrupt IRQ handler,
           the user IT callback treatment is implemented on the same external interrupt
@@ -66,18 +66,18 @@ EndDependencies */
 
 /** @addtogroup STM32H745I_DISCOVERY
   * @{
-  */ 
-  
+  */
+
 /** @defgroup STM32H745I_DISCOVERY_TS STM32H745I_DISCOVERY_TS
   * @{
-  */   
+  */
 
 
 /** @defgroup STM32H745I_DISCOVERY_TS_Private_Variables Private Variables
   * @{
-  */ 
+  */
 static TS_DrvTypeDef *tsDriver;
-static uint16_t tsXBoundary, tsYBoundary; 
+static uint16_t tsXBoundary, tsYBoundary;
 static uint8_t  tsOrientation;
 static uint8_t  I2cAddress;
 
@@ -100,21 +100,21 @@ char * ts_gesture_id_string_tab[GEST_ID_NB_MAX] = { "None",
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup STM32H745I_DISCOVERY_TS_Private_Function_Prototypes  Private Function Prototypes
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup STM32H745I_DISCOVERY_TS_Exported_Functions Exported Functions
   * @{
-  */ 
+  */
 
 /**
-  * @brief  Initializes and configures the touch screen functionalities and 
+  * @brief  Initializes and configures the touch screen functionalities and
   *         configures all necessary hardware resources (GPIOs, I2C, clocks..).
   * @param  ts_SizeX: Maximum X size of the TS area on LCD
   * @param  ts_SizeY: Maximum Y size of the TS area on LCD
@@ -125,11 +125,11 @@ uint8_t BSP_TS_Init(uint16_t ts_SizeX, uint16_t ts_SizeY)
   uint8_t status = TS_OK;
   tsXBoundary = ts_SizeX;
   tsYBoundary = ts_SizeY;
-  
+
   /* Read ID and verify if the touch screen driver is ready */
   ft5336_ts_drv.Init(TS_I2C_ADDRESS);
   if(ft5336_ts_drv.ReadID(TS_I2C_ADDRESS) == FT5336_ID_VALUE)
-  { 
+  {
     /* Initialize the TS driver structure */
     tsDriver = &ft5336_ts_drv;
     I2cAddress = TS_I2C_ADDRESS;
@@ -151,7 +151,7 @@ uint8_t BSP_TS_Init(uint16_t ts_SizeX, uint16_t ts_SizeY)
   * @retval TS state
   */
 uint8_t BSP_TS_DeInit(void)
-{ 
+{
   /* Actually ts_driver does not provide a DeInit function */
   return TS_OK;
 }
@@ -178,7 +178,7 @@ uint8_t BSP_TS_ITConfig(void)
   /* Enable the TS ITs */
   tsDriver->EnableIT(I2cAddress);
 
-  return TS_OK;  
+  return TS_OK;
 }
 
 /**
@@ -216,7 +216,7 @@ uint8_t BSP_TS_GetState(TS_StateTypeDef *TS_State)
 
   /* Check and update the number of touches active detected */
   TS_State->touchDetected = tsDriver->DetectTouch(I2cAddress);
-  
+
   if(TS_State->touchDetected)
   {
     for(index=0; index < TS_State->touchDetected; index++)
@@ -363,7 +363,7 @@ uint8_t BSP_TS_Get_GestureId(TS_StateTypeDef *TS_State)
 void BSP_TS_ITClear(void)
 {
   /* Clear TS IT pending bits */
-  tsDriver->ClearIT(I2cAddress); 
+  tsDriver->ClearIT(I2cAddress);
 }
 
 /**
@@ -400,15 +400,15 @@ uint8_t BSP_TS_ResetTouchData(TS_StateTypeDef *TS_State)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */  
+  */
 
 /**
   * @}

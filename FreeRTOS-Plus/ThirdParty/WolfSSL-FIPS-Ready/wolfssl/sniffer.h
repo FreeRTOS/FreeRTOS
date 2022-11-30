@@ -51,8 +51,8 @@ SSL_SNIFFER_API int ssl_SetPrivateKey(const char* address, int port,
 
 WOLFSSL_API
 SSL_SNIFFER_API int ssl_SetPrivateKeyBuffer(const char* address, int port,
-                                            const char* keyBuf, int keySz, 
-                                            int typeK, const char* password, 
+                                            const char* keyBuf, int keySz,
+                                            int typeK, const char* password,
                                             char* error);
 
 
@@ -65,31 +65,31 @@ SSL_SNIFFER_API int ssl_SetNamedPrivateKey(const char* name,
 WOLFSSL_API
 SSL_SNIFFER_API int ssl_SetNamedPrivateKeyBuffer(const char* name,
                                                  const char* address, int port,
-                                                 const char* keyBuf, int keySz, 
-                                                 int typeK, const char* password, 
+                                                 const char* keyBuf, int keySz,
+                                                 int typeK, const char* password,
                                                  char* error);
 
-WOLFSSL_API 
-SSL_SNIFFER_API int ssl_SetEphemeralKey(const char* address, int port, 
-                                        const char* keyFile, int typeKey, 
+WOLFSSL_API
+SSL_SNIFFER_API int ssl_SetEphemeralKey(const char* address, int port,
+                                        const char* keyFile, int typeKey,
                                         const char* password, char* error);
 
-WOLFSSL_API 
-SSL_SNIFFER_API int ssl_SetEphemeralKeyBuffer(const char* address, int port, 
-                                              const char* keyBuf, int keySz, int typeKey, 
+WOLFSSL_API
+SSL_SNIFFER_API int ssl_SetEphemeralKeyBuffer(const char* address, int port,
+                                              const char* keyBuf, int keySz, int typeKey,
                                               const char* password, char* error);
 
 
-WOLFSSL_API 
+WOLFSSL_API
 SSL_SNIFFER_API int ssl_SetNamedEphemeralKey(const char* name,
                                              const char* address, int port,
                                              const char* keyFile, int typeKey,
                                              const char* password, char* error);
 
-WOLFSSL_API 
+WOLFSSL_API
 SSL_SNIFFER_API int ssl_SetNamedEphemeralKeyBuffer(const char* name,
                                                    const char* address, int port,
-                                                   const char* keyBuf, int keySz, int typeKey, 
+                                                   const char* keyBuf, int keySz, int typeKey,
                                                    const char* password, char* error);
 
 WOLFSSL_API
@@ -255,4 +255,3 @@ SSL_SNIFFER_API int ssl_DecodePacketWithChainSessionInfoStoreData(
 #endif
 
 #endif /* wolfSSL_SNIFFER_H */
-

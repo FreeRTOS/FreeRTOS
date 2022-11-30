@@ -27,7 +27,7 @@
 
 /******************************************************************************
  *
- * See the following web page for essential TwoEchoClient.c usage and 
+ * See the following web page for essential TwoEchoClient.c usage and
  * configuration details:
  * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml
  *
@@ -194,7 +194,7 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 			not actually used (at the time of writing this comment, anyway) by
 			FreeRTOS_recvfrom(), but is set appropriately in case future
 			versions do use it. */
-			
+
 			memset( ( void * ) cRxString, 0x00, sizeof( cRxString ) );
 			lReturned = FreeRTOS_recvfrom(	xSocket,				/* The socket being received from. */
 								cRxString,				/* The buffer into which the received data will be written. */
@@ -397,4 +397,3 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 	}
 }
 /*-----------------------------------------------------------*/
-

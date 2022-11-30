@@ -1149,5 +1149,3 @@ static void prvRegTest4Task( void *pvParameters )
 	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
-
-

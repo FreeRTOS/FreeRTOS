@@ -101,4 +101,3 @@ extern void BMP_displayHeader(uint32_t* pAddressHeader);
 extern void RGB565toBGR555( uint8_t *fileSource, uint8_t *fileDestination, uint32_t width, uint32_t height, uint8_t bpp );
 
 #endif //#ifndef BMP_H
-

@@ -104,7 +104,7 @@ void CAN_DeInit(void)
 * Input          : CAN_InitStruct: pointer to a CAN_InitTypeDef structure that
                    contains the configuration information for the CAN peripheral.
 * Output         : None.
-* Return         : Constant indicates initialization succeed which will be 
+* Return         : Constant indicates initialization succeed which will be
 *                  CANINITFAILED or CANINITOK.
 *******************************************************************************/
 u8 CAN_Init(CAN_InitTypeDef* CAN_InitStruct)
@@ -298,7 +298,7 @@ void CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct)
     /* FIFO 1 assignation for the filter */
     CAN->FFA0R |= (u32)FilterNumber_BitPos;
   }
-  
+
   /* Filter activation */
   if (CAN_FilterInitStruct->CAN_FilterActivation == ENABLE)
   {

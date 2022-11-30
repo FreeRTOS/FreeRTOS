@@ -100,23 +100,23 @@
     ====================================
     [..]
       (#) Configure the SourceInc and DestinationInc of MDMA paramters in the HAL_OSPI_MspInit() function :
-         (++) MDMA settings for write operation : 
-          (+) The DestinationInc should be MDMA_DEST_INC_DISABLE  
+         (++) MDMA settings for write operation :
+          (+) The DestinationInc should be MDMA_DEST_INC_DISABLE
           (+) The SourceInc must be a value of @ref MDMA_Source_increment_mode (Except the MDMA_SRC_INC_DOUBLEWORD).
-          (+) The SourceDataSize must be a value of @ref MDMA Source data size (Except the MDMA_SRC_DATASIZE_DOUBLEWORD) 
+          (+) The SourceDataSize must be a value of @ref MDMA Source data size (Except the MDMA_SRC_DATASIZE_DOUBLEWORD)
               aligned with @ref MDMA_Source_increment_mode .
-          (+) The DestDataSize must be a value of @ref MDMA Destination data size (Except the MDMA_DEST_DATASIZE_DOUBLEWORD) 
-         (++) MDMA settings for read operation : 
-          (+) The SourceInc should be MDMA_SRC_INC_DISABLE  
+          (+) The DestDataSize must be a value of @ref MDMA Destination data size (Except the MDMA_DEST_DATASIZE_DOUBLEWORD)
+         (++) MDMA settings for read operation :
+          (+) The SourceInc should be MDMA_SRC_INC_DISABLE
           (+) The DestinationInc must be a value of @ref MDMA_Destination_increment_mode (Except the MDMA_DEST_INC_DOUBLEWORD).
           (+) The SourceDataSize must be a value of @ref MDMA Source data size (Except the MDMA_SRC_DATASIZE_DOUBLEWORD) .
           (+) The DestDataSize must be a value of @ref MDMA Destination data size (Except the MDMA_DEST_DATASIZE_DOUBLEWORD)
               aligned with @ref MDMA_Destination_increment_mode.
          (++)The buffer Transfer Length (BufferTransferLength) = number of bytes in the FIFO (FifoThreshold) of the Octospi.
-      (#)In case of wrong MDMA setting 
-        (++) For write operation : 
+      (#)In case of wrong MDMA setting
+        (++) For write operation :
          (+) If the DestinationInc is different to MDMA_DEST_INC_DISABLE , it will be disabled by the HAL_OSPI_Transmit_DMA().
-        (++) For read operation : 
+        (++) For read operation :
          (+) If the SourceInc is not set to MDMA_SRC_INC_DISABLE , it will be disabled by the HAL_OSPI_Receive_DMA().
 
     *** Memory-mapped functional mode ***
@@ -419,7 +419,7 @@ HAL_StatusTypeDef HAL_OSPI_Init (OSPI_HandleTypeDef *hospi)
 
          /* Enable OctoSPI */
          __HAL_OSPI_ENABLE(hospi);
-         
+
          /* Enable free running clock if needed : must be done after OSPI enable */
          if (hospi->Init.FreeRunningClock == HAL_OSPI_FREERUNCLK_ENABLE)
          {
@@ -1437,7 +1437,7 @@ HAL_StatusTypeDef HAL_OSPI_Transmit_DMA(OSPI_HandleTypeDef *hospi, uint8_t *pDat
 
         /* In Transmit mode , the MDMA destination is the OSPI DR register : Force the MDMA Destination Increment to disable */
         MODIFY_REG(hospi->hmdma->Instance->CTCR, (MDMA_CTCR_DINC | MDMA_CTCR_DINCOS) ,MDMA_DEST_INC_DISABLE);
-        
+
         /* Update MDMA configuration with the correct SourceInc field for Write operation */
         if (hospi->hmdma->Init.SourceDataSize == MDMA_SRC_DATASIZE_BYTE)
         {
@@ -1451,7 +1451,7 @@ HAL_StatusTypeDef HAL_OSPI_Transmit_DMA(OSPI_HandleTypeDef *hospi, uint8_t *pDat
         {
           MODIFY_REG(hospi->hmdma->Instance->CTCR, (MDMA_CTCR_SINC | MDMA_CTCR_SINCOS) , MDMA_SRC_INC_WORD);
         }
-        else   
+        else
         {
           /* in case of incorrect source data size */
           hospi->ErrorCode |= HAL_OSPI_ERROR_DMA;
@@ -1540,7 +1540,7 @@ HAL_StatusTypeDef HAL_OSPI_Receive_DMA(OSPI_HandleTypeDef *hospi, uint8_t *pData
 
 /* In Receive mode , the MDMA source is the OSPI DR register : Force the MDMA Source Increment to disable */
       MODIFY_REG(hospi->hmdma->Instance->CTCR, (MDMA_CTCR_SINC | MDMA_CTCR_SINCOS) , MDMA_SRC_INC_DISABLE);
-      
+
       /* Update MDMA configuration with the correct DestinationInc field for read operation */
       if (hospi->hmdma->Init.DestDataSize == MDMA_DEST_DATASIZE_BYTE)
       {
@@ -1554,12 +1554,12 @@ HAL_StatusTypeDef HAL_OSPI_Receive_DMA(OSPI_HandleTypeDef *hospi, uint8_t *pData
       {
         MODIFY_REG(hospi->hmdma->Instance->CTCR, (MDMA_CTCR_DINC | MDMA_CTCR_DINCOS) , MDMA_DEST_INC_WORD);
       }
-      else 
+      else
       {
        /* in case of incorrect destination data size */
         hospi->ErrorCode |= HAL_OSPI_ERROR_DMA;
         status = HAL_ERROR;
-      }   
+      }
 
         /* Enable the transmit MDMA Channel */
         if (HAL_MDMA_Start_IT(hospi->hmdma, (uint32_t)&hospi->Instance->DR, (uint32_t)pData, hospi->XferSize, 1) == HAL_OK)

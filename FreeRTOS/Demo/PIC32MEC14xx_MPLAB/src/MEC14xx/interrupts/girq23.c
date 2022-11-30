@@ -41,41 +41,41 @@ typedef void (* GIRQ23_FPVU8)(uint8_t);
 /*
  * FreeRTOS ISR for HW timer used as RTOS tick.
  * Implemented in MEC14xx FreeRTOS porting layer, port_asm.S
- * It save/restores CPU context and clears HW timer interrupt 
- * status in JTVIC. On each timer tick it checks if any task 
- * requires service. If yes then it triggers the PendSV low 
+ * It save/restores CPU context and clears HW timer interrupt
+ * status in JTVIC. On each timer tick it checks if any task
+ * requires service. If yes then it triggers the PendSV low
  * priority software interrupt.
  * Issue:
- * When aggregated girq23_isr save CPU context but this context 
- * is not the same as a FreeRTOS context save. If the RTOS timer 
- * is active then girq23_isr would call vPortTickInterruptHandler 
- * which uses FreeRTOS portSAVE_CONTEXT macro to save RTOS + CPU 
+ * When aggregated girq23_isr save CPU context but this context
+ * is not the same as a FreeRTOS context save. If the RTOS timer
+ * is active then girq23_isr would call vPortTickInterruptHandler
+ * which uses FreeRTOS portSAVE_CONTEXT macro to save RTOS + CPU
  * context. At this point you have two context saves on the stack.
  * There is a problem:
- * vPortTickInterruptHandler does not return but exits using 
- * portRESTORE_CONTEXT. This means the context save performed 
- * by aggregated girq23_isr is left on the stack. Eventually 
+ * vPortTickInterruptHandler does not return but exits using
+ * portRESTORE_CONTEXT. This means the context save performed
+ * by aggregated girq23_isr is left on the stack. Eventually
  * a stack overflow will occur.
- * 
+ *
  * Solutions:
- * 1. vPortTickInterruptHandler must be modified to handle scan 
- *    GIRQ23 Result bits and all the respective handler. All 
+ * 1. vPortTickInterruptHandler must be modified to handle scan
+ *    GIRQ23 Result bits and all the respective handler. All
  *    other GIRQ23 source are called as hook functions.
- *  
+ *
  * 2. Do not use vPortTickInterruptHandler.
- *    Modify girq23_isr here to use FreeRTOS portSAVE_CONTEXT 
- *    and portRESTORE_CONTEXT macros. 
- *    If RTOS timer is active interrupt then call vPortIncrementTick 
+ *    Modify girq23_isr here to use FreeRTOS portSAVE_CONTEXT
+ *    and portRESTORE_CONTEXT macros.
+ *    If RTOS timer is active interrupt then call vPortIncrementTick
  *    as vPortTickInterruptHandler does.
  *    For all other GIRQ23 sources call the respective handlers.
- *  
+ *
  *  NOTE: for both of the above solutions a we must either:
- *  A. Service one source only resulting in GIRQ23 firing multiple 
+ *  A. Service one source only resulting in GIRQ23 firing multiple
  *     times if more than one source is active.
  *  B. Service all active sources with RTOS Timer checked first.
- *  
+ *
  *  We will implement 1A with a single hook for all other sources.
- *  
+ *
  */
 
 extern void vPortIncrementTick(void);
@@ -111,8 +111,8 @@ const GIRQ23_FPVU8 girq23_htable[GIRQ23_NUM_SOURCES] =
     girq23_dflt_handler,    /* vci_handler, */
 };
 
-/* Called by FreeRTOS vPortTickInterruptHandler(girq23_isr) 
- * after saving FreeRTOS context 
+/* Called by FreeRTOS vPortTickInterruptHandler(girq23_isr)
+ * after saving FreeRTOS context
  */
 void girq23_handler(void)
 {
@@ -140,7 +140,7 @@ girq23_isr(void)
         bitpos = 31 - ((uint8_t)__builtin_clz(d) & 0x1F);
         (girq23_htable[bitpos])(bitpos);
         d &= ~(1ul << bitpos);
-    }    
+    }
 }
 
 #else
@@ -150,7 +150,7 @@ girq23_isr(void)
 void __attribute__((weak, interrupt, nomips16))
 girq23_b0(void)
 {
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ23_ID].SOURCE = (1ul << 0);  
+    JTVIC_GIRQ->REGS[MEC14xx_GIRQ23_ID].SOURCE = (1ul << 0);
 }
 
 /* 16-bit Basic Timer 1 */
@@ -179,7 +179,7 @@ void __attribute__((weak, interrupt, nomips16))
 girq23_b4(void)
 {
     JTVIC_GIRQ->REGS[MEC14xx_GIRQ23_ID].SOURCE = (1ul << 4);
-    
+
 }
 
 /* Hibernation Timer */
@@ -252,4 +252,3 @@ girq23_b13(void)
 /* end girq23.c */
 /**   @}
  */
-

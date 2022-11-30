@@ -357,4 +357,3 @@ unsigned portBASE_TYPE uxLine = 0, uxRow = 0;
 		OSRAMStringDraw( pcMessage, uxLine & 0x3f, uxRow & 0x01);
 	}
 }
-

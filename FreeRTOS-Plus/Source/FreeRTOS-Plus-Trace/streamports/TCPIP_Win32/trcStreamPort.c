@@ -5,9 +5,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  *
- * Supporting functions for trace streaming, used by the "stream ports" 
+ * Supporting functions for trace streaming, used by the "stream ports"
  * for reading and writing data to the interface.
- * Existing ports can easily be modified to fit another setup, e.g., a 
+ * Existing ports can easily be modified to fit another setup, e.g., a
  * different TCP/IP stack, or to define your own stream port.
  */
 
@@ -43,7 +43,7 @@ static void prvCloseAllSockets(void);
 static int prvInitWinsockIfNeeded(void)
 {
 	WSADATA wsa;
-	
+
 	if (server_socket)
 		return 0;
 
@@ -108,11 +108,11 @@ static int prvInitTraceSocketIfNeeded(void)
 	if (trace_socket == INVALID_SOCKET)
 	{
 		trace_socket = (UINT_PTR)0;
-		
+
 		closesocket(server_socket);
 		WSACleanup();
 		server_socket = (UINT_PTR)0;
-		
+
 		return -1;
 	}
 
@@ -158,7 +158,7 @@ int32_t prvTraceWriteToSocket(void* data, uint32_t size, int32_t *ptrBytesWritte
 	{
 		*ptrBytesWritten = ret;
 	}
-	
+
 	return 0;
 }
 
@@ -168,7 +168,7 @@ int32_t prvTraceReadFromSocket(void* data, uint32_t bufsize, int32_t *ptrBytesRe
 
 	if (prvInitServerSocketIfNeeded() < 0)
 		return -1;
-	
+
 	if (prvInitTraceSocketIfNeeded() < 0)
 		return -1;
 
@@ -229,7 +229,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
 traceResult xTraceStreamPortOnTraceEnd(void)
 {
 	prvCloseAllSockets();
-	
+
 	return TRC_SUCCESS;
 }
 

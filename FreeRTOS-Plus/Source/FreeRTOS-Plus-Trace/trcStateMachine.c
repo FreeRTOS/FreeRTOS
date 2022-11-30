@@ -34,7 +34,7 @@ traceResult xTraceStateMachineCreate(const char *szName, TraceStateMachineHandle
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntrySetOptions((TraceEntryHandle_t)xObjectHandle, (uint32_t)TRC_ENTRY_OPTION_STATE_MACHINE) == TRC_SUCCESS);
 
 	*pxStateMachineHandle = (TraceStateMachineHandle_t)xObjectHandle;
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -66,7 +66,7 @@ traceResult xTraceStateMachineSetState(TraceStateMachineHandle_t xStateMachineHa
 {
 	TraceEventHandle_t xEventHandle = 0;
 	TraceUnsignedBaseType_t uxStateMachine;
-	
+
 	/* This should never fail */
 	TRC_ASSERT(xStateMachineHandle != 0);
 

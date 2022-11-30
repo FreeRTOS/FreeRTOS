@@ -491,4 +491,3 @@ RCC_OscInitTypeDef RCC_OscInitStruct;
 	HAL_NVIC_SetPriority( EXTI1_IRQn, 0xFU, 0U );
 	HAL_NVIC_EnableIRQ( EXTI1_IRQn );
 }
-

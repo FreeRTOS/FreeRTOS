@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -55,7 +55,7 @@
 #define MPU_REGION_DISABLE                      ( 0x0 )
 
 #define MPU_ENABLE                              ( 0x1 << MPU_CTRL_ENABLE_Pos)
-#define MPU_HFNMIENA                            ( 0x1 << MPU_CTRL_HFNMIENA_Pos )   
+#define MPU_HFNMIENA                            ( 0x1 << MPU_CTRL_HFNMIENA_Pos )
 #define MPU_PRIVDEFENA                          ( 0x1 << MPU_CTRL_PRIVDEFENA_Pos )
 
 
@@ -83,7 +83,7 @@
 #define MPU_TEX_B110                            ( 0x01 << MPU_RASR_TEX_Pos )
 #define MPU_TEX_B111                            ( 0x01 << MPU_RASR_TEX_Pos )
 
-/* Default memory map 
+/* Default memory map
    Address range          Memory region          Memory type      Shareability   Cache policy
    0x00000000- 0x1FFFFFFF Code                   Normal           Non-shareable  WT
    0x20000000- 0x3FFFFFFF SRAM                   Normal           Non-shareable  WBWA
@@ -120,7 +120,7 @@
 
 /* Regions should be a 2^(N+1)  where 4 < N < 31 */
 #define SRAM_FIRST_START_ADDRESS            (SRAM_START_ADDRESS)
-#define SRAM_FIRST_END_ADDRESS              (SRAM_FIRST_START_ADDRESS + 0x3FFFF)        // (2^18) 256 KB 
+#define SRAM_FIRST_END_ADDRESS              (SRAM_FIRST_START_ADDRESS + 0x3FFFF)        // (2^18) 256 KB
 
 #define SRAM_SECOND_START_ADDRESS           (SRAM_FIRST_END_ADDRESS+1)
 #define SRAM_SECOND_END_ADDRESS             (SRAM_END_ADDRESS)                          // (2^17) 128 KB
@@ -157,4 +157,3 @@ void MPU_UpdateRegions( uint32_t dwRegionNum, uint32_t dwRegionBaseAddr,
                         uint32_t dwRegionAttr);
 
 #endif /* #ifndef _MMU_ */
-

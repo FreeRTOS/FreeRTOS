@@ -94,4 +94,3 @@ int wc_AesCmacVerify(const byte* check, word32 checkSz,
 
 #endif /* NO_AES && WOLFSSL_CMAC */
 #endif /* WOLF_CRYPT_CMAC_H */
-

@@ -477,4 +477,3 @@
  <variable Header="xStart" Icon="2" Type="variable" Desc=":   struct A_BLOCK_LINK" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\portable\MemMang\heap_2.c" DeclLine="108" Pointer="No"/>
  <variable Header="xEnd" Icon="2" Type="variable" Desc=":   struct A_BLOCK_LINK" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\portable\MemMang\heap_2.c" DeclLine="108" Pointer="No"/>
 </aoffile>
-

@@ -173,4 +173,3 @@ const unsigned long ulExpectedValue = 100UL;
         }
     }
 }
-

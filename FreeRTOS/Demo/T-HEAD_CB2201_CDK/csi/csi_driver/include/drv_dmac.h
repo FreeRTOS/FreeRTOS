@@ -168,4 +168,3 @@ dma_status_e csi_dma_get_status(dmac_handle_t handle, int32_t ch);
 #endif
 
 #endif /* _CSI_DMA_H_ */
-

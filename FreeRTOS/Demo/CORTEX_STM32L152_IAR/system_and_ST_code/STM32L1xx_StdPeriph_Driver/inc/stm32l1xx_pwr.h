@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    07/02/2010
-  * @brief   This file contains all the functions prototypes for the PWR firmware 
+  * @brief   This file contains all the functions prototypes for the PWR firmware
   *          library.
   ******************************************************************************
   * @copy
@@ -17,7 +17,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32L1xx_PWR_H
@@ -36,23 +36,23 @@
 
 /** @addtogroup PWR
   * @{
-  */ 
+  */
 
 /** @defgroup PWR_Exported_Types
   * @{
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup PWR_Exported_Constants
   * @{
-  */ 
+  */
 
-/** @defgroup PVD_detection_level 
+/** @defgroup PVD_detection_level
   * @{
-  */ 
+  */
 
 #define PWR_PVDLevel_0          PWR_CR_PLS_LEV0
 #define PWR_PVDLevel_1          PWR_CR_PLS_LEV1
@@ -61,7 +61,7 @@
 #define PWR_PVDLevel_4          PWR_CR_PLS_LEV4
 #define PWR_PVDLevel_5          PWR_CR_PLS_LEV5
 #define PWR_PVDLevel_6          PWR_CR_PLS_LEV6
-#define PWR_PVDLevel_7          PWR_CR_PLS_LEV7 /* External input analog voltage 
+#define PWR_PVDLevel_7          PWR_CR_PLS_LEV7 /* External input analog voltage
                                                (Compare internally to VREFINT) */
 #define IS_PWR_PVD_LEVEL(LEVEL) (((LEVEL) == PWR_PVDLevel_0) || ((LEVEL) == PWR_PVDLevel_1)|| \
                                  ((LEVEL) == PWR_PVDLevel_2) || ((LEVEL) == PWR_PVDLevel_3)|| \
@@ -71,7 +71,7 @@
   * @}
   */
 
-/** @defgroup WakeUp_Pins 
+/** @defgroup WakeUp_Pins
   * @{
   */
 
@@ -85,7 +85,7 @@
   * @}
   */
 
-  
+
 /** @defgroup Voltage_Scaling_Ranges
   * @{
   */
@@ -99,9 +99,9 @@
                                              ((RANGE) == PWR_VoltageScaling_Range3))
 /**
   * @}
-  */    
-  
-/** @defgroup Regulator_state_is_Sleep_STOP_mode 
+  */
+
+/** @defgroup Regulator_state_is_Sleep_STOP_mode
   * @{
   */
 
@@ -113,31 +113,31 @@
   * @}
   */
 
-/** @defgroup SLEEP_mode_entry 
+/** @defgroup SLEEP_mode_entry
   * @{
   */
 
 #define PWR_SLEEPEntry_WFI         ((uint8_t)0x01)
 #define PWR_SLEEPEntry_WFE         ((uint8_t)0x02)
 #define IS_PWR_SLEEP_ENTRY(ENTRY) (((ENTRY) == PWR_SLEEPEntry_WFI) || ((ENTRY) == PWR_SLEEPEntry_WFE))
- 
+
 /**
   * @}
   */
-  
-/** @defgroup STOP_mode_entry 
+
+/** @defgroup STOP_mode_entry
   * @{
   */
 
 #define PWR_STOPEntry_WFI         ((uint8_t)0x01)
 #define PWR_STOPEntry_WFE         ((uint8_t)0x02)
 #define IS_PWR_STOP_ENTRY(ENTRY) (((ENTRY) == PWR_STOPEntry_WFI) || ((ENTRY) == PWR_STOPEntry_WFE))
- 
+
 /**
   * @}
   */
 
-/** @defgroup PWR_Flag 
+/** @defgroup PWR_Flag
   * @{
   */
 

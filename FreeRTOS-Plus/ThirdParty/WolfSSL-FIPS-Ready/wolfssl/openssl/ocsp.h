@@ -79,4 +79,3 @@
 #endif /* HAVE_OCSP */
 
 #endif /* WOLFSSL_OCSP_H_ */
-

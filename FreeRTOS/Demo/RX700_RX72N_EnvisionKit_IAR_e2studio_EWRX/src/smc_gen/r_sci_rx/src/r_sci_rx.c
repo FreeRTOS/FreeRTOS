@@ -1,24 +1,24 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
 * Copyright (C) 2016-2019 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
 /**********************************************************************************************************************
 * File Name    : r_sci_rx.c
-* Description  : Functions for using SCI on RX devices. 
+* Description  : Functions for using SCI on RX devices.
 ***********************************************************************************************************************
 * History : DD.MM.YYYY Version Description
 *           01.10.2016 1.80    Initial Release. (The remake of the r01an1815ju0170 to the base.)
@@ -262,11 +262,11 @@ typedef union
 * other APIs except R_SCI_GetVersion(). See Section 2.9 Parameters in the application note for details.
 *
 *
-* @retval   SCI_SUCCESS  Successful; channel initialized 
+* @retval   SCI_SUCCESS  Successful; channel initialized
 *
 * @retval   SCI_ERR_BAD_CHAN  Channel number is invalid for part
 *
-* @retval   SCI_ERR_OMITTED_CHAN  Corresponding SCI_CHx_INCLUDED is invalid (0) 
+* @retval   SCI_ERR_OMITTED_CHAN  Corresponding SCI_CHx_INCLUDED is invalid (0)
 *
 * @retval   SCI_ERR_CH_NOT_CLOSED  Channel currently in operation; Perform R_SCI_Close() first
 *
@@ -323,7 +323,7 @@ sci_err_t R_SCI_Open(uint8_t const      chan,
         return SCI_ERR_NULL_PTR;
     }
 #endif
-    
+
      /* APPLY POWER TO CHANNEL */
     power_on(g_handles[chan]);
 
@@ -607,7 +607,7 @@ static sci_err_t sci_init_queues(uint8_t const chan)
 *                TX/RX FIFO, and the threshold setting of the TX/RX FIFO.
 * Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
-* Return Value : SCI_SUCCESS - 
+* Return Value : SCI_SUCCESS -
 *                    fifo initialized successfully
 *                SCI_ERR_INVALID_ARG -
 *                    element of hdl contains illegal value
@@ -650,19 +650,19 @@ static sci_err_t sci_init_fifo(sci_hdl_t const hdl)
 #if (SCI_CFG_ASYNC_INCLUDED)
 /*****************************************************************************
 * Function Name: sci_init_async
-* Description  : This function initializes the control block and UART 
+* Description  : This function initializes the control block and UART
 *                registers for an SCI channel.
 *
 * NOTE: p_cfg is checked to be non-NULL prior to this function.
 *       The TE and RE bits in SCR must be 0 prior to calling this function.
 *
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 *                p_cfg -
 *                    ptr to Uart configuration argument structure
 *                p_priority -
 *                    pointer to location to load interrupt priority into
-* Return Value : SCI_SUCCESS - 
+* Return Value : SCI_SUCCESS -
 *                    channel initialized successfully
 *                SCI_ERR_INVALID_ARG -
 *                    element of p_cfg contains illegal value
@@ -674,7 +674,7 @@ static sci_err_t sci_init_async(sci_hdl_t const      hdl,
     sci_err_t   err=SCI_SUCCESS;
     int32_t     bit_err;
 
-    /* Check arguments */    
+    /* Check arguments */
 
 #if SCI_CFG_PARAM_CHECKING_ENABLE
     if (((SCI_DATA_8BIT != p_cfg->data_size) && (SCI_DATA_7BIT != p_cfg->data_size))
@@ -720,7 +720,7 @@ static sci_err_t sci_init_async(sci_hdl_t const      hdl,
     /* Initialize channel control block flags */
     hdl->tx_idle = true;
 
-        
+
     /* Configure SMR for asynchronous mode, single processor, and user settings */
     if (SCI_PARITY_OFF == p_cfg->parity_en)
     {
@@ -942,7 +942,7 @@ sci_err_t R_SCI_Send(sci_hdl_t const    hdl,
 *                    data transfer started
 *                SCI_ERR_XCVR_BUSY -
 *                    channel currently busy
-*                SCI_ERR_INSUFFICIENT_SPACE - 
+*                SCI_ERR_INSUFFICIENT_SPACE -
 *                    not enough space in tx queue to store data (Async)
 ******************************************************************************/
 static sci_err_t sci_send_async_data(sci_hdl_t const hdl,
@@ -1014,7 +1014,7 @@ static sci_err_t sci_send_async_data(sci_hdl_t const hdl,
 *                    byte to transmit
 * Return Value : SCI_SUCCESS -
 *                    data transfer started
-*                SCI_ERR_INSUFFICIENT_SPACE - 
+*                SCI_ERR_INSUFFICIENT_SPACE -
 *                    not enough space in tx queue to store data (Async)
 ******************************************************************************/
 static byteq_err_t sci_put_byte(sci_hdl_t const   hdl,
@@ -1093,7 +1093,7 @@ static sci_err_t sci_send_sync_data(sci_hdl_t const hdl,
             }
 
             thresh_cnt = hdl->rom->regs->FCR.BIT.RTRG;
-            
+
             hdl->tx_cnt -= thresh_cnt;
 
             /* Repeated FIFO RX threshold count */
@@ -1188,7 +1188,7 @@ sci_err_t R_SCI_SendReceive(sci_hdl_t const hdl,
 /*****************************************************************************
 * Function Name: sci_transfer
 * Description  : Transfer for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1222,7 +1222,7 @@ static void sci_transfer(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: sci_fifo_transfer
 * Description  : FIFO Transfer for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1259,7 +1259,7 @@ static void sci_fifo_transfer(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: txi_handler
 * Description  : TXI interrupt handler for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1285,7 +1285,7 @@ void txi_handler(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: tei_handler
 * Description  : TEI interrupt handler for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1391,14 +1391,14 @@ sci_err_t   err = SCI_SUCCESS;
 #if (SCI_CFG_ASYNC_INCLUDED)
 /*****************************************************************************
 * Function Name: sci_receive_async_data
-* Description  : This function determines if the rx byte queue of the channel 
-*                referenced by the handle, the requested number of bytes 
+* Description  : This function determines if the rx byte queue of the channel
+*                referenced by the handle, the requested number of bytes
 *                is available, and get the data from the rx byte queue.
 * Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 *                p_dst -
 *                    ptr to buffer to load data into
-*                length - 
+*                length -
 *                    number of bytes to read
 * Return Value : SCI_SUCCESS -
 *                    requested number of byte loaded into p_dst
@@ -1449,7 +1449,7 @@ static sci_err_t sci_receive_async_data(sci_hdl_t const hdl,
 *                    handle for channel (ptr to chan control block)
 *                p_dst -
 *                    ptr to buffer to load data into
-*                length - 
+*                length -
 *                    number of bytes to read
 * Return Value : SCI_SUCCESS -
 *                    requested number of byte loaded into p_dst
@@ -1523,7 +1523,7 @@ static sci_err_t sci_receive_sync_data(sci_hdl_t const hdl,
 /*****************************************************************************
 * Function Name: sci_receive
 * Description  : Receive for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1612,7 +1612,7 @@ static void sci_receive(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: sci_fifo_receive_sync
 * Description  : FIFO Receive for SCI mode is SYNC and SSPI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1652,7 +1652,7 @@ static void sci_fifo_receive_sync(sci_hdl_t const hdl)
         {
             hdl->rom->regs->FCR.BIT.RTRG = hdl->rx_cnt;
         }
-        
+
         if (0 < hdl->tx_cnt)
         {
             if (hdl->tx_cnt > fifo_num_rx)
@@ -1709,7 +1709,7 @@ static void sci_fifo_receive_sync(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: sci_fifo_receive
 * Description  : FIFO Receive for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1850,7 +1850,7 @@ static void sci_receive_data_match(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: rxi_handler
 * Description  : RXI interrupt handler for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1881,7 +1881,7 @@ void rxi_handler(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: sci_error
 * Description  : Error for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -1950,7 +1950,7 @@ static void sci_error(sci_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: sci_fifo_error
 * Description  : FIFO Error for SCI
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -2144,7 +2144,7 @@ sci_err_t R_SCI_Control(sci_hdl_t const     hdl,
     }
 #endif
 #endif /* End of SCI_CFG_PARAM_CHECKING_ENABLE */
-    
+
     /* COMMANDS COMMON TO ALL MODES */
 
     switch (cmd)
@@ -2288,7 +2288,7 @@ sci_err_t R_SCI_Control(sci_hdl_t const     hdl,
 *
 * @retval SCI_SUCCESS Successful; channel closed
 *
-* @retval SCI_ERR_NULL_PTR hdl is NULL 
+* @retval SCI_ERR_NULL_PTR hdl is NULL
 *
 * @details    Disables the SCI channel designated by the handle and enters module-stop state.
 * @note This function will abort any transmission or reception that may be in progress.

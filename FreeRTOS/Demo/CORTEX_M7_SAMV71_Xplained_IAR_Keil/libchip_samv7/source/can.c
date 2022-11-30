@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -694,4 +694,3 @@ void CAN_MessageRx(Can *pCan, uint8_t bMb)
 
 #endif
 /**@}*/
-

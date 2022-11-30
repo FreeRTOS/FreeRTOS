@@ -41,4 +41,3 @@ typedef struct {
 } dw_wdt_reg_t;
 
 #endif /* __DW_WDT_H */
-

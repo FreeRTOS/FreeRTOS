@@ -70,7 +70,7 @@ typedef struct _AsyncTwi {
 static void TWID_DmaInitializeRead(TwihsDma *pTwiXdma)
 {
 	/* Allocate a XDMA channel, Read accesses into TWI_THR */
-	dmaReadChannel = XDMAD_AllocateChannel( pTwiXdma->pTwiDma, pTwiXdma->Twi_id, 
+	dmaReadChannel = XDMAD_AllocateChannel( pTwiXdma->pTwiDma, pTwiXdma->Twi_id,
 			XDMAD_TRANSFER_MEMORY);
 	if ( dmaReadChannel == XDMAD_ALLOC_FAILED ) {
 		printf("-E- Can't allocate XDMA channel\n\r");
@@ -110,7 +110,7 @@ static uint8_t TWID_XdmaConfigureWrite(TwihsDma *pTwiXdma, uint8_t *buf, uint32_
 	xdmadTxCfg.mbr_ubc =      XDMA_UBC_NVIEW_NDV0 |
 							 XDMA_UBC_NDE_FETCH_DIS|
 							 XDMA_UBC_NSEN_UPDATED |  len;
-	  
+
 	xdmadTxCfg.mbr_sa = (uint32_t)buf;
 	xdmadTxCfg.mbr_da = Thr;
 	xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
@@ -122,18 +122,18 @@ static uint8_t TWID_XdmaConfigureWrite(TwihsDma *pTwiXdma, uint8_t *buf, uint32_
 						 XDMAC_CC_DIF_AHB_IF1 |
 						 XDMAC_CC_SAM_INCREMENTED_AM |
 						 XDMAC_CC_DAM_FIXED_AM |
-						 XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber( 
+						 XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(
 							pTwiXdma->Twi_id, XDMAD_TRANSFER_TX ));
-	
+
 	xdmadTxCfg.mbr_bc = 0;
 	xdmadTxCfg.mbr_sus = 0;
 	xdmadTxCfg.mbr_dus =0;
 	xdmaCndc = 0;
-	
+
 	xdmaInt =  (XDMAC_CIE_BIE |
 			   XDMAC_CIE_RBIE  |
 			   XDMAC_CIE_WBIE );
-	if (XDMAD_ConfigureTransfer( pTwiXdma->pTwiDma, dmaWriteChannel, 
+	if (XDMAD_ConfigureTransfer( pTwiXdma->pTwiDma, dmaWriteChannel,
 			&xdmadTxCfg, xdmaCndc, 0, xdmaInt) )
 	  return USARTD_ERROR;
 
@@ -160,10 +160,10 @@ static uint8_t TWID_XdmaConfigureRead(TwihsDma *pTwiXdma, uint8_t *buf, uint32_t
 						  XDMA_UBC_NDE_FETCH_DIS|
 						  XDMA_UBC_NDEN_UPDATED |
 						  len;
-	
+
 	xdmadRxCfg.mbr_da = (uint32_t)buf;
 	xdmadRxCfg.mbr_sa = Rhr;
-	
+
 	xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
 						   XDMAC_CC_MBSIZE_SINGLE |
 						   XDMAC_CC_DSYNC_PER2MEM |
@@ -173,9 +173,9 @@ static uint8_t TWID_XdmaConfigureRead(TwihsDma *pTwiXdma, uint8_t *buf, uint32_t
 						   XDMAC_CC_DIF_AHB_IF0 |
 						   XDMAC_CC_SAM_FIXED_AM |
 						   XDMAC_CC_DAM_INCREMENTED_AM |
-						   XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber( 
+						   XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(
 								pTwiXdma->Twi_id , XDMAD_TRANSFER_RX ));
-	  
+
 	xdmadRxCfg.mbr_bc = 0;
 	xdmadRxCfg.mbr_sus = 0;
 	xdmadRxCfg.mbr_dus =0;
@@ -183,8 +183,8 @@ static uint8_t TWID_XdmaConfigureRead(TwihsDma *pTwiXdma, uint8_t *buf, uint32_t
 	xdmaInt =  (XDMAC_CIE_BIE |
 			   XDMAC_CIE_RBIE  |
 			   XDMAC_CIE_WBIE );
-		
-	if (XDMAD_ConfigureTransfer( pTwiXdma->pTwiDma, dmaReadChannel, 
+
+	if (XDMAD_ConfigureTransfer( pTwiXdma->pTwiDma, dmaReadChannel,
 			&xdmadRxCfg, xdmaCndc, 0, xdmaInt))
 	  return 1;
 	return 0;
@@ -371,7 +371,7 @@ uint8_t TWID_Read(
 					break;
 				}
 			}
-			
+
 			*pData++ = TWI_ReadByte(pTwi);
 			num--;
 		}
@@ -389,7 +389,7 @@ uint8_t TWID_Read(
 }
 
 /**
- * \brief Asynchronously sends data to a slave on the TWI bus. An optional 
+ * \brief Asynchronously sends data to a slave on the TWI bus. An optional
  * callback function is invoked whenever the transfer is complete.
  * \param pTwid  Pointer to a Twid instance.
  * \param address  TWI slave address.
@@ -437,7 +437,7 @@ uint8_t TWID_Write(
 		/* Enable write interrupt and start the transfer */
 		TWI_StartWrite(pTwi, address, iaddress, isize, *pData);
 		TWI_EnableIt(pTwi, TWIHS_IER_TXRDY);
-		
+
 	} else {
 		/* Synchronous transfer*/
 		// Start write
@@ -465,7 +465,7 @@ uint8_t TWID_Write(
 				TRACE_ERROR("TWID Timeout TC2\n\r");
 				break;
 			}
-		}  
+		}
 	}
 	return 0;
 }
@@ -485,13 +485,13 @@ void TWID_DmaInitialize(TwihsDma *pTwidma, Twihs *pTwi, uint8_t bPolling)
 	if ((unsigned int)pTwi == (unsigned int)TWIHS0 ) pTwidma->Twi_id = ID_TWIHS0;
 	if ((unsigned int)pTwi == (unsigned int)TWIHS1 ) pTwidma->Twi_id = ID_TWIHS1;
 	if ((unsigned int)pTwi == (unsigned int)TWIHS2 ) pTwidma->Twi_id = ID_TWIHS2;
-	
+
 	/* Initialize driver. */
 	pTwidma->pTwid->pTwi = pTwi;
 	pTwidma->pTwid->pTransfer = 0;
-	
+
 	if(!bPolling) {
-	  /* Enable XDMA interrupt and give it priority over any other peripheral 
+	  /* Enable XDMA interrupt and give it priority over any other peripheral
 		interrupt */
 	  NVIC_ClearPendingIRQ(XDMAC_IRQn);
 	  NVIC_SetPriority(XDMAC_IRQn, 1);
@@ -558,8 +558,8 @@ uint8_t TWID_DmaRead(
 	/* Synchronous transfer*/
 		TWID_DmaInitializeRead(pTwiXdma);
 		TWID_XdmaConfigureRead(pTwiXdma, pData, (num - 2));
-		
-		// cache maintenance before starting DMA Xfr 
+
+		// cache maintenance before starting DMA Xfr
 		SCB_CleanInvalidateDCache();
 		/* Start read*/
 		XDMAD_StartTransfer( pTwiXdma->pTwiDma, dmaReadChannel );
@@ -571,11 +571,11 @@ uint8_t TWID_DmaRead(
 				TRACE_ERROR("TWID DMA not done\n\r");
 				break;
 			}
-		}  
+		}
 
 		status = TWI_GetStatus(pTwi);
 		startTime = GetTicks();
-		
+
 		while( !(status & TWIHS_SR_RXRDY)) {
 			status = TWI_GetStatus(pTwi);
 			if ( (GetDelayInTicks(startTime, GetTicks() ) ) > TWITIMEOUTMAX) {
@@ -584,11 +584,11 @@ uint8_t TWID_DmaRead(
 			}
 		}
 		TWI_Stop(pTwi);
-		
+
 		pData[num - 2] = TWI_ReadByte(pTwi);
 		status = TWI_GetStatus(pTwi);
 		startTime = GetTicks();
-		
+
 		while( !(status & TWIHS_SR_RXRDY)) {
 			status = TWI_GetStatus(pTwi);
 			if ( (GetDelayInTicks(startTime, GetTicks() ) ) > TWITIMEOUTMAX) {
@@ -606,7 +606,7 @@ uint8_t TWID_DmaRead(
 				break;
 			}
 		}
-		
+
 		XDMAD_StopTransfer( pTwiXdma->pTwiDma, dmaReadChannel );
 		XDMAD_FreeChannel(pTwiXdma->pTwiDma, dmaWriteChannel);
 	}
@@ -614,7 +614,7 @@ uint8_t TWID_DmaRead(
 }
 
 /**
- * \brief Asynchronously sends data to a slave on the TWI bus. An optional 
+ * \brief Asynchronously sends data to a slave on the TWI bus. An optional
  * callback function is invoked whenever the transfer is complete.
  * \param pTwid  Pointer to a Twid instance.
  * \param address  TWI slave address.
@@ -677,24 +677,24 @@ uint8_t TWID_DmaWrite(
 		/* Set internal address bytes. */
 		pTwi->TWIHS_IADR = 0;
 		pTwi->TWIHS_IADR = iaddress;
-		
-		// cache maintenance before starting DMA Xfr 
+
+		// cache maintenance before starting DMA Xfr
 		SCB_CleanInvalidateDCache();
-	   
+
 		startTime = GetTicks();
-		
+
 		XDMAD_StartTransfer( pTwiXdma->pTwiDma, dmaWriteChannel );
-		
+
 		while( (XDMAD_IsTransferDone(pTwiXdma->pTwiDma, dmaWriteChannel)) ) {
 			if ( (GetDelayInTicks(startTime, GetTicks() ) ) > TWITIMEOUTMAX) {
-				TRACE_ERROR("TWID DMA not done, Channel State is %d\n\r", 
+				TRACE_ERROR("TWID DMA not done, Channel State is %d\n\r",
 						pTwiXdma->pTwiDma->XdmaChannels[dmaWriteChannel].state);
 				break;
 			}
 		}
 		status = TWI_GetStatus(pTwi);
 		startTime = GetTicks();
-		
+
 		while( !(status & TWIHS_SR_TXRDY)) {
 			status = TWI_GetStatus(pTwi);
 			if ( (GetDelayInTicks(startTime, GetTicks() ) ) > TWITIMEOUTMAX) {
@@ -708,7 +708,7 @@ uint8_t TWID_DmaWrite(
 		TWI_WriteByte(pTwi, pData[num-1]);
 		status = TWI_GetStatus(pTwi);
 		startTime = GetTicks();
-		
+
 		while( !(status & TWIHS_SR_TXCOMP)) {
 			status = TWI_GetStatus(pTwi);
 			if ( (GetDelayInTicks(startTime, GetTicks() ) ) > TWITIMEOUTMAX) {
@@ -718,7 +718,7 @@ uint8_t TWID_DmaWrite(
 		}
 		XDMAD_StopTransfer(pTwiXdma->pTwiDma, dmaWriteChannel );
 		XDMAD_FreeChannel(pTwiXdma->pTwiDma, dmaWriteChannel);
-		
-	} 
+
+	}
 	return 0;
 }

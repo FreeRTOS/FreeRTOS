@@ -33,7 +33,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F7xx_HAL_DCMI_EX_H
@@ -54,16 +54,16 @@
 
 /** @addtogroup DCMIEx DCMIEx
   * @{
-  */ 
- 
+  */
+
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup DCMIEx_Exported_Types DCMIEx Exported Types
   * @{
   */
-/** 
+/**
   * @brief   DCMIEx Embedded Synchronisation CODE Init structure definition
-  */ 
+  */
 typedef struct
 {
   uint8_t FrameStartCode; /*!< Specifies the code of the frame start delimiter. */
@@ -72,9 +72,9 @@ typedef struct
   uint8_t FrameEndCode;   /*!< Specifies the code of the frame end delimiter.   */
 }DCMI_CodesInitTypeDef;
 
-/** 
+/**
   * @brief   DCMI Init structure definition
-  */  
+  */
 typedef struct
 {
   uint32_t  SynchroMode;                /*!< Specifies the Synchronization Mode: Hardware or Embedded.
@@ -97,18 +97,18 @@ typedef struct
 
   DCMI_CodesInitTypeDef SyncroCode;     /*!< Specifies the code of the frame start delimiter.                */
 
-  uint32_t JPEGMode;                    /*!< Enable or Disable the JPEG mode.                                
+  uint32_t JPEGMode;                    /*!< Enable or Disable the JPEG mode.
                                              This parameter can be a value of @ref DCMI_MODE_JPEG            */
 
-  uint32_t ByteSelectMode;              /*!< Specifies the data to be captured by the interface 
+  uint32_t ByteSelectMode;              /*!< Specifies the data to be captured by the interface
                                             This parameter can be a value of @ref DCMIEx_Byte_Select_Mode      */
-                                            
+
   uint32_t ByteSelectStart;             /*!< Specifies if the data to be captured by the interface is even or odd
                                             This parameter can be a value of @ref DCMIEx_Byte_Select_Start     */
 
-  uint32_t LineSelectMode;              /*!< Specifies the line of data to be captured by the interface 
+  uint32_t LineSelectMode;              /*!< Specifies the line of data to be captured by the interface
                                             This parameter can be a value of @ref DCMIEx_Line_Select_Mode      */
-                                            
+
   uint32_t LineSelectStart;             /*!< Specifies if the line of data to be captured by the interface is even or odd
                                             This parameter can be a value of @ref DCMIEx_Line_Select_Start     */
 }DCMI_InitTypeDef;
@@ -136,7 +136,7 @@ typedef struct
 
 /** @defgroup DCMIEx_Byte_Select_Start DCMIEx Byte Select Start
   * @{
-  */ 
+  */
 #define DCMI_OEBS_ODD               ((uint32_t)0x00000000) /*!< Interface captures first data from the frame/line start, second one being dropped */
 #define DCMI_OEBS_EVEN              ((uint32_t)DCMI_CR_OEBS) /*!< Interface captures second data from the frame/line start, first one being dropped */
 
@@ -156,23 +156,23 @@ typedef struct
 
 /** @defgroup DCMIEx_Line_Select_Start DCMIEx Line Select Start
   * @{
-  */ 
+  */
 #define DCMI_OELS_ODD               ((uint32_t)0x00000000) /*!< Interface captures first line from the frame start, second one being dropped */
 #define DCMI_OELS_EVEN              ((uint32_t)DCMI_CR_OELS) /*!< Interface captures second line from the frame start, first one being dropped */
 
 /**
   * @}
   */
-  
+
 /**
   * @}
   */
 
-/* Exported macro ------------------------------------------------------------*/      
+/* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* Private constants ---------------------------------------------------------*/   
+/* Private constants ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /** @defgroup DCMIEx_Private_Macros DCMIEx Private Macros
   * @{
@@ -181,13 +181,13 @@ typedef struct
                                        ((MODE) == DCMI_BSM_OTHER) || \
                                        ((MODE) == DCMI_BSM_ALTERNATE_4) || \
                                        ((MODE) == DCMI_BSM_ALTERNATE_2))
-                                                                                                
+
 #define IS_DCMI_BYTE_SELECT_START(POLARITY)(((POLARITY) == DCMI_OEBS_ODD) || \
                                             ((POLARITY) == DCMI_OEBS_EVEN))
-                              
+
 #define IS_DCMI_LINE_SELECT_MODE(MODE)(((MODE) == DCMI_LSM_ALL) || \
                                        ((MODE) == DCMI_LSM_ALTERNATE_2))
-                                      
+
 #define IS_DCMI_LINE_SELECT_START(POLARITY)(((POLARITY) == DCMI_OELS_ODD) || \
                                             ((POLARITY) == DCMI_OELS_EVEN))
 /**
@@ -199,10 +199,10 @@ typedef struct
 /**
   * @}
   */
-    
+
 /**
   * @}
-  */ 
+  */
 
 #ifdef __cplusplus
 }

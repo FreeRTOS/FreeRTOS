@@ -110,7 +110,3 @@ void vT2_3InterruptHandler( void )
 {
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-
-
-
-

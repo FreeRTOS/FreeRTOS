@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -133,7 +133,7 @@ unsigned char SPI_WriteBuffer(AT91S_SPI *spi,
         spi->SPI_TNCR = length;
         return 1;
     }
-      
+
     // No free banks
     return 0;
 }
@@ -189,4 +189,3 @@ unsigned char SPI_ReadBuffer(AT91S_SPI *spi,
     // No free bank
     return 0;
 }
-

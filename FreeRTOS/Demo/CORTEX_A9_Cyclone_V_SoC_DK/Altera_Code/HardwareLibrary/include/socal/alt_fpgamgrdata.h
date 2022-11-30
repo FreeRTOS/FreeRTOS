@@ -41,46 +41,46 @@ extern "C"
 /*
  * Component : FPGA Manager Module Configuration Data - ALT_FPGAMGRDATA
  * FPGA Manager Module Configuration Data
- * 
+ *
  * Registers in the FPGA Manager module accessible via its AXI slave
- * 
+ *
  */
 /*
  * Register : Write Data Register - data
- * 
+ *
  * Used to send configuration image to FPGA.
- * 
+ *
  * The DATA register accepts 4 bytes of the configuration image on each write. The
  * configuration image byte-stream is converted into a 4-byte word with little-
  * endian ordering. If the configuration image is not an integer multiple of 4
  * bytes, software should pad the configuration image with extra zero bytes to make
  * it an integer multiple of 4 bytes.
- * 
+ *
  * The FPGA Manager converts the DATA to 16 bits wide when writing CB.DATA for
  * partial reconfiguration.
- * 
+ *
  * The FPGA Manager waits to transmit the data to the CB until the FPGA is able to
  * receive it. For a full configuration, the FPGA Manager waits until the FPGA
  * exits the Reset Phase and enters the Configuration Phase. For a partial
  * reconfiguration, the FPGA Manager waits until the CB.PR_READY signal indicates
  * that the FPGA is ready.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description     
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:-----------------
  *  [31:0] | RW     | Unknown | Write Data Value
- * 
+ *
  */
 /*
  * Field : Write Data Value - value
- * 
+ *
  * Accepts configuration image to be sent to CB when the HPS configures the FPGA.
  * Software normally just writes this register. If software reads this register, it
  * returns the value 0 and replies with an AXI SLVERR error.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_FPGAMGRDATA_DATA_VALUE register field. */
 #define ALT_FPGAMGRDATA_DATA_VALUE_LSB        0
@@ -107,7 +107,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_FPGAMGRDATA_DATA.
  */
 struct ALT_FPGAMGRDATA_DATA_s
@@ -130,7 +130,7 @@ typedef volatile struct ALT_FPGAMGRDATA_DATA_s  ALT_FPGAMGRDATA_DATA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_FPGAMGRDATA.
  */
 struct ALT_FPGAMGRDATA_s
@@ -155,4 +155,3 @@ typedef volatile struct ALT_FPGAMGRDATA_raw_s  ALT_FPGAMGRDATA_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_FPGAMGRDATA_H__ */
-

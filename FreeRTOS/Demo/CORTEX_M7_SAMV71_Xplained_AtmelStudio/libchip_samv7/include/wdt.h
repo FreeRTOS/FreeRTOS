@@ -71,4 +71,3 @@ extern uint32_t WDT_GetPeriod( uint32_t dwMs ) ;
 #endif
 
 #endif /* #ifndef _WDT_ */
-

@@ -7,7 +7,7 @@
 * @date     07/2007
 * @version  1.1
 * @date     10/2007
-* @version  1.5 various corrections reported by Ron Miller 
+* @version  1.5 various corrections reported by Ron Miller
 *
 **/
 /******************************************************************************/
@@ -56,7 +56,7 @@ s16                                 GradZ                            = 0;
 //  f = flag to indicate that a move has been done. Cleared by the Ptr Manager when acknowledged.
 //  i = amplitude of the move (Grad / 10)
 //  t = delay to accept the counter reaction
-int fMovePtrX; 
+int fMovePtrX;
 int iMovePtrX;
 int tMovePtrX;
 int fMovePtrY;
@@ -193,7 +193,7 @@ static u32 MEMS_ReadOutXY( void )
    if( N_filtering < 256 )
       {
       // Just to validate the calculated average values.
-      N_filtering++; 
+      N_filtering++;
       }
 
    return ( MEMS_Info.OutX + ( MEMS_Info.OutY << 16 ) );
@@ -223,10 +223,10 @@ static void MEMS_ChipSelect( u8 State )
 *
 *******************************************************************************/
 /**
-*  Sends a byte through the SPI interface and return the byte received from 
+*  Sends a byte through the SPI interface and return the byte received from
 *  the SPI bus.
 *
-*  @param[in]  byte The byte to send to the SPI interface.                  
+*  @param[in]  byte The byte to send to the SPI interface.
 *
 *  @return The byte returned by the SPI bus.
 *
@@ -401,7 +401,7 @@ void MEMS_Handler( void )
       {
       if( ( GradX > MIN_REACT ) || ( GradX < -MIN_REACT ) )
          {
-         iMovePtrX = GradX / DIV_REACT; 
+         iMovePtrX = GradX / DIV_REACT;
          tMovePtrX = DELAY_REACT;
          fMovePtrX = 1;
          }
@@ -461,7 +461,7 @@ void MEMS_Handler( void )
       else
          {
          TimeLastShock = TimeCounterForDoubleClick;
-         }    
+         }
       BUZZER_SetMode( BUZZER_SHORTBEEP );
       }
    }
@@ -509,7 +509,7 @@ u8 MEMS_ReadID( void )
 /**
 *
 *  Returns the current (relative) position of the Primer.
-*  Only X-Y axis are considered here. 
+*  Only X-Y axis are considered here.
 *
 *  @param[out] pX    Current horizontal coordinate.
 *  @param[out] pY    Current vertical coordinate.
@@ -543,19 +543,19 @@ void MEMS_GetRotation( Rotate_H12_V_Match_TypeDef* pH12 )
    s16 sX = MEMS_Info.OutX;
    s16 sY = MEMS_Info.OutY;
 
-   if( ( ( sX <= -MARGIN ) && ( sY <= 0 ) && (sX<=sY ) ) || 
+   if( ( ( sX <= -MARGIN ) && ( sY <= 0 ) && (sX<=sY ) ) ||
        ( ( sX <=- MARGIN ) && ( sY > 0) && (sX <= (-sY ) ) ) )
       {
       // 1st case: x<0, |x|>y => H12 = V9
       *pH12 = V9;
       }
    else if( ( ( sY <= -MARGIN ) && ( sX <= 0 ) && ( sY <= sX ) ) ||
-            ( ( sY <= -MARGIN ) && ( sX > 0 ) && ( sY <= (-sX ) ) ) ) 
+            ( ( sY <= -MARGIN ) && ( sX > 0 ) && ( sY <= (-sX ) ) ) )
       {
       // 2nd case: y<0, |y|>x => H12 = V12
       *pH12 = V12;
       }
-   else if( ( ( sX >= MARGIN ) && ( sY <= 0 ) && ( sX >= (-sY) ) ) || 
+   else if( ( ( sX >= MARGIN ) && ( sY <= 0 ) && ( sX >= (-sY) ) ) ||
             ( ( sX >= MARGIN ) && ( sY > 0 ) && ( sX >= sY ) ) )
       {
       // 3rd case: x>0, |x|>y => H12=V3

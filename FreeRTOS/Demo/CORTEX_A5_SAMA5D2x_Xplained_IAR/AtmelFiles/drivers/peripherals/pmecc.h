@@ -63,4 +63,3 @@ extern void build_gf(uint32_t mm, int32_t *index_of, int32_t *alpha_to);
 extern void pmecc_disable(void);
 
 #endif
-

@@ -731,4 +731,3 @@ static char cPageBuffer[ tcpBUFFER_LEN ];
 	/* Tell the WIZnet to send the data we have just written to its Tx buffer. */
 	prvFlushBuffer( ulTxAddress );
 }
-

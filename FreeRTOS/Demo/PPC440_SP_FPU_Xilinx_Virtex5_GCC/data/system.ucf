@@ -456,7 +456,7 @@ INST "DDR2_SDRAM/*/*gen_wdf[1]*u_wdf" LOC = RAMB36_X0Y16;
 
 AREA_GROUP "DDR_CAPTURE_FFS" GROUP = CLOSED;
 
- 
+
 
 Net fpga_0_SysACE_CompactFlash_SysACE_MPA_pin<0> LOC=G5  |  IOSTANDARD = LVCMOS33;
 Net fpga_0_SysACE_CompactFlash_SysACE_MPA_pin<1> LOC=N7  |  IOSTANDARD = LVCMOS33;

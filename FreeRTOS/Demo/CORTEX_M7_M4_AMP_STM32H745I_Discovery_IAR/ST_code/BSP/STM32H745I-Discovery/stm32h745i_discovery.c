@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @brief   This file provides a set of firmware functions to manage LEDs,
   *          push-buttons, external SDRAM, external QSPI Flash,
-  *          available on STM32H745I-Discovery board (MB1381) from 
+  *          available on STM32H745I-Discovery board (MB1381) from
   *          STMicroelectronics.
   ******************************************************************************
   * @attention
@@ -133,18 +133,18 @@ uint32_t BSP_GetVersion(void)
 void BSP_LED_Init(Led_TypeDef Led)
 {
   GPIO_InitTypeDef  GPIO_InitStruct;
-  
+
   /* Enable the GPIO_LED clock */
   LEDx_GPIO_CLK_ENABLE();
-  
+
   /* Configure the GPIO_LED pin */
   GPIO_InitStruct.Pin = GPIO_PIN[Led];
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  
+
   HAL_GPIO_Init(GPIO_PORT[Led], &GPIO_InitStruct);
-  
+
   /* By default, turn off LED */
   HAL_GPIO_WritePin(GPIO_PORT[Led], GPIO_PIN[Led], GPIO_PIN_SET);
 }
@@ -230,10 +230,10 @@ void BSP_LED_Toggle(Led_TypeDef Led)
 void BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode)
 {
   GPIO_InitTypeDef GPIO_InitStruct;
-  
+
   /* Enable the BUTTON clock */
   BUTTON_GPIO_CLK_ENABLE();
-  
+
   if(Button_Mode == BUTTON_MODE_GPIO)
   {
     /* Configure Button pin as input */
@@ -243,18 +243,18 @@ void BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     HAL_GPIO_Init(BUTTON_PORT[Button], &GPIO_InitStruct);
   }
-  
+
   if(Button_Mode == BUTTON_MODE_EXTI)
   {
     /* Configure Button pin as input with External interrupt */
     GPIO_InitStruct.Pin = BUTTON_PIN[Button];
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    
+
     GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-    
+
     HAL_GPIO_Init(BUTTON_PORT[Button], &GPIO_InitStruct);
-    
+
     /* Enable and set Button EXTI Interrupt to the lowest priority */
     HAL_NVIC_SetPriority((IRQn_Type)(BUTTON_IRQn[Button]), 0x0F, 0x00);
     HAL_NVIC_EnableIRQ((IRQn_Type)(BUTTON_IRQn[Button]));
@@ -311,19 +311,19 @@ static void I2Cx_MspInit(void)
 {
   GPIO_InitTypeDef  gpio_init_structure;
   RCC_PeriphCLKInitTypeDef  RCC_PeriphClkInit;
-  
+
   /* Configure the I2C clock source */
   RCC_PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C123;
   RCC_PeriphClkInit.I2c123ClockSelection = RCC_I2C123CLKSOURCE_D2PCLK1;
   HAL_RCCEx_PeriphCLKConfig(&RCC_PeriphClkInit);
-  
+
   /* set STOPWUCK in RCC_CFGR */
   __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
-  
-  /*** Configure the GPIOs ***/  
+
+  /*** Configure the GPIOs ***/
   /* Enable GPIO clock */
   DISCOVERY_I2Cx_SCL_SDA_GPIO_CLK_ENABLE();
-  
+
   /* Configure I2C Tx as alternate function */
   gpio_init_structure.Pin = DISCOVERY_I2Cx_SCL_PIN;
   gpio_init_structure.Mode = GPIO_MODE_AF_OD;
@@ -331,25 +331,25 @@ static void I2Cx_MspInit(void)
   gpio_init_structure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   gpio_init_structure.Alternate = DISCOVERY_I2Cx_SCL_SDA_AF;
   HAL_GPIO_Init(DISCOVERY_I2Cx_SCL_SDA_GPIO_PORT, &gpio_init_structure);
-  
+
   /* Configure I2C Rx as alternate function */
   gpio_init_structure.Pin = DISCOVERY_I2Cx_SDA_PIN;
   HAL_GPIO_Init(DISCOVERY_I2Cx_SCL_SDA_GPIO_PORT, &gpio_init_structure);
-  
-  /*** Configure the I2C peripheral ***/ 
+
+  /*** Configure the I2C peripheral ***/
   /* Enable I2C clock */
   DISCOVERY_I2Cx_CLK_ENABLE();
-  
-  /* Force the I2C peripheral clock reset */  
-  DISCOVERY_I2Cx_FORCE_RESET(); 
-  
-  /* Release the I2C peripheral clock reset */  
-  DISCOVERY_I2Cx_RELEASE_RESET(); 
-  
+
+  /* Force the I2C peripheral clock reset */
+  DISCOVERY_I2Cx_FORCE_RESET();
+
+  /* Release the I2C peripheral clock reset */
+  DISCOVERY_I2Cx_RELEASE_RESET();
+
   /* Enable and set I2Cx Interrupt to a lower priority */
   HAL_NVIC_SetPriority(DISCOVERY_I2Cx_EV_IRQn, 0x0F, 0);
   HAL_NVIC_EnableIRQ(DISCOVERY_I2Cx_EV_IRQn);
-  
+
   /* Enable and set I2Cx Interrupt to a lower priority */
   HAL_NVIC_SetPriority(DISCOVERY_I2Cx_ER_IRQn, 0x0F, 0);
   HAL_NVIC_EnableIRQ(DISCOVERY_I2Cx_ER_IRQn);
@@ -372,17 +372,17 @@ static void I2Cx_Init(void)
     hdiscovery_I2c.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
     hdiscovery_I2c.Init.GeneralCallMode  = I2C_GENERALCALL_ENABLE;
     hdiscovery_I2c.Init.NoStretchMode    = I2C_NOSTRETCH_DISABLE;
-    
+
     /* Init the I2C */
     I2Cx_MspInit();
-    HAL_I2C_Init(&hdiscovery_I2c);    
+    HAL_I2C_Init(&hdiscovery_I2c);
   }
 }
 
 /**
   * @brief  Writes a single data.
   * @param  Addr: I2C address
-  * @param  Reg: Register address 
+  * @param  Reg: Register address
   * @param  Value: Data to be written
   * @retval None
   */
@@ -390,7 +390,7 @@ static void I2Cx_Write(uint8_t Addr, uint8_t Reg, uint8_t Value)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
-  status = HAL_I2C_Mem_Write(&hdiscovery_I2c, Addr, (uint16_t)Reg, I2C_MEMADD_SIZE_8BIT, &Value, 1, 100); 
+  status = HAL_I2C_Mem_Write(&hdiscovery_I2c, Addr, (uint16_t)Reg, I2C_MEMADD_SIZE_8BIT, &Value, 1, 100);
 
   /* Check the communication status */
   if(status != HAL_OK)
@@ -403,23 +403,23 @@ static void I2Cx_Write(uint8_t Addr, uint8_t Reg, uint8_t Value)
 /**
   * @brief  Reads a single data.
   * @param  Addr: I2C address
-  * @param  Reg: Register address 
+  * @param  Reg: Register address
   * @retval Read data
   */
 static uint8_t I2Cx_Read(uint8_t Addr, uint8_t Reg)
 {
   HAL_StatusTypeDef status = HAL_OK;
   uint8_t Value = 0;
-  
+
   status = HAL_I2C_Mem_Read(&hdiscovery_I2c, Addr, Reg, I2C_MEMADD_SIZE_8BIT, &Value, 1, 1000);
-  
+
   /* Check the communication status */
   if(status != HAL_OK)
   {
     /* Execute user timeout callback */
     I2Cx_Error(Addr);
   }
-  return Value;   
+  return Value;
 }
 
 /**
@@ -448,19 +448,19 @@ static HAL_StatusTypeDef I2Cx_ReadMultiple(uint8_t Addr, uint16_t Reg, uint16_t 
 
 /**
   * @brief  Writes a value in a register of the device through BUS in using DMA mode.
-  * @param  Addr: Device address on BUS Bus.  
+  * @param  Addr: Device address on BUS Bus.
   * @param  Reg: The target register address to write
   * @param  MemAddress: memory address
-  * @param  Buffer: The target register value to be written 
+  * @param  Buffer: The target register value to be written
   * @param  Length: buffer size to be written
   * @retval HAL status
   */
 static HAL_StatusTypeDef I2Cx_WriteMultiple(uint8_t Addr, uint16_t Reg, uint16_t MemAddress, uint8_t *Buffer, uint16_t Length)
 {
   HAL_StatusTypeDef status = HAL_OK;
-  
+
   status = HAL_I2C_Mem_Write(&hdiscovery_I2c, Addr, (uint16_t)Reg, MemAddress, Buffer, Length, 1000);
-  
+
   /* Check the communication status */
   if(status != HAL_OK)
   {
@@ -479,7 +479,7 @@ static void I2Cx_Error(uint8_t Addr)
 {
   /* De-initialize the I2C comunication bus */
   HAL_I2C_DeInit(&hdiscovery_I2c);
-  
+
   /* Re-Initialize the I2C communication bus */
   I2Cx_Init();
 }
@@ -494,7 +494,7 @@ static void I2Cx_Error(uint8_t Addr)
   * @brief  Initializes Audio low level.
   * @retval None
   */
-void AUDIO_IO_Init(void) 
+void AUDIO_IO_Init(void)
 {
   I2Cx_Init();
 }
@@ -510,39 +510,39 @@ void AUDIO_IO_DeInit(void)
 /**
   * @brief  Writes a single data.
   * @param  Addr: I2C address
-  * @param  Reg: Reg address 
+  * @param  Reg: Reg address
   * @param  Value: Data to be written
   * @retval None
   */
 void AUDIO_IO_Write(uint8_t Addr, uint16_t Reg, uint16_t Value)
 {
   uint16_t tmp = Value;
-  
+
   Value = ((uint16_t)(tmp >> 8) & 0x00FF);
-  
+
   Value |= ((uint16_t)(tmp << 8)& 0xFF00);
-  
+
   I2Cx_WriteMultiple(Addr, Reg, I2C_MEMADD_SIZE_16BIT,(uint8_t*)&Value, 2);
 }
 
 /**
   * @brief  Reads a single data.
   * @param  Addr: I2C address
-  * @param  Reg: Reg address 
+  * @param  Reg: Reg address
   * @retval Data to be read
   */
 uint16_t AUDIO_IO_Read(uint8_t Addr, uint16_t Reg)
 {
   uint16_t read_value = 0, tmp = 0;
-  
-  I2Cx_ReadMultiple(Addr, Reg, I2C_MEMADD_SIZE_16BIT, (uint8_t*)&read_value, 2); 
-  
+
+  I2Cx_ReadMultiple(Addr, Reg, I2C_MEMADD_SIZE_16BIT, (uint8_t*)&read_value, 2);
+
   tmp = ((uint16_t)(read_value >> 8) & 0x00FF);
-  
+
   tmp |= ((uint16_t)(read_value << 8)& 0xFF00);
-  
+
   read_value = tmp;
-  
+
   return read_value;
 }
 
@@ -633,11 +633,11 @@ void TS_IO_Delay(uint32_t Delay)
 /**
   * @}
   */
-  
+
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

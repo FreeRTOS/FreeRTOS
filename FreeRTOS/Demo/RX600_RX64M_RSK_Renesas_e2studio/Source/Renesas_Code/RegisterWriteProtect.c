@@ -69,4 +69,3 @@ void DisablePRCR( uint16_t protect )
 
 	SYSTEM.PRCR.WORD = (uint16_t)( 0xA500 | current_value );
 }
-

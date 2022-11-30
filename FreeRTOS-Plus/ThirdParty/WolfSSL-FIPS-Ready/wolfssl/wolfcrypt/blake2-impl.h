@@ -152,4 +152,3 @@ static WC_INLINE void secure_zero_memory( void *v, word64 n )
 }
 
 #endif  /* WOLFCRYPT_BLAKE2_IMPL_H */
-

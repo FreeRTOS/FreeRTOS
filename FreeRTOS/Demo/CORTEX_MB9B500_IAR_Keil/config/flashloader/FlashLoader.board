@@ -5,5 +5,3 @@
     <loader>$PROJ_DIR$\config\flashloader\FlashMB9BF506.flash</loader>
   </pass>
 </flash_board>
-
-

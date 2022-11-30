@@ -16,9 +16,7 @@
 @REM                     session afterwards.
 @REM   --silent          Omits the sign-on message.
 @REM   --timeout         Limits the maximum allowed execution time.
-@REM 
+@REM
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 6.5\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armstlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armbat.dll" --macro "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\config\debugger\ST\Trace_STM32L1xx.dmac" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\config\flashloader\ST\FlashSTM32L15xxB.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\CONFIG\debugger\ST\STM32L152xB.ddf" "--drv_verify_download" "--semihosting" "--device=STM32L152xB" "--stlink_interface=SWD" "--stlink_reset_strategy=0,2" "--drv_swo_clock_setup=32000000,1,2000000" 
-
-
+"C:\devtools\IAR Systems\Embedded Workbench 6.5\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armstlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armbat.dll" --macro "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\config\debugger\ST\Trace_STM32L1xx.dmac" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\config\flashloader\ST\FlashSTM32L15xxB.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\CONFIG\debugger\ST\STM32L152xB.ddf" "--drv_verify_download" "--semihosting" "--device=STM32L152xB" "--stlink_interface=SWD" "--stlink_reset_strategy=0,2" "--drv_swo_clock_setup=32000000,1,2000000"

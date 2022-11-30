@@ -156,4 +156,3 @@ uint32_t RedRand32(
 
     return (uint32_t)ullN;
 }
-

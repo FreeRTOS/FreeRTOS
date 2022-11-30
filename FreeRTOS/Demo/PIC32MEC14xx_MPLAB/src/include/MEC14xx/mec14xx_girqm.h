@@ -31,8 +31,8 @@
  */
 
 /* Include FreeRTOS configuration settings.
- * These include porting layer switches affecting interrupt aggregation 
- * of GIRQ23 & GIRQ24 
+ * These include porting layer switches affecting interrupt aggregation
+ * of GIRQ23 & GIRQ24
  */
 #include "FreeRTOSConfig.h"
 

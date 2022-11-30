@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 /*! \file
@@ -50,7 +50,7 @@ extern "C"
  * The APIs in this module are divided into two categories:
  * * Support for low-level MMU configuration and operation.
  * * Support for simplified virtual address space definition and enablement.
- * 
+ *
  * The functions in the low-level MMU API provide capabilities to:
  * * Control and maintain the MMU operational state.
  * * Create and maintain MMU translation tables using a low-level API.
@@ -164,20 +164,20 @@ typedef enum ALT_MMU_DAP_e
  * The HWLIB uses the short-descriptor translation table format for defining the
  * access permissions where three bits, AP[2:0], define the access
  * permissions. The SCTLR.AFE must be set to 0.
- * 
+ *
  * The following table provides a summary of the enumerations, AP bit encodings,
  * and access permission descriptions for this type.
  *
- *  Enumeration               | AP Value | Privileged (PL1) Access | User (PL0) Access | Description                         
+ *  Enumeration               | AP Value | Privileged (PL1) Access | User (PL0) Access | Description
  * :--------------------------|:---------|:------------------------|:------------------|:-------------------------------------
- *  ALT_MMU_AP_NO_ACCESS      | 000      | No Access               | No Access         | No Access                           
- *  ALT_MMU_AP_PRIV_ACCESS    | 001      | Read/Write              | No Access         | Privileged access only              
+ *  ALT_MMU_AP_NO_ACCESS      | 000      | No Access               | No Access         | No Access
+ *  ALT_MMU_AP_PRIV_ACCESS    | 001      | Read/Write              | No Access         | Privileged access only
  *  ALT_MMU_AP_USER_READ_ONLY | 010      | Read/Write              | Read Only         | Write in user mode generates a fault
- *  ALT_MMU_AP_FULL_ACCESS    | 011      | Read/Write              | Read/Write        | Full Access                         
- *  N/A                       | 100      | Unknown                 | Unknown           | Reserved                            
- *  ALT_MMU_AP_PRIV_READ_ONLY | 101      | Read Only               | No Access         | Privileged read only                
- *  N/A                       | 110      | Read Only               | Read Only         | Read Only - deprecated              
- *  ALT_MMU_AP_READ_ONLY      | 111      | Read Only               | Read Only         | Read Only                           
+ *  ALT_MMU_AP_FULL_ACCESS    | 011      | Read/Write              | Read/Write        | Full Access
+ *  N/A                       | 100      | Unknown                 | Unknown           | Reserved
+ *  ALT_MMU_AP_PRIV_READ_ONLY | 101      | Read Only               | No Access         | Privileged read only
+ *  N/A                       | 110      | Read Only               | Read Only         | Read Only - deprecated
+ *  ALT_MMU_AP_READ_ONLY      | 111      | Read Only               | Read Only         | Read Only
  */
 enum ALT_MMU_AP_e
 {
@@ -195,40 +195,40 @@ typedef enum ALT_MMU_AP_e       ALT_MMU_AP_t;
  * This type enumerates the Memory Region attributes that can be specifed in MMU
  * translation table entries. Memory attributes determine the memory ordering and
  * cache policies for inner/outer domains used for a particular range of memory.
- * 
+ *
  * Within the translation table entries, the memory region attributes are encoded
  * using a combination of the descriptor entry data fields (TEX, C, B).  Memory
  * attribute settings also affect the meaning of other memory region properties
  * such as shareability (S).
- * 
+ *
  * The tables below describe the available enumerations for specifying different
  * memory region attributes and their affect on shareability.
  *
  * The memory attributes enumerated here are meant to be used is a system where
  * TEX remap is disabled (i.e. SCTLR.TRE is set to 0).
  *
- *  Enumeration            | TEX | C | B | Description                                       | Shareability                   
+ *  Enumeration            | TEX | C | B | Description                                       | Shareability
  * :-----------------------|:----|:--|:--|:--------------------------------------------------|:--------------------------------
- *  ALT_MMU_ATTR_STRONG    | 000 | 0 | 0 | Strongly Ordered                                  | Shareable                      
- *  ALT_MMU_ATTR_DEVICE    | 000 | 0 | 1 | Device                                            | Shareable                      
+ *  ALT_MMU_ATTR_STRONG    | 000 | 0 | 0 | Strongly Ordered                                  | Shareable
+ *  ALT_MMU_ATTR_DEVICE    | 000 | 0 | 1 | Device                                            | Shareable
  *  ALT_MMU_ATTR_WT        | 000 | 1 | 0 | Inner/Outer Write-Through, No Write Allocate      | Determined by desciptor [S] bit
  *  ALT_MMU_ATTR_WB        | 000 | 1 | 1 | Inner/Outer Write-Back, No Write Allocate         | Determined by desciptor [S] bit
  *  ALT_MMU_ATTR_NC        | 001 | 0 | 0 | Inner/Outer Non-Cacheable                         | Determined by desciptor [S] bit
- *  N/A                    | 001 | 0 | 1 | Reserved                                          | Reserved                       
- *  N/A                    | 001 | 1 | 0 | Implementation Defined                            | -                              
+ *  N/A                    | 001 | 0 | 1 | Reserved                                          | Reserved
+ *  N/A                    | 001 | 1 | 0 | Implementation Defined                            | -
  *  ALT_MMU_ATTR_WBA       | 001 | 1 | 1 | Inner/Outer Write-Back, Write Allocate            | Determined by desciptor [S] bit
- *  ALT_MMU_ATTR_DEVICE_NS | 010 | 0 | 0 | Device                                            | Non-Shareable                  
- *  N/A                    | 010 | 0 | 1 | Reserved                                          | Reserved                       
- *  N/A                    | 010 | 1 | 0 | Reserved                                          | Reserved                       
- *  N/A                    | 010 | 1 | 1 | Reserved                                          | Reserved                       
+ *  ALT_MMU_ATTR_DEVICE_NS | 010 | 0 | 0 | Device                                            | Non-Shareable
+ *  N/A                    | 010 | 0 | 1 | Reserved                                          | Reserved
+ *  N/A                    | 010 | 1 | 0 | Reserved                                          | Reserved
+ *  N/A                    | 010 | 1 | 1 | Reserved                                          | Reserved
  *  ALT_MMU_ATTR_AA_BB     | 1BB | A | A | Cached where AA = Inner Policy, BB = Outer Policy | Determined by desciptor [S] bit
  *
  *  Cache Policy Encoding for AA, BB
  *
- *  Mnemonic Encoding | Bit Encoding | Cache Policy                    
+ *  Mnemonic Encoding | Bit Encoding | Cache Policy
  * :------------------|:-------------|:---------------------------------
- *  NC                | 00           | Non-Cacheable                   
- *  WBA               | 01           | Write-Back, Write Allocate      
+ *  NC                | 00           | Non-Cacheable
+ *  WBA               | 01           | Write-Back, Write Allocate
  *  WT                | 10           | Write-Through, No Write Allocate
  *  WB                | 11           | Write-Back, No Write Allocate
  *
@@ -269,7 +269,7 @@ enum ALT_MMU_ATTR_e
     ALT_MMU_ATTR_WB_WT     = 0x63, /*!< Inner Write-Back, Outer Write-Through, Shareability determined by [S] bit */
     ALT_MMU_ATTR_WB_WB     = 0x73, /*!< Inner Write-Back, Outer Write-Back, Shareability determined by [S] bit */
 
-}; 
+};
 /*! Typedef name for enum ALT_MMU_ATTR_e */
 typedef enum ALT_MMU_ATTR_e     ALT_MMU_ATTR_t;
 
@@ -337,7 +337,7 @@ typedef enum ALT_MMU_ATTR_e     ALT_MMU_ATTR_t;
  * These macros may be used to create descriptor entry values that are passed to a
  * first level translation table contruction function such as
  * alt_mmu_ttb1_desc_set().
- * 
+ *
  * Each short-descriptor has a set of macro definitions of the following form:
  *
  * * \b ALT_MMU_TTB1_<type_and_field_name>_MASK - bit mask for the descriptor type
@@ -631,7 +631,7 @@ typedef enum ALT_MMU_ATTR_e     ALT_MMU_ATTR_t;
  * These macros may be used to create descriptor entry values that are passed to a
  * second level translation table contruction function such as
  * alt_mmu_ttb2_desc_set().
- * 
+ *
  * Each short-descriptor has a set of macro definitions of the following form:
  *
  * * \b ALT_MMU_TTB2_<type_and_field_name>_MASK - bit mask for the descriptor type
@@ -846,7 +846,7 @@ typedef enum ALT_MMU_ATTR_e     ALT_MMU_ATTR_t;
  * These data structures are an alternative method to create descriptor entry
  * values that are passed to a first level translation table contruction function
  * such as alt_mmu_ttb1_desc_set().
- * 
+ *
  * @{
  */
 
@@ -894,7 +894,7 @@ typedef struct ALT_MMU_TTB1_PAGE_TABLE_s
  * This type defines a union for accessing a First Level Translation Table Page
  * Table Entry by fields or aggregate raw entry value.
  */
-typedef union ALT_MMU_TTB1_PAGE_TABLE_ENTRY_u 
+typedef union ALT_MMU_TTB1_PAGE_TABLE_ENTRY_u
 {
     ALT_MMU_TTB1_PAGE_TABLE_t   fld;    /*!< access to individual entry data fields */
     uint32_t                    raw;    /*!< access to aggregate entry value */
@@ -945,7 +945,7 @@ typedef struct ALT_MMU_TTB1_SECTION_s
  * This type defines a union for accessing a First Level Translation Table Section
  * Entry by fields or aggregate raw entry value.
  */
-typedef union ALT_MMU_TTB1_SECTION_ENTRY_u 
+typedef union ALT_MMU_TTB1_SECTION_ENTRY_u
 {
     ALT_MMU_TTB1_SECTION_t      fld;    /*!< access to individual entry data fields */
     uint32_t                    raw;    /*!< access to aggregate entry value */
@@ -998,7 +998,7 @@ typedef struct ALT_MMU_TTB1_SUPERSECTION_s
  * This type defines a union for accessing a First Level Translation Table
  * Supersection Entry by fields or aggregate raw entry value.
  */
-typedef union ALT_MMU_TTB1_SUPERSECTION_ENTRY_u 
+typedef union ALT_MMU_TTB1_SUPERSECTION_ENTRY_u
 {
     ALT_MMU_TTB1_SUPERSECTION_t fld;    /*!< access to individual entry data fields */
     uint32_t                    raw;    /*!< access to aggregate entry value */
@@ -1015,7 +1015,7 @@ typedef union ALT_MMU_TTB1_SUPERSECTION_ENTRY_u
  * These data structures are an alternative method to create descriptor entry
  * values that are passed to a first level translation table contruction function
  * such as alt_mmu_ttb2_desc_set().
- * 
+ *
  * @{
  */
 
@@ -1032,7 +1032,7 @@ typedef struct ALT_MMU_TTB2_FAULT_s
  * This type defines a union for accessing a Second Level Translation Table Fault
  * Entry by fields or aggregate raw entry value.
  */
-typedef union ALT_MMU_TTB2_FAULT_ENTRY_u 
+typedef union ALT_MMU_TTB2_FAULT_ENTRY_u
 {
     ALT_MMU_TTB2_FAULT_t        fld;    /*!< access to individual entry data fields */
     uint32_t                    raw;    /*!< access to aggregate entry value */
@@ -1077,7 +1077,7 @@ typedef struct ALT_MMU_TTB2_LARGE_PAGE_s
  * This type defines a union for accessing a Second Level Translation Table Large
  * Page Table Entry by fields or aggregate raw entry value.
  */
-typedef union ALT_MMU_TTB2_LARGE_PAGE_ENTRY_u 
+typedef union ALT_MMU_TTB2_LARGE_PAGE_ENTRY_u
 {
     ALT_MMU_TTB2_LARGE_PAGE_t   fld;    /*!< access to individual entry data fields */
     uint32_t                    raw;    /*!< access to aggregate entry value */
@@ -1121,7 +1121,7 @@ typedef struct ALT_MMU_TTB2_SMALL_PAGE_s
  * This type defines a union for accessing a Second Level Translation Table Small
  * Page Table Entry by fields or aggregate raw entry value.
  */
-typedef union ALT_MMU_TTB2_SMALL_PAGE_ENTRY_u 
+typedef union ALT_MMU_TTB2_SMALL_PAGE_ENTRY_u
 {
     ALT_MMU_TTB2_SMALL_PAGE_t   fld;    /*!< access to individual entry data fields */
     uint32_t                    raw;    /*!< access to aggregate entry value */
@@ -1219,7 +1219,7 @@ ALT_STATUS_CODE alt_mmu_ttb1_desc_set(uint32_t* ttb1,
  * the corresponding first level translation table page table descriptor entry to
  * have been previously configured prior to setting up any second level
  * translation table entries in that 1 MiB virtual address range.
- * 
+ *
  * If the descriptor type of \e desc is a fault or small page descriptor then the
  * virtual address value \e va must be a 4 KiB aligned address and the
  * appropriate entry in the second level translation table is set to the
@@ -1377,7 +1377,7 @@ ALT_STATUS_CODE alt_mmu_TTBCR_set(const bool enable_ttbr0_walk,
  * \param       domain_ap
  *              An array of sixteen domain access permission settings for each of
  *              the respective sixteen memory domains.
- *              
+ *
  * \param       num_elem
  *              The number of domain access permission elements in \e
  *              domain_ap. This should always be 16.
@@ -1500,11 +1500,11 @@ typedef struct ALT_MMU_MEM_REGION_s
                                      *   shareablity of the memory region.
                                      */
   ALT_MMU_TTB_S_t        shareable; /*!< The shareability of the memory region. */
-  ALT_MMU_TTB_XN_t       execute;   /*!< Whether instructions can be executed from this 
+  ALT_MMU_TTB_XN_t       execute;   /*!< Whether instructions can be executed from this
                                      *   memory region.
                                      */
-  ALT_MMU_TTB_NS_t       security;  /*!< Controls whether address translations made from 
-                                     *   the secure state translate physical address in 
+  ALT_MMU_TTB_NS_t       security;  /*!< Controls whether address translations made from
+                                     *   the secure state translate physical address in
                                      *   the secure or non-secure address map.
                                      */
 } ALT_MMU_MEM_REGION_t;
@@ -1562,7 +1562,7 @@ typedef void* (*alt_mmu_ttb_alloc_t)(const size_t size, void * context);
  *              tables described by the virtual address space specfication, or
  *              zero if an error has occurred.
  */
-size_t alt_mmu_va_space_storage_required(const ALT_MMU_MEM_REGION_t* mem_regions, 
+size_t alt_mmu_va_space_storage_required(const ALT_MMU_MEM_REGION_t* mem_regions,
                                          const size_t num_mem_regions);
 
 /******************************************************************************/
@@ -1575,7 +1575,7 @@ size_t alt_mmu_va_space_storage_required(const ALT_MMU_MEM_REGION_t* mem_regions
  *
  * The largest region that can be specified by a single entry is 2 GiB. Use multiple
  * entries to describe a memory region larger than 2 GiB.
- * 
+ *
  * Any address ranges in the potential 4 GiB virtual address space left
  * unspecified in the \e mem_regions parameter default to fault descriptor entries
  * in the generated translation tables.
@@ -1603,7 +1603,7 @@ size_t alt_mmu_va_space_storage_required(const ALT_MMU_MEM_REGION_t* mem_regions
  * \retval      ALT_E_ERROR     Details about error status code
  */
 ALT_STATUS_CODE alt_mmu_va_space_create(uint32_t ** ttb1,
-                                        const ALT_MMU_MEM_REGION_t* mem_regions, 
+                                        const ALT_MMU_MEM_REGION_t* mem_regions,
                                         const size_t num_mem_regions,
                                         alt_mmu_ttb_alloc_t ttb_alloc,
                                         void * ttb_alloc_context);
@@ -1620,7 +1620,7 @@ ALT_STATUS_CODE alt_mmu_va_space_create(uint32_t ** ttb1,
  *   table (i.e. TTBR0).
  * * Set Translation Table Base Register (TTBR0) to \e ttb1.
  * * Configure Domain Access Control Register (DACR) to the client domain.
- * * Invalidate 
+ * * Invalidate
  *   - TLBs
  *   - caches
  *   - branch prediction buffers (BTAC, etc.)

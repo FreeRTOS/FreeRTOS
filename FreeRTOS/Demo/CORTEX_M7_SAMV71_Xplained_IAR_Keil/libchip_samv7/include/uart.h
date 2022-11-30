@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -64,4 +64,3 @@ void UART_CompareConfig(Uart *uart, uint8_t Val1, uint8_t Val2);
 
 uint32_t UART_IsTxReady(Uart *uart);
 #endif //#ifndef UART_H
-

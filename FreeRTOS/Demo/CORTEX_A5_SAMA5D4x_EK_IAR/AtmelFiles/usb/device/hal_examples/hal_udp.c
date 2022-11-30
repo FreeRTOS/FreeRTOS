@@ -1672,4 +1672,3 @@ void USBD_HAL_Test( uint8_t bIndex )
 }
 
 /**@}*/
-

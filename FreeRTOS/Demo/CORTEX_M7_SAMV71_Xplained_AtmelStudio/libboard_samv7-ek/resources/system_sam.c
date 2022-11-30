@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 #include "samv71.h"
 
 /* @cond 0 */
@@ -59,69 +59,69 @@ uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_4MHZ;
 	uint32_t read_MOR;
 	/* Set FWS according to SYS_BOARD_MCKR configuration */
 	EFC->EEFC_FMR = EEFC_FMR_FWS(5);
-	
-	 /* Before switching MAIN OSC on external crystal : enable it and don't 
+
+	 /* Before switching MAIN OSC on external crystal : enable it and don't
 	 * disable at the same time RC OSC in case of if MAIN OSC is still using RC
 	 * OSC
 	 */
-	
+
 	read_MOR = PMC->CKGR_MOR;
 	 /* enable external crystal - enable RC OSC */
-	read_MOR |= (CKGR_MOR_KEY_PASSWD |CKGR_MOR_XT32KFME); 
+	read_MOR |= (CKGR_MOR_KEY_PASSWD |CKGR_MOR_XT32KFME);
 	PMC->CKGR_MOR = read_MOR;
-	
+
 	/* Select XTAL 32k instead of internal slow RC 32k for slow clock */
 	if ( (SUPC->SUPC_SR & SUPC_SR_OSCSEL) != SUPC_SR_OSCSEL_CRYST )
 	{
 		SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
-	
+
 		while( !(SUPC->SUPC_SR & SUPC_SR_OSCSEL) );
 	}
-	
+
 	/* Initialize main oscillator */
 	if ( !(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) )
 	{
 	  PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT
 					| CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN;
-	
+
 	  while ( !(PMC->PMC_SR & PMC_SR_MOSCXTS) )
 	  {
 	  }
 	}
-	
+
 	/* Switch to 3-20MHz Xtal oscillator */
-	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT 
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | SYS_BOARD_OSCOUNT
 					| CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;
-	
+
 	while ( !(PMC->PMC_SR & PMC_SR_MOSCSELS) )
 	{
 	}
-	
+
 	PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk)
 					| PMC_MCKR_CSS_MAIN_CLK;
 
 	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
 	{
 	}
-   
+
 	/* Initialize PLLA */
 	PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;
 	while ( !(PMC->PMC_SR & PMC_SR_LOCKA) )
 	{
 	}
-   
+
 	/* Switch to main clock */
 	PMC->PMC_MCKR = (SYS_BOARD_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;
 	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
 	{
 	}
-   
+
 	/* Switch to PLLA */
 	PMC->PMC_MCKR = SYS_BOARD_MCKR;
 	while ( !(PMC->PMC_SR & PMC_SR_MCKRDY) )
 	{
 	}
-   
+
 	SystemCoreClock = CHIP_FREQ_CPU_MAX;
 }
 
@@ -277,15 +277,15 @@ void sysclk_enable_usb(void)
 {
     /* Disable FS USB clock*/
     PMC->PMC_SCDR = PMC_SCDR_USBCLK;
-    
+
     /* Enable PLL 480 MHz */
-    PMC->CKGR_UCKR = CKGR_UCKR_UPLLEN | CKGR_UCKR_UPLLCOUNT(0xF);    
+    PMC->CKGR_UCKR = CKGR_UCKR_UPLLEN | CKGR_UCKR_UPLLCOUNT(0xF);
     /* Wait that PLL is considered locked by the PMC */
     while( !(PMC->PMC_SR & PMC_SR_LOCKU) );
-    
+
     /* USB clock register: USB Clock Input is UTMI PLL */
     PMC->PMC_USB = (PMC_USB_USBS | PMC_USB_USBDIV(USBCLK_DIV - 1) );
-    
+
     PMC->PMC_SCER = PMC_SCER_USBCLK;
 }
 
@@ -303,15 +303,15 @@ void sysclk_disable_usb(void)
 {
     /* Disable FS USB clock*/
     PMC->PMC_SCDR = PMC_SCDR_USBCLK;
-    
+
     /* Enable PLL 480 MHz */
-    PMC->CKGR_UCKR = CKGR_UCKR_UPLLEN | CKGR_UCKR_UPLLCOUNT(0xF);    
+    PMC->CKGR_UCKR = CKGR_UCKR_UPLLEN | CKGR_UCKR_UPLLCOUNT(0xF);
     /* Wait that PLL is considered locked by the PMC */
     while( !(PMC->PMC_SR & PMC_SR_LOCKU) );
-    
+
     /* USB clock register: USB Clock Input is UTMI PLL */
     PMC->PMC_USB = (PMC_USB_USBS | PMC_USB_USBDIV(USBCLK_DIV - 1) );
-    
+
 
 }
 

@@ -96,7 +96,7 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		*(privileged_functions)
-		
+
 		/* Non privileged code is after _Privileged_Functions_Region_Size. */
 		__privileged_functions_actual_end__ = .;
 		. = _Privileged_Functions_Region_Size;

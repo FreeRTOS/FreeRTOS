@@ -69,5 +69,3 @@ extern void SUPC_SelectExtCrystal32K(void)
         while( !(SUPC->SUPC_SR & SUPC_SR_OSCSEL) );
     }
 }
-
-

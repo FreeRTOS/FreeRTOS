@@ -219,9 +219,3 @@ char cChar;
 
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-
-

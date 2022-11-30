@@ -16,7 +16,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l1xx_pwr.h"
@@ -26,10 +26,10 @@
   * @{
   */
 
-/** @defgroup PWR 
+/** @defgroup PWR
   * @brief PWR driver modules
   * @{
-  */ 
+  */
 
 /** @defgroup PWR_Private_TypesDefinitions
   * @{
@@ -132,7 +132,7 @@ void PWR_RTCAccessCmd(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   *(__IO uint32_t *) CR_DBP_BB = (uint32_t)NewState;
 }
 
@@ -146,7 +146,7 @@ void PWR_PVDCmd(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   *(__IO uint32_t *) CR_PVDE_BB = (uint32_t)NewState;
 }
 
@@ -167,18 +167,18 @@ void PWR_PVDCmd(FunctionalState NewState)
 void PWR_PVDLevelConfig(uint32_t PWR_PVDLevel)
 {
   uint32_t tmpreg = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_PWR_PVD_LEVEL(PWR_PVDLevel));
-  
+
   tmpreg = PWR->CR;
-  
+
   /* Clear PLS[7:5] bits */
   tmpreg &= CR_PLS_MASK;
-  
+
   /* Set PLS[7:5] bits according to PWR_PVDLevel value */
   tmpreg |= PWR_PVDLevel;
-  
+
   /* Store the new value */
   PWR->CR = tmpreg;
 }
@@ -194,14 +194,14 @@ void PWR_PVDLevelConfig(uint32_t PWR_PVDLevel)
 void PWR_WakeUpPinCmd(uint32_t PWR_WakeUpPin, FunctionalState NewState)
 {
   __IO uint32_t tmp = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_PWR_WAKEUP_PIN(PWR_WakeUpPin));
-  
+
   assert_param(IS_FUNCTIONAL_STATE(NewState));
 
   tmp = CSR_EWUP_BB + PWR_WakeUpPin;
-  
+
   *(__IO uint32_t *) (tmp) = (uint32_t)NewState;
 }
 
@@ -239,21 +239,21 @@ void PWR_UltraLowPowerCmd(FunctionalState NewState)
   *   This parameter can be:
   *     @arg PWR_VoltageScaling_Range1: Voltage Scaling Range 1
   *     @arg PWR_VoltageScaling_Range2: Voltage Scaling Range 2
-  *     @arg PWR_VoltageScaling_Range3: Voltage Scaling Range 3      
+  *     @arg PWR_VoltageScaling_Range3: Voltage Scaling Range 3
   * @retval None
   */
 void PWR_VoltageScalingConfig(uint32_t PWR_VoltageScaling)
 {
   uint32_t tmp = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_PWR_VOLTAGE_SCALING_RANGE(PWR_VoltageScaling));
-  
+
   tmp = PWR->CR;
 
   tmp &= CR_VOS_MASK;
   tmp |= PWR_VoltageScaling;
-  
+
   PWR->CR = tmp & 0xFFFFFFF3;
 
 }
@@ -272,13 +272,13 @@ void PWR_EnterLowPowerRunMode(FunctionalState NewState)
   if (NewState != DISABLE)
   {
     PWR->CR |= PWR_CR_LPSDSR;
-    PWR->CR |= PWR_CR_LPRUN;     
+    PWR->CR |= PWR_CR_LPRUN;
   }
   else
   {
-    PWR->CR &= (uint32_t)~((uint32_t)PWR_CR_LPRUN); 
-    PWR->CR &= (uint32_t)~((uint32_t)PWR_CR_LPSDSR);  
-  }  
+    PWR->CR &= (uint32_t)~((uint32_t)PWR_CR_LPRUN);
+    PWR->CR &= (uint32_t)~((uint32_t)PWR_CR_LPSDSR);
+  }
 }
 
 /**
@@ -301,25 +301,25 @@ void PWR_EnterSleepMode(uint32_t PWR_Regulator, uint8_t PWR_SLEEPEntry)
   assert_param(IS_PWR_REGULATOR(PWR_Regulator));
 
   assert_param(IS_PWR_SLEEP_ENTRY(PWR_SLEEPEntry));
-  
+
   /* Select the regulator state in Sleep mode ---------------------------------*/
   tmpreg = PWR->CR;
-  
+
   /* Clear PDDS and LPDSR bits */
   tmpreg &= CR_DS_MASK;
-  
+
   /* Set LPDSR bit according to PWR_Regulator value */
   tmpreg |= PWR_Regulator;
-  
+
   /* Store the new value */
   PWR->CR = tmpreg;
 
   /* Clear SLEEPDEEP bit of Cortex System Control Register */
   SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);
-  
+
   /* Select SLEEP mode entry -------------------------------------------------*/
   if(PWR_SLEEPEntry == PWR_SLEEPEntry_WFI)
-  {   
+  {
     /* Request Wait For Interrupt */
     __WFI();
   }
@@ -345,28 +345,28 @@ void PWR_EnterSleepMode(uint32_t PWR_Regulator, uint8_t PWR_SLEEPEntry)
 void PWR_EnterSTOPMode(uint32_t PWR_Regulator, uint8_t PWR_STOPEntry)
 {
   uint32_t tmpreg = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_PWR_REGULATOR(PWR_Regulator));
   assert_param(IS_PWR_STOP_ENTRY(PWR_STOPEntry));
-  
+
   /* Select the regulator state in STOP mode ---------------------------------*/
   tmpreg = PWR->CR;
   /* Clear PDDS and LPDSR bits */
   tmpreg &= CR_DS_MASK;
-  
+
   /* Set LPDSR bit according to PWR_Regulator value */
   tmpreg |= PWR_Regulator;
-  
+
   /* Store the new value */
   PWR->CR = tmpreg;
-  
+
   /* Set SLEEPDEEP bit of Cortex System Control Register */
   SCB->SCR |= SCB_SCR_SLEEPDEEP;
-  
+
   /* Select STOP mode entry --------------------------------------------------*/
   if(PWR_STOPEntry == PWR_STOPEntry_WFI)
-  {   
+  {
     /* Request Wait For Interrupt */
     __WFI();
   }
@@ -376,7 +376,7 @@ void PWR_EnterSTOPMode(uint32_t PWR_Regulator, uint8_t PWR_STOPEntry)
     __WFE();
   }
   /* Reset SLEEPDEEP bit of Cortex System Control Register */
-  SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);  
+  SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP);
 }
 
 /**
@@ -388,13 +388,13 @@ void PWR_EnterSTANDBYMode(void)
 {
   /* Clear Wake-up flag */
   PWR->CR |= PWR_CR_CWUF;
-  
+
   /* Select STANDBY mode */
   PWR->CR |= PWR_CR_PDDS;
-  
+
   /* Set SLEEPDEEP bit of Cortex System Control Register */
   SCB->SCR |= SCB_SCR_SLEEPDEEP;
-  
+
 /* This option is used to ensure that store operations are completed */
 #if defined ( __CC_ARM   )
   __force_stores();
@@ -412,7 +412,7 @@ void PWR_EnterSTANDBYMode(void)
   *     @arg PWR_FLAG_PVDO: PVD Output
   *     @arg PWR_FLAG_VREFINTRDY: Internal Voltage Reference Ready flag
   *     @arg PWR_FLAG_VOS: Voltage Scaling select flag
-  *     @arg PWR_FLAG_REGLP: Regulator LP flag        
+  *     @arg PWR_FLAG_REGLP: Regulator LP flag
   * @retval The new state of PWR_FLAG (SET or RESET).
   */
 FlagStatus PWR_GetFlagStatus(uint32_t PWR_FLAG)
@@ -420,7 +420,7 @@ FlagStatus PWR_GetFlagStatus(uint32_t PWR_FLAG)
   FlagStatus bitstatus = RESET;
   /* Check the parameters */
   assert_param(IS_PWR_GET_FLAG(PWR_FLAG));
-  
+
   if ((PWR->CSR & PWR_FLAG) != (uint32_t)RESET)
   {
     bitstatus = SET;
@@ -445,7 +445,7 @@ void PWR_ClearFlag(uint32_t PWR_FLAG)
 {
   /* Check the parameters */
   assert_param(IS_PWR_CLEAR_FLAG(PWR_FLAG));
-         
+
   PWR->CR |=  PWR_FLAG << 2;
 }
 

@@ -187,4 +187,3 @@ machine on which the test is developed). */
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   4
 
 #endif /* FREERTOS_CONFIG_H */
-

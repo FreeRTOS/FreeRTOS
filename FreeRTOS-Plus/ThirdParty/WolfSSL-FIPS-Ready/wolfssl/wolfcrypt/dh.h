@@ -119,7 +119,7 @@ WOLFSSL_API int wc_DhSetKey_ex(DhKey* key, const byte* p, word32 pSz,
 #ifdef WOLFSSL_DH_EXTRA
 WOLFSSL_API int wc_DhImportKeyPair(DhKey* key, const byte* priv, word32 privSz,
                                    const byte* pub, word32 pubSz);
-WOLFSSL_API int wc_DhExportKeyPair(DhKey* key, byte* priv, word32* pPrivSz, 
+WOLFSSL_API int wc_DhExportKeyPair(DhKey* key, byte* priv, word32* pPrivSz,
                                    byte* pub, word32* pPubSz);
 #endif /* WOLFSSL_DH_EXTRA */
 

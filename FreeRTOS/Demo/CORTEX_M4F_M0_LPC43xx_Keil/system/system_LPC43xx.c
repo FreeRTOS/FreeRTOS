@@ -5,7 +5,7 @@
  *
  * Description:
  *     CMSIS Cortex-M4 Device Peripheral Access Layer Source File
- *     for the NXP LPC43xx Device Series 
+ *     for the NXP LPC43xx Device Series
  *
  ***********************************************************************
  * Software that is described herein is for illustrative purposes only
@@ -22,14 +22,14 @@
 
 #include <stdint.h>
 #if defined CORE_M4
-#include "LPC43xx.h"   
+#include "LPC43xx.h"
 #endif
 
 #ifdef CORE_M0
-#include "LPC43xx_M0.h"                
+#include "LPC43xx_M0.h"
 #endif
 
-#include "scu.h" 
+#include "scu.h"
 #include "type.h"
 #include "config.h"
 
@@ -95,11 +95,11 @@
 /*----------------------------------------------------------------------------
   DEFINES
  *----------------------------------------------------------------------------*/
-uint32_t XtalFrequency = 0; 				
-uint32_t PL160M_0Frequency = 0; 
-uint32_t PL160M_1Frequency = 0; 
-uint32_t PL160M_2Frequency = 0; 
-uint32_t PL550Frequency = 0; 
+uint32_t XtalFrequency = 0;
+uint32_t PL160M_0Frequency = 0;
+uint32_t PL160M_1Frequency = 0;
+uint32_t PL160M_2Frequency = 0;
+uint32_t PL550Frequency = 0;
 uint32_t PL550FracFrequency = 0; //New in Falcon
 uint32_t IDIVAFrequency = 0;
 uint32_t IDIVBFrequency = 0;
@@ -117,7 +117,7 @@ uint32_t VPB1Frequency = 0;
 uint32_t VPB3Frequency = 0;
 uint32_t LCDFrequency = 0;
 uint32_t SCIFrequency = 0;
-uint32_t VADCFrequency = 0;	
+uint32_t VADCFrequency = 0;
 uint32_t SDIOFrequency = 0;
 uint32_t SSP0Frequency = 0;
 uint32_t SSP1Frequency = 0;
@@ -130,9 +130,9 @@ uint32_t AOTESTFrequency = 0;
 uint32_t ISOFrequency = 0;
 uint32_t BSRFrequency = 0;
 uint32_t CLK_TESTFrequency = 0;
-uint32_t APLLFrequency = 0;   
-uint32_t SPARE0Frequency = 0; 
-uint32_t SPARE1Frequency = 0; 
+uint32_t APLLFrequency = 0;
+uint32_t SPARE0Frequency = 0;
+uint32_t SPARE1Frequency = 0;
 
 /**
  * Initialize the system
@@ -141,12 +141,12 @@ uint32_t SPARE1Frequency = 0;
  * @return none
  *
  * @brief  Setup the microcontroller system.
- *         
+ *
  */
 void SystemInit(void)
 {
 	// M4 runs on IRC by default
-	M4Frequency = IRC_OSC; 
+	M4Frequency = IRC_OSC;
 	XtalFrequency = XTAL_FREQ;
 	EXTFrequency = EXT_FREQ;
 }
@@ -157,7 +157,7 @@ void SystemInit(void)
  * @param  target PLL, source clock, division
  * @return none
  *
- * @brief  Setup a clock 
+ * @brief  Setup a clock
  */
 void SetClock(CLKBASE_Type target_clk, CLKSRC_Type src_clk, CLKDIV_Type div)
 {
@@ -171,23 +171,23 @@ void SetClock(CLKBASE_Type target_clk, CLKSRC_Type src_clk, CLKDIV_Type div)
 	{
 		case(DIV1):						// Divide by 1 == no division
 			break;
-		case(DIV2):	
-			LPC_CGU->IDIVA_CTRL = (src_clk<<24) | (1<<2) | AUTO_BLOCK;	
+		case(DIV2):
+			LPC_CGU->IDIVA_CTRL = (src_clk<<24) | (1<<2) | AUTO_BLOCK;
 			IDIVAFrequency = GetClockFrequency(src_clk)/2;
 			src_clk = SRC_IDIV_0; 		// Set new src_clk for target_clk
 			break;
-		case(DIV4):	
-			LPC_CGU->IDIVB_CTRL = (src_clk<<24) | (3<<2) |AUTO_BLOCK;		
+		case(DIV4):
+			LPC_CGU->IDIVB_CTRL = (src_clk<<24) | (3<<2) |AUTO_BLOCK;
 			IDIVBFrequency = GetClockFrequency(src_clk)/4;
 			src_clk = SRC_IDIV_1; 		// Set new src_clk for target_clk
 			break;
-		case(DIV8):	
-			LPC_CGU->IDIVC_CTRL = (src_clk<<24) | (7<<2) |AUTO_BLOCK;		
+		case(DIV8):
+			LPC_CGU->IDIVC_CTRL = (src_clk<<24) | (7<<2) |AUTO_BLOCK;
 			IDIVCFrequency = GetClockFrequency(src_clk)/8;
 			src_clk = SRC_IDIV_2; 		// Set new src_clk for target_clk
 			break;
-		case(DIV16):	
-			LPC_CGU->IDIVD_CTRL = (src_clk<<24) | (15<<2) |AUTO_BLOCK;		
+		case(DIV16):
+			LPC_CGU->IDIVD_CTRL = (src_clk<<24) | (15<<2) |AUTO_BLOCK;
 			IDIVDFrequency = GetClockFrequency(src_clk)/16;
 			src_clk = SRC_IDIV_3; 		// Set new src_clk for target_clk
 			break;
@@ -351,8 +351,8 @@ void SetClock(CLKBASE_Type target_clk, CLKSRC_Type src_clk, CLKDIV_Type div)
 
 	if(target_clk<200)
 	{
-		target_clk_adr = (uint32_t) &LPC_CGU->IDIVA_CTRL + (target_clk-2)*4;	
-		*(uint32_t *)target_clk_adr = (src_clk<<24) | (auto_block<<11);	
+		target_clk_adr = (uint32_t) &LPC_CGU->IDIVA_CTRL + (target_clk-2)*4;
+		*(uint32_t *)target_clk_adr = (src_clk<<24) | (auto_block<<11);
 	}
 }
 
@@ -408,21 +408,21 @@ uint32_t GetClockFrequency(CLKSRC_Type src_clk)
 /**
  * Set PL160M
  *
- * @param  source clock, desired frequency 
+ * @param  source clock, desired frequency
  * @return none
  *
- * @brief  	Setup the PL160M PLL 
+ * @brief  	Setup the PL160M PLL
  *		   	If frequency equals 0 then disable PLL
- *			Integer mode only (fbsel=1, direct=0)				
- *			Fclkout = M * Fclkin/N 
- *			Fcc0 = 2 * P * Fclkout = 2 * P * M * Fclkin/N 
- *			msel+1 = feedback-divider value M 	(1 to 2^15)	
- *			nsel+1 = pre-divider value N		(1 to 2^8)	
- *			psel+1 = post-divider value P(x2)	(1 to 2^5)	
+ *			Integer mode only (fbsel=1, direct=0)
+ *			Fclkout = M * Fclkin/N
+ *			Fcc0 = 2 * P * Fclkout = 2 * P * M * Fclkin/N
+ *			msel+1 = feedback-divider value M 	(1 to 2^15)
+ *			nsel+1 = pre-divider value N		(1 to 2^8)
+ *			psel+1 = post-divider value P(x2)	(1 to 2^5)
  */
-void SetPL160M(CLKSRC_Type src_clk, uint32_t mult) 
+void SetPL160M(CLKSRC_Type src_clk, uint32_t mult)
 {
-	uint32_t msel=0, nsel=0, psel=0, pval=1;	
+	uint32_t msel=0, nsel=0, psel=0, pval=1;
 
 //	EnableSourceClk(src_clk);
 
@@ -434,7 +434,7 @@ void SetPL160M(CLKSRC_Type src_clk, uint32_t mult)
 	else
 	{
 		EnableSourceClk(src_clk);
-			 
+
 		switch(src_clk)
 		{
 			case(SRC_OSC32K):
@@ -459,13 +459,13 @@ void SetPL160M(CLKSRC_Type src_clk, uint32_t mult)
 				PL160M_0Frequency = mult * IRC_OSC;
 				break;
 		}
-	
+
 		// CCO must be in range of 156 - 320 MHz
-		// Increase P if FCCO is too low. 
+		// Increase P if FCCO is too low.
 		msel = mult-1;
 		//psel is encoded such that 0=1, 1=2, 2=4, 3=8
 		while(2*(pval)*PL160M_0Frequency < 156000000) {
-			psel++;	
+			psel++;
 			pval*=2;
 		}
 //		if(2*(pval)*PL160M_0Frequency > 320000000) {
@@ -484,12 +484,12 @@ void SetPL160M(CLKSRC_Type src_clk, uint32_t mult)
  * @param  enable
  * @return none
  *
- * @brief  	Setup the USB PLL to 480 MHz 
+ * @brief  	Setup the USB PLL to 480 MHz
  *		   	If enable equals 0 then disable PLL
  *		   	Only clock sources IRC and XTAL are valid
- *			Mode1a only: Normal operating mode without post- and pre-divider				
+ *			Mode1a only: Normal operating mode without post- and pre-divider
  *			Fclkout = 2 * M * Fclkin
- *			msel+1 = feedback-divider value M 	(1 to 2^15)	
+ *			msel+1 = feedback-divider value M 	(1 to 2^15)
  */
 void SetPLLUSB(CLKSRC_Type src_clk, uint8_t enable)
 {
@@ -503,14 +503,14 @@ void SetPLLUSB(CLKSRC_Type src_clk, uint8_t enable)
 		LPC_CGU->PLL0USB_CTRL |= PD_ENABLE; 	// Power down PLL
 							//	P			N
 		LPC_CGU->PLL0USB_NP_DIV = (98<<0) | (514<<12);
-							//	SELP	SELI	SELR	MDEC	 
-		LPC_CGU->PLL0USB_MDIV = (0xB<<17)|(0x10<<22)|(0<<28)|(0x7FFA<<0); 					
-		LPC_CGU->PLL0USB_CTRL =(SRC_XTAL<<24) | (0x3<<2) | CLKEN;  
-		
+							//	SELP	SELI	SELR	MDEC
+		LPC_CGU->PLL0USB_MDIV = (0xB<<17)|(0x10<<22)|(0<<28)|(0x7FFA<<0);
+		LPC_CGU->PLL0USB_CTRL =(SRC_XTAL<<24) | (0x3<<2) | CLKEN;
+
 		// Set the USB0 clock source to PLL550 (480MHz)
-		LPC_CGU->BASE_USB0_CLK = (0<<0) | (1<<11) | (SRC_PL550M_0<<24);	
-			
-		while((LPC_CGU->PLL0USB_STAT&1) == 0x0);	// Wait for PLL lock 
+		LPC_CGU->BASE_USB0_CLK = (0<<0) | (1<<11) | (SRC_PL550M_0<<24);
+
+		while((LPC_CGU->PLL0USB_STAT&1) == 0x0);	// Wait for PLL lock
 	}
 
 	PL550Frequency = 480000000UL;

@@ -282,7 +282,3 @@ int iByte;
 	lStatus = red_close( lFildes );
 	configASSERT( lStatus == 0 );
 }
-
-
-
-

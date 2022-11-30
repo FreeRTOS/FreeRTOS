@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -193,4 +193,3 @@ unsigned int AES_GetStatus(void)
 
     return AT91C_BASE_AES->AES_ISR;
 }
-

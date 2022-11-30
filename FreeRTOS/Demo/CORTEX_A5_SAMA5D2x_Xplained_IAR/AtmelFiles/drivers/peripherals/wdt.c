@@ -118,4 +118,3 @@ uint32_t wdt_get_counter_value(void)
 {
 	return (WDT->WDT_MR & WDT_MR_WDV_Msk) >> WDT_MR_WDV_Pos;
 }
-

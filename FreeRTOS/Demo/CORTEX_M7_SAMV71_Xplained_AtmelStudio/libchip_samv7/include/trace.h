@@ -227,4 +227,3 @@ extern void TRACE_CONFIGURE( uint32_t dwBaudRate, uint32_t dwMCk ) ;
 #endif
 
 #endif //#ifndef TRACE_H
-

@@ -104,5 +104,3 @@ void vT1InterruptHandler( void )
 
 	portEND_SWITCHING_ISR( xSecondTimerHandler() );
 }
-
-

@@ -159,4 +159,3 @@ int wc_Md2Hash(const byte* data, word32 len, byte* hash)
 
 
 #endif /* WOLFSSL_MD2 */
-

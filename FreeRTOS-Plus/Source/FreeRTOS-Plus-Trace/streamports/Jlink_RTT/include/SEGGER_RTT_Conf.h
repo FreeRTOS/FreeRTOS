@@ -47,8 +47,8 @@
 **********************************************************************
 ----------------------------------------------------------------------
 File    : SEGGER_RTT_Conf.h
-Purpose : Implementation of SEGGER real-time transfer (RTT) which 
-          allows real-time communication on targets which support 
+Purpose : Implementation of SEGGER real-time transfer (RTT) which
+          allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
 Revision: $Rev: 3892 $
 ---------------------------END-OF-HEADER------------------------------
@@ -86,7 +86,7 @@ Revision: $Rev: 3892 $
 // Target is not allowed to perform other RTT operations while string still has not been stored completely.
 // Otherwise we would probably end up with a mixed string in the buffer.
 // If using  RTT from within interrupts, multiple tasks or multi processors, define the SEGGER_RTT_LOCK() and SEGGER_RTT_UNLOCK() function here.
-// 
+//
 // SEGGER_RTT_MAX_INTERRUPT_PRIORITY can be used in the sample lock routines on Cortex-M3/4.
 // Make sure to mask all interrupts which can send RTT data, i.e. generate SystemView events, or cause task switches.
 // When high-priority interrupts must not be masked while sending RTT data, SEGGER_RTT_MAX_INTERRUPT_PRIORITY needs to be adjusted accordingly.
@@ -95,13 +95,13 @@ Revision: $Rev: 3892 $
 // Default configuration in FreeRTOS: configMAX_SYSCALL_INTERRUPT_PRIORITY: ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 // In case of doubt mask all interrupts: 1 << (8 - BASEPRI_PRIO_BITS) i.e. 1 << 5 when 3 bits are implemented in NVIC
 // or define SEGGER_RTT_LOCK() to completely disable interrupts.
-// 
+//
 
 #define SEGGER_RTT_MAX_INTERRUPT_PRIORITY         (0x20)   // Interrupt priority to lock on SEGGER_RTT_LOCK on Cortex-M3/4 (Default: 0x20)
 
 /*********************************************************************
 *
-*       RTT lock configuration for SEGGER Embedded Studio, 
+*       RTT lock configuration for SEGGER Embedded Studio,
 *       Rowley CrossStudio and GCC
 */
 #if (defined __SES_ARM) || (defined __CROSSWORKS_ARM) || (defined __GNUC__)
@@ -114,15 +114,15 @@ Revision: $Rev: 3892 $
                                                   : "=r" (LockState)                                \
                                                   :                                                 \
                                                   : "r1"                                            \
-                                                  );                            
-    
+                                                  );
+
     #define SEGGER_RTT_UNLOCK()   __asm volatile ("msr   primask, %0  \n\t"                         \
                                                   :                                                 \
                                                   : "r" (LockState)                                 \
                                                   :                                                 \
                                                   );                                                \
-                                }                                             
-                                  
+                                }
+
   #elif (defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__))
     #ifndef   SEGGER_RTT_MAX_INTERRUPT_PRIORITY
       #define SEGGER_RTT_MAX_INTERRUPT_PRIORITY   (0x20)
@@ -135,15 +135,15 @@ Revision: $Rev: 3892 $
                                                   : "=r" (LockState)                                \
                                                   : "i"(SEGGER_RTT_MAX_INTERRUPT_PRIORITY)          \
                                                   : "r1"                                            \
-                                                  );                            
-    
+                                                  );
+
     #define SEGGER_RTT_UNLOCK()   __asm volatile ("msr   basepri, %0  \n\t"                         \
                                                   :                                                 \
                                                   : "r" (LockState)                                 \
                                                   :                                                 \
                                                   );                                                \
                                 }
-  
+
   #elif defined(__ARM_ARCH_7A__)
     #define SEGGER_RTT_LOCK() {                                                \
                                  unsigned int LockState;                       \
@@ -168,7 +168,7 @@ Revision: $Rev: 3892 $
                                                 );                             \
                             }
 #else
-    #define SEGGER_RTT_LOCK()  
+    #define SEGGER_RTT_LOCK()
     #define SEGGER_RTT_UNLOCK()
   #endif
 #endif
@@ -182,8 +182,8 @@ Revision: $Rev: 3892 $
     #define SEGGER_RTT_LOCK()   {                                                                   \
                                   unsigned int LockState;                                           \
                                   LockState = __get_PRIMASK();                                      \
-                                  __set_PRIMASK(1);                           
-                                    
+                                  __set_PRIMASK(1);
+
     #define SEGGER_RTT_UNLOCK()   __set_PRIMASK(LockState);                                         \
                                 }
   #elif ((defined (__ARM7EM__) && (__CORE__ == __ARM7EM__)) || (defined (__ARM7M__) && (__CORE__ == __ARM7M__)))
@@ -193,10 +193,10 @@ Revision: $Rev: 3892 $
     #define SEGGER_RTT_LOCK()   {                                                                   \
                                   unsigned int LockState;                                           \
                                   LockState = __get_BASEPRI();                                      \
-                                  __set_BASEPRI(SEGGER_RTT_MAX_INTERRUPT_PRIORITY);                           
-                                    
+                                  __set_BASEPRI(SEGGER_RTT_MAX_INTERRUPT_PRIORITY);
+
     #define SEGGER_RTT_UNLOCK()   __set_BASEPRI(LockState);                                         \
-                                }  
+                                }
   #endif
 #endif
 
@@ -208,8 +208,8 @@ Revision: $Rev: 3892 $
   #define SEGGER_RTT_LOCK()   {                                                                     \
                                 unsigned long LockState;                                            \
                                 LockState = __get_interrupt_state();                                \
-                                __disable_interrupt();                           
-                                  
+                                __disable_interrupt();
+
   #define SEGGER_RTT_UNLOCK()   __set_interrupt_state(LockState);                                   \
                               }
 #endif

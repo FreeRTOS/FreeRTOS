@@ -72,4 +72,3 @@ traceResult xTraceStreamPortOnTraceEnd(void);
 #endif
 
 #endif /* TRC_STREAM_PORT_H */
-

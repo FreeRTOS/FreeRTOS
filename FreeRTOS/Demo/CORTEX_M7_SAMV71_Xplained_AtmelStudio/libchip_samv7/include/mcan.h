@@ -65,7 +65,7 @@ typedef enum
 	CAN_STD_ID = 0,
 	CAN_EXT_ID = 1
 } MCan_IdType;
-   
+
 typedef enum
 {
 	CAN_DLC_0 = 0,
@@ -174,166 +174,166 @@ typedef struct MCan_ConfigTag
 	uint32_t          bitTiming;
 	uint32_t          fastBitTiming;
 	uint32_t          nmbrStdFilts;
-	uint32_t          nmbrExtFilts;  
+	uint32_t          nmbrExtFilts;
 	uint32_t          nmbrFifo0Elmts;
 	uint32_t          nmbrFifo1Elmts;
 	uint32_t          nmbrRxDedBufElmts;
 	uint32_t          nmbrTxEvtFifoElmts;
 	uint32_t          nmbrTxDedBufElmts;
-	uint32_t          nmbrTxFifoQElmts;  
+	uint32_t          nmbrTxFifoQElmts;
 	uint32_t          rxFifo0ElmtSize;
 	uint32_t          rxFifo1ElmtSize;
-	uint32_t          rxBufElmtSize;   
-	// Element sizes and data sizes (encoded element size)  
-	uint32_t          txBufElmtSize;    
+	uint32_t          rxBufElmtSize;
+	// Element sizes and data sizes (encoded element size)
+	uint32_t          txBufElmtSize;
 	// Element size and data size (encoded element size)
 	MCan_MsgRamPntrs  msgRam;
-} MCan_ConfigType;   
+} MCan_ConfigType;
 
 extern const MCan_ConfigType mcan0Config;
 extern const MCan_ConfigType mcan1Config;
 
-__STATIC_INLINE uint32_t MCAN_IsTxComplete( 
+__STATIC_INLINE uint32_t MCAN_IsTxComplete(
 	const MCan_ConfigType * mcanConfig )
 {
 	Mcan * mcan = mcanConfig->pMCan;
 	return ( mcan->MCAN_IR & MCAN_IR_TC );
 }
 
-__STATIC_INLINE void MCAN_ClearTxComplete( 
+__STATIC_INLINE void MCAN_ClearTxComplete(
 	const MCan_ConfigType * mcanConfig )
 {
 	Mcan * mcan = mcanConfig->pMCan;
 	mcan->MCAN_IR = MCAN_IR_TC;
 }
 
-__STATIC_INLINE uint32_t MCAN_IsMessageStoredToRxDedBuffer( 
+__STATIC_INLINE uint32_t MCAN_IsMessageStoredToRxDedBuffer(
 	const MCan_ConfigType * mcanConfig )
 {
   Mcan * mcan = mcanConfig->pMCan;
 
-  return ( mcan->MCAN_IR & MCAN_IR_DRX );  
+  return ( mcan->MCAN_IR & MCAN_IR_DRX );
 }
 
-__STATIC_INLINE void MCAN_ClearMessageStoredToRxBuffer( 
+__STATIC_INLINE void MCAN_ClearMessageStoredToRxBuffer(
 	const MCan_ConfigType * mcanConfig )
 {
 	Mcan * mcan = mcanConfig->pMCan;
 	mcan->MCAN_IR = MCAN_IR_DRX;
 }
 
-__STATIC_INLINE uint32_t MCAN_IsMessageStoredToRxFifo0( 
+__STATIC_INLINE uint32_t MCAN_IsMessageStoredToRxFifo0(
 	const MCan_ConfigType * mcanConfig )
 {
 	Mcan * mcan = mcanConfig->pMCan;
-	return ( mcan->MCAN_IR & MCAN_IR_RF0N );  
+	return ( mcan->MCAN_IR & MCAN_IR_RF0N );
 }
 
-__STATIC_INLINE void MCAN_ClearMessageStoredToRxFifo0( 
+__STATIC_INLINE void MCAN_ClearMessageStoredToRxFifo0(
 	const MCan_ConfigType * mcanConfig )
 {
 	Mcan * mcan = mcanConfig->pMCan;
 	mcan->MCAN_IR = MCAN_IR_RF0N;
 }
 
-__STATIC_INLINE uint32_t MCAN_IsMessageStoredToRxFifo1( 
+__STATIC_INLINE uint32_t MCAN_IsMessageStoredToRxFifo1(
 	const MCan_ConfigType * mcanConfig )
 {
 	Mcan * mcan = mcanConfig->pMCan;
-	return ( mcan->MCAN_IR & MCAN_IR_RF1N );  
+	return ( mcan->MCAN_IR & MCAN_IR_RF1N );
 }
 
-__STATIC_INLINE void MCAN_ClearMessageStoredToRxFifo1( 
+__STATIC_INLINE void MCAN_ClearMessageStoredToRxFifo1(
 	const MCan_ConfigType * mcanConfig )
 {
 	Mcan * mcan = mcanConfig->pMCan;
 	mcan->MCAN_IR = MCAN_IR_RF1N;
 }
 
-void MCAN_Init( 
+void MCAN_Init(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_InitFdEnable( 
+void MCAN_InitFdEnable(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_InitFdBitRateSwitchEnable( 
+void MCAN_InitFdBitRateSwitchEnable(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_InitTxQueue( 
+void MCAN_InitTxQueue(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_InitLoopback( 
+void MCAN_InitLoopback(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_Enable( 
+void MCAN_Enable(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_RequestIso11898_1( 
+void MCAN_RequestIso11898_1(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_RequestFd( 
+void MCAN_RequestFd(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_RequestFdBitRateSwitch( 
+void MCAN_RequestFdBitRateSwitch(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_LoopbackOn( 
+void MCAN_LoopbackOn(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_LoopbackOff( 
+void MCAN_LoopbackOff(
 	const MCan_ConfigType * mcanConfig );
 
-void MCAN_IEnableMessageStoredToRxDedBuffer( 
-	const MCan_ConfigType * mcanConfig, 
+void MCAN_IEnableMessageStoredToRxDedBuffer(
+	const MCan_ConfigType * mcanConfig,
 	MCan_IntrLineType line );
 
-uint8_t  * MCAN_ConfigTxDedBuffer( 
-	const MCan_ConfigType * mcanConfig, 
-	uint8_t buffer, 
-	uint32_t id, 
-	MCan_IdType idType, 
+uint8_t  * MCAN_ConfigTxDedBuffer(
+	const MCan_ConfigType * mcanConfig,
+	uint8_t buffer,
+	uint32_t id,
+	MCan_IdType idType,
 	MCan_DlcType dlc );
 
-void MCAN_SendTxDedBuffer( 
-	const MCan_ConfigType * mcanConfig, 
+void MCAN_SendTxDedBuffer(
+	const MCan_ConfigType * mcanConfig,
 	uint8_t buffer );
 
-uint32_t MCAN_AddToTxFifoQ( 
-	const MCan_ConfigType * mcanConfig, 
-	uint32_t id, MCan_IdType idType, 
+uint32_t MCAN_AddToTxFifoQ(
+	const MCan_ConfigType * mcanConfig,
+	uint32_t id, MCan_IdType idType,
 	MCan_DlcType dlc, uint8_t * data );
 
-uint8_t MCAN_IsBufferTxd( 
-	const MCan_ConfigType * mcanConfig, 
+uint8_t MCAN_IsBufferTxd(
+	const MCan_ConfigType * mcanConfig,
 	uint8_t buffer );
 
-void MCAN_ConfigRxBufferFilter( 
-	const MCan_ConfigType * mcanConfig, 
-	uint32_t buffer, 
-	uint32_t filter, 
-	uint32_t id, 
+void MCAN_ConfigRxBufferFilter(
+	const MCan_ConfigType * mcanConfig,
+	uint32_t buffer,
+	uint32_t filter,
+	uint32_t id,
 	MCan_IdType idType);
 
-void MCAN_ConfigRxClassicFilter( 
+void MCAN_ConfigRxClassicFilter(
 	const MCan_ConfigType * mcanConfig,
-	MCan_FifoType fifo, 
-	uint8_t filter, 
-	uint32_t id, 
-	MCan_IdType idType, 
+	MCan_FifoType fifo,
+	uint8_t filter,
+	uint32_t id,
+	MCan_IdType idType,
 	uint32_t mask );
 
-uint8_t MCAN_IsNewDataInRxDedBuffer( 
-	const MCan_ConfigType * mcanConfig, 
+uint8_t MCAN_IsNewDataInRxDedBuffer(
+	const MCan_ConfigType * mcanConfig,
 	uint8_t buffer );
 
-void MCAN_GetRxDedBuffer( 
-	const MCan_ConfigType * mcanConfig, 
-	uint8_t buffer, 
+void MCAN_GetRxDedBuffer(
+	const MCan_ConfigType * mcanConfig,
+	uint8_t buffer,
 	Mailbox64Type * pRxMailbox );
 
-uint32_t MCAN_GetRxFifoBuffer( 
-	const MCan_ConfigType * mcanConfig, 
-	MCan_FifoType fifo, 
+uint32_t MCAN_GetRxFifoBuffer(
+	const MCan_ConfigType * mcanConfig,
+	MCan_FifoType fifo,
 	Mailbox64Type * pRxMailbox );
 
 #ifdef __cplusplus
@@ -341,4 +341,3 @@ uint32_t MCAN_GetRxFifoBuffer(
 #endif
 
 #endif /* #ifndef _MCAN_ */
-

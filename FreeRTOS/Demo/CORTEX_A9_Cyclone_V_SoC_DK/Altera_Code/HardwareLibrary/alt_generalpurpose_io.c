@@ -774,4 +774,3 @@ ALT_GPIO_1BIT_t alt_gpio_port_pin_to_bit(ALT_GPIO_PORT_t pid,
     }
     return ALT_END_OF_GPIO_SIGNALS;
 }
-

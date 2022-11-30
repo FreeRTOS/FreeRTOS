@@ -180,4 +180,3 @@ void ImgcopyRecursiveRmdir(const char *pszDir);
 
 
 #endif /* REDTOOLS_H */
-

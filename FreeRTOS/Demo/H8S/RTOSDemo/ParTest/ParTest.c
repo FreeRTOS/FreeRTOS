@@ -135,6 +135,3 @@ unsigned char ucLED;
 		portEXIT_CRITICAL();
 	}
 }
-
-
-

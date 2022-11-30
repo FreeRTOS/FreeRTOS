@@ -36,7 +36,7 @@
  *
  * \section Contents
  *
- *  - sama5d4-EK 
+ *  - sama5d4-EK
  *  - For sama5d4-EK information, see \subpage sama5d4_ek_board_info.
  *  - For operating frequency information, see \subpage sama5d4_ek_opfreq.
  *  - For using portable PIO definitions, see \subpage sama5d4_ek_piodef.
@@ -64,7 +64,7 @@
 /**
  *  \file board.h
  *
- *  Definition of sama5d4-EK 
+ *  Definition of sama5d4-EK
  *  characteristics, sama5d4-dependant PIOs and external components interfacing.
  */
 
@@ -151,7 +151,7 @@
  * - \ref PIN_USART0_RTS
  * - \ref PIN_USART0_CTS
  * - \ref PIN_USART0_SCK
- * 
+ *
  * TWI0
  * - \ref PIN_TWI_TWD0
  * - \ref PIN_TWI_TWCK0
@@ -203,7 +203,7 @@
  * - \ref PIN_ISI_HSYNC
  * - \ref PIN_ISI_PCK
  * - \ref PIN_ISI_PINS_DATA
- * - \ref PINS_ISI 
+ * - \ref PINS_ISI
  */
 
 /** List of all DBGU pin definitions. */
@@ -296,11 +296,11 @@
 #define PINS_TWI2      PIN_TWI_TWD2, PIN_TWI_TWCK2
 
 /** TWI3 data pin */
-#define PIN_TWI_TWD3   {PIO_PC25B_TWD3, PIOC, ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT} 
+#define PIN_TWI_TWD3   {PIO_PC25B_TWD3, PIOC, ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT}
 /** TWI3 clock pin */
 #define PIN_TWI_TWCK3  {PIO_PC26B_TWCK3, PIOC, ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT}
 /** TWI3 pins */
-#define PINS_TWI3      PIN_TWI_TWD3, PIN_TWI_TWCK3  
+#define PINS_TWI3      PIN_TWI_TWD3, PIN_TWI_TWCK3
 
 /** List of all CAN pin deinitions. */
 /** CAN0 pin TX */
@@ -449,8 +449,8 @@
 /** Address for transferring command bytes to the nandflash, CLE A22*/
 #define BOARD_NF_COMMAND_ADDR   0x80400000
 /** Address for transferring address bytes to the nandflash, ALE A21*/
-#define BOARD_NF_ADDRESS_ADDR   0x80200000 
-/** Address for transferring data bytes to the nandflash.*/ 
+#define BOARD_NF_ADDRESS_ADDR   0x80200000
+/** Address for transferring data bytes to the nandflash.*/
 #define BOARD_NF_DATA_ADDR      0x80000000
 
 /** Address for transferring command bytes to the norflash. */
@@ -515,7 +515,7 @@
  * - \ref BOARD_EMAC_RST_PINS
  * - \ref BOARD_EMAC_PHY_ADDR
  * - \ref BOARD_EMAC_RUN_PINS
- * 
+ *
  * \section board_lcd LCD Properties
  * - \ref BOARD_LCD_WIDTH
  * - \ref BOARD_LCD_HEIGHT
@@ -639,12 +639,12 @@
  * Push buttons
  * - \ref PIN_PUSHBUTTON_1
   * - \ref PINS_PUSHBUTTONS
- 
+
  *
- * PCK0 
+ * PCK0
  * - \ref PIN_PCK0
  *
- * PCK1 
+ * PCK1
  * - \ref  PIN_PCK1
  */
 
@@ -667,7 +667,7 @@
 #define PIN_PUSHBUTTON_1    {PIO_PE13, PIOE, ID_PIOE, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
 #define PIN_PUSHBUTTON_2    {PIO_PE13, PIOE, ID_PIOE, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
 /** List of all push button definitions. */
-#define PINS_PUSHBUTTONS    PIN_PUSHBUTTON_1 
+#define PINS_PUSHBUTTONS    PIN_PUSHBUTTON_1
 
 /** Push button #1 index. */
 #define PUSHBUTTON_BP1   0
@@ -700,7 +700,7 @@
 /*----------------------------------------------------------------------------
  *        Headers for board
  *----------------------------------------------------------------------------*/
- 
+
 #include "include/board_lowlevel.h"
 #include "include/bmp.h"
 #include "include/dbgu_console.h"
@@ -733,4 +733,3 @@
 #include "include/rtc_calib.h"
 
 #endif /* #ifndef _BOARD_ */
-

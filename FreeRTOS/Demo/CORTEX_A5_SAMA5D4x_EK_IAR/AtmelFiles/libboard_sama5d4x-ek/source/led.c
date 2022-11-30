@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -165,4 +165,3 @@ extern uint32_t LED_Toggle( uint32_t dwLed )
     return 0 ;
 #endif
 }
-

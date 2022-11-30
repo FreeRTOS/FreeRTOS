@@ -110,7 +110,7 @@ typedef struct
 #define IS_FSMC_NORSRAM_BANK(BANK) (((BANK) == FSMC_Bank1_NORSRAM1) || \
                                     ((BANK) == FSMC_Bank1_NORSRAM2) || \
                                     ((BANK) == FSMC_Bank1_NORSRAM3) || \
-                                    ((BANK) == FSMC_Bank1_NORSRAM4))                           
+                                    ((BANK) == FSMC_Bank1_NORSRAM4))
 
 
 #define IS_FSMC_NAND_BANK(BANK) (((BANK) == FSMC_Bank2_NAND) || \
@@ -119,10 +119,10 @@ typedef struct
 #define IS_FSMC_GETFLAG_BANK(BANK) (((BANK) == FSMC_Bank2_NAND) || \
                                     ((BANK) == FSMC_Bank3_NAND) || \
                                     ((BANK) == FSMC_Bank4_PCCARD))
-                                    
+
 #define IS_FSMC_IT_BANK(BANK) (((BANK) == FSMC_Bank2_NAND) || \
                                ((BANK) == FSMC_Bank3_NAND) || \
-                               ((BANK) == FSMC_Bank4_PCCARD))                                    
+                               ((BANK) == FSMC_Bank4_PCCARD))
 
 
 /*------------------------------- NOR/SRAM Banks -----------------------------*/
@@ -131,7 +131,7 @@ typedef struct
 #define FSMC_DataAddressMux_Enable                        ((u32)0x00000002)
 
 #define IS_FSMC_MUX(MUX) (((MUX) == FSMC_DataAddressMux_Disable) || \
-                          ((MUX) == FSMC_DataAddressMux_Enable))                           
+                          ((MUX) == FSMC_DataAddressMux_Enable))
 
 /* FSMC Memory Type ----------------------------------------------------------*/
 #define FSMC_MemoryType_SRAM                            ((u32)0x00000000)
@@ -143,74 +143,74 @@ typedef struct
                                 ((MEMORY) == FSMC_MemoryType_CRAM)|| \
                                 ((MEMORY) == FSMC_MemoryType_NOR)|| \
                                 ((MEMORY) == FSMC_MemoryType_COSMORAM))
-                                     
+
 /* FSMC  Data Width ----------------------------------------------------------*/
 #define FSMC_MemoryDataWidth_8b                         ((u32)0x00000000)
 #define FSMC_MemoryDataWidth_16b                        ((u32)0x00000010)
 
 #define IS_FSMC_MEMORY_WIDTH(WIDTH) (((WIDTH) == FSMC_MemoryDataWidth_8b) || \
                                      ((WIDTH) == FSMC_MemoryDataWidth_16b))
-                                      
-                               
+
+
 /* FSMC Burst Access Mode ----------------------------------------------------*/
-#define FSMC_BurstAccessMode_Disable                    ((u32)0x00000000) 
+#define FSMC_BurstAccessMode_Disable                    ((u32)0x00000000)
 #define FSMC_BurstAccessMode_Enable                     ((u32)0x00000100)
 
 #define IS_FSMC_BURSTMODE(STATE) (((STATE) == FSMC_BurstAccessMode_Disable) || \
                                   ((STATE) == FSMC_BurstAccessMode_Enable))
 
-/* FSMC Wait Signal Polarity -------------------------------------------------*/                                  
+/* FSMC Wait Signal Polarity -------------------------------------------------*/
 #define FSMC_WaitSignalPolarity_Low                     ((u32)0x00000000)
 #define FSMC_WaitSignalPolarity_High                    ((u32)0x00000200)
 
 #define IS_FSMC_WAIT_POLARITY(POLARITY) (((POLARITY) == FSMC_WaitSignalPolarity_Low) || \
-                                         ((POLARITY) == FSMC_WaitSignalPolarity_High)) 
-                                        
-/* FSMC Wrap Mode ------------------------------------------------------------*/ 
+                                         ((POLARITY) == FSMC_WaitSignalPolarity_High))
+
+/* FSMC Wrap Mode ------------------------------------------------------------*/
 #define FSMC_WrapMode_Disable                           ((u32)0x00000000)
-#define FSMC_WrapMode_Enable                            ((u32)0x00000400) 
+#define FSMC_WrapMode_Enable                            ((u32)0x00000400)
 
 #define IS_FSMC_WRAP_MODE(MODE) (((MODE) == FSMC_WrapMode_Disable) || \
                                  ((MODE) == FSMC_WrapMode_Enable))
-                                 
-/* FSMC Wait Timing ----------------------------------------------------------*/                                 
+
+/* FSMC Wait Timing ----------------------------------------------------------*/
 #define FSMC_WaitSignalActive_BeforeWaitState           ((u32)0x00000000)
-#define FSMC_WaitSignalActive_DuringWaitState           ((u32)0x00000800) 
+#define FSMC_WaitSignalActive_DuringWaitState           ((u32)0x00000800)
 
 #define IS_FSMC_WAIT_SIGNAL_ACTIVE(ACTIVE) (((ACTIVE) == FSMC_WaitSignalActive_BeforeWaitState) || \
                                             ((ACTIVE) == FSMC_WaitSignalActive_DuringWaitState))
-                                    
+
 /* FSMC Write Operation ------------------------------------------------------*/
 #define FSMC_WriteOperation_Disable                     ((u32)0x00000000)
 #define FSMC_WriteOperation_Enable                      ((u32)0x00001000)
 
 #define IS_FSMC_WRITE_OPERATION(OPERATION) (((OPERATION) == FSMC_WriteOperation_Disable) || \
                                             ((OPERATION) == FSMC_WriteOperation_Enable))
-                              
+
 /* FSMC Wait Signal ----------------------------------------------------------*/
 #define FSMC_WaitSignal_Disable                         ((u32)0x00000000)
-#define FSMC_WaitSignal_Enable                          ((u32)0x00002000) 
+#define FSMC_WaitSignal_Enable                          ((u32)0x00002000)
 
 #define IS_FSMC_WAITE_SIGNAL(SIGNAL) (((SIGNAL) == FSMC_WaitSignal_Disable) || \
                                       ((SIGNAL) == FSMC_WaitSignal_Enable))
 
 /* FSMC Extended Mode --------------------------------------------------------*/
 #define FSMC_ExtendedMode_Disable                       ((u32)0x00000000)
-#define FSMC_ExtendedMode_Enable                        ((u32)0x00004000)                                  
+#define FSMC_ExtendedMode_Enable                        ((u32)0x00004000)
 
 #define IS_FSMC_EXTENDED_MODE(MODE) (((MODE) == FSMC_ExtendedMode_Disable) || \
-                                     ((MODE) == FSMC_ExtendedMode_Enable)) 
-                               
+                                     ((MODE) == FSMC_ExtendedMode_Enable))
+
 /* FSMC Asynchronous Wait ----------------------------------------------------*/
 #define FSMC_AsyncWait_Disable                          ((u32)0x00000000)
 #define FSMC_AsyncWait_Enable                           ((u32)0x00008000)
 
 #define IS_FSMC_ASYNC_WAIT(WAIT) (((WAIT) == FSMC_AsyncWait_Disable) || \
                                   ((WAIT) == FSMC_AsyncWait_Enable))
-                                  
-/* FSMC Write Burst ----------------------------------------------------------*/                                  
+
+/* FSMC Write Burst ----------------------------------------------------------*/
 #define FSMC_WriteBurst_Disable                         ((u32)0x00000000)
-#define FSMC_WriteBurst_Enable                          ((u32)0x00080000) 
+#define FSMC_WriteBurst_Enable                          ((u32)0x00080000)
 
 #define IS_FSMC_WRITE_BURST(BURST) (((BURST) == FSMC_WriteBurst_Disable) || \
                                     ((BURST) == FSMC_WriteBurst_Enable))
@@ -235,15 +235,15 @@ typedef struct
 
 /* FSMC Access Mode ----------------------------------------------------------*/
 #define FSMC_AccessMode_A                               ((u32)0x00000000)
-#define FSMC_AccessMode_B                               ((u32)0x10000000) 
+#define FSMC_AccessMode_B                               ((u32)0x10000000)
 #define FSMC_AccessMode_C                               ((u32)0x20000000)
 #define FSMC_AccessMode_D                               ((u32)0x30000000)
 
 #define IS_FSMC_ACCESS_MODE(MODE) (((MODE) == FSMC_AccessMode_A) || \
                                    ((MODE) == FSMC_AccessMode_B) || \
                                    ((MODE) == FSMC_AccessMode_C) || \
-                                   ((MODE) == FSMC_AccessMode_D)) 
-                                  
+                                   ((MODE) == FSMC_AccessMode_D))
+
 /*----------------------------- NAND and PCCARD Banks ------------------------*/
 /* FSMC Wait feature ---------------------------------------------------------*/
 #define FSMC_Waitfeature_Disable                        ((u32)0x00000000)
@@ -251,21 +251,21 @@ typedef struct
 
 #define IS_FSMC_WAIT_FEATURE(FEATURE) (((FEATURE) == FSMC_Waitfeature_Disable) || \
                                        ((FEATURE) == FSMC_Waitfeature_Enable))
-                                    
+
 /* FSMC Memory Data Width ----------------------------------------------------*/
 #define FSMC_MemoryDataWidth_8b                         ((u32)0x00000000)
 #define FSMC_MemoryDataWidth_16b                        ((u32)0x00000010)
 
 #define IS_FSMC_DATA_WIDTH(WIDTH) (((WIDTH) == FSMC_MemoryDataWidth_8b) || \
                                    ((WIDTH) == FSMC_MemoryDataWidth_16b))
-                                    
+
 /* FSMC ECC ------------------------------------------------------------------*/
 #define FSMC_ECC_Disable                                ((u32)0x00000000)
 #define FSMC_ECC_Enable                                 ((u32)0x00000040)
 
 #define IS_FSMC_ECC_STATE(STATE) (((STATE) == FSMC_ECC_Disable) || \
                                   ((STATE) == FSMC_ECC_Enable))
-                                            
+
 /* FSMC ECC Page Size --------------------------------------------------------*/
 #define FSMC_ECCPageSize_256Bytes                       ((u32)0x00000000)
 #define FSMC_ECCPageSize_512Bytes                       ((u32)0x00020000)
@@ -280,7 +280,7 @@ typedef struct
                                     ((SIZE) == FSMC_ECCPageSize_2048Bytes) || \
                                     ((SIZE) == FSMC_ECCPageSize_4096Bytes) || \
                                     ((SIZE) == FSMC_ECCPageSize_8192Bytes))
-                                                              
+
 /* FSMC Address Low Mapping --------------------------------------------------*/
 #define FSMC_AddressLowMapping_Direct                   ((u32)0x00000000)
 #define FSMC_AddressLowMapping_InDirect                 ((u32)0x00000100)
@@ -314,7 +314,7 @@ typedef struct
 
 #define IS_FSMC_GET_IT(IT) (((IT) == FSMC_IT_RisingEdge) || \
                             ((IT) == FSMC_IT_Level) || \
-                            ((IT) == FSMC_IT_FallingEdge)) 
+                            ((IT) == FSMC_IT_FallingEdge))
 
 /* FSMC Flags ----------------------------------------------------------------*/
 #define FSMC_FLAG_RisingEdge                            ((u32)0x00000001)
@@ -327,7 +327,7 @@ typedef struct
                                 ((FLAG) == FSMC_FLAG_FallingEdge) || \
                                 ((FLAG) == FSMC_FLAG_FEMPT))
 
-#define IS_FSMC_CLEAR_FLAG(FLAG) ((((FLAG) & (u32)0xFFFFFFF8) == 0x00000000) && ((FLAG) != 0x00000000))                                                                                                                                                                                                                                                                                                                                  
+#define IS_FSMC_CLEAR_FLAG(FLAG) ((((FLAG) & (u32)0xFFFFFFF8) == 0x00000000) && ((FLAG) != 0x00000000))
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void FSMC_NORSRAMDeInit(u32 FSMC_Bank);

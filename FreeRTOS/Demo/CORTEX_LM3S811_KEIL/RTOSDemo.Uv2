@@ -113,4 +113,3 @@ Options 1,0,0  // Target 'FreeRTOS_Demo'
  FLASH3 ("" ())
  FLASH4 ()
 EndOpt
-

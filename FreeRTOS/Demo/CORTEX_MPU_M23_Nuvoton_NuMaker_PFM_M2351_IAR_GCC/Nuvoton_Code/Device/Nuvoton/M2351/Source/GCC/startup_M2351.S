@@ -10,7 +10,7 @@
 
     .syntax unified
     .arch   armv8 - m.base
-    
+
     .section .stack
     .align  3
 #ifndef Stack_Size
@@ -23,13 +23,13 @@ __StackLimit:
     .size   __StackLimit, . - __StackLimit
 __StackTop:
     .size   __StackTop, . - __StackTop
-    
+
     .section .heap
     .align  3
 #ifndef Heap_Size
     .equ    Heap_Size, 0x00000100
 #endif
-    
+
     .global __HeapBase
     .global __HeapLimit
 __HeapBase:
@@ -39,7 +39,7 @@ __HeapBase:
     .size   __HeapBase, . - __HeapBase
 __HeapLimit:
     .size   __HeapLimit, . - __HeapLimit
-    
+
     .section .vectors
     .align  2
     .global __Vectors
@@ -60,7 +60,7 @@ __Vectors:
     .long   0                     /* Reserved */
     .long   PendSV_Handler        /* PendSV Handler */
     .long   SysTick_Handler       /* SysTick Handler */
-    
+
     /* External interrupts */
     .long   BOD_IRQHandler        /* 0   */
     .long   IRC_IRQHandler        /* 1   */
@@ -164,27 +164,27 @@ __Vectors:
     .long   SCU_IRQHandler        /* 99  */
     .long   Default_Handler    /* 100 */
     .long   TRNG_IRQHandler       /* 101 */
-    
-    
+
+
     .size   __Vectors, . - __Vectors
-    
-    
-    
+
+
+
     .text
     .thumb
     .thumb_func
     .align  2
     .global Reset_Handler
     .type   Reset_Handler, % function
-    
-    
+
+
 Reset_Handler:
     /*  Firstly it copies data from read only memory to RAM. There are two schemes
      *  to copy. One can copy more than one sections. Another can only copy
      *  one section.  The former scheme needs more instructions and read-only
      *  data to implement than the latter.
      *  Macro __STARTUP_COPY_MULTIPLE is used to choose between two schemes.  */
-    
+
 #ifdef __STARTUP_COPY_MULTIPLE
     /*  Multiple sections scheme.
      *
@@ -198,25 +198,25 @@ Reset_Handler:
      */
     ldr r4, = __copy_table_start__
     ldr r5, = __copy_table_end__
-    
+
 .L_loop0:
     cmp r4, r5
     bge .L_loop0_done
     ldr r1, [r4]
     ldr r2, [r4, #4]
     ldr r3, [r4, #8]
-    
+
 .L_loop0_0:
     subs    r3, #4
     blt .L_loop0_0_done
     ldr r0, [r1, r3]
     str r0, [r2, r3]
     b   .L_loop0_0
-    
+
 .L_loop0_0_done:
     adds    r4, #12
     b   .L_loop0
-    
+
 .L_loop0_done:
 #else
     /*  Single section scheme.
@@ -231,19 +231,19 @@ Reset_Handler:
     ldr r1, = __etext
     ldr r2, = __data_start__
     ldr r3, = __data_end__
-    
+
     subs    r3, r2
     ble .L_loop1_done
-    
+
 .L_loop1:
     subs    r3, #4
     ldr r0, [r1, r3]
     str r0, [r2, r3]
     bgt .L_loop1
-    
+
 .L_loop1_done:
 #endif /*__STARTUP_COPY_MULTIPLE */
-    
+
     /*  This part of work usually is done in C library startup code. Otherwise,
      *  define this macro to enable it in this startup.
      *
@@ -264,21 +264,21 @@ Reset_Handler:
      */
     ldr r3, = __zero_table_start__
     ldr r4, = __zero_table_end__
-    
+
 .L_loop2:
     cmp r3, r4
     bge .L_loop2_done
     ldr r1, [r3]
     ldr r2, [r3, #4]
     movs    r0, 0
-    
+
 .L_loop2_0:
     subs    r2, #4
     blt .L_loop2_0_done
     str r0, [r1, r2]
     b   .L_loop2_0
 .L_loop2_0_done:
-    
+
     adds    r3, #8
     b   .L_loop2
 .L_loop2_done:
@@ -306,52 +306,52 @@ Reset_Handler:
     bgt .L_loop3
 .L_loop3_done:
 #endif /* __STARTUP_CLEAR_BSS_MULTIPLE || __STARTUP_CLEAR_BSS */
-    
-    
-    
+
+
+
 #ifndef __NO_SYSTEM_INIT
     bl  SystemInit
 #endif
-    
-    
+
+
 #ifndef __START
 #define __START _start
 #endif
     bl  __START
-    
+
     .pool
     .size   Reset_Handler, . - Reset_Handler
-    
+
     .align  1
     .thumb_func
     .weak   Default_Handler
     .type   Default_Handler, % function
-    
+
 Default_Handler:
     b   .
     .size   Default_Handler, . - Default_Handler
-    
+
     /*    Macro to define default handlers. Default handler
      *    will be weak symbol and just dead loops. They can be
      *    overwritten by other handlers */
-     
+
     .macro  def_irq_handler handler_name
     .weak   \handler_name
     .set    \handler_name, Default_Handler
     .endm
-    
+
     def_irq_handler NMI_Handler
     def_irq_handler HardFault_Handler
     def_irq_handler SVC_Handler
     def_irq_handler PendSV_Handler
     def_irq_handler SysTick_Handler
-    
+
     def_irq_handler BOD_IRQHandler
     def_irq_handler IRC_IRQHandler
     def_irq_handler PWRWU_IRQHandler
     def_irq_handler SRAM_IRQHandler
     def_irq_handler CLKFAIL_IRQHandler
-    
+
     def_irq_handler RTC_IRQHandler
     def_irq_handler TAMPER_IRQHandler
     def_irq_handler WDT_IRQHandler
@@ -391,31 +391,31 @@ Default_Handler:
     def_irq_handler EADC0_IRQHandler
     def_irq_handler EADC1_IRQHandler
     def_irq_handler ACMP01_IRQHandler
-    
+
     def_irq_handler EADC2_IRQHandler
     def_irq_handler EADC3_IRQHandler
     def_irq_handler UART2_IRQHandler
     def_irq_handler UART3_IRQHandler
-    
+
     def_irq_handler SPI1_IRQHandler
     def_irq_handler SPI2_IRQHandler
     def_irq_handler USBD_IRQHandler
     def_irq_handler USBH_IRQHandler
     def_irq_handler USBOTG_IRQHandler
     def_irq_handler CAN0_IRQHandler
-    
+
     def_irq_handler SC0_IRQHandler
     def_irq_handler SC1_IRQHandler
     def_irq_handler SC2_IRQHandler
-    
+
     def_irq_handler SPI3_IRQHandler
-    
+
     def_irq_handler SDH0_IRQHandler
-    
-    
-    
+
+
+
     def_irq_handler I2S0_IRQHandler
-    
+
     def_irq_handler OPA0_IRQHandler
     def_irq_handler CRPT_IRQHandler
     def_irq_handler GPG_IRQHandler
@@ -426,54 +426,54 @@ Default_Handler:
     def_irq_handler USCI1_IRQHandler
     def_irq_handler BPWM0_IRQHandler
     def_irq_handler BPWM1_IRQHandler
-    
-    
+
+
     def_irq_handler I2C2_IRQHandler
-    
+
     def_irq_handler QEI0_IRQHandler
     def_irq_handler QEI1_IRQHandler
     def_irq_handler ECAP0_IRQHandler
     def_irq_handler ECAP1_IRQHandler
     def_irq_handler GPH_IRQHandler
     def_irq_handler EINT7_IRQHandler
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 
 
     def_irq_handler PDMA1_IRQHandler
     def_irq_handler SCU_IRQHandler
-    
+
     def_irq_handler TRNG_IRQHandler
-    
-    
-    
+
+
+
     /* ;int32_t SH_DoCommand(int32_t n32In_R0, int32_t n32In_R1, int32_t *pn32Out_R0) */
     .align 2
     .thumb_func
     .type SH_DoCommand, % function
-    
+
 SH_DoCommand:
-    
+
     BKPT   0xAB                /* ; Wait ICE or HardFault */
     LDR    R3, = SH_Return
     MOV    R4, lr
     BLX    R3                  /* ; Call SH_Return. The return value is in R0 */
     BX     R4                  /* ; Return value = R0 */
     .size  SH_DoCommand, . - SH_DoCommand
-    
+
     .align  2
     .thumb_func
     .global __PC
     .type   __PC, % function
 __PC:
-    
+
     MOV     r0, lr
     BLX     lr
     .size   __PC, . - __PC
-    
-    
+
+
     .end

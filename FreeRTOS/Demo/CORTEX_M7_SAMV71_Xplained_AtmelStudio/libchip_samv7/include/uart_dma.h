@@ -96,12 +96,12 @@ typedef struct
 
 /** Constant structure associated with UART port. This structure prevents
     client applications to have access in the same time. */
-typedef struct 
+typedef struct
 {
     /** USART Id as defined in the product datasheet */
     uint8_t uartId ;
     /** Pointer to DMA driver */
-    sXdmad* pXdmad;    
+    sXdmad* pXdmad;
     /** Pointer to UART Hardware registers */
     Uart* pUartHw ;
     /** Current Uart Rx channel */

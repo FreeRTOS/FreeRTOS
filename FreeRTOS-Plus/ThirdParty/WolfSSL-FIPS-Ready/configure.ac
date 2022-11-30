@@ -5674,4 +5674,3 @@ if test "$MINGW_LIB_WARNING" = "yes"
 then
     AC_MSG_WARN([Building with shared and static library at the same time on this system may cause export/import problems when using non contemporary GNU tools.])
 fi
-

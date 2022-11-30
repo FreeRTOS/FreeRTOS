@@ -49,4 +49,3 @@
 void pmecc_get_gf_512_tables(const int16_t **alpha_to, const int16_t **index_of);
 
 #endif /* PMECC_TABLES_512_H */
-

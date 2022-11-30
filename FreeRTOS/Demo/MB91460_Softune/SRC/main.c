@@ -555,5 +555,3 @@ extern volatile unsigned long ulCriticalNesting;
 	}
 }
 /*-----------------------------------------------------------*/
-
-

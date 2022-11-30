@@ -70,7 +70,7 @@ static ALT_STATUS_CODE alt_spi_checking(ALT_SPI_DEV_t * spi_dev)
         return ALT_E_FALSE;
     }
 
-    
+
     return ALT_E_TRUE;
 }
 
@@ -89,7 +89,7 @@ ALT_STATUS_CODE alt_spi_init(const ALT_SPI_CTLR_t spi,
 
     //Save spi start address to the instance
     spi_dev->location = (void *)spi;
-    
+
     if (alt_spi_checking(spi_dev) == ALT_E_FALSE)
     {
         return ALT_E_BAD_ARG;
@@ -225,7 +225,7 @@ ALT_STATUS_CODE alt_spi_reset(ALT_SPI_DEV_t * spi_dev)
             return status;
         }
     }
-    
+
     // Reset spi module by reset manager
     alt_spi_rstmgr_strobe(spi_dev);
 
@@ -289,7 +289,7 @@ ALT_STATUS_CODE alt_spi_enable(ALT_SPI_DEV_t * spi_dev)
                          ALT_SPIS_SPIENR_SPI_EN_SET_MSK);
         break;
     }
-    
+
     return ALT_E_SUCCESS;
 }
 
@@ -308,7 +308,7 @@ ALT_STATUS_CODE alt_spi_disable(ALT_SPI_DEV_t * spi_dev)
     {
         return ALT_E_SUCCESS;
     }
-  
+
     // Else clear enable bit of spi_enable register
     switch (spi_dev->op_mode)
     {
@@ -359,7 +359,7 @@ ALT_STATUS_CODE alt_spi_is_busy(ALT_SPI_DEV_t *spi_dev)
     {
         return ALT_E_BAD_ARG;
     }
-   
+
     switch (spi_dev->op_mode)
     {
     case ALT_SPI_OP_MODE_MASTER:
@@ -375,7 +375,7 @@ ALT_STATUS_CODE alt_spi_is_busy(ALT_SPI_DEV_t *spi_dev)
         }
         break;
     }
-   
+
     return ALT_E_FALSE;
 }
 
@@ -395,7 +395,7 @@ ALT_STATUS_CODE alt_spi_config_get(ALT_SPI_DEV_t *spi_dev,
     {
     case ALT_SPI_OP_MODE_MASTER:
         cfg_register = alt_read_word(ALT_SPIM_CTLR0_ADDR(spi_dev->location));
-      
+
         cfg->frame_size    = (ALT_SPI_DFS_t)ALT_SPIM_CTLR0_DFS_GET(cfg_register);
         cfg->frame_format  = (ALT_SPI_FRF_t)ALT_SPIM_CTLR0_FRF_GET(cfg_register);
         cfg->clk_phase     = (ALT_SPI_SCPH_t)ALT_SPIM_CTLR0_SCPH_GET(cfg_register);
@@ -462,7 +462,7 @@ ALT_STATUS_CODE alt_spi_config_set(ALT_SPI_DEV_t *spi_dev,
                      | ALT_SPIM_CTLR0_SCPOL_SET_MSK
                      | ALT_SPIM_CTLR0_TMOD_SET_MSK
                      | ALT_SPIM_CTLR0_SRL_SET_MSK;
-                       
+
         alt_replbits_word(ALT_SPIM_CTLR0_ADDR(spi_dev->location), cfg_mask, cfg_register);
         break;
     case ALT_SPI_OP_MODE_SLAVE:
@@ -482,7 +482,7 @@ ALT_STATUS_CODE alt_spi_config_set(ALT_SPI_DEV_t *spi_dev,
                      | ALT_SPIS_CTLR0_TMOD_SET_MSK
                      | ALT_SPIS_CTLR0_SLV_OE_SET_MSK
                      | ALT_SPIS_CTLR0_SRL_SET_MSK;
-                       
+
         alt_replbits_word(ALT_SPIS_CTLR0_ADDR(spi_dev->location), cfg_mask, cfg_register);
         break;
     }
@@ -510,7 +510,7 @@ ALT_STATUS_CODE alt_spi_mw_config_get(ALT_SPI_DEV_t *spi_dev,
     case ALT_SPI_OP_MODE_MASTER:
         cfg_register           = alt_read_word(ALT_SPIM_CTLR0_ADDR(spi_dev->location));
         mwcr_register          = alt_read_word(ALT_SPIM_MWCR_ADDR(spi_dev->location));
-        
+
         cfg->ctl_frame_size    = ALT_SPIM_CTLR0_DFS_GET(cfg_register);
         cfg->mode              = (ALT_SPI_MW_MODE_t)ALT_SPIM_MWCR_MWMOD_GET(mwcr_register);
         cfg->dir               = (ALT_SPI_MW_DIR_t)ALT_SPIM_MWCR_MDD_GET(mwcr_register);
@@ -519,7 +519,7 @@ ALT_STATUS_CODE alt_spi_mw_config_get(ALT_SPI_DEV_t *spi_dev,
     case ALT_SPI_OP_MODE_SLAVE:
         cfg_register          = alt_read_word(ALT_SPIS_CTLR0_ADDR(spi_dev->location));
         mwcr_register         = alt_read_word(ALT_SPIS_MWCR_ADDR(spi_dev->location));
-        
+
         cfg->ctl_frame_size = ALT_SPIS_CTLR0_DFS_GET(cfg_register);
         cfg->mode             = (ALT_SPI_MW_MODE_t)ALT_SPIS_MWCR_MWMOD_GET(mwcr_register);
         cfg->dir              = (ALT_SPI_MW_DIR_t)ALT_SPIS_MWCR_MDD_GET(mwcr_register);
@@ -565,9 +565,9 @@ ALT_STATUS_CODE alt_spi_mw_config_set(ALT_SPI_DEV_t *spi_dev,
         mwcr_mask     = ALT_SPIM_MWCR_MWMOD_SET_MSK
                       | ALT_SPIM_MWCR_MDD_SET_MSK
                       | ALT_SPIM_MWCR_MHS_SET_MSK;
-                        
+
         alt_replbits_word(ALT_SPIM_MWCR_ADDR(spi_dev->location), mwcr_mask, mwcr_register);
-        alt_replbits_word(ALT_SPIM_CTLR0_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_CTLR0_ADDR(spi_dev->location),
                           ALT_SPIM_CTLR0_DFS_SET_MSK,
                           ALT_SPIM_CTLR0_DFS_SET(cfg->ctl_frame_size));
         break;
@@ -577,9 +577,9 @@ ALT_STATUS_CODE alt_spi_mw_config_set(ALT_SPI_DEV_t *spi_dev,
 
         mwcr_mask     = ALT_SPIS_MWCR_MWMOD_SET_MSK
                       | ALT_SPIS_MWCR_MDD_SET_MSK;
-                        
+
         alt_replbits_word(ALT_SPIS_MWCR_ADDR(spi_dev->location), mwcr_mask, mwcr_register);
-        alt_replbits_word(ALT_SPIS_CTLR0_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIS_CTLR0_ADDR(spi_dev->location),
                           ALT_SPIS_CTLR0_DFS_SET_MSK,
                           ALT_SPIS_CTLR0_DFS_SET(cfg->ctl_frame_size));
         break;
@@ -732,7 +732,7 @@ ALT_STATUS_CODE alt_spi_divider_set(ALT_SPI_DEV_t *spi_dev, const uint32_t div)
     return status;
 }
 
-    
+
 //
 // Get the configured baud rate divider value for the specified SPI controller
 //
@@ -756,7 +756,7 @@ ALT_STATUS_CODE alt_spi_baud_rate_get(ALT_SPI_DEV_t *spi_dev, uint32_t *div)
 
     return status;
 }
-    
+
 //
 // Set the baud rate divider to configure the generated sclk_out frequency
 //
@@ -782,7 +782,7 @@ ALT_STATUS_CODE alt_spi_baud_rate_set(ALT_SPI_DEV_t *spi_dev, const uint32_t div
             status = ALT_E_BAD_ARG;
             break;
         }
-        alt_replbits_word(ALT_SPIM_BAUDR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_BAUDR_ADDR(spi_dev->location),
                           ALT_SPIM_BAUDR_SCKDV_SET_MSK,
                           ALT_SPIM_BAUDR_SCKDV_SET(div));
         break;
@@ -815,12 +815,12 @@ ALT_STATUS_CODE alt_spi_speed_get(ALT_SPI_DEV_t * spi_dev,
     {
         return status;
     }
- 
+
     if (div < ALT_SPI_MIN_CLK_DIV || div > ALT_SPI_MAX_CLK_DIV)
     {
         return ALT_E_BAD_ARG;
     }
-        
+
     //<speed, Hz> = <internal clock> / <lcount>
     *speed_in_hz = spi_dev->clock_freq / div;
 
@@ -854,10 +854,10 @@ ALT_STATUS_CODE alt_spi_speed_set(ALT_SPI_DEV_t * spi_dev,
 //
 // Fill struct with configuration of spi controller for master mode by bus speed
 //
-ALT_STATUS_CODE alt_spi_speed_to_divider(ALT_SPI_DEV_t * spi_dev, 
-                                         uint32_t speed_in_hz, 
+ALT_STATUS_CODE alt_spi_speed_to_divider(ALT_SPI_DEV_t * spi_dev,
+                                         uint32_t speed_in_hz,
                                          uint32_t * div)
-    
+
 {
     if (alt_spi_checking(spi_dev) == ALT_E_FALSE || !div)
     {
@@ -869,7 +869,7 @@ ALT_STATUS_CODE alt_spi_speed_to_divider(ALT_SPI_DEV_t * spi_dev,
     {
         return ALT_E_ARG_RANGE;
     }
-    
+
     // <lcount> = <internal clock> / <speed, Hz>
     *div = spi_dev->clock_freq / speed_in_hz;
 
@@ -879,8 +879,8 @@ ALT_STATUS_CODE alt_spi_speed_to_divider(ALT_SPI_DEV_t * spi_dev,
 //
 // Return bus speed by configuration of spi controller for master mode.
 //
-ALT_STATUS_CODE alt_spi_divider_to_speed(ALT_SPI_DEV_t * spi_dev, 
-                                         uint32_t * speed_in_hz, 
+ALT_STATUS_CODE alt_spi_divider_to_speed(ALT_SPI_DEV_t * spi_dev,
+                                         uint32_t * speed_in_hz,
                                          const uint32_t * div)
 {
     if (alt_spi_checking(spi_dev) == ALT_E_FALSE || !div)
@@ -892,7 +892,7 @@ ALT_STATUS_CODE alt_spi_divider_to_speed(ALT_SPI_DEV_t * spi_dev,
     {
         return ALT_E_BAD_ARG;
     }
-    
+
     // <speed, Hz> = <internal clock> / <lcount>
     *speed_in_hz = spi_dev->clock_freq / *div;
 
@@ -922,7 +922,7 @@ ALT_STATUS_CODE alt_spi_num_data_frames_get(ALT_SPI_DEV_t *spi_dev, uint32_t *nu
 
     return status;
 }
-   
+
 //
 // Set the number of data frames configured for the SPI controller.
 //
@@ -948,7 +948,7 @@ ALT_STATUS_CODE alt_spi_num_data_frames_set(ALT_SPI_DEV_t *spi_dev, const uint32
             status = ALT_E_BAD_ARG;
             break;
         }
-        alt_replbits_word(ALT_SPIM_CTLR1_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_CTLR1_ADDR(spi_dev->location),
                           ALT_SPIM_CTLR1_NDF_SET_MSK,
                           ALT_SPIM_CTLR1_NDF_SET(num_data_frames));
         break;
@@ -1021,12 +1021,12 @@ static ALT_STATUS_CODE alt_spi_slave_int_clear(ALT_SPI_DEV_t *spi_dev, const uin
         alt_read_word(ALT_SPIS_ICR_ADDR(spi_dev->location));
         return ALT_E_SUCCESS;
     }
-    
+
     // For different status clear different register
     if (mask & ALT_SPI_STATUS_TXOI)
     {
         alt_read_word(ALT_SPIS_TXOICR_ADDR(spi_dev->location));
-    } 
+    }
     if (mask & ALT_SPI_STATUS_RXOI)
     {
         alt_read_word(ALT_SPIS_RXOICR_ADDR(spi_dev->location));
@@ -1050,7 +1050,7 @@ static ALT_STATUS_CODE alt_spi_master_int_clear(ALT_SPI_DEV_t *spi_dev, const ui
         alt_read_word(ALT_SPIM_ICR_ADDR(spi_dev->location));
         return ALT_E_SUCCESS;
     }
-    
+
     // For different status clear different register
     if (mask & ALT_SPI_STATUS_TXOI)
     {
@@ -1269,16 +1269,16 @@ ALT_STATUS_CODE alt_spi_rx_fifo_threshold_set(ALT_SPI_DEV_t *spi_dev,
     switch (spi_dev->op_mode)
     {
     case ALT_SPI_OP_MODE_MASTER:
-        alt_replbits_word(ALT_SPIM_RXFTLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_RXFTLR_ADDR(spi_dev->location),
                           ALT_SPIM_RXFTLR_RFT_SET_MSK,
                           ALT_SPIM_RXFTLR_RFT_SET(threshold));
-        
+
         break;
     case ALT_SPI_OP_MODE_SLAVE:
-        alt_replbits_word(ALT_SPIS_RXFTLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIS_RXFTLR_ADDR(spi_dev->location),
                           ALT_SPIS_RXFTLR_RFT_SET_MSK,
                           ALT_SPIS_RXFTLR_RFT_SET(threshold));
-        
+
         break;
     }
 
@@ -1415,12 +1415,12 @@ ALT_STATUS_CODE alt_spi_tx_fifo_threshold_set(ALT_SPI_DEV_t *spi_dev,
     switch (spi_dev->op_mode)
     {
     case ALT_SPI_OP_MODE_MASTER:
-        alt_replbits_word(ALT_SPIM_TXFTLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_TXFTLR_ADDR(spi_dev->location),
                           ALT_SPIM_TXFTLR_TFT_SET_MSK,
                           ALT_SPIM_TXFTLR_TFT_SET(threshold));
         break;
     case ALT_SPI_OP_MODE_SLAVE:
-        alt_replbits_word(ALT_SPIS_TXFTLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIS_TXFTLR_ADDR(spi_dev->location),
                           ALT_SPIS_TXFTLR_TFT_SET_MSK,
                           ALT_SPIS_TXFTLR_TFT_SET(threshold));
         break;
@@ -1478,7 +1478,7 @@ ALT_STATUS_CODE alt_spi_rx_sample_delay_set(ALT_SPI_DEV_t *spi_dev, const uint32
             status = ALT_E_BAD_ARG;
             break;
         }
-        alt_replbits_word(ALT_SPIM_RX_SMPL_DLY_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_RX_SMPL_DLY_ADDR(spi_dev->location),
                           ALT_SPIM_RX_SMPL_DLY_RSD_SET_MSK,
                           ALT_SPIM_RX_SMPL_DLY_RSD_SET(delay));
         break;
@@ -1504,11 +1504,11 @@ ALT_STATUS_CODE alt_spi_dma_tx_disable(ALT_SPI_DEV_t *spi_dev)
     switch (spi_dev->op_mode)
     {
     case ALT_SPI_OP_MODE_MASTER:
-        alt_clrbits_word(ALT_SPIM_DMACR_ADDR(spi_dev->location), 
+        alt_clrbits_word(ALT_SPIM_DMACR_ADDR(spi_dev->location),
                          ALT_SPIM_DMACR_TDMAE_SET_MSK);
         break;
     case ALT_SPI_OP_MODE_SLAVE:
-        alt_clrbits_word(ALT_SPIS_DMACR_ADDR(spi_dev->location), 
+        alt_clrbits_word(ALT_SPIS_DMACR_ADDR(spi_dev->location),
                          ALT_SPIS_DMACR_TDMAE_SET_MSK);
         break;
     }
@@ -1538,7 +1538,7 @@ ALT_STATUS_CODE alt_spi_dma_tx_enable(ALT_SPI_DEV_t *spi_dev, const uint32_t lev
             status = ALT_E_BAD_ARG;
             break;
         }
-        alt_replbits_word(ALT_SPIM_DMATDLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_DMATDLR_ADDR(spi_dev->location),
                           ALT_SPIM_DMATDLR_DMATDL_SET_MSK,
                           ALT_SPIM_DMATDLR_DMATDL_SET(level));
         break;
@@ -1550,12 +1550,12 @@ ALT_STATUS_CODE alt_spi_dma_tx_enable(ALT_SPI_DEV_t *spi_dev, const uint32_t lev
         }
         alt_setbits_word( ALT_SPIS_DMACR_ADDR(spi_dev->location),
                           ALT_SPIS_DMACR_TDMAE_SET_MSK);
-        alt_replbits_word(ALT_SPIS_DMATDLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIS_DMATDLR_ADDR(spi_dev->location),
                           ALT_SPIS_DMATDLR_DMATDL_SET_MSK,
                           ALT_SPIS_DMATDLR_DMATDL_SET(level));
         break;
     }
-    
+
     return status;
 }
 
@@ -1573,11 +1573,11 @@ ALT_STATUS_CODE alt_spi_dma_rx_disable(ALT_SPI_DEV_t *spi_dev)
     switch (spi_dev->op_mode)
     {
     case ALT_SPI_OP_MODE_MASTER:
-        alt_clrbits_word(ALT_SPIM_DMACR_ADDR(spi_dev->location), 
+        alt_clrbits_word(ALT_SPIM_DMACR_ADDR(spi_dev->location),
                          ALT_SPIM_DMACR_RDMAE_SET_MSK);
         break;
     case ALT_SPI_OP_MODE_SLAVE:
-        alt_clrbits_word(ALT_SPIS_DMACR_ADDR(spi_dev->location), 
+        alt_clrbits_word(ALT_SPIS_DMACR_ADDR(spi_dev->location),
                          ALT_SPIS_DMACR_RDMAE_SET_MSK);
         break;
     }
@@ -1607,7 +1607,7 @@ ALT_STATUS_CODE alt_spi_dma_rx_enable(ALT_SPI_DEV_t *spi_dev, const uint32_t lev
             status = ALT_E_BAD_ARG;
             break;
         }
-        alt_replbits_word(ALT_SPIM_DMARDLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIM_DMARDLR_ADDR(spi_dev->location),
                           ALT_SPIM_DMARDLR_DMARDL_SET_MSK,
                           ALT_SPIM_DMARDLR_DMARDL_SET(level));
         break;
@@ -1619,12 +1619,12 @@ ALT_STATUS_CODE alt_spi_dma_rx_enable(ALT_SPI_DEV_t *spi_dev, const uint32_t lev
         }
         alt_setbits_word( ALT_SPIS_DMACR_ADDR(spi_dev->location),
                           ALT_SPIS_DMACR_RDMAE_SET_MSK);
-        alt_replbits_word(ALT_SPIS_DMARDLR_ADDR(spi_dev->location), 
+        alt_replbits_word(ALT_SPIS_DMARDLR_ADDR(spi_dev->location),
                           ALT_SPIS_DMARDLR_DMARDL_SET_MSK,
                           ALT_SPIS_DMARDLR_DMARDL_SET(level));
         break;
     }
-    
+
     return status;
 }
 
@@ -1685,7 +1685,7 @@ ALT_STATUS_CODE alt_spi_tx_fifo_enq(ALT_SPI_DEV_t *spi_dev, const uint16_t data)
 }
 
 //
-// This function writes a single data byte to the transmit FIFO. 
+// This function writes a single data byte to the transmit FIFO.
 //
 static ALT_STATUS_CODE alt_spi_transmit_error_handler(ALT_SPI_DEV_t *spi_dev, ALT_STATUS_CODE *err_status)
 {
@@ -1696,7 +1696,7 @@ static ALT_STATUS_CODE alt_spi_transmit_error_handler(ALT_SPI_DEV_t *spi_dev, AL
 
     if (status == ALT_E_TRUE && int_status != 0)
     {
-        if(int_status 
+        if(int_status
             & (ALT_SPI_STATUS_TXOI
                 | ALT_SPI_STATUS_RXOI
                 | ALT_SPI_STATUS_RXUI))
@@ -1711,10 +1711,10 @@ static ALT_STATUS_CODE alt_spi_transmit_error_handler(ALT_SPI_DEV_t *spi_dev, AL
 //
 // Write or read bulk of data form master mode
 //
-static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev, 
+static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev,
                                                       size_t data_send,
                                                       size_t data_recv,
-                                                      const uint16_t * tx_buf, 
+                                                      const uint16_t * tx_buf,
                                                       uint16_t * rx_buf)
 {
     ALT_STATUS_CODE    status  = ALT_E_SUCCESS;
@@ -1722,26 +1722,26 @@ static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev,
     const uint16_t * buffer_tx = tx_buf;
     uint16_t * buffer_rx       = rx_buf;
     uint32_t timeout           = MAX(data_send, data_recv) * 10000;
-    
+
     while (data_send > 0 || data_recv > 0)
     {
         // Error handling
         ALT_STATUS_CODE err_status = 0;
         status = alt_spi_transmit_error_handler(spi_dev, &err_status);
-    
+
         if (status != ALT_E_SUCCESS)
         {
             break;
         }
-    
+
         if (err_status != ALT_E_SUCCESS)
         {
             status = err_status;
             break;
         }
-    
+
         // Top up the TX FIFO with sending data
-    
+
         if (data_send > 0)
         {
             uint32_t level = 0;
@@ -1750,22 +1750,22 @@ static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev,
             {
                 break;
             }
-    
+
             uint32_t space = ALT_SPI_TX_FIFO_NUM_ENTRIES - level;
-    
+
             space = MIN(data_send, space);
-    
+
             for (uint32_t i = 0; i < space; ++i)
             {
                 alt_write_word(ALT_SPIM_DR_ADDR(spi_dev->location), ALT_SPIM_DR_DR_SET(*buffer_tx));
                 ++buffer_tx;
             }
-    
+
             data_send -= space;
         }
-    
+
         // Read out the resulting received data as they come in.
-    
+
         if (data_recv > 0)
         {
             uint32_t level = 0;
@@ -1774,7 +1774,7 @@ static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev,
             {
                 break;
             }
-    
+
             if (level == 0)
             {
                 timeout--;
@@ -1784,9 +1784,9 @@ static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev,
                     break;
                 }
             }
-    
+
             level = MIN(data_recv, level);
-    
+
             for (uint32_t i = 0; i < level; ++i)
             {
                 uint32_t data_read = alt_read_word(ALT_SPIM_DR_ADDR(spi_dev->location));
@@ -1794,7 +1794,7 @@ static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev,
                 //printf("data %x\n", (unsigned int)data_read);
                 ++buffer_rx;
             }
-    
+
             data_recv -= level;
         }
     }
@@ -1805,10 +1805,10 @@ static ALT_STATUS_CODE alt_spi_master_transfer_helper(ALT_SPI_DEV_t *spi_dev,
 //
 // This function performs a master SPI/SSP serial master transfer operations (use by all transfer functions).
 //
-static ALT_STATUS_CODE alt_spi_master_transfer(ALT_SPI_DEV_t *spi_dev, 
+static ALT_STATUS_CODE alt_spi_master_transfer(ALT_SPI_DEV_t *spi_dev,
                                                const uint32_t slave_select,
                                                const size_t num_frames,
-                                               const uint16_t * tx_buf, 
+                                               const uint16_t * tx_buf,
                                                uint16_t * rx_buf,
                                                ALT_SPI_TMOD_t transfer_mode,
                                                const uint8_t opcode,
@@ -1823,8 +1823,8 @@ static ALT_STATUS_CODE alt_spi_master_transfer(ALT_SPI_DEV_t *spi_dev,
     {
         return ALT_E_ERROR;
     }
-    
-    if (num_frames == 0) 
+
+    if (num_frames == 0)
     {
         return ALT_E_SUCCESS;
     }
@@ -1869,7 +1869,7 @@ static ALT_STATUS_CODE alt_spi_master_transfer(ALT_SPI_DEV_t *spi_dev,
                           ALT_SPIM_CTLR0_TMOD_SET(transfer_mode));
         spi_dev->last_transfer_mode = transfer_mode;
     }
-    
+
     if (transfer_mode == ALT_SPI_TMOD_RX || transfer_mode == ALT_SPI_TMOD_EEPROM)
     {
         status = alt_spi_disable(spi_dev);
@@ -1897,30 +1897,30 @@ static ALT_STATUS_CODE alt_spi_master_transfer(ALT_SPI_DEV_t *spi_dev,
             return status;
         }
     }
-    
+
     //Enable abort and TXFIFO empty interrupt status
-    alt_spi_int_enable(spi_dev, ALT_SPI_STATUS_RXOI | 
-                                ALT_SPI_STATUS_RXUI | 
+    alt_spi_int_enable(spi_dev, ALT_SPI_STATUS_RXOI |
+                                ALT_SPI_STATUS_RXUI |
                                 ALT_SPI_STATUS_TXOI);
 
     // This SPI controller requires that a read issue be performed for each byte requested.
     // Read issue takes space in the TX FIFO, which may asynchronously handling a previous request.
-    
+
     uint32_t data_send = 0;
     uint32_t data_recv = 0;
-    
+
     if (transfer_mode == ALT_SPI_TMOD_TX || transfer_mode == ALT_SPI_TMOD_TXRX)
     {
         data_send = num_frames;
     }
-    
-    if (transfer_mode == ALT_SPI_TMOD_RX   || 
+
+    if (transfer_mode == ALT_SPI_TMOD_RX   ||
         transfer_mode == ALT_SPI_TMOD_TXRX ||
         transfer_mode == ALT_SPI_TMOD_EEPROM)
     {
         data_recv = num_frames;
     }
-    
+
     if (transfer_mode == ALT_SPI_TMOD_EEPROM)
     {
         //Send opcode and eeprom address
@@ -1933,11 +1933,11 @@ static ALT_STATUS_CODE alt_spi_master_transfer(ALT_SPI_DEV_t *spi_dev,
         //Activate rx transfer
         alt_spi_tx_fifo_enq(spi_dev, 0);
     }
-    
+
     // Write or read bulk of data
     status = alt_spi_master_transfer_helper(spi_dev,
                                             data_send, data_recv,
-                                            tx_buf,  
+                                            tx_buf,
                                             rx_buf);
 
     // Need reset for set spi bus in idle state
@@ -1953,81 +1953,81 @@ static ALT_STATUS_CODE alt_spi_master_transfer(ALT_SPI_DEV_t *spi_dev,
 //
 // This function performs a master SPI/SSP serial transmit and receive transfer.
 //
-ALT_STATUS_CODE alt_spi_master_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
                                               const uint32_t slave_select,
                                               const size_t num_frames,
-                                              const uint16_t * tx_buf, 
+                                              const uint16_t * tx_buf,
                                               uint16_t * rx_buf)
 {
-    return alt_spi_master_transfer(spi_dev, 
-                                   slave_select, 
+    return alt_spi_master_transfer(spi_dev,
+                                   slave_select,
                                    num_frames,
-                                   tx_buf, 
-                                   rx_buf, 
-                                   ALT_SPI_TMOD_TXRX, 
+                                   tx_buf,
+                                   rx_buf,
+                                   ALT_SPI_TMOD_TXRX,
                                    0, 0);
 }
 
 //
 // This function performs a master SPI/SSP serial transmit only transfer.
 //
-ALT_STATUS_CODE alt_spi_master_tx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_tx_transfer(ALT_SPI_DEV_t *spi_dev,
                                            const uint32_t slave_select,
                                            const size_t num_frames,
                                            const uint16_t * tx_buf)
 {
-    return alt_spi_master_transfer(spi_dev, 
-                                   slave_select, 
+    return alt_spi_master_transfer(spi_dev,
+                                   slave_select,
                                    num_frames,
-                                   tx_buf, NULL, 
-                                   ALT_SPI_TMOD_TX, 
+                                   tx_buf, NULL,
+                                   ALT_SPI_TMOD_TX,
                                    0, 0);
 }
 
 //
 // This function performs a master SPI/SSP serial receive only transfer.
 //
-ALT_STATUS_CODE alt_spi_master_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_rx_transfer(ALT_SPI_DEV_t *spi_dev,
                                            const uint32_t slave_select,
                                            const size_t num_frames,
                                            uint16_t * rx_buf)
 {
-    return alt_spi_master_transfer(spi_dev, 
-                                   slave_select, 
+    return alt_spi_master_transfer(spi_dev,
+                                   slave_select,
                                    num_frames,
-                                   NULL, 
-                                   rx_buf, 
-                                   ALT_SPI_TMOD_RX, 
+                                   NULL,
+                                   rx_buf,
+                                   ALT_SPI_TMOD_RX,
                                    0, 0);
 }
 
 //
 // This function performs a master SPI EEPROM read transfer.
 //
-ALT_STATUS_CODE alt_spi_master_eeprom_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_eeprom_transfer(ALT_SPI_DEV_t *spi_dev,
                                                const uint32_t slave_select,
                                                const uint8_t opcode,
                                                const uint16_t eeprom_addr,
                                                const size_t num_frames,
                                                uint16_t * rx_buf)
 {
-    return alt_spi_master_transfer(spi_dev, 
-                                   slave_select, 
+    return alt_spi_master_transfer(spi_dev,
+                                   slave_select,
                                    num_frames,
-                                   NULL, 
-                                   rx_buf, 
-                                   ALT_SPI_TMOD_EEPROM, 
-                                   opcode, 
+                                   NULL,
+                                   rx_buf,
+                                   ALT_SPI_TMOD_EEPROM,
+                                   opcode,
                                    eeprom_addr);
 }
 
 //
 // Write or read bulk of data form slave mode
 //
-static ALT_STATUS_CODE alt_spi_slave_transfer_helper(ALT_SPI_DEV_t *spi_dev, 
+static ALT_STATUS_CODE alt_spi_slave_transfer_helper(ALT_SPI_DEV_t *spi_dev,
                                               size_t data_send,
                                               size_t data_recv,
-                                              const uint16_t * tx_buf, 
+                                              const uint16_t * tx_buf,
                                               uint16_t * rx_buf)
 {
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
@@ -2035,26 +2035,26 @@ static ALT_STATUS_CODE alt_spi_slave_transfer_helper(ALT_SPI_DEV_t *spi_dev,
     const uint16_t * buffer_tx = tx_buf;
     uint16_t * buffer_rx = rx_buf;
     uint32_t timeout = MAX(data_send, data_recv) * 10000;
-    
+
     while (data_send > 0 || data_recv > 0)
     {
         // Error handling
         ALT_STATUS_CODE err_status = 0;
         status = alt_spi_transmit_error_handler(spi_dev, &err_status);
-    
+
         if (status != ALT_E_SUCCESS)
         {
             break;
         }
-    
+
         if (err_status != ALT_E_SUCCESS)
         {
             status = err_status;
             break;
         }
-    
+
         // Read out the resulting received data as they come in.
-        
+
         if (data_recv > 0)
         {
             uint32_t level = 0;
@@ -2063,7 +2063,7 @@ static ALT_STATUS_CODE alt_spi_slave_transfer_helper(ALT_SPI_DEV_t *spi_dev,
             {
                 break;
             }
-        
+
             if (level == 0)
             {
                 if (--timeout == 0)
@@ -2072,20 +2072,20 @@ static ALT_STATUS_CODE alt_spi_slave_transfer_helper(ALT_SPI_DEV_t *spi_dev,
                     break;
                 }
             }
-        
+
             level = MIN(data_recv, level);
-        
+
             for (uint32_t i = 0; i < level; ++i)
             {
                 *buffer_rx = (ALT_SPIS_DR_DR_GET(alt_read_word(ALT_SPIS_DR_ADDR(spi_dev->location))));
                 ++buffer_rx;
             }
-        
+
             data_recv -= level;
         }
 
         // Top up the TX FIFO with sending data
-        
+
         if (data_send > 0)
         {
             uint32_t level = 0;
@@ -2094,20 +2094,20 @@ static ALT_STATUS_CODE alt_spi_slave_transfer_helper(ALT_SPI_DEV_t *spi_dev,
             {
                 break;
             }
-    
+
             uint32_t space = ALT_SPI_TX_FIFO_NUM_ENTRIES - level;
-    
+
             space = MIN(data_send, space);
-    
+
             for (uint32_t i = 0; i < space; ++i)
             {
                 alt_write_word(ALT_SPIS_DR_ADDR(spi_dev->location), ALT_SPIS_DR_DR_SET(*buffer_tx));
                 ++buffer_tx;
             }
-    
+
             data_send -= space;
         }
-    
+
     }
 
     return status;
@@ -2115,8 +2115,8 @@ static ALT_STATUS_CODE alt_spi_slave_transfer_helper(ALT_SPI_DEV_t *spi_dev,
 //
 // This function performs a slave SPI/SSP serial slave transfer.
 //
-static ALT_STATUS_CODE alt_spi_slave_transfer(ALT_SPI_DEV_t *spi_dev, 
-                                              const uint16_t * tx_buf, 
+static ALT_STATUS_CODE alt_spi_slave_transfer(ALT_SPI_DEV_t *spi_dev,
+                                              const uint16_t * tx_buf,
                                               uint16_t * rx_buf,
                                               const size_t buf_len,
                                               ALT_SPI_TMOD_t transfer_mode)
@@ -2130,8 +2130,8 @@ static ALT_STATUS_CODE alt_spi_slave_transfer(ALT_SPI_DEV_t *spi_dev,
     {
         return ALT_E_ERROR;
     }
-    
-    if (buf_len == 0) 
+
+    if (buf_len == 0)
     {
         return ALT_E_SUCCESS;
     }
@@ -2140,38 +2140,38 @@ static ALT_STATUS_CODE alt_spi_slave_transfer(ALT_SPI_DEV_t *spi_dev,
     {
         return ALT_E_ERROR;
     }
-    
+
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
 
     // Clear interrupt status and disable interrupt mask
     alt_spi_int_clear(  spi_dev,ALT_SPI_STATUS_ALL);
     alt_spi_int_disable(spi_dev,ALT_SPI_STATUS_ALL);
     // Enable abort and TXFIFO empty interrupt status
-    alt_spi_int_enable( spi_dev,ALT_SPI_STATUS_RXOI | 
-                                ALT_SPI_STATUS_RXUI | 
+    alt_spi_int_enable( spi_dev,ALT_SPI_STATUS_RXOI |
+                                ALT_SPI_STATUS_RXUI |
                                 ALT_SPI_STATUS_TXOI);
 
     // This SPI controller requires that a read issue be performed for each byte requested.
     // Read issue takes space in the TX FIFO, which may asynchronously handling a previous request.
-    
+
     uint32_t data_send = 0;
     uint32_t data_recv = 0;
-    
+
     if (transfer_mode == ALT_SPI_TMOD_TX || transfer_mode == ALT_SPI_TMOD_TXRX)
     {
         data_send = buf_len;
     }
-    
+
     if (transfer_mode == ALT_SPI_TMOD_RX || transfer_mode == ALT_SPI_TMOD_TXRX)
     {
         data_recv = buf_len;
     }
-    
+
     // Write or read bulk of data
-    status = alt_spi_slave_transfer_helper(spi_dev, 
-                                           data_send, 
+    status = alt_spi_slave_transfer_helper(spi_dev,
+                                           data_send,
                                            data_recv,
-                                           tx_buf, 
+                                           tx_buf,
                                            rx_buf);
 
     // Need reset for set spi bus in idle state
@@ -2188,45 +2188,44 @@ static ALT_STATUS_CODE alt_spi_slave_transfer(ALT_SPI_DEV_t *spi_dev,
 //
 // This function performs a slave SPI/SSP serial transmit and receive transfer.
 //
-ALT_STATUS_CODE alt_spi_slave_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
-                                             const uint16_t * tx_buf, 
+ALT_STATUS_CODE alt_spi_slave_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
+                                             const uint16_t * tx_buf,
                                              uint16_t * rx_buf,
                                              const size_t buf_len)
 {
-    return alt_spi_slave_transfer(spi_dev, 
-                                  tx_buf, 
-                                  rx_buf, 
-                                  buf_len, 
+    return alt_spi_slave_transfer(spi_dev,
+                                  tx_buf,
+                                  rx_buf,
+                                  buf_len,
                                   ALT_SPI_TMOD_TXRX);
 }
 
 //
 // This function performs a slave SPI/SSP serial transmit only transfer.
 //
-ALT_STATUS_CODE alt_spi_slave_tx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_slave_tx_transfer(ALT_SPI_DEV_t *spi_dev,
                                           const uint16_t * tx_buf,
                                           const size_t buf_len)
 {
     alt_spi_int_disable(spi_dev, ALT_SPI_STATUS_RXFI);
-    return alt_spi_slave_transfer(spi_dev, 
-                                  tx_buf, 
-                                  NULL, 
-                                  buf_len, 
+    return alt_spi_slave_transfer(spi_dev,
+                                  tx_buf,
+                                  NULL,
+                                  buf_len,
                                   ALT_SPI_TMOD_TXRX);
 }
 
 //
 // This function performs a slave SPI/SSP serial receive only transfer.
 //
-ALT_STATUS_CODE alt_spi_slave_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_slave_rx_transfer(ALT_SPI_DEV_t *spi_dev,
                                           uint16_t * rx_buf,
                                           const size_t buf_len)
 {
     alt_spi_int_disable(spi_dev, ALT_SPI_STATUS_TXEI);
-    return alt_spi_slave_transfer(spi_dev, 
-                                  NULL, 
-                                  rx_buf, 
-                                  buf_len, 
+    return alt_spi_slave_transfer(spi_dev,
+                                  NULL,
+                                  rx_buf,
+                                  buf_len,
                                   ALT_SPI_TMOD_TXRX);
 }
-

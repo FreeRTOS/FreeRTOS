@@ -631,33 +631,33 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
-     Init                                    308000      29      41       2   .text       
-     _Startup                                  C151      12      18       1   NON_BANKED  
+     Init                                    308000      29      41       2   .text
+     _Startup                                  C151      12      18       1   NON_BANKED
 - VARIABLES:
-     _startupData                              C07C      18      24       6   .startData  
+     _startupData                              C07C      18      24       6   .startData
 MODULE:                 -- STRING.C.o (ansibi.lib) --
 - PROCEDURES:
-     memcpy                                  308029      26      38       8   .text       
-     memset                                  30804F      1E      30       2   .text       
-     strncpy                                 30806D      2D      45       2   .text       
+     memcpy                                  308029      26      38       8   .text
+     memset                                  30804F      1E      30       2   .text
+     strncpy                                 30806D      2D      45       2   .text
 - VARIABLES:
 MODULE:                 -- rtshc12.c.o (ansibi.lib) --
 - PROCEDURES:
-     _LCMP                                     C163      19      25       2   NON_BANKED  
-     _LCMP_P                                   C17C      15      21       3   NON_BANKED  
-     _LNEG                                     C191       D      13       2   NON_BANKED  
-     _LINC                                     C19E       5       5       4   NON_BANKED  
-     _LMUL                                     C1A3      27      39       1   NON_BANKED  
-     _lDivMod                                  C1CA      E3     227       3   NON_BANKED  
-     _LDIVU                                    C2AD       E      14       1   NON_BANKED  
-     _NEG_P                                    C2BB       F      15       4   NON_BANKED  
-     _LDIVS                                    C2CA      35      53       2   NON_BANKED  
+     _LCMP                                     C163      19      25       2   NON_BANKED
+     _LCMP_P                                   C17C      15      21       3   NON_BANKED
+     _LNEG                                     C191       D      13       2   NON_BANKED
+     _LINC                                     C19E       5       5       4   NON_BANKED
+     _LMUL                                     C1A3      27      39       1   NON_BANKED
+     _lDivMod                                  C1CA      E3     227       3   NON_BANKED
+     _LDIVU                                    C2AD       E      14       1   NON_BANKED
+     _NEG_P                                    C2BB       F      15       4   NON_BANKED
+     _LDIVS                                    C2CA      35      53       2   NON_BANKED
 - VARIABLES:
 MODULE:                 -- Cpu.C.o --
 - PROCEDURES:
-     _EntryPoint                               C000      2E      46       1   .init       
-     PE_low_level_init                         C02E      4E      78       2   .init       
-     Cpu_Interrupt                             C2FF       1       1      60   NON_BANKED  
+     _EntryPoint                               C000      2E      46       1   .init
+     PE_low_level_init                         C02E      4E      78       2   .init
+     Cpu_Interrupt                             C2FF       1       1      60   NON_BANKED
 - VARIABLES:
 MODULE:                 -- IO_Map.C.o --
 - PROCEDURES:
@@ -1191,31 +1191,31 @@ MODULE:                 -- Vectors.c.o --
      _vect                                     FF80      80     128       0   .abs_section_ff80
 MODULE:                 -- RTOSDemo.C.o --
 - PROCEDURES:
-     main                                    30809A       9       9       0   .text       
+     main                                    30809A       9       9       0   .text
 - VARIABLES:
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     vMain                                   3080A3      52      82       1   .text       
-     vErrorChecks                            3080F5      33      51       3   .text       
-     prvCheckOtherTasksAreStillRunning       308128      49      73       2   .text       
-     vApplicationIdleHook                    308171      70     112       2   .text       
+     vMain                                   3080A3      52      82       1   .text
+     vErrorChecks                            3080F5      33      51       3   .text
+     prvCheckOtherTasksAreStillRunning       308128      49      73       2   .text
+     vApplicationIdleHook                    308171      70     112       2   .text
 - VARIABLES:
-     STRING.Check.1                            C09A       6       6       1   .rodata1    
-     xLocalError                               1001       1       1       2   .bss        
+     STRING.Check.1                            C09A       6       6       1   .rodata1
+     xLocalError                               1001       1       1       2   .bss
 MODULE:                 -- ParTest.c.o --
 - PROCEDURES:
-     vParTestSetLED                          3081E1      22      34       4   .text       
-     vParTestToggleLED                       308203      14      20      10   .text       
+     vParTestSetLED                          3081E1      22      34       4   .text
+     vParTestToggleLED                       308203      14      20      10   .text
 - VARIABLES:
 MODULE:                 -- serial.c.o --
 - PROCEDURES:
-     xSerialPortInitMinimal                  308217      24      36       2   .text       
-     xSerialGetChar                          30823B      17      23       2   .text       
+     xSerialPortInitMinimal                  308217      24      36       2   .text
+     xSerialGetChar                          30823B      17      23       2   .text
      xSerialPutChar                          318000      1D      29       2   ROM_PAGE31_524
-     vCOM0_ISR                                 C300      59      89       1   NON_BANKED  
+     vCOM0_ISR                                 C300      59      89       1   NON_BANKED
 - VARIABLES:
-     xRxedChars                                1002       2       2       3   .bss        
-     xCharsForTx                               1004       2       2       3   .bss        
+     xRxedChars                                1002       2       2       3   .bss
+     xCharsForTx                               1004       2       2       3   .bss
 MODULE:                 -- tasks.c.o --
 - PROCEDURES:
      xTaskCreate                             31801D      D9     217      48   ROM_PAGE31_524
@@ -1242,25 +1242,25 @@ MODULE:                 -- tasks.c.o --
      prvAllocateTCBAndStack                  348055      37      55       2   ROM_PAGE34_527
      prvDeleteTCB                            34808C      11      17       2   ROM_PAGE34_527
 - VARIABLES:
-     STRING.IDLE.2                             C0A0       5       5       1   .rodata1    
-     pxCurrentTCB                              1006       2       2      28   .bss        
-     uxTasksDeleted                            1008       1       1       3   .bss        
-     uxCurrentNumberOfTasks                    1009       1       1       5   .bss        
-     xTickCount                                100A       2       2      14   .bss        
-     uxTopUsedPriority                         100C       1       1       2   .bss        
-     uxTopReadyPriority                        100D       1       1      15   .bss        
-     xSchedulerRunning                         100E       1       1       3   .bss        
-     uxSchedulerSuspended                      100F       1       1       6   .bss        
-     uxMissedTicks                             1010       1       1       4   .bss        
-     uxTaskNumber.1                            1011       1       1       2   .bss        
-     pxReadyTasksLists                         1012      3C      60      11   .bss        
-     xDelayedTaskList1                         104E       F      15       2   .bss        
-     xDelayedTaskList2                         105D       F      15       2   .bss        
-     pxDelayedTaskList                         106C       2       2       8   .bss        
-     pxOverflowDelayedTaskList                 106E       2       2       6   .bss        
-     xPendingReadyList                         1070       F      15       4   .bss        
-     xTasksWaitingTermination                  107F       F      15       5   .bss        
-     xSuspendedTaskList                        108E       F      15       2   .bss        
+     STRING.IDLE.2                             C0A0       5       5       1   .rodata1
+     pxCurrentTCB                              1006       2       2      28   .bss
+     uxTasksDeleted                            1008       1       1       3   .bss
+     uxCurrentNumberOfTasks                    1009       1       1       5   .bss
+     xTickCount                                100A       2       2      14   .bss
+     uxTopUsedPriority                         100C       1       1       2   .bss
+     uxTopReadyPriority                        100D       1       1      15   .bss
+     xSchedulerRunning                         100E       1       1       3   .bss
+     uxSchedulerSuspended                      100F       1       1       6   .bss
+     uxMissedTicks                             1010       1       1       4   .bss
+     uxTaskNumber.1                            1011       1       1       2   .bss
+     pxReadyTasksLists                         1012      3C      60      11   .bss
+     xDelayedTaskList1                         104E       F      15       2   .bss
+     xDelayedTaskList2                         105D       F      15       2   .bss
+     pxDelayedTaskList                         106C       2       2       8   .bss
+     pxOverflowDelayedTaskList                 106E       2       2       6   .bss
+     xPendingReadyList                         1070       F      15       4   .bss
+     xTasksWaitingTermination                  107F       F      15       5   .bss
+     xSuspendedTaskList                        108E       F      15       2   .bss
 MODULE:                 -- queue.c.o --
 - PROCEDURES:
      xQueueCreate                            34809D      7C     124      14   ROM_PAGE34_527
@@ -1286,10 +1286,10 @@ MODULE:                 -- heap_2.c.o --
      pvPortMalloc                            36807D      B6     182      14   ROM_PAGE36_529
      vPortFree                               368133      34      52      10   ROM_PAGE36_529
 - VARIABLES:
-     xHeapHasBeenInitialised.1                 109D       1       1       2   .bss        
-     xHeap                                     109E    2804   10244       2   .bss        
-     xStart                                    38A2       4       4       6   .bss        
-     xEnd                                      38A6       4       4       4   .bss        
+     xHeapHasBeenInitialised.1                 109D       1       1       2   .bss
+     xHeap                                     109E    2804   10244       2   .bss
+     xStart                                    38A2       4       4       6   .bss
+     xEnd                                      38A6       4       4       4   .bss
 MODULE:                 -- TickTimer.C.o --
 - PROCEDURES:
      SetCV                                   3B811C       F      15       4   TickTimer_CODE
@@ -1306,18 +1306,18 @@ MODULE:                 -- PE_Timer.C.o --
 - VARIABLES:
 MODULE:                 -- Byte1.C.o --
 - PROCEDURES:
-     Byte1_GetMsk                            3B81AB       D      13       4   Byte1_CODE  
-     Byte1_PutBit                            3B81B8      1F      31       2   Byte1_CODE  
-     Byte1_NegBit                            3B81D7      11      17       2   Byte1_CODE  
+     Byte1_GetMsk                            3B81AB       D      13       4   Byte1_CODE
+     Byte1_PutBit                            3B81B8      1F      31       2   Byte1_CODE
+     Byte1_NegBit                            3B81D7      11      17       2   Byte1_CODE
 - VARIABLES:
-     Byte1_Table                               38F4       8       8       1   Byte1_DATA  
+     Byte1_Table                               38F4       8       8       1   Byte1_DATA
 MODULE:                 -- flash.c.o --
 - PROCEDURES:
      vStartLEDFlashTasks                     3681AA      2A      42       2   ROM_PAGE36_529
      vLEDFlashTask                           3681D4      57      87       3   ROM_PAGE36_529
 - VARIABLES:
-     STRING.LEDx.1                             C0A5       5       5       1   .rodata1    
-     uxFlashTaskNumber                         38AA       1       1       2   .bss        
+     STRING.LEDx.1                             C0A5       5       5       1   .rodata1
+     uxFlashTaskNumber                         38AA       1       1       2   .bss
 MODULE:                 -- dynamic.c.o --
 - PROCEDURES:
      vStartDynamicPriorityTasks              378000      9B     155       2   ROM_PAGE37_530
@@ -1328,22 +1328,22 @@ MODULE:                 -- dynamic.c.o --
      vQueueReceiveWhenSuspendedTask          3781C8      53      83       3   ROM_PAGE37_530
      xAreDynamicPriorityTasksStillRunning     37821B      27      39       2   ROM_PAGE37_530
 - VARIABLES:
-     STRING.CNT_INC.1                          C0AA       8       8       1   .rodata1    
-     STRING.LIM_INC.2                          C0B2       8       8       1   .rodata1    
-     STRING.C_CTRL.3                           C0BA       7       7       1   .rodata1    
-     STRING.SUSP_TX.4                          C0C1       8       8       1   .rodata1    
-     STRING.SUSP_RX.5                          C0C9       8       8       1   .rodata1    
-     usCheckVariable                           38AB       2       2       4   .bss        
-     xSuspendedQueueSendError                  38AD       1       1       2   .bss        
-     xSuspendedQueueReceiveError               38AE       1       1       3   .bss        
-     ulValueToSend.6                           38AF       4       4       5   .bss        
-     ulExpectedValue.7                         38B3       4       4       6   .bss        
-     usLastTaskCheck.9                         38B7       2       2       2   .bss        
-     xContinousIncrementHandle                 38B9       2       2       5   .bss        
-     xLimitedIncrementHandle                   38BB       2       2       2   .bss        
-     ulCounter                                 38BD       4       4      10   .bss        
-     ulReceivedValue.8                         38C1       4       4       3   .bss        
-     xSuspendedTestQueue                       38EC       2       2       3   .common     
+     STRING.CNT_INC.1                          C0AA       8       8       1   .rodata1
+     STRING.LIM_INC.2                          C0B2       8       8       1   .rodata1
+     STRING.C_CTRL.3                           C0BA       7       7       1   .rodata1
+     STRING.SUSP_TX.4                          C0C1       8       8       1   .rodata1
+     STRING.SUSP_RX.5                          C0C9       8       8       1   .rodata1
+     usCheckVariable                           38AB       2       2       4   .bss
+     xSuspendedQueueSendError                  38AD       1       1       2   .bss
+     xSuspendedQueueReceiveError               38AE       1       1       3   .bss
+     ulValueToSend.6                           38AF       4       4       5   .bss
+     ulExpectedValue.7                         38B3       4       4       6   .bss
+     usLastTaskCheck.9                         38B7       2       2       2   .bss
+     xContinousIncrementHandle                 38B9       2       2       5   .bss
+     xLimitedIncrementHandle                   38BB       2       2       2   .bss
+     ulCounter                                 38BD       4       4      10   .bss
+     ulReceivedValue.8                         38C1       4       4       3   .bss
+     xSuspendedTestQueue                       38EC       2       2       3   .common
 MODULE:                 -- PollQ.c.o --
 - PROCEDURES:
      vStartPolledQueueTasks                  388000      49      73       2   ROM_PAGE38_531
@@ -1351,11 +1351,11 @@ MODULE:                 -- PollQ.c.o --
      vPolledQueueConsumer                    388098      5C      92       3   ROM_PAGE38_531
      xArePollingQueuesStillRunning           3880F4      1D      29       2   ROM_PAGE38_531
 - VARIABLES:
-     STRING.QConsNB.2                          C0D1       8       8       1   .rodata1    
-     STRING.QProdNB.3                          C0D9       8       8       1   .rodata1    
-     xPollingConsumerCount                     38C5       1       1       3   .bss        
-     xPollingProducerCount                     38C6       1       1       3   .bss        
-     xPolledQueue.1                            38C7       2       2       3   .bss        
+     STRING.QConsNB.2                          C0D1       8       8       1   .rodata1
+     STRING.QProdNB.3                          C0D9       8       8       1   .rodata1
+     xPollingConsumerCount                     38C5       1       1       3   .bss
+     xPollingProducerCount                     38C6       1       1       3   .bss
+     xPolledQueue.1                            38C7       2       2       3   .bss
 MODULE:                 -- comtest.c.o --
 - PROCEDURES:
      vAltStartComTestTasks                   388111      4D      77       2   ROM_PAGE38_531
@@ -1363,39 +1363,39 @@ MODULE:                 -- comtest.c.o --
      vComRxTask                              3881AF      6A     106       3   ROM_PAGE38_531
      xAreComTestTasksStillRunning            388219      15      21       2   ROM_PAGE38_531
 - VARIABLES:
-     STRING.COMTx.1                            C0E1       6       6       1   .rodata1    
-     STRING.COMRx.2                            C0E7       6       6       1   .rodata1    
-     xPort                                     38C9       2       2       2   .bss        
-     uxBaseLED                                 38CB       1       1       5   .bss        
-     uxRxLoops                                 38CC       1       1       3   .bss        
+     STRING.COMTx.1                            C0E1       6       6       1   .rodata1
+     STRING.COMRx.2                            C0E7       6       6       1   .rodata1
+     xPort                                     38C9       2       2       2   .bss
+     uxBaseLED                                 38CB       1       1       5   .bss
+     uxRxLoops                                 38CC       1       1       3   .bss
 MODULE:                 -- COM0.C.o --
 - PROCEDURES:
-     HWEnDi                                  3B81E8       A      10       2   COM0_CODE   
-     COM0_SetBaudRateMode                    3B81F2      19      25       2   COM0_CODE   
-     COM0_Init                               3B820B      20      32       2   COM0_CODE   
+     HWEnDi                                  3B81E8       A      10       2   COM0_CODE
+     COM0_SetBaudRateMode                    3B81F2      19      25       2   COM0_CODE
+     COM0_Init                               3B820B      20      32       2   COM0_CODE
 - VARIABLES:
-     COM0_PrescHigh.1                          38FC       8       8       1   COM0_DATA   
-     SerFlag                                   3904       2       2       1   COM0_DATA   
-     PrescHigh                                 3906       2       2       2   COM0_DATA   
-     NumMode                                   3908       1       1       2   COM0_DATA   
+     COM0_PrescHigh.1                          38FC       8       8       1   COM0_DATA
+     SerFlag                                   3904       2       2       1   COM0_DATA
+     PrescHigh                                 3906       2       2       2   COM0_DATA
+     NumMode                                   3908       1       1       2   COM0_DATA
 MODULE:                 -- port.c.o --
 - PROCEDURES:
      pxPortInitialiseStack                   398000      31      49       2   ROM_PAGE39_532
      prvSetupTimerInterrupt                  398031       C      12       2   ROM_PAGE39_532
      xPortStartScheduler                     39803D       4       4       2   ROM_PAGE39_532
-     xBankedStartScheduler                     C359      13      19       1   NON_BANKED  
-     vPortYield                                C36C      1D      29       1   NON_BANKED  
-     vPortTickInterrupt                        C389      25      37       1   NON_BANKED  
+     xBankedStartScheduler                     C359      13      19       1   NON_BANKED
+     vPortYield                                C36C      1D      29       1   NON_BANKED
+     vPortTickInterrupt                        C389      25      37       1   NON_BANKED
 - VARIABLES:
-     uxCriticalNesting                         1000       1       1     101   .data       
+     uxCriticalNesting                         1000       1       1     101   .data
 MODULE:                 -- integer.c.o --
 - PROCEDURES:
      vStartIntegerMathTasks                  398041      33      51       2   ROM_PAGE39_532
      vCompeteingIntMathTask                  398074      87     135       3   ROM_PAGE39_532
      xAreIntegerMathsTaskStillRunning        3980FB      25      37       2   ROM_PAGE39_532
 - VARIABLES:
-     STRING.IntMath.1                          C0ED       8       8       1   .rodata1    
-     xTaskCheck                                38CD       1       1       3   .bss        
+     STRING.IntMath.1                          C0ED       8       8       1   .rodata1
+     xTaskCheck                                38CD       1       1       3   .bss
 MODULE:                 -- BlockQ.c.o --
 - PROCEDURES:
      vStartBlockingQueueTasks                3A8000     143     323       7   ROM_PAGE3A_533
@@ -1403,16 +1403,16 @@ MODULE:                 -- BlockQ.c.o --
      vBlockingQueueConsumer                  3A817D      45      69       9   ROM_PAGE3A_533
      xAreBlockingQueuesStillRunning          3A81C2      49      73       2   ROM_PAGE3A_533
 - VARIABLES:
-     STRING.QConsB1.1                          C0F5       8       8       1   .rodata1    
-     STRING.QProdB2.2                          C0FD       8       8       1   .rodata1    
-     STRING.QProdB3.3                          C105       8       8       1   .rodata1    
-     STRING.QConsB4.4                          C10D       8       8       1   .rodata1    
-     STRING.QProdB5.5                          C115       8       8       1   .rodata1    
-     STRING.QConsB6.6                          C11D       8       8       1   .rodata1    
-     sBlockingConsumerCount                    38CE       6       6       5   .bss        
-     sBlockingProducerCount                    38D4       6       6       5   .bss        
-     sLastBlockingConsumerCount.7              38DA       6       6       2   .bss        
-     sLastBlockingProducerCount.8              38E0       6       6       2   .bss        
+     STRING.QConsB1.1                          C0F5       8       8       1   .rodata1
+     STRING.QProdB2.2                          C0FD       8       8       1   .rodata1
+     STRING.QProdB3.3                          C105       8       8       1   .rodata1
+     STRING.QConsB4.4                          C10D       8       8       1   .rodata1
+     STRING.QProdB5.5                          C115       8       8       1   .rodata1
+     STRING.QConsB6.6                          C11D       8       8       1   .rodata1
+     sBlockingConsumerCount                    38CE       6       6       5   .bss
+     sBlockingProducerCount                    38D4       6       6       5   .bss
+     sLastBlockingConsumerCount.7              38DA       6       6       2   .bss
+     sLastBlockingProducerCount.8              38E0       6       6       2   .bss
 MODULE:                 -- death.c.o --
 - PROCEDURES:
      vCreateSuicidalTasks                    3A820B      33      51       2   ROM_PAGE3A_533
@@ -1420,17 +1420,17 @@ MODULE:                 -- death.c.o --
      vCreateTasks                            3B8052      94     148       4   ROM_PAGE3B_534
      xIsCreateTaskStillRunning               3B80E6      36      54       2   ROM_PAGE3B_534
 - VARIABLES:
-     STRING.CREATOR.1                          C125       8       8       1   .rodata1    
-     STRING.SUICIDE1.2                         C12D       9       9       1   .rodata1    
-     STRING.SUICIDE2.3                         C136       9       9       1   .rodata1    
-     STRING.SUICIDE1.4                         C13F       9       9       1   .rodata1    
-     STRING.SUICIDE2.5                         C148       9       9       1   .rodata1    
-     usCreationCount                           38E6       2       2       4   .bss        
-     uxTasksRunningAtStart                     38E8       1       1       4   .bss        
-     usLastCreationCount.6                     38E9       2       2       2   .bss        
-     uxTasksRunningNow.7                       38EB       1       1       1   .bss        
-     xCreatedTask1                             38EE       2       2       2   .common     
-     xCreatedTask2                             38F0       2       2       2   .common     
+     STRING.CREATOR.1                          C125       8       8       1   .rodata1
+     STRING.SUICIDE1.2                         C12D       9       9       1   .rodata1
+     STRING.SUICIDE2.3                         C136       9       9       1   .rodata1
+     STRING.SUICIDE1.4                         C13F       9       9       1   .rodata1
+     STRING.SUICIDE2.5                         C148       9       9       1   .rodata1
+     usCreationCount                           38E6       2       2       4   .bss
+     uxTasksRunningAtStart                     38E8       1       1       4   .bss
+     usLastCreationCount.6                     38E9       2       2       2   .bss
+     uxTasksRunningNow.7                       38EB       1       1       1   .bss
+     xCreatedTask1                             38EE       2       2       2   .common
+     xCreatedTask2                             38F0       2       2       2   .common
 
 *********************************************************************************************
 MODULE STATISTIC
@@ -1468,1137 +1468,1137 @@ MODULE STATISTIC
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  Init memcpy memset strncpy main vMain vErrorChecks 
-  prvCheckOtherTasksAreStillRunning vApplicationIdleHook vParTestSetLED 
-  vParTestToggleLED xSerialPortInitMinimal xSerialGetChar 
+  Init memcpy memset strncpy main vMain vErrorChecks
+  prvCheckOtherTasksAreStillRunning vApplicationIdleHook vParTestSetLED
+  vParTestToggleLED xSerialPortInitMinimal xSerialGetChar
 SECTION: ".data"
-  uxCriticalNesting 
+  uxCriticalNesting
 SECTION: ".bss"
-  xLocalError xRxedChars xCharsForTx pxCurrentTCB uxTasksDeleted 
-  uxCurrentNumberOfTasks xTickCount uxTopUsedPriority uxTopReadyPriority 
-  xSchedulerRunning uxSchedulerSuspended uxMissedTicks uxTaskNumber.1 
-  pxReadyTasksLists xDelayedTaskList1 xDelayedTaskList2 pxDelayedTaskList 
-  pxOverflowDelayedTaskList xPendingReadyList xTasksWaitingTermination 
-  xSuspendedTaskList xHeapHasBeenInitialised.1 xHeap xStart xEnd 
-  uxFlashTaskNumber usCheckVariable xSuspendedQueueSendError 
-  xSuspendedQueueReceiveError ulValueToSend.6 ulExpectedValue.7 
-  usLastTaskCheck.9 xContinousIncrementHandle xLimitedIncrementHandle ulCounter 
-  ulReceivedValue.8 xPollingConsumerCount xPollingProducerCount xPolledQueue.1 
-  xPort uxBaseLED uxRxLoops xTaskCheck sBlockingConsumerCount 
-  sBlockingProducerCount sLastBlockingConsumerCount.7 
-  sLastBlockingProducerCount.8 usCreationCount uxTasksRunningAtStart 
-  usLastCreationCount.6 uxTasksRunningNow.7 
+  xLocalError xRxedChars xCharsForTx pxCurrentTCB uxTasksDeleted
+  uxCurrentNumberOfTasks xTickCount uxTopUsedPriority uxTopReadyPriority
+  xSchedulerRunning uxSchedulerSuspended uxMissedTicks uxTaskNumber.1
+  pxReadyTasksLists xDelayedTaskList1 xDelayedTaskList2 pxDelayedTaskList
+  pxOverflowDelayedTaskList xPendingReadyList xTasksWaitingTermination
+  xSuspendedTaskList xHeapHasBeenInitialised.1 xHeap xStart xEnd
+  uxFlashTaskNumber usCheckVariable xSuspendedQueueSendError
+  xSuspendedQueueReceiveError ulValueToSend.6 ulExpectedValue.7
+  usLastTaskCheck.9 xContinousIncrementHandle xLimitedIncrementHandle ulCounter
+  ulReceivedValue.8 xPollingConsumerCount xPollingProducerCount xPolledQueue.1
+  xPort uxBaseLED uxRxLoops xTaskCheck sBlockingConsumerCount
+  sBlockingProducerCount sLastBlockingConsumerCount.7
+  sLastBlockingProducerCount.8 usCreationCount uxTasksRunningAtStart
+  usLastCreationCount.6 uxTasksRunningNow.7
 SECTION: ".init"
-  _EntryPoint PE_low_level_init 
+  _EntryPoint PE_low_level_init
 SECTION: ".rodata1"
-  STRING.Check.1 STRING.IDLE.2 STRING.LEDx.1 STRING.CNT_INC.1 STRING.LIM_INC.2 
-  STRING.C_CTRL.3 STRING.SUSP_TX.4 STRING.SUSP_RX.5 STRING.QConsNB.2 
-  STRING.QProdNB.3 STRING.COMTx.1 STRING.COMRx.2 STRING.IntMath.1 
-  STRING.QConsB1.1 STRING.QProdB2.2 STRING.QProdB3.3 STRING.QConsB4.4 
-  STRING.QProdB5.5 STRING.QConsB6.6 STRING.CREATOR.1 STRING.SUICIDE1.2 
-  STRING.SUICIDE2.3 STRING.SUICIDE1.4 STRING.SUICIDE2.5 
+  STRING.Check.1 STRING.IDLE.2 STRING.LEDx.1 STRING.CNT_INC.1 STRING.LIM_INC.2
+  STRING.C_CTRL.3 STRING.SUSP_TX.4 STRING.SUSP_RX.5 STRING.QConsNB.2
+  STRING.QProdNB.3 STRING.COMTx.1 STRING.COMRx.2 STRING.IntMath.1
+  STRING.QConsB1.1 STRING.QProdB2.2 STRING.QProdB3.3 STRING.QConsB4.4
+  STRING.QProdB5.5 STRING.QConsB6.6 STRING.CREATOR.1 STRING.SUICIDE1.2
+  STRING.SUICIDE2.3 STRING.SUICIDE1.4 STRING.SUICIDE2.5
 SECTION: "NON_BANKED"
-  _Startup _LCMP _LCMP_P _LNEG _LINC _LMUL _lDivMod _LDIVU _NEG_P _LDIVS 
-  Cpu_Interrupt vCOM0_ISR xBankedStartScheduler vPortYield vPortTickInterrupt 
+  _Startup _LCMP _LCMP_P _LNEG _LINC _LMUL _lDivMod _LDIVU _NEG_P _LDIVS
+  Cpu_Interrupt vCOM0_ISR xBankedStartScheduler vPortYield vPortTickInterrupt
 SECTION: ".common"
-  xSuspendedTestQueue xCreatedTask1 xCreatedTask2 
+  xSuspendedTestQueue xCreatedTask1 xCreatedTask2
 SECTION: "TickTimer_CODE"
-  SetCV SetPV HWEnDi TickTimer_Enable TickTimer_SetFreqHz TickTimer_Init 
+  SetCV SetPV HWEnDi TickTimer_Enable TickTimer_SetFreqHz TickTimer_Init
 SECTION: "Byte1_CODE"
-  Byte1_GetMsk Byte1_PutBit Byte1_NegBit 
+  Byte1_GetMsk Byte1_PutBit Byte1_NegBit
 SECTION: "COM0_CODE"
-  HWEnDi COM0_SetBaudRateMode COM0_Init 
+  HWEnDi COM0_SetBaudRateMode COM0_Init
 SECTION: ".abs_section_3f"
-  _ARMCOP 
+  _ARMCOP
 SECTION: ".abs_section_8d"
-  _ATD0DIEN 
+  _ATD0DIEN
 SECTION: ".abs_section_86"
-  _ATD0STAT0 
+  _ATD0STAT0
 SECTION: ".abs_section_8b"
-  _ATD0STAT1 
+  _ATD0STAT1
 SECTION: ".abs_section_12d"
-  _ATD1DIEN 
+  _ATD1DIEN
 SECTION: ".abs_section_126"
-  _ATD1STAT0 
+  _ATD1STAT0
 SECTION: ".abs_section_12b"
-  _ATD1STAT1 
+  _ATD1STAT1
 SECTION: ".abs_section_ff06"
-  _BDMCCR 
+  _BDMCCR
 SECTION: ".abs_section_ff07"
-  _BDMINR 
+  _BDMINR
 SECTION: ".abs_section_ff01"
-  _BDMSTS 
+  _BDMSTS
 SECTION: ".abs_section_2b"
-  _BKP0H 
+  _BKP0H
 SECTION: ".abs_section_2c"
-  _BKP0L 
+  _BKP0L
 SECTION: ".abs_section_2a"
-  _BKP0X 
+  _BKP0X
 SECTION: ".abs_section_2e"
-  _BKP1H 
+  _BKP1H
 SECTION: ".abs_section_2f"
-  _BKP1L 
+  _BKP1L
 SECTION: ".abs_section_2d"
-  _BKP1X 
+  _BKP1X
 SECTION: ".abs_section_28"
-  _BKPCT0 
+  _BKPCT0
 SECTION: ".abs_section_29"
-  _BKPCT1 
+  _BKPCT1
 SECTION: ".abs_section_142"
-  _CAN0BTR0 
+  _CAN0BTR0
 SECTION: ".abs_section_143"
-  _CAN0BTR1 
+  _CAN0BTR1
 SECTION: ".abs_section_140"
-  _CAN0CTL0 
+  _CAN0CTL0
 SECTION: ".abs_section_141"
-  _CAN0CTL1 
+  _CAN0CTL1
 SECTION: ".abs_section_14b"
-  _CAN0IDAC 
+  _CAN0IDAC
 SECTION: ".abs_section_150"
-  _CAN0IDAR0 
+  _CAN0IDAR0
 SECTION: ".abs_section_151"
-  _CAN0IDAR1 
+  _CAN0IDAR1
 SECTION: ".abs_section_152"
-  _CAN0IDAR2 
+  _CAN0IDAR2
 SECTION: ".abs_section_153"
-  _CAN0IDAR3 
+  _CAN0IDAR3
 SECTION: ".abs_section_158"
-  _CAN0IDAR4 
+  _CAN0IDAR4
 SECTION: ".abs_section_159"
-  _CAN0IDAR5 
+  _CAN0IDAR5
 SECTION: ".abs_section_15a"
-  _CAN0IDAR6 
+  _CAN0IDAR6
 SECTION: ".abs_section_15b"
-  _CAN0IDAR7 
+  _CAN0IDAR7
 SECTION: ".abs_section_154"
-  _CAN0IDMR0 
+  _CAN0IDMR0
 SECTION: ".abs_section_155"
-  _CAN0IDMR1 
+  _CAN0IDMR1
 SECTION: ".abs_section_156"
-  _CAN0IDMR2 
+  _CAN0IDMR2
 SECTION: ".abs_section_157"
-  _CAN0IDMR3 
+  _CAN0IDMR3
 SECTION: ".abs_section_15c"
-  _CAN0IDMR4 
+  _CAN0IDMR4
 SECTION: ".abs_section_15d"
-  _CAN0IDMR5 
+  _CAN0IDMR5
 SECTION: ".abs_section_15e"
-  _CAN0IDMR6 
+  _CAN0IDMR6
 SECTION: ".abs_section_15f"
-  _CAN0IDMR7 
+  _CAN0IDMR7
 SECTION: ".abs_section_144"
-  _CAN0RFLG 
+  _CAN0RFLG
 SECTION: ".abs_section_145"
-  _CAN0RIER 
+  _CAN0RIER
 SECTION: ".abs_section_16c"
-  _CAN0RXDLR 
+  _CAN0RXDLR
 SECTION: ".abs_section_164"
-  _CAN0RXDSR0 
+  _CAN0RXDSR0
 SECTION: ".abs_section_165"
-  _CAN0RXDSR1 
+  _CAN0RXDSR1
 SECTION: ".abs_section_166"
-  _CAN0RXDSR2 
+  _CAN0RXDSR2
 SECTION: ".abs_section_167"
-  _CAN0RXDSR3 
+  _CAN0RXDSR3
 SECTION: ".abs_section_168"
-  _CAN0RXDSR4 
+  _CAN0RXDSR4
 SECTION: ".abs_section_169"
-  _CAN0RXDSR5 
+  _CAN0RXDSR5
 SECTION: ".abs_section_16a"
-  _CAN0RXDSR6 
+  _CAN0RXDSR6
 SECTION: ".abs_section_16b"
-  _CAN0RXDSR7 
+  _CAN0RXDSR7
 SECTION: ".abs_section_14e"
-  _CAN0RXERR 
+  _CAN0RXERR
 SECTION: ".abs_section_160"
-  _CAN0RXIDR0 
+  _CAN0RXIDR0
 SECTION: ".abs_section_161"
-  _CAN0RXIDR1 
+  _CAN0RXIDR1
 SECTION: ".abs_section_162"
-  _CAN0RXIDR2 
+  _CAN0RXIDR2
 SECTION: ".abs_section_163"
-  _CAN0RXIDR3 
+  _CAN0RXIDR3
 SECTION: ".abs_section_149"
-  _CAN0TAAK 
+  _CAN0TAAK
 SECTION: ".abs_section_148"
-  _CAN0TARQ 
+  _CAN0TARQ
 SECTION: ".abs_section_14a"
-  _CAN0TBSEL 
+  _CAN0TBSEL
 SECTION: ".abs_section_146"
-  _CAN0TFLG 
+  _CAN0TFLG
 SECTION: ".abs_section_147"
-  _CAN0TIER 
+  _CAN0TIER
 SECTION: ".abs_section_17c"
-  _CAN0TXDLR 
+  _CAN0TXDLR
 SECTION: ".abs_section_174"
-  _CAN0TXDSR0 
+  _CAN0TXDSR0
 SECTION: ".abs_section_175"
-  _CAN0TXDSR1 
+  _CAN0TXDSR1
 SECTION: ".abs_section_176"
-  _CAN0TXDSR2 
+  _CAN0TXDSR2
 SECTION: ".abs_section_177"
-  _CAN0TXDSR3 
+  _CAN0TXDSR3
 SECTION: ".abs_section_178"
-  _CAN0TXDSR4 
+  _CAN0TXDSR4
 SECTION: ".abs_section_179"
-  _CAN0TXDSR5 
+  _CAN0TXDSR5
 SECTION: ".abs_section_17a"
-  _CAN0TXDSR6 
+  _CAN0TXDSR6
 SECTION: ".abs_section_17b"
-  _CAN0TXDSR7 
+  _CAN0TXDSR7
 SECTION: ".abs_section_14f"
-  _CAN0TXERR 
+  _CAN0TXERR
 SECTION: ".abs_section_170"
-  _CAN0TXIDR0 
+  _CAN0TXIDR0
 SECTION: ".abs_section_171"
-  _CAN0TXIDR1 
+  _CAN0TXIDR1
 SECTION: ".abs_section_172"
-  _CAN0TXIDR2 
+  _CAN0TXIDR2
 SECTION: ".abs_section_173"
-  _CAN0TXIDR3 
+  _CAN0TXIDR3
 SECTION: ".abs_section_17f"
-  _CAN0TXTBPR 
+  _CAN0TXTBPR
 SECTION: ".abs_section_182"
-  _CAN1BTR0 
+  _CAN1BTR0
 SECTION: ".abs_section_183"
-  _CAN1BTR1 
+  _CAN1BTR1
 SECTION: ".abs_section_180"
-  _CAN1CTL0 
+  _CAN1CTL0
 SECTION: ".abs_section_181"
-  _CAN1CTL1 
+  _CAN1CTL1
 SECTION: ".abs_section_18b"
-  _CAN1IDAC 
+  _CAN1IDAC
 SECTION: ".abs_section_190"
-  _CAN1IDAR0 
+  _CAN1IDAR0
 SECTION: ".abs_section_191"
-  _CAN1IDAR1 
+  _CAN1IDAR1
 SECTION: ".abs_section_192"
-  _CAN1IDAR2 
+  _CAN1IDAR2
 SECTION: ".abs_section_193"
-  _CAN1IDAR3 
+  _CAN1IDAR3
 SECTION: ".abs_section_198"
-  _CAN1IDAR4 
+  _CAN1IDAR4
 SECTION: ".abs_section_199"
-  _CAN1IDAR5 
+  _CAN1IDAR5
 SECTION: ".abs_section_19a"
-  _CAN1IDAR6 
+  _CAN1IDAR6
 SECTION: ".abs_section_19b"
-  _CAN1IDAR7 
+  _CAN1IDAR7
 SECTION: ".abs_section_194"
-  _CAN1IDMR0 
+  _CAN1IDMR0
 SECTION: ".abs_section_195"
-  _CAN1IDMR1 
+  _CAN1IDMR1
 SECTION: ".abs_section_196"
-  _CAN1IDMR2 
+  _CAN1IDMR2
 SECTION: ".abs_section_197"
-  _CAN1IDMR3 
+  _CAN1IDMR3
 SECTION: ".abs_section_19c"
-  _CAN1IDMR4 
+  _CAN1IDMR4
 SECTION: ".abs_section_19d"
-  _CAN1IDMR5 
+  _CAN1IDMR5
 SECTION: ".abs_section_19e"
-  _CAN1IDMR6 
+  _CAN1IDMR6
 SECTION: ".abs_section_19f"
-  _CAN1IDMR7 
+  _CAN1IDMR7
 SECTION: ".abs_section_184"
-  _CAN1RFLG 
+  _CAN1RFLG
 SECTION: ".abs_section_185"
-  _CAN1RIER 
+  _CAN1RIER
 SECTION: ".abs_section_1ac"
-  _CAN1RXDLR 
+  _CAN1RXDLR
 SECTION: ".abs_section_1a4"
-  _CAN1RXDSR0 
+  _CAN1RXDSR0
 SECTION: ".abs_section_1a5"
-  _CAN1RXDSR1 
+  _CAN1RXDSR1
 SECTION: ".abs_section_1a6"
-  _CAN1RXDSR2 
+  _CAN1RXDSR2
 SECTION: ".abs_section_1a7"
-  _CAN1RXDSR3 
+  _CAN1RXDSR3
 SECTION: ".abs_section_1a8"
-  _CAN1RXDSR4 
+  _CAN1RXDSR4
 SECTION: ".abs_section_1a9"
-  _CAN1RXDSR5 
+  _CAN1RXDSR5
 SECTION: ".abs_section_1aa"
-  _CAN1RXDSR6 
+  _CAN1RXDSR6
 SECTION: ".abs_section_1ab"
-  _CAN1RXDSR7 
+  _CAN1RXDSR7
 SECTION: ".abs_section_18e"
-  _CAN1RXERR 
+  _CAN1RXERR
 SECTION: ".abs_section_1a0"
-  _CAN1RXIDR0 
+  _CAN1RXIDR0
 SECTION: ".abs_section_1a1"
-  _CAN1RXIDR1 
+  _CAN1RXIDR1
 SECTION: ".abs_section_1a2"
-  _CAN1RXIDR2 
+  _CAN1RXIDR2
 SECTION: ".abs_section_1a3"
-  _CAN1RXIDR3 
+  _CAN1RXIDR3
 SECTION: ".abs_section_189"
-  _CAN1TAAK 
+  _CAN1TAAK
 SECTION: ".abs_section_188"
-  _CAN1TARQ 
+  _CAN1TARQ
 SECTION: ".abs_section_18a"
-  _CAN1TBSEL 
+  _CAN1TBSEL
 SECTION: ".abs_section_186"
-  _CAN1TFLG 
+  _CAN1TFLG
 SECTION: ".abs_section_187"
-  _CAN1TIER 
+  _CAN1TIER
 SECTION: ".abs_section_1bc"
-  _CAN1TXDLR 
+  _CAN1TXDLR
 SECTION: ".abs_section_1b4"
-  _CAN1TXDSR0 
+  _CAN1TXDSR0
 SECTION: ".abs_section_1b5"
-  _CAN1TXDSR1 
+  _CAN1TXDSR1
 SECTION: ".abs_section_1b6"
-  _CAN1TXDSR2 
+  _CAN1TXDSR2
 SECTION: ".abs_section_1b7"
-  _CAN1TXDSR3 
+  _CAN1TXDSR3
 SECTION: ".abs_section_1b8"
-  _CAN1TXDSR4 
+  _CAN1TXDSR4
 SECTION: ".abs_section_1b9"
-  _CAN1TXDSR5 
+  _CAN1TXDSR5
 SECTION: ".abs_section_1ba"
-  _CAN1TXDSR6 
+  _CAN1TXDSR6
 SECTION: ".abs_section_1bb"
-  _CAN1TXDSR7 
+  _CAN1TXDSR7
 SECTION: ".abs_section_18f"
-  _CAN1TXERR 
+  _CAN1TXERR
 SECTION: ".abs_section_1b0"
-  _CAN1TXIDR0 
+  _CAN1TXIDR0
 SECTION: ".abs_section_1b1"
-  _CAN1TXIDR1 
+  _CAN1TXIDR1
 SECTION: ".abs_section_1b2"
-  _CAN1TXIDR2 
+  _CAN1TXIDR2
 SECTION: ".abs_section_1b3"
-  _CAN1TXIDR3 
+  _CAN1TXIDR3
 SECTION: ".abs_section_1bf"
-  _CAN1TXTBPR 
+  _CAN1TXTBPR
 SECTION: ".abs_section_1c2"
-  _CAN2BTR0 
+  _CAN2BTR0
 SECTION: ".abs_section_1c3"
-  _CAN2BTR1 
+  _CAN2BTR1
 SECTION: ".abs_section_1c0"
-  _CAN2CTL0 
+  _CAN2CTL0
 SECTION: ".abs_section_1c1"
-  _CAN2CTL1 
+  _CAN2CTL1
 SECTION: ".abs_section_1cb"
-  _CAN2IDAC 
+  _CAN2IDAC
 SECTION: ".abs_section_1d0"
-  _CAN2IDAR0 
+  _CAN2IDAR0
 SECTION: ".abs_section_1d1"
-  _CAN2IDAR1 
+  _CAN2IDAR1
 SECTION: ".abs_section_1d2"
-  _CAN2IDAR2 
+  _CAN2IDAR2
 SECTION: ".abs_section_1d3"
-  _CAN2IDAR3 
+  _CAN2IDAR3
 SECTION: ".abs_section_1d8"
-  _CAN2IDAR4 
+  _CAN2IDAR4
 SECTION: ".abs_section_1d9"
-  _CAN2IDAR5 
+  _CAN2IDAR5
 SECTION: ".abs_section_1da"
-  _CAN2IDAR6 
+  _CAN2IDAR6
 SECTION: ".abs_section_1db"
-  _CAN2IDAR7 
+  _CAN2IDAR7
 SECTION: ".abs_section_1d4"
-  _CAN2IDMR0 
+  _CAN2IDMR0
 SECTION: ".abs_section_1d5"
-  _CAN2IDMR1 
+  _CAN2IDMR1
 SECTION: ".abs_section_1d6"
-  _CAN2IDMR2 
+  _CAN2IDMR2
 SECTION: ".abs_section_1d7"
-  _CAN2IDMR3 
+  _CAN2IDMR3
 SECTION: ".abs_section_1dc"
-  _CAN2IDMR4 
+  _CAN2IDMR4
 SECTION: ".abs_section_1dd"
-  _CAN2IDMR5 
+  _CAN2IDMR5
 SECTION: ".abs_section_1de"
-  _CAN2IDMR6 
+  _CAN2IDMR6
 SECTION: ".abs_section_1df"
-  _CAN2IDMR7 
+  _CAN2IDMR7
 SECTION: ".abs_section_1c4"
-  _CAN2RFLG 
+  _CAN2RFLG
 SECTION: ".abs_section_1c5"
-  _CAN2RIER 
+  _CAN2RIER
 SECTION: ".abs_section_1ec"
-  _CAN2RXDLR 
+  _CAN2RXDLR
 SECTION: ".abs_section_1e4"
-  _CAN2RXDSR0 
+  _CAN2RXDSR0
 SECTION: ".abs_section_1e5"
-  _CAN2RXDSR1 
+  _CAN2RXDSR1
 SECTION: ".abs_section_1e6"
-  _CAN2RXDSR2 
+  _CAN2RXDSR2
 SECTION: ".abs_section_1e7"
-  _CAN2RXDSR3 
+  _CAN2RXDSR3
 SECTION: ".abs_section_1e8"
-  _CAN2RXDSR4 
+  _CAN2RXDSR4
 SECTION: ".abs_section_1e9"
-  _CAN2RXDSR5 
+  _CAN2RXDSR5
 SECTION: ".abs_section_1ea"
-  _CAN2RXDSR6 
+  _CAN2RXDSR6
 SECTION: ".abs_section_1eb"
-  _CAN2RXDSR7 
+  _CAN2RXDSR7
 SECTION: ".abs_section_1ce"
-  _CAN2RXERR 
+  _CAN2RXERR
 SECTION: ".abs_section_1e0"
-  _CAN2RXIDR0 
+  _CAN2RXIDR0
 SECTION: ".abs_section_1e1"
-  _CAN2RXIDR1 
+  _CAN2RXIDR1
 SECTION: ".abs_section_1e2"
-  _CAN2RXIDR2 
+  _CAN2RXIDR2
 SECTION: ".abs_section_1e3"
-  _CAN2RXIDR3 
+  _CAN2RXIDR3
 SECTION: ".abs_section_1c9"
-  _CAN2TAAK 
+  _CAN2TAAK
 SECTION: ".abs_section_1c8"
-  _CAN2TARQ 
+  _CAN2TARQ
 SECTION: ".abs_section_1ca"
-  _CAN2TBSEL 
+  _CAN2TBSEL
 SECTION: ".abs_section_1c6"
-  _CAN2TFLG 
+  _CAN2TFLG
 SECTION: ".abs_section_1c7"
-  _CAN2TIER 
+  _CAN2TIER
 SECTION: ".abs_section_1fc"
-  _CAN2TXDLR 
+  _CAN2TXDLR
 SECTION: ".abs_section_1f4"
-  _CAN2TXDSR0 
+  _CAN2TXDSR0
 SECTION: ".abs_section_1f5"
-  _CAN2TXDSR1 
+  _CAN2TXDSR1
 SECTION: ".abs_section_1f6"
-  _CAN2TXDSR2 
+  _CAN2TXDSR2
 SECTION: ".abs_section_1f7"
-  _CAN2TXDSR3 
+  _CAN2TXDSR3
 SECTION: ".abs_section_1f8"
-  _CAN2TXDSR4 
+  _CAN2TXDSR4
 SECTION: ".abs_section_1f9"
-  _CAN2TXDSR5 
+  _CAN2TXDSR5
 SECTION: ".abs_section_1fa"
-  _CAN2TXDSR6 
+  _CAN2TXDSR6
 SECTION: ".abs_section_1fb"
-  _CAN2TXDSR7 
+  _CAN2TXDSR7
 SECTION: ".abs_section_1cf"
-  _CAN2TXERR 
+  _CAN2TXERR
 SECTION: ".abs_section_1f0"
-  _CAN2TXIDR0 
+  _CAN2TXIDR0
 SECTION: ".abs_section_1f1"
-  _CAN2TXIDR1 
+  _CAN2TXIDR1
 SECTION: ".abs_section_1f2"
-  _CAN2TXIDR2 
+  _CAN2TXIDR2
 SECTION: ".abs_section_1f3"
-  _CAN2TXIDR3 
+  _CAN2TXIDR3
 SECTION: ".abs_section_1ff"
-  _CAN2TXTBPR 
+  _CAN2TXTBPR
 SECTION: ".abs_section_202"
-  _CAN3BTR0 
+  _CAN3BTR0
 SECTION: ".abs_section_203"
-  _CAN3BTR1 
+  _CAN3BTR1
 SECTION: ".abs_section_200"
-  _CAN3CTL0 
+  _CAN3CTL0
 SECTION: ".abs_section_201"
-  _CAN3CTL1 
+  _CAN3CTL1
 SECTION: ".abs_section_20b"
-  _CAN3IDAC 
+  _CAN3IDAC
 SECTION: ".abs_section_210"
-  _CAN3IDAR0 
+  _CAN3IDAR0
 SECTION: ".abs_section_211"
-  _CAN3IDAR1 
+  _CAN3IDAR1
 SECTION: ".abs_section_212"
-  _CAN3IDAR2 
+  _CAN3IDAR2
 SECTION: ".abs_section_213"
-  _CAN3IDAR3 
+  _CAN3IDAR3
 SECTION: ".abs_section_218"
-  _CAN3IDAR4 
+  _CAN3IDAR4
 SECTION: ".abs_section_219"
-  _CAN3IDAR5 
+  _CAN3IDAR5
 SECTION: ".abs_section_21a"
-  _CAN3IDAR6 
+  _CAN3IDAR6
 SECTION: ".abs_section_21b"
-  _CAN3IDAR7 
+  _CAN3IDAR7
 SECTION: ".abs_section_214"
-  _CAN3IDMR0 
+  _CAN3IDMR0
 SECTION: ".abs_section_215"
-  _CAN3IDMR1 
+  _CAN3IDMR1
 SECTION: ".abs_section_216"
-  _CAN3IDMR2 
+  _CAN3IDMR2
 SECTION: ".abs_section_217"
-  _CAN3IDMR3 
+  _CAN3IDMR3
 SECTION: ".abs_section_21c"
-  _CAN3IDMR4 
+  _CAN3IDMR4
 SECTION: ".abs_section_21d"
-  _CAN3IDMR5 
+  _CAN3IDMR5
 SECTION: ".abs_section_21e"
-  _CAN3IDMR6 
+  _CAN3IDMR6
 SECTION: ".abs_section_21f"
-  _CAN3IDMR7 
+  _CAN3IDMR7
 SECTION: ".abs_section_204"
-  _CAN3RFLG 
+  _CAN3RFLG
 SECTION: ".abs_section_205"
-  _CAN3RIER 
+  _CAN3RIER
 SECTION: ".abs_section_22c"
-  _CAN3RXDLR 
+  _CAN3RXDLR
 SECTION: ".abs_section_224"
-  _CAN3RXDSR0 
+  _CAN3RXDSR0
 SECTION: ".abs_section_225"
-  _CAN3RXDSR1 
+  _CAN3RXDSR1
 SECTION: ".abs_section_226"
-  _CAN3RXDSR2 
+  _CAN3RXDSR2
 SECTION: ".abs_section_227"
-  _CAN3RXDSR3 
+  _CAN3RXDSR3
 SECTION: ".abs_section_228"
-  _CAN3RXDSR4 
+  _CAN3RXDSR4
 SECTION: ".abs_section_229"
-  _CAN3RXDSR5 
+  _CAN3RXDSR5
 SECTION: ".abs_section_22a"
-  _CAN3RXDSR6 
+  _CAN3RXDSR6
 SECTION: ".abs_section_22b"
-  _CAN3RXDSR7 
+  _CAN3RXDSR7
 SECTION: ".abs_section_20e"
-  _CAN3RXERR 
+  _CAN3RXERR
 SECTION: ".abs_section_220"
-  _CAN3RXIDR0 
+  _CAN3RXIDR0
 SECTION: ".abs_section_221"
-  _CAN3RXIDR1 
+  _CAN3RXIDR1
 SECTION: ".abs_section_222"
-  _CAN3RXIDR2 
+  _CAN3RXIDR2
 SECTION: ".abs_section_223"
-  _CAN3RXIDR3 
+  _CAN3RXIDR3
 SECTION: ".abs_section_209"
-  _CAN3TAAK 
+  _CAN3TAAK
 SECTION: ".abs_section_208"
-  _CAN3TARQ 
+  _CAN3TARQ
 SECTION: ".abs_section_20a"
-  _CAN3TBSEL 
+  _CAN3TBSEL
 SECTION: ".abs_section_206"
-  _CAN3TFLG 
+  _CAN3TFLG
 SECTION: ".abs_section_207"
-  _CAN3TIER 
+  _CAN3TIER
 SECTION: ".abs_section_23c"
-  _CAN3TXDLR 
+  _CAN3TXDLR
 SECTION: ".abs_section_234"
-  _CAN3TXDSR0 
+  _CAN3TXDSR0
 SECTION: ".abs_section_235"
-  _CAN3TXDSR1 
+  _CAN3TXDSR1
 SECTION: ".abs_section_236"
-  _CAN3TXDSR2 
+  _CAN3TXDSR2
 SECTION: ".abs_section_237"
-  _CAN3TXDSR3 
+  _CAN3TXDSR3
 SECTION: ".abs_section_238"
-  _CAN3TXDSR4 
+  _CAN3TXDSR4
 SECTION: ".abs_section_239"
-  _CAN3TXDSR5 
+  _CAN3TXDSR5
 SECTION: ".abs_section_23a"
-  _CAN3TXDSR6 
+  _CAN3TXDSR6
 SECTION: ".abs_section_23b"
-  _CAN3TXDSR7 
+  _CAN3TXDSR7
 SECTION: ".abs_section_20f"
-  _CAN3TXERR 
+  _CAN3TXERR
 SECTION: ".abs_section_230"
-  _CAN3TXIDR0 
+  _CAN3TXIDR0
 SECTION: ".abs_section_231"
-  _CAN3TXIDR1 
+  _CAN3TXIDR1
 SECTION: ".abs_section_232"
-  _CAN3TXIDR2 
+  _CAN3TXIDR2
 SECTION: ".abs_section_233"
-  _CAN3TXIDR3 
+  _CAN3TXIDR3
 SECTION: ".abs_section_23f"
-  _CAN3TXTBPR 
+  _CAN3TXTBPR
 SECTION: ".abs_section_282"
-  _CAN4BTR0 
+  _CAN4BTR0
 SECTION: ".abs_section_283"
-  _CAN4BTR1 
+  _CAN4BTR1
 SECTION: ".abs_section_280"
-  _CAN4CTL0 
+  _CAN4CTL0
 SECTION: ".abs_section_281"
-  _CAN4CTL1 
+  _CAN4CTL1
 SECTION: ".abs_section_28b"
-  _CAN4IDAC 
+  _CAN4IDAC
 SECTION: ".abs_section_290"
-  _CAN4IDAR0 
+  _CAN4IDAR0
 SECTION: ".abs_section_291"
-  _CAN4IDAR1 
+  _CAN4IDAR1
 SECTION: ".abs_section_292"
-  _CAN4IDAR2 
+  _CAN4IDAR2
 SECTION: ".abs_section_293"
-  _CAN4IDAR3 
+  _CAN4IDAR3
 SECTION: ".abs_section_298"
-  _CAN4IDAR4 
+  _CAN4IDAR4
 SECTION: ".abs_section_299"
-  _CAN4IDAR5 
+  _CAN4IDAR5
 SECTION: ".abs_section_29a"
-  _CAN4IDAR6 
+  _CAN4IDAR6
 SECTION: ".abs_section_29b"
-  _CAN4IDAR7 
+  _CAN4IDAR7
 SECTION: ".abs_section_294"
-  _CAN4IDMR0 
+  _CAN4IDMR0
 SECTION: ".abs_section_295"
-  _CAN4IDMR1 
+  _CAN4IDMR1
 SECTION: ".abs_section_296"
-  _CAN4IDMR2 
+  _CAN4IDMR2
 SECTION: ".abs_section_297"
-  _CAN4IDMR3 
+  _CAN4IDMR3
 SECTION: ".abs_section_29c"
-  _CAN4IDMR4 
+  _CAN4IDMR4
 SECTION: ".abs_section_29d"
-  _CAN4IDMR5 
+  _CAN4IDMR5
 SECTION: ".abs_section_29e"
-  _CAN4IDMR6 
+  _CAN4IDMR6
 SECTION: ".abs_section_29f"
-  _CAN4IDMR7 
+  _CAN4IDMR7
 SECTION: ".abs_section_284"
-  _CAN4RFLG 
+  _CAN4RFLG
 SECTION: ".abs_section_285"
-  _CAN4RIER 
+  _CAN4RIER
 SECTION: ".abs_section_2ac"
-  _CAN4RXDLR 
+  _CAN4RXDLR
 SECTION: ".abs_section_2a4"
-  _CAN4RXDSR0 
+  _CAN4RXDSR0
 SECTION: ".abs_section_2a5"
-  _CAN4RXDSR1 
+  _CAN4RXDSR1
 SECTION: ".abs_section_2a6"
-  _CAN4RXDSR2 
+  _CAN4RXDSR2
 SECTION: ".abs_section_2a7"
-  _CAN4RXDSR3 
+  _CAN4RXDSR3
 SECTION: ".abs_section_2a8"
-  _CAN4RXDSR4 
+  _CAN4RXDSR4
 SECTION: ".abs_section_2a9"
-  _CAN4RXDSR5 
+  _CAN4RXDSR5
 SECTION: ".abs_section_2aa"
-  _CAN4RXDSR6 
+  _CAN4RXDSR6
 SECTION: ".abs_section_2ab"
-  _CAN4RXDSR7 
+  _CAN4RXDSR7
 SECTION: ".abs_section_28e"
-  _CAN4RXERR 
+  _CAN4RXERR
 SECTION: ".abs_section_2a0"
-  _CAN4RXIDR0 
+  _CAN4RXIDR0
 SECTION: ".abs_section_2a1"
-  _CAN4RXIDR1 
+  _CAN4RXIDR1
 SECTION: ".abs_section_2a2"
-  _CAN4RXIDR2 
+  _CAN4RXIDR2
 SECTION: ".abs_section_2a3"
-  _CAN4RXIDR3 
+  _CAN4RXIDR3
 SECTION: ".abs_section_289"
-  _CAN4TAAK 
+  _CAN4TAAK
 SECTION: ".abs_section_288"
-  _CAN4TARQ 
+  _CAN4TARQ
 SECTION: ".abs_section_28a"
-  _CAN4TBSEL 
+  _CAN4TBSEL
 SECTION: ".abs_section_286"
-  _CAN4TFLG 
+  _CAN4TFLG
 SECTION: ".abs_section_287"
-  _CAN4TIER 
+  _CAN4TIER
 SECTION: ".abs_section_2bc"
-  _CAN4TXDLR 
+  _CAN4TXDLR
 SECTION: ".abs_section_2b4"
-  _CAN4TXDSR0 
+  _CAN4TXDSR0
 SECTION: ".abs_section_2b5"
-  _CAN4TXDSR1 
+  _CAN4TXDSR1
 SECTION: ".abs_section_2b6"
-  _CAN4TXDSR2 
+  _CAN4TXDSR2
 SECTION: ".abs_section_2b7"
-  _CAN4TXDSR3 
+  _CAN4TXDSR3
 SECTION: ".abs_section_2b8"
-  _CAN4TXDSR4 
+  _CAN4TXDSR4
 SECTION: ".abs_section_2b9"
-  _CAN4TXDSR5 
+  _CAN4TXDSR5
 SECTION: ".abs_section_2ba"
-  _CAN4TXDSR6 
+  _CAN4TXDSR6
 SECTION: ".abs_section_2bb"
-  _CAN4TXDSR7 
+  _CAN4TXDSR7
 SECTION: ".abs_section_28f"
-  _CAN4TXERR 
+  _CAN4TXERR
 SECTION: ".abs_section_2b0"
-  _CAN4TXIDR0 
+  _CAN4TXIDR0
 SECTION: ".abs_section_2b1"
-  _CAN4TXIDR1 
+  _CAN4TXIDR1
 SECTION: ".abs_section_2b2"
-  _CAN4TXIDR2 
+  _CAN4TXIDR2
 SECTION: ".abs_section_2b3"
-  _CAN4TXIDR3 
+  _CAN4TXIDR3
 SECTION: ".abs_section_2bf"
-  _CAN4TXTBPR 
+  _CAN4TXTBPR
 SECTION: ".abs_section_41"
-  _CFORC 
+  _CFORC
 SECTION: ".abs_section_39"
-  _CLKSEL 
+  _CLKSEL
 SECTION: ".abs_section_3c"
-  _COPCTL 
+  _COPCTL
 SECTION: ".abs_section_37"
-  _CRGFLG 
+  _CRGFLG
 SECTION: ".abs_section_38"
-  _CRGINT 
+  _CRGINT
 SECTION: ".abs_section_3e"
-  _CTCTL 
+  _CTCTL
 SECTION: ".abs_section_36"
-  _CTFLG 
+  _CTFLG
 SECTION: ".abs_section_9"
-  _DDRE 
+  _DDRE
 SECTION: ".abs_section_262"
-  _DDRH 
+  _DDRH
 SECTION: ".abs_section_26a"
-  _DDRJ 
+  _DDRJ
 SECTION: ".abs_section_33"
-  _DDRK 
+  _DDRK
 SECTION: ".abs_section_252"
-  _DDRM 
+  _DDRM
 SECTION: ".abs_section_25a"
-  _DDRP 
+  _DDRP
 SECTION: ".abs_section_24a"
-  _DDRS 
+  _DDRS
 SECTION: ".abs_section_242"
-  _DDRT 
+  _DDRT
 SECTION: ".abs_section_ec"
-  _DLCBARD 
+  _DLCBARD
 SECTION: ".abs_section_e8"
-  _DLCBCR1 
+  _DLCBCR1
 SECTION: ".abs_section_ea"
-  _DLCBCR2 
+  _DLCBCR2
 SECTION: ".abs_section_eb"
-  _DLCBDR 
+  _DLCBDR
 SECTION: ".abs_section_ed"
-  _DLCBRSR 
+  _DLCBRSR
 SECTION: ".abs_section_e9"
-  _DLCBSVR 
+  _DLCBSVR
 SECTION: ".abs_section_ee"
-  _DLCSCR 
+  _DLCSCR
 SECTION: ".abs_section_69"
-  _DLYCT 
+  _DLYCT
 SECTION: ".abs_section_e"
-  _EBICTL 
+  _EBICTL
 SECTION: ".abs_section_110"
-  _ECLKDIV 
+  _ECLKDIV
 SECTION: ".abs_section_116"
-  _ECMD 
+  _ECMD
 SECTION: ".abs_section_113"
-  _ECNFG 
+  _ECNFG
 SECTION: ".abs_section_114"
-  _EPROT 
+  _EPROT
 SECTION: ".abs_section_115"
-  _ESTAT 
+  _ESTAT
 SECTION: ".abs_section_100"
-  _FCLKDIV 
+  _FCLKDIV
 SECTION: ".abs_section_106"
-  _FCMD 
+  _FCMD
 SECTION: ".abs_section_103"
-  _FCNFG 
+  _FCNFG
 SECTION: ".abs_section_3d"
-  _FORBYP 
+  _FORBYP
 SECTION: ".abs_section_104"
-  _FPROT 
+  _FPROT
 SECTION: ".abs_section_101"
-  _FSEC 
+  _FSEC
 SECTION: ".abs_section_105"
-  _FSTAT 
+  _FSTAT
 SECTION: ".abs_section_1f"
-  _HPRIO 
+  _HPRIO
 SECTION: ".abs_section_e0"
-  _IBAD 
+  _IBAD
 SECTION: ".abs_section_e2"
-  _IBCR 
+  _IBCR
 SECTION: ".abs_section_e4"
-  _IBDR 
+  _IBDR
 SECTION: ".abs_section_e1"
-  _IBFD 
+  _IBFD
 SECTION: ".abs_section_e3"
-  _IBSR 
+  _IBSR
 SECTION: ".abs_section_6a"
-  _ICOVW 
+  _ICOVW
 SECTION: ".abs_section_68"
-  _ICPAR 
+  _ICPAR
 SECTION: ".abs_section_6b"
-  _ICSYS 
+  _ICSYS
 SECTION: ".abs_section_12"
-  _INITEE 
+  _INITEE
 SECTION: ".abs_section_11"
-  _INITRG 
+  _INITRG
 SECTION: ".abs_section_10"
-  _INITRM 
+  _INITRM
 SECTION: ".abs_section_1e"
-  _INTCR 
+  _INTCR
 SECTION: ".abs_section_15"
-  _ITCR 
+  _ITCR
 SECTION: ".abs_section_16"
-  _ITEST 
+  _ITEST
 SECTION: ".abs_section_66"
-  _MCCTL 
+  _MCCTL
 SECTION: ".abs_section_67"
-  _MCFLG 
+  _MCFLG
 SECTION: ".abs_section_1c"
-  _MEMSIZ0 
+  _MEMSIZ0
 SECTION: ".abs_section_1d"
-  _MEMSIZ1 
+  _MEMSIZ1
 SECTION: ".abs_section_13"
-  _MISC 
+  _MISC
 SECTION: ".abs_section_b"
-  _MODE 
+  _MODE
 SECTION: ".abs_section_257"
-  _MODRR 
+  _MODRR
 SECTION: ".abs_section_14"
-  _MTST0 
+  _MTST0
 SECTION: ".abs_section_17"
-  _MTST1 
+  _MTST1
 SECTION: ".abs_section_43"
-  _OC7D 
+  _OC7D
 SECTION: ".abs_section_42"
-  _OC7M 
+  _OC7M
 SECTION: ".abs_section_60"
-  _PACTL 
+  _PACTL
 SECTION: ".abs_section_61"
-  _PAFLG 
+  _PAFLG
 SECTION: ".abs_section_1a"
-  _PARTIDH 
+  _PARTIDH
 SECTION: ".abs_section_1b"
-  _PARTIDL 
+  _PARTIDL
 SECTION: ".abs_section_70"
-  _PBCTL 
+  _PBCTL
 SECTION: ".abs_section_71"
-  _PBFLG 
+  _PBFLG
 SECTION: ".abs_section_a"
-  _PEAR 
+  _PEAR
 SECTION: ".abs_section_264"
-  _PERH 
+  _PERH
 SECTION: ".abs_section_26c"
-  _PERJ 
+  _PERJ
 SECTION: ".abs_section_254"
-  _PERM 
+  _PERM
 SECTION: ".abs_section_25c"
-  _PERP 
+  _PERP
 SECTION: ".abs_section_24c"
-  _PERS 
+  _PERS
 SECTION: ".abs_section_244"
-  _PERT 
+  _PERT
 SECTION: ".abs_section_266"
-  _PIEH 
+  _PIEH
 SECTION: ".abs_section_26e"
-  _PIEJ 
+  _PIEJ
 SECTION: ".abs_section_25e"
-  _PIEP 
+  _PIEP
 SECTION: ".abs_section_267"
-  _PIFH 
+  _PIFH
 SECTION: ".abs_section_26f"
-  _PIFJ 
+  _PIFJ
 SECTION: ".abs_section_25f"
-  _PIFP 
+  _PIFP
 SECTION: ".abs_section_3a"
-  _PLLCTL 
+  _PLLCTL
 SECTION: ".abs_section_8f"
-  _PORTAD0 
+  _PORTAD0
 SECTION: ".abs_section_12f"
-  _PORTAD1 
+  _PORTAD1
 SECTION: ".abs_section_8"
-  _PORTE 
+  _PORTE
 SECTION: ".abs_section_32"
-  _PORTK 
+  _PORTK
 SECTION: ".abs_section_30"
-  _PPAGE 
+  _PPAGE
 SECTION: ".abs_section_265"
-  _PPSH 
+  _PPSH
 SECTION: ".abs_section_26d"
-  _PPSJ 
+  _PPSJ
 SECTION: ".abs_section_255"
-  _PPSM 
+  _PPSM
 SECTION: ".abs_section_25d"
-  _PPSP 
+  _PPSP
 SECTION: ".abs_section_24d"
-  _PPSS 
+  _PPSS
 SECTION: ".abs_section_245"
-  _PPST 
+  _PPST
 SECTION: ".abs_section_260"
-  _PTH 
+  _PTH
 SECTION: ".abs_section_261"
-  _PTIH 
+  _PTIH
 SECTION: ".abs_section_269"
-  _PTIJ 
+  _PTIJ
 SECTION: ".abs_section_251"
-  _PTIM 
+  _PTIM
 SECTION: ".abs_section_259"
-  _PTIP 
+  _PTIP
 SECTION: ".abs_section_249"
-  _PTIS 
+  _PTIS
 SECTION: ".abs_section_241"
-  _PTIT 
+  _PTIT
 SECTION: ".abs_section_268"
-  _PTJ 
+  _PTJ
 SECTION: ".abs_section_250"
-  _PTM 
+  _PTM
 SECTION: ".abs_section_258"
-  _PTP 
+  _PTP
 SECTION: ".abs_section_248"
-  _PTS 
+  _PTS
 SECTION: ".abs_section_240"
-  _PTT 
+  _PTT
 SECTION: ".abs_section_c"
-  _PUCR 
+  _PUCR
 SECTION: ".abs_section_a4"
-  _PWMCAE 
+  _PWMCAE
 SECTION: ".abs_section_a2"
-  _PWMCLK 
+  _PWMCLK
 SECTION: ".abs_section_a5"
-  _PWMCTL 
+  _PWMCTL
 SECTION: ".abs_section_a0"
-  _PWME 
+  _PWME
 SECTION: ".abs_section_a1"
-  _PWMPOL 
+  _PWMPOL
 SECTION: ".abs_section_a3"
-  _PWMPRCLK 
+  _PWMPRCLK
 SECTION: ".abs_section_a8"
-  _PWMSCLA 
+  _PWMSCLA
 SECTION: ".abs_section_a9"
-  _PWMSCLB 
+  _PWMSCLB
 SECTION: ".abs_section_c4"
-  _PWMSDN 
+  _PWMSDN
 SECTION: ".abs_section_263"
-  _RDRH 
+  _RDRH
 SECTION: ".abs_section_d"
-  _RDRIV 
+  _RDRIV
 SECTION: ".abs_section_26b"
-  _RDRJ 
+  _RDRJ
 SECTION: ".abs_section_253"
-  _RDRM 
+  _RDRM
 SECTION: ".abs_section_25b"
-  _RDRP 
+  _RDRP
 SECTION: ".abs_section_24b"
-  _RDRS 
+  _RDRS
 SECTION: ".abs_section_243"
-  _RDRT 
+  _RDRT
 SECTION: ".abs_section_35"
-  _REFDV 
+  _REFDV
 SECTION: ".abs_section_3b"
-  _RTICTL 
+  _RTICTL
 SECTION: ".abs_section_ca"
-  _SCI0CR1 
+  _SCI0CR1
 SECTION: ".abs_section_cb"
-  _SCI0CR2 
+  _SCI0CR2
 SECTION: ".abs_section_ce"
-  _SCI0DRH 
+  _SCI0DRH
 SECTION: ".abs_section_cf"
-  _SCI0DRL 
+  _SCI0DRL
 SECTION: ".abs_section_cc"
-  _SCI0SR1 
+  _SCI0SR1
 SECTION: ".abs_section_cd"
-  _SCI0SR2 
+  _SCI0SR2
 SECTION: ".abs_section_d2"
-  _SCI1CR1 
+  _SCI1CR1
 SECTION: ".abs_section_d3"
-  _SCI1CR2 
+  _SCI1CR2
 SECTION: ".abs_section_d6"
-  _SCI1DRH 
+  _SCI1DRH
 SECTION: ".abs_section_d7"
-  _SCI1DRL 
+  _SCI1DRL
 SECTION: ".abs_section_d4"
-  _SCI1SR1 
+  _SCI1SR1
 SECTION: ".abs_section_d5"
-  _SCI1SR2 
+  _SCI1SR2
 SECTION: ".abs_section_da"
-  _SPI0BR 
+  _SPI0BR
 SECTION: ".abs_section_d8"
-  _SPI0CR1 
+  _SPI0CR1
 SECTION: ".abs_section_d9"
-  _SPI0CR2 
+  _SPI0CR2
 SECTION: ".abs_section_dd"
-  _SPI0DR 
+  _SPI0DR
 SECTION: ".abs_section_db"
-  _SPI0SR 
+  _SPI0SR
 SECTION: ".abs_section_f2"
-  _SPI1BR 
+  _SPI1BR
 SECTION: ".abs_section_f0"
-  _SPI1CR1 
+  _SPI1CR1
 SECTION: ".abs_section_f1"
-  _SPI1CR2 
+  _SPI1CR2
 SECTION: ".abs_section_f5"
-  _SPI1DR 
+  _SPI1DR
 SECTION: ".abs_section_f3"
-  _SPI1SR 
+  _SPI1SR
 SECTION: ".abs_section_fa"
-  _SPI2BR 
+  _SPI2BR
 SECTION: ".abs_section_f8"
-  _SPI2CR1 
+  _SPI2CR1
 SECTION: ".abs_section_f9"
-  _SPI2CR2 
+  _SPI2CR2
 SECTION: ".abs_section_fd"
-  _SPI2DR 
+  _SPI2DR
 SECTION: ".abs_section_fb"
-  _SPI2SR 
+  _SPI2SR
 SECTION: ".abs_section_34"
-  _SYNR 
+  _SYNR
 SECTION: ".abs_section_48"
-  _TCTL1 
+  _TCTL1
 SECTION: ".abs_section_49"
-  _TCTL2 
+  _TCTL2
 SECTION: ".abs_section_4a"
-  _TCTL3 
+  _TCTL3
 SECTION: ".abs_section_4b"
-  _TCTL4 
+  _TCTL4
 SECTION: ".abs_section_4e"
-  _TFLG1 
+  _TFLG1
 SECTION: ".abs_section_4f"
-  _TFLG2 
+  _TFLG2
 SECTION: ".abs_section_4c"
-  _TIE 
+  _TIE
 SECTION: ".abs_section_6d"
-  _TIMTST 
+  _TIMTST
 SECTION: ".abs_section_40"
-  _TIOS 
+  _TIOS
 SECTION: ".abs_section_46"
-  _TSCR1 
+  _TSCR1
 SECTION: ".abs_section_4d"
-  _TSCR2 
+  _TSCR2
 SECTION: ".abs_section_47"
-  _TTOV 
+  _TTOV
 SECTION: ".abs_section_256"
-  _WOMM 
+  _WOMM
 SECTION: ".abs_section_24e"
-  _WOMS 
+  _WOMS
 SECTION: ".abs_section_82"
-  _ATD0CTL23 
+  _ATD0CTL23
 SECTION: ".abs_section_84"
-  _ATD0CTL45 
+  _ATD0CTL45
 SECTION: ".abs_section_90"
-  _ATD0DR0 
+  _ATD0DR0
 SECTION: ".abs_section_92"
-  _ATD0DR1 
+  _ATD0DR1
 SECTION: ".abs_section_94"
-  _ATD0DR2 
+  _ATD0DR2
 SECTION: ".abs_section_96"
-  _ATD0DR3 
+  _ATD0DR3
 SECTION: ".abs_section_98"
-  _ATD0DR4 
+  _ATD0DR4
 SECTION: ".abs_section_9a"
-  _ATD0DR5 
+  _ATD0DR5
 SECTION: ".abs_section_9c"
-  _ATD0DR6 
+  _ATD0DR6
 SECTION: ".abs_section_9e"
-  _ATD0DR7 
+  _ATD0DR7
 SECTION: ".abs_section_122"
-  _ATD1CTL23 
+  _ATD1CTL23
 SECTION: ".abs_section_124"
-  _ATD1CTL45 
+  _ATD1CTL45
 SECTION: ".abs_section_130"
-  _ATD1DR0 
+  _ATD1DR0
 SECTION: ".abs_section_132"
-  _ATD1DR1 
+  _ATD1DR1
 SECTION: ".abs_section_134"
-  _ATD1DR2 
+  _ATD1DR2
 SECTION: ".abs_section_136"
-  _ATD1DR3 
+  _ATD1DR3
 SECTION: ".abs_section_138"
-  _ATD1DR4 
+  _ATD1DR4
 SECTION: ".abs_section_13a"
-  _ATD1DR5 
+  _ATD1DR5
 SECTION: ".abs_section_13c"
-  _ATD1DR6 
+  _ATD1DR6
 SECTION: ".abs_section_13e"
-  _ATD1DR7 
+  _ATD1DR7
 SECTION: ".abs_section_2"
-  _DDRAB 
+  _DDRAB
 SECTION: ".abs_section_76"
-  _MCCNT 
+  _MCCNT
 SECTION: ".abs_section_74"
-  _PA10H 
+  _PA10H
 SECTION: ".abs_section_72"
-  _PA32H 
+  _PA32H
 SECTION: ".abs_section_64"
-  _PACN10 
+  _PACN10
 SECTION: ".abs_section_62"
-  _PACN32 
+  _PACN32
 SECTION: ".abs_section_0"
-  _PORTAB 
+  _PORTAB
 SECTION: ".abs_section_ac"
-  _PWMCNT01 
+  _PWMCNT01
 SECTION: ".abs_section_ae"
-  _PWMCNT23 
+  _PWMCNT23
 SECTION: ".abs_section_b0"
-  _PWMCNT45 
+  _PWMCNT45
 SECTION: ".abs_section_b2"
-  _PWMCNT67 
+  _PWMCNT67
 SECTION: ".abs_section_bc"
-  _PWMDTY01 
+  _PWMDTY01
 SECTION: ".abs_section_be"
-  _PWMDTY23 
+  _PWMDTY23
 SECTION: ".abs_section_c0"
-  _PWMDTY45 
+  _PWMDTY45
 SECTION: ".abs_section_c2"
-  _PWMDTY67 
+  _PWMDTY67
 SECTION: ".abs_section_b4"
-  _PWMPER01 
+  _PWMPER01
 SECTION: ".abs_section_b6"
-  _PWMPER23 
+  _PWMPER23
 SECTION: ".abs_section_b8"
-  _PWMPER45 
+  _PWMPER45
 SECTION: ".abs_section_ba"
-  _PWMPER67 
+  _PWMPER67
 SECTION: ".abs_section_c8"
-  _SCI0BD 
+  _SCI0BD
 SECTION: ".abs_section_d0"
-  _SCI1BD 
+  _SCI1BD
 SECTION: ".abs_section_50"
-  _TC0 
+  _TC0
 SECTION: ".abs_section_78"
-  _TC0H 
+  _TC0H
 SECTION: ".abs_section_52"
-  _TC1 
+  _TC1
 SECTION: ".abs_section_7a"
-  _TC1H 
+  _TC1H
 SECTION: ".abs_section_54"
-  _TC2 
+  _TC2
 SECTION: ".abs_section_7c"
-  _TC2H 
+  _TC2H
 SECTION: ".abs_section_56"
-  _TC3 
+  _TC3
 SECTION: ".abs_section_7e"
-  _TC3H 
+  _TC3H
 SECTION: ".abs_section_58"
-  _TC4 
+  _TC4
 SECTION: ".abs_section_5a"
-  _TC5 
+  _TC5
 SECTION: ".abs_section_5c"
-  _TC6 
+  _TC6
 SECTION: ".abs_section_5e"
-  _TC7 
+  _TC7
 SECTION: ".abs_section_44"
-  _TCNT 
+  _TCNT
 SECTION: ".abs_section_ff80"
-  _vect 
+  _vect
 SECTION: "TickTimer_DATA"
-  CmpHighVal 
+  CmpHighVal
 SECTION: "Byte1_DATA"
-  Byte1_Table 
+  Byte1_Table
 SECTION: "COM0_DATA"
-  COM0_PrescHigh.1 SerFlag PrescHigh NumMode 
+  COM0_PrescHigh.1 SerFlag PrescHigh NumMode
 SECTION: "ROM_PAGE31_524"
-  xSerialPutChar xTaskCreate vTaskDelete vTaskDelayUntil vTaskDelay 
-  uxTaskPriorityGet 
+  xSerialPutChar xTaskCreate vTaskDelete vTaskDelayUntil vTaskDelay
+  uxTaskPriorityGet
 SECTION: "ROM_PAGE32_525"
-  vTaskPrioritySet vTaskSuspend vTaskResume vTaskStartScheduler 
-  vTaskSuspendAll xTaskResumeAll xTaskGetTickCount uxTaskGetNumberOfTasks 
+  vTaskPrioritySet vTaskSuspend vTaskResume vTaskStartScheduler
+  vTaskSuspendAll xTaskResumeAll xTaskGetTickCount uxTaskGetNumberOfTasks
 SECTION: "ROM_PAGE33_526"
-  vTaskIncrementTick vTaskSwitchContext vTaskPlaceOnEventList 
-  xTaskRemoveFromEventList prvIdleTask prvInitialiseTCBVariables 
-  prvInitialiseTaskLists 
+  vTaskIncrementTick vTaskSwitchContext vTaskPlaceOnEventList
+  xTaskRemoveFromEventList prvIdleTask prvInitialiseTCBVariables
+  prvInitialiseTaskLists
 SECTION: "ROM_PAGE34_527"
-  prvCheckTasksWaitingTermination prvAllocateTCBAndStack prvDeleteTCB 
-  xQueueCreate xQueueSend xQueueSendFromISR 
+  prvCheckTasksWaitingTermination prvAllocateTCBAndStack prvDeleteTCB
+  xQueueCreate xQueueSend xQueueSendFromISR
 SECTION: "ROM_PAGE35_528"
-  xQueueReceive xQueueReceiveFromISR uxQueueMessagesWaiting prvUnlockQueue 
-  prvIsQueueEmpty prvIsQueueFull vListInitialise vListInitialiseItem 
-  vListInsertEnd 
+  xQueueReceive xQueueReceiveFromISR uxQueueMessagesWaiting prvUnlockQueue
+  prvIsQueueEmpty prvIsQueueFull vListInitialise vListInitialiseItem
+  vListInsertEnd
 SECTION: "ROM_PAGE36_529"
-  vListInsert vListRemove pvPortMalloc vPortFree PE_Timer_LngHi1 
-  vStartLEDFlashTasks vLEDFlashTask 
+  vListInsert vListRemove pvPortMalloc vPortFree PE_Timer_LngHi1
+  vStartLEDFlashTasks vLEDFlashTask
 SECTION: "ROM_PAGE37_530"
-  vStartDynamicPriorityTasks vLimitedIncrementTask vContinuousIncrementTask 
-  vCounterControlTask vQueueSendWhenSuspendedTask 
-  vQueueReceiveWhenSuspendedTask xAreDynamicPriorityTasksStillRunning 
+  vStartDynamicPriorityTasks vLimitedIncrementTask vContinuousIncrementTask
+  vCounterControlTask vQueueSendWhenSuspendedTask
+  vQueueReceiveWhenSuspendedTask xAreDynamicPriorityTasksStillRunning
 SECTION: "ROM_PAGE38_531"
-  vStartPolledQueueTasks vPolledQueueProducer vPolledQueueConsumer 
-  xArePollingQueuesStillRunning vAltStartComTestTasks vComTxTask vComRxTask 
-  xAreComTestTasksStillRunning 
+  vStartPolledQueueTasks vPolledQueueProducer vPolledQueueConsumer
+  xArePollingQueuesStillRunning vAltStartComTestTasks vComTxTask vComRxTask
+  xAreComTestTasksStillRunning
 SECTION: "ROM_PAGE39_532"
-  pxPortInitialiseStack prvSetupTimerInterrupt xPortStartScheduler 
-  vStartIntegerMathTasks vCompeteingIntMathTask 
-  xAreIntegerMathsTaskStillRunning 
+  pxPortInitialiseStack prvSetupTimerInterrupt xPortStartScheduler
+  vStartIntegerMathTasks vCompeteingIntMathTask
+  xAreIntegerMathsTaskStillRunning
 SECTION: "ROM_PAGE3A_533"
-  vStartBlockingQueueTasks vBlockingQueueProducer vBlockingQueueConsumer 
-  xAreBlockingQueuesStillRunning vCreateSuicidalTasks 
+  vStartBlockingQueueTasks vBlockingQueueProducer vBlockingQueueConsumer
+  xAreBlockingQueuesStillRunning vCreateSuicidalTasks
 SECTION: "ROM_PAGE3B_534"
-  vSuicidalTask vCreateTasks xIsCreateTaskStillRunning 
+  vSuicidalTask vCreateTasks xIsCreateTaskStillRunning
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -3124,125 +3124,125 @@ OBJECT LIST SORTED BY ADDRESS
      _CAN4TXDSR7                                2BB       1       1       0   .abs_section_2bb
      _CAN4TXDLR                                 2BC       1       1       0   .abs_section_2bc
      _CAN4TXTBPR                                2BF       1       1       0   .abs_section_2bf
-     uxCriticalNesting                         1000       1       1     101   .data       
-     xLocalError                               1001       1       1       2   .bss        
-     xRxedChars                                1002       2       2       3   .bss        
-     xCharsForTx                               1004       2       2       3   .bss        
-     pxCurrentTCB                              1006       2       2      28   .bss        
-     uxTasksDeleted                            1008       1       1       3   .bss        
-     uxCurrentNumberOfTasks                    1009       1       1       5   .bss        
-     xTickCount                                100A       2       2      14   .bss        
-     uxTopUsedPriority                         100C       1       1       2   .bss        
-     uxTopReadyPriority                        100D       1       1      15   .bss        
-     xSchedulerRunning                         100E       1       1       3   .bss        
-     uxSchedulerSuspended                      100F       1       1       6   .bss        
-     uxMissedTicks                             1010       1       1       4   .bss        
-     uxTaskNumber.1                            1011       1       1       2   .bss        
-     pxReadyTasksLists                         1012      3C      60      11   .bss        
-     xDelayedTaskList1                         104E       F      15       2   .bss        
-     xDelayedTaskList2                         105D       F      15       2   .bss        
-     pxDelayedTaskList                         106C       2       2       8   .bss        
-     pxOverflowDelayedTaskList                 106E       2       2       6   .bss        
-     xPendingReadyList                         1070       F      15       4   .bss        
-     xTasksWaitingTermination                  107F       F      15       5   .bss        
-     xSuspendedTaskList                        108E       F      15       2   .bss        
-     xHeapHasBeenInitialised.1                 109D       1       1       2   .bss        
-     xHeap                                     109E    2804   10244       2   .bss        
-     xStart                                    38A2       4       4       6   .bss        
-     xEnd                                      38A6       4       4       4   .bss        
-     uxFlashTaskNumber                         38AA       1       1       2   .bss        
-     usCheckVariable                           38AB       2       2       4   .bss        
-     xSuspendedQueueSendError                  38AD       1       1       2   .bss        
-     xSuspendedQueueReceiveError               38AE       1       1       3   .bss        
-     ulValueToSend.6                           38AF       4       4       5   .bss        
-     ulExpectedValue.7                         38B3       4       4       6   .bss        
-     usLastTaskCheck.9                         38B7       2       2       2   .bss        
-     xContinousIncrementHandle                 38B9       2       2       5   .bss        
-     xLimitedIncrementHandle                   38BB       2       2       2   .bss        
-     ulCounter                                 38BD       4       4      10   .bss        
-     ulReceivedValue.8                         38C1       4       4       3   .bss        
-     xPollingConsumerCount                     38C5       1       1       3   .bss        
-     xPollingProducerCount                     38C6       1       1       3   .bss        
-     xPolledQueue.1                            38C7       2       2       3   .bss        
-     xPort                                     38C9       2       2       2   .bss        
-     uxBaseLED                                 38CB       1       1       5   .bss        
-     uxRxLoops                                 38CC       1       1       3   .bss        
-     xTaskCheck                                38CD       1       1       3   .bss        
-     sBlockingConsumerCount                    38CE       6       6       5   .bss        
-     sBlockingProducerCount                    38D4       6       6       5   .bss        
-     sLastBlockingConsumerCount.7              38DA       6       6       2   .bss        
-     sLastBlockingProducerCount.8              38E0       6       6       2   .bss        
-     usCreationCount                           38E6       2       2       4   .bss        
-     uxTasksRunningAtStart                     38E8       1       1       4   .bss        
-     usLastCreationCount.6                     38E9       2       2       2   .bss        
-     uxTasksRunningNow.7                       38EB       1       1       1   .bss        
-     xSuspendedTestQueue                       38EC       2       2       3   .common     
-     xCreatedTask1                             38EE       2       2       2   .common     
-     xCreatedTask2                             38F0       2       2       2   .common     
+     uxCriticalNesting                         1000       1       1     101   .data
+     xLocalError                               1001       1       1       2   .bss
+     xRxedChars                                1002       2       2       3   .bss
+     xCharsForTx                               1004       2       2       3   .bss
+     pxCurrentTCB                              1006       2       2      28   .bss
+     uxTasksDeleted                            1008       1       1       3   .bss
+     uxCurrentNumberOfTasks                    1009       1       1       5   .bss
+     xTickCount                                100A       2       2      14   .bss
+     uxTopUsedPriority                         100C       1       1       2   .bss
+     uxTopReadyPriority                        100D       1       1      15   .bss
+     xSchedulerRunning                         100E       1       1       3   .bss
+     uxSchedulerSuspended                      100F       1       1       6   .bss
+     uxMissedTicks                             1010       1       1       4   .bss
+     uxTaskNumber.1                            1011       1       1       2   .bss
+     pxReadyTasksLists                         1012      3C      60      11   .bss
+     xDelayedTaskList1                         104E       F      15       2   .bss
+     xDelayedTaskList2                         105D       F      15       2   .bss
+     pxDelayedTaskList                         106C       2       2       8   .bss
+     pxOverflowDelayedTaskList                 106E       2       2       6   .bss
+     xPendingReadyList                         1070       F      15       4   .bss
+     xTasksWaitingTermination                  107F       F      15       5   .bss
+     xSuspendedTaskList                        108E       F      15       2   .bss
+     xHeapHasBeenInitialised.1                 109D       1       1       2   .bss
+     xHeap                                     109E    2804   10244       2   .bss
+     xStart                                    38A2       4       4       6   .bss
+     xEnd                                      38A6       4       4       4   .bss
+     uxFlashTaskNumber                         38AA       1       1       2   .bss
+     usCheckVariable                           38AB       2       2       4   .bss
+     xSuspendedQueueSendError                  38AD       1       1       2   .bss
+     xSuspendedQueueReceiveError               38AE       1       1       3   .bss
+     ulValueToSend.6                           38AF       4       4       5   .bss
+     ulExpectedValue.7                         38B3       4       4       6   .bss
+     usLastTaskCheck.9                         38B7       2       2       2   .bss
+     xContinousIncrementHandle                 38B9       2       2       5   .bss
+     xLimitedIncrementHandle                   38BB       2       2       2   .bss
+     ulCounter                                 38BD       4       4      10   .bss
+     ulReceivedValue.8                         38C1       4       4       3   .bss
+     xPollingConsumerCount                     38C5       1       1       3   .bss
+     xPollingProducerCount                     38C6       1       1       3   .bss
+     xPolledQueue.1                            38C7       2       2       3   .bss
+     xPort                                     38C9       2       2       2   .bss
+     uxBaseLED                                 38CB       1       1       5   .bss
+     uxRxLoops                                 38CC       1       1       3   .bss
+     xTaskCheck                                38CD       1       1       3   .bss
+     sBlockingConsumerCount                    38CE       6       6       5   .bss
+     sBlockingProducerCount                    38D4       6       6       5   .bss
+     sLastBlockingConsumerCount.7              38DA       6       6       2   .bss
+     sLastBlockingProducerCount.8              38E0       6       6       2   .bss
+     usCreationCount                           38E6       2       2       4   .bss
+     uxTasksRunningAtStart                     38E8       1       1       4   .bss
+     usLastCreationCount.6                     38E9       2       2       2   .bss
+     uxTasksRunningNow.7                       38EB       1       1       1   .bss
+     xSuspendedTestQueue                       38EC       2       2       3   .common
+     xCreatedTask1                             38EE       2       2       2   .common
+     xCreatedTask2                             38F0       2       2       2   .common
      CmpHighVal                                38F2       2       2       2   TickTimer_DATA
-     Byte1_Table                               38F4       8       8       1   Byte1_DATA  
-     COM0_PrescHigh.1                          38FC       8       8       1   COM0_DATA   
-     SerFlag                                   3904       2       2       1   COM0_DATA   
-     PrescHigh                                 3906       2       2       2   COM0_DATA   
-     NumMode                                   3908       1       1       2   COM0_DATA   
-     _EntryPoint                               C000      2E      46       1   .init       
-     PE_low_level_init                         C02E      4E      78       2   .init       
-     STRING.Check.1                            C09A       6       6       1   .rodata1    
-     STRING.IDLE.2                             C0A0       5       5       1   .rodata1    
-     STRING.LEDx.1                             C0A5       5       5       1   .rodata1    
-     STRING.CNT_INC.1                          C0AA       8       8       1   .rodata1    
-     STRING.LIM_INC.2                          C0B2       8       8       1   .rodata1    
-     STRING.C_CTRL.3                           C0BA       7       7       1   .rodata1    
-     STRING.SUSP_TX.4                          C0C1       8       8       1   .rodata1    
-     STRING.SUSP_RX.5                          C0C9       8       8       1   .rodata1    
-     STRING.QConsNB.2                          C0D1       8       8       1   .rodata1    
-     STRING.QProdNB.3                          C0D9       8       8       1   .rodata1    
-     STRING.COMTx.1                            C0E1       6       6       1   .rodata1    
-     STRING.COMRx.2                            C0E7       6       6       1   .rodata1    
-     STRING.IntMath.1                          C0ED       8       8       1   .rodata1    
-     STRING.QConsB1.1                          C0F5       8       8       1   .rodata1    
-     STRING.QProdB2.2                          C0FD       8       8       1   .rodata1    
-     STRING.QProdB3.3                          C105       8       8       1   .rodata1    
-     STRING.QConsB4.4                          C10D       8       8       1   .rodata1    
-     STRING.QProdB5.5                          C115       8       8       1   .rodata1    
-     STRING.QConsB6.6                          C11D       8       8       1   .rodata1    
-     STRING.CREATOR.1                          C125       8       8       1   .rodata1    
-     STRING.SUICIDE1.2                         C12D       9       9       1   .rodata1    
-     STRING.SUICIDE2.3                         C136       9       9       1   .rodata1    
-     STRING.SUICIDE1.4                         C13F       9       9       1   .rodata1    
-     STRING.SUICIDE2.5                         C148       9       9       1   .rodata1    
-     _Startup                                  C151      12      18       1   NON_BANKED  
-     _LCMP                                     C163      19      25       2   NON_BANKED  
-     _LCMP_P                                   C17C      15      21       3   NON_BANKED  
-     _LNEG                                     C191       D      13       2   NON_BANKED  
-     _LINC                                     C19E       5       5       4   NON_BANKED  
-     _LMUL                                     C1A3      27      39       1   NON_BANKED  
-     _lDivMod                                  C1CA      E3     227       3   NON_BANKED  
-     _LDIVU                                    C2AD       E      14       1   NON_BANKED  
-     _NEG_P                                    C2BB       F      15       4   NON_BANKED  
-     _LDIVS                                    C2CA      35      53       2   NON_BANKED  
-     Cpu_Interrupt                             C2FF       1       1      60   NON_BANKED  
-     vCOM0_ISR                                 C300      59      89       1   NON_BANKED  
-     xBankedStartScheduler                     C359      13      19       1   NON_BANKED  
-     vPortYield                                C36C      1D      29       1   NON_BANKED  
-     vPortTickInterrupt                        C389      25      37       1   NON_BANKED  
+     Byte1_Table                               38F4       8       8       1   Byte1_DATA
+     COM0_PrescHigh.1                          38FC       8       8       1   COM0_DATA
+     SerFlag                                   3904       2       2       1   COM0_DATA
+     PrescHigh                                 3906       2       2       2   COM0_DATA
+     NumMode                                   3908       1       1       2   COM0_DATA
+     _EntryPoint                               C000      2E      46       1   .init
+     PE_low_level_init                         C02E      4E      78       2   .init
+     STRING.Check.1                            C09A       6       6       1   .rodata1
+     STRING.IDLE.2                             C0A0       5       5       1   .rodata1
+     STRING.LEDx.1                             C0A5       5       5       1   .rodata1
+     STRING.CNT_INC.1                          C0AA       8       8       1   .rodata1
+     STRING.LIM_INC.2                          C0B2       8       8       1   .rodata1
+     STRING.C_CTRL.3                           C0BA       7       7       1   .rodata1
+     STRING.SUSP_TX.4                          C0C1       8       8       1   .rodata1
+     STRING.SUSP_RX.5                          C0C9       8       8       1   .rodata1
+     STRING.QConsNB.2                          C0D1       8       8       1   .rodata1
+     STRING.QProdNB.3                          C0D9       8       8       1   .rodata1
+     STRING.COMTx.1                            C0E1       6       6       1   .rodata1
+     STRING.COMRx.2                            C0E7       6       6       1   .rodata1
+     STRING.IntMath.1                          C0ED       8       8       1   .rodata1
+     STRING.QConsB1.1                          C0F5       8       8       1   .rodata1
+     STRING.QProdB2.2                          C0FD       8       8       1   .rodata1
+     STRING.QProdB3.3                          C105       8       8       1   .rodata1
+     STRING.QConsB4.4                          C10D       8       8       1   .rodata1
+     STRING.QProdB5.5                          C115       8       8       1   .rodata1
+     STRING.QConsB6.6                          C11D       8       8       1   .rodata1
+     STRING.CREATOR.1                          C125       8       8       1   .rodata1
+     STRING.SUICIDE1.2                         C12D       9       9       1   .rodata1
+     STRING.SUICIDE2.3                         C136       9       9       1   .rodata1
+     STRING.SUICIDE1.4                         C13F       9       9       1   .rodata1
+     STRING.SUICIDE2.5                         C148       9       9       1   .rodata1
+     _Startup                                  C151      12      18       1   NON_BANKED
+     _LCMP                                     C163      19      25       2   NON_BANKED
+     _LCMP_P                                   C17C      15      21       3   NON_BANKED
+     _LNEG                                     C191       D      13       2   NON_BANKED
+     _LINC                                     C19E       5       5       4   NON_BANKED
+     _LMUL                                     C1A3      27      39       1   NON_BANKED
+     _lDivMod                                  C1CA      E3     227       3   NON_BANKED
+     _LDIVU                                    C2AD       E      14       1   NON_BANKED
+     _NEG_P                                    C2BB       F      15       4   NON_BANKED
+     _LDIVS                                    C2CA      35      53       2   NON_BANKED
+     Cpu_Interrupt                             C2FF       1       1      60   NON_BANKED
+     vCOM0_ISR                                 C300      59      89       1   NON_BANKED
+     xBankedStartScheduler                     C359      13      19       1   NON_BANKED
+     vPortYield                                C36C      1D      29       1   NON_BANKED
+     vPortTickInterrupt                        C389      25      37       1   NON_BANKED
      _BDMSTS                                   FF01       1       1       0   .abs_section_ff01
      _BDMCCR                                   FF06       1       1       0   .abs_section_ff06
      _BDMINR                                   FF07       1       1       0   .abs_section_ff07
      _vect                                     FF80      80     128       0   .abs_section_ff80
-     Init                                    308000      29      41       2   .text       
-     memcpy                                  308029      26      38       8   .text       
-     memset                                  30804F      1E      30       2   .text       
-     strncpy                                 30806D      2D      45       2   .text       
-     main                                    30809A       9       9       0   .text       
-     vMain                                   3080A3      52      82       1   .text       
-     vErrorChecks                            3080F5      33      51       3   .text       
-     prvCheckOtherTasksAreStillRunning       308128      49      73       2   .text       
-     vApplicationIdleHook                    308171      70     112       2   .text       
-     vParTestSetLED                          3081E1      22      34       4   .text       
-     vParTestToggleLED                       308203      14      20      10   .text       
-     xSerialPortInitMinimal                  308217      24      36       2   .text       
-     xSerialGetChar                          30823B      17      23       2   .text       
+     Init                                    308000      29      41       2   .text
+     memcpy                                  308029      26      38       8   .text
+     memset                                  30804F      1E      30       2   .text
+     strncpy                                 30806D      2D      45       2   .text
+     main                                    30809A       9       9       0   .text
+     vMain                                   3080A3      52      82       1   .text
+     vErrorChecks                            3080F5      33      51       3   .text
+     prvCheckOtherTasksAreStillRunning       308128      49      73       2   .text
+     vApplicationIdleHook                    308171      70     112       2   .text
+     vParTestSetLED                          3081E1      22      34       4   .text
+     vParTestToggleLED                       308203      14      20      10   .text
+     xSerialPortInitMinimal                  308217      24      36       2   .text
+     xSerialGetChar                          30823B      17      23       2   .text
      xSerialPutChar                          318000      1D      29       2   ROM_PAGE31_524
      xTaskCreate                             31801D      D9     217      48   ROM_PAGE31_524
      vTaskDelete                             3180F6      4A      74       4   ROM_PAGE31_524
@@ -3321,51 +3321,51 @@ OBJECT LIST SORTED BY ADDRESS
      TickTimer_Enable                        3B813F       6       6       2   TickTimer_CODE
      TickTimer_SetFreqHz                     3B8145      51      81       2   TickTimer_CODE
      TickTimer_Init                          3B8196      15      21       2   TickTimer_CODE
-     Byte1_GetMsk                            3B81AB       D      13       4   Byte1_CODE  
-     Byte1_PutBit                            3B81B8      1F      31       2   Byte1_CODE  
-     Byte1_NegBit                            3B81D7      11      17       2   Byte1_CODE  
-     HWEnDi                                  3B81E8       A      10       2   COM0_CODE   
-     COM0_SetBaudRateMode                    3B81F2      19      25       2   COM0_CODE   
-     COM0_Init                               3B820B      20      32       2   COM0_CODE   
+     Byte1_GetMsk                            3B81AB       D      13       4   Byte1_CODE
+     Byte1_PutBit                            3B81B8      1F      31       2   Byte1_CODE
+     Byte1_NegBit                            3B81D7      11      17       2   Byte1_CODE
+     HWEnDi                                  3B81E8       A      10       2   COM0_CODE
+     COM0_SetBaudRateMode                    3B81F2      19      25       2   COM0_CODE
+     COM0_Init                               3B820B      20      32       2   COM0_CODE
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
 NOT USED PROCEDURES
 STRING.C.o (ansibi.lib):
-  strerror memchr memcmp memcpy2 _memcpy_8bitCount memmove 
-  _memset_clear_8bitCount strlen strset strcat strncat strcpy strcmp strncmp 
-  strchr strrchr strspn strcspn strpbrk strstr strtok strcoll strxfrm 
+  strerror memchr memcmp memcpy2 _memcpy_8bitCount memmove
+  _memset_clear_8bitCount strlen strset strcat strncat strcpy strcmp strncmp
+  strchr strrchr strspn strcspn strpbrk strstr strtok strcoll strxfrm
 rtshc12.c.o (ansibi.lib):
-  _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU 
-  _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP_PP _LABS _LCOM _LDEC _LMODU _LMODS 
-  _ILSEXT _LTEST _COPY _CASE_DIRECT _CASE_DIRECT_BYTE _CASE_CHECKED 
-  _CASE_CHECKED_BYTE _CASE_SEARCH _CASE_SEARCH_BYTE _CASE_SEARCH_8 
-  _CASE_SEARCH_8_BYTE _FCALL _FPCMP 
+  _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU
+  _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP_PP _LABS _LCOM _LDEC _LMODU _LMODS
+  _ILSEXT _LTEST _COPY _CASE_DIRECT _CASE_DIRECT_BYTE _CASE_CHECKED
+  _CASE_CHECKED_BYTE _CASE_SEARCH _CASE_SEARCH_BYTE _CASE_SEARCH_8
+  _CASE_SEARCH_8_BYTE _FCALL _FPCMP
 serial.c.o:
-  vSerialClose 
+  vSerialClose
 tasks.c.o:
-  vTaskEndScheduler 
+  vTaskEndScheduler
 queue.c.o:
-  vQueueDelete 
+  vQueueDelete
 TickTimer.C.o:
-  TickTimer_Interrupt TickTimer_SetPeriodTicks16 TickTimer_SetPeriodTicks32 
-  TickTimer_SetPeriodUS TickTimer_SetPeriodMS 
+  TickTimer_Interrupt TickTimer_SetPeriodTicks16 TickTimer_SetPeriodTicks32
+  TickTimer_SetPeriodUS TickTimer_SetPeriodMS
 PE_Timer.C.o:
-  PE_Timer_LngMul PE_Timer_LngHi2 PE_Timer_LngHi3 PE_Timer_LngHi4 
+  PE_Timer_LngMul PE_Timer_LngHi2 PE_Timer_LngHi3 PE_Timer_LngHi4
 port.c.o:
-  vPortEndScheduler 
+  vPortEndScheduler
 NOT USED VARIABLES
 STRING.C.o (ansibi.lib):
-  STRING..1 next.2 
+  STRING..1 next.2
 rtshc12.c.o (ansibi.lib):
-  _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32 
+  _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32
 Cpu.C.o:
-  CpuMode CCR_reg 
+  CpuMode CCR_reg
 heap_2.c.o:
-  heapSTRUCT_SIZE 
+  heapSTRUCT_SIZE
 death.c.o:
-  uxMaxNumberOfExtraTasksRunning 
+  uxMaxNumberOfExtraTasksRunning
 
 *********************************************************************************************
 COPYDOWN SECTION
@@ -3395,626 +3395,626 @@ Filling bytes inserted
 *********************************************************************************************
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
-_EntryPoint               USES _INITRM _INITEE _MISC _CLKSEL _PLLCTL _SYNR 
-                                _REFDV _CRGFLG _Startup 
-PE_low_level_init         USES _TSCR1 _TCTL2 _TCTL1 _TIE _TTOV _TSCR2 _TIOS 
-                                _PWMCTL _PWMSDN _ICSYS _MCCTL TickTimer_Init _PORTAB 
-                                _DDRAB _DDRS _PTS COM0_Init _INTCR 
-_Startup                  USES _startupData Init 
-_LDIVU                    USES _lDivMod 
-_LDIVS                    USES _NEG_P _lDivMod 
-vCOM0_ISR                 USES _SCI0SR1 _SCI0DRL xRxedChars xQueueSendFromISR 
-                                _SCI0CR2 xCharsForTx xQueueReceiveFromISR 
-xBankedStartScheduler     USES prvSetupTimerInterrupt pxCurrentTCB 
-                                uxCriticalNesting 
-vPortYield                USES uxCriticalNesting pxCurrentTCB 
-                                vTaskSwitchContext 
-vPortTickInterrupt        USES uxCriticalNesting pxCurrentTCB 
-                                vTaskIncrementTick vTaskSwitchContext _TFLG1 
-_vect                     USES Cpu_Interrupt vCOM0_ISR vPortTickInterrupt 
-                                vPortYield _EntryPoint 
-Init                      USES _startupData 
-main                      USES PE_low_level_init vMain 
-vMain                     USES vStartLEDFlashTasks vStartPolledQueueTasks 
-                                vStartDynamicPriorityTasks vAltStartComTestTasks vStartBlockingQueueTasks 
-                                vStartIntegerMathTasks vCreateSuicidalTasks vErrorChecks 
-                                STRING.Check.1 xTaskCreate vTaskStartScheduler 
-vErrorChecks              USES xTaskGetTickCount vTaskDelayUntil 
-                                prvCheckOtherTasksAreStillRunning _LCMP vParTestToggleLED 
-prvCheckOtherTasksAreStillRunning USES xArePollingQueuesStillRunning 
-                                xAreDynamicPriorityTasksStillRunning xAreComTestTasksStillRunning 
-                                xAreIntegerMathsTaskStillRunning xAreBlockingQueuesStillRunning 
-                                xIsCreateTaskStillRunning xLocalError 
-vApplicationIdleHook      USES _LNEG _LDIVS _LCMP_P uxCriticalNesting 
-                                xLocalError 
-vParTestSetLED            USES uxCriticalNesting Byte1_PutBit 
-vParTestToggleLED         USES uxCriticalNesting Byte1_NegBit 
-xSerialPortInitMinimal    USES xQueueCreate xRxedChars xCharsForTx 
-                                COM0_SetBaudRateMode 
-xSerialGetChar            USES xRxedChars xQueueReceive 
-xSerialPutChar            USES xCharsForTx xQueueSend _SCI0CR2 
-xTaskCreate               USES prvAllocateTCBAndStack 
-                                prvInitialiseTCBVariables pxPortInitialiseStack uxCriticalNesting 
-                                uxCurrentNumberOfTasks pxCurrentTCB prvInitialiseTaskLists 
-                                xSchedulerRunning uxTopUsedPriority uxTaskNumber.1 
-                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd 
-vTaskDelete               USES uxCriticalNesting pxCurrentTCB vListRemove 
-                                xTasksWaitingTermination vListInsertEnd uxTasksDeleted 
-vTaskDelayUntil           USES vTaskSuspendAll xTickCount pxCurrentTCB 
-                                vListRemove pxOverflowDelayedTaskList pxDelayedTaskList 
-                                vListInsert xTaskResumeAll 
-vTaskDelay                USES vTaskSuspendAll xTickCount pxCurrentTCB 
-                                vListRemove pxOverflowDelayedTaskList pxDelayedTaskList 
-                                vListInsert xTaskResumeAll 
-uxTaskPriorityGet         USES uxCriticalNesting pxCurrentTCB 
-vTaskPrioritySet          USES uxCriticalNesting pxCurrentTCB 
-                                pxReadyTasksLists vListRemove uxTopReadyPriority vListInsertEnd 
-vTaskSuspend              USES uxCriticalNesting pxCurrentTCB vListRemove 
-                                xSuspendedTaskList vListInsertEnd 
-vTaskResume               USES uxCriticalNesting pxCurrentTCB vListRemove 
-                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd 
-vTaskStartScheduler       USES pxCurrentTCB prvIdleTask STRING.IDLE.2 
-                                xTaskCreate xSchedulerRunning xTickCount 
-                                xPortStartScheduler 
-vTaskSuspendAll           USES uxCriticalNesting uxSchedulerSuspended 
-xTaskResumeAll            USES uxCriticalNesting uxSchedulerSuspended 
-                                uxCurrentNumberOfTasks vListRemove uxTopReadyPriority 
-                                pxReadyTasksLists vListInsertEnd pxCurrentTCB xPendingReadyList 
-                                uxMissedTicks vTaskIncrementTick 
-xTaskGetTickCount         USES uxCriticalNesting xTickCount 
-uxTaskGetNumberOfTasks    USES uxCriticalNesting uxCurrentNumberOfTasks 
-vTaskIncrementTick        USES uxSchedulerSuspended xTickCount 
-                                pxDelayedTaskList pxOverflowDelayedTaskList vListRemove 
-                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd uxMissedTicks 
-vTaskSwitchContext        USES uxSchedulerSuspended uxTopReadyPriority 
-                                pxCurrentTCB pxReadyTasksLists 
-vTaskPlaceOnEventList     USES pxCurrentTCB vListInsert xTickCount vListRemove 
-                                pxOverflowDelayedTaskList pxDelayedTaskList 
-xTaskRemoveFromEventList  USES vListRemove uxSchedulerSuspended 
-                                uxTopReadyPriority pxReadyTasksLists xPendingReadyList 
-                                vListInsertEnd pxCurrentTCB 
-prvIdleTask               USES prvCheckTasksWaitingTermination 
-                                pxReadyTasksLists vApplicationIdleHook 
-prvInitialiseTCBVariables USES strncpy vListInitialiseItem 
-prvInitialiseTaskLists    USES pxReadyTasksLists xDelayedTaskList1 
-                                xDelayedTaskList2 xPendingReadyList xTasksWaitingTermination 
-                                xSuspendedTaskList pxDelayedTaskList pxOverflowDelayedTaskList 
-                                vListInitialise 
-prvCheckTasksWaitingTermination USES uxTasksDeleted vTaskSuspendAll 
-                                xTasksWaitingTermination xTaskResumeAll uxCriticalNesting vListRemove 
-                                uxCurrentNumberOfTasks prvDeleteTCB 
-prvAllocateTCBAndStack    USES pvPortMalloc vPortFree memset 
-prvDeleteTCB              USES vPortFree 
-xQueueCreate              USES pvPortMalloc vListInitialise vPortFree 
-xQueueSend                USES vTaskSuspendAll uxCriticalNesting xQueueSend 
-                                prvIsQueueFull vTaskPlaceOnEventList prvUnlockQueue 
-                                xTaskResumeAll memcpy 
-xQueueSendFromISR         USES memcpy xTaskRemoveFromEventList 
-xQueueReceive             USES vTaskSuspendAll uxCriticalNesting xQueueReceive 
-                                prvIsQueueEmpty vTaskPlaceOnEventList prvUnlockQueue 
-                                xTaskResumeAll memcpy 
-xQueueReceiveFromISR      USES memcpy xTaskRemoveFromEventList 
-uxQueueMessagesWaiting    USES uxCriticalNesting 
-prvUnlockQueue            USES uxCriticalNesting xTaskRemoveFromEventList 
-prvIsQueueEmpty           USES uxCriticalNesting 
-prvIsQueueFull            USES uxCriticalNesting 
-vListInitialise           USES vListInitialiseItem 
-pvPortMalloc              USES vTaskSuspendAll xHeapHasBeenInitialised.1 xHeap 
-                                xStart xEnd xTaskResumeAll 
-vPortFree                 USES vTaskSuspendAll xStart xTaskResumeAll 
-PE_Timer_LngHi1           USES _LCMP 
-vStartLEDFlashTasks       USES vLEDFlashTask STRING.LEDx.1 xTaskCreate 
-vLEDFlashTask             USES uxCriticalNesting uxFlashTaskNumber 
-                                xTaskGetTickCount vTaskDelayUntil vParTestToggleLED 
-vStartDynamicPriorityTasks USES xQueueCreate xSuspendedTestQueue 
-                                vContinuousIncrementTask STRING.CNT_INC.1 ulCounter 
-                                xContinousIncrementHandle xTaskCreate vLimitedIncrementTask 
-                                STRING.LIM_INC.2 xLimitedIncrementHandle vCounterControlTask 
-                                STRING.C_CTRL.3 vQueueSendWhenSuspendedTask STRING.SUSP_TX.4 
-                                vQueueReceiveWhenSuspendedTask STRING.SUSP_RX.5 
-vLimitedIncrementTask     USES _LINC _LCMP_P vTaskSuspend 
-vContinuousIncrementTask  USES uxTaskPriorityGet vTaskPrioritySet _LINC 
-vCounterControlTask       USES vCounterControlTask xContinousIncrementHandle 
-                                vTaskSuspend ulCounter vTaskResume vTaskDelay 
-                                vTaskSuspendAll xTaskResumeAll xLimitedIncrementHandle 
-                                uxCriticalNesting usCheckVariable 
-vQueueSendWhenSuspendedTask USES vTaskSuspendAll xSuspendedTestQueue 
-                                ulValueToSend.6 xQueueSend xSuspendedQueueSendError 
-                                xTaskResumeAll vTaskDelay _LINC 
-vQueueReceiveWhenSuspendedTask USES vTaskSuspendAll xSuspendedTestQueue 
-                                ulReceivedValue.8 xQueueReceive xTaskResumeAll 
-                                xSuspendedQueueReceiveError ulExpectedValue.7 _LINC 
-xAreDynamicPriorityTasksStillRunning USES usCheckVariable usLastTaskCheck.9 
-                                xSuspendedQueueSendError xSuspendedQueueReceiveError 
-vStartPolledQueueTasks    USES xQueueCreate xPolledQueue.1 
-                                vPolledQueueConsumer STRING.QConsNB.2 xTaskCreate 
-                                vPolledQueueProducer STRING.QProdNB.3 
-vPolledQueueProducer      USES xQueueSend uxCriticalNesting 
-                                xPollingProducerCount vTaskDelay 
-vPolledQueueConsumer      USES xQueueReceive uxCriticalNesting 
-                                xPollingConsumerCount uxQueueMessagesWaiting vTaskDelay 
-xArePollingQueuesStillRunning USES xPollingConsumerCount xPollingProducerCount 
-vAltStartComTestTasks     USES uxBaseLED xSerialPortInitMinimal vComTxTask 
-                                STRING.COMTx.1 xTaskCreate vComRxTask STRING.COMRx.2 
-vComTxTask                USES xPort xSerialPutChar uxBaseLED 
-                                vParTestToggleLED vParTestSetLED xTaskGetTickCount vTaskDelay 
-vComRxTask                USES uxBaseLED vParTestToggleLED vParTestSetLED 
-                                uxRxLoops xPort xSerialGetChar 
-xAreComTestTasksStillRunning USES uxRxLoops 
-prvSetupTimerInterrupt    USES TickTimer_SetFreqHz TickTimer_Enable 
-xPortStartScheduler       USES xBankedStartScheduler 
-vStartIntegerMathTasks    USES vCompeteingIntMathTask STRING.IntMath.1 
-                                xTaskCheck xTaskCreate 
-vCompeteingIntMathTask    USES _LNEG _LDIVS _LCMP_P uxCriticalNesting 
-xAreIntegerMathsTaskStillRunning USES xTaskCheck 
-vStartBlockingQueueTasks  USES vStartBlockingQueueTasks xQueueCreate 
-                                sBlockingConsumerCount sBlockingProducerCount vBlockingQueueConsumer 
-                                STRING.QConsB1.1 xTaskCreate vBlockingQueueProducer 
-                                STRING.QProdB2.2 STRING.QProdB3.3 STRING.QConsB4.4 
-                                STRING.QProdB5.5 STRING.QConsB6.6 pvPortMalloc 
-vBlockingQueueProducer    USES xQueueSend 
-vBlockingQueueConsumer    USES xQueueReceive 
-xAreBlockingQueuesStillRunning USES sBlockingConsumerCount 
-                                sLastBlockingConsumerCount.7 sBlockingProducerCount 
-                                sLastBlockingProducerCount.8 
-vCreateSuicidalTasks      USES pvPortMalloc vCreateTasks STRING.CREATOR.1 
-                                xTaskCreate uxTaskGetNumberOfTasks uxTasksRunningAtStart 
-vSuicidalTask             USES _LMUL vTaskDelay vTaskDelete 
-vCreateTasks              USES vPortFree vTaskDelay vSuicidalTask 
-                                STRING.SUICIDE1.2 xCreatedTask1 xTaskCreate STRING.SUICIDE2.3 
-                                STRING.SUICIDE1.4 xCreatedTask2 STRING.SUICIDE2.5 
-                                usCreationCount vCreateTasks 
-xIsCreateTaskStillRunning USES usLastCreationCount.6 usCreationCount 
-                                uxTaskGetNumberOfTasks uxTasksRunningNow.7 uxTasksRunningAtStart 
-SetCV                     USES _TC0 _TC7 
-SetPV                     USES _TSCR2 
-HWEnDi                    USES _TFLG1 _TIE 
-TickTimer_Enable          USES HWEnDi 
-TickTimer_SetFreqHz       USES _LDIVU PE_Timer_LngHi1 CmpHighVal SetCV 
-TickTimer_Init            USES CmpHighVal SetCV SetPV HWEnDi 
-Byte1_GetMsk              USES Byte1_Table 
-Byte1_PutBit              USES Byte1_GetMsk _PORTAB 
-Byte1_NegBit              USES Byte1_GetMsk _PORTAB 
-HWEnDi                    USES _SCI0CR2 
-COM0_SetBaudRateMode      USES NumMode COM0_PrescHigh.1 PrescHigh _SCI0BD 
-COM0_Init                 USES PrescHigh SerFlag NumMode _SCI0CR1 _SCI0SR2 
-                                _SCI0SR1 _SCI0CR2 _SCI0BD HWEnDi 
+_EntryPoint               USES _INITRM _INITEE _MISC _CLKSEL _PLLCTL _SYNR
+                                _REFDV _CRGFLG _Startup
+PE_low_level_init         USES _TSCR1 _TCTL2 _TCTL1 _TIE _TTOV _TSCR2 _TIOS
+                                _PWMCTL _PWMSDN _ICSYS _MCCTL TickTimer_Init _PORTAB
+                                _DDRAB _DDRS _PTS COM0_Init _INTCR
+_Startup                  USES _startupData Init
+_LDIVU                    USES _lDivMod
+_LDIVS                    USES _NEG_P _lDivMod
+vCOM0_ISR                 USES _SCI0SR1 _SCI0DRL xRxedChars xQueueSendFromISR
+                                _SCI0CR2 xCharsForTx xQueueReceiveFromISR
+xBankedStartScheduler     USES prvSetupTimerInterrupt pxCurrentTCB
+                                uxCriticalNesting
+vPortYield                USES uxCriticalNesting pxCurrentTCB
+                                vTaskSwitchContext
+vPortTickInterrupt        USES uxCriticalNesting pxCurrentTCB
+                                vTaskIncrementTick vTaskSwitchContext _TFLG1
+_vect                     USES Cpu_Interrupt vCOM0_ISR vPortTickInterrupt
+                                vPortYield _EntryPoint
+Init                      USES _startupData
+main                      USES PE_low_level_init vMain
+vMain                     USES vStartLEDFlashTasks vStartPolledQueueTasks
+                                vStartDynamicPriorityTasks vAltStartComTestTasks vStartBlockingQueueTasks
+                                vStartIntegerMathTasks vCreateSuicidalTasks vErrorChecks
+                                STRING.Check.1 xTaskCreate vTaskStartScheduler
+vErrorChecks              USES xTaskGetTickCount vTaskDelayUntil
+                                prvCheckOtherTasksAreStillRunning _LCMP vParTestToggleLED
+prvCheckOtherTasksAreStillRunning USES xArePollingQueuesStillRunning
+                                xAreDynamicPriorityTasksStillRunning xAreComTestTasksStillRunning
+                                xAreIntegerMathsTaskStillRunning xAreBlockingQueuesStillRunning
+                                xIsCreateTaskStillRunning xLocalError
+vApplicationIdleHook      USES _LNEG _LDIVS _LCMP_P uxCriticalNesting
+                                xLocalError
+vParTestSetLED            USES uxCriticalNesting Byte1_PutBit
+vParTestToggleLED         USES uxCriticalNesting Byte1_NegBit
+xSerialPortInitMinimal    USES xQueueCreate xRxedChars xCharsForTx
+                                COM0_SetBaudRateMode
+xSerialGetChar            USES xRxedChars xQueueReceive
+xSerialPutChar            USES xCharsForTx xQueueSend _SCI0CR2
+xTaskCreate               USES prvAllocateTCBAndStack
+                                prvInitialiseTCBVariables pxPortInitialiseStack uxCriticalNesting
+                                uxCurrentNumberOfTasks pxCurrentTCB prvInitialiseTaskLists
+                                xSchedulerRunning uxTopUsedPriority uxTaskNumber.1
+                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd
+vTaskDelete               USES uxCriticalNesting pxCurrentTCB vListRemove
+                                xTasksWaitingTermination vListInsertEnd uxTasksDeleted
+vTaskDelayUntil           USES vTaskSuspendAll xTickCount pxCurrentTCB
+                                vListRemove pxOverflowDelayedTaskList pxDelayedTaskList
+                                vListInsert xTaskResumeAll
+vTaskDelay                USES vTaskSuspendAll xTickCount pxCurrentTCB
+                                vListRemove pxOverflowDelayedTaskList pxDelayedTaskList
+                                vListInsert xTaskResumeAll
+uxTaskPriorityGet         USES uxCriticalNesting pxCurrentTCB
+vTaskPrioritySet          USES uxCriticalNesting pxCurrentTCB
+                                pxReadyTasksLists vListRemove uxTopReadyPriority vListInsertEnd
+vTaskSuspend              USES uxCriticalNesting pxCurrentTCB vListRemove
+                                xSuspendedTaskList vListInsertEnd
+vTaskResume               USES uxCriticalNesting pxCurrentTCB vListRemove
+                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd
+vTaskStartScheduler       USES pxCurrentTCB prvIdleTask STRING.IDLE.2
+                                xTaskCreate xSchedulerRunning xTickCount
+                                xPortStartScheduler
+vTaskSuspendAll           USES uxCriticalNesting uxSchedulerSuspended
+xTaskResumeAll            USES uxCriticalNesting uxSchedulerSuspended
+                                uxCurrentNumberOfTasks vListRemove uxTopReadyPriority
+                                pxReadyTasksLists vListInsertEnd pxCurrentTCB xPendingReadyList
+                                uxMissedTicks vTaskIncrementTick
+xTaskGetTickCount         USES uxCriticalNesting xTickCount
+uxTaskGetNumberOfTasks    USES uxCriticalNesting uxCurrentNumberOfTasks
+vTaskIncrementTick        USES uxSchedulerSuspended xTickCount
+                                pxDelayedTaskList pxOverflowDelayedTaskList vListRemove
+                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd uxMissedTicks
+vTaskSwitchContext        USES uxSchedulerSuspended uxTopReadyPriority
+                                pxCurrentTCB pxReadyTasksLists
+vTaskPlaceOnEventList     USES pxCurrentTCB vListInsert xTickCount vListRemove
+                                pxOverflowDelayedTaskList pxDelayedTaskList
+xTaskRemoveFromEventList  USES vListRemove uxSchedulerSuspended
+                                uxTopReadyPriority pxReadyTasksLists xPendingReadyList
+                                vListInsertEnd pxCurrentTCB
+prvIdleTask               USES prvCheckTasksWaitingTermination
+                                pxReadyTasksLists vApplicationIdleHook
+prvInitialiseTCBVariables USES strncpy vListInitialiseItem
+prvInitialiseTaskLists    USES pxReadyTasksLists xDelayedTaskList1
+                                xDelayedTaskList2 xPendingReadyList xTasksWaitingTermination
+                                xSuspendedTaskList pxDelayedTaskList pxOverflowDelayedTaskList
+                                vListInitialise
+prvCheckTasksWaitingTermination USES uxTasksDeleted vTaskSuspendAll
+                                xTasksWaitingTermination xTaskResumeAll uxCriticalNesting vListRemove
+                                uxCurrentNumberOfTasks prvDeleteTCB
+prvAllocateTCBAndStack    USES pvPortMalloc vPortFree memset
+prvDeleteTCB              USES vPortFree
+xQueueCreate              USES pvPortMalloc vListInitialise vPortFree
+xQueueSend                USES vTaskSuspendAll uxCriticalNesting xQueueSend
+                                prvIsQueueFull vTaskPlaceOnEventList prvUnlockQueue
+                                xTaskResumeAll memcpy
+xQueueSendFromISR         USES memcpy xTaskRemoveFromEventList
+xQueueReceive             USES vTaskSuspendAll uxCriticalNesting xQueueReceive
+                                prvIsQueueEmpty vTaskPlaceOnEventList prvUnlockQueue
+                                xTaskResumeAll memcpy
+xQueueReceiveFromISR      USES memcpy xTaskRemoveFromEventList
+uxQueueMessagesWaiting    USES uxCriticalNesting
+prvUnlockQueue            USES uxCriticalNesting xTaskRemoveFromEventList
+prvIsQueueEmpty           USES uxCriticalNesting
+prvIsQueueFull            USES uxCriticalNesting
+vListInitialise           USES vListInitialiseItem
+pvPortMalloc              USES vTaskSuspendAll xHeapHasBeenInitialised.1 xHeap
+                                xStart xEnd xTaskResumeAll
+vPortFree                 USES vTaskSuspendAll xStart xTaskResumeAll
+PE_Timer_LngHi1           USES _LCMP
+vStartLEDFlashTasks       USES vLEDFlashTask STRING.LEDx.1 xTaskCreate
+vLEDFlashTask             USES uxCriticalNesting uxFlashTaskNumber
+                                xTaskGetTickCount vTaskDelayUntil vParTestToggleLED
+vStartDynamicPriorityTasks USES xQueueCreate xSuspendedTestQueue
+                                vContinuousIncrementTask STRING.CNT_INC.1 ulCounter
+                                xContinousIncrementHandle xTaskCreate vLimitedIncrementTask
+                                STRING.LIM_INC.2 xLimitedIncrementHandle vCounterControlTask
+                                STRING.C_CTRL.3 vQueueSendWhenSuspendedTask STRING.SUSP_TX.4
+                                vQueueReceiveWhenSuspendedTask STRING.SUSP_RX.5
+vLimitedIncrementTask     USES _LINC _LCMP_P vTaskSuspend
+vContinuousIncrementTask  USES uxTaskPriorityGet vTaskPrioritySet _LINC
+vCounterControlTask       USES vCounterControlTask xContinousIncrementHandle
+                                vTaskSuspend ulCounter vTaskResume vTaskDelay
+                                vTaskSuspendAll xTaskResumeAll xLimitedIncrementHandle
+                                uxCriticalNesting usCheckVariable
+vQueueSendWhenSuspendedTask USES vTaskSuspendAll xSuspendedTestQueue
+                                ulValueToSend.6 xQueueSend xSuspendedQueueSendError
+                                xTaskResumeAll vTaskDelay _LINC
+vQueueReceiveWhenSuspendedTask USES vTaskSuspendAll xSuspendedTestQueue
+                                ulReceivedValue.8 xQueueReceive xTaskResumeAll
+                                xSuspendedQueueReceiveError ulExpectedValue.7 _LINC
+xAreDynamicPriorityTasksStillRunning USES usCheckVariable usLastTaskCheck.9
+                                xSuspendedQueueSendError xSuspendedQueueReceiveError
+vStartPolledQueueTasks    USES xQueueCreate xPolledQueue.1
+                                vPolledQueueConsumer STRING.QConsNB.2 xTaskCreate
+                                vPolledQueueProducer STRING.QProdNB.3
+vPolledQueueProducer      USES xQueueSend uxCriticalNesting
+                                xPollingProducerCount vTaskDelay
+vPolledQueueConsumer      USES xQueueReceive uxCriticalNesting
+                                xPollingConsumerCount uxQueueMessagesWaiting vTaskDelay
+xArePollingQueuesStillRunning USES xPollingConsumerCount xPollingProducerCount
+vAltStartComTestTasks     USES uxBaseLED xSerialPortInitMinimal vComTxTask
+                                STRING.COMTx.1 xTaskCreate vComRxTask STRING.COMRx.2
+vComTxTask                USES xPort xSerialPutChar uxBaseLED
+                                vParTestToggleLED vParTestSetLED xTaskGetTickCount vTaskDelay
+vComRxTask                USES uxBaseLED vParTestToggleLED vParTestSetLED
+                                uxRxLoops xPort xSerialGetChar
+xAreComTestTasksStillRunning USES uxRxLoops
+prvSetupTimerInterrupt    USES TickTimer_SetFreqHz TickTimer_Enable
+xPortStartScheduler       USES xBankedStartScheduler
+vStartIntegerMathTasks    USES vCompeteingIntMathTask STRING.IntMath.1
+                                xTaskCheck xTaskCreate
+vCompeteingIntMathTask    USES _LNEG _LDIVS _LCMP_P uxCriticalNesting
+xAreIntegerMathsTaskStillRunning USES xTaskCheck
+vStartBlockingQueueTasks  USES vStartBlockingQueueTasks xQueueCreate
+                                sBlockingConsumerCount sBlockingProducerCount vBlockingQueueConsumer
+                                STRING.QConsB1.1 xTaskCreate vBlockingQueueProducer
+                                STRING.QProdB2.2 STRING.QProdB3.3 STRING.QConsB4.4
+                                STRING.QProdB5.5 STRING.QConsB6.6 pvPortMalloc
+vBlockingQueueProducer    USES xQueueSend
+vBlockingQueueConsumer    USES xQueueReceive
+xAreBlockingQueuesStillRunning USES sBlockingConsumerCount
+                                sLastBlockingConsumerCount.7 sBlockingProducerCount
+                                sLastBlockingProducerCount.8
+vCreateSuicidalTasks      USES pvPortMalloc vCreateTasks STRING.CREATOR.1
+                                xTaskCreate uxTaskGetNumberOfTasks uxTasksRunningAtStart
+vSuicidalTask             USES _LMUL vTaskDelay vTaskDelete
+vCreateTasks              USES vPortFree vTaskDelay vSuicidalTask
+                                STRING.SUICIDE1.2 xCreatedTask1 xTaskCreate STRING.SUICIDE2.3
+                                STRING.SUICIDE1.4 xCreatedTask2 STRING.SUICIDE2.5
+                                usCreationCount vCreateTasks
+xIsCreateTaskStillRunning USES usLastCreationCount.6 usCreationCount
+                                uxTaskGetNumberOfTasks uxTasksRunningNow.7 uxTasksRunningAtStart
+SetCV                     USES _TC0 _TC7
+SetPV                     USES _TSCR2
+HWEnDi                    USES _TFLG1 _TIE
+TickTimer_Enable          USES HWEnDi
+TickTimer_SetFreqHz       USES _LDIVU PE_Timer_LngHi1 CmpHighVal SetCV
+TickTimer_Init            USES CmpHighVal SetCV SetPV HWEnDi
+Byte1_GetMsk              USES Byte1_Table
+Byte1_PutBit              USES Byte1_GetMsk _PORTAB
+Byte1_NegBit              USES Byte1_GetMsk _PORTAB
+HWEnDi                    USES _SCI0CR2
+COM0_SetBaudRateMode      USES NumMode COM0_PrescHigh.1 PrescHigh _SCI0BD
+COM0_Init                 USES PrescHigh SerFlag NumMode _SCI0CR1 _SCI0SR2
+                                _SCI0SR1 _SCI0CR2 _SCI0BD HWEnDi
 
 *********************************************************************************************
 DEPENDENCY TREE
 *********************************************************************************************
  main and _Startup Group
- | 
- +- main                
- |  | 
- |  +- PE_low_level_init   
- |  |  | 
- |  |  +- TickTimer_Init      
- |  |  |  | 
- |  |  |  +- SetCV               
- |  |  |  |    
- |  |  |  +- SetPV               
- |  |  |  |    
- |  |  |  +- HWEnDi              
- |  |  |       
- |  |  +- COM0_Init           
- |  |     | 
- |  |     +- HWEnDi              
- |  |          
- |  +- vMain               
- |     | 
- |     +- vStartLEDFlashTasks 
- |     |  | 
- |     |  +- vLEDFlashTask       
- |     |  |  | 
- |     |  |  +- xTaskGetTickCount   
- |     |  |  |    
- |     |  |  +- vTaskDelayUntil     
- |     |  |  |  | 
- |     |  |  |  +- vTaskSuspendAll     
- |     |  |  |  |    
- |     |  |  |  +- vListRemove         
- |     |  |  |  |    
- |     |  |  |  +- vListInsert         
- |     |  |  |  |    
- |     |  |  |  +- xTaskResumeAll      
- |     |  |  |     | 
+ |
+ +- main
+ |  |
+ |  +- PE_low_level_init
+ |  |  |
+ |  |  +- TickTimer_Init
+ |  |  |  |
+ |  |  |  +- SetCV
+ |  |  |  |
+ |  |  |  +- SetPV
+ |  |  |  |
+ |  |  |  +- HWEnDi
+ |  |  |
+ |  |  +- COM0_Init
+ |  |     |
+ |  |     +- HWEnDi
+ |  |
+ |  +- vMain
+ |     |
+ |     +- vStartLEDFlashTasks
+ |     |  |
+ |     |  +- vLEDFlashTask
+ |     |  |  |
+ |     |  |  +- xTaskGetTickCount
+ |     |  |  |
+ |     |  |  +- vTaskDelayUntil
+ |     |  |  |  |
+ |     |  |  |  +- vTaskSuspendAll
+ |     |  |  |  |
+ |     |  |  |  +- vListRemove
+ |     |  |  |  |
+ |     |  |  |  +- vListInsert
+ |     |  |  |  |
+ |     |  |  |  +- xTaskResumeAll
+ |     |  |  |     |
  |     |  |  |     +- vListRemove          (see above)
- |     |  |  |     |  
- |     |  |  |     +- vListInsertEnd      
- |     |  |  |     |    
- |     |  |  |     +- vTaskIncrementTick  
- |     |  |  |        | 
+ |     |  |  |     |
+ |     |  |  |     +- vListInsertEnd
+ |     |  |  |     |
+ |     |  |  |     +- vTaskIncrementTick
+ |     |  |  |        |
  |     |  |  |        +- vListRemove          (see above)
- |     |  |  |        |  
+ |     |  |  |        |
  |     |  |  |        +- vListInsertEnd       (see above)
- |     |  |  |           
- |     |  |  +- vParTestToggleLED   
- |     |  |     | 
- |     |  |     +- Byte1_NegBit        
- |     |  |        | 
- |     |  |        +- Byte1_GetMsk        
- |     |  |             
- |     |  +- xTaskCreate         
- |     |     | 
+ |     |  |  |
+ |     |  |  +- vParTestToggleLED
+ |     |  |     |
+ |     |  |     +- Byte1_NegBit
+ |     |  |        |
+ |     |  |        +- Byte1_GetMsk
+ |     |  |
+ |     |  +- xTaskCreate
+ |     |     |
  |     |     +- prvAllocateTCBAndStack
- |     |     |  | 
- |     |     |  +- pvPortMalloc        
- |     |     |  |  | 
+ |     |     |  |
+ |     |     |  +- pvPortMalloc
+ |     |     |  |  |
  |     |     |  |  +- vTaskSuspendAll      (see above)
- |     |     |  |  |  
+ |     |     |  |  |
  |     |     |  |  +- xTaskResumeAll       (see above)
- |     |     |  |     
- |     |     |  +- vPortFree           
- |     |     |  |  | 
+ |     |     |  |
+ |     |     |  +- vPortFree
+ |     |     |  |  |
  |     |     |  |  +- vTaskSuspendAll      (see above)
- |     |     |  |  |  
+ |     |     |  |  |
  |     |     |  |  +- xTaskResumeAll       (see above)
- |     |     |  |     
- |     |     |  +- memset              
- |     |     |       
+ |     |     |  |
+ |     |     |  +- memset
+ |     |     |
  |     |     +- prvInitialiseTCBVariables
- |     |     |  | 
- |     |     |  +- strncpy             
- |     |     |  |    
- |     |     |  +- vListInitialiseItem 
- |     |     |       
+ |     |     |  |
+ |     |     |  +- strncpy
+ |     |     |  |
+ |     |     |  +- vListInitialiseItem
+ |     |     |
  |     |     +- pxPortInitialiseStack
- |     |     |    
+ |     |     |
  |     |     +- prvInitialiseTaskLists
- |     |     |  | 
- |     |     |  +- vListInitialise     
- |     |     |     | 
+ |     |     |  |
+ |     |     |  +- vListInitialise
+ |     |     |     |
  |     |     |     +- vListInitialiseItem  (see above)
- |     |     |        
+ |     |     |
  |     |     +- vListInsertEnd       (see above)
- |     |        
+ |     |
  |     +- vStartPolledQueueTasks
- |     |  | 
- |     |  +- xQueueCreate        
- |     |  |  | 
+ |     |  |
+ |     |  +- xQueueCreate
+ |     |  |  |
  |     |  |  +- pvPortMalloc         (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- vListInitialise      (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- vPortFree            (see above)
- |     |  |     
+ |     |  |
  |     |  +- vPolledQueueConsumer
- |     |  |  | 
- |     |  |  +- xQueueReceive       
- |     |  |  |  | 
+ |     |  |  |
+ |     |  |  +- xQueueReceive
+ |     |  |  |  |
  |     |  |  |  +- vTaskSuspendAll      (see above)
- |     |  |  |  |  
- |     |  |  |  +- prvIsQueueEmpty     
- |     |  |  |  |    
+ |     |  |  |  |
+ |     |  |  |  +- prvIsQueueEmpty
+ |     |  |  |  |
  |     |  |  |  +- vTaskPlaceOnEventList
- |     |  |  |  |  | 
+ |     |  |  |  |  |
  |     |  |  |  |  +- vListInsert          (see above)
- |     |  |  |  |  |  
+ |     |  |  |  |  |
  |     |  |  |  |  +- vListRemove          (see above)
- |     |  |  |  |     
- |     |  |  |  +- prvUnlockQueue      
- |     |  |  |  |  | 
+ |     |  |  |  |
+ |     |  |  |  +- prvUnlockQueue
+ |     |  |  |  |  |
  |     |  |  |  |  +- xTaskRemoveFromEventList
- |     |  |  |  |     | 
+ |     |  |  |  |     |
  |     |  |  |  |     +- vListRemove          (see above)
- |     |  |  |  |     |  
+ |     |  |  |  |     |
  |     |  |  |  |     +- vListInsertEnd       (see above)
- |     |  |  |  |        
+ |     |  |  |  |
  |     |  |  |  +- xTaskResumeAll       (see above)
- |     |  |  |  |  
- |     |  |  |  +- memcpy              
- |     |  |  |       
+ |     |  |  |  |
+ |     |  |  |  +- memcpy
+ |     |  |  |
  |     |  |  +- uxQueueMessagesWaiting
- |     |  |  |    
- |     |  |  +- vTaskDelay          
- |     |  |     | 
+ |     |  |  |
+ |     |  |  +- vTaskDelay
+ |     |  |     |
  |     |  |     +- vTaskSuspendAll      (see above)
- |     |  |     |  
+ |     |  |     |
  |     |  |     +- vListRemove          (see above)
- |     |  |     |  
+ |     |  |     |
  |     |  |     +- vListInsert          (see above)
- |     |  |     |  
+ |     |  |     |
  |     |  |     +- xTaskResumeAll       (see above)
- |     |  |        
+ |     |  |
  |     |  +- xTaskCreate          (see above)
- |     |  |  
+ |     |  |
  |     |  +- vPolledQueueProducer
- |     |     | 
- |     |     +- xQueueSend          
- |     |     |  | 
+ |     |     |
+ |     |     +- xQueueSend
+ |     |     |  |
  |     |     |  +- vTaskSuspendAll      (see above)
- |     |     |  |  
- |     |     |  +- prvIsQueueFull      
- |     |     |  |    
+ |     |     |  |
+ |     |     |  +- prvIsQueueFull
+ |     |     |  |
  |     |     |  +- vTaskPlaceOnEventList (see above)
- |     |     |  |  
+ |     |     |  |
  |     |     |  +- prvUnlockQueue       (see above)
- |     |     |  |  
+ |     |     |  |
  |     |     |  +- xTaskResumeAll       (see above)
- |     |     |  |  
+ |     |     |  |
  |     |     |  +- memcpy               (see above)
- |     |     |     
+ |     |     |
  |     |     +- vTaskDelay           (see above)
- |     |        
+ |     |
  |     +- vStartDynamicPriorityTasks
- |     |  | 
+ |     |  |
  |     |  +- xQueueCreate         (see above)
- |     |  |  
+ |     |  |
  |     |  +- vContinuousIncrementTask
- |     |  |  | 
- |     |  |  +- uxTaskPriorityGet   
- |     |  |  |    
- |     |  |  +- vTaskPrioritySet    
- |     |  |  |  | 
+ |     |  |  |
+ |     |  |  +- uxTaskPriorityGet
+ |     |  |  |
+ |     |  |  +- vTaskPrioritySet
+ |     |  |  |  |
  |     |  |  |  +- vListRemove          (see above)
- |     |  |  |  |  
+ |     |  |  |  |
  |     |  |  |  +- vListInsertEnd       (see above)
- |     |  |  |     
- |     |  |  +- _LINC               
- |     |  |       
+ |     |  |  |
+ |     |  |  +- _LINC
+ |     |  |
  |     |  +- xTaskCreate          (see above)
- |     |  |  
+ |     |  |
  |     |  +- vLimitedIncrementTask
- |     |  |  | 
+ |     |  |  |
  |     |  |  +- _LINC                (see above)
- |     |  |  |  
- |     |  |  +- _LCMP_P             
- |     |  |  |    
- |     |  |  +- vTaskSuspend        
- |     |  |     | 
+ |     |  |  |
+ |     |  |  +- _LCMP_P
+ |     |  |  |
+ |     |  |  +- vTaskSuspend
+ |     |  |     |
  |     |  |     +- vListRemove          (see above)
- |     |  |     |  
+ |     |  |     |
  |     |  |     +- vListInsertEnd       (see above)
- |     |  |        
- |     |  +- vCounterControlTask 
- |     |  |  | 
+ |     |  |
+ |     |  +- vCounterControlTask
+ |     |  |  |
  |     |  |  +- vTaskSuspend         (see above)
- |     |  |  |  
- |     |  |  +- vTaskResume         
- |     |  |  |  | 
+ |     |  |  |
+ |     |  |  +- vTaskResume
+ |     |  |  |  |
  |     |  |  |  +- vListRemove          (see above)
- |     |  |  |  |  
+ |     |  |  |  |
  |     |  |  |  +- vListInsertEnd       (see above)
- |     |  |  |     
+ |     |  |  |
  |     |  |  +- vTaskDelay           (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- vTaskSuspendAll      (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- xTaskResumeAll       (see above)
- |     |  |     
+ |     |  |
  |     |  +- vQueueSendWhenSuspendedTask
- |     |  |  | 
+ |     |  |  |
  |     |  |  +- vTaskSuspendAll      (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- xQueueSend           (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- xTaskResumeAll       (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- vTaskDelay           (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- _LINC                (see above)
- |     |  |     
+ |     |  |
  |     |  +- vQueueReceiveWhenSuspendedTask
- |     |     | 
+ |     |     |
  |     |     +- vTaskSuspendAll      (see above)
- |     |     |  
+ |     |     |
  |     |     +- xQueueReceive        (see above)
- |     |     |  
+ |     |     |
  |     |     +- xTaskResumeAll       (see above)
- |     |     |  
+ |     |     |
  |     |     +- _LINC                (see above)
- |     |        
+ |     |
  |     +- vAltStartComTestTasks
- |     |  | 
+ |     |  |
  |     |  +- xSerialPortInitMinimal
- |     |  |  | 
+ |     |  |  |
  |     |  |  +- xQueueCreate         (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- COM0_SetBaudRateMode
- |     |  |       
- |     |  +- vComTxTask          
- |     |  |  | 
- |     |  |  +- xSerialPutChar      
- |     |  |  |  | 
+ |     |  |
+ |     |  +- vComTxTask
+ |     |  |  |
+ |     |  |  +- xSerialPutChar
+ |     |  |  |  |
  |     |  |  |  +- xQueueSend           (see above)
- |     |  |  |     
+ |     |  |  |
  |     |  |  +- vParTestToggleLED    (see above)
- |     |  |  |  
- |     |  |  +- vParTestSetLED      
- |     |  |  |  | 
- |     |  |  |  +- Byte1_PutBit        
- |     |  |  |     | 
+ |     |  |  |
+ |     |  |  +- vParTestSetLED
+ |     |  |  |  |
+ |     |  |  |  +- Byte1_PutBit
+ |     |  |  |     |
  |     |  |  |     +- Byte1_GetMsk         (see above)
- |     |  |  |        
+ |     |  |  |
  |     |  |  +- xTaskGetTickCount    (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- vTaskDelay           (see above)
- |     |  |     
+ |     |  |
  |     |  +- xTaskCreate          (see above)
- |     |  |  
- |     |  +- vComRxTask          
- |     |     | 
+ |     |  |
+ |     |  +- vComRxTask
+ |     |     |
  |     |     +- vParTestToggleLED    (see above)
- |     |     |  
+ |     |     |
  |     |     +- vParTestSetLED       (see above)
- |     |     |  
- |     |     +- xSerialGetChar      
- |     |        | 
+ |     |     |
+ |     |     +- xSerialGetChar
+ |     |        |
  |     |        +- xQueueReceive        (see above)
- |     |           
+ |     |
  |     +- vStartBlockingQueueTasks
- |     |  | 
+ |     |  |
  |     |  +- xQueueCreate         (see above)
- |     |  |  
+ |     |  |
  |     |  +- vBlockingQueueConsumer
- |     |  |  | 
+ |     |  |  |
  |     |  |  +- xQueueReceive        (see above)
- |     |  |     
+ |     |  |
  |     |  +- xTaskCreate          (see above)
- |     |  |  
+ |     |  |
  |     |  +- vBlockingQueueProducer
- |     |  |  | 
+ |     |  |  |
  |     |  |  +- xQueueSend           (see above)
- |     |  |     
+ |     |  |
  |     |  +- pvPortMalloc         (see above)
- |     |     
+ |     |
  |     +- vStartIntegerMathTasks
- |     |  | 
+ |     |  |
  |     |  +- vCompeteingIntMathTask
- |     |  |  | 
- |     |  |  +- _LNEG               
- |     |  |  |    
- |     |  |  +- _LDIVS              
- |     |  |  |  | 
- |     |  |  |  +- _NEG_P              
- |     |  |  |  |    
- |     |  |  |  +- _lDivMod            
- |     |  |  |       
+ |     |  |  |
+ |     |  |  +- _LNEG
+ |     |  |  |
+ |     |  |  +- _LDIVS
+ |     |  |  |  |
+ |     |  |  |  +- _NEG_P
+ |     |  |  |  |
+ |     |  |  |  +- _lDivMod
+ |     |  |  |
  |     |  |  +- _LCMP_P              (see above)
- |     |  |     
+ |     |  |
  |     |  +- xTaskCreate          (see above)
- |     |     
+ |     |
  |     +- vCreateSuicidalTasks
- |     |  | 
+ |     |  |
  |     |  +- pvPortMalloc         (see above)
- |     |  |  
- |     |  +- vCreateTasks        
- |     |  |  | 
+ |     |  |
+ |     |  +- vCreateTasks
+ |     |  |  |
  |     |  |  +- vPortFree            (see above)
- |     |  |  |  
+ |     |  |  |
  |     |  |  +- vTaskDelay           (see above)
- |     |  |  |  
- |     |  |  +- vSuicidalTask       
- |     |  |  |  | 
- |     |  |  |  +- _LMUL               
- |     |  |  |  |    
+ |     |  |  |
+ |     |  |  +- vSuicidalTask
+ |     |  |  |  |
+ |     |  |  |  +- _LMUL
+ |     |  |  |  |
  |     |  |  |  +- vTaskDelay           (see above)
- |     |  |  |  |  
- |     |  |  |  +- vTaskDelete         
- |     |  |  |     | 
+ |     |  |  |  |
+ |     |  |  |  +- vTaskDelete
+ |     |  |  |     |
  |     |  |  |     +- vListRemove          (see above)
- |     |  |  |     |  
+ |     |  |  |     |
  |     |  |  |     +- vListInsertEnd       (see above)
- |     |  |  |        
+ |     |  |  |
  |     |  |  +- xTaskCreate          (see above)
- |     |  |     
+ |     |  |
  |     |  +- xTaskCreate          (see above)
- |     |  |  
+ |     |  |
  |     |  +- uxTaskGetNumberOfTasks
- |     |       
- |     +- vErrorChecks        
- |     |  | 
+ |     |
+ |     +- vErrorChecks
+ |     |  |
  |     |  +- xTaskGetTickCount    (see above)
- |     |  |  
+ |     |  |
  |     |  +- vTaskDelayUntil      (see above)
- |     |  |  
+ |     |  |
  |     |  +- prvCheckOtherTasksAreStillRunning
- |     |  |  | 
+ |     |  |  |
  |     |  |  +- xArePollingQueuesStillRunning
- |     |  |  |    
+ |     |  |  |
  |     |  |  +- xAreDynamicPriorityTasksStillRunning
- |     |  |  |    
+ |     |  |  |
  |     |  |  +- xAreComTestTasksStillRunning
- |     |  |  |    
+ |     |  |  |
  |     |  |  +- xAreIntegerMathsTaskStillRunning
- |     |  |  |    
+ |     |  |  |
  |     |  |  +- xAreBlockingQueuesStillRunning
- |     |  |  |    
+ |     |  |  |
  |     |  |  +- xIsCreateTaskStillRunning
- |     |  |     | 
+ |     |  |     |
  |     |  |     +- uxTaskGetNumberOfTasks (see above)
- |     |  |        
- |     |  +- _LCMP               
- |     |  |    
+ |     |  |
+ |     |  +- _LCMP
+ |     |  |
  |     |  +- vParTestToggleLED    (see above)
- |     |     
+ |     |
  |     +- xTaskCreate          (see above)
- |     |  
- |     +- vTaskStartScheduler 
- |        | 
- |        +- prvIdleTask         
- |        |  | 
+ |     |
+ |     +- vTaskStartScheduler
+ |        |
+ |        +- prvIdleTask
+ |        |  |
  |        |  +- prvCheckTasksWaitingTermination
- |        |  |  | 
+ |        |  |  |
  |        |  |  +- vTaskSuspendAll      (see above)
- |        |  |  |  
+ |        |  |  |
  |        |  |  +- xTaskResumeAll       (see above)
- |        |  |  |  
+ |        |  |  |
  |        |  |  +- vListRemove          (see above)
- |        |  |  |  
- |        |  |  +- prvDeleteTCB        
- |        |  |     | 
+ |        |  |  |
+ |        |  |  +- prvDeleteTCB
+ |        |  |     |
  |        |  |     +- vPortFree            (see above)
- |        |  |        
+ |        |  |
  |        |  +- vApplicationIdleHook
- |        |     | 
+ |        |     |
  |        |     +- _LNEG                (see above)
- |        |     |  
+ |        |     |
  |        |     +- _LDIVS               (see above)
- |        |     |  
+ |        |     |
  |        |     +- _LCMP_P              (see above)
- |        |        
+ |        |
  |        +- xTaskCreate          (see above)
- |        |  
- |        +- xPortStartScheduler 
- |           | 
+ |        |
+ |        +- xPortStartScheduler
+ |           |
  |           +- xBankedStartScheduler
- |              | 
+ |              |
  |              +- prvSetupTimerInterrupt
- |                 | 
- |                 +- TickTimer_SetFreqHz 
- |                 |  | 
- |                 |  +- _LDIVU              
- |                 |  |  | 
+ |                 |
+ |                 +- TickTimer_SetFreqHz
+ |                 |  |
+ |                 |  +- _LDIVU
+ |                 |  |  |
  |                 |  |  +- _lDivMod             (see above)
- |                 |  |     
- |                 |  +- PE_Timer_LngHi1     
- |                 |  |  | 
+ |                 |  |
+ |                 |  +- PE_Timer_LngHi1
+ |                 |  |  |
  |                 |  |  +- _LCMP                (see above)
- |                 |  |     
+ |                 |  |
  |                 |  +- SetCV                (see above)
- |                 |     
- |                 +- TickTimer_Enable    
- |                    | 
+ |                 |
+ |                 +- TickTimer_Enable
+ |                    |
  |                    +- HWEnDi               (see above)
- |                       
- +- _EntryPoint         
-    | 
-    +- _Startup            
-       | 
-       +- Init                
-            
- _vect               
- | 
- +- Cpu_Interrupt       
- |    
- +- vCOM0_ISR           
- |  | 
- |  +- xQueueSendFromISR   
- |  |  | 
+ |
+ +- _EntryPoint
+    |
+    +- _Startup
+       |
+       +- Init
+
+ _vect
+ |
+ +- Cpu_Interrupt
+ |
+ +- vCOM0_ISR
+ |  |
+ |  +- xQueueSendFromISR
+ |  |  |
  |  |  +- memcpy               (see above)
- |  |  |  
+ |  |  |
  |  |  +- xTaskRemoveFromEventList (see above)
- |  |     
+ |  |
  |  +- xQueueReceiveFromISR
- |     | 
+ |     |
  |     +- memcpy               (see above)
- |     |  
+ |     |
  |     +- xTaskRemoveFromEventList (see above)
- |        
- +- vPortTickInterrupt  
- |  | 
+ |
+ +- vPortTickInterrupt
+ |  |
  |  +- vTaskIncrementTick   (see above)
- |  |  
- |  +- vTaskSwitchContext  
- |       
- +- vPortYield          
- |  | 
+ |  |
+ |  +- vTaskSwitchContext
+ |
+ +- vPortYield
+ |  |
  |  +- vTaskSwitchContext   (see above)
- |     
+ |
  +- _EntryPoint          (see above)
-    
+
 *********************************************************************************************
 STATISTIC SECTION
 ---------------------------------------------------------------------------------------------
@@ -4023,4 +4023,3 @@ ExeFile:
 --------
 Number of blocks to be downloaded: 19
 Total size of all blocks to be downloaded: 7635
-

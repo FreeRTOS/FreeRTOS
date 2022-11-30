@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,11 +31,11 @@
 /// \unit
 ///
 /// !Purpose
-/// 
+///
 /// Image Sensor Interface (ISI) driver
-/// 
+///
 /// !Usage
-/// 
+///
 /// Explanation on the usage of the code made available through the header file.
 //------------------------------------------------------------------------------
 
@@ -106,7 +106,7 @@ void ISI_CodecPathFull(void)
 //-----------------------------------------------------------------------------
 /// Set frame rate
 /// \param  frate frame rate capture
-/// \return 
+/// \return
 //-----------------------------------------------------------------------------
 void ISI_SetFrame(unsigned int frate)
 {
@@ -130,12 +130,12 @@ unsigned char ISI_BytesForOnePixel(unsigned char bmpRgb)
         if ((AT91C_BASE_ISI->ISI_CR2 & AT91C_ISI_RGB_MODE) == AT91C_ISI_RGB_MODE_RGB_565){
             // RGB: 5:6:5 16bits/pixels
             nbByte_Pixel = 2;
-        } 
+        }
         else {
             // RGB: 8:8:8 24bits/pixels
             nbByte_Pixel = 3;
         }
-    } 
+    }
     else {
         // YUV: 2 pixels for 4 bytes
         nbByte_Pixel = 2;
@@ -187,7 +187,7 @@ void ISI_Init(AT91PS_VIDEO pVideo)
     // Vertical size = IM_VSIZE + 1
     // IM_HSIZE: Horizontal size of the Image sensor [0..2047]
     // Horizontal size = IM_HSIZE + 1
-    // YCC_SWAP : YCC image data    
+    // YCC_SWAP : YCC image data
     AT91C_BASE_ISI->ISI_CR2 =  ((pVideo->codec_vsize-1) & AT91C_ISI_IM_VSIZE)
                             + (((pVideo->codec_hsize-1) << 16) & AT91C_ISI_IM_HSIZE)
                             + AT91C_ISI_YCC_SWAP_YCC_MODE2;
@@ -197,12 +197,12 @@ void ISI_Init(AT91PS_VIDEO pVideo)
             | AT91C_ISI_RGB_CFG_RGB_DEFAULT;
     }
     else {
-    //    AT91C_BASE_HISI->ISI_CR2 &=  ~AT91C_ISI_COL_SPACE;    
+    //    AT91C_BASE_HISI->ISI_CR2 &=  ~AT91C_ISI_COL_SPACE;
     }
     TRACE_DEBUG("ISI_CR2=0x%X\n\r", AT91C_BASE_ISI->ISI_CR2);
 
     // Vertical Preview size = PREV_VSIZE + 1 (480 max only in RGB mode).
-    // Horizontal Preview size = PREV_HSIZE + 1 (640 max only in RGB mode).    
+    // Horizontal Preview size = PREV_HSIZE + 1 (640 max only in RGB mode).
 #if defined (AT91C_ID_LCDC)
     if( (pVideo->lcd_vsize > 480) || (pVideo->lcd_hsize > 640)) {
         TRACE_ERROR("Size LCD bad define\n\r");
@@ -217,7 +217,7 @@ void ISI_Init(AT91PS_VIDEO pVideo)
 #endif
 
 
-    // DEC_FACTOR is 8-bit width, range is from 16 to 255. 
+    // DEC_FACTOR is 8-bit width, range is from 16 to 255.
     // Values from 0 to 16 do not perform any decimation.
     AT91C_BASE_ISI->ISI_PDECF = (16 * pVideo->codec_hsize) / pVideo->lcd_hsize;
 
@@ -258,4 +258,3 @@ void ISI_Init(AT91PS_VIDEO pVideo)
 }
 
 #endif // !defined (BOARD_ISI_V200)
-

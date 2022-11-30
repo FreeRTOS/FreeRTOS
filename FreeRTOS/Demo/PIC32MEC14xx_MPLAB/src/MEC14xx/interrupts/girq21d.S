@@ -29,9 +29,9 @@
  * Disaggregated girq21_isr
  * Program address of this version of girq21_isr into JTVIC GIRQ21
  * Aggregator Control register with bit[0] = 1.
- * NOTE: GIRQ21 has no sources, it is a wake only and actually 
+ * NOTE: GIRQ21 has no sources, it is a wake only and actually
  * does not send an interrupt message to the M14K.
- * 
+ *
  */
 
 /*
@@ -64,5 +64,3 @@ g21end:
 #endif
 
 /******************************************************************/
-
-

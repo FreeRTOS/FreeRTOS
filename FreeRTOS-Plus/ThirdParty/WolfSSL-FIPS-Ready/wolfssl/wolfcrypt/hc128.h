@@ -64,4 +64,3 @@ WOLFSSL_LOCAL int wc_Hc128_SetHeap(HC128* ctx, void* heap);
 
 #endif /* HAVE_HC128 */
 #endif /* WOLF_CRYPT_HC128_H */
-

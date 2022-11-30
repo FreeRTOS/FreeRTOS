@@ -66,6 +66,3 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	LED_Toggle( uxLED );
 }
-
-
-

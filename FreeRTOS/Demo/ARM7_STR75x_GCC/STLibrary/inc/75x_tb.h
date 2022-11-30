@@ -2,7 +2,7 @@
 * File Name          : 75x_tb.h
 * Author             : MCD Application Team
 * Date First Issued  : 03/10/2006
-* Description        : This file contains all the functions prototypes for the 
+* Description        : This file contains all the functions prototypes for the
 *                      TB software library.
 ********************************************************************************
 * History:
@@ -65,7 +65,7 @@ typedef struct
 /* TB Slave Mode Selection */
 #define TB_SMSMode_Trigger  0x0018
 #define TB_SMSMode_Gated    0x0010
-#define TB_SMSMode_External 0x0008  
+#define TB_SMSMode_External 0x0008
 #define TB_SMSMode_Reset    0x0000
 
 /* Exported macro ------------------------------------------------------------*/

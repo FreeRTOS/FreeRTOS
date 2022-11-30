@@ -16,7 +16,7 @@ $0
 -K NOLIB
 -K NOUNROLL
 $other
--INF srcin  
+-INF srcin
 $time
 1232224954
 $end

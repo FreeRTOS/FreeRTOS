@@ -156,4 +156,3 @@ extern void ADC_TsCalibration( Adc *pAdc );
 #endif
 
 #endif /* #ifndef _ADC_ */
-

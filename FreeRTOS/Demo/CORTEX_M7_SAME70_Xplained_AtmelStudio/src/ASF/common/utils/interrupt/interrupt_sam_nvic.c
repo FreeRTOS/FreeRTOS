@@ -83,4 +83,3 @@ void cpu_irq_leave_critical(void)
 		cpu_irq_enable();
 	}
 }
-

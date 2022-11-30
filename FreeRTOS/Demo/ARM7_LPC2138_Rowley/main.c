@@ -371,9 +371,3 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	( void ) pcTaskName;
 	for( ;; );
 }
-
-
-
-
-
-

@@ -178,4 +178,3 @@ Zynq MPU. */
 #define configUSE_TRACE_FACILITY				0
 
 #endif /* FREERTOS_CONFIG_H */
-

@@ -141,5 +141,3 @@ unsigned portBASE_TYPE uxBaseAddress, *puxCurrentValue;
 	}
 	portEXIT_CRITICAL();
 }
-
-

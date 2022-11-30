@@ -31,19 +31,19 @@ SECTIONS
 {
 .vectors.reset 0x0 : {
    KEEP (*(.vectors.reset))
-} 
+}
 
 .vectors.sw_exception 0x8 : {
    KEEP (*(.vectors.sw_exception))
-} 
+}
 
 .vectors.interrupt 0x10 : {
    KEEP (*(.vectors.interrupt))
-} 
+}
 
 .vectors.hw_exception 0x20 : {
    KEEP (*(.vectors.hw_exception))
-} 
+}
 
 .text : {
    *(.text)
@@ -210,4 +210,3 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
 
 _end = .;
 }
-

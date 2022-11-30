@@ -12,7 +12,7 @@
 #define NONSMP_HART 0
 #endif
 
-/* If your test cannot handle multiple-threads, use this: 
+/* If your test cannot handle multiple-threads, use this:
  *   smp_disable(reg1)
  */
 #define smp_disable(reg1, reg2)			 \

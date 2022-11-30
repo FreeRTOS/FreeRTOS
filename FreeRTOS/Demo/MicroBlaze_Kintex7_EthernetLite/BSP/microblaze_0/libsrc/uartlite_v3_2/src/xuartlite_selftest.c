@@ -48,7 +48,7 @@
 * 1.00b jhl  02/21/02 Repartitioned the driver for smaller files
 * 2.00a ktn  10/20/09 Updated to use HAL Processor APIs. The macros have been
 *		      renamed to remove _m from the name.
-* 3.0 adk 17/12/13  Fixed CR:741186,761863 Reset the FIFO's before reading 
+* 3.0 adk 17/12/13  Fixed CR:741186,761863 Reset the FIFO's before reading
 *		      the status register We don't know the status of the Status
 * 		      Register in case of if there is more than one uartlite IP
 *		      instance in the h/w design.
@@ -111,12 +111,12 @@ int XUartLite_SelfTest(XUartLite *InstancePtr)
 
 	/*
 	 * Reset the FIFO's before reading the status register.
-	 * It is likely that the Uartlite IP may not always have an 
-	 * empty Tx and Rx FIFO when a selftest is performed if more than one 
+	 * It is likely that the Uartlite IP may not always have an
+	 * empty Tx and Rx FIFO when a selftest is performed if more than one
 	 * uartlite instance is present in the h/w design.
 	 */
 	 	XUartLite_ResetFifos(InstancePtr);
-		
+
 	/*
 	 * Read the Status register value to check if it is the correct value
 	 * after a reset

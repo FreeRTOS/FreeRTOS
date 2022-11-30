@@ -234,7 +234,7 @@
 /// SPI0 SPCK pin definition.
 #define PIN_SPI0_SPCK  {1 << 2, AT91C_BASE_PIOA, AT91C_ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
 /// List of SPI0 pin definitions (MISO, MOSI & SPCK).
-#define PINS_SPI0      PIN_SPI0_MISO, PIN_SPI0_MOSI, PIN_SPI0_SPCK	
+#define PINS_SPI0      PIN_SPI0_MISO, PIN_SPI0_MOSI, PIN_SPI0_SPCK
 /// SPI0 chip select 0 pin definition.
 #define PIN_SPI0_NPCS0 {AT91C_PA3_SPI0_NPCS0, AT91C_BASE_PIOA, AT91C_ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
 /// SPI0 chip select 1 pin definition.
@@ -425,4 +425,3 @@
 //------------------------------------------------------------------------------
 
 #endif //#ifndef BOARD_H
-

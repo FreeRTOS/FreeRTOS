@@ -240,4 +240,3 @@ static void prvBlinkyTimerCallback( TimerHandle_t xTimer )
 	with the period set by mainBLINKY_TIMER_PERIOD. */
 	vParTestToggleLED( mainTIMER_LED );
 }
-

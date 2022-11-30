@@ -62,7 +62,7 @@ memset (void *, int, unsigned);
 
 void
 free (void *);
- 
+
 void *
 malloc (unsigned);
 

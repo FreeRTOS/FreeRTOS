@@ -609,6 +609,3 @@ static void vRegTest2Task( void *pvParameters )
 		"	nop														\n"
 	);
 }
-
-
-

@@ -546,4 +546,3 @@ extern uint8_t USBEndpointDescriptor_GetInterval(
 /** @}*/
 /**@}*/
 #endif /* #ifndef _USBDESCRIPTORS_H_ */
-

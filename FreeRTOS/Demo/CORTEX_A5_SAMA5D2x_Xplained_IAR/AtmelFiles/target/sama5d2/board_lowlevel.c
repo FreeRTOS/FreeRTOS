@@ -176,4 +176,3 @@ void board_save_misc_power(void)
 		pmc_disable_peripheral(i);
 	}
 }
-

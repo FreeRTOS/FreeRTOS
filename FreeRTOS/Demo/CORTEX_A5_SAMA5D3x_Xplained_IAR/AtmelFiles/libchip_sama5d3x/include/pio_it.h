@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -94,4 +94,3 @@ extern void PIO_CaptureHandler( void ) ;
 #endif
 
 #endif /* #ifndef _PIO_IT_ */
-

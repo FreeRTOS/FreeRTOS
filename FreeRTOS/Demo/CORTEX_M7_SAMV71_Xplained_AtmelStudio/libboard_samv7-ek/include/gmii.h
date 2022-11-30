@@ -74,7 +74,7 @@
 #define GMII_RESTART_AUTONEG   (1 << 9)  // 1 = Restart auto-negotiation 0 = Normal operation
 #define GMII_DUPLEX_MODE       (1 << 8)  // 1 = Full duplex operation 0 = Normal operation
 //      Reserved                7        // Read as 0, ignore on write
-#define GMII_SPEED_SELECT_MSB  (1 << 6)  // 
+#define GMII_SPEED_SELECT_MSB  (1 << 6)  //
 //      Reserved                5 to 0   // Read as 0, ignore on write
 
 

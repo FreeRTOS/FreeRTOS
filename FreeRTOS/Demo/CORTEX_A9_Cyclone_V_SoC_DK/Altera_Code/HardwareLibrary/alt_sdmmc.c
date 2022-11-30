@@ -1,20 +1,20 @@
 /******************************************************************************
  *
  * Copyright 2013 Altera Corporation. All Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of the author may not be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  ******************************************************************************/
 
 #include "alt_sdmmc.h"
@@ -95,7 +95,7 @@ uint32_t log_index = 0;
 static alt_freq_t clock_freq;
 
 // Default configurations of used commands
-static ALT_SDMMC_CMD_CONFIG_t cmd_default_cfg[20] = 
+static ALT_SDMMC_CMD_CONFIG_t cmd_default_cfg[20] =
 {
     {
         .cmd_index = ALT_SDMMC_WRITE_MULTIPLE_BLOCK,
@@ -243,7 +243,7 @@ static ALT_SDMMC_CMD_CONFIG_t cmd_default_cfg[20] =
     }
 };
 
-static ALT_SDMMC_CMD_CONFIG_t cmd_clock_cfg = 
+static ALT_SDMMC_CMD_CONFIG_t cmd_clock_cfg =
 {
     .update_clock_registers_only = true,
     .wait_prvdata_complete = true
@@ -252,7 +252,7 @@ static ALT_SDMMC_CMD_CONFIG_t cmd_clock_cfg =
 static uint32_t                    rca_number; /*!< Relative card address.  */
 static ALT_SDMMC_DMA_BUF_DESC_t    dma_descriptors[ALT_SDMMC_DMA_DESC_COUNT];
                                         /*!< Array of dma descriptors.  */
-static ALT_SDMMC_DMA_BUF_DESC_t    *dma_cur_descr; 
+static ALT_SDMMC_DMA_BUF_DESC_t    *dma_cur_descr;
                                         /*!< Current decriptor.  */
 
 //
@@ -312,7 +312,7 @@ static ALT_STATUS_CODE alt_sdmmc_desc_chain_init()
             dma_desc[count].des3.fld.bap2_or_next = (uint32_t) (&dma_desc[count + 1]);
         }
     }
-    
+
     dma_cur_descr = dma_desc;
 
     return ALT_E_SUCCESS;
@@ -390,10 +390,10 @@ ALT_STATUS_CODE alt_sdmmc_reset()
             return status;
         }
     }
-    
+
     // Reset sdmmc module by reset manager
     alt_sdmmc_rstmgr_strobe();
-    
+
     if (already_enabled)
     {
         // Re-enable card power
@@ -445,7 +445,7 @@ ALT_STATUS_CODE alt_sdmmc_uninit(void)
 //
 ALT_STATUS_CODE alt_sdmmc_card_pwr_on(void)
 {
-    alt_setbits_word(ALT_SDMMC_PWREN_ADDR, 
+    alt_setbits_word(ALT_SDMMC_PWREN_ADDR,
                      ALT_SDMMC_PWREN_POWER_EN_SET_MSK);
 
     return ALT_E_SUCCESS;
@@ -465,7 +465,7 @@ ALT_STATUS_CODE alt_sdmmc_card_pwr_off(void)
     //Else clear enable bit of sdmmc_enable register
     alt_clrbits_word(ALT_SDMMC_PWREN_ADDR,
                      ALT_SDMMC_PWREN_POWER_EN_SET_MSK);
-    
+
     // Clear interrupt status
     alt_sdmmc_int_clear(ALT_SDMMC_INT_STATUS_ALL);
 
@@ -480,7 +480,7 @@ ALT_STATUS_CODE alt_sdmmc_card_pwr_off(void)
 //
 bool alt_sdmmc_card_pwr_is_on(void)
 {
-    if (ALT_SDMMC_PWREN_POWER_EN_GET(alt_read_word(ALT_SDMMC_PWREN_ADDR)) == 
+    if (ALT_SDMMC_PWREN_POWER_EN_GET(alt_read_word(ALT_SDMMC_PWREN_ADDR)) ==
         ALT_SDMMC_PWREN_POWER_EN_E_ON)
     {
         return true;
@@ -513,9 +513,9 @@ static ALT_STATUS_CODE alt_sdmmc_is_busy(void)
 static ALT_STATUS_CODE alt_sdmmc_is_idle(void)
 {
     uint32_t mmc_state = ALT_SDMMC_STAT_CMD_FSM_STATES_GET(alt_read_word(ALT_SDMMC_STAT_ADDR));
-    
+
     uint32_t dma_state = ALT_SDMMC_IDSTS_FSM_GET(alt_read_word(ALT_SDMMC_IDSTS_ADDR));
-    
+
     if ((mmc_state != ALT_SDMMC_FSM_IDLE) || (dma_state != ALT_SDMMC_DMA_FSM_IDLE))
     {
 #ifdef LOGGER
@@ -648,16 +648,16 @@ static ALT_STATUS_CODE alt_sdmmc_bus_width_set(const ALT_SDMMC_BUS_WIDTH_t width
                           ALT_SDMMC_CTYPE_CARD_WIDTH1_SET_MSK,
                           ALT_SDMMC_CTYPE_CARD_WIDTH1_SET(ALT_SDMMC_CTYPE_CARD_WIDTH1_E_NON8BIT));
         alt_replbits_word(ALT_SDMMC_CTYPE_ADDR,
-                          ALT_SDMMC_CTYPE_CARD_WIDTH2_SET_MSK, 
+                          ALT_SDMMC_CTYPE_CARD_WIDTH2_SET_MSK,
                           ALT_SDMMC_CTYPE_CARD_WIDTH2_SET(ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD4BIT));
         break;
 
     case ALT_SDMMC_BUS_WIDTH_1:
         alt_replbits_word(ALT_SDMMC_CTYPE_ADDR,
-                          ALT_SDMMC_CTYPE_CARD_WIDTH1_SET_MSK, 
+                          ALT_SDMMC_CTYPE_CARD_WIDTH1_SET_MSK,
                           ALT_SDMMC_CTYPE_CARD_WIDTH1_SET(ALT_SDMMC_CTYPE_CARD_WIDTH1_E_NON8BIT));
         alt_replbits_word(ALT_SDMMC_CTYPE_ADDR,
-                          ALT_SDMMC_CTYPE_CARD_WIDTH2_SET_MSK, 
+                          ALT_SDMMC_CTYPE_CARD_WIDTH2_SET_MSK,
                           ALT_SDMMC_CTYPE_CARD_WIDTH2_SET(ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD1BIT));
         break;
 
@@ -752,7 +752,7 @@ ALT_STATUS_CODE alt_sdmmc_card_misc_set(const ALT_SDMMC_CARD_MISC_t *card_misc_c
 // Starts the SD/MMC internal DMA transfer with the specified
 // descriptor an bus mode transfer configuration.
 //
-ALT_STATUS_CODE alt_sdmmc_dma_start(ALT_SDMMC_DMA_BUF_DESC_t *buf_desc_list, 
+ALT_STATUS_CODE alt_sdmmc_dma_start(ALT_SDMMC_DMA_BUF_DESC_t *buf_desc_list,
                                     const uint32_t desc_skip_len,
                                     const ALT_SDMMC_DMA_PBL_t burst_len,
                                     const bool use_fixed_burst)
@@ -778,7 +778,7 @@ ALT_STATUS_CODE alt_sdmmc_dma_start(ALT_SDMMC_DMA_BUF_DESC_t *buf_desc_list,
 //
 bool alt_sdmmc_card_is_write_protected(void)
 {
-    alt_setbits_word(ALT_SDMMC_WRTPRT_ADDR, 
+    alt_setbits_word(ALT_SDMMC_WRTPRT_ADDR,
                      ALT_SDMMC_WRTPRT_WR_PROTECT_SET_MSK);
 
     return ALT_E_SUCCESS;
@@ -793,7 +793,7 @@ ALT_STATUS_CODE alt_sdmmc_fifo_reset(void)
 
     // Activate fifo reset
     alt_setbits_word(ALT_SDMMC_CTL_ADDR, ALT_SDMMC_CTL_FIFO_RST_SET_MSK);
-    
+
     // Wait to complete reset or timeout
     while (ALT_SDMMC_CTL_FIFO_RST_GET(alt_read_word(ALT_SDMMC_CTL_ADDR))
                                                 && --timeout)
@@ -807,7 +807,7 @@ ALT_STATUS_CODE alt_sdmmc_fifo_reset(void)
 
     return ALT_E_SUCCESS;
 }
-    
+
 //
 // DMA reset
 //
@@ -817,7 +817,7 @@ ALT_STATUS_CODE alt_sdmmc_dma_reset(void)
 
     //Activate dma reset
     alt_setbits_word(ALT_SDMMC_CTL_ADDR, ALT_SDMMC_CTL_DMA_RST_SET_MSK);
-    
+
     // Wait to complete reset or timeout
     while (ALT_SDMMC_CTL_DMA_RST_GET(alt_read_word(ALT_SDMMC_CTL_ADDR))
                                                 && --timeout)
@@ -831,7 +831,7 @@ ALT_STATUS_CODE alt_sdmmc_dma_reset(void)
 
     return ALT_E_SUCCESS;
 }
-        
+
 
 //
 // Returns ALT_E_TRUE if the sdmmc controller is present depend on cdata_in.
@@ -859,7 +859,7 @@ static ALT_STATUS_CODE alt_sdmmc_cmd_set(const ALT_SDMMC_CMD_INDEX_t cmd_index,
                                          bool start_cmd)
 {
      uint32_t cmd_register = ALT_SDMMC_CMD_CMD_INDEX_SET(cmd_index)
-                           | ALT_SDMMC_CMD_RESPONSE_EXPECT_SET(cmd_cfg->response_expect) 
+                           | ALT_SDMMC_CMD_RESPONSE_EXPECT_SET(cmd_cfg->response_expect)
                            | ALT_SDMMC_CMD_RESPONSE_LEN_SET(cmd_cfg->response_length_long)
                            | ALT_SDMMC_CMD_CHECK_RESPONSE_CRC_SET(cmd_cfg->check_response_crc)
                            | ALT_SDMMC_CMD_DATA_EXPECTED_SET(cmd_cfg->data_expected)
@@ -938,12 +938,12 @@ ALT_STATUS_CODE alt_sdmmc_fifo_read(void *dest, const size_t size)
     {
         dest_ptr[counter] = (uint32_t)(ALT_SDMMC_DATA_VALUE_GET(alt_read_word(ALT_SDMMC_DATA_ADDR)));
     }
-    
+
     if (size & 0x3)
     {
         uint8_t * add_dest_ptr = (uint8_t*)dest + (size / 4);
         uint32_t word_notfull = (uint32_t)(ALT_SDMMC_DATA_VALUE_GET(alt_read_word(ALT_SDMMC_DATA_ADDR)));
-    
+
         for (int counter = 0; counter < (size & 0x3); counter++)
         {
             add_dest_ptr[counter] = (uint8_t)word_notfull;
@@ -977,7 +977,7 @@ ALT_STATUS_CODE alt_sdmmc_fifo_write(const void *src, const size_t size)
 
         alt_write_word(ALT_SDMMC_DATA_ADDR, ALT_SDMMC_DATA_VALUE_SET(word_notfull));
     }
-    
+
     return ALT_E_SUCCESS;
 }
 
@@ -1028,7 +1028,7 @@ ALT_STATUS_CODE alt_sdmmc_int_enable(const uint32_t mask)
 {
     if (mask & 0x0001ffff)
     {
-        alt_setbits_word(ALT_SDMMC_CTL_ADDR, 
+        alt_setbits_word(ALT_SDMMC_CTL_ADDR,
                      ALT_SDMMC_CTL_INT_EN_SET_MSK);
 
         alt_setbits_word(ALT_SDMMC_INTMSK_ADDR, mask);
@@ -1042,7 +1042,7 @@ ALT_STATUS_CODE alt_sdmmc_int_enable(const uint32_t mask)
 //
 bool alt_sdmmc_fifo_is_rx_wtrmk_reached(void)
 {
-    if (ALT_SDMMC_STAT_FIFO_RX_WATERMARK_GET(alt_read_word(ALT_SDMMC_STAT_ADDR)) == 
+    if (ALT_SDMMC_STAT_FIFO_RX_WATERMARK_GET(alt_read_word(ALT_SDMMC_STAT_ADDR)) ==
                     ALT_SDMMC_STAT_FIFO_RX_WATERMARK_E_RXWATERMARK)
     {
         return true;
@@ -1059,7 +1059,7 @@ bool alt_sdmmc_fifo_is_rx_wtrmk_reached(void)
 //
 bool alt_sdmmc_fifo_is_tx_wtrmk_reached(void)
 {
-    if (ALT_SDMMC_STAT_FIFO_TX_WATERMARK_GET(alt_read_word(ALT_SDMMC_STAT_ADDR)) == 
+    if (ALT_SDMMC_STAT_FIFO_TX_WATERMARK_GET(alt_read_word(ALT_SDMMC_STAT_ADDR)) ==
                      ALT_SDMMC_STAT_FIFO_TX_WATERMARK_E_TXWATERMARK)
     {
         return true;
@@ -1132,11 +1132,11 @@ ALT_STATUS_CODE alt_sdmmc_fifo_param_set(uint32_t rx_wtrmk, uint32_t tx_wtrmk, A
     uint32_t fifoth_set_mask = ALT_SDMMC_FIFOTH_RX_WMARK_SET_MSK
                              | ALT_SDMMC_FIFOTH_TX_WMARK_SET_MSK
                              | ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_SET_MSK;
-    
+
     uint32_t fifoth_set_value = ALT_SDMMC_FIFOTH_RX_WMARK_SET(rx_wtrmk)
                               | ALT_SDMMC_FIFOTH_TX_WMARK_SET(tx_wtrmk)
                               | ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_SET(mult_trans_size);
-                            
+
     alt_replbits_word(ALT_SDMMC_FIFOTH_ADDR,
                       fifoth_set_mask,
                       fifoth_set_value);
@@ -1149,8 +1149,8 @@ ALT_STATUS_CODE alt_sdmmc_fifo_param_set(uint32_t rx_wtrmk, uint32_t tx_wtrmk, A
 //
 ALT_STATUS_CODE alt_sdmmc_card_reset(void)
 {
-    // Assert card reset 
-    alt_setbits_word(ALT_SDMMC_RST_N_ADDR, 
+    // Assert card reset
+    alt_setbits_word(ALT_SDMMC_RST_N_ADDR,
                      ALT_SDMMC_RST_N_CARD_RST_SET_MSK);
 
     volatile uint32_t timeout = ALT_SDMMC_RESET_TMO_INIT;
@@ -1160,7 +1160,7 @@ ALT_STATUS_CODE alt_sdmmc_card_reset(void)
         ;
 
     // Deassert the appropriate card reset.
-    alt_clrbits_word(ALT_SDMMC_RST_N_ADDR, 
+    alt_clrbits_word(ALT_SDMMC_RST_N_ADDR,
                      ALT_SDMMC_RST_N_CARD_RST_SET_MSK);
 
     return ALT_E_SUCCESS;
@@ -1171,9 +1171,9 @@ ALT_STATUS_CODE alt_sdmmc_card_reset(void)
 //
 ALT_STATUS_CODE alt_sdmmc_dma_enable(void)
 {
-    alt_setbits_word(ALT_SDMMC_CTL_ADDR, 
+    alt_setbits_word(ALT_SDMMC_CTL_ADDR,
                      ALT_SDMMC_CTL_USE_INTERNAL_DMAC_SET_MSK);
-    alt_setbits_word(ALT_SDMMC_BMOD_ADDR, 
+    alt_setbits_word(ALT_SDMMC_BMOD_ADDR,
                      ALT_SDMMC_BMOD_DE_SET_MSK);
 
     return ALT_E_SUCCESS;
@@ -1184,9 +1184,9 @@ ALT_STATUS_CODE alt_sdmmc_dma_enable(void)
 //
 ALT_STATUS_CODE alt_sdmmc_dma_disable(void)
 {
-    alt_clrbits_word(ALT_SDMMC_CTL_ADDR, 
+    alt_clrbits_word(ALT_SDMMC_CTL_ADDR,
                      ALT_SDMMC_CTL_USE_INTERNAL_DMAC_SET_MSK);
-    alt_clrbits_word(ALT_SDMMC_BMOD_ADDR, 
+    alt_clrbits_word(ALT_SDMMC_BMOD_ADDR,
                      ALT_SDMMC_BMOD_DE_SET_MSK);
 
     return ALT_E_SUCCESS;
@@ -1288,9 +1288,9 @@ ALT_STATUS_CODE alt_sdmmc_card_rd_threshold_disable(void)
 ALT_STATUS_CODE alt_sdmmc_card_rd_threshold_enable(const uint32_t threshold)
 {
     alt_replbits_word(ALT_SDMMC_CARDTHRCTL_ADDR,
-                        ALT_SDMMC_CARDTHRCTL_CARDRDTHRESHOLD_SET_MSK 
+                        ALT_SDMMC_CARDTHRCTL_CARDRDTHRESHOLD_SET_MSK
                       | ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_SET_MSK,
-                        ALT_SDMMC_CARDTHRCTL_CARDRDTHRESHOLD_SET(threshold) 
+                        ALT_SDMMC_CARDTHRCTL_CARDRDTHRESHOLD_SET(threshold)
                       | ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_SET(ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_E_END));
 
     return ALT_E_SUCCESS;
@@ -1304,7 +1304,7 @@ static ALT_STATUS_CODE alt_sdmmc_error_status_detect(void)
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
     uint32_t int_status = 0;
 
-    // All sdmmc interrupt status caused by an error 
+    // All sdmmc interrupt status caused by an error
     uint32_t err = (  ALT_SDMMC_INT_STATUS_RE
                     | ALT_SDMMC_INT_STATUS_RCRC
                     | ALT_SDMMC_INT_STATUS_DCRC
@@ -1320,7 +1320,7 @@ static ALT_STATUS_CODE alt_sdmmc_error_status_detect(void)
     {
         return status;
     }
-    
+
     // Checking on errors
     if (int_status & err)
     {
@@ -1346,7 +1346,7 @@ static ALT_STATUS_CODE alt_sdmmc_transfer_helper(uint32_t * buffer,
     uint32_t data_size = size;
     bool read_freeze  = false;
     bool write_freeze = false;
-    
+
     while (data_size > 0)
     {
 #ifdef LOGGER
@@ -1379,7 +1379,7 @@ static ALT_STATUS_CODE alt_sdmmc_transfer_helper(uint32_t * buffer,
             }
         }
         while (read_freeze || write_freeze);
-        
+
         uint32_t level = alt_sdmmc_fifo_count();
 
 #ifdef LOGGER
@@ -1460,7 +1460,7 @@ static ALT_STATUS_CODE alt_sdmmc_dma_trans_helper(uint32_t * buffer,
             cur_dma_desc->des2.fld.bap1 = cur_buffer;
 
 #ifdef LOGGER
-            dprintf("socfpga_setup_dma_add: des_adrdr %08X des2_paddr %08X des1_len %08X len_left %08X\n", 
+            dprintf("socfpga_setup_dma_add: des_adrdr %08X des2_paddr %08X des1_len %08X len_left %08X\n",
                         (int)cur_dma_desc, (int)cur_buffer, (int)set_len, (int)len_left);
 #endif
 
@@ -1471,7 +1471,7 @@ static ALT_STATUS_CODE alt_sdmmc_dma_trans_helper(uint32_t * buffer,
             cur_dma_desc->des0.fld.ld = (len_left == 0) ? 1 : 0;
             //Descriptor could be used
             cur_dma_desc->des0.fld.own = 1;
-            //Currernt descriptor set sa next element 
+            //Currernt descriptor set sa next element
             cur_dma_desc = (ALT_SDMMC_DMA_BUF_DESC_t *)cur_dma_desc->des3.fld.bap2_or_next;
         }
 
@@ -1552,11 +1552,11 @@ static ALT_STATUS_CODE alt_sdmmc_clock_waiter(void)
 {
     ALT_STATUS_CODE status = ALT_E_TMO;
     uint32_t timeout = ALT_SDMMC_TMO_WAITER;
-    
+
     while (--timeout)
     {
         uint32_t cmd_register = alt_read_word(ALT_SDMMC_CMD_ADDR);
-        
+
         // Error checking
         if (alt_sdmmc_error_status_detect() != ALT_E_SUCCESS)
         {
@@ -1581,7 +1581,7 @@ static ALT_STATUS_CODE alt_sdmmc_cmd_waiter(void)
 {
     ALT_STATUS_CODE status = ALT_E_TMO;
     uint32_t timeout = ALT_SDMMC_TMO_WAITER;
-    
+
     while (--timeout)
     {
         uint32_t int_status;
@@ -1593,7 +1593,7 @@ static ALT_STATUS_CODE alt_sdmmc_cmd_waiter(void)
             status = ALT_E_ERROR;
             break;
         }
-        
+
         //Check command done
         if (int_status & ALT_SDMMC_INT_STATUS_CMD)
         {
@@ -1614,7 +1614,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_scr_get(uint64_t *scr_reg)
 #ifdef LOGGER
     uint32_t response = 0;
 #endif
-    
+
     uint16_t prev_blk_size = 0;
     // Save current block size and change it
     prev_blk_size = alt_sdmmc_block_size_get();
@@ -1632,14 +1632,14 @@ static ALT_STATUS_CODE alt_sdmmc_card_scr_get(uint64_t *scr_reg)
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SDMMC_APP_CMD response = %x\n", (int)response);
 #endif
-    
+
     // Send request for read SRC register
     status = alt_sdmmc_command_send(ALT_SD_SEND_SCR, 0x0, NULL);
     if (status != ALT_E_SUCCESS)
     {
         return status;
     }
-    
+
 #ifdef LOGGER
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SD_SEND_SCR responce = %x\n", (int)response);
@@ -1683,7 +1683,7 @@ ALT_STATUS_CODE alt_sdmmc_card_bus_width_set(const ALT_SDMMC_BUS_WIDTH_t width)
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
 
     uint64_t scr_reg;
-    
+
     // Read SRC register
     status = alt_sdmmc_card_scr_get(&scr_reg);
     if (status != ALT_E_SUCCESS)
@@ -1735,7 +1735,7 @@ ALT_STATUS_CODE alt_sdmmc_card_bus_width_set(const ALT_SDMMC_BUS_WIDTH_t width)
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SDMMC_APP_CMD response = %x\n", (int)response);
 #endif
-    
+
     // Send new card bus width
     status = alt_sdmmc_command_send(ALT_SD_SET_BUS_WIDTH, set_width_arg, NULL);
     if (status != ALT_E_SUCCESS)
@@ -1747,10 +1747,10 @@ ALT_STATUS_CODE alt_sdmmc_card_bus_width_set(const ALT_SDMMC_BUS_WIDTH_t width)
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SD_SET_BUS_WIDTH responce = %x\n", (int)response);
 #endif
-    
+
     // Set new bus width in controller register
     alt_sdmmc_bus_width_set(width);
-    
+
     return status;
 }
 
@@ -1760,7 +1760,7 @@ ALT_STATUS_CODE alt_sdmmc_card_bus_width_set(const ALT_SDMMC_BUS_WIDTH_t width)
 ALT_STATUS_CODE alt_sdmmc_card_block_size_set(const uint16_t block_size)
 {
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
-    
+
     // Send new block size to card
     status = alt_sdmmc_command_send(ALT_SDMMC_SET_BLOCKLEN, block_size, NULL);
     if (status != ALT_E_SUCCESS)
@@ -1828,13 +1828,13 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_io_only(ALT_SDMMC_CARD_INFO_t *card_
             return status;
         }
     }
-    
+
 #ifdef LOGGER
     dprintf("\nALT_SDMMC_SEND_OP_COND_2 response = %x\n", (int)response);
 #endif
     // Enumerated Card Stack p.2d
     bool is_sdio_combo = response & (1 << 27);
-    card_info->card_type = (is_sdio_combo) 
+    card_info->card_type = (is_sdio_combo)
                            ? ALT_SDMMC_CARD_TYPE_NOTDETECT
                            : ALT_SDMMC_CARD_TYPE_SDIOIO;
 
@@ -1867,12 +1867,12 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_sdhc(ALT_SDMMC_CARD_INFO_t *card_inf
             return status;
         }
     }
-    
+
 #ifdef LOGGER
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SDMMC_GO_IDLE_STATE response = %x\n", (int)response);
 #endif
-    
+
     // Enumerated Card Stack p.3a
     // For only SDC V2. Check voltage range.
     status = alt_sdmmc_command_send(ALT_SDMMC_IF_COND, 0x1AA, &response);
@@ -1888,19 +1888,19 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_sdhc(ALT_SDMMC_CARD_INFO_t *card_inf
             return status;
         }
     }
-    
+
     alt_sdmmc_read_short_response(&response);
 #ifdef LOGGER
     dprintf("\nALT_SDMMC_IF_COND response = %x\n", (int)response);
 #endif
-    
+
     if (response != 0x1AA)
     {
         return ALT_E_ERROR;
     }
 
-    // Indicates to the card that the next command is an 
-    // application specific command rather than a 
+    // Indicates to the card that the next command is an
+    // application specific command rather than a
     // standard command
     status = alt_sdmmc_command_send(ALT_SDMMC_APP_CMD, 0x0, &response);
     if (status != ALT_E_SUCCESS)
@@ -1920,11 +1920,11 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_sdhc(ALT_SDMMC_CARD_INFO_t *card_inf
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SDMMC_APP_CMD response = %x\n", (int)response);
 #endif
-    
+
     // Enumerated Card Stack p.3c
-    // Asks the accessed card to send its operating condition 
-    // register (OCR) con tent in the response on the CMD 
-    // line. 
+    // Asks the accessed card to send its operating condition
+    // register (OCR) con tent in the response on the CMD
+    // line.
     status = alt_sdmmc_command_send(ALT_SD_SEND_OP_COND, 0x40FF8000, &response);
     if (status != ALT_E_SUCCESS)
     {
@@ -1943,7 +1943,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_sdhc(ALT_SDMMC_CARD_INFO_t *card_inf
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SD_SEND_OP_COND responce = %x\n", (int)response);
 #endif
-    
+
     //Enumerated Card Stack p.3d
     card_info->card_type = ALT_SDMMC_CARD_TYPE_SDHC;
 
@@ -1965,9 +1965,9 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_sd(ALT_SDMMC_CARD_INFO_t *card_info)
     uint32_t response = 0;
 #endif
     // Enumerated Card Stack p.3e
-    // Indicates to the card that the next command is an 
-    // application specific command rather than a 
-    // standard command 
+    // Indicates to the card that the next command is an
+    // application specific command rather than a
+    // standard command
     status = alt_sdmmc_command_send(ALT_SDMMC_APP_CMD, 0x0, NULL);
     if (status != ALT_E_SUCCESS)
     {
@@ -1986,10 +1986,10 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_sd(ALT_SDMMC_CARD_INFO_t *card_info)
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SDMMC_APP_CMD response = %x\n", (int)response);
 #endif
-    
-    // Asks the accessed card to send its operating condition 
-    // register (OCR) con tent in the response on the CMD 
-    // line. 
+
+    // Asks the accessed card to send its operating condition
+    // register (OCR) con tent in the response on the CMD
+    // line.
     status = alt_sdmmc_command_send(ALT_SD_SEND_OP_COND, 0x00FF8000, NULL);
     if (status != ALT_E_SUCCESS)
     {
@@ -2003,12 +2003,12 @@ static ALT_STATUS_CODE alt_sdmmc_card_ident_sd(ALT_SDMMC_CARD_INFO_t *card_info)
             return status;
         }
     }
-    
+
 #ifdef LOGGER
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SD_SEND_OP_COND responce = %x\n", (int)response);
 #endif
-    
+
     // Enumerated Card Stack p.3f
     card_info->card_type = ALT_SDMMC_CARD_TYPE_SD;
 
@@ -2037,7 +2037,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
     {
         return status;
     }
-    
+
     uint32_t response = 0;
     // Resets all cards to Idle State
     status = alt_sdmmc_command_send(ALT_SDMMC_GO_IDLE_STATE, 0x0, &response);
@@ -2045,7 +2045,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
     {
         return status;
     }
-    
+
 #ifdef LOGGER
     alt_sdmmc_read_short_response(&response);
     dprintf("\nALT_SDMMC_GO_IDLE_STATE response = %x\n", (int)response);
@@ -2062,29 +2062,29 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
     dprintf("\nALT_SDMMC_IF_COND response = %x\n", (int)response);
 #endif
 
-/*    OCR Bit VDD Voltage Window 
-           0-3          Reserved 
-            4             1.6-1.7 
-            5             1.7-1.8 
-            6             1.8-1.9 
-            7             1.9-2.0 
-            8             2.0-2.1 
-            9             2.1-2.2 
-            10           2.2-2.3 
-            11           2.3-2.4 
-            12           2.4-2.5 
-            13           2.5-2.6 
-            14           2.6-2.7 
-            15           2.7-2.8 
-            16           2.8-2.9 
-            17           2.9-3.0 
-            18           3.0-3.1 
-            19           3.1-3.2 
-            20           3.2-3.3 
-            21           3.3-3.4 
-            22           3.4-3.5 
-            23           3.5-3.6 
-          24-29       Reserved 
+/*    OCR Bit VDD Voltage Window
+           0-3          Reserved
+            4             1.6-1.7
+            5             1.7-1.8
+            6             1.8-1.9
+            7             1.9-2.0
+            8             2.0-2.1
+            9             2.1-2.2
+            10           2.2-2.3
+            11           2.3-2.4
+            12           2.4-2.5
+            13           2.5-2.6
+            14           2.6-2.7
+            15           2.7-2.8
+            16           2.8-2.9
+            17           2.9-3.0
+            18           3.0-3.1
+            19           3.1-3.2
+            20           3.2-3.3
+            21           3.3-3.4
+            22           3.4-3.5
+            23           3.5-3.6
+          24-29       Reserved
             30          High capacity card
             31          Card power up status bit (busy)
 */
@@ -2107,7 +2107,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
         alt_sdmmc_read_short_response(&response);
         dprintf("\nALT_SDMMC_APP_CMD response = %x\n", (int)response);
 #endif
-        
+
         volatile uint32_t timeout = 1000000;
 
         // Wait while sdmmc module is reseting
@@ -2125,7 +2125,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
 #endif
     }
     while ((response & (1UL << 31)) == 0);
-    
+
     //Asks any card to send their CID numbers on the CMD line.
     //(Any card that is connected to the host will respond.)
     status = alt_sdmmc_command_send(ALT_SDMMC_ALL_SEND_CID, 0x0, &response);
@@ -2149,7 +2149,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
 #ifdef LOGGER
     dprintf("\nALT_SDMMC_SET_RELATIVE_ADDR responce = %x\n", (int)response);
 #endif
-    
+
     uint32_t RCA_number = response & 0xFFFF0000;
     rca_number = RCA_number;
 
@@ -2165,7 +2165,7 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
     dprintf("\nALT_SDMMC_SEND_CID responce = %x\n", (int)response);
 #endif
 
-    // Addressed card sends its card-specific data (CSD) 
+    // Addressed card sends its card-specific data (CSD)
     // on the CMD line.
     status = alt_sdmmc_command_send(ALT_SDMMC_SEND_CSD, rca_number, &response);
     if (status != ALT_E_SUCCESS)
@@ -2201,8 +2201,8 @@ static ALT_STATUS_CODE alt_sdmmc_card_enum_sd(ALT_SDMMC_CARD_INFO_t *card_info)
         return ALT_E_ERROR;
     }
 
-    // Command toggles a card between the Stand-by 
-    // and Transfer states or between the Programming 
+    // Command toggles a card between the Stand-by
+    // and Transfer states or between the Programming
     // and Disconnect state
     status = alt_sdmmc_command_send(ALT_SDMMC_SEL_DES_CARD, rca_number, &response);
     if (status != ALT_E_SUCCESS)
@@ -2281,7 +2281,7 @@ ALT_STATUS_CODE alt_sdmmc_card_identify(ALT_SDMMC_CARD_INFO_t *card_info)
 // Send the a command and command argument to the card and optionally return the
 // command response.
 //
-ALT_STATUS_CODE alt_sdmmc_command_send(ALT_SDMMC_CMD_INDEX_t command, 
+ALT_STATUS_CODE alt_sdmmc_command_send(ALT_SDMMC_CMD_INDEX_t command,
                                        uint32_t command_arg, uint32_t *response)
 {
     const ALT_SDMMC_CMD_CONFIG_t * cmd_cfg = NULL;
@@ -2334,7 +2334,7 @@ ALT_STATUS_CODE alt_sdmmc_command_send(ALT_SDMMC_CMD_INDEX_t command,
                   | ALT_SDMMC_INT_STATUS_HTO                // Data starvation by host timeout
                   | ALT_SDMMC_INT_STATUS_FRUN               // FIFO underrun/overrun error
                   | ALT_SDMMC_INT_STATUS_EBE;               // End-bit error
-        
+
         if (cmd_cfg->write_active == ALT_SDMMC_TMOD_WRITE)
         {
             int_mask |= ALT_SDMMC_INT_STATUS_TXDR           // Transmit FIFO data request (TXDR)
@@ -2345,9 +2345,9 @@ ALT_STATUS_CODE alt_sdmmc_command_send(ALT_SDMMC_CMD_INDEX_t command,
             int_mask |= ALT_SDMMC_INT_STATUS_RXDR           // Receive FIFO data request (RXDR)
                        |ALT_SDMMC_INT_STATUS_SBE;           // Start-bit error (SBE)
         }
-        
+
     }
-    
+
     alt_sdmmc_int_disable(ALT_SDMMC_INT_STATUS_ALL);
     // Reset all possible interrupts
     alt_sdmmc_int_clear(ALT_SDMMC_INT_STATUS_ALL);
@@ -2363,7 +2363,7 @@ ALT_STATUS_CODE alt_sdmmc_command_send(ALT_SDMMC_CMD_INDEX_t command,
 
 #ifdef LOGGER
     uint32_t state = (uint32_t)ALT_SDMMC_STAT_CMD_FSM_STATES_GET(alt_read_word(ALT_SDMMC_STAT_ADDR));
-    
+
     uint32_t dma_state = (uint32_t)ALT_SDMMC_IDSTS_FSM_GET(alt_read_word(ALT_SDMMC_IDSTS_ADDR));
 
     dprintf("\nstate %x dma_state %x\n", (int)state, (int)dma_state);
@@ -2400,7 +2400,7 @@ ALT_STATUS_CODE alt_sdmmc_command_send(ALT_SDMMC_CMD_INDEX_t command,
     {
         alt_sdmmc_read_short_response(response);
     }
-    
+
     return status;
 }
 
@@ -2421,7 +2421,7 @@ static ALT_STATUS_CODE alt_sdmmc_transfer(uint32_t start_addr,
 
     uint16_t block_size = alt_sdmmc_block_size_get();
 
-    if (   (start_addr % block_size != 0) 
+    if (   (start_addr % block_size != 0)
         || (buf_len    % block_size != 0))
     {
         return ALT_E_BAD_ARG;
@@ -2439,7 +2439,7 @@ static ALT_STATUS_CODE alt_sdmmc_transfer(uint32_t start_addr,
     {
         return status;
     }
-    
+
     // reset DMA
     status = alt_sdmmc_dma_reset();
     if (status != ALT_E_SUCCESS)
@@ -2453,14 +2453,14 @@ static ALT_STATUS_CODE alt_sdmmc_transfer(uint32_t start_addr,
     uint32_t cmd_index = 0;
     if (buf_len == block_size)
     {
-        cmd_index = (transfer_mode == ALT_SDMMC_TMOD_READ) 
-                                        ? ALT_SDMMC_READ_SINGLE_BLOCK 
+        cmd_index = (transfer_mode == ALT_SDMMC_TMOD_READ)
+                                        ? ALT_SDMMC_READ_SINGLE_BLOCK
                                         : ALT_SDMMC_WRITE_BLOCK;
     }
     else
     {
-        cmd_index = (transfer_mode == ALT_SDMMC_TMOD_READ) 
-                                        ? ALT_SDMMC_READ_MULTIPLE_BLOCK 
+        cmd_index = (transfer_mode == ALT_SDMMC_TMOD_READ)
+                                        ? ALT_SDMMC_READ_MULTIPLE_BLOCK
                                         : ALT_SDMMC_WRITE_MULTIPLE_BLOCK;
     }
 
@@ -2468,7 +2468,7 @@ static ALT_STATUS_CODE alt_sdmmc_transfer(uint32_t start_addr,
     {
         // Clean descriptor chain
         alt_sdmmc_desc_chain_clear();
-        
+
         alt_sdmmc_dma_start(dma_cur_descr, 0x0,
                             ALT_SDMMC_DMA_PBL_1, false);
         //Enable all dma interrupt status

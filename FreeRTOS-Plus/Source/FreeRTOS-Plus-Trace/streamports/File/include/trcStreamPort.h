@@ -24,7 +24,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 #define TRC_USE_INTERNAL_BUFFER (TRC_CFG_STREAM_PORT_USE_INTERNAL_BUFFER)
 
 /* Default file name */

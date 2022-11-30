@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace entry table APIs.
  */
 
@@ -64,12 +64,12 @@ typedef struct TraceEntryTableBuffer
 
 /**
  * @internal Initialize trace entry table.
- * 
+ *
  * This routine initializes the trace entry table which maps objects to
  * symbolic identifiers, state information, and options.
- * 
+ *
  * @param[in] pxBuffer Pointer to uninitialized trace entry table buffer.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -77,9 +77,9 @@ traceResult xTraceEntryTableInitialize(TraceEntryTableBuffer_t* pxBuffer);
 
 /**
  * @brief Creates trace entry.
- * 
+ *
  * @param[out] pxEntryHandle Pointer to uninitialized trace entry handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -87,9 +87,9 @@ traceResult xTraceEntryCreate(TraceEntryHandle_t *pxEntryHandle);
 
 /**
  * @brief Deletes trace entry.
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -97,10 +97,10 @@ traceResult xTraceEntryDelete(TraceEntryHandle_t xEntryHandle);
 
 /**
  * @brief Finds trace entry mapped to object address.
- * 
+ *
  * @param[in] pvAddress Address of object.
  * @param[out] pxEntryHandle Pointer to uninitialized trace entry handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -108,20 +108,20 @@ traceResult xTraceEntryFind(void* pvAddress, TraceEntryHandle_t* pxEntryHandle);
 
 /**
  * @brief Gets the number of entries in the trace entry table.
- * 
+ *
  * @param[out] puiCount Count.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceEntryGetCount(uint32_t* puiCount);
 
 /**
- * @brief Gets trace table entry at index. 
- * 
+ * @brief Gets trace table entry at index.
+ *
  * @param[in] index Entry index.
- * @param[out] pxEntryHandle Pointer to uninitialized trace entry handle. 
- * 
+ * @param[out] pxEntryHandle Pointer to uninitialized trace entry handle.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -129,10 +129,10 @@ traceResult xTraceEntryGetAtIndex(uint32_t index, TraceEntryHandle_t* pxEntryHan
 
 /**
  * @brief Sets symbol for entry.
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[out] szSymbol Pointer to symbol string, set by function
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -142,10 +142,10 @@ traceResult xTraceEntrySetSymbol(TraceEntryHandle_t xEntryHandle, const char* sz
 
 /**
  * @brief Creates trace entry mapped to memory address.
- * 
+ *
  * @param[in] pvAddress Address.
  * @param[out] pxEntryHandle Pointer to uninitialized trace entry handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -153,11 +153,11 @@ traceResult xTraceEntryCreateWithAddress(void* pvAddress, TraceEntryHandle_t* px
 
 /**
  * @brief Sets trace entry state.
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[in] uiStateIndex Index of state (< TRC_ENTRY_TABLE_STATE_COUNT).
  * @param[in] uxState State.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -165,10 +165,10 @@ traceResult xTraceEntrySetState(TraceEntryHandle_t xEntryHandle, uint32_t uiStat
 
 /**
  * @brief Sets trace entry option(s).
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[in] uiMask Option(s) set mask.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -176,10 +176,10 @@ traceResult xTraceEntrySetOptions(TraceEntryHandle_t xEntryHandle, uint32_t uiMa
 
 /**
  * @brief Clears trace entry option(s).
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[in] uiMask Options(s) clear mask.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -187,10 +187,10 @@ traceResult xTraceEntryClearOptions(TraceEntryHandle_t xEntryHandle, uint32_t ui
 
 /**
  * @brief Gets linked address for trace entry.
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[out] ppvAddress Address.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -198,10 +198,10 @@ traceResult xTraceEntryGetAddress(TraceEntryHandle_t xEntryHandle, void **ppvAdd
 
 /**
  * @brief Gets symbol for trace entry.
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[out] pszSymbol Symbol.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -209,11 +209,11 @@ traceResult xTraceEntryGetSymbol(TraceEntryHandle_t xEntryHandle, const char** p
 
 /**
  * @brief Gets state for trace entry.
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[in] uiStateIndex State index (< TRC_ENTRY_TABLE_STATE_COUNT).
  * @param[out] puxState State.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -221,10 +221,10 @@ traceResult xTraceEntryGetState(TraceEntryHandle_t xEntryHandle, uint32_t uiStat
 
 /**
  * @brief Gets options for trace entry.
- * 
+ *
  * @param[in] xEntryHandle Pointer to initialized trace entry handle.
  * @param[out] puiOptions Options.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

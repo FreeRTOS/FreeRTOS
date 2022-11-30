@@ -90,10 +90,10 @@ extern const Font gFont;
  *----------------------------------------------------------------------------*/
 
 extern void LCDD_DrawChar(
-						uint16_t* pCanvasBuffer, 
-						uint32_t x, 
-						uint32_t y, 
-						uint8_t c, 
+						uint16_t* pCanvasBuffer,
+						uint32_t x,
+						uint32_t y,
+						uint8_t c,
 						uint32_t color );
 
 extern void LCD_DrawString(
@@ -105,4 +105,3 @@ extern void LCD_DrawString(
 
 
 #endif /* #ifndef LCD_FONT_ */
-

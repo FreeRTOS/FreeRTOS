@@ -147,7 +147,7 @@ typedef enum
 #define ST7637_TEMPSEL           0xF4
 #define ST7637_THYS              0xF7
 #define ST7637_FRAMESET          0xF9
-                                 
+
 #define ST7637_MAXCOL            0x83
 #define ST7637_MAXPAG            0x83
 

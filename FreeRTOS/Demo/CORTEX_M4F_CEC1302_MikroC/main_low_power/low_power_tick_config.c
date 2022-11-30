@@ -307,4 +307,3 @@ TickType_t xModifiableIdleTime;
 
 
 #endif /* configCREATE_LOW_POWER_DEMO */
-

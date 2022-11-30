@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -108,4 +108,3 @@ extern uint32_t SPI_IsFinished( Spi* pSpi ) ;
 #endif
 
 #endif /* #ifndef _SPI_ */
-

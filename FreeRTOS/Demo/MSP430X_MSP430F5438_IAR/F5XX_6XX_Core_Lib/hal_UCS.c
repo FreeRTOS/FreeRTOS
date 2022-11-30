@@ -187,19 +187,19 @@ void XT2_Bypass(void)
   */
 void Init_FLL_Settle(uint16_t fsystem, uint16_t ratio)
 {
-  volatile uint16_t x = ratio * 32;       
+  volatile uint16_t x = ratio * 32;
   // save actual state of FLL loop control
   uint16_t globalInterruptState = __get_SR_register() & SCG0;
-  								
+
   __bic_SR_register(SCG0);      // Enable FLL loop control
 
   Init_FLL(fsystem, ratio);
-  
+
   while(x--)
   {
-   __delay_cycles(30); 
+   __delay_cycles(30);
   }
-  
+
   __bis_SR_register(globalInterruptState);	// restore previous state
 
 }
@@ -263,5 +263,5 @@ static void Init_FLL(uint16_t fsystem, uint16_t ratio)
   else
    SELECT_MCLK_SMCLK(SELM__DCOCLKDIV + SELS__DCOCLKDIV); // selcet DCODIVCLK
 
-  
+
 } // End of fll_init()

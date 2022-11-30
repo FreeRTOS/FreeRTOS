@@ -39,7 +39,7 @@ static uint32_t gpio_has_drv_str ( enum gpio_id_t gpio_id );
 
 #ifdef ENABLE_GPIO_PIN_VALIDATION
 
-static const uint32_t gpio_port_bitmaps[NUM_GPIO_PORTS] = 
+static const uint32_t gpio_port_bitmaps[NUM_GPIO_PORTS] =
 {
     (GPIO_PORT_A_BITMAP),
     (GPIO_PORT_B_BITMAP),
@@ -49,10 +49,10 @@ static const uint32_t gpio_port_bitmaps[NUM_GPIO_PORTS] =
 
 #endif
 
-// 
+//
 // Drive Strength Register bitmap
 //
-static const uint32_t gpio_drv_str_bitmap[NUM_GPIO_PORTS] = 
+static const uint32_t gpio_drv_str_bitmap[NUM_GPIO_PORTS] =
 {
     (GPIO_PORT_A_DRVSTR_BITMAP),
     (GPIO_PORT_B_DRVSTR_BITMAP),
@@ -61,13 +61,13 @@ static const uint32_t gpio_drv_str_bitmap[NUM_GPIO_PORTS] =
 };
 
 
-struct gpio_cfg 
+struct gpio_cfg
 {
    uint16_t bit_mask;
    uint8_t bit_pos;
 };
 
-static const struct gpio_cfg gpio_cfg_tbl[GPIO_PROP_MAX] = 
+static const struct gpio_cfg gpio_cfg_tbl[GPIO_PROP_MAX] =
 {
    { 0x0003u, 0x00u },
    { 0x000Cu, 0x02u },
@@ -88,14 +88,14 @@ static uint32_t gpio_pin_ctrl_addr(enum gpio_id_t gpio_id)
 #ifdef ENABLE_GPIO_PIN_VALIDATION
 
 /**
- * gpio_is_valid - local helper checks if GPIO pin is 
- * implemented in this hardware. 
- * 
- * @author sworley 
- * 
+ * gpio_is_valid - local helper checks if GPIO pin is
+ * implemented in this hardware.
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * 
- * @return uint8_t Non-zero(GPIO Pin implemented), 0(not 
+ *
+ * @return uint8_t Non-zero(GPIO Pin implemented), 0(not
  *         implemented).
  */
 static uint8_t gpio_is_valid ( enum gpio_id_t gpio_id )
@@ -108,7 +108,7 @@ static uint8_t gpio_is_valid ( enum gpio_id_t gpio_id )
    {
       gp_bank = (uint16_t)gpio_id >> 5;
       if ( gpio_port_bitmaps[gp_bank] & (1 << (gpio_id & 0x001Fu)) )
-      { 
+      {
          return true;
       }
    }
@@ -134,20 +134,20 @@ static uint8_t gpio_pin_num(enum gpio_id_t gpio_id)
 
 
 /**
- * gpio_has_drv_str - Local helper to check if GPIO pin has 
- * associated drive strength register. 
- * 
- * @author sworley 
- * 
+ * gpio_has_drv_str - Local helper to check if GPIO pin has
+ * associated drive strength register.
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * 
- * @return uint32_t 0(No Drive Strength), Non-zero(Physical 
+ *
+ * @return uint32_t 0(No Drive Strength), Non-zero(Physical
  *         address of Drive Strength Register).
  */
 static uint32_t gpio_has_drv_str ( enum gpio_id_t gpio_id )
 {
     uint32_t bank, bitpos, addr;
-    
+
     addr = 0ul;
     if ( gpio_id < MAX_GPIO_ID )
     {
@@ -162,7 +162,7 @@ static uint32_t gpio_has_drv_str ( enum gpio_id_t gpio_id )
             }
         }
     }
-    
+
     return addr;
 }
 
@@ -180,7 +180,7 @@ uint16_t GPIOGetConfig(enum gpio_id_t gpio_id)
 void GPIOSetConfig(enum gpio_id_t gpio_id, uint16_t config)
 {
     volatile uint16_t * p;
-    
+
     if (gpio_is_valid(gpio_id)) {
         p = (volatile uint16_t *)gpio_pin_ctrl_addr(gpio_id);
         *p = config;
@@ -213,7 +213,7 @@ uint32_t GPIOGetControl(enum gpio_id_t gpio_id)
 void GPIOSetControl(enum gpio_id_t gpio_id, uint32_t ctrl_val)
 {
     volatile uint32_t * p;
-    
+
     if (gpio_is_valid(gpio_id)) {
         p = (volatile uint32_t *)gpio_pin_ctrl_addr(gpio_id);
         *p = ctrl_val;
@@ -233,23 +233,23 @@ void GPIOControlAndOr(enum gpio_id_t gpio_id, uint32_t and_mask, uint32_t or_mas
 
 
 /**
- * GPIOPropertySet - Program specified GPIO Pin configuration 
- * item. 
- * 
- * @author sworley 
- * 
+ * GPIOPropertySet - Program specified GPIO Pin configuration
+ * item.
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
  * @param gpio_prop enumerated GPIO Property(configuration item)
  * @param prop_val new property value
  */
-void GPIOPropertySet ( enum gpio_id_t gpio_id, 
+void GPIOPropertySet ( enum gpio_id_t gpio_id,
                        enum gpio_prop_t gpio_prop,
                        uint16_t prop_val
                      )
 {
     volatile uint16_t * p;
     uint16_t gp_cfg;
-  
+
     gp_cfg = 0u;
 
     if ( gpio_is_valid(gpio_id) && ((uint16_t)gpio_prop < (uint16_t)GPIO_PROP_MAX) )
@@ -257,8 +257,8 @@ void GPIOPropertySet ( enum gpio_id_t gpio_id,
         p = (volatile uint16_t *)gpio_pin_ctrl_addr(gpio_id);
         gp_cfg = *p;
         gp_cfg &= ~(gpio_cfg_tbl[gpio_prop].bit_mask);
-        gp_cfg |= (prop_val << gpio_cfg_tbl[gpio_prop].bit_pos) & 
-                  gpio_cfg_tbl[gpio_prop].bit_mask; 
+        gp_cfg |= (prop_val << gpio_cfg_tbl[gpio_prop].bit_pos) &
+                  gpio_cfg_tbl[gpio_prop].bit_mask;
         *p = gp_cfg;
     }
 }
@@ -266,18 +266,18 @@ void GPIOPropertySet ( enum gpio_id_t gpio_id,
 
 /**
  * GPIOGetSlewRate - Return GPIO Pin Slew Rate
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * 
+ *
  * @return uint8_t GPIO Pin Slew Rate: 0(Slow) or 1(Fast)
  */
 uint8_t GPIOGetSlewRate( enum gpio_id_t gpio_id )
 {
     uint32_t addr;
     uint8_t slew;
-    
+
     addr = gpio_has_drv_str(gpio_id);
     if ( 0ul != addr )
     {
@@ -287,16 +287,16 @@ uint8_t GPIOGetSlewRate( enum gpio_id_t gpio_id )
     {
         slew = 0u;
     }
-    
+
     return slew;
 }
 
 
 /**
  * GPIOSetSlewRate - Program GPIO Pin's Slew Rate
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
  * @param slew_rate new slew rate: 0(Slow), Non-zero(Fast)
  */
@@ -304,31 +304,31 @@ void GPIOSetSlewRate ( enum gpio_id_t gpio_id,
                        enum gpio_slew_rate_t slew_rate )
 {
     uint32_t addr;
-    
+
     addr = gpio_has_drv_str(gpio_id );
     if ( addr )
     {
-        *(volatile uint8_t *)addr = (*(volatile uint8_t *)addr & 
-            ~(GPIO_DRV_SLEW_MASK)) | 
+        *(volatile uint8_t *)addr = (*(volatile uint8_t *)addr &
+            ~(GPIO_DRV_SLEW_MASK)) |
             ((slew_rate << (GPIO_DRV_SLEW_BITPOS)) & (GPIO_DRV_SLEW_MASK));
     }
 }
 
 
 /**
- * GPIOGetDriveStr - Get GPIO Pin's Drive Strength 
- * 
- * @author sworley 
- * 
+ * GPIOGetDriveStr - Get GPIO Pin's Drive Strength
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * 
- * @return uint8_t Pin Drive Strength: 0=2mA, 1=4mA, 2=8mA, 
+ *
+ * @return uint8_t Pin Drive Strength: 0=2mA, 1=4mA, 2=8mA,
  *         3=12mA.
  */
 uint8_t GPIOGetDriveStr ( enum gpio_id_t gpio_id )
 {
     uint32_t addr;
-    
+
     addr = gpio_has_drv_str(gpio_id );
     if ( addr )
     {
@@ -343,11 +343,11 @@ uint8_t GPIOGetDriveStr ( enum gpio_id_t gpio_id )
 
 /**
  * GPIOSetDriveStr - Program GPIO Pin's Drive Strength
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * @param drv_str enumerated drive strength: 0=2mA, 1=4mA, 
+ * @param drv_str enumerated drive strength: 0=2mA, 1=4mA,
  *                2=8mA, 3=12mA
  */
 void GPIOSetDriveStr ( enum gpio_id_t gpio_id,
@@ -355,7 +355,7 @@ void GPIOSetDriveStr ( enum gpio_id_t gpio_id,
 {
     uint32_t addr;
     uint8_t r8;
-    
+
     addr = gpio_has_drv_str(gpio_id);
     if ( addr )
     {
@@ -367,20 +367,20 @@ void GPIOSetDriveStr ( enum gpio_id_t gpio_id,
 
 
 /**
- * GPIOGetDriveStrAndSlew - Return combined value representing 
- * Drive Strength and Slew Rate. 
- * 
- * @author sworley 
- * 
+ * GPIOGetDriveStrAndSlew - Return combined value representing
+ * Drive Strength and Slew Rate.
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * 
- * @return uint8_t bit[0] = Slew Rate, bits[3:1]=0(Reserved), 
+ *
+ * @return uint8_t bit[0] = Slew Rate, bits[3:1]=0(Reserved),
  *         bits[5:4]=Drive Strength, bits[7:6]=0(Reserved)
  */
 uint8_t GPIOGetDriveStrAndSlew ( enum gpio_id_t gpio_id )
 {
     uint32_t addr;
-    
+
     addr = gpio_has_drv_str(gpio_id );
     if ( addr )
     {
@@ -394,13 +394,13 @@ uint8_t GPIOGetDriveStrAndSlew ( enum gpio_id_t gpio_id )
 
 
 /**
- * GPIOSetDriveStrAndSlew - Program GPIO Pin's drive strength 
- * and slew rate. 
- * 
- * @author sworley 
- * 
+ * GPIOSetDriveStrAndSlew - Program GPIO Pin's drive strength
+ * and slew rate.
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * @param drv_and_slew bit[0] = Slew Rate, bits[3:1]=0(Reserved), 
+ * @param drv_and_slew bit[0] = Slew Rate, bits[3:1]=0(Reserved),
  *         bits[5:4]=Drive Strength, bits[7:6]=0(Reserved)
  */
 void GPIOSetDriveStrAndSlew ( enum gpio_id_t gpio_id,
@@ -408,7 +408,7 @@ void GPIOSetDriveStrAndSlew ( enum gpio_id_t gpio_id,
 {
     uint32_t addr;
     uint8_t r8;
-    
+
     addr = gpio_has_drv_str(gpio_id);
     if ( addr )
     {
@@ -420,25 +420,25 @@ void GPIOSetDriveStrAndSlew ( enum gpio_id_t gpio_id,
 
 
 /**
- * GPIOSetOutput - Program GPIO Pin's output state using Pin 
- * configuration register (not parallel output register). 
- * 
- * @author sworley 
- * 
+ * GPIOSetOutput - Program GPIO Pin's output state using Pin
+ * configuration register (not parallel output register).
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID
- * @param gpio_state pin state: actual pin state at pad will 
+ * @param gpio_state pin state: actual pin state at pad will
  *                   depend upon GPIO Output invert
  *                   configuration.
- * @note peforms a byte wide write to byte offset 2 of the GPIO 
+ * @note peforms a byte wide write to byte offset 2 of the GPIO
  *       Pin's 32-bit configuration register. No
  *       read-modify-write.
  */
-void GPIOSetOutput ( enum gpio_id_t gpio_id, 
+void GPIOSetOutput ( enum gpio_id_t gpio_id,
                      uint8_t gpio_state
                      )
 {
     volatile uint8_t * p;
-    
+
     if ( gpio_is_valid(gpio_id) )
     {
         p = (volatile uint8_t *)(gpio_pin_ctrl_addr(gpio_id) + 2ul);
@@ -464,16 +464,16 @@ void GPIOToggleOutput ( enum gpio_id_t gpio_id )
 
 
 /**
- * GPIOReadPin - Read GPIO Pin's Pad Input from configuration 
- * register. 
- * 
- * @author sworley 
- * 
+ * GPIOReadPin - Read GPIO Pin's Pad Input from configuration
+ * register.
+ *
+ * @author sworley
+ *
  * @param gpio_id 0-based GPIO ID.
- * 
- * @return uint8_t 0 or 1 depending upon the state of the GPIO 
+ *
+ * @return uint8_t 0 or 1 depending upon the state of the GPIO
  *         pad.
- * @note performs a byte read of offset 3 of the GPIO Pin's 
+ * @note performs a byte read of offset 3 of the GPIO Pin's
  *       32-bit configuration register.
  */
 uint8_t GPIOReadPin( enum gpio_id_t gpio_id )
@@ -481,8 +481,8 @@ uint8_t GPIOReadPin( enum gpio_id_t gpio_id )
     if ( gpio_is_valid(gpio_id) )
     {
         return *((volatile uint8_t *)(gpio_pin_ctrl_addr(gpio_id) + 3ul));
-    } 
-    else 
+    }
+    else
     {
         return 0u;
     }
@@ -494,7 +494,7 @@ uint8_t GPIOReadPin( enum gpio_id_t gpio_id )
  *  @note Lock bit is only cleared on POR. Lock registers
  *  are in reverse order, first register is at top address.
  *  GPIO_LOCK_BASE defined to top(first) register address.
- *  */ 
+ *  */
 void GPIOPinLock(enum gpio_id_t gpio_id)
 {
     uint32_t addr;
@@ -505,11 +505,10 @@ void GPIOPinLock(enum gpio_id_t gpio_id)
         bitpos = gpio_pin_num(gpio_id); // 0 - 31
         addr = (uint32_t)(GPIO_LOCK_BASE) - (bank << 2);
         *(volatile uint32_t *)addr |= (1ul << bitpos);
-    } 
+    }
 }
 
 
 /* end mec14xx_gpio.c */
 /**   @}
  */
-

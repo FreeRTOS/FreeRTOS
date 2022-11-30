@@ -110,7 +110,7 @@ _mainCRTStartup:
 	mov		r0, #0          /* no arguments  */
 	mov		r1, #0          /* no argv either */
 
-    ldr lr, =main	
+    ldr lr, =main
 	bx	lr
 
 endless_loop:

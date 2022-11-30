@@ -4,7 +4,7 @@
  *
  * This code is derived from the Stanford/CMU enet packet filter,
  * (net/enet.c) distributed as part of 4.3BSD, and code contributed
- * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence 
+ * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence
  * Berkeley Laboratory.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,8 +69,8 @@ typedef	u_int bpf_u_int32;
 #endif
 
 /*
- * Alignment macros.  BPF_WORDALIGN rounds up to the next 
- * even multiple of BPF_ALIGNMENT. 
+ * Alignment macros.  BPF_WORDALIGN rounds up to the next
+ * even multiple of BPF_ALIGNMENT.
  */
 #ifndef __NetBSD__
 #define BPF_ALIGNMENT sizeof(bpf_int32)
@@ -89,9 +89,9 @@ struct bpf_program {
 	u_int bf_len;
 	struct bpf_insn *bf_insns;
 };
- 
+
 /*
- * Struct return by BIOCVERSION.  This represents the version number of 
+ * Struct return by BIOCVERSION.  This represents the version number of
  * the filter language described by the instruction encodings below.
  * bpf understands a program iff kernel_major == filter_major &&
  * kernel_minor >= filter_minor, that is, if the value returned by the
@@ -353,7 +353,7 @@ struct bpf_version {
  */
 #define DLT_SUNATM		123	/* Solaris+SunATM */
 
-/* 
+/*
  * Reserved as per request from Kent Dahlgren <kent@praesum.com>
  * for private use.
  */
@@ -596,7 +596,7 @@ struct bpf_version {
 
 /*
  * Juniper-private data link type, as per request from
- * Hannes Gredler <hannes@juniper.net>. 
+ * Hannes Gredler <hannes@juniper.net>.
  * The DLT_ are used for prepending meta-information
  * like interface index, interface name
  * before standard Ethernet, PPP, Frelay & C-HDLC Frames
@@ -613,7 +613,7 @@ struct bpf_version {
 
 /*
  * Juniper-private data link type, as per request from
- * Hannes Gredler <hannes@juniper.net>. 
+ * Hannes Gredler <hannes@juniper.net>.
  * The DLT_ is used for internal communication with a
  * voice Adapter Card (PIC)
  */
@@ -688,7 +688,7 @@ struct bpf_version {
 
 /*
  * Juniper-private data link type, as per request from
- * Hannes Gredler <hannes@juniper.net>. 
+ * Hannes Gredler <hannes@juniper.net>.
  * The DLT_ is used for internal communication with a
  * integrated service module (ISM).
  */
@@ -729,7 +729,7 @@ struct bpf_version {
 
 /*
  * Juniper-private data link type, as per request from
- * Hannes Gredler <hannes@juniper.net>. 
+ * Hannes Gredler <hannes@juniper.net>.
  * The DLT_ is used for capturing data on a secure tunnel interface.
  */
 #define DLT_JUNIPER_ST          200

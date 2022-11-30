@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -29,13 +29,13 @@
 
 /** \addtogroup aic_module
  *
- * The Advanced Interrupt Controller (AIC) is an 8-level priority, individually 
- * maskable, vectored interrupt controller, providing handling of up to thirty-two interrupt sources. 
+ * The Advanced Interrupt Controller (AIC) is an 8-level priority, individually
+ * maskable, vectored interrupt controller, providing handling of up to thirty-two interrupt sources.
  *
  * \section Usage
  * <ul>
  * <li> Each interrupt source can be enabled or disabled by using the IRQ_EnableIT() and IRQ_DisableIT()</li>
- * <li> Configure the AIC interrupt to its requirements and special needs,such as priorty 
+ * <li> Configure the AIC interrupt to its requirements and special needs,such as priorty
  * level, source type and configure the addresses of the corresponding handler for each interrupt source
  * could be setting by  IRQ_ConfigureIT(). </li>
  * <li> Start conversion by setting ADC_CR_START in ADC_CR. </li>
@@ -74,7 +74,7 @@
 /**
  * \brief Enables interrupts coming from the given AIC and (unique) source (ID_xxx).
  *
- * \param aic  AIC instance. 
+ * \param aic  AIC instance.
  * \param source  Interrupt source to enable.
  */
 static void _aic_EnableIT(Aic *aic, uint32_t source)
@@ -101,7 +101,7 @@ static void _aic_DisableIT(Aic *aic, uint32_t source)
  * \param pid  peripheral ID
  */
 static uint8_t _isH64Matrix(uint32_t pid){
-    if ((pid == ID_ARM) || 
+    if ((pid == ID_ARM) ||
         (pid == ID_XDMAC0) ||
         //(pid == ID_PKCC) ||
         (pid == ID_AESB) ||
@@ -110,7 +110,7 @@ static uint8_t _isH64Matrix(uint32_t pid){
         (pid == ID_XDMAC1) ||
         (pid == ID_LCDC) ||
         (pid == ID_ISI) ||
-        (pid == ID_L2CC)) 
+        (pid == ID_L2CC))
     {
         return 1;
     } else {
@@ -126,7 +126,7 @@ static uint8_t _isH64Matrix(uint32_t pid){
 void AIC_EnableIT( uint32_t source)
 {
     volatile unsigned int * pAicFuse = (volatile unsigned int *) REG_SFR_AICREDIR;
-    
+
     if(*pAicFuse)
     {
       _aic_EnableIT(AIC, source);
@@ -136,12 +136,12 @@ void AIC_EnableIT( uint32_t source)
       if (_isH64Matrix(source)) {
           if ( MATRIX0->MATRIX_SPSELR[source / 32] & (1 << (source % 32)))
               _aic_EnableIT(AIC, source);
-          else 
+          else
               _aic_EnableIT(SAIC, source);
       } else {
           if ( MATRIX1->MATRIX_SPSELR[source / 32] & (1 << (source % 32)))
               _aic_EnableIT(AIC, source);
-          else 
+          else
               _aic_EnableIT(SAIC, source);
       }
     }
@@ -157,12 +157,12 @@ void AIC_DisableIT(uint32_t source)
     if (_isH64Matrix(source)) {
         if ( MATRIX0->MATRIX_SPSELR[source / 32] & (1 << (source % 32)))
             _aic_DisableIT(AIC, source);
-        else 
+        else
             _aic_DisableIT(SAIC, source);
     } else {
         if ( MATRIX1->MATRIX_SPSELR[source / 32] & (1 << (source % 32)))
             _aic_DisableIT(AIC, source);
-        else 
+        else
             _aic_DisableIT(SAIC, source);
     }
 }

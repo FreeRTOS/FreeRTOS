@@ -128,4 +128,3 @@ the timer has overflowed. */
 		TA1CTL |= MC__CONTINOUS;												\
 	}
 #endif /* FREERTOS_CONFIG_H */
-

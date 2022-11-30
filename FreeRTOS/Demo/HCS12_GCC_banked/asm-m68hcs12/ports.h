@@ -189,4 +189,3 @@ timer_initialize_rate (unsigned char divisor)
 }
 
 #endif /* _M68HC11_PORTS_H */
-

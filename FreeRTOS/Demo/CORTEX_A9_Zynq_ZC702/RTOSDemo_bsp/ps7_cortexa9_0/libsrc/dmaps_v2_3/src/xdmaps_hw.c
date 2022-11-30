@@ -3,7 +3,7 @@
 * Copyright (C) 2009 - 2015 Xilinx, Inc.  All rights reserved.
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal 
+* of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
@@ -20,7 +20,7 @@
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 * XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
@@ -36,7 +36,7 @@
 * @addtogroup dmaps_v2_3
 * @{
 *
-* This file contains the implementation of the interface reset functionality 
+* This file contains the implementation of the interface reset functionality
 *	for XDmaPs driver.
 *
 * <pre>
@@ -66,10 +66,10 @@
 
 /*****************************************************************************/
 /**
-* This function perform the reset sequence to the given dmaps interface by 
+* This function perform the reset sequence to the given dmaps interface by
 * configuring the appropriate control bits in the dmaps specifc registers
 * the dmaps reset squence involves the following steps
-*	Disable all the interuupts 
+*	Disable all the interuupts
 *	Clear the pending interrupts
 *	Kill all the active channel threads
 *	Kill the manager thread
@@ -78,8 +78,8 @@
 *
 * @return N/A
 *
-* @note 
-* This function will not modify the slcr registers that are relavant for 
+* @note
+* This function will not modify the slcr registers that are relavant for
 * dmaps controller
 ******************************************************************************/
 void XDmaPs_ResetHw(u32 BaseAddress)
@@ -99,16 +99,16 @@ void XDmaPs_ResetHw(u32 BaseAddress)
 				&& (WaitCount < XDMAPS_MAX_WAIT))
 				WaitCount++;
 
-		DbgInst = XDmaPs_DBGINST0(0, 0x01, ChanIndex, 1);	
+		DbgInst = XDmaPs_DBGINST0(0, 0x01, ChanIndex, 1);
 		XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGINST0_OFFSET, DbgInst);
-		XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGINST1_OFFSET, 0x0);	
+		XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGINST1_OFFSET, 0x0);
 		XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGCMD_OFFSET, 0x0);
-	}	
+	}
 	/* Kill the manager thread	*/
-	DbgInst = XDmaPs_DBGINST0(0, 0x01, 0, 0);	
+	DbgInst = XDmaPs_DBGINST0(0, 0x01, 0, 0);
 	XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGINST0_OFFSET, DbgInst);
-	XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGINST1_OFFSET, 0x0);	
-	XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGCMD_OFFSET, 0x0);	
+	XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGINST1_OFFSET, 0x0);
+	XDmaPs_WriteReg(BaseAddress, XDMAPS_DBGCMD_OFFSET, 0x0);
 }
 
 

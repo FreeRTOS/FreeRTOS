@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -69,7 +69,7 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
- 
+
 /**
  * Return 1 if PHY is idle
  */
@@ -111,9 +111,9 @@ uint16_t GMAC_PHYData(Gmac *pGmac)
 }
 
 /**
- *  \brief Set MDC clock according to current board clock. Per 802.3, MDC should be 
+ *  \brief Set MDC clock according to current board clock. Per 802.3, MDC should be
  *  less then 2.5MHz.
- *  \param pGmac Pointer to an Gmac instance. 
+ *  \param pGmac Pointer to an Gmac instance.
  *  \param mck Mdc clock
  *  \return 1 if successfully, 0 if MDC clock not found.
  */
@@ -195,7 +195,7 @@ void GMAC_EnableGMII( Gmac *pGmac )
  *  \brief Enable RGMII mode for GMAC, called once after autonegotiate
  *  \param pGmac Pointer to an Gmac instance.
  *  \param duplex: 1 full duplex 0 half duplex
- *  \param speed:   0 10M 1 100M 
+ *  \param speed:   0 10M 1 100M
  */
 void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
 {
@@ -204,7 +204,7 @@ void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
     {
         pGmac->GMAC_NCFGR &= ~GMAC_NCFGR_FD;
     }
-    else 
+    else
     {
         pGmac->GMAC_NCFGR |= GMAC_NCFGR_FD;
     }
@@ -214,7 +214,7 @@ void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
     {
         pGmac->GMAC_NCFGR &= ~GMAC_NCFGR_SPD;
     }
-    else if(speed == GMAC_SPEED_100M) 
+    else if(speed == GMAC_SPEED_100M)
     {
         pGmac->GMAC_NCFGR |= GMAC_NCFGR_SPD;
     }
@@ -222,7 +222,7 @@ void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
     {
         pGmac->GMAC_NCFGR |= GMAC_NCFGR_SPD;
     }
-  
+
     /* RGMII enable */
     pGmac->GMAC_UR |= GMAC_UR_RMII;
     pGmac->GMAC_NCFGR &= ~GMAC_NCFGR_GBE;
@@ -322,7 +322,7 @@ void GMAC_TransmitEnable(Gmac *pGmac, uint8_t bEnaDis)
     if (bEnaDis) pGmac->GMAC_NCR |=  GMAC_NCR_TXEN;
     else         pGmac->GMAC_NCR &= ~GMAC_NCR_TXEN;
 }
- 
+
 
 /**
  * Set Rx Queue
@@ -331,7 +331,7 @@ void GMAC_SetRxQueue(Gmac *pGmac, uint32_t dwAddr)
 {
     pGmac->GMAC_RBQB = GMAC_RBQB_ADDR_Msk & dwAddr;
 }
-           
+
 /**
  * Get Rx Queue Address
  */

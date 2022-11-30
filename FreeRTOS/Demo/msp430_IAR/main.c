@@ -295,9 +295,3 @@ volatile long lValue;
         LPM3;
 	}
 }
-
-
-
-
-
-

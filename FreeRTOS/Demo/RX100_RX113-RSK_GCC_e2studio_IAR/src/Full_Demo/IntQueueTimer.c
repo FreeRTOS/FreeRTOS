@@ -145,4 +145,3 @@ __interrupt void vT2_3InterruptHandler( void )
 }
 
 #endif /* __ICCRX__ */
-

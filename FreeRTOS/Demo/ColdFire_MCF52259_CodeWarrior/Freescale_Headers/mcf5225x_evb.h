@@ -3,7 +3,7 @@
  * Purpose:		Evaluation board definitions and memory map information
  *
  * Notes:
- * 
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */
@@ -25,11 +25,11 @@
  */
 #undef DEBUG
 
-/* 
- * System Bus Clock Info 
+/*
+ * System Bus Clock Info
  */
- 
- 								
+
+
 #define	SYSTEM_CLOCK			80	/* system bus frequency in MHz */
 //#define PERIOD			    12.5	/* system bus period in ns */
 #define TERMINAL_BAUD			19200
@@ -41,13 +41,13 @@
 #define REF_CLK_KHZ         	(REF_CLK_MHZ * 1000)
 #define SYS_CLK_KHZ         	(SYS_CLK_MHZ * 1000)
 
-/* 
- * Memory map definitions from linker command files 
+/*
+ * Memory map definitions from linker command files
  */
 
 extern uint8 __IPSBAR[];
 extern uint8 __SRAM[];
-extern uint8 __FLASH[];      
+extern uint8 __FLASH[];
 extern uint8 __SRAM_SIZE[];
 extern uint8 __FLASH_SIZE[];
 extern uint8 __DATA_ROM[];
@@ -59,8 +59,8 @@ extern uint32 VECTOR_TABLE[];
 extern uint32 __VECTOR_RAM[];
 
 
-/* 
- * Memory Map Info 
+/*
+ * Memory Map Info
  */
 #define IPSBAR_ADDRESS		(uint32)__IPSBAR
 
@@ -79,9 +79,9 @@ extern uint32 __VECTOR_RAM[];
 /*
  *	Timer period info
  */
- 
+
  /* 1 sec / max timeout */
-#define TIMER_NETWORK_PERIOD	1000000000/0x10000	
+#define TIMER_NETWORK_PERIOD	1000000000/0x10000
 
 /*
  * Board specific function prototypes

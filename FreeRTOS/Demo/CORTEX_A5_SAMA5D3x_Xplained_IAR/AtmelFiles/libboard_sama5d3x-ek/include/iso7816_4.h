@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -84,4 +84,3 @@ extern void ISO7816_warm_reset( void );
 extern void ISO7816_Decode_ATR( uint8_t* pAtr );
 
 #endif /* ISO7816_4_H */
-

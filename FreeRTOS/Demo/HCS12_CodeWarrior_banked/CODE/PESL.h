@@ -48,5 +48,3 @@
 #pragma MESSAGE DISABLE C4001 /* WARNING C4001: Condition is always FALSE */
 
 #include "PESLlib.h"
-
-

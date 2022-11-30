@@ -38,7 +38,7 @@
 *              : 21.05.2015 1.00     First Release
 ***********************************************************************************************************************/
 
-/* This program is allocated to section "intvec" */ 
+/* This program is allocated to section "intvec" */
 
     .text
     .code 32
@@ -49,7 +49,7 @@
     .global reserved_handler
     .global irq_handler
     .global fiq_handler
-    
+
 
 undefined_handler:
     b  undefined_handler
@@ -73,4 +73,3 @@ fiq_handler:
     b  fiq_handler
 
     .end
-

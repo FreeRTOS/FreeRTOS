@@ -41,11 +41,11 @@ void NMIException( void ) {}
 *
 **/
 /******************************************************************************/
-void HardFaultException( void ) 
+void HardFaultException( void )
    {
    #ifdef TIMING_ANALYSIS     //to debug with a scope
-   GPIO_WriteBit( GPIOA, GPIO_Pin_5, Bit_RESET );  
-   GPIO_WriteBit( GPIOA, GPIO_Pin_5, Bit_SET );    
+   GPIO_WriteBit( GPIOA, GPIO_Pin_5, Bit_RESET );
+   GPIO_WriteBit( GPIOA, GPIO_Pin_5, Bit_SET );
    #endif
    }
 
@@ -214,4 +214,3 @@ void TIM4_IRQHandler( void )
       TIM_ClearITPendingBit( TIM4, TIM_IT_CC2 );
   }
 }
-

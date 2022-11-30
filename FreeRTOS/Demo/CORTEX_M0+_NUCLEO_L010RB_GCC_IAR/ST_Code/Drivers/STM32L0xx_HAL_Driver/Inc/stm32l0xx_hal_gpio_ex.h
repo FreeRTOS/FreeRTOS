@@ -2502,4 +2502,3 @@ extern "C" {
 #endif /* __STM32L0xx_HAL_GPIO_EX_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

@@ -1219,7 +1219,7 @@ void pio_keypad_set_row_num(Pio *p_pio, uint8_t num)
  * \brief Get PIO keypad controller row number.
  *
  * \param p_pio Pointer to a PIO instance.
- * 
+ *
  * \return Number of row of the keypad matrix.
  */
 uint8_t pio_keypad_get_row_num(const Pio *p_pio)
@@ -1243,7 +1243,7 @@ void pio_keypad_set_column_num(Pio *p_pio, uint8_t num)
  * \brief Get PIO keypad controller column number.
  *
  * \param p_pio Pointer to a PIO instance.
- * 
+ *
  * \return Number of column of the keypad matrix.
  */
 uint8_t pio_keypad_get_column_num(const Pio *p_pio)
@@ -1467,4 +1467,3 @@ uint8_t pio_keypad_get_release_column_index(const Pio *p_pio, uint8_t queue)
 #endif
 
 //@}
-

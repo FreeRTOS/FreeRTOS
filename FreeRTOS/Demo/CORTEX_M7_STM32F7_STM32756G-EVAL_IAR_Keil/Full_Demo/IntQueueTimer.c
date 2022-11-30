@@ -140,4 +140,3 @@ void TIM4_IRQHandler( void )
 	run-time stats. */
 	ulHighFrequencyTimerCounts++;
 }
-

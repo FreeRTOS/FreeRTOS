@@ -1322,7 +1322,7 @@ extern void uITRON4_free(void *p) ;
             #include "stm32f1xx.h"
         #endif
     #endif /* WOLFSSL_STM32_CUBEMX */
-#endif /* WOLFSSL_STM32F2 || WOLFSSL_STM32F4 || WOLFSSL_STM32L4 || 
+#endif /* WOLFSSL_STM32F2 || WOLFSSL_STM32F4 || WOLFSSL_STM32L4 ||
 		  WOLFSSL_STM32L5 || WOLFSSL_STM32F7 || WOLFSSL_STMWB || WOLFSSL_STM32H7 */
 #ifdef WOLFSSL_DEOS
     #include <deos.h>

@@ -512,7 +512,7 @@ static WC_INLINE int mygetopt(int argc, char** argv, const char* optstring)
     char  c;
     char* cp;
 
-    /* Added sanity check becuase scan-build complains argv[myoptind] access 
+    /* Added sanity check becuase scan-build complains argv[myoptind] access
      * results in a null pointer dereference. */
     if (argv == NULL)  {
         myoptarg = NULL;
@@ -1788,7 +1788,7 @@ static WC_INLINE int myVerify(int preverify, WOLFSSL_X509_STORE_CTX* store)
         return 0; /* test failure case */
     }
 
-    if (myVerifyAction == VERIFY_OVERRIDE_DATE_ERR && 
+    if (myVerifyAction == VERIFY_OVERRIDE_DATE_ERR &&
         (store->error == ASN_BEFORE_DATE_E || store->error == ASN_AFTER_DATE_E)) {
         printf("Overriding cert date error as example for bad clock testing\n");
         return 1;

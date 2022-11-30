@@ -41,32 +41,32 @@ extern "C"
 /*
  * Component : MPU SCU Module Address Space - ALT_MPUSCU
  * MPU SCU Module Address Space
- * 
+ *
  * Address space allocated to the MPU SCU. For detailed information about the use
  * of this address space,
  * [url=http://infocenter.arm.com/help/topic/com.arm.doc.ddi0407f/index.html]click
  * here[/url] to access the ARM documentation for the Cortex-A9 MPCore.
- * 
+ *
  */
 /*
  * Register : Empty - reg
- * 
+ *
  * Placeholder
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------
- *  [31:0] | RW     | Unknown | Empty      
- * 
+ *  [31:0] | RW     | Unknown | Empty
+ *
  */
 /*
  * Field : Empty - fld
- * 
+ *
  * Placeholder
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_MPUSCU_REG_FLD register field. */
 #define ALT_MPUSCU_REG_FLD_LSB        0
@@ -93,7 +93,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_MPUSCU_REG.
  */
 struct ALT_MPUSCU_REG_s
@@ -116,7 +116,7 @@ typedef volatile struct ALT_MPUSCU_REG_s  ALT_MPUSCU_REG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_MPUSCU.
  */
 struct ALT_MPUSCU_s
@@ -141,4 +141,3 @@ typedef volatile struct ALT_MPUSCU_raw_s  ALT_MPUSCU_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_MPUSCU_H__ */
-

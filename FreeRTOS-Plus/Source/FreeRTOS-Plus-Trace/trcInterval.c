@@ -33,14 +33,14 @@ traceResult xTraceIntervalCreate(const char *szName, TraceIntervalHandle_t *pxIn
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntrySetOptions((TraceEntryHandle_t)xObjectHandle, TRC_ENTRY_OPTION_INTERVAL) == TRC_SUCCESS);
 
 	*pxIntervalHandle = (TraceIntervalHandle_t)xObjectHandle;
-	
+
 	return TRC_SUCCESS;
 }
 
 traceResult xTraceIntervalStart(TraceIntervalHandle_t xIntervalHandle)
 {
 	TraceEventHandle_t xEventHandle = 0;
-	
+
 	/* This should never fail */
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntrySetState((TraceEntryHandle_t)xIntervalHandle, TRC_INTERVAL_STATE_INDEX, 1) == TRC_SUCCESS);
 
@@ -58,7 +58,7 @@ traceResult xTraceIntervalStart(TraceIntervalHandle_t xIntervalHandle)
 traceResult xTraceIntervalStop(TraceIntervalHandle_t xIntervalHandle)
 {
 	TraceEventHandle_t xEventHandle = 0;
-	
+
 	/* This should never fail */
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntrySetState((TraceEntryHandle_t)xIntervalHandle, TRC_INTERVAL_STATE_INDEX, 0) == TRC_SUCCESS);
 
@@ -69,7 +69,7 @@ traceResult xTraceIntervalStop(TraceIntervalHandle_t xIntervalHandle)
 		xTraceEventAdd32(xEventHandle, 0);
 		xTraceEventEnd(xEventHandle);
 	}
-	
+
 	return TRC_SUCCESS;
 }
 

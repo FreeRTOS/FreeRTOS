@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -158,7 +158,7 @@ extern "C"
 
 //*****************************************************************************
 //
-//! Calculates the flash bank and sector number given an address. Stores the 
+//! Calculates the flash bank and sector number given an address. Stores the
 //! results into the two pointers given as parameters. The user must provide
 //! a valid memory address (an address in SRAM for example will give an invalid
 //! result).
@@ -178,7 +178,7 @@ extern "C"
 //! \return None.
 //
 //*****************************************************************************
-extern void FlashCtl_getMemoryInfo(uint32_t addr, uint32_t *sectorNum, 
+extern void FlashCtl_getMemoryInfo(uint32_t addr, uint32_t *sectorNum,
                                 uint32_t *bankNum);
 
 //*****************************************************************************
@@ -274,7 +274,7 @@ extern void FlashCtl_disableReadBuffering(uint_fast8_t memoryBank,
 //!
 //! \note Not all devices will contain a dedicated INFO memory. Please check the
 //!  device datasheet to see if your device has INFO memory available for use.
-//!  For devices without INFO memory, any operation related to the INFO memory 
+//!  For devices without INFO memory, any operation related to the INFO memory
 //!  will be ignored by the hardware.
 //!
 //! \return true if sector protection disabled false otherwise.
@@ -336,7 +336,7 @@ extern bool FlashCtl_unprotectSector(uint_fast8_t memorySpace,
 //!
 //! \note Not all devices will contain a dedicated INFO memory. Please check the
 //!  device datasheet to see if your device has INFO memory available for use.
-//!  For devices without INFO memory, any operation related to the INFO memory 
+//!  For devices without INFO memory, any operation related to the INFO memory
 //!  will be ignored by the hardware.
 //!
 //! \return true if sector protection enabled false otherwise.
@@ -397,7 +397,7 @@ extern bool FlashCtl_protectSector(uint_fast8_t memorySpace,
 //!
 //! \note Not all devices will contain a dedicated INFO memory. Please check the
 //!  device datasheet to see if your device has INFO memory available for use.
-//!  For devices without INFO memory, any operation related to the INFO memory 
+//!  For devices without INFO memory, any operation related to the INFO memory
 //!  will be ignored by the hardware.
 //!
 //! \return true if sector protection enabled false otherwise.
@@ -476,7 +476,7 @@ extern bool FlashCtl_performMassErase(void);
 //!  Initiates a mass erase and returns control back to the program. This is a
 //!  non-blocking function, however it is the user's responsibility to perform
 //!  the necessary verification requirements after the interrupt is set to
-//!  signify completion. 
+//!  signify completion.
 //!
 //! \return None
 //
@@ -893,7 +893,7 @@ extern void FlashCtl_unregisterInterrupt(void);
 
 //*****************************************************************************
 //
-//! Initiates a sector erase of MAIN or INFO flash memory. Note that this 
+//! Initiates a sector erase of MAIN or INFO flash memory. Note that this
 //! function simply initaites the sector erase, but does no verification
 //! which is required by the flash controller. The user must manually set
 //! and enable interrupts on the flash controller to fire on erase completion

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -169,4 +169,3 @@ extern uint32_t MCID_IOCtrl(sMcid * pMcid,uint32_t bCtl,uint32_t param);
 /**     @}*/
 /**@}*/
 #endif //#ifndef HSMCID_H
-

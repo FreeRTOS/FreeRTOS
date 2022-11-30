@@ -471,6 +471,3 @@ void vFullDemoTickHook( void )
 	}
 	#endif /* configASSERT_DEFINED */
 }
-
-
-

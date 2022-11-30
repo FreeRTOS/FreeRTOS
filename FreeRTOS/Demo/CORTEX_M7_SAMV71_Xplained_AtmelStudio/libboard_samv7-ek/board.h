@@ -28,7 +28,7 @@
  */
 
 /**
- * \page samv7_Xplained_ultra_board_desc SAM V71 Xplained Ultra - Board 
+ * \page samv7_Xplained_ultra_board_desc SAM V71 Xplained Ultra - Board
  * Description
  *
  * \section Purpose
@@ -37,14 +37,14 @@
  *
  * \section Contents
  *
- *  - For SAM V71 Xplained Ultra board information, see 
+ *  - For SAM V71 Xplained Ultra board information, see
  *    \subpage samv7_Xplained_ultra_board_info.
  *  - For operating frequency information, see \subpage samv7_Xplained_ultra_opfreq.
  *  - For using portable PIO definitions, see \subpage samv7_Xplained_ultra_piodef.
  *  - For using GMAC PIO definitions, see \subpage samv7_Xplained_ultra_gmac.
  *  - For using ISI definitions, see \subpage samv7_Xplained_ultra_isi.
  *  - For on-board memories, see \subpage samv7_Xplained_ultra_mem.
- *  - Several USB definitions are included here, 
+ *  - Several USB definitions are included here,
  *    see \subpage samv7_Xplained_ultra_usb.
  *  - For External components, see \subpage samv7_Xplained_ultra_extcomp.
  *  - For Individual chip definition, see \subpage samv7_Xplained_ultra_chipdef.
@@ -111,7 +111,7 @@
 #include "include/ovyuv.h"
 #include "include/ov.h"
 #include "include/iso7816_4.h"
-   
+
 #if defined (  __GNUC__  )
 #include "include/syscalls.h"
 #endif
@@ -147,7 +147,7 @@
 
 /** Master clock frequency (when using board_lowlevel.c) */
 
-#define BOARD_MCK    150000000 
+#define BOARD_MCK    150000000
 
 #if (BOARD_MCK==132000000 )
 
@@ -256,7 +256,7 @@
  * - \ref PIN_MCAN1_TXD
  * - \ref PIN_MCAN1_RXD
  */
- 
+
 /** SSC pin Transmitter Data (TD) */
 #define PIN_SSC_TD  {PIO_PD26B_TD, PIOD, ID_PIOD, PIO_PERIPH_B, PIO_DEFAULT}
 /** SSC pin Transmitter Clock (TK) */
@@ -293,14 +293,14 @@
 /** List of all LEDs definitions. */
 #define PINS_LEDS  {PIN_LED_0, PIN_LED_1}
 
-/** 
- * Push button #0 definition. 
+/**
+ * Push button #0 definition.
  * Attributes = pull-up + debounce + interrupt on rising edge.
  */
 #define PIN_PUSHBUTTON_0 \
 		{PIO_PA9, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
-/** 
- * Push button #1 definition. 
+/**
+ * Push button #1 definition.
  * Attributes = pull-up + debounce + interrupt on rising edge.
  */
 #define PIN_PUSHBUTTON_1 \
@@ -501,7 +501,7 @@
 		PIN_ISI_D0, PIN_ISI_D1, PIN_ISI_D2,PIN_ISI_D3,PIN_ISI_D4, PIN_ISI_D5,\
 		PIN_ISI_D6,PIN_ISI_D7,PIN_ISI_D8, PIN_ISI_D9,BOARD_ISI_VSYNC ,\
 		BOARD_ISI_HSYNC ,BOARD_ISI_PCK, BOARD_ISI_RST, BOARD_ISI_PWD,BOARD_ISI_PCK0
- 
+
 /*----------------------------------------------------------------------------*/
 /**
  * \page samv7_Xplained_ultra_usb "SAM V71 Xplained Ultra - USB device"
@@ -514,8 +514,8 @@
  *
  */
 
-/** 
- * USB attributes configuration descriptor (bus or self powered, 
+/**
+ * USB attributes configuration descriptor (bus or self powered,
  * remote wakeup)
  */
 #define BOARD_USB_BMATTRIBUTES USBConfigurationDescriptor_SELFPOWERED_NORWAKEUP
@@ -565,7 +565,7 @@
 /** PWM channel for LED0 */
 #define CHANNEL_PWM_LCD 0
 
-#endif 
+#endif
 /*ENDIF BOARD_LCD_SPI_EXT1 */
 
 #if defined (BOARD_LCD_SPI_EXT2)
@@ -595,7 +595,7 @@
 /** PWM channel for LED0 */
 #define CHANNEL_PWM_LCD 2
 
-#endif 
+#endif
 /*ENDIF BOARD_LCD_SPI_EXT2 */
 
 /** SMC pin definition for LCD */
@@ -633,20 +633,20 @@
  * \page samv7_Xplained_ultra_mem "SAM V71 Xplained Ultra - Memories"
  * This page lists definitions related to internal & external on-board memories.
  * \section SDRAM
- * - \ref PIN_SDRAM_D0_7 
- * - \ref PIN_SDRAM_D8_13 
- * - \ref PIN_SDRAM_D14_15 
- * - \ref PIN_SDRAM_A0_9 
- * - \ref PIN_SDRAM_SDA10 
- * - \ref PIN_SDRAM_CAS 
- * - \ref PIN_SDRAM_RAS 
- * - \ref PIN_SDRAM_SDCKE 
- * - \ref PIN_SDRAM_SDCK  
- * - \ref PIN_SDRAM_SDSC 
- * - \ref PIN_SDRAM_NBS0 
- * - \ref PIN_SDRAM_NBS1 
- * - \ref PIN_SDRAM_SDWE 
- * - \ref PIN_SDRAM_BA0 
+ * - \ref PIN_SDRAM_D0_7
+ * - \ref PIN_SDRAM_D8_13
+ * - \ref PIN_SDRAM_D14_15
+ * - \ref PIN_SDRAM_A0_9
+ * - \ref PIN_SDRAM_SDA10
+ * - \ref PIN_SDRAM_CAS
+ * - \ref PIN_SDRAM_RAS
+ * - \ref PIN_SDRAM_SDCKE
+ * - \ref PIN_SDRAM_SDCK
+ * - \ref PIN_SDRAM_SDSC
+ * - \ref PIN_SDRAM_NBS0
+ * - \ref PIN_SDRAM_NBS1
+ * - \ref PIN_SDRAM_SDWE
+ * - \ref PIN_SDRAM_BA0
  *
  * \section SDMMC
  * - \ref BOARD_MCI_PIN_CD
@@ -659,24 +659,24 @@
  * - \ref PINS_QSPI_IO3
  * - \ref PINS_QSPI
  */
- 
+
 /** List of all SDRAM pin definitions. */
 #define BOARD_SDRAM_SIZE  (2*1024*1024)
-#define PIN_SDRAM_D0_7    {0x000000FF, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT} 
-#define PIN_SDRAM_D8_13   {0x0000003F, PIOE, ID_PIOE, PIO_PERIPH_A, PIO_DEFAULT} 
-#define PIN_SDRAM_D14_15  {0x00018000, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} 
-#define PIN_SDRAM_A0_9    {0x3FF00000, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT} 
-#define PIN_SDRAM_SDA10   {0x00002000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT} 
+#define PIN_SDRAM_D0_7    {0x000000FF, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_SDRAM_D8_13   {0x0000003F, PIOE, ID_PIOE, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_SDRAM_D14_15  {0x00018000, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_SDRAM_A0_9    {0x3FF00000, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_SDRAM_SDA10   {0x00002000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT}
 
-#define PIN_SDRAM_CAS     {0x00020000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT} 
-#define PIN_SDRAM_RAS     {0x00010000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT} 
-#define PIN_SDRAM_SDCKE   {0x00004000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT} 
-#define PIN_SDRAM_SDCK    {0x00800000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT} 
-#define PIN_SDRAM_SDSC    {0x00008000, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT} 
-#define PIN_SDRAM_NBS0    {0x00040000, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT} 
-#define PIN_SDRAM_NBS1    {0x00008000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT} 
-#define PIN_SDRAM_SDWE    {0x20000000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT} 
-#define PIN_SDRAM_BA0     {0x00100000, PIOA, ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT} 
+#define PIN_SDRAM_CAS     {0x00020000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT}
+#define PIN_SDRAM_RAS     {0x00010000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT}
+#define PIN_SDRAM_SDCKE   {0x00004000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT}
+#define PIN_SDRAM_SDCK    {0x00800000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT}
+#define PIN_SDRAM_SDSC    {0x00008000, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_SDRAM_NBS0    {0x00040000, PIOC, ID_PIOC, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_SDRAM_NBS1    {0x00008000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT}
+#define PIN_SDRAM_SDWE    {0x20000000, PIOD, ID_PIOD, PIO_PERIPH_C, PIO_DEFAULT}
+#define PIN_SDRAM_BA0     {0x00100000, PIOA, ID_PIOA, PIO_PERIPH_C, PIO_DEFAULT}
 
 #define BOARD_SDRAM_PINS PIN_SDRAM_D0_7, PIN_SDRAM_D8_13 , PIN_SDRAM_D14_15,\
 		PIN_SDRAM_A0_9, PIN_SDRAM_SDA10, PIN_SDRAM_BA0, \
@@ -758,4 +758,3 @@
  */
 #define PINS_VBUS_EN   {PIO_PC16, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
 #endif /* #ifndef _BOARD_H_ */
-

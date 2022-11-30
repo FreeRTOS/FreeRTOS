@@ -33,7 +33,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F7xx_HAL_I2C_EX_H
@@ -44,7 +44,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f7xx_hal_def.h"  
+#include "stm32f7xx_hal_def.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -52,9 +52,9 @@
 
 /** @addtogroup I2CEx
   * @{
-  */ 
+  */
 
-/* Exported types ------------------------------------------------------------*/ 
+/* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
 /** @defgroup I2CEx_Exported_Constants I2CEx Exported Constants
@@ -72,8 +72,8 @@
 
 /**
   * @}
-  */ 
-  
+  */
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
@@ -88,7 +88,7 @@ HAL_StatusTypeDef HAL_I2CEx_ConfigDigitalFilter(I2C_HandleTypeDef *hi2c, uint32_
 
 /**
   * @}
-  */ 
+  */
 
 /* Private macros ------------------------------------------------------------*/
 /** @defgroup I2C_Private_Macro I2C Private Macros
@@ -100,7 +100,7 @@ HAL_StatusTypeDef HAL_I2CEx_ConfigDigitalFilter(I2C_HandleTypeDef *hi2c, uint32_
 #define IS_I2C_DIGITAL_FILTER(FILTER)   ((FILTER) <= 0x0000000F)
 /**
   * @}
-  */ 
+  */
 
 /* Private Functions ---------------------------------------------------------*/
 /** @defgroup I2C_Private_Functions I2C Private Functions
@@ -109,16 +109,16 @@ HAL_StatusTypeDef HAL_I2CEx_ConfigDigitalFilter(I2C_HandleTypeDef *hi2c, uint32_
 /* Private functions are defined in stm32f7xx_hal_i2c_ex.c file */
 /**
   * @}
-  */ 
-
-/**
-  * @}
-  */ 
+  */
 
 /**
   * @}
   */
-  
+
+/**
+  * @}
+  */
+
 #ifdef __cplusplus
 }
 #endif

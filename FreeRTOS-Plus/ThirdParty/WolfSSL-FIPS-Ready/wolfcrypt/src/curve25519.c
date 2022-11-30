@@ -529,4 +529,3 @@ int wc_curve25519_size(curve25519_key* key)
 }
 
 #endif /*HAVE_CURVE25519*/
-

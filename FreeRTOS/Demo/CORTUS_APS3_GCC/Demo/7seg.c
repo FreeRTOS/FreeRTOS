@@ -155,5 +155,3 @@ TickType_t xCountRate, xLastCountTime;
 		}
 	}
 }
-
-

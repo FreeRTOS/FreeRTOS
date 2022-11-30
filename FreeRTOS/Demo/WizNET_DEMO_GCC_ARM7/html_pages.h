@@ -57,4 +57,3 @@ const char * const cSamplePageSecondPart =
 
 
 #endif
-

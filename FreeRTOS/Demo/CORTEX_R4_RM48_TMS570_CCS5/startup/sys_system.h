@@ -2,7 +2,7 @@
 *   @brief System Driver Header File
 *   @date 23.July.2009
 *   @version 1.01.001
-*   
+*
 *   This file contains:
 *   - Definitions
 *   - Types

@@ -107,4 +107,3 @@ const intvec_elem __vector_table[] =
 };
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/
-

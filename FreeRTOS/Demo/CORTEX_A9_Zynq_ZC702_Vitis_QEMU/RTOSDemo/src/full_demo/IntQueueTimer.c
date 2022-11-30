@@ -267,4 +267,3 @@ BaseType_t xYieldRequired = pdFALSE;
 		ulUnexpectedInterrupts++;
 	}
 }
-

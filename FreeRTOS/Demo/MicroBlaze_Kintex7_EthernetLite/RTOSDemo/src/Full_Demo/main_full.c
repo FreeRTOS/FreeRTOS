@@ -430,7 +430,3 @@ static uint32_t ulStartedTimers = pdFALSE;
 		ulStartedTimers = pdTRUE;
 	}
 }
-
-
-
-

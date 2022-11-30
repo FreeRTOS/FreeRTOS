@@ -279,7 +279,7 @@ extern "C" {
   * @{
   */
 #define LL_PWR_LDO_SUPPLY                     PWR_CR3_LDOEN                                                               /*!< Core domains are suppplied from the LDO                                                                     */
-#if defined (SMPS)                                                                                                                                                                                                                       
+#if defined (SMPS)
 #define LL_PWR_DIRECT_SMPS_SUPPLY             PWR_CR3_SMPSEN                                                              /*!< Core domains are suppplied from the SMPS                                                                    */
 #define LL_PWR_SMPS_1V8_SUPPLIES_LDO          (PWR_CR3_SMPSLEVEL_0 | PWR_CR3_SMPSEN | PWR_CR3_LDOEN)                      /*!< The SMPS 1.8V output supplies the LDO which supplies the Core domains                                       */
 #define LL_PWR_SMPS_2V5_SUPPLIES_LDO          (PWR_CR3_SMPSLEVEL_1 | PWR_CR3_SMPSEN | PWR_CR3_LDOEN)                      /*!< The SMPS 2.5V output supplies the LDO which supplies the Core domains                                       */
@@ -1553,7 +1553,7 @@ __STATIC_INLINE uint32_t LL_PWR_CPU2_IsEnabledD3RunInLowPowerMode(void)
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE1
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE2
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE3
-  * @note   For all H7 lines except STM32H7Axxx and STM32H7Bxxx lines, VOS0 
+  * @note   For all H7 lines except STM32H7Axxx and STM32H7Bxxx lines, VOS0
   *         is applied when PWR_D3CR_VOS[1:0] = 0b11 and  SYSCFG_PWRCR_ODEN = 0b1.
   * @retval None
   */
@@ -1569,7 +1569,7 @@ __STATIC_INLINE void LL_PWR_SetRegulVoltageScaling(uint32_t VoltageScaling)
 /**
   * @brief  Get the main internal Regulator output voltage
   * @rmtoll D3CR    VOS       LL_PWR_GetRegulVoltageScaling
-  * @note   For all H7 lines except STM32H7Axxx and STM32H7Bxxx lines, checking 
+  * @note   For all H7 lines except STM32H7Axxx and STM32H7Bxxx lines, checking
   *         VOS0 need the check of PWR_D3CR_VOS[1:0] field and SYSCFG_PWRCR_ODEN bit.
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_REGU_VOLTAGE_SCALE0

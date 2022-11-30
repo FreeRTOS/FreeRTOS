@@ -49,7 +49,7 @@
     .global loader_init2
     .global r_icu_nmi_interrupt
 
- 
+
  reset_handler:
 
 /***********************************************************************************************************************
@@ -59,7 +59,7 @@
 * Return Value  : none
 ***********************************************************************************************************************/
 loader_init1:
- 
+
 /* ========================================================================= */
 /* Multi-core startup (future proofing boot code)                            */
 /* Check core, if not core 0  put to sleep.                                  */
@@ -74,7 +74,7 @@ goToSleep:
     orr r0, r0, #0x000000C0
     msr cpsr, r0
     isb
- 
+
 stack_init:
     /* Stack setting */
     cps  #17  /* FIQ mode */
@@ -134,7 +134,7 @@ jump_loader_init2:
 .equ	SCTLR_BR,        0x00020000
 .equ	SCTLR_M,         0x00000001
 .equ	SCTLR_I_C,       0x00001004
- 
+
 .equ	DRBAR_REGION_0,  0x04000000  /*Base address = 0400_0000h */
 .equ	DRACR_REGION_0,  0x0000030C  /*R/W(full), Normal, Non-cache, share */
 .equ	DRSR_REGION_0,   0x00000025  /*Size 512KB, MPU enable */
@@ -158,7 +158,7 @@ jump_loader_init2:
 .equ	DRBAR_REGION_5,  0x40000000  /*Base address = 4000_0000h */
 .equ	DRACR_REGION_5,  0x00000307  /*R/W(full), Normal, Write-back no allocate, share */
 .equ	DRSR_REGION_5,   0x00000035  /*Size 128MB, MPU enable */
- 
+
 .equ	DRBAR_REGION_6,  0x48000000  /*Base address = 4800_0000h */
 .equ	DRACR_REGION_6,  0x00000307  /*R/W(full), Normal, Write-back no allocate, share */
 .equ	DRSR_REGION_6,   0x00000035  /*Size 128MB, MPU enable */
@@ -174,7 +174,7 @@ jump_loader_init2:
 .equ	DRBAR_REGION_9,  0x68000000  /*Base address = 6800_0000h */
 .equ	DRACR_REGION_9,  0x0000030C  /*R/W(full), Normal, Non-cache, share */
 .equ	DRSR_REGION_9,   0x00000035  /*Size 128MB, MPU enable */
- 
+
 .equ	DRBAR_REGION_10,  0x70000000 /*Base address = 7000_0000h */
 .equ	DRACR_REGION_10,  0x00001305 /*R/W(full), XN, Device, share */
 .equ	DRSR_REGION_10,   0x00000035 /*Size 128MB, MPU enable */
@@ -193,15 +193,15 @@ cache_invalidate:
     isb                            /*Ensuring Context-changing */
     mcr  p15, #0, r0, c15, c5, #0  /*Invalidate all Data Caches (Write-value is Ignored) */
     isb                            /*Ensuring Context-changing */
-  
+
     /*Adopt default memory map as background map. */
     ldr  r0, =SCTLR_BR           /*Set SCTLR.BR bit to 1 */
-    mrc  p15, 0, r1, c1, c0, 0  
+    mrc  p15, 0, r1, c1, c0, 0
     orr  r1, r1, r0
     dsb
-    mcr  p15, 0, r1, c1, c0, 0  
+    mcr  p15, 0, r1, c1, c0, 0
     isb                         /*Ensuring Context-changing */
-    
+
     /*Initialize MPU settings (region 0 to 11) */
     /*Define region 0 */
     mov  r0,  #0
@@ -286,21 +286,21 @@ cache_invalidate:
     ldr  r2, =DRACR_REGION_11
     ldr  r3, =DRSR_REGION_11
     bl  mpu_init
-    
+
     /*Enables MPU operation */
     ldr  r0, =SCTLR_M            /*Set SCTLR.M bit to 1 */
-    mrc  p15, 0, r1, c1, c0, 0  
+    mrc  p15, 0, r1, c1, c0, 0
     orr  r1, r1, r0
     dsb
-    mcr  p15, 0, r1, c1, c0, 0  
+    mcr  p15, 0, r1, c1, c0, 0
     isb                         /*Ensuring Context-changing */
-    
+
     /*Enables I1,D1 cache operation */
     ldr  r0, =SCTLR_I_C          /*Set SCTLR.I and C bit to 1 */
-    mrc  p15, 0, r1, c1, c0, 0  
+    mrc  p15, 0, r1, c1, c0, 0
     orr  r1, r1, r0
     dsb
-    mcr  p15, 0, r1, c1, c0, 0  
+    mcr  p15, 0, r1, c1, c0, 0
     isb                         /*Ensuring Context-changing */
 
     pop  {pc}
@@ -316,7 +316,7 @@ mpu_init:
     /*RGNR(MPU Memory Region Number Register) */
     mcr p15, #0, r0, c6, c2, #0
     isb                             /*Ensuring Context-changing */
-    
+
     /*DRBAR(Data Region Base Address Register) */
     mcr  p15, #0, r1, c6, c1, #0
     isb                             /*Ensuring Context-changing */
@@ -328,7 +328,7 @@ mpu_init:
     /*DRSR(Data Region Size and Enable Register) */
     mcr p15, #0, r3, c6, c1, #2
     isb                             /*Ensuring Context-changing */
-    
+
     bx      lr
 
 
@@ -343,8 +343,8 @@ set_low_vec:
     and  r0, r0, #0xFFFFDFFF
     mcr  p15, 0, r0, c1, c0, 0
     isb                         /*Ensuring Context-changing*/
-    
-    bx  lr  
+
+    bx  lr
 
     .end
 

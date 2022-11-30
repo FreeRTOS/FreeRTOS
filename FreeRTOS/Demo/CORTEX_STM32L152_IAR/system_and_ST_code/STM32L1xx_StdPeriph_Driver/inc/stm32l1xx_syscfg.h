@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    07/02/2010
-  * @brief   This file contains all the functions prototypes for the SYSCFG 
+  * @brief   This file contains all the functions prototypes for the SYSCFG
   *          firmware library.
   ******************************************************************************
   * @copy
@@ -17,7 +17,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /*!< Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32L1xx_SYSCFG_H
@@ -36,35 +36,35 @@
 
 /** @addtogroup SYSCFG
   * @{
-  */ 
-  
+  */
+
 /** @defgroup SYSCFG_Exported_Types
   * @{
   */
 
-/** @defgroup EXTI_Port_Sources 
+/** @defgroup EXTI_Port_Sources
   * @{
-  */ 
+  */
 #define EXTI_PortSourceGPIOA       ((uint8_t)0x00)
 #define EXTI_PortSourceGPIOB       ((uint8_t)0x01)
 #define EXTI_PortSourceGPIOC       ((uint8_t)0x02)
 #define EXTI_PortSourceGPIOD       ((uint8_t)0x03)
 #define EXTI_PortSourceGPIOE       ((uint8_t)0x04)
 #define EXTI_PortSourceGPIOH       ((uint8_t)0x05)
-                                      
+
 #define IS_EXTI_PORT_SOURCE(PORTSOURCE) (((PORTSOURCE) == EXTI_PortSourceGPIOA) || \
                                          ((PORTSOURCE) == EXTI_PortSourceGPIOB) || \
                                          ((PORTSOURCE) == EXTI_PortSourceGPIOC) || \
                                          ((PORTSOURCE) == EXTI_PortSourceGPIOD) || \
                                          ((PORTSOURCE) == EXTI_PortSourceGPIOE) || \
-                                         ((PORTSOURCE) == EXTI_PortSourceGPIOH)) 
+                                         ((PORTSOURCE) == EXTI_PortSourceGPIOH))
 /**
   * @}
   */
 
-/** @defgroup EXTI_Pin_sources 
+/** @defgroup EXTI_Pin_sources
   * @{
-  */ 
+  */
 #define EXTI_PinSource0            ((uint8_t)0x00)
 #define EXTI_PinSource1            ((uint8_t)0x01)
 #define EXTI_PinSource2            ((uint8_t)0x02)
@@ -101,13 +101,13 @@
   * @}
   */
 
-/** @defgroup SYSCFG_Memory_Remap_Config 
+/** @defgroup SYSCFG_Memory_Remap_Config
   * @{
-  */ 
+  */
 #define SYSCFG_MemoryRemap_Flash       ((uint8_t)0x00)
 #define SYSCFG_MemoryRemap_SystemFlash ((uint8_t)0x01)
 #define SYSCFG_MemoryRemap_SRAM        ((uint8_t)0x03)
-   
+
 #define IS_SYSCFG_MEMORY_REMAP_CONFING(REMAP) (((REMAP) == SYSCFG_MemoryRemap_Flash) || \
                                                ((REMAP) == SYSCFG_MemoryRemap_SystemFlash) || \
                                                ((REMAP) == SYSCFG_MemoryRemap_SRAM))
@@ -126,15 +126,15 @@
                                    ((RESISTOR) == COMP_CSR_400KPU) || \
                                    ((RESISTOR) == COMP_CSR_10KPD) || \
                                    ((RESISTOR) == COMP_CSR_400KPD))
- 
+
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup RI_InputCapture
   * @{
-  */ 
-  
+  */
+
 #define RI_InputCapture_IC1  RI_ICR_IC1    /*!< Input Capture 1 */
 #define RI_InputCapture_IC2  RI_ICR_IC2    /*!< Input Capture 2 */
 #define RI_InputCapture_IC3  RI_ICR_IC3    /*!< Input Capture 3 */
@@ -143,12 +143,12 @@
 #define IS_RI_INPUTCAPTURE(INPUTCAPTURE) ((((INPUTCAPTURE) & (uint32_t)0xFFC2FFFF) == 0x00) && ((INPUTCAPTURE) != (uint32_t)0x00))
 /**
   * @}
-  */ 
-  
+  */
+
 /** @defgroup TIM_Select
   * @{
-  */ 
-  
+  */
+
 #define TIM_Select_None  ((uint32_t)0x00000000)    /*!< None selected */
 #define TIM_Select_TIM2  ((uint32_t)0x00010000)    /*!< Timer 2 selected */
 #define TIM_Select_TIM3  ((uint32_t)0x00020000)    /*!< Timer 3 selected */
@@ -161,12 +161,12 @@
 
 /**
   * @}
-  */ 
-  
+  */
+
 /** @defgroup RI_InputCaptureRouting
   * @{
-  */ 
-                                                          /* TIMx_IC1 TIMx_IC2  TIMx_IC3  TIMx_IC4 */  
+  */
+                                                          /* TIMx_IC1 TIMx_IC2  TIMx_IC3  TIMx_IC4 */
 #define RI_InputCaptureRouting_0   ((uint32_t)0x00000000) /* PA0       PA1      PA2       PA3      */
 #define RI_InputCaptureRouting_1   ((uint32_t)0x00000001) /* PA4       PA5      PA6       PA7      */
 #define RI_InputCaptureRouting_2   ((uint32_t)0x00000002) /* PA8       PA9      PA10      PA11     */
@@ -203,12 +203,12 @@
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup RI_IOSwitch
   * @{
-  */ 
-  
+  */
+
 /* ASCR1 I/O switch: bit 28 is set to '1' to indicate that the mask is in ASCR1 register */
 #define RI_IOSwitch_CH0        ((uint32_t)0x10000001)
 #define RI_IOSwitch_CH1        ((uint32_t)0x10000002)
@@ -234,10 +234,10 @@
 #define RI_IOSwitch_CH23       ((uint32_t)0x10800000)
 #define RI_IOSwitch_CH24       ((uint32_t)0x11000000)
 #define RI_IOSwitch_CH25       ((uint32_t)0x12000000)
-#define RI_IOSwitch_VCOMP      ((uint32_t)0x14000000) /* VCOMP is an internal switch used to connect 
+#define RI_IOSwitch_VCOMP      ((uint32_t)0x14000000) /* VCOMP is an internal switch used to connect
                                                          selected channel to COMP1 non inverting input */
 
-/* ASCR2 IO switch: : bit 28 is set to '0' to indicate that the mask is in ASCR2 register */  
+/* ASCR2 IO switch: : bit 28 is set to '0' to indicate that the mask is in ASCR2 register */
 #define RI_IOSwitch_GR10_1     ((uint32_t)0x00000001)
 #define RI_IOSwitch_GR10_2     ((uint32_t)0x00000002)
 #define RI_IOSwitch_GR10_3     ((uint32_t)0x00000004)
@@ -308,7 +308,7 @@
   * @}
   */
 
-/** @defgroup RI_Pin define 
+/** @defgroup RI_Pin define
   * @{
   */
 #define RI_Pin_0                 ((uint16_t)0x0001)  /*!< Pin 0 selected */
@@ -341,14 +341,14 @@
 
 /** @defgroup SYSCFG_Exported_Macros
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup SYSCFG_Exported_Functions
   * @{
-  */ 
+  */
 void SYSCFG_DeInit(void);
 void SYSCFG_MemoryRemapConfig(uint8_t SYSCFG_MemoryRemap);
 void SYSCFG_USBPuCmd(FunctionalState NewState);
@@ -368,14 +368,14 @@ void SYSCFG_RIHysteresisConfig(uint8_t RI_Port, uint16_t RI_Pin,
 #endif /*__STM32L1xx_SYSCFG_H */
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

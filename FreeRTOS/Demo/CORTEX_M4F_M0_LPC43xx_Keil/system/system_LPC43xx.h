@@ -29,7 +29,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 #define BUTTON0	!((LPC_GPIO3->PIN>>6)&1)	// P6.10
 #define BUTTON1	!((LPC_GPIO2->PIN>>0)&1)	// P4.0
@@ -38,11 +38,11 @@
   Clock Variable definitions
   DO NOT SET MANUALLY, SET WITH SetClock AND SetPL160M
  *----------------------------------------------------------------------------*/
-extern uint32_t XtalFrequency; 				
-extern uint32_t PL160M_0Frequency; 
-extern uint32_t PL160M_1Frequency; 
-extern uint32_t PL160M_2Frequency; 
-extern uint32_t PL550Frequency; 
+extern uint32_t XtalFrequency;
+extern uint32_t PL160M_0Frequency;
+extern uint32_t PL160M_1Frequency;
+extern uint32_t PL160M_2Frequency;
+extern uint32_t PL550Frequency;
 extern uint32_t PL550FracFrequency;  //New in Falcon
 extern uint32_t IDIVAFrequency;
 extern uint32_t IDIVBFrequency;
@@ -150,10 +150,10 @@ typedef enum CLKBASE
 	XTAL			= 253,
 	ENET_RX			= 254,
 	ENET_TX			= 255,
-}CLKBASE_Type;	
+}CLKBASE_Type;
 
 // PL550M
-#define	MODE1A		(0x3<<2)	// Normal operating mode without post-divider and without pre-divider	
+#define	MODE1A		(0x3<<2)	// Normal operating mode without post-divider and without pre-divider
 #define	MODE1B	   	(0x2<<2)	// Normal operating mode with post-divider and without pre-divider
 #define	MODE1C	   	(0x1<<2)	// Normal operating mode without post-divider and with pre-divider
 #define	MODE1D	   	(0x0<<2)	// Normal operating mode with post-divider and with pre-divider.
@@ -163,7 +163,7 @@ typedef enum CLKBASE
 // PL160M
 #define FBSEL 			(1<<6)
 #define MSEL_FBDIV(n)	(n<<16)	// MSEL = feedback-divider value	2*M (1 to 2^15)
-#define NSEL_PREDIV(n)	(n<<12)	// NSEL = pre-divider value			N	(1 to 2^8)		  	
+#define NSEL_PREDIV(n)	(n<<12)	// NSEL = pre-divider value			N	(1 to 2^8)
 #define PSEL_POSTDIV(n)	(n<<8)	// PSEL = post-divider value		P*2	(1 to 2^5)
 
 // Generic clock properties

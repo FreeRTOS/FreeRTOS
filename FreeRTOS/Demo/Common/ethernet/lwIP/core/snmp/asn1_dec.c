@@ -649,4 +649,3 @@ snmp_asn1_dec_raw(struct pbuf *p, u16_t ofs, u16_t len, u16_t raw_len, u8_t *raw
 }
 
 #endif /* LWIP_SNMP */
-

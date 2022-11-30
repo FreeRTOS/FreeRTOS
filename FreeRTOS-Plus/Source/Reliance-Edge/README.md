@@ -120,4 +120,3 @@ guidelines.
 
 To report bugs, please create a GitHub issue or contact
 <RelianceEdgeSupport@datalight.com>.
-

@@ -41,32 +41,32 @@ extern "C"
 /*
  * Component : Timer Module - ALT_TMR
  * Timer Module
- * 
+ *
  * Registers in the timer module. The timer IP core supports multiple timers but it
  * is configured for just one timer. The term Timer1 refers to this one timer in
  * the IP core and not the module instance.
- * 
+ *
  */
 /*
  * Register : Timer1 Load Count Register - timer1loadcount
- * 
+ *
  * Used to load counter value into Timer1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
  *  [31:0] | RW     | 0x0   | Timer1LoadCount
- * 
+ *
  */
 /*
  * Field : Timer1LoadCount - timer1loadcount
- * 
+ *
  * Value to be loaded into Timer1. This is the value from which counting commences.
  * Any value written to this register is loaded into the associated timer.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_TMR_TMR1LDCOUNT_TMR1LDCOUNT register field. */
 #define ALT_TMR_TMR1LDCOUNT_TMR1LDCOUNT_LSB        0
@@ -93,7 +93,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMR1LDCOUNT.
  */
 struct ALT_TMR_TMR1LDCOUNT_s
@@ -112,23 +112,23 @@ typedef volatile struct ALT_TMR_TMR1LDCOUNT_s  ALT_TMR_TMR1LDCOUNT_t;
 
 /*
  * Register : Timer1 Current Value Register - timer1currentval
- * 
+ *
  * Provides current value of Timer1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------
  *  [31:0] | R      | 0x0   | Timer1 Current Value
- * 
+ *
  */
 /*
  * Field : Timer1 Current Value - timer1currentval
- * 
+ *
  * Current value of Timer1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_TMR_TMR1CURVAL_TMR1CURVAL register field. */
 #define ALT_TMR_TMR1CURVAL_TMR1CURVAL_LSB        0
@@ -155,7 +155,7 @@ typedef volatile struct ALT_TMR_TMR1LDCOUNT_s  ALT_TMR_TMR1LDCOUNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMR1CURVAL.
  */
 struct ALT_TMR_TMR1CURVAL_s
@@ -174,45 +174,45 @@ typedef volatile struct ALT_TMR_TMR1CURVAL_s  ALT_TMR_TMR1CURVAL_t;
 
 /*
  * Register : Timer1 Control Register - timer1controlreg
- * 
+ *
  * This register controls enabling, operating mode (free-running or user-defined-
  * count), and interrupt mask of Timer1. You can program this register to enable or
  * disable Timer1 and to control its mode of operation.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
- *  [0]    | RW     | 0x0   | Timer1 Enable        
- *  [1]    | RW     | 0x0   | Timer1 Mode          
+ *  [0]    | RW     | 0x0   | Timer1 Enable
+ *  [1]    | RW     | 0x0   | Timer1 Mode
  *  [2]    | RW     | 0x0   | Timer1 Interrupt Mask
- *  [31:3] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [31:3] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Timer1 Enable - timer1_enable
- * 
+ *
  * Timer1 enable/disable bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description    
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------
  *  ALT_TMR_TMR1CTLREG_TMR1_EN_E_DISD | 0x0   | Timer1 Disabled
- *  ALT_TMR_TMR1CTLREG_TMR1_EN_E_END  | 0x1   | Timer1 Enabled 
- * 
+ *  ALT_TMR_TMR1CTLREG_TMR1_EN_E_END  | 0x1   | Timer1 Enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_TMR_TMR1CTLREG_TMR1_EN
- * 
+ *
  * Timer1 Disabled
  */
 #define ALT_TMR_TMR1CTLREG_TMR1_EN_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_TMR_TMR1CTLREG_TMR1_EN
- * 
+ *
  * Timer1 Enabled
  */
 #define ALT_TMR_TMR1CTLREG_TMR1_EN_E_END    0x1
@@ -236,31 +236,31 @@ typedef volatile struct ALT_TMR_TMR1CURVAL_s  ALT_TMR_TMR1CURVAL_t;
 
 /*
  * Field : Timer1 Mode - timer1_mode
- * 
+ *
  * Sets operating mode.
- * 
+ *
  * NOTE: You must set the timer1loadcount register to all ones before enabling the
  * timer in free-running mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description            
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:------------------------
- *  ALT_TMR_TMR1CTLREG_TMR1_MOD_E_FREERUN | 0x0   | Free-running mode      
+ *  ALT_TMR_TMR1CTLREG_TMR1_MOD_E_FREERUN | 0x0   | Free-running mode
  *  ALT_TMR_TMR1CTLREG_TMR1_MOD_E_USEDEF  | 0x1   | User-defined count mode
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_TMR_TMR1CTLREG_TMR1_MOD
- * 
+ *
  * Free-running mode
  */
 #define ALT_TMR_TMR1CTLREG_TMR1_MOD_E_FREERUN   0x0
 /*
  * Enumerated value for register field ALT_TMR_TMR1CTLREG_TMR1_MOD
- * 
+ *
  * User-defined count mode
  */
 #define ALT_TMR_TMR1CTLREG_TMR1_MOD_E_USEDEF    0x1
@@ -284,28 +284,28 @@ typedef volatile struct ALT_TMR_TMR1CURVAL_s  ALT_TMR_TMR1CURVAL_t;
 
 /*
  * Field : Timer1 Interrupt Mask - timer1_interrupt_mask
- * 
+ *
  * Timer1 interrupt mask
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                   
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:-------------------------------
  *  ALT_TMR_TMR1CTLREG_TMR1_INT_MSK_E_NOTMSKED | 0x0   | interrupt not masked (enabled)
- *  ALT_TMR_TMR1CTLREG_TMR1_INT_MSK_E_MSKED    | 0x1   | interrupt masked (disabled)   
- * 
+ *  ALT_TMR_TMR1CTLREG_TMR1_INT_MSK_E_MSKED    | 0x1   | interrupt masked (disabled)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_TMR_TMR1CTLREG_TMR1_INT_MSK
- * 
+ *
  * interrupt not masked (enabled)
  */
 #define ALT_TMR_TMR1CTLREG_TMR1_INT_MSK_E_NOTMSKED  0x0
 /*
  * Enumerated value for register field ALT_TMR_TMR1CTLREG_TMR1_INT_MSK
- * 
+ *
  * interrupt masked (disabled)
  */
 #define ALT_TMR_TMR1CTLREG_TMR1_INT_MSK_E_MSKED     0x1
@@ -335,7 +335,7 @@ typedef volatile struct ALT_TMR_TMR1CURVAL_s  ALT_TMR_TMR1CURVAL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMR1CTLREG.
  */
 struct ALT_TMR_TMR1CTLREG_s
@@ -357,24 +357,24 @@ typedef volatile struct ALT_TMR_TMR1CTLREG_s  ALT_TMR_TMR1CTLREG_t;
 
 /*
  * Register : Timer1 End-of-Interrupt Register - timer1eoi
- * 
+ *
  * Clears Timer1 interrupt when read.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | R      | 0x0   | Timer1 End of Interrupt
- *  [31:1] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Timer1 End of Interrupt - timer1eoi
- * 
+ *
  * Reading from this register clears the interrupt from Timer1 and returns 0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_TMR_TMR1EOI_TMR1EOI register field. */
 #define ALT_TMR_TMR1EOI_TMR1EOI_LSB        0
@@ -401,7 +401,7 @@ typedef volatile struct ALT_TMR_TMR1CTLREG_s  ALT_TMR_TMR1CTLREG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMR1EOI.
  */
 struct ALT_TMR_TMR1EOI_s
@@ -421,43 +421,43 @@ typedef volatile struct ALT_TMR_TMR1EOI_s  ALT_TMR_TMR1EOI_t;
 
 /*
  * Register : Timer1 Interrupt Status Register - timer1intstat
- * 
+ *
  * Provides the interrupt status of Timer1 after masking.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | R      | 0x0   | Timer1 Interrupt Status
- *  [31:1] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Timer1 Interrupt Status - timer1intstat
- * 
+ *
  * Provides the interrupt status for Timer1. The status reported is after the
  * interrupt mask has been applied. Reading from this register does not clear any
  * active interrupts.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                   
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:-------------------------------
  *  ALT_TMR_TMR1INTSTAT_TMR1INTSTAT_E_INACT | 0x0   | Timer1 interrupt is not active
- *  ALT_TMR_TMR1INTSTAT_TMR1INTSTAT_E_ACT   | 0x1   | Timer1 interrupt is active    
- * 
+ *  ALT_TMR_TMR1INTSTAT_TMR1INTSTAT_E_ACT   | 0x1   | Timer1 interrupt is active
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_TMR_TMR1INTSTAT_TMR1INTSTAT
- * 
+ *
  * Timer1 interrupt is not active
  */
 #define ALT_TMR_TMR1INTSTAT_TMR1INTSTAT_E_INACT 0x0
 /*
  * Enumerated value for register field ALT_TMR_TMR1INTSTAT_TMR1INTSTAT
- * 
+ *
  * Timer1 interrupt is active
  */
 #define ALT_TMR_TMR1INTSTAT_TMR1INTSTAT_E_ACT   0x1
@@ -487,7 +487,7 @@ typedef volatile struct ALT_TMR_TMR1EOI_s  ALT_TMR_TMR1EOI_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMR1INTSTAT.
  */
 struct ALT_TMR_TMR1INTSTAT_s
@@ -507,45 +507,45 @@ typedef volatile struct ALT_TMR_TMR1INTSTAT_s  ALT_TMR_TMR1INTSTAT_t;
 
 /*
  * Register : Timers Interrupt Status Register - timersintstat
- * 
+ *
  * Provides the interrupt status for all timers after masking. Because there is
  * only Timer1 in this module instance, this status is the same as timer1intstat.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | R      | 0x0   | Timers Interrupt Status
- *  [31:1] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Timers Interrupt Status - timersintstat
- * 
+ *
  * Provides the interrupt status for Timer1. Because there is only Timer1 in this
  * module instance, this status is the same as timer1intstat. The status reported
  * is after the interrupt mask has been applied. Reading from this register does
  * not clear any active interrupts.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description             
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:-------------------------
  *  ALT_TMR_TMRSINTSTAT_TMRSINTSTAT_E_INACT | 0x0   | timer_intr is not active
- *  ALT_TMR_TMRSINTSTAT_TMRSINTSTAT_E_ACT   | 0x1   | timer_intr is active    
- * 
+ *  ALT_TMR_TMRSINTSTAT_TMRSINTSTAT_E_ACT   | 0x1   | timer_intr is active
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_TMR_TMRSINTSTAT_TMRSINTSTAT
- * 
+ *
  * timer_intr is not active
  */
 #define ALT_TMR_TMRSINTSTAT_TMRSINTSTAT_E_INACT 0x0
 /*
  * Enumerated value for register field ALT_TMR_TMRSINTSTAT_TMRSINTSTAT
- * 
+ *
  * timer_intr is active
  */
 #define ALT_TMR_TMRSINTSTAT_TMRSINTSTAT_E_ACT   0x1
@@ -575,7 +575,7 @@ typedef volatile struct ALT_TMR_TMR1INTSTAT_s  ALT_TMR_TMR1INTSTAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMRSINTSTAT.
  */
 struct ALT_TMR_TMRSINTSTAT_s
@@ -595,27 +595,27 @@ typedef volatile struct ALT_TMR_TMRSINTSTAT_s  ALT_TMR_TMRSINTSTAT_t;
 
 /*
  * Register : Timers End-of-Interrupt Register - timerseoi
- * 
+ *
  * Clears Timer1 interrupt when read. Because there is only Timer1 in this module
  * instance, reading this register has the same effect as reading timer1eoi.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | R      | 0x0   | Timers End-of-Interrupt
- *  [31:1] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Timers End-of-Interrupt - timerseoi
- * 
+ *
  * Reading from this register clears the interrupt all timers and returns 0.
  * Because there is only Timer1 in this module instance, reading this register has
  * the same effect as reading timer1eoi.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_TMR_TMRSEOI_TMRSEOI register field. */
 #define ALT_TMR_TMRSEOI_TMRSEOI_LSB        0
@@ -642,7 +642,7 @@ typedef volatile struct ALT_TMR_TMRSINTSTAT_s  ALT_TMR_TMRSINTSTAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMRSEOI.
  */
 struct ALT_TMR_TMRSEOI_s
@@ -662,45 +662,45 @@ typedef volatile struct ALT_TMR_TMRSEOI_s  ALT_TMR_TMRSEOI_t;
 
 /*
  * Register : Timers Raw Interrupt Status Register - timersrawintstat
- * 
+ *
  * Provides the interrupt status for all timers before masking. Note that there is
  * only Timer1 in this module instance.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [0]    | R      | 0x0   | Timers Raw Interrupt Status
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Timers Raw Interrupt Status - timersrawintstat
- * 
+ *
  * Provides the interrupt status for Timer1. Because there is only Timer1 in this
  * module instance, this status is the same as timer1intstat. The status reported
  * is before the interrupt mask has been applied. Reading from this register does
  * not clear any active interrupts.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                          | Value | Description                   
+ *
+ *  Enum                                          | Value | Description
  * :----------------------------------------------|:------|:-------------------------------
  *  ALT_TMR_TMRSRAWINTSTAT_TMRSRAWINTSTAT_E_INACT | 0x0   | Timer1 interrupt is not active
- *  ALT_TMR_TMRSRAWINTSTAT_TMRSRAWINTSTAT_E_ACT   | 0x1   | Timer1 interrupt is active    
- * 
+ *  ALT_TMR_TMRSRAWINTSTAT_TMRSRAWINTSTAT_E_ACT   | 0x1   | Timer1 interrupt is active
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_TMR_TMRSRAWINTSTAT_TMRSRAWINTSTAT
- * 
+ *
  * Timer1 interrupt is not active
  */
 #define ALT_TMR_TMRSRAWINTSTAT_TMRSRAWINTSTAT_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_TMR_TMRSRAWINTSTAT_TMRSRAWINTSTAT
- * 
+ *
  * Timer1 interrupt is active
  */
 #define ALT_TMR_TMRSRAWINTSTAT_TMRSRAWINTSTAT_E_ACT     0x1
@@ -730,7 +730,7 @@ typedef volatile struct ALT_TMR_TMRSEOI_s  ALT_TMR_TMRSEOI_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMRSRAWINTSTAT.
  */
 struct ALT_TMR_TMRSRAWINTSTAT_s
@@ -750,21 +750,21 @@ typedef volatile struct ALT_TMR_TMRSRAWINTSTAT_s  ALT_TMR_TMRSRAWINTSTAT_t;
 
 /*
  * Register : Timers Component Version Register - timerscompversion
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description             
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:-------------------------
  *  [31:0] | R      | 0x3230352a | Timers Component Version
- * 
+ *
  */
 /*
  * Field : Timers Component Version - timerscompversion
- * 
+ *
  * Current revision number of the timers component.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_TMR_TMRSCOMPVER_TMRSCOMPVER register field. */
 #define ALT_TMR_TMRSCOMPVER_TMRSCOMPVER_LSB        0
@@ -791,7 +791,7 @@ typedef volatile struct ALT_TMR_TMRSRAWINTSTAT_s  ALT_TMR_TMRSRAWINTSTAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_TMR_TMRSCOMPVER.
  */
 struct ALT_TMR_TMRSCOMPVER_s
@@ -816,7 +816,7 @@ typedef volatile struct ALT_TMR_TMRSCOMPVER_s  ALT_TMR_TMRSCOMPVER_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_TMR.
  */
 struct ALT_TMR_s
@@ -861,4 +861,3 @@ typedef volatile struct ALT_TMR_raw_s  ALT_TMR_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_TMR_H__ */
-

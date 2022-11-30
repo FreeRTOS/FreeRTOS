@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*---------------------------------------------------------------------------
@@ -54,7 +54,7 @@
 /** Return count in buffer */
 #define CIRC_CNT(head,tail,size) (((head) - (tail)) % (size))
 
-/** Return space available, 0..size-1. always leave one free char as a completely full buffer 
+/** Return space available, 0..size-1. always leave one free char as a completely full buffer
     has head == tail, which is the same as empty */
 #define CIRC_SPACE(head,tail,size) CIRC_CNT((tail),((head)+1),(size))
 
@@ -158,7 +158,7 @@ static void EMACD_ResetRx(sEmacd *pDrv)
 /*---------------------------------------------------------------------------
  *         Exported functions
  *---------------------------------------------------------------------------*/
- 
+
 /**
  * EMAC Interrupt handler
  */
@@ -265,7 +265,7 @@ void EMACD_Handler( sEmacd *pEmacd )
                 CIRC_INC( pEmacd->wTxTail, pEmacd->wTxListSize );
             } while (CIRC_CNT(pEmacd->wTxHead, pEmacd->wTxTail, pEmacd->wTxListSize));
         }
-        
+
         if (tsr & EMAC_TSR_RLES)
         {
             /* Notify upper layer RLE */
@@ -274,8 +274,8 @@ void EMACD_Handler( sEmacd *pEmacd )
                 (*pTxCb)(txStatusFlag);
             }
         }
-        
-        /* If a wakeup has been scheduled, notify upper layer that it can  
+
+        /* If a wakeup has been scheduled, notify upper layer that it can
            send other packets, send will be successfull. */
         if( (CIRC_SPACE(pEmacd->wTxHead,
                         pEmacd->wTxTail,
@@ -496,14 +496,14 @@ uint8_t EMACD_Send( sEmacd *pEmacd,
        so it's always the last buffer of the frame. */
     if (pEmacd->wTxHead == pEmacd->wTxListSize-1)
     {
-        pTxTd->status.val = 
+        pTxTd->status.val =
             (size & EMAC_TXD_LEN_MASK) | EMAC_TXD_bmLAST | EMAC_TXD_bmWRAP;
     }
     else
     {
         pTxTd->status.val = (size & EMAC_TXD_LEN_MASK) | EMAC_TXD_bmLAST;
     }
-    
+
     CIRC_INC(pEmacd->wTxHead, pEmacd->wTxListSize);
     /* Now start to transmit if it is not already done */
     EMAC_TransmissionStart(pHw);
@@ -596,14 +596,14 @@ uint8_t EMACD_Poll( sEmacd * pEmacd,
             memcpy(pTmpFrame, (void*)(pRxTd->addr.val & EMAC_RXD_ADDR_MASK), bufferLength);
             pTmpFrame += bufferLength;
             tmpFrameSize += bufferLength;
-            
+
             /* An end of frame has been received, return the data */
             if ((pRxTd->status.val & EMAC_RXD_bmEOF) == EMAC_RXD_bmEOF)
             {
 
                 /* Frame size from the EMAC */
                 *pRcvSize = (pRxTd->status.val & EMAC_RXD_LEN_MASK);
-                
+
                 TRACE_INFO("packet %d-%d (%d)\n\r", pEmacd->wRxI, tmpIdx, *pRcvSize);
                 /* All data have been copied in the application frame buffer => release TD */
                 while (pEmacd->wRxI != tmpIdx)
@@ -630,7 +630,7 @@ uint8_t EMACD_Poll( sEmacd * pEmacd,
            pRxTd->addr.val &= ~(EMAC_RXD_bmOWNERSHIP);
            pEmacd->wRxI = tmpIdx;
         }
-       
+
         /* Process the next buffer */
         pRxTd = &pEmacd->pRxD[tmpIdx];
     }
@@ -672,9 +672,9 @@ void EMACD_SetRxCallback(sEmacd * pEmacd, fEmacdTransferCallback fRxCb)
 /**
  * Register/Clear TX wakeup callback.
  *
- * When EMACD_Send() returns EMACD_TX_BUSY (all TD busy) the application 
- * task calls EMACD_SetTxWakeupCallback() to register fWakeup() callback and 
- * enters suspend state. The callback is in charge to resume the task once 
+ * When EMACD_Send() returns EMACD_TX_BUSY (all TD busy) the application
+ * task calls EMACD_SetTxWakeupCallback() to register fWakeup() callback and
+ * enters suspend state. The callback is in charge to resume the task once
  * several TD have been released. The next time EMACD_Send() will be called,
  * it shall be successfull.
  *

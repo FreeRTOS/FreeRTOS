@@ -19,8 +19,8 @@
 **                of any kind.
 **
 **  (c)Copyright Atollic AB.
-**  This file may be distributed and used with the FreeRTOS example project 
-**  for Atollic TrueSTUDIO only. 
+**  This file may be distributed and used with the FreeRTOS example project
+**  for Atollic TrueSTUDIO only.
 **
 *****************************************************************************
 */

@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
- 
+
 #include "usart.h"
 
 /// @cond 0
@@ -52,7 +52,7 @@ extern "C" {
 /**
  * \defgroup sam_drivers_usart_group Universal Synchronous Asynchronous Receiver Transmitter (USART)
  *
- * The Universal Synchronous Asynchronous Receiver Transceiver (USART) provides one full duplex 
+ * The Universal Synchronous Asynchronous Receiver Transceiver (USART) provides one full duplex
  * universal synchronous asynchronous serial link. Data frame format is widely programmable
  * (data length, parity, number of stop bits) to support a maximum of standards. The receiver
  * implements parity error, framing error and overrun error detection. The receiver time-out enables
@@ -91,12 +91,12 @@ extern "C" {
 #define ISO7816_T_1                   1
 
 /**
- * \brief Calculate a clock divider(CD) and a fractional part (FP) for the 
- * USART asynchronous modes to generate a baudrate as close as possible to 
+ * \brief Calculate a clock divider(CD) and a fractional part (FP) for the
+ * USART asynchronous modes to generate a baudrate as close as possible to
  * the baudrate set point.
  *
  * \note Baud rate calculation: Baudrate = ul_mck/(Over * (CD + FP/8))
- * (Over being 16 or 8). The maximal oversampling is selected if it allows to 
+ * (Over being 16 or 8). The maximal oversampling is selected if it allows to
  * generate a baudrate close to the set point.
  *
  * \param p_usart Pointer to a USART instance.
@@ -104,7 +104,7 @@ extern "C" {
  * \param ul_mck USART module input clock frequency.
  *
  * \retval 0 Baud rate is successfully initialized.
- * \retval 1 Baud rate set point is out of range for the given input clock 
+ * \retval 1 Baud rate set point is out of range for the given input clock
  * frequency.
  */
 static uint32_t usart_set_async_baudrate(Usart *p_usart,
@@ -152,7 +152,7 @@ static uint32_t usart_set_async_baudrate(Usart *p_usart,
  * \param ul_mck USART module input clock frequency.
  *
  * \retval 0 Baud rate is successfully initialized.
- * \retval 1 Baud rate set point is out of range for the given input clock 
+ * \retval 1 Baud rate set point is out of range for the given input clock
  * frequency.
  */
 static uint32_t usart_set_sync_master_baudrate(Usart *p_usart,
@@ -189,7 +189,7 @@ static void usart_set_sync_slave_baudrate(Usart *p_usart)
 
 
 /**
- * \brief Calculate a clock divider (\e CD) for the USART ISO7816 mode to 
+ * \brief Calculate a clock divider (\e CD) for the USART ISO7816 mode to
  * generate an ISO7816 clock as close as possible to the clock set point.
  *
  * \note ISO7816 clock calculation: Clock = ul_mck / cd
@@ -199,7 +199,7 @@ static void usart_set_sync_slave_baudrate(Usart *p_usart)
  * \param ul_mck USART module input clock frequency.
  *
  * \retval 0 ISO7816 clock is successfully initialized.
- * \retval 1 ISO7816 clock set point is out of range for the given input clock 
+ * \retval 1 ISO7816 clock set point is out of range for the given input clock
  * frequency.
  */
 static uint32_t usart_set_iso7816_clock(Usart *p_usart,
@@ -235,7 +235,7 @@ static uint32_t usart_set_iso7816_clock(Usart *p_usart,
  * \param ul_mck USART module input clock frequency.
  *
  * \retval 0 Baud rate is successfully initialized.
- * \retval 1 Baud rate set point is out of range for the given input clock 
+ * \retval 1 Baud rate set point is out of range for the given input clock
  * frequency.
  */
 static uint32_t usart_set_spi_master_baudrate(Usart *p_usart,
@@ -256,7 +256,7 @@ static uint32_t usart_set_spi_master_baudrate(Usart *p_usart,
 }
 
 /**
- * \brief Select the SCK pin as the source of baudrate for the USART SPI slave 
+ * \brief Select the SCK pin as the source of baudrate for the USART SPI slave
  * mode.
  *
  * \param p_usart Pointer to a USART instance.
@@ -322,12 +322,12 @@ uint32_t usart_init_rs232(Usart *p_usart,
 	/* Configure the character length, parity type, channel mode and stop bit length. */
 	ul_reg_val |= p_usart_opt->char_length | p_usart_opt->parity_type |
 				p_usart_opt->channel_mode | p_usart_opt->stop_bits;
-	
+
 	/* Configure the USART mode as normal mode. */
 	ul_reg_val |= US_MR_USART_MODE_NORMAL;
-	
+
 	p_usart->US_MR |= ul_reg_val;
-	
+
 	return 0;
 }
 
@@ -374,7 +374,7 @@ uint32_t usart_init_hw_handshaking(Usart *p_usart,
 uint32_t usart_init_modem(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck)
 {
-	/* SAM3S || SAM4S series support MODEM mode only on USART1, and 
+	/* SAM3S || SAM4S series support MODEM mode only on USART1, and
 	   SAM3U series support MODEM mode only on USART0. */
 #if (SAM3S || SAM4S)
 	if (p_usart != USART1) {
@@ -390,7 +390,7 @@ uint32_t usart_init_modem(Usart *p_usart,
 	if (usart_init_rs232(p_usart, p_usart_opt, ul_mck)) {
 		return 1;
 	}
-	
+
 	/* Set MODEM mode. */
 	p_usart->US_MR = (p_usart->US_MR & ~US_MR_USART_MODE_Msk) |
 			US_MR_USART_MODE_MODEM;
@@ -429,7 +429,7 @@ uint32_t usart_init_sync_master(Usart *p_usart,
 	/* Configure the character length, parity type, channel mode and stop bit length. */
 	ul_reg_val |= p_usart_opt->char_length | p_usart_opt->parity_type |
 				p_usart_opt->channel_mode | p_usart_opt->stop_bits;
-	
+
 	/* Set normal mode and output clock on the SCK pin as synchronous master. */
 	ul_reg_val |= US_MR_USART_MODE_NORMAL | US_MR_CLKO;
 	p_usart->US_MR |= ul_reg_val;
@@ -452,13 +452,13 @@ uint32_t usart_init_sync_slave(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt)
 {
 	static uint32_t ul_reg_val;
-	
+
 	/* Reset the USART and shut down TX and RX. */
 	usart_reset(p_usart);
-	
+
 	ul_reg_val = 0;
 	usart_set_sync_slave_baudrate(p_usart);
-	
+
 	/* Check whether the input values are legal. */
 	if (!p_usart_opt) {
 		return 1;
@@ -470,7 +470,7 @@ uint32_t usart_init_sync_slave(Usart *p_usart,
 
 	/* Set normal mode. */
 	ul_reg_val |= US_MR_USART_MODE_NORMAL;
-	p_usart->US_MR |= ul_reg_val;	
+	p_usart->US_MR |= ul_reg_val;
 
 	return 0;
 }
@@ -548,18 +548,18 @@ uint32_t usart_init_iso7816(Usart *p_usart,
 		const usart_iso7816_opt_t *p_usart_opt, uint32_t ul_mck)
 {
 	static uint32_t ul_reg_val;
-	
+
 	/* Reset the USART and shut down TX and RX. */
 	usart_reset(p_usart);
-	
+
 	ul_reg_val = 0;
-	
+
 	/* Check whether the input values are legal. */
 	if (!p_usart_opt || ((p_usart_opt->parity_type != US_MR_PAR_EVEN) &&
 		(p_usart_opt->parity_type != US_MR_PAR_ODD))) {
 		return 1;
 	}
-	
+
 	if (p_usart_opt->protocol_type == ISO7816_T_0) {
 		ul_reg_val |= US_MR_USART_MODE_IS07816_T_0 | US_MR_NBSTOP_2_BIT |
 				(p_usart_opt->max_iterations << US_MR_MAX_ITERATION_Pos);
@@ -572,7 +572,7 @@ uint32_t usart_init_iso7816(Usart *p_usart,
 		if (p_usart_opt->bit_order || p_usart_opt->max_iterations) {
 			return 1;
 		}
-		
+
 		/* Set USART mode to ISO7816, T=1, and always uses 1 stop bit. */
 		ul_reg_val |= US_MR_USART_MODE_IS07816_T_1 | US_MR_NBSTOP_1_BIT;
 	} else {
@@ -589,14 +589,14 @@ uint32_t usart_init_iso7816(Usart *p_usart,
 
 	/* Set ISO7816 parity type in the MODE register. */
 	ul_reg_val |= p_usart_opt->parity_type;
-	
+
 	if (p_usart_opt->inhibit_nack) {
 		ul_reg_val |= US_MR_INACK;
 	}
 	if (p_usart_opt->dis_suc_nack) {
 		ul_reg_val |= US_MR_DSNACK;
 	}
-	
+
 	p_usart->US_MR |= ul_reg_val;
 
 	return 0;
@@ -618,10 +618,10 @@ uint32_t usart_init_spi_master(Usart *p_usart,
 		const usart_spi_opt_t *p_usart_opt, uint32_t ul_mck)
 {
 	static uint32_t ul_reg_val;
-	
+
 	/* Reset the USART and shut down TX and RX. */
 	usart_reset(p_usart);
-	
+
 	ul_reg_val = 0;
 	/* Check whether the input values are legal. */
 	if (!p_usart_opt ||
@@ -632,11 +632,11 @@ uint32_t usart_init_spi_master(Usart *p_usart,
 
 	/* Configure the character length bit in MR register. */
 	ul_reg_val |= p_usart_opt->char_length;
-	
+
 	/* Set SPI master mode and channel mode. */
 	ul_reg_val |= US_MR_USART_MODE_SPI_MASTER | US_MR_CLKO |
 				p_usart_opt->channel_mode;
-					
+
 	switch (p_usart_opt->spi_mode) {
 	case SPI_MODE_0:
 		ul_reg_val |= US_MR_CPHA;
@@ -657,7 +657,7 @@ uint32_t usart_init_spi_master(Usart *p_usart,
 	default:
 		break;
 	}
-	
+
 	p_usart->US_MR |= ul_reg_val;
 
 	return 0;
@@ -681,10 +681,10 @@ uint32_t usart_init_spi_slave(Usart *p_usart,
 
 	/* Reset the USART and shut down TX and RX. */
 	usart_reset(p_usart);
-	
+
 	ul_reg_val = 0;
 	usart_set_spi_slave_baudrate(p_usart);
-	
+
 	/* Check whether the input values are legal. */
 	if (!p_usart_opt ||
 		p_usart_opt->spi_mode > SPI_MODE_3) {
@@ -693,10 +693,10 @@ uint32_t usart_init_spi_slave(Usart *p_usart,
 
 	/* Configure the character length bit in MR register. */
 	ul_reg_val |= p_usart_opt->char_length;
-	
+
 	/* Set SPI slave mode and channel mode. */
 	ul_reg_val |= US_MR_USART_MODE_SPI_SLAVE | p_usart_opt->channel_mode;
-					
+
 	switch (p_usart_opt->spi_mode) {
 	case SPI_MODE_0:
 		ul_reg_val |= US_MR_CPHA;
@@ -746,10 +746,10 @@ uint32_t usart_init_lin_master(Usart *p_usart,
 	if (usart_set_async_baudrate(p_usart, p_usart_opt->baudrate, ul_mck)) {
 		return 1;
 	}
-	
+
 	/* Set LIN master mode. */
 	p_usart->US_MR = (p_usart->US_MR & ~US_MR_USART_MODE_Msk) |
-					US_MR_USART_MODE_LIN_MASTER;	
+					US_MR_USART_MODE_LIN_MASTER;
 
 	return 0;
 }
@@ -776,7 +776,7 @@ uint32_t usart_init_lin_slave(Usart *p_usart,
 	if (usart_set_async_baudrate(p_usart, p_usart_opt->baudrate, ul_mck)) {
 		return 1;
 	}
-	
+
 	/* Set LIN slave mode. */
 	p_usart->US_MR = (p_usart->US_MR & ~US_MR_USART_MODE_Msk) |
 					US_MR_USART_MODE_LIN_SLAVE;
@@ -873,8 +873,8 @@ void usart_lin_set_checksum_type(Usart *p_usart, uint8_t uc_type)
  * \brief Configure the data length mode during the LIN communication.
  *
  * \param p_usart Pointer to a USART instance.
- * \param uc_mode Indicate the checksum type: 0 if the data length is defined by the 
- * DLC of LIN mode register or 1 if the data length is defined by the bit 5 and 6 of 
+ * \param uc_mode Indicate the checksum type: 0 if the data length is defined by the
+ * DLC of LIN mode register or 1 if the data length is defined by the bit 5 and 6 of
  * the identifier.
  */
 void usart_lin_set_data_len_mode(Usart *p_usart, uint8_t uc_mode)
@@ -907,7 +907,7 @@ void usart_lin_enable_frame_slot(Usart *p_usart)
  * \brief Configure the wakeup signal type during the LIN communication.
  *
  * \param p_usart Pointer to a USART instance.
- * \param uc_type Indicate the checksum type: 0 if the wakeup signal is a LIN 2.0 
+ * \param uc_type Indicate the checksum type: 0 if the wakeup signal is a LIN 2.0
  * wakeup signal; 1 if the wakeup signal is a LIN 1.3 wakeup signal.
  */
 void usart_lin_set_wakeup_signal_type(Usart *p_usart, uint8_t uc_type)
@@ -966,8 +966,8 @@ void usart_lin_set_tx_identifier(Usart *p_usart, uint8_t uc_id)
  *
  * \param p_usart Pointer to a USART instance.
  *
- * \return The last identifier received in LIN slave mode or the last identifier 
- * transmitted in LIN master mode. 
+ * \return The last identifier received in LIN slave mode or the last identifier
+ * transmitted in LIN master mode.
  */
 uint8_t usart_lin_read_identifier(Usart *p_usart)
 {
@@ -1137,7 +1137,7 @@ void usart_stop_tx_break(Usart *p_usart)
 
 /**
  * \brief Start waiting for a character before clocking the timeout count.
- * Reset the status bit TIMEOUT in US_CSR. 
+ * Reset the status bit TIMEOUT in US_CSR.
  *
  * \param p_usart Pointer to a USART instance.
  */
@@ -1148,7 +1148,7 @@ void usart_start_rx_timeout(Usart *p_usart)
 
 /**
  * \brief In Multidrop mode only, the next character written to the US_THR
- * is sent with the address bit set. 
+ * is sent with the address bit set.
  *
  * \param p_usart Pointer to a USART instance.
  * \param ul_addr The address to be sent out.
@@ -1161,9 +1161,9 @@ uint32_t usart_send_address(Usart *p_usart, uint32_t ul_addr)
 	if ((p_usart->US_MR & US_MR_PAR_MULTIDROP) != US_MR_PAR_MULTIDROP) {
 		return 1;
 	}
-	
+
 	p_usart->US_CR = US_CR_SENDA;
-	
+
 	if (usart_write(p_usart, ul_addr)) {
 		return 1;
 	} else {
@@ -1265,7 +1265,7 @@ void usart_spi_release_chip_select(Usart *p_usart)
 
 /**
  * \brief Check if Transmit is Ready.
- * Check if data have been loaded in USART_THR and are waiting to be loaded 
+ * Check if data have been loaded in USART_THR and are waiting to be loaded
  * into the Transmit Shift Register (TSR).
  *
  * \param p_usart Pointer to a USART instance.
@@ -1435,10 +1435,10 @@ uint32_t usart_read(Usart *p_usart, uint32_t *c)
 	if (!(p_usart->US_CSR & US_CSR_RXRDY)) {
 		return 1;
 	}
-	
+
 	/* Read character */
 	*c = p_usart->US_RHR & US_RHR_RXCHR_Msk;
-	
+
 	return 0;
 }
 
@@ -1559,7 +1559,7 @@ void usart_disable_writeprotect(Usart *p_usart)
  *
  * \param p_usart Pointer to a USART instance.
  *
- * \return 0 if the peripheral is not protected. 
+ * \return 0 if the peripheral is not protected.
  * \return 16-bit Write Protect Violation Status otherwise.
  */
 uint32_t usart_get_writeprotect_status(Usart *p_usart)
@@ -1588,7 +1588,7 @@ uint8_t usart_get_error_number(Usart *p_usart)
 
 #if (SAM3S || SAM4S || SAM3U || SAM3XA)
 /**
- * \brief Configure the transmitter preamble length when the Manchester 
+ * \brief Configure the transmitter preamble length when the Manchester
  * encode/decode is enabled.
  *
  * \param p_usart Pointer to a USART instance.
@@ -1601,7 +1601,7 @@ void usart_man_set_tx_pre_len(Usart *p_usart, uint8_t uc_len)
 }
 
 /**
- * \brief Configure the transmitter preamble pattern when the Manchester 
+ * \brief Configure the transmitter preamble pattern when the Manchester
  * encode/decode is enabled, which should be 0 ~ 3.
  *
  * \param p_usart Pointer to a USART instance.
@@ -1617,11 +1617,11 @@ void usart_man_set_tx_pre_pattern(Usart *p_usart, uint8_t uc_pattern)
 }
 
 /**
- * \brief Configure the transmitter Manchester polarity when the Manchester 
+ * \brief Configure the transmitter Manchester polarity when the Manchester
  * encode/decode is enabled.
  *
  * \param p_usart Pointer to a USART instance.
- * \param uc_polarity Indicate the transmitter Manchester polarity, which 
+ * \param uc_polarity Indicate the transmitter Manchester polarity, which
  * should be 0 or 1.
  */
 void usart_man_set_tx_polarity(Usart *p_usart, uint8_t uc_polarity)
@@ -1631,7 +1631,7 @@ void usart_man_set_tx_polarity(Usart *p_usart, uint8_t uc_polarity)
 }
 
 /**
- * \brief Configure the detected receiver preamble length when the Manchester 
+ * \brief Configure the detected receiver preamble length when the Manchester
  * encode/decode is enabled.
  *
  * \param p_usart Pointer to a USART instance.
@@ -1644,7 +1644,7 @@ void usart_man_set_rx_pre_len(Usart *p_usart, uint8_t uc_len)
 }
 
 /**
- * \brief Configure the detected receiver preamble pattern when the Manchester 
+ * \brief Configure the detected receiver preamble pattern when the Manchester
  *  encode/decode is enabled, which should be 0 ~ 3.
  *
  * \param p_usart Pointer to a USART instance.
@@ -1660,11 +1660,11 @@ void usart_man_set_rx_pre_pattern(Usart *p_usart, uint8_t uc_pattern)
 }
 
 /**
- * \brief Configure the receiver Manchester polarity when the Manchester 
+ * \brief Configure the receiver Manchester polarity when the Manchester
  * encode/decode is enabled.
  *
  * \param p_usart Pointer to a USART instance.
- * \param uc_polarity Indicate the receiver Manchester polarity, which should 
+ * \param uc_polarity Indicate the receiver Manchester polarity, which should
  * be 0 or 1.
  */
 void usart_man_set_rx_polarity(Usart *p_usart, uint8_t uc_polarity)

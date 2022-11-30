@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -90,4 +90,3 @@ void WAV_DisplayInfo(const WavHeader *header)
     printf( "  - Subchunk2 ID    = 0x%08X\n\r", header->subchunk2ID);
     printf( "  - Subchunk2 Size  = %u\n\r",     header->subchunk2Size);
 }
-

@@ -152,4 +152,3 @@ volatile unsigned long ulCalculatedValue; /* Volatile to ensure optimisation is 
 	}
 }
 /*-----------------------------------------------------------*/
-

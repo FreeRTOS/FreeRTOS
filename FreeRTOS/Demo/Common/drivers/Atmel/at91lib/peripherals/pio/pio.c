@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -126,21 +126,21 @@ static void PIO_SetInput(AT91S_PIO *pio,
 
     // Enable pull-up(s) if necessary
     if (enablePullUp) {
-    
+
         WRITE(pio, PIO_PPUER, mask);
     }
     else {
-    
+
         WRITE(pio, PIO_PPUDR, mask);
     }
 
     // Enable filter(s) if necessary
     if (enableFilter) {
-    
+
         WRITE(pio, PIO_IFER, mask);
     }
     else {
-    
+
         WRITE(pio, PIO_IFDR, mask);
     }
 
@@ -171,21 +171,21 @@ static void PIO_SetOutput(AT91S_PIO *pio,
 
     // Enable pull-up(s) if necessary
     if (enablePullUp) {
-    
+
         WRITE(pio, PIO_PPUER, mask);
     }
     else {
-    
+
         WRITE(pio, PIO_PPUDR, mask);
     }
 
     // Enable multi-drive if necessary
     if (enableMultiDrive) {
-    
+
         WRITE(pio, PIO_MDER, mask);
     }
     else {
-    
+
         WRITE(pio, PIO_MDDR, mask);
     }
 
@@ -208,8 +208,8 @@ static void PIO_SetOutput(AT91S_PIO *pio,
 //         Exported functions
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-/// Configures a list of Pin instances, which can either hold a single pin or a 
-/// group of pins, depending on the mask value; all pins are configured by this 
+/// Configures a list of Pin instances, which can either hold a single pin or a
+/// group of pins, depending on the mask value; all pins are configured by this
 /// function.
 /// Returns 1 if the configuration has been performed successfully; otherwise 0.
 /// \param list  Pointer to a list of Pin instances.
@@ -219,21 +219,21 @@ unsigned char PIO_Configure(const Pin *list, unsigned int size)
 {
     // Configure pins
     while (size > 0) {
-    
+
         switch (list->type) {
-    
+
             case PIO_PERIPH_A:
                 PIO_SetPeripheralA(list->pio,
                                    list->mask,
                                    (list->attribute & PIO_PULLUP) ? 1 : 0);
                 break;
-    
+
             case PIO_PERIPH_B:
                 PIO_SetPeripheralB(list->pio,
                                    list->mask,
                                    (list->attribute & PIO_PULLUP) ? 1 : 0);
                 break;
-    
+
             case PIO_INPUT:
                 AT91C_BASE_PMC->PMC_PCER = 1 << list->id;
                 PIO_SetInput(list->pio,
@@ -241,7 +241,7 @@ unsigned char PIO_Configure(const Pin *list, unsigned int size)
                              (list->attribute & PIO_PULLUP) ? 1 : 0,
                              (list->attribute & PIO_DEGLITCH)? 1 : 0);
                 break;
-    
+
             case PIO_OUTPUT_0:
             case PIO_OUTPUT_1:
                 PIO_SetOutput(list->pio,
@@ -250,7 +250,7 @@ unsigned char PIO_Configure(const Pin *list, unsigned int size)
                               (list->attribute & PIO_OPENDRAIN) ? 1 : 0,
                               (list->attribute & PIO_PULLUP) ? 1 : 0);
                 break;
-    
+
             default: return 0;
         }
 
@@ -333,4 +333,3 @@ unsigned int PIO_GetISR(const Pin *pin)
 {
     return (READ(pin->pio, PIO_ISR));
 }
-

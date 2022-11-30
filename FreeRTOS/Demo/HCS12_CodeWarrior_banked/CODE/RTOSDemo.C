@@ -6,7 +6,7 @@
 **     Compiler  : Metrowerks HC12 C Compiler
 **     Date/Time : 13/06/2005, 20:14
 **     Abstract  :
-**         Main module. 
+**         Main module.
 **         Here is to be placed user's code.
 **     Settings  :
 **     Contents  :
@@ -49,7 +49,7 @@ void main(void)
   {
   	 jmp vMain
   }
-  
+
 
   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
     for(;;);
@@ -60,7 +60,7 @@ void main(void)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

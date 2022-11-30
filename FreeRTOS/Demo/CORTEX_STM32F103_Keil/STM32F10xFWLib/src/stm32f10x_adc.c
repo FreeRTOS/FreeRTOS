@@ -133,7 +133,7 @@ void ADC_DeInit(ADC_TypeDef* ADCx)
       /* Release ADC1 from reset state */
       RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1, DISABLE);
       break;
-    
+
     case ADC2_BASE:
       /* Enable ADC2 reset state */
       RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC2, ENABLE);
@@ -165,9 +165,9 @@ void ADC_Init(ADC_TypeDef* ADCx, ADC_InitTypeDef* ADC_InitStruct)
   /* Check the parameters */
   assert(IS_ADC_MODE(ADC_InitStruct->ADC_Mode));
   assert(IS_FUNCTIONAL_STATE(ADC_InitStruct->ADC_ScanConvMode));
-  assert(IS_FUNCTIONAL_STATE(ADC_InitStruct->ADC_ContinuousConvMode));  		    
-  assert(IS_ADC_EXT_TRIG(ADC_InitStruct->ADC_ExternalTrigConv));   
-  assert(IS_ADC_DATA_ALIGN(ADC_InitStruct->ADC_DataAlign)); 
+  assert(IS_FUNCTIONAL_STATE(ADC_InitStruct->ADC_ContinuousConvMode));
+  assert(IS_ADC_EXT_TRIG(ADC_InitStruct->ADC_ExternalTrigConv));
+  assert(IS_ADC_DATA_ALIGN(ADC_InitStruct->ADC_DataAlign));
   assert(IS_ADC_REGULAR_LENGTH(ADC_InitStruct->ADC_NbrOfChannel));
 
   /*---------------------------- ADCx CR1 Configuration -----------------*/
@@ -296,7 +296,7 @@ void ADC_DMACmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 * Description    : Enables or disables the specified ADC interrupts.
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
 *                  - ADC_IT: specifies the ADC interrupts sources to be enabled
-*                    or disabled. 
+*                    or disabled.
 *                    This parameter can be any combination of the following values:
 *                       - ADC_IT_EOC: End of conversion interrupt mask
 *                       - ADC_IT_AWD: Analog watchdog interrupt mask
@@ -338,7 +338,7 @@ void ADC_ITConfig(ADC_TypeDef* ADCx, u16 ADC_IT, FunctionalState NewState)
 *******************************************************************************/
 void ADC_ResetCalibration(ADC_TypeDef* ADCx)
 {
-  /* Resets the selected ADC calibartion registers */  
+  /* Resets the selected ADC calibartion registers */
   ADCx->CR2 |= CR2_RSTCAL_Set;
 }
 
@@ -377,7 +377,7 @@ FlagStatus ADC_GetResetCalibrationStatus(ADC_TypeDef* ADCx)
 *******************************************************************************/
 void ADC_StartCalibration(ADC_TypeDef* ADCx)
 {
-  /* Enable the selected ADC calibration process */  
+  /* Enable the selected ADC calibration process */
   ADCx->CR2 |= CR2_CAL_Set;
 }
 
@@ -523,7 +523,7 @@ void ADC_DiscModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 * Description    : Configures for the selected ADC regular channel its corresponding
 *                  rank in the sequencer and its sample time.
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
-*                  - ADC_Channel: the ADC channel to configure. 
+*                  - ADC_Channel: the ADC channel to configure.
 *                    This parameter can be one of the following values:
 *                       - ADC_Channel_0: ADC Channel0 selected
 *                       - ADC_Channel_1: ADC Channel1 selected
@@ -546,16 +546,16 @@ void ADC_DiscModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 *                  - Rank: The rank in the regular group sequencer. This parameter
 *                    must be between 1 to 16.
 *                  - ADC_SampleTime: The sample time value to be set for the
-*                    selected channel. 
+*                    selected channel.
 *                    This parameter can be one of the following values:
 *                       - ADC_SampleTime_1Cycles5: Sample time equal to 1.5 cycles
 *                       - ADC_SampleTime_7Cycles5: Sample time equal to 7.5 cycles
 *                       - ADC_SampleTime_13Cycles5: Sample time equal to 13.5 cycles
-*                       - ADC_SampleTime_28Cycles5: Sample time equal to 28.5 cycles	
-*                       - ADC_SampleTime_41Cycles5: Sample time equal to 41.5 cycles	
-*                       - ADC_SampleTime_55Cycles5: Sample time equal to 55.5 cycles	
-*                       - ADC_SampleTime_71Cycles5: Sample time equal to 71.5 cycles	
-*                       - ADC_SampleTime_239Cycles5: Sample time equal to 239.5 cycles	
+*                       - ADC_SampleTime_28Cycles5: Sample time equal to 28.5 cycles
+*                       - ADC_SampleTime_41Cycles5: Sample time equal to 41.5 cycles
+*                       - ADC_SampleTime_55Cycles5: Sample time equal to 55.5 cycles
+*                       - ADC_SampleTime_71Cycles5: Sample time equal to 71.5 cycles
+*                       - ADC_SampleTime_239Cycles5: Sample time equal to 239.5 cycles
 * Output         : None
 * Return         : None
 *******************************************************************************/
@@ -762,9 +762,9 @@ void ADC_InjectedDiscModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 * Description    : Configures the external trigger for injected channels conversion.
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
 *                  - ADC_ExternalTrigInjecConv: specifies the ADC trigger to
-*                    start injected conversion. 
+*                    start injected conversion.
 *                    This parameter can be one of the following values:
-*                       - ADC_ExternalTrigInjecConv_T1_TRGO: Timer1 TRGO event 
+*                       - ADC_ExternalTrigInjecConv_T1_TRGO: Timer1 TRGO event
 *                         selected
 *                       - ADC_ExternalTrigInjecConv_T1_CC4: Timer1 capture
 *                         compare4 selected
@@ -775,7 +775,7 @@ void ADC_InjectedDiscModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 *                       - ADC_ExternalTrigInjecConv_T3_CC4: Timer3 capture
 *                         compare4 selected
 *                       - ADC_ExternalTrigInjecConv_T4_TRGO: Timer4 TRGO event
-*                         selected 
+*                         selected
 *                       - ADC_ExternalTrigInjecConv_Ext_Interrupt15: External
 *                         interrupt 15 event selected
 *                       - ADC_ExternalTrigInjecConv_None: Injected conversion
@@ -888,7 +888,7 @@ FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_TypeDef* ADCx)
 * Description    : Configures for the selected ADC injected channel its corresponding
 *                  rank in the sequencer and its sample time.
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
-*                  - ADC_Channel: the ADC channel to configure. 
+*                  - ADC_Channel: the ADC channel to configure.
 *                    This parameter can be one of the following values:
 *                       - ADC_Channel_0: ADC Channel0 selected
 *                       - ADC_Channel_1: ADC Channel1 selected
@@ -911,16 +911,16 @@ FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_TypeDef* ADCx)
 *                  - Rank: The rank in the injected group sequencer. This parameter
 *                    must be between 1 to 4.
 *                  - ADC_SampleTime: The sample time value to be set for the
-*                    selected channel. 
+*                    selected channel.
 *                    This parameter can be one of the following values:
 *                       - ADC_SampleTime_1Cycles5: Sample time equal to 1.5 cycles
 *                       - ADC_SampleTime_7Cycles5: Sample time equal to 7.5 cycles
 *                       - ADC_SampleTime_13Cycles5: Sample time equal to 13.5 cycles
-*                       - ADC_SampleTime_28Cycles5: Sample time equal to 28.5 cycles	
-*                       - ADC_SampleTime_41Cycles5: Sample time equal to 41.5 cycles	
-*                       - ADC_SampleTime_55Cycles5: Sample time equal to 55.5 cycles	
-*                       - ADC_SampleTime_71Cycles5: Sample time equal to 71.5 cycles	
-*                       - ADC_SampleTime_239Cycles5: Sample time equal to 239.5 cycles	
+*                       - ADC_SampleTime_28Cycles5: Sample time equal to 28.5 cycles
+*                       - ADC_SampleTime_41Cycles5: Sample time equal to 41.5 cycles
+*                       - ADC_SampleTime_55Cycles5: Sample time equal to 55.5 cycles
+*                       - ADC_SampleTime_71Cycles5: Sample time equal to 71.5 cycles
+*                       - ADC_SampleTime_239Cycles5: Sample time equal to 239.5 cycles
 * Output         : None
 * Return         : None
 *******************************************************************************/
@@ -987,7 +987,7 @@ void ADC_InjectedChannelConfig(ADC_TypeDef* ADCx, u8 ADC_Channel, u8 Rank, u8 AD
 * Function Name  : ADC_InjectedSequencerLengthConfig
 * Description    : Configures the sequencer for injected channels
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
-*                  - Length: The sequencer length. 
+*                  - Length: The sequencer length.
 *                    This parameter must be a number between 1 to 4.
 * Output         : None
 * Return         : None
@@ -999,13 +999,13 @@ void ADC_InjectedSequencerLengthConfig(ADC_TypeDef* ADCx, u8 Length)
 
   /* Check the parameters */
   assert(IS_ADC_INJECTED_LENGTH(Length));
-  
+
   /* Get the old register value */
   tmpreg1 = ADCx->JSQR;
   /* Clear the old injected sequnence lenght JL bits */
   tmpreg1 &= JSQR_JL_Reset;
   /* Set the injected sequnence lenght JL bits */
-  tmpreg2 = Length - 1; 
+  tmpreg2 = Length - 1;
   tmpreg1 |= (u32)tmpreg2 << 20;
   /* Store the new register value */
   ADCx->JSQR = tmpreg1;
@@ -1016,7 +1016,7 @@ void ADC_InjectedSequencerLengthConfig(ADC_TypeDef* ADCx, u8 Length)
 * Description    : Set the injected channels conversion value offset
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
 *                  - ADC_InjectedChannel: the ADC injected channel to set its
-*                    offset. 
+*                    offset.
 *                    This parameter can be one of the following values:
 *                       - ADC_InjectedChannel_1: Injected Channel1 selected
 *                       - ADC_InjectedChannel_2: Injected Channel2 selected
@@ -1029,7 +1029,7 @@ void ADC_SetInjectedOffset(ADC_TypeDef* ADCx, u8 ADC_InjectedChannel, u16 Offset
 {
   /* Check the parameters */
   assert(IS_ADC_INJECTED_CHANNEL(ADC_InjectedChannel));
-  assert(IS_ADC_OFFSET(Offset));  
+  assert(IS_ADC_OFFSET(Offset));
 
   /* Set the selected injected channel data offset */
   *((u32 *)((*(u32*)&ADCx) + ADC_InjectedChannel)) = (u32)Offset;
@@ -1069,7 +1069,7 @@ u16 ADC_GetInjectedConversionValue(ADC_TypeDef* ADCx, u8 ADC_InjectedChannel)
 *                         a single regular channel
 *                       - ADC_AnalogWatchdog_SingleInjecEnable: Analog watchdog on
 *                         a single injected channel
-*                       - ADC_AnalogWatchdog_SingleRegOrInjecEnable: Analog 
+*                       - ADC_AnalogWatchdog_SingleRegOrInjecEnable: Analog
 *                         watchdog on a single regular or injected channel
 *                       - ADC_AnalogWatchdog_AllRegEnable: Analog watchdog on
 *                         all regular channel
@@ -1080,7 +1080,7 @@ u16 ADC_GetInjectedConversionValue(ADC_TypeDef* ADCx, u8 ADC_InjectedChannel)
 *                       - ADC_AnalogWatchdog_None: No channel guarded by the
 *                         analog watchdog
 * Output         : None
-* Return         : None	  
+* Return         : None
 *******************************************************************************/
 void ADC_AnalogWatchdogCmd(ADC_TypeDef* ADCx, u32 ADC_AnalogWatchdog)
 {
@@ -1128,7 +1128,7 @@ void ADC_AnalogWatchdogThresholdsConfig(ADC_TypeDef* ADCx, u16 HighThreshold,
 * Description    : Configures the analog watchdog guarded single channel
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
 *                  - ADC_Channel: the ADC channel to configure for the analog
-*                    watchdog. 
+*                    watchdog.
 *                    This parameter can be one of the following values:
 *                       - ADC_Channel_0: ADC Channel0 selected
 *                       - ADC_Channel_1: ADC Channel1 selected
@@ -1197,7 +1197,7 @@ void ADC_TempSensorCmd(FunctionalState NewState)
 * Function Name  : ADC_GetFlagStatus
 * Description    : Checks whether the specified ADC flag is set or not.
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
-*                  - ADC_FLAG: specifies the flag to check. 
+*                  - ADC_FLAG: specifies the flag to check.
 *                    This parameter can be one of the following values:
 *                       - ADC_FLAG_AWD: Analog watchdog flag
 *                       - ADC_FLAG_EOC: End of conversion flag
@@ -1233,7 +1233,7 @@ FlagStatus ADC_GetFlagStatus(ADC_TypeDef* ADCx, u8 ADC_FLAG)
 * Function Name  : ADC_ClearFlag
 * Description    : Clears the ADCx's pending flags.
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
-*                  - ADC_FLAG: specifies the flag to clear. 
+*                  - ADC_FLAG: specifies the flag to clear.
 *                    This parameter can be any combination of the following values:
 *                       - ADC_FLAG_AWD: Analog watchdog flag
 *                       - ADC_FLAG_EOC: End of conversion flag
@@ -1256,7 +1256,7 @@ void ADC_ClearFlag(ADC_TypeDef* ADCx, u8 ADC_FLAG)
 * Function Name  : ADC_GetITStatus
 * Description    : Checks whether the specified ADC interrupt has occurred or not.
 * Input          : - ADCx: where x can be 1 or 2 to select the ADC peripheral.
-*                  - ADC_IT: specifies the ADC interrupt source to check. 
+*                  - ADC_IT: specifies the ADC interrupt source to check.
 *                    This parameter can be one of the following values:
 *                       - ADC_IT_EOC: End of conversion interrupt mask
 *                       - ADC_IT_AWD: Analog watchdog interrupt mask

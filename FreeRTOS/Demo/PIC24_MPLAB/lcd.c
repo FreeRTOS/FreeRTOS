@@ -45,18 +45,18 @@ static void vLCDTask( void *pvParameters );
  */
 static void prvSetupLCD( void );
 
-/* 
- * Move to the first (0) or second (1) row of the LCD. 
+/*
+ * Move to the first (0) or second (1) row of the LCD.
  */
 static void prvLCDGotoRow( unsigned short usRow );
 
-/* 
- * Write a string of text to the LCD. 
+/*
+ * Write a string of text to the LCD.
  */
 static void prvLCDPutString( char *pcString );
 
-/* 
- * Clear the LCD. 
+/*
+ * Clear the LCD.
  */
 static void prvLCDClear( void );
 
@@ -133,7 +133,7 @@ static void prvLCDClear( void )
 	/* Clear the display. */
 	PMADDR = 0x0000;
 	PMDIN1 = lcdCLEAR_DISPLAY;
-	vTaskDelay( lcdSHORT_DELAY );	
+	vTaskDelay( lcdSHORT_DELAY );
 }
 /*-----------------------------------------------------------*/
 
@@ -193,12 +193,8 @@ unsigned short usRow = 0;
 		usRow++;
 		prvLCDPutString( xMessage.pcMessage );
 
-		/* Delay the requested amount of time to ensure the text just written 
+		/* Delay the requested amount of time to ensure the text just written
 		to the LCD is not overwritten. */
-		vTaskDelay( xMessage.xMinDisplayTime );		
+		vTaskDelay( xMessage.xMinDisplayTime );
 	}
 }
-
-
-
-

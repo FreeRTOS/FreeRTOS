@@ -278,4 +278,3 @@ int32_t gpio_set_config(void)
     return(0UL);
 }
 #endif
-

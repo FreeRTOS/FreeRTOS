@@ -37,4 +37,3 @@ extern "C" {
 
 
 #endif /* WOLFSSL_OPTIONS_H */
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -68,4 +68,3 @@ extern void SLCDC_EnableInterrupts(unsigned int sources);
 extern void SLCDC_DisableInterrupts(unsigned int sources);
 
 #endif //#ifndef SLCDC_H
-

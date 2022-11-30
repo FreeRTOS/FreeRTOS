@@ -27,7 +27,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * @file    main.c
  * @brief   Application entry point.
@@ -199,7 +199,7 @@ static void prvInitializeHeap( void )
 
 	/* Place the second block of the heap memory in the second bank of RAM. */
 	static uint8_t ucHeap2[ 16 * 1024 ] COMPILER_ATTRIBUTE_PLACE_IN_2ND_MEMORY_BANK;
-	
+
 	/* Memory regions are defined in address order, and terminate with NULL. */
 	static HeapRegion_t xHeapRegions[] =
 	{
@@ -282,5 +282,3 @@ extern unsigned long _pvHeapStart[];
 
 	uTickInterruptCounter++;
 }
-
-

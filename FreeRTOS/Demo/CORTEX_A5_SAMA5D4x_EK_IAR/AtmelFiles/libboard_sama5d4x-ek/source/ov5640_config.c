@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -46,7 +46,7 @@ const struct ov_reg ov5640_yuv_vga[]= {
     {0x3008, 0x82},
     {0xFFFF, 0x05},
     {0x3008, 0x42},
-    {0x3103, 0x03}, 
+    {0x3103, 0x03},
     {0x3017, 0xff},
     {0x3018, 0xff},
 
@@ -346,7 +346,7 @@ const struct ov_reg ov5640_yuv_sxga[]= {
     {0x3008, 0x82},
     {0xFFFF, 0x05},
     {0x3008, 0x42},
-    {0x3103, 0x03}, 
+    {0x3103, 0x03},
     {0x3017, 0xff},
     {0x3018, 0xff},
 
@@ -601,7 +601,7 @@ const struct ov_reg ov5640_yuv_sxga[]= {
     {0x3a11, 0x60},
     {0x3a1f, 0x14},
     {0x3008, 0x02},
- 
+
 #if 1
     {0x3503, 0x00},
     {0x3c07, 0x08},

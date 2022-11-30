@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -116,4 +116,3 @@ void WDT_A_unregisterInterrupt(void)
     //
     Interrupt_unregisterInterrupt(INT_WDT_A);
 }
-

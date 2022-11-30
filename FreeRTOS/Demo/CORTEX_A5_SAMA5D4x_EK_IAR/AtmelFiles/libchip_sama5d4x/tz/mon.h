@@ -31,7 +31,7 @@
 #if defined(__ICCARM__)
   #include <intrinsics.h>
 #endif
-   
+
 typedef struct {
   unsigned int Mode_SPSR;
   unsigned int Mode_SP;
@@ -53,9 +53,9 @@ typedef struct
     Mode_Regs           Svc;
     Mode_Regs           Fiq;
     Mode_Regs           Irq;
-    
+
 } WorldContext, *pWorldContext;
-   
+
 
 extern void monitor_init(void);
 extern void SecureMonitor_init(void);

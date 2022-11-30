@@ -235,4 +235,3 @@ girq11_b30(void)
 /* end girq11.c */
 /**   @}
  */
-

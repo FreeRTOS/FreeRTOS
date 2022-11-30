@@ -106,4 +106,3 @@ void vParTestToggleLED( UBaseType_t uxLED )
 
 	xTaskResumeAll();
 }
-

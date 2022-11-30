@@ -183,10 +183,3 @@ static portBASE_TYPE xHigherPriorityTaskWoken;
 	/* If sending or receiving necessitates a context switch, then switch now. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-
-
-

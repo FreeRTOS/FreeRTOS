@@ -355,4 +355,3 @@ BaseType_t xReturn = pdPASS, x;
 }
 
 #endif /* ipconfigUSE_TCP */
-

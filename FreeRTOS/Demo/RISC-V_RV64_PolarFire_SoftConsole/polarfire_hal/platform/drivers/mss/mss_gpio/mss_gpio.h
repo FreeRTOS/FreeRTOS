@@ -21,7 +21,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * 
+ *
  * PolarFire SoC Microprocessor Subsystem GPIO bare metal software driver
  * public API.
  *
@@ -43,7 +43,7 @@
   part of an operating system but the implementation of the adaptation layer
   between this driver and the operating system's driver model is outside the
   scope of this driver.
-  
+
   ==============================================================================
   Hardware Flow Dependencies
   ==============================================================================
@@ -72,7 +72,7 @@
   the Asymmetric Multi-Processing (AMP) mode of operation, the APB peripherals
   can alternatively be accessed on the AXI-Slave 6 via the AXI to AHB and AHB to
   APB bridges (referred as the AMP APB bus).
-  
+
   Application must make sure that the desired GPIO instance is appropriately
   configured on one of the APB bus described above by configuring the PolarFire
   SoC system registers (SYSREG) as per the application need and that the
@@ -93,14 +93,14 @@
     - Configuration
     - Reading and setting GPIO state
     - Interrupt control
-    
+
   --------------------------------
   Initialization
   --------------------------------
   The MSS GPIO driver is initialized through a call to the MSS_GPIO_init()
   function. The MSS_GPIO_init() function must be called before any other MSS
   GPIO driver functions can be called.
-  
+
   --------------------------------
   Configuration
   --------------------------------
@@ -112,7 +112,7 @@
   can be used to configure eight consecutive GPIO ports identically. The
   MSS_GPIO_config_byte() function can be used to configure all available GPIO
   ports identically.
-  
+
   --------------------------------
   Reading and Setting GPIO State
   --------------------------------
@@ -122,7 +122,7 @@
     - MSS_GPIO_set_outputs()
     - MSS_GPIO_set_output()
     - MSS_GPIO_drive_inout()
-  
+
   --------------------------------
   Interrupt Control
   --------------------------------
@@ -148,7 +148,7 @@
   all the GPIO0 interrupts which don't have a direct interrupt input on PLIC are
   connected to corresponding non-direct input pin. The table below explains all
   the GPIO direct and non-direct interrupt connectivity options.
-  
+
   | PLIC | GPIO_INTERRUPT_FAB_CR = 0 | GPIO_INTERRUPT_FAB_CR = 1 |
   |------|---------------------------|---------------------------|
   |   0  |      GPIO0 bit 0          |        GPIO2 bit 0        |
@@ -161,8 +161,8 @@
   |  ... |          ...              |             ...           |
   |  30  |      GPIO1  bit 16        |        GPIO2 bit 30       |
   |  31  |      GPIO1  bit 17        |        GPIO2 bit 31       |
-  
-  
+
+
   | PLIC |                           Interrupt source                           |
   |------|----------------------------------------------------------------------|
   |  32  |                             GPIO1 bit 18                             |
@@ -187,7 +187,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 #include <stdint.h>
 
@@ -197,7 +197,7 @@ extern "C" {
     - MSS_GPIO_config()
     - MSS_GPIO_set_output() and MSS_GPIO_drive_inout()
     - MSS_GPIO_enable_irq(), MSS_GPIO_disable_irq() and MSS_GPIO_clear_irq()
-    
+
   Note that the GPIO0, GPIO1 and GPIO2 blocks have 14, 24 and 32 GPIO ports
   respectively.
  */
@@ -271,7 +271,7 @@ typedef enum mss_gpio_byte_num
   blocks when they are connected on the main APB bus. The GPIO0_HI, GPIO1_HI,
   GPIO2_HI represent the GPIO0, GPIO1 and GPIO2 hardware blocks when they are
   connected on the AMP APB bus.
-  
+
   | Constant | Description                           |
   |----------|---------------------------------------|
   | GPIO0_LO | GPIO0 block connected on main APB bus |
@@ -280,7 +280,7 @@ typedef enum mss_gpio_byte_num
   | GPIO0_HI | GPIO0 block connected on AMP APB bus  |
   | GPIO1_HI | GPIO1 block connected on AMP APB bus  |
   | GPIO2_HI | GPIO2 block connected on AMP APB bus  |
-  
+
  */
 #define GPIO0_LO                        ((GPIO_TypeDef*)0x20120000UL)
 #define GPIO1_LO                        ((GPIO_TypeDef*)0x20121000UL)
@@ -297,7 +297,7 @@ typedef enum mss_gpio_byte_num
   constants can be used to specify multiple GPIO ports.
   These definitions can also be used to identify GPIO ports through logical
   operations on the return value of the MSS_GPIO_get_inputs() function.
-  
+
   | Constant         | Description           |
   |------------------|-----------------------|
   | MSS_GPIO_0_MASK  | GPIO port 0-bit mask  |
@@ -332,7 +332,7 @@ typedef enum mss_gpio_byte_num
   | MSS_GPIO_29_MASK | GPIO port 29-bit mask |
   | MSS_GPIO_30_MASK | GPIO port 30-bit mask |
   | MSS_GPIO_31_MASK | GPIO port 31-bit mask |
-  
+
  */
 #define MSS_GPIO_0_MASK         0x00000001UL
 #define MSS_GPIO_1_MASK         0x00000002UL
@@ -372,13 +372,13 @@ typedef enum mss_gpio_byte_num
   ==================
   These constant definitions are used as an argument to the MSS_GPIO_config()
   function to specify the I/O mode of each GPIO port.
-  
+
   | Constant             | Description                |
   |----------------------|----------------------------|
   | MSS_GPIO_INPUT_MODE  | Input port only            |
   | MSS_GPIO_OUTPUT_MODE | Output port only           |
   | MSS_GPIO_INOUT_MODE  | Both input and output port |
-  
+
  */
 #define MSS_GPIO_INPUT_MODE              0x0000000002UL
 #define MSS_GPIO_OUTPUT_MODE             0x0000000005UL
@@ -389,7 +389,7 @@ typedef enum mss_gpio_byte_num
   ===================
   These constant definitions are used as an argument to the MSS_GPIO_config()
   function to specify the interrupt mode of each GPIO port.
-  
+
   | Constant                   | Description                                         |
   |----------------------------|-----------------------------------------------------|
   | MSS_GPIO_IRQ_LEVEL_HIGH    | Interrupt on GPIO input level High                  |
@@ -397,7 +397,7 @@ typedef enum mss_gpio_byte_num
   | MSS_GPIO_IRQ_EDGE_POSITIVE | Interrupt on GPIO input positive edge               |
   | MSS_GPIO_IRQ_EDGE_NEGATIVE | Interrupt on GPIO input negative edge               |
   | MSS_GPIO_IRQ_EDGE_BOTH     | Interrupt on GPIO input positive and negative edges |
-  
+
  */
 #define MSS_GPIO_IRQ_LEVEL_HIGH           0x0000000000UL
 #define MSS_GPIO_IRQ_LEVEL_LOW            0x0000000020UL
@@ -428,10 +428,10 @@ typedef struct
   resets the MSS GPIO hardware block and it also clears any pending MSS GPIO
   interrupts in the  interrupt controller. When the function exits,
   it takes the MSS GPIO block out of reset.
-  
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
-    
+
   @return
     This function does not return a value.
 
@@ -457,13 +457,13 @@ void MSS_GPIO_init
 
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
- 
+
   @param port_id
     The port_id parameter identifies the GPIO port to be configured. An
     enumeration item of the form MSS_GPIO_n, where n is the number of the GPIO
     port, is used to identify the GPIO port. For example, MSS_GPIO_0 identifies
     the first GPIO port and MSS_GPIO_31 is the last one.
-    
+
   @param config
     The config parameter specifies the configuration to be applied to the GPIO
     port identified by the port_id parameter. It is a logical OR of the required
@@ -479,7 +479,7 @@ void MSS_GPIO_init
            - MSS_GPIO_IRQ_EDGE_POSITIVE
            - MSS_GPIO_IRQ_EDGE_NEGATIVE
            - MSS_GPIO_IRQ_EDGE_BOTH
-  
+
    @return
     This function does not return any value.
 
@@ -507,7 +507,7 @@ void MSS_GPIO_config
 /*-------------------------------------------------------------------------*//**
   The MSS_GPIO_set_outputs() function is used to set the state of all GPIO ports
   configured as outputs.
- 
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
 
@@ -519,7 +519,7 @@ void MSS_GPIO_config
     third GPIO outputs must be set High and all other GPIO outputs set Low. The
     driver provides 32 mask constants, MSS_GPIO_0_MASK to MSS_GPIO_31_MASK
     inclusive, for this purpose.
-  
+
   @return
     This function does not return any value.
 
@@ -680,14 +680,14 @@ void MSS_GPIO_config_byte
     set. An enumeration item of the form MSS_GPIO_n, where n is the number of
     the GPIO port, is used to identify the GPIO port. For example, MSS_GPIO_0
     identifies the first GPIO port and MSS_GPIO_31 is the last one.
-  
+
   @param value
     The value parameter specifies the desired state for the GPIO output. A value
     of 0 will set the output Low and a value of 1 will set the output High.
-  
+
   @return
     This function does not return a value.
-    
+
   Example:
   The following call will set GPIO output 12 High, leaving all other GPIO
   outputs unaffected:
@@ -712,7 +712,7 @@ void MSS_GPIO_set_output
 /*-------------------------------------------------------------------------*//**
   The MSS_GPIO_get_inputs() function is used to read the current state all GPIO
   ports configured as inputs.
- 
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
 
@@ -806,7 +806,7 @@ MSS_GPIO_disable_nondirect_irq
 /*-------------------------------------------------------------------------*//**
   The MSS_GPIO_get_outputs() function is used to read the current state of all
   GPIO ports configured as outputs.
- 
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
 
@@ -891,14 +891,14 @@ MSS_GPIO_get_irq( GPIO_TypeDef const * gpio )
     - High
     - Low
     - High impedance
-    
+
   An INOUT output would typically be used where several devices can drive the
   state of a shared signal line. The High and Low states are equivalent to the
   High and Low states of a GPIO configured as an output. The High impedance
   state is used to prevent the GPIO from driving its output state onto the
   signal line, while at the same time allowing the input state of the GPIO to
   be read.
-  
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
 
@@ -907,7 +907,7 @@ MSS_GPIO_get_irq( GPIO_TypeDef const * gpio )
     the output state. An enumeration item of the form MSS_GPIO_n, where n is the
     number of the GPIO port, is used to identify the GPIO port. For example,
     MSS_GPIO_0 identifies the first GPIO port and MSS_GPIO_31 is the last one.
-    
+
   @param inout_state
     The inout_state parameter specifies the state of the GPIO port identified by
     the port_id parameter. Allowed values of type mss_gpio_inout_state_t are as
@@ -915,7 +915,7 @@ MSS_GPIO_get_irq( GPIO_TypeDef const * gpio )
         - MSS_GPIO_DRIVE_HIGH
         - MSS_GPIO_DRIVE_LOW
         - MSS_GPIO_HIGH_Z  (High impedance)
-        
+
   @return
     This function does not return a value.
 
@@ -947,7 +947,7 @@ void MSS_GPIO_drive_inout
   the specified GPIO input. Interrupts are generated based on the state of the
   GPIO input and the interrupt mode configured for it by MSS_GPIO_config(). This
   function enables the corresponding GPIO direct interrupt on the PLIC as well.
- 
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
 
@@ -957,7 +957,7 @@ void MSS_GPIO_drive_inout
     the number of the GPIO port, is used to identify the GPIO port. For example,
     MSS_GPIO_0 identifies the first GPIO port and MSS_GPIO_31 is the last one in
     GPIO2 block.
-    
+
   @return
     This function does not return a value.
 
@@ -988,7 +988,7 @@ void MSS_GPIO_enable_irq
   The MSS_GPIO_disable_irq() function is used to disable interrupt generation
   for the specified GPIO input. This function disables the corresponding GPIO
   direct interrupt on the PLIC as well.
- 
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
 
@@ -997,7 +997,7 @@ void MSS_GPIO_enable_irq
     interrupt generation. An enumeration item of the form MSS_GPIO_n, where n is
     the number of the GPIO port, is used to identify the GPIO port. For example,
     MSS_GPIO_0 identifies the first GPIO port and MSS_GPIO_31 is the last one.
- 
+
   @return
     This function does not return a value.
 
@@ -1021,7 +1021,7 @@ void MSS_GPIO_disable_irq
   Note: The MSS_GPIO_clear_irq() function must be called as part of any GPIO
         interrupt service routine (ISR) in order to prevent the same interrupt
         event retriggering a call to the GPIO ISR.
- 
+
   @param gpio
     The gpio parameter specifies the GPIO block that needs to be configured
 
@@ -1030,13 +1030,13 @@ void MSS_GPIO_disable_irq
     the interrupt. An enumeration item of the form MSS_GPIO_n, where n is the
     number of the GPIO port, is used to identify the GPIO port. For example,
     MSS_GPIO_0 identifies the first GPIO port and MSS_GPIO_31 is the last one.
-    
+
   @return
     This function does not return a value.
 
   Example:
     The example below demonstrates the use of the MSS_GPIO_clear_irq() function
-    as part of the GPIO 9 interrupt service routine.  
+    as part of the GPIO 9 interrupt service routine.
 
     @code
     uint8_t gpio2_non_direct_plic_IRQHandler(void)

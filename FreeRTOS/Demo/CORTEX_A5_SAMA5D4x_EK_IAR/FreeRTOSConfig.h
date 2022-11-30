@@ -150,4 +150,3 @@ used. */
 #endif /* __IASMARM__ */
 
 #endif /* FREERTOS_CONFIG_H */
-

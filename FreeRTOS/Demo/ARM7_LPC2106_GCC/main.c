@@ -464,6 +464,3 @@ static long lErrorOccurred = pdFALSE;
 		xTaskResumeAll();
 	}
 }
-
-
-

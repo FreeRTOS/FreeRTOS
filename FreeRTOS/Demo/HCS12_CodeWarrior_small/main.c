@@ -359,5 +359,3 @@ unsigned portBASE_TYPE uxExpected = 1, uxReceived;
 	}
 
 #pragma CODE_SEG DEFAULT
-
-

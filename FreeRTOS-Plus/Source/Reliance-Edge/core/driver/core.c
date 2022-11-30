@@ -1918,4 +1918,3 @@ REDSTATUS RedCoreDirRead(
     return ret;
 }
 #endif /* (REDCONF_API_POSIX == 1) && (REDCONF_API_POSIX_READDIR == 1) */
-

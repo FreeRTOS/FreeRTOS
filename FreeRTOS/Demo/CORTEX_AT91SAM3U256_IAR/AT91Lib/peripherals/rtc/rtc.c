@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -110,10 +110,10 @@ int RTC_SetTime(unsigned char hour, unsigned char minute, unsigned char second)
     unsigned char sec_bcd;
 
     TRACE_DEBUG("RTC_SetTime(%02d:%02d:%02d)\n\r", hour, minute, second);
-   
+
     // if 12-hour mode, set AMPM bit
     if ((AT91C_BASE_RTC->RTC_MR & AT91C_RTC_HRMOD) == AT91C_RTC_HRMOD) {
-          
+
         if (hour > 12) {
 
             hour -= 12;
@@ -123,13 +123,13 @@ int RTC_SetTime(unsigned char hour, unsigned char minute, unsigned char second)
     hour_bcd  = (hour%10) | ((hour/10)<<4);
     min_bcd   = (minute%10) | ((minute/10)<<4);
     sec_bcd   = (second%10) | ((second/10)<<4);
-    
+
     //value overflow
     if((hour_bcd & (unsigned char)(~RTC_HOUR_BIT_LEN_MASK)) |
        (min_bcd & (unsigned char)(~RTC_MIN_BIT_LEN_MASK)) |
          (sec_bcd & (unsigned char)(~RTC_SEC_BIT_LEN_MASK)))
             return 1;
-    
+
     time = sec_bcd | (min_bcd << 8) | (hour_bcd<<16);
 
 //    time |= ((hour % 10) << 16) | ((hour / 10) << 20);
@@ -143,7 +143,7 @@ int RTC_SetTime(unsigned char hour, unsigned char minute, unsigned char second)
     AT91C_BASE_RTC->RTC_TIMR = time;
     AT91C_BASE_RTC->RTC_CR &= ~AT91C_RTC_UPDTIM;
     AT91C_BASE_RTC->RTC_SCCR |= AT91C_RTC_SECEV;//clear SECENV in SCCR
-        
+
     return (int)(AT91C_BASE_RTC->RTC_VER & AT91C_RTC_NVTIM);
 }
 
@@ -179,7 +179,7 @@ void RTC_GetTime(
             *pHour += 12;
         }
     }
-    
+
     // Minute
     if (pMinute) {
 
@@ -233,7 +233,7 @@ int RTC_SetTimeAlarm(
     }
 
     AT91C_BASE_RTC->RTC_TIMALR = alarm;
-    
+
     return (int)(AT91C_BASE_RTC->RTC_VER & AT91C_RTC_NVTIMALR);
 }
 
@@ -309,13 +309,13 @@ int RTC_SetDate(
     unsigned char month_bcd;
     unsigned char day_bcd;
     unsigned char week_bcd;
-    
+
     cent_bcd  = ((year/100)%10) | ((year/1000)<<4);
     year_bcd  = (year%10) | ((year/10)%10);
     month_bcd = ((month%10) | (month/10)<<4);
     day_bcd   = ((day%10) | (day/10)<<4);
     week_bcd  = ((week%10) | (week/10)<<4);
-    
+
     //value over flow
     if((cent_bcd & (unsigned char)(~RTC_CENT_BIT_LEN_MASK)) |
         (year_bcd & (unsigned char)(~RTC_YEAR_BIT_LEN_MASK)) |
@@ -331,8 +331,8 @@ int RTC_SetDate(
               (month_bcd << 16) |
                 (week_bcd << 21) |
                   (day_bcd << 24);
-    
-           
+
+
     // Update calendar register
     //if((AT91C_BASE_RTC->RTC_SR & AT91C_RTC_SECEV) != AT91C_RTC_SECEV) return 1;
     while ((AT91C_BASE_RTC->RTC_SR & AT91C_RTC_SECEV) != AT91C_RTC_SECEV);//wait from previous set
@@ -342,7 +342,7 @@ int RTC_SetDate(
     AT91C_BASE_RTC->RTC_CALR = date;
     AT91C_BASE_RTC->RTC_CR &= ~AT91C_RTC_UPDCAL;
     AT91C_BASE_RTC->RTC_SCCR |= AT91C_RTC_SECEV;//clear SECENV in SCCR
-    
+
     return (int)(AT91C_BASE_RTC->RTC_VER & AT91C_RTC_NVCAL);
 }
 
@@ -371,12 +371,12 @@ int RTC_SetDateAlarm(unsigned char *pMonth, unsigned char *pDay)
 
     // Set alarm
     AT91C_BASE_RTC->RTC_CALALR = alarm;
-    
+
     return (int)(AT91C_BASE_RTC->RTC_VER & AT91C_RTC_NVCALALR);
 }
 
 //------------------------------------------------------------------------------
-/// Clear flag bits of status clear command register in the RTC. 
+/// Clear flag bits of status clear command register in the RTC.
 /// \param mask Bits mask of cleared events
 //------------------------------------------------------------------------------
 void RTC_ClearSCCR(unsigned int mask)
@@ -384,20 +384,20 @@ void RTC_ClearSCCR(unsigned int mask)
     // Clear all flag bits in status clear command register
     mask &= AT91C_RTC_ACKUPD | AT91C_RTC_ALARM | AT91C_RTC_SECEV | \
                                     AT91C_RTC_TIMEV | AT91C_RTC_CALEV;
-    
+
     AT91C_BASE_RTC->RTC_SCCR = mask;
 }
 
 //------------------------------------------------------------------------------
-/// Get flag bits of status register in the RTC. 
+/// Get flag bits of status register in the RTC.
 /// \param mask Bits mask of Status Register
 /// \return Status register & mask
 //------------------------------------------------------------------------------
 unsigned int RTC_GetSR(unsigned int mask)
 {
     unsigned int event;
-    
+
     event = AT91C_BASE_RTC->RTC_SR;
-    
+
     return (event & mask);
 }

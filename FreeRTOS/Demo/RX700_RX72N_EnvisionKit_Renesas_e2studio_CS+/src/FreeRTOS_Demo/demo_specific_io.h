@@ -74,4 +74,3 @@ extern dtc_transfer_data_t xSerialTxDtcInfo;
 extern void vSerialSciCallback( void *pvArgs );
 
 #endif /* LED_IO_H */
-

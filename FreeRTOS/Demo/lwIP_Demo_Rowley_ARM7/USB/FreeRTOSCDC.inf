@@ -45,4 +45,3 @@ LoadOrderGroup = Base
 FreeRTOS = "FreeRTOS"
 FreeRTOS_CDC = "FreeRTOS CDC Demo"
 Serial.SvcDesc = "USB Serial emulation driver"
-

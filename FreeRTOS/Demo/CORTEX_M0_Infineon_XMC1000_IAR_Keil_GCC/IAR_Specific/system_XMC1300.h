@@ -1,6 +1,6 @@
 /******************************************************************************
  * @file     system_XMC1300.h
- * @brief    Device specific initialization for the XMC1300-Series according 
+ * @brief    Device specific initialization for the XMC1300-Series according
  * to CMSIS
  * @version  V1.1
  * @date     13 Dec 2012
@@ -10,12 +10,12 @@
 
  *
  * @par
- * Infineon Technologies AG (Infineon) is supplying this software for use with 
+ * Infineon Technologies AG (Infineon) is supplying this software for use with
  * Infineon’s microcontrollers.
- *   
- * This file can be freely distributed within development tools that are 
+ *
+ * This file can be freely distributed within development tools that are
  * supporting such microcontrollers.
- *  
+ *
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -37,7 +37,7 @@
 extern uint32_t SystemCoreClock;
 /**
   * @brief  Setup the microcontroller system.
-  *         Initialize the PLL and update the 
+  *         Initialize the PLL and update the
   *         SystemCoreClock variable.
   * @param  None
   * @retval None
@@ -46,9 +46,8 @@ void SystemInit(void);
 
 /**
   * @brief  Update SystemCoreClock according to Clock Register Values
-  * @note   -  
+  * @note   -
   * @param  None
   * @retval None
   */
 void SystemCoreClockUpdate(void);
-

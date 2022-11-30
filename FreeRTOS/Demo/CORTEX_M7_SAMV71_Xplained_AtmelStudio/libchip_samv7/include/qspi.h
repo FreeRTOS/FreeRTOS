@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -74,8 +74,8 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-  
-/** \brief qspi access modes 
+
+/** \brief qspi access modes
  */
 typedef enum{
 	 CmdAccess = 0,
@@ -114,7 +114,7 @@ typedef enum{
 	QSPI_INPUT_ERROR,
 	QSPI_TOTAL_ERROR
 }QspidStatus_t;
-	 
+
 
 /** \brief qspi status regiter bits
  */
@@ -132,8 +132,8 @@ typedef enum {
 /** \brief qspi command structure
  */
 typedef struct {
-	uint8_t       Instruction; 
-	uint8_t       Option;  
+	uint8_t       Instruction;
+	uint8_t       Option;
 }QspiMemCmd_t;
 
 /** \brief qspi buffer structure
@@ -193,14 +193,14 @@ QspidStatus_t QSPI_EndTransfer( Qspi *pQspi );
 
 uint32_t QSPI_GetStatus( Qspi *pQspi, const QspiStatus_t rStatus );
 
-void QSPI_ConfigureClock( Qspi *pQspi, QspiClockMode_t ClockMode, 
+void QSPI_ConfigureClock( Qspi *pQspi, QspiClockMode_t ClockMode,
 		uint32_t dwClockCfg );
-  
+
 QspidStatus_t QSPI_SingleReadSPI( Qspid_t *pQspid, uint16_t* const pData );
-	 
-QspidStatus_t QSPI_MultiReadSPI( Qspid_t *pQspid, uint16_t* 
+
+QspidStatus_t QSPI_MultiReadSPI( Qspid_t *pQspid, uint16_t*
 		const pData, uint32_t NumOfBytes );
-	   
+
 QspidStatus_t QSPI_SingleWriteSPI( Qspid_t *pQspid, uint16_t const *pData );
 
 QspidStatus_t QSPI_MultiWriteSPI( Qspid_t *pQspid, uint16_t const *pData ,
@@ -209,16 +209,16 @@ QspidStatus_t QSPI_MultiWriteSPI( Qspid_t *pQspid, uint16_t const *pData ,
 QspidStatus_t QSPI_EnableIt( Qspi *pQspi, uint32_t dwSources );
 
 QspidStatus_t QSPI_DisableIt( Qspi *pQspi, uint32_t dwSources );
-  
+
 uint32_t QSPI_GetItMask( Qspi *pQspi );
-	 
+
 uint32_t QSPI_GetEnabledItStatus( Qspi *pQspi );
-	 
-QspidStatus_t QSPI_ConfigureInterface( Qspid_t *pQspid, QspiMode_t Mode, 
+
+QspidStatus_t QSPI_ConfigureInterface( Qspid_t *pQspid, QspiMode_t Mode,
 		uint32_t dwConfiguration );
 
 QspidStatus_t QSPI_SendCommand( Qspid_t *pQspi, uint8_t const KeepCfg);
-	 
+
 QspidStatus_t QSPI_SendCommandWithData( Qspid_t *pQspi, uint8_t const KeepCfg);
 
 QspidStatus_t QSPI_ReadCommand( Qspid_t *pQspi,  uint8_t const KeepCfg);
@@ -233,4 +233,3 @@ QspidStatus_t QSPI_ReadWriteMem( Qspid_t *pQspid, Access_t const ReadWrite);
 #endif
 
 #endif /* #ifndef _QSPI_ */
-

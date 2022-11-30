@@ -172,4 +172,3 @@ extern uint32_t TC_FindMckDivisor( uint32_t dwFreq, uint32_t dwMCk, uint32_t *dw
 
     return 1 ;
 }
-

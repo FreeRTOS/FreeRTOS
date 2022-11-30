@@ -422,8 +422,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	the task interrupted by this ISR. */
 	return xHigherPriorityTaskWoken;
 }
-
-
-
-
-

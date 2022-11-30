@@ -239,4 +239,3 @@ volatile unsigned long ulSetToNonZeroInDebuggerToContinue = 0;
 	}
 	taskEXIT_CRITICAL();
 }
-

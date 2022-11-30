@@ -40,6 +40,3 @@ place at start of RAM_region { block RamTop with fixed order {readonly, section 
 place at end of RAM_region { block RamBottom with fixed order {section HIGHSTART, readwrite, section .noinit,
                         block CSTACK, block SVC_STACK, block IRQ_STACK, block FIQ_STACK,
                         block UND_STACK, block ABT_STACK, block HEAP}};
-
-
-

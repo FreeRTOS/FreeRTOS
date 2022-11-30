@@ -8,4 +8,3 @@ config WDT_DW
         select the dw wdt driver
 
 endchoice
-

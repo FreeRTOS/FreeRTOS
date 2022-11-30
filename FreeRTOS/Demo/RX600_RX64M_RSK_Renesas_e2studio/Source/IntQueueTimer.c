@@ -121,7 +121,3 @@ void Excep_PERIB_INTB129( void )
 {
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-
-
-
-

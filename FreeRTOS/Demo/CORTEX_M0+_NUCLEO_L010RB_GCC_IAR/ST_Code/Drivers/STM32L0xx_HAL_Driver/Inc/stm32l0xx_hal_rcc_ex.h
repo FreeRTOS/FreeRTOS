@@ -2018,4 +2018,3 @@ void              HAL_RCCEx_CRS_ErrorCallback(uint32_t Error);
 #endif /* __STM32L0xx_HAL_RCC_EX_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

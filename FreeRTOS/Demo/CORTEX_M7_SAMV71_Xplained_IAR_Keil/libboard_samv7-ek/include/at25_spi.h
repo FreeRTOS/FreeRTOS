@@ -219,4 +219,3 @@ extern const At25Desc * AT25_FindDevice(
     unsigned int jedecId);
 
 #endif /*#ifndef AT25_SPI_H */
-

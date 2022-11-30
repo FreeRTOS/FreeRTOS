@@ -176,13 +176,13 @@ typedef struct
 
   //! Run the channel in testmode: \ref USART_NORMAL_CHMODE, \ref USART_AUTO_ECHO,
   //! \ref USART_LOCAL_LOOPBACK or \ref USART_REMOTE_LOOPBACK.
-  unsigned char channelmode;  
-  
+  unsigned char channelmode;
+
   //! Which SPI mode to use when transmitting.
   unsigned char spimode;
 } usart_spi_options_t;
-  
-  
+
+
 
 
 

@@ -31,13 +31,13 @@
  *
  * \section DmaHw Dma Hardware Interface Usage
  * <ul>
- * <li> The DMA controller can handle the transfer between peripherals and memory 
+ * <li> The DMA controller can handle the transfer between peripherals and memory
  * and so receives the triggers from the peripherals. The hardware interface number
  * are getting from DMAIF_Get_ChannelNumber().</li>
- 
- * <li> DMAIF_IsValidatedPeripherOnDma() helps to check if the given DMAC has associated 
+
+ * <li> DMAIF_IsValidatedPeripherOnDma() helps to check if the given DMAC has associated
  * peripheral identifier coded by the given  peripheral.</li>
- * 
+ *
  * </ul>
 */
 /*@{*/
@@ -71,7 +71,7 @@ static const DmaHardwareInterface dmaHwIf[] = {
        {0,   ID_UART0,    1,  12},
        {0,   ID_SSC0,     0,  13},
        {0,   ID_SSC0,     1,  14},
-    /* dmac 1 */   
+    /* dmac 1 */
        {1,   ID_HSMCI1,   0,   0},
        {1,   ID_HSMCI1,   1,   0},
        {1,   ID_HSMCI2,   0,   1},
@@ -118,7 +118,7 @@ static const DmaHardwareInterface dmaHwIf[] = {
  *         0xff : no associated peripheral identifier coded.
  */
 uint8_t DMAIF_Get_ChannelNumber (uint8_t bDmac,
-                                 uint8_t bPeriphID, 
+                                 uint8_t bPeriphID,
                                  uint8_t bTransfer)
 {
     uint8_t i;
@@ -133,7 +133,7 @@ uint8_t DMAIF_Get_ChannelNumber (uint8_t bDmac,
 }
 
 /**
- * \brief Check if the given DMAC has associated peripheral identifier coded by 
+ * \brief Check if the given DMAC has associated peripheral identifier coded by
  * the given  peripheral.
  *
  * \param bDmac      DMA Controller number.
@@ -156,5 +156,3 @@ uint8_t DMAIF_IsValidatedPeripherOnDma( uint8_t bDmac, uint8_t bPeriphID)
     }
     return 0;
 }
-
-

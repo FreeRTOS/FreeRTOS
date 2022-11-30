@@ -6570,4 +6570,3 @@ sfrl name   = address;
 #pragma language=default
 
 #endif /* #ifndef __msp430FR5XX_FR6XXGENERIC */
-

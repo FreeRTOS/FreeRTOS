@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -178,9 +178,9 @@ extern void RTC_ClockCalibration( Rtc* pRtc, int32_t CurrentTempr)
 {
 	uint16_t i;
 	uint32_t MR_Reg, Size;
-  
+
 	Size = sizeof(PPM_Lookup);
-  
+
 	MR_Reg = 0;
 	for(i=0; i< Size; i++) {
 		if(PPM_Lookup[i].Tempr == CurrentTempr) {

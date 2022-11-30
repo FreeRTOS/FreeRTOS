@@ -182,4 +182,3 @@ void vApplicationTickHook( void )
 	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
-

@@ -8,18 +8,18 @@
  * @version  V1.1
  * @date     6. November 2015
  *
- * @note     Generated with SVDConv V2.87e 
+ * @note     Generated with SVDConv V2.87e
  *           from CMSIS SVD File 'MCHP_CEC1302.svd' Version 1.1,
  *
- * @par      ARM Limited (ARM) is supplying this software for use with Cortex-M processor based 
+ * @par      ARM Limited (ARM) is supplying this software for use with Cortex-M processor based
  *           microcontroller, but can be equally used for other suitable processor architectures.
  *           This file can be freely distributed. Modifications to this file shall be clearly marked.
- *           
+ *
  *           THIS SOFTWARE IS PROVIDED "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED
  *           OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
  *           MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
  *           ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
- *           CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER. 
+ *           CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
  *
  *******************************************************************************************************/
 
@@ -203,7 +203,7 @@ typedef union
 typedef struct {
   union {
     __IO uint16_t  CR;                              /*!< MEM_BAR Control [15:0]                                                */
-    
+
     struct {
       __IO uint16_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint16_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -226,7 +226,7 @@ typedef struct {
 typedef struct {
   union {
     __IO uint8_t   ACTIVATE;                        /*!< Enable this channel for operation.                                    */
-    
+
     struct {
       __IO uint8_t   EN         :  1;               /*!< Enable this channel for operation.                                    */
     } ACTIVATE_b;                                   /*!< BitSize                                                               */
@@ -235,10 +235,10 @@ typedef struct {
   __IO uint32_t  MEM_START_ADDR;                    /*!< starting address for the Memory device.                               */
   __IO uint32_t  MEM_END_ADDR;                      /*!< ending address for the Memory device.                                 */
   __IO uint32_t  DEVICE_ADDR;                       /*!< This is the Master Device address.                                    */
-  
+
   union {
     __IO uint32_t  CONTROL;                         /*!< DMA Channel N Control                                                 */
-    
+
     struct {
       __IO uint32_t  RUN        :  1;               /*!< 1= enabled and will service transfer requests                         */
       __I  uint32_t  REQUEST    :  1;               /*!< 1= transfer request from the Master Device                            */
@@ -258,10 +258,10 @@ typedef struct {
       __IO uint32_t  TRANSFER_ABORT:  1;            /*!< abort the current transfer                                            */
     } CONTROL_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint8_t   INT_STATUS;                      /*!< DMA Channel N Interrupt Status                                        */
-    
+
     struct {
       __IO uint8_t   BUS_ERROR  :  1;               /*!< interrupt source. 1: Error detected.(R/WC)                            */
       __IO uint8_t   FLOW_CONTROL:  1;              /*!< Intr source.1=HW Flow Ctrl is requesting                              */
@@ -269,10 +269,10 @@ typedef struct {
     } INT_STATUS_b;                                 /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED2[3];
-  
+
   union {
     __IO uint8_t   INT_EN;                          /*!< DMA CHANNEL N INTERRUPT ENABLE                                        */
-    
+
     struct {
       __IO uint8_t   BUS_ERROR  :  1;               /*!< 1=enable Interrupt:Status AMBA Bus Error.                             */
       __IO uint8_t   FLOW_CONTROL:  1;              /*!< 1=enable Interrupt:Status Flow Control Error.                         */
@@ -297,10 +297,10 @@ typedef struct {
 typedef struct {                                    /*!< PCR Structure                                                         */
   __IO uint32_t  CHIP_SLP_EN;                       /*!< Chip Sleep Enable Register. (MCHP Reserved)                           */
   __I  uint32_t  CHIP_CLK_REQ_STS;                  /*!< Chip Clock Required Status. (MCHP Reserved)                           */
-  
+
   union {
     __IO uint32_t  EC_SLP_EN;                       /*!< EC Sleep Enable Register (EC_SLP_EN)                                  */
-    
+
     struct {
       __IO uint32_t  INT_SLP_EN :  1;               /*!< INT Sleep Enable (INT_SLP_EN)                                         */
       __IO uint32_t  PECI_SLP_EN:  1;               /*!< PECI Sleep Enable (PECI_SLP_EN)                                       */
@@ -324,10 +324,10 @@ typedef struct {                                    /*!< PCR Structure          
       __IO uint32_t  TIMER16_1_SLP_EN:  1;          /*!< TIMER16_1 Sleep Enable (TIMER16_1_SLP_EN)                             */
     } EC_SLP_EN_b;                                  /*!< BitSize                                                               */
   };
-  
+
   union {
     __I  uint32_t  EC_CLK_REQ_STS;                  /*!< EC Clock Required Status Registers                                    */
-    
+
     struct {
       __I  uint32_t  INT_CLK_REQ:  1;               /*!< INT Clock Required (INT_CLK_REQ)                                      */
       __I  uint32_t  PECI_CLK_REQ:  1;              /*!< PECI Clock Required (PECI_CLK_REQ)                                    */
@@ -351,10 +351,10 @@ typedef struct {                                    /*!< PCR Structure          
       __I  uint32_t  TIMER16_1_CLK_REQ:  1;         /*!< TIMER16_1 Clock Required (TIMER16_1_CLK_REQ)                          */
     } EC_CLK_REQ_STS_b;                             /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  HOST_SLP_EN;                     /*!< Host Sleep Enable Register (HOST_SLP_EN)                              */
-    
+
     struct {
       __IO uint32_t  LPC_SLP_EN :  1;               /*!< LPC Sleep Enable (LPC_SLP_EN)                                         */
       __IO uint32_t  UART_0_SLP_EN:  1;             /*!< UART 0 Sleep Enable (UART_0_SLP_EN)                                   */
@@ -368,10 +368,10 @@ typedef struct {                                    /*!< PCR Structure          
       __IO uint32_t  RTC_SLP_EN :  1;               /*!< RTC Sleep Enable (RTC_SLP_EN)                                         */
     } HOST_SLP_EN_b;                                /*!< BitSize                                                               */
   };
-  
+
   union {
     __I  uint32_t  HOST_CLK_REQ;                    /*!< Host Clock Required Status Registers                                  */
-    
+
     struct {
       __I  uint32_t  LPC_CLK_REQ:  1;               /*!< LPC Clock Required (LPC_CLK_REQ)                                      */
       __I  uint32_t  UART_0_CLK_REQ:  1;            /*!< UART 0 Clock Required (UART_0_CLK_REQ)                                */
@@ -385,10 +385,10 @@ typedef struct {                                    /*!< PCR Structure          
       __I  uint32_t  RTC_CLK_REQ:  1;               /*!< RTC Clock Required (RTC_CLK_REQ)                                      */
     } HOST_CLK_REQ_b;                               /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  SYS_SLP_CNTRL;                   /*!< System Sleep Control Register                                         */
-    
+
     struct {
       __IO uint32_t  ROSC_PD    :  1;               /*!< Ring oscillator power down (ROSC_PD)                                  */
       __IO uint32_t  ROSC_GATE  :  1;               /*!< Ring oscillator output gate (ROSC_GATE)                               */
@@ -402,12 +402,12 @@ typedef struct {                                    /*!< PCR Structure          
                                                           4: divide 48 MHz Ring Oscillator by 4.(default)
                                                           16: divide 48 MHz Ring Oscillator by 16.
                                                           48: divide 48 MHz Ring Oscillator by 48.
-                                                          No other values are supported 
+                                                          No other values are supported
                                                           ---------------------------------------------------------            */
-  
+
   union {
     __IO uint32_t  EC_SLP_EN2;                      /*!< EC Sleep Enable 2 Register (EC_SLP_EN2)                               */
-    
+
     struct {
            uint32_t             :  3;
       __IO uint32_t  ADC_SLP_EN :  1;               /*!< ADC Sleep Enable (ADC_SLP_EN)                                         */
@@ -435,10 +435,10 @@ typedef struct {                                    /*!< PCR Structure          
       __IO uint32_t  LED3_SLP_EN:  1;               /*!< LED3 Sleep Enable (LED3_SLP_EN)                                       */
     } EC_SLP_EN2_b;                                 /*!< BitSize                                                               */
   };
-  
+
   union {
     __I  uint32_t  EC_CLK_REQ2_STS;                 /*!< EC Clock Required 2 Status Register                                   */
-    
+
     struct {
            uint32_t             :  3;
       __I  uint32_t  ADC_CLK_REQ:  1;               /*!< ADC Clock Required (ADC_CLK_REQ)                                      */
@@ -468,23 +468,23 @@ typedef struct {                                    /*!< PCR Structure          
   };
   __IO uint32_t  SLOW_CLK_CNTRL;                    /*!< Slow Clock Control Register (SLOW_CLK_CNTRL) Slow Clock (100
                                                          kHz) Divide Value (slow_div) Configures the 100kHz_Clk.
-                                                          0: Clock off 
+                                                          0: Clock off
                                                           n: divide by n.
-                                                          Note: The default setting is for 100 kHz. 
+                                                          Note: The default setting is for 100 kHz.
                                                           ---------------------------------------------------------            */
-  
+
   union {
     __I  uint32_t  CHIP_OSC_ID;                     /*!< Oscillator ID Register (CHIP_OSC_ID)                                  */
-    
+
     struct {
            uint32_t             :  8;
       __I  uint32_t  OSC_LOCK   :  1;               /*!< OSC_LOCK (OSC_LOCK)                                                   */
     } CHIP_OSC_ID_b;                                /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  CHIP_PWR_RST_STS;                /*!< PCR chip sub-system power reset status                                */
-    
+
     struct {
            uint32_t             :  2;
       __I  uint32_t  VCC_nRST   :  1;               /*!< 0=active, 1=not active (PWRGD asserted).                              */
@@ -498,10 +498,10 @@ typedef struct {                                    /*!< PCR Structure          
     } CHIP_PWR_RST_STS_b;                           /*!< BitSize                                                               */
   };
   __IO uint32_t  CHIP_RST_EN;                       /*!< Chip Reset Enable (MCHP Reserved)                                     */
-  
+
   union {
     __IO uint32_t  HOST_RST_EN;                     /*!< Host Reset Enable Register                                            */
-    
+
     struct {
       __IO uint32_t  LPC_RST_EN :  1;               /*!< LPC Reset Enable (LPC_RST_EN)                                         */
       __IO uint32_t  UART_0_RST_EN:  1;             /*!< UART 0 Reset Enable                                                   */
@@ -515,10 +515,10 @@ typedef struct {                                    /*!< PCR Structure          
       __IO uint32_t  RTC_RST_EN :  1;               /*!< RTC Reset Enable (RTC_RST_EN)                                         */
     } HOST_RST_EN_b;                                /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  EC_RST_EN;                       /*!< EC Reset Enable Register                                              */
-    
+
     struct {
       __IO uint32_t  INT_RST_EN :  1;               /*!< INT Reset Enable (INT_RST_EN)                                         */
       __IO uint32_t  PECI_RST_EN:  1;               /*!< PECI Reset Enable (PECI_RST_EN)                                       */
@@ -542,10 +542,10 @@ typedef struct {                                    /*!< PCR Structure          
       __IO uint32_t  TIMER16_1_RST_EN:  1;          /*!< TIMER16_1 Reset Enable (TIMER16_1_RST_EN)                             */
     } EC_RST_EN_b;                                  /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  EC_RST_EN2;                      /*!< EC Reset Enable 2 Register                                            */
-    
+
     struct {
            uint32_t             :  3;
       __IO uint32_t  ADC_RST_EN :  1;               /*!< ADC Reset Enable (ADC_RST_EN)                                         */
@@ -573,10 +573,10 @@ typedef struct {                                    /*!< PCR Structure          
       __IO uint32_t  LED3_RST_EN:  1;               /*!< LED3 Reset Enable (LED3_RST_EN)                                       */
     } EC_RST_EN2_b;                                 /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  PWR_RST_CTRL;                    /*!< Power Reset Control (PWR_RST_CTRL) Register                           */
-    
+
     struct {
       __IO uint32_t  IRESET_OUT :  1;               /*!< iRESET_OUT (IRESET_OUT)                                               */
     } PWR_RST_CTRL_b;                               /*!< BitSize                                                               */
@@ -590,17 +590,17 @@ typedef struct {                                    /*!< PCR Structure          
 
 
 /**
-  * @brief The VBAT Register Bank block is a block implemented for aggregating miscellaneous battery-backed registers 
+  * @brief The VBAT Register Bank block is a block implemented for aggregating miscellaneous battery-backed registers
  required the host and by the Embedded Controller (EC) Subsystem that are not unique to a block implemented in the EC subsystem.
- The VBAT Powered RAM provides a 64 Byte Random Accessed Memory that is operational while the main power rail is operational, 
+ The VBAT Powered RAM provides a 64 Byte Random Accessed Memory that is operational while the main power rail is operational,
  and will retain its values powered by battery power while the main rail is unpowered.  (VBAT)
   */
 
 typedef struct {                                    /*!< VBAT Structure                                                        */
-  
+
   union {
     __IO uint8_t   PFR_STS;                         /*!< Power-Fail and Reset Status Register                                  */
-    
+
     struct {
       __I  uint8_t   DET32K_IN  :  1;               /*!< XTAL[1:2] 0=No clock, 1= Clock detected                               */
            uint8_t              :  4;
@@ -610,10 +610,10 @@ typedef struct {                                    /*!< VBAT Structure         
     } PFR_STS_b;                                    /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED[7];
-  
+
   union {
     __IO uint32_t  CLOCK_EN;                        /*!< CLOCK ENABLE Control                                                  */
-    
+
     struct {
       __IO uint32_t  XOSEL      :  1;               /*!< 32KHz, 1=single-ended, 0=crystal (default).                           */
       __IO uint32_t  _32K_EN    :  1;               /*!< 1=32K_ON, 0=OFF (VBAT_POR default)                                    */
@@ -635,19 +635,19 @@ typedef struct {                                    /*!< LPC Structure          
   __IO uint8_t   INDEX;                             /*!< A pointer to a Configuration Reg. Address.                            */
   __IO uint8_t   DATA_REG;                          /*!< To rd/wt data with the INDEX Register.                                */
   __I  uint16_t  RESERVED[129];
-  
+
   union {
     __I  uint32_t  BUS_MONITOR;                     /*!< LPC BUS MONITOR REGISTER                                              */
-    
+
     struct {
            uint32_t             :  1;
       __I  uint32_t  LRESET_STATUS:  1;             /*!< Reflects the inverse state of LRESET# pin.                            */
     } BUS_MONITOR_b;                                /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  HOST_BUS_ERROR;                  /*!< Host Bus Error Register                                               */
-    
+
     struct {
       __IO uint32_t  LPC_ERR    :  1;               /*!< A BAR conflict or an internal bus error. (R/WC)                       */
       __IO uint32_t  EN_ERR     :  1;               /*!< Internal bus errors. (R/WC)                                           */
@@ -659,18 +659,18 @@ typedef struct {                                    /*!< LPC Structure          
       __I  uint32_t  ERR_ADDR   : 24;               /*!< 24-bit internal addr. of LPC transaction                              */
     } HOST_BUS_ERROR_b;                             /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  EC_SERIRQ;                       /*!< the interrupt source of EC SERIRQ                                     */
-    
+
     struct {
       __IO uint32_t  EC_IRQ     :  1;               /*!< interrupt source of a LPC Logical Device                              */
     } EC_SERIRQ_b;                                  /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  CLK_CTRL;                        /*!< Controls throughput of LPC transactions.                              */
-    
+
     struct {
       __IO uint32_t  CR         :  2;               /*!< controls ring oscillator to be shut down.                             */
       __IO uint32_t  HANDSHAKE  :  1;               /*!< controls throughput of LPC transactions.                              */
@@ -696,10 +696,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
   __I  uint32_t  RESERVED[12];
   __IO uint8_t   ACTIVATE;                          /*!< 1=LPC Logical Device is powered/functional                            */
   __I  uint8_t   RESERVED1[15];
-  
+
   union {
     __IO uint8_t   SIRQ[16];                        /*!< 16 SIRQ channels                                                      */
-    
+
     struct {
       __IO uint8_t   FRAME      :  6;               /*!< Six bits select the Logical Device.                                   */
       __IO uint8_t   DEVICE     :  1;               /*!< Set to 0 in order to enable a SERIRQ.                                 */
@@ -707,10 +707,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
     } SIRQ_b[16];                                   /*!< BitSize                                                               */
   };
   __I  uint32_t  RESERVED2[4];
-  
+
   union {
     __IO uint32_t  LPC_BAR;                         /*!< LPC Interface BAR Register                                            */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -719,10 +719,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
       __IO uint32_t  LPC_HOST_ADDR: 16;             /*!< To match LPC I/O addresses                                            */
     } LPC_BAR_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  EM_BAR;                          /*!< EM Interface 0 BAR                                                    */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -731,10 +731,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
       __IO uint32_t  LPC_HOST_ADDR: 16;             /*!< To match LPC I/O addresses                                            */
     } EM_BAR_b;                                     /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  UART_BAR;                        /*!< UART 0 BAR Register                                                   */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -744,10 +744,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
     } UART_BAR_b;                                   /*!< BitSize                                                               */
   };
   __I  uint32_t  RESERVED3[3];
-  
+
   union {
     __IO uint32_t  KBC_BAR;                         /*!< Keyboard Controller (8042) BAR                                        */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -757,10 +757,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
     } KBC_BAR_b;                                    /*!< BitSize                                                               */
   };
   __I  uint32_t  RESERVED4[3];
-  
+
   union {
     __IO uint32_t  EC0_BAR;                         /*!< ACPI EC Interface 0 BAR                                               */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -769,10 +769,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
       __IO uint32_t  LPC_HOST_ADDR: 16;             /*!< To match LPC I/O addresses                                            */
     } EC0_BAR_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  EC1_BAR;                         /*!< ACPI EC Interface 1 BAR                                               */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -781,10 +781,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
       __IO uint32_t  LPC_HOST_ADDR: 16;             /*!< To match LPC I/O addresses                                            */
     } EC1_BAR_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  PM1_BAR;                         /*!< ACPI PM1 Interface BAR                                                */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -793,10 +793,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
       __IO uint32_t  LPC_HOST_ADDR: 16;             /*!< To match LPC I/O addresses                                            */
     } PM1_BAR_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  LGC_BAR;                         /*!< Legacy (GATEA20) Interface BAR                                        */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -805,10 +805,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
       __IO uint32_t  LPC_HOST_ADDR: 16;             /*!< To match LPC I/O addresses                                            */
     } LGC_BAR_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  MBX_BAR;                         /*!< Mailbox Registers Interface BAR                                       */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -817,10 +817,10 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
       __IO uint32_t  LPC_HOST_ADDR: 16;             /*!< To match LPC I/O addresses                                            */
     } MBX_BAR_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  RTC_BAR;                         /*!< RTC Registers Interface BAR                                           */
-    
+
     struct {
       __IO uint32_t  MASK       :  8;               /*!< Mask off LPC I/O address bits                                         */
       __IO uint32_t  FRAME      :  6;               /*!< Specify a logical device frame number                                 */
@@ -830,7 +830,7 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
     } RTC_BAR_b;                                    /*!< BitSize                                                               */
   };
   __I  uint32_t  RESERVED5[8];
-  
+
   union {
     LPC_CONFIG_MEM_BAR_Type MBX_MEM_BAR;            /*!< Mailbox Registers I/F Memory BAR                                      */
     LPC_CONFIG_MEM_BAR_Type MEM_BAR;                /*!< Mailbox Registers I/F Memory BAR                                      */
@@ -847,7 +847,7 @@ typedef struct {                                    /*!< LPC_CONFIG Structure   
 
 
 /**
-  * @brief The Logical Device Configuration registers support motherboard designs in which the resources required 
+  * @brief The Logical Device Configuration registers support motherboard designs in which the resources required
  by their components are known and assigned by the BIOS at POST.  (GCR)
   */
 
@@ -866,32 +866,32 @@ typedef struct {                                    /*!< GCR Structure          
 
 
 /**
-  * @brief The Embedded Memory Interface (EMI) provides a standard run-time mechanism for the system host 
+  * @brief The Embedded Memory Interface (EMI) provides a standard run-time mechanism for the system host
  to communicate with the Embedded Controller (EC) and other logical components.  (EMI)
   */
 
 typedef struct {                                    /*!< EMI Structure                                                         */
   __IO uint8_t   HOST_EC_MBX;                       /*!< Host-to-EC Mailbox Register                                           */
   __IO uint8_t   EC_HOST_MBX;                       /*!< EC-to-Host Mailbox Register (R/WC)                                    */
-  
+
   union {
     __IO uint16_t  EC_ADDRESS;                      /*!< EC Address Access Control Register                                    */
-    
+
     struct {
       __IO uint16_t  ACCESS_TYPE:  2;               /*!< defines the type of EC Data rd/wt access                              */
       __IO uint16_t  EC_ADDRESS : 13;               /*!< defines bits[14:2] of EC_Address [15:0].                              */
       __IO uint16_t  REGION     :  1;               /*!< Selector of two segments.                                             */
     } EC_ADDRESS_b;                                 /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  EC_DATA;                         /*!< EC Data Register                                                      */
     __IO uint8_t   EC_DATA_BYTE[4];                 /*!< EC Data Byte Register                                                 */
   };
-  
+
   union {
     __IO uint16_t  EC_SWI;                          /*!< Notification of EC Software Interrupt                                 */
-    
+
     struct {
       __I  uint16_t  EC_WR      :  1;               /*!< EC Mailbox Write.                                                     */
       __IO uint16_t  NOTIFICATION: 15;              /*!< EC to notify the host of an event(R/WC)                               */
@@ -920,22 +920,22 @@ typedef struct {                                    /*!< EMI Structure          
 
 
 /**
-  * @brief The ACPI Embedded Controller Interface (ACPI-ECI) provides a four byte full duplex data interface 
+  * @brief The ACPI Embedded Controller Interface (ACPI-ECI) provides a four byte full duplex data interface
  which is a superset of the standard ACPI Embedded Controller Interface (ACPI-ECI) one byte data interface. The
  ACPI Embedded Controller Interface (ACPI-ECI) defaults to the standard one byte interface.  (ACPI_EC0)
   */
 
 typedef struct {                                    /*!< ACPI_EC0 Structure                                                    */
-  
+
   union {
     __IO uint32_t  OS_DATA;                         /*!< ACPI OS Data Register                                                 */
     __IO uint8_t   OS_DATA_BYTE[4];                 /*!< aliased to the OS2EC DATA BYTES[n].                                   */
   };
-  
+
   union {
     union {
       __I  uint8_t   OS_STATUS;                     /*!< aliased to the EC STATUS Register                                     */
-      
+
       struct {
         __I  uint8_t   OBF      :  1;               /*!< Output Buffer Full bit                                                */
         __I  uint8_t   IBF      :  1;               /*!< Input Buffer Full bit                                                 */
@@ -951,15 +951,15 @@ typedef struct {                                    /*!< ACPI_EC0 Structure     
   };
   __I  uint8_t   OS_BYTE_CONTROL;                   /*!< OS Control [0:0] FOUR_BYTE_ACCESS                                     */
   __I  uint16_t  RESERVED[125];
-  
+
   union {
     __IO uint32_t  EC2OS_DATA;                      /*!< EC2OS Data                                                            */
     __IO uint8_t   EC2OS_DATA_BYTE[4];              /*!< EC2OS Data Bytes                                                      */
   };
-  
+
   union {
     __IO uint8_t   EC_STATUS;                       /*!< EC STATUS                                                             */
-    
+
     struct {
       __I  uint8_t   OBF        :  1;               /*!< Output Buffer Full bit                                                */
       __I  uint8_t   IBF        :  1;               /*!< Input Buffer Full bit                                                 */
@@ -973,7 +973,7 @@ typedef struct {                                    /*!< ACPI_EC0 Structure     
   };
   __IO uint8_t   EC_BYTE_CONTROL;                   /*!< OS Control [0:0] FOUR_BYTE_ACCESS                                     */
   __I  uint16_t  RESERVED1;
-  
+
   union {
     __I uint32_t  OS2EC_DATA;                       /*!< OS2EC Data EC-Register                                                */
     __I uint8_t   OS2EC_DATA_BYTE[4];               /*!< OS2EC Data Bytes                                                      */
@@ -994,17 +994,17 @@ typedef struct {                                    /*!< ACPI_EC0 Structure     
   */
 
 typedef struct {                                    /*!< KBC Structure                                                         */
-  
+
   union {
     __O  uint8_t   WT_PORT60_DATA;                  /*!< Host_EC Data Register (=Host Write 60h)                               */
     __I  uint8_t   RD_PORT60_DATA;                  /*!< EC_Host Data/Aux Register (=Host Read 60h)                            */
   };
   __I  uint8_t   RESERVED[3];
-  
+
   union {
     union {
       __I  uint8_t   RD_PORT64_STATUS;              /*!< Keyboard Status Register (=Host Read 64h)                             */
-      
+
       struct {
         __I  uint8_t   OBF      :  1;               /*!< Output Buffer Full.                                                   */
         __I  uint8_t   IBF      :  1;               /*!< Input Buffer Full.                                                    */
@@ -1018,16 +1018,16 @@ typedef struct {                                    /*!< KBC Structure          
     __O  uint8_t   WT_PORT64_CMD;                   /*!< Host_EC Command Register (=Host Write 64h)                            */
   };
   __I  uint8_t   RESERVED1[251];
-  
+
   union {
     __O  uint8_t   EC_DATA;                         /*!< EC2Host Data Register                                                 */
     __I  uint8_t   HOST2EC_DATA;                    /*!< Host2EC Data/Cmd Register                                             */
   };
   __I  uint8_t   RESERVED2[3];
-  
+
   union {
     __IO uint8_t   STATUS;                          /*!< EC KEYBOARD STATUS REGISTER                                           */
-    
+
     struct {
       __I  uint8_t   OBF        :  1;               /*!< Output Buffer Full.                                                   */
       __I  uint8_t   IBF        :  1;               /*!< Input Buffer Full.                                                    */
@@ -1039,10 +1039,10 @@ typedef struct {                                    /*!< KBC Structure          
     } STATUS_b;                                     /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED3[3];
-  
+
   union {
     __IO uint8_t   CONTROL;                         /*!< Keyboard Control Register                                             */
-    
+
     struct {
       __IO uint8_t   UD3        :  1;               /*!< User-defined data.                                                    */
       __IO uint8_t   SAEN       :  1;               /*!< Software-assist enable.                                               */
@@ -1068,15 +1068,15 @@ typedef struct {                                    /*!< KBC Structure          
 
 
 /**
-  * @brief The registers listed in the Configuration Register Summary table are for a 
+  * @brief The registers listed in the Configuration Register Summary table are for a
  single instance of the Legacy Port92 and GATEA20 logic.  (PORT92)
   */
 
 typedef struct {                                    /*!< PORT92 Structure                                                      */
-  
+
   union {
     __IO uint8_t   PORT92;                          /*!< Support GATE_A20 CPU_RESET control                                    */
-    
+
     struct {
       __IO uint8_t   ALT_CPU_RESET:  1;             /*!< provides to generate a CPU_RESET pulse.                               */
       __IO uint8_t   ALT_GATE_A20:  1;              /*!< provides system to control GATEA20 pin.                               */
@@ -1111,20 +1111,20 @@ typedef struct {                                    /*!< MBX Structure          
   __I  uint8_t   RESERVED1[3];
   __IO uint8_t   EC_TO_HOST;                        /*!< EC-to-Host Mailbox Register                                           */
   __I  uint8_t   RESERVED2[3];
-  
+
   union {
     __IO uint8_t   SMI_SOURCE;                      /*!< SMI Interrupt Source Register                                         */
-    
+
     struct {
       __I  uint8_t   EC_WR      :  1;               /*!< EC Mailbox Write (flag).                                              */
       __IO uint8_t   EC_SMI     :  7;               /*!< EC Software Interrupt source control                                  */
     } SMI_SOURCE_b;                                 /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED3[3];
-  
+
   union {
     __IO uint8_t   SMI_MASK;                        /*!< SMI Interrupt Mask Register                                           */
-    
+
     struct {
       __IO uint8_t   EC_WR_EN   :  1;               /*!< EC Mailbox Write Interrupt Enable.                                    */
       __IO uint8_t   EC_SMI_EN  :  7;               /*!< EC Software Interrupt Enable.                                         */
@@ -1147,10 +1147,10 @@ typedef struct {                                    /*!< MBX Structure          
 
 typedef struct {                                    /*!< PM1 Structure                                                         */
   __I  uint8_t   RESERVED;
-  
+
   union {
     __IO uint8_t   STS2;                            /*!< PM1 Status 2                                                          */
-    
+
     struct {
       __IO uint8_t   PWRBTN_STS :  1;               /*!< simulate a Power button status (R/WC)                                 */
       __IO uint8_t   SLPBTN_STS :  1;               /*!< simulate a Sleep button status (R/WC)                                 */
@@ -1161,10 +1161,10 @@ typedef struct {                                    /*!< PM1 Structure          
     } STS2_b;                                       /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED1;
-  
+
   union {
     __IO uint8_t   EN2;                             /*!< PM1 Enable 2                                                          */
-    
+
     struct {
       __IO uint8_t   PWRBTN_EN  :  1;               /*!< Controlled by Host. read by the EC.                                   */
       __IO uint8_t   SLPBTN_EN  :  1;               /*!< Controlled by Host. read by the EC.                                   */
@@ -1172,10 +1172,10 @@ typedef struct {                                    /*!< PM1 Structure          
     } EN2_b;                                        /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED2;
-  
+
   union {
     __IO uint8_t   CTRL2;                           /*!< PM1 Control 2                                                         */
-    
+
     struct {
            uint8_t              :  1;
       __IO uint8_t   PWRBTNOR_EN:  1;               /*!< Controlled by Host. read by the EC.                                   */
@@ -1184,10 +1184,10 @@ typedef struct {                                    /*!< PM1 Structure          
     } CTRL2_b;                                      /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED3[251];
-  
+
   union {
     __IO uint8_t   STS_2;                           /*!< PM1 Status 2                                                          */
-    
+
     struct {
       __IO uint8_t   PWRBTN_STS :  1;               /*!< simulate a Power button status (R/WC)                                 */
       __IO uint8_t   SLPBTN_STS :  1;               /*!< simulate a Sleep button status (R/WC)                                 */
@@ -1198,10 +1198,10 @@ typedef struct {                                    /*!< PM1 Structure          
     } STS_2_b;                                      /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED4;
-  
+
   union {
     __IO uint8_t   EN_2;                            /*!< PM1 Enable 2                                                          */
-    
+
     struct {
       __IO uint8_t   PWRBTN_EN  :  1;               /*!< Controlled by Host. read by the EC.                                   */
       __IO uint8_t   SLPBTN_EN  :  1;               /*!< Controlled by Host. read by the EC.                                   */
@@ -1209,10 +1209,10 @@ typedef struct {                                    /*!< PM1 Structure          
     } EN_2_b;                                       /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED5;
-  
+
   union {
     __IO uint8_t   CTRL_2;                          /*!< PM1 Control 2                                                         */
-    
+
     struct {
            uint8_t              :  1;
       __IO uint8_t   PWRBTNOR_EN:  1;               /*!< Controlled by Host. read by the EC.                                   */
@@ -1236,17 +1236,17 @@ typedef struct {                                    /*!< PM1 Structure          
   */
 
 typedef struct {                                    /*!< UART Structure                                                        */
-  
+
   union {
     __O  uint8_t   TX_DATA;                         /*!< UART Transmit Buffer Register                                         */
     __I  uint8_t   RX_DATA;                         /*!< UART Receive Buffer Register                                          */
     __IO uint8_t   BAUDRATE_LSB;                    /*!< Programmable BAUD Rate Generator (LSB) Reg.                           */
   };
-  
+
   union {
     union {
       __IO uint8_t   INT_EN;                        /*!< UART Interrupt Enable Register                                        */
-      
+
       struct {
         __IO uint8_t   ERDAI    :  1;               /*!< enables Received Data Available Interrupt                             */
         __IO uint8_t   ETHREI   :  1;               /*!< enables Transmitter Holding Empty Interrupt                           */
@@ -1256,11 +1256,11 @@ typedef struct {                                    /*!< UART Structure         
     };
     __IO uint8_t   BAUDRATE_MSB;                    /*!< [6:0]BAUD_RATE_DIVISOR_MSB [7]BAUD_CLK_SEL                            */
   };
-  
+
   union {
     union {
       __I  uint8_t   INT_ID;                        /*!< UART Interrupt Identification Register                                */
-      
+
       struct {
         __I  uint8_t   IPEND    :  1;               /*!< indicate whether an interrupt is pending.                             */
         __I  uint8_t   INTID    :  3;               /*!< highest priority interrupt pending                                    */
@@ -1268,10 +1268,10 @@ typedef struct {                                    /*!< UART Structure         
         __I  uint8_t   FIFO_EN  :  2;               /*!< two bits are set when FIFO CONTROL bit 0=1                            */
       } INT_ID_b;                                   /*!< BitSize                                                               */
     };
-    
+
     union {
       __O  uint8_t   FIFO_CR;                       /*!< UART FIFO Control Register                                            */
-      
+
       struct {
         __O  uint8_t   EXRF     :  1;               /*!< Enable XMIT and RECV FIFO.                                            */
         __O  uint8_t   CLEAR_RECV_FIFO:  1;         /*!< clears all bytes in RCVR FIFO, resets counter                         */
@@ -1282,10 +1282,10 @@ typedef struct {                                    /*!< UART Structure         
       } FIFO_CR_b;                                  /*!< BitSize                                                               */
     };
   };
-  
+
   union {
     __IO uint8_t   LINE_CR;                         /*!< UART Line Control Register                                            */
-    
+
     struct {
       __IO uint8_t   WORD_LENGTH:  2;               /*!< number of bits in transmitted or received                             */
       __IO uint8_t   STOP_BITS  :  1;               /*!< number of stop bits in transmitted or received                        */
@@ -1296,10 +1296,10 @@ typedef struct {                                    /*!< UART Structure         
       __IO uint8_t   DLAB       :  1;               /*!< DLAB Divisor Latch Access Bit (DLAB).                                 */
     } LINE_CR_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint8_t   MODEM_CR;                        /*!< UART Modem Control Register                                           */
-    
+
     struct {
       __IO uint8_t   DTR        :  1;               /*!< Data Terminal Ready (nDTR) output.                                    */
       __IO uint8_t   RTS        :  1;               /*!< Request To Send (nRTS) output.                                        */
@@ -1308,10 +1308,10 @@ typedef struct {                                    /*!< UART Structure         
       __IO uint8_t   LOOPBACK   :  1;               /*!< provides loopback for diagnostic                                      */
     } MODEM_CR_b;                                   /*!< BitSize                                                               */
   };
-  
+
   union {
     __I  uint8_t   LINE_STS;                        /*!< UART Line Status Register                                             */
-    
+
     struct {
       __I  uint8_t   DATA_READY :  1;               /*!< 1= data into Rx Buffer Register or FIFO                               */
       __I  uint8_t   OVERRUN    :  1;               /*!< OVERRUN Overrun Error.                                                */
@@ -1323,10 +1323,10 @@ typedef struct {                                    /*!< UART Structure         
       __I  uint8_t   FIFO_ERROR :  1;               /*!< FIFO_ERROR                                                            */
     } LINE_STS_b;                                   /*!< BitSize                                                               */
   };
-  
+
   union {
     __I  uint8_t   MODEM_STS;                       /*!< UART Modem Status Register                                            */
-    
+
     struct {
       __I  uint8_t   CTS        :  1;               /*!< CTS Delta Clear To Send (DCTS).                                       */
       __I  uint8_t   DSR        :  1;               /*!< DSR Delta Data Set Ready (DDSR).                                      */
@@ -1342,10 +1342,10 @@ typedef struct {                                    /*!< UART Structure         
   __I  uint32_t  RESERVED[202];
   __IO uint8_t   ACTIVATE;                          /*!< [0:0] 1= UART is powered/functional.                                  */
   __I  uint8_t   RESERVED1[191];
-  
+
   union {
     __IO uint8_t   CONFIG;                          /*!< UART Config Select Register                                           */
-    
+
     struct {
       __IO uint8_t   CLK_SRC    :  1;               /*!< 1=Baud Clock from external clock, 0=internal                          */
       __IO uint8_t   POWER      :  1;               /*!< 1=reset from nSIO_RESET, 0=VCC1_RESET                                 */
@@ -1391,10 +1391,10 @@ typedef struct {                                    /*!< INTR Structure         
 typedef struct {                                    /*!< WDT Structure                                                         */
   __IO uint16_t  LOAD;                              /*!< Writing to reload Watch Dog Timer counter                             */
   __I  uint16_t  RESERVED;
-  
+
   union {
     __IO uint8_t   CONTROL;                         /*!< WDT Control Register                                                  */
-    
+
     struct {
       __IO uint8_t   ENABLE     :  1;               /*!< WDT Block enabled                                                     */
       __IO uint8_t   STATUS     :  1;               /*!< last reset was caused by an underflow (R/WC)                          */
@@ -1422,10 +1422,10 @@ typedef struct {                                    /*!< TIMER_16_0 Structure   
   __IO uint32_t  PRE_LOAD;                          /*!< Timer pre-load for counter upon restart.                              */
   __IO uint32_t  INTERRUPT_STATUS;                  /*!< [0:0] Interrupt status (R/WC)                                         */
   __IO uint32_t  INTERRUPT_ENABLE;                  /*!< [0:0] interrupt enable                                                */
-  
+
   union {
     __IO REG32_U  CONTROL;                         /*!< Timer Control Register                                                */
-    
+
     struct {
       __IO uint32_t  ENABLE     :  1;               /*!< This enables the block for operation.                                 */
            uint32_t             :  1;
@@ -1449,8 +1449,8 @@ typedef struct {                                    /*!< TIMER_16_0 Structure   
 
 /**
   * @brief The Hibernation Timer can generate a wake event to the Embedded Controller (EC)
- when it is in a hibernation mode. This block supports wake events up to 2 hours in duration. 
- The timer is a 16-bit binary count-down timer that can be programmed in 30.5us and 0.125 second 
+ when it is in a hibernation mode. This block supports wake events up to 2 hours in duration.
+ The timer is a 16-bit binary count-down timer that can be programmed in 30.5us and 0.125 second
  increments for period ranges of 30.5us to 2s or 0.125s to 136.5 minutes, respectively.  (HTM)
   */
 
@@ -1490,10 +1490,10 @@ typedef struct {                                    /*!< RTC Structure          
   __IO uint8_t   REG_C;                             /*!< Register C                                                            */
   __IO uint8_t   REG_D;                             /*!< Register D                                                            */
   __I  uint16_t  RESERVED;
-  
+
   union {
     __IO uint8_t   CONTROL;                         /*!< RTC Control Register                                                  */
-    
+
     struct {
       __IO uint8_t   BLOCK_ENABLE:  1;              /*!< 1= block to function internally                                       */
       __IO uint8_t   SOFT_RESET :  1;               /*!< 1= RTC_RST reset (self-clearing no waiting)                           */
@@ -1504,10 +1504,10 @@ typedef struct {                                    /*!< RTC Structure          
   __I  uint8_t   RESERVED1[3];
   __IO uint8_t   WEEK_ALARM;                        /*!< Set value in range 1-7                                                */
   __I  uint8_t   RESERVED2[3];
-  
+
   union {
     __IO uint32_t  DAYLIGHT_SAVINGS_FORWARD;        /*!< Daylight Savings Forward Register                                     */
-    
+
     struct {
       __IO uint32_t  DST_MONTH  :  8;               /*!< This field matches the Month Register.                                */
       __IO uint32_t  DST_DAY_OF_WEEK:  3;           /*!< matches the Day of Week Register bits[2:0].                           */
@@ -1518,10 +1518,10 @@ typedef struct {                                    /*!< RTC Structure          
       __IO uint32_t  DST_AM_PM  :  1;               /*!< This bit selects AM vs. PM.                                           */
     } DAYLIGHT_SAVINGS_FORWARD_b;                   /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  DAYLIGHT_SAVINGS_BACKWARD;       /*!< Daylight Savings Backward Register                                    */
-    
+
     struct {
       __IO uint32_t  DST_MONTH  :  8;               /*!< This field matches the Month Register.                                */
       __IO uint32_t  DST_DAY_OF_WEEK:  3;           /*!< matches the Day of Week Register bits[2:0].                           */
@@ -1548,21 +1548,21 @@ typedef struct {                                    /*!< RTC Structure          
   */
 
 typedef struct {                                    /*!< GPIO Structure                                                        */
-  
+
   union {
     __IO uint32_t  PIN_CONTROL[160];                /*!< 1st Pin Control Register                                              */
-    
+
     struct {
       __IO uint32_t  PU_PD      :  2;               /*!< 01= Pull Up, 10= Pull Down, 11/00= None                               */
       __IO uint32_t  PWR        :  2;               /*!< 00= VCC1, 01= VCC2 Power Rail 1x = Reserved                           */
-      __IO uint32_t  INT_DET    :  3;               /*!< 
+      __IO uint32_t  INT_DET    :  3;               /*!<
                                                           [7654] --------------------------------------------
-                                                          0 000 = Low Level Sensitive 
+                                                          0 000 = Low Level Sensitive
                                                           0 001 = High Level Sensitive
                                                           0 100 = Interrupt events are disabled
-                                                          1 101 = Rising Edge Triggered 
-                                                          1 110 = Falling Edge Triggered 
-                                                          1 111 = Either edge triggered 
+                                                          1 101 = Rising Edge Triggered
+                                                          1 110 = Falling Edge Triggered
+                                                          1 111 = Either edge triggered
                                                           ---------------------------------------------------                  */
       __IO uint32_t  EDGE_EN    :  1;               /*!< 1= Edge detection enabled                                             */
       __IO uint32_t  BUFFER     :  1;               /*!< Output Buffer Type. 0 = Push-Pull, 1 = Open Drain                     */
@@ -1580,20 +1580,20 @@ typedef struct {                                    /*!< GPIO Structure         
   __I  uint32_t  RESERVED[27];
   __IO uint32_t  INPUT[5];                          /*!< Group GPIO Input Registers                                            */
   __I  uint32_t  RESERVED1[123];
-  
+
   union {
     __IO uint32_t  CONTROL2_000_067[56];            /*!< PIN CONTROL REGISTER 2, from 000 - 067                                */
-    
+
     struct {
       __IO uint32_t  SLEW_RATE  :  1;               /*!< slew rate 0= slow (half freq), 1= fast                                */
            uint32_t             :  3;
       __IO uint32_t  DRIVE_STRENGTH:  2;            /*!< drive strength 00=2, 01=4, 10=8, 11=12(mA)                            */
     } CONTROL2_000_067_b[56];                       /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  CONTROL2_100_167[56];            /*!< PIN CONTROL REGISTER 2, from 100 - 167                                */
-    
+
     struct {
       __IO uint32_t  SLEW_RATE  :  1;               /*!< slew rate 0= slow (half freq), 1= fast                                */
            uint32_t             :  3;
@@ -1601,10 +1601,10 @@ typedef struct {                                    /*!< GPIO Structure         
     } CONTROL2_100_167_b[56];                       /*!< BitSize                                                               */
   };
   __I  uint32_t  RESERVED2[24];
-  
+
   union {
     __IO uint32_t  CONTROL2_200_267[56];            /*!< PIN CONTROL REGISTER 2, from 200 - 267                                */
-    
+
     struct {
       __IO uint32_t  SLEW_RATE  :  1;               /*!< slew rate 0= slow (half freq), 1= fast                                */
            uint32_t             :  3;
@@ -1628,10 +1628,10 @@ typedef struct {                                    /*!< GPIO Structure         
   */
 
 typedef struct {                                    /*!< DMA Structure                                                         */
-  
+
   union {
     __IO uint8_t   CONTROL;                         /*!< Soft reset. Enable the blocks operation.                              */
-    
+
     struct {
       __IO uint8_t   ACTIVATE   :  1;               /*!< Enable the blocks operation. (R/WS)                                   */
       __O  uint8_t   SOFT_RESET :  1;               /*!< Soft reset entire module. self-clearing.                              */
@@ -1654,11 +1654,11 @@ typedef struct {                                    /*!< DMA Structure          
   */
 
 typedef struct {                                    /*!< SMB0 Structure                                                        */
-  
+
   union {
     union {
       __I  uint8_t   STATUS;                        /*!< Status Register                                                       */
-      
+
       struct {
         __I  uint8_t   nBB      :  1;               /*!< 0= Bus Busy                                                           */
         __I  uint8_t   LAB      :  1;               /*!< Lost Arbitration Bit                                                  */
@@ -1670,10 +1670,10 @@ typedef struct {                                    /*!< SMB0 Structure         
         __I  uint8_t   PIN      :  1;               /*!< Pending Interrupt bit                                                 */
       } STATUS_b;                                   /*!< BitSize                                                               */
     };
-    
+
     union {
       __O  uint8_t   CONTROL;                       /*!< Control Register                                                      */
-      
+
       struct {
         __IO uint8_t   ACK      :  1;               /*!< 1= send an acknowledge automatically                                  */
         __IO uint8_t   STO      :  1;               /*!< See STA description                                                   */
@@ -1686,10 +1686,10 @@ typedef struct {                                    /*!< SMB0 Structure         
     };
   };
   __I  uint8_t   RESERVED[3];
-  
+
   union {
     __IO uint16_t  OWN;                             /*!< Own Address Reg. wt 55h= AAh addr                                     */
-    
+
     struct {
       __IO uint16_t  ADDRESS_1  :  7;               /*!< Own Address 1 addressed as a slave.                                   */
            uint16_t             :  1;
@@ -1699,10 +1699,10 @@ typedef struct {                                    /*!< SMB0 Structure         
   __I  uint16_t  RESERVED1;
   __IO uint8_t   DATA_REG;                          /*!< Data                                                                  */
   __I  uint8_t   RESERVED2[3];
-  
+
   union {
     __IO uint32_t  MASTER_COMMAND;                  /*!< SMBus Master Command Register                                         */
-    
+
     struct {
       __IO uint32_t  MRUN       :  1;               /*!< 1= transfer bytes over SMBus.                                         */
       __IO uint32_t  MPROCEED   :  1;               /*!< 1:WAIT-BUSBUSY and MRUN-RECEIVE                                       */
@@ -1718,10 +1718,10 @@ typedef struct {                                    /*!< SMB0 Structure         
       __IO uint32_t  READCOUNT  :  8;               /*!< number of Master Receive Buffer bytes                                 */
     } MASTER_COMMAND_b;                             /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  SLAVE_COMMAND;                   /*!< SMBus Slave Command Register                                          */
-    
+
     struct {
       __IO uint32_t  SRUN       :  1;               /*!< 1:enables the Slave State Machine to operate                          */
       __IO uint32_t  SPROCEED   :  1;               /*!< Slave to START_WAIT/RECEIVE/TRANSMIT states                           */
@@ -1735,10 +1735,10 @@ typedef struct {                                    /*!< SMB0 Structure         
   __I  uint8_t   RESERVED3[3];
   __IO uint8_t   DATA_TIMING2;                      /*!< HOLD TIME (clock) START BIT                                           */
   __I  uint8_t   RESERVED4[7];
-  
+
   union {
     __IO uint32_t  COMPLETION;                      /*!< Completion Register                                                   */
-    
+
     struct {
            uint32_t             :  2;
       __IO uint32_t  DTEN       :  1;               /*!< 1: Device Time-out checking is enabled.                               */
@@ -1770,20 +1770,20 @@ typedef struct {                                    /*!< SMB0 Structure         
       __IO uint32_t  SDONE      :  1;               /*!< 1: Slave completed operation (R/WC)                                   */
     } COMPLETION_b;                                 /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  IDLE_SCALING;                    /*!< Idle Scaling Register                                                 */
-    
+
     struct {
       __IO uint32_t  FAIR_BUS_IDLE_MIN: 12;         /*!< number ticks to satisfy the fairness protocol                         */
            uint32_t             :  4;
       __IO uint32_t  FAIR_IDLE_DELAY: 12;           /*!< number ticks to program the delay                                     */
     } IDLE_SCALING_b;                               /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  CONFIGURATION;                   /*!< Configuration Register                                                */
-    
+
     struct {
       __IO uint32_t  PORT_SEL   :  4;               /*!< determine one of 16 bus ports apply to SDAT/SCLK                      */
       __IO uint32_t  TCEN       :  1;               /*!< 1: Bus Time-Outs are enabled                                          */
@@ -1809,10 +1809,10 @@ typedef struct {                                    /*!< SMB0 Structure         
       __IO uint32_t  ENSI       :  1;               /*!< 1: Slave Done interrupt is enabled. 0: disabled                       */
     } CONFIGURATION_b;                              /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint16_t  BUS_CLOCK;                       /*!< Bus Clock Register                                                    */
-    
+
     struct {
       __IO uint16_t  LOW_PERIOD :  8;               /*!< number of I2C Baud Clock to make up low phase                         */
       __IO uint16_t  HIGH_PERIOD:  8;               /*!< number of I2C Baud Clock to make up high phase                        */
@@ -1823,10 +1823,10 @@ typedef struct {                                    /*!< SMB0 Structure         
   __I  uint8_t   RESERVED6[3];
   __I  uint8_t   REVISION;                          /*!< Revision Register                                                     */
   __I  uint8_t   RESERVED7[3];
-  
+
   union {
     __IO uint8_t   BIT_BANG_CONTROL;                /*!< Bit-Bang Control Register                                             */
-    
+
     struct {
       __IO uint8_t   BBEN       :  1;               /*!< 1: Bit-Bang Mode Enable.                                              */
       __IO uint8_t   CLDIR      :  1;               /*!< Bit-Bang Clock Direction. 0 - Input, 1 - Output                       */
@@ -1838,10 +1838,10 @@ typedef struct {                                    /*!< SMB0 Structure         
     } BIT_BANG_CONTROL_b;                           /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED8[7];
-  
+
   union {
     __IO uint32_t  DATA_TIMING;                     /*!< Data Timing Register                                                  */
-    
+
     struct {
       __IO uint32_t  DATA_HOLD  :  8;               /*!< SDAT hold time following SCLK driven low.                             */
       __IO uint32_t  RESTART_SETUP:  8;             /*!< SDAT setup time for a repeated START condition.                       */
@@ -1849,10 +1849,10 @@ typedef struct {                                    /*!< SMB0 Structure         
       __IO uint32_t  START_HOLD :  8;               /*!< SCLK hold time during a START condition.                              */
     } DATA_TIMING_b;                                /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  TIME_OUT_SCALING;                /*!< Time-Out Scaling Register                                             */
-    
+
     struct {
       __IO uint32_t  CLOCK_HIGH :  8;               /*!< = Clock High Time-Out x Baud_Clock_Period x 2                         */
       __IO uint32_t  SLAVE_CUM  :  8;               /*!< = Slave Cum Time-Out x Baud_Clock_Period x 1024                       */
@@ -1884,10 +1884,10 @@ typedef struct {                                    /*!< PECI Structure         
   __I  uint8_t   RESERVED[3];
   __IO uint8_t   READ_DATA;                         /*!< provides access to a 32-byte Receive FIFO.                            */
   __I  uint8_t   RESERVED1[3];
-  
+
   union {
     __IO uint8_t   CONTROL;                         /*!< Control Register                                                      */
-    
+
     struct {
       __IO uint8_t   PD         :  1;               /*!< Power Down controls Power Management Interface                        */
            uint8_t              :  2;
@@ -1899,10 +1899,10 @@ typedef struct {                                    /*!< PECI Structure         
     } CONTROL_b;                                    /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED2[3];
-  
+
   union {
     __IO uint8_t   STATUS1;                         /*!< Status Register 1                                                     */
-    
+
     struct {
       __IO uint8_t   BOF        :  1;               /*!< PECI begins Address Timing Negotiation(R/WC)                          */
       __IO uint8_t   nEOF       :  1;               /*!< End of Frame asserted following Message Stop(R/WC)                    */
@@ -1915,10 +1915,10 @@ typedef struct {                                    /*!< PECI Structure         
     } STATUS1_b;                                    /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED3[3];
-  
+
   union {
     __I  uint8_t   STATUS2;                         /*!< Status Register 2                                                     */
-    
+
     struct {
       __I  uint8_t   WFF        :  1;               /*!< Write Data Register FIFO is full. No interrupt.                       */
       __I  uint8_t   WFE        :  1;               /*!< Write Data Register FIFO is empty.                                    */
@@ -1929,10 +1929,10 @@ typedef struct {                                    /*!< PECI Structure         
     } STATUS2_b;                                    /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED4[3];
-  
+
   union {
     __IO uint8_t   ERROR;                           /*!< Error Register                                                        */
-    
+
     struct {
       __IO uint8_t   FERR       :  1;               /*!< FERR (Frame Check Sequence Error). (R/WC)                             */
       __IO uint8_t   BERR       :  1;               /*!< reads value different from it has driven (R/WC)                       */
@@ -1945,10 +1945,10 @@ typedef struct {                                    /*!< PECI Structure         
     } ERROR_b;                                      /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED5[3];
-  
+
   union {
     __IO uint8_t   INT_EN1;                         /*!< Interrupt Enable 1 Register                                           */
-    
+
     struct {
       __IO uint8_t   BIEN       :  1;               /*!< '1' the BOF interrupt is enabled.                                     */
       __IO uint8_t   EIEN       :  1;               /*!< '1' the EOF interrupt is enabled.                                     */
@@ -1959,10 +1959,10 @@ typedef struct {                                    /*!< PECI Structure         
     } INT_EN1_b;                                    /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED6[3];
-  
+
   union {
     __IO uint8_t   INT_EN2;                         /*!< Interrupt Enable 2 Register                                           */
-    
+
     struct {
            uint8_t              :  1;
       __IO uint8_t   ENWFE      :  1;               /*!< '1' the WFE interrupt is enabled.                                     */
@@ -1990,10 +1990,10 @@ typedef struct {                                    /*!< PECI Structure         
   */
 
 typedef struct {                                    /*!< TACH_0 Structure                                                      */
-  
+
   union {
     __IO uint32_t  CONTROL;                         /*!< TACHx Control Register                                                */
-    
+
     struct {
       __IO uint32_t  OUT_LIMIT_ENABLE:  1;          /*!< 1=Enable interrupt output from Tach block                             */
       __IO uint32_t  TACH_EN    :  1;               /*!< 1= TACH Monitoring/ clock enabled, 0= TACH Idle                       */
@@ -2008,10 +2008,10 @@ typedef struct {                                    /*!< TACH_0 Structure       
       __I  uint32_t  COUNTER    : 16;               /*!< latched value of the internal Tach pulse counter                      */
     } CONTROL_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  STATUS;                          /*!< TACHx Status Register                                                 */
-    
+
     struct {
       __IO uint32_t  OUT_LIMIT  :  1;               /*!< 1=Tach is outside of limits (R/WC)                                    */
       __I  uint32_t  PIN        :  1;               /*!< 1= Tach Input is high, 0= Input is low                                */
@@ -2031,18 +2031,18 @@ typedef struct {                                    /*!< TACH_0 Structure       
 
 
 /**
-  * @brief This block generates a PWM output that can be used to control 4-wire fans, blinking LEDs, and 
- other similar devices. Each PWM can generate an arbitrary duty cycle output at frequencies from less than 0.1 Hz to 24 MHz. 
+  * @brief This block generates a PWM output that can be used to control 4-wire fans, blinking LEDs, and
+ other similar devices. Each PWM can generate an arbitrary duty cycle output at frequencies from less than 0.1 Hz to 24 MHz.
  The PWM controller can also used to generate the PROCHOT output and Speaker output.  (PWM_0)
   */
 
 typedef struct {                                    /*!< PWM_0 Structure                                                       */
   __IO uint32_t  COUNTER_ON_TIME;                   /*!< determine both frequency and duty cycle                               */
   __IO uint32_t  COUNTER_OFF_TIME;                  /*!< determine both frequency and duty cycle                               */
-  
+
   union {
     __IO uint32_t  CONFIG;                          /*!< PWMx CONFIGURATION REGISTER                                           */
-    
+
     struct {
       __IO uint32_t  EN         :  1;               /*!< 1=Enabled (default), 0=Disabled                                       */
       __IO uint32_t  CLK_SELECT :  1;               /*!< determines clock source, 1=CLOCK_LOW, 0=HIGH                          */
@@ -2067,10 +2067,10 @@ typedef struct {                                    /*!< PWM_0 Structure        
 typedef struct {                                    /*!< RPM_FAN Structure                                                     */
   __IO uint8_t   SETTING;                           /*!< Drive = (FAN_SETTING VALUE/255) x 100%.                               */
   __IO uint8_t   PWM_DIVIDE;                        /*!< PWM_Frequency = base_clk / PWM_DIVIDE                                 */
-  
+
   union {
     __IO uint16_t  CONFIGURATION;                   /*!< general operation of Fan Control Algorithm                            */
-    
+
     struct {
       __IO uint16_t  UPDATE     :  3;               /*!< Determines base time between fan driver updates                       */
       __IO uint16_t  EDGES      :  2;               /*!< minimum number of edges that must be detected                         */
@@ -2084,20 +2084,20 @@ typedef struct {                                    /*!< RPM_FAN Structure      
     } CONFIGURATION_b;                              /*!< BitSize                                                               */
   };
   __I  uint8_t   RESERVED;
-  
+
   union {
     __IO uint8_t   GAIN;                            /*!< gain for proportional/integral portion                                */
-    
+
     struct {
       __IO uint8_t   GAINP      :  2;               /*!< derivative gain term                                                  */
       __IO uint8_t   GAINI      :  2;               /*!< derivative gain term                                                  */
       __IO uint8_t   GAIND      :  2;               /*!< derivative gain term                                                  */
     } GAIN_b;                                       /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint8_t   SPIN_UP_CONFIGURATION;           /*!< settings of Spin Up Routine.                                          */
-    
+
     struct {
       __IO uint8_t   SPINUP_TIME:  2;               /*!< maximum Spin Time that Spin Up Routine run                            */
       __IO uint8_t   SPIN_LVL   :  3;               /*!< final drive level used by the Spin Up Routine                         */
@@ -2112,10 +2112,10 @@ typedef struct {                                    /*!< RPM_FAN Structure      
   __IO uint16_t  TACH_TARGET;                       /*!< [12:0] The target tachometer value.                                   */
   __IO uint16_t  TACH_READING;                      /*!< [15:3]current tachometer reading value.                               */
   __IO uint8_t   DRIVER_BASE_FREQUENCY;             /*!< [1:0]frequency range of the PWM fan driver                            */
-  
+
   union {
     __IO uint8_t   STATUS;                          /*!< The bits are routed to interrupts                                     */
-    
+
     struct {
       __IO uint8_t   FAN_STALL  :  1;               /*!< 1 - Stalled fan detected. (R/WC)                                      */
       __IO uint8_t   FAN_SPIN   :  1;               /*!< 1: Spin up Routine not detect a valid tachometer                      */
@@ -2139,10 +2139,10 @@ typedef struct {                                    /*!< RPM_FAN Structure      
 
 typedef struct {                                    /*!< SPI_0 Structure                                                       */
   __IO uint32_t  ENABLE;                            /*!< [0:0] 1=Enabled. device is fully operational                          */
-  
+
   union {
     __IO uint32_t  CONTROL;                         /*!< SPI Control                                                           */
-    
+
     struct {
       __IO uint32_t  LSBF       :  1;               /*!< Least Significant Bit First                                           */
       __IO uint32_t  BIOEN      :  1;               /*!< Bidirectional Output Enable control.                                  */
@@ -2152,10 +2152,10 @@ typedef struct {                                    /*!< SPI_0 Structure        
       __IO uint32_t  CE         :  1;               /*!< SPI Chip Select Enable.                                               */
     } CONTROL_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __I  uint32_t  STATUS;                          /*!< SPI Status                                                            */
-    
+
     struct {
       __I  uint32_t  TXBE       :  1;               /*!< 1=TX_Data buffer is empty                                             */
       __I  uint32_t  RXBF       :  1;               /*!< 1=RX_Data buffer is full                                              */
@@ -2164,10 +2164,10 @@ typedef struct {                                    /*!< SPI_0 Structure        
   };
   __IO uint32_t  TX_DATA;                           /*!< [7:0]wt to initiate a SPI transaction.                                */
   __IO uint32_t  RX_DATA;                           /*!< [7:0]read value returned by ext SPI device                            */
-  
+
   union {
     __IO uint32_t  CLOCK_Control;                   /*!< SPI Clock Control.                                                    */
-    
+
     struct {
       __IO uint32_t  TCLKPH     :  1;               /*!< Valid data is clocked out on 1st SPI_CLK                              */
       __IO uint32_t  RCLKPH     :  1;               /*!< Valid data is expected after 1st SPI_CLK edge                         */
@@ -2193,10 +2193,10 @@ typedef struct {                                    /*!< SPI_0 Structure        
   */
 
 typedef struct {                                    /*!< LED_0 Structure                                                       */
-  
+
   union {
     __IO uint32_t  CONFIG;                          /*!< LED Configuration                                                     */
-    
+
     struct {
       __IO uint32_t  CONTROL    :  2;               /*!< 3=on,2=blinking,1=breathing,0=off                                     */
       __IO uint32_t  CLOCK_SOURCE:  1;              /*!< 1=48MHz, 0=32.768 KHz clock                                           */
@@ -2208,28 +2208,28 @@ typedef struct {                                    /*!< LED_0 Structure        
       __IO uint32_t  SYMMETRY   :  1;               /*!< 1=rising/falling ramp are in Asymmetric mode                          */
     } CONFIG_b;                                     /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  LIMITS;                          /*!< LED Limits                                                            */
-    
+
     struct {
       __IO uint32_t  MINIMUM    :  8;               /*!< wait in breathing if current cycle less this value                    */
       __IO uint32_t  MAXIMUM    :  8;               /*!< wait, breathing if current cycle great this value                     */
     } LIMITS_b;                                     /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  DELAY;                           /*!< LED Delay                                                             */
-    
+
     struct {
       __IO uint32_t  LOWPULSE        : 12;          /*!< number to wait before updating current cycle                          */
       __IO uint32_t  HIGHPULSE       : 12;          /*!< number to wait before updating current cycle                          */
     } DELAY_b;                                      /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  UPDATE_STEPSIZE;                 /*!< provide amount duty cycle to adjust                                   */
-    
+
     struct {
       __IO uint32_t  STEP0      :  4;               /*!< when the segment index is equal to 000.                               */
       __IO uint32_t  STEP1      :  4;               /*!< when the segment index is equal to 001.                               */
@@ -2241,10 +2241,10 @@ typedef struct {                                    /*!< LED_0 Structure        
       __IO uint32_t  STEP7      :  4;               /*!< when the segment index is equal to 111.                               */
     } UPDATE_STEPSIZE_b;                            /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  UPDATE_INTERVAL;                 /*!< LED Update Interval                                                   */
-    
+
     struct {
       __IO uint32_t  INTERVAL0  :  4;               /*!< when the segment index is equal to 000b.                              */
       __IO uint32_t  INTERVAL1  :  4;               /*!< when the segment index is equal to 001b.                              */
@@ -2271,15 +2271,15 @@ typedef struct {                                    /*!< LED_0 Structure        
   */
 
 typedef struct {                                    /*!< PS2_0 Structure                                                       */
-  
+
   union {
     __I  uint32_t  RX_DATA;                         /*!< Data received from a peripheral                                       */
     __O  uint32_t  TX_DATA;                         /*!< Writes to start a transmission                                        */
   };
-  
+
   union {
     __IO uint32_t  CONTROL;                         /*!< PS2 Control Register                                                  */
-    
+
     struct {
       __IO uint32_t  TR         :  1;               /*!< PS/2 1:Transmit, 0:Receive data                                       */
       __IO uint32_t  EN         :  1;               /*!< 1: PS/2 Enable                                                        */
@@ -2287,10 +2287,10 @@ typedef struct {                                    /*!< PS2_0 Structure        
       __IO uint32_t  STOP       :  2;               /*!< 00b=Receiver expects an active high stop bit                          */
     } CONTROL_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  STATUS;                          /*!< PS2 Status Register                                                   */
-    
+
     struct {
       __I  uint32_t  RDATA_RDY  :  1;               /*!< Data Ready. Reading Receive data to clears                            */
       __IO uint32_t  REC_TIMEOUT:  1;               /*!< REC_TIMEOUT is cleared when Status is read                            */
@@ -2317,10 +2317,10 @@ typedef struct {                                    /*!< PS2_0 Structure        
 
 typedef struct {                                    /*!< KEYSCAN Structure                                                     */
   __I  uint32_t  RESERVED;
-  
+
   union {
     __IO uint32_t  CONTROL;                         /*!< KSO Select and control                                                */
-    
+
     struct {
       __IO uint32_t  SELECT     :  5;               /*!< selects a KSO line (00000b=KSO[0] etc.)                               */
       __IO uint32_t  ALL        :  1;               /*!< 0=KSO_SELECT set KSO, 1=KSO[x] driven high                            */
@@ -2347,10 +2347,10 @@ typedef struct {                                    /*!< KEYSCAN Structure      
   */
 
 typedef struct {                                    /*!< BC_LINK Structure                                                     */
-  
+
   union {
     __IO uint32_t  STATUS;                          /*!< BC-Link Status                                                        */
-    
+
     struct {
       __I  uint32_t  BUSY       :  1;               /*!< 1: BC is transferring data and on reset                               */
            uint32_t             :  3;
@@ -2372,17 +2372,17 @@ typedef struct {                                    /*!< BC_LINK Structure      
 
 
 /**
-  * @brief The TFDP serially transmits Embedded Controller (EC)-originated 
+  * @brief The TFDP serially transmits Embedded Controller (EC)-originated
  diagnostic vectors to an external debug trace system.  (TFDP)
   */
 
 typedef struct {                                    /*!< TFDP Structure                                                        */
   __IO uint8_t   DATA_REG;                          /*!< Debug data to be shifted out on TFDP port                             */
   __I  uint8_t   RESERVED[3];
-  
+
   union {
     __IO uint8_t   CONTROL;                         /*!< Debug Control Register                                                */
-    
+
     struct {
       __IO uint8_t   EN         :  1;               /*!< 1=Clock enabled, 0=Clock is disabled (Default)                        */
       __IO uint8_t   EDGE_SEL   :  1;               /*!< 1= shifted out on falling edge, 0= rising                             */
@@ -2403,10 +2403,10 @@ typedef struct {                                    /*!< TFDP Structure         
   */
 
 typedef struct {                                    /*!< ADC Structure                                                         */
-  
+
   union {
     __IO uint32_t  CONTROL;                         /*!< control behavior of ADC                                               */
-    
+
     struct {
       __IO uint32_t  ACTIVATE   :  1;               /*!< 1: ADC is enabled for operation.                                      */
       __IO uint32_t  START_SINGLE:  1;              /*!< 1: ADC Single Mode is enabled. self-clearing                          */
@@ -2418,19 +2418,19 @@ typedef struct {                                    /*!< ADC Structure          
       __IO uint32_t  SINGLE_DONE_STAT:  1;          /*!< 1: ADC single conversion is completed.(R/WC)                          */
     } CONTROL_b;                                    /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  DELAY;                           /*!< delay fm set Start_Repeat and conversion                              */
-    
+
     struct {
       __IO uint32_t  START      : 16;               /*!< start delay before conv. when Start_Repeat=1                          */
       __IO uint32_t  REPEAT     : 16;               /*!< interval between conversion when Start_Repeat=1                       */
     } DELAY_b;                                      /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  STATUS;                          /*!< 1: conversion is complete (R/WC)                                      */
-    
+
     struct {
       __IO uint32_t  CH0        :  1;               /*!< ADC_Ch0_Status                                                        */
       __IO uint32_t  CH1        :  1;               /*!< ADC_Ch1_Status                                                        */
@@ -2439,10 +2439,10 @@ typedef struct {                                    /*!< ADC Structure          
       __IO uint32_t  CH4        :  1;               /*!< ADC_Ch4_Status                                                        */
     } STATUS_b;                                     /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  SINGLE_EN;                       /*!< ADC Single-Sample conversion control                                  */
-    
+
     struct {
       __IO uint32_t  CH0        :  1;               /*!< Ch0 single conversions, 1:enabled/0:disabled                          */
       __IO uint32_t  CH1        :  1;               /*!< Ch1 single conversions, 1:enabled/0:disabled                          */
@@ -2451,10 +2451,10 @@ typedef struct {                                    /*!< ADC Structure          
       __IO uint32_t  CH4        :  1;               /*!< Ch4 single conversions, 1:enabled/0:disabled                          */
     } SINGLE_EN_b;                                  /*!< BitSize                                                               */
   };
-  
+
   union {
     __IO uint32_t  REPEAT;                          /*!< ADC channels repeat conversion control                                */
-    
+
     struct {
       __IO uint32_t  CH0        :  1;               /*!< Ch0 repeat conversions, 1:enabled/0:disabled                          */
       __IO uint32_t  CH1        :  1;               /*!< Ch1 repeat conversions, 1:enabled/0:disabled                          */
@@ -2580,26 +2580,26 @@ typedef struct
     __IO    uint32_t DMA_IN;                /*!< Offset: 0x0024  DMA Input Address */
     __IO    uint32_t DMA_OUT;               /*!< Offset: 0x0028  DMA Output Address */
             uint32_t RESERVEDA[(0xFC - 0x2C)/4 + 1];
-    __IO    uint32_t KEY1[AES_MAX_KEY_WLEN];/*!< Offset: 0x0100  KeyIn1[159:128] 
-                                              !< Offset: 0x0104  KeyIn1[191:160] 
-                                              !< Offset: 0x0108  KeyIn1[223:192] 
-                                              !< Offset: 0x010C  KeyIn1[255:224] 
-                                              !< Offset: 0x0110  KeyIn1[31:0] 
-                                              !< Offset: 0x0114  KeyIn1[63:32] 
-                                              !< Offset: 0x0118  KeyIn1[95:64] 
+    __IO    uint32_t KEY1[AES_MAX_KEY_WLEN];/*!< Offset: 0x0100  KeyIn1[159:128]
+                                              !< Offset: 0x0104  KeyIn1[191:160]
+                                              !< Offset: 0x0108  KeyIn1[223:192]
+                                              !< Offset: 0x010C  KeyIn1[255:224]
+                                              !< Offset: 0x0110  KeyIn1[31:0]
+                                              !< Offset: 0x0114  KeyIn1[63:32]
+                                              !< Offset: 0x0118  KeyIn1[95:64]
                                               !< Offset: 0x011C  KeyIn1[127:96] */
-    __IO    uint32_t IV[AES_MAX_IV_WLEN];   /*!< Offset: 0x0120  IV[31:0] 
-                                              !< Offset: 0x0124  IV[63:32] 
-                                              !< Offset: 0x0128  IV[95:64] 
+    __IO    uint32_t IV[AES_MAX_IV_WLEN];   /*!< Offset: 0x0120  IV[31:0]
+                                              !< Offset: 0x0124  IV[63:32]
+                                              !< Offset: 0x0128  IV[95:64]
                                               !< Offset: 0x012C  IV[127:96] */
             uint32_t RESERVEDB[4];
-    __IO    uint32_t KEY2[AES_MAX_KEY_WLEN];/*!< Offset: 0x0140  KeyIn1[159:128] 
-                                              !< Offset: 0x0144  KeyIn1[191:160] 
-                                              !< Offset: 0x0148  KeyIn1[223:192] 
-                                              !< Offset: 0x014C  KeyIn1[255:224] 
-                                              !< Offset: 0x0150  KeyIn1[31:0] 
-                                              !< Offset: 0x0154  KeyIn1[63:32] 
-                                              !< Offset: 0x0158  KeyIn1[95:64] 
+    __IO    uint32_t KEY2[AES_MAX_KEY_WLEN];/*!< Offset: 0x0140  KeyIn1[159:128]
+                                              !< Offset: 0x0144  KeyIn1[191:160]
+                                              !< Offset: 0x0148  KeyIn1[223:192]
+                                              !< Offset: 0x014C  KeyIn1[255:224]
+                                              !< Offset: 0x0150  KeyIn1[31:0]
+                                              !< Offset: 0x0154  KeyIn1[63:32]
+                                              !< Offset: 0x0158  KeyIn1[95:64]
                                               !< Offset: 0x015C  KeyIn1[127:96] */
 } AES_TypeDef;
 /*@}*/ /* end of group CEC1302_AES */
@@ -5621,7 +5621,7 @@ typedef struct
 #define CEC1302_HASH                            ((HASH_TypeDef            *) HASH_BASE)
 #define CEC1302_AES                             ((AES_TypeDef             *) AES_BASE)
 
-        
+
 /** @} */ /* End of group Device_Peripheral_Registers */
 /** @} */ /* End of group MCHP_CEC1302 */
 /** @} */ /* End of group Microchip Technology Inc. */
@@ -5632,5 +5632,3 @@ typedef struct
 
 
 #endif  /* MCHP_CEC1302_H */
-
-

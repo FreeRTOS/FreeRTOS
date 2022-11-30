@@ -335,13 +335,13 @@ Release 4.3.0 of wolfSSL embedded TLS has bug fixes and new features including:
 * Update to allow compiling for pwdbased/PBKDF2 with having NO_ASN defined
 * Modify KeyShare and PreSharedKey TLS 1.3 extension linked list advancement to be easier for compilers to handle
 * Optimization to parsing certificate extension name strings
-* Adjustment to example server -x runtime behavior when encountering an unrecoverable error case 
+* Adjustment to example server -x runtime behavior when encountering an unrecoverable error case
 * Remove Blake2b support from HMAC
 * Adds new hash wrapper init wc_HashInit_ex and Adds new PBKDF2 API wc_PBKDF2_ex for using heap hints for custom memory pools
 * Adding script to cleanup generated test files,  scripts/cleanup_testfiles.sh
 * Support 20-byte serial numbers and disallow 0
 * sp_div improved to handle when a has less digits than d (--enable-sp-math build)
-* When decoding a policy OID and turning it into a human readable string use snprintf() 
+* When decoding a policy OID and turning it into a human readable string use snprintf()
 * set the IV length of EVP AES GCM to 96-bits by default
 * Allow adding CAs for root CA's over the wire that do not have the extended key usage cert_sign set
 * Added logging messages for SendAlert call and update to send alert after verify certificate callback
@@ -405,13 +405,13 @@ Release 4.2.0 of wolfSSL embedded TLS has bug fixes and new features including:
 * Addition to configure.ac for FIPS wolfRand builds
 * Adding the flag WOLFSSL_LOAD_FLAG_DATE_ERR_OKAY for ignoring certificate date checks with the functions wolfSSL_CTX_load_verify_buffer_ex and wolfSSL_CTX_load_verify_locations_ex
 * Support for PKCS8 keys added to the function wolfSSL_CTX_use_PrivateKey_buffer
-* Support for KECCAK hashing. Build with macro WOLFSSL_HASH_FLAGS and call wc_Sha3_SetFlags(&sha, WC_HASH_SHA3_KECCAK256) before the first SHA3 update 
+* Support for KECCAK hashing. Build with macro WOLFSSL_HASH_FLAGS and call wc_Sha3_SetFlags(&sha, WC_HASH_SHA3_KECCAK256) before the first SHA3 update
 * Addition of setting secure renegotiation at CTX level
 * Addition of KDS (NXP Kinetis Design Studio) example project to directory IDE/KDS/
 * Support for Encrypt-Then-MAC to TLS 1.2 and below
-* Added a new build option for a TITAN session cache that can hold just over 2 million session entries (--enable-titancache)  
+* Added a new build option for a TITAN session cache that can hold just over 2 million session entries (--enable-titancache)
 * Synchronous Quick Assist Support for Sniffer
-* Added Support for SiFive HiFive Unleashed board 
+* Added Support for SiFive HiFive Unleashed board
 * Support for Google WebRTC added in to compatibility layer build
 * Additional Sniffer features; IPv6 sniffer support, Fragment chain input, Data store callback, Various statistics tweaks and other Sniffer fixes
 
@@ -446,7 +446,7 @@ Release 4.2.0 of wolfSSL embedded TLS has bug fixes and new features including:
 * Optimization to SP math, changing variables to const where possible. Thanks to Yair Poleg (yair.poleg@ayyeka.com) of Ayyeka for proposing static declaration of global constant variables in SP code
 * Additional fuzz testing and fixes for TLS 1.3 use, including additional TLS 1.3 alert messages (PR#2440 for more information)
 * Additional sanity check that ciphersuite from client hello is used in server hello response (check can be removed with the macro WOLFSSL_NO_STRICT_CIPHER_SUITE)
-* Improved MMCAU performance: SHA-1 by 35%, SHA-256 by 20% and MD5 by 78% 
+* Improved MMCAU performance: SHA-1 by 35%, SHA-256 by 20% and MD5 by 78%
 * By default, disallow SHA-2 cipher suites from being used in TLS 1.0 and 1.1 handshakes (can be ignored with macro WOLFSSL_OLDTLS_SHA2_CIPHERSUITES)
 * Optimization of export session buffer size with enable option --enable-sessionexport=nopeer
 * Spelling fixes in comments and some cast warnings resolved
@@ -986,7 +986,7 @@ This release includes many performance improvements with Intel ASM (AVX/AVX2) an
 * Fixes to allow custom serial number during certificate generation
 * Add method to get WOLFSSL_CTX certificate manager
 * Improvement to `wolfSSL_SetOCSP_Cb` to allow context per WOLFSSL object
-* Alternate certificate chain support `WOLFSSL_ALT_CERT_CHAINS`. Enables checking cert against multiple CA's. 
+* Alternate certificate chain support `WOLFSSL_ALT_CERT_CHAINS`. Enables checking cert against multiple CA's.
 * Added new `--disable-oldnames` option to allow for using openssl along-side wolfssl headers (without OPENSSL_EXTRA).
 * Refactor SSL_ and hashing types to use wolf specific prefix (WOLFSSL and WC_) to allow openssl coexistence.
 * Fixes for HAVE_INTEL_MULX
@@ -1106,7 +1106,7 @@ More info can be found on-line at http://wolfssl.com/wolfSSL/Docs.html
 - Added support for HAproxy load balancer
 - Added option to allow SHA1 with TLS 1.2 for IIS compatibility (WOLFSSL_ALLOW_TLS_SHA1)
 - Added Curve25519 51-bit Implementation, increasing performance on systems that have 128 bit types
-- Fix to not send session ID on server side if session cache is off unless we're echoing 
+- Fix to not send session ID on server side if session cache is off unless we're echoing
 session ID as part of session tickets
 - Fixes for ensuring all default ciphers are setup correctly (see PR #830)
 - Added NXP Hexiwear example in `IDE/HEXIWEAR`.
@@ -1114,7 +1114,7 @@ session ID as part of session tickets
 - Fixes for TLS elliptic curve selection on private key import.
 - Fixes for RNG with Intel rdrand and rdseed speedups.
 - Improved performance with Intel rdrand to use full 64-bit output
-- Added new --enable-intelrand option to indicate use of RDRAND preference for RNG source 
+- Added new --enable-intelrand option to indicate use of RDRAND preference for RNG source
 - Removed RNG ARC4 support
 - Added ECC helpers to get size and id from curve name.
 - Added ECC Cofactor DH (ECC-CDH) support
@@ -1737,7 +1737,7 @@ and comments about the new features please check the manual.
   handling and reduce memory fragmentation on I/O large sizes
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -1748,7 +1748,7 @@ and comments about the new features please check the manual.
 - Freescale Kinetis mmCAU support
 - TLS Hello extensions
   - ECC
-  - Secure Renegotiation (null) 
+  - Secure Renegotiation (null)
   - Truncated HMAC
 - SCEP support
   - PKCS #7 Enveloped data and signed data
@@ -1795,7 +1795,7 @@ http://cache.freescale.com/files/32bit/doc/user_guide/CAUAPIUG.pdf
 
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -1821,7 +1821,7 @@ and comments about the new features please check the manual.
 
 When compiling with Mingw, libtool may give the following warning due to
 path conversion errors:
- 
+
 ```
 libtool: link: Could not determine host file name corresponding to **
 libtool: link: Continuing, but uninstalled executables may not work.
@@ -1831,7 +1831,7 @@ If so, examples and testsuite will have problems when run, showing an
 error while loading shared libraries. To resolve, please run "make install".
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -1853,7 +1853,7 @@ and comments about the new features please check the manual.
       13 bytes DTLS headers, but every effort is now made to align with the
       CYASSL_GENERAL_ALIGNMENT flag which sets desired alignment requirement
 - NO_64BIT flag to turn off 64bit data type accumulators in public key code
-    * Note, some systems are faster with 32bit accumulators 
+    * Note, some systems are faster with 32bit accumulators
 - --enable-stacksize for example client/server stack use
     * Note, modern desktop Operating Systems may add bytes to each stack frame
 - Updated compression/decompression with direct crypto access
@@ -1874,19 +1874,19 @@ and comments about the new features please check the manual.
     * dh
     * dsa
     * md5
-    * sha 
+    * sha
     * arc4
     * null    (allow NULL ciphers)
     * oldtls  (only use TLS 1.2)
     * asn     (no certs or public keys allowed)
-- ./configure generates cyassl/options.h which allows a header the user can 
+- ./configure generates cyassl/options.h which allows a header the user can
   include in their app to make sure the same options are set at the app and
   CyaSSL level.
 - autoconf no longer needs serial-tests which lowers version requirements of
   automake to 1.11 and autoconf to 2.63
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -1904,7 +1904,7 @@ and comments about the new features please check the manual.
 - Camellia crypto and cipher suites
 - Bumped minimum autoconf version to 2.65, automake version to 1.12
 - Addition of OCSP callbacks
-- STM32F2 support with hardware crypto and RNG 
+- STM32F2 support with hardware crypto and RNG
 - Cavium NITROX support
 
 CTaoCrypt now has support for the Microchip PIC32 and has been tested with
@@ -1917,7 +1917,7 @@ To add Cavium NITROX support do:
 ./configure --with-cavium=/home/user/cavium/software
 
 pointing to your licensed cavium/software directory.  Since Cavium doesn't
-build a library we pull in the cavium_common.o file which gives a libtool 
+build a library we pull in the cavium_common.o file which gives a libtool
 warning about the portability of this.  Also, if you're using the github source
 tree you'll need to remove the -Wredundant-decls warning from the generated
 Makefile because the cavium headers don't conform to this warning.  Currently
@@ -1930,11 +1930,11 @@ test and benchmark.  Please see the HAVE_CAVIUM define.
 CyaSSL is able to use the STM32F2 hardware-based cryptography and random number
 generator through the STM32F2 Standard Peripheral Library. For necessary
 defines, see the CYASSL_STM32F2 define in settings.h. Documentation for the
-STM32F2 Standard Peripheral Library can be found in the following document: 
+STM32F2 Standard Peripheral Library can be found in the following document:
 http://www.st.com/internet/com/TECHNICAL_RESOURCES/TECHNICAL_LITERATURE/USER_MANUAL/DM00023896.pdf
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -1962,7 +1962,7 @@ K70 Sub-Family Reference Manual:
 http://cache.freescale.com/files/microcontrollers/doc/ref_manual/K70P256M150SF3RM.pdf
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -1974,7 +1974,7 @@ and comments about the new features please check the manual.
 - Updated build process
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -1993,7 +1993,7 @@ and comments about the new features please check the manual.
 - DTLS Cookie support, reliability coming soon
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -2006,13 +2006,13 @@ and comments about the new features please check the manual.
 - Add static ECDH suites
 - SHA-384 support
 - ECC client certificate support
-- Add medium session cache size (1055 sessions) 
+- Add medium session cache size (1055 sessions)
 - Updated unit tests
 - Protection against mutex reinitialization
 
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -2029,7 +2029,7 @@ and comments about the new features please check the manual.
 
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -2048,7 +2048,7 @@ and comments about the new features please check the manual.
 - Export Base64_Encode for general use
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -2065,7 +2065,7 @@ and comments about the new features please check the manual.
 - Microchip pic32 support
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 
@@ -2089,7 +2089,7 @@ changes are required.
 Special Thanks to Brian Aker for his autoconf, install, and header patches.
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 # CyaSSL Release 2.0.0rc2 (6/6/2011)
@@ -2108,21 +2108,21 @@ This is the 2nd and perhaps final release candidate for version 2.
 Please send any comments or questions to support@yassl.com.
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 # CyaSSL Release 2.0.0rc1 (5/2/2011)
 
 #### Release 2.0.0rc1 for CyaSSL has many new features including:
 - bug fixes
-- SHA-256 cipher suites 
-- Root Certificate Verification (instead of needing all certs in the chain) 
-- PKCS #8 private key encryption (supports PKCS #5 v1-v2 and PKCS #12) 
-- Serial number retrieval for x509 
-- PBKDF2 and PKCS #12 PBKDF 
-- UID parsing for x509 
-- SHA-256 certificate signatures 
-- Client and server can send chains (SSL_CTX_use_certificate_chain_file) 
+- SHA-256 cipher suites
+- Root Certificate Verification (instead of needing all certs in the chain)
+- PKCS #8 private key encryption (supports PKCS #5 v1-v2 and PKCS #12)
+- Serial number retrieval for x509
+- PBKDF2 and PKCS #12 PBKDF
+- UID parsing for x509
+- SHA-256 certificate signatures
+- Client and server can send chains (SSL_CTX_use_certificate_chain_file)
 - CA loading can now parse multiple certificates per file
 - Dynamic memory runtime hooks
 - Runtime hooks for logging
@@ -2141,7 +2141,7 @@ options that CyaSSL allows, there may be some configuration fixes needed.
 Please send any comments or questions to support@yassl.com.
 
 The CyaSSL manual is available at:
-http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
 and comments about the new features please check the manual.
 
 # CyaSSL Release 1.9.0 (3/2/2011)
@@ -2169,13 +2169,13 @@ build instructions and comments about the new features please check the manual.
 Please send any comments or questions to support@yassl.com.
 
 Happy Holidays.
- 
+
 
 # CyaSSL Release 1.6.5 (9/9/2010)
 
 Release 1.6.5 for CyaSSL adds bug fixes and x509 v3 self signed certificate
 generation.
- 
+
 For general build instructions see doc/Building_CyaSSL.pdf.
 
 To enable certificate generation support add this option to ./configure
@@ -2188,7 +2188,7 @@ in doc/CyaSSL_Extensions_Reference.pdf item 11.
 
 Release 1.6.0 for CyaSSL adds bug fixes, RIPEMD-160, SHA-512, and RSA key
 generation.
- 
+
 For general build instructions see doc/Building_CyaSSL.pdf.
 
 To add RIPEMD-160 support add this option to ./configure
@@ -2211,7 +2211,7 @@ CyaSSL.
 
 Release 1.5.6 for CyaSSL adds bug fixes, compatibility for our JSSE provider,
 and a fix for GCC builds on some systems.
- 
+
 For general build instructions see doc/Building_CyaSSL.pdf.
 
 To add AES-NI support add this option to ./configure
@@ -2221,9 +2221,9 @@ You'll need GCC 4.4.3 or later to make use of the assembly.
 
 # CyaSSL Release 1.5.4 (7/7/2010)
 
-Release 1.5.4 for CyaSSL adds bug fixes, support for AES-NI, SHA1 speed 
+Release 1.5.4 for CyaSSL adds bug fixes, support for AES-NI, SHA1 speed
 improvements from loop unrolling, and support for the Mongoose Web Server.
- 
+
 For general build instructions see doc/Building_CyaSSL.pdf.
 
 To add AES-NI support add this option to ./configure
@@ -2255,7 +2255,7 @@ please send questions or comments to support@yassl.com.
 When doing load testing with CyaSSL, on the echoserver example say, the client
 machine may run out of tcp ephemeral ports, they will end up in the TIME_WAIT
 queue, and can't be reused by default.  There are generally two ways to fix
-this. 
+this.
 
 1. Reduce the length sockets remain on the TIME_WAIT queue OR
 2. Allow items on the TIME_WAIT queue to be reused.
@@ -2313,7 +2313,7 @@ SSL_METHOD *TLSv1_2_server_method(void);
 SSL_METHOD *TLSv1_2_client_method(void);
 ```
 
-CyaSSL was tested against lighttpd 1.4.23.  To build CyaSSL for use with 
+CyaSSL was tested against lighttpd 1.4.23.  To build CyaSSL for use with
 lighttpd use the following commands from the CyaSSL install dir <CyaSSLDir>:
 
 ```
@@ -2498,7 +2498,7 @@ This gives warnings for some symbols but seems to work.
     ./configure
     make
 
-    from the ./testsuite/ directory run ./testsuite 
+    from the ./testsuite/ directory run ./testsuite
 
 #### To make a debug build:
 
@@ -2517,7 +2517,7 @@ Run the testsuite program
 
 
 
-# CyaSSL version 0.9.9 (7/25/2008) 
+# CyaSSL version 0.9.9 (7/25/2008)
 
 This release of CyaSSL adds bug fixes, Pre-Shared Keys, over-rideable memory
 handling, and optionally TomsFastMath.  Thanks to Moisés Guimarães for the
@@ -2537,7 +2537,7 @@ yet use -m64 because of GCCs inability to do 128bit division.
 See notes below (0.2.0) for complete build instructions.
 
 
-# CyaSSL version 0.9.8 (5/7/2008) 
+# CyaSSL version 0.9.8 (5/7/2008)
 
 This release of CyaSSL adds bug fixes, client side Diffie-Hellman, and better
 socket handling.
@@ -2545,7 +2545,7 @@ socket handling.
 See notes below (0.2.0) for complete build instructions.
 
 
-# CyaSSL version 0.9.6 (1/31/2008) 
+# CyaSSL version 0.9.6 (1/31/2008)
 
 This release of CyaSSL adds bug fixes, increased session management, and a fix
 for gnutls.
@@ -2553,15 +2553,15 @@ for gnutls.
 See notes below (0.2.0) for complete build instructions.
 
 
-# CyaSSL version 0.9.0 (10/15/2007) 
+# CyaSSL version 0.9.0 (10/15/2007)
 
-This release of CyaSSL adds bug fixes, MSVC 2005 support, GCC 4.2 support, 
+This release of CyaSSL adds bug fixes, MSVC 2005 support, GCC 4.2 support,
 IPV6 support and test, and new test certificates.
 
 See notes below (0.2.0) for complete build instructions.
 
 
-# CyaSSL version 0.8.0 (1/10/2007) 
+# CyaSSL version 0.8.0 (1/10/2007)
 
 This release of CyaSSL adds increased socket support, for non-blocking writes,
 connects, and interrupted system calls.
@@ -2569,7 +2569,7 @@ connects, and interrupted system calls.
 See notes below (0.2.0) for complete build instructions.
 
 
-# CyaSSL version 0.6.3 (10/30/2006) 
+# CyaSSL version 0.6.3 (10/30/2006)
 
 This release of CyaSSL adds debug logging to stderr to aid in the debugging of
 CyaSSL on systems that may not provide the best support.
@@ -2587,19 +2587,19 @@ To turn logging back off call CyaSSL_Debugging_OFF()
 See notes below (0.2.0) for complete build instructions.
 
 
-# CyaSSL version 0.6.2 (10/29/2006) 
+# CyaSSL version 0.6.2 (10/29/2006)
 
 This release of CyaSSL adds TLS 1.1.
 
 Note that CyaSSL has certificate verification on by default, unlike OpenSSL.
 To emulate OpenSSL behavior, you must call SSL_CTX_set_verify() with
-SSL_VERIFY_NONE.  In order to have full security you should never do this, 
+SSL_VERIFY_NONE.  In order to have full security you should never do this,
 provide CyaSSL with the proper certificates to eliminate impostors and call
 CyaSSL_check_domain_name() to prevent man in the middle attacks.
 
 See notes below (0.2.0) for build instructions.
 
-# CyaSSL version 0.6.0 (10/25/2006) 
+# CyaSSL version 0.6.0 (10/25/2006)
 
 This release of CyaSSL adds more SSL functions, better autoconf, nonblocking
 I/O for accept, connect, and read.  There is now an --enable-small configure
@@ -2609,7 +2609,7 @@ for the defines.  Note that TLS requires HMAC and AES requires TLS.
 See notes below (0.2.0) for build instructions.
 
 
-# CyaSSL version 0.5.5 (09/27/2006) 
+# CyaSSL version 0.5.5 (09/27/2006)
 
 This mini release of CyaSSL adds better input processing through buffered input
 and big message support.  Added SSL_pending() and some sanity checks on user
@@ -2618,23 +2618,23 @@ settings.
 See notes below (0.2.0) for build instructions.
 
 
-# CyaSSL version 0.5.0 (03/27/2006) 
+# CyaSSL version 0.5.0 (03/27/2006)
 
-This release of CyaSSL adds AES support and minor bug fixes. 
+This release of CyaSSL adds AES support and minor bug fixes.
 
 See notes below (0.2.0) for build instructions.
 
 
 # CyaSSL version 0.4.0 (03/15/2006)
 
-This release of CyaSSL adds TLSv1 client/server support and libtool. 
+This release of CyaSSL adds TLSv1 client/server support and libtool.
 
 See notes below for build instructions.
 
 
 # CyaSSL version 0.3.0 (02/26/2006)
 
-This release of CyaSSL adds SSLv3 server support and session resumption. 
+This release of CyaSSL adds SSLv3 server support and session resumption.
 
 See notes below for build instructions.
 
@@ -2660,7 +2660,7 @@ with support for SHA-1 and MD5 digests.  Ciphers include 3DES and RC4.
     ./configure
     make
 
-    from the ./testsuite/ directory run ./testsuite 
+    from the ./testsuite/ directory run ./testsuite
 
 #### to make a debug build:
 

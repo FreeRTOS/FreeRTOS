@@ -69,4 +69,3 @@ WOLFSSL_LOCAL void wc_FreeCertList(WC_DerCertList* list, void* heap);
 #endif
 
 #endif /* WOLF_CRYPT_PKCS12_H */
-

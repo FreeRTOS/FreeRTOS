@@ -96,7 +96,7 @@ void prvTraceAssertCreate(const char* szFilePath, TraceUnsignedBaseType_t uxLine
 traceResult xTraceAssertGet(TraceStringHandle_t *pxFileNameStringHandle, TraceUnsignedBaseType_t *puxLineNumber)
 {
 	TRC_ASSERT(pxFileNameStringHandle != 0);
-	
+
 	TRC_ASSERT(puxLineNumber != 0);
 
 	if (!xTraceIsComponentInitialized(TRC_RECORDER_COMPONENT_ASSERT))
@@ -111,7 +111,7 @@ traceResult xTraceAssertGet(TraceStringHandle_t *pxFileNameStringHandle, TraceUn
 	{
 		return TRC_FAIL;
 	}
-	
+
 	/* The string handle can be set to the entry handle */
 	*pxFileNameStringHandle = (TraceStringHandle_t)pxAssertInfo->xEntry;
 

@@ -54,4 +54,3 @@ girq18_b0(void)
 /* end girq18.c */
 /**   @}
  */
-

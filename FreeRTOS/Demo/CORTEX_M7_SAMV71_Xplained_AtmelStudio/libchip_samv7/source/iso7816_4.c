@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -99,7 +99,7 @@ static uint32_t ISO7816_GetChar( uint8_t *pCharToReceive )
 	TRACE_DEBUG("T: %u\n\r", timeout);
 
 
-	/* At least one complete character has been received and US_RHR has not 
+	/* At least one complete character has been received and US_RHR has not
 	yet been read. */
 
 	/* Get a char */
@@ -392,7 +392,7 @@ void ISO7816_Datablock_ATR( uint8_t* pAtr, uint8_t* pLength )
  * \param dwClockFrequency ICC clock frequency in KHz.
  * \param dwDataRate       ICC data rate in bpd
  */
-void ISO7816_SetDataRateandClockFrequency( uint32_t dwClockFrequency, 
+void ISO7816_SetDataRateandClockFrequency( uint32_t dwClockFrequency,
 		uint32_t dwDataRate )
 {
 	uint8_t ClockFrequency;
@@ -561,10 +561,10 @@ void ISO7816_Init( Usart *pUsart, uint32_t usartId , const Pin pPinIso7816RstMC 
 	UsartIso = pUsart;
 	UsartIsoId = usartId;
 		uint32_t baudrate = USART7816BAUDRATE;
-		
+
 	/* Pin ISO7816 initialize */
 	st_pinIso7816RstMC  = pPinIso7816RstMC;
-	
+
 		PMC_EnablePeripheral(UsartIsoId);
 
 		UsartIso->US_FIDI = 372;  /* by default */
@@ -584,4 +584,3 @@ void ISO7816_Init( Usart *pUsart, uint32_t usartId , const Pin pPinIso7816RstMC 
 	/* Write the Time-guard Register */
 	UsartIso->US_TTGR = 5;
 }
-

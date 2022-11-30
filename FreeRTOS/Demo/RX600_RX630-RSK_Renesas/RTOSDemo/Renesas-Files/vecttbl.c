@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,7 +25,7 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
@@ -59,6 +59,6 @@ void* const Fixed_Vectors[] = {
 //;0xfffffffc  RESET
 //;<<VECTOR DATA START (POWER ON RESET)>>
 //;Power On Reset PC
-PowerON_Reset_PC                                                                                                                             
+PowerON_Reset_PC
 //;<<VECTOR DATA END (POWER ON RESET)>>
 };

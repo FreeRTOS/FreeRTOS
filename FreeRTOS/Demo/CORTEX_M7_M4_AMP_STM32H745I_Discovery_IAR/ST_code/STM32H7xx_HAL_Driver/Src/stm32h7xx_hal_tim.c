@@ -3873,13 +3873,13 @@ HAL_StatusTypeDef HAL_TIM_OnePulse_ConfigChannel(TIM_HandleTypeDef *htim,  TIM_O
   *            @arg TIM_DMABASE_CCR3
   *            @arg TIM_DMABASE_CCR4
   *            @arg TIM_DMABASE_BDTR
-  *            @arg TIM_DMABASE_CCMR3 
-  *            @arg TIM_DMABASE_CCR5 
-  *            @arg TIM_DMABASE_CCR6 
-  *            @arg TIM_DMABASE_AF1  
-  *            @arg TIM_DMABASE_AF2  
+  *            @arg TIM_DMABASE_CCMR3
+  *            @arg TIM_DMABASE_CCR5
+  *            @arg TIM_DMABASE_CCR6
+  *            @arg TIM_DMABASE_AF1
+  *            @arg TIM_DMABASE_AF2
   *            @arg TIM_DMABASE_TISEL
-  *         
+  *
   * @param  BurstRequestSrc TIM DMA Request sources
   *         This parameter can be one of the following values:
   *            @arg TIM_DMA_UPDATE: TIM update Interrupt source
@@ -3925,13 +3925,13 @@ HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStart(TIM_HandleTypeDef *htim, uint32_t 
   *            @arg TIM_DMABASE_CCR3
   *            @arg TIM_DMABASE_CCR4
   *            @arg TIM_DMABASE_BDTR
-  *            @arg TIM_DMABASE_CCMR3 
-  *            @arg TIM_DMABASE_CCR5 
-  *            @arg TIM_DMABASE_CCR6 
-  *            @arg TIM_DMABASE_AF1  
-  *            @arg TIM_DMABASE_AF2  
+  *            @arg TIM_DMABASE_CCMR3
+  *            @arg TIM_DMABASE_CCR5
+  *            @arg TIM_DMABASE_CCR6
+  *            @arg TIM_DMABASE_AF1
+  *            @arg TIM_DMABASE_AF2
   *            @arg TIM_DMABASE_TISEL
-  *         
+  *
   * @param  BurstRequestSrc TIM DMA Request sources
   *         This parameter can be one of the following values:
   *            @arg TIM_DMA_UPDATE: TIM update Interrupt source
@@ -4201,13 +4201,13 @@ HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStop(TIM_HandleTypeDef *htim, uint32_t B
   *            @arg TIM_DMABASE_CCR3
   *            @arg TIM_DMABASE_CCR4
   *            @arg TIM_DMABASE_BDTR
-  *            @arg TIM_DMABASE_CCMR3 
-  *            @arg TIM_DMABASE_CCR5 
-  *            @arg TIM_DMABASE_CCR6 
-  *            @arg TIM_DMABASE_AF1  
-  *            @arg TIM_DMABASE_AF2  
+  *            @arg TIM_DMABASE_CCMR3
+  *            @arg TIM_DMABASE_CCR5
+  *            @arg TIM_DMABASE_CCR6
+  *            @arg TIM_DMABASE_AF1
+  *            @arg TIM_DMABASE_AF2
   *            @arg TIM_DMABASE_TISEL
-  *         
+  *
   * @param  BurstRequestSrc TIM DMA Request sources
   *         This parameter can be one of the following values:
   *            @arg TIM_DMA_UPDATE: TIM update Interrupt source
@@ -4253,13 +4253,13 @@ HAL_StatusTypeDef HAL_TIM_DMABurst_ReadStart(TIM_HandleTypeDef *htim, uint32_t B
   *            @arg TIM_DMABASE_CCR3
   *            @arg TIM_DMABASE_CCR4
   *            @arg TIM_DMABASE_BDTR
-  *            @arg TIM_DMABASE_CCMR3 
-  *            @arg TIM_DMABASE_CCR5 
-  *            @arg TIM_DMABASE_CCR6 
-  *            @arg TIM_DMABASE_AF1  
-  *            @arg TIM_DMABASE_AF2  
+  *            @arg TIM_DMABASE_CCMR3
+  *            @arg TIM_DMABASE_CCR5
+  *            @arg TIM_DMABASE_CCR6
+  *            @arg TIM_DMABASE_AF1
+  *            @arg TIM_DMABASE_AF2
   *            @arg TIM_DMABASE_TISEL
-  *         
+  *
   * @param  BurstRequestSrc TIM DMA Request sources
   *         This parameter can be one of the following values:
   *            @arg TIM_DMA_UPDATE: TIM update Interrupt source

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -191,4 +191,3 @@ extern void *LCDD_CreateCanvas(uint8_t bLayer,
 extern void LCDD_Flush_CurrentCanvas(void);
 /**  @}*/
 #endif /* #ifndef LCDD_H */
-

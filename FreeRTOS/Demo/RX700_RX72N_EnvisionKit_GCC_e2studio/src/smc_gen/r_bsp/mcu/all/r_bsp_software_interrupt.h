@@ -135,4 +135,3 @@ e_bsp_swint_err_t R_BSP_SoftwareInterruptControl(e_bsp_swint_unit_t unit, e_bsp_
 #endif /* (BSP_CFG_SWINT_UNIT1_ENABLE == 1) || (BSP_CFG_SWINT_UNIT2_ENABLE == 1) */
 
 #endif  /* End of multiple inclusion prevention macro */
-

@@ -26,7 +26,7 @@ extern "C" {
 
 /**
  * @def TRC_EXTERNAL_BUFFERS
- * 
+ *
  * @brief This Stream Port houses the EntryTable and Timestamp buffers
  */
 #define TRC_EXTERNAL_BUFFERS 1
@@ -40,7 +40,7 @@ extern "C" {
 
 /**
  * @def TRC_USE_INTERNAL_BUFFER
- * 
+ *
  * @brief This Stream Port uses the Multi Core Buffer directly.
  */
 
@@ -97,11 +97,11 @@ typedef struct TraceStreamPortBuffer
 
 /**
  * @internal Stream port initialize callback.
- * 
+ *
  * This function is called by the recorder as part of its initialization phase.
- * 
+ *
  * @param[in] pxBuffer Buffer
- * 
+ *
  * @retval TRC_FAIL Initialization failed
  * @retval TRC_SUCCESS Success
  */
@@ -109,10 +109,10 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
 
 /**
  * @brief Allocates data from the stream port.
- * 
+ *
  * @param[in] uiSize Allocation size
  * @param[out] ppvData Allocation data pointer
- * 
+ *
  * @retval TRC_FAIL Allocate failed
  * @retval TRC_SUCCESS Success
  */
@@ -122,11 +122,11 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
  * @brief Commits data to the stream port, depending on the implementation/configuration of the
  * stream port this data might be directly written to the stream port interface, buffered, or
  * something else.
- * 
+ *
  * @param[in] pvData Data to commit
  * @param[in] uiSize Data to commit size
  * @param[out] piBytesCommitted Bytes commited
- * 
+ *
  * @retval TRC_FAIL Commit failed
  * @retval TRC_SUCCESS Success
  */
@@ -134,11 +134,11 @@ traceResult xTraceStreamPortCommit(void* pvData, uint32_t uiSize, int32_t* piByt
 
 /**
  * @brief Writes data through the stream port interface.
- * 
+ *
  * @param[in] pvData Data to write
  * @param[in] uiSize Data to write size
  * @param[out] piBytesWritten Bytes written
- * 
+ *
  * @retval TRC_FAIL Write failed
  * @retval TRC_SUCCESS Success
  */
@@ -146,11 +146,11 @@ traceResult xTraceStreamPortCommit(void* pvData, uint32_t uiSize, int32_t* piByt
 
 /**
  * @brief Reads data through the stream port interface.
- * 
- * @param[in] pvData Destination data buffer 
+ *
+ * @param[in] pvData Destination data buffer
  * @param[in] uiSize Destination data buffer size
  * @param[out] piBytesRead Bytes read
- * 
+ *
  * @retval TRC_FAIL Read failed
  * @retval TRC_SUCCESS Success
  */
@@ -158,7 +158,7 @@ traceResult xTraceStreamPortCommit(void* pvData, uint32_t uiSize, int32_t* piByt
 
 /**
  * @brief Callback for when recorder is enabled
- * 
+ *
  * @param[in] uiStartOption Start option used when enabling trace recorder
  *
  * @retval TRC_FAIL Read failed

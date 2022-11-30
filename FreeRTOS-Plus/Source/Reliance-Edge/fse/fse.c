@@ -687,4 +687,3 @@ static void FseLeave(void)
 
 
 #endif /* REDCONF_API_FSE == 1 */
-

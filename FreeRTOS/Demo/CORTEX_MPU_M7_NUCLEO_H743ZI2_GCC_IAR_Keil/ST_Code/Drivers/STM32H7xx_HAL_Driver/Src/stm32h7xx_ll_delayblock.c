@@ -3,26 +3,26 @@
   * @file    stm32h7xx_ll_delayblock.c
   * @author  MCD Application Team
   * @brief   DelayBlock Low Layer HAL module driver.
-  *    
-  *          This file provides firmware functions to manage the following 
+  *
+  *          This file provides firmware functions to manage the following
   *          functionalities of the Delay Block peripheral:
   *           + input clock frequency range 25MHz to 208MHz
   *           + up to 12 oversampling phases
-  *         
+  *
   @verbatim
   ==============================================================================
                        ##### DelayBlock peripheral features #####
-  ==============================================================================        
+  ==============================================================================
     [..] The Delay block is used to generate an Output clock which is de-phased from the Input
           clock. The phase of the Output clock is programmed by FW. The Output clock is then used
           to clock the receive data in i.e. a SDMMC or QSPI interface.
          The delay is Voltage and Temperature dependent, which may require FW to do re-tuning
           and recenter the Output clock phase to the receive data.
-    
+
     [..] The Delay Block features include the following:
          (+) Input clock frequency range 25MHz to 208MHz.
          (+) Up to 12 oversampling phases.
-         
+
                            ##### How to use this driver #####
   ==============================================================================
     [..]
@@ -31,8 +31,8 @@
       The DelayBlock_Enable() function, enables the DelayBlock instance, configure the delay line length
       and configure the Output clock phase.
       The DelayBlock_Disable() function, disables the DelayBlock instance by setting DEN flag to 0.
-      
-  
+
+
   @endverbatim
   ******************************************************************************
   * @attention
@@ -46,7 +46,7 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
@@ -74,15 +74,15 @@
   * @{
   */
 
-/** @defgroup HAL_DELAY_LL_Group1 Initialization de-initialization functions 
- *  @brief    Initialization and Configuration functions 
+/** @defgroup HAL_DELAY_LL_Group1 Initialization de-initialization functions
+ *  @brief    Initialization and Configuration functions
  *
-@verbatim    
+@verbatim
  ===============================================================================
               ##### Initialization and de-initialization functions #####
  ===============================================================================
     [..]  This section provides functions allowing to:
- 
+
 @endverbatim
   * @{
   */

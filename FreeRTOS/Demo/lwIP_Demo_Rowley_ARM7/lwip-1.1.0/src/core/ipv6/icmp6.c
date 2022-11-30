@@ -174,11 +174,3 @@ icmp_time_exceeded(struct pbuf *p, enum icmp_te_type t)
       (struct ip_addr *)&(iphdr->src), ICMP_TTL, IP_PROTO_ICMP);
   pbuf_free(q);
 }
-
-
-
-
-
-
-
-

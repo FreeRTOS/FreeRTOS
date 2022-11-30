@@ -384,4 +384,3 @@ uint32_t usart_lin_write_stream(Usart *usart, uint8_t *stream, uint32_t len)
 }
 
 #endif
-

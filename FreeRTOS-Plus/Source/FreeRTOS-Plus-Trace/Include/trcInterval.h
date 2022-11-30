@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace interval APIs.
  */
 
@@ -33,10 +33,10 @@ extern "C" {
 
 /**
  * @brief Creates trace interval.
- * 
+ *
  * @param[in] szName Name.
  * @param[out] pxIntervalHandle Pointer to uninitialized trace interval.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -44,9 +44,9 @@ traceResult xTraceIntervalCreate(const char *szName, TraceIntervalHandle_t *pxIn
 
 /**
  * @brief Starts trace interval.
- * 
+ *
  * @param[in] xIntervalHandle Pointer to initialized trace interval.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -54,9 +54,9 @@ traceResult xTraceIntervalStart(TraceIntervalHandle_t xIntervalHandle);
 
 /**
  * @brief Stops trace interval.
- * 
+ *
  * @param[in] xIntervalHandle Pointer to initialized trace interval.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -64,10 +64,10 @@ traceResult xTraceIntervalStop(TraceIntervalHandle_t xIntervalHandle);
 
 /**
  * @brief Gets trace interval state.
- * 
+ *
  * @param[in] xIntervalHandle Pointer to initialized trace interval.
  * @param[out] puxState State.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

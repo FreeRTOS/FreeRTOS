@@ -137,10 +137,10 @@ functional_group:
 void BOARD_InitTrustZone()
 {
     /* SAU configuration */
-    
+
     /* Set SAU Control register: Disable SAU and All Secure */
     SAU->CTRL = 0;
-    
+
     /* Set SAU region number */
     SAU->RNR = 0;
     /* Region base address */
@@ -149,7 +149,7 @@ void BOARD_InitTrustZone()
     SAU->RLAR = (SAU_REGION_0_END & SAU_RLAR_LADDR_Msk)
         | ((0U << SAU_RLAR_NSC_Pos) & SAU_RLAR_NSC_Msk)
         | ((1U << SAU_RLAR_ENABLE_Pos) & SAU_RLAR_ENABLE_Msk);
-    
+
     /* Set SAU region number */
     SAU->RNR = 1;
     /* Region base address */
@@ -158,7 +158,7 @@ void BOARD_InitTrustZone()
     SAU->RLAR = (SAU_REGION_1_END & SAU_RLAR_LADDR_Msk)
         | ((0U << SAU_RLAR_NSC_Pos) & SAU_RLAR_NSC_Msk)
         | ((1U << SAU_RLAR_ENABLE_Pos) & SAU_RLAR_ENABLE_Msk);
-    
+
     /* Set SAU region number */
     SAU->RNR = 2;
     /* Region base address */
@@ -167,16 +167,16 @@ void BOARD_InitTrustZone()
     SAU->RLAR = (SAU_REGION_2_END & SAU_RLAR_LADDR_Msk)
         | ((1U << SAU_RLAR_NSC_Pos) & SAU_RLAR_NSC_Msk)
         | ((1U << SAU_RLAR_ENABLE_Pos) & SAU_RLAR_ENABLE_Msk);
-    
+
     /* Force memory writes before continuing */
     __DSB();
     /* Flush and refill pipeline with updated permissions */
     __ISB();
-    
+
     /* Set SAU Control register: Enable SAU and All Secure (applied only if disabled) */
     SAU->CTRL = ((0U << SAU_CTRL_ALLNS_Pos) & SAU_CTRL_ALLNS_Msk)
         | ((1U << SAU_CTRL_ENABLE_Pos) & SAU_CTRL_ENABLE_Msk);
-    
+
     /* AHB configuration */
 
     /*--------------------------------------------------------------------

@@ -293,4 +293,3 @@ GPIO_InitTypeDef GPIO_InitStructure;
 	LCD_GLASS_Init();
 	LCD_GLASS_DisplayString( "F'RTOS" );
 }
-

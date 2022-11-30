@@ -8,7 +8,7 @@
  * @version  V1.1.0 (Reference Manual v1.1)
  * @date     10. January 2013
  *
- * @note     Generated with SVDConv V2.78b 
+ * @note     Generated with SVDConv V2.78b
  *           from CMSIS SVD File 'XMC4200_Processed_SVD.xml' Version 1.1.0 (Reference Manual v1.1),
  *******************************************************************************************************/
 
@@ -1055,7 +1055,7 @@ typedef struct {                                    /*!< (@ 0x50040900) USB0_EP0
   */
 
 typedef struct {                                    /*!< (@ 0x50040920) USB_EP Structure                                       */
-  
+
   union {
     __IO uint32_t  DIEPCTL_INTBULK;                 /*!< (@ 0x50040920) Device Endpoint Control Register [INTBULK]             */
     __IO uint32_t  DIEPCTL_ISOCONT;                 /*!< (@ 0x50040920) Device Endpoint Control Register [ISOCONT]             */
@@ -1068,7 +1068,7 @@ typedef struct {                                    /*!< (@ 0x50040920) USB_EP S
   __I  uint32_t  DTXFSTS;                           /*!< (@ 0x50040938) Device IN Endpoint Transmit FIFO Status Register       */
   __I  uint32_t  DIEPDMAB;                          /*!< (@ 0x5004093C) Device Endpoint DMA Buffer Address Register            */
   __I  uint32_t  RESERVED2[120];
-  
+
   union {
     __IO uint32_t  DOEPCTL_INTBULK;                 /*!< (@ 0x50040B20) Device Endpoint Control Register [INTBULK]             */
     __IO uint32_t  DOEPCTL_ISOCONT;                 /*!< (@ 0x50040B20) Device Endpoint Control Register [ISOCONT]             */
@@ -1076,7 +1076,7 @@ typedef struct {                                    /*!< (@ 0x50040920) USB_EP S
   __I  uint32_t  RESERVED3;
   __IO uint32_t  DOEPINT;                           /*!< (@ 0x50040B28) Device Endpoint Interrupt Register                     */
   __I  uint32_t  RESERVED4;
-  
+
   union {
     __IO uint32_t  DOEPTSIZ_CONTROL;                /*!< (@ 0x50040B30) Device Endpoint Transfer Size Register [CONT]          */
     __IO uint32_t  DOEPTSIZ_ISO;                    /*!< (@ 0x50040B30) Device Endpoint Transfer Size Register [ISO]           */
@@ -1126,7 +1126,7 @@ typedef struct {                                    /*!< (@ 0x40030000) USIC_CH 
   __IO uint32_t  DX5CR;                             /*!< (@ 0x40030030) Input Control Register 5                               */
   __IO uint32_t  SCTR;                              /*!< (@ 0x40030034) Shift Control Register                                 */
   __IO uint32_t  TCSR;                              /*!< (@ 0x40030038) Transmit Control/Status Register                       */
-  
+
   union {
     __IO uint32_t  PCR_IICMode;                     /*!< (@ 0x4003003C) Protocol Control Register [IIC Mode]                   */
     __IO uint32_t  PCR_IISMode;                     /*!< (@ 0x4003003C) Protocol Control Register [IIS Mode]                   */
@@ -1136,7 +1136,7 @@ typedef struct {                                    /*!< (@ 0x40030000) USIC_CH 
   };
   __IO uint32_t  CCR;                               /*!< (@ 0x40030040) Channel Control Register                               */
   __IO uint32_t  CMTR;                              /*!< (@ 0x40030044) Capture Mode Timer Register                            */
-  
+
   union {
     __IO uint32_t  PSR_IICMode;                     /*!< (@ 0x40030048) Protocol Status Register [IIC Mode]                    */
     __IO uint32_t  PSR_IISMode;                     /*!< (@ 0x40030048) Protocol Status Register [IIS Mode]                    */
@@ -1233,7 +1233,7 @@ typedef struct {                                    /*!< (@ 0x48015000) CAN_MO S
   __IO uint32_t  MODATAL;                           /*!< (@ 0x48015010) Message Object Data Register Low                       */
   __IO uint32_t  MODATAH;                           /*!< (@ 0x48015014) Message Object Data Register High                      */
   __IO uint32_t  MOAR;                              /*!< (@ 0x48015018) Message Object Arbitration Register                    */
-  
+
   union {
     __I  uint32_t  MOSTAT;                          /*!< (@ 0x4801501C) Message Object Status Register                         */
     __O  uint32_t  MOCTR;                           /*!< (@ 0x4801501C) Message Object Control Register                        */
@@ -1315,7 +1315,7 @@ typedef struct {                                    /*!< (@ 0x40004400) VADC_G S
   __IO uint32_t  QMR0;                              /*!< (@ 0x40004504) Queue 0 Mode Register                                  */
   __I  uint32_t  QSR0;                              /*!< (@ 0x40004508) Queue 0 Status Register                                */
   __I  uint32_t  Q0R0;                              /*!< (@ 0x4000450C) Queue 0 Register 0                                     */
-  
+
   union {
     __I  uint32_t  QBUR0;                           /*!< (@ 0x40004510) Queue 0 Backup Register                                */
     __O  uint32_t  QINR0;                           /*!< (@ 0x40004510) Queue 0 Input Register                                 */
@@ -13135,4 +13135,3 @@ typedef struct {                                    /*!< (@ 0x48028E00) PORT14 S
 
 
 #endif  /* XMC4200_H */
-

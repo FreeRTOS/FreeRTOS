@@ -53,5 +53,3 @@ void vStartEthernetTask( unsigned portBASE_TYPE uxPriority );
 
 
 #endif
-
-

@@ -110,4 +110,3 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define xPortSysTickHandler SysTick_Handler
 
 #endif /* FREERTOS_CONFIG_H */
-

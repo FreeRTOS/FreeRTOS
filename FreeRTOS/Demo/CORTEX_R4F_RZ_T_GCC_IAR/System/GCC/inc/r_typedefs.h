@@ -84,4 +84,3 @@ typedef long double         float128_t;
 
 /* R_TYPEDEFS_H */
 #endif
-

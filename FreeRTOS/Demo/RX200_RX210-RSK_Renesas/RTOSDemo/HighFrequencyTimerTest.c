@@ -134,10 +134,3 @@ static unsigned long ulErrorCount = 0UL;
 	/* Then start the clock again. */
 	CMT.CMSTR1.BIT.STR3 = 1;
 }
-
-
-
-
-
-
-

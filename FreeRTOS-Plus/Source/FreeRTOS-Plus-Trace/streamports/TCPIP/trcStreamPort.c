@@ -5,9 +5,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  *
- * Supporting functions for trace streaming, used by the "stream ports" 
+ * Supporting functions for trace streaming, used by the "stream ports"
  * for reading and writing data to the interface.
- * Existing ports can easily be modified to fit another setup, e.g., a 
+ * Existing ports can easily be modified to fit another setup, e.g., a
  * different TCP/IP stack, or to define your own stream port.
  */
 
@@ -15,8 +15,8 @@
 
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)  
-	
+#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+
 /* TCP/IP includes - for lwIP in this case */
 #include <lwip/tcpip.h>
 #include <lwip/sockets.h>
@@ -48,10 +48,10 @@ static int32_t prvSocketSend( void* pvData, uint32_t uiSize, int32_t* piBytesWri
 {
   if (new_sd < 0)
     return -1;
-  
+
   if (piBytesWritten == 0)
 	return -1;
-  
+
   *piBytesWritten = send( new_sd, pvData, uiSize, 0 );
   if (*piBytesWritten < 0)
   {
@@ -65,7 +65,7 @@ static int32_t prvSocketSend( void* pvData, uint32_t uiSize, int32_t* piBytesWri
     else
         *piBytesWritten = 0;
   }
-  
+
   return 0;
 }
 
@@ -90,9 +90,9 @@ static int32_t prvSocketInitializeListener()
 {
   if (sock >= 0)
 	return 0;
-  
+
   sock = lwip_socket(AF_INET, SOCK_STREAM, 0);
-  
+
   if (sock < 0)
     return -1;
 
@@ -121,10 +121,10 @@ static int32_t prvSocketAccept()
 {
   if (sock < 0)
       return -1;
-  
+
   if (new_sd >= 0)
       return 0;
-  
+
   remoteSize = sizeof( remote );
   new_sd = accept( sock, (struct sockaddr *)&remote, (socklen_t*)&remoteSize );
 
@@ -149,7 +149,7 @@ static void prvCloseAllSockets()
 	{
 		closesocket(new_sd);
 	}
-	
+
 	if (sock > 0)
 	{
 		closesocket(sock);
@@ -162,16 +162,16 @@ int32_t prvTraceTcpWrite(void* pvData, uint32_t uiSize, int32_t *piBytesWritten)
 	prvSocketInitializeListener();
 
 	prvSocketAccept();
-	
+
     return prvSocketSend(pvData, uiSize, piBytesWritten);
 }
 
 int32_t prvTraceTcpRead(void* pvData, uint32_t uiSize, int32_t *piBytesRead)
 {
     prvSocketInitializeListener();
-        
+
     prvSocketAccept();
-      
+
     return prvSocketReceive(pvData, uiSize, piBytesRead);
 }
 

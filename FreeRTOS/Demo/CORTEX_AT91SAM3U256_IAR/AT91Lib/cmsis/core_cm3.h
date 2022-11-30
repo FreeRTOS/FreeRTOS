@@ -7,9 +7,9 @@
  *
  * Copyright (C) 2009 ARM Limited. All rights reserved.
  *
- * ARM Limited (ARM) is supplying this software for use with Cortex-Mx 
- * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * ARM Limited (ARM) is supplying this software for use with Cortex-Mx
+ * processor based microcontrollers.  This file can be freely distributed
+ * within development tools that are supporting such ARM based processors.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
  * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -183,7 +183,7 @@ typedef struct
 /* memory mapping structur for ITM */
 typedef struct
 {
-  __O  union  
+  __O  union
   {
     __O  uint8_t    u8;                       /*!< ITM Stimulus Port 8-bit               */
     __O  uint16_t   u16;                      /*!< ITM Stimulus Port 16-bit              */
@@ -350,7 +350,7 @@ extern uint32_t __get_PSP(void);
  * @param  uint32_t Process Stack Pointer
  * @return none
  *
- * Assign the value ProcessStackPointer to the MSP 
+ * Assign the value ProcessStackPointer to the MSP
  * (process stack pointer) Cortex processor register
  */
 extern void __set_PSP(uint32_t topOfProcStack);
@@ -372,7 +372,7 @@ extern uint32_t __get_MSP(void);
  * @param  uint32_t Main Stack Pointer
  * @return none
  *
- * Assign the value mainStackPointer to the MSP 
+ * Assign the value mainStackPointer to the MSP
  * (main stack pointer) Cortex processor register
  */
 extern void __set_MSP(uint32_t topOfMainStack);
@@ -473,7 +473,7 @@ extern void __set_FAULTMASK(uint32_t faultMask);
 
 /**
  * @brief  Return the Control Register value
- * 
+ *
  * @param  none
  * @return uint32_t Control value
  *
@@ -591,7 +591,7 @@ static __INLINE void __set_FAULTMASK(uint32_t faultMask)
 
 /**
  * @brief  Return the Control Register value
- * 
+ *
  * @param  none
  * @return uint32_t Control value
  *
@@ -617,7 +617,7 @@ static __INLINE void __set_CONTROL(uint32_t control)
   __regControl = control;
 }
 
-#endif /* __ARMCC_VERSION  */ 
+#endif /* __ARMCC_VERSION  */
 
 #elif (defined (__ICCARM__)) /*------------------ ICC Compiler -------------------*/
 /* IAR iccarm specific functions */
@@ -665,7 +665,7 @@ static uint32_t __get_PSP(void)
 {
   __ASM("mrs r0, psp");
 }
- 
+
 static void __set_PSP(uint32_t topOfProcStack)
 {
   __ASM("msr psp, r0");
@@ -675,7 +675,7 @@ static uint32_t __get_MSP(void)
 {
   __ASM("mrs r0, msp");
 }
- 
+
 static void __set_MSP(uint32_t topOfMainStack)
 {
   __ASM("msr msp, r0");
@@ -775,7 +775,7 @@ static __INLINE void __CLREX(void)
 static uint32_t __get_FPSCR(void)
 {
 #if (__FPU_PRESENT == 1)   // __FPU_PRESENT is defined in the device header file, if present in current device.
-  __ASM("vmrs r0, fpscr"); 
+  __ASM("vmrs r0, fpscr");
 #else
   return(0);
 #endif
@@ -832,7 +832,7 @@ extern uint32_t __get_PSP(void);
  * @param  uint32_t Process Stack Pointer
  * @return none
  *
- * Assign the value ProcessStackPointer to the MSP 
+ * Assign the value ProcessStackPointer to the MSP
  * (process stack pointer) Cortex processor register
  */
 extern void __set_PSP(uint32_t topOfProcStack);
@@ -854,7 +854,7 @@ extern uint32_t __get_MSP(void);
  * @param  uint32_t Main Stack Pointer
  * @return none
  *
- * Assign the value mainStackPointer to the MSP 
+ * Assign the value mainStackPointer to the MSP
  * (main stack pointer) Cortex processor register
  */
 extern void __set_MSP(uint32_t topOfMainStack);
@@ -922,7 +922,7 @@ extern void __set_FAULTMASK(uint32_t faultMask);
 
 /**
  * @brief  Return the Control Register value
-* 
+*
 *  @param  none
 *  @return uint32_t Control value
  *
@@ -1054,16 +1054,16 @@ extern uint32_t __STREXW(uint32_t value, uint32_t *addr);
  * @brief  Set the Priority Grouping in NVIC Interrupt Controller
  *
  * @param  uint32_t priority_grouping is priority grouping field
- * @return  
+ * @return
  *
  * Set the priority grouping field using the required unlock sequence.
- * The parameter priority_grouping is assigned to the field 
+ * The parameter priority_grouping is assigned to the field
  * SCB->AIRCR [10:8] PRIGROUP field.
  */
 static __INLINE void NVIC_SetPriorityGrouping(uint32_t priority_grouping)
 {
   uint32_t reg_value=0;
-  
+
   reg_value  = SCB->AIRCR;                                                                            /* read old register configuration    */
   reg_value &= ~((0xFFFFU << 16) | (0x0F << 8));                                                      /* clear bits to change               */
   reg_value  = ((reg_value | NVIC_AIRCR_VECTKEY | (priority_grouping << 8)));                         /* Insert write key and priorty group */
@@ -1074,7 +1074,7 @@ static __INLINE void NVIC_SetPriorityGrouping(uint32_t priority_grouping)
  * @brief  Enable Interrupt in NVIC Interrupt Controller
  *
  * @param  IRQn_Type IRQn specifies the interrupt number
- * @return none 
+ * @return none
  *
  * Enable a device specific interupt in the NVIC interrupt controller.
  * The interrupt number cannot be a negative value.
@@ -1086,10 +1086,10 @@ static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 
 /**
  * @brief  Disable the interrupt line for external interrupt specified
- * 
+ *
  * @param  IRQn_Type IRQn is the positive number of the external interrupt
  * @return  none
- * 
+ *
  * Disable a device specific interupt in the NVIC interrupt controller.
  * The interrupt number cannot be a negative value.
  */
@@ -1100,12 +1100,12 @@ static __INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
 
 /**
  * @brief  Read the interrupt pending bit for a device specific interrupt source
- * 
+ *
  * @param  IRQn_Type IRQn is the number of the device specifc interrupt
  * @return IRQn_Type Number of pending interrupt or zero
  *
  * Read the pending register in NVIC and return the number of the
- * specified interrupt if its status is pending, otherwise it returns 
+ * specified interrupt if its status is pending, otherwise it returns
  * zero. The interrupt number cannot be a negative value.
  */
 static __INLINE IRQn_Type NVIC_GetPendingIRQ(IRQn_Type IRQn)
@@ -1115,7 +1115,7 @@ static __INLINE IRQn_Type NVIC_GetPendingIRQ(IRQn_Type IRQn)
 
 /**
  * @brief  Set the pending bit for an external interrupt
- * 
+ *
  * @param  IRQn_Type IRQn is the Number of the interrupt
  * @return  none
  *
@@ -1133,7 +1133,7 @@ static __INLINE void NVIC_SetPendingIRQ(IRQn_Type IRQn)
  * @param  IRQn_Type IRQn is the Number of the interrupt
  * @return  none
  *
- * Clear the pending bit for the specified interrupt. 
+ * Clear the pending bit for the specified interrupt.
  * The interrupt number cannot be a negative value.
  */
 static __INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
@@ -1148,7 +1148,7 @@ static __INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
  * @return IRQn_Type Number of pending interrupt or zero
  *
  * Read the active register in NVIC and returns the number of the
- * specified interrupt if its status is active, otherwise it 
+ * specified interrupt if its status is active, otherwise it
  * returns zero. The interrupt number cannot be a negative value.
  */
 static __INLINE IRQn_Type NVIC_GetActive(IRQn_Type IRQn)
@@ -1163,8 +1163,8 @@ static __INLINE IRQn_Type NVIC_GetActive(IRQn_Type IRQn)
  * @param  priority is the priority for the interrupt
  * @return  none
  *
- * Set the priority for the specified interrupt. The interrupt 
- * number can be positive to specify an external (device specific) 
+ * Set the priority for the specified interrupt. The interrupt
+ * number can be positive to specify an external (device specific)
  * interrupt, or negative to specify an internal (core) interrupt. \n
  *
  * Note: The priority cannot be set for every core interrupt.
@@ -1184,8 +1184,8 @@ static __INLINE void NVIC_SetPriority(IRQn_Type IRQn, int32_t priority)
  * @param  IRQn_Type IRQn is the Number of the interrupt
  * @return priority is the priority for the interrupt
  *
- * Read the priority for the specified interrupt. The interrupt 
- * number can be positive to specify an external (device specific) 
+ * Read the priority for the specified interrupt. The interrupt
+ * number can be positive to specify an external (device specific)
  * interrupt, or negative to specify an internal (core) interrupt.
  *
  * The returned priority value is automatically aligned to the implemented
@@ -1221,11 +1221,11 @@ static __INLINE uint32_t NVIC_GetPriority(IRQn_Type IRQn)
  * @return  none
  *
  * Initialise the system tick timer and its interrupt and start the
- * system tick timer / counter in free running mode to generate 
+ * system tick timer / counter in free running mode to generate
  * periodical interrupts.
  */
 static __INLINE uint32_t SysTick_Config(uint32_t ticks)
-{ 
+{
   if (ticks > SYSTICK_MAXCOUNT)  return (1);                                                /* Reload value impossible */
 
   SysTick->LOAD  =  (ticks & SYSTICK_MAXCOUNT) - 1;                                         /* set reload register */
@@ -1266,21 +1266,21 @@ static __INLINE void NVIC_SystemReset(void)
  * @param   uint32_t character to output
  * @return  uint32_t input character
  *
- * The function outputs a character via the ITM channel 0. 
- * The function returns when no debugger is connected that has booked the output.  
- * It is blocking when a debugger is connected, but the previous character send is not transmitted. 
+ * The function outputs a character via the ITM channel 0.
+ * The function returns when no debugger is connected that has booked the output.
+ * It is blocking when a debugger is connected, but the previous character send is not transmitted.
  */
 static __INLINE uint32_t ITM_SendChar (uint32_t ch)
 {
   if(ch == '\n') ITM_SendChar('\r');
-  
+
   if ((CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA)  &&
       (ITM->TCR & ITM_TCR_ITMENA)                  &&
-      (ITM->TER & (1UL << 0))  ) 
+      (ITM->TER & (1UL << 0))  )
   {
     while (ITM->PORT[0].u32 == 0);
     ITM->PORT[0].u8 = (uint8_t) ch;
-  }  
+  }
   return (ch);
 }
 

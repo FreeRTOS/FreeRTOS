@@ -4,9 +4,9 @@
   * @author  STMicroelectronics - MCD Application Team
   * @version V1.0.0RC1
   * @date    07/02/2010
-  * @brief   CMSIS Cortex-M3 Device Peripheral Access Layer Header File. 
-  *          This file contains all the peripheral register's definitions, bits 
-  *          definitions and memory mapping for STM32L1xx devices.  
+  * @brief   CMSIS Cortex-M3 Device Peripheral Access Layer Header File.
+  *          This file contains all the peripheral register's definitions, bits
+  *          definitions and memory mapping for STM32L1xx devices.
   ******************************************************************************
   *
   * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -27,20 +27,20 @@
 /** @addtogroup stm32l1xx
   * @{
   */
-    
+
 #ifndef __STM32L1XX_H
 #define __STM32L1XX_H
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
-  
+#endif
+
 /** @addtogroup Library_configuration_section
   * @{
   */
-  
-/* Uncomment the line below according to the target STM32L device used in your 
-   application 
+
+/* Uncomment the line below according to the target STM32L device used in your
+   application
   */
 
 #if !defined (STM32L1XX_MD)
@@ -49,7 +49,7 @@
 /*  Tip: To avoid modifying this file each time you need to switch between these
         devices, you can define the device in your toolchain compiler preprocessor.
 
- - Ultra Low Power Medium-density devices are STM32L151xx and STM32L152xx 
+ - Ultra Low Power Medium-density devices are STM32L151xx and STM32L152xx
    microcontrollers where the Flash memory density ranges between 64 and 128 Kbytes.
 
   */
@@ -57,24 +57,24 @@
 #if !defined  USE_STDPERIPH_DRIVER
 /**
  * @brief Comment the line below if you will not use the peripherals drivers.
-   In this case, these drivers will not be included and the application code will 
-   be based on direct access to peripherals registers 
+   In this case, these drivers will not be included and the application code will
+   be based on direct access to peripherals registers
    */
   /*#define USE_STDPERIPH_DRIVER*/
 #endif
 
 /**
  * @brief In the following line adjust the value of External High Speed oscillator (HSE)
-   used in your application 
-   
+   used in your application
+
    Tip: To avoid modifying this file each time you need to use different HSE, you
         can define the HSE value in your toolchain compiler preprocessor.
-  */  
+  */
 #define HSE_VALUE    ((uint32_t)8000000) /*!< Value of the External oscillator in Hz*/
 
 /**
- * @brief In the following line adjust the External High Speed oscillator (HSE) Startup 
-   Timeout value 
+ * @brief In the following line adjust the External High Speed oscillator (HSE) Startup
+   Timeout value
    */
 #define HSE_STARTUP_TIMEOUT   ((uint16_t)0x0500) /*!< Time out for HSE start up */
 
@@ -86,9 +86,9 @@
 /**
  * @brief STM32L1xx Standard Peripheral Library version number
    */
-#define __STM32L1XX_STDPERIPH_VERSION_MAIN   (0x01) /*!< [31:16] STM32L1xx Standard Peripheral Library main version */                                  
+#define __STM32L1XX_STDPERIPH_VERSION_MAIN   (0x01) /*!< [31:16] STM32L1xx Standard Peripheral Library main version */
 #define __STM32L1XX_STDPERIPH_VERSION_SUB1   (0x00) /*!< [15:8]  STM32L1xx Standard Peripheral Library sub1 version */
-#define __STM32L1XX_STDPERIPH_VERSION_SUB2   (0x00) /*!< [7:0]  STM32L1xx Standard Peripheral Library sub2 version */ 
+#define __STM32L1XX_STDPERIPH_VERSION_SUB2   (0x00) /*!< [7:0]  STM32L1xx Standard Peripheral Library sub2 version */
 #define __STM32L1XX_STDPERIPH_VERSION       ((__STM32L1XX_STDPERIPH_VERSION_MAIN << 16)\
                                              | (__STM32L1XX_STDPERIPH_VERSION_SUB1 << 8)\
                                              | __STM32L1XX_STDPERIPH_VERSION_SUB2)
@@ -102,8 +102,8 @@
   */
 
 /**
- * @brief STM32L1xx Interrupt Number Definition, according to the selected device 
- *        in @ref Library_configuration_section 
+ * @brief STM32L1xx Interrupt Number Definition, according to the selected device
+ *        in @ref Library_configuration_section
  */
 #define __MPU_PRESENT             1 /*!< STM32L provide a MPU present */
 #define __NVIC_PRIO_BITS          4 /*!< STM32 uses 4 Bits for the Priority Levels    */
@@ -153,16 +153,16 @@ typedef enum IRQn
   TIM11_IRQn                  = 27,     /*!< TIM11 global Interrupt                               */
   TIM2_IRQn                   = 28,     /*!< TIM2 global Interrupt                                */
   TIM3_IRQn                   = 29,     /*!< TIM3 global Interrupt                                */
-  TIM4_IRQn                   = 30,     /*!< TIM4 global Interrupt                                */  
+  TIM4_IRQn                   = 30,     /*!< TIM4 global Interrupt                                */
   I2C1_EV_IRQn                = 31,     /*!< I2C1 Event Interrupt                                 */
   I2C1_ER_IRQn                = 32,     /*!< I2C1 Error Interrupt                                 */
   I2C2_EV_IRQn                = 33,     /*!< I2C2 Event Interrupt                                 */
-  I2C2_ER_IRQn                = 34,     /*!< I2C2 Error Interrupt                                 */  
+  I2C2_ER_IRQn                = 34,     /*!< I2C2 Error Interrupt                                 */
   SPI1_IRQn                   = 35,     /*!< SPI1 global Interrupt                                */
   SPI2_IRQn                   = 36,     /*!< SPI2 global Interrupt                                */
   USART1_IRQn                 = 37,     /*!< USART1 global Interrupt                              */
-  USART2_IRQn                 = 38,     /*!< USART2 global Interrupt                              */  
-  USART3_IRQn                 = 39,     /*!< USART3 global Interrupt                              */  
+  USART2_IRQn                 = 38,     /*!< USART2 global Interrupt                              */
+  USART3_IRQn                 = 39,     /*!< USART3 global Interrupt                              */
   EXTI15_10_IRQn              = 40,     /*!< External Line[15:10] Interrupts                      */
   RTC_Alarm_IRQn              = 41,     /*!< RTC Alarm through EXTI Line Interrupt                */
   USB_FS_WKUP_IRQn            = 42,     /*!< USB FS WakeUp from suspend through EXTI Line Interrupt  */
@@ -180,7 +180,7 @@ typedef enum IRQn
 
 /** @addtogroup Exported_types
   * @{
-  */  
+  */
 
 typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 
@@ -197,10 +197,10 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
 
 /** @addtogroup Peripheral_registers_structures
   * @{
-  */   
+  */
 
-/** 
-  * @brief Analog to Digital Converter  
+/**
+  * @brief Analog to Digital Converter
   */
 
 typedef struct
@@ -237,8 +237,8 @@ typedef struct
 } ADC_Common_TypeDef;
 
 
-/** 
-  * @brief Comparator 
+/**
+  * @brief Comparator
   */
 
 typedef struct
@@ -246,8 +246,8 @@ typedef struct
   __IO uint32_t CSR;
 } COMP_TypeDef;
 
-/** 
-  * @brief CRC calculation unit 
+/**
+  * @brief CRC calculation unit
   */
 
 typedef struct
@@ -259,7 +259,7 @@ typedef struct
   __IO uint32_t CR;
 } CRC_TypeDef;
 
-/** 
+/**
   * @brief Digital to Analog Converter
   */
 
@@ -278,10 +278,10 @@ typedef struct
   __IO uint32_t DHR8RD;
   __IO uint32_t DOR1;
   __IO uint32_t DOR2;
-  __IO uint32_t SR;  
+  __IO uint32_t SR;
 } DAC_TypeDef;
 
-/** 
+/**
   * @brief Debug MCU
   */
 
@@ -290,10 +290,10 @@ typedef struct
   __IO uint32_t IDCODE;
   __IO uint32_t CR;
   __IO uint32_t APB1FZ;
-  __IO uint32_t APB2FZ;	
+  __IO uint32_t APB2FZ;
 }DBGMCU_TypeDef;
 
-/** 
+/**
   * @brief DMA Controller
   */
 
@@ -311,7 +311,7 @@ typedef struct
   __IO uint32_t IFCR;
 } DMA_TypeDef;
 
-/** 
+/**
   * @brief External Interrupt/Event Controller
   */
 
@@ -325,7 +325,7 @@ typedef struct
   __IO uint32_t PR;
 } EXTI_TypeDef;
 
-/** 
+/**
   * @brief FLASH Registers
   */
 
@@ -339,13 +339,13 @@ typedef struct
   __IO uint32_t OPTKEYR;
   __IO uint32_t SR;
   __IO uint32_t OBR;
-  __IO uint32_t WRPR;       
+  __IO uint32_t WRPR;
 } FLASH_TypeDef;
 
-/** 
+/**
   * @brief Option Bytes Registers
   */
-  
+
 typedef struct
 {
   __IO uint32_t RDP;
@@ -354,7 +354,7 @@ typedef struct
   __IO uint32_t WRP23;
 } OB_TypeDef;
 
-/** 
+/**
   * @brief General Purpose IO
   */
 
@@ -375,7 +375,7 @@ typedef struct
   __IO uint32_t AFR[2];
 } GPIO_TypeDef;
 
-/** 
+/**
   * @brief SysTem Configuration
   */
 
@@ -386,7 +386,7 @@ typedef struct
   __IO uint32_t EXTICR[4];
 } SYSCFG_TypeDef;
 
-/** 
+/**
   * @brief Inter-integrated Circuit Interface
   */
 
@@ -412,7 +412,7 @@ typedef struct
   uint16_t  RESERVED8;
 } I2C_TypeDef;
 
-/** 
+/**
   * @brief Independent WATCHDOG
   */
 
@@ -425,7 +425,7 @@ typedef struct
 } IWDG_TypeDef;
 
 
-/** 
+/**
   * @brief LCD
   */
 
@@ -439,7 +439,7 @@ typedef struct
   __IO uint32_t RAM[16];
 } LCD_TypeDef;
 
-/** 
+/**
   * @brief Power Control
   */
 
@@ -449,7 +449,7 @@ typedef struct
   __IO uint32_t CSR;
 } PWR_TypeDef;
 
-/** 
+/**
   * @brief Reset and Clock Control
   */
 
@@ -467,12 +467,12 @@ typedef struct
   __IO uint32_t APB1ENR;
   __IO uint32_t AHBLPENR;
   __IO uint32_t APB2LPENR;
-  __IO uint32_t APB1LPENR;      
-  __IO uint32_t CSR;    
+  __IO uint32_t APB1LPENR;
+  __IO uint32_t CSR;
 } RCC_TypeDef;
 
-/** 
-  * @brief Routing Interface 
+/**
+  * @brief Routing Interface
   */
 
 typedef struct
@@ -485,7 +485,7 @@ typedef struct
   __IO uint32_t HYSCR3;
 } RI_TypeDef;
 
-/** 
+/**
   * @brief Real-Time Clock
   */
 
@@ -533,7 +533,7 @@ typedef struct
   __IO uint32_t BK19R;
 } RTC_TypeDef;
 
-/** 
+/**
   * @brief Serial Peripheral Interface
   */
 
@@ -552,10 +552,10 @@ typedef struct
   __IO uint16_t RXCRCR;
   uint16_t  RESERVED5;
   __IO uint16_t TXCRCR;
-  uint16_t  RESERVED6;  
+  uint16_t  RESERVED6;
 } SPI_TypeDef;
 
-/** 
+/**
   * @brief TIM
   */
 
@@ -603,10 +603,10 @@ typedef struct
   uint16_t  RESERVED20;
 } TIM_TypeDef;
 
-/** 
+/**
   * @brief Universal Synchronous Asynchronous Receiver Transmitter
   */
- 
+
 typedef struct
 {
   __IO uint16_t SR;
@@ -625,7 +625,7 @@ typedef struct
   uint16_t  RESERVED6;
 } USART_TypeDef;
 
-/** 
+/**
   * @brief Window WATCHDOG
   */
 
@@ -639,7 +639,7 @@ typedef struct
 /**
   * @}
   */
-  
+
 /** @addtogroup Peripheral_memory_map
   * @{
   */
@@ -712,10 +712,10 @@ typedef struct
 /**
   * @}
   */
-  
+
 /** @addtogroup Peripheral_declaration
   * @{
-  */  
+  */
 
 #define TIM2                ((TIM_TypeDef *) TIM2_BASE)
 #define TIM3                ((TIM_TypeDef *) TIM3_BASE)
@@ -764,7 +764,7 @@ typedef struct
 #define GPIOH               ((GPIO_TypeDef *) GPIOH_BASE)
 
 #define FLASH               ((FLASH_TypeDef *) FLASH_R_BASE)
-#define OB                  ((OB_TypeDef *) OB_BASE) 
+#define OB                  ((OB_TypeDef *) OB_BASE)
 
 #define DBGMCU              ((DBGMCU_TypeDef *) DBGMCU_BASE)
 
@@ -775,11 +775,11 @@ typedef struct
 /** @addtogroup Exported_constants
   * @{
   */
-  
+
   /** @addtogroup Peripheral_Registers_Bits_Definition
   * @{
   */
-    
+
 /******************************************************************************/
 /*                         Peripheral Registers_Bits_Definition               */
 /******************************************************************************/
@@ -833,7 +833,7 @@ typedef struct
 #define  ADC_CR1_RES_1                       ((uint32_t)0x02000000)        /*!< Bit 1 */
 
 #define  ADC_CR1_OVRIE                       ((uint32_t)0x04000000)        /*!< Overrun interrupt enable */
-  
+
 /*******************  Bit definition for ADC_CR2 register  ********************/
 #define  ADC_CR2_ADON                        ((uint32_t)0x00000001)        /*!< A/D Converter ON / OFF */
 #define  ADC_CR2_CONT                        ((uint32_t)0x00000002)        /*!< Continuous Conversion */
@@ -959,7 +959,7 @@ typedef struct
 #define  ADC_SMPR3_SMP0_0                    ((uint32_t)0x00000001)        /*!< Bit 0 */
 #define  ADC_SMPR3_SMP0_1                    ((uint32_t)0x00000002)        /*!< Bit 1 */
 #define  ADC_SMPR3_SMP0_2                    ((uint32_t)0x00000004)        /*!< Bit 2 */
- 
+
 #define  ADC_SMPR3_SMP1                      ((uint32_t)0x00000038)        /*!< SMP1[2:0] bits (Channel 1 Sample time selection) */
 #define  ADC_SMPR3_SMP1_0                    ((uint32_t)0x00000008)        /*!< Bit 0 */
 #define  ADC_SMPR3_SMP1_1                    ((uint32_t)0x00000010)        /*!< Bit 1 */
@@ -1226,7 +1226,7 @@ typedef struct
 
 
 /*******************  Bit definition for ADC_JSQR register  *******************/
-#define  ADC_JSQR_JSQ1                       ((uint32_t)0x0000001F)        /*!< JSQ1[4:0] bits (1st conversion in injected sequence) */  
+#define  ADC_JSQR_JSQ1                       ((uint32_t)0x0000001F)        /*!< JSQ1[4:0] bits (1st conversion in injected sequence) */
 #define  ADC_JSQR_JSQ1_0                     ((uint32_t)0x00000001)        /*!< Bit 0 */
 #define  ADC_JSQR_JSQ1_1                     ((uint32_t)0x00000002)        /*!< Bit 1 */
 #define  ADC_JSQR_JSQ1_2                     ((uint32_t)0x00000004)        /*!< Bit 2 */
@@ -1286,7 +1286,7 @@ typedef struct
 /*******************  Bit definition for ADC_CCR register  ********************/
 #define  ADC_CCR_ADCPRE                      ((uint32_t)0x00030000)        /*!< ADC prescaler*/
 #define  ADC_CCR_ADCPRE_0                    ((uint32_t)0x00010000)        /*!< Bit 0 */
-#define  ADC_CCR_ADCPRE_1                    ((uint32_t)0x00020000)        /*!< Bit 1 */ 
+#define  ADC_CCR_ADCPRE_1                    ((uint32_t)0x00020000)        /*!< Bit 1 */
 #define  ADC_CCR_TSVREFE                     ((uint32_t)0x00800000)        /*!< Temperature Sensor and VREFINT Enable */
 
 /******************************************************************************/
@@ -1960,9 +1960,9 @@ typedef struct
 #define FLASH_PECR_FTDW                      ((uint32_t)0x00000100)        /*!< Fixed Time Data write for Word/Half Word/Byte programming */
 #define FLASH_PECR_ERASE                     ((uint32_t)0x00000200)        /*!< Page erasing mode */
 #define FLASH_PECR_FPRG                      ((uint32_t)0x00000400)        /*!< Fast Page/Half Page programming mode */
-#define FLASH_PECR_EOPIE                     ((uint32_t)0x00010000)        /*!< End of programming interrupt */ 
-#define FLASH_PECR_ERRIE                     ((uint32_t)0x00020000)        /*!< Error interrupt */ 
-#define FLASH_PECR_OBL_LAUNCH                ((uint32_t)0x00040000)        /*!< Launch the option byte loading */ 
+#define FLASH_PECR_EOPIE                     ((uint32_t)0x00010000)        /*!< End of programming interrupt */
+#define FLASH_PECR_ERRIE                     ((uint32_t)0x00020000)        /*!< Error interrupt */
+#define FLASH_PECR_OBL_LAUNCH                ((uint32_t)0x00040000)        /*!< Launch the option byte loading */
 
 /******************  Bit definition for FLASH_PDKEYR register  ******************/
 #define  FLASH_PDKEYR_PDKEYR                 ((uint32_t)0xFFFFFFFF)       /*!< FLASH_PEC and data matrix Key */
@@ -2003,7 +2003,7 @@ typedef struct
 /*                        General Purpose IOs                                 */
 /*                                                                            */
 /******************************************************************************/
-/*******************  Bit definition for GPIO_MODER register  *****************/  
+/*******************  Bit definition for GPIO_MODER register  *****************/
 #define GPIO_MODER_MODER0          ((uint32_t)0x00000003)
 #define GPIO_MODER_MODER0_0        ((uint32_t)0x00000001)
 #define GPIO_MODER_MODER0_1        ((uint32_t)0x00000002)
@@ -2053,7 +2053,7 @@ typedef struct
 #define GPIO_MODER_MODER15_0       ((uint32_t)0x40000000)
 #define GPIO_MODER_MODER15_1       ((uint32_t)0x80000000)
 
-/*******************  Bit definition for GPIO_OTYPER register  ****************/   
+/*******************  Bit definition for GPIO_OTYPER register  ****************/
 #define GPIO_OTYPER_OT_0           ((uint32_t)0x00000001)
 #define GPIO_OTYPER_OT_1           ((uint32_t)0x00000002)
 #define GPIO_OTYPER_OT_2           ((uint32_t)0x00000004)
@@ -2071,7 +2071,7 @@ typedef struct
 #define GPIO_OTYPER_OT_14          ((uint32_t)0x00004000)
 #define GPIO_OTYPER_OT_15          ((uint32_t)0x00008000)
 
-/*******************  Bit definition for GPIO_OSPEEDR register  ***************/  
+/*******************  Bit definition for GPIO_OSPEEDR register  ***************/
 #define GPIO_OSPEEDER_OSPEEDR0     ((uint32_t)0x00000003)
 #define GPIO_OSPEEDER_OSPEEDR0_0   ((uint32_t)0x00000001)
 #define GPIO_OSPEEDER_OSPEEDR0_1   ((uint32_t)0x00000002)
@@ -2121,7 +2121,7 @@ typedef struct
 #define GPIO_OSPEEDER_OSPEEDR15_0  ((uint32_t)0x40000000)
 #define GPIO_OSPEEDER_OSPEEDR15_1  ((uint32_t)0x80000000)
 
-/*******************  Bit definition for GPIO_PUPDR register  *****************/  
+/*******************  Bit definition for GPIO_PUPDR register  *****************/
 #define GPIO_PUPDR_PUPDR0          ((uint32_t)0x00000003)
 #define GPIO_PUPDR_PUPDR0_0        ((uint32_t)0x00000001)
 #define GPIO_PUPDR_PUPDR0_1        ((uint32_t)0x00000002)
@@ -2171,7 +2171,7 @@ typedef struct
 #define GPIO_PUPDR_PUPDR15_0       ((uint32_t)0x40000000)
 #define GPIO_PUPDR_PUPDR15_1       ((uint32_t)0x80000000)
 
-/*******************  Bit definition for GPIO_IDR register  *******************/  
+/*******************  Bit definition for GPIO_IDR register  *******************/
 #define GPIO_OTYPER_IDR_0          ((uint32_t)0x00000001)
 #define GPIO_OTYPER_IDR_1          ((uint32_t)0x00000002)
 #define GPIO_OTYPER_IDR_2          ((uint32_t)0x00000004)
@@ -2189,7 +2189,7 @@ typedef struct
 #define GPIO_OTYPER_IDR_14         ((uint32_t)0x00004000)
 #define GPIO_OTYPER_IDR_15         ((uint32_t)0x00008000)
 
-/*******************  Bit definition for GPIO_ODR register  *******************/   
+/*******************  Bit definition for GPIO_ODR register  *******************/
 #define GPIO_OTYPER_ODR_0          ((uint32_t)0x00000001)
 #define GPIO_OTYPER_ODR_1          ((uint32_t)0x00000002)
 #define GPIO_OTYPER_ODR_2          ((uint32_t)0x00000004)
@@ -2207,7 +2207,7 @@ typedef struct
 #define GPIO_OTYPER_ODR_14         ((uint32_t)0x00004000)
 #define GPIO_OTYPER_ODR_15         ((uint32_t)0x00008000)
 
-/*******************  Bit definition for GPIO_BSRR register  ******************/  
+/*******************  Bit definition for GPIO_BSRR register  ******************/
 #define GPIO_BSRR_BS_0             ((uint32_t)0x00000001)
 #define GPIO_BSRR_BS_1             ((uint32_t)0x00000002)
 #define GPIO_BSRR_BS_2             ((uint32_t)0x00000004)
@@ -2675,7 +2675,7 @@ typedef struct
 #define  RCC_AHBRSTR_CRCRST                  ((uint32_t)0x00001000)        /*!< CRC reset */
 #define  RCC_AHBRSTR_FLITFRST                ((uint32_t)0x00008000)        /*!< FLITF reset */
 #define  RCC_AHBRSTR_DMA1RST                 ((uint32_t)0x01000000)        /*!< DMA1 reset */
- 
+
 /*****************  Bit definition for RCC_APB2RSTR register  *****************/
 #define  RCC_APB2RSTR_SYSCFGRST              ((uint32_t)0x00000001)        /*!< System Configuration SYSCFG reset */
 #define  RCC_APB2RSTR_TIM9RST                ((uint32_t)0x00000004)        /*!< TIM9 reset */
@@ -2805,7 +2805,7 @@ typedef struct
 
 #define  RCC_CSR_RTCEN                      ((uint32_t)0x00400000)        /*!< RTC clock enable */
 #define  RCC_CSR_RTCRST                     ((uint32_t)0x00800000)        /*!< RTC reset  */
- 
+
 #define  RCC_CSR_RMVF                       ((uint32_t)0x01000000)        /*!< Remove reset flag */
 #define  RCC_CSR_OBLRSTF                    ((uint32_t)0x02000000)        /*!< Option Bytes Loader reset flag */
 #define  RCC_CSR_PINRSTF                    ((uint32_t)0x04000000)        /*!< PIN reset flag */
@@ -3208,9 +3208,9 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI2            ((uint16_t)0x0F00) /*!< EXTI 2 configuration */
 #define SYSCFG_EXTICR1_EXTI3            ((uint16_t)0xF000) /*!< EXTI 3 configuration */
 
-/** 
-  * @brief  EXTI0 configuration  
-  */ 
+/**
+  * @brief  EXTI0 configuration
+  */
 #define SYSCFG_EXTICR1_EXTI0_PA         ((uint16_t)0x0000) /*!< PA[0] pin */
 #define SYSCFG_EXTICR1_EXTI0_PB         ((uint16_t)0x0001) /*!< PB[0] pin */
 #define SYSCFG_EXTICR1_EXTI0_PC         ((uint16_t)0x0002) /*!< PC[0] pin */
@@ -3218,9 +3218,9 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI0_PE         ((uint16_t)0x0004) /*!< PE[0] pin */
 #define SYSCFG_EXTICR1_EXTI0_PH         ((uint16_t)0x0005) /*!< PH[0] pin */
 
-/** 
-  * @brief  EXTI1 configuration  
-  */ 
+/**
+  * @brief  EXTI1 configuration
+  */
 #define SYSCFG_EXTICR1_EXTI1_PA         ((uint16_t)0x0000) /*!< PA[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PB         ((uint16_t)0x0010) /*!< PB[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PC         ((uint16_t)0x0020) /*!< PC[1] pin */
@@ -3228,9 +3228,9 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI1_PE         ((uint16_t)0x0040) /*!< PE[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PH         ((uint16_t)0x0050) /*!< PH[1] pin */
 
-/** 
-  * @brief  EXTI2 configuration  
-  */ 
+/**
+  * @brief  EXTI2 configuration
+  */
 #define SYSCFG_EXTICR1_EXTI2_PA         ((uint16_t)0x0000) /*!< PA[2] pin */
 #define SYSCFG_EXTICR1_EXTI2_PB         ((uint16_t)0x0100) /*!< PB[2] pin */
 #define SYSCFG_EXTICR1_EXTI2_PC         ((uint16_t)0x0200) /*!< PC[2] pin */
@@ -3238,9 +3238,9 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI2_PE         ((uint16_t)0x0400) /*!< PE[2] pin */
 #define SYSCFG_EXTICR1_EXTI2_PH         ((uint16_t)0x0500) /*!< PH[2] pin */
 
-/** 
-  * @brief  EXTI3 configuration  
-  */ 
+/**
+  * @brief  EXTI3 configuration
+  */
 #define SYSCFG_EXTICR1_EXTI3_PA         ((uint16_t)0x0000) /*!< PA[3] pin */
 #define SYSCFG_EXTICR1_EXTI3_PB         ((uint16_t)0x1000) /*!< PB[3] pin */
 #define SYSCFG_EXTICR1_EXTI3_PC         ((uint16_t)0x2000) /*!< PC[3] pin */
@@ -3253,36 +3253,36 @@ typedef struct
 #define SYSCFG_EXTICR2_EXTI6            ((uint16_t)0x0F00) /*!< EXTI 6 configuration */
 #define SYSCFG_EXTICR2_EXTI7            ((uint16_t)0xF000) /*!< EXTI 7 configuration */
 
-/** 
-  * @brief  EXTI4 configuration  
-  */ 
+/**
+  * @brief  EXTI4 configuration
+  */
 #define SYSCFG_EXTICR2_EXTI4_PA         ((uint16_t)0x0000) /*!< PA[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PB         ((uint16_t)0x0001) /*!< PB[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PC         ((uint16_t)0x0002) /*!< PC[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PD         ((uint16_t)0x0003) /*!< PD[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PE         ((uint16_t)0x0004) /*!< PE[4] pin */
 
-/** 
-  * @brief  EXTI5 configuration  
-  */ 
+/**
+  * @brief  EXTI5 configuration
+  */
 #define SYSCFG_EXTICR2_EXTI5_PA         ((uint16_t)0x0000) /*!< PA[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PB         ((uint16_t)0x0010) /*!< PB[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PC         ((uint16_t)0x0020) /*!< PC[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PD         ((uint16_t)0x0030) /*!< PD[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PE         ((uint16_t)0x0040) /*!< PE[5] pin */
 
-/** 
-  * @brief  EXTI6 configuration  
-  */ 
+/**
+  * @brief  EXTI6 configuration
+  */
 #define SYSCFG_EXTICR2_EXTI6_PA         ((uint16_t)0x0000) /*!< PA[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PB         ((uint16_t)0x0100) /*!< PB[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PC         ((uint16_t)0x0200) /*!< PC[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PD         ((uint16_t)0x0300) /*!< PD[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PE         ((uint16_t)0x0400) /*!< PE[6] pin */
 
-/** 
-  * @brief  EXTI7 configuration  
-  */ 
+/**
+  * @brief  EXTI7 configuration
+  */
 #define SYSCFG_EXTICR2_EXTI7_PA         ((uint16_t)0x0000) /*!< PA[7] pin */
 #define SYSCFG_EXTICR2_EXTI7_PB         ((uint16_t)0x1000) /*!< PB[7] pin */
 #define SYSCFG_EXTICR2_EXTI7_PC         ((uint16_t)0x2000) /*!< PC[7] pin */
@@ -3294,37 +3294,37 @@ typedef struct
 #define SYSCFG_EXTICR3_EXTI9            ((uint16_t)0x00F0) /*!< EXTI 9 configuration */
 #define SYSCFG_EXTICR3_EXTI10           ((uint16_t)0x0F00) /*!< EXTI 10 configuration */
 #define SYSCFG_EXTICR3_EXTI11           ((uint16_t)0xF000) /*!< EXTI 11 configuration */
-									  
-/** 
-  * @brief  EXTI8 configuration  
-  */ 
+
+/**
+  * @brief  EXTI8 configuration
+  */
 #define SYSCFG_EXTICR3_EXTI8_PA         ((uint16_t)0x0000) /*!< PA[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PB         ((uint16_t)0x0001) /*!< PB[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PC         ((uint16_t)0x0002) /*!< PC[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PD         ((uint16_t)0x0003) /*!< PD[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PE         ((uint16_t)0x0004) /*!< PE[8] pin */
 
-/** 
-  * @brief  EXTI9 configuration  
-  */ 
+/**
+  * @brief  EXTI9 configuration
+  */
 #define SYSCFG_EXTICR3_EXTI9_PA         ((uint16_t)0x0000) /*!< PA[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PB         ((uint16_t)0x0010) /*!< PB[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PC         ((uint16_t)0x0020) /*!< PC[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PD         ((uint16_t)0x0030) /*!< PD[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PE         ((uint16_t)0x0040) /*!< PE[9] pin */
 
-/** 
-  * @brief  EXTI10 configuration  
-  */ 
+/**
+  * @brief  EXTI10 configuration
+  */
 #define SYSCFG_EXTICR3_EXTI10_PA        ((uint16_t)0x0000) /*!< PA[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PB        ((uint16_t)0x0100) /*!< PB[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PC        ((uint16_t)0x0200) /*!< PC[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PD        ((uint16_t)0x0300) /*!< PD[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PE        ((uint16_t)0x0400) /*!< PE[10] pin */
 
-/** 
-  * @brief  EXTI11 configuration  
-  */ 
+/**
+  * @brief  EXTI11 configuration
+  */
 #define SYSCFG_EXTICR3_EXTI11_PA        ((uint16_t)0x0000) /*!< PA[11] pin */
 #define SYSCFG_EXTICR3_EXTI11_PB        ((uint16_t)0x1000) /*!< PB[11] pin */
 #define SYSCFG_EXTICR3_EXTI11_PC        ((uint16_t)0x2000) /*!< PC[11] pin */
@@ -3337,42 +3337,42 @@ typedef struct
 #define SYSCFG_EXTICR4_EXTI14           ((uint16_t)0x0F00) /*!< EXTI 14 configuration */
 #define SYSCFG_EXTICR4_EXTI15           ((uint16_t)0xF000) /*!< EXTI 15 configuration */
 
-/** 
-  * @brief  EXTI12 configuration  
-  */ 
+/**
+  * @brief  EXTI12 configuration
+  */
 #define SYSCFG_EXTICR4_EXTI12_PA        ((uint16_t)0x0000) /*!< PA[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PB        ((uint16_t)0x0001) /*!< PB[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PC        ((uint16_t)0x0002) /*!< PC[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PD        ((uint16_t)0x0003) /*!< PD[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PE        ((uint16_t)0x0004) /*!< PE[12] pin */
 
-/** 
-  * @brief  EXTI13 configuration  
-  */ 
+/**
+  * @brief  EXTI13 configuration
+  */
 #define SYSCFG_EXTICR4_EXTI13_PA        ((uint16_t)0x0000) /*!< PA[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PB        ((uint16_t)0x0010) /*!< PB[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PC        ((uint16_t)0x0020) /*!< PC[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PD        ((uint16_t)0x0030) /*!< PD[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PE        ((uint16_t)0x0040) /*!< PE[13] pin */
 
-/** 
-  * @brief  EXTI14 configuration  
-  */ 
+/**
+  * @brief  EXTI14 configuration
+  */
 #define SYSCFG_EXTICR4_EXTI14_PA        ((uint16_t)0x0000) /*!< PA[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PB        ((uint16_t)0x0100) /*!< PB[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PC        ((uint16_t)0x0200) /*!< PC[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PD        ((uint16_t)0x0300) /*!< PD[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PE        ((uint16_t)0x0400) /*!< PE[14] pin */
 
-/** 
-  * @brief  EXTI15 configuration  
-  */ 
+/**
+  * @brief  EXTI15 configuration
+  */
 #define SYSCFG_EXTICR4_EXTI15_PA        ((uint16_t)0x0000) /*!< PA[15] pin */
 #define SYSCFG_EXTICR4_EXTI15_PB        ((uint16_t)0x1000) /*!< PB[15] pin */
 #define SYSCFG_EXTICR4_EXTI15_PC        ((uint16_t)0x2000) /*!< PC[15] pin */
 #define SYSCFG_EXTICR4_EXTI15_PD        ((uint16_t)0x3000) /*!< PD[15] pin */
 #define SYSCFG_EXTICR4_EXTI15_PE        ((uint16_t)0x4000) /*!< PE[15] pin */
- 
+
 /******************************************************************************/
 /*                                                                            */
 /*                       Routing Interface (RI)                               */
@@ -4158,7 +4158,7 @@ typedef struct
 
 #define  USB_DADDR_EF                        ((uint8_t)0x80)               /*!<Enable Function */
 
-/******************  Bit definition for USB_BTABLE register  ******************/    
+/******************  Bit definition for USB_BTABLE register  ******************/
 #define  USB_BTABLE_BTABLE                   ((uint16_t)0xFFF8)            /*!<Buffer Table */
 
 /*!< Buffer descriptor table */
@@ -4998,7 +4998,7 @@ typedef struct
 
  /**
   * @}
-  */ 
+  */
 
 #ifdef USE_STDPERIPH_DRIVER
   #include "stm32l1xx_conf.h"

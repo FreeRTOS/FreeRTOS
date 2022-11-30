@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -33,9 +33,9 @@
  * \section Purpose
  *
  *   Definitions and methods for USB composite device implement.
- * 
+ *
  * \section Usage
- * 
+ *
  * -# Initialize USB function specified driver ( for MSD currently )
  *  - MSDDFunctionDriver_Initialize()
  *
@@ -149,4 +149,3 @@ extern void CDCHIDDDriver_RemoteWakeUp(void);
 
 /**@}*/
 #endif //#ifndef CDCHIDDDRIVER_H
-

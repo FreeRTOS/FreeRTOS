@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace counter APIs.
  */
 
@@ -33,9 +33,9 @@ extern "C" {
 
 /**
  * @brief Sets trace counter callback.
- * 
+ *
  * @param[in] xCallback Callback
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -43,13 +43,13 @@ traceResult xTraceCounterSetCallback(TraceCounterCallback_t xCallback);
 
 /**
  * @brief Creates trace counter.
- * 
+ *
  * @param[in] szName Name.
  * @param[in] xInitialValue Initial value.
  * @param[in] xLowerLimit Lower limit.
  * @param[in] xUpperLimit Upper limit.
  * @param[out] pxCounterHandle Uninitialized trace counter handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -57,10 +57,10 @@ traceResult xTraceCounterCreate(const char* szName, TraceBaseType_t xInitialValu
 
 /**
  * @brief Adds value to trace counter.
- * 
+ *
  * @param[in] xCounterHandle Initialized trace counter handle.
  * @param[in] xValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -68,10 +68,10 @@ traceResult xTraceCounterAdd(TraceCounterHandle_t xCounterHandle, TraceBaseType_
 
 /**
  * @brief Sets trace counter value.
- * 
- * @param[in] xCounterHandle Initialized trace counter handle. 
+ *
+ * @param[in] xCounterHandle Initialized trace counter handle.
  * @param[in] xValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -79,10 +79,10 @@ traceResult xTraceCounterSet(TraceCounterHandle_t xCounterHandle, TraceBaseType_
 
 /**
  * @brief Gets trace counter value.
- * 
+ *
  * @param[in] xCounterHandle Initialized trace counter handle.
  * @param[out] pxValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -90,9 +90,9 @@ traceResult xTraceCounterGet(TraceCounterHandle_t xCounterHandle, TraceBaseType_
 
 /**
  * @brief Increases trace counter value.
- * 
- * @param[in] xCounterHandle Initialized trace counter handle. 
- * 
+ *
+ * @param[in] xCounterHandle Initialized trace counter handle.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -100,9 +100,9 @@ traceResult xTraceCounterIncrease(TraceCounterHandle_t xCounterHandle);
 
 /**
  * @brief Decreases trace counter value.
- * 
+ *
  * @param[in] xCounterHandle Initialized trace counter handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -110,10 +110,10 @@ traceResult xTraceCounterDecrease(TraceCounterHandle_t xCounterHandle);
 
 /**
  * @brief Gets trace counter upper limit.
- * 
+ *
  * @param[in] xCounterHandle Initialized trace counter handle.
  * @param[out] pxValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -121,10 +121,10 @@ traceResult xTraceCounterGetUpperLimit(TraceCounterHandle_t xCounterHandle, Trac
 
 /**
  * @brief Gets trace counter lower limit.
- * 
+ *
  * @param[in] xCounterHandle Initialized trace counter handle.
  * @param[out] pxValue Value
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -132,10 +132,10 @@ traceResult xTraceCounterGetLowerLimit(TraceCounterHandle_t xCounterHandle, Trac
 
 /**
  * @brief Gets trace counter name.
- * 
+ *
  * @param[in] xCounterHandle Initialized trace counter handle.
  * @param[out] pszName Name.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

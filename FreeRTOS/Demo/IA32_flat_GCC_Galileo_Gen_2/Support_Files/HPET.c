@@ -962,6 +962,3 @@ void vCreateHPETInfoUpdateTask( void  )
 #endif
 }
 /*-----------------------------------------------------------*/
-
-
-

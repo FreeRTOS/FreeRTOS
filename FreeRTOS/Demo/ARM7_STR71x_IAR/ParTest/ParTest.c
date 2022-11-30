@@ -95,7 +95,3 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 	uxLED += partstFIRST_LED_BIT;
     GPIO_BitWrite(GPIO1, uxLED, ~GPIO_BitRead( GPIO1, uxLED ) );
 }
-
-
-
-

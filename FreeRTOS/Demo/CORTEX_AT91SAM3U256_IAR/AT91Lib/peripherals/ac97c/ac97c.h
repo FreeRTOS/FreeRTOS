@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,12 +31,12 @@
 /// \unit
 ///
 /// !!!Purpose
-/// 
+///
 /// This module provides definitions and functions for using the AC'97
 /// controller (AC97C).
-/// 
+///
 /// !!!Usage
-/// 
+///
 /// -# Enable the AC'97 interface pins (see pio & board.h).
 /// -# Configure the AC'97 controller using AC97C_Configure
 /// -# Assign the input and output slots to channels, and the data size used to
@@ -73,10 +73,10 @@
 ///    // Set channel size
 ///    AC97C_SetChannelSize(AC97C_CHANNEL_A, bitsPerSample);
 ///    // Start channel A transfer
-///    AC97C_Transfer(AC97C_CHANNEL_A_TRANSMIT, 
+///    AC97C_Transfer(AC97C_CHANNEL_A_TRANSMIT,
 ///                   (unsigned char *) (pointerToAudioDataBuffer),
 ///                   numberOfSamplesToSend,
-///                   (Ac97Callback) PlayingFinished, 
+///                   (Ac97Callback) PlayingFinished,
 ///                   0);
 /// \endcode
 ///    - Audio recording sample:
@@ -88,7 +88,7 @@
 ///    // Always use 16-bits recording
 ///    AC97C_SetChannelSize(AC97C_CHANNEL_A, 16);
 ///    // Start recording
-///    AC97C_Transfer(AC97C_CHANNEL_A_RECEIVE, 
+///    AC97C_Transfer(AC97C_CHANNEL_A_RECEIVE,
 ///                   (unsigned char *) RECORD_ADDRESS,
 ///                   MAX_RECORD_SIZE,
 ///                   (Ac97Callback) RecordFinished,
@@ -165,4 +165,3 @@ extern void AC97C_SetChannelSize(unsigned char channel, unsigned char size);
 extern void AC97C_CancelTransfer(unsigned char channel);
 
 #endif //#ifndef AC97C_H
-

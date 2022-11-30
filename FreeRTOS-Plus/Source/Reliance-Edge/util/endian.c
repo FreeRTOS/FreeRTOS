@@ -79,4 +79,3 @@ uint16_t RedRev16(
 }
 
 #endif
-

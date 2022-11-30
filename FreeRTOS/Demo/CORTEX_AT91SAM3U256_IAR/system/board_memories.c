@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2009, Atmel Corporation
  *
@@ -53,17 +53,17 @@ void BOARD_ConfigureSdram(unsigned char busWidth)
 //------------------------------------------------------------------------------
 void BOARD_ConfigureNandFlash(unsigned char busWidth)
 {
-    AT91PS_HSMC4 pHSMC4 = AT91C_BASE_HSMC4;    
+    AT91PS_HSMC4 pHSMC4 = AT91C_BASE_HSMC4;
     AT91PS_HSMC4_CS pSMC = AT91C_BASE_HSMC4_CS1;
 
     // Open EBI clock
     AT91C_BASE_PMC->PMC_PCER = (1<< AT91C_ID_HSMC4);
- 
-#ifdef CHIP_NAND_CTRL    
+
+#ifdef CHIP_NAND_CTRL
     // Enable the Nand Flash Controller
     pHSMC4 ->HSMC4_CTRL = AT91C_HSMC4_NFCEN;
 #endif
-    
+
     pSMC->HSMC4_SETUP = 0
                     | ((0 <<  0) & AT91C_HSMC4_NWE_SETUP)
                     | ((1 <<  8) & AT91C_HSMC4_NCS_WR_SETUP)
@@ -89,8 +89,8 @@ void BOARD_ConfigureNandFlash(unsigned char busWidth)
                     | (7<<28)
                     |(AT91C_HSMC4_NFSEL)              // Nand Flash Timing
                     ;
-    
-        
+
+
     if (busWidth == 8) {
         pSMC->HSMC4_MODE = AT91C_HSMC4_DBW_WIDTH_EIGTH_BITS | AT91C_HSMC4_READ_MODE | AT91C_HSMC4_WRITE_MODE;
     }
@@ -98,4 +98,3 @@ void BOARD_ConfigureNandFlash(unsigned char busWidth)
         pSMC->HSMC4_MODE = AT91C_HSMC4_DBW_WIDTH_SIXTEEN_BITS | AT91C_HSMC4_READ_MODE | AT91C_HSMC4_WRITE_MODE;
     }
 }
-

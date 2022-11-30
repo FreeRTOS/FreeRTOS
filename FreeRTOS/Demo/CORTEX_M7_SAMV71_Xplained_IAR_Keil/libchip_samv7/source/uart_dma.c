@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -81,8 +81,8 @@
  * \brief UART xDMA Rx callback
  * Invoked on UART DMA reception done.
  * \param channel DMA channel.
- * \param pArg Pointer to callback argument - Pointer to UARTDma instance.   
- */ 
+ * \param pArg Pointer to callback argument - Pointer to UARTDma instance.
+ */
 static void UARTD_Rx_Cb(uint32_t channel, UartDma* pArg)
 {
 
@@ -98,7 +98,7 @@ static void UARTD_Rx_Cb(uint32_t channel, UartDma* pArg)
     /* Invoke the callback associated with the current command */
     if (pUartdCh && pUartdCh->callback) {
         pUartdCh->callback(0, pUartdCh->pArgument);
-    }   
+    }
     pUartdCh->sempaphore = 1;
 }
 
@@ -106,8 +106,8 @@ static void UARTD_Rx_Cb(uint32_t channel, UartDma* pArg)
  * \brief USART xDMA Rx callback
  * Invoked on USART DMA reception done.
  * \param channel DMA channel.
- * \param pArg Pointer to callback argument - Pointer to USARTDma instance.   
- */ 
+ * \param pArg Pointer to callback argument - Pointer to USARTDma instance.
+ */
 static void UARTD_Tx_Cb(uint32_t channel, UartDma* pArg)
 {
     UartChannel *pUartdCh = pArg->pTxChannel;
@@ -193,7 +193,7 @@ static uint8_t _configureTxLinkList(Uart *pUartHw, void *pXdmad, UartChannel *pU
     if ((unsigned int)pUartHw == (unsigned int)UART3 ) uartId = ID_UART3;
     if ((unsigned int)pUartHw == (unsigned int)UART4 ) uartId = ID_UART4;
 
-    /* Setup TX Link List */ 
+    /* Setup TX Link List */
     xdmadTxCfg.mbr_ubc =   XDMA_UBC_NVIEW_NDV0 |
         XDMA_UBC_NDE_FETCH_DIS|
         XDMA_UBC_NSEN_UPDATED |  pUartTx->BuffSize;
@@ -233,7 +233,7 @@ static uint8_t _configureTxLinkList(Uart *pUartHw, void *pXdmad, UartChannel *pU
  * \param pUartd  Pointer to a UartDma instance.
  * \param pUartHw Associated UART peripheral.
  * \param uartId  UART peripheral identifier.
- * \param pXdmad  Pointer to a Dmad instance. 
+ * \param pXdmad  Pointer to a Dmad instance.
  */
 uint32_t UARTD_Configure( UartDma *pUartd ,
         Uart *pUartHw ,
@@ -253,7 +253,7 @@ uint32_t UARTD_Configure( UartDma *pUartd ,
 
     /* Driver initialize */
     XDMAD_Initialize(  pUartd->pXdmad, 0 );
-    /* Configure and enable interrupt on RC compare */ 
+    /* Configure and enable interrupt on RC compare */
     NVIC_ClearPendingIRQ(XDMAC_IRQn);
     NVIC_SetPriority( XDMAC_IRQn ,1);
     return 0;
@@ -270,7 +270,7 @@ uint32_t UARTD_Configure( UartDma *pUartd ,
  * \param pUartHw Associated USART peripheral.
  * \param uartId  USART peripheral identifier.
  * \param UartClk USART clock.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
 
 uint32_t UARTD_EnableRxChannels( UartDma *pUartd, UartChannel *pRxCh)
@@ -288,7 +288,7 @@ uint32_t UARTD_EnableRxChannels( UartDma *pUartd, UartChannel *pRxCh)
 
     /* Allocate a DMA channel for UART0/1 RX. */
     Channel =  XDMAD_AllocateChannel( pUartd->pXdmad, pUartd->uartId, XDMAD_TRANSFER_MEMORY);
-    if ( Channel == XDMAD_ALLOC_FAILED ) 
+    if ( Channel == XDMAD_ALLOC_FAILED )
     {
         return USARTD_ERROR;
     }
@@ -300,7 +300,7 @@ uint32_t UARTD_EnableRxChannels( UartDma *pUartd, UartChannel *pRxCh)
     if (XDMAD_PrepareChannel( pUartd->pXdmad, pRxCh->ChNum ))
         return USARTD_ERROR;
 
-    /* Enable interrupt  */ 
+    /* Enable interrupt  */
     NVIC_EnableIRQ(XDMAC_IRQn);
 
     if (_configureRxLinkList(pUartHw, pUartd->pXdmad, pRxCh))
@@ -326,7 +326,7 @@ uint32_t UARTD_EnableTxChannels( UartDma *pUartd, UartChannel *pTxCh)
 
     /* Allocate a DMA channel for USART0/1 TX. */
     Channel =  XDMAD_AllocateChannel( pUartd->pXdmad, XDMAD_TRANSFER_MEMORY, pUartd->uartId);
-    if ( pTxCh->ChNum == XDMAD_ALLOC_FAILED ) 
+    if ( pTxCh->ChNum == XDMAD_ALLOC_FAILED )
     {
         return USARTD_ERROR;
     }
@@ -338,7 +338,7 @@ uint32_t UARTD_EnableTxChannels( UartDma *pUartd, UartChannel *pTxCh)
     if ( XDMAD_PrepareChannel( pUartd->pXdmad, pTxCh->ChNum ))
         return USARTD_ERROR;
 
-    /* Enable interrupt  */ 
+    /* Enable interrupt  */
     NVIC_EnableIRQ(XDMAC_IRQn);
 
     if (_configureTxLinkList(pUartHw, pUartd->pXdmad, pTxCh))
@@ -362,7 +362,7 @@ uint32_t UARTD_SendData( UartDma *pUartd)
 
     /* Start DMA 0(RX) && 1(TX) */
     while(!pUartd->pTxChannel->sempaphore);
-    if (XDMAD_StartTransfer( pUartd->pXdmad, pUartd->pTxChannel->ChNum )) 
+    if (XDMAD_StartTransfer( pUartd->pXdmad, pUartd->pTxChannel->ChNum ))
         return USARTD_ERROR_LOCK;
     pUartd->pTxChannel->sempaphore=0;
     return 0;
@@ -379,13 +379,12 @@ uint32_t UARTD_SendData( UartDma *pUartd)
  * valid.
  */
 uint32_t UARTD_RcvData( UartDma *pUartd)
-{    
+{
 
     while(!pUartd->pRxChannel->sempaphore);
     /* Start DMA 0(RX) && 1(TX) */
-    if (XDMAD_StartTransfer( pUartd->pXdmad, pUartd->pRxChannel->ChNum )) 
+    if (XDMAD_StartTransfer( pUartd->pXdmad, pUartd->pRxChannel->ChNum ))
         return USARTD_ERROR_LOCK;
     pUartd->pRxChannel->sempaphore=0;
     return 0;
 }
-

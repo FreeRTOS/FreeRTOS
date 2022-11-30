@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -365,5 +365,3 @@ void GPIO_unregisterInterrupt(uint_fast8_t selectedPort)
     //
     Interrupt_unregisterInterrupt(wPortInt);
 }
-
-

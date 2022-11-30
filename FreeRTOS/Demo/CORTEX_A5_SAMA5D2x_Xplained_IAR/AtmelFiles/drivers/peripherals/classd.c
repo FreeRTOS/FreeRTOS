@@ -383,4 +383,3 @@ void classd_volume_unmute(bool left, bool right)
 		bits |= CLASSD_MR_RMUTE;
 	CLASSD->CLASSD_MR &= ~bits;
 }
-

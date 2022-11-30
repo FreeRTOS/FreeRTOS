@@ -261,7 +261,7 @@ enum status_code usart_write_buffer_job(
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
-	
+
 	/* Check that the receiver is enabled */
 	if (!(module->transmitter_enabled)) {
 		return STATUS_ERR_DENIED;
@@ -303,7 +303,7 @@ enum status_code usart_read_buffer_job(
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	/* Check that the receiver is enabled */
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;

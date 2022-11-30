@@ -537,4 +537,3 @@ REDSTATUS RedVolSeqNumIncrement(void)
 
     return ret;
 }
-

@@ -259,5 +259,3 @@ reg2_error_loop:
 
 .align( 4 )
 ulRegTest2LoopCounterConst: .word ulRegTest2LoopCounter
-
-

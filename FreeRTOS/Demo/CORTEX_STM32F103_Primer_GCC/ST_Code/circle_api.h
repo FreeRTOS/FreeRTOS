@@ -64,8 +64,8 @@ enum eSchHandler
    UNUSED4_SCHHDL_ID = 12,
    UNUSED5_SCHHDL_ID = 13,
    UNUSED6_SCHHDL_ID = 14,
-   UNUSED7_SCHHDL_ID = 15   
-   }; 
+   UNUSED7_SCHHDL_ID = 15
+   };
 
 
 /// @cond Internal
@@ -449,7 +449,7 @@ enum BUTTON_state
 #define DRAW_SETTEXTCOLOR_ID                      (DRAW_ID + 12)        // Set the current text color
 #define DRAW_GETBGNDCOLOR_ID                      (DRAW_ID + 13)        // Return the current background color
 #define DRAW_SETBGNDCOLOR_ID                      (DRAW_ID + 14)        // Set the current background color
-#define DRAW_LINE_ID                              (DRAW_ID + 15)        // Draw a Line between (using Bresenham algorithm) 
+#define DRAW_LINE_ID                              (DRAW_ID + 15)        // Draw a Line between (using Bresenham algorithm)
 
 //Prototypes
 #define DRAW_SetDefaultColor()                      ((tCircleFunc0)(Circle_API [DRAW_SETDEFAULTCOLOR_ID])) ()                                                 //void  DRAW_SetDefaultColor (void);

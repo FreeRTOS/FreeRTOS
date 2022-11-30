@@ -84,13 +84,13 @@ void R_RAM_ECC_Enable(void)
 {
     /* Enables writing to the protected registers related to RAM function */
     R_RAM_WriteEnable();
-  
+
     /* Enable ECC function */
     ECCRAM.RAMEDC.LONG = RAM_ECC_ENABLE;
-    
+
     /* Disables writing to the protected registers related to RAM function */
     R_RAM_WriteDisable();
-    
+
 }
 
 /*******************************************************************************
@@ -107,15 +107,15 @@ void R_RAM_ECC_Enable(void)
 *******************************************************************************/
 void R_RAM_WriteEnable(void)
 {
-    volatile uint32_t dummy; 
-    
+    volatile uint32_t dummy;
+
     /* Special sequence for protect release */
     ECCRAM.RAMPCMD.LONG = 0x000000A5;  // Write fixed value 0x000000A5
-    ECCRAM.RAMPCMD.LONG = 0x00000001;  // Write expected value 
+    ECCRAM.RAMPCMD.LONG = 0x00000001;  // Write expected value
     ECCRAM.RAMPCMD.LONG = 0x0000FFFE;  // Write inversed value of the expected value
     ECCRAM.RAMPCMD.LONG = 0x00000001;  // Write expected value again
-    dummy = ECCRAM.RAMPCMD.LONG;        
-    
+    dummy = ECCRAM.RAMPCMD.LONG;
+
 }
 
 /*******************************************************************************
@@ -131,12 +131,12 @@ void R_RAM_WriteEnable(void)
 *******************************************************************************/
 void R_RAM_WriteDisable(void)
 {
-    volatile uint32_t dummy; 
-    
+    volatile uint32_t dummy;
+
     /* Clear RAMPCMD register to zero */
-    ECCRAM.RAMPCMD.LONG = RAM_PROTECT;   
-    dummy = ECCRAM.RAMPCMD.LONG; 
-    
+    ECCRAM.RAMPCMD.LONG = RAM_PROTECT;
+    dummy = ECCRAM.RAMPCMD.LONG;
+
 }
 
 /*******************************************************************************
@@ -144,5 +144,3 @@ void R_RAM_WriteDisable(void)
 *******************************************************************************/
 
 /* End of File */
-
-

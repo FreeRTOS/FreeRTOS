@@ -189,7 +189,7 @@ extern void EFC_TranslateAddress( Efc** ppEfc, uint32_t dwAddress, uint16_t* pwP
         *pwOffset = (dwAddress - IFLASH_ADDR) % IFLASH_PAGE_SIZE; ;
     }
 }
-   
+
 
 /**
  * \brief Computes the address of a flash access given the page and offset.
@@ -270,4 +270,3 @@ extern void EFC_SetFlashAccessMode(Efc* efc, uint32_t dwMode)
     dwFmr = (efc->EEFC_FMR & (~EEFC_FMR_FAM)) | dwMode;
     EFC_WriteFMR(efc, dwFmr);
 }
-

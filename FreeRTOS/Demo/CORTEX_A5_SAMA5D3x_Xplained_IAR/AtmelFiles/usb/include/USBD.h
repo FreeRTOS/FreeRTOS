@@ -275,4 +275,3 @@ extern void USBDCallbacks_Resumed(void);
 extern void USBDCallbacks_RequestReceived(const USBGenericRequest *request);
 
 #endif /*#ifndef USBD_H*/
-

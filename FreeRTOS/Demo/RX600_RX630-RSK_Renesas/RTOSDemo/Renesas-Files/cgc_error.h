@@ -10,7 +10,7 @@
       (CLK_SOURCE != CLK_SOURCE_PLL) )
       #error "No CLK_SOURCE specified. Please specify a valid CLK_SOURCE";
 #endif
-      
+
 
 #if (CLK_SOURCE == CLK_SOURCE_HOCO) && (ENABLE_HOCO == 0)
     #error "HOCO has been specified as the CLK_SOURCE but ENABLE_HOCO is (0). Please set to (1) in file cgc.h"
@@ -39,9 +39,9 @@
 #if ( BCLK_FREQUENCY > 100000000L )
     #error "BCLK_FREQUENCY Error: Please enter a valid divider value"
 #endif
-    
-#if ( PCLKB_FREQUENCY > 50000000L )  
+
+#if ( PCLKB_FREQUENCY > 50000000L )
     #error "PCLKB_FREQUENCY Error: Please enter a valid divider value"
 #endif
-    
+
 #endif

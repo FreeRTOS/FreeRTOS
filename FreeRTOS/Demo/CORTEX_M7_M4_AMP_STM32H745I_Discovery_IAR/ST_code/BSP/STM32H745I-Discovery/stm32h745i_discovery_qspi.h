@@ -41,7 +41,7 @@
 /** @addtogroup STM32H745I_DISCOVERY_QSPI
   * @{
   */
- 
+
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup STM32H745I_DISCOVERY_QSPI_Exported_Constants Exported Constants
   * @{

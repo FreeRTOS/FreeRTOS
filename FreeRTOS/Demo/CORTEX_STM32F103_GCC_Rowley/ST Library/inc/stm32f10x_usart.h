@@ -30,7 +30,7 @@ typedef struct
   u16 USART_StopBits;
   u16 USART_Parity;
   u16 USART_Mode;
-  u16 USART_HardwareFlowControl;  
+  u16 USART_HardwareFlowControl;
 } USART_InitTypeDef;
 
 /* USART Clock Init Structure definition */
@@ -61,7 +61,7 @@ typedef struct
 /* USART Word Length ---------------------------------------------------------*/
 #define USART_WordLength_8b                  ((u16)0x0000)
 #define USART_WordLength_9b                  ((u16)0x1000)
-                                    
+
 #define IS_USART_WORD_LENGTH(LENGTH) (((LENGTH) == USART_WordLength_8b) || \
                                       ((LENGTH) == USART_WordLength_9b))
 
@@ -78,7 +78,7 @@ typedef struct
 /* USART Parity --------------------------------------------------------------*/
 #define USART_Parity_No                      ((u16)0x0000)
 #define USART_Parity_Even                    ((u16)0x0400)
-#define USART_Parity_Odd                     ((u16)0x0600) 
+#define USART_Parity_Odd                     ((u16)0x0600)
 
 #define IS_USART_PARITY(PARITY) (((PARITY) == USART_Parity_No) || \
                                  ((PARITY) == USART_Parity_Even) || \
@@ -104,7 +104,7 @@ typedef struct
 
 #define IS_USART_PERIPH_HFC(PERIPH, HFC) ((((*(u32*)&(PERIPH)) != UART4_BASE) && \
                                           ((*(u32*)&(PERIPH)) != UART5_BASE)) \
-                                          || ((HFC) == USART_HardwareFlowControl_None))                                
+                                          || ((HFC) == USART_HardwareFlowControl_None))
 
 /* USART Clock ---------------------------------------------------------------*/
 #define USART_Clock_Disable                  ((u16)0x0000)
@@ -118,7 +118,7 @@ typedef struct
 #define USART_CPOL_High                      ((u16)0x0400)
 
 #define IS_USART_CPOL(CPOL) (((CPOL) == USART_CPOL_Low) || ((CPOL) == USART_CPOL_High))
-                               
+
 /* USART Clock Phase ---------------------------------------------------------*/
 #define USART_CPHA_1Edge                     ((u16)0x0000)
 #define USART_CPHA_2Edge                     ((u16)0x0200)
@@ -163,7 +163,7 @@ typedef struct
 
 #define IS_USART_PERIPH_IT(PERIPH, USART_IT) ((((*(u32*)&(PERIPH)) != UART4_BASE) && \
                                               ((*(u32*)&(PERIPH)) != UART5_BASE)) \
-                                              || ((USART_IT) != USART_IT_CTS))                                                                           
+                                              || ((USART_IT) != USART_IT_CTS))
 
 /* USART DMA Requests --------------------------------------------------------*/
 #define USART_DMAReq_Tx                      ((u16)0x0080)
@@ -210,12 +210,12 @@ typedef struct
                              ((FLAG) == USART_FLAG_IDLE) || ((FLAG) == USART_FLAG_LBD) || \
                              ((FLAG) == USART_FLAG_CTS) || ((FLAG) == USART_FLAG_ORE) || \
                              ((FLAG) == USART_FLAG_NE) || ((FLAG) == USART_FLAG_FE))
-                              
+
 #define IS_USART_CLEAR_FLAG(FLAG) ((((FLAG) & (u16)0xFC80) == 0x00) && ((FLAG) != (u16)0x00))
 
 #define IS_USART_PERIPH_FLAG(PERIPH, USART_FLAG) ((((*(u32*)&(PERIPH)) != UART4_BASE) &&\
                                                   ((*(u32*)&(PERIPH)) != UART5_BASE)) \
-                                                  || ((USART_FLAG) != USART_FLAG_CTS)) 
+                                                  || ((USART_FLAG) != USART_FLAG_CTS))
 
 #define IS_USART_BAUDRATE(BAUDRATE) (((BAUDRATE) > 0) && ((BAUDRATE) < 0x0044AA21))
 #define IS_USART_ADDRESS(ADDRESS) ((ADDRESS) <= 0xF)

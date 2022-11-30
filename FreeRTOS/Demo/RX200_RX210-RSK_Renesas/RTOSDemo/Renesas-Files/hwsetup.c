@@ -1,32 +1,32 @@
 /******************************************************************************
 * DISCLAIMER
 
-* This software is supplied by Renesas Technology Corp. and is only 
+* This software is supplied by Renesas Technology Corp. and is only
 * intended for use with Renesas products. No other uses are authorized.
 
-* This software is owned by Renesas Technology Corp. and is protected under 
+* This software is owned by Renesas Technology Corp. and is protected under
 * all applicable laws, including copyright laws.
 
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES
-* REGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, 
-* INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-* PARTICULAR PURPOSE AND NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY 
+* REGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY,
+* INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+* PARTICULAR PURPOSE AND NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY
 * DISCLAIMED.
 
-* TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS 
-* TECHNOLOGY CORP. NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
-* FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES 
-* FOR ANY REASON RELATED TO THE THIS SOFTWARE, EVEN IF RENESAS OR ITS 
+* TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS
+* TECHNOLOGY CORP. NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE
+* FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES
+* FOR ANY REASON RELATED TO THE THIS SOFTWARE, EVEN IF RENESAS OR ITS
 * AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
-* Renesas reserves the right, without notice, to make changes to this 
-* software and to discontinue the availability of this software.  
-* By using this software, you agree to the additional terms and 
+* Renesas reserves the right, without notice, to make changes to this
+* software and to discontinue the availability of this software.
+* By using this software, you agree to the additional terms and
 * conditions found by accessing the following link:
 * http://www.renesas.com/disclaimer
 ******************************************************************************
 * Copyright (C) 2008. Renesas Technology Corp., All Rights Reserved.
-*******************************************************************************	
+*******************************************************************************
 * File Name    : hwsetup.c
 * Version      : 1.00
 * Description  : Power up hardware initializations
@@ -118,17 +118,17 @@ Many peripheral modules will override the setting of the port registers. Ensure
 that the state is safe for external devices if the internal peripheral module is
 disabled or powered down. */
     /* Configure LED 0-4 pin settings */
-    PORT1.PODR.BIT.B4 = 1; 
+    PORT1.PODR.BIT.B4 = 1;
     PORT1.PODR.BIT.B5 = 1;
     PORT1.PODR.BIT.B6 = 1;
     PORT1.PODR.BIT.B7 = 1;
 
-    PORT1.PDR.BIT.B4 = 1; 
+    PORT1.PDR.BIT.B4 = 1;
     PORT1.PDR.BIT.B5 = 1;
     PORT1.PDR.BIT.B6 = 1;
     PORT1.PDR.BIT.B7 = 1;
 
-   
+
 
 
 #if INCLUDE_LCD == 1
@@ -159,7 +159,7 @@ changes to the debugger and flash kernel BRR settings. */
 
 	SYSTEM.PRCR.WORD = 0xA503;				/* Protect off 						*/
 
-#if (CLK_SRC_HOCO == 1)	
+#if (CLK_SRC_HOCO == 1)
 	SYSTEM.HOCOPCR.BYTE = 0x00;				/* HOCO power supply on */
 	SYSTEM.HOCOCR2.BYTE = 0x03;				/* Select - 50MHz */
 	SYSTEM.HOCOCR.BYTE  = 0x01;				/* HOCO is operating */
@@ -175,30 +175,30 @@ changes to the debugger and flash kernel BRR settings. */
 											/* 262144 states 					*/
 											/* wait over 2.1 ms  @PLL = 80Hz	*/
 											/*					(20/2x8*8) 		*/
-	
+
 	SYSTEM.PLLCR.WORD = 0x0701;				/* x8 @PLL 							*/
 											/* Input to PLL (EXTAL in) / 2 		*/
-											/* Therefore: 
-													PLL = EXTAL / 2 	
+											/* Therefore:
+													PLL = EXTAL / 2
 														= 20M / 2
-														= 10MHz														
-												PLL * 8 = 80Mhz					*/	
-	
+														= 10MHz
+												PLL * 8 = 80Mhz					*/
+
 	SYSTEM.MOSCCR.BYTE = 0x02;				/* EXTAL ON */
 											/* External oscillation input selection */
 	SYSTEM.PLLCR2.BYTE = 0x00;				/* PLL ON */
-	
+
 	for(i = 0; i<263; i++){					/* wait over 2.1ms */
 	}
 #endif
-	
+
 //	SYSTEM.SCKCR.LONG = 0x21823333;			/* ICK=PLL/2,FCK,PCK,BCL=PLL/4 */
 /************************************************************************/
 /*  If setting bits individually, rather than a single long write, 		*/
 /*	set the BCK value before that of ICK 								*/
 /************************************************************************/
 	SYSTEM.SCKCR.BIT.PCKD 	= 3;			/* PLL/8 = 10MHz		*/
-	SYSTEM.SCKCR.BIT.PCKC 	= 3;			/* PLL/8 = 10MHz		*/	
+	SYSTEM.SCKCR.BIT.PCKC 	= 3;			/* PLL/8 = 10MHz		*/
 	SYSTEM.SCKCR.BIT.PCKB 	= 3;			/* PLL/8 = 10MHz		*/
 	SYSTEM.SCKCR.BIT.PCKA 	= 3;			/* PLL/8 = 10MHz		*/
 	SYSTEM.SCKCR.BIT.BCK 	= 3;			/* PLL/8 = 10MHz		*/
@@ -209,7 +209,7 @@ changes to the debugger and flash kernel BRR settings. */
 	while(SYSTEM.OPCCR.BIT.OPCMTSF == 1);
 	SYSTEM.OPCCR.BIT.OLPCM = 0;
 	while(SYSTEM.OPCCR.BIT.OPCMTSF == 1);
-#if (CLK_SRC_HOCO == 1)	
+#if (CLK_SRC_HOCO == 1)
 	SYSTEM.SCKCR3.WORD = 0x0100;			/* LOCO -> HOCO */
 #else
 	SYSTEM.SCKCR3.WORD = 0x0400;			/* LOCO -> PLL */

@@ -81,4 +81,3 @@ int8_t  *_top_of_heap(void);
 #endif /* BSP_CFG_HEAP_BYTES */
 
 #endif  /* SBRK_H */
-

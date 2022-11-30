@@ -135,4 +135,3 @@ table in order to install the RTOS interrupt handlers. */
 #define xPortSysTickHandler SysTick_Handler
 
 #endif /* FREERTOS_CONFIG_H */
-

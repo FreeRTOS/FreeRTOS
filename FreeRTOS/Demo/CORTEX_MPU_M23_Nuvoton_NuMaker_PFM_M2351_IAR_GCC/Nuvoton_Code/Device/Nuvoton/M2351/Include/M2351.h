@@ -675,4 +675,3 @@ typedef volatile unsigned short vu16;
 
 
 /* Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved. */
-

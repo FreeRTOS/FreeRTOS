@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -611,4 +611,3 @@ void ISO7816_Init( const Pin pPinIso7816RstMC )
     USART_SetReceiverEnabled(BOARD_ISO7816_BASE_USART, 1);
 
 }
-

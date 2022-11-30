@@ -41,7 +41,7 @@
 *         :                    Supported to the register added in DTCb.
 *         :                    Supported sequence transfer.
 *         :                    Added R_DTC_CreateSeq() function.
-*         :                    Added DTC_CMD_SEQUENCE_TRANSFER_ENABLE, 
+*         :                    Added DTC_CMD_SEQUENCE_TRANSFER_ENABLE,
 *         :                    DTC_CMD_SEQUENCE_TRANSFER_DISABLE and DTC_CMD_SEQUENCE_TRANSFER_ABORT
 *         :                    to R_DTC_Control().
 *         : 31.01.2017 2.06    Added the default setting of "writeback_disable", "sequence_end",
@@ -1026,7 +1026,7 @@ static void r_dtc_release_hw_lock(void)
 * Description  : Checks all DMAC channel locking.
 * Arguments    : none -
 * Return Value : true -
-*                    All DMAC channels are unlocked. 
+*                    All DMAC channels are unlocked.
 *                false -
 *                    One or some DMAC channels are locked.
 *******************************************************************************/

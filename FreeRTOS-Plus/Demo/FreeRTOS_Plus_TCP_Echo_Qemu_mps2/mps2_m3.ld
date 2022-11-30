@@ -135,8 +135,7 @@ SECTIONS
    __StackTop = ORIGIN(RAM) + LENGTH(RAM);
    __StackLimit = __StackTop - _Min_Stack_Size;
    PROVIDE(__stack = __StackTop);
-     
+
   /* Check if data + heap + stack exceeds RAM limit */
   ASSERT(__StackLimit >= _heap_top, "region RAM overflowed with stack")
 }
-

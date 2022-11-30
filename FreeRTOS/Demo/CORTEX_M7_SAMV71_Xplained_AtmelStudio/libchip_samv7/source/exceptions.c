@@ -56,10 +56,10 @@ void NMI_Handler( void )
 }
 
 /**
- * \brief This function back trace the stack to give exact address where fault 
+ * \brief This function back trace the stack to give exact address where fault
  happened
 **/
-#if (TRACE_LEVEL > 4) 
+#if (TRACE_LEVEL > 4)
 __STATIC_INLINE uint32_t StackUnwind(void)
 {
 	uint32_t Fault_Add;
@@ -77,12 +77,12 @@ __STATIC_INLINE uint32_t StackUnwind(void)
 #endif
 
 /**
- * \brief If Other Faults are enabled then HardFault error will look for those 
+ * \brief If Other Faults are enabled then HardFault error will look for those
  *  errors to give more detail about fault
 **/
 static void HardFault_reason(void)
 {
-	uint32_t CFSRValue; 
+	uint32_t CFSRValue;
 	TRACE_DEBUG("In Hard Fault Handler\n\r");
 	TRACE_DEBUG("SCB->HFSR = 0x%08x\n\r", SCB->HFSR);
 
@@ -100,7 +100,7 @@ static void HardFault_reason(void)
 		TRACE_DEBUG("Forced Hard Fault\n\r");
 		TRACE_DEBUG("SCB->CFSR = 0x%08x\n\r", SCB->CFSR );
 		// Usage Fault
-		if((SCB->CFSR & SCB_CFSR_USGFAULTSR_Msk)) 
+		if((SCB->CFSR & SCB_CFSR_USGFAULTSR_Msk))
 		{
 			CFSRValue = SCB->CFSR;
 			TRACE_DEBUG("Usage fault: ");
@@ -206,5 +206,5 @@ void UsageFault_Handler( void )
 
 	__ISB();
 	__DMB();
-	__ASM volatile("BKPT #01");  
+	__ASM volatile("BKPT #01");
 }

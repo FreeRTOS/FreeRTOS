@@ -1,11 +1,11 @@
-syntax: glob 
- 
-*.pyc 
-*.orig 
-*.rej 
-*~ 
-TAGS 
-Module.symvers 
+syntax: glob
+
+*.pyc
+*.orig
+*.rej
+*~
+TAGS
+Module.symvers
 *.ncb
 *.suo
 *.bak

@@ -64,21 +64,21 @@ extern "C" {
  *
  * \par Purpose
  *
- * The Power Management Controller (PMC) optimizes power consumption by controlling 
- * all system and user peripheral clocks. The PMC enables/disables the clock inputs 
+ * The Power Management Controller (PMC) optimizes power consumption by controlling
+ * all system and user peripheral clocks. The PMC enables/disables the clock inputs
  * to many of the peripherals and the Cortex-M Processor.
  *
  * @{
  */
 
 /**
- * \brief Set the prescaler of the MCK. 
+ * \brief Set the prescaler of the MCK.
  *
  * \param ul_pres Prescaler value.
  */
 void pmc_mck_set_prescaler(uint32_t ul_pres)
 {
-	PMC->PMC_MCKR = 
+	PMC->PMC_MCKR =
 			(PMC->PMC_MCKR & (~PMC_MCKR_PRES_Msk)) | ul_pres;
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
 }
@@ -90,7 +90,7 @@ void pmc_mck_set_prescaler(uint32_t ul_pres)
  */
 void pmc_mck_set_source(uint32_t ul_source)
 {
-	PMC->PMC_MCKR = 
+	PMC->PMC_MCKR =
 			(PMC->PMC_MCKR & (~PMC_MCKR_CSS_Msk)) | ul_source;
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
 }
@@ -175,7 +175,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres)
 			return 1;
 		}
 	}
-	
+
 	PMC->PMC_MCKR = (PMC->PMC_MCKR & (~PMC_MCKR_CSS_Msk)) |
 			PMC_MCKR_CSS_PLLA_CLK;
 
@@ -259,7 +259,7 @@ uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres)
 
 /**
  * \brief Switch slow clock source selection to external 32k (Xtal or Bypass).
- * 
+ *
  * \note This function disables the PLLs.
  *
  * \note Switching SCLK back to 32krc is only possible by shutting down the VDDIO
@@ -353,8 +353,8 @@ void pmc_osc_disable_fastrc(void)
 }
 
 /**
- * \brief Switch main clock source selection to external Xtal/Bypass. 
- * The function may switch MCK to SCLK if MCK source is MAINCK to avoid any 
+ * \brief Switch main clock source selection to external Xtal/Bypass.
+ * The function may switch MCK to SCLK if MCK source is MAINCK to avoid any
  * system crash.
  *
  * \note If used in Xtal mode, the Xtal is automatically enabled.
@@ -420,7 +420,7 @@ uint32_t pmc_osc_is_ready_mainck(void)
  */
 void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva)
 {
-	pmc_disable_pllack(); // Hardware BUG FIX : first disable the PLL to unlock the lock! 
+	pmc_disable_pllack(); // Hardware BUG FIX : first disable the PLL to unlock the lock!
 	// It occurs when re-enabling the PLL with the same parameters.
 
 	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_DIVA(diva) |
@@ -457,7 +457,7 @@ uint32_t pmc_is_locked_pllack(void)
  */
 void pmc_enable_pllbck(uint32_t mulb, uint32_t pllbcount, uint32_t divb)
 {
-	pmc_disable_pllbck(); // Hardware BUG FIX : first disable the PLL to unlock the lock! 
+	pmc_disable_pllbck(); // Hardware BUG FIX : first disable the PLL to unlock the lock!
 	// It occurs when re-enabling the PLL with the same parameters.
 	PMC->CKGR_PLLBR =
 			CKGR_PLLBR_DIVB(divb) | CKGR_PLLBR_PLLBCOUNT(pllbcount)
@@ -545,7 +545,7 @@ uint32_t pmc_enable_periph_clk(uint32_t ul_id)
 		}
 #endif
 	}
-	
+
 	return 0;
 }
 
@@ -601,7 +601,7 @@ void pmc_disable_all_periph_clk(void)
 {
 	PMC->PMC_PCDR0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != 0);
-	
+
 #if (SAM3S || SAM3XA || SAM4S)
 	PMC->PMC_PCDR1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != 0);
@@ -913,7 +913,7 @@ void pmc_disable_udpck(void)
 }
 #endif
 
-/** 
+/**
  * \brief Enable PMC interrupts.
  *
  * \param ul_sources Interrupt sources bit map.
@@ -923,7 +923,7 @@ void pmc_enable_interrupt(uint32_t ul_sources)
 	PMC->PMC_IER = ul_sources;
 }
 
-/** 
+/**
  * \brief Disable PMC interrupts.
  *
  * \param ul_sources Interrupt sources bit map.
@@ -933,7 +933,7 @@ void pmc_disable_interrupt(uint32_t ul_sources)
 	PMC->PMC_IDR = ul_sources;
 }
 
-/** 
+/**
  * \brief Get PMC interrupt mask.
  *
  * \return The interrupt mask value.
@@ -994,7 +994,7 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 }
 
 /**
- * \brief Enable Wait Mode. 
+ * \brief Enable Wait Mode.
  * Enter condition: WFE + (SLEEPDEEP bit = 0) + (LPM bit = 1)
  */
 void pmc_enable_waitmode(void)
@@ -1015,7 +1015,7 @@ void pmc_enable_waitmode(void)
 }
 
 /**
- * \brief Enable Backup Mode. 
+ * \brief Enable Backup Mode.
  * Enter condition: WFE + (SLEEPDEEP bit = 1)
  */
 void pmc_enable_backupmode(void)
@@ -1024,7 +1024,7 @@ void pmc_enable_backupmode(void)
 	__WFE();
 }
 
-/** 
+/**
  * \brief Enable or disable write protect of PMC registers.
  *
  * \param ul_enable 1 to enable, 0 to disable.
@@ -1038,7 +1038,7 @@ void pmc_set_writeprotect(uint32_t ul_enable)
 	}
 }
 
-/** 
+/**
  * \brief Return write protect status.
  *
  * \retval 0 Protection disabled.

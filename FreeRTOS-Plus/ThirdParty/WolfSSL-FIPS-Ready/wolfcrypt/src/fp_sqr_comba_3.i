@@ -30,7 +30,7 @@ int fp_sqr_comba3(fp_int *A, fp_int *B)
 #endif
 
    a = A->dp;
-   COMBA_START; 
+   COMBA_START;
 
    /* clear carries */
    CLEAR_CARRY;
@@ -41,22 +41,22 @@ int fp_sqr_comba3(fp_int *A, fp_int *B)
 
    /* output 1 */
    CARRY_FORWARD;
-   SQRADD2(a[0], a[1]); 
+   SQRADD2(a[0], a[1]);
    COMBA_STORE(b[1]);
 
    /* output 2 */
    CARRY_FORWARD;
-   SQRADD2(a[0], a[2]); SQRADD(a[1], a[1]); 
+   SQRADD2(a[0], a[2]); SQRADD(a[1], a[1]);
    COMBA_STORE(b[2]);
 
    /* output 3 */
    CARRY_FORWARD;
-   SQRADD2(a[1], a[2]); 
+   SQRADD2(a[1], a[2]);
    COMBA_STORE(b[3]);
 
    /* output 4 */
    CARRY_FORWARD;
-   SQRADD(a[2], a[2]); 
+   SQRADD(a[2], a[2]);
    COMBA_STORE(b[4]);
    COMBA_STORE2(b[5]);
    COMBA_FINI;
@@ -69,5 +69,3 @@ int fp_sqr_comba3(fp_int *A, fp_int *B)
    return FP_OKAY;
 }
 #endif
-
-

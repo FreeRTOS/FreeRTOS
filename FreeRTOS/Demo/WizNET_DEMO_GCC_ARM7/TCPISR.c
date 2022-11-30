@@ -85,5 +85,3 @@ void vEINT0_ISR_Wrapper( void )
 	/* Restore the context of whichever task is going to run next. */
 	portRESTORE_CONTEXT();
 }
-
-

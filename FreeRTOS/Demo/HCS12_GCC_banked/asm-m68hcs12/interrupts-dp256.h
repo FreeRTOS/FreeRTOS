@@ -39,7 +39,7 @@ struct interrupt_vectors
   interrupt_t res5_handler;        /* 0x8a */
   interrupt_t pwm_shutdown_handler; /* 0x8c */
   interrupt_t ptpif_handler;
-  
+
   /** Controller Area Networking */
   interrupt_t can4_tx_handler;
   interrupt_t can4_rx_handler;
@@ -61,7 +61,7 @@ struct interrupt_vectors
   interrupt_t can0_rx_handler;
   interrupt_t can0_err_handler;
   interrupt_t can0_wake_handler;
-  
+
   interrupt_t flash_handler;
   interrupt_t eeprom_handler;
   interrupt_t spi2_handler;
@@ -79,12 +79,12 @@ struct interrupt_vectors
   interrupt_t sci1_handler;
   interrupt_t sci0_handler;
   interrupt_t spi0_handler;
-  
+
   /** Timer and Accumulator */
   interrupt_t acca_input_handler;
   interrupt_t acca_overflow_handler;
   interrupt_t timer_overflow_handler;
-  
+
   /** Input capture / Output compare Timers */
   interrupt_t tc7_handler;
   interrupt_t tc6_handler;
@@ -94,7 +94,7 @@ struct interrupt_vectors
   interrupt_t tc2_handler;
   interrupt_t tc1_handler;
   interrupt_t tc0_handler;
-  
+
   /** External Interrupts */
   interrupt_t rtii_handler;
   interrupt_t irq_handler;

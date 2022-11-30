@@ -1,20 +1,20 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
-* Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.    
+* Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * File Name    : r_bsp_config_reference.c
@@ -23,7 +23,7 @@
 *                somewhere in your package so that the r_bsp code has access to it. This file (r_bsp_config_reference.h)
 *                is just a reference file that the user can use to make their own r_bsp_config.h file.
 ************************************************************************************************************************
-* History : DD.MM.YYYY Version Description           
+* History : DD.MM.YYYY Version Description
 *         : 07.11.2012 0.01    Beta Release
 ***********************************************************************************************************************/
 #ifndef R_BSP_CONFIG_REF_HEADER_FILE
@@ -32,8 +32,8 @@
 /***********************************************************************************************************************
 Configuration Options
 ***********************************************************************************************************************/
-/* Enter the product part number for your MCU. This information will be used to obtain information about your MCU such 
-   as package and memory size. 
+/* Enter the product part number for your MCU. This information will be used to obtain information about your MCU such
+   as package and memory size.
    To help parse this information, the part number will be defined using multiple macros.
    R 5 F 51 11 5 A D FM
    | | | |  |  | | | |  Macro Name              Description
@@ -41,11 +41,11 @@ Configuration Options
    | | | |  |  | | |____not used              = Products with wide temperature range (D: -40 to 85C G: -40 to 105C)
    | | | |  |  | |______not used              = Blank
    | | | |  |  |________MCU_PART_MEMORY_SIZE  = ROM, RAM, and Data Flash Capacity
-   | | | |  |___________MCU_PART_GROUP        = Group name  
+   | | | |  |___________MCU_PART_GROUP        = Group name
    | | | |______________MCU_PART_SERIES       = Series name
    | | |________________MCU_PART_MEMORY_TYPE  = Type of memory (Flash)
    | |__________________not used              = Renesas MCU
-   |____________________not used              = Renesas semiconductor product. 
+   |____________________not used              = Renesas semiconductor product.
    */
 
 /* Package type. Set the macro definition based on values below:
@@ -61,7 +61,7 @@ Configuration Options
 */
 #define MCU_PART_PACKAGE        (0x0)
 
-/* ROM, RAM, and Data Flash Capacity. 
+/* ROM, RAM, and Data Flash Capacity.
    Character(s) = Value for macro = ROM Size/Ram Size/Data Flash Size
    5            = 0x5             = 128KB/16KB/8KB
    4            = 0x4             = 96KB/16KB/8KB
@@ -71,26 +71,26 @@ Configuration Options
 */
 #define MCU_PART_MEMORY_SIZE    (0x5)
 
-/* Group name. 
+/* Group name.
    Character(s) = Value for macro = Description
    10           = 0x0             = RX110 Group
    11           = 0x1             = RX111 Group
 */
 #define MCU_PART_GROUP          (0x1)
 
-/* Series name. 
+/* Series name.
    Character(s) = Value for macro = Description
    51           = 0x0             = RX100 Series
-*/  
+*/
 #define MCU_PART_SERIES         (0x0)
 
-/* Memory type. 
+/* Memory type.
    Character(s) = Value for macro = Description
    F            = 0x0             = Flash memory version
 */
 #define MCU_PART_MEMORY_TYPE    (0x0)
 
-/* The 'BSP_DECLARE_STACK' macro is checked so that the stack is only declared in one place (resetprg.c). Every time a 
+/* The 'BSP_DECLARE_STACK' macro is checked so that the stack is only declared in one place (resetprg.c). Every time a
    '#pragma stacksize' is encountered, the stack size is increased. This prevents multiplication of stack size. */
 #if defined(BSP_DECLARE_STACK)
 /* User Stack size in bytes. The Renesas RX toolchain sets the stack size using the #pragma stacksize directive. */
@@ -111,7 +111,7 @@ Configuration Options
 
 
 /* This macro lets other modules no if a RTOS is being used.
-   0 = RTOS is not used. 
+   0 = RTOS is not used.
    1 = RTOS is used.
 */
 #define RTOS_USED               (0)
@@ -119,10 +119,10 @@ Configuration Options
 /* Clock source select (CKSEL).
    0 = Low Speed On-Chip Oscillator  (LOCO)
    1 = High Speed On-Chip Oscillator (HOCO)
-   2 = Main Clock Oscillator  
+   2 = Main Clock Oscillator
    3 = Sub-Clock Oscillator
    4 = PLL Circuit
-*/ 
+*/
 #define CLOCK_SOURCE            (4)
 
 /* Clock configuration options.
@@ -141,11 +141,11 @@ Configuration Options
 */
 /* XTAL - Input clock frequency in Hz */
 #define XTAL_HZ                 (16000000)
-/* PLL Input Frequency Divider Select (PLIDIV). 
+/* PLL Input Frequency Divider Select (PLIDIV).
    Available divisors = /1 (no division), /2, /4
 */
 #define PLL_DIV                 (2)
-/* PLL Frequency Multiplication Factor Select (STC). 
+/* PLL Frequency Multiplication Factor Select (STC).
    Available multipliers = x6, x8
 */
 #define PLL_MUL                 (6)
@@ -153,27 +153,27 @@ Configuration Options
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
 #define ICK_DIV                 (2)
-/* Peripheral Module Clock B Divider (PCKB). 
+/* Peripheral Module Clock B Divider (PCKB).
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
 #define PCKB_DIV                (2)
-/* Peripheral Module Clock D Divider (PCKD). 
+/* Peripheral Module Clock D Divider (PCKD).
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
 #define PCKD_DIV                (2)
-/* Flash IF Clock Divider (FCK). 
+/* Flash IF Clock Divider (FCK).
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
 #define FCK_DIV                 (2)
 
-/* Below are callback functions that can be used for detecting MCU exceptions, undefined interrupt sources, and 
-   bus errors. If the user wishes to be alerted of these events then they will need to define the macro as a 
-   function to be called when the event occurs. For example, if the user wanted the function 
+/* Below are callback functions that can be used for detecting MCU exceptions, undefined interrupt sources, and
+   bus errors. If the user wishes to be alerted of these events then they will need to define the macro as a
+   function to be called when the event occurs. For example, if the user wanted the function
    excep_undefined_instr_isr() to be called when an undefined interrupt source ISR is triggered then they would
    do the following:
    #define UNDEFINED_INT_ISR_CALLBACK   undefined_interrupt_cb
    If the user does not wish to be alerted of these events then they should comment out the macros.
-   
+
    NOTE: When a callback function is called it will be called from within a ISR. This means that the function
          will essentially be an interrupt and will hold off other interrupts that occur in the system while it
          is executing. For this reason, it is recommended to keep these callback functions short as to not
@@ -200,12 +200,12 @@ Configuration Options
 /* Endian mode for User Application.
    0    = Big Endian
    Else = Little Endian (Default)
-*/   
+*/
 #define USER_APP_ENDIAN     (1)
 
 
-/* Configure WDT and IWDT settings. 
-   OFS0 - Option Function Select Register 0 
+/* Configure WDT and IWDT settings.
+   OFS0 - Option Function Select Register 0
        OFS0 - Option Function Select Register 0
        b31:b15 Reserved (set to 1)
        b14     IWDTSLCSTP - IWDT Sleep Mode Count Stop Control - (0=can't stop count, 1=stop w/some low power modes)
@@ -245,6 +245,3 @@ Configuration Options
 #define IO_LIB_ENABLE           (1)
 
 #endif /* R_BSP_CONFIG_REF_HEADER_FILE */
-
-
-

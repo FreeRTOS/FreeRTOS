@@ -955,4 +955,3 @@ static uint32_t DirOffsetToEntryIndex(
 
 
 #endif /* REDCONF_API_POSIX == 1 */
-

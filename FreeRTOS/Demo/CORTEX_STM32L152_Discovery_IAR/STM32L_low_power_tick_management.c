@@ -367,4 +367,3 @@ const TickType_t xRegulatorOffIdleTime = 30;
 }
 
 #endif /* configCREATE_LOW_POWER_DEMO == 1 */
-

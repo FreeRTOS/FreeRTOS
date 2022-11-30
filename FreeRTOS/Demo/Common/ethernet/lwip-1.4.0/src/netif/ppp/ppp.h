@@ -7,13 +7,13 @@
 * The authors hereby grant permission to use, copy, modify, distribute,
 * and license this software and its documentation for any purpose, provided
 * that existing copyright notices are retained in all copies and that this
-* notice and the following disclaimer are included verbatim in any 
+* notice and the following disclaimer are included verbatim in any
 * distributions. No written agreement, license, or royalty fee is required
 * for any of the authorized uses.
 *
 * THIS SOFTWARE IS PROVIDED BY THE CONTRIBUTORS *AS IS* AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
 * IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
 * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
@@ -391,7 +391,7 @@ void pppSetAuth(enum pppAuthType authType, const char *user, const char *passwd)
  * This initializes the PPP control block but does not
  * attempt to negotiate the LCP session.
  * Return a new PPP connection descriptor on success or
- * an error code (negative) on failure. 
+ * an error code (negative) on failure.
  */
 int pppOverSerialOpen(sio_fd_t fd, void (*linkStatusCB)(void *ctx, int errCode, void *arg), void *linkStatusCtx);
 
@@ -404,9 +404,9 @@ int pppOverEthernetOpen(struct netif *ethif, const char *service_name, const cha
 #define pppOpen(fd,cb,ls) pppOverSerialOpen(fd,cb,ls)
 
 /*
- * Close a PPP connection and release the descriptor. 
+ * Close a PPP connection and release the descriptor.
  * Any outstanding packets in the queues are dropped.
- * Return 0 on success, an error code on failure. 
+ * Return 0 on success, an error code on failure.
  */
 int pppClose(int pd);
 
@@ -417,7 +417,7 @@ void pppSigHUP(int pd);
 
 /*
  * Get and set parameters for the given connection.
- * Return 0 on success, an error code on failure. 
+ * Return 0 on success, an error code on failure.
  */
 int  pppIOCtl(int pd, int cmd, void *arg);
 
@@ -469,7 +469,7 @@ int  sifdefaultroute (int, u32_t, u32_t);
 int  cifdefaultroute (int, u32_t, u32_t);
 
 /* Get appropriate netmask for address */
-u32_t GetMask (u32_t); 
+u32_t GetMask (u32_t);
 
 #if LWIP_NETIF_STATUS_CALLBACK
 void ppp_set_netif_statuscallback(int pd, netif_status_callback_fn status_callback);

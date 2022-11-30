@@ -14,7 +14,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #include <stdint.h>
@@ -1045,4 +1045,3 @@ typedef enum IRQn
 /*@}*/
 
 #endif /* _SAMA5D3x_ */
-

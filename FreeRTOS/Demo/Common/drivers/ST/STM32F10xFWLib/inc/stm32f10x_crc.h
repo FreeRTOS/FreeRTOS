@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version  V3.0.0
   * @date  04/06/2009
-  * @brief  This file contains all the functions prototypes for the CRC firmware 
+  * @brief  This file contains all the functions prototypes for the CRC firmware
   *         library.
   ******************************************************************************
   * @copy
@@ -17,7 +17,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2009 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F10x_CRC_H

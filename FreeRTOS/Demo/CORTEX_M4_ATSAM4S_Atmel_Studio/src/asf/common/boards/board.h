@@ -98,7 +98,7 @@ extern "C" {
 #define SAM3S_EK2             36  //!< SAM3S-EK2 board.
 #define SAM4S_EK              37  //!< SAM4S-EK board.
 #define STK600_RCUC3A0        38  //!< STK600 RCUC3A0 board.
-#define SAM4S_XPLAINED        39  //!< SAM4S Xplained board. 
+#define SAM4S_XPLAINED        39  //!< SAM4S Xplained board.
 #define ATXMEGA128A1_QT600    40  //!< QT600 ATXMEGA128A1 MCU board.
 #define SIMULATOR_XMEGA_A1    97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3     98  //!< AVR SIMULATOR for AVR UC3 device family.
@@ -184,13 +184,13 @@ extern "C" {
   #include "system_sam3x.h"
 #elif BOARD == SAM3N_EK
   #include "sam3n_ek/sam3n_ek.h"
-  #include "system_sam3n.h"  
+  #include "system_sam3n.h"
 #elif BOARD == SAM4S_EK
   #include "sam4s_ek/sam4s_ek.h"
   #include "system_sam4s.h"
 #elif BOARD == SAM4S_XPLAINED
   #include "sam4s_xplained/sam4s_xplained.h"
-  #include "system_sam4s.h"  
+  #include "system_sam4s.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
   #include "mega1284p_xplained_bc/mega1284p_xplained_bc.h"
 #elif BOARD == UC3_L0_QT600

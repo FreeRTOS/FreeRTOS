@@ -103,7 +103,7 @@ extern "C" {
  * trace recorder library with an older version of FreeRTOS).
  *
  * TRC_FREERTOS_VERSION_7_3_X          If using FreeRTOS v7.3.X
- * TRC_FREERTOS_VERSION_7_4_X          If using FreeRTOS v7.4.X 
+ * TRC_FREERTOS_VERSION_7_4_X          If using FreeRTOS v7.4.X
  * TRC_FREERTOS_VERSION_7_5_X          If using FreeRTOS v7.5.X
  * TRC_FREERTOS_VERSION_7_6_X          If using FreeRTOS v7.6.X
  * TRC_FREERTOS_VERSION_8_X_X          If using FreeRTOS v8.X.X

@@ -9,20 +9,20 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, 
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- * 
- * 4. This software may only be redistributed and used in connection with an 
+ *
+ * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -56,17 +56,17 @@ MEMORY
 /* The stack size used by the application. NOTE: you need to adjust  */
 STACK_SIZE = 0x2000;
 
-/* Section Definitions */ 
-SECTIONS 
-{ 
-    .text : 
-    { 
+/* Section Definitions */
+SECTIONS
+{
+    .text :
+    {
         . = ALIGN(4);
         _sfixed = .;
         KEEP(*(.vectors .vectors.*))
-        *(.text .text.* .gnu.linkonce.t.*) 	      
-        *(.glue_7t) *(.glue_7)		                
-        *(.rodata .rodata* .gnu.linkonce.r.*)		    	                  
+        *(.text .text.* .gnu.linkonce.t.*)
+        *(.glue_7t) *(.glue_7)
+        *(.rodata .rodata* .gnu.linkonce.r.*)
         *(.ARM.extab* .gnu.linkonce.armextab.*)
 
         /* Support C constructors, and C destructors in both user code
@@ -116,7 +116,7 @@ SECTIONS
     } > rom
     PROVIDE_HIDDEN (__exidx_end = .);
 
-    . = ALIGN(4); 
+    . = ALIGN(4);
     _etext = .;
 
     .relocate : AT (_etext)
@@ -129,9 +129,9 @@ SECTIONS
         _erelocate = .;
     } > ram
 
-    /* .bss section which is used for uninitialized data */ 
+    /* .bss section which is used for uninitialized data */
     .bss (NOLOAD) :
-    { 
+    {
         . = ALIGN(4);
         _sbss = . ;
         _szero = .;
@@ -152,6 +152,6 @@ SECTIONS
         _estack = .;
     } > ram
 
-    . = ALIGN(4); 
-    _end = . ; 
+    . = ALIGN(4);
+    _end = . ;
 }

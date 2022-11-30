@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace event buffer APIs.
  */
 
@@ -60,10 +60,10 @@ typedef struct TraceEventBuffer
 
 /**
  * @internal Initialize trace event buffer.
- * 
+ *
  * This routine initializes a trace event buffer and assigns it a
  * memory area based on the supplied buffer.
- * 
+ *
  * Trace event buffer options specifies the buffer behavior regarding
  * old data, the alternatives are TRC_EVENT_BUFFER_OPTION_SKIP and
  * TRC_EVENT_BUFFER_OPTION_OVERWRITE (mutal exclusive).
@@ -81,7 +81,7 @@ traceResult xTraceEventBufferInitialize(TraceEventBuffer_t * pxTraceEventBuffer,
 
 /**
  * @brief Pushes data into trace event buffer.
- * 
+ *
  * This routine attempts to push data into the trace event buffer.
  *
  * @param[in] pxTraceEventBuffer Pointer to initialized trace event buffer.
@@ -96,14 +96,14 @@ traceResult xTraceEventBufferPush(TraceEventBuffer_t *pxTraceEventBuffer, void *
 
 /**
  * @brief Transfer trace event buffer data through streamport.
- * 
+ *
  * This routine will attempt to transfer all existing data in the trace event
  * buffer through the streamport. New data pushed to the trace event buffer
- * during the execution of this routine will not be transfered to 
- * 
+ * during the execution of this routine will not be transfered to
+ *
  * @param[in] pxTraceEventBuffer Pointer to initialized trace event buffer.
  * @param[out] piBytesWritten Bytes written.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -111,9 +111,9 @@ traceResult xTraceEventBufferTransfer(TraceEventBuffer_t* pxTraceEventBuffer, in
 
 /**
  * @brief Clears all data from event buffer.
- * 
+ *
  * @param[in] pxTraceEventBuffer Pointer to initialized trace event buffer.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

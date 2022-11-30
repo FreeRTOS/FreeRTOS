@@ -452,6 +452,3 @@ void starting_delay( unsigned long ul )
 {
 	vTaskDelay( ( TickType_t ) ul );
 }
-
-
-

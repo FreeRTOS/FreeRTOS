@@ -55,7 +55,7 @@ _InitPLL() {
     __writeMemory32(0x00000007,0xFFFFFc30,"Memory");    // MCKRDY
     while( !(__readMemory32(0xFFFFFc68,"Memory") & 0x8)  );
 
-    // Set 1 WS for Flash accesses on each EFC 
+    // Set 1 WS for Flash accesses on each EFC
     __writeMemory32(0x00480100,0xFFFFFF60,"Memory");
     __writeMemory32(0x00480100,0xFFFFFF70,"Memory");
 }
@@ -70,4 +70,3 @@ execUserReset() {
     _InitPLL();                         // Allow to debug at JTAG Full Speed
     _InitRSTC();                        // Enable User Reset to allow execUserReset() execution
 }
-

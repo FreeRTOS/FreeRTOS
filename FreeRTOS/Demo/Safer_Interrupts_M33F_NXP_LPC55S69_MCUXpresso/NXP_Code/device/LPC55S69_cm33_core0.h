@@ -30419,4 +30419,3 @@ static inline uint32_t Chip_GetVersion(void)
 
 
 #endif  /* _LPC55S69_CM33_CORE0_H_ */
-

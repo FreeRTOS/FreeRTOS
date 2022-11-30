@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -63,20 +63,20 @@
  extern "C" {
 #endif
 
-   
+
 #define ENABLE          1
-#define DISABLE         0   
-   
+#define DISABLE         0
+
 #define OFFSET_BIT      5
 #define INDEX_BIT       9
-#define TAG_BIT         18          
-   
+#define TAG_BIT         18
+
 #define DCACHE_CLEAN            0
 #define DCACHE_INVAL            1
-#define DCACHE_FLUSH            2   
-   
+#define DCACHE_FLUSH            2
+
 #define RESET_EVCOUNTER0        0
-#define RESET_EVCOUNTER1        1   
+#define RESET_EVCOUNTER1        1
 #define RESET_BOTH_COUNTER      3
 
 #define FWA_DEFAULT             0
@@ -97,9 +97,9 @@ typedef struct
 typedef struct
 {
   Latency       TagRAM;
-  Latency       DataRAM;  
+  Latency       DataRAM;
 }RAMLatencyControl;
-   
+
 /** L2CC structur */
 typedef struct
 {
@@ -111,17 +111,17 @@ typedef struct
     uint32_t SAIE_Val;
     /** Event Monitor Bus Enable */
     uint32_t EMBEN_Val;
-    /** Parity Enable */    
+    /** Parity Enable */
     uint32_t PEN_Val;
-    /** Shared Attribute Override Enable */    
+    /** Shared Attribute Override Enable */
     uint32_t SAOEN_Val;
-    /** Force Write Allocate */    
+    /** Force Write Allocate */
     uint32_t FWA_Val;
-    /** Cache Replacement Policy */    
+    /** Cache Replacement Policy */
     uint32_t CRPOL_Val;
-    /** Non-Secure Lockdown Enable*/    
+    /** Non-Secure Lockdown Enable*/
     uint32_t NSLEN_Val;
-    /** Non-Secure Interrupt Access Control */    
+    /** Non-Secure Interrupt Access Control */
     uint32_t NSIAC_Val;
      /** Data Prefetch Enable*/
     uint32_t DPEN_Val;

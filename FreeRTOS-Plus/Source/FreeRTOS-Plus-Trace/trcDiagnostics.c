@@ -24,7 +24,7 @@ static TraceDiagnostics_t *pxDiagnostics;
 traceResult xTraceDiagnosticsInitialize(TraceDiagnosticsBuffer_t *pxBuffer)
 {
 	uint32_t i;
-	
+
 	TRC_ASSERT_EQUAL_SIZE(TraceDiagnosticsBuffer_t, TraceDiagnostics_t);
 
 	/* This should never fail */

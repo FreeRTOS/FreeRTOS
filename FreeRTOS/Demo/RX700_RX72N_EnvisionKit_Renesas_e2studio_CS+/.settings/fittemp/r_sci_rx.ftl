@@ -1,14 +1,14 @@
 ﻿<#--
   Copyright(C) 2015 Renesas Electronics Corporation
   RENESAS ELECTRONICS CONFIDENTIAL AND PROPRIETARY
-  This program must be used solely for the purpose for which it was furnished 
+  This program must be used solely for the purpose for which it was furnished
   by Renesas Electronics Corporation. No part of this program may be reproduced
-  or disclosed to others, in any form, without the prior written permission of 
+  or disclosed to others, in any form, without the prior written permission of
   Renesas Electronics Corporation.
 -->
 <#-- = DECLARE FUNCTION INFORMATION HERE =================== -->
-<#-- 
-   (Step 1) Explanation: These variables are necessary information for the function header. 
+<#--
+   (Step 1) Explanation: These variables are necessary information for the function header.
    Please fill up or leave blank, but do not delete
 -->
 <#assign Function_Base_Name = "R_SCI_PinSet">
@@ -18,9 +18,9 @@
 <#assign Version = 1.00>
 
 <#-- = DECLARE FUNCTION CONTENT HERE ======================= -->
-<#-- 
+<#--
    (Step 2) Explanation: Function content.
-    - Macro [initialsection] : 
+    - Macro [initialsection] :
       Any text that goes into this section will be printed out 1 time per function
       input [postfix]   :Use this variable to add the channel number to the function base name.
 -->
@@ -32,7 +32,7 @@ void ${Function_Name}()
     R_BSP_RegisterProtectDisable(BSP_REG_PROTECT_MPC);
 </#macro>
 
-<#-- 
+<#--
    (Step 3) Explanation: Function content.
     - Macro [peripheralpincode] : Any text that goes into this section will be printed out 1 time per peripheral
     - input [pin] : Available info includes:
@@ -40,12 +40,12 @@ void ${Function_Name}()
         pin.assignedPinName     :The pin assigned to, eg “P32”
         pin.pinMPC              :The port number of assigned pin, eg “P32” has portNume = “3”
         pin.portNum             :The bit number of the assigned pin, eg “P32” has pinBitNum = “2”
-        pin.pinBitNum           :The value of MPC 
+        pin.pinBitNum           :The value of MPC
 -->
 <#macro peripheralpincode pin>
-</#macro> 
+</#macro>
 
-<#-- 
+<#--
    (Step 4) Explanation: Function content.
     - Macro [channelpincode] : Any text that goes into this section will be printed out 1 time per channel
     - input [pin] : Same as above
@@ -55,12 +55,12 @@ void ${Function_Name}()
     /* Set ${pin.pinName} pin */
     MPC.${pin.assignedPinName}PFS.BYTE = 0x${pin.pinMPC}U;
     PORT${pin.portNum}.PMR.BIT.B${pin.pinBitNum} = 1U;
-</#macro> 
+</#macro>
 
 <#macro channelpincodeextra pin postfix>
-</#macro> 
+</#macro>
 
-<#-- 
+<#--
    (Step 5) Explanation: Function content.
     - Macro [endsection] : Any text that goes into this section will be printed out 1 time last
 -->
@@ -68,18 +68,18 @@ void ${Function_Name}()
 
     R_BSP_RegisterProtectEnable(BSP_REG_PROTECT_MPC);
 }
-</#macro> 
+</#macro>
 
-<#-- 
+<#--
    (Step 6) Explanation: Header file content
     - Macro [headerfilesection] : Any text that goes into this section will be printed out 1 time in the header file
     - input [postfix]   :Use this variable to add the channel number to the function base name.
 -->
 <#macro headerfilesection postfix>
 void ${Function_Base_Name}${postfix}();
-</#macro> 
+</#macro>
 
 <#macro headerfilesectionExtra postfix>
-</#macro> 
+</#macro>
 
 <#-- = END OF FILE ========================================= -->

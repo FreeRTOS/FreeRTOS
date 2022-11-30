@@ -70,7 +70,7 @@ static const Pin spi_pins[] = BOARD_LCD_PINS;
 static void ILI9488_InitInterface(void)
 {
 
-    PIO_Configure(ILI9488_Reset, PIO_LISTSIZE(ILI9488_Reset));    
+    PIO_Configure(ILI9488_Reset, PIO_LISTSIZE(ILI9488_Reset));
     PIO_Configure(spi_pins, PIO_LISTSIZE(spi_pins));
 
 
@@ -80,7 +80,7 @@ static void ILI9488_InitInterface(void)
 
     /* Set clock A and clock B */
     // set for 14.11 KHz for CABC control
-    //    mode = PWM_CLK_PREB(0x0A) | (PWM_CLK_DIVB(110)) | 
+    //    mode = PWM_CLK_PREB(0x0A) | (PWM_CLK_DIVB(110)) |
     //           PWM_CLK_PREA(0x0A) | (PWM_CLK_DIVA(110));
     PWMC_ConfigureClocks(PWM0, 14200, 0,  BOARD_MCK);
 
@@ -93,10 +93,10 @@ static void ILI9488_InitInterface(void)
     PWMC_EnableChannel(PWM0, CHANNEL_PWM_LCD);
 
     SPI_Configure(ILI9488, ILI9488_ID, (SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( ILI9488_cs )));
-    SPI_ConfigureNPCS( ILI9488, ILI9488_cs, 
-            SPI_CSR_CPOL | SPI_CSR_BITS_9_BIT | 
+    SPI_ConfigureNPCS( ILI9488, ILI9488_cs,
+            SPI_CSR_CPOL | SPI_CSR_BITS_9_BIT |
             SPI_DLYBS(100, BOARD_MCK) | SPI_DLYBCT(100, BOARD_MCK) |
-            SPI_SCBR( 35000000, BOARD_MCK) ) ;  
+            SPI_SCBR( 35000000, BOARD_MCK) ) ;
 
     SPI_Enable(ILI9488);
 
@@ -109,8 +109,8 @@ static void ILI9488_InitInterface(void)
  *
  */
 static void ILI9488_SendCmd( uint8_t reg )
-{    
-    SPI_Write(ILI9488, ILI9488_cs, ILI9488_CMD(reg));  
+{
+    SPI_Write(ILI9488, ILI9488_cs, ILI9488_CMD(reg));
 }
 
 
@@ -184,7 +184,7 @@ static uint8_t ILI9488_ReadReg( uint8_t reg)
 
     return value;
 
-}    
+}
 /**
  * \brief Read data from ILI9488 Register.
  *
@@ -198,12 +198,12 @@ static uint16_t ILI9488_ReadReg16( uint8_t reg)
     uint8_t SPI_CNT = 0x81;
 
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
-    ILI9488_WriteReg(SPI_CNT);         
+    ILI9488_WriteReg(SPI_CNT);
     value = (ILI9488_ReadReg(reg) << 0x08);
 
     SPI_CNT++;
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
-    ILI9488_WriteReg(SPI_CNT);  
+    ILI9488_WriteReg(SPI_CNT);
     value |= ILI9488_ReadReg(reg);
 
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
@@ -234,13 +234,13 @@ static uint32_t ILI9488_ReadReg24( uint8_t reg)
 
     SPI_CNT++;
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
-    ILI9488_WriteReg(SPI_CNT);  
+    ILI9488_WriteReg(SPI_CNT);
 
     value |= (ILI9488_ReadReg(reg) << 0x08);
 
     SPI_CNT++;
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
-    ILI9488_WriteReg(SPI_CNT);  
+    ILI9488_WriteReg(SPI_CNT);
     value |= ILI9488_ReadReg(reg);
 
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
@@ -271,17 +271,17 @@ static uint32_t ILI9488_ReadReg32( uint8_t reg)
 
     SPI_CNT++;
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
-    ILI9488_WriteReg(SPI_CNT);  
+    ILI9488_WriteReg(SPI_CNT);
     value |= (ILI9488_ReadReg(reg) << 16);
 
     SPI_CNT++;
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
-    ILI9488_WriteReg(SPI_CNT);  
+    ILI9488_WriteReg(SPI_CNT);
     value |= (ILI9488_ReadReg(reg) << 8);
 
     SPI_CNT++;
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
-    ILI9488_WriteReg(SPI_CNT);  
+    ILI9488_WriteReg(SPI_CNT);
     value |= ILI9488_ReadReg(reg);
 
     ILI9488_SendCmd(ILI9488_CMD_SPI_READ_SETTINGS);
@@ -339,8 +339,8 @@ void ILI9488_ReadRAM_Prepare(void)
  * \param data  Data to be written.
  */
 void ILI9488_WriteRAM( LcdColor_t data )
-{  
-    ILI9488_WriteReg24(data);  
+{
+    ILI9488_WriteReg24(data);
 }
 
 
@@ -364,7 +364,7 @@ void ILI9488_WriteRAMBuffer( const LcdColor_t *pBuf, uint32_t size)
 void ILI9488_SetCursor(uint16_t x, uint16_t y)
 {
     /* Set Horizontal Address Start Position */
-    ILI9488_SendCmd(ILI9488_CMD_COLUMN_ADDRESS_SET);    
+    ILI9488_SendCmd(ILI9488_CMD_COLUMN_ADDRESS_SET);
     ILI9488_WriteReg16(x);
     ILI9488_WriteReg16(x+1);
     ILI9488_NOP();
@@ -388,7 +388,7 @@ extern uint32_t ILI9488_Initialize( void )
 
     ILI9488_InitInterface();
 
-    ILI9488_SendCmd(ILI9488_CMD_SOFTWARE_RESET);    
+    ILI9488_SendCmd(ILI9488_CMD_SOFTWARE_RESET);
     Wait(200);
 
     ILI9488_SendCmd(ILI9488_CMD_SLEEP_OUT);
@@ -438,7 +438,7 @@ extern void ILI9488_On( void )
  * \brief Turn off the ILI9488.
  */
 extern void ILI9488_Off( void )
-{    
+{
     ILI9488_SendCmd(ILI9488_CMD_DISPLAY_OFF);
     ILI9488_SendCmd(ILI9488_CMD_DISPLAY_OFF);
 }
@@ -490,7 +490,7 @@ extern void ILI9488_SetWindow( uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uin
     RowStart = dwY ;
     RowEnd   = dwHeight;
 
-    if (  ( ColEnd > (ILI9488_LCD_WIDTH)) || ( RowEnd > (ILI9488_LCD_HEIGHT))) 
+    if (  ( ColEnd > (ILI9488_LCD_WIDTH)) || ( RowEnd > (ILI9488_LCD_HEIGHT)))
     {
         printf("\n\rWindow too large\n\r");
         assert(1);
@@ -499,10 +499,10 @@ extern void ILI9488_SetWindow( uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uin
     if (  ( ColEnd < ColStart) || ( RowEnd < RowStart) )
     {
         printf("\n\rWindow's hight or width is not large enough\n\r");
-        assert(1);     
+        assert(1);
     }
     /* Set Horizontal Address Start Position */
-    ILI9488_SendCmd(ILI9488_CMD_COLUMN_ADDRESS_SET);    
+    ILI9488_SendCmd(ILI9488_CMD_COLUMN_ADDRESS_SET);
     ILI9488_WriteReg16(ColStart);
     ILI9488_WriteReg16(ColEnd);
     ILI9488_NOP();
@@ -598,7 +598,7 @@ extern void ILI9488_TestPattern(void)
 {
     uint32_t i, data;
 
-    ILI9488_SetWindow( 0, 0, 319, 479 ) ;  
+    ILI9488_SetWindow( 0, 0, 319, 479 ) ;
 
     data = COLOR_WHITE;
     ILI9488_SendCmd(ILI9488_CMD_MEMORY_WRITE);
@@ -609,7 +609,7 @@ extern void ILI9488_TestPattern(void)
         SPI_Write(ILI9488, ILI9488_cs, ILI9488_PARAM(data & 0xFF));
     }
 
-    ILI9488_SetWindow( 50, 50, 300, 300 ) ;  
+    ILI9488_SetWindow( 50, 50, 300, 300 ) ;
     data = COLOR_BLUE;
     ILI9488_SendCmd(ILI9488_CMD_MEMORY_WRITE);
     for(i = 0; i< (BOARD_LCD_WIDTH * BOARD_LCD_HEIGHT); i++)
@@ -619,7 +619,7 @@ extern void ILI9488_TestPattern(void)
         SPI_Write(ILI9488, ILI9488_cs, ILI9488_PARAM(data & 0xFF));
     }
 
-    ILI9488_SetWindow( 150, 150, 300, 300 ) ;  
+    ILI9488_SetWindow( 150, 150, 300, 300 ) ;
     data = COLOR_GREEN;
     ILI9488_SendCmd(ILI9488_CMD_MEMORY_WRITE);
     for(i = 0; i< (BOARD_LCD_WIDTH * BOARD_LCD_HEIGHT); i++)
@@ -629,7 +629,7 @@ extern void ILI9488_TestPattern(void)
         SPI_Write(ILI9488, ILI9488_cs, ILI9488_PARAM(data & 0xFF));
     }
 
-    ILI9488_SetWindow(200, 200, 300, 300 ) ;  
+    ILI9488_SetWindow(200, 200, 300, 300 ) ;
     data = COLOR_RED;
     ILI9488_SendCmd(ILI9488_CMD_MEMORY_WRITE);
     for(i = 0; i< (BOARD_LCD_WIDTH * BOARD_LCD_HEIGHT); i++)

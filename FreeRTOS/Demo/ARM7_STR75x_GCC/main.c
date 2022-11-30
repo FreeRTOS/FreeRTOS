@@ -309,4 +309,3 @@ ErrorStatus OSC4MStartUpStatus01;
 	EIC_IRQCmd(ENABLE);
 }
 /*-----------------------------------------------------------*/
-

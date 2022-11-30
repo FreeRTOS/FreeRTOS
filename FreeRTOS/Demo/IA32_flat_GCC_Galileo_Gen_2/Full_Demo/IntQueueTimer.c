@@ -118,4 +118,3 @@ void vApplicationHPETTimer2Handler( void )
 		ulMaxInterruptNesting = ulInterruptNesting;
 	}
 }
-

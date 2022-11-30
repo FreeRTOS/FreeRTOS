@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -70,4 +70,3 @@ extern void RTC_SetDate(
 extern void RTC_SetDateAlarm(unsigned char *pMonth, unsigned char *pDay);
 
 #endif //#ifndef RTC_H
-

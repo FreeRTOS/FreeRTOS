@@ -6,7 +6,7 @@ Additional bounded-ness checks are done using [CBMC](https://www.cprover.org/cbm
 For more information on FreeRTOS testing please refer to https://www.freertos.org/FreeRTOS-Coding-Standard-and-Style-Guide.html.
 
 ## Directory structure
-This directory is in working progress -- we are migrating scattered test cases to this directory. Here only lists what's currently under this directory. 
+This directory is in working progress -- we are migrating scattered test cases to this directory. Here only lists what's currently under this directory.
 
 - ```./CBMC```: This directory contains automated proofs of the memory safety of various parts of the FreeRTOS code base.
 - ```./CMock```: This directory has the submoduled version of CMock for providing basis Unit testing

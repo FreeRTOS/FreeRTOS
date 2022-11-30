@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 /*! \file
@@ -156,7 +156,7 @@ typedef enum ALT_SPI_TMOD_e
     ALT_SPI_TMOD_EEPROM  = 3,        /*!< EEPROM Read */
 } ALT_SPI_TMOD_t;
 
-/*! 
+/*!
  * This type enumerates the HPS SPI controller type mode.
  */
 typedef enum ALT_SPI_OP_MODE_e
@@ -576,7 +576,7 @@ ALT_STATUS_CODE alt_spi_mw_config_set(ALT_SPI_DEV_t *spi_dev, const ALT_SPI_MW_C
 
 /*!
  * Disable the specified SPI controller slave select output lines.
- * 
+ *
  * This function is only valid for SPI controllers configured as masters.
  *
  * \param       spi_dev
@@ -599,7 +599,7 @@ ALT_STATUS_CODE alt_spi_slave_select_disable(ALT_SPI_DEV_t *spi_dev,
 
 /*!
  * Enable the specified SPI controller slave select output lines.
- * 
+ *
  * Normally, unless operating in broadcast mode, only one slave select output
  * should be specified in \e mask.
  *
@@ -643,7 +643,7 @@ ALT_STATUS_CODE alt_spi_slave_select_enable(ALT_SPI_DEV_t *spi_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_speed_get(ALT_SPI_DEV_t * spi_dev, 
+ALT_STATUS_CODE alt_spi_speed_get(ALT_SPI_DEV_t * spi_dev,
                                   uint32_t * speed_in_hz);
 
 
@@ -659,7 +659,7 @@ ALT_STATUS_CODE alt_spi_speed_get(ALT_SPI_DEV_t * spi_dev,
  * * <b>F<sub>spi_m_clk</sub></b> is the input clock frequency to the SPI master
  *   peripheral module.
  * * <b>DIV</b> is the baud rate divider value.
- *   
+ *
  * This function is only valid for SPI master controllers.
  *
  * \param       spi_dev
@@ -683,7 +683,7 @@ ALT_STATUS_CODE alt_spi_divider_set(ALT_SPI_DEV_t *spi_dev, const uint32_t div);
 
 /*!
  * Get the configured baud rate divider value for the specified SPI controller.
- * 
+ *
  * This function is only valid for SPI master controllers.
  *
  * \param       spi_dev
@@ -714,7 +714,7 @@ ALT_STATUS_CODE alt_spi_baud_rate_get(ALT_SPI_DEV_t *spi_dev, uint32_t *div);
  * * <b>F<sub>spi_m_clk</sub></b> is the input clock frequency to the SPI master
  *   peripheral module.
  * * <b>DIV</b> is the baud rate divider value.
- *   
+ *
  * This function is only valid for SPI master controllers.
  *
  * \param       spi_dev
@@ -753,7 +753,7 @@ ALT_STATUS_CODE alt_spi_baud_rate_set(ALT_SPI_DEV_t *spi_dev, const uint32_t div
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_speed_get(ALT_SPI_DEV_t * spi_dev, 
+ALT_STATUS_CODE alt_spi_speed_get(ALT_SPI_DEV_t * spi_dev,
                                   uint32_t * speed_in_hz);
 
 /*!
@@ -772,7 +772,7 @@ ALT_STATUS_CODE alt_spi_speed_get(ALT_SPI_DEV_t * spi_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_speed_set(ALT_SPI_DEV_t * spi_dev, 
+ALT_STATUS_CODE alt_spi_speed_set(ALT_SPI_DEV_t * spi_dev,
                                   uint32_t speed_in_hz);
 
 
@@ -795,8 +795,8 @@ ALT_STATUS_CODE alt_spi_speed_set(ALT_SPI_DEV_t * spi_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_speed_to_divider(ALT_SPI_DEV_t * spi_dev, 
-                                        uint32_t speed_in_hz, 
+ALT_STATUS_CODE alt_spi_speed_to_divider(ALT_SPI_DEV_t * spi_dev,
+                                        uint32_t speed_in_hz,
                                         uint32_t * div);
 
 /*!
@@ -818,8 +818,8 @@ ALT_STATUS_CODE alt_spi_speed_to_divider(ALT_SPI_DEV_t * spi_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_divider_to_speed(ALT_SPI_DEV_t * spi_dev, 
-                                        uint32_t * speed_in_hz, 
+ALT_STATUS_CODE alt_spi_divider_to_speed(ALT_SPI_DEV_t * spi_dev,
+                                        uint32_t * speed_in_hz,
                                         const uint32_t * div);
 
 /*!
@@ -1402,13 +1402,13 @@ ALT_STATUS_CODE alt_spi_tx_fifo_threshold_set(ALT_SPI_DEV_t *spi_dev,
  * These functions assume that the SPI master or serial controller configuration
  * has already been established by calls to configuration functions like
  * alt_spi_config_set() and alt_spi_baud_rate_set().
- * 
+ *
  * The transfer functions in this section modify settings for the SPI controller
  * interrupts and Tx/Rx FIFOs as part of their implementation. No attempt to
  * preserve established settings for interrupts and Tx/Rx FIFOs across calls to
  * the transfer functions in this section is made.
  *
- * \internal 
+ * \internal
  * The functions in this section are variations of procedures detailed in chapter 3.
  * of DesignWare DW_apb_ssi Databook.
  *
@@ -1459,11 +1459,11 @@ ALT_STATUS_CODE alt_spi_tx_fifo_threshold_set(ALT_SPI_DEV_t *spi_dev,
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  *
- * \internal 
+ * \internal
  * Use procedure specified in section 3.6.1.4 of DesignWare DW_apb_ssi
  * Databook. You may use interrupts to handle Tx FIFO, Rx FIFO, and BUSY event
  * conditions.
- * 
+ *
  * * Preconditions to calling this function are that the SPI
  *   controller has been configured with calls to:
  *   - alt_spi_config_set()
@@ -1472,10 +1472,10 @@ ALT_STATUS_CODE alt_spi_tx_fifo_threshold_set(ALT_SPI_DEV_t *spi_dev,
  * * Follow steps 3 - 8 of the procedure.
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_master_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
                                               const uint32_t slave_select,
                                               const size_t num_frames,
-                                              const uint16_t * tx_buf, 
+                                              const uint16_t * tx_buf,
                                               uint16_t * rx_buf);
 
 /*!
@@ -1501,11 +1501,11 @@ ALT_STATUS_CODE alt_spi_master_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
  *              \e tx_buf element. The buffer is expected to contain \e num_frames
  *              data frames for transmittal.
  *
- * \internal 
+ * \internal
  * Use procedure specified in section 3.6.1.4 of DesignWare DW_apb_ssi
  * Databook. You may use interrupts to handle Tx FIFO, Rx FIFO, and BUSY event
  * conditions.
- * 
+ *
  * * Preconditions to calling this function are that the SPI
  *   controller has been configured with calls to:
  *   - alt_spi_config_set()
@@ -1514,7 +1514,7 @@ ALT_STATUS_CODE alt_spi_master_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
  * * Follow steps 3 - 8 of the procedure.
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_master_tx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_tx_transfer(ALT_SPI_DEV_t *spi_dev,
                                            const uint32_t slave_select,
                                            const size_t num_frames,
                                            const uint16_t * tx_buf);
@@ -1540,11 +1540,11 @@ ALT_STATUS_CODE alt_spi_master_tx_transfer(ALT_SPI_DEV_t *spi_dev,
  *              buffer is expected to be at least \e num_frames data frames in
  *              length.
  *
- * \internal 
+ * \internal
  * Use procedure specified in section 3.6.1.4 of DesignWare DW_apb_ssi
  * Databook. You may use interrupts to handle Tx FIFO, Rx FIFO, and BUSY event
  * conditions.
- * 
+ *
  * * Preconditions to calling this function are that the SPI
  *   controller has been configured with calls to:
  *   - alt_spi_config_set()
@@ -1554,7 +1554,7 @@ ALT_STATUS_CODE alt_spi_master_tx_transfer(ALT_SPI_DEV_t *spi_dev,
  * * Follow steps 3 - 8 of the procedure.
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_master_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_rx_transfer(ALT_SPI_DEV_t *spi_dev,
                                            const uint32_t slave_select,
                                            const size_t num_frames,
                                            uint16_t * rx_buf);
@@ -1586,11 +1586,11 @@ ALT_STATUS_CODE alt_spi_master_rx_transfer(ALT_SPI_DEV_t *spi_dev,
  *              buffer is expected to be at least \e num_frames data frames in
  *              length.
  *
- * \internal 
+ * \internal
  * Use procedure specified in section 3.6.1.4 of DesignWare DW_apb_ssi
  * Databook. You may use interrupts to handle Tx FIFO, Rx FIFO, and BUSY event
  * conditions.
- * 
+ *
  * * Preconditions to calling this function are that the SPI
  *   controller has been configured with calls to:
  *   - alt_spi_config_set()
@@ -1604,7 +1604,7 @@ ALT_STATUS_CODE alt_spi_master_rx_transfer(ALT_SPI_DEV_t *spi_dev,
  * * Follow steps 3 - 8 of the procedure.
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_master_eeprom_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_master_eeprom_transfer(ALT_SPI_DEV_t *spi_dev,
                                                const uint32_t slave_select,
                                                const uint8_t opcode,
                                                const uint16_t eeprom_addr,
@@ -1649,11 +1649,11 @@ ALT_STATUS_CODE alt_spi_master_eeprom_transfer(ALT_SPI_DEV_t *spi_dev,
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  *
- * \internal 
+ * \internal
  * Use procedure specified in section 3.6.2.1 of DesignWare DW_apb_ssi
  * Databook. You may use interrupts to handle Tx FIFO, Rx FIFO, and BUSY event
  * conditions.
- * 
+ *
  * * Preconditions to calling this function are that the SPI
  *   controller has been configured with calls to:
  *   - alt_spi_config_set()
@@ -1662,8 +1662,8 @@ ALT_STATUS_CODE alt_spi_master_eeprom_transfer(ALT_SPI_DEV_t *spi_dev,
  * * Follow steps 3 - 8 of the procedure.
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_slave_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
-                                             const uint16_t * tx_buf, 
+ALT_STATUS_CODE alt_spi_slave_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
+                                             const uint16_t * tx_buf,
                                              uint16_t * rx_buf,
                                              const size_t buf_len);
 
@@ -1686,11 +1686,11 @@ ALT_STATUS_CODE alt_spi_slave_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
  * \param       buf_len
  *              The length in data frames of the \e tx_buf buffer.
  *
- * \internal 
+ * \internal
  * Use procedure specified in section 3.6.2.1 of DesignWare DW_apb_ssi
  * Databook. You may use interrupts to handle Tx FIFO, Rx FIFO, and BUSY event
  * conditions.
- * 
+ *
  * * Preconditions to calling this function are that the SPI
  *   controller has been configured with calls to:
  *   - alt_spi_config_set()
@@ -1699,7 +1699,7 @@ ALT_STATUS_CODE alt_spi_slave_tx_rx_transfer(ALT_SPI_DEV_t *spi_dev,
  * * Follow steps 3 - 8 of the procedure.
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_slave_tx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_slave_tx_transfer(ALT_SPI_DEV_t *spi_dev,
                                           const uint16_t * tx_buf,
                                           const size_t buf_len);
 
@@ -1721,11 +1721,11 @@ ALT_STATUS_CODE alt_spi_slave_tx_transfer(ALT_SPI_DEV_t *spi_dev,
  * \param       buf_len
  *              The length in data frames of the \e rx_buf buffer.
  *
- * \internal 
+ * \internal
  * Use procedure specified in section 3.6.2.1 of DesignWare DW_apb_ssi
  * Databook. You may use interrupts to handle Tx FIFO, Rx FIFO, and BUSY event
  * conditions.
- * 
+ *
  * * Preconditions to calling this function are that the SPI
  *   controller has been configured with calls to:
  *   - alt_spi_config_set()
@@ -1735,7 +1735,7 @@ ALT_STATUS_CODE alt_spi_slave_tx_transfer(ALT_SPI_DEV_t *spi_dev,
  * * Follow steps 3 - 8 of the procedure.
  * \endinternal
  */
-ALT_STATUS_CODE alt_spi_slave_rx_transfer(ALT_SPI_DEV_t *spi_dev, 
+ALT_STATUS_CODE alt_spi_slave_rx_transfer(ALT_SPI_DEV_t *spi_dev,
                                           uint16_t * rx_buf,
                                           const size_t buf_len);
 
@@ -1786,7 +1786,7 @@ ALT_STATUS_CODE alt_spi_dma_tx_disable(ALT_SPI_DEV_t *spi_dev);
  *              The transmit data level value at which the DMA request is made by
  *              the SPI controller transmit logic. The DMA request signal is
  *              generated when the number of valid data entries in the Tx FIFO is
- *              equal or below the \e level value. Valid values: 0 <= \e level < 
+ *              equal or below the \e level value. Valid values: 0 <= \e level <
  *              ALT_SPI_TX_FIFO_NUM_ENTRIES.
  *
  * \retval      ALT_E_SUCCESS   Successful status.
@@ -1824,7 +1824,7 @@ ALT_STATUS_CODE alt_spi_dma_rx_disable(ALT_SPI_DEV_t *spi_dev);
  *              The receive data level value at which the DMA request is made by
  *              the SPI controller receive logic. The DMA request signal is
  *              generated when the number of valid data entries in the Rx FIFO is
- *              equal or below the \e level value. Valid values: 0 < \e level <= 
+ *              equal or below the \e level value. Valid values: 0 < \e level <=
  *              ALT_SPI_RX_FIFO_NUM_ENTRIES.
  *
  * \retval      ALT_E_SUCCESS   Successful status.

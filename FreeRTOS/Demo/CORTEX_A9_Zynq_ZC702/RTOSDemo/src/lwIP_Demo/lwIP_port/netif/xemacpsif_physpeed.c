@@ -555,4 +555,3 @@ unsigned Phy_Setup (XEmacPs *xemacpsp)
 	xil_printf("link speed: %d\r\n", link_speed);
 	return link_speed;
 }
-

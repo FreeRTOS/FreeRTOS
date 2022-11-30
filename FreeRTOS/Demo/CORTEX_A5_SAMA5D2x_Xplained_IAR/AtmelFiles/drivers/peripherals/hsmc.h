@@ -64,13 +64,13 @@
 #define hsmc_pmecc_data_phase()        {HSMC->HSMC_PMECCTRL |= HSMC_PMECCTRL_DATA; }
 #define hsmc_pmecc_enable_write()      {HSMC->HSMC_PMECCFG |= HSMC_PMECCFG_NANDWR;}
 #define hsmc_pmecc_enable_read()       {HSMC->HSMC_PMECCFG &= (~HSMC_PMECCFG_NANDWR);}
- 
+
 #define hsmc_pmecc_error_status()      (HSMC->HSMC_PMECCISR )
 #define hsmc_pmecc_enable()            {HSMC->HSMC_PMECCTRL = HSMC_PMECCTRL_ENABLE;}
 #define hsmc_pmecc_disable()           {HSMC->HSMC_PMECCTRL = HSMC_PMECCTRL_DISABLE;}
 #define hsmc_pmecc_auto_enable()       {HSMC->HSMC_PMECCFG |= HSMC_PMECCFG_AUTO;}
 #define hsmc_pmecc_auto_disable()      {HSMC->HSMC_PMECCFG &= (~HSMC_PMECCFG_AUTO);}
-#define hsmc_pmecc_auto_apare_en()     ((HSMC->HSMC_PMECCFG & HSMC_PMECCFG_SPAREEN) == HSMC_PMECCFG_SPAREEN) 
+#define hsmc_pmecc_auto_apare_en()     ((HSMC->HSMC_PMECCFG & HSMC_PMECCFG_SPAREEN) == HSMC_PMECCFG_SPAREEN)
 #define hsmc_pmecc(i)                  (HSMC->SMC_PMECC[i])
 
 /*----------------------------------------------------------------------------

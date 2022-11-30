@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -59,4 +59,3 @@ extern unsigned int PMC_IsAllPeriphEnabled(void);
 extern unsigned int PMC_IsPeriphEnabled(unsigned int id);
 
 #endif //#ifndef PMC_H
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -143,7 +143,7 @@ static void CAN_ErrorHandling( unsigned int status, unsigned char can_number)
 // Generic CAN Interrupt handler
 /// \param can_number can nulber
 //------------------------------------------------------------------------------
-static void CAN_Handler( unsigned char can_number ) 
+static void CAN_Handler( unsigned char can_number )
 {
     AT91PS_CAN base_can;
     AT91PS_CAN_MB CAN_Mailbox;
@@ -201,8 +201,8 @@ static void CAN_Handler( unsigned char can_number )
                 if( message_mode == 0 ) {
                     TRACE_ERROR("Error in MOT\n\r");
                 }
-                else if( ( message_mode == CAN_MOT_RECEPT ) 
-                      || ( message_mode == CAN_MOT_RECEPT_OW ) 
+                else if( ( message_mode == CAN_MOT_RECEPT )
+                      || ( message_mode == CAN_MOT_RECEPT_OW )
                       || ( message_mode == CAN_MOT_PRODUCER ) ) {
                     TRACE_DEBUG("Mailbox is in RECEPTION\n\r");
                     TRACE_DEBUG("Length 0x%X\n\r", (can_msr>>16)&0xF);
@@ -211,10 +211,10 @@ static void CAN_Handler( unsigned char can_number )
                     TRACE_DEBUG("can_number %d\n\r", can_number);
                     if( can_number == 0 ) {
                         //CAN_MB_MDLx
-                        pCAN0Transfer->data_low_reg = 
+                        pCAN0Transfer->data_low_reg =
                            (*(unsigned int*)((unsigned int)CAN_Mailbox+(unsigned int)(0x14+(0x20*numMailbox))));
                         //CAN_MB_MDHx
-                        pCAN0Transfer->data_high_reg = 
+                        pCAN0Transfer->data_high_reg =
                            (*(unsigned int*)((unsigned int)CAN_Mailbox+(unsigned int)(0x18+(0x20*numMailbox))));
                         pCAN0Transfer->size = (can_msr>>16)&0xF;
                         pCAN0Transfer->mailbox_number = numMailbox;
@@ -223,10 +223,10 @@ static void CAN_Handler( unsigned char can_number )
 #ifdef AT91C_BASE_CAN1
                     else {
                         //CAN_MB_MDLx
-                        pCAN1Transfer->data_low_reg = 
+                        pCAN1Transfer->data_low_reg =
                            (*(unsigned int*)((unsigned int)CAN_Mailbox+(unsigned int)(0x14+(0x20*numMailbox))));
                         //CAN_MB_MDHx
-                        pCAN1Transfer->data_high_reg = 
+                        pCAN1Transfer->data_high_reg =
                            (*(unsigned int*)((unsigned int)CAN_Mailbox+(unsigned int)(0x18+(0x20*numMailbox))));
                         pCAN1Transfer->size = (can_msr>>16)&0xF;
                         pCAN1Transfer->mailbox_number = numMailbox;
@@ -342,7 +342,7 @@ void CAN_InitMailboxRegisters( CanTransfer *pTransfer )
 void CAN_ResetAllMailbox( void )
 {
     unsigned char i;
-  
+
 #if defined (AT91C_BASE_CAN0_MB0)
     CAN_ResetTransfer( pCAN0Transfer );
     for( i=0; i<8; i++ ) {
@@ -467,7 +467,7 @@ static unsigned char CAN_Synchronisation( void )
 
         tick = 0;
         // Wait for WAKEUP flag raising <=> 11-recessive-bit were scanned by the transceiver
-        while( ((pCAN1Transfer->test_can != AT91C_TEST_OK)) 
+        while( ((pCAN1Transfer->test_can != AT91C_TEST_OK))
             && (tick < AT91C_CAN_TIMEOUT) ) {
             tick++;
         }
@@ -486,7 +486,7 @@ static unsigned char CAN_Synchronisation( void )
 //------------------------------------------------------------------------------
 /// Write a CAN transfer
 /// \param pTransfer can transfer structure
-/// \return return CAN_STATUS_SUCCESS if command passed, otherwise 
+/// \return return CAN_STATUS_SUCCESS if command passed, otherwise
 ///         return CAN_STATUS_LOCKED
 //------------------------------------------------------------------------------
 unsigned char CAN_Write( CanTransfer *pTransfer )
@@ -522,7 +522,7 @@ unsigned char CAN_Write( CanTransfer *pTransfer )
 //------------------------------------------------------------------------------
 /// Read a CAN transfer
 /// \param pTransfer can transfer structure
-/// \return return CAN_STATUS_SUCCESS if command passed, otherwise 
+/// \return return CAN_STATUS_SUCCESS if command passed, otherwise
 ///         return CAN_STATUS_LOCKED
 //------------------------------------------------------------------------------
 unsigned char CAN_Read( CanTransfer *pTransfer )
@@ -584,7 +584,7 @@ void CAN_BasicTestSuiteWithoutInterrupt(void)
     pCAN0Transfer->control_reg = (AT91C_CAN_MDLC & (0x8<<16));
     CAN_InitMailboxRegisters( pCAN0Transfer );
 
-    // Init CAN1 Mailbox 0, receive, 
+    // Init CAN1 Mailbox 0, receive,
     CAN_ResetTransfer( pCAN1Transfer );
     pCAN1Transfer->can_number = 1;
     pCAN1Transfer->mailbox_number = 0;
@@ -608,7 +608,7 @@ void CAN_BasicTestSuiteWithoutInterrupt(void)
 
     if (tick == AT91C_CAN_TIMEOUT) {
         TRACE_ERROR("Test FAILED\n\r");
-    } 
+    }
     else {
         TRACE_DEBUG("Transfer completed: CAN1 Mailbox 0 MRDY flag has raised\n\r");
         if( AT91C_BASE_CAN0_MB0->CAN_MB_MDL != AT91C_BASE_CAN1_MB0->CAN_MB_MDL ) {
@@ -663,7 +663,7 @@ void CAN_BasicTestSuiteWithoutInterrupt(void)
 
     // Ask Transmissions on Mailbox 1 & 2 --> AT91C_CAN_MRDY & AT91C_CAN_MMI raises for Mailbox 15 CAN_MB_SR
     AT91C_BASE_CAN0->CAN_TCR = AT91C_CAN_MB1 | AT91C_CAN_MB2;
-    
+
     // Wait for Last Transmit Mailbox
     tick = 0;
     do  {
@@ -726,7 +726,7 @@ void CAN_BasicTestSuiteWithoutInterrupt(void)
 
     // Ask Transmissions on Mailbox 1 & 2 --> AT91C_CAN_MRDY & AT91C_CAN_MMI raises for Mailbox 15 CAN_MB_SR
     AT91C_BASE_CAN0->CAN_TCR = AT91C_CAN_MB1 | AT91C_CAN_MB2;
-    
+
     // Wait for Last Transmit Mailbox
     tick = 0;
     do  {
@@ -840,14 +840,14 @@ void CAN_disable( void )
 #endif
 
     // Disable clock for CAN PIO
-#if defined(AT91C_ID_PIOA)    
+#if defined(AT91C_ID_PIOA)
     AT91C_BASE_PMC->PMC_PCDR = (1 << AT91C_ID_PIOA);
 #elif defined(AT91C_ID_PIOABCD)
     AT91C_BASE_PMC->PMC_PCDR = (1 << AT91C_ID_PIOABCD);
 #elif defined(AT91C_ID_PIOABCDE)
     AT91C_BASE_PMC->PMC_PCDR = (1 << AT91C_ID_PIOABCDE);
 #endif
-    
+
     // Disable the CAN0 controller peripheral clock
     AT91C_BASE_PMC->PMC_PCDR = (1 << AT91C_ID_CAN0);
 
@@ -860,7 +860,7 @@ void CAN_disable( void )
 ///                 allowed values: 1000, 800, 500, 250, 125, 50, 25, 10
 /// \return return 1 in success, otherwise return 0
 //------------------------------------------------------------------------------
-unsigned char CAN_BaudRateCalculate( AT91PS_CAN   base_CAN, 
+unsigned char CAN_BaudRateCalculate( AT91PS_CAN   base_CAN,
                                      unsigned int baudrate )
 {
     unsigned int BRP;
@@ -950,12 +950,12 @@ unsigned char CAN_BaudRateCalculate( AT91PS_CAN   base_CAN,
 ///                 allowed values: 1000, 800, 500, 250, 125, 50, 25, 10
 /// \param canTransfer0 CAN0 structure transfer
 /// \param canTransfer1 CAN1 structure transfer
-/// \return return 1 if CAN has good baudrate and CAN is synchronized, 
+/// \return return 1 if CAN has good baudrate and CAN is synchronized,
 ///         otherwise return 0
 //------------------------------------------------------------------------------
-unsigned char CAN_Init( unsigned int baudrate, 
-                        CanTransfer *canTransfer0, 
-                        CanTransfer *canTransfer1 ) 
+unsigned char CAN_Init( unsigned int baudrate,
+                        CanTransfer *canTransfer0,
+                        CanTransfer *canTransfer1 )
 {
     unsigned char ret;
 
@@ -975,7 +975,7 @@ unsigned char CAN_Init( unsigned int baudrate,
 #endif
 
     // Enable clock for CAN PIO
-#if defined(AT91C_ID_PIOA)    
+#if defined(AT91C_ID_PIOA)
     AT91C_BASE_PMC->PMC_PCER = (1 << AT91C_ID_PIOA);
 #elif defined(AT91C_ID_PIOABCD)
     AT91C_BASE_PMC->PMC_PCER = (1 << AT91C_ID_PIOABCD);
@@ -1063,4 +1063,3 @@ unsigned char CAN_Init( unsigned int baudrate,
 
     return ret;
 }
-

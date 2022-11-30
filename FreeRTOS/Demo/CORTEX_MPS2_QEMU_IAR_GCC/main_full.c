@@ -316,4 +316,3 @@ void vFullDemoTickHookFunction( void )
 	vInterruptSemaphorePeriodicTest();
 }
 /*-----------------------------------------------------------*/
-

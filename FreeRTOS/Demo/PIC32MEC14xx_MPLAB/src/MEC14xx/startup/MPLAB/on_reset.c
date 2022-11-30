@@ -40,9 +40,9 @@ extern uint32_t _ebase_address[];
 /** _on_reset - Very early HW initialization.
  * @note XC32 startup code has initialized SP & GP. No other
  * C features have been initialized (before .bss clear and
- * global data init.) NOTE: MIPS M14K is still in Boot-Strap 
- * mode and EBASE has not been programmed. Any exception or 
- * interrupts will vector to the BEV Exception handler! 
+ * global data init.) NOTE: MIPS M14K is still in Boot-Strap
+ * mode and EBASE has not been programmed. Any exception or
+ * interrupts will vector to the BEV Exception handler!
  */
 void
 __attribute__((nomips16)) _on_reset (void)
@@ -59,5 +59,3 @@ __attribute__((nomips16)) _on_reset (void)
     CPU_NOP();
 
 }
-
-

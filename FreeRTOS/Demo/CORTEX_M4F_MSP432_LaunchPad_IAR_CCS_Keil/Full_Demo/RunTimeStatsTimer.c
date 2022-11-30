@@ -80,4 +80,3 @@ unsigned long ulValueNow;
 	return ulValueNow;
 }
 /*-----------------------------------------------------------*/
-

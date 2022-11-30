@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -97,4 +97,3 @@ extern void AC97C_SetChannelSize(unsigned char channel, unsigned char size);
 extern void AC97C_CancelTransfer(unsigned char channel);
 
 #endif //#ifndef AC97C_H
-

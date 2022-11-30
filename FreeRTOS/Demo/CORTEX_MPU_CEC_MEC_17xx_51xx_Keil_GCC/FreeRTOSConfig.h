@@ -169,4 +169,3 @@ solely for the purpose of ensuring parameters are passed into tasks correctly. *
 
 
 #endif /* FREERTOS_CONFIG_H */
-

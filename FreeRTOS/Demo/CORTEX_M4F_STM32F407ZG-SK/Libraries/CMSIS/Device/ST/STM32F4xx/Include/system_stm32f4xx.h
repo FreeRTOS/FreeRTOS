@@ -4,8 +4,8 @@
   * @author  MCD Application Team
   * @version V1.0.0
   * @date    30-September-2011
-  * @brief   CMSIS Cortex-M4 Device System Source File for STM32F4xx devices.  
-  ******************************************************************************  
+  * @brief   CMSIS Cortex-M4 Device System Source File for STM32F4xx devices.
+  ******************************************************************************
   * @attention
   *
   * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -16,8 +16,8 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  ******************************************************************************  
-  */ 
+  ******************************************************************************
+  */
 
 /** @addtogroup CMSIS
   * @{
@@ -25,8 +25,8 @@
 
 /** @addtogroup stm32f4xx_system
   * @{
-  */  
-  
+  */
+
 /**
   * @brief Define to prevent recursive inclusion
   */
@@ -35,7 +35,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /** @addtogroup STM32F4xx_System_Includes
   * @{
@@ -76,7 +76,7 @@ extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Cloc
 /** @addtogroup STM32F4xx_System_Exported_Functions
   * @{
   */
-  
+
 extern void SystemInit(void);
 extern void SystemCoreClockUpdate(void);
 /**
@@ -92,8 +92,8 @@ extern void SystemCoreClockUpdate(void);
 /**
   * @}
   */
-  
+
 /**
   * @}
-  */  
+  */
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

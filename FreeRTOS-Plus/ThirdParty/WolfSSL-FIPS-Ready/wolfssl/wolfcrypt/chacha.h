@@ -97,4 +97,3 @@ WOLFSSL_API int wc_Chacha_SetKey(ChaCha* ctx, const byte* key, word32 keySz);
 
 #endif /* HAVE_CHACHA */
 #endif /* WOLF_CRYPT_CHACHA_H */
-

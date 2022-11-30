@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -184,7 +184,7 @@ extern uint32_t PMC_IsPeriphEnabled( uint32_t dwId )
  * \brief Select external 32K crystal.
  */
 extern void PMC_SelectExt32KCrystal(void)
-{ 
+{
     volatile uint32_t count;
     SCKC->SCKC_CR = (SCKC->SCKC_CR & ~SCKC_CR_OSCSEL) | SCKC_CR_OSCSEL_XTAL;
     /* Wait 5 slow clock cycles for internal resynchronization*/
@@ -211,14 +211,14 @@ extern void PMC_SelectInt32kCrystal(void)
  * \brief Select external 12M OSC.
  */
 extern void PMC_SelectExt12M_Osc(void)
-{ 
+{
     /* switch from internal RC 12 MHz to external OSC 12 MHz */
     /* wait Main XTAL Oscillator stabilisation*/
     if ((PMC->CKGR_MOR & CKGR_MOR_MOSCSEL ) == CKGR_MOR_MOSCSEL) return;
     /* enable external OSC 12 MHz */
-    PMC->CKGR_MOR |= CKGR_MOR_MOSCXTEN | CKGR_MOR_KEY_PASSWD; 
+    PMC->CKGR_MOR |= CKGR_MOR_MOSCXTEN | CKGR_MOR_KEY_PASSWD;
     /* wait Main CLK Ready */
-    while(!(PMC->CKGR_MCFR & CKGR_MCFR_MAINFRDY)); 
+    while(!(PMC->CKGR_MCFR & CKGR_MCFR_MAINFRDY));
     /* switch MAIN clock to external OSC 12 MHz*/
     PMC->CKGR_MOR |= CKGR_MOR_MOSCSEL | CKGR_MOR_KEY_PASSWD;
     /* wait MAIN clock status change for external OSC 12 MHz selection*/
@@ -339,4 +339,3 @@ extern void PMC_DisablePllA(void)
 {
     PMC->CKGR_PLLAR = (PMC->CKGR_PLLAR & ~CKGR_PLLAR_MULA_Msk) | CKGR_PLLAR_MULA(0);
 }
-

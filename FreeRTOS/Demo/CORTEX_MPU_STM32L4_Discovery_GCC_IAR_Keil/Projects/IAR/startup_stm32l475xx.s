@@ -163,8 +163,8 @@ __vector_table
         DCD     SAI2_IRQHandler                   ; Serial Audio Interface 2 global interrupt
         DCD     SWPMI1_IRQHandler                 ; Serial Wire Interface global interrupt
         DCD     TSC_IRQHandler                    ; Touch Sense Controller global interrupt
-        DCD     0                                 ; Reserved        
-        DCD     0                                 ; Reserved        
+        DCD     0                                 ; Reserved
+        DCD     0                                 ; Reserved
         DCD     RNG_IRQHandler                    ; RNG global interrupt
         DCD     FPU_IRQHandler                    ; FPU
 

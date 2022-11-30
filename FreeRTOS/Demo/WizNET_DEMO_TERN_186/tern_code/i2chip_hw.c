@@ -70,7 +70,7 @@ a	HLPRsetvect(0x47, (void far *) spu_m_isr);
 	outport(0xffa6,0x81ff); 						     // MMCS, base 0x80000,
 	outport(0xffa2,0x7fbf);						        // 512K RAM,
 	outport(0xffa4,0x007d); 						     // PACS, base 0,
-	
+
 #else
 
 	outport( 0xffa0,0xc0bf); // UMCS, 256K ROM, 3 wait, disable AD15-0

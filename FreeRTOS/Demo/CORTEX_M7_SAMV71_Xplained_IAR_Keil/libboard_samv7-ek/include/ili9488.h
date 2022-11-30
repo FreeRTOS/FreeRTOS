@@ -57,7 +57,7 @@ typedef uint32_t LcdColor_t ;
 #define ILI9488_LCD_WIDTH       320
 #define ILI9488_LCD_HEIGHT      480
 #define ILI9488_SELF_TEST_OK    0xC0
-   
+
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ typedef volatile uint8_t REG8;
 #define ILI9488_CMD(x) (uint16_t)(x & 0x00FF)
 /** ILI9488 status register address */
 #define ILI9488_PARAM(x) (uint16_t)(x | 0x100)
-   
+
 
 #define ILI9488_cs          1
 

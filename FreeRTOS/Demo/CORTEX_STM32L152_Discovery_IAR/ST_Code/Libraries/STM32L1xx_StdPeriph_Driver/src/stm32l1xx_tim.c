@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.1.1
   * @date    05-March-2012
-  * @brief   This file provides firmware functions to manage the following 
+  * @brief   This file provides firmware functions to manage the following
   *          functionalities of the TIM peripheral:
   *            + TimeBase management
   *            + Output Compare management
@@ -13,16 +13,16 @@
   *            + Clocks management
   *            + Synchronization management
   *            + Specific interface management
-  *            + Specific remapping management      
-  *              
+  *            + Specific remapping management
+  *
 *  @verbatim
-  
+
  ===============================================================================
                     ##### How to use this driver #####
  ===============================================================================
-    [..] This driver provides functions to configure and program the TIM 
-         of all STM32L1xx devices These functions are split in 8 groups: 
-         (#) TIM TimeBase management: this group includes all needed functions 
+    [..] This driver provides functions to configure and program the TIM
+         of all STM32L1xx devices These functions are split in 8 groups:
+         (#) TIM TimeBase management: this group includes all needed functions
              to configure the TM Timebase unit:
              (++) Set/Get Prescaler.
              (++) Set/Get Autoreload.
@@ -33,59 +33,59 @@
              (++) Update Disable Configuration.
              (++) Auto-Preload Configuration.
              (++) Enable/Disable the counter.
-  
-         (#) TIM Output Compare management: this group includes all needed 
-             functions to configure the Capture/Compare unit used in Output 
-             compare mode: 
+
+         (#) TIM Output Compare management: this group includes all needed
+             functions to configure the Capture/Compare unit used in Output
+             compare mode:
              (++) Configure each channel, independently, in Output Compare mode.
              (++) Select the output compare modes.
              (++) Select the Polarities of each channel.
              (++) Set/Get the Capture/Compare register values.
-             (++) Select the Output Compare Fast mode. 
-             (++) Select the Output Compare Forced mode.  
-             (++) Output Compare-Preload Configuration. 
+             (++) Select the Output Compare Fast mode.
+             (++) Select the Output Compare Forced mode.
+             (++) Output Compare-Preload Configuration.
              (++) Clear Output Compare Reference.
              (++) Select the OCREF Clear signal.
-             (++) Enable/Disable the Capture/Compare Channels.    
-  
-         (#) TIM Input Capture management: this group includes all needed 
-             functions to configure the Capture/Compare unit used in 
+             (++) Enable/Disable the Capture/Compare Channels.
+
+         (#) TIM Input Capture management: this group includes all needed
+             functions to configure the Capture/Compare unit used in
              Input Capture mode:
              (++) Configure each channel in input capture mode.
              (++) Configure Channel1/2 in PWM Input mode.
              (++) Set the Input Capture Prescaler.
-             (++) Get the Capture/Compare values.      
-  
+             (++) Get the Capture/Compare values.
+
          (#) TIM interrupts, DMA and flags management.
              (++) Enable/Disable interrupt sources.
              (++) Get flags status.
              (++) Clear flags/ Pending bits.
-             (++) Enable/Disable DMA requests. 
+             (++) Enable/Disable DMA requests.
              (++) Configure DMA burst mode.
-             (++) Select CaptureCompare DMA request.  
-  
-         (#) TIM clocks management: this group includes all needed functions 
+             (++) Select CaptureCompare DMA request.
+
+         (#) TIM clocks management: this group includes all needed functions
              to configure the clock controller unit:
              (++) Select internal/External clock.
              (++) Select the external clock mode: ETR(Mode1/Mode2), TIx or ITRx.
-  
-         (#) TIM synchronization management: this group includes all needed. 
+
+         (#) TIM synchronization management: this group includes all needed.
              functions to configure the Synchronization unit:
-             (++) Select Input Trigger.  
-             (++) Select Output Trigger.  
-             (++) Select Master Slave Mode. 
-             (++) ETR Configuration when used as external trigger.   
-  
-         (#) TIM specific interface management, this group includes all 
+             (++) Select Input Trigger.
+             (++) Select Output Trigger.
+             (++) Select Master Slave Mode.
+             (++) ETR Configuration when used as external trigger.
+
+         (#) TIM specific interface management, this group includes all
              needed functions to use the specific TIM interface:
              (++) Encoder Interface Configuration.
-             (++) Select Hall Sensor.   
-  
-         (#) TIM specific remapping management includes the Remapping 
+             (++) Select Hall Sensor.
+
+         (#) TIM specific remapping management includes the Remapping
              configuration of specific timers
-  
+
 @endverbatim
-  
+
   ******************************************************************************
   * @attention
   *
@@ -97,8 +97,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -114,7 +114,7 @@
   * @{
   */
 
-/** @defgroup TIM 
+/** @defgroup TIM
   * @brief TIM driver modules
   * @{
   */
@@ -123,10 +123,10 @@
 /* Private define ------------------------------------------------------------*/
 
 /* ---------------------- TIM registers bit mask ------------------------ */
-#define SMCR_ETR_MASK               ((uint16_t)0x00FF) 
+#define SMCR_ETR_MASK               ((uint16_t)0x00FF)
 #define CCMR_OFFSET                 ((uint16_t)0x0018)
-#define CCER_CCE_SET                ((uint16_t)0x0001)  
-  
+#define CCER_CCE_SET                ((uint16_t)0x0001)
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -146,29 +146,29 @@ static void TI4_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
   */
 
 /** @defgroup TIM_Group1 TimeBase management functions
- *  @brief   TimeBase management functions 
+ *  @brief   TimeBase management functions
  *
 @verbatim
  ===============================================================================
                  ##### TimeBase management functions #####
  ===============================================================================
-  
+
         *** TIM Driver: how to use it in Timing(Time base) Mode ***
  ===============================================================================
-    [..] To use the Timer in Timing(Time base) mode, the following steps are 
+    [..] To use the Timer in Timing(Time base) mode, the following steps are
          mandatory:
-         (#) Enable TIM clock using 
+         (#) Enable TIM clock using
              RCC_APBxPeriphClockCmd(RCC_APBxPeriph_TIMx, ENABLE) function.
          (#) Fill the TIM_TimeBaseInitStruct with the desired parameters.
-         (#) Call TIM_TimeBaseInit(TIMx, &TIM_TimeBaseInitStruct) to configure 
+         (#) Call TIM_TimeBaseInit(TIMx, &TIM_TimeBaseInitStruct) to configure
              the Time Base unit with the corresponding configuration.
-         (#) Enable the NVIC if you need to generate the update interrupt. 
-         (#) Enable the corresponding interrupt using the function 
-             TIM_ITConfig(TIMx, TIM_IT_Update). 
+         (#) Enable the NVIC if you need to generate the update interrupt.
+         (#) Enable the corresponding interrupt using the function
+             TIM_ITConfig(TIMx, TIM_IT_Update).
          (#) Call the TIM_Cmd(ENABLE) function to enable the TIM counter.
     [..]
         (@) All other functions can be used seperatly to modify, if needed,
-            a specific feature of the Timer. 
+            a specific feature of the Timer.
 
 @endverbatim
   * @{
@@ -178,13 +178,13 @@ static void TI4_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
   * @brief  Deinitializes the TIMx peripheral registers to their default reset values.
   * @param  TIMx: where x can be 2 to 11 to select the TIM peripheral.
   * @retval None
-  *   
+  *
   */
 void TIM_DeInit(TIM_TypeDef* TIMx)
 {
   /* Check the parameters */
-  assert_param(IS_TIM_ALL_PERIPH(TIMx)); 
-   
+  assert_param(IS_TIM_ALL_PERIPH(TIMx));
+
   if (TIMx == TIM2)
   {
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM2, ENABLE);
@@ -199,46 +199,46 @@ void TIM_DeInit(TIM_TypeDef* TIMx)
   {
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM4, ENABLE);
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM4, DISABLE);
-  } 
+  }
   else if (TIMx == TIM5)
   {
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM5, ENABLE);
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM5, DISABLE);
-  } 
+  }
   else if (TIMx == TIM6)
   {
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM6, ENABLE);
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM6, DISABLE);
-  } 
+  }
   else if (TIMx == TIM7)
   {
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM7, ENABLE);
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM7, DISABLE);
-  } 
+  }
 
   else if (TIMx == TIM9)
   {
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM9, ENABLE);
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM9, DISABLE);
-  } 
+  }
   else if (TIMx == TIM10)
   {
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM10, ENABLE);
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM10, DISABLE);
-  } 
+  }
   else
   {
     if (TIMx == TIM11)
     {
       RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM11, ENABLE);
-      RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM11, DISABLE); 
-    }  
+      RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM11, DISABLE);
+    }
   }
-     
+
 }
 
 /**
-  * @brief  Initializes the TIMx Time Base Unit peripheral according to 
+  * @brief  Initializes the TIMx Time Base Unit peripheral according to
   *         the specified parameters in the TIM_TimeBaseInitStruct.
   * @param  TIMx: where x can be 2 to 11 to select the TIM peripheral.
   * @param  TIM_TimeBaseInitStruct: pointer to a TIM_TimeBaseInitTypeDef
@@ -251,19 +251,19 @@ void TIM_TimeBaseInit(TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseIn
   uint16_t tmpcr1 = 0;
 
   /* Check the parameters */
-  assert_param(IS_TIM_ALL_PERIPH(TIMx)); 
+  assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_COUNTER_MODE(TIM_TimeBaseInitStruct->TIM_CounterMode));
   assert_param(IS_TIM_CKD_DIV(TIM_TimeBaseInitStruct->TIM_ClockDivision));
 
-  tmpcr1 = TIMx->CR1;  
+  tmpcr1 = TIMx->CR1;
 
   if(((TIMx) == TIM2) || ((TIMx) == TIM3) || ((TIMx) == TIM4) || ((TIMx) == TIM5))
-  {											
+  {
     /* Select the Counter Mode */
     tmpcr1 &= (uint16_t)(~((uint16_t)(TIM_CR1_DIR | TIM_CR1_CMS)));
     tmpcr1 |= (uint32_t)TIM_TimeBaseInitStruct->TIM_CounterMode;
   }
- 
+
   if(((TIMx) != TIM6) && ((TIMx) != TIM7))
   {
     /* Set the clock division */
@@ -275,12 +275,12 @@ void TIM_TimeBaseInit(TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseIn
 
   /* Set the Autoreload value */
   TIMx->ARR = TIM_TimeBaseInitStruct->TIM_Period ;
- 
+
   /* Set the Prescaler value */
   TIMx->PSC = TIM_TimeBaseInitStruct->TIM_Prescaler;
-    
+
   /* Generate an update event to reload the Prescaler value immediatly */
-  TIMx->EGR = TIM_PSCReloadMode_Immediate;          
+  TIMx->EGR = TIM_PSCReloadMode_Immediate;
 }
 
 /**
@@ -313,7 +313,7 @@ void TIM_PrescalerConfig(TIM_TypeDef* TIMx, uint16_t Prescaler, uint16_t TIM_PSC
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_PRESCALER_RELOAD(TIM_PSCReloadMode));
-  
+
   /* Set the Prescaler value */
   TIMx->PSC = Prescaler;
   /* Set or reset the UG Bit */
@@ -335,11 +335,11 @@ void TIM_PrescalerConfig(TIM_TypeDef* TIMx, uint16_t Prescaler, uint16_t TIM_PSC
 void TIM_CounterModeConfig(TIM_TypeDef* TIMx, uint16_t TIM_CounterMode)
 {
   uint16_t tmpcr1 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_COUNTER_MODE(TIM_CounterMode));
-  
+
   tmpcr1 = TIMx->CR1;
   /* Reset the CMS and DIR Bits */
   tmpcr1 &= (uint16_t)(~((uint16_t)(TIM_CR1_DIR | TIM_CR1_CMS)));
@@ -359,7 +359,7 @@ void TIM_SetCounter(TIM_TypeDef* TIMx, uint32_t Counter)
 {
   /* Check the parameters */
    assert_param(IS_TIM_ALL_PERIPH(TIMx));
-   
+
   /* Set the Counter Register value */
   TIMx->CNT = Counter;
 }
@@ -374,7 +374,7 @@ void TIM_SetAutoreload(TIM_TypeDef* TIMx, uint32_t Autoreload)
 {
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
-  
+
   /* Set the Autoreload Register value */
   TIMx->ARR = Autoreload;
 }
@@ -388,7 +388,7 @@ uint32_t TIM_GetCounter(TIM_TypeDef* TIMx)
 {
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
-  
+
   /* Get the Counter Register value */
   return TIMx->CNT;
 }
@@ -402,7 +402,7 @@ uint16_t TIM_GetPrescaler(TIM_TypeDef* TIMx)
 {
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
-  
+
   /* Get the Prescaler Register value */
   return TIMx->PSC;
 }
@@ -419,7 +419,7 @@ void TIM_UpdateDisableConfig(TIM_TypeDef* TIMx, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Set the Update Disable Bit */
@@ -448,7 +448,7 @@ void TIM_UpdateRequestConfig(TIM_TypeDef* TIMx, uint16_t TIM_UpdateSource)
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_UPDATE_SOURCE(TIM_UpdateSource));
-  
+
   if (TIM_UpdateSource != TIM_UpdateSource_Global)
   {
     /* Set the URS Bit */
@@ -473,7 +473,7 @@ void TIM_ARRPreloadConfig(TIM_TypeDef* TIMx, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Set the ARR Preload Bit */
@@ -491,9 +491,9 @@ void TIM_ARRPreloadConfig(TIM_TypeDef* TIMx, FunctionalState NewState)
   * @param  TIMx: where x can be 2 to 11 to select the TIM peripheral.
   * @param  TIM_OPMode: specifies the OPM Mode to be used.
   *   This parameter can be one of the following values:
-  *     @arg TIM_OPMode_Single:: TIM One Pulse Single Mode (Counter stops counting 
+  *     @arg TIM_OPMode_Single:: TIM One Pulse Single Mode (Counter stops counting
   *                              at the next update event (clearing the bit CEN)).
-  *     @arg TIM_OPMode_Repetitive: TIM One Pulse Repetitive Mode 
+  *     @arg TIM_OPMode_Repetitive: TIM One Pulse Repetitive Mode
   *                                 (Counter is not stopped at update event).
   * @retval None
   */
@@ -502,7 +502,7 @@ void TIM_SelectOnePulseMode(TIM_TypeDef* TIMx, uint16_t TIM_OPMode)
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_OPM_MODE(TIM_OPMode));
-  
+
   /* Reset the OPM Bit */
   TIMx->CR1 &= (uint16_t)~((uint16_t)TIM_CR1_OPM);
   /* Configure the OPM Mode */
@@ -524,7 +524,7 @@ void TIM_SetClockDivision(TIM_TypeDef* TIMx, uint16_t TIM_CKD)
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_CKD_DIV(TIM_CKD));
-  
+
   /* Reset the CKD Bits */
   TIMx->CR1 &= (uint16_t)~((uint16_t)TIM_CR1_CKD);
   /* Set the CKD value */
@@ -541,9 +541,9 @@ void TIM_SetClockDivision(TIM_TypeDef* TIMx, uint16_t TIM_CKD)
 void TIM_Cmd(TIM_TypeDef* TIMx, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert_param(IS_TIM_ALL_PERIPH(TIMx)); 
+  assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the TIM Counter */
@@ -561,7 +561,7 @@ void TIM_Cmd(TIM_TypeDef* TIMx, FunctionalState NewState)
   */
 
 /** @defgroup TIM_Group2 Output Compare management functions
- *  @brief    Output Compare management functions 
+ *  @brief    Output Compare management functions
  *
 @verbatim
  ===============================================================================
@@ -570,11 +570,11 @@ void TIM_Cmd(TIM_TypeDef* TIMx, FunctionalState NewState)
         *** TIM Driver: how to use it in Output Compare Mode ***
  ===============================================================================
     [..] To use the Timer in Output Compare mode, the following steps are mandatory:
-         (#) Enable TIM clock using 
+         (#) Enable TIM clock using
              RCC_APBxPeriphClockCmd(RCC_APBxPeriph_TIMx, ENABLE) function.
          (#) Configure the TIM pins by configuring the corresponding GPIO pins
-         (#) Configure the Time base unit as described in the first part of this 
-             driver, if needed, else the Timer will run with the default 
+         (#) Configure the Time base unit as described in the first part of this
+             driver, if needed, else the Timer will run with the default
              configuration:
              (++) Autoreload value = 0xFFFF.
              (++) Prescaler value = 0x0000.
@@ -585,7 +585,7 @@ void TIM_Cmd(TIM_TypeDef* TIMx, FunctionalState NewState)
              (++) TIM Output State: TIM_OutputState.
              (++) TIM Pulse value: TIM_Pulse.
              (++) TIM Output Compare Polarity : TIM_OCPolarity.
-         (#) Call TIM_OCxInit(TIMx, &TIM_OCInitStruct) to configure the desired 
+         (#) Call TIM_OCxInit(TIMx, &TIM_OCInitStruct) to configure the desired
              channel with the corresponding configuration.
          (#) Call the TIM_Cmd(ENABLE) function to enable the TIM counter.
     [..]
@@ -607,49 +607,49 @@ void TIM_Cmd(TIM_TypeDef* TIMx, FunctionalState NewState)
   *         parameters in the TIM_OCInitStruct.
   * @param  TIMx: where x can be 2, 3, 4, 5, 9, 10 or 11 to select the TIM peripheral.
   * @param  TIM_OCInitStruct: pointer to a TIM_OCInitTypeDef structure
-  *         that contains the configuration information for the specified TIM 
+  *         that contains the configuration information for the specified TIM
   *         peripheral.
   * @retval None
   */
 void TIM_OC1Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
 {
   uint16_t tmpccmrx = 0, tmpccer = 0;
-   
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_OC_MODE(TIM_OCInitStruct->TIM_OCMode));
   assert_param(IS_TIM_OUTPUT_STATE(TIM_OCInitStruct->TIM_OutputState));
-  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));   
+  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));
   /* Disable the Channel 1: Reset the CC1E Bit */
   TIMx->CCER &= (uint16_t)(~(uint16_t)TIM_CCER_CC1E);
-  
+
   /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
-  
+
   /* Get the TIMx CCMR1 register value */
   tmpccmrx = TIMx->CCMR1;
-    
+
   /* Reset the Output Compare Mode Bits */
   tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CCMR1_OC1M));
   tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CCMR1_CC1S));
-  
+
   /* Select the Output Compare Mode */
   tmpccmrx |= TIM_OCInitStruct->TIM_OCMode;
-  
+
   /* Reset the Output Polarity level */
   tmpccer &= (uint16_t)(~((uint16_t)TIM_CCER_CC1P));
   /* Set the Output Compare Polarity */
   tmpccer |= TIM_OCInitStruct->TIM_OCPolarity;
-  
+
   /* Set the Output State */
   tmpccer |= TIM_OCInitStruct->TIM_OutputState;
-  
+
   /* Set the Capture Compare Register value */
   TIMx->CCR1 = TIM_OCInitStruct->TIM_Pulse;
-  
+
   /* Write to TIMx CCMR1 */
   TIMx->CCMR1 = tmpccmrx;
-  
+
   /* Write to TIMx CCER */
   TIMx->CCER = tmpccer;
 }
@@ -659,48 +659,48 @@ void TIM_OC1Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
   *         parameters in the TIM_OCInitStruct.
   * @param  TIMx: where x can be 2, 3, 4, 5 or 9 to select the TIM peripheral.
   * @param  TIM_OCInitStruct: pointer to a TIM_OCInitTypeDef structure
-  *         that contains the configuration information for the specified TIM 
+  *         that contains the configuration information for the specified TIM
   *         peripheral.
   * @retval None
   */
 void TIM_OC2Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
 {
   uint16_t tmpccmrx = 0, tmpccer = 0;
-   
+
   /* Check the parameters */
-  assert_param(IS_TIM_LIST2_PERIPH(TIMx)); 
+  assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_OC_MODE(TIM_OCInitStruct->TIM_OCMode));
   assert_param(IS_TIM_OUTPUT_STATE(TIM_OCInitStruct->TIM_OutputState));
-  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));   
+  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));
   /* Disable the Channel 2: Reset the CC2E Bit */
   TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CCER_CC2E));
-  
-  /* Get the TIMx CCER register value */  
+
+  /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
-  
+
   /* Get the TIMx CCMR1 register value */
   tmpccmrx = TIMx->CCMR1;
-    
+
   /* Reset the Output Compare Mode Bits */
   tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CCMR1_OC2M));
-  
+
   /* Select the Output Compare Mode */
   tmpccmrx |= (uint16_t)(TIM_OCInitStruct->TIM_OCMode << 8);
-  
+
   /* Reset the Output Polarity level */
   tmpccer &= (uint16_t)(~((uint16_t)TIM_CCER_CC2P));
   /* Set the Output Compare Polarity */
   tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OCPolarity << 4);
-  
+
   /* Set the Output State */
   tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OutputState << 4);
-  
+
   /* Set the Capture Compare Register value */
   TIMx->CCR2 = TIM_OCInitStruct->TIM_Pulse;
-    
+
   /* Write to TIMx CCMR1 */
   TIMx->CCMR1 = tmpccmrx;
-  
+
   /* Write to TIMx CCER */
   TIMx->CCER = tmpccer;
 }
@@ -710,49 +710,49 @@ void TIM_OC2Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
   *         parameters in the TIM_OCInitStruct.
   * @param  TIMx: where x can be 2, 3, 4 or 5 to select the TIM peripheral.
   * @param  TIM_OCInitStruct: pointer to a TIM_OCInitTypeDef structure
-  *         that contains the configuration information for the specified TIM 
+  *         that contains the configuration information for the specified TIM
   *         peripheral.
   * @retval None
   */
 void TIM_OC3Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
 {
   uint16_t tmpccmrx = 0, tmpccer = 0;
-   
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OC_MODE(TIM_OCInitStruct->TIM_OCMode));
   assert_param(IS_TIM_OUTPUT_STATE(TIM_OCInitStruct->TIM_OutputState));
-  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));   
+  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));
 
   /* Disable the Channel 2: Reset the CC2E Bit */
   TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CCER_CC3E));
-  
+
   /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
-  
+
   /* Get the TIMx CCMR2 register value */
   tmpccmrx = TIMx->CCMR2;
-    
+
   /* Reset the Output Compare Mode Bits */
   tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CCMR2_OC3M));
-  
+
   /* Select the Output Compare Mode */
   tmpccmrx |= TIM_OCInitStruct->TIM_OCMode;
-  
+
   /* Reset the Output Polarity level */
   tmpccer &= (uint16_t)(~((uint16_t)TIM_CCER_CC3P));
   /* Set the Output Compare Polarity */
   tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OCPolarity << 8);
-  
+
   /* Set the Output State */
   tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OutputState << 8);
-  
+
   /* Set the Capture Compare Register value */
   TIMx->CCR3 = TIM_OCInitStruct->TIM_Pulse;
-  
+
   /* Write to TIMx CCMR2 */
   TIMx->CCMR2 = tmpccmrx;
-  
+
   /* Write to TIMx CCER */
   TIMx->CCER = tmpccer;
 }
@@ -762,49 +762,49 @@ void TIM_OC3Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
   *         parameters in the TIM_OCInitStruct.
   * @param  TIMx: where x can be 2, 3, 4 or 5 to select the TIM peripheral.
   * @param  TIM_OCInitStruct: pointer to a TIM_OCInitTypeDef structure
-  *         that contains the configuration information for the specified TIM 
+  *         that contains the configuration information for the specified TIM
   *         peripheral.
   * @retval None
   */
 void TIM_OC4Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
 {
   uint16_t tmpccmrx = 0, tmpccer = 0;
-   
+
   /* Check the parameters */
-  assert_param(IS_TIM_LIST3_PERIPH(TIMx)); 
+  assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OC_MODE(TIM_OCInitStruct->TIM_OCMode));
   assert_param(IS_TIM_OUTPUT_STATE(TIM_OCInitStruct->TIM_OutputState));
-  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));   
+  assert_param(IS_TIM_OC_POLARITY(TIM_OCInitStruct->TIM_OCPolarity));
 
   /* Disable the Channel 2: Reset the CC4E Bit */
   TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CCER_CC4E));
-  
+
   /* Get the TIMx CCER register value */
   tmpccer = TIMx->CCER;
-  
+
   /* Get the TIMx CCMR2 register value */
   tmpccmrx = TIMx->CCMR2;
-    
+
   /* Reset the Output Compare Mode Bits */
   tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CCMR2_OC4M));
-  
+
   /* Select the Output Compare Mode */
   tmpccmrx |= (uint16_t)(TIM_OCInitStruct->TIM_OCMode << 8);
-  
+
   /* Reset the Output Polarity level */
   tmpccer &= (uint16_t)(~((uint16_t)TIM_CCER_CC4P));
   /* Set the Output Compare Polarity */
   tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OCPolarity << 12);
-  
+
   /* Set the Output State */
   tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OutputState << 12);
-  
+
   /* Set the Capture Compare Register value */
   TIMx->CCR4 = TIM_OCInitStruct->TIM_Pulse;
-  
-  /* Write to TIMx CCMR2 */  
+
+  /* Write to TIMx CCMR2 */
   TIMx->CCMR2 = tmpccmrx;
-  
+
   /* Write to TIMx CCER */
   TIMx->CCER = tmpccer;
 }
@@ -854,9 +854,9 @@ void TIM_SelectOCxM(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_OCMode
   uint16_t tmp1 = 0;
 
   /* Check the parameters */
-  assert_param(IS_TIM_LIST1_PERIPH(TIMx));  
+  assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_OCM(TIM_OCMode));
-  
+
   tmp = (uint32_t) TIMx;
   tmp += CCMR_OFFSET;
 
@@ -871,7 +871,7 @@ void TIM_SelectOCxM(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_OCMode
 
     /* Reset the OCxM bits in the CCMRx register */
     *(__IO uint32_t *) tmp &= (uint32_t)~((uint32_t)TIM_CCMR1_OC1M);
-   
+
     /* Configure the OCxM bits in the CCMRx register */
     *(__IO uint32_t *) tmp |= TIM_OCMode;
   }
@@ -881,7 +881,7 @@ void TIM_SelectOCxM(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_OCMode
 
     /* Reset the OCxM bits in the CCMRx register */
     *(__IO uint32_t *) tmp &= (uint32_t)~((uint32_t)TIM_CCMR1_OC2M);
-    
+
     /* Configure the OCxM bits in the CCMRx register */
     *(__IO uint32_t *) tmp |= (uint16_t)(TIM_OCMode << 8);
   }
@@ -897,7 +897,7 @@ void TIM_SetCompare1(TIM_TypeDef* TIMx, uint32_t Compare1)
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
-  
+
   /* Set the Capture Compare1 Register value */
   TIMx->CCR1 = Compare1;
 }
@@ -912,7 +912,7 @@ void TIM_SetCompare2(TIM_TypeDef* TIMx, uint32_t Compare2)
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
-  
+
   /* Set the Capture Compare2 Register value */
   TIMx->CCR2 = Compare2;
 }
@@ -927,7 +927,7 @@ void TIM_SetCompare3(TIM_TypeDef* TIMx, uint32_t Compare3)
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
-  
+
   /* Set the Capture Compare3 Register value */
   TIMx->CCR3 = Compare3;
 }
@@ -942,7 +942,7 @@ void TIM_SetCompare4(TIM_TypeDef* TIMx, uint32_t Compare4)
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
-  
+
   /* Set the Capture Compare4 Register value */
   TIMx->CCR4 = Compare4;
 }
@@ -970,10 +970,10 @@ void TIM_ForcedOC1Config(TIM_TypeDef* TIMx, uint16_t TIM_ForcedAction)
   /* Write to TIMx CCMR1 register */
   TIMx->CCMR1 = tmpccmr1;
 }
- 
+
 /**
   * @brief  Forces the TIMx output 2 waveform to active or inactive level.
-  * @param  TIMx: where x can be 2, 3, 4, 5 or 9 to select the TIM 
+  * @param  TIMx: where x can be 2, 3, 4, 5 or 9 to select the TIM
   *   peripheral.
   * @param  TIM_ForcedAction: specifies the forced Action to be set to the output waveform.
   *   This parameter can be one of the following values:
@@ -984,11 +984,11 @@ void TIM_ForcedOC1Config(TIM_TypeDef* TIMx, uint16_t TIM_ForcedAction)
 void TIM_ForcedOC2Config(TIM_TypeDef* TIMx, uint16_t TIM_ForcedAction)
 {
   uint16_t tmpccmr1 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_FORCED_ACTION(TIM_ForcedAction));
-  
+
   tmpccmr1 = TIMx->CCMR1;
   /* Reset the OC2M Bits */
   tmpccmr1 &= (uint16_t)~((uint16_t)TIM_CCMR1_OC2M);
@@ -1010,11 +1010,11 @@ void TIM_ForcedOC2Config(TIM_TypeDef* TIMx, uint16_t TIM_ForcedAction)
 void TIM_ForcedOC3Config(TIM_TypeDef* TIMx, uint16_t TIM_ForcedAction)
 {
   uint16_t tmpccmr2 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_FORCED_ACTION(TIM_ForcedAction));
-  
+
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC1M Bits */
   tmpccmr2 &= (uint16_t)~((uint16_t)TIM_CCMR2_OC3M);
@@ -1039,7 +1039,7 @@ void TIM_ForcedOC4Config(TIM_TypeDef* TIMx, uint16_t TIM_ForcedAction)
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_FORCED_ACTION(TIM_ForcedAction));
-  
+
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC2M Bits */
   tmpccmr2 &= (uint16_t)~((uint16_t)TIM_CCMR2_OC4M);
@@ -1064,7 +1064,7 @@ void TIM_OC1PreloadConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPreload)
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_OCPRELOAD_STATE(TIM_OCPreload));
-  
+
   tmpccmr1 = TIMx->CCMR1;
   /* Reset the OC1PE Bit */
   tmpccmr1 &= (uint16_t)~((uint16_t)TIM_CCMR1_OC1PE);
@@ -1089,7 +1089,7 @@ void TIM_OC2PreloadConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPreload)
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_OCPRELOAD_STATE(TIM_OCPreload));
-  
+
   tmpccmr1 = TIMx->CCMR1;
   /* Reset the OC2PE Bit */
   tmpccmr1 &= (uint16_t)~((uint16_t)TIM_CCMR1_OC2PE);
@@ -1111,11 +1111,11 @@ void TIM_OC2PreloadConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPreload)
 void TIM_OC3PreloadConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPreload)
 {
   uint16_t tmpccmr2 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OCPRELOAD_STATE(TIM_OCPreload));
-  
+
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC3PE Bit */
   tmpccmr2 &= (uint16_t)~((uint16_t)TIM_CCMR2_OC3PE);
@@ -1137,11 +1137,11 @@ void TIM_OC3PreloadConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPreload)
 void TIM_OC4PreloadConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPreload)
 {
   uint16_t tmpccmr2 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OCPRELOAD_STATE(TIM_OCPreload));
-  
+
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC4PE Bit */
   tmpccmr2 &= (uint16_t)~((uint16_t)TIM_CCMR2_OC4PE);
@@ -1163,11 +1163,11 @@ void TIM_OC4PreloadConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPreload)
 void TIM_OC1FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 {
   uint16_t tmpccmr1 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_OCFAST_STATE(TIM_OCFast));
-  
+
   /* Get the TIMx CCMR1 register value */
   tmpccmr1 = TIMx->CCMR1;
   /* Reset the OC1FE Bit */
@@ -1190,11 +1190,11 @@ void TIM_OC1FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 void TIM_OC2FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 {
   uint16_t tmpccmr1 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_OCFAST_STATE(TIM_OCFast));
-  
+
   /* Get the TIMx CCMR1 register value */
   tmpccmr1 = TIMx->CCMR1;
   /* Reset the OC2FE Bit */
@@ -1217,11 +1217,11 @@ void TIM_OC2FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 void TIM_OC3FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 {
   uint16_t tmpccmr2 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OCFAST_STATE(TIM_OCFast));
-  
+
   /* Get the TIMx CCMR2 register value */
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC3FE Bit */
@@ -1244,11 +1244,11 @@ void TIM_OC3FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 void TIM_OC4FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 {
   uint16_t tmpccmr2 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OCFAST_STATE(TIM_OCFast));
-  
+
   /* Get the TIMx CCMR2 register value */
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC4FE Bit */
@@ -1271,11 +1271,11 @@ void TIM_OC4FastConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCFast)
 void TIM_ClearOC1Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 {
   uint16_t tmpccmr1 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_OCCLEAR_STATE(TIM_OCClear));
-  
+
   tmpccmr1 = TIMx->CCMR1;
   /* Reset the OC1CE Bit */
   tmpccmr1 &= (uint16_t)~((uint16_t)TIM_CCMR1_OC1CE);
@@ -1298,11 +1298,11 @@ void TIM_ClearOC1Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 void TIM_ClearOC2Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 {
   uint16_t tmpccmr1 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_OCCLEAR_STATE(TIM_OCClear));
-  
+
   tmpccmr1 = TIMx->CCMR1;
   /* Reset the OC2CE Bit */
   tmpccmr1 &= (uint16_t)~((uint16_t)TIM_CCMR1_OC2CE);
@@ -1324,11 +1324,11 @@ void TIM_ClearOC2Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 void TIM_ClearOC3Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 {
   uint16_t tmpccmr2 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OCCLEAR_STATE(TIM_OCClear));
-  
+
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC3CE Bit */
   tmpccmr2 &= (uint16_t)~((uint16_t)TIM_CCMR2_OC3CE);
@@ -1350,11 +1350,11 @@ void TIM_ClearOC3Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 void TIM_ClearOC4Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 {
   uint16_t tmpccmr2 = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OCCLEAR_STATE(TIM_OCClear));
-  
+
   tmpccmr2 = TIMx->CCMR2;
   /* Reset the OC4CE Bit */
   tmpccmr2 &= (uint16_t)~((uint16_t)TIM_CCMR2_OC4CE);
@@ -1376,11 +1376,11 @@ void TIM_ClearOC4Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
 void TIM_OC1PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
 {
   uint16_t tmpccer = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_OC_POLARITY(TIM_OCPolarity));
-  
+
   tmpccer = TIMx->CCER;
   /* Set or Reset the CC1P Bit */
   tmpccer &= (uint16_t)~((uint16_t)TIM_CCER_CC1P);
@@ -1401,11 +1401,11 @@ void TIM_OC1PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
 void TIM_OC2PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
 {
   uint16_t tmpccer = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_OC_POLARITY(TIM_OCPolarity));
-  
+
   tmpccer = TIMx->CCER;
   /* Set or Reset the CC2P Bit */
   tmpccer &= (uint16_t)~((uint16_t)TIM_CCER_CC2P);
@@ -1426,11 +1426,11 @@ void TIM_OC2PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
 void TIM_OC3PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
 {
   uint16_t tmpccer = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OC_POLARITY(TIM_OCPolarity));
-  
+
   tmpccer = TIMx->CCER;
   /* Set or Reset the CC3P Bit */
   tmpccer &= (uint16_t)~((uint16_t)TIM_CCER_CC3P);
@@ -1451,11 +1451,11 @@ void TIM_OC3PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
 void TIM_OC4PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
 {
   uint16_t tmpccer = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_OC_POLARITY(TIM_OCPolarity));
-  
+
   tmpccer = TIMx->CCER;
   /* Set or Reset the CC4P Bit */
   tmpccer &= (uint16_t)~((uint16_t)TIM_CCER_CC4P);
@@ -1470,7 +1470,7 @@ void TIM_OC4PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
   * @param  TIM_OCReferenceClear: specifies the OCReference Clear source.
   *   This parameter can be one of the following values:
   *     @arg TIM_OCReferenceClear_ETRF: The internal OCreference clear input is connected to ETRF.
-  *     @arg TIM_OCReferenceClear_OCREFCLR: The internal OCreference clear input is connected to OCREF_CLR input.  
+  *     @arg TIM_OCReferenceClear_OCREFCLR: The internal OCreference clear input is connected to OCREF_CLR input.
   * @retval None
   */
 void TIM_SelectOCREFClear(TIM_TypeDef* TIMx, uint16_t TIM_OCReferenceClear)
@@ -1494,7 +1494,7 @@ void TIM_SelectOCREFClear(TIM_TypeDef* TIMx, uint16_t TIM_OCReferenceClear)
   *     @arg TIM_Channel_3: TIM Channel 3.
   *     @arg TIM_Channel_4: TIM Channel 4.
   * @param  TIM_CCx: specifies the TIM Channel CCxE bit new state.
-  *   This parameter can be: TIM_CCx_Enable or TIM_CCx_Disable. 
+  *   This parameter can be: TIM_CCx_Enable or TIM_CCx_Disable.
   * @retval None
   */
 void TIM_CCxCmd(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_CCx)
@@ -1502,7 +1502,7 @@ void TIM_CCxCmd(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_CCx)
   uint16_t tmp = 0;
 
   /* Check the parameters */
-  assert_param(IS_TIM_LIST1_PERIPH(TIMx)); 
+  assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_CCX(TIM_CCx));
 
   tmp = CCER_CCE_SET << TIM_Channel;
@@ -1510,7 +1510,7 @@ void TIM_CCxCmd(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_CCx)
   /* Reset the CCxE Bit */
   TIMx->CCER &= (uint16_t)~ tmp;
 
-  /* Set or reset the CCxE Bit */ 
+  /* Set or reset the CCxE Bit */
   TIMx->CCER |=  (uint16_t)(TIM_CCx << TIM_Channel);
 }
 
@@ -1519,20 +1519,20 @@ void TIM_CCxCmd(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_CCx)
   */
 
 /** @defgroup TIM_Group3 Input Capture management functions
- *  @brief    Input Capture management functions 
+ *  @brief    Input Capture management functions
  *
 @verbatim
  ===============================================================================
                ##### Input Capture management functions #####
  ===============================================================================
-   
+
           *** TIM Driver: how to use it in Input Capture Mode ***
  ===============================================================================
     [..] To use the Timer in Input Capture mode, the following steps are mandatory:
-         (#) Enable TIM clock using RCC_APBxPeriphClockCmd(RCC_APBxPeriph_TIMx, ENABLE) 
+         (#) Enable TIM clock using RCC_APBxPeriphClockCmd(RCC_APBxPeriph_TIMx, ENABLE)
              function.
          (#) Configure the TIM pins by configuring the corresponding GPIO pins.
-         (#) Configure the Time base unit as described in the first part of this 
+         (#) Configure the Time base unit as described in the first part of this
              driver, if needed, else the Timer will run with the default configuration:
              (++) Autoreload value = 0xFFFF.
              (++) Prescaler value = 0x0000.
@@ -1544,21 +1544,21 @@ void TIM_CCxCmd(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_CCx)
              (++) TIM Input Capture selection: TIM_ICSelection.
              (++) TIM Input Capture Prescaler: TIM_ICPrescaler.
              (++) TIM Input CApture filter value: TIM_ICFilter.
-         (#) Call TIM_ICInit(TIMx, &TIM_ICInitStruct) to configure the desired 
-             channel with the corresponding configuration and to measure only 
-             frequency or duty cycle of the input signal,or, Call 
-             TIM_PWMIConfig(TIMx, &TIM_ICInitStruct) to configure the desired 
-             channels with the corresponding configuration and to measure the 
+         (#) Call TIM_ICInit(TIMx, &TIM_ICInitStruct) to configure the desired
+             channel with the corresponding configuration and to measure only
+             frequency or duty cycle of the input signal,or, Call
+             TIM_PWMIConfig(TIMx, &TIM_ICInitStruct) to configure the desired
+             channels with the corresponding configuration and to measure the
              frequency and the duty cycle of the input signal.
          (#) Enable the NVIC or the DMA to read the measured frequency.
-         (#) Enable the corresponding interrupt (or DMA request) to read 
+         (#) Enable the corresponding interrupt (or DMA request) to read
              the Captured value, using the function TIM_ITConfig(TIMx, TIM_IT_CCx)
              (or TIM_DMA_Cmd(TIMx, TIM_DMA_CCx)).
          (#) Call the TIM_Cmd(ENABLE) function to enable the TIM counter.
          (#) Use TIM_GetCapturex(TIMx); to read the captured value.
     [..]
         (@) All other functions can be used separately to modify, if needed,
-            a specific feature of the Timer. 
+            a specific feature of the Timer.
 
 @endverbatim
   * @{
@@ -1569,7 +1569,7 @@ void TIM_CCxCmd(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_CCx)
   *         parameters in the TIM_ICInitStruct.
   * @param  TIMx: where x can be 2, 3, 4, 5, 9, 10 or 11 to select the TIM peripheral.
   * @param  TIM_ICInitStruct: pointer to a TIM_ICInitTypeDef structure
-  *         that contains the configuration information for the specified TIM 
+  *         that contains the configuration information for the specified TIM
   *         peripheral.
   * @retval None
   */
@@ -1581,7 +1581,7 @@ void TIM_ICInit(TIM_TypeDef* TIMx, TIM_ICInitTypeDef* TIM_ICInitStruct)
   assert_param(IS_TIM_IC_SELECTION(TIM_ICInitStruct->TIM_ICSelection));
   assert_param(IS_TIM_IC_PRESCALER(TIM_ICInitStruct->TIM_ICPrescaler));
   assert_param(IS_TIM_IC_FILTER(TIM_ICInitStruct->TIM_ICFilter));
-  
+
   if (TIM_ICInitStruct->TIM_Channel == TIM_Channel_1)
   {
     /* TI1 Configuration */
@@ -1644,7 +1644,7 @@ void TIM_ICStructInit(TIM_ICInitTypeDef* TIM_ICInitStruct)
   *         parameters in the TIM_ICInitStruct to measure an external PWM signal.
   * @param  TIMx: where x can be 2, 3, 4, 5 or 9 to select the TIM peripheral.
   * @param  TIM_ICInitStruct: pointer to a TIM_ICInitTypeDef structure
-  *         that contains the configuration information for the specified TIM 
+  *         that contains the configuration information for the specified TIM
   *         peripheral.
   * @retval None
   */
@@ -1685,7 +1685,7 @@ void TIM_PWMIConfig(TIM_TypeDef* TIMx, TIM_ICInitTypeDef* TIM_ICInitStruct)
     TIM_SetIC2Prescaler(TIMx, TIM_ICInitStruct->TIM_ICPrescaler);
   }
   else
-  { 
+  {
     /* TI2 Configuration */
     TI2_Config(TIMx, TIM_ICInitStruct->TIM_ICPolarity, TIM_ICInitStruct->TIM_ICSelection,
                TIM_ICInitStruct->TIM_ICFilter);
@@ -1707,7 +1707,7 @@ uint32_t TIM_GetCapture1(TIM_TypeDef* TIMx)
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
-  
+
   /* Get the Capture 1 Register value */
   return TIMx->CCR1;
 }
@@ -1721,7 +1721,7 @@ uint32_t TIM_GetCapture2(TIM_TypeDef* TIMx)
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
-  
+
   /* Get the Capture 2 Register value */
   return TIMx->CCR2;
 }
@@ -1734,8 +1734,8 @@ uint32_t TIM_GetCapture2(TIM_TypeDef* TIMx)
 uint32_t TIM_GetCapture3(TIM_TypeDef* TIMx)
 {
   /* Check the parameters */
-  assert_param(IS_TIM_LIST3_PERIPH(TIMx)); 
-  
+  assert_param(IS_TIM_LIST3_PERIPH(TIMx));
+
   /* Get the Capture 3 Register value */
   return TIMx->CCR3;
 }
@@ -1749,7 +1749,7 @@ uint32_t TIM_GetCapture4(TIM_TypeDef* TIMx)
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
-  
+
   /* Get the Capture 4 Register value */
   return TIMx->CCR4;
 }
@@ -1770,7 +1770,7 @@ void TIM_SetIC1Prescaler(TIM_TypeDef* TIMx, uint16_t TIM_ICPSC)
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_IC_PRESCALER(TIM_ICPSC));
-  
+
   /* Reset the IC1PSC Bits */
   TIMx->CCMR1 &= (uint16_t)~((uint16_t)TIM_CCMR1_IC1PSC);
   /* Set the IC1PSC value */
@@ -1793,7 +1793,7 @@ void TIM_SetIC2Prescaler(TIM_TypeDef* TIMx, uint16_t TIM_ICPSC)
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_IC_PRESCALER(TIM_ICPSC));
-  
+
   /* Reset the IC2PSC Bits */
   TIMx->CCMR1 &= (uint16_t)~((uint16_t)TIM_CCMR1_IC2PSC);
   /* Set the IC2PSC value */
@@ -1816,7 +1816,7 @@ void TIM_SetIC3Prescaler(TIM_TypeDef* TIMx, uint16_t TIM_ICPSC)
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_IC_PRESCALER(TIM_ICPSC));
-  
+
   /* Reset the IC3PSC Bits */
   TIMx->CCMR2 &= (uint16_t)~((uint16_t)TIM_CCMR2_IC3PSC);
   /* Set the IC3PSC value */
@@ -1835,11 +1835,11 @@ void TIM_SetIC3Prescaler(TIM_TypeDef* TIMx, uint16_t TIM_ICPSC)
   * @retval None
   */
 void TIM_SetIC4Prescaler(TIM_TypeDef* TIMx, uint16_t TIM_ICPSC)
-{  
+{
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_IC_PRESCALER(TIM_ICPSC));
-  
+
   /* Reset the IC4PSC Bits */
   TIMx->CCMR2 &= (uint16_t)~((uint16_t)TIM_CCMR2_IC4PSC);
   /* Set the IC4PSC value */
@@ -1851,7 +1851,7 @@ void TIM_SetIC4Prescaler(TIM_TypeDef* TIMx, uint16_t TIM_ICPSC)
   */
 
 /** @defgroup TIM_Group4 Interrupts DMA and flags management functions
- *  @brief    Interrupts, DMA and flags management functions 
+ *  @brief    Interrupts, DMA and flags management functions
  *
 @verbatim
  ===============================================================================
@@ -1873,20 +1873,20 @@ void TIM_SetIC4Prescaler(TIM_TypeDef* TIMx, uint16_t TIM_ICPSC)
   *     @arg TIM_IT_CC3: TIM Capture Compare 3 Interrupt source.
   *     @arg TIM_IT_CC4: TIM Capture Compare 4 Interrupt source.
   *     @arg TIM_IT_Trigger: TIM Trigger Interrupt source.
-  * @note TIM6 and TIM7 can only generate an update interrupt.  
+  * @note TIM6 and TIM7 can only generate an update interrupt.
   * @note TIM_IT_CC2, TIM_IT_CC3, TIM_IT_CC4 and TIM_IT_Trigger can not be used with TIM10 and TIM11.
-  * @note TIM_IT_CC3, TIM_IT_CC4 can not be used with TIM9.   
+  * @note TIM_IT_CC3, TIM_IT_CC4 can not be used with TIM9.
   * @param  NewState: new state of the TIM interrupts.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
 void TIM_ITConfig(TIM_TypeDef* TIMx, uint16_t TIM_IT, FunctionalState NewState)
-{  
+{
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_IT(TIM_IT));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the Interrupt sources */
@@ -1903,24 +1903,24 @@ void TIM_ITConfig(TIM_TypeDef* TIMx, uint16_t TIM_IT, FunctionalState NewState)
   * @brief  Configures the TIMx event to be generate by software.
   * @param  TIMx: where x can be 2 to 11 to select the TIM peripheral.
   * @param  TIM_EventSource: specifies the event source.
-  *   This parameter can be one or more of the following values:	   
+  *   This parameter can be one or more of the following values:
   *     @arg TIM_EventSource_Update: Timer update Event source.
   *     @arg TIM_EventSource_CC1: Timer Capture Compare 1 Event source.
   *     @arg TIM_EventSource_CC2: Timer Capture Compare 2 Event source.
   *     @arg TIM_EventSource_CC3: Timer Capture Compare 3 Event source.
   *     @arg TIM_EventSource_CC4: Timer Capture Compare 4 Event source.
   *     @arg TIM_EventSource_Trigger: Timer Trigger Event source.
-  * @note TIM6 and TIM7 can only generate an update event. 
-  * @note TIM9 can only generate an update event, Capture Compare 1 event, 
-  *     Capture Compare 2 event and TIM_EventSource_Trigger.  
-  * @note TIM10 and TIM11 can only generate an update event and Capture Compare 1 event.            
+  * @note TIM6 and TIM7 can only generate an update event.
+  * @note TIM9 can only generate an update event, Capture Compare 1 event,
+  *     Capture Compare 2 event and TIM_EventSource_Trigger.
+  * @note TIM10 and TIM11 can only generate an update event and Capture Compare 1 event.
   * @retval None
   */
 void TIM_GenerateEvent(TIM_TypeDef* TIMx, uint16_t TIM_EventSource)
-{ 
+{
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
-  assert_param(IS_TIM_EVENT_SOURCE(TIM_EventSource)); 
+  assert_param(IS_TIM_EVENT_SOURCE(TIM_EventSource));
   /* Set the event sources */
   TIMx->EGR = TIM_EventSource;
 }
@@ -1943,18 +1943,18 @@ void TIM_GenerateEvent(TIM_TypeDef* TIMx, uint16_t TIM_EventSource)
   *
   * @note TIM6 and TIM7 can have only one update flag.
   * @note TIM9 can have only update flag, TIM_FLAG_CC1, TIM_FLAG_CC2 and TIM_FLAG_Trigger,
-  *     TIM_FLAG_CC1OF or TIM_FLAG_CC2OF flags.  
-  * @note TIM10 and TIM11 can have only update flag, TIM_FLAG_CC1 or TIM_FLAG_CC1OF flags         
+  *     TIM_FLAG_CC1OF or TIM_FLAG_CC2OF flags.
+  * @note TIM10 and TIM11 can have only update flag, TIM_FLAG_CC1 or TIM_FLAG_CC1OF flags
   * @retval The new state of TIM_FLAG (SET or RESET).
   */
 FlagStatus TIM_GetFlagStatus(TIM_TypeDef* TIMx, uint16_t TIM_FLAG)
-{ 
-  ITStatus bitstatus = RESET; 
-   
+{
+  ITStatus bitstatus = RESET;
+
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_GET_FLAG(TIM_FLAG));
-  
+
   if ((TIMx->SR & TIM_FLAG) != (uint16_t)RESET)
   {
     bitstatus = SET;
@@ -1981,19 +1981,19 @@ FlagStatus TIM_GetFlagStatus(TIM_TypeDef* TIMx, uint16_t TIM_FLAG)
   *     @arg TIM_FLAG_CC2OF: TIM Capture Compare 2 overcapture Flag.
   *     @arg TIM_FLAG_CC3OF: TIM Capture Compare 3 overcapture Flag.
   *     @arg TIM_FLAG_CC4OF: TIM Capture Compare 4 overcapture Flag.
-  * @note TIM6 and TIM7 can have only one update flag. 
+  * @note TIM6 and TIM7 can have only one update flag.
   * @note TIM9 can have only update flag, TIM_FLAG_CC1, TIM_FLAG_CC2 and TIM_FLAG_Trigger flags
-  *     TIM_FLAG_CC1OF or TIM_FLAG_CC2OF flags.  
+  *     TIM_FLAG_CC1OF or TIM_FLAG_CC2OF flags.
   * @note TIM10 and TIM11 can have only update flag, TIM_FLAG_CC1
-  *     or TIM_FLAG_CC1OF flags      
+  *     or TIM_FLAG_CC1OF flags
   * @retval None
   */
 void TIM_ClearFlag(TIM_TypeDef* TIMx, uint16_t TIM_FLAG)
-{  
+{
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_CLEAR_FLAG(TIM_FLAG));
-   
+
   /* Clear the flags */
   TIMx->SR = (uint16_t)~TIM_FLAG;
 }
@@ -2014,20 +2014,20 @@ void TIM_ClearFlag(TIM_TypeDef* TIMx, uint16_t TIM_FLAG)
   * @note TIM9 can have only update interrupt, TIM_FLAG_CC1 or TIM_FLAG_CC2,
   *     interrupt and TIM_IT_Trigger interrupt.
   * @note TIM10 and TIM11 can have only update interrupt or TIM_FLAG_CC1
-  *     interrupt      
+  *     interrupt
   * @retval The new state of the TIM_IT(SET or RESET).
   */
 ITStatus TIM_GetITStatus(TIM_TypeDef* TIMx, uint16_t TIM_IT)
 {
-  ITStatus bitstatus = RESET;  
+  ITStatus bitstatus = RESET;
   uint16_t itstatus = 0x0, itenable = 0x0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_GET_IT(TIM_IT));
-   
+
   itstatus = TIMx->SR & TIM_IT;
-  
+
   itenable = TIMx->DIER & TIM_IT;
   if ((itstatus != (uint16_t)RESET) && (itenable != (uint16_t)RESET))
   {
@@ -2054,9 +2054,9 @@ ITStatus TIM_GetITStatus(TIM_TypeDef* TIMx, uint16_t TIM_IT)
   * @note
   * @note TIM6 and TIM7 can generate only an update interrupt.
   * @note TIM9 can have only update interrupt, TIM_IT_CC1 or TIM_IT_CC2,
-  *     and TIM_IT_Trigger interrupt.  
+  *     and TIM_IT_Trigger interrupt.
   * @note TIM10 and TIM11 can have only update interrupt or TIM_IT_CC1
-  *     interrupt        
+  *     interrupt
   * @retval None
   */
 void TIM_ClearITPendingBit(TIM_TypeDef* TIMx, uint16_t TIM_IT)
@@ -2064,7 +2064,7 @@ void TIM_ClearITPendingBit(TIM_TypeDef* TIMx, uint16_t TIM_IT)
   /* Check the parameters */
   assert_param(IS_TIM_ALL_PERIPH(TIMx));
   assert_param(IS_TIM_IT(TIM_IT));
-   
+
   /* Clear the IT pending Bit */
   TIMx->SR = (uint16_t)~TIM_IT;
 }
@@ -2101,7 +2101,7 @@ void TIM_DMAConfig(TIM_TypeDef* TIMx, uint16_t TIM_DMABase, uint16_t TIM_DMABurs
 {
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
-  assert_param(IS_TIM_DMA_BASE(TIM_DMABase)); 
+  assert_param(IS_TIM_DMA_BASE(TIM_DMABase));
   assert_param(IS_TIM_DMA_LENGTH(TIM_DMABurstLength));
   /* Set the DMA Base and the DMA Burst Length */
   TIMx->DCR = TIM_DMABase | TIM_DMABurstLength;
@@ -2109,7 +2109,7 @@ void TIM_DMAConfig(TIM_TypeDef* TIMx, uint16_t TIM_DMABase, uint16_t TIM_DMABurs
 
 /**
   * @brief  Enables or disables the TIMx's DMA Requests.
-  * @param  TIMx: where x can be 2, 3, 4, 5, 6 or 7 to select the TIM peripheral. 
+  * @param  TIMx: where x can be 2, 3, 4, 5, 6 or 7 to select the TIM peripheral.
   * @param  TIM_DMASource: specifies the DMA Request sources.
   *   This parameter can be any combination of the following values:
   *     @arg TIM_DMA_Update: TIM update Interrupt source.
@@ -2123,16 +2123,16 @@ void TIM_DMAConfig(TIM_TypeDef* TIMx, uint16_t TIM_DMABase, uint16_t TIM_DMABurs
   * @retval None
   */
 void TIM_DMACmd(TIM_TypeDef* TIMx, uint16_t TIM_DMASource, FunctionalState NewState)
-{ 
+{
   /* Check the parameters */
   assert_param(IS_TIM_LIST4_PERIPH(TIMx));
   assert_param(IS_TIM_DMA_SOURCE(TIM_DMASource));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the DMA sources */
-    TIMx->DIER |= TIM_DMASource; 
+    TIMx->DIER |= TIM_DMASource;
   }
   else
   {
@@ -2153,7 +2153,7 @@ void TIM_SelectCCDMA(TIM_TypeDef* TIMx, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Set the CCDS Bit */
@@ -2240,7 +2240,7 @@ void TIM_TIxExternalClockConfig(TIM_TypeDef* TIMx, uint16_t TIM_TIxExternalCLKSo
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_IC_POLARITY(TIM_ICPolarity));
   assert_param(IS_TIM_IC_FILTER(ICFilter));
-  
+
   /* Configure the Timer Input Clock Source */
   if (TIM_TIxExternalCLKSource == TIM_TIxExternalCLK1Source_TI2)
   {
@@ -2277,16 +2277,16 @@ void TIM_ETRClockMode1Config(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler, ui
                              uint16_t ExtTRGFilter)
 {
   uint16_t tmpsmcr = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_EXT_PRESCALER(TIM_ExtTRGPrescaler));
   assert_param(IS_TIM_EXT_POLARITY(TIM_ExtTRGPolarity));
   assert_param(IS_TIM_EXT_FILTER(ExtTRGFilter));
-  
+
   /* Configure the ETR Clock source */
   TIM_ETRConfig(TIMx, TIM_ExtTRGPrescaler, TIM_ExtTRGPolarity, ExtTRGFilter);
-  
+
   /* Get the TIMx SMCR register value */
   tmpsmcr = TIMx->SMCR;
   /* Reset the SMS Bits */
@@ -2317,7 +2317,7 @@ void TIM_ETRClockMode1Config(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler, ui
   *   This parameter must be a value between 0x00 and 0x0F
   * @retval None
   */
-void TIM_ETRClockMode2Config(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler, 
+void TIM_ETRClockMode2Config(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler,
                              uint16_t TIM_ExtTRGPolarity, uint16_t ExtTRGFilter)
 {
   /* Check the parameters */
@@ -2325,7 +2325,7 @@ void TIM_ETRClockMode2Config(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler,
   assert_param(IS_TIM_EXT_PRESCALER(TIM_ExtTRGPrescaler));
   assert_param(IS_TIM_EXT_POLARITY(TIM_ExtTRGPolarity));
   assert_param(IS_TIM_EXT_FILTER(ExtTRGFilter));
-  
+
   /* Configure the ETR Clock source */
   TIM_ETRConfig(TIMx, TIM_ExtTRGPrescaler, TIM_ExtTRGPolarity, ExtTRGFilter);
   /* Enable the External clock mode2 */
@@ -2337,7 +2337,7 @@ void TIM_ETRClockMode2Config(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler,
   */
 
 /** @defgroup TIM_Group6 Synchronization management functions
- *  @brief    Synchronization management functions 
+ *  @brief    Synchronization management functions
  *
 @verbatim
  ===============================================================================
@@ -2350,10 +2350,10 @@ void TIM_ETRClockMode2Config(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler,
              (++) void TIM_SelectOutputTrigger(TIM_TypeDef* TIMx,
                   uint16_t TIM_TRGOSource).
              (++) void TIM_SelectMasterSlaveMode(TIM_TypeDef* TIMx,
-                  uint16_t TIM_MasterSlaveMode);  
-         (#) Configure the Slave Timers using the following functions: 
-             (++) void TIM_SelectInputTrigger(TIM_TypeDef* TIMx, 
-                  uint16_t TIM_InputTriggerSource);  
+                  uint16_t TIM_MasterSlaveMode);
+         (#) Configure the Slave Timers using the following functions:
+             (++) void TIM_SelectInputTrigger(TIM_TypeDef* TIMx,
+                  uint16_t TIM_InputTriggerSource);
              (++) void TIM_SelectSlaveMode(TIM_TypeDef* TIMx, uint16_t TIM_SlaveMode);
     [..] Case of Timers and external trigger(ETR pin)
          (#) Configure the Etrenal trigger using this function:
@@ -2388,7 +2388,7 @@ void TIM_SelectInputTrigger(TIM_TypeDef* TIMx, uint16_t TIM_InputTriggerSource)
   uint16_t tmpsmcr = 0;
 
   /* Check the parameters */
-  assert_param(IS_TIM_LIST1_PERIPH(TIMx)); 
+  assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_TRIGGER_SELECTION(TIM_InputTriggerSource));
 
   /* Get the TIMx SMCR register value */
@@ -2453,9 +2453,9 @@ void TIM_SelectOutputTrigger(TIM_TypeDef* TIMx, uint16_t TIM_TRGOSource)
 void TIM_SelectSlaveMode(TIM_TypeDef* TIMx, uint16_t TIM_SlaveMode)
 {
   /* Check the parameters */
-  assert_param(IS_TIM_LIST2_PERIPH(TIMx)); 
+  assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_SLAVE_MODE(TIM_SlaveMode));
-  
+
   /* Reset the SMS Bits */
   TIMx->SMCR &= (uint16_t)~((uint16_t)TIM_SMCR_SMS);
   /* Select the Slave Mode */
@@ -2477,10 +2477,10 @@ void TIM_SelectMasterSlaveMode(TIM_TypeDef* TIMx, uint16_t TIM_MasterSlaveMode)
   /* Check the parameters */
   assert_param(IS_TIM_LIST2_PERIPH(TIMx));
   assert_param(IS_TIM_MSM_STATE(TIM_MasterSlaveMode));
-  
+
   /* Reset the MSM Bit */
   TIMx->SMCR &= (uint16_t)~((uint16_t)TIM_SMCR_MSM);
-  
+
   /* Set or Reset the MSM Bit */
   TIMx->SMCR |= TIM_MasterSlaveMode;
 }
@@ -2506,13 +2506,13 @@ void TIM_ETRConfig(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler, uint16_t TIM
                    uint16_t ExtTRGFilter)
 {
   uint16_t tmpsmcr = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST1_PERIPH(TIMx));
   assert_param(IS_TIM_EXT_PRESCALER(TIM_ExtTRGPrescaler));
   assert_param(IS_TIM_EXT_POLARITY(TIM_ExtTRGPolarity));
   assert_param(IS_TIM_EXT_FILTER(ExtTRGFilter));
-  
+
   tmpsmcr = TIMx->SMCR;
   /* Reset the ETR Bits */
   tmpsmcr &= SMCR_ETR_MASK;
@@ -2527,7 +2527,7 @@ void TIM_ETRConfig(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler, uint16_t TIM
   */
 
 /** @defgroup TIM_Group7 Specific interface management functions
- *  @brief    Specific interface management functions 
+ *  @brief    Specific interface management functions
  *
 @verbatim
  ===============================================================================
@@ -2563,13 +2563,13 @@ void TIM_EncoderInterfaceConfig(TIM_TypeDef* TIMx, uint16_t TIM_EncoderMode,
   uint16_t tmpsmcr = 0;
   uint16_t tmpccmr1 = 0;
   uint16_t tmpccer = 0;
-    
+
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_TIM_ENCODER_MODE(TIM_EncoderMode));
   assert_param(IS_TIM_IC_POLARITY(TIM_IC1Polarity));
   assert_param(IS_TIM_IC_POLARITY(TIM_IC2Polarity));
-  
+
   /* Get the TIMx SMCR register value */
   tmpsmcr = TIMx->SMCR;
   /* Get the TIMx CCMR1 register value */
@@ -2605,7 +2605,7 @@ void TIM_SelectHallSensor(TIM_TypeDef* TIMx, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_TIM_LIST3_PERIPH(TIMx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Set the TI1S Bit */
@@ -2635,7 +2635,7 @@ void TIM_SelectHallSensor(TIM_TypeDef* TIMx, FunctionalState NewState)
   */
 
 /**
-  * @brief  Configures the TIM2, TIM3, TIM9, TIM10 and TIM11 Remapping input 
+  * @brief  Configures the TIM2, TIM3, TIM9, TIM10 and TIM11 Remapping input
   *         Capabilities.
   * @param  TIMx: where x can be 2, 3, 9, 10 or 11 to select the TIM peripheral.
   * @param  TIM_Remap: specifies the TIM input remapping source.
@@ -2652,13 +2652,13 @@ void TIM_SelectHallSensor(TIM_TypeDef* TIMx, FunctionalState NewState)
   *     @arg TIM10_LSI: TIM10 Channel 1 is connected to LSI clock.
   *     @arg TIM10_LSE: TIM10 Channel 1 is connected to LSE clock.
   *     @arg TIM10_RTC: TIM10 Channel 1 is connected to RTC Output event.
-  *     @arg TIM10_RI: TIM10 Channel 1 is connected to Routing Interface (RI).  
+  *     @arg TIM10_RI: TIM10 Channel 1 is connected to Routing Interface (RI).
   *     @arg TIM10_ETR_LSE: TIM10 ETR input is connected to LSE Clock.
   *     @arg TIM10_ETR_TIM9_TRGO: TIM10 ETR input is connected to TIM9 Trigger Output.
-  *     @arg TIM11_GPIO: TIM11 Channel 1 is connected to dedicated Timer pin(default). 
+  *     @arg TIM11_GPIO: TIM11 Channel 1 is connected to dedicated Timer pin(default).
   *     @arg TIM11_MSI: TIM11 Channel 1 is connected to MSI clock.
   *     @arg TIM11_HSE_RTC: TIM11 Channel 1 is connected to HSE_RTC clock.
-  *     @arg TIM11_RI: TIM11 Channel 1 is connected to Routing Interface (RI).  
+  *     @arg TIM11_RI: TIM11 Channel 1 is connected to Routing Interface (RI).
   *     @arg TIM11_ETR_LSE: TIM11 ETR input is connected to LSE Clock.
   *     @arg TIM11_ETR_TIM9_TRGO: TIM11 ETR input is connected to TIM9 Trigger Output.
   * @retval None
@@ -2698,7 +2698,7 @@ static void TI1_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
                        uint16_t TIM_ICFilter)
 {
   uint16_t tmpccmr1 = 0, tmpccer = 0;
-  
+
   /* Disable the Channel 1: Reset the CC1E Bit */
   TIMx->CCER &= (uint16_t)~((uint16_t)TIM_CCER_CC1E);
   tmpccmr1 = TIMx->CCMR1;
@@ -2734,7 +2734,7 @@ static void TI2_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
                        uint16_t TIM_ICFilter)
 {
   uint16_t tmpccmr1 = 0, tmpccer = 0, tmp = 0;
-  
+
   /* Disable the Channel 2: Reset the CC2E Bit */
   TIMx->CCER &= (uint16_t)~((uint16_t)TIM_CCER_CC2E);
   tmpccmr1 = TIMx->CCMR1;
@@ -2772,7 +2772,7 @@ static void TI3_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
                        uint16_t TIM_ICFilter)
 {
   uint16_t tmpccmr2 = 0, tmpccer = 0, tmp = 0;
-  
+
   /* Disable the Channel 3: Reset the CC3E Bit */
   TIMx->CCER &= (uint16_t)~((uint16_t)TIM_CCER_CC3E);
   tmpccmr2 = TIMx->CCMR2;
@@ -2809,7 +2809,7 @@ static void TI4_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
                        uint16_t TIM_ICFilter)
 {
   uint16_t tmpccmr2 = 0, tmpccer = 0, tmp = 0;
-  
+
   /* Disable the Channel 4: Reset the CC4E Bit */
   TIMx->CCER &= (uint16_t)~((uint16_t)TIM_CCER_CC4E);
   tmpccmr2 = TIMx->CCMR2;

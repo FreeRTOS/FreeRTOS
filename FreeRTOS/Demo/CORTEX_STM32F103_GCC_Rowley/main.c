@@ -332,4 +332,3 @@ void assert_failed( unsigned char *pucFile, unsigned long ulLine )
 
 	for( ;; );
 }
-

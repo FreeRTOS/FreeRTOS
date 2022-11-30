@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 /*! \file
@@ -80,7 +80,7 @@ extern "C"
  * The NAND flash controller uses indexed addressing to operate on flash device
  * blocks or pages. The NAND flash 32-bit address is organized as follows:
  *
- *  Bits      | Description                                                             
+ *  Bits      | Description
  * :----------|:-------------------------------------------------------------------------
  *  [31:24]   | <em>Reserved - Unused</em>
  *  [23:\e m] | Specifies the block address portion of the address.
@@ -172,7 +172,7 @@ typedef ALT_STATUS_CODE (*alt_nand_flash_custom_init_t)(void *user_arg);
  * \param       load_block0_page0
  *              If \b true then load block 0, page 0 from the flash device and
  *              configure the NAND flash controller for direct read access. This
- *              option is typically used by custom preloaders and should be set to 
+ *              option is typically used by custom preloaders and should be set to
  *              \b false by most users.
  *
  * \param       page_size_512
@@ -308,7 +308,7 @@ uint32_t alt_nand_page_address_get(const uint32_t addr);
  *              device. ALT_NAND_INVALID_FLASH_ADDR is returned if either of the \e
  *              block_num or \e page_num arguments is invalid for the device.
  */
-uint32_t alt_nand_flash_addr_compose(const uint32_t block_num, 
+uint32_t alt_nand_flash_addr_compose(const uint32_t block_num,
                                      const uint32_t page_num);
 
 /*!
@@ -317,7 +317,7 @@ uint32_t alt_nand_flash_addr_compose(const uint32_t block_num,
  * Erases the flash device block designated by \e block_addr. The erase operation
  * proceeds asynchronously with a user callback notification upon completion or
  * error.
- * 
+ *
  * Flash memory must be erased before being written. Erasing sets all bits in a
  * given block of flash memory to '1' which is the erased state.
  *
@@ -334,7 +334,7 @@ uint32_t alt_nand_flash_addr_compose(const uint32_t block_num,
  *
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
- * \retval      ALT_E_BAD_BLK   One or more device block(s) are marked defective 
+ * \retval      ALT_E_BAD_BLK   One or more device block(s) are marked defective
  *                              and hence the operation was ignored.
  *
  * \internal
@@ -356,7 +356,7 @@ ALT_STATUS_CODE alt_nand_flash_block_erase(const uint32_t block_addr,
  *
  * Reads \e num_pages from the flash device beginning at \e page_addr. Whole pages
  * are read from flash memory. The pages are copied into the \e dest location.
- * 
+ *
  * If ECC is enabled then the NAND flash controller performs ECC correction and
  * detection on the fly as data is read from the device and before being
  * transferred out of the controller.
@@ -375,10 +375,10 @@ ALT_STATUS_CODE alt_nand_flash_block_erase(const uint32_t block_addr,
  *
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
- * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the 
+ * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the
  *                              operation was ignored.
- * \retval      ALT_E_BUF_OVF   The destination buffer does not contain enough space 
- *                              for the operation. 
+ * \retval      ALT_E_BUF_OVF   The destination buffer does not contain enough space
+ *                              for the operation.
  * \retval      ALT_E_ECC_UNCOR An uncorrected ECC error occurred.
  *
  * \internal
@@ -404,7 +404,7 @@ ALT_STATUS_CODE alt_nand_flash_block_erase(const uint32_t block_addr,
  * Use pipeline read-ahead technique to optimize multi-page reads.
  * \endinternal
  */
-ALT_STATUS_CODE alt_nand_flash_page_read(const uint32_t page_addr, 
+ALT_STATUS_CODE alt_nand_flash_page_read(const uint32_t page_addr,
                                          const uint32_t num_pages,
                                          void *dest,
                                          const uint32_t dest_size);
@@ -415,7 +415,7 @@ ALT_STATUS_CODE alt_nand_flash_page_read(const uint32_t page_addr,
  * Writes \e num_pages to the flash device beginning at \e page_addr. Whole pages
  * are written to flash memory. The block(s) containing the pages must have been
  * previously erased.
- * 
+ *
  * \param       page_addr
  *              The beginning page address to write.
  *
@@ -431,15 +431,15 @@ ALT_STATUS_CODE alt_nand_flash_page_read(const uint32_t page_addr,
  *
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
- * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the 
+ * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the
  *                              operation was ignored.
- * \retval      ALT_E_BUF_OVF   The source buffer is larger than the flash device 
+ * \retval      ALT_E_BUF_OVF   The source buffer is larger than the flash device
  *                              page(s) destination.
  *
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_nand_flash_page_write(const uint32_t page_addr, 
+ALT_STATUS_CODE alt_nand_flash_page_write(const uint32_t page_addr,
                                           const uint32_t num_pages,
                                           const void *src,
                                           const uint32_t src_size);
@@ -451,7 +451,7 @@ ALT_STATUS_CODE alt_nand_flash_page_write(const uint32_t page_addr,
  *
  * Reads \e num_pages from the flash device beginning at \e page_addr. Whole pages
  * are read from flash memory. The pages are copied into the \e dest location.
- * 
+ *
  * If ECC is enabled then the NAND flash controller performs ECC correction and
  * detection on the fly as data is read from the device and before being
  * transferred out of the controller.
@@ -478,10 +478,10 @@ ALT_STATUS_CODE alt_nand_flash_page_write(const uint32_t page_addr,
  *
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
- * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the 
+ * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the
  *                              operation was ignored.
- * \retval      ALT_E_BUF_OVF   The destination buffer does not contain enough space 
- *                              for the operation. 
+ * \retval      ALT_E_BUF_OVF   The destination buffer does not contain enough space
+ *                              for the operation.
  *
  * \internal
  * See:
@@ -492,7 +492,7 @@ ALT_STATUS_CODE alt_nand_flash_page_write(const uint32_t page_addr,
  * * Pipeline Read-Ahead and Write-Ahead Operations
  * \endinternal
  */
-ALT_STATUS_CODE alt_nand_flash_page_dma_read(const uint32_t page_addr, 
+ALT_STATUS_CODE alt_nand_flash_page_dma_read(const uint32_t page_addr,
                                              const uint32_t num_pages,
                                              void *dest,
                                              const uint32_t dest_size,
@@ -506,7 +506,7 @@ ALT_STATUS_CODE alt_nand_flash_page_dma_read(const uint32_t page_addr,
  * Writes \e num_pages to the flash device beginning at \e page_addr. Whole pages
  * are written to flash memory. The block(s) containing the pages must have been
  * previously erased.
- * 
+ *
  * \param       page_addr
  *              The beginning page address to write.
  *
@@ -530,10 +530,10 @@ ALT_STATUS_CODE alt_nand_flash_page_dma_read(const uint32_t page_addr,
  *
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
- * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the 
+ * \retval      ALT_E_BAD_BLK   The device block is marked defective and hence the
  *                              operation was ignored.
- * \retval      ALT_E_BUF_OVF   The destination buffer does not contain enough space 
- *                              for the operation. 
+ * \retval      ALT_E_BUF_OVF   The destination buffer does not contain enough space
+ *                              for the operation.
  *
  * \internal
  * See:
@@ -544,7 +544,7 @@ ALT_STATUS_CODE alt_nand_flash_page_dma_read(const uint32_t page_addr,
  * * Pipeline Read-Ahead and Write-Ahead Operations
  * \endinternal
  */
-ALT_STATUS_CODE alt_nand_flash_page_dma_write(const uint32_t page_addr, 
+ALT_STATUS_CODE alt_nand_flash_page_dma_write(const uint32_t page_addr,
                                               const uint32_t num_pages,
                                               const void *src,
                                               const uint32_t src_size,
@@ -557,7 +557,7 @@ ALT_STATUS_CODE alt_nand_flash_page_dma_write(const uint32_t page_addr,
  */
 typedef enum ALT_NAND_ECC_CORRECTION_e
 {
-    ALT_NAND_ECC_4_BIT_CORRECTION      = 4,    /*!< Performs 4 bit correction over a 512 byte sector */ 
+    ALT_NAND_ECC_4_BIT_CORRECTION      = 4,    /*!< Performs 4 bit correction over a 512 byte sector */
     ALT_NAND_ECC_8_BIT_CORRECTION      = 8,    /*!< Performs 8 bit correction over a 512 byte sector */
     ALT_NAND_ECC_16_BIT_CORRECTION     = 16,   /*!< Performs 16 bit correction over a 512 byte sector */
     ALT_NAND_ECC_24_BIT_CORRECTION     = 24    /*!< Performs 24 bit correction over a 1024 byte sector */
@@ -571,8 +571,8 @@ typedef enum ALT_NAND_ECC_CORRECTION_e
  *
  * \retval      ALT_E_SUCCESS       Indicates successful completion.
  * \retval      ALT_E_ERROR         Indicates an error occurred.
- * \retval      ALT_E_INV_OPTION    The specified ECC correction value is not 
- *                                  appropriate for the device page size and 
+ * \retval      ALT_E_INV_OPTION    The specified ECC correction value is not
+ *                                  appropriate for the device page size and
  *                                  spare area available.
  *
  * \internal
@@ -835,8 +835,8 @@ ALT_STATUS_CODE alt_nand_int_disable(const uint32_t mask);
  * the \b ALT_INT_INTERRUPT_NAND_IRQ interrupt signal state.
  *
  * NOTE: A cleared bit for any status condition in the mask value does not have
- * the effect of disabling it as a contributor to the \b ALT_INT_INTERRUPT_NAND_IRQ 
- * interrupt signal state. The function alt_nand_int_disable() is used to disable 
+ * the effect of disabling it as a contributor to the \b ALT_INT_INTERRUPT_NAND_IRQ
+ * interrupt signal state. The function alt_nand_int_disable() is used to disable
  * status source conditions.
  *
  * \param       mask
@@ -1003,7 +1003,7 @@ typedef uint32_t * alt_nand_bad_block_table_t;
  * \retval      ALT_E_BAD_ARG   The \e bad_block_table_len specifies a bad_block_table
  *                              length that is not large enough to hold a copy of
  *                              the bad block table for the device.
- *                              
+ *
  */
 ALT_STATUS_CODE alt_nand_bad_block_table_get(alt_nand_bad_block_table_t bad_block_table,
                                              const uint32_t bad_block_table_len);

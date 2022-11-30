@@ -463,7 +463,7 @@ ALT_STATUS_CODE alt_ecc_status_get(const ALT_ECC_RAM_ENUM_t ram_block,
     return ALT_E_SUCCESS;
 }
 
-ALT_STATUS_CODE alt_ecc_status_clear(const ALT_ECC_RAM_ENUM_t ram_block, 
+ALT_STATUS_CODE alt_ecc_status_clear(const ALT_ECC_RAM_ENUM_t ram_block,
                                      const uint32_t ecc_mask)
 {
     void *   ecc_addr;

@@ -41,7 +41,7 @@ extern "C" {
 //
 
 //
-// Chip Sleep Enable Reg (Offset +00h) 
+// Chip Sleep Enable Reg (Offset +00h)
 // Chip Clock Required Status Reg (Offset +04h)
 //
 #define PCR_CHIP_SLP_EN_OFFSET          (0ul)
@@ -408,7 +408,7 @@ extern "C" {
 #define PCR_EC2_RST_EN_TIMER3           (1ul << 22)
 
 //
-// Host Reset 
+// Host Reset
 //
 // Power Reset Control Reg (Offset +48h)
 //
@@ -474,4 +474,3 @@ extern "C" {
 /* end mec14xx_pcr.h */
 /**   @}
  */
-

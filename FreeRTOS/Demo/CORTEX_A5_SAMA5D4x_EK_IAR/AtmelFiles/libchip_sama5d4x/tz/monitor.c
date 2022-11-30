@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License  
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -40,17 +40,17 @@
 #endif
 #include "mon.h"
 #include "mon_macros.h"
-   
+
 #if defined ( __ICCARM__ ) /* IAR Ewarm */
     #pragma default_variable_attributes = @ "region_context_switch"
       WorldContext SW_Context;
-      WorldContext NSW_Context;    
-    #pragma default_variable_attributes = 
-    
+      WorldContext NSW_Context;
+    #pragma default_variable_attributes =
+
 #elif defined (  __GNUC__  ) /* GCC CS3 */
     WorldContext SW_Context __attribute__((__section__("region_context_switch")));
     WorldContext NSW_Context __attribute__((__section__("region_context_switch")));
-#endif 
+#endif
 /*----------------------------------------------------------------------------
  *        Global functions
  *----------------------------------------------------------------------------*/
@@ -59,8 +59,7 @@ void InitMonitor(void)
 {
   SW_Context.Mon.Mode_SPSR = 0;
   SecureMonitor_init();
-  
-  NSW_Context.Mon.Mode_SPSR = INITIAL_NWD_STATE;
-  NSW_Context.Mon.Mode_LR = (unsigned int)&nw_start;  
-}
 
+  NSW_Context.Mon.Mode_SPSR = INITIAL_NWD_STATE;
+  NSW_Context.Mon.Mode_LR = (unsigned int)&nw_start;
+}

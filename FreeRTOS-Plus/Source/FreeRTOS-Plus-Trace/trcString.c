@@ -22,7 +22,7 @@ traceResult xTraceStringRegister(const char* szString, TraceStringHandle_t *pStr
 
 	/* This should never fail */
 	TRC_ASSERT(szString != 0);
-	
+
 	/* This should never fail */
 	TRC_ASSERT(pString != 0);
 
@@ -54,7 +54,7 @@ traceResult xTraceStringRegister(const char* szString, TraceStringHandle_t *pStr
 		{
 			xTraceEventAdd8(xEventHandle, 0);
 		}
-		
+
 		xTraceEventEnd(xEventHandle);
 	}
 

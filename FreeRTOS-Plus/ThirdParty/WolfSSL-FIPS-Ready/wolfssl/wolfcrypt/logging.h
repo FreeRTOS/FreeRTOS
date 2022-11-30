@@ -191,4 +191,3 @@ WOLFSSL_API void wolfSSL_Debugging_OFF(void);
 }
 #endif
 #endif /* WOLFSSL_LOGGING_H */
-

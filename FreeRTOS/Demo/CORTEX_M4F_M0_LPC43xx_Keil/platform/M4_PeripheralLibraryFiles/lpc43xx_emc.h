@@ -68,12 +68,10 @@ void EMCFlashInit(void);
 #define SDRAM_SIZE_BYTES		(1024UL * 1024UL * 8UL)
 #define SDRAM_WIDTH				EMC_SDRAM_WIDTH_16_BITS
 #define SDRAM_SIZE_MBITS		EMC_SDRAM_SIZE_64_MBITS
-#define SDRAM_DATA_BUS_BITS		EMC_SDRAM_DATA_BUS_16_BITS			
-#define SDRAM_COL_ADDR_BITS		8		
+#define SDRAM_DATA_BUS_BITS		EMC_SDRAM_DATA_BUS_16_BITS
+#define SDRAM_COL_ADDR_BITS		8
 #define CLK0_DELAY     0
 
 void vEMC_InitSRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, uint32_t u32DataBus, uint32_t u32ColAddrBits);
 void emc_WaitUS(volatile uint32_t us);
 void emc_WaitMS(uint32_t ms);
-
-

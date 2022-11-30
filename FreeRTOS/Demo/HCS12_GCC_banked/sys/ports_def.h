@@ -33,4 +33,3 @@ Boston, MA 02111-1307, USA.  */
 #endif
 
 #endif /* _SYS_PORTS_DEF_H */
-

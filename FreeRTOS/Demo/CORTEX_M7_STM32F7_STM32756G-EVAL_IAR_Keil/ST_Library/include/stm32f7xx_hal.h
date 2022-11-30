@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0
   * @date    12-May-2015
-  * @brief   This file contains all the functions prototypes for the HAL 
+  * @brief   This file contains all the functions prototypes for the HAL
   *          module driver.
   ******************************************************************************
   * @attention
@@ -34,7 +34,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F7xx_HAL_H
@@ -53,13 +53,13 @@
 
 /** @addtogroup HAL
   * @{
-  */ 
+  */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 
-/** @brief  Freeze/Unfreeze Peripherals in Debug mode 
+/** @brief  Freeze/Unfreeze Peripherals in Debug mode
   */
 #define __HAL_DBGMCU_FREEZE_TIM2()           (DBGMCU->APB1FZ |= (DBGMCU_APB1_FZ_DBG_TIM2_STOP))
 #define __HAL_DBGMCU_FREEZE_TIM3()           (DBGMCU->APB1FZ |= (DBGMCU_APB1_FZ_DBG_TIM3_STOP))
@@ -115,7 +115,7 @@
 /** @brief  FMC (NOR/RAM) mapped at 0x60000000 and SDRAM mapped at 0xC0000000
   */
 #define __HAL_SYSCFG_REMAPMEMORY_FMC()          (SYSCFG->MEMRMP &= ~(SYSCFG_MEMRMP_SWP_FMC))
-                                       
+
 
 /** @brief  FMC/SDRAM  mapped at 0x60000000 (NOR/RAM) mapped at 0xC0000000
   */
@@ -156,12 +156,12 @@ void HAL_DisableFMCMemorySwapping(void);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
+  */
+
 #ifdef __cplusplus
 }
 #endif

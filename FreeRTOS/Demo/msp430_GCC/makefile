@@ -70,15 +70,3 @@ $(OBJ) : %.o : %.c makefile
 
 clean :
 	touch makefile
-
-
-
-
-
-
-
-
-
-
-
-

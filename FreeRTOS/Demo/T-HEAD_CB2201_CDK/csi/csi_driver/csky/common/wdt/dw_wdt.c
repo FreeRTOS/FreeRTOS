@@ -256,4 +256,3 @@ int32_t csi_wdt_read_current_value(wdt_handle_t handle, uint32_t *value)
     *value = addr->WDT_CCVR;
     return 0;
 }
-

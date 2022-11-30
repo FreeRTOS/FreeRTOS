@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the CEC firmware 
+  * @brief   This file contains all the functions prototypes for the CEC firmware
   *          library.
   ******************************************************************************
   * @attention
@@ -42,9 +42,9 @@
   * @{
   */
 /* Exported types ------------------------------------------------------------*/
-  
-/** 
-  * @brief CEC Init structure definition 
+
+/**
+  * @brief CEC Init structure definition
   */
 typedef struct
 {

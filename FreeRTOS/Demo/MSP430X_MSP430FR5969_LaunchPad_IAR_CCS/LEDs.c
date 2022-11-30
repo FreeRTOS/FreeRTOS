@@ -69,4 +69,3 @@ void vParTestToggleLED( UBaseType_t uxLED )
 		GPIO_toggleOutputOnPin( ucPorts[ uxLED ], usPins[ uxLED ] );
 	}
 }
-

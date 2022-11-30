@@ -30,14 +30,14 @@
  */
 
 
-#ifndef MEC14XX_DEFS_H 
-#define MEC14XX_DEFS_H 
+#ifndef MEC14XX_DEFS_H
+#define MEC14XX_DEFS_H
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
-/** @addtogroup MEC14xx_Definitions 
+/** @addtogroup MEC14xx_Definitions
   This file defines all structures and symbols for MEC14xx:
     - registers and bitfields
     - peripheral base address
@@ -53,7 +53,7 @@
  * MEC1404
  * 96KB CODE SRAM
  * 32KB DATA SRAM
- * 
+ *
  *              Physical                    Virtual                     Length
  * CODE SRAM  0x1FD0_0000 - 0x1FD1_7FFF     0xBFD0_0000 - 0xBFD1_7FFF   96KB (0x18000)
  * DATA SRAM  0x1FD1_8000 - 0x1FD1_FFFF     0xBFD1_8000 - 0xBFD1_FFFF   32KB
@@ -69,7 +69,7 @@
  * CPP Regs   0x1FFF_C000 - 0x1FFF_FFFF     0xBFFF_C000 - 0xBFFF_FFFF   16KB
  *
  */
- 
+
 #define MEC14XX_TRUE    (1ul)
 #define MEC14XX_FALSE   (0ul)
 
@@ -167,7 +167,7 @@
 #define MEC14xx_GIRQ26_ID           (18)
 #define MEC14xx_NUM_JTVIC_INTS      (18+1)
 // 4-bits per GIRQ source bit (only lower 2-bits used)
-// 4 * 32 * 19 = 2432 bits -> 76 32-bit registers 
+// 4 * 32 * 19 = 2432 bits -> 76 32-bit registers
 #define MEC14xx_NUM_GIRQ_PRI_REGS   ((MEC14xx_NUM_JTVIC_INTS) << 2)
 
 
@@ -209,19 +209,19 @@ typedef union
     uint8_t  b[4];
 } DATA32_U;
 
-typedef struct buff8_s 
+typedef struct buff8_s
 {
     uint32_t len;
     uint8_t *pd;
 } BUFF8_T;
 
-typedef struct buff16_s 
+typedef struct buff16_s
 {
     uint32_t len;
     uint16_t *pd;
 } BUFF16_T;
 
-typedef struct buff32_s 
+typedef struct buff32_s
 {
     uint32_t len;
     uint32_t *pd;
@@ -231,11 +231,11 @@ typedef struct buff32_s
 #ifndef __IO
 #define __IO volatile
 #ifdef __cplusplus
-  #define   __I     volatile             
+  #define   __I     volatile
 #else
-  #define   __I     volatile const      
+  #define   __I     volatile const
 #endif
-#define     __O     volatile      
+#define     __O     volatile
 #endif
 
 
@@ -248,9 +248,9 @@ typedef struct buff32_s
 
 typedef struct
 {
-    __IO uint32_t SOURCE;   /*!< Offset: 0x0000 Source RW1C */ 
-    __IO uint32_t EN_SET;   /*!< Offset: 0x0004 Enable Set RW */ 
-    __IO uint32_t EN_CLR;   /*!< Offset: 0x0008 Enable Clear RW */ 
+    __IO uint32_t SOURCE;   /*!< Offset: 0x0000 Source RW1C */
+    __IO uint32_t EN_SET;   /*!< Offset: 0x0004 Enable Set RW */
+    __IO uint32_t EN_CLR;   /*!< Offset: 0x0008 Enable Clear RW */
     __IO uint32_t RESULT;   /*!< Offset: 0x000C Result RO */
 } GIRQ_TypeDef;
 
@@ -267,8 +267,8 @@ typedef struct
 */
 typedef struct
 {
-    GIRQ_TypeDef  REGS[MEC14xx_NUM_JTVIC_INTS]; 
-    uint8_t PAD[0x200ul-((MEC14xx_NUM_JTVIC_INTS)<<4)]; 
+    GIRQ_TypeDef  REGS[MEC14xx_NUM_JTVIC_INTS];
+    uint8_t PAD[0x200ul-((MEC14xx_NUM_JTVIC_INTS)<<4)];
 } JTVIC_GIRQ_REGS_TypeDef; // at CPP_BASE
 
 /*
@@ -278,7 +278,7 @@ typedef struct
 typedef struct
 {
     __IO uint32_t REG32[MEC14xx_NUM_JTVIC_INTS];
-    uint8_t PAD[0x100ul-((MEC14xx_NUM_JTVIC_INTS)<<2)];  
+    uint8_t PAD[0x100ul-((MEC14xx_NUM_JTVIC_INTS)<<2)];
 } JTVIC_AGG_CTRL_TypeDef; // at CCP_BASE+0x200
 
 /*
@@ -288,7 +288,7 @@ typedef struct
 typedef struct
 {
     __IO uint32_t REG32[(MEC14xx_NUM_JTVIC_INTS)<<4];
-    uint8_t PAD[0x200ul-((MEC14xx_NUM_JTVIC_INTS)<<4)]; 
+    uint8_t PAD[0x200ul-((MEC14xx_NUM_JTVIC_INTS)<<4)];
 } JTVIC_PRIORITY_TypeDef; // at CPP_Base+0x300
 
 
@@ -347,7 +347,7 @@ typedef struct
 #define MEC14xx_NUM_BASIC_TIMERS    (4)
 typedef struct
 {
-  __IO uint32_t COUNT;                      /*!< Offset: 0x0000   Timer Count Register            */ 
+  __IO uint32_t COUNT;                      /*!< Offset: 0x0000   Timer Count Register            */
   __IO uint32_t PRELOAD;                    /*!< Offset: 0x0004   Timer Preload Register          */
   __IO uint8_t  STATUS;                     /*!< Offset: 0x0008   Timer Status Register           */
        uint8_t  RESERVEDC[3];
@@ -442,7 +442,7 @@ typedef struct
 */
 typedef struct
 {
-  __IO uint32_t CHIP_SLEEP_EN;                  /*!< Offset: 0x0000  Chip sleep enable */               
+  __IO uint32_t CHIP_SLEEP_EN;                  /*!< Offset: 0x0000  Chip sleep enable */
   __IO uint32_t CHIP_CLOCK_REQ_STS;             /*!< Offset: 0x0004  Chip Clocks required status */
   __IO uint32_t EC_SLEEP_EN;                    /*!< Offset: 0x0008  EC Sleep enable  */
   __IO uint32_t EC_CLOCK_REQ_STS;               /*!< Offset: 0x000C  EC Clocks required status */
@@ -484,7 +484,7 @@ typedef struct
 #define MEC14xx_NUM_GPIO_BANKS  (4)
 #define MEC14xx_NUM_GPIO_PINS   ((MEC14xx_NUM_GPIO_BANKS) * 32)
 
-typedef struct                               
+typedef struct
 {
     GPIO_CFG_TypeDef PIN_CFG[MEC14xx_NUM_GPIO_PINS];
 } GPIO_TypeDef;
@@ -591,19 +591,19 @@ typedef struct
 */
 
 /* EC Bus Segment Devices */
-#define WDT         ((WDT_TypeDef *)(WDT_BASE))                 
-#define RTOS_TIMER  ((RTMR_TypeDef *)(RTOS_TIMER_BASE))         
-#define TFDP        ((TFDP_TypeDef *)(TFDP_BASE))               
-#define VBAT_REGS   ((VBATREGS_TypeDef *)(VBAT_REGS_BASE))      
-#define BBLED0      ((BBLED_TypeDef *)(LED0_BASE))              
-#define BBLED1      ((BBLED_TypeDef *)(LED1_BASE))              
-#define BBLED2      ((BBLED_TypeDef *)(LED2_BASE))              
+#define WDT         ((WDT_TypeDef *)(WDT_BASE))
+#define RTOS_TIMER  ((RTMR_TypeDef *)(RTOS_TIMER_BASE))
+#define TFDP        ((TFDP_TypeDef *)(TFDP_BASE))
+#define VBAT_REGS   ((VBATREGS_TypeDef *)(VBAT_REGS_BASE))
+#define BBLED0      ((BBLED_TypeDef *)(LED0_BASE))
+#define BBLED1      ((BBLED_TypeDef *)(LED1_BASE))
+#define BBLED2      ((BBLED_TypeDef *)(LED2_BASE))
 #define ECS         ((ECS_TypeDef *)(ECS_BASE))
 #define ECS_REG     ((ECS_TypeDef *)(ECS_BASE + 0x20))
 
 /* Chip Bus Segment Devices */
-#define PCR         ((PCR_TypeDef *)(PCR_BASE))                 
-#define GPIO        ((GPIO_TypeDef *)(GPIO_BASE))               
+#define PCR         ((PCR_TypeDef *)(PCR_BASE))
+#define GPIO        ((GPIO_TypeDef *)(GPIO_BASE))
 #define GPIO_CTRL   ((GPIO_CTRL_TypeDef *) (GPIO_BASE))
 #define GPIO_PAROUT ((GPIO_PAROUT_TypeDef *)(GPIO_POUT_BASE))
 #define GPIO_PARIN  ((GPIO_PARIN_TypeDef *)(GPIO_PIN_BASE))
@@ -639,4 +639,3 @@ typedef struct
 
 /**   @}
  */
-

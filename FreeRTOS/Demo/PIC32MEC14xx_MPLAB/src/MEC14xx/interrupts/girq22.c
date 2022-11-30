@@ -109,4 +109,3 @@ girq22_b9(void)
 /* end girq22.c */
 /**   @}
  */
-

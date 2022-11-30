@@ -131,4 +131,3 @@ to exclude the API function. */
 /* A header file that defines trace macro can be included here. */
 
 #endif /* FREERTOS_CONFIG_H */
-

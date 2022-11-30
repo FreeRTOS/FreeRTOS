@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -128,12 +128,12 @@ uint8_t ISI_BytesForOnePixel(uint8_t bmpRgb)
         if ((REG_ISI_CFG2 & ISI_CFG2_RGB_MODE) == ISI_CFG2_RGB_MODE){
             // RGB: 5:6:5 16bits/pixels
             nbByte_Pixel = 2;
-        } 
+        }
         else {
             // RGB: 8:8:8 24bits/pixels
             nbByte_Pixel = 3;
         }
-    } 
+    }
     else {
         // YUV: 2 pixels for 4 bytes
         nbByte_Pixel = 2;
@@ -180,10 +180,10 @@ void ISI_Init(pIsi_Video pVideo)
     // Vertical size = IM_VSIZE + 1
     // IM_HSIZE: Horizontal size of the Image sensor [0..2047]
     // Horizontal size = IM_HSIZE + 1
-    // YCC_SWAP : YCC image data    
+    // YCC_SWAP : YCC image data
     REG_ISI_CFG2 = ISI_CFG2_IM_VSIZE(pVideo->codec_vsize - 1)
                  + ISI_CFG2_IM_HSIZE(pVideo->codec_hsize - 1);
-    
+
     if (pVideo->rgb_or_yuv == RGB) {
         REG_ISI_CFG2 |= ISI_CFG2_COL_SPACE | ISI_CFG2_RGB_MODE ;
     }
@@ -202,11 +202,11 @@ void ISI_Init(pIsi_Video pVideo)
     else {
         REG_ISI_PSIZE = ((pVideo->lcd_vsize -1)) + (((pVideo->lcd_hsize -1) << 16) );
     }
-    // DEC_FACTOR is 8-bit width, range is from 16 to 255. 
+    // DEC_FACTOR is 8-bit width, range is from 16 to 255.
     // Values from 0 to 16 do not perform any decimation.
     //REG_ISI_PDECF = (16 * pVideo->codec_hsize)/640;
-    hRatio = (16 * pVideo->codec_hsize)/(pVideo->lcd_hsize); 
-    vRatio = (16 * pVideo->codec_vsize)/(pVideo->lcd_vsize); 
+    hRatio = (16 * pVideo->codec_hsize)/(pVideo->lcd_hsize);
+    vRatio = (16 * pVideo->codec_vsize)/(pVideo->lcd_vsize);
     REG_ISI_PDECF = (hRatio > vRatio )? vRatio: hRatio;
 
     if (REG_ISI_PDECF < 16) REG_ISI_PDECF = 16;
@@ -237,4 +237,3 @@ void ISI_Init(pIsi_Video pVideo)
                       + ISI_Y2R_SET1_Croff
                       + ISI_Y2R_SET1_Cboff;
 }
-

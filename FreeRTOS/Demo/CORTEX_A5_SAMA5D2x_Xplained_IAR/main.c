@@ -273,6 +273,3 @@ size_t __write(int f, const unsigned char *p, size_t s)
   (void) s;
   return 0;
 }
-
-
-

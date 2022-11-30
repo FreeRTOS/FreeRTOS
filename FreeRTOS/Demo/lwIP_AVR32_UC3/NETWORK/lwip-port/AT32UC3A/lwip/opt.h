@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -11,21 +11,21 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission. 
+ *    derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
- * 
+ *
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
@@ -172,7 +172,7 @@ a lot of data that needs to be copied, this should be set high. */
  * This feature has not stabilized yet. Single-packet queueing is
  * believed to be stable, multi-packet queueing is believed to
  * clash with the TCP segment queueing.
- * 
+ *
  * As multi-packet-queueing is currently disabled, enabling this
  * _should_ work, but we need your testing feedback on lwip-users.
  *
@@ -308,7 +308,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 #ifndef TCP_WND
 #define TCP_WND                         2048
-#endif 
+#endif
 
 #ifndef TCP_MAXRTX
 #define TCP_MAXRTX                      12
@@ -361,10 +361,10 @@ a lot of data that needs to be copied, this should be set high. */
 #ifndef LWIP_EVENT_API
 #define LWIP_EVENT_API                  0
 #define LWIP_CALLBACK_API               1
-#else 
+#else
 #define LWIP_EVENT_API                  1
 #define LWIP_CALLBACK_API               0
-#endif 
+#endif
 
 #ifndef LWIP_COMPAT_SOCKETS
 #define LWIP_COMPAT_SOCKETS             1
@@ -389,12 +389,12 @@ a lot of data that needs to be copied, this should be set high. */
 
 
 /* ---------- Socket Options ---------- */
-/* Enable SO_REUSEADDR and SO_REUSEPORT options */ 
+/* Enable SO_REUSEADDR and SO_REUSEPORT options */
 #ifdef SO_REUSE
 /* I removed the lot since this was an ugly hack. It broke the raw-API.
    It also came with many ugly goto's, Christiaan Simons. */
 #error "SO_REUSE currently unavailable, this was a hack"
-#endif                                                                        
+#endif
 
 
 /* ---------- Statistics options ---------- */
@@ -475,7 +475,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define PPP_SUPPORT                     0      /* Set for PPP */
 #endif
 
-#if PPP_SUPPORT 
+#if PPP_SUPPORT
 
 #define NUM_PPP                         1      /* Max PPP sessions. */
 
@@ -561,19 +561,19 @@ a lot of data that needs to be copied, this should be set high. */
 #ifndef CHECKSUM_GEN_IP
 #define CHECKSUM_GEN_IP                 1
 #endif
- 
+
 #ifndef CHECKSUM_GEN_UDP
 #define CHECKSUM_GEN_UDP                1
 #endif
- 
+
 #ifndef CHECKSUM_GEN_TCP
 #define CHECKSUM_GEN_TCP                1
 #endif
- 
+
 #ifndef CHECKSUM_CHECK_IP
 #define CHECKSUM_CHECK_IP               1
 #endif
- 
+
 #ifndef CHECKSUM_CHECK_UDP
 #define CHECKSUM_CHECK_UDP              1
 #endif
@@ -692,23 +692,23 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCPIP_DEBUG                     DBG_OFF
 #endif
 
-#ifndef PPP_DEBUG 
+#ifndef PPP_DEBUG
 #define PPP_DEBUG                       DBG_OFF
 #endif
 
-#ifndef SLIP_DEBUG 
+#ifndef SLIP_DEBUG
 #define SLIP_DEBUG                      DBG_OFF
 #endif
 
-#ifndef DHCP_DEBUG 
+#ifndef DHCP_DEBUG
 #define DHCP_DEBUG                      DBG_OFF
 #endif
 
-#ifndef SNMP_MSG_DEBUG 
+#ifndef SNMP_MSG_DEBUG
 #define SNMP_MSG_DEBUG                  DBG_OFF
 #endif
 
-#ifndef SNMP_MIB_DEBUG 
+#ifndef SNMP_MIB_DEBUG
 #define SNMP_MIB_DEBUG                  DBG_OFF
 #endif
 
@@ -717,6 +717,3 @@ a lot of data that needs to be copied, this should be set high. */
 #endif
 
 #endif /* __LWIP_OPT_H__ */
-
-
-

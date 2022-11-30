@@ -116,4 +116,3 @@ void vSerialClose(xComPortHandle xPort)
 	( void ) xPort;
 }
 /*-----------------------------------------------------------*/
-

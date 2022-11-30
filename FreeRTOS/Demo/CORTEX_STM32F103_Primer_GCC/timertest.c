@@ -150,11 +150,3 @@ unsigned short usThisCount, usDifference;
 
     TIM_ClearITPendingBit( TIM2, TIM_IT_Update );
 }
-
-
-
-
-
-
-
-

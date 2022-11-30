@@ -98,4 +98,3 @@ void system_init(void)
 	/* Initialize board hardware */
 	system_board_init();
 }
-

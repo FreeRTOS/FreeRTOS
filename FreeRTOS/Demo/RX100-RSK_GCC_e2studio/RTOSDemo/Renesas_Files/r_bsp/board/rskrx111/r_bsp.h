@@ -46,5 +46,3 @@ INCLUDE APPROPRIATE MCU AND BOARD FILES
 #include    ".\board\rskrx111\lcd.h"
 
 #endif /* PLATFORM_BOARD_RSKRX111 */
-
-

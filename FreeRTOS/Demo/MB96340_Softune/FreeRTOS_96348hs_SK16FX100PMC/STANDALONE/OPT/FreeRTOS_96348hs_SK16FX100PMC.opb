@@ -30,4 +30,3 @@
 -a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96340_Softune\FreeRTOS_96348hs_SK16FX100PMC\STANDALONE\OBJ\printf_stdarg.obj"
 -a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96340_Softune\FreeRTOS_96348hs_SK16FX100PMC\STANDALONE\OBJ\__STD_LIB_sbrk.obj"
 -a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96340_Softune\FreeRTOS_96348hs_SK16FX100PMC\STANDALONE\OBJ\heap_3.obj"
-

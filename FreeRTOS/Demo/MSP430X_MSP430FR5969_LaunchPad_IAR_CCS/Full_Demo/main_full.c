@@ -363,7 +363,3 @@ __interrupt void v4RunTimeStatsTimerOverflow( void )
 	ulRunTimeCounterOverflows += 0x10000;
 	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 }
-
-
-
-

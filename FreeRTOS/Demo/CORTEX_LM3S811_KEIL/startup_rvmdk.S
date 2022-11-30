@@ -219,7 +219,7 @@ __user_initial_stackheap
 ;******************************************************************************
         ALIGN
 
-; Note: 
+; Note:
 ; Using READWRITE places Section .RTOSHeap in Region ER_RW.
 ; Using NOINIT places Section .RTOSHeap in Region ER_ZI,which means
 ; "ZEROINITIALIZE" (sic), and which is the last region in memory. Then

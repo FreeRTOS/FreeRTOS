@@ -23,7 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
- 
+
 #ifndef CORE_MQTT_CONFIG_H
 #define CORE_MQTT_CONFIG_H
 

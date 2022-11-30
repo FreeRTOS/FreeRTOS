@@ -182,4 +182,3 @@ void vRegTest2Implementation( void )
 	); /* __asm volatile */
 }
 /*-----------------------------------------------------------*/
-

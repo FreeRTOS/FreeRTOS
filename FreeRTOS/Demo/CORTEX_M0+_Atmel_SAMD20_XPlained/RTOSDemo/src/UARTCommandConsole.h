@@ -34,6 +34,3 @@
 void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPriority );
 
 #endif /* UART_COMMAND_CONSOLE_H */
-
-
-

@@ -95,6 +95,3 @@ BaseType_t xLEDState;
 		xil_printf( "blink\n" );
 	#endif
 }
-
-
-

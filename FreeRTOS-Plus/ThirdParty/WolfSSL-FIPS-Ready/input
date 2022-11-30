@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 #endif
 
     if (argc >= 2) {
-        fin  = fopen(argv[1], "r"); 
+        fin  = fopen(argv[1], "r");
         inCreated = 1;
     }
     if (argc >= 3) {
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
             break;
         }
 
-        if (SSL_read(ssl, reply, sizeof(reply)) > 0) 
+        if (SSL_read(ssl, reply, sizeof(reply)) > 0)
             fputs(reply, fout);
     }
 
@@ -85,5 +85,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
-

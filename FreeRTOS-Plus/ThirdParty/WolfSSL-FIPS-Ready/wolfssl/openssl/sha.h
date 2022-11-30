@@ -200,4 +200,3 @@ typedef WOLFSSL_SHA512_CTX SHA512_CTX;
 
 
 #endif /* WOLFSSL_SHA_H_ */
-

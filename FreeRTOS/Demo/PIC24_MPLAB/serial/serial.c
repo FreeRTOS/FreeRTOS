@@ -224,5 +224,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		taskYIELD();
 	}
 }
-
-

@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -67,9 +67,9 @@ typedef struct _ClockConfiguration
 
 /* Clock configuration for the AT91SAM3S */
 static const ClockConfiguration clockConfigurations[] = {
-    {133, 133,  CKGR_PLLAR_STUCKTO1 | CKGR_PLLAR_MULA(199) 
+    {133, 133,  CKGR_PLLAR_STUCKTO1 | CKGR_PLLAR_MULA(199)
     | CKGR_PLLAR_OUTA(0) | CKGR_PLLAR_PLLACOUNT(64) | CKGR_PLLAR_DIVA(3),
-    PMC_MCKR_CSS_SLOW_CLK | PMC_MCKR_PRES_CLOCK | PMC_MCKR_MDIV_PCK_DIV3 
+    PMC_MCKR_CSS_SLOW_CLK | PMC_MCKR_PRES_CLOCK | PMC_MCKR_MDIV_PCK_DIV3
     | PMC_MCKR_PLLADIV2_DIV2 | PMC_MCKR_CSS_PLLA_CLK}
 };
 
@@ -165,4 +165,3 @@ void CLOCK_UserChangeConfig(void)
         }
     }
 }
-

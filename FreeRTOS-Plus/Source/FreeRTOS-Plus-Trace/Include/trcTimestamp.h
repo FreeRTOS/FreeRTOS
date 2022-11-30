@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace timestamp APIs.
  */
 
@@ -59,10 +59,10 @@ typedef struct TraceTimestampBuffer
 
 /**
  * @internal Initialize trace timestamp system.
- * 
+ *
  * @param[in] pxBuffer Pointer to memory that will be used by the
  * trace timestamp system.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -72,9 +72,9 @@ traceResult xTraceTimestampInitialize(TraceTimestampBuffer_t *pxBuffer);
 
 /**
  * @brief Gets current trace timestamp.
- * 
+ *
  * @param[out] puiTimestamp Timestamp.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -82,19 +82,19 @@ traceResult xTraceTimestampGet(uint32_t* puiTimestamp);
 
 /**
  * @brief Gets trace timestamp wraparounds.
- * 
+ *
  * @param[out] puiTimerWraparounds Timer wraparounds.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceTimestampGetWraparounds(uint32_t* puiTimerWraparounds);
 
 /**
- * @brief Sets trace timestamp frequency. 
- * 
+ * @brief Sets trace timestamp frequency.
+ *
  * @param[in] uxFrequency Frequency.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -102,9 +102,9 @@ traceResult xTraceTimestampSetFrequency(TraceUnsignedBaseType_t uxFrequency);
 
 /**
  * @brief Gets trace timestamp frequency.
- * 
+ *
  * @param[out] puxFrequency Frequency.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -112,9 +112,9 @@ traceResult xTraceTimestampGetFrequency(TraceUnsignedBaseType_t* puxFrequency);
 
 /**
  * @brief Sets trace timestamp period.
- * 
+ *
  * @param[in] uiPeriod Period.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -122,9 +122,9 @@ traceResult xTraceTimestampSetPeriod(uint32_t uiPeriod);
 
 /**
  * @brief Gets trace timestamp period.
- * 
+ *
  * @param[out] puiPeriod Period.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -132,9 +132,9 @@ traceResult xTraceTimestampGetPeriod(uint32_t* puiPeriod);
 
 /**
  * @brief Sets trace timestamp OS tick count.
- * 
+ *
  * @param[in] uiOsTickCount OS tick count.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -142,9 +142,9 @@ traceResult xTraceTimestampSetOsTickCount(uint32_t uiOsTickCount);
 
 /**
  * @brief Gets trace timestamp OS tick count.
- * 
- * @param[in] puiOsTickCount 
- * 
+ *
+ * @param[in] puiOsTickCount
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -154,9 +154,9 @@ traceResult xTraceTimestampGetOsTickCount(uint32_t *puiOsTickCount);
 
 /**
  * @brief Gets current trace timestamp.
- * 
+ *
  * @param[out] puiTimestamp Timestamp.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -170,19 +170,19 @@ traceResult xTraceTimestampGetOsTickCount(uint32_t *puiOsTickCount);
 
 /**
  * @brief Gets trace timestamp wraparounds.
- * 
+ *
  * @param[out] puiTimerWraparounds Timer wraparounds.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 #define xTraceTimestampGetWraparounds(puiTimerWraparounds) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2(*(puiTimerWraparounds) = pxTraceTimestamp->wraparounds, TRC_SUCCESS)
 
 /**
- * @brief Sets trace timestamp frequency. 
- * 
+ * @brief Sets trace timestamp frequency.
+ *
  * @param[in] uxFrequency Frequency.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -190,9 +190,9 @@ traceResult xTraceTimestampGetOsTickCount(uint32_t *puiOsTickCount);
 
 /**
  * @brief Sets trace timestamp period.
- * 
+ *
  * @param[in] uiPeriod Period.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -200,9 +200,9 @@ traceResult xTraceTimestampGetOsTickCount(uint32_t *puiOsTickCount);
 
 /**
  * @brief Sets trace timestamp OS tick count.
- * 
+ *
  * @param[in] uiOsTickCount OS tick count.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -210,9 +210,9 @@ traceResult xTraceTimestampGetOsTickCount(uint32_t *puiOsTickCount);
 
 /**
  * @brief Gets trace timestamp frequency.
- * 
+ *
  * @param[out] puxFrequency Frequency.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -220,9 +220,9 @@ traceResult xTraceTimestampGetOsTickCount(uint32_t *puiOsTickCount);
 
 /**
  * @brief Gets trace timestamp period.
- * 
+ *
  * @param[out] puiPeriod Period.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -230,9 +230,9 @@ traceResult xTraceTimestampGetOsTickCount(uint32_t *puiOsTickCount);
 
 /**
  * @brief Gets trace timestamp OS tick count.
- * 
- * @param[in] puiOsTickCount 
- * 
+ *
+ * @param[in] puiOsTickCount
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

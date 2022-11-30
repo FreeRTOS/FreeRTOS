@@ -171,4 +171,3 @@ void vGalileoPuts(const char *string);
 #endif
 
 #endif /* __GALILEO_SUPPORT_H__ */
-

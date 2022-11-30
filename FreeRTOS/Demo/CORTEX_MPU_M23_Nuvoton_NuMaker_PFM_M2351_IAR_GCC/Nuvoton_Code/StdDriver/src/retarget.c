@@ -55,7 +55,7 @@ __attribute__((weak))
 #endif
 uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp);
 
-#endif 
+#endif
 
 int kbhit(void);
 int IsDebugFifoEmpty(void);
@@ -99,9 +99,9 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
             sp = (uint32_t *)psp;
         else
             sp = (uint32_t *)msp;
-    
+
     }
-#if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)    
+#if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)
     else
     {
         /* Non-secure stack used */
@@ -109,17 +109,17 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
             sp = (uint32_t *)__TZ_get_PSP_NS();
         else
             sp = (uint32_t *)__TZ_get_MSP_NS();
-    
+
     }
-#endif    
-        
+#endif
+
     /* Get the instruction caused the hardfault */
     inst = M16(sp[6]);
-    
-    
+
+
     if(inst == 0xBEAB)
     {
-        /* 
+        /*
             If the instruction is 0xBEAB, it means it is caused by BKPT without ICE connected.
             We still return for output/input message to UART.
         */
@@ -127,10 +127,10 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
         sp[6] += 2; // return to next instruction
         return lr;  // Keep lr in R0
     }
-    
+
     /* It is casued by hardfault (Not semihost). Just process the hard fault here. */
     /* TODO: Implement your hardfault handle code here */
-    
+
     /*
     printf("  HardFault!\n\n");
     printf("r0  = 0x%x\n", sp[0]);
@@ -142,9 +142,9 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     printf("pc  = 0x%x\n", sp[6]);
     printf("psr = 0x%x\n", sp[7]);
     */
-    
+
     while(1){}
-    
+
 }
 
 
@@ -166,7 +166,7 @@ int32_t SH_Return(int32_t n32In_R0, int32_t n32In_R1, int32_t *pn32Out_R0)
     {
         if(pn32Out_R0)
             *pn32Out_R0 = n32In_R0;
-        
+
         return 1;
     }
     return 0;
@@ -182,14 +182,14 @@ int32_t SH_Return(int32_t n32In_R0, int32_t n32In_R1, int32_t *pn32Out_R0);
 #if defined( __ICCARM__ )
 __WEAK
 #else
-__attribute__((weak)) 
+__attribute__((weak))
 #endif
 uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 {
     uint32_t *sp;
     /* It is casued by hardfault. Just process the hard fault */
     /* TODO: Implement your hardfault handle code here */
-    
+
     /* Check the used stack */
     if(lr & 0x40UL)
     {
@@ -202,9 +202,9 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
         {
             sp = (uint32_t *)msp;
         }
-    
+
     }
-#if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3)    
+#if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3)
     else
     {
         /* Non-secure stack used */
@@ -212,10 +212,10 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
             sp = (uint32_t *)__TZ_get_PSP_NS();
         else
             sp = (uint32_t *)__TZ_get_MSP_NS();
-    
+
     }
-#endif    
-    
+#endif
+
     /*
     printf("  HardFault!\n\n");
     printf("r0  = 0x%x\n", sp[0]);
@@ -227,10 +227,10 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     printf("pc  = 0x%x\n", sp[6]);
     printf("psr = 0x%x\n", sp[7]);
     */
-    
+
     /* Or *sp to remove compiler warning */
     while(1U|*sp){}
-    
+
     return lr;
 }
 
@@ -274,7 +274,7 @@ void SendChar_ToUART(int ch)
     static int32_t i32Head = 0;
     static int32_t i32Tail = 0;
     int32_t i32Tmp;
-    
+
     /* Only flush the data in buffer to UART when ch == 0 */
     if(ch)
     {
@@ -286,7 +286,7 @@ void SendChar_ToUART(int ch)
             u8Buf[i32Head] = ch;
             i32Head = i32Tmp;
         }
-        
+
         if(ch == '\n')
         {
             i32Tmp = i32Head+1;
@@ -303,13 +303,13 @@ void SendChar_ToUART(int ch)
         if(i32Tail == i32Head)
             return;
     }
-    
+
     // pop char
     do
     {
         i32Tmp = i32Tail + 1;
         if(i32Tmp > BUF_SIZE) i32Tmp = 0;
-        
+
         if((DEBUG_PORT->FSR & UART_FSR_TX_FULL_Msk) == 0)
         {
             DEBUG_PORT->DATA = u8Buf[i32Tail];
@@ -333,7 +333,7 @@ void SendChar_ToUART(int ch)
 void SendChar(int ch)
 {
 #if defined(DEBUG_ENABLE_SEMIHOST)
-    
+
     g_buf[g_buf_len++] = ch;
     g_buf[g_buf_len] = '\0';
     if(g_buf_len + 1 >= sizeof(g_buf) || ch == '\n' || ch == '\0')
@@ -341,23 +341,23 @@ void SendChar(int ch)
         /* Send the char */
         if(g_ICE_Conneced)
         {
-            
+
             if(SH_DoCommand(0x04, (int)g_buf, NULL) != 0)
             {
                 g_buf_len = 0;
-                
+
                 return;
             }
         }
         else
         {
-# if (DEBUG_ENABLE_SEMIHOST == 2) // Re-direct to UART Debug Port only when DEBUG_ENABLE_SEMIHOST=2           
+# if (DEBUG_ENABLE_SEMIHOST == 2) // Re-direct to UART Debug Port only when DEBUG_ENABLE_SEMIHOST=2
             int i;
 
             for(i = 0; i < g_buf_len; i++)
                 SendChar_ToUART(g_buf[i]);
             g_buf_len = 0;
-# endif            
+# endif
         }
     }
 #else
@@ -395,9 +395,9 @@ char GetChar(void)
         }
     }
 
-    
+
 # if (DEBUG_ENABLE_SEMIHOST == 2) // Re-direct to UART Debug Port only when DEBUG_ENABLE_SEMIHOST=2
-    
+
     /* Use debug port when ICE is not connected at semihost mode */
     while(!g_ICE_Conneced)
     {
@@ -406,8 +406,8 @@ char GetChar(void)
             return (DEBUG_PORT->DAT);
         }
     }
-# endif    
-    
+# endif
+
 # endif
     return (0);
 #else
@@ -598,5 +598,3 @@ label:
 
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
-
-

@@ -47,12 +47,12 @@ traceResult xTraceTaskInitialize(TraceTaskInfoBuffer_t *pxBuffer)
 traceResult xTraceTaskUnregister(TraceTaskHandle_t xTaskHandle, TraceUnsignedBaseType_t uxPriority)
 {
 	void* pvTask;
-	
+
 	/* This should never fail */
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntryGetAddress((TraceEntryHandle_t)xTaskHandle, &pvTask) == TRC_SUCCESS);
-	
+
 	xTraceStackMonitorRemove(pvTask);
-	
+
 	return xTraceObjectUnregister((TraceObjectHandle_t)xTaskHandle, PSF_EVENT_TASK_DELETE, uxPriority);
 }
 
@@ -63,7 +63,7 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
 
 	/* This should never fail */
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceObjectSetState((TraceObjectHandle_t)xTaskHandle, uxPriority) == TRC_SUCCESS);
-	
+
 	/* This should never fail */
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntryGetAddress((TraceEntryHandle_t)xTaskHandle, &pvTask) == TRC_SUCCESS);
 
@@ -74,7 +74,7 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
 		xTraceEventAdd32(xEventHandle, (uint32_t)uxPriority);
 		xTraceEventEnd(xEventHandle);
 	}
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -82,7 +82,7 @@ traceResult xTraceTaskSetPriorityWithoutHandle(void* pvTask, TraceUnsignedBaseTy
 {
 	TraceEventHandle_t xEventHandle = 0;
 	TraceEntryHandle_t xEntryHandle;
-	
+
 	if (xTraceEntryFind(pvTask, &xEntryHandle) == TRC_FAIL)
 	{
 		return TRC_FAIL;
@@ -98,7 +98,7 @@ traceResult xTraceTaskSetPriorityWithoutHandle(void* pvTask, TraceUnsignedBaseTy
 		xTraceEventAdd32(xEventHandle, (uint32_t)uxPriority);
 		xTraceEventEnd(xEventHandle);
 	}
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -107,7 +107,7 @@ traceResult xTraceTaskSwitch(void *pvTask, TraceUnsignedBaseType_t uxPriority)
 	traceResult xResult = TRC_FAIL;
 	TraceEventHandle_t xEventHandle = 0;
 	void* pvCurrent = 0;
-	
+
 	(void)pvTask;
 	(void)uxPriority;
 
@@ -126,7 +126,7 @@ traceResult xTraceTaskSwitch(void *pvTask, TraceUnsignedBaseType_t uxPriority)
 	if (pvCurrent != pvTask)
 	{
 		xTraceTaskSetCurrent(pvTask);
-		
+
 		if (xTraceEventBegin(PSF_EVENT_TASK_ACTIVATE, sizeof(void*) + sizeof(uint32_t), &xEventHandle) == TRC_SUCCESS)
 		{
 			xTraceEventAddPointer(xEventHandle, pvTask);

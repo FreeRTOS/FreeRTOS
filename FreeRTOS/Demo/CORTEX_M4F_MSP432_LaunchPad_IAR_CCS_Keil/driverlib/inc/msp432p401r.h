@@ -36,7 +36,7 @@
 *
 * For legacy components the definitions that are compatible with MSP430 code,
 * are included with msp432p401r_classic.h
-* 
+*
 * With CMSIS definitions, the register defines have been reformatted:
 *     ModuleName[ModuleInstance]->RegisterName
 *
@@ -1265,14 +1265,14 @@ typedef struct {
   @{
 */
 
-#define ADC14                            ((ADC14_Type *) ADC14_BASE)   
-#define AES256                           ((AES256_Type *) AES256_BASE) 
+#define ADC14                            ((ADC14_Type *) ADC14_BASE)
+#define AES256                           ((AES256_Type *) AES256_BASE)
 #define CAPTIO0                          ((CAPTIO_Type *) CAPTIO0_BASE)
 #define CAPTIO1                          ((CAPTIO_Type *) CAPTIO1_BASE)
 #define COMP_E0                          ((COMP_E_Type *) COMP_E0_BASE)
 #define COMP_E1                          ((COMP_E_Type *) COMP_E1_BASE)
-#define CRC32                            ((CRC32_Type *) CRC32_BASE)   
-#define CS                               ((CS_Type *) CS_BASE)         
+#define CRC32                            ((CRC32_Type *) CRC32_BASE)
+#define CS                               ((CS_Type *) CS_BASE)
 #define PA                               ((DIO_PORT_Interruptable_Type*) (DIO_BASE + 0x0000))
 #define PB                               ((DIO_PORT_Interruptable_Type*) (DIO_BASE + 0x0020))
 #define PC                               ((DIO_PORT_Interruptable_Type*) (DIO_BASE + 0x0040))
@@ -1307,8 +1307,8 @@ typedef struct {
 #define EUSCI_B2_SPI                     ((EUSCI_B_SPI_Type *) EUSCI_B2_SPI_BASE)
 #define EUSCI_B3                         ((EUSCI_B_Type *) EUSCI_B3_BASE)
 #define EUSCI_B3_SPI                     ((EUSCI_B_SPI_Type *) EUSCI_B3_SPI_BASE)
-#define FLCTL                            ((FLCTL_Type *) FLCTL_BASE)   
-#define PCM                              ((PCM_Type *) PCM_BASE)       
+#define FLCTL                            ((FLCTL_Type *) FLCTL_BASE)
+#define PCM                              ((PCM_Type *) PCM_BASE)
 #define PMAP                             ((PMAP_COMMON_Type*) PMAP_BASE)
 #define P1MAP                            ((PMAP_REGISTER_Type*) (PMAP_BASE + 0x0008))
 #define P2MAP                            ((PMAP_REGISTER_Type*) (PMAP_BASE + 0x0010))
@@ -1317,10 +1317,10 @@ typedef struct {
 #define P5MAP                            ((PMAP_REGISTER_Type*) (PMAP_BASE + 0x0028))
 #define P6MAP                            ((PMAP_REGISTER_Type*) (PMAP_BASE + 0x0030))
 #define P7MAP                            ((PMAP_REGISTER_Type*) (PMAP_BASE + 0x0038))
-#define PSS                              ((PSS_Type *) PSS_BASE)       
-#define REF_A                            ((REF_A_Type *) REF_A_BASE)   
-#define RSTCTL                           ((RSTCTL_Type *) RSTCTL_BASE) 
-#define RTC_C                            ((RTC_C_Type *) RTC_C_BASE)   
+#define PSS                              ((PSS_Type *) PSS_BASE)
+#define REF_A                            ((REF_A_Type *) REF_A_BASE)
+#define RSTCTL                           ((RSTCTL_Type *) RSTCTL_BASE)
+#define RTC_C                            ((RTC_C_Type *) RTC_C_BASE)
 #define RTC_C_BCD                        ((RTC_C_BCD_Type *) RTC_C_BCD_BASE)
 #define SYSCTL                           ((SYSCTL_Type *) SYSCTL_BASE)
 #define SYSCTL_Boot                      ((SYSCTL_Boot_Type *) (SYSCTL_BASE + 0x1000))
@@ -1330,8 +1330,8 @@ typedef struct {
 #define TIMER_A1                         ((Timer_A_Type *) TIMER_A1_BASE)
 #define TIMER_A2                         ((Timer_A_Type *) TIMER_A2_BASE)
 #define TIMER_A3                         ((Timer_A_Type *) TIMER_A3_BASE)
-#define TLV                              ((TLV_Type *) TLV_BASE)       
-#define WDT_A                            ((WDT_A_Type *) WDT_A_BASE)   
+#define TLV                              ((TLV_Type *) TLV_BASE)
+#define WDT_A                            ((WDT_A_Type *) WDT_A_BASE)
 
 
 /*@}*/ /* end of group MSP432P401R_PeripheralDecl */
@@ -6788,4 +6788,3 @@ typedef struct {
 #endif
 
 #endif /* __MSP432P401R_H__ */
-

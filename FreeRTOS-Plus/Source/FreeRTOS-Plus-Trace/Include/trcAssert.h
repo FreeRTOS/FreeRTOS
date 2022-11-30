@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace assert APIs.
  */
 
@@ -64,7 +64,7 @@ inline TraceBaseType_t prvTraceAssertCheckCondition(TraceBaseType_t condition)
 
 #else
 
-#define TRC_ASSERT_EQUAL_SIZE(x, y) 
+#define TRC_ASSERT_EQUAL_SIZE(x, y)
 
 #endif
 
@@ -109,11 +109,11 @@ traceResult xTraceAssertGet(TraceStringHandle_t* pxFileNameStringHandle, TraceUn
 
 #else /* ((TRC_CFG_USE_TRACE_ASSERT) == 1) */
 
-#define TRC_ASSERT(__condition) 
+#define TRC_ASSERT(__condition)
 
 #define TRC_ASSERT_ALWAYS_EVALUATE(__condition) (void)(__condition)
 
-#define TRC_ASSERT_CUSTOM_ON_FAIL(__condition, __custom_on_fail) 
+#define TRC_ASSERT_CUSTOM_ON_FAIL(__condition, __custom_on_fail)
 
 #define TRC_ASSERT_CUSTOM_ON_FAIL_ALWAYS_EVALUATE(__condition, __custom_on_fail) (__condition)
 

@@ -164,7 +164,3 @@ ISRFunction_t pxISRToCall = pxISRFunction;
 	}
 #endif /* __GNUC__ */
 /*-----------------------------------------------------------*/
-
-
-
-

@@ -7,7 +7,7 @@
 * @date     07/2007
 * @version  1.5
 *
-* It contains the list of the utilities functions organized by sections 
+* It contains the list of the utilities functions organized by sections
 * (MEMS, LCD, POINTER, ...)
 *
 * @date     10/2007
@@ -73,7 +73,7 @@ enum eSchHandler
    UNUSED4_SCHHDL_ID = 12,
    UNUSED5_SCHHDL_ID = 13,
    UNUSED6_SCHHDL_ID = 14,
-   UNUSED7_SCHHDL_ID = 15   
+   UNUSED7_SCHHDL_ID = 15
    } dummy_var ; //for doxygen
 
 void UTIL_SetSchHandler (  enum eSchHandler , tHandler );

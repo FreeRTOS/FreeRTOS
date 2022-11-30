@@ -72,7 +72,7 @@ int8_t *_last_heap_object=(int8_t *)&s_heap_area;
 /***********************************************************************************************************************
 * Function name: sbrk
 * Description  : This function configures MCU memory area allocation. (CC-RX and GNURX+NEWLIB)
-* Arguments    : size - 
+* Arguments    : size -
 *                    assigned area size
 * Return value : Start address of allocated area (pass)
 *                -1 (failure)
@@ -117,4 +117,3 @@ int8_t *_top_of_heap(void)
 #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
 
 #endif /* BSP_CFG_HEAP_BYTES */
-

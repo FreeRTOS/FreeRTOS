@@ -66,7 +66,7 @@ Additional information:
           WrOff == (RdOff - 1): Buffer is full
           WrOff >  RdOff:       Free space includes wrap-around
           WrOff <  RdOff:       Used space includes wrap-around
-          (WrOff == (SizeOfBuffer - 1)) && (RdOff == 0):  
+          (WrOff == (SizeOfBuffer - 1)) && (RdOff == 0):
                                 Buffer full and wrap-around after next byte
 
 
@@ -556,7 +556,7 @@ unsigned SEGGER_RTT_Read(unsigned BufferIndex, void* pBuffer, unsigned BufferSiz
 *  Function description
 *    Stores a specified number of characters in SEGGER RTT
 *    control block.
-*    SEGGER_RTT_WriteWithOverwriteNoLock does not lock the application 
+*    SEGGER_RTT_WriteWithOverwriteNoLock does not lock the application
 *    and overwrites data if the data does not fit into the buffer.
 *
 *  Parameters
@@ -569,7 +569,7 @@ unsigned SEGGER_RTT_Read(unsigned BufferIndex, void* pBuffer, unsigned BufferSiz
 *    (2) For performance reasons this function does not call Init()
 *        and may only be called after RTT has been initialized.
 *        Either by calling SEGGER_RTT_Init() or calling another RTT API function first.
-*    (3) Do not use SEGGER_RTT_WriteWithOverwriteNoLock if a J-Link 
+*    (3) Do not use SEGGER_RTT_WriteWithOverwriteNoLock if a J-Link
 *        connection reads RTT data.
 */
 void SEGGER_RTT_WriteWithOverwriteNoLock(unsigned BufferIndex, const void* pBuffer, unsigned NumBytes) {

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -147,10 +147,10 @@
 /** \addtogroup emac_structs
         @{*/
 #ifdef __ICCARM__          // IAR
-#define PACKED_ATTR 
+#define PACKED_ATTR
 #elif defined (  __GNUC__  ) /* GCC CS3 */
-#define PACKED_ATTR     __attribute__((packed, aligned(8))) 
-#endif                     
+#define PACKED_ATTR     __attribute__((packed, aligned(8)))
+#endif
 
 /** Receive buffer descriptor struct */
 typedef struct _EmacRxDescriptor {
@@ -299,4 +299,3 @@ extern void EMAC_TransceiverClockEnable(Emac * pEmac,uint8_t bEnaDis);
 #endif
 
 #endif /* #ifndef _EMAC_H */
-

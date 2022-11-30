@@ -346,4 +346,3 @@ REDSTATUS RedImapBlockState(
 
     return ret;
 }
-

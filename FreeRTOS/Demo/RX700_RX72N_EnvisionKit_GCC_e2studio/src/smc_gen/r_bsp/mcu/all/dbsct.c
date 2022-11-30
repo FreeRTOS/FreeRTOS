@@ -130,4 +130,3 @@ Private global variables and functions
 #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
 
 #endif /* defined(__CCRX__) */
-

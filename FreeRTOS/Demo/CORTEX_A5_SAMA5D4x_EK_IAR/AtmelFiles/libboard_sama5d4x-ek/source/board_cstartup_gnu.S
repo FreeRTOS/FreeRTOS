@@ -53,7 +53,7 @@
 #define F_BIT            0x40
 
 #define REG_SFR_AICREDIR        0xF8028054
-#define REG_SFR_UID             0xF8028050   
+#define REG_SFR_UID             0xF8028050
 #define AICREDIR_KEY            0x5F67B102
 
 //------------------------------------------------------------------------------
@@ -62,7 +62,7 @@
 
             .align      4
             .arm
-        
+
 /* Exception vectors
  *******************/
             .section    .vectors, "a", %progbits
@@ -171,8 +171,8 @@ irqHandler:
 
 entry:
 resetHandler:
-        
-        CPSIE   A 
+
+        CPSIE   A
 
 /* Enable VFP */
         /* - Enable access to CP10 and CP11 in CP15.CACR */
@@ -227,39 +227,39 @@ resetHandler:
         cmp     r0, r1
         strcc   r2, [r0], #4
         bcc     1b
-        
-        MRS     r0, cpsr                
+
+        MRS     r0, cpsr
 /* Set up the fast interrupt stack pointer.*/
-        bic     r0, r0, #MODE_MSK       
-        orr     r0, r0, #ARM_MODE_FIQ   
-        msr     cpsr_c, r0              
-        ldr     sp, =_fiqstack     
-        bic     sp,sp,#0x7       
+        bic     r0, r0, #MODE_MSK
+        orr     r0, r0, #ARM_MODE_FIQ
+        msr     cpsr_c, r0
+        ldr     sp, =_fiqstack
+        bic     sp,sp,#0x7
 
 /* Set up the normal interrupt stack pointer.*/
 
-        bic     r0, r0, #MODE_MSK       
-        orr     r0, r0, #ARM_MODE_IRQ  
-        msr     cpsr_c, r0             
-        ldr     sp, =_irqstack          
-        bic     sp,sp,#0x7             
+        bic     r0, r0, #MODE_MSK
+        orr     r0, r0, #ARM_MODE_IRQ
+        msr     cpsr_c, r0
+        ldr     sp, =_irqstack
+        bic     sp,sp,#0x7
 
 /* Set up the stack pointer.*/
 
-        bic     r0 ,r0, #MODE_MSK      
-        orr     r0 ,r0, #ARM_MODE_SYS  
-        msr     cpsr_c, r0             
+        bic     r0 ,r0, #MODE_MSK
+        orr     r0 ,r0, #ARM_MODE_SYS
+        msr     cpsr_c, r0
         ldr     sp, =_sysstack
-        bic     sp,sp,#0x7              
+        bic     sp,sp,#0x7
 
-        bic     r0 ,r0, #MODE_MSK      
+        bic     r0 ,r0, #MODE_MSK
         orr     r0 ,r0, #ARM_MODE_SVC
-        msr     cpsr_c, r0             
+        msr     cpsr_c, r0
         ldr     sp, =_cstack
-        bic     sp,sp,#0x7    
+        bic     sp,sp,#0x7
 
 		// Redirect FIQ to IRQ
-        LDR  r0,  =AICREDIR_KEY 
+        LDR  r0,  =AICREDIR_KEY
         LDR  r1, = REG_SFR_UID
         LDR  r2, = REG_SFR_AICREDIR
         LDR  r3,[r1]
@@ -280,4 +280,3 @@ resetHandler:
 /* Loop indefinitely when program is finished */
 1:
         b       1b
-

@@ -204,4 +204,3 @@ const uint32_t ddr_test_pattern[768] =
 	0x74e26406, 0x79a27942, 0x6ae27a02, 0x61616b42,
 	0x842a8082, 0x651785a6, 0x05130003, 0xa0efa325
 };
-

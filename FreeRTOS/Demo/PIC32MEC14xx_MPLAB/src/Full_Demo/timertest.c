@@ -101,5 +101,3 @@ void __attribute__((interrupt, nomips16)) girq23_b3( void )
 	portMMCR_JTVIC_GIRQ23_SRC = portGIRQ23_TMR3_TIMER_MASK;
 	__asm volatile( "ei" );
 }
-
-

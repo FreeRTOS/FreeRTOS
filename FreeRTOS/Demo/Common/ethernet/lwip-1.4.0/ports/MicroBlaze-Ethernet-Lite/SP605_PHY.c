@@ -159,5 +159,3 @@ static int detect_phy_emaclite(XEmacLite *pxEMACLiteInstance)
 	/* default to zero */
 	return 0;
 }
-
-

@@ -9,4 +9,3 @@ contain absolute paths.  I don't know how to get around this, so if somebody kno
 Edit the paths in a text editor before use.
 
 See the PIC port section of www.FreeRTOS.org for more information.
-

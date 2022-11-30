@@ -59,4 +59,3 @@ typedef WOLFSSL_MD4_CTX MD4_CTX;
 #endif /* NO_MD4 */
 
 #endif /* WOLFSSL_MD4_H_ */
-

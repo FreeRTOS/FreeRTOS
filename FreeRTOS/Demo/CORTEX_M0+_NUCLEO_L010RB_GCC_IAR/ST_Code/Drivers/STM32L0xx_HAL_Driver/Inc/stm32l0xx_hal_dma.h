@@ -541,7 +541,7 @@ typedef struct __DMA_HandleTypeDef
 /**
   * @brief  Disable the specified DMA Channel interrupts.
   * @param  __HANDLE__ DMA handle
-  * @param  __INTERRUPT__ specifies the DMA interrupt sources to be enabled or disabled. 
+  * @param  __INTERRUPT__ specifies the DMA interrupt sources to be enabled or disabled.
   *          This parameter can be any combination of the following values:
   *            @arg DMA_IT_TC:  Transfer complete interrupt mask
   *            @arg DMA_IT_HT:  Half transfer complete interrupt mask

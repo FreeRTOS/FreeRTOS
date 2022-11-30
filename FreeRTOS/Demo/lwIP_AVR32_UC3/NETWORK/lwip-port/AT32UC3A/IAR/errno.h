@@ -58,6 +58,3 @@ _C_STD_END
  * Copyright (c) 1992-2002 by P.J. Plauger.  ALL RIGHTS RESERVED.
  * Consult your license regarding permissions and restrictions.
 V3.12:0576 */
-
-
-

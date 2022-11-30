@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -96,4 +96,3 @@ void ResetCtl_clearPCMFlags(void)
 {
     RSTCTL->PCMRESET_CLR |= RSTCTL_PCMRESET_CLR_CLR;
 }
-

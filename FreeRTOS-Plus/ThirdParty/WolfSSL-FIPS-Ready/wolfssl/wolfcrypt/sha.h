@@ -177,4 +177,3 @@ WOLFSSL_API void wc_ShaSizeSet(wc_Sha* sha, word32 len);
 
 #endif /* NO_SHA */
 #endif /* WOLF_CRYPT_SHA_H */
-

@@ -140,4 +140,3 @@ static inline void bpm_sleep(Bpm *bpm, uint32_t sleep_mode)
 #endif
 
 #endif /* SLEEP_H */
-

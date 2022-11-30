@@ -65,17 +65,17 @@ Private variables and functions
 /*******************************************************************************
 * Outline      : exit processing
 * Function Name: __exit
-* Description  : exit sequence from main function.   
-* Arguments    : code 
+* Description  : exit sequence from main function.
+* Arguments    : code
 *                  The return value of main function.
 * Return Value : none
 *******************************************************************************/
 void __exit(int code)
 {
-   
+
     while (1)
     {
-        /* Please describe the exit sequence */   
+        /* Please describe the exit sequence */
     }
 
 }

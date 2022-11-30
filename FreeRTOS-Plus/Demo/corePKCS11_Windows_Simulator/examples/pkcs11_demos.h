@@ -44,7 +44,7 @@ void vPKCS11MechanismsAndDigestDemo( void );
  */
 void vPKCS11ObjectDemo( void );
 
-/* Prototype for the PKCS #11 "Sign and Verify" demo. This demo covers how 
+/* Prototype for the PKCS #11 "Sign and Verify" demo. This demo covers how
  * PKCS #11 can be used to sign a message, and verify the integrity of a message
  * using private and public keys.
  *

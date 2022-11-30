@@ -326,4 +326,3 @@ static void RedStrNCpyUnchecked(
     }
 }
 #endif
-

@@ -101,16 +101,3 @@ const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, UBaseType_t u
 /* *INDENT-ON* */
 
 #endif /* COMMAND_INTERPRETER_H */
-
-
-
-
-
-
-
-
-
-
-
-
-

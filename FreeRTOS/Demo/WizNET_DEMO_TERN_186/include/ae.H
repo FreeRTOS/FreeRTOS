@@ -2,14 +2,14 @@
 #define _AE_H_
 
 /*********************************************************************
-	ae.h	 	headers for AM188ES   6-20-99   7-16-98             
+	ae.h	 	headers for AM188ES   6-20-99   7-16-98
 *********************************************************************/
 /*  Data structure for Serial operation */
 
 typedef struct  {
 	unsigned char ready;          /* TRUE when ready */
 	unsigned char baud;
-	unsigned int mode;              
+	unsigned int mode;
 	unsigned char iflag;     /* interrupt status     */
 	unsigned char* in_buf;        /* Input buffer */
 	unsigned int in_tail;        /* Input buffer TAIL ptr */
@@ -52,7 +52,7 @@ typedef struct{
 	unsigned char mon1;
 	unsigned char mon10;
 	unsigned char year1;
-	unsigned char year10; 
+	unsigned char year10;
 	unsigned char wk;
 } TIM;
 
@@ -137,14 +137,14 @@ int amd_ee_byte_pro_512(unsigned int s, unsigned int o, unsigned char dat);
 int amd_ee_byte_pro_128(unsigned int s, unsigned int o, unsigned char dat);
 
 //
-// unsigned char rtc_rds(char* time_string); 
+// unsigned char rtc_rds(char* time_string);
 // put a time string into time_string, based on the reading of RTC.
 //	At least 15 bytes of buffer must be available for the time_string
 //	returns 0, if RTC OK, or returns 1, if problem
 //
-unsigned char rtc_rds(char* time_string); 
+unsigned char rtc_rds(char* time_string);
 int rtc_rd(TIM *r);
-void rtc_init(unsigned char*);    
+void rtc_init(unsigned char*);
 unsigned char r_rd(void);
 int r_out(unsigned char v);
 
@@ -158,7 +158,7 @@ unsigned int t0_rd(void);
 
 //	Analog to Digital conversion using TLC2543 on the A-Engine-88/86
 //	Input:
-//		unsigned char c = input channel 
+//		unsigned char c = input channel
 //		c = 0,	input ch = AD0
 //		c = 1,	input ch = AD1
 //		c = 2,	input ch = AD2

@@ -162,4 +162,3 @@ int sp_ecc_verify_384_nb(sp_ecc_ctx_t* ctx, const byte* hash, word32 hashLen, mp
 #endif /* WOLFSSL_HAVE_SP_RSA || WOLFSSL_HAVE_SP_DH || WOLFSSL_HAVE_SP_ECC */
 
 #endif /* WOLF_CRYPT_SP_H */
-

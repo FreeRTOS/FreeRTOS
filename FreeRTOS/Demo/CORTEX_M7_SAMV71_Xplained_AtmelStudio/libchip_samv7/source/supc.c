@@ -125,7 +125,7 @@ void SUPC_SramBackupMode(uint8_t enable)
  */
 void SUPC_BypassXtal32KOsc(void)
 {
-	SUPC->SUPC_MR = ( SUPC_MR_OSCBYPASS_BYPASS | SUPC_MR_KEY_PASSWD);    
+	SUPC->SUPC_MR = ( SUPC_MR_OSCBYPASS_BYPASS | SUPC_MR_KEY_PASSWD);
 }
 
 
@@ -191,5 +191,3 @@ uint8_t SUPC_Read_Status(uint32_t status)
 {
 	return (SUPC->SUPC_SR & status);
 }
-
-

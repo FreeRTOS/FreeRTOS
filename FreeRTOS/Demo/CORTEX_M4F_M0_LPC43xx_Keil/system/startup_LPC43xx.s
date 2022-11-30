@@ -3,7 +3,7 @@
 ; *
 ; * Project: LPC43xx CMSIS Package
 ; *
-; * Description: Cortex-M4 Core Device Startup File for the NXP LPC18xx 
+; * Description: Cortex-M4 Core Device Startup File for the NXP LPC18xx
 ; *              Device Series.
 ; *
 ; * Copyright(C) 2011, NXP Semiconductor
@@ -61,7 +61,7 @@ Sign_Value		EQU		0x5A5A5A5A
 ;                DCD     0x00000000
 ;                DCD     0x00000000
 ;                DCD     0x00000000
-;				SPACE  Signature_Size 
+;				SPACE  Signature_Size
 ;                DCD     __initial_sp
 ;                DCD     Reset_Handler             ; 1 Reset Handler
 ;                FILL    256 - 8 - 16
@@ -79,15 +79,15 @@ __Vectors       DCD     __initial_sp              	; 0 Top of Stack
                 DCD     0                         	; 8 Reserved
                 DCD     0                         	; 9 Reserved
                 DCD     0                         	; 10 Reserved
-                DCD     SVC_Handler              	; 11 SVCall Handler 
+                DCD     SVC_Handler              	; 11 SVCall Handler
                 DCD     DebugMon_Handler          	; 12 Debug Monitor Handler
                 DCD     0                         	; 13 Reserved
-                DCD     PendSV_Handler         		; 14 PendSV Handler	
-                DCD     SysTick_Handler        		; 15 SysTick Handler 
+                DCD     PendSV_Handler         		; 14 PendSV Handler
+                DCD     SysTick_Handler        		; 15 SysTick Handler
 
-                ; External Interrupts				
+                ; External Interrupts
 				DCD		DAC_IRQHandler	 			; 16 D/A Converter
-				DCD		M0_IRQHandler				; 17 M0 
+				DCD		M0_IRQHandler				; 17 M0
 				DCD		DMA_IRQHandler				; 18 General Purpose DMA
 				DCD		0							; 19 Reserved
 				DCD		FLASH_EEPROM_IRQHandler		; 20 Reserved for Typhoon
@@ -141,7 +141,7 @@ __Vectors       DCD     __initial_sp              	; 0 Top of Stack
 				DCD 	QEI_IRQHandler				; 68 QEI
 
 __endVectors
-				  								
+
                 IF      :LNOT::DEF:NO_CRP
                 AREA    |.ARM.__at_0x02FC|, CODE, READONLY
 CRP_Key         DCD     0xFFFFFFFF
@@ -158,48 +158,48 @@ Reset_Handler   PROC
                 IF      :DEF:EXT_FLASH
 
 			   	; Extend the address bus, as the bootloader configured only [A13:0]
-		    	; *(uint32_t*)(0x40086320) = 0x000000F1;  
-				; P6_8: A14 (function 1) 
+		    	; *(uint32_t*)(0x40086320) = 0x000000F1;
+				; P6_8: A14 (function 1)
 				LDR     R0, =0x40086320
 				LDR     R1, =0x000000F1
 				STR     R1, [R0,#0]
-				; *(uint32_t*)(0x4008631C) = 0x000000F1;  
-				; P6_7: A15 (function 1) 
+				; *(uint32_t*)(0x4008631C) = 0x000000F1;
+				; P6_7: A15 (function 1)
     			LDR     R0, =0x4008631C
     			LDR     R1, =0x000000F1
-			    STR     R1, [R0,#0]			
-				; *(uint32_t*)(0x400866C0) = 0x000000F2;  
-				; PD_16: A16 (function 2) 
+			    STR     R1, [R0,#0]
+				; *(uint32_t*)(0x400866C0) = 0x000000F2;
+				; PD_16: A16 (function 2)
 				LDR     R0, =0x400866C0
 				LDR     R1, =0x000000F2
-				STR     R1, [R0,#0]			
-			    ; *(uint32_t*)(0x400866BC) = 0x000000F2;  
-				; PD_15: A17 (function 2) 
+				STR     R1, [R0,#0]
+			    ; *(uint32_t*)(0x400866BC) = 0x000000F2;
+				; PD_15: A17 (function 2)
 				LDR     R0, =0x400866BC
 				LDR     R1, =0x000000F2
-				STR     R1, [R0,#0]			
-			    ; *(uint32_t*)(0x40086700) = 0x000000F3;  
-				; PE_0: A18 (function 3) 
+				STR     R1, [R0,#0]
+			    ; *(uint32_t*)(0x40086700) = 0x000000F3;
+				; PE_0: A18 (function 3)
 				LDR     R0, =0x40086700
 				LDR     R1, =0x000000F3
-				STR     R1, [R0,#0]			
-			    ; *(uint32_t*)(0x40086704) = 0x000000F3;  
-				; PE_1: A19 (function 3) 
+				STR     R1, [R0,#0]
+			    ; *(uint32_t*)(0x40086704) = 0x000000F3;
+				; PE_1: A19 (function 3)
 				LDR     R0, =0x40086704
 				LDR     R1, =0x000000F3
-				STR     R1, [R0,#0]			
-			    ; *(uint32_t*)(0x40086708) = 0x000000F3;  
-				; PE_2: A20 (function 3) 
+				STR     R1, [R0,#0]
+			    ; *(uint32_t*)(0x40086708) = 0x000000F3;
+				; PE_2: A20 (function 3)
 				LDR     R0, =0x40086708
 				LDR     R1, =0x000000F3
-				STR     R1, [R0,#0]			
-			    ; *(uint32_t*)(0x4008670C) = 0x000000F3;  
-				; PE_3: A21 (function 3) 
+				STR     R1, [R0,#0]
+			    ; *(uint32_t*)(0x4008670C) = 0x000000F3;
+				; PE_3: A21 (function 3)
 				LDR     R0, =0x4008670C
 				LDR     R1, =0x000000F3
-				STR     R1, [R0,#0]			
-			    ; *(uint32_t*)(0x40086710) = 0x000000F3;  
-				; PE_4: A22 (function 3) 
+				STR     R1, [R0,#0]
+			    ; *(uint32_t*)(0x40086710) = 0x000000F3;
+				; PE_4: A22 (function 3)
 				LDR     R0, =0x40086710
 				LDR     R1, =0x000000F3
 				STR     R1, [R0,#0]
@@ -217,7 +217,7 @@ Reset_Handler   PROC
                 BX      R0
                 ENDP
 
-; Dummy Exception Handlers (infinite loops which can be modified)                
+; Dummy Exception Handlers (infinite loops which can be modified)
 
 NMI_Handler     PROC
                 EXPORT  NMI_Handler               [WEAK]
@@ -398,13 +398,13 @@ QEI_IRQHandler
 ; User Initial Stack & Heap
 
                 IF      :DEF:__MICROLIB
-                
+
                 EXPORT  __initial_sp
                 EXPORT  __heap_base
                 EXPORT  __heap_limit
-                
+
                 ELSE
-                
+
                 IMPORT  __use_two_region_memory
                 EXPORT  __user_initial_stackheap
 __user_initial_stackheap

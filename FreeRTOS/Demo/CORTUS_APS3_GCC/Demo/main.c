@@ -263,5 +263,3 @@ void exit( int status )
 {
 	for( ;; );
 }
-
-

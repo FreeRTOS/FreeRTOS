@@ -171,5 +171,3 @@ portBASE_TYPE xError = pdFALSE;
 	}
 	xTaskResumeAll();
 }
-
-

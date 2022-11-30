@@ -60,4 +60,3 @@ void RedSignOn(void)
 
   #endif
 }
-

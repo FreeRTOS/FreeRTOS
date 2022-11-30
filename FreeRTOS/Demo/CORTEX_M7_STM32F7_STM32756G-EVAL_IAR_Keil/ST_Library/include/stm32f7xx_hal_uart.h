@@ -32,7 +32,7 @@
   * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
-  ******************************************************************************  
+  ******************************************************************************
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -806,15 +806,15 @@ typedef struct
 #define __HAL_UART_SEND_REQ(__HANDLE__, __REQ__) ((__HANDLE__)->Instance->RQR |= (uint32_t)(__REQ__))
 
 /** @brief  Enables the UART one bit sample method
-  * @param  __HANDLE__: specifies the UART Handle.  
+  * @param  __HANDLE__: specifies the UART Handle.
   * @retval None
-  */     
+  */
 #define __HAL_UART_ONE_BIT_SAMPLE_ENABLE(__HANDLE__) ((__HANDLE__)->Instance->CR3|= USART_CR3_ONEBIT)
 
 /** @brief  Disables the UART one bit sample method
-  * @param  __HANDLE__: specifies the UART Handle.  
+  * @param  __HANDLE__: specifies the UART Handle.
   * @retval None
-  */      
+  */
 #define __HAL_UART_ONE_BIT_SAMPLE_DISABLE(__HANDLE__) ((__HANDLE__)->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_ONEBIT))
 
 /** @brief  Enable UART
@@ -829,15 +829,15 @@ typedef struct
   */
 #define __HAL_UART_DISABLE(__HANDLE__)                  ((__HANDLE__)->Instance->CR1 &=  ~USART_CR1_UE)
 
-/** @brief  Enable CTS flow control 
-  *         This macro allows to enable CTS hardware flow control for a given UART instance, 
+/** @brief  Enable CTS flow control
+  *         This macro allows to enable CTS hardware flow control for a given UART instance,
   *         without need to call HAL_UART_Init() function.
   *         As involving direct access to UART registers, usage of this macro should be fully endorsed by user.
   * @note   As macro is expected to be used for modifying CTS Hw flow control feature activation, without need
   *         for USART instance Deinit/Init, following conditions for macro call should be fulfilled :
   *           - UART instance should have already been initialised (through call of HAL_UART_Init() )
   *           - macro could only be called when corresponding UART instance is disabled (i.e __HAL_UART_DISABLE(__HANDLE__))
-  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)).                                                                                                                  
+  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)).
   * @param  __HANDLE__: specifies the UART Handle.
   *         The Handle Instance can be USART1, USART2 or LPUART.
   * @retval None
@@ -848,15 +848,15 @@ typedef struct
     (__HANDLE__)->Init.HwFlowCtl |= USART_CR3_CTSE;        \
   } while(0)
 
-/** @brief  Disable CTS flow control 
-  *         This macro allows to disable CTS hardware flow control for a given UART instance, 
+/** @brief  Disable CTS flow control
+  *         This macro allows to disable CTS hardware flow control for a given UART instance,
   *         without need to call HAL_UART_Init() function.
   *         As involving direct access to UART registers, usage of this macro should be fully endorsed by user.
   * @note   As macro is expected to be used for modifying CTS Hw flow control feature activation, without need
   *         for USART instance Deinit/Init, following conditions for macro call should be fulfilled :
   *           - UART instance should have already been initialised (through call of HAL_UART_Init() )
   *           - macro could only be called when corresponding UART instance is disabled (i.e __HAL_UART_DISABLE(__HANDLE__))
-  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)). 
+  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)).
   * @param  __HANDLE__: specifies the UART Handle.
   *         The Handle Instance can be USART1, USART2 or LPUART.
   * @retval None
@@ -867,15 +867,15 @@ typedef struct
     (__HANDLE__)->Init.HwFlowCtl &= ~(USART_CR3_CTSE);      \
   } while(0)
 
-/** @brief  Enable RTS flow control 
-  *         This macro allows to enable RTS hardware flow control for a given UART instance, 
+/** @brief  Enable RTS flow control
+  *         This macro allows to enable RTS hardware flow control for a given UART instance,
   *         without need to call HAL_UART_Init() function.
   *         As involving direct access to UART registers, usage of this macro should be fully endorsed by user.
   * @note   As macro is expected to be used for modifying RTS Hw flow control feature activation, without need
   *         for USART instance Deinit/Init, following conditions for macro call should be fulfilled :
   *           - UART instance should have already been initialised (through call of HAL_UART_Init() )
   *           - macro could only be called when corresponding UART instance is disabled (i.e __HAL_UART_DISABLE(__HANDLE__))
-  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)). 
+  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)).
   * @param  __HANDLE__: specifies the UART Handle.
   *         The Handle Instance can be USART1, USART2 or LPUART.
   * @retval None
@@ -886,15 +886,15 @@ typedef struct
     (__HANDLE__)->Init.HwFlowCtl |= USART_CR3_RTSE;       \
   } while(0)
 
-/** @brief  Disable RTS flow control 
-  *         This macro allows to disable RTS hardware flow control for a given UART instance, 
+/** @brief  Disable RTS flow control
+  *         This macro allows to disable RTS hardware flow control for a given UART instance,
   *         without need to call HAL_UART_Init() function.
   *         As involving direct access to UART registers, usage of this macro should be fully endorsed by user.
   * @note   As macro is expected to be used for modifying RTS Hw flow control feature activation, without need
   *         for USART instance Deinit/Init, following conditions for macro call should be fulfilled :
   *           - UART instance should have already been initialised (through call of HAL_UART_Init() )
   *           - macro could only be called when corresponding UART instance is disabled (i.e __HAL_UART_DISABLE(__HANDLE__))
-  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)). 
+  *             and should be followed by an Enable macro (i.e __HAL_UART_ENABLE(__HANDLE__)).
   * @param  __HANDLE__: specifies the UART Handle.
   *         The Handle Instance can be USART1, USART2 or LPUART.
   * @retval None

@@ -2,7 +2,7 @@
 * File Name          : 75x_pwm.h
 * Author             : MCD Application Team
 * Date First Issued  : 03/10/2006
-* Description        : This file contains all the functions prototypes for the 
+* Description        : This file contains all the functions prototypes for the
 *                      PWM software library.
 ********************************************************************************
 * History:
@@ -189,7 +189,7 @@ void PWM_DeInit(void);
 void PWM_Init(PWM_InitTypeDef* PWM_InitStruct);
 void PWM_StructInit(PWM_InitTypeDef *PWM_InitStruct);
 void PWM_Cmd(FunctionalState Newstate);
-void PWM_CtrlPWMOutputs(FunctionalState Newstate); 
+void PWM_CtrlPWMOutputs(FunctionalState Newstate);
 void PWM_ITConfig(u16 PWM_IT, FunctionalState Newstate);
 void PWM_DMAConfig(u16 PWM_DMASources, u16 PWM_OCRMState, u16 PWM_DMABase);
 void PWM_DMACmd(u16 PWM_DMASources, FunctionalState Newstate);

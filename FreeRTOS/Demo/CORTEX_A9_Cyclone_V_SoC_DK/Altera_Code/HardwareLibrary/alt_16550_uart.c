@@ -1,20 +1,20 @@
 /******************************************************************************
  *
  * Copyright 2013 Altera Corporation. All Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of the author may not be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  ******************************************************************************/
 
 #include "alt_16550_uart.h"
@@ -220,7 +220,7 @@ ALT_STATUS_CODE alt_16550_init(ALT_16550_DEVICE_t device,
 
                 // Bring UART1 out of reset.
                 alt_clrbits_word(ALT_RSTMGR_PERMODRST_ADDR, ALT_RSTMGR_PERMODRST_UART1_SET_MSK);
-            } 
+            }
 
             // Verify the UCR (UART Component Version)
             uint32_t ucr = alt_read_word(ALT_UART_UCV_ADDR(handle->location));
@@ -957,7 +957,7 @@ ALT_STATUS_CODE alt_16550_line_config_set(ALT_16550_HANDLE_t * handle,
         }
 
         // Update LCR (Line Control Register)
-        alt_replbits_word(ALT_UART_LCR_ADDR(handle->location), 
+        alt_replbits_word(ALT_UART_LCR_ADDR(handle->location),
                           ALT_UART_LCR_DLS_SET_MSK
                         | ALT_UART_LCR_STOP_SET_MSK
                         | ALT_UART_LCR_PEN_SET_MSK

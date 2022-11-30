@@ -65,4 +65,3 @@ typedef enum {
 void ck_set_sys_freq (clk_gen_t source, clk_val_t val);
 
 #endif /* _CK_SYS_FREQ_H_ */
-

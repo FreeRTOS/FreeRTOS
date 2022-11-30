@@ -202,5 +202,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
-
-

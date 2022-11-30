@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -50,4 +50,3 @@ extern void PMC_EnablePeripheral(unsigned int id);
 
 extern void PMC_DisablePeripheral(unsigned int id);
 #endif //#ifndef PMC_H
-

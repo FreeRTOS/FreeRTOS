@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace string APIs.
  */
 
@@ -33,7 +33,7 @@ extern "C" {
 
 /**
  * @brief Registers a trace string.
- * 
+ *
  * This routine registers a strings in the recorder, e.g. for names of user
  * event channels.
  *
@@ -42,24 +42,24 @@ extern "C" {
  *	 xTraceStringRegister("MyUserEvent", &myEventHandle);
  *	 ...
  *	 xTracePrintF(myEventHandle, "My value is: %d", myValue);
- * 
+ *
  * @param[in] szString String.
  * @param[out] pString Pointer to uninitialized trace string.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceStringRegister(const char *szString, TraceStringHandle_t* pString);
 
 /**
- * @brief Registers a trace string. 
- * 
+ * @brief Registers a trace string.
+ *
  * @deprecated Remains for backward compability with pre v4.6 versions
  * of the recorder.
- * 
+ *
  * @param[in] name Name.
- * 
- * @return TraceStringHandle_t 
+ *
+ * @return TraceStringHandle_t
  */
 TraceStringHandle_t xTraceRegisterString(const char *name);
 

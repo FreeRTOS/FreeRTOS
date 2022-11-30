@@ -632,4 +632,3 @@ int wc_curve448_size(curve448_key* key)
 }
 
 #endif /* HAVE_CURVE448 */
-

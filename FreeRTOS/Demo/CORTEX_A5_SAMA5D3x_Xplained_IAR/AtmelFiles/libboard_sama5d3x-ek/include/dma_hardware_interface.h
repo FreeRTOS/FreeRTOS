@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -56,4 +56,3 @@ extern uint8_t DMAIF_IsValidatedPeripherOnDma( uint8_t bDmac, uint8_t bPeriphID)
 extern uint8_t DMAIF_Get_ChannelNumber (uint8_t bDmac, uint8_t bPeriphID, uint8_t bTransfer);
 
 #endif //#ifndef _DMAD_IF_H
-

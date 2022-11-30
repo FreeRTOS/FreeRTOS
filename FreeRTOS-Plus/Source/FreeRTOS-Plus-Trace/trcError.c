@@ -57,7 +57,7 @@ traceResult xTraceWarning(uint32_t uiErrorCode)
 		/* If not initialized */
 		return TRC_FAIL;
 	}
-	
+
 	if (GET_ERROR_WARNING_FLAG(uiErrorCode) == 0)
 	{
 		/* Will never reach this point more than once per warning type, since we verify if uiErrorAndWarningFlags[uiErrorCode] has already been set */
@@ -87,10 +87,10 @@ traceResult xTraceError(uint32_t uiErrorCode)
 		if (prvTraceErrorPrint(uiErrorCode) == TRC_FAIL)
 		{
 			xTraceDisable();
-			
+
 			return TRC_FAIL;
 		}
-		
+
 		xTracePrint(pxErrorInfo->xWarningChannel, "Recorder stopped in xTraceError(...)!");
 		xTraceDisable();
 	}
@@ -113,7 +113,7 @@ traceResult xTraceErrorGetLast(const char **pszError)
 
 	/* This should never fail */
 	TRC_ASSERT(pszError != 0);
-	
+
 	return prvTraceErrorGetDescription(pxErrorInfo->uiErrorCode, pszError);
 }
 
@@ -130,7 +130,7 @@ traceResult xTraceErrorClear(void)
 		/* If not initialized */
 		return TRC_FAIL;
 	}
-	
+
 	pxErrorInfo->uiErrorCode = TRC_ERROR_NONE;
 
 	return TRC_SUCCESS;
@@ -193,11 +193,11 @@ traceResult prvTraceErrorPrint(uint32_t uiErrorCode)
 
 			return TRC_SUCCESS;
 		}
-		
+
 	default:
 		/* No error, or an unknown error occurred */
 		xTracePrintF(pxErrorInfo->xWarningChannel, "Unknown error code: 0x%08X", uiErrorCode);
-		
+
 		return TRC_FAIL;
 	}
 

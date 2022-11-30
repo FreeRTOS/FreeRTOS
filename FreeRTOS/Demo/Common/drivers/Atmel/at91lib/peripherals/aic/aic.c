@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -77,4 +77,3 @@ void AIC_DisableIT(unsigned int source)
 {
     AT91C_BASE_AIC->AIC_IDCR = 1 << source;
 }
-

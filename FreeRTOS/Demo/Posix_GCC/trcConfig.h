@@ -70,13 +70,13 @@ extern "C" {
  * @def TRC_CFG_INCLUDE_USER_EVENTS
  * @brief Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), all code related to User Events is excluded in order 
+ * If this is zero (0), all code related to User Events is excluded in order
  * to reduce code size. Any attempts of storing User Events are then silently
  * ignored.
  *
- * User Events are application-generated events, like "printf" but for the 
- * trace log, generated using vTracePrint and vTracePrintF. 
- * The formatting is done on host-side, by Tracealyzer. User Events are 
+ * User Events are application-generated events, like "printf" but for the
+ * trace log, generated using vTracePrint and vTracePrintF.
+ * The formatting is done on host-side, by Tracealyzer. User Events are
  * therefore much faster than a console printf and can often be used
  * in timing critical code without problems.
  *
@@ -101,7 +101,7 @@ extern "C" {
  * calling a traced kernel service. These events will still be recorded and
  * show up in anonymous ISR instances in Tracealyzer, with names such as
  * "ISR sending to <queue name>".
- * To disable such tracing, please refer to vTraceSetFilterGroup and 
+ * To disable such tracing, please refer to vTraceSetFilterGroup and
  * vTraceSetFilterMask.
  *
  * Default value is 1.
@@ -142,7 +142,7 @@ extern "C" {
  * @brief If enabled (1), the recorder periodically reports the unused stack space of
  * all active tasks.
  * The stack monitoring runs in the Tracealyzer Control task, TzCtrl. This task
- * is always created by the recorder when in streaming mode. 
+ * is always created by the recorder when in streaming mode.
  * In snapshot mode, the TzCtrl task is only used for stack monitoring and is
  * not created unless this is enabled.
  */
@@ -166,7 +166,7 @@ extern "C" {
  * This defines how many tasks that will be subject to stack usage analysis for
  * each execution of the Tracealyzer Control task (TzCtrl). Note that the stack
  * monitoring cycles between the tasks, so this does not affect WHICH tasks that
- * are monitored, but HOW OFTEN each task stack is analyzed. 
+ * are monitored, but HOW OFTEN each task stack is analyzed.
  *
  * This setting can be combined with TRC_CFG_CTRL_TASK_DELAY to tune the
  * frequency of the stack monitoring. This is motivated since the stack analysis
@@ -181,13 +181,13 @@ extern "C" {
 
 /**
  * @def TRC_CFG_CTRL_TASK_PRIORITY
- * @brief The scheduling priority of the Tracealyzer Control (TzCtrl) task. 
+ * @brief The scheduling priority of the Tracealyzer Control (TzCtrl) task.
  *
- * In streaming mode, TzCtrl is used to receive start/stop commands from 
+ * In streaming mode, TzCtrl is used to receive start/stop commands from
  * Tracealyzer and in some cases also to transmit the trace data (for stream
  * ports that uses the internal buffer, like TCP/IP). For such stream ports,
  * make sure the TzCtrl priority is high enough to ensure reliable periodic
- * execution and transfer of the data, but low enough to avoid disturbing any 
+ * execution and transfer of the data, but low enough to avoid disturbing any
  * time-sensitive functions.
  *
  * In Snapshot mode, TzCtrl is only used for the stack usage monitoring and is
@@ -198,9 +198,9 @@ extern "C" {
 
 /**
  * @def TRC_CFG_CTRL_TASK_DELAY
- * @brief The delay between loops of the TzCtrl task (see TRC_CFG_CTRL_TASK_PRIORITY), 
- * which affects the frequency of the stack monitoring. 
- * 
+ * @brief The delay between loops of the TzCtrl task (see TRC_CFG_CTRL_TASK_PRIORITY),
+ * which affects the frequency of the stack monitoring.
+ *
  * In streaming mode, this also affects the trace data transfer if you are using
  * a stream port leveraging the internal buffer (like TCP/IP). A shorter delay
  * increases the CPU load of TzCtrl somewhat, but may improve the performance of
@@ -304,7 +304,7 @@ extern "C" {
  *
  * Default value is empty.
  */
-#define TRC_CFG_RECORDER_DATA_ATTRIBUTE 
+#define TRC_CFG_RECORDER_DATA_ATTRIBUTE
 
 /**
  * @def TRC_CFG_USE_TRACE_ASSERT

@@ -226,8 +226,8 @@ BaseType_t xSpacePadding;
 	pcWriteBuffer += strlen( pcWriteBuffer );
 
 	/* Pad the string "task" with however many bytes necessary to make it the
-	length of a task name.  Minus three for the null terminator and half the 
-	number of characters in	"Task" so the column lines up with the centre of 
+	length of a task name.  Minus three for the null terminator and half the
+	number of characters in	"Task" so the column lines up with the centre of
 	the heading. */
 	for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
 	{
@@ -264,8 +264,8 @@ BaseType_t xSpacePadding;
 	pcWriteBuffer += strlen( pcWriteBuffer );
 
 	/* Pad the string "task" with however many bytes necessary to make it the
-	length of a task name.  Minus three for the null terminator and half the 
-	number of characters in	"Task" so the column lines up with the centre of 
+	length of a task name.  Minus three for the null terminator and half the
+	number of characters in	"Task" so the column lines up with the centre of
 	the heading. */
 	for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
 	{

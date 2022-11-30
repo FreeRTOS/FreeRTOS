@@ -89,4 +89,3 @@ typedef struct {
 #endif
 
 #endif /*RISCV_MTRAP_H*/
-

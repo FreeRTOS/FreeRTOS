@@ -206,4 +206,3 @@ Options 2,0,0  // Target 'RTOSDemo_THUMB'
  FLASH3 ("LPC210x_ISP.EXE" ("#H" ^X $D COM1: 9600 1))
  FLASH4 ()
 EndOpt
-

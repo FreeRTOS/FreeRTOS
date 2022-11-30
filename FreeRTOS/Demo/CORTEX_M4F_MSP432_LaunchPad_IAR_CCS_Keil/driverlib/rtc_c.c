@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -335,4 +335,3 @@ void RTC_C_unregisterInterrupt(void)
     Interrupt_disableInterrupt(INT_RTC_C);
     Interrupt_unregisterInterrupt(INT_RTC_C);
 }
-

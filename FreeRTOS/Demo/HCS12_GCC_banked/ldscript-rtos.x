@@ -1,6 +1,6 @@
-/* Linker script for MC689S12DP256 Flash 
+/* Linker script for MC689S12DP256 Flash
    rom banks.
-   
+
    Author Jefferson L Smith; Robotronics, Inc.  2006
  */
 OUTPUT_FORMAT("elf32-m68hc12", "elf32-m68hc12",
@@ -21,7 +21,7 @@ SECTIONS
   {
     *(.page0)
   }  > page0
-  
+
   /* PPAGE memory banks */
 
   .bank0 :
@@ -94,9 +94,9 @@ SECTIONS
     *(.bank13)
     . = ALIGN(2);
   } > bank13  =0xff
-  
+
   /* Start of text section.  */
-  .text : 
+  .text :
   {
     /* Put startup code at beginning so that _start keeps same address.  */
     /* Startup code.  */
@@ -124,45 +124,45 @@ SECTIONS
     PROVIDE (etext = .);
     . = ALIGN(2);
   }  > text AT>bank14  =0xff
-  
-  .text_h : 
+
+  .text_h :
   {
     *(.text_h)           /* Bootloader; high Flash area unbanked */
     . = ALIGN(2);
   }  > text_h AT>bank15  =0xff
-  .rodata : 
+  .rodata :
   {
     *(.rodata)
     *(.rodata.*)
     *(.gnu.linkonce.r*)
     . = ALIGN(2);
   }  > text_h AT>bank15  =0xff
-  .eh_frame : 
+  .eh_frame :
   {
     KEEP (*(.eh_frame))
     . = ALIGN(2);
   }  > text_h AT>bank15  =0xff
-  
+
   /* Constructor and destructor tables are in ROM.  */
-  .ctors : 
+  .ctors :
   {
      PROVIDE (__CTOR_LIST__ = .);
     KEEP (*(.ctors))
      PROVIDE(__CTOR_END__ = .);
      . = ALIGN(2);
   }  > text_h AT>bank15  =0xff
-  .dtors : 
+  .dtors :
   {
      PROVIDE(__DTOR_LIST__ = .);
     KEEP (*(.dtors))
      PROVIDE(__DTOR_END__ = .);
      . = ALIGN(2);
   }  > text_h AT>bank15  =0xff
-  
+
   /* Start of the data section image in ROM.  */
   __data_image = .;
   PROVIDE (__data_image = .);
-  
+
   /* All read-only sections that normally go in PROM must be above.
      We construct the DATA image section in PROM at end of all these
      read-only sections.  The data image must be copied at init time.
@@ -195,7 +195,7 @@ SECTIONS
     *(.softregs)
     __softregs_section_end = .;
   }  > data
-  __softregs_section_size = SIZEOF(.softregs); 
+  __softregs_section_size = SIZEOF(.softregs);
   .bss   :
   {
     __bss_start = .;

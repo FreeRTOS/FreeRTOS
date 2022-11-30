@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -132,4 +132,3 @@ extern WEAK void ADCC1_IrqHandler(void);
 extern WEAK void HDMA_IrqHandler(void);
 // USB Device High Speed UDP_HS
 extern WEAK void UDPD_IrqHandler(void);
-

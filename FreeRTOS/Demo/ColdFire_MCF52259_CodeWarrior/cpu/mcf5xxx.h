@@ -3,7 +3,7 @@
  * Purpose:     Definitions common to all ColdFire processors
  *
  * Notes:
- * 
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */
@@ -280,4 +280,3 @@ void cpu_handle_interrupt (int);
 /********************************************************************/
 
 #endif  /* _CPU_MCF5XXX_H */
-

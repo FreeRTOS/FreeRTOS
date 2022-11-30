@@ -638,4 +638,3 @@ static uint32_t nlz64(
 
     return n;
 }
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -129,4 +129,3 @@ extern void LCDD_DrawCharWithBGColor( uint32_t x, uint32_t y, uint8_t c, uint32_
         }
     }
 }
-

@@ -17,13 +17,13 @@ SECTIONS
 		*(P)
 		etext = .;
 	} > ROM
-	.rvectors : 
+	.rvectors :
 	{
 		_rvectors_start = .;
 		KEEP(*(.rvectors))
 		_rvectors_end = .;
 	} > ROM
-	.init : 
+	.init :
 	{
 		*(.init)
 		__preinit_array_start = .;
@@ -38,16 +38,16 @@ SECTIONS
 		*(SORT(.fini_array.*))
 		__fini_array_end = .;
 	} > ROM
-	.fini : 
+	.fini :
 	{
 		*(.fini)
 	} > ROM
-	.got : 
+	.got :
 	{
 		*(.got)
 		*(.got.plt)
 	} > ROM
-	.rodata : 
+	.rodata :
 	{
 		*(.rodata)
 		*(.rodata.*)
@@ -56,19 +56,19 @@ SECTIONS
 		*(C)
 		_erodata = .;
 	} > ROM
-	.eh_frame_hdr : 
+	.eh_frame_hdr :
 	{
 		*(.eh_frame_hdr)
 	} > ROM
-	.eh_frame : 
+	.eh_frame :
 	{
 		*(.eh_frame)
 	} > ROM
-	.jcr : 
+	.jcr :
 	{
 		*(.jcr)
 	} > ROM
-	.tors : 
+	.tors :
 	{
 		__CTOR_LIST__ = .;
 		. = ALIGN(2);
@@ -94,11 +94,11 @@ SECTIONS
 		*(D_2)
 		_edata = .;
 	} > RAM
-	.gcc_exc : 
+	.gcc_exc :
 	{
 		*(.gcc_exc)
 	} > RAM
-	.bss : 
+	.bss :
 	{
 		_bss = .;
 		*(.bss)

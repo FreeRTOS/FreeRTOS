@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -235,4 +235,3 @@ void PWMC_DisableChannelIt(unsigned char channel)
 {
     AT91C_BASE_PWMC->PWMC_IDR = 1 << channel;
 }
-

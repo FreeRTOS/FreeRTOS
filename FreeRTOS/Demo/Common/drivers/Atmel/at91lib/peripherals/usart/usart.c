@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -60,7 +60,7 @@ void USART_Configure(AT91S_USART *usart,
     // Asynchronous, no oversampling
     if (((mode & AT91C_US_SYNC) == 0)
         && ((mode & AT91C_US_OVER) == 0)) {
-    
+
         usart->US_BRGR = (masterClock / baudrate) / 16;
     }
     // TODO other modes
@@ -256,4 +256,3 @@ unsigned char USART_IsDataAvailable(AT91S_USART *usart)
         return 0;
     }
 }
-

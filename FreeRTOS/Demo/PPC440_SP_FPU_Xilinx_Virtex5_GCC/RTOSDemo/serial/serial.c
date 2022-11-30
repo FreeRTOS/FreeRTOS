@@ -205,6 +205,3 @@ char cChar;
 		portYIELD_FROM_ISR();
 	}
 }
-
-
-

@@ -412,4 +412,3 @@
 #define FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK (1)
 
 #endif /* _LPC55S69_cm33_core0_FEATURES_H_ */
-

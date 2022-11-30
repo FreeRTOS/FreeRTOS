@@ -29143,9 +29143,9 @@ int SetDhInternal(WOLFSSL_DH* dh)
         p = (unsigned char*)XMALLOC(pSz, NULL, DYNAMIC_TYPE_PUBLIC_KEY);
         g = (unsigned char*)XMALLOC(gSz, NULL, DYNAMIC_TYPE_PUBLIC_KEY);
         #ifdef WOLFSSL_DH_EXTRA
-            priv_key = (unsigned char*)XMALLOC(privSz, NULL, 
+            priv_key = (unsigned char*)XMALLOC(privSz, NULL,
                 DYNAMIC_TYPE_PRIVATE_KEY);
-            pub_key  = (unsigned char*)XMALLOC(pubSz, NULL, 
+            pub_key  = (unsigned char*)XMALLOC(pubSz, NULL,
                 DYNAMIC_TYPE_PUBLIC_KEY);
         #endif
 
@@ -48468,7 +48468,7 @@ int wolfSSL_X509_REQ_set_pubkey(WOLFSSL_X509 *req, WOLFSSL_EVP_PKEY *pkey)
 #endif /* OPENSSL_EXTRA && !NO_CERTS && WOLFSSL_CERT_GEN && WOLFSSL_CERT_REQ */
 
 #ifdef WOLFSSL_STATIC_EPHEMERAL
-static int SetStaticEphemeralKey(StaticKeyExchangeInfo_t* staticKE, int keyAlgo, 
+static int SetStaticEphemeralKey(StaticKeyExchangeInfo_t* staticKE, int keyAlgo,
     const char* key, unsigned int keySz, int format, void* heap)
 {
     int ret = 0;
@@ -48508,7 +48508,7 @@ static int SetStaticEphemeralKey(StaticKeyExchangeInfo_t* staticKE, int keyAlgo,
     if (format == WOLFSSL_FILETYPE_PEM) {
     #ifdef WOLFSSL_PEM_TO_DER
         int keyFormat = 0;
-        ret = PemToDer(keyBuf, keySz, PRIVATEKEY_TYPE, &staticKE->key, 
+        ret = PemToDer(keyBuf, keySz, PRIVATEKEY_TYPE, &staticKE->key,
             heap, NULL, &keyFormat);
         /* auto detect key type */
         if (ret == 0 && keyAlgo == 0) {
@@ -48537,7 +48537,7 @@ static int SetStaticEphemeralKey(StaticKeyExchangeInfo_t* staticKE, int keyAlgo,
     return ret;
 }
 
-int wolfSSL_CTX_set_ephemeral_key(WOLFSSL_CTX* ctx, int keyAlgo, 
+int wolfSSL_CTX_set_ephemeral_key(WOLFSSL_CTX* ctx, int keyAlgo,
     const char* key, unsigned int keySz, int format)
 {
     if (ctx == NULL) {
@@ -48549,11 +48549,11 @@ int wolfSSL_CTX_set_ephemeral_key(WOLFSSL_CTX* ctx, int keyAlgo,
         FreeDer(&ctx->staticKE.key);
     }
 
-    return SetStaticEphemeralKey(&ctx->staticKE, keyAlgo, key, keySz, format, 
+    return SetStaticEphemeralKey(&ctx->staticKE, keyAlgo, key, keySz, format,
         ctx->heap);
 }
 
-int wolfSSL_set_ephemeral_key(WOLFSSL* ssl, int keyAlgo, 
+int wolfSSL_set_ephemeral_key(WOLFSSL* ssl, int keyAlgo,
     const char* key, unsigned int keySz, int format)
 {
     if (ssl == NULL) {
@@ -48565,7 +48565,7 @@ int wolfSSL_set_ephemeral_key(WOLFSSL* ssl, int keyAlgo,
         FreeDer(&ssl->staticKE.key);
     }
 
-    return SetStaticEphemeralKey(&ssl->staticKE, keyAlgo, key, keySz, format, 
+    return SetStaticEphemeralKey(&ssl->staticKE, keyAlgo, key, keySz, format,
         ssl->heap);
 }
 

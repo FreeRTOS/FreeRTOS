@@ -40,17 +40,17 @@
 
 /* Platform specific definitions */
 #define PLATFORM_ZYNQMP
- 
+
 /* Definitions for debug logic configuration in lockstep mode */
 #define LOCKSTEP_MODE_DEBUG 0U
- 
+
 /* Definitions for sleep timer configuration */
 #define SLEEP_TIMER_BASEADDR XPAR_PSU_TTC_9_BASEADDR
 #define SLEEP_TIMER_FREQUENCY XPAR_PSU_TTC_9_TTC_CLK_FREQ_HZ
 #define XSLEEP_TTC_INSTANCE 3
 #define XSLEEP_TIMER_IS_DEFAULT_TIMER
- 
- 
+
+
 /******************************************************************/
 /* Definitions for driver AVBUF */
 #define XPAR_XAVBUF_NUM_INSTANCES 1

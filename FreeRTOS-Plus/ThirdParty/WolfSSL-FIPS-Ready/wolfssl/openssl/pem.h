@@ -249,8 +249,7 @@ int wolfSSL_PEM_write_DHparams(XFILE fp, WOLFSSL_DH* dh);
 #define PEM_write_bio_PUBKEY            wolfSSL_PEM_write_bio_PUBKEY
 
 #ifdef __cplusplus
-    }  /* extern "C" */ 
+    }  /* extern "C" */
 #endif
 
 #endif /* WOLFSSL_PEM_H_ */
-

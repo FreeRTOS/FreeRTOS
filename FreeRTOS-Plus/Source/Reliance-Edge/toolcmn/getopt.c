@@ -556,4 +556,3 @@ int32_t RedGetoptLong(
 {
     return getopt_internal(nargc, nargv, options, long_options, idx, FLAG_PERMUTE);
 }
-

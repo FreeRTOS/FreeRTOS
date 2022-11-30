@@ -10,7 +10,7 @@
 // ---------------------------------------------------------
 //  File: sama5d3x-ek-sram.mac
 //  User setup file for CSPY debugger.
-//  
+//
 // ---------------------------------------------------------
 
 __var __tempo_var;
@@ -38,7 +38,7 @@ execUserPreload()
 {
 //    __message "------------------------------ execUserPreload ---------------------------------";
     //__hwReset(0);                     //* Hardware Reset: CPU is automatically halted after the reset (JTAG is already configured to 32kHz)
-    
+
 //    __writeMemory32(0xD3,0x98,"Register"); //*  Set CPSR
 //    CheckNoRemap();                   //* Set the RAM memory at 0x0020 0000 & 0x0000 0000
     Watchdog();                       //* Watchdog Disable
@@ -60,8 +60,8 @@ execUserPreload()
 CheckNoRemap()
 {
     __tempo_var = __readMemory32(0x00000000,"Memory");
-    
-    if (__tempo_var == 0xAA55AA55) 
+
+    if (__tempo_var == 0xAA55AA55)
     {
        __data_test = 0x55AA55AA;
     }
@@ -69,14 +69,14 @@ CheckNoRemap()
       {
          __data_test = 0xAA55AA55;
       }
-      
+
     __writeMemory32(__data_test,0x00000000,"Memory");
-      
+
     __dummy_read = __readMemory32(0x00000000,"Memory");
 
     __writeMemory32(__tempo_var,0x00000000,"Memory");
-   
-    if (__dummy_read == __data_test) 
+
+    if (__dummy_read == __data_test)
     {
        __message " ------------------------ The Remap is already done ------------------------";
     }
@@ -105,4 +105,3 @@ Watchdog()
    __writeMemory32(0x00008000,0xFFFFFE44,"Memory");
    __message " ------------------------ Watchdog Disable ------------------------";
 }
-

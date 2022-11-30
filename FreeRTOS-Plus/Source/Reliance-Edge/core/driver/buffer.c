@@ -1209,4 +1209,3 @@ static bool BufferFind(
 
     return ret;
 }
-

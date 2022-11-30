@@ -264,9 +264,3 @@ char cChar;
 	directly to the higher priority unblocked task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-
-

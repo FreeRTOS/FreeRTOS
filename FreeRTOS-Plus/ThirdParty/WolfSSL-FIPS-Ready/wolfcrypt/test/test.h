@@ -40,4 +40,3 @@ int wolfcrypt_test(void* args);
 
 
 #endif /* WOLFCRYPT_TEST_H */
-

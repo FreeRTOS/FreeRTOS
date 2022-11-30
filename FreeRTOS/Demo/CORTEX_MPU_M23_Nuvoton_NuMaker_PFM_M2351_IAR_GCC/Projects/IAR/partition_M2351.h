@@ -819,4 +819,3 @@ __STATIC_INLINE void TZ_SAU_Setup(void)
 
 
 #endif  /* PARTITION_M2351 */
-

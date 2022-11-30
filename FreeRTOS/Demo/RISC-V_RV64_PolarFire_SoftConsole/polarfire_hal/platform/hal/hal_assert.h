@@ -52,4 +52,3 @@ extern "C" {
 #endif
 
 #endif  /* HAL_ASSERT_HEADER */
-

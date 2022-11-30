@@ -77,5 +77,5 @@ extern tHandler SchHandler [16+1];
 #define SCH_HDL_MAX   ( sizeof SchHandler / sizeof (tHandler) )
 
 
-					 
+
 #endif /* __STM32F10x_IT_H */

@@ -54,23 +54,23 @@ extern void BOARD_ConfigureNandFlash( Smc* pSmc )
     /* NCS0 is assigned to a NAND Flash (NANDOE and NANWE used for NCS0) */
     // MATRIX->MATRIX_SFR[5] = 1;
 
-    pSmc->SMC_CS_NUMBER[0].SMC_SETUP = 
+    pSmc->SMC_CS_NUMBER[0].SMC_SETUP =
           SMC_SETUP_NWE_SETUP(0)
         | SMC_SETUP_NCS_WR_SETUP(1)
         | SMC_SETUP_NRD_SETUP(0)
         | SMC_SETUP_NCS_RD_SETUP(1);
 
-    pSmc->SMC_CS_NUMBER[0].SMC_PULSE = 
+    pSmc->SMC_CS_NUMBER[0].SMC_PULSE =
           SMC_PULSE_NWE_PULSE(2)
         | SMC_PULSE_NCS_WR_PULSE(3)
         | SMC_PULSE_NRD_PULSE(4)
         | SMC_PULSE_NCS_RD_PULSE(4);
 
-    pSmc->SMC_CS_NUMBER[0].SMC_CYCLE = 
+    pSmc->SMC_CS_NUMBER[0].SMC_CYCLE =
           SMC_CYCLE_NWE_CYCLE(4)
         | SMC_CYCLE_NRD_CYCLE(7);
 
-    pSmc->SMC_CS_NUMBER[0].SMC_MODE = 
+    pSmc->SMC_CS_NUMBER[0].SMC_MODE =
           SMC_MODE_READ_MODE
         | SMC_MODE_WRITE_MODE;
 }
@@ -84,23 +84,23 @@ extern void BOARD_ConfigureNorFlash( Smc* pSmc )
     PMC_EnablePeripheral( ID_SMC ) ;
 
     /* Configure SMC, NCS0 is assigned to a norflash */
-    pSmc->SMC_CS_NUMBER[0].SMC_SETUP = 
+    pSmc->SMC_CS_NUMBER[0].SMC_SETUP =
           SMC_SETUP_NWE_SETUP(2)
         | SMC_SETUP_NCS_WR_SETUP(0)
         | SMC_SETUP_NRD_SETUP(0)
         | SMC_SETUP_NCS_RD_SETUP(0);
 
-    pSmc->SMC_CS_NUMBER[0].SMC_PULSE = 
+    pSmc->SMC_CS_NUMBER[0].SMC_PULSE =
           SMC_PULSE_NWE_PULSE(6)
         | SMC_PULSE_NCS_WR_PULSE(0xA)
         | SMC_PULSE_NRD_PULSE(0xA)
         | SMC_PULSE_NCS_RD_PULSE(0xA);
 
-    pSmc->SMC_CS_NUMBER[0].SMC_CYCLE = 
+    pSmc->SMC_CS_NUMBER[0].SMC_CYCLE =
           SMC_CYCLE_NWE_CYCLE(0xA)
         | SMC_CYCLE_NRD_CYCLE(0xA);
 
-    pSmc->SMC_CS_NUMBER[0].SMC_MODE  = 
+    pSmc->SMC_CS_NUMBER[0].SMC_MODE  =
           SMC_MODE_READ_MODE
         | SMC_MODE_WRITE_MODE
         | SMC_MODE_EXNW_MODE_DISABLED
@@ -129,13 +129,13 @@ extern void BOARD_ConfigurePSRAM( Smc* pSmc )
      * 21 + 55 = 76 ns => at least 5 cycles at 64 MHz
      * Write pulse width minimum = 45 ns (PSRAM)
      */
-    pSmc->SMC_CS_NUMBER[1].SMC_SETUP = 
+    pSmc->SMC_CS_NUMBER[1].SMC_SETUP =
           SMC_SETUP_NWE_SETUP( 1 )
         | SMC_SETUP_NCS_WR_SETUP( 0 )
         | SMC_SETUP_NRD_SETUP( 2 )
         | SMC_SETUP_NCS_RD_SETUP( 0 ) ;
 
-    pSmc->SMC_CS_NUMBER[1].SMC_PULSE = 
+    pSmc->SMC_CS_NUMBER[1].SMC_PULSE =
           SMC_PULSE_NWE_PULSE( 3 )
         | SMC_PULSE_NCS_WR_PULSE( 4 )
         | SMC_PULSE_NRD_PULSE( 3 )
@@ -149,7 +149,7 @@ NRD_CYCLE:     The total duration of the read cycle.
 NRD_CYCLE = NRD_SETUP + NRD_PULSE + NRD_HOLD
 = NCS_RD_SETUP + NCS_RD_PULSE + NCS_RD_HOLD
 (tRC) Read Cycle Time min. 70ns. */
-    pSmc->SMC_CS_NUMBER[1].SMC_CYCLE = 
+    pSmc->SMC_CS_NUMBER[1].SMC_CYCLE =
           SMC_CYCLE_NWE_CYCLE( 4 )
         | SMC_CYCLE_NRD_CYCLE( 5 ) ;
 
@@ -212,8 +212,8 @@ void BOARD_ConfigureSdram( void )
 
     /* 1. SDRAM features must be set in the configuration register: asynchronous timings (TRC, TRAS, etc.), number
        of columns, rows, CAS latency, and the data bus width. */
-    SDRAMC->SDRAMC_CR = 
-          SDRAMC_CR_NC_COL8    // 8 column bits 
+    SDRAMC->SDRAMC_CR =
+          SDRAMC_CR_NC_COL8    // 8 column bits
         | SDRAMC_CR_NR_ROW11   // 12 row bits (4K)
         | SDRAMC_CR_CAS_LATENCY3              // CAS Latency 2
         | SDRAMC_CR_NB_BANK2                  // 2 banks
@@ -221,8 +221,8 @@ void BOARD_ConfigureSdram( void )
         | SDRAMC_CR_TWR(2)
         | SDRAMC_CR_TRC_TRFC(9) // 63ns   min
         | SDRAMC_CR_TRP(3) // Command period (PRE to ACT) 21 ns min
-        | SDRAMC_CR_TRCD(3) // Active Command to read/Write Command delay time 21ns min 
-        | SDRAMC_CR_TRAS(6) // Command period (ACT to PRE)  42ns min 
+        | SDRAMC_CR_TRCD(3) // Active Command to read/Write Command delay time 21ns min
+        | SDRAMC_CR_TRAS(6) // Command period (ACT to PRE)  42ns min
         | SDRAMC_CR_TXSR(10U); //Exit self-refresh to active time  70ns Min
 
     /* 2. For mobile SDRAM, temperature-compensated self refresh (TCSR), drive strength (DS) and partial array

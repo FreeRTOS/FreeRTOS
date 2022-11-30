@@ -91,7 +91,7 @@ typedef const unsigned short	IO_WORD_READ;
 
 /* REGISTER BIT STRUCTURES */
 
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -104,7 +104,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -117,7 +117,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -130,7 +130,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -143,7 +143,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -156,7 +156,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -169,7 +169,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -182,7 +182,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -195,7 +195,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -208,7 +208,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -221,7 +221,7 @@ typedef union{
     IO_BYTE _P7 :1;
   }bit;
  }PDR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _P0 :1;
@@ -234,7 +234,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PDR10STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _resv :1;
@@ -261,7 +261,7 @@ typedef union{
     IO_WORD _STS :2;
   }bitc;
  }ADCSSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _resv :1;
@@ -278,7 +278,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }ADCSLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -295,7 +295,7 @@ typedef union{
     IO_BYTE _STS :2;
   }bitc;
  }ADCSHSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -319,7 +319,7 @@ typedef union{
     IO_WORD _D :10;
   }bitc;
  }ADCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -332,7 +332,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }ADCRLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D8 :1;
@@ -345,7 +345,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ADCRHSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ANE0 :1;
@@ -366,7 +366,7 @@ typedef union{
     IO_WORD _ST2 :1;
   }bit;
  }ADSRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ADSEL :1;
@@ -379,7 +379,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ADECRSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _T0 :1;
@@ -403,7 +403,7 @@ typedef union{
     IO_WORD _T :16;
   }bitc;
  }TCDT0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CLK0 :1;
@@ -427,7 +427,7 @@ typedef union{
     IO_WORD _CLK :3;
   }bitc;
  }TCCS0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CLK0 :1;
@@ -443,7 +443,7 @@ typedef union{
     IO_BYTE _CLK :3;
   }bitc;
  }TCCSL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -456,7 +456,7 @@ typedef union{
     IO_BYTE _ECKE :1;
   }bit;
  }TCCSH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _T0 :1;
@@ -480,7 +480,7 @@ typedef union{
     IO_WORD _T :16;
   }bitc;
  }TCDT1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CLK0 :1;
@@ -504,7 +504,7 @@ typedef union{
     IO_WORD _CLK :3;
   }bitc;
  }TCCS1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CLK0 :1;
@@ -520,7 +520,7 @@ typedef union{
     IO_BYTE _CLK :3;
   }bitc;
  }TCCSL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -533,7 +533,7 @@ typedef union{
     IO_BYTE _ECKE :1;
   }bit;
  }TCCSH1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CST0 :1;
@@ -546,7 +546,7 @@ typedef union{
     IO_BYTE _ICP1 :1;
   }bit;
  }OCS0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OTD0 :1;
@@ -559,7 +559,7 @@ typedef union{
     IO_BYTE _CMOD1 :1;
   }bit;
  }OCS1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -583,7 +583,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -607,7 +607,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CST2 :1;
@@ -620,7 +620,7 @@ typedef union{
     IO_BYTE _ICP3 :1;
   }bit;
  }OCS2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OTD2 :1;
@@ -633,7 +633,7 @@ typedef union{
     IO_BYTE _CMOD1 :1;
   }bit;
  }OCS3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -657,7 +657,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -681,7 +681,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CST4 :1;
@@ -694,7 +694,7 @@ typedef union{
     IO_BYTE _ICP5 :1;
   }bit;
  }OCS4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OTD4 :1;
@@ -707,7 +707,7 @@ typedef union{
     IO_BYTE _CMOD1 :1;
   }bit;
  }OCS5STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -731,7 +731,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -755,7 +755,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CST6 :1;
@@ -768,7 +768,7 @@ typedef union{
     IO_BYTE _ICP7 :1;
   }bit;
  }OCS6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OTD6 :1;
@@ -781,7 +781,7 @@ typedef union{
     IO_BYTE _CMOD1 :1;
   }bit;
  }OCS7STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -805,7 +805,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C00 :1;
@@ -829,7 +829,7 @@ typedef union{
     IO_WORD _C0 :16;
   }bitc;
  }OCCP7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EG00 :1;
@@ -846,7 +846,7 @@ typedef union{
     IO_BYTE _EG1 :2;
   }bitc;
  }ICS01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IEI0 :1;
@@ -859,7 +859,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ICE01STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -883,7 +883,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -896,7 +896,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -909,7 +909,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -933,7 +933,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -946,7 +946,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -959,7 +959,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EG20 :1;
@@ -976,7 +976,7 @@ typedef union{
     IO_BYTE _EG3 :2;
   }bitc;
  }ICS23STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IEI2 :1;
@@ -989,7 +989,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ICE23STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -1013,7 +1013,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -1026,7 +1026,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -1039,7 +1039,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -1063,7 +1063,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -1076,7 +1076,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -1089,7 +1089,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EG40 :1;
@@ -1106,7 +1106,7 @@ typedef union{
     IO_BYTE _EG5 :2;
   }bitc;
  }ICS45STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IEI4 :1;
@@ -1119,7 +1119,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ICE45STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -1143,7 +1143,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -1156,7 +1156,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -1169,7 +1169,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -1193,7 +1193,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -1206,7 +1206,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -1219,7 +1219,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EG60 :1;
@@ -1236,7 +1236,7 @@ typedef union{
     IO_BYTE _EG7 :2;
   }bitc;
  }ICS67STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IEI6 :1;
@@ -1249,7 +1249,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ICE67STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -1273,7 +1273,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -1286,7 +1286,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -1299,7 +1299,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _CP00 :1;
@@ -1323,7 +1323,7 @@ typedef union{
     IO_WORD _CP0 :16;
   }bitc;
  }IPCP7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP00 :1;
@@ -1336,7 +1336,7 @@ typedef union{
     IO_BYTE _CP07 :1;
   }bit;
  }IPCPL7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CP08 :1;
@@ -1349,7 +1349,7 @@ typedef union{
     IO_BYTE _CP15 :1;
   }bit;
  }IPCPH7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EN0 :1;
@@ -1362,7 +1362,7 @@ typedef union{
     IO_BYTE _EN7 :1;
   }bit;
  }ENIR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ER0 :1;
@@ -1375,7 +1375,7 @@ typedef union{
     IO_BYTE _ER7 :1;
   }bit;
  }EIRR0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _LA0 :1;
@@ -1396,7 +1396,7 @@ typedef union{
     IO_WORD _LB7 :1;
   }bit;
  }ELVR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LA0 :1;
@@ -1409,7 +1409,7 @@ typedef union{
     IO_BYTE _LB3 :1;
   }bit;
  }ELVRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LA4 :1;
@@ -1422,7 +1422,7 @@ typedef union{
     IO_BYTE _LB7 :1;
   }bit;
  }ELVRH0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EN8 :1;
@@ -1435,7 +1435,7 @@ typedef union{
     IO_BYTE _EN15 :1;
   }bit;
  }ENIR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ER8 :1;
@@ -1448,7 +1448,7 @@ typedef union{
     IO_BYTE _ER15 :1;
   }bit;
  }EIRR1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _LA8 :1;
@@ -1469,7 +1469,7 @@ typedef union{
     IO_WORD _LB15 :1;
   }bit;
  }ELVR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LA8 :1;
@@ -1482,7 +1482,7 @@ typedef union{
     IO_BYTE _LB11 :1;
   }bit;
  }ELVRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LA12 :1;
@@ -1495,7 +1495,7 @@ typedef union{
     IO_BYTE _LB15 :1;
   }bit;
  }ELVRH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TRG :1;
@@ -1520,7 +1520,7 @@ typedef union{
     IO_WORD _CSL :2;
   }bitc;
  }TMCSR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TRG :1;
@@ -1533,7 +1533,7 @@ typedef union{
     IO_BYTE _MOD0 :1;
   }bit;
  }TMCSRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MOD1 :1;
@@ -1550,7 +1550,7 @@ typedef union{
     IO_BYTE _CSL :2;
   }bitc;
  }TMCSRH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TRG :1;
@@ -1575,7 +1575,7 @@ typedef union{
     IO_WORD _CSL :2;
   }bitc;
  }TMCSR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TRG :1;
@@ -1588,7 +1588,7 @@ typedef union{
     IO_BYTE _MOD0 :1;
   }bit;
  }TMCSRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MOD1 :1;
@@ -1605,7 +1605,7 @@ typedef union{
     IO_BYTE _CSL :2;
   }bitc;
  }TMCSRH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TRG :1;
@@ -1630,7 +1630,7 @@ typedef union{
     IO_WORD _CSL :2;
   }bitc;
  }TMCSR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TRG :1;
@@ -1643,7 +1643,7 @@ typedef union{
     IO_BYTE _MOD0 :1;
   }bit;
  }TMCSRL2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MOD1 :1;
@@ -1660,7 +1660,7 @@ typedef union{
     IO_BYTE _CSL :2;
   }bitc;
  }TMCSRH2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TRG :1;
@@ -1685,7 +1685,7 @@ typedef union{
     IO_WORD _CSL :2;
   }bitc;
  }TMCSR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TRG :1;
@@ -1698,7 +1698,7 @@ typedef union{
     IO_BYTE _MOD0 :1;
   }bit;
  }TMCSRL3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MOD1 :1;
@@ -1715,7 +1715,7 @@ typedef union{
     IO_BYTE _CSL :2;
   }bitc;
  }TMCSRH3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TRG :1;
@@ -1740,7 +1740,7 @@ typedef union{
     IO_WORD _CSL :2;
   }bitc;
  }TMCSR6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TRG :1;
@@ -1753,7 +1753,7 @@ typedef union{
     IO_BYTE _MOD0 :1;
   }bit;
  }TMCSRL6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MOD1 :1;
@@ -1770,7 +1770,7 @@ typedef union{
     IO_BYTE _CSL :2;
   }bitc;
  }TMCSRH6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TSEL00 :1;
@@ -1797,7 +1797,7 @@ typedef union{
     IO_WORD _TSEL3 :4;
   }bitc;
  }GCN10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL00 :1;
@@ -1814,7 +1814,7 @@ typedef union{
     IO_BYTE _TSEL1 :4;
   }bitc;
  }GCN1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL20 :1;
@@ -1831,7 +1831,7 @@ typedef union{
     IO_BYTE _TSEL3 :4;
   }bitc;
  }GCN1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _EN0 :1;
@@ -1857,7 +1857,7 @@ typedef union{
     IO_WORD _CKSEL :4;
   }bitc;
  }GCN20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EN0 :1;
@@ -1873,7 +1873,7 @@ typedef union{
     IO_BYTE _EN :4;
   }bitc;
  }GCN2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CKSEL0 :1;
@@ -1889,7 +1889,7 @@ typedef union{
     IO_BYTE _CKSEL :4;
   }bitc;
  }GCN2H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -1913,7 +1913,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -1937,7 +1937,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -1961,7 +1961,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -1990,7 +1990,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -2009,7 +2009,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -2026,7 +2026,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2050,7 +2050,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2074,7 +2074,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2098,7 +2098,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -2127,7 +2127,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -2146,7 +2146,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -2163,7 +2163,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2187,7 +2187,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2211,7 +2211,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2235,7 +2235,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -2264,7 +2264,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -2283,7 +2283,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -2300,7 +2300,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2324,7 +2324,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2348,7 +2348,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2372,7 +2372,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -2401,7 +2401,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -2420,7 +2420,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -2437,7 +2437,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TSEL00 :1;
@@ -2464,7 +2464,7 @@ typedef union{
     IO_WORD _TSEL3 :4;
   }bitc;
  }GCN11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL00 :1;
@@ -2481,7 +2481,7 @@ typedef union{
     IO_BYTE _TSEL1 :4;
   }bitc;
  }GCN1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL20 :1;
@@ -2498,7 +2498,7 @@ typedef union{
     IO_BYTE _TSEL3 :4;
   }bitc;
  }GCN1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _EN0 :1;
@@ -2523,7 +2523,7 @@ typedef union{
     IO_WORD _CKSEL :4;
   }bitc;
  }GCN21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EN0 :1;
@@ -2536,7 +2536,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }GCN2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CKSEL0 :1;
@@ -2552,7 +2552,7 @@ typedef union{
     IO_BYTE _CKSEL :4;
   }bitc;
  }GCN2H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2576,7 +2576,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2600,7 +2600,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2624,7 +2624,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -2653,7 +2653,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -2672,7 +2672,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -2689,7 +2689,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2713,7 +2713,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR5STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2737,7 +2737,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR5STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -2761,7 +2761,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT5STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -2790,7 +2790,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -2809,7 +2809,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -2826,7 +2826,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ADT :1;
@@ -2839,7 +2839,7 @@ typedef union{
     IO_BYTE _BB :1;
   }bit;
  }IBSR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INT :1;
@@ -2852,7 +2852,7 @@ typedef union{
     IO_BYTE _BER :1;
   }bit;
  }IBCR0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TA0 :1;
@@ -2876,7 +2876,7 @@ typedef union{
     IO_WORD _TA :10;
   }bitc;
  }ITBA0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TA0 :1;
@@ -2889,7 +2889,7 @@ typedef union{
     IO_BYTE _TA7 :1;
   }bit;
  }ITBAL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TA8 :1;
@@ -2902,7 +2902,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ITBAH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TM0 :1;
@@ -2926,7 +2926,7 @@ typedef union{
     IO_WORD _TM :10;
   }bitc;
  }ITMK0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TM0 :1;
@@ -2939,7 +2939,7 @@ typedef union{
     IO_BYTE _TM7 :1;
   }bit;
  }ITMKL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TM8 :1;
@@ -2952,7 +2952,7 @@ typedef union{
     IO_BYTE _ENTB :1;
   }bit;
  }ITMKH0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SA0 :1;
@@ -2968,7 +2968,7 @@ typedef union{
     IO_BYTE _SA :7;
   }bitc;
  }ISBA0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SM0 :1;
@@ -2984,7 +2984,7 @@ typedef union{
     IO_BYTE _SM :7;
   }bitc;
  }ISMK0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -2997,7 +2997,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }IDAR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CS0 :1;
@@ -3013,7 +3013,7 @@ typedef union{
     IO_BYTE _CS :5;
   }bitc;
  }ICCR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ADT :1;
@@ -3026,7 +3026,7 @@ typedef union{
     IO_BYTE _BB :1;
   }bit;
  }IBSR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INT :1;
@@ -3039,7 +3039,7 @@ typedef union{
     IO_BYTE _BER :1;
   }bit;
  }IBCR1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TA0 :1;
@@ -3063,7 +3063,7 @@ typedef union{
     IO_WORD _TA :10;
   }bitc;
  }ITBA1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TA0 :1;
@@ -3076,7 +3076,7 @@ typedef union{
     IO_BYTE _TA7 :1;
   }bit;
  }ITBAL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TA8 :1;
@@ -3089,7 +3089,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ITBAH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TM0 :1;
@@ -3113,7 +3113,7 @@ typedef union{
     IO_WORD _TM :10;
   }bitc;
  }ITMK1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TM0 :1;
@@ -3126,7 +3126,7 @@ typedef union{
     IO_BYTE _TM7 :1;
   }bit;
  }ITMKL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TM8 :1;
@@ -3139,7 +3139,7 @@ typedef union{
     IO_BYTE _ENTB :1;
   }bit;
  }ITMKH1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SA0 :1;
@@ -3155,7 +3155,7 @@ typedef union{
     IO_BYTE _SA :7;
   }bitc;
  }ISBA1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SM0 :1;
@@ -3171,7 +3171,7 @@ typedef union{
     IO_BYTE _SM :7;
   }bitc;
  }ISMK1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -3184,7 +3184,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }IDAR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CS0 :1;
@@ -3200,7 +3200,7 @@ typedef union{
     IO_BYTE _CS :5;
   }bitc;
  }ICCR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SOE :1;
@@ -3217,7 +3217,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }SMR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXE :1;
@@ -3230,7 +3230,7 @@ typedef union{
     IO_BYTE _PEN :1;
   }bit;
  }SCR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIE :1;
@@ -3243,7 +3243,7 @@ typedef union{
     IO_BYTE _PE :1;
   }bit;
  }SSR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TBI :1;
@@ -3256,7 +3256,7 @@ typedef union{
     IO_BYTE _INV :1;
   }bit;
  }ECCR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCES :1;
@@ -3273,7 +3273,7 @@ typedef union{
     IO_BYTE _LBL :2;
   }bitc;
  }ESCR0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BGR0 :1;
@@ -3297,7 +3297,7 @@ typedef union{
     IO_WORD _BGR :16;
   }bitc;
  }BGR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR0 :1;
@@ -3310,7 +3310,7 @@ typedef union{
     IO_BYTE _BGR7 :1;
   }bit;
  }BGRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR8 :1;
@@ -3323,7 +3323,7 @@ typedef union{
     IO_BYTE _BGR15 :1;
   }bit;
  }BGRH0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _AICD :1;
@@ -3336,7 +3336,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ESIR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SOE :1;
@@ -3353,7 +3353,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }SMR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXE :1;
@@ -3366,7 +3366,7 @@ typedef union{
     IO_BYTE _PEN :1;
   }bit;
  }SCR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIE :1;
@@ -3379,7 +3379,7 @@ typedef union{
     IO_BYTE _PE :1;
   }bit;
  }SSR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TBI :1;
@@ -3392,7 +3392,7 @@ typedef union{
     IO_BYTE _INV :1;
   }bit;
  }ECCR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCES :1;
@@ -3409,7 +3409,7 @@ typedef union{
     IO_BYTE _LBL :2;
   }bitc;
  }ESCR1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BGR0 :1;
@@ -3433,7 +3433,7 @@ typedef union{
     IO_WORD _BGR :16;
   }bitc;
  }BGR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR0 :1;
@@ -3446,7 +3446,7 @@ typedef union{
     IO_BYTE _BGR7 :1;
   }bit;
  }BGRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR8 :1;
@@ -3459,7 +3459,7 @@ typedef union{
     IO_BYTE _BGR15 :1;
   }bit;
  }BGRH1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _AICD :1;
@@ -3472,7 +3472,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ESIR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SOE :1;
@@ -3489,7 +3489,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }SMR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXE :1;
@@ -3502,7 +3502,7 @@ typedef union{
     IO_BYTE _PEN :1;
   }bit;
  }SCR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIE :1;
@@ -3515,7 +3515,7 @@ typedef union{
     IO_BYTE _PE :1;
   }bit;
  }SSR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TBI :1;
@@ -3528,7 +3528,7 @@ typedef union{
     IO_BYTE _INV :1;
   }bit;
  }ECCR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCES :1;
@@ -3545,7 +3545,7 @@ typedef union{
     IO_BYTE _LBL :2;
   }bitc;
  }ESCR2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BGR0 :1;
@@ -3569,7 +3569,7 @@ typedef union{
     IO_WORD _BGR :16;
   }bitc;
  }BGR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR0 :1;
@@ -3582,7 +3582,7 @@ typedef union{
     IO_BYTE _BGR7 :1;
   }bit;
  }BGRL2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR8 :1;
@@ -3595,7 +3595,7 @@ typedef union{
     IO_BYTE _BGR15 :1;
   }bit;
  }BGRH2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _AICD :1;
@@ -3608,7 +3608,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ESIR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SOE :1;
@@ -3625,7 +3625,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }SMR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXE :1;
@@ -3638,7 +3638,7 @@ typedef union{
     IO_BYTE _PEN :1;
   }bit;
  }SCR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIE :1;
@@ -3651,7 +3651,7 @@ typedef union{
     IO_BYTE _PE :1;
   }bit;
  }SSR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TBI :1;
@@ -3664,7 +3664,7 @@ typedef union{
     IO_BYTE _INV :1;
   }bit;
  }ECCR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCES :1;
@@ -3681,7 +3681,7 @@ typedef union{
     IO_BYTE _LBL :2;
   }bitc;
  }ESCR3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BGR0 :1;
@@ -3705,7 +3705,7 @@ typedef union{
     IO_WORD _BGR :16;
   }bitc;
  }BGR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR0 :1;
@@ -3718,7 +3718,7 @@ typedef union{
     IO_BYTE _BGR7 :1;
   }bit;
  }BGRL3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR8 :1;
@@ -3731,7 +3731,7 @@ typedef union{
     IO_BYTE _BGR15 :1;
   }bit;
  }BGRH3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _AICD :1;
@@ -3744,7 +3744,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ESIR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SE :1;
@@ -3757,7 +3757,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DMACS0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SE :1;
@@ -3770,7 +3770,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DMACS1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SE :1;
@@ -3783,7 +3783,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DMACS2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SE :1;
@@ -3796,7 +3796,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DMACS3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SE :1;
@@ -3809,7 +3809,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DMACS4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SE :1;
@@ -3822,7 +3822,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DMACS5STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DTE0 :1;
@@ -3836,7 +3836,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }DSRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DTE0 :1;
@@ -3849,7 +3849,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DSRLSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _STP0 :1;
@@ -3863,7 +3863,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }DSSRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _STP0 :1;
@@ -3876,7 +3876,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DSSRLSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _EN0 :1;
@@ -3890,7 +3890,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }DERSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EN0 :1;
@@ -3903,7 +3903,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DERLSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _IL0 :1;
@@ -3929,7 +3929,7 @@ typedef union{
     IO_WORD _IX :8;
   }bitc;
  }ICRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -3945,7 +3945,7 @@ typedef union{
     IO_BYTE _IL :3;
   }bitc;
  }ILRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IX0 :1;
@@ -3961,7 +3961,7 @@ typedef union{
     IO_BYTE _IX :8;
   }bitc;
  }IDXSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -3982,7 +3982,7 @@ typedef union{
     IO_WORD _TB23 :1;
   }bit;
  }TBRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -3995,7 +3995,7 @@ typedef union{
     IO_BYTE _TB15 :1;
   }bit;
  }TBRLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TB16 :1;
@@ -4008,7 +4008,7 @@ typedef union{
     IO_BYTE _TB23 :1;
   }bit;
  }TBRHSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _R0 :1;
@@ -4021,7 +4021,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DIRRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _FLAG :1;
@@ -4034,7 +4034,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }NMISTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _RSEL0 :1;
@@ -4059,7 +4059,7 @@ typedef union{
     IO_WORD _TSEL :8;
   }bitc;
  }EDSU2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MI :1;
@@ -4072,7 +4072,7 @@ typedef union{
     IO_BYTE _BS3 :1;
   }bit;
  }ROMMSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _RINT :1;
@@ -4089,7 +4089,7 @@ typedef union{
     IO_BYTE _SEL :2;
   }bitc;
  }EDSUSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _I0 :1;
@@ -4110,7 +4110,7 @@ typedef union{
     IO_WORD _READ :1;
   }bit;
  }PFCS0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _I0 :1;
@@ -4131,7 +4131,7 @@ typedef union{
     IO_WORD _READ :1;
   }bit;
  }PFCS1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _I0 :1;
@@ -4152,7 +4152,7 @@ typedef union{
     IO_WORD _READ :1;
   }bit;
  }PFCS2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _I0 :1;
@@ -4173,7 +4173,7 @@ typedef union{
     IO_WORD _READ :1;
   }bit;
  }PFCS3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4186,7 +4186,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4199,7 +4199,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4212,7 +4212,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4225,7 +4225,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4238,7 +4238,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4251,7 +4251,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4264,7 +4264,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4277,7 +4277,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4290,7 +4290,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4303,7 +4303,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4316,7 +4316,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4329,7 +4329,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4342,7 +4342,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4355,7 +4355,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4368,7 +4368,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4381,7 +4381,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4394,7 +4394,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4407,7 +4407,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4420,7 +4420,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4433,7 +4433,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4446,7 +4446,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA0 :1;
@@ -4459,7 +4459,7 @@ typedef union{
     IO_BYTE _PFA7 :1;
   }bit;
  }PFAL7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA8 :1;
@@ -4472,7 +4472,7 @@ typedef union{
     IO_BYTE _PFA15 :1;
   }bit;
  }PFAM7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFA16 :1;
@@ -4485,7 +4485,7 @@ typedef union{
     IO_BYTE _PFA23 :1;
   }bit;
  }PFAH7STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4509,7 +4509,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4522,7 +4522,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4535,7 +4535,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4559,7 +4559,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4572,7 +4572,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4585,7 +4585,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4609,7 +4609,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4622,7 +4622,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4635,7 +4635,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4659,7 +4659,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4672,7 +4672,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4685,7 +4685,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4709,7 +4709,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4722,7 +4722,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4735,7 +4735,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4759,7 +4759,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4772,7 +4772,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4785,7 +4785,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH5STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4809,7 +4809,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4822,7 +4822,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4835,7 +4835,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PFD0 :1;
@@ -4859,7 +4859,7 @@ typedef union{
     IO_WORD _PFD :16;
   }bitc;
  }PFD7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD0 :1;
@@ -4872,7 +4872,7 @@ typedef union{
     IO_BYTE _PFD7 :1;
   }bit;
  }PFDL7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PFD8 :1;
@@ -4885,7 +4885,7 @@ typedef union{
     IO_BYTE _PFD15 :1;
   }bit;
  }PFDH7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _RDY :1;
@@ -4898,7 +4898,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }MFMCSSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _FAWC0 :1;
@@ -4926,7 +4926,7 @@ typedef union{
     IO_WORD _EQL :3;
   }bitc;
  }MFMTCSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _FAWC0 :1;
@@ -4942,7 +4942,7 @@ typedef union{
     IO_BYTE _FAWC :3;
   }bitc;
  }MFMTCLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ATDINIT :1;
@@ -4961,7 +4961,7 @@ typedef union{
     IO_BYTE _EQL :3;
   }bitc;
  }MFMTCHSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _RDY :1;
@@ -4974,7 +4974,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }SFMCSSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _FAWC0 :1;
@@ -5002,7 +5002,7 @@ typedef union{
     IO_WORD _EQL :3;
   }bitc;
  }SFMTCSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _FAWC0 :1;
@@ -5018,7 +5018,7 @@ typedef union{
     IO_BYTE _FAWC :3;
   }bitc;
  }SFMTCLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ATDINIT :1;
@@ -5037,7 +5037,7 @@ typedef union{
     IO_BYTE _EQL :3;
   }bitc;
  }SFMTCHSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _WCB0 :1;
@@ -5053,7 +5053,7 @@ typedef union{
     IO_BYTE _WCB :4;
   }bitc;
  }FMWC0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _WCA0 :1;
@@ -5069,7 +5069,7 @@ typedef union{
     IO_BYTE _WCA :4;
   }bitc;
  }FMWC1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _WC32 :1;
@@ -5085,7 +5085,7 @@ typedef union{
     IO_BYTE _WC3 :8;
   }bitc;
  }FMWC5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SMS0 :1;
@@ -5101,7 +5101,7 @@ typedef union{
     IO_BYTE _SMS :2;
   }bitc;
  }SMCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SC1S0 :1;
@@ -5118,7 +5118,7 @@ typedef union{
     IO_BYTE _SC2S :2;
   }bitc;
  }CKSRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MCST0 :1;
@@ -5134,7 +5134,7 @@ typedef union{
     IO_BYTE _MCST :3;
   }bitc;
  }CKSSRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SC1M0 :1;
@@ -5151,7 +5151,7 @@ typedef union{
     IO_BYTE _SC2M :2;
   }bitc;
  }CKMRSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _RCFS :1;
@@ -5178,7 +5178,7 @@ typedef union{
     IO_WORD _PC2D :4;
   }bitc;
  }CKFCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _RCFS :1;
@@ -5195,7 +5195,7 @@ typedef union{
     IO_BYTE _BCD :4;
   }bitc;
  }CKFCRLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PC1D0 :1;
@@ -5212,7 +5212,7 @@ typedef union{
     IO_BYTE _PC2D :4;
   }bitc;
  }CKFCRHSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _PMS0 :1;
@@ -5238,7 +5238,7 @@ typedef union{
     IO_WORD _PC3D :4;
   }bitc;
  }PLLCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PMS0 :1;
@@ -5255,7 +5255,7 @@ typedef union{
     IO_BYTE _VMS :3;
   }bitc;
  }PLLCRLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PC3D0 :1;
@@ -5271,7 +5271,7 @@ typedef union{
     IO_BYTE _PC3D :4;
   }bitc;
  }PLLCRHSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _RCTI0 :1;
@@ -5287,7 +5287,7 @@ typedef union{
     IO_BYTE _RCTI :4;
   }bitc;
  }RCTCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MCTI0 :1;
@@ -5303,7 +5303,7 @@ typedef union{
     IO_BYTE _MCTI :4;
   }bitc;
  }MCTCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PRST :1;
@@ -5316,7 +5316,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }RCCSRCSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SRSTG :1;
@@ -5329,7 +5329,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }RCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PRST :1;
@@ -5342,7 +5342,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }RCCSRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _WTI0 :1;
@@ -5359,7 +5359,7 @@ typedef union{
     IO_BYTE _WTCS :2;
   }bitc;
  }WDTCSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _WCP0 :1;
@@ -5375,7 +5375,7 @@ typedef union{
     IO_BYTE _WCP :8;
   }bitc;
  }WDTCPSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CKOE0 :1;
@@ -5388,7 +5388,7 @@ typedef union{
     IO_BYTE _RUNM1 :1;
   }bit;
  }COARSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SEL0 :1;
@@ -5405,7 +5405,7 @@ typedef union{
     IO_BYTE _DIV :3;
   }bitc;
  }COCR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SEL0 :1;
@@ -5422,7 +5422,7 @@ typedef union{
     IO_BYTE _DIV :3;
   }bitc;
  }COCR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PDX :1;
@@ -5435,7 +5435,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }CMCRSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _C0 :1;
@@ -5462,7 +5462,7 @@ typedef union{
     IO_WORD _K :5;
   }bitc;
  }CMPRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _C0 :1;
@@ -5479,7 +5479,7 @@ typedef union{
     IO_BYTE _N :3;
   }bitc;
  }CMPRLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _N3 :1;
@@ -5496,7 +5496,7 @@ typedef union{
     IO_BYTE _K :5;
   }bitc;
  }CMPRHSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LPBM0 :1;
@@ -5514,7 +5514,7 @@ typedef union{
     IO_BYTE _HPM :2;
   }bitc;
  }VRCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5527,7 +5527,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5540,7 +5540,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5553,7 +5553,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5566,7 +5566,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5579,7 +5579,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5592,7 +5592,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5605,7 +5605,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5618,7 +5618,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5631,7 +5631,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5644,7 +5644,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }DDR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -5657,7 +5657,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }DDR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5670,7 +5670,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5683,7 +5683,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5696,7 +5696,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5709,7 +5709,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5722,7 +5722,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5735,7 +5735,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5748,7 +5748,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5761,7 +5761,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5774,7 +5774,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5787,7 +5787,7 @@ typedef union{
     IO_BYTE _IE7 :1;
   }bit;
  }PIER09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IE0 :1;
@@ -5800,7 +5800,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PIER10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5813,7 +5813,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5826,7 +5826,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5839,7 +5839,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5852,7 +5852,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5865,7 +5865,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5878,7 +5878,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5891,7 +5891,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5904,7 +5904,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5917,7 +5917,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5930,7 +5930,7 @@ typedef union{
     IO_BYTE _IL7 :1;
   }bit;
  }PILR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IL0 :1;
@@ -5943,7 +5943,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PILR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -5956,7 +5956,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -5969,7 +5969,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -5982,7 +5982,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -5995,7 +5995,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -6008,7 +6008,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -6021,7 +6021,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -6034,7 +6034,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -6047,7 +6047,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -6060,7 +6060,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -6073,7 +6073,7 @@ typedef union{
     IO_BYTE _EIL7 :1;
   }bit;
  }EPILR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EIL0 :1;
@@ -6086,7 +6086,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }EPILR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6099,7 +6099,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6112,7 +6112,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6125,7 +6125,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6138,7 +6138,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6151,7 +6151,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6164,7 +6164,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6177,7 +6177,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6190,7 +6190,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6203,7 +6203,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6216,7 +6216,7 @@ typedef union{
     IO_BYTE _OD7 :1;
   }bit;
  }PODR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OD0 :1;
@@ -6229,7 +6229,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PODR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _HD0 :1;
@@ -6242,7 +6242,7 @@ typedef union{
     IO_BYTE _HD7 :1;
   }bit;
  }PHDR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _HD0 :1;
@@ -6255,7 +6255,7 @@ typedef union{
     IO_BYTE _HD7 :1;
   }bit;
  }PHDR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _HD0 :1;
@@ -6268,7 +6268,7 @@ typedef union{
     IO_BYTE _HD7 :1;
   }bit;
  }PHDR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6281,7 +6281,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6294,7 +6294,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6307,7 +6307,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6320,7 +6320,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6333,7 +6333,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6346,7 +6346,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6359,7 +6359,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6372,7 +6372,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6385,7 +6385,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6398,7 +6398,7 @@ typedef union{
     IO_BYTE _PU7 :1;
   }bit;
  }PUCR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PU0 :1;
@@ -6411,7 +6411,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PUCR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6424,7 +6424,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR00STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6437,7 +6437,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR01STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6450,7 +6450,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR02STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6463,7 +6463,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR03STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6476,7 +6476,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR04STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6489,7 +6489,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR05STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6502,7 +6502,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR06STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6515,7 +6515,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR07STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6528,7 +6528,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR08STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6541,7 +6541,7 @@ typedef union{
     IO_BYTE _PS7 :1;
   }bit;
  }EPSR09STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PS0 :1;
@@ -6554,7 +6554,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }EPSR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ADE0 :1;
@@ -6567,7 +6567,7 @@ typedef union{
     IO_BYTE _ADE7 :1;
   }bit;
  }ADER0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ADE8 :1;
@@ -6580,7 +6580,7 @@ typedef union{
     IO_BYTE _ADE15 :1;
   }bit;
  }ADER1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ADE16 :1;
@@ -6593,7 +6593,7 @@ typedef union{
     IO_BYTE _ADE23 :1;
   }bit;
  }ADER2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INT0_R :1;
@@ -6606,7 +6606,7 @@ typedef union{
     IO_BYTE _INT7_R :1;
   }bit;
  }PRRR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INT8_R :1;
@@ -6619,7 +6619,7 @@ typedef union{
     IO_BYTE _INT15_R :1;
   }bit;
  }PRRR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PPG0_R :1;
@@ -6632,7 +6632,7 @@ typedef union{
     IO_BYTE _PPG7_R :1;
   }bit;
  }PRRR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIN0_R :1;
@@ -6645,7 +6645,7 @@ typedef union{
     IO_BYTE _TOT3_R :1;
   }bit;
  }PRRR3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _IN0_R :1;
@@ -6658,7 +6658,7 @@ typedef union{
     IO_BYTE _IN7_R :1;
   }bit;
  }PRRR4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OUT0_R :1;
@@ -6671,7 +6671,7 @@ typedef union{
     IO_BYTE _OUT7_R :1;
   }bit;
  }PRRR5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SGO0_R :1;
@@ -6684,7 +6684,7 @@ typedef union{
     IO_BYTE _CKOTX1_R :1;
   }bit;
  }PRRR6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ADTG_R :1;
@@ -6697,7 +6697,7 @@ typedef union{
     IO_BYTE _TX2_R :1;
   }bit;
  }PRRR7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SIN7_R :1;
@@ -6710,7 +6710,7 @@ typedef union{
     IO_BYTE _SOT9_R :1;
   }bit;
  }PRRR8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCK9_R :1;
@@ -6723,7 +6723,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PRRR9STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -6747,7 +6747,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }WTBR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D0 :1;
@@ -6760,7 +6760,7 @@ typedef union{
     IO_BYTE _D7 :1;
   }bit;
  }WTBRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D8 :1;
@@ -6773,7 +6773,7 @@ typedef union{
     IO_BYTE _D15 :1;
   }bit;
  }WTBRH0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _D16 :1;
@@ -6789,7 +6789,7 @@ typedef union{
     IO_BYTE _D1 :5;
   }bitc;
  }WTBR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _S0 :1;
@@ -6805,7 +6805,7 @@ typedef union{
     IO_BYTE _S :6;
   }bitc;
  }WTSRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _M0 :1;
@@ -6821,7 +6821,7 @@ typedef union{
     IO_BYTE _M :6;
   }bitc;
  }WTMRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _H0 :1;
@@ -6837,7 +6837,7 @@ typedef union{
     IO_BYTE _H :5;
   }bitc;
  }WTHRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INT4 :1;
@@ -6850,7 +6850,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }WTCERSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CKSEL0 :1;
@@ -6866,7 +6866,7 @@ typedef union{
     IO_BYTE _CKSEL :2;
   }bitc;
  }WTCKSRSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ST :1;
@@ -6887,7 +6887,7 @@ typedef union{
     IO_WORD _INTE3 :1;
   }bit;
  }WTCRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ST :1;
@@ -6900,7 +6900,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }WTCRLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INT0 :1;
@@ -6913,7 +6913,7 @@ typedef union{
     IO_BYTE _INTE3 :1;
   }bit;
  }WTCRHSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTEN :1;
@@ -6926,7 +6926,7 @@ typedef union{
     IO_BYTE _RESV :1;
   }bit;
  }CUCRSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TDD0 :1;
@@ -6950,7 +6950,7 @@ typedef union{
     IO_WORD _TDD :16;
   }bitc;
  }CUTDSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TDD0 :1;
@@ -6963,7 +6963,7 @@ typedef union{
     IO_BYTE _TDD7 :1;
   }bit;
  }CUTDLSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TDD8 :1;
@@ -6976,7 +6976,7 @@ typedef union{
     IO_BYTE _TDD15 :1;
   }bit;
  }CUTDHSTR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _TDR0 :1;
@@ -7013,7 +7013,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }CUTRSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TDR0 :1;
@@ -7034,7 +7034,7 @@ typedef union{
     IO_WORD _TDR15 :1;
   }bit;
  }CUTR2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TDR0 :1;
@@ -7047,7 +7047,7 @@ typedef union{
     IO_BYTE _TDR7 :1;
   }bit;
  }CUTR2LSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TDR8 :1;
@@ -7060,7 +7060,7 @@ typedef union{
     IO_BYTE _TDR15 :1;
   }bit;
  }CUTR2HSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TDR16 :1;
@@ -7081,7 +7081,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }CUTR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TDR16 :1;
@@ -7094,7 +7094,7 @@ typedef union{
     IO_BYTE _TDR23 :1;
   }bit;
  }CUTR1LSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -7107,7 +7107,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }CUTR1HSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TMIS0 :1;
@@ -7120,7 +7120,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }TMISRSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SOE :1;
@@ -7137,7 +7137,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }SMR7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXE :1;
@@ -7150,7 +7150,7 @@ typedef union{
     IO_BYTE _PEN :1;
   }bit;
  }SCR7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIE :1;
@@ -7163,7 +7163,7 @@ typedef union{
     IO_BYTE _PE :1;
   }bit;
  }SSR7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TBI :1;
@@ -7176,7 +7176,7 @@ typedef union{
     IO_BYTE _INV :1;
   }bit;
  }ECCR7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCES :1;
@@ -7193,7 +7193,7 @@ typedef union{
     IO_BYTE _LBL :2;
   }bitc;
  }ESCR7STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BGR0 :1;
@@ -7217,7 +7217,7 @@ typedef union{
     IO_WORD _BGR :16;
   }bitc;
  }BGR7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR0 :1;
@@ -7230,7 +7230,7 @@ typedef union{
     IO_BYTE _BGR7 :1;
   }bit;
  }BGRL7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR8 :1;
@@ -7243,7 +7243,7 @@ typedef union{
     IO_BYTE _BGR15 :1;
   }bit;
  }BGRH7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _AICD :1;
@@ -7256,7 +7256,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ESIR7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SOE :1;
@@ -7273,7 +7273,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }SMR8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXE :1;
@@ -7286,7 +7286,7 @@ typedef union{
     IO_BYTE _PEN :1;
   }bit;
  }SCR8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIE :1;
@@ -7299,7 +7299,7 @@ typedef union{
     IO_BYTE _PE :1;
   }bit;
  }SSR8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TBI :1;
@@ -7312,7 +7312,7 @@ typedef union{
     IO_BYTE _INV :1;
   }bit;
  }ECCR8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCES :1;
@@ -7329,7 +7329,7 @@ typedef union{
     IO_BYTE _LBL :2;
   }bitc;
  }ESCR8STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BGR0 :1;
@@ -7353,7 +7353,7 @@ typedef union{
     IO_WORD _BGR :16;
   }bitc;
  }BGR8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR0 :1;
@@ -7366,7 +7366,7 @@ typedef union{
     IO_BYTE _BGR7 :1;
   }bit;
  }BGRL8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR8 :1;
@@ -7379,7 +7379,7 @@ typedef union{
     IO_BYTE _BGR15 :1;
   }bit;
  }BGRH8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _AICD :1;
@@ -7392,7 +7392,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ESIR8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SOE :1;
@@ -7409,7 +7409,7 @@ typedef union{
     IO_BYTE _MD :2;
   }bitc;
  }SMR9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXE :1;
@@ -7422,7 +7422,7 @@ typedef union{
     IO_BYTE _PEN :1;
   }bit;
  }SCR9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TIE :1;
@@ -7435,7 +7435,7 @@ typedef union{
     IO_BYTE _PE :1;
   }bit;
  }SSR9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TBI :1;
@@ -7448,7 +7448,7 @@ typedef union{
     IO_BYTE _INV :1;
   }bit;
  }ECCR9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _SCES :1;
@@ -7465,7 +7465,7 @@ typedef union{
     IO_BYTE _LBL :2;
   }bitc;
  }ESCR9STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BGR0 :1;
@@ -7489,7 +7489,7 @@ typedef union{
     IO_WORD _BGR :16;
   }bitc;
  }BGR9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR0 :1;
@@ -7502,7 +7502,7 @@ typedef union{
     IO_BYTE _BGR7 :1;
   }bit;
  }BGRL9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BGR8 :1;
@@ -7515,7 +7515,7 @@ typedef union{
     IO_BYTE _BGR15 :1;
   }bit;
  }BGRH9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _AICD :1;
@@ -7528,7 +7528,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }ESIR9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PD :1;
@@ -7541,7 +7541,7 @@ typedef union{
     IO_BYTE _CMD :1;
   }bit;
  }ACSR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTREF :1;
@@ -7554,7 +7554,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }AECSR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PD :1;
@@ -7567,7 +7567,7 @@ typedef union{
     IO_BYTE _CMD :1;
   }bit;
  }ACSR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTREF :1;
@@ -7580,7 +7580,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }AECSR1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -7604,7 +7604,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -7628,7 +7628,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -7652,7 +7652,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -7681,7 +7681,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -7700,7 +7700,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL6STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -7717,7 +7717,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH6STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -7741,7 +7741,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR7STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -7765,7 +7765,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR7STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -7789,7 +7789,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT7STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -7818,7 +7818,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -7837,7 +7837,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL7STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -7854,7 +7854,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH7STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TSEL00 :1;
@@ -7881,7 +7881,7 @@ typedef union{
     IO_WORD _TSEL3 :4;
   }bitc;
  }GCN12STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL00 :1;
@@ -7898,7 +7898,7 @@ typedef union{
     IO_BYTE _TSEL1 :4;
   }bitc;
  }GCN1L2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL20 :1;
@@ -7915,7 +7915,7 @@ typedef union{
     IO_BYTE _TSEL3 :4;
   }bitc;
  }GCN1H2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _EN0 :1;
@@ -7941,7 +7941,7 @@ typedef union{
     IO_WORD _CKSEL :4;
   }bitc;
  }GCN22STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EN0 :1;
@@ -7957,7 +7957,7 @@ typedef union{
     IO_BYTE _EN :4;
   }bitc;
  }GCN2L2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CKSEL0 :1;
@@ -7973,7 +7973,7 @@ typedef union{
     IO_BYTE _CKSEL :4;
   }bitc;
  }GCN2H2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -7997,7 +7997,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR8STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8021,7 +8021,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR8STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8045,7 +8045,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT8STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -8074,7 +8074,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -8093,7 +8093,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL8STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -8110,7 +8110,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH8STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8134,7 +8134,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR9STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8158,7 +8158,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR9STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8182,7 +8182,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT9STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -8211,7 +8211,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -8230,7 +8230,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL9STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -8247,7 +8247,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH9STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8271,7 +8271,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR10STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8295,7 +8295,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR10STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8319,7 +8319,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT10STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -8348,7 +8348,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -8367,7 +8367,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -8384,7 +8384,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH10STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8408,7 +8408,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR11STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8432,7 +8432,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR11STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8456,7 +8456,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT11STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -8485,7 +8485,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -8504,7 +8504,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -8521,7 +8521,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH11STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TSEL00 :1;
@@ -8548,7 +8548,7 @@ typedef union{
     IO_WORD _TSEL3 :4;
   }bitc;
  }GCN13STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL00 :1;
@@ -8565,7 +8565,7 @@ typedef union{
     IO_BYTE _TSEL1 :4;
   }bitc;
  }GCN1L3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEL20 :1;
@@ -8582,7 +8582,7 @@ typedef union{
     IO_BYTE _TSEL3 :4;
   }bitc;
  }GCN1H3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _EN0 :1;
@@ -8608,7 +8608,7 @@ typedef union{
     IO_WORD _CKSEL :4;
   }bitc;
  }GCN23STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EN0 :1;
@@ -8624,7 +8624,7 @@ typedef union{
     IO_BYTE _EN :4;
   }bitc;
  }GCN2L3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CKSEL0 :1;
@@ -8640,7 +8640,7 @@ typedef union{
     IO_BYTE _CKSEL :4;
   }bitc;
  }GCN2H3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8664,7 +8664,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR12STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8688,7 +8688,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR12STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8712,7 +8712,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT12STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -8741,7 +8741,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN12STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -8760,7 +8760,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL12STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -8777,7 +8777,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH12STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8801,7 +8801,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR13STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8825,7 +8825,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR13STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8849,7 +8849,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT13STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -8878,7 +8878,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN13STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -8897,7 +8897,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL13STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -8914,7 +8914,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH13STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8938,7 +8938,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR14STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8962,7 +8962,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR14STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -8986,7 +8986,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT14STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -9015,7 +9015,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN14STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -9034,7 +9034,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL14STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -9051,7 +9051,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH14STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -9075,7 +9075,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PTMR15STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -9099,7 +9099,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PCSR15STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _D0 :1;
@@ -9123,7 +9123,7 @@ typedef union{
     IO_WORD _D :16;
   }bitc;
  }PDUT15STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _OSEL :1;
@@ -9152,7 +9152,7 @@ typedef union{
     IO_WORD _CKS :2;
   }bitc;
  }PCN15STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OSEL :1;
@@ -9171,7 +9171,7 @@ typedef union{
     IO_BYTE _EGS :2;
   }bitc;
  }PCNL15STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -9188,7 +9188,7 @@ typedef union{
     IO_BYTE _CKS :2;
   }bitc;
  }PCNH15STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PPG8_R :1;
@@ -9201,7 +9201,7 @@ typedef union{
     IO_BYTE _TTG11_R :1;
   }bit;
  }PRRR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _PPG16_R :1;
@@ -9214,7 +9214,7 @@ typedef union{
     IO_BYTE _TTG19_R :1;
   }bit;
  }PRRR11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _CS0_R :1;
@@ -9227,7 +9227,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PRRR12STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -9240,7 +9240,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }PRRR13STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _R0 :1;
@@ -9264,7 +9264,7 @@ typedef union{
     IO_WORD _R :3;
   }bitc;
  }EAC0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _R0 :1;
@@ -9280,7 +9280,7 @@ typedef union{
     IO_BYTE _R :3;
   }bitc;
  }EACL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -9293,7 +9293,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }EACH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _R0 :1;
@@ -9317,7 +9317,7 @@ typedef union{
     IO_WORD _R :3;
   }bitc;
  }EAC1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _R0 :1;
@@ -9333,7 +9333,7 @@ typedef union{
     IO_BYTE _R :3;
   }bitc;
  }EACL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -9346,7 +9346,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }EACH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _R0 :1;
@@ -9372,7 +9372,7 @@ typedef union{
     IO_WORD _EASZ :3;
   }bitc;
  }EAC2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _R0 :1;
@@ -9388,7 +9388,7 @@ typedef union{
     IO_BYTE _R :3;
   }bitc;
  }EACL2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EASZ0 :1;
@@ -9404,7 +9404,7 @@ typedef union{
     IO_BYTE _EASZ :3;
   }bitc;
  }EACH2STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _R0 :1;
@@ -9430,7 +9430,7 @@ typedef union{
     IO_WORD _EASZ :3;
   }bitc;
  }EAC3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _R0 :1;
@@ -9446,7 +9446,7 @@ typedef union{
     IO_BYTE _R :3;
   }bitc;
  }EACL3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EASZ0 :1;
@@ -9462,7 +9462,7 @@ typedef union{
     IO_BYTE _EASZ :3;
   }bitc;
  }EACH3STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _R0 :1;
@@ -9488,7 +9488,7 @@ typedef union{
     IO_WORD _EASZ :3;
   }bitc;
  }EAC4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _R0 :1;
@@ -9504,7 +9504,7 @@ typedef union{
     IO_BYTE _R :3;
   }bitc;
  }EACL4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EASZ0 :1;
@@ -9520,7 +9520,7 @@ typedef union{
     IO_BYTE _EASZ :3;
   }bitc;
  }EACH4STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _R0 :1;
@@ -9546,7 +9546,7 @@ typedef union{
     IO_WORD _EASZ :3;
   }bitc;
  }EAC5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _R0 :1;
@@ -9562,7 +9562,7 @@ typedef union{
     IO_BYTE _R :3;
   }bitc;
  }EACL5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EASZ0 :1;
@@ -9578,7 +9578,7 @@ typedef union{
     IO_BYTE _EASZ :3;
   }bitc;
  }EACH5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _A0 :1;
@@ -9594,7 +9594,7 @@ typedef union{
     IO_BYTE _A :8;
   }bitc;
  }EAS2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _A0 :1;
@@ -9610,7 +9610,7 @@ typedef union{
     IO_BYTE _A :8;
   }bitc;
  }EAS3STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _A0 :1;
@@ -9626,7 +9626,7 @@ typedef union{
     IO_BYTE _A :8;
   }bitc;
  }EAS4STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _A0 :1;
@@ -9639,7 +9639,7 @@ typedef union{
     IO_BYTE _A7 :1;
   }bit;
  }EAS5STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _EAE0 :1;
@@ -9655,7 +9655,7 @@ typedef union{
     IO_BYTE _EAE :6;
   }bitc;
  }EBMSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DIV0 :1;
@@ -9671,7 +9671,7 @@ typedef union{
     IO_BYTE _DIV :3;
   }bitc;
  }EBCFSTR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _A00 :1;
@@ -9684,7 +9684,7 @@ typedef union{
     IO_BYTE _A07 :1;
   }bit;
  }EBAE0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _A08 :1;
@@ -9697,7 +9697,7 @@ typedef union{
     IO_BYTE _A15 :1;
   }bit;
  }EBAE1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _A16 :1;
@@ -9710,7 +9710,7 @@ typedef union{
     IO_BYTE _A23 :1;
   }bit;
  }EBAE2STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LBE :1;
@@ -9723,7 +9723,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }EBCSSTR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INIT :1;
@@ -9744,7 +9744,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }CTRLR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INIT :1;
@@ -9757,7 +9757,7 @@ typedef union{
     IO_BYTE _TEST :1;
   }bit;
  }CTRLRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -9770,7 +9770,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }CTRLRH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _LEC0 :1;
@@ -9794,7 +9794,7 @@ typedef union{
     IO_WORD _LEC :3;
   }bitc;
  }STATR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LEC0 :1;
@@ -9810,7 +9810,7 @@ typedef union{
     IO_BYTE _LEC :3;
   }bitc;
  }STATRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -9823,7 +9823,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }STATRH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TEC0 :1;
@@ -9848,7 +9848,7 @@ typedef union{
     IO_WORD _REC :7;
   }bitc;
  }ERRCNT0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TEC0 :1;
@@ -9864,7 +9864,7 @@ typedef union{
     IO_BYTE _TEC :8;
   }bitc;
  }ERRCNTL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _REC0 :1;
@@ -9880,7 +9880,7 @@ typedef union{
     IO_BYTE _REC :7;
   }bitc;
  }ERRCNTH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BRP0 :1;
@@ -9907,7 +9907,7 @@ typedef union{
     IO_WORD _TSEG2 :3;
   }bitc;
  }BTR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BRP0 :1;
@@ -9924,7 +9924,7 @@ typedef union{
     IO_BYTE _SJW :2;
   }bitc;
  }BTRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEG10 :1;
@@ -9941,7 +9941,7 @@ typedef union{
     IO_BYTE _TSEG2 :3;
   }bitc;
  }BTRH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INTID0 :1;
@@ -9965,7 +9965,7 @@ typedef union{
     IO_WORD _INTID :16;
   }bitc;
  }INTR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTID0 :1;
@@ -9978,7 +9978,7 @@ typedef union{
     IO_BYTE _INTID7 :1;
   }bit;
  }INTRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTID8 :1;
@@ -9991,7 +9991,7 @@ typedef union{
     IO_BYTE _INTID15 :1;
   }bit;
  }INTRH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -10012,7 +10012,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }TESTR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10025,7 +10025,7 @@ typedef union{
     IO_BYTE _RX :1;
   }bit;
  }TESTRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10038,7 +10038,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }TESTRH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BRPE0 :1;
@@ -10062,7 +10062,7 @@ typedef union{
     IO_WORD _BRPE :4;
   }bitc;
  }BRPER0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BRPE0 :1;
@@ -10078,7 +10078,7 @@ typedef union{
     IO_BYTE _BRPE :4;
   }bitc;
  }BRPERL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10091,7 +10091,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }BRPERH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGN0 :1;
@@ -10112,7 +10112,7 @@ typedef union{
     IO_WORD _BUSY :1;
   }bit;
  }IF1CREQ0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGN0 :1;
@@ -10125,7 +10125,7 @@ typedef union{
     IO_BYTE _MSGN7 :1;
   }bit;
  }IF1CREQL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10138,7 +10138,7 @@ typedef union{
     IO_BYTE _BUSY :1;
   }bit;
  }IF1CREQH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DATAB :1;
@@ -10159,7 +10159,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1CMSK0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DATAB :1;
@@ -10172,7 +10172,7 @@ typedef union{
     IO_BYTE _WRRD :1;
   }bit;
  }IF1CMSKL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10185,7 +10185,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1CMSKH0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _MSK0 :1;
@@ -10225,7 +10225,7 @@ typedef union{
     IO_LWORD _MSK :29;
   }bitc;
  }IF1MSK0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK0 :1;
@@ -10246,7 +10246,7 @@ typedef union{
     IO_WORD _MSK15 :1;
   }bit;
  }IF1MSK10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK0 :1;
@@ -10259,7 +10259,7 @@ typedef union{
     IO_BYTE _MSK7 :1;
   }bit;
  }IF1MSK1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK8 :1;
@@ -10272,7 +10272,7 @@ typedef union{
     IO_BYTE _MSK15 :1;
   }bit;
  }IF1MSK1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK16 :1;
@@ -10293,7 +10293,7 @@ typedef union{
     IO_WORD _MXTD :1;
   }bit;
  }IF1MSK20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK16 :1;
@@ -10306,7 +10306,7 @@ typedef union{
     IO_BYTE _MSK23 :1;
   }bit;
  }IF1MSK2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK24 :1;
@@ -10319,7 +10319,7 @@ typedef union{
     IO_BYTE _MXTD :1;
   }bit;
  }IF1MSK2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _ID0 :1;
@@ -10359,7 +10359,7 @@ typedef union{
     IO_LWORD _ID :29;
   }bitc;
  }IF1ARB0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID0 :1;
@@ -10380,7 +10380,7 @@ typedef union{
     IO_WORD _ID15 :1;
   }bit;
  }IF1ARB10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID0 :1;
@@ -10393,7 +10393,7 @@ typedef union{
     IO_BYTE _ID7 :1;
   }bit;
  }IF1ARB1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID8 :1;
@@ -10406,7 +10406,7 @@ typedef union{
     IO_BYTE _ID15 :1;
   }bit;
  }IF1ARB1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID16 :1;
@@ -10427,7 +10427,7 @@ typedef union{
     IO_WORD _MSGVAL :1;
   }bit;
  }IF1ARB20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID16 :1;
@@ -10440,7 +10440,7 @@ typedef union{
     IO_BYTE _ID23 :1;
   }bit;
  }IF1ARB2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID24 :1;
@@ -10453,7 +10453,7 @@ typedef union{
     IO_BYTE _MSGVAL :1;
   }bit;
  }IF1ARB2H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DLC0 :1;
@@ -10477,7 +10477,7 @@ typedef union{
     IO_WORD _DLC :4;
   }bitc;
  }IF1MCTR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DLC0 :1;
@@ -10493,7 +10493,7 @@ typedef union{
     IO_BYTE _DLC :4;
   }bitc;
  }IF1MCTRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST :1;
@@ -10506,7 +10506,7 @@ typedef union{
     IO_BYTE _NEWDAT :1;
   }bit;
  }IF1MCTRH0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -10543,7 +10543,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF1DTA0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -10564,7 +10564,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTA10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10577,7 +10577,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10590,7 +10590,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -10611,7 +10611,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTA20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10624,7 +10624,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10637,7 +10637,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -10674,7 +10674,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF1DTB0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -10695,7 +10695,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTB10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10708,7 +10708,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10721,7 +10721,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -10742,7 +10742,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTB20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10755,7 +10755,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10768,7 +10768,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB2H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGN0 :1;
@@ -10789,7 +10789,7 @@ typedef union{
     IO_WORD _BUSY :1;
   }bit;
  }IF2CREQ0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGN0 :1;
@@ -10802,7 +10802,7 @@ typedef union{
     IO_BYTE _MSGN7 :1;
   }bit;
  }IF2CREQL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10815,7 +10815,7 @@ typedef union{
     IO_BYTE _BUSY :1;
   }bit;
  }IF2CREQH0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DATAB :1;
@@ -10836,7 +10836,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2CMSK0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DATAB :1;
@@ -10849,7 +10849,7 @@ typedef union{
     IO_BYTE _WRRD :1;
   }bit;
  }IF2CMSKL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -10862,7 +10862,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2CMSKH0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _MSK0 :1;
@@ -10902,7 +10902,7 @@ typedef union{
     IO_LWORD _MSK :29;
   }bitc;
  }IF2MSK0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK0 :1;
@@ -10923,7 +10923,7 @@ typedef union{
     IO_WORD _MSK15 :1;
   }bit;
  }IF2MSK10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK0 :1;
@@ -10936,7 +10936,7 @@ typedef union{
     IO_BYTE _MSK7 :1;
   }bit;
  }IF2MSK1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK8 :1;
@@ -10949,7 +10949,7 @@ typedef union{
     IO_BYTE _MSK15 :1;
   }bit;
  }IF2MSK1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK16 :1;
@@ -10970,7 +10970,7 @@ typedef union{
     IO_WORD _MXTD :1;
   }bit;
  }IF2MSK20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK16 :1;
@@ -10983,7 +10983,7 @@ typedef union{
     IO_BYTE _MSK23 :1;
   }bit;
  }IF2MSK2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK24 :1;
@@ -10996,7 +10996,7 @@ typedef union{
     IO_BYTE _MXTD :1;
   }bit;
  }IF2MSK2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _ID0 :1;
@@ -11036,7 +11036,7 @@ typedef union{
     IO_LWORD _ID :29;
   }bitc;
  }IF2ARB0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID0 :1;
@@ -11057,7 +11057,7 @@ typedef union{
     IO_WORD _ID15 :1;
   }bit;
  }IF2ARB10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID0 :1;
@@ -11070,7 +11070,7 @@ typedef union{
     IO_BYTE _ID7 :1;
   }bit;
  }IF2ARB1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID8 :1;
@@ -11083,7 +11083,7 @@ typedef union{
     IO_BYTE _ID15 :1;
   }bit;
  }IF2ARB1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID16 :1;
@@ -11104,7 +11104,7 @@ typedef union{
     IO_WORD _MSGVAL :1;
   }bit;
  }IF2ARB20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID16 :1;
@@ -11117,7 +11117,7 @@ typedef union{
     IO_BYTE _ID23 :1;
   }bit;
  }IF2ARB2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID24 :1;
@@ -11130,7 +11130,7 @@ typedef union{
     IO_BYTE _MSGVAL :1;
   }bit;
  }IF2ARB2H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DLC0 :1;
@@ -11154,7 +11154,7 @@ typedef union{
     IO_WORD _DLC :4;
   }bitc;
  }IF2MCTR0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DLC0 :1;
@@ -11170,7 +11170,7 @@ typedef union{
     IO_BYTE _DLC :4;
   }bitc;
  }IF2MCTRL0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST :1;
@@ -11183,7 +11183,7 @@ typedef union{
     IO_BYTE _NEWDAT :1;
   }bit;
  }IF2MCTRH0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -11220,7 +11220,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF2DTA0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -11241,7 +11241,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTA10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11254,7 +11254,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11267,7 +11267,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -11288,7 +11288,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTA20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11301,7 +11301,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11314,7 +11314,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -11351,7 +11351,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF2DTB0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -11372,7 +11372,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTB10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11385,7 +11385,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11398,7 +11398,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -11419,7 +11419,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTB20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11432,7 +11432,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -11445,7 +11445,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _TXRQST1 :1;
@@ -11485,7 +11485,7 @@ typedef union{
     IO_LWORD _TXRQST :32;
   }bitc;
  }TREQR0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TXRQST1 :1;
@@ -11506,7 +11506,7 @@ typedef union{
     IO_WORD _TXRQST16 :1;
   }bit;
  }TREQR10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST1 :1;
@@ -11519,7 +11519,7 @@ typedef union{
     IO_BYTE _TXRQST8 :1;
   }bit;
  }TREQR1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST9 :1;
@@ -11532,7 +11532,7 @@ typedef union{
     IO_BYTE _TXRQST16 :1;
   }bit;
  }TREQR1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TXRQST17 :1;
@@ -11553,7 +11553,7 @@ typedef union{
     IO_WORD _TXRQST32 :1;
   }bit;
  }TREQR20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST17 :1;
@@ -11566,7 +11566,7 @@ typedef union{
     IO_BYTE _TXRQST24 :1;
   }bit;
  }TREQR2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST25 :1;
@@ -11579,7 +11579,7 @@ typedef union{
     IO_BYTE _TXRQST32 :1;
   }bit;
  }TREQR2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _NEWDAT1 :1;
@@ -11619,7 +11619,7 @@ typedef union{
     IO_LWORD _NEWDAT :32;
   }bitc;
  }NEWDT0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _NEWDAT1 :1;
@@ -11640,7 +11640,7 @@ typedef union{
     IO_WORD _NEWDAT16 :1;
   }bit;
  }NEWDT10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT1 :1;
@@ -11653,7 +11653,7 @@ typedef union{
     IO_BYTE _NEWDAT8 :1;
   }bit;
  }NEWDT1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT9 :1;
@@ -11666,7 +11666,7 @@ typedef union{
     IO_BYTE _NEWDAT16 :1;
   }bit;
  }NEWDT1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _NEWDAT17 :1;
@@ -11687,7 +11687,7 @@ typedef union{
     IO_WORD _NEWDAT32 :1;
   }bit;
  }NEWDT20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT17 :1;
@@ -11700,7 +11700,7 @@ typedef union{
     IO_BYTE _NEWDAT24 :1;
   }bit;
  }NEWDT2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT25 :1;
@@ -11713,7 +11713,7 @@ typedef union{
     IO_BYTE _NEWDAT32 :1;
   }bit;
  }NEWDT2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _INTPND1 :1;
@@ -11753,7 +11753,7 @@ typedef union{
     IO_LWORD _INTPND :32;
   }bitc;
  }INTPND0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INTPND1 :1;
@@ -11774,7 +11774,7 @@ typedef union{
     IO_WORD _INTPND16 :1;
   }bit;
  }INTPND10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND1 :1;
@@ -11787,7 +11787,7 @@ typedef union{
     IO_BYTE _INTPND8 :1;
   }bit;
  }INTPND1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND9 :1;
@@ -11800,7 +11800,7 @@ typedef union{
     IO_BYTE _INTPND16 :1;
   }bit;
  }INTPND1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INTPND17 :1;
@@ -11821,7 +11821,7 @@ typedef union{
     IO_WORD _INTPND32 :1;
   }bit;
  }INTPND20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND17 :1;
@@ -11834,7 +11834,7 @@ typedef union{
     IO_BYTE _INTPND24 :1;
   }bit;
  }INTPND2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND25 :1;
@@ -11847,7 +11847,7 @@ typedef union{
     IO_BYTE _INTPND32 :1;
   }bit;
  }INTPND2H0STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _MSGVAL1 :1;
@@ -11887,7 +11887,7 @@ typedef union{
     IO_LWORD _MSGVAL :32;
   }bitc;
  }MSGVAL0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGVAL1 :1;
@@ -11908,7 +11908,7 @@ typedef union{
     IO_WORD _MSGVAL16 :1;
   }bit;
  }MSGVAL10STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL1 :1;
@@ -11921,7 +11921,7 @@ typedef union{
     IO_BYTE _MSGVAL8 :1;
   }bit;
  }MSGVAL1L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL9 :1;
@@ -11934,7 +11934,7 @@ typedef union{
     IO_BYTE _MSGVAL16 :1;
   }bit;
  }MSGVAL1H0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGVAL17 :1;
@@ -11955,7 +11955,7 @@ typedef union{
     IO_WORD _MSGVAL32 :1;
   }bit;
  }MSGVAL20STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL17 :1;
@@ -11968,7 +11968,7 @@ typedef union{
     IO_BYTE _MSGVAL24 :1;
   }bit;
  }MSGVAL2L0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL25 :1;
@@ -11981,7 +11981,7 @@ typedef union{
     IO_BYTE _MSGVAL32 :1;
   }bit;
  }MSGVAL2H0STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OE :1;
@@ -11994,7 +11994,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }COER0STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INIT :1;
@@ -12015,7 +12015,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }CTRLR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INIT :1;
@@ -12028,7 +12028,7 @@ typedef union{
     IO_BYTE _TEST :1;
   }bit;
  }CTRLRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12041,7 +12041,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }CTRLRH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _LEC0 :1;
@@ -12065,7 +12065,7 @@ typedef union{
     IO_WORD _LEC :3;
   }bitc;
  }STATR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _LEC0 :1;
@@ -12081,7 +12081,7 @@ typedef union{
     IO_BYTE _LEC :3;
   }bitc;
  }STATRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12094,7 +12094,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }STATRH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TEC0 :1;
@@ -12119,7 +12119,7 @@ typedef union{
     IO_WORD _REC :7;
   }bitc;
  }ERRCNT1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TEC0 :1;
@@ -12135,7 +12135,7 @@ typedef union{
     IO_BYTE _TEC :8;
   }bitc;
  }ERRCNTL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _REC0 :1;
@@ -12151,7 +12151,7 @@ typedef union{
     IO_BYTE _REC :7;
   }bitc;
  }ERRCNTH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BRP0 :1;
@@ -12178,7 +12178,7 @@ typedef union{
     IO_WORD _TSEG2 :3;
   }bitc;
  }BTR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BRP0 :1;
@@ -12195,7 +12195,7 @@ typedef union{
     IO_BYTE _SJW :2;
   }bitc;
  }BTRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TSEG10 :1;
@@ -12212,7 +12212,7 @@ typedef union{
     IO_BYTE _TSEG2 :3;
   }bitc;
  }BTRH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INTID0 :1;
@@ -12236,7 +12236,7 @@ typedef union{
     IO_WORD _INTID :16;
   }bitc;
  }INTR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTID0 :1;
@@ -12249,7 +12249,7 @@ typedef union{
     IO_BYTE _INTID7 :1;
   }bit;
  }INTRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTID8 :1;
@@ -12262,7 +12262,7 @@ typedef union{
     IO_BYTE _INTID15 :1;
   }bit;
  }INTRH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -12283,7 +12283,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }TESTR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12296,7 +12296,7 @@ typedef union{
     IO_BYTE _RX :1;
   }bit;
  }TESTRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12309,7 +12309,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }TESTRH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _BRPE0 :1;
@@ -12333,7 +12333,7 @@ typedef union{
     IO_WORD _BRPE :4;
   }bitc;
  }BRPER1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _BRPE0 :1;
@@ -12349,7 +12349,7 @@ typedef union{
     IO_BYTE _BRPE :4;
   }bitc;
  }BRPERL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12362,7 +12362,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }BRPERH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGN0 :1;
@@ -12383,7 +12383,7 @@ typedef union{
     IO_WORD _BUSY :1;
   }bit;
  }IF1CREQ1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGN0 :1;
@@ -12396,7 +12396,7 @@ typedef union{
     IO_BYTE _MSGN7 :1;
   }bit;
  }IF1CREQL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12409,7 +12409,7 @@ typedef union{
     IO_BYTE _BUSY :1;
   }bit;
  }IF1CREQH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DATAB :1;
@@ -12430,7 +12430,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1CMSK1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DATAB :1;
@@ -12443,7 +12443,7 @@ typedef union{
     IO_BYTE _WRRD :1;
   }bit;
  }IF1CMSKL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12456,7 +12456,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1CMSKH1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _MSK0 :1;
@@ -12496,7 +12496,7 @@ typedef union{
     IO_LWORD _MSK :29;
   }bitc;
  }IF1MSK1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK0 :1;
@@ -12517,7 +12517,7 @@ typedef union{
     IO_WORD _MSK15 :1;
   }bit;
  }IF1MSK11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK0 :1;
@@ -12530,7 +12530,7 @@ typedef union{
     IO_BYTE _MSK7 :1;
   }bit;
  }IF1MSK1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK8 :1;
@@ -12543,7 +12543,7 @@ typedef union{
     IO_BYTE _MSK15 :1;
   }bit;
  }IF1MSK1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK16 :1;
@@ -12564,7 +12564,7 @@ typedef union{
     IO_WORD _MXTD :1;
   }bit;
  }IF1MSK21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK16 :1;
@@ -12577,7 +12577,7 @@ typedef union{
     IO_BYTE _MSK23 :1;
   }bit;
  }IF1MSK2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK24 :1;
@@ -12590,7 +12590,7 @@ typedef union{
     IO_BYTE _MXTD :1;
   }bit;
  }IF1MSK2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _ID0 :1;
@@ -12630,7 +12630,7 @@ typedef union{
     IO_LWORD _ID :29;
   }bitc;
  }IF1ARB1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID0 :1;
@@ -12651,7 +12651,7 @@ typedef union{
     IO_WORD _ID15 :1;
   }bit;
  }IF1ARB11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID0 :1;
@@ -12664,7 +12664,7 @@ typedef union{
     IO_BYTE _ID7 :1;
   }bit;
  }IF1ARB1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID8 :1;
@@ -12677,7 +12677,7 @@ typedef union{
     IO_BYTE _ID15 :1;
   }bit;
  }IF1ARB1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID16 :1;
@@ -12698,7 +12698,7 @@ typedef union{
     IO_WORD _MSGVAL :1;
   }bit;
  }IF1ARB21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID16 :1;
@@ -12711,7 +12711,7 @@ typedef union{
     IO_BYTE _ID23 :1;
   }bit;
  }IF1ARB2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID24 :1;
@@ -12724,7 +12724,7 @@ typedef union{
     IO_BYTE _MSGVAL :1;
   }bit;
  }IF1ARB2H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DLC0 :1;
@@ -12748,7 +12748,7 @@ typedef union{
     IO_WORD _DLC :4;
   }bitc;
  }IF1MCTR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DLC0 :1;
@@ -12764,7 +12764,7 @@ typedef union{
     IO_BYTE _DLC :4;
   }bitc;
  }IF1MCTRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST :1;
@@ -12777,7 +12777,7 @@ typedef union{
     IO_BYTE _NEWDAT :1;
   }bit;
  }IF1MCTRH1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -12814,7 +12814,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF1DTA1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -12835,7 +12835,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTA11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12848,7 +12848,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12861,7 +12861,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -12882,7 +12882,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTA21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12895,7 +12895,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12908,7 +12908,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTA2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -12945,7 +12945,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF1DTB1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -12966,7 +12966,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTB11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12979,7 +12979,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -12992,7 +12992,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -13013,7 +13013,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF1DTB21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13026,7 +13026,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13039,7 +13039,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF1DTB2H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGN0 :1;
@@ -13060,7 +13060,7 @@ typedef union{
     IO_WORD _BUSY :1;
   }bit;
  }IF2CREQ1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGN0 :1;
@@ -13073,7 +13073,7 @@ typedef union{
     IO_BYTE _MSGN7 :1;
   }bit;
  }IF2CREQL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13086,7 +13086,7 @@ typedef union{
     IO_BYTE _BUSY :1;
   }bit;
  }IF2CREQH1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DATAB :1;
@@ -13107,7 +13107,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2CMSK1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DATAB :1;
@@ -13120,7 +13120,7 @@ typedef union{
     IO_BYTE _WRRD :1;
   }bit;
  }IF2CMSKL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13133,7 +13133,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2CMSKH1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _MSK0 :1;
@@ -13173,7 +13173,7 @@ typedef union{
     IO_LWORD _MSK :29;
   }bitc;
  }IF2MSK1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK0 :1;
@@ -13194,7 +13194,7 @@ typedef union{
     IO_WORD _MSK15 :1;
   }bit;
  }IF2MSK11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK0 :1;
@@ -13207,7 +13207,7 @@ typedef union{
     IO_BYTE _MSK7 :1;
   }bit;
  }IF2MSK1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK8 :1;
@@ -13220,7 +13220,7 @@ typedef union{
     IO_BYTE _MSK15 :1;
   }bit;
  }IF2MSK1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSK16 :1;
@@ -13241,7 +13241,7 @@ typedef union{
     IO_WORD _MXTD :1;
   }bit;
  }IF2MSK21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK16 :1;
@@ -13254,7 +13254,7 @@ typedef union{
     IO_BYTE _MSK23 :1;
   }bit;
  }IF2MSK2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSK24 :1;
@@ -13267,7 +13267,7 @@ typedef union{
     IO_BYTE _MXTD :1;
   }bit;
  }IF2MSK2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _ID0 :1;
@@ -13307,7 +13307,7 @@ typedef union{
     IO_LWORD _ID :29;
   }bitc;
  }IF2ARB1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID0 :1;
@@ -13328,7 +13328,7 @@ typedef union{
     IO_WORD _ID15 :1;
   }bit;
  }IF2ARB11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID0 :1;
@@ -13341,7 +13341,7 @@ typedef union{
     IO_BYTE _ID7 :1;
   }bit;
  }IF2ARB1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID8 :1;
@@ -13354,7 +13354,7 @@ typedef union{
     IO_BYTE _ID15 :1;
   }bit;
  }IF2ARB1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _ID16 :1;
@@ -13375,7 +13375,7 @@ typedef union{
     IO_WORD _MSGVAL :1;
   }bit;
  }IF2ARB21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID16 :1;
@@ -13388,7 +13388,7 @@ typedef union{
     IO_BYTE _ID23 :1;
   }bit;
  }IF2ARB2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _ID24 :1;
@@ -13401,7 +13401,7 @@ typedef union{
     IO_BYTE _MSGVAL :1;
   }bit;
  }IF2ARB2H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _DLC0 :1;
@@ -13425,7 +13425,7 @@ typedef union{
     IO_WORD _DLC :4;
   }bitc;
  }IF2MCTR1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _DLC0 :1;
@@ -13441,7 +13441,7 @@ typedef union{
     IO_BYTE _DLC :4;
   }bitc;
  }IF2MCTRL1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST :1;
@@ -13454,7 +13454,7 @@ typedef union{
     IO_BYTE _NEWDAT :1;
   }bit;
  }IF2MCTRH1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -13491,7 +13491,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF2DTA1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -13512,7 +13512,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTA11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13525,7 +13525,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13538,7 +13538,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -13559,7 +13559,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTA21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13572,7 +13572,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13585,7 +13585,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTA2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD  :1;
@@ -13622,7 +13622,7 @@ typedef union{
     IO_LWORD  :1;
   }bit;
  }IF2DTB1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -13643,7 +13643,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTB11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13656,7 +13656,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13669,7 +13669,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD  :1;
@@ -13690,7 +13690,7 @@ typedef union{
     IO_WORD  :1;
   }bit;
  }IF2DTB21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13703,7 +13703,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE  :1;
@@ -13716,7 +13716,7 @@ typedef union{
     IO_BYTE  :1;
   }bit;
  }IF2DTB2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _TXRQST1 :1;
@@ -13756,7 +13756,7 @@ typedef union{
     IO_LWORD _TXRQST :32;
   }bitc;
  }TREQR1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TXRQST1 :1;
@@ -13777,7 +13777,7 @@ typedef union{
     IO_WORD _TXRQST16 :1;
   }bit;
  }TREQR11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST1 :1;
@@ -13790,7 +13790,7 @@ typedef union{
     IO_BYTE _TXRQST8 :1;
   }bit;
  }TREQR1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST9 :1;
@@ -13803,7 +13803,7 @@ typedef union{
     IO_BYTE _TXRQST16 :1;
   }bit;
  }TREQR1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _TXRQST17 :1;
@@ -13824,7 +13824,7 @@ typedef union{
     IO_WORD _TXRQST32 :1;
   }bit;
  }TREQR21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST17 :1;
@@ -13837,7 +13837,7 @@ typedef union{
     IO_BYTE _TXRQST24 :1;
   }bit;
  }TREQR2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _TXRQST25 :1;
@@ -13850,7 +13850,7 @@ typedef union{
     IO_BYTE _TXRQST32 :1;
   }bit;
  }TREQR2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _NEWDAT1 :1;
@@ -13890,7 +13890,7 @@ typedef union{
     IO_LWORD _NEWDAT :32;
   }bitc;
  }NEWDT1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _NEWDAT1 :1;
@@ -13911,7 +13911,7 @@ typedef union{
     IO_WORD _NEWDAT16 :1;
   }bit;
  }NEWDT11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT1 :1;
@@ -13924,7 +13924,7 @@ typedef union{
     IO_BYTE _NEWDAT8 :1;
   }bit;
  }NEWDT1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT9 :1;
@@ -13937,7 +13937,7 @@ typedef union{
     IO_BYTE _NEWDAT16 :1;
   }bit;
  }NEWDT1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _NEWDAT17 :1;
@@ -13958,7 +13958,7 @@ typedef union{
     IO_WORD _NEWDAT32 :1;
   }bit;
  }NEWDT21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT17 :1;
@@ -13971,7 +13971,7 @@ typedef union{
     IO_BYTE _NEWDAT24 :1;
   }bit;
  }NEWDT2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _NEWDAT25 :1;
@@ -13984,7 +13984,7 @@ typedef union{
     IO_BYTE _NEWDAT32 :1;
   }bit;
  }NEWDT2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _INTPND1 :1;
@@ -14024,7 +14024,7 @@ typedef union{
     IO_LWORD _INTPND :32;
   }bitc;
  }INTPND1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INTPND1 :1;
@@ -14045,7 +14045,7 @@ typedef union{
     IO_WORD _INTPND16 :1;
   }bit;
  }INTPND11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND1 :1;
@@ -14058,7 +14058,7 @@ typedef union{
     IO_BYTE _INTPND8 :1;
   }bit;
  }INTPND1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND9 :1;
@@ -14071,7 +14071,7 @@ typedef union{
     IO_BYTE _INTPND16 :1;
   }bit;
  }INTPND1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _INTPND17 :1;
@@ -14092,7 +14092,7 @@ typedef union{
     IO_WORD _INTPND32 :1;
   }bit;
  }INTPND21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND17 :1;
@@ -14105,7 +14105,7 @@ typedef union{
     IO_BYTE _INTPND24 :1;
   }bit;
  }INTPND2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _INTPND25 :1;
@@ -14118,7 +14118,7 @@ typedef union{
     IO_BYTE _INTPND32 :1;
   }bit;
  }INTPND2H1STR;
-typedef union{  
+typedef union{
     IO_LWORD	lword;
     struct{
     IO_LWORD _MSGVAL1 :1;
@@ -14158,7 +14158,7 @@ typedef union{
     IO_LWORD _MSGVAL :32;
   }bitc;
  }MSGVAL1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGVAL1 :1;
@@ -14179,7 +14179,7 @@ typedef union{
     IO_WORD _MSGVAL16 :1;
   }bit;
  }MSGVAL11STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL1 :1;
@@ -14192,7 +14192,7 @@ typedef union{
     IO_BYTE _MSGVAL8 :1;
   }bit;
  }MSGVAL1L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL9 :1;
@@ -14205,7 +14205,7 @@ typedef union{
     IO_BYTE _MSGVAL16 :1;
   }bit;
  }MSGVAL1H1STR;
-typedef union{  
+typedef union{
     IO_WORD	word;
     struct{
     IO_WORD _MSGVAL17 :1;
@@ -14226,7 +14226,7 @@ typedef union{
     IO_WORD _MSGVAL32 :1;
   }bit;
  }MSGVAL21STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL17 :1;
@@ -14239,7 +14239,7 @@ typedef union{
     IO_BYTE _MSGVAL24 :1;
   }bit;
  }MSGVAL2L1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _MSGVAL25 :1;
@@ -14252,7 +14252,7 @@ typedef union{
     IO_BYTE _MSGVAL32 :1;
   }bit;
  }MSGVAL2H1STR;
-typedef union{  
+typedef union{
     IO_BYTE	byte;
     struct{
     IO_BYTE _OE :1;
@@ -14268,7 +14268,7 @@ typedef union{
 
 /* C-DECLARATIONS */
 
-__IO_EXTERN __io PDR00STR _pdr00;  
+__IO_EXTERN __io PDR00STR _pdr00;
 #define PDR00 _pdr00.byte
 #define PDR00_P0 _pdr00.bit._P0
 #define PDR00_P1 _pdr00.bit._P1
@@ -14278,7 +14278,7 @@ __IO_EXTERN __io PDR00STR _pdr00;
 #define PDR00_P5 _pdr00.bit._P5
 #define PDR00_P6 _pdr00.bit._P6
 #define PDR00_P7 _pdr00.bit._P7
-__IO_EXTERN __io PDR01STR _pdr01;  
+__IO_EXTERN __io PDR01STR _pdr01;
 #define PDR01 _pdr01.byte
 #define PDR01_P0 _pdr01.bit._P0
 #define PDR01_P1 _pdr01.bit._P1
@@ -14288,7 +14288,7 @@ __IO_EXTERN __io PDR01STR _pdr01;
 #define PDR01_P5 _pdr01.bit._P5
 #define PDR01_P6 _pdr01.bit._P6
 #define PDR01_P7 _pdr01.bit._P7
-__IO_EXTERN __io PDR02STR _pdr02;  
+__IO_EXTERN __io PDR02STR _pdr02;
 #define PDR02 _pdr02.byte
 #define PDR02_P0 _pdr02.bit._P0
 #define PDR02_P1 _pdr02.bit._P1
@@ -14298,7 +14298,7 @@ __IO_EXTERN __io PDR02STR _pdr02;
 #define PDR02_P5 _pdr02.bit._P5
 #define PDR02_P6 _pdr02.bit._P6
 #define PDR02_P7 _pdr02.bit._P7
-__IO_EXTERN __io PDR03STR _pdr03;  
+__IO_EXTERN __io PDR03STR _pdr03;
 #define PDR03 _pdr03.byte
 #define PDR03_P0 _pdr03.bit._P0
 #define PDR03_P1 _pdr03.bit._P1
@@ -14308,7 +14308,7 @@ __IO_EXTERN __io PDR03STR _pdr03;
 #define PDR03_P5 _pdr03.bit._P5
 #define PDR03_P6 _pdr03.bit._P6
 #define PDR03_P7 _pdr03.bit._P7
-__IO_EXTERN __io PDR04STR _pdr04;  
+__IO_EXTERN __io PDR04STR _pdr04;
 #define PDR04 _pdr04.byte
 #define PDR04_P0 _pdr04.bit._P0
 #define PDR04_P1 _pdr04.bit._P1
@@ -14318,7 +14318,7 @@ __IO_EXTERN __io PDR04STR _pdr04;
 #define PDR04_P5 _pdr04.bit._P5
 #define PDR04_P6 _pdr04.bit._P6
 #define PDR04_P7 _pdr04.bit._P7
-__IO_EXTERN __io PDR05STR _pdr05;  
+__IO_EXTERN __io PDR05STR _pdr05;
 #define PDR05 _pdr05.byte
 #define PDR05_P0 _pdr05.bit._P0
 #define PDR05_P1 _pdr05.bit._P1
@@ -14328,7 +14328,7 @@ __IO_EXTERN __io PDR05STR _pdr05;
 #define PDR05_P5 _pdr05.bit._P5
 #define PDR05_P6 _pdr05.bit._P6
 #define PDR05_P7 _pdr05.bit._P7
-__IO_EXTERN __io PDR06STR _pdr06;  
+__IO_EXTERN __io PDR06STR _pdr06;
 #define PDR06 _pdr06.byte
 #define PDR06_P0 _pdr06.bit._P0
 #define PDR06_P1 _pdr06.bit._P1
@@ -14338,7 +14338,7 @@ __IO_EXTERN __io PDR06STR _pdr06;
 #define PDR06_P5 _pdr06.bit._P5
 #define PDR06_P6 _pdr06.bit._P6
 #define PDR06_P7 _pdr06.bit._P7
-__IO_EXTERN __io PDR07STR _pdr07;  
+__IO_EXTERN __io PDR07STR _pdr07;
 #define PDR07 _pdr07.byte
 #define PDR07_P0 _pdr07.bit._P0
 #define PDR07_P1 _pdr07.bit._P1
@@ -14348,7 +14348,7 @@ __IO_EXTERN __io PDR07STR _pdr07;
 #define PDR07_P5 _pdr07.bit._P5
 #define PDR07_P6 _pdr07.bit._P6
 #define PDR07_P7 _pdr07.bit._P7
-__IO_EXTERN __io PDR08STR _pdr08;  
+__IO_EXTERN __io PDR08STR _pdr08;
 #define PDR08 _pdr08.byte
 #define PDR08_P0 _pdr08.bit._P0
 #define PDR08_P1 _pdr08.bit._P1
@@ -14358,7 +14358,7 @@ __IO_EXTERN __io PDR08STR _pdr08;
 #define PDR08_P5 _pdr08.bit._P5
 #define PDR08_P6 _pdr08.bit._P6
 #define PDR08_P7 _pdr08.bit._P7
-__IO_EXTERN __io PDR09STR _pdr09;  
+__IO_EXTERN __io PDR09STR _pdr09;
 #define PDR09 _pdr09.byte
 #define PDR09_P0 _pdr09.bit._P0
 #define PDR09_P1 _pdr09.bit._P1
@@ -14368,11 +14368,11 @@ __IO_EXTERN __io PDR09STR _pdr09;
 #define PDR09_P5 _pdr09.bit._P5
 #define PDR09_P6 _pdr09.bit._P6
 #define PDR09_P7 _pdr09.bit._P7
-__IO_EXTERN __io PDR10STR _pdr10;  
+__IO_EXTERN __io PDR10STR _pdr10;
 #define PDR10 _pdr10.byte
 #define PDR10_P0 _pdr10.bit._P0
 #define PDR10_P1 _pdr10.bit._P1
-__IO_EXTERN __io ADCSSTR _adcs;  
+__IO_EXTERN __io ADCSSTR _adcs;
 #define ADCS _adcs.word
 #define ADCS_resv _adcs.bit._resv
 #define ADCS_S10 _adcs.bit._S10
@@ -14387,14 +14387,14 @@ __IO_EXTERN __io ADCSSTR _adcs;
 #define ADCS_BUSY _adcs.bit._BUSY
 #define ADCS_MD _adcs.bitc._MD
 #define ADCS_STS _adcs.bitc._STS
-__IO_EXTERN __io ADCSLSTR _adcsl;  
+__IO_EXTERN __io ADCSLSTR _adcsl;
 #define ADCSL _adcsl.byte
 #define ADCSL_resv _adcsl.bit._resv
 #define ADCSL_S10 _adcsl.bit._S10
 #define ADCSL_MD0 _adcsl.bit._MD0
 #define ADCSL_MD1 _adcsl.bit._MD1
 #define ADCSL_MD _adcsl.bitc._MD
-__IO_EXTERN __io ADCSHSTR _adcsh;  
+__IO_EXTERN __io ADCSHSTR _adcsh;
 #define ADCSH _adcsh.byte
 #define ADCSH_STRT _adcsh.bit._STRT
 #define ADCSH_STS0 _adcsh.bit._STS0
@@ -14404,7 +14404,7 @@ __IO_EXTERN __io ADCSHSTR _adcsh;
 #define ADCSH_INT _adcsh.bit._INT
 #define ADCSH_BUSY _adcsh.bit._BUSY
 #define ADCSH_STS _adcsh.bitc._STS
-__IO_EXTERN __io ADCRSTR _adcr;  
+__IO_EXTERN __io ADCRSTR _adcr;
 #define ADCR _adcr.word
 #define ADCR_D0 _adcr.bit._D0
 #define ADCR_D1 _adcr.bit._D1
@@ -14417,7 +14417,7 @@ __IO_EXTERN __io ADCRSTR _adcr;
 #define ADCR_D8 _adcr.bit._D8
 #define ADCR_D9 _adcr.bit._D9
 #define ADCR_D _adcr.bitc._D
-__IO_EXTERN __io ADCRLSTR _adcrl;  
+__IO_EXTERN __io ADCRLSTR _adcrl;
 #define ADCRL _adcrl.byte
 #define ADCRL_D0 _adcrl.bit._D0
 #define ADCRL_D1 _adcrl.bit._D1
@@ -14427,11 +14427,11 @@ __IO_EXTERN __io ADCRLSTR _adcrl;
 #define ADCRL_D5 _adcrl.bit._D5
 #define ADCRL_D6 _adcrl.bit._D6
 #define ADCRL_D7 _adcrl.bit._D7
-__IO_EXTERN __io ADCRHSTR _adcrh;  
+__IO_EXTERN __io ADCRHSTR _adcrh;
 #define ADCRH _adcrh.byte
 #define ADCRH_D8 _adcrh.bit._D8
 #define ADCRH_D9 _adcrh.bit._D9
-__IO_EXTERN __io ADSRSTR _adsr;  
+__IO_EXTERN __io ADSRSTR _adsr;
 #define ADSR _adsr.word
 #define ADSR_ANE0 _adsr.bit._ANE0
 #define ADSR_ANE1 _adsr.bit._ANE1
@@ -14449,12 +14449,12 @@ __IO_EXTERN __io ADSRSTR _adsr;
 #define ADSR_ST0 _adsr.bit._ST0
 #define ADSR_ST1 _adsr.bit._ST1
 #define ADSR_ST2 _adsr.bit._ST2
-__IO_EXTERN __io ADECRSTR _adecr;  
+__IO_EXTERN __io ADECRSTR _adecr;
 #define ADECR _adecr.byte
 #define ADECR_ADSEL _adecr.bit._ADSEL
 #define ADECR_HSEL _adecr.bit._HSEL
 #define ADECR_LSEL _adecr.bit._LSEL
-__IO_EXTERN __io TCDT0STR _tcdt0;  
+__IO_EXTERN __io TCDT0STR _tcdt0;
 #define TCDT0 _tcdt0.word
 #define TCDT0_T0 _tcdt0.bit._T0
 #define TCDT0_T1 _tcdt0.bit._T1
@@ -14473,7 +14473,7 @@ __IO_EXTERN __io TCDT0STR _tcdt0;
 #define TCDT0_T14 _tcdt0.bit._T14
 #define TCDT0_T15 _tcdt0.bit._T15
 #define TCDT0_T _tcdt0.bitc._T
-__IO_EXTERN __io TCCS0STR _tccs0;  
+__IO_EXTERN __io TCCS0STR _tccs0;
 #define TCCS0 _tccs0.word
 #define TCCS0_CLK0 _tccs0.bit._CLK0
 #define TCCS0_CLK1 _tccs0.bit._CLK1
@@ -14486,7 +14486,7 @@ __IO_EXTERN __io TCCS0STR _tccs0;
 #define TCCS0_FSEL _tccs0.bit._FSEL
 #define TCCS0_ECKE _tccs0.bit._ECKE
 #define TCCS0_CLK _tccs0.bitc._CLK
-__IO_EXTERN __io TCCSL0STR _tccsl0;  
+__IO_EXTERN __io TCCSL0STR _tccsl0;
 #define TCCSL0 _tccsl0.byte
 #define TCCSL0_CLK0 _tccsl0.bit._CLK0
 #define TCCSL0_CLK1 _tccsl0.bit._CLK1
@@ -14497,11 +14497,11 @@ __IO_EXTERN __io TCCSL0STR _tccsl0;
 #define TCCSL0_IVFE _tccsl0.bit._IVFE
 #define TCCSL0_IVF _tccsl0.bit._IVF
 #define TCCSL0_CLK _tccsl0.bitc._CLK
-__IO_EXTERN __io TCCSH0STR _tccsh0;  
+__IO_EXTERN __io TCCSH0STR _tccsh0;
 #define TCCSH0 _tccsh0.byte
 #define TCCSH0_FSEL _tccsh0.bit._FSEL
 #define TCCSH0_ECKE _tccsh0.bit._ECKE
-__IO_EXTERN __io TCDT1STR _tcdt1;  
+__IO_EXTERN __io TCDT1STR _tcdt1;
 #define TCDT1 _tcdt1.word
 #define TCDT1_T0 _tcdt1.bit._T0
 #define TCDT1_T1 _tcdt1.bit._T1
@@ -14520,7 +14520,7 @@ __IO_EXTERN __io TCDT1STR _tcdt1;
 #define TCDT1_T14 _tcdt1.bit._T14
 #define TCDT1_T15 _tcdt1.bit._T15
 #define TCDT1_T _tcdt1.bitc._T
-__IO_EXTERN __io TCCS1STR _tccs1;  
+__IO_EXTERN __io TCCS1STR _tccs1;
 #define TCCS1 _tccs1.word
 #define TCCS1_CLK0 _tccs1.bit._CLK0
 #define TCCS1_CLK1 _tccs1.bit._CLK1
@@ -14533,7 +14533,7 @@ __IO_EXTERN __io TCCS1STR _tccs1;
 #define TCCS1_FSEL _tccs1.bit._FSEL
 #define TCCS1_ECKE _tccs1.bit._ECKE
 #define TCCS1_CLK _tccs1.bitc._CLK
-__IO_EXTERN __io TCCSL1STR _tccsl1;  
+__IO_EXTERN __io TCCSL1STR _tccsl1;
 #define TCCSL1 _tccsl1.byte
 #define TCCSL1_CLK0 _tccsl1.bit._CLK0
 #define TCCSL1_CLK1 _tccsl1.bit._CLK1
@@ -14544,11 +14544,11 @@ __IO_EXTERN __io TCCSL1STR _tccsl1;
 #define TCCSL1_IVFE _tccsl1.bit._IVFE
 #define TCCSL1_IVF _tccsl1.bit._IVF
 #define TCCSL1_CLK _tccsl1.bitc._CLK
-__IO_EXTERN __io TCCSH1STR _tccsh1;  
+__IO_EXTERN __io TCCSH1STR _tccsh1;
 #define TCCSH1 _tccsh1.byte
 #define TCCSH1_FSEL _tccsh1.bit._FSEL
 #define TCCSH1_ECKE _tccsh1.bit._ECKE
-__IO_EXTERN __io OCS0STR _ocs0;  
+__IO_EXTERN __io OCS0STR _ocs0;
 #define OCS0 _ocs0.byte
 #define OCS0_CST0 _ocs0.bit._CST0
 #define OCS0_CST1 _ocs0.bit._CST1
@@ -14556,7 +14556,7 @@ __IO_EXTERN __io OCS0STR _ocs0;
 #define OCS0_ICE1 _ocs0.bit._ICE1
 #define OCS0_ICP0 _ocs0.bit._ICP0
 #define OCS0_ICP1 _ocs0.bit._ICP1
-__IO_EXTERN __io OCS1STR _ocs1;  
+__IO_EXTERN __io OCS1STR _ocs1;
 #define OCS1 _ocs1.byte
 #define OCS1_OTD0 _ocs1.bit._OTD0
 #define OCS1_OTD1 _ocs1.bit._OTD1
@@ -14564,7 +14564,7 @@ __IO_EXTERN __io OCS1STR _ocs1;
 #define OCS1_OTE1 _ocs1.bit._OTE1
 #define OCS1_CMOD0 _ocs1.bit._CMOD0
 #define OCS1_CMOD1 _ocs1.bit._CMOD1
-__IO_EXTERN __io OCCP0STR _occp0;  
+__IO_EXTERN __io OCCP0STR _occp0;
 #define OCCP0 _occp0.word
 #define OCCP0_C00 _occp0.bit._C00
 #define OCCP0_C01 _occp0.bit._C01
@@ -14583,7 +14583,7 @@ __IO_EXTERN __io OCCP0STR _occp0;
 #define OCCP0_C14 _occp0.bit._C14
 #define OCCP0_C15 _occp0.bit._C15
 #define OCCP0_C0 _occp0.bitc._C0
-__IO_EXTERN __io OCCP1STR _occp1;  
+__IO_EXTERN __io OCCP1STR _occp1;
 #define OCCP1 _occp1.word
 #define OCCP1_C00 _occp1.bit._C00
 #define OCCP1_C01 _occp1.bit._C01
@@ -14602,7 +14602,7 @@ __IO_EXTERN __io OCCP1STR _occp1;
 #define OCCP1_C14 _occp1.bit._C14
 #define OCCP1_C15 _occp1.bit._C15
 #define OCCP1_C0 _occp1.bitc._C0
-__IO_EXTERN __io OCS2STR _ocs2;  
+__IO_EXTERN __io OCS2STR _ocs2;
 #define OCS2 _ocs2.byte
 #define OCS2_CST2 _ocs2.bit._CST2
 #define OCS2_CST3 _ocs2.bit._CST3
@@ -14610,7 +14610,7 @@ __IO_EXTERN __io OCS2STR _ocs2;
 #define OCS2_ICE3 _ocs2.bit._ICE3
 #define OCS2_ICP2 _ocs2.bit._ICP2
 #define OCS2_ICP3 _ocs2.bit._ICP3
-__IO_EXTERN __io OCS3STR _ocs3;  
+__IO_EXTERN __io OCS3STR _ocs3;
 #define OCS3 _ocs3.byte
 #define OCS3_OTD2 _ocs3.bit._OTD2
 #define OCS3_OTD3 _ocs3.bit._OTD3
@@ -14618,7 +14618,7 @@ __IO_EXTERN __io OCS3STR _ocs3;
 #define OCS3_OTE3 _ocs3.bit._OTE3
 #define OCS3_CMOD0 _ocs3.bit._CMOD0
 #define OCS3_CMOD1 _ocs3.bit._CMOD1
-__IO_EXTERN __io OCCP2STR _occp2;  
+__IO_EXTERN __io OCCP2STR _occp2;
 #define OCCP2 _occp2.word
 #define OCCP2_C00 _occp2.bit._C00
 #define OCCP2_C01 _occp2.bit._C01
@@ -14637,7 +14637,7 @@ __IO_EXTERN __io OCCP2STR _occp2;
 #define OCCP2_C14 _occp2.bit._C14
 #define OCCP2_C15 _occp2.bit._C15
 #define OCCP2_C0 _occp2.bitc._C0
-__IO_EXTERN __io OCCP3STR _occp3;  
+__IO_EXTERN __io OCCP3STR _occp3;
 #define OCCP3 _occp3.word
 #define OCCP3_C00 _occp3.bit._C00
 #define OCCP3_C01 _occp3.bit._C01
@@ -14656,7 +14656,7 @@ __IO_EXTERN __io OCCP3STR _occp3;
 #define OCCP3_C14 _occp3.bit._C14
 #define OCCP3_C15 _occp3.bit._C15
 #define OCCP3_C0 _occp3.bitc._C0
-__IO_EXTERN __io OCS4STR _ocs4;  
+__IO_EXTERN __io OCS4STR _ocs4;
 #define OCS4 _ocs4.byte
 #define OCS4_CST4 _ocs4.bit._CST4
 #define OCS4_CST5 _ocs4.bit._CST5
@@ -14664,7 +14664,7 @@ __IO_EXTERN __io OCS4STR _ocs4;
 #define OCS4_ICE5 _ocs4.bit._ICE5
 #define OCS4_ICP4 _ocs4.bit._ICP4
 #define OCS4_ICP5 _ocs4.bit._ICP5
-__IO_EXTERN __io OCS5STR _ocs5;  
+__IO_EXTERN __io OCS5STR _ocs5;
 #define OCS5 _ocs5.byte
 #define OCS5_OTD4 _ocs5.bit._OTD4
 #define OCS5_OTD5 _ocs5.bit._OTD5
@@ -14672,7 +14672,7 @@ __IO_EXTERN __io OCS5STR _ocs5;
 #define OCS5_OTE5 _ocs5.bit._OTE5
 #define OCS5_CMOD0 _ocs5.bit._CMOD0
 #define OCS5_CMOD1 _ocs5.bit._CMOD1
-__IO_EXTERN __io OCCP4STR _occp4;  
+__IO_EXTERN __io OCCP4STR _occp4;
 #define OCCP4 _occp4.word
 #define OCCP4_C00 _occp4.bit._C00
 #define OCCP4_C01 _occp4.bit._C01
@@ -14691,7 +14691,7 @@ __IO_EXTERN __io OCCP4STR _occp4;
 #define OCCP4_C14 _occp4.bit._C14
 #define OCCP4_C15 _occp4.bit._C15
 #define OCCP4_C0 _occp4.bitc._C0
-__IO_EXTERN __io OCCP5STR _occp5;  
+__IO_EXTERN __io OCCP5STR _occp5;
 #define OCCP5 _occp5.word
 #define OCCP5_C00 _occp5.bit._C00
 #define OCCP5_C01 _occp5.bit._C01
@@ -14710,7 +14710,7 @@ __IO_EXTERN __io OCCP5STR _occp5;
 #define OCCP5_C14 _occp5.bit._C14
 #define OCCP5_C15 _occp5.bit._C15
 #define OCCP5_C0 _occp5.bitc._C0
-__IO_EXTERN __io OCS6STR _ocs6;  
+__IO_EXTERN __io OCS6STR _ocs6;
 #define OCS6 _ocs6.byte
 #define OCS6_CST6 _ocs6.bit._CST6
 #define OCS6_CST7 _ocs6.bit._CST7
@@ -14718,7 +14718,7 @@ __IO_EXTERN __io OCS6STR _ocs6;
 #define OCS6_ICE7 _ocs6.bit._ICE7
 #define OCS6_ICP6 _ocs6.bit._ICP6
 #define OCS6_ICP7 _ocs6.bit._ICP7
-__IO_EXTERN __io OCS7STR _ocs7;  
+__IO_EXTERN __io OCS7STR _ocs7;
 #define OCS7 _ocs7.byte
 #define OCS7_OTD6 _ocs7.bit._OTD6
 #define OCS7_OTD7 _ocs7.bit._OTD7
@@ -14726,7 +14726,7 @@ __IO_EXTERN __io OCS7STR _ocs7;
 #define OCS7_OTE7 _ocs7.bit._OTE7
 #define OCS7_CMOD0 _ocs7.bit._CMOD0
 #define OCS7_CMOD1 _ocs7.bit._CMOD1
-__IO_EXTERN __io OCCP6STR _occp6;  
+__IO_EXTERN __io OCCP6STR _occp6;
 #define OCCP6 _occp6.word
 #define OCCP6_C00 _occp6.bit._C00
 #define OCCP6_C01 _occp6.bit._C01
@@ -14745,7 +14745,7 @@ __IO_EXTERN __io OCCP6STR _occp6;
 #define OCCP6_C14 _occp6.bit._C14
 #define OCCP6_C15 _occp6.bit._C15
 #define OCCP6_C0 _occp6.bitc._C0
-__IO_EXTERN __io OCCP7STR _occp7;  
+__IO_EXTERN __io OCCP7STR _occp7;
 #define OCCP7 _occp7.word
 #define OCCP7_C00 _occp7.bit._C00
 #define OCCP7_C01 _occp7.bit._C01
@@ -14764,7 +14764,7 @@ __IO_EXTERN __io OCCP7STR _occp7;
 #define OCCP7_C14 _occp7.bit._C14
 #define OCCP7_C15 _occp7.bit._C15
 #define OCCP7_C0 _occp7.bitc._C0
-__IO_EXTERN __io ICS01STR _ics01;  
+__IO_EXTERN __io ICS01STR _ics01;
 #define ICS01 _ics01.byte
 #define ICS01_EG00 _ics01.bit._EG00
 #define ICS01_EG01 _ics01.bit._EG01
@@ -14776,13 +14776,13 @@ __IO_EXTERN __io ICS01STR _ics01;
 #define ICS01_ICP1 _ics01.bit._ICP1
 #define ICS01_EG0 _ics01.bitc._EG0
 #define ICS01_EG1 _ics01.bitc._EG1
-__IO_EXTERN __io ICE01STR _ice01;  
+__IO_EXTERN __io ICE01STR _ice01;
 #define ICE01 _ice01.byte
 #define ICE01_IEI0 _ice01.bit._IEI0
 #define ICE01_IEI1 _ice01.bit._IEI1
 #define ICE01_ICUS0 _ice01.bit._ICUS0
 #define ICE01_ICUS1 _ice01.bit._ICUS1
-__IO_EXTERN __io IPCP0STR _ipcp0;  
+__IO_EXTERN __io IPCP0STR _ipcp0;
 #define IPCP0 _ipcp0.word
 #define IPCP0_CP00 _ipcp0.bit._CP00
 #define IPCP0_CP01 _ipcp0.bit._CP01
@@ -14801,7 +14801,7 @@ __IO_EXTERN __io IPCP0STR _ipcp0;
 #define IPCP0_CP14 _ipcp0.bit._CP14
 #define IPCP0_CP15 _ipcp0.bit._CP15
 #define IPCP0_CP0 _ipcp0.bitc._CP0
-__IO_EXTERN __io IPCPL0STR _ipcpl0;  
+__IO_EXTERN __io IPCPL0STR _ipcpl0;
 #define IPCPL0 _ipcpl0.byte
 #define IPCPL0_CP00 _ipcpl0.bit._CP00
 #define IPCPL0_CP01 _ipcpl0.bit._CP01
@@ -14811,7 +14811,7 @@ __IO_EXTERN __io IPCPL0STR _ipcpl0;
 #define IPCPL0_CP05 _ipcpl0.bit._CP05
 #define IPCPL0_CP06 _ipcpl0.bit._CP06
 #define IPCPL0_CP07 _ipcpl0.bit._CP07
-__IO_EXTERN __io IPCPH0STR _ipcph0;  
+__IO_EXTERN __io IPCPH0STR _ipcph0;
 #define IPCPH0 _ipcph0.byte
 #define IPCPH0_CP08 _ipcph0.bit._CP08
 #define IPCPH0_CP09 _ipcph0.bit._CP09
@@ -14821,7 +14821,7 @@ __IO_EXTERN __io IPCPH0STR _ipcph0;
 #define IPCPH0_CP13 _ipcph0.bit._CP13
 #define IPCPH0_CP14 _ipcph0.bit._CP14
 #define IPCPH0_CP15 _ipcph0.bit._CP15
-__IO_EXTERN __io IPCP1STR _ipcp1;  
+__IO_EXTERN __io IPCP1STR _ipcp1;
 #define IPCP1 _ipcp1.word
 #define IPCP1_CP00 _ipcp1.bit._CP00
 #define IPCP1_CP01 _ipcp1.bit._CP01
@@ -14840,7 +14840,7 @@ __IO_EXTERN __io IPCP1STR _ipcp1;
 #define IPCP1_CP14 _ipcp1.bit._CP14
 #define IPCP1_CP15 _ipcp1.bit._CP15
 #define IPCP1_CP0 _ipcp1.bitc._CP0
-__IO_EXTERN __io IPCPL1STR _ipcpl1;  
+__IO_EXTERN __io IPCPL1STR _ipcpl1;
 #define IPCPL1 _ipcpl1.byte
 #define IPCPL1_CP00 _ipcpl1.bit._CP00
 #define IPCPL1_CP01 _ipcpl1.bit._CP01
@@ -14850,7 +14850,7 @@ __IO_EXTERN __io IPCPL1STR _ipcpl1;
 #define IPCPL1_CP05 _ipcpl1.bit._CP05
 #define IPCPL1_CP06 _ipcpl1.bit._CP06
 #define IPCPL1_CP07 _ipcpl1.bit._CP07
-__IO_EXTERN __io IPCPH1STR _ipcph1;  
+__IO_EXTERN __io IPCPH1STR _ipcph1;
 #define IPCPH1 _ipcph1.byte
 #define IPCPH1_CP08 _ipcph1.bit._CP08
 #define IPCPH1_CP09 _ipcph1.bit._CP09
@@ -14860,7 +14860,7 @@ __IO_EXTERN __io IPCPH1STR _ipcph1;
 #define IPCPH1_CP13 _ipcph1.bit._CP13
 #define IPCPH1_CP14 _ipcph1.bit._CP14
 #define IPCPH1_CP15 _ipcph1.bit._CP15
-__IO_EXTERN __io ICS23STR _ics23;  
+__IO_EXTERN __io ICS23STR _ics23;
 #define ICS23 _ics23.byte
 #define ICS23_EG20 _ics23.bit._EG20
 #define ICS23_EG21 _ics23.bit._EG21
@@ -14872,11 +14872,11 @@ __IO_EXTERN __io ICS23STR _ics23;
 #define ICS23_ICP3 _ics23.bit._ICP3
 #define ICS23_EG2 _ics23.bitc._EG2
 #define ICS23_EG3 _ics23.bitc._EG3
-__IO_EXTERN __io ICE23STR _ice23;  
+__IO_EXTERN __io ICE23STR _ice23;
 #define ICE23 _ice23.byte
 #define ICE23_IEI2 _ice23.bit._IEI2
 #define ICE23_IEI3 _ice23.bit._IEI3
-__IO_EXTERN __io IPCP2STR _ipcp2;  
+__IO_EXTERN __io IPCP2STR _ipcp2;
 #define IPCP2 _ipcp2.word
 #define IPCP2_CP00 _ipcp2.bit._CP00
 #define IPCP2_CP01 _ipcp2.bit._CP01
@@ -14895,7 +14895,7 @@ __IO_EXTERN __io IPCP2STR _ipcp2;
 #define IPCP2_CP14 _ipcp2.bit._CP14
 #define IPCP2_CP15 _ipcp2.bit._CP15
 #define IPCP2_CP0 _ipcp2.bitc._CP0
-__IO_EXTERN __io IPCPL2STR _ipcpl2;  
+__IO_EXTERN __io IPCPL2STR _ipcpl2;
 #define IPCPL2 _ipcpl2.byte
 #define IPCPL2_CP00 _ipcpl2.bit._CP00
 #define IPCPL2_CP01 _ipcpl2.bit._CP01
@@ -14905,7 +14905,7 @@ __IO_EXTERN __io IPCPL2STR _ipcpl2;
 #define IPCPL2_CP05 _ipcpl2.bit._CP05
 #define IPCPL2_CP06 _ipcpl2.bit._CP06
 #define IPCPL2_CP07 _ipcpl2.bit._CP07
-__IO_EXTERN __io IPCPH2STR _ipcph2;  
+__IO_EXTERN __io IPCPH2STR _ipcph2;
 #define IPCPH2 _ipcph2.byte
 #define IPCPH2_CP08 _ipcph2.bit._CP08
 #define IPCPH2_CP09 _ipcph2.bit._CP09
@@ -14915,7 +14915,7 @@ __IO_EXTERN __io IPCPH2STR _ipcph2;
 #define IPCPH2_CP13 _ipcph2.bit._CP13
 #define IPCPH2_CP14 _ipcph2.bit._CP14
 #define IPCPH2_CP15 _ipcph2.bit._CP15
-__IO_EXTERN __io IPCP3STR _ipcp3;  
+__IO_EXTERN __io IPCP3STR _ipcp3;
 #define IPCP3 _ipcp3.word
 #define IPCP3_CP00 _ipcp3.bit._CP00
 #define IPCP3_CP01 _ipcp3.bit._CP01
@@ -14934,7 +14934,7 @@ __IO_EXTERN __io IPCP3STR _ipcp3;
 #define IPCP3_CP14 _ipcp3.bit._CP14
 #define IPCP3_CP15 _ipcp3.bit._CP15
 #define IPCP3_CP0 _ipcp3.bitc._CP0
-__IO_EXTERN __io IPCPL3STR _ipcpl3;  
+__IO_EXTERN __io IPCPL3STR _ipcpl3;
 #define IPCPL3 _ipcpl3.byte
 #define IPCPL3_CP00 _ipcpl3.bit._CP00
 #define IPCPL3_CP01 _ipcpl3.bit._CP01
@@ -14944,7 +14944,7 @@ __IO_EXTERN __io IPCPL3STR _ipcpl3;
 #define IPCPL3_CP05 _ipcpl3.bit._CP05
 #define IPCPL3_CP06 _ipcpl3.bit._CP06
 #define IPCPL3_CP07 _ipcpl3.bit._CP07
-__IO_EXTERN __io IPCPH3STR _ipcph3;  
+__IO_EXTERN __io IPCPH3STR _ipcph3;
 #define IPCPH3 _ipcph3.byte
 #define IPCPH3_CP08 _ipcph3.bit._CP08
 #define IPCPH3_CP09 _ipcph3.bit._CP09
@@ -14954,7 +14954,7 @@ __IO_EXTERN __io IPCPH3STR _ipcph3;
 #define IPCPH3_CP13 _ipcph3.bit._CP13
 #define IPCPH3_CP14 _ipcph3.bit._CP14
 #define IPCPH3_CP15 _ipcph3.bit._CP15
-__IO_EXTERN __io ICS45STR _ics45;  
+__IO_EXTERN __io ICS45STR _ics45;
 #define ICS45 _ics45.byte
 #define ICS45_EG40 _ics45.bit._EG40
 #define ICS45_EG41 _ics45.bit._EG41
@@ -14966,13 +14966,13 @@ __IO_EXTERN __io ICS45STR _ics45;
 #define ICS45_ICP5 _ics45.bit._ICP5
 #define ICS45_EG4 _ics45.bitc._EG4
 #define ICS45_EG5 _ics45.bitc._EG5
-__IO_EXTERN __io ICE45STR _ice45;  
+__IO_EXTERN __io ICE45STR _ice45;
 #define ICE45 _ice45.byte
 #define ICE45_IEI4 _ice45.bit._IEI4
 #define ICE45_IEI5 _ice45.bit._IEI5
 #define ICE45_ICUS4 _ice45.bit._ICUS4
 #define ICE45_ICUS5 _ice45.bit._ICUS5
-__IO_EXTERN __io IPCP4STR _ipcp4;  
+__IO_EXTERN __io IPCP4STR _ipcp4;
 #define IPCP4 _ipcp4.word
 #define IPCP4_CP00 _ipcp4.bit._CP00
 #define IPCP4_CP01 _ipcp4.bit._CP01
@@ -14991,7 +14991,7 @@ __IO_EXTERN __io IPCP4STR _ipcp4;
 #define IPCP4_CP14 _ipcp4.bit._CP14
 #define IPCP4_CP15 _ipcp4.bit._CP15
 #define IPCP4_CP0 _ipcp4.bitc._CP0
-__IO_EXTERN __io IPCPL4STR _ipcpl4;  
+__IO_EXTERN __io IPCPL4STR _ipcpl4;
 #define IPCPL4 _ipcpl4.byte
 #define IPCPL4_CP00 _ipcpl4.bit._CP00
 #define IPCPL4_CP01 _ipcpl4.bit._CP01
@@ -15001,7 +15001,7 @@ __IO_EXTERN __io IPCPL4STR _ipcpl4;
 #define IPCPL4_CP05 _ipcpl4.bit._CP05
 #define IPCPL4_CP06 _ipcpl4.bit._CP06
 #define IPCPL4_CP07 _ipcpl4.bit._CP07
-__IO_EXTERN __io IPCPH4STR _ipcph4;  
+__IO_EXTERN __io IPCPH4STR _ipcph4;
 #define IPCPH4 _ipcph4.byte
 #define IPCPH4_CP08 _ipcph4.bit._CP08
 #define IPCPH4_CP09 _ipcph4.bit._CP09
@@ -15011,7 +15011,7 @@ __IO_EXTERN __io IPCPH4STR _ipcph4;
 #define IPCPH4_CP13 _ipcph4.bit._CP13
 #define IPCPH4_CP14 _ipcph4.bit._CP14
 #define IPCPH4_CP15 _ipcph4.bit._CP15
-__IO_EXTERN __io IPCP5STR _ipcp5;  
+__IO_EXTERN __io IPCP5STR _ipcp5;
 #define IPCP5 _ipcp5.word
 #define IPCP5_CP00 _ipcp5.bit._CP00
 #define IPCP5_CP01 _ipcp5.bit._CP01
@@ -15030,7 +15030,7 @@ __IO_EXTERN __io IPCP5STR _ipcp5;
 #define IPCP5_CP14 _ipcp5.bit._CP14
 #define IPCP5_CP15 _ipcp5.bit._CP15
 #define IPCP5_CP0 _ipcp5.bitc._CP0
-__IO_EXTERN __io IPCPL5STR _ipcpl5;  
+__IO_EXTERN __io IPCPL5STR _ipcpl5;
 #define IPCPL5 _ipcpl5.byte
 #define IPCPL5_CP00 _ipcpl5.bit._CP00
 #define IPCPL5_CP01 _ipcpl5.bit._CP01
@@ -15040,7 +15040,7 @@ __IO_EXTERN __io IPCPL5STR _ipcpl5;
 #define IPCPL5_CP05 _ipcpl5.bit._CP05
 #define IPCPL5_CP06 _ipcpl5.bit._CP06
 #define IPCPL5_CP07 _ipcpl5.bit._CP07
-__IO_EXTERN __io IPCPH5STR _ipcph5;  
+__IO_EXTERN __io IPCPH5STR _ipcph5;
 #define IPCPH5 _ipcph5.byte
 #define IPCPH5_CP08 _ipcph5.bit._CP08
 #define IPCPH5_CP09 _ipcph5.bit._CP09
@@ -15050,7 +15050,7 @@ __IO_EXTERN __io IPCPH5STR _ipcph5;
 #define IPCPH5_CP13 _ipcph5.bit._CP13
 #define IPCPH5_CP14 _ipcph5.bit._CP14
 #define IPCPH5_CP15 _ipcph5.bit._CP15
-__IO_EXTERN __io ICS67STR _ics67;  
+__IO_EXTERN __io ICS67STR _ics67;
 #define ICS67 _ics67.byte
 #define ICS67_EG60 _ics67.bit._EG60
 #define ICS67_EG61 _ics67.bit._EG61
@@ -15062,13 +15062,13 @@ __IO_EXTERN __io ICS67STR _ics67;
 #define ICS67_ICP7 _ics67.bit._ICP7
 #define ICS67_EG6 _ics67.bitc._EG6
 #define ICS67_EG7 _ics67.bitc._EG7
-__IO_EXTERN __io ICE67STR _ice67;  
+__IO_EXTERN __io ICE67STR _ice67;
 #define ICE67 _ice67.byte
 #define ICE67_IEI6 _ice67.bit._IEI6
 #define ICE67_IEI7 _ice67.bit._IEI7
 #define ICE67_ICUS6 _ice67.bit._ICUS6
 #define ICE67_ICUS7 _ice67.bit._ICUS7
-__IO_EXTERN __io IPCP6STR _ipcp6;  
+__IO_EXTERN __io IPCP6STR _ipcp6;
 #define IPCP6 _ipcp6.word
 #define IPCP6_CP00 _ipcp6.bit._CP00
 #define IPCP6_CP01 _ipcp6.bit._CP01
@@ -15087,7 +15087,7 @@ __IO_EXTERN __io IPCP6STR _ipcp6;
 #define IPCP6_CP14 _ipcp6.bit._CP14
 #define IPCP6_CP15 _ipcp6.bit._CP15
 #define IPCP6_CP0 _ipcp6.bitc._CP0
-__IO_EXTERN __io IPCPL6STR _ipcpl6;  
+__IO_EXTERN __io IPCPL6STR _ipcpl6;
 #define IPCPL6 _ipcpl6.byte
 #define IPCPL6_CP00 _ipcpl6.bit._CP00
 #define IPCPL6_CP01 _ipcpl6.bit._CP01
@@ -15097,7 +15097,7 @@ __IO_EXTERN __io IPCPL6STR _ipcpl6;
 #define IPCPL6_CP05 _ipcpl6.bit._CP05
 #define IPCPL6_CP06 _ipcpl6.bit._CP06
 #define IPCPL6_CP07 _ipcpl6.bit._CP07
-__IO_EXTERN __io IPCPH6STR _ipcph6;  
+__IO_EXTERN __io IPCPH6STR _ipcph6;
 #define IPCPH6 _ipcph6.byte
 #define IPCPH6_CP08 _ipcph6.bit._CP08
 #define IPCPH6_CP09 _ipcph6.bit._CP09
@@ -15107,7 +15107,7 @@ __IO_EXTERN __io IPCPH6STR _ipcph6;
 #define IPCPH6_CP13 _ipcph6.bit._CP13
 #define IPCPH6_CP14 _ipcph6.bit._CP14
 #define IPCPH6_CP15 _ipcph6.bit._CP15
-__IO_EXTERN __io IPCP7STR _ipcp7;  
+__IO_EXTERN __io IPCP7STR _ipcp7;
 #define IPCP7 _ipcp7.word
 #define IPCP7_CP00 _ipcp7.bit._CP00
 #define IPCP7_CP01 _ipcp7.bit._CP01
@@ -15126,7 +15126,7 @@ __IO_EXTERN __io IPCP7STR _ipcp7;
 #define IPCP7_CP14 _ipcp7.bit._CP14
 #define IPCP7_CP15 _ipcp7.bit._CP15
 #define IPCP7_CP0 _ipcp7.bitc._CP0
-__IO_EXTERN __io IPCPL7STR _ipcpl7;  
+__IO_EXTERN __io IPCPL7STR _ipcpl7;
 #define IPCPL7 _ipcpl7.byte
 #define IPCPL7_CP00 _ipcpl7.bit._CP00
 #define IPCPL7_CP01 _ipcpl7.bit._CP01
@@ -15136,7 +15136,7 @@ __IO_EXTERN __io IPCPL7STR _ipcpl7;
 #define IPCPL7_CP05 _ipcpl7.bit._CP05
 #define IPCPL7_CP06 _ipcpl7.bit._CP06
 #define IPCPL7_CP07 _ipcpl7.bit._CP07
-__IO_EXTERN __io IPCPH7STR _ipcph7;  
+__IO_EXTERN __io IPCPH7STR _ipcph7;
 #define IPCPH7 _ipcph7.byte
 #define IPCPH7_CP08 _ipcph7.bit._CP08
 #define IPCPH7_CP09 _ipcph7.bit._CP09
@@ -15146,7 +15146,7 @@ __IO_EXTERN __io IPCPH7STR _ipcph7;
 #define IPCPH7_CP13 _ipcph7.bit._CP13
 #define IPCPH7_CP14 _ipcph7.bit._CP14
 #define IPCPH7_CP15 _ipcph7.bit._CP15
-__IO_EXTERN __io ENIR0STR _enir0;  
+__IO_EXTERN __io ENIR0STR _enir0;
 #define ENIR0 _enir0.byte
 #define ENIR0_EN0 _enir0.bit._EN0
 #define ENIR0_EN1 _enir0.bit._EN1
@@ -15156,7 +15156,7 @@ __IO_EXTERN __io ENIR0STR _enir0;
 #define ENIR0_EN5 _enir0.bit._EN5
 #define ENIR0_EN6 _enir0.bit._EN6
 #define ENIR0_EN7 _enir0.bit._EN7
-__IO_EXTERN __io EIRR0STR _eirr0;  
+__IO_EXTERN __io EIRR0STR _eirr0;
 #define EIRR0 _eirr0.byte
 #define EIRR0_ER0 _eirr0.bit._ER0
 #define EIRR0_ER1 _eirr0.bit._ER1
@@ -15166,7 +15166,7 @@ __IO_EXTERN __io EIRR0STR _eirr0;
 #define EIRR0_ER5 _eirr0.bit._ER5
 #define EIRR0_ER6 _eirr0.bit._ER6
 #define EIRR0_ER7 _eirr0.bit._ER7
-__IO_EXTERN __io ELVR0STR _elvr0;  
+__IO_EXTERN __io ELVR0STR _elvr0;
 #define ELVR0 _elvr0.word
 #define ELVR0_LA0 _elvr0.bit._LA0
 #define ELVR0_LB0 _elvr0.bit._LB0
@@ -15184,7 +15184,7 @@ __IO_EXTERN __io ELVR0STR _elvr0;
 #define ELVR0_LB6 _elvr0.bit._LB6
 #define ELVR0_LA7 _elvr0.bit._LA7
 #define ELVR0_LB7 _elvr0.bit._LB7
-__IO_EXTERN __io ELVRL0STR _elvrl0;  
+__IO_EXTERN __io ELVRL0STR _elvrl0;
 #define ELVRL0 _elvrl0.byte
 #define ELVRL0_LA0 _elvrl0.bit._LA0
 #define ELVRL0_LB0 _elvrl0.bit._LB0
@@ -15194,7 +15194,7 @@ __IO_EXTERN __io ELVRL0STR _elvrl0;
 #define ELVRL0_LB2 _elvrl0.bit._LB2
 #define ELVRL0_LA3 _elvrl0.bit._LA3
 #define ELVRL0_LB3 _elvrl0.bit._LB3
-__IO_EXTERN __io ELVRH0STR _elvrh0;  
+__IO_EXTERN __io ELVRH0STR _elvrh0;
 #define ELVRH0 _elvrh0.byte
 #define ELVRH0_LA4 _elvrh0.bit._LA4
 #define ELVRH0_LB4 _elvrh0.bit._LB4
@@ -15204,7 +15204,7 @@ __IO_EXTERN __io ELVRH0STR _elvrh0;
 #define ELVRH0_LB6 _elvrh0.bit._LB6
 #define ELVRH0_LA7 _elvrh0.bit._LA7
 #define ELVRH0_LB7 _elvrh0.bit._LB7
-__IO_EXTERN __io ENIR1STR _enir1;  
+__IO_EXTERN __io ENIR1STR _enir1;
 #define ENIR1 _enir1.byte
 #define ENIR1_EN8 _enir1.bit._EN8
 #define ENIR1_EN9 _enir1.bit._EN9
@@ -15214,7 +15214,7 @@ __IO_EXTERN __io ENIR1STR _enir1;
 #define ENIR1_EN13 _enir1.bit._EN13
 #define ENIR1_EN14 _enir1.bit._EN14
 #define ENIR1_EN15 _enir1.bit._EN15
-__IO_EXTERN __io EIRR1STR _eirr1;  
+__IO_EXTERN __io EIRR1STR _eirr1;
 #define EIRR1 _eirr1.byte
 #define EIRR1_ER8 _eirr1.bit._ER8
 #define EIRR1_ER9 _eirr1.bit._ER9
@@ -15224,7 +15224,7 @@ __IO_EXTERN __io EIRR1STR _eirr1;
 #define EIRR1_ER13 _eirr1.bit._ER13
 #define EIRR1_ER14 _eirr1.bit._ER14
 #define EIRR1_ER15 _eirr1.bit._ER15
-__IO_EXTERN __io ELVR1STR _elvr1;  
+__IO_EXTERN __io ELVR1STR _elvr1;
 #define ELVR1 _elvr1.word
 #define ELVR1_LA8 _elvr1.bit._LA8
 #define ELVR1_LB8 _elvr1.bit._LB8
@@ -15242,7 +15242,7 @@ __IO_EXTERN __io ELVR1STR _elvr1;
 #define ELVR1_LB14 _elvr1.bit._LB14
 #define ELVR1_LA15 _elvr1.bit._LA15
 #define ELVR1_LB15 _elvr1.bit._LB15
-__IO_EXTERN __io ELVRL1STR _elvrl1;  
+__IO_EXTERN __io ELVRL1STR _elvrl1;
 #define ELVRL1 _elvrl1.byte
 #define ELVRL1_LA8 _elvrl1.bit._LA8
 #define ELVRL1_LB8 _elvrl1.bit._LB8
@@ -15252,7 +15252,7 @@ __IO_EXTERN __io ELVRL1STR _elvrl1;
 #define ELVRL1_LB10 _elvrl1.bit._LB10
 #define ELVRL1_LA11 _elvrl1.bit._LA11
 #define ELVRL1_LB11 _elvrl1.bit._LB11
-__IO_EXTERN __io ELVRH1STR _elvrh1;  
+__IO_EXTERN __io ELVRH1STR _elvrh1;
 #define ELVRH1 _elvrh1.byte
 #define ELVRH1_LA12 _elvrh1.bit._LA12
 #define ELVRH1_LB12 _elvrh1.bit._LB12
@@ -15262,7 +15262,7 @@ __IO_EXTERN __io ELVRH1STR _elvrh1;
 #define ELVRH1_LB14 _elvrh1.bit._LB14
 #define ELVRH1_LA15 _elvrh1.bit._LA15
 #define ELVRH1_LB15 _elvrh1.bit._LB15
-__IO_EXTERN __io TMCSR0STR _tmcsr0;  
+__IO_EXTERN __io TMCSR0STR _tmcsr0;
 #define TMCSR0 _tmcsr0.word
 #define TMCSR0_TRG _tmcsr0.bit._TRG
 #define TMCSR0_CNTE _tmcsr0.bit._CNTE
@@ -15278,7 +15278,7 @@ __IO_EXTERN __io TMCSR0STR _tmcsr0;
 #define TMCSR0_CSL1 _tmcsr0.bit._CSL1
 #define TMCSR0_FSEL _tmcsr0.bit._FSEL
 #define TMCSR0_CSL _tmcsr0.bitc._CSL
-__IO_EXTERN __io TMCSRL0STR _tmcsrl0;  
+__IO_EXTERN __io TMCSRL0STR _tmcsrl0;
 #define TMCSRL0 _tmcsrl0.byte
 #define TMCSRL0_TRG _tmcsrl0.bit._TRG
 #define TMCSRL0_CNTE _tmcsrl0.bit._CNTE
@@ -15288,7 +15288,7 @@ __IO_EXTERN __io TMCSRL0STR _tmcsrl0;
 #define TMCSRL0_OUTL _tmcsrl0.bit._OUTL
 #define TMCSRL0_OUTE _tmcsrl0.bit._OUTE
 #define TMCSRL0_MOD0 _tmcsrl0.bit._MOD0
-__IO_EXTERN __io TMCSRH0STR _tmcsrh0;  
+__IO_EXTERN __io TMCSRH0STR _tmcsrh0;
 #define TMCSRH0 _tmcsrh0.byte
 #define TMCSRH0_MOD1 _tmcsrh0.bit._MOD1
 #define TMCSRH0_MOD2 _tmcsrh0.bit._MOD2
@@ -15297,10 +15297,10 @@ __IO_EXTERN __io TMCSRH0STR _tmcsrh0;
 #define TMCSRH0_FSEL _tmcsrh0.bit._FSEL
 #define TMCSRH0_CSL _tmcsrh0.bitc._CSL
 __IO_EXTERN __io IO_WORD _tmrlr0;
-#define TMRLR0 _tmrlr0   
+#define TMRLR0 _tmrlr0
 __IO_EXTERN __io IO_WORD _tmr0;
-#define TMR0 _tmr0   
-__IO_EXTERN __io TMCSR1STR _tmcsr1;  
+#define TMR0 _tmr0
+__IO_EXTERN __io TMCSR1STR _tmcsr1;
 #define TMCSR1 _tmcsr1.word
 #define TMCSR1_TRG _tmcsr1.bit._TRG
 #define TMCSR1_CNTE _tmcsr1.bit._CNTE
@@ -15316,7 +15316,7 @@ __IO_EXTERN __io TMCSR1STR _tmcsr1;
 #define TMCSR1_CSL1 _tmcsr1.bit._CSL1
 #define TMCSR1_FSEL _tmcsr1.bit._FSEL
 #define TMCSR1_CSL _tmcsr1.bitc._CSL
-__IO_EXTERN __io TMCSRL1STR _tmcsrl1;  
+__IO_EXTERN __io TMCSRL1STR _tmcsrl1;
 #define TMCSRL1 _tmcsrl1.byte
 #define TMCSRL1_TRG _tmcsrl1.bit._TRG
 #define TMCSRL1_CNTE _tmcsrl1.bit._CNTE
@@ -15326,7 +15326,7 @@ __IO_EXTERN __io TMCSRL1STR _tmcsrl1;
 #define TMCSRL1_OUTL _tmcsrl1.bit._OUTL
 #define TMCSRL1_OUTE _tmcsrl1.bit._OUTE
 #define TMCSRL1_MOD0 _tmcsrl1.bit._MOD0
-__IO_EXTERN __io TMCSRH1STR _tmcsrh1;  
+__IO_EXTERN __io TMCSRH1STR _tmcsrh1;
 #define TMCSRH1 _tmcsrh1.byte
 #define TMCSRH1_MOD1 _tmcsrh1.bit._MOD1
 #define TMCSRH1_MOD2 _tmcsrh1.bit._MOD2
@@ -15335,10 +15335,10 @@ __IO_EXTERN __io TMCSRH1STR _tmcsrh1;
 #define TMCSRH1_FSEL _tmcsrh1.bit._FSEL
 #define TMCSRH1_CSL _tmcsrh1.bitc._CSL
 __IO_EXTERN __io IO_WORD _tmrlr1;
-#define TMRLR1 _tmrlr1   
+#define TMRLR1 _tmrlr1
 __IO_EXTERN __io IO_WORD _tmr1;
-#define TMR1 _tmr1   
-__IO_EXTERN __io TMCSR2STR _tmcsr2;  
+#define TMR1 _tmr1
+__IO_EXTERN __io TMCSR2STR _tmcsr2;
 #define TMCSR2 _tmcsr2.word
 #define TMCSR2_TRG _tmcsr2.bit._TRG
 #define TMCSR2_CNTE _tmcsr2.bit._CNTE
@@ -15354,7 +15354,7 @@ __IO_EXTERN __io TMCSR2STR _tmcsr2;
 #define TMCSR2_CSL1 _tmcsr2.bit._CSL1
 #define TMCSR2_FSEL _tmcsr2.bit._FSEL
 #define TMCSR2_CSL _tmcsr2.bitc._CSL
-__IO_EXTERN __io TMCSRL2STR _tmcsrl2;  
+__IO_EXTERN __io TMCSRL2STR _tmcsrl2;
 #define TMCSRL2 _tmcsrl2.byte
 #define TMCSRL2_TRG _tmcsrl2.bit._TRG
 #define TMCSRL2_CNTE _tmcsrl2.bit._CNTE
@@ -15364,7 +15364,7 @@ __IO_EXTERN __io TMCSRL2STR _tmcsrl2;
 #define TMCSRL2_OUTL _tmcsrl2.bit._OUTL
 #define TMCSRL2_OUTE _tmcsrl2.bit._OUTE
 #define TMCSRL2_MOD0 _tmcsrl2.bit._MOD0
-__IO_EXTERN __io TMCSRH2STR _tmcsrh2;  
+__IO_EXTERN __io TMCSRH2STR _tmcsrh2;
 #define TMCSRH2 _tmcsrh2.byte
 #define TMCSRH2_MOD1 _tmcsrh2.bit._MOD1
 #define TMCSRH2_MOD2 _tmcsrh2.bit._MOD2
@@ -15373,10 +15373,10 @@ __IO_EXTERN __io TMCSRH2STR _tmcsrh2;
 #define TMCSRH2_FSEL _tmcsrh2.bit._FSEL
 #define TMCSRH2_CSL _tmcsrh2.bitc._CSL
 __IO_EXTERN __io IO_WORD _tmrlr2;
-#define TMRLR2 _tmrlr2   
+#define TMRLR2 _tmrlr2
 __IO_EXTERN __io IO_WORD _tmr2;
-#define TMR2 _tmr2   
-__IO_EXTERN __io TMCSR3STR _tmcsr3;  
+#define TMR2 _tmr2
+__IO_EXTERN __io TMCSR3STR _tmcsr3;
 #define TMCSR3 _tmcsr3.word
 #define TMCSR3_TRG _tmcsr3.bit._TRG
 #define TMCSR3_CNTE _tmcsr3.bit._CNTE
@@ -15392,7 +15392,7 @@ __IO_EXTERN __io TMCSR3STR _tmcsr3;
 #define TMCSR3_CSL1 _tmcsr3.bit._CSL1
 #define TMCSR3_FSEL _tmcsr3.bit._FSEL
 #define TMCSR3_CSL _tmcsr3.bitc._CSL
-__IO_EXTERN __io TMCSRL3STR _tmcsrl3;  
+__IO_EXTERN __io TMCSRL3STR _tmcsrl3;
 #define TMCSRL3 _tmcsrl3.byte
 #define TMCSRL3_TRG _tmcsrl3.bit._TRG
 #define TMCSRL3_CNTE _tmcsrl3.bit._CNTE
@@ -15402,7 +15402,7 @@ __IO_EXTERN __io TMCSRL3STR _tmcsrl3;
 #define TMCSRL3_OUTL _tmcsrl3.bit._OUTL
 #define TMCSRL3_OUTE _tmcsrl3.bit._OUTE
 #define TMCSRL3_MOD0 _tmcsrl3.bit._MOD0
-__IO_EXTERN __io TMCSRH3STR _tmcsrh3;  
+__IO_EXTERN __io TMCSRH3STR _tmcsrh3;
 #define TMCSRH3 _tmcsrh3.byte
 #define TMCSRH3_MOD1 _tmcsrh3.bit._MOD1
 #define TMCSRH3_MOD2 _tmcsrh3.bit._MOD2
@@ -15411,10 +15411,10 @@ __IO_EXTERN __io TMCSRH3STR _tmcsrh3;
 #define TMCSRH3_FSEL _tmcsrh3.bit._FSEL
 #define TMCSRH3_CSL _tmcsrh3.bitc._CSL
 __IO_EXTERN __io IO_WORD _tmrlr3;
-#define TMRLR3 _tmrlr3   
+#define TMRLR3 _tmrlr3
 __IO_EXTERN __io IO_WORD _tmr3;
-#define TMR3 _tmr3   
-__IO_EXTERN __io TMCSR6STR _tmcsr6;  
+#define TMR3 _tmr3
+__IO_EXTERN __io TMCSR6STR _tmcsr6;
 #define TMCSR6 _tmcsr6.word
 #define TMCSR6_TRG _tmcsr6.bit._TRG
 #define TMCSR6_CNTE _tmcsr6.bit._CNTE
@@ -15428,7 +15428,7 @@ __IO_EXTERN __io TMCSR6STR _tmcsr6;
 #define TMCSR6_CSL1 _tmcsr6.bit._CSL1
 #define TMCSR6_FSEL _tmcsr6.bit._FSEL
 #define TMCSR6_CSL _tmcsr6.bitc._CSL
-__IO_EXTERN __io TMCSRL6STR _tmcsrl6;  
+__IO_EXTERN __io TMCSRL6STR _tmcsrl6;
 #define TMCSRL6 _tmcsrl6.byte
 #define TMCSRL6_TRG _tmcsrl6.bit._TRG
 #define TMCSRL6_CNTE _tmcsrl6.bit._CNTE
@@ -15436,7 +15436,7 @@ __IO_EXTERN __io TMCSRL6STR _tmcsrl6;
 #define TMCSRL6_INTE _tmcsrl6.bit._INTE
 #define TMCSRL6_RELD _tmcsrl6.bit._RELD
 #define TMCSRL6_MOD0 _tmcsrl6.bit._MOD0
-__IO_EXTERN __io TMCSRH6STR _tmcsrh6;  
+__IO_EXTERN __io TMCSRH6STR _tmcsrh6;
 #define TMCSRH6 _tmcsrh6.byte
 #define TMCSRH6_MOD1 _tmcsrh6.bit._MOD1
 #define TMCSRH6_MOD2 _tmcsrh6.bit._MOD2
@@ -15445,10 +15445,10 @@ __IO_EXTERN __io TMCSRH6STR _tmcsrh6;
 #define TMCSRH6_FSEL _tmcsrh6.bit._FSEL
 #define TMCSRH6_CSL _tmcsrh6.bitc._CSL
 __IO_EXTERN __io IO_WORD _tmrlr6;
-#define TMRLR6 _tmrlr6   
+#define TMRLR6 _tmrlr6
 __IO_EXTERN __io IO_WORD _tmr6;
-#define TMR6 _tmr6   
-__IO_EXTERN __io GCN10STR _gcn10;  
+#define TMR6 _tmr6
+__IO_EXTERN __io GCN10STR _gcn10;
 #define GCN10 _gcn10.word
 #define GCN10_TSEL00 _gcn10.bit._TSEL00
 #define GCN10_TSEL01 _gcn10.bit._TSEL01
@@ -15470,7 +15470,7 @@ __IO_EXTERN __io GCN10STR _gcn10;
 #define GCN10_TSEL1 _gcn10.bitc._TSEL1
 #define GCN10_TSEL2 _gcn10.bitc._TSEL2
 #define GCN10_TSEL3 _gcn10.bitc._TSEL3
-__IO_EXTERN __io GCN1L0STR _gcn1l0;  
+__IO_EXTERN __io GCN1L0STR _gcn1l0;
 #define GCN1L0 _gcn1l0.byte
 #define GCN1L0_TSEL00 _gcn1l0.bit._TSEL00
 #define GCN1L0_TSEL01 _gcn1l0.bit._TSEL01
@@ -15482,7 +15482,7 @@ __IO_EXTERN __io GCN1L0STR _gcn1l0;
 #define GCN1L0_TSEL13 _gcn1l0.bit._TSEL13
 #define GCN1L0_TSEL0 _gcn1l0.bitc._TSEL0
 #define GCN1L0_TSEL1 _gcn1l0.bitc._TSEL1
-__IO_EXTERN __io GCN1H0STR _gcn1h0;  
+__IO_EXTERN __io GCN1H0STR _gcn1h0;
 #define GCN1H0 _gcn1h0.byte
 #define GCN1H0_TSEL20 _gcn1h0.bit._TSEL20
 #define GCN1H0_TSEL21 _gcn1h0.bit._TSEL21
@@ -15494,7 +15494,7 @@ __IO_EXTERN __io GCN1H0STR _gcn1h0;
 #define GCN1H0_TSEL33 _gcn1h0.bit._TSEL33
 #define GCN1H0_TSEL2 _gcn1h0.bitc._TSEL2
 #define GCN1H0_TSEL3 _gcn1h0.bitc._TSEL3
-__IO_EXTERN __io GCN20STR _gcn20;  
+__IO_EXTERN __io GCN20STR _gcn20;
 #define GCN20 _gcn20.word
 #define GCN20_EN0 _gcn20.bit._EN0
 #define GCN20_EN1 _gcn20.bit._EN1
@@ -15506,21 +15506,21 @@ __IO_EXTERN __io GCN20STR _gcn20;
 #define GCN20_CKSEL3 _gcn20.bit._CKSEL3
 #define GCN20_EN _gcn20.bitc._EN
 #define GCN20_CKSEL _gcn20.bitc._CKSEL
-__IO_EXTERN __io GCN2L0STR _gcn2l0;  
+__IO_EXTERN __io GCN2L0STR _gcn2l0;
 #define GCN2L0 _gcn2l0.byte
 #define GCN2L0_EN0 _gcn2l0.bit._EN0
 #define GCN2L0_EN1 _gcn2l0.bit._EN1
 #define GCN2L0_EN2 _gcn2l0.bit._EN2
 #define GCN2L0_EN3 _gcn2l0.bit._EN3
 #define GCN2L0_EN _gcn2l0.bitc._EN
-__IO_EXTERN __io GCN2H0STR _gcn2h0;  
+__IO_EXTERN __io GCN2H0STR _gcn2h0;
 #define GCN2H0 _gcn2h0.byte
 #define GCN2H0_CKSEL0 _gcn2h0.bit._CKSEL0
 #define GCN2H0_CKSEL1 _gcn2h0.bit._CKSEL1
 #define GCN2H0_CKSEL2 _gcn2h0.bit._CKSEL2
 #define GCN2H0_CKSEL3 _gcn2h0.bit._CKSEL3
 #define GCN2H0_CKSEL _gcn2h0.bitc._CKSEL
-__IO_EXTERN __io PTMR0STR _ptmr0;  
+__IO_EXTERN __io PTMR0STR _ptmr0;
 #define PTMR0 _ptmr0.word
 #define PTMR0_D0 _ptmr0.bit._D0
 #define PTMR0_D1 _ptmr0.bit._D1
@@ -15539,7 +15539,7 @@ __IO_EXTERN __io PTMR0STR _ptmr0;
 #define PTMR0_D14 _ptmr0.bit._D14
 #define PTMR0_D15 _ptmr0.bit._D15
 #define PTMR0_D _ptmr0.bitc._D
-__IO_EXTERN __io PCSR0STR _pcsr0;  
+__IO_EXTERN __io PCSR0STR _pcsr0;
 #define PCSR0 _pcsr0.word
 #define PCSR0_D0 _pcsr0.bit._D0
 #define PCSR0_D1 _pcsr0.bit._D1
@@ -15558,7 +15558,7 @@ __IO_EXTERN __io PCSR0STR _pcsr0;
 #define PCSR0_D14 _pcsr0.bit._D14
 #define PCSR0_D15 _pcsr0.bit._D15
 #define PCSR0_D _pcsr0.bitc._D
-__IO_EXTERN __io PDUT0STR _pdut0;  
+__IO_EXTERN __io PDUT0STR _pdut0;
 #define PDUT0 _pdut0.word
 #define PDUT0_D0 _pdut0.bit._D0
 #define PDUT0_D1 _pdut0.bit._D1
@@ -15577,7 +15577,7 @@ __IO_EXTERN __io PDUT0STR _pdut0;
 #define PDUT0_D14 _pdut0.bit._D14
 #define PDUT0_D15 _pdut0.bit._D15
 #define PDUT0_D _pdut0.bitc._D
-__IO_EXTERN __io PCN0STR _pcn0;  
+__IO_EXTERN __io PCN0STR _pcn0;
 #define PCN0 _pcn0.word
 #define PCN0_OSEL _pcn0.bit._OSEL
 #define PCN0_OE _pcn0.bit._OE
@@ -15597,7 +15597,7 @@ __IO_EXTERN __io PCN0STR _pcn0;
 #define PCN0_IRS _pcn0.bitc._IRS
 #define PCN0_EGS _pcn0.bitc._EGS
 #define PCN0_CKS _pcn0.bitc._CKS
-__IO_EXTERN __io PCNL0STR _pcnl0;  
+__IO_EXTERN __io PCNL0STR _pcnl0;
 #define PCNL0 _pcnl0.byte
 #define PCNL0_OSEL _pcnl0.bit._OSEL
 #define PCNL0_OE _pcnl0.bit._OE
@@ -15609,7 +15609,7 @@ __IO_EXTERN __io PCNL0STR _pcnl0;
 #define PCNL0_EGS1 _pcnl0.bit._EGS1
 #define PCNL0_IRS _pcnl0.bitc._IRS
 #define PCNL0_EGS _pcnl0.bitc._EGS
-__IO_EXTERN __io PCNH0STR _pcnh0;  
+__IO_EXTERN __io PCNH0STR _pcnh0;
 #define PCNH0 _pcnh0.byte
 #define PCNH0_PGMS _pcnh0.bit._PGMS
 #define PCNH0_CKS0 _pcnh0.bit._CKS0
@@ -15619,7 +15619,7 @@ __IO_EXTERN __io PCNH0STR _pcnh0;
 #define PCNH0_STGR _pcnh0.bit._STGR
 #define PCNH0_CNTE _pcnh0.bit._CNTE
 #define PCNH0_CKS _pcnh0.bitc._CKS
-__IO_EXTERN __io PTMR1STR _ptmr1;  
+__IO_EXTERN __io PTMR1STR _ptmr1;
 #define PTMR1 _ptmr1.word
 #define PTMR1_D0 _ptmr1.bit._D0
 #define PTMR1_D1 _ptmr1.bit._D1
@@ -15638,7 +15638,7 @@ __IO_EXTERN __io PTMR1STR _ptmr1;
 #define PTMR1_D14 _ptmr1.bit._D14
 #define PTMR1_D15 _ptmr1.bit._D15
 #define PTMR1_D _ptmr1.bitc._D
-__IO_EXTERN __io PCSR1STR _pcsr1;  
+__IO_EXTERN __io PCSR1STR _pcsr1;
 #define PCSR1 _pcsr1.word
 #define PCSR1_D0 _pcsr1.bit._D0
 #define PCSR1_D1 _pcsr1.bit._D1
@@ -15657,7 +15657,7 @@ __IO_EXTERN __io PCSR1STR _pcsr1;
 #define PCSR1_D14 _pcsr1.bit._D14
 #define PCSR1_D15 _pcsr1.bit._D15
 #define PCSR1_D _pcsr1.bitc._D
-__IO_EXTERN __io PDUT1STR _pdut1;  
+__IO_EXTERN __io PDUT1STR _pdut1;
 #define PDUT1 _pdut1.word
 #define PDUT1_D0 _pdut1.bit._D0
 #define PDUT1_D1 _pdut1.bit._D1
@@ -15676,7 +15676,7 @@ __IO_EXTERN __io PDUT1STR _pdut1;
 #define PDUT1_D14 _pdut1.bit._D14
 #define PDUT1_D15 _pdut1.bit._D15
 #define PDUT1_D _pdut1.bitc._D
-__IO_EXTERN __io PCN1STR _pcn1;  
+__IO_EXTERN __io PCN1STR _pcn1;
 #define PCN1 _pcn1.word
 #define PCN1_OSEL _pcn1.bit._OSEL
 #define PCN1_OE _pcn1.bit._OE
@@ -15696,7 +15696,7 @@ __IO_EXTERN __io PCN1STR _pcn1;
 #define PCN1_IRS _pcn1.bitc._IRS
 #define PCN1_EGS _pcn1.bitc._EGS
 #define PCN1_CKS _pcn1.bitc._CKS
-__IO_EXTERN __io PCNL1STR _pcnl1;  
+__IO_EXTERN __io PCNL1STR _pcnl1;
 #define PCNL1 _pcnl1.byte
 #define PCNL1_OSEL _pcnl1.bit._OSEL
 #define PCNL1_OE _pcnl1.bit._OE
@@ -15708,7 +15708,7 @@ __IO_EXTERN __io PCNL1STR _pcnl1;
 #define PCNL1_EGS1 _pcnl1.bit._EGS1
 #define PCNL1_IRS _pcnl1.bitc._IRS
 #define PCNL1_EGS _pcnl1.bitc._EGS
-__IO_EXTERN __io PCNH1STR _pcnh1;  
+__IO_EXTERN __io PCNH1STR _pcnh1;
 #define PCNH1 _pcnh1.byte
 #define PCNH1_PGMS _pcnh1.bit._PGMS
 #define PCNH1_CKS0 _pcnh1.bit._CKS0
@@ -15718,7 +15718,7 @@ __IO_EXTERN __io PCNH1STR _pcnh1;
 #define PCNH1_STGR _pcnh1.bit._STGR
 #define PCNH1_CNTE _pcnh1.bit._CNTE
 #define PCNH1_CKS _pcnh1.bitc._CKS
-__IO_EXTERN __io PTMR2STR _ptmr2;  
+__IO_EXTERN __io PTMR2STR _ptmr2;
 #define PTMR2 _ptmr2.word
 #define PTMR2_D0 _ptmr2.bit._D0
 #define PTMR2_D1 _ptmr2.bit._D1
@@ -15737,7 +15737,7 @@ __IO_EXTERN __io PTMR2STR _ptmr2;
 #define PTMR2_D14 _ptmr2.bit._D14
 #define PTMR2_D15 _ptmr2.bit._D15
 #define PTMR2_D _ptmr2.bitc._D
-__IO_EXTERN __io PCSR2STR _pcsr2;  
+__IO_EXTERN __io PCSR2STR _pcsr2;
 #define PCSR2 _pcsr2.word
 #define PCSR2_D0 _pcsr2.bit._D0
 #define PCSR2_D1 _pcsr2.bit._D1
@@ -15756,7 +15756,7 @@ __IO_EXTERN __io PCSR2STR _pcsr2;
 #define PCSR2_D14 _pcsr2.bit._D14
 #define PCSR2_D15 _pcsr2.bit._D15
 #define PCSR2_D _pcsr2.bitc._D
-__IO_EXTERN __io PDUT2STR _pdut2;  
+__IO_EXTERN __io PDUT2STR _pdut2;
 #define PDUT2 _pdut2.word
 #define PDUT2_D0 _pdut2.bit._D0
 #define PDUT2_D1 _pdut2.bit._D1
@@ -15775,7 +15775,7 @@ __IO_EXTERN __io PDUT2STR _pdut2;
 #define PDUT2_D14 _pdut2.bit._D14
 #define PDUT2_D15 _pdut2.bit._D15
 #define PDUT2_D _pdut2.bitc._D
-__IO_EXTERN __io PCN2STR _pcn2;  
+__IO_EXTERN __io PCN2STR _pcn2;
 #define PCN2 _pcn2.word
 #define PCN2_OSEL _pcn2.bit._OSEL
 #define PCN2_OE _pcn2.bit._OE
@@ -15795,7 +15795,7 @@ __IO_EXTERN __io PCN2STR _pcn2;
 #define PCN2_IRS _pcn2.bitc._IRS
 #define PCN2_EGS _pcn2.bitc._EGS
 #define PCN2_CKS _pcn2.bitc._CKS
-__IO_EXTERN __io PCNL2STR _pcnl2;  
+__IO_EXTERN __io PCNL2STR _pcnl2;
 #define PCNL2 _pcnl2.byte
 #define PCNL2_OSEL _pcnl2.bit._OSEL
 #define PCNL2_OE _pcnl2.bit._OE
@@ -15807,7 +15807,7 @@ __IO_EXTERN __io PCNL2STR _pcnl2;
 #define PCNL2_EGS1 _pcnl2.bit._EGS1
 #define PCNL2_IRS _pcnl2.bitc._IRS
 #define PCNL2_EGS _pcnl2.bitc._EGS
-__IO_EXTERN __io PCNH2STR _pcnh2;  
+__IO_EXTERN __io PCNH2STR _pcnh2;
 #define PCNH2 _pcnh2.byte
 #define PCNH2_PGMS _pcnh2.bit._PGMS
 #define PCNH2_CKS0 _pcnh2.bit._CKS0
@@ -15817,7 +15817,7 @@ __IO_EXTERN __io PCNH2STR _pcnh2;
 #define PCNH2_STGR _pcnh2.bit._STGR
 #define PCNH2_CNTE _pcnh2.bit._CNTE
 #define PCNH2_CKS _pcnh2.bitc._CKS
-__IO_EXTERN __io PTMR3STR _ptmr3;  
+__IO_EXTERN __io PTMR3STR _ptmr3;
 #define PTMR3 _ptmr3.word
 #define PTMR3_D0 _ptmr3.bit._D0
 #define PTMR3_D1 _ptmr3.bit._D1
@@ -15836,7 +15836,7 @@ __IO_EXTERN __io PTMR3STR _ptmr3;
 #define PTMR3_D14 _ptmr3.bit._D14
 #define PTMR3_D15 _ptmr3.bit._D15
 #define PTMR3_D _ptmr3.bitc._D
-__IO_EXTERN __io PCSR3STR _pcsr3;  
+__IO_EXTERN __io PCSR3STR _pcsr3;
 #define PCSR3 _pcsr3.word
 #define PCSR3_D0 _pcsr3.bit._D0
 #define PCSR3_D1 _pcsr3.bit._D1
@@ -15855,7 +15855,7 @@ __IO_EXTERN __io PCSR3STR _pcsr3;
 #define PCSR3_D14 _pcsr3.bit._D14
 #define PCSR3_D15 _pcsr3.bit._D15
 #define PCSR3_D _pcsr3.bitc._D
-__IO_EXTERN __io PDUT3STR _pdut3;  
+__IO_EXTERN __io PDUT3STR _pdut3;
 #define PDUT3 _pdut3.word
 #define PDUT3_D0 _pdut3.bit._D0
 #define PDUT3_D1 _pdut3.bit._D1
@@ -15874,7 +15874,7 @@ __IO_EXTERN __io PDUT3STR _pdut3;
 #define PDUT3_D14 _pdut3.bit._D14
 #define PDUT3_D15 _pdut3.bit._D15
 #define PDUT3_D _pdut3.bitc._D
-__IO_EXTERN __io PCN3STR _pcn3;  
+__IO_EXTERN __io PCN3STR _pcn3;
 #define PCN3 _pcn3.word
 #define PCN3_OSEL _pcn3.bit._OSEL
 #define PCN3_OE _pcn3.bit._OE
@@ -15894,7 +15894,7 @@ __IO_EXTERN __io PCN3STR _pcn3;
 #define PCN3_IRS _pcn3.bitc._IRS
 #define PCN3_EGS _pcn3.bitc._EGS
 #define PCN3_CKS _pcn3.bitc._CKS
-__IO_EXTERN __io PCNL3STR _pcnl3;  
+__IO_EXTERN __io PCNL3STR _pcnl3;
 #define PCNL3 _pcnl3.byte
 #define PCNL3_OSEL _pcnl3.bit._OSEL
 #define PCNL3_OE _pcnl3.bit._OE
@@ -15906,7 +15906,7 @@ __IO_EXTERN __io PCNL3STR _pcnl3;
 #define PCNL3_EGS1 _pcnl3.bit._EGS1
 #define PCNL3_IRS _pcnl3.bitc._IRS
 #define PCNL3_EGS _pcnl3.bitc._EGS
-__IO_EXTERN __io PCNH3STR _pcnh3;  
+__IO_EXTERN __io PCNH3STR _pcnh3;
 #define PCNH3 _pcnh3.byte
 #define PCNH3_PGMS _pcnh3.bit._PGMS
 #define PCNH3_CKS0 _pcnh3.bit._CKS0
@@ -15916,7 +15916,7 @@ __IO_EXTERN __io PCNH3STR _pcnh3;
 #define PCNH3_STGR _pcnh3.bit._STGR
 #define PCNH3_CNTE _pcnh3.bit._CNTE
 #define PCNH3_CKS _pcnh3.bitc._CKS
-__IO_EXTERN __io GCN11STR _gcn11;  
+__IO_EXTERN __io GCN11STR _gcn11;
 #define GCN11 _gcn11.word
 #define GCN11_TSEL00 _gcn11.bit._TSEL00
 #define GCN11_TSEL01 _gcn11.bit._TSEL01
@@ -15938,7 +15938,7 @@ __IO_EXTERN __io GCN11STR _gcn11;
 #define GCN11_TSEL1 _gcn11.bitc._TSEL1
 #define GCN11_TSEL2 _gcn11.bitc._TSEL2
 #define GCN11_TSEL3 _gcn11.bitc._TSEL3
-__IO_EXTERN __io GCN1L1STR _gcn1l1;  
+__IO_EXTERN __io GCN1L1STR _gcn1l1;
 #define GCN1L1 _gcn1l1.byte
 #define GCN1L1_TSEL00 _gcn1l1.bit._TSEL00
 #define GCN1L1_TSEL01 _gcn1l1.bit._TSEL01
@@ -15950,7 +15950,7 @@ __IO_EXTERN __io GCN1L1STR _gcn1l1;
 #define GCN1L1_TSEL13 _gcn1l1.bit._TSEL13
 #define GCN1L1_TSEL0 _gcn1l1.bitc._TSEL0
 #define GCN1L1_TSEL1 _gcn1l1.bitc._TSEL1
-__IO_EXTERN __io GCN1H1STR _gcn1h1;  
+__IO_EXTERN __io GCN1H1STR _gcn1h1;
 #define GCN1H1 _gcn1h1.byte
 #define GCN1H1_TSEL20 _gcn1h1.bit._TSEL20
 #define GCN1H1_TSEL21 _gcn1h1.bit._TSEL21
@@ -15962,7 +15962,7 @@ __IO_EXTERN __io GCN1H1STR _gcn1h1;
 #define GCN1H1_TSEL33 _gcn1h1.bit._TSEL33
 #define GCN1H1_TSEL2 _gcn1h1.bitc._TSEL2
 #define GCN1H1_TSEL3 _gcn1h1.bitc._TSEL3
-__IO_EXTERN __io GCN21STR _gcn21;  
+__IO_EXTERN __io GCN21STR _gcn21;
 #define GCN21 _gcn21.word
 #define GCN21_EN0 _gcn21.bit._EN0
 #define GCN21_EN1 _gcn21.bit._EN1
@@ -15973,20 +15973,20 @@ __IO_EXTERN __io GCN21STR _gcn21;
 #define GCN21_CKSEL2 _gcn21.bit._CKSEL2
 #define GCN21_CKSEL3 _gcn21.bit._CKSEL3
 #define GCN21_CKSEL _gcn21.bitc._CKSEL
-__IO_EXTERN __io GCN2L1STR _gcn2l1;  
+__IO_EXTERN __io GCN2L1STR _gcn2l1;
 #define GCN2L1 _gcn2l1.byte
 #define GCN2L1_EN0 _gcn2l1.bit._EN0
 #define GCN2L1_EN1 _gcn2l1.bit._EN1
 #define GCN2L1_EN2 _gcn2l1.bit._EN2
 #define GCN2L1_EN3 _gcn2l1.bit._EN3
-__IO_EXTERN __io GCN2H1STR _gcn2h1;  
+__IO_EXTERN __io GCN2H1STR _gcn2h1;
 #define GCN2H1 _gcn2h1.byte
 #define GCN2H1_CKSEL0 _gcn2h1.bit._CKSEL0
 #define GCN2H1_CKSEL1 _gcn2h1.bit._CKSEL1
 #define GCN2H1_CKSEL2 _gcn2h1.bit._CKSEL2
 #define GCN2H1_CKSEL3 _gcn2h1.bit._CKSEL3
 #define GCN2H1_CKSEL _gcn2h1.bitc._CKSEL
-__IO_EXTERN __io PTMR4STR _ptmr4;  
+__IO_EXTERN __io PTMR4STR _ptmr4;
 #define PTMR4 _ptmr4.word
 #define PTMR4_D0 _ptmr4.bit._D0
 #define PTMR4_D1 _ptmr4.bit._D1
@@ -16005,7 +16005,7 @@ __IO_EXTERN __io PTMR4STR _ptmr4;
 #define PTMR4_D14 _ptmr4.bit._D14
 #define PTMR4_D15 _ptmr4.bit._D15
 #define PTMR4_D _ptmr4.bitc._D
-__IO_EXTERN __io PCSR4STR _pcsr4;  
+__IO_EXTERN __io PCSR4STR _pcsr4;
 #define PCSR4 _pcsr4.word
 #define PCSR4_D0 _pcsr4.bit._D0
 #define PCSR4_D1 _pcsr4.bit._D1
@@ -16024,7 +16024,7 @@ __IO_EXTERN __io PCSR4STR _pcsr4;
 #define PCSR4_D14 _pcsr4.bit._D14
 #define PCSR4_D15 _pcsr4.bit._D15
 #define PCSR4_D _pcsr4.bitc._D
-__IO_EXTERN __io PDUT4STR _pdut4;  
+__IO_EXTERN __io PDUT4STR _pdut4;
 #define PDUT4 _pdut4.word
 #define PDUT4_D0 _pdut4.bit._D0
 #define PDUT4_D1 _pdut4.bit._D1
@@ -16043,7 +16043,7 @@ __IO_EXTERN __io PDUT4STR _pdut4;
 #define PDUT4_D14 _pdut4.bit._D14
 #define PDUT4_D15 _pdut4.bit._D15
 #define PDUT4_D _pdut4.bitc._D
-__IO_EXTERN __io PCN4STR _pcn4;  
+__IO_EXTERN __io PCN4STR _pcn4;
 #define PCN4 _pcn4.word
 #define PCN4_OSEL _pcn4.bit._OSEL
 #define PCN4_OE _pcn4.bit._OE
@@ -16063,7 +16063,7 @@ __IO_EXTERN __io PCN4STR _pcn4;
 #define PCN4_IRS _pcn4.bitc._IRS
 #define PCN4_EGS _pcn4.bitc._EGS
 #define PCN4_CKS _pcn4.bitc._CKS
-__IO_EXTERN __io PCNL4STR _pcnl4;  
+__IO_EXTERN __io PCNL4STR _pcnl4;
 #define PCNL4 _pcnl4.byte
 #define PCNL4_OSEL _pcnl4.bit._OSEL
 #define PCNL4_OE _pcnl4.bit._OE
@@ -16075,7 +16075,7 @@ __IO_EXTERN __io PCNL4STR _pcnl4;
 #define PCNL4_EGS1 _pcnl4.bit._EGS1
 #define PCNL4_IRS _pcnl4.bitc._IRS
 #define PCNL4_EGS _pcnl4.bitc._EGS
-__IO_EXTERN __io PCNH4STR _pcnh4;  
+__IO_EXTERN __io PCNH4STR _pcnh4;
 #define PCNH4 _pcnh4.byte
 #define PCNH4_PGMS _pcnh4.bit._PGMS
 #define PCNH4_CKS0 _pcnh4.bit._CKS0
@@ -16085,7 +16085,7 @@ __IO_EXTERN __io PCNH4STR _pcnh4;
 #define PCNH4_STGR _pcnh4.bit._STGR
 #define PCNH4_CNTE _pcnh4.bit._CNTE
 #define PCNH4_CKS _pcnh4.bitc._CKS
-__IO_EXTERN __io PTMR5STR _ptmr5;  
+__IO_EXTERN __io PTMR5STR _ptmr5;
 #define PTMR5 _ptmr5.word
 #define PTMR5_D0 _ptmr5.bit._D0
 #define PTMR5_D1 _ptmr5.bit._D1
@@ -16104,7 +16104,7 @@ __IO_EXTERN __io PTMR5STR _ptmr5;
 #define PTMR5_D14 _ptmr5.bit._D14
 #define PTMR5_D15 _ptmr5.bit._D15
 #define PTMR5_D _ptmr5.bitc._D
-__IO_EXTERN __io PCSR5STR _pcsr5;  
+__IO_EXTERN __io PCSR5STR _pcsr5;
 #define PCSR5 _pcsr5.word
 #define PCSR5_D0 _pcsr5.bit._D0
 #define PCSR5_D1 _pcsr5.bit._D1
@@ -16123,7 +16123,7 @@ __IO_EXTERN __io PCSR5STR _pcsr5;
 #define PCSR5_D14 _pcsr5.bit._D14
 #define PCSR5_D15 _pcsr5.bit._D15
 #define PCSR5_D _pcsr5.bitc._D
-__IO_EXTERN __io PDUT5STR _pdut5;  
+__IO_EXTERN __io PDUT5STR _pdut5;
 #define PDUT5 _pdut5.word
 #define PDUT5_D0 _pdut5.bit._D0
 #define PDUT5_D1 _pdut5.bit._D1
@@ -16142,7 +16142,7 @@ __IO_EXTERN __io PDUT5STR _pdut5;
 #define PDUT5_D14 _pdut5.bit._D14
 #define PDUT5_D15 _pdut5.bit._D15
 #define PDUT5_D _pdut5.bitc._D
-__IO_EXTERN __io PCN5STR _pcn5;  
+__IO_EXTERN __io PCN5STR _pcn5;
 #define PCN5 _pcn5.word
 #define PCN5_OSEL _pcn5.bit._OSEL
 #define PCN5_OE _pcn5.bit._OE
@@ -16162,7 +16162,7 @@ __IO_EXTERN __io PCN5STR _pcn5;
 #define PCN5_IRS _pcn5.bitc._IRS
 #define PCN5_EGS _pcn5.bitc._EGS
 #define PCN5_CKS _pcn5.bitc._CKS
-__IO_EXTERN __io PCNL5STR _pcnl5;  
+__IO_EXTERN __io PCNL5STR _pcnl5;
 #define PCNL5 _pcnl5.byte
 #define PCNL5_OSEL _pcnl5.bit._OSEL
 #define PCNL5_OE _pcnl5.bit._OE
@@ -16174,7 +16174,7 @@ __IO_EXTERN __io PCNL5STR _pcnl5;
 #define PCNL5_EGS1 _pcnl5.bit._EGS1
 #define PCNL5_IRS _pcnl5.bitc._IRS
 #define PCNL5_EGS _pcnl5.bitc._EGS
-__IO_EXTERN __io PCNH5STR _pcnh5;  
+__IO_EXTERN __io PCNH5STR _pcnh5;
 #define PCNH5 _pcnh5.byte
 #define PCNH5_PGMS _pcnh5.bit._PGMS
 #define PCNH5_CKS0 _pcnh5.bit._CKS0
@@ -16184,7 +16184,7 @@ __IO_EXTERN __io PCNH5STR _pcnh5;
 #define PCNH5_STGR _pcnh5.bit._STGR
 #define PCNH5_CNTE _pcnh5.bit._CNTE
 #define PCNH5_CKS _pcnh5.bitc._CKS
-__IO_EXTERN __io IBSR0STR _ibsr0;  
+__IO_EXTERN __io IBSR0STR _ibsr0;
 #define IBSR0 _ibsr0.byte
 #define IBSR0_ADT _ibsr0.bit._ADT
 #define IBSR0_GCA _ibsr0.bit._GCA
@@ -16194,7 +16194,7 @@ __IO_EXTERN __io IBSR0STR _ibsr0;
 #define IBSR0_AL _ibsr0.bit._AL
 #define IBSR0_RSC _ibsr0.bit._RSC
 #define IBSR0_BB _ibsr0.bit._BB
-__IO_EXTERN __io IBCR0STR _ibcr0;  
+__IO_EXTERN __io IBCR0STR _ibcr0;
 #define IBCR0 _ibcr0.byte
 #define IBCR0_INT _ibcr0.bit._INT
 #define IBCR0_INTE _ibcr0.bit._INTE
@@ -16204,7 +16204,7 @@ __IO_EXTERN __io IBCR0STR _ibcr0;
 #define IBCR0_SCC _ibcr0.bit._SCC
 #define IBCR0_BEIE _ibcr0.bit._BEIE
 #define IBCR0_BER _ibcr0.bit._BER
-__IO_EXTERN __io ITBA0STR _itba0;  
+__IO_EXTERN __io ITBA0STR _itba0;
 #define ITBA0 _itba0.word
 #define ITBA0_TA0 _itba0.bit._TA0
 #define ITBA0_TA1 _itba0.bit._TA1
@@ -16217,7 +16217,7 @@ __IO_EXTERN __io ITBA0STR _itba0;
 #define ITBA0_TA8 _itba0.bit._TA8
 #define ITBA0_TA9 _itba0.bit._TA9
 #define ITBA0_TA _itba0.bitc._TA
-__IO_EXTERN __io ITBAL0STR _itbal0;  
+__IO_EXTERN __io ITBAL0STR _itbal0;
 #define ITBAL0 _itbal0.byte
 #define ITBAL0_TA0 _itbal0.bit._TA0
 #define ITBAL0_TA1 _itbal0.bit._TA1
@@ -16227,11 +16227,11 @@ __IO_EXTERN __io ITBAL0STR _itbal0;
 #define ITBAL0_TA5 _itbal0.bit._TA5
 #define ITBAL0_TA6 _itbal0.bit._TA6
 #define ITBAL0_TA7 _itbal0.bit._TA7
-__IO_EXTERN __io ITBAH0STR _itbah0;  
+__IO_EXTERN __io ITBAH0STR _itbah0;
 #define ITBAH0 _itbah0.byte
 #define ITBAH0_TA8 _itbah0.bit._TA8
 #define ITBAH0_TA9 _itbah0.bit._TA9
-__IO_EXTERN __io ITMK0STR _itmk0;  
+__IO_EXTERN __io ITMK0STR _itmk0;
 #define ITMK0 _itmk0.word
 #define ITMK0_TM0 _itmk0.bit._TM0
 #define ITMK0_TM1 _itmk0.bit._TM1
@@ -16246,7 +16246,7 @@ __IO_EXTERN __io ITMK0STR _itmk0;
 #define ITMK0_RAL _itmk0.bit._RAL
 #define ITMK0_ENTB _itmk0.bit._ENTB
 #define ITMK0_TM _itmk0.bitc._TM
-__IO_EXTERN __io ITMKL0STR _itmkl0;  
+__IO_EXTERN __io ITMKL0STR _itmkl0;
 #define ITMKL0 _itmkl0.byte
 #define ITMKL0_TM0 _itmkl0.bit._TM0
 #define ITMKL0_TM1 _itmkl0.bit._TM1
@@ -16256,13 +16256,13 @@ __IO_EXTERN __io ITMKL0STR _itmkl0;
 #define ITMKL0_TM5 _itmkl0.bit._TM5
 #define ITMKL0_TM6 _itmkl0.bit._TM6
 #define ITMKL0_TM7 _itmkl0.bit._TM7
-__IO_EXTERN __io ITMKH0STR _itmkh0;  
+__IO_EXTERN __io ITMKH0STR _itmkh0;
 #define ITMKH0 _itmkh0.byte
 #define ITMKH0_TM8 _itmkh0.bit._TM8
 #define ITMKH0_TM9 _itmkh0.bit._TM9
 #define ITMKH0_RAL _itmkh0.bit._RAL
 #define ITMKH0_ENTB _itmkh0.bit._ENTB
-__IO_EXTERN __io ISBA0STR _isba0;  
+__IO_EXTERN __io ISBA0STR _isba0;
 #define ISBA0 _isba0.byte
 #define ISBA0_SA0 _isba0.bit._SA0
 #define ISBA0_SA1 _isba0.bit._SA1
@@ -16272,7 +16272,7 @@ __IO_EXTERN __io ISBA0STR _isba0;
 #define ISBA0_SA5 _isba0.bit._SA5
 #define ISBA0_SA6 _isba0.bit._SA6
 #define ISBA0_SA _isba0.bitc._SA
-__IO_EXTERN __io ISMK0STR _ismk0;  
+__IO_EXTERN __io ISMK0STR _ismk0;
 #define ISMK0 _ismk0.byte
 #define ISMK0_SM0 _ismk0.bit._SM0
 #define ISMK0_SM1 _ismk0.bit._SM1
@@ -16283,7 +16283,7 @@ __IO_EXTERN __io ISMK0STR _ismk0;
 #define ISMK0_SM6 _ismk0.bit._SM6
 #define ISMK0_ENSB _ismk0.bit._ENSB
 #define ISMK0_SM _ismk0.bitc._SM
-__IO_EXTERN __io IDAR0STR _idar0;  
+__IO_EXTERN __io IDAR0STR _idar0;
 #define IDAR0 _idar0.byte
 #define IDAR0_D0 _idar0.bit._D0
 #define IDAR0_D1 _idar0.bit._D1
@@ -16293,7 +16293,7 @@ __IO_EXTERN __io IDAR0STR _idar0;
 #define IDAR0_D5 _idar0.bit._D5
 #define IDAR0_D6 _idar0.bit._D6
 #define IDAR0_D7 _idar0.bit._D7
-__IO_EXTERN __io ICCR0STR _iccr0;  
+__IO_EXTERN __io ICCR0STR _iccr0;
 #define ICCR0 _iccr0.byte
 #define ICCR0_CS0 _iccr0.bit._CS0
 #define ICCR0_CS1 _iccr0.bit._CS1
@@ -16303,7 +16303,7 @@ __IO_EXTERN __io ICCR0STR _iccr0;
 #define ICCR0_EN _iccr0.bit._EN
 #define ICCR0_NSF _iccr0.bit._NSF
 #define ICCR0_CS _iccr0.bitc._CS
-__IO_EXTERN __io IBSR1STR _ibsr1;  
+__IO_EXTERN __io IBSR1STR _ibsr1;
 #define IBSR1 _ibsr1.byte
 #define IBSR1_ADT _ibsr1.bit._ADT
 #define IBSR1_GCA _ibsr1.bit._GCA
@@ -16313,7 +16313,7 @@ __IO_EXTERN __io IBSR1STR _ibsr1;
 #define IBSR1_AL _ibsr1.bit._AL
 #define IBSR1_RSC _ibsr1.bit._RSC
 #define IBSR1_BB _ibsr1.bit._BB
-__IO_EXTERN __io IBCR1STR _ibcr1;  
+__IO_EXTERN __io IBCR1STR _ibcr1;
 #define IBCR1 _ibcr1.byte
 #define IBCR1_INT _ibcr1.bit._INT
 #define IBCR1_INTE _ibcr1.bit._INTE
@@ -16323,7 +16323,7 @@ __IO_EXTERN __io IBCR1STR _ibcr1;
 #define IBCR1_SCC _ibcr1.bit._SCC
 #define IBCR1_BEIE _ibcr1.bit._BEIE
 #define IBCR1_BER _ibcr1.bit._BER
-__IO_EXTERN __io ITBA1STR _itba1;  
+__IO_EXTERN __io ITBA1STR _itba1;
 #define ITBA1 _itba1.word
 #define ITBA1_TA0 _itba1.bit._TA0
 #define ITBA1_TA1 _itba1.bit._TA1
@@ -16336,7 +16336,7 @@ __IO_EXTERN __io ITBA1STR _itba1;
 #define ITBA1_TA8 _itba1.bit._TA8
 #define ITBA1_TA9 _itba1.bit._TA9
 #define ITBA1_TA _itba1.bitc._TA
-__IO_EXTERN __io ITBAL1STR _itbal1;  
+__IO_EXTERN __io ITBAL1STR _itbal1;
 #define ITBAL1 _itbal1.byte
 #define ITBAL1_TA0 _itbal1.bit._TA0
 #define ITBAL1_TA1 _itbal1.bit._TA1
@@ -16346,11 +16346,11 @@ __IO_EXTERN __io ITBAL1STR _itbal1;
 #define ITBAL1_TA5 _itbal1.bit._TA5
 #define ITBAL1_TA6 _itbal1.bit._TA6
 #define ITBAL1_TA7 _itbal1.bit._TA7
-__IO_EXTERN __io ITBAH1STR _itbah1;  
+__IO_EXTERN __io ITBAH1STR _itbah1;
 #define ITBAH1 _itbah1.byte
 #define ITBAH1_TA8 _itbah1.bit._TA8
 #define ITBAH1_TA9 _itbah1.bit._TA9
-__IO_EXTERN __io ITMK1STR _itmk1;  
+__IO_EXTERN __io ITMK1STR _itmk1;
 #define ITMK1 _itmk1.word
 #define ITMK1_TM0 _itmk1.bit._TM0
 #define ITMK1_TM1 _itmk1.bit._TM1
@@ -16365,7 +16365,7 @@ __IO_EXTERN __io ITMK1STR _itmk1;
 #define ITMK1_RAL _itmk1.bit._RAL
 #define ITMK1_ENTB _itmk1.bit._ENTB
 #define ITMK1_TM _itmk1.bitc._TM
-__IO_EXTERN __io ITMKL1STR _itmkl1;  
+__IO_EXTERN __io ITMKL1STR _itmkl1;
 #define ITMKL1 _itmkl1.byte
 #define ITMKL1_TM0 _itmkl1.bit._TM0
 #define ITMKL1_TM1 _itmkl1.bit._TM1
@@ -16375,13 +16375,13 @@ __IO_EXTERN __io ITMKL1STR _itmkl1;
 #define ITMKL1_TM5 _itmkl1.bit._TM5
 #define ITMKL1_TM6 _itmkl1.bit._TM6
 #define ITMKL1_TM7 _itmkl1.bit._TM7
-__IO_EXTERN __io ITMKH1STR _itmkh1;  
+__IO_EXTERN __io ITMKH1STR _itmkh1;
 #define ITMKH1 _itmkh1.byte
 #define ITMKH1_TM8 _itmkh1.bit._TM8
 #define ITMKH1_TM9 _itmkh1.bit._TM9
 #define ITMKH1_RAL _itmkh1.bit._RAL
 #define ITMKH1_ENTB _itmkh1.bit._ENTB
-__IO_EXTERN __io ISBA1STR _isba1;  
+__IO_EXTERN __io ISBA1STR _isba1;
 #define ISBA1 _isba1.byte
 #define ISBA1_SA0 _isba1.bit._SA0
 #define ISBA1_SA1 _isba1.bit._SA1
@@ -16391,7 +16391,7 @@ __IO_EXTERN __io ISBA1STR _isba1;
 #define ISBA1_SA5 _isba1.bit._SA5
 #define ISBA1_SA6 _isba1.bit._SA6
 #define ISBA1_SA _isba1.bitc._SA
-__IO_EXTERN __io ISMK1STR _ismk1;  
+__IO_EXTERN __io ISMK1STR _ismk1;
 #define ISMK1 _ismk1.byte
 #define ISMK1_SM0 _ismk1.bit._SM0
 #define ISMK1_SM1 _ismk1.bit._SM1
@@ -16402,7 +16402,7 @@ __IO_EXTERN __io ISMK1STR _ismk1;
 #define ISMK1_SM6 _ismk1.bit._SM6
 #define ISMK1_ENSB _ismk1.bit._ENSB
 #define ISMK1_SM _ismk1.bitc._SM
-__IO_EXTERN __io IDAR1STR _idar1;  
+__IO_EXTERN __io IDAR1STR _idar1;
 #define IDAR1 _idar1.byte
 #define IDAR1_D0 _idar1.bit._D0
 #define IDAR1_D1 _idar1.bit._D1
@@ -16412,7 +16412,7 @@ __IO_EXTERN __io IDAR1STR _idar1;
 #define IDAR1_D5 _idar1.bit._D5
 #define IDAR1_D6 _idar1.bit._D6
 #define IDAR1_D7 _idar1.bit._D7
-__IO_EXTERN __io ICCR1STR _iccr1;  
+__IO_EXTERN __io ICCR1STR _iccr1;
 #define ICCR1 _iccr1.byte
 #define ICCR1_CS0 _iccr1.bit._CS0
 #define ICCR1_CS1 _iccr1.bit._CS1
@@ -16422,7 +16422,7 @@ __IO_EXTERN __io ICCR1STR _iccr1;
 #define ICCR1_EN _iccr1.bit._EN
 #define ICCR1_NSF _iccr1.bit._NSF
 #define ICCR1_CS _iccr1.bitc._CS
-__IO_EXTERN __io SMR0STR _smr0;  
+__IO_EXTERN __io SMR0STR _smr0;
 #define SMR0 _smr0.byte
 #define SMR0_SOE _smr0.bit._SOE
 #define SMR0_SCKE _smr0.bit._SCKE
@@ -16433,7 +16433,7 @@ __IO_EXTERN __io SMR0STR _smr0;
 #define SMR0_MD0 _smr0.bit._MD0
 #define SMR0_MD1 _smr0.bit._MD1
 #define SMR0_MD _smr0.bitc._MD
-__IO_EXTERN __io SCR0STR _scr0;  
+__IO_EXTERN __io SCR0STR _scr0;
 #define SCR0 _scr0.byte
 #define SCR0_TXE _scr0.bit._TXE
 #define SCR0_RXE _scr0.bit._RXE
@@ -16444,10 +16444,10 @@ __IO_EXTERN __io SCR0STR _scr0;
 #define SCR0_P _scr0.bit._P
 #define SCR0_PEN _scr0.bit._PEN
 __IO_EXTERN __io IO_BYTE _tdr0;
-#define TDR0 _tdr0   
+#define TDR0 _tdr0
 __IO_EXTERN __io IO_BYTE _rdr0;
-#define RDR0 _rdr0   
-__IO_EXTERN __io SSR0STR _ssr0;  
+#define RDR0 _rdr0
+__IO_EXTERN __io SSR0STR _ssr0;
 #define SSR0 _ssr0.byte
 #define SSR0_TIE _ssr0.bit._TIE
 #define SSR0_RIE _ssr0.bit._RIE
@@ -16457,7 +16457,7 @@ __IO_EXTERN __io SSR0STR _ssr0;
 #define SSR0_FRE _ssr0.bit._FRE
 #define SSR0_ORE _ssr0.bit._ORE
 #define SSR0_PE _ssr0.bit._PE
-__IO_EXTERN __io ECCR0STR _eccr0;  
+__IO_EXTERN __io ECCR0STR _eccr0;
 #define ECCR0 _eccr0.byte
 #define ECCR0_TBI _eccr0.bit._TBI
 #define ECCR0_RBI _eccr0.bit._RBI
@@ -16467,7 +16467,7 @@ __IO_EXTERN __io ECCR0STR _eccr0;
 #define ECCR0_MS _eccr0.bit._MS
 #define ECCR0_LBR _eccr0.bit._LBR
 #define ECCR0_INV _eccr0.bit._INV
-__IO_EXTERN __io ESCR0STR _escr0;  
+__IO_EXTERN __io ESCR0STR _escr0;
 #define ESCR0 _escr0.byte
 #define ESCR0_SCES _escr0.bit._SCES
 #define ESCR0_CCO _escr0.bit._CCO
@@ -16478,7 +16478,7 @@ __IO_EXTERN __io ESCR0STR _escr0;
 #define ESCR0_LBD _escr0.bit._LBD
 #define ESCR0_LBIE _escr0.bit._LBIE
 #define ESCR0_LBL _escr0.bitc._LBL
-__IO_EXTERN __io BGR0STR _bgr0;  
+__IO_EXTERN __io BGR0STR _bgr0;
 #define BGR0 _bgr0.word
 #define BGR0_BGR0 _bgr0.bit._BGR0
 #define BGR0_BGR1 _bgr0.bit._BGR1
@@ -16497,7 +16497,7 @@ __IO_EXTERN __io BGR0STR _bgr0;
 #define BGR0_BGR14 _bgr0.bit._BGR14
 #define BGR0_BGR15 _bgr0.bit._BGR15
 #define BGR0_BGR _bgr0.bitc._BGR
-__IO_EXTERN __io BGRL0STR _bgrl0;  
+__IO_EXTERN __io BGRL0STR _bgrl0;
 #define BGRL0 _bgrl0.byte
 #define BGRL0_BGR0 _bgrl0.bit._BGR0
 #define BGRL0_BGR1 _bgrl0.bit._BGR1
@@ -16507,7 +16507,7 @@ __IO_EXTERN __io BGRL0STR _bgrl0;
 #define BGRL0_BGR5 _bgrl0.bit._BGR5
 #define BGRL0_BGR6 _bgrl0.bit._BGR6
 #define BGRL0_BGR7 _bgrl0.bit._BGR7
-__IO_EXTERN __io BGRH0STR _bgrh0;  
+__IO_EXTERN __io BGRH0STR _bgrh0;
 #define BGRH0 _bgrh0.byte
 #define BGRH0_BGR8 _bgrh0.bit._BGR8
 #define BGRH0_BGR9 _bgrh0.bit._BGR9
@@ -16517,13 +16517,13 @@ __IO_EXTERN __io BGRH0STR _bgrh0;
 #define BGRH0_BGR13 _bgrh0.bit._BGR13
 #define BGRH0_BGR14 _bgrh0.bit._BGR14
 #define BGRH0_BGR15 _bgrh0.bit._BGR15
-__IO_EXTERN __io ESIR0STR _esir0;  
+__IO_EXTERN __io ESIR0STR _esir0;
 #define ESIR0 _esir0.byte
 #define ESIR0_AICD _esir0.bit._AICD
 #define ESIR0_RBI _esir0.bit._RBI
 #define ESIR0_RDRF _esir0.bit._RDRF
 #define ESIR0_TDRE _esir0.bit._TDRE
-__IO_EXTERN __io SMR1STR _smr1;  
+__IO_EXTERN __io SMR1STR _smr1;
 #define SMR1 _smr1.byte
 #define SMR1_SOE _smr1.bit._SOE
 #define SMR1_SCKE _smr1.bit._SCKE
@@ -16534,7 +16534,7 @@ __IO_EXTERN __io SMR1STR _smr1;
 #define SMR1_MD0 _smr1.bit._MD0
 #define SMR1_MD1 _smr1.bit._MD1
 #define SMR1_MD _smr1.bitc._MD
-__IO_EXTERN __io SCR1STR _scr1;  
+__IO_EXTERN __io SCR1STR _scr1;
 #define SCR1 _scr1.byte
 #define SCR1_TXE _scr1.bit._TXE
 #define SCR1_RXE _scr1.bit._RXE
@@ -16545,10 +16545,10 @@ __IO_EXTERN __io SCR1STR _scr1;
 #define SCR1_P _scr1.bit._P
 #define SCR1_PEN _scr1.bit._PEN
 __IO_EXTERN __io IO_BYTE _tdr1;
-#define TDR1 _tdr1   
+#define TDR1 _tdr1
 __IO_EXTERN __io IO_BYTE _rdr1;
-#define RDR1 _rdr1   
-__IO_EXTERN __io SSR1STR _ssr1;  
+#define RDR1 _rdr1
+__IO_EXTERN __io SSR1STR _ssr1;
 #define SSR1 _ssr1.byte
 #define SSR1_TIE _ssr1.bit._TIE
 #define SSR1_RIE _ssr1.bit._RIE
@@ -16558,7 +16558,7 @@ __IO_EXTERN __io SSR1STR _ssr1;
 #define SSR1_FRE _ssr1.bit._FRE
 #define SSR1_ORE _ssr1.bit._ORE
 #define SSR1_PE _ssr1.bit._PE
-__IO_EXTERN __io ECCR1STR _eccr1;  
+__IO_EXTERN __io ECCR1STR _eccr1;
 #define ECCR1 _eccr1.byte
 #define ECCR1_TBI _eccr1.bit._TBI
 #define ECCR1_RBI _eccr1.bit._RBI
@@ -16568,7 +16568,7 @@ __IO_EXTERN __io ECCR1STR _eccr1;
 #define ECCR1_MS _eccr1.bit._MS
 #define ECCR1_LBR _eccr1.bit._LBR
 #define ECCR1_INV _eccr1.bit._INV
-__IO_EXTERN __io ESCR1STR _escr1;  
+__IO_EXTERN __io ESCR1STR _escr1;
 #define ESCR1 _escr1.byte
 #define ESCR1_SCES _escr1.bit._SCES
 #define ESCR1_CCO _escr1.bit._CCO
@@ -16579,7 +16579,7 @@ __IO_EXTERN __io ESCR1STR _escr1;
 #define ESCR1_LBD _escr1.bit._LBD
 #define ESCR1_LBIE _escr1.bit._LBIE
 #define ESCR1_LBL _escr1.bitc._LBL
-__IO_EXTERN __io BGR1STR _bgr1;  
+__IO_EXTERN __io BGR1STR _bgr1;
 #define BGR1 _bgr1.word
 #define BGR1_BGR0 _bgr1.bit._BGR0
 #define BGR1_BGR1 _bgr1.bit._BGR1
@@ -16598,7 +16598,7 @@ __IO_EXTERN __io BGR1STR _bgr1;
 #define BGR1_BGR14 _bgr1.bit._BGR14
 #define BGR1_BGR15 _bgr1.bit._BGR15
 #define BGR1_BGR _bgr1.bitc._BGR
-__IO_EXTERN __io BGRL1STR _bgrl1;  
+__IO_EXTERN __io BGRL1STR _bgrl1;
 #define BGRL1 _bgrl1.byte
 #define BGRL1_BGR0 _bgrl1.bit._BGR0
 #define BGRL1_BGR1 _bgrl1.bit._BGR1
@@ -16608,7 +16608,7 @@ __IO_EXTERN __io BGRL1STR _bgrl1;
 #define BGRL1_BGR5 _bgrl1.bit._BGR5
 #define BGRL1_BGR6 _bgrl1.bit._BGR6
 #define BGRL1_BGR7 _bgrl1.bit._BGR7
-__IO_EXTERN __io BGRH1STR _bgrh1;  
+__IO_EXTERN __io BGRH1STR _bgrh1;
 #define BGRH1 _bgrh1.byte
 #define BGRH1_BGR8 _bgrh1.bit._BGR8
 #define BGRH1_BGR9 _bgrh1.bit._BGR9
@@ -16618,13 +16618,13 @@ __IO_EXTERN __io BGRH1STR _bgrh1;
 #define BGRH1_BGR13 _bgrh1.bit._BGR13
 #define BGRH1_BGR14 _bgrh1.bit._BGR14
 #define BGRH1_BGR15 _bgrh1.bit._BGR15
-__IO_EXTERN __io ESIR1STR _esir1;  
+__IO_EXTERN __io ESIR1STR _esir1;
 #define ESIR1 _esir1.byte
 #define ESIR1_AICD _esir1.bit._AICD
 #define ESIR1_RBI _esir1.bit._RBI
 #define ESIR1_RDRF _esir1.bit._RDRF
 #define ESIR1_TDRE _esir1.bit._TDRE
-__IO_EXTERN __io SMR2STR _smr2;  
+__IO_EXTERN __io SMR2STR _smr2;
 #define SMR2 _smr2.byte
 #define SMR2_SOE _smr2.bit._SOE
 #define SMR2_SCKE _smr2.bit._SCKE
@@ -16635,7 +16635,7 @@ __IO_EXTERN __io SMR2STR _smr2;
 #define SMR2_MD0 _smr2.bit._MD0
 #define SMR2_MD1 _smr2.bit._MD1
 #define SMR2_MD _smr2.bitc._MD
-__IO_EXTERN __io SCR2STR _scr2;  
+__IO_EXTERN __io SCR2STR _scr2;
 #define SCR2 _scr2.byte
 #define SCR2_TXE _scr2.bit._TXE
 #define SCR2_RXE _scr2.bit._RXE
@@ -16646,10 +16646,10 @@ __IO_EXTERN __io SCR2STR _scr2;
 #define SCR2_P _scr2.bit._P
 #define SCR2_PEN _scr2.bit._PEN
 __IO_EXTERN __io IO_BYTE _tdr2;
-#define TDR2 _tdr2   
+#define TDR2 _tdr2
 __IO_EXTERN __io IO_BYTE _rdr2;
-#define RDR2 _rdr2   
-__IO_EXTERN __io SSR2STR _ssr2;  
+#define RDR2 _rdr2
+__IO_EXTERN __io SSR2STR _ssr2;
 #define SSR2 _ssr2.byte
 #define SSR2_TIE _ssr2.bit._TIE
 #define SSR2_RIE _ssr2.bit._RIE
@@ -16659,7 +16659,7 @@ __IO_EXTERN __io SSR2STR _ssr2;
 #define SSR2_FRE _ssr2.bit._FRE
 #define SSR2_ORE _ssr2.bit._ORE
 #define SSR2_PE _ssr2.bit._PE
-__IO_EXTERN __io ECCR2STR _eccr2;  
+__IO_EXTERN __io ECCR2STR _eccr2;
 #define ECCR2 _eccr2.byte
 #define ECCR2_TBI _eccr2.bit._TBI
 #define ECCR2_RBI _eccr2.bit._RBI
@@ -16669,7 +16669,7 @@ __IO_EXTERN __io ECCR2STR _eccr2;
 #define ECCR2_MS _eccr2.bit._MS
 #define ECCR2_LBR _eccr2.bit._LBR
 #define ECCR2_INV _eccr2.bit._INV
-__IO_EXTERN __io ESCR2STR _escr2;  
+__IO_EXTERN __io ESCR2STR _escr2;
 #define ESCR2 _escr2.byte
 #define ESCR2_SCES _escr2.bit._SCES
 #define ESCR2_CCO _escr2.bit._CCO
@@ -16680,7 +16680,7 @@ __IO_EXTERN __io ESCR2STR _escr2;
 #define ESCR2_LBD _escr2.bit._LBD
 #define ESCR2_LBIE _escr2.bit._LBIE
 #define ESCR2_LBL _escr2.bitc._LBL
-__IO_EXTERN __io BGR2STR _bgr2;  
+__IO_EXTERN __io BGR2STR _bgr2;
 #define BGR2 _bgr2.word
 #define BGR2_BGR0 _bgr2.bit._BGR0
 #define BGR2_BGR1 _bgr2.bit._BGR1
@@ -16699,7 +16699,7 @@ __IO_EXTERN __io BGR2STR _bgr2;
 #define BGR2_BGR14 _bgr2.bit._BGR14
 #define BGR2_BGR15 _bgr2.bit._BGR15
 #define BGR2_BGR _bgr2.bitc._BGR
-__IO_EXTERN __io BGRL2STR _bgrl2;  
+__IO_EXTERN __io BGRL2STR _bgrl2;
 #define BGRL2 _bgrl2.byte
 #define BGRL2_BGR0 _bgrl2.bit._BGR0
 #define BGRL2_BGR1 _bgrl2.bit._BGR1
@@ -16709,7 +16709,7 @@ __IO_EXTERN __io BGRL2STR _bgrl2;
 #define BGRL2_BGR5 _bgrl2.bit._BGR5
 #define BGRL2_BGR6 _bgrl2.bit._BGR6
 #define BGRL2_BGR7 _bgrl2.bit._BGR7
-__IO_EXTERN __io BGRH2STR _bgrh2;  
+__IO_EXTERN __io BGRH2STR _bgrh2;
 #define BGRH2 _bgrh2.byte
 #define BGRH2_BGR8 _bgrh2.bit._BGR8
 #define BGRH2_BGR9 _bgrh2.bit._BGR9
@@ -16719,13 +16719,13 @@ __IO_EXTERN __io BGRH2STR _bgrh2;
 #define BGRH2_BGR13 _bgrh2.bit._BGR13
 #define BGRH2_BGR14 _bgrh2.bit._BGR14
 #define BGRH2_BGR15 _bgrh2.bit._BGR15
-__IO_EXTERN __io ESIR2STR _esir2;  
+__IO_EXTERN __io ESIR2STR _esir2;
 #define ESIR2 _esir2.byte
 #define ESIR2_AICD _esir2.bit._AICD
 #define ESIR2_RBI _esir2.bit._RBI
 #define ESIR2_RDRF _esir2.bit._RDRF
 #define ESIR2_TDRE _esir2.bit._TDRE
-__IO_EXTERN __io SMR3STR _smr3;  
+__IO_EXTERN __io SMR3STR _smr3;
 #define SMR3 _smr3.byte
 #define SMR3_SOE _smr3.bit._SOE
 #define SMR3_SCKE _smr3.bit._SCKE
@@ -16736,7 +16736,7 @@ __IO_EXTERN __io SMR3STR _smr3;
 #define SMR3_MD0 _smr3.bit._MD0
 #define SMR3_MD1 _smr3.bit._MD1
 #define SMR3_MD _smr3.bitc._MD
-__IO_EXTERN __io SCR3STR _scr3;  
+__IO_EXTERN __io SCR3STR _scr3;
 #define SCR3 _scr3.byte
 #define SCR3_TXE _scr3.bit._TXE
 #define SCR3_RXE _scr3.bit._RXE
@@ -16747,10 +16747,10 @@ __IO_EXTERN __io SCR3STR _scr3;
 #define SCR3_P _scr3.bit._P
 #define SCR3_PEN _scr3.bit._PEN
 __IO_EXTERN __io IO_BYTE _tdr3;
-#define TDR3 _tdr3   
+#define TDR3 _tdr3
 __IO_EXTERN __io IO_BYTE _rdr3;
-#define RDR3 _rdr3   
-__IO_EXTERN __io SSR3STR _ssr3;  
+#define RDR3 _rdr3
+__IO_EXTERN __io SSR3STR _ssr3;
 #define SSR3 _ssr3.byte
 #define SSR3_TIE _ssr3.bit._TIE
 #define SSR3_RIE _ssr3.bit._RIE
@@ -16760,7 +16760,7 @@ __IO_EXTERN __io SSR3STR _ssr3;
 #define SSR3_FRE _ssr3.bit._FRE
 #define SSR3_ORE _ssr3.bit._ORE
 #define SSR3_PE _ssr3.bit._PE
-__IO_EXTERN __io ECCR3STR _eccr3;  
+__IO_EXTERN __io ECCR3STR _eccr3;
 #define ECCR3 _eccr3.byte
 #define ECCR3_TBI _eccr3.bit._TBI
 #define ECCR3_RBI _eccr3.bit._RBI
@@ -16770,7 +16770,7 @@ __IO_EXTERN __io ECCR3STR _eccr3;
 #define ECCR3_MS _eccr3.bit._MS
 #define ECCR3_LBR _eccr3.bit._LBR
 #define ECCR3_INV _eccr3.bit._INV
-__IO_EXTERN __io ESCR3STR _escr3;  
+__IO_EXTERN __io ESCR3STR _escr3;
 #define ESCR3 _escr3.byte
 #define ESCR3_SCES _escr3.bit._SCES
 #define ESCR3_CCO _escr3.bit._CCO
@@ -16781,7 +16781,7 @@ __IO_EXTERN __io ESCR3STR _escr3;
 #define ESCR3_LBD _escr3.bit._LBD
 #define ESCR3_LBIE _escr3.bit._LBIE
 #define ESCR3_LBL _escr3.bitc._LBL
-__IO_EXTERN __io BGR3STR _bgr3;  
+__IO_EXTERN __io BGR3STR _bgr3;
 #define BGR3 _bgr3.word
 #define BGR3_BGR0 _bgr3.bit._BGR0
 #define BGR3_BGR1 _bgr3.bit._BGR1
@@ -16800,7 +16800,7 @@ __IO_EXTERN __io BGR3STR _bgr3;
 #define BGR3_BGR14 _bgr3.bit._BGR14
 #define BGR3_BGR15 _bgr3.bit._BGR15
 #define BGR3_BGR _bgr3.bitc._BGR
-__IO_EXTERN __io BGRL3STR _bgrl3;  
+__IO_EXTERN __io BGRL3STR _bgrl3;
 #define BGRL3 _bgrl3.byte
 #define BGRL3_BGR0 _bgrl3.bit._BGR0
 #define BGRL3_BGR1 _bgrl3.bit._BGR1
@@ -16810,7 +16810,7 @@ __IO_EXTERN __io BGRL3STR _bgrl3;
 #define BGRL3_BGR5 _bgrl3.bit._BGR5
 #define BGRL3_BGR6 _bgrl3.bit._BGR6
 #define BGRL3_BGR7 _bgrl3.bit._BGR7
-__IO_EXTERN __io BGRH3STR _bgrh3;  
+__IO_EXTERN __io BGRH3STR _bgrh3;
 #define BGRH3 _bgrh3.byte
 #define BGRH3_BGR8 _bgrh3.bit._BGR8
 #define BGRH3_BGR9 _bgrh3.bit._BGR9
@@ -16820,19 +16820,19 @@ __IO_EXTERN __io BGRH3STR _bgrh3;
 #define BGRH3_BGR13 _bgrh3.bit._BGR13
 #define BGRH3_BGR14 _bgrh3.bit._BGR14
 #define BGRH3_BGR15 _bgrh3.bit._BGR15
-__IO_EXTERN __io ESIR3STR _esir3;  
+__IO_EXTERN __io ESIR3STR _esir3;
 #define ESIR3 _esir3.byte
 #define ESIR3_AICD _esir3.bit._AICD
 #define ESIR3_RBI _esir3.bit._RBI
 #define ESIR3_RDRF _esir3.bit._RDRF
 #define ESIR3_TDRE _esir3.bit._TDRE
 __IO_EXTENDED IO_BYTE _bapl0;
-#define BAPL0 _bapl0   
+#define BAPL0 _bapl0
 __IO_EXTENDED IO_BYTE _bapm0;
-#define BAPM0 _bapm0   
+#define BAPM0 _bapm0
 __IO_EXTENDED IO_BYTE _baph0;
-#define BAPH0 _baph0   
-__IO_EXTENDED DMACS0STR _dmacs0;  
+#define BAPH0 _baph0
+__IO_EXTENDED DMACS0STR _dmacs0;
 #define DMACS0 _dmacs0.byte
 #define DMACS0_SE _dmacs0.bit._SE
 #define DMACS0_DIR _dmacs0.bit._DIR
@@ -16841,24 +16841,24 @@ __IO_EXTENDED DMACS0STR _dmacs0;
 #define DMACS0_IF _dmacs0.bit._IF
 #define DMACS0_BPD _dmacs0.bit._BPD
 __IO_EXTENDED IO_WORD _ioa0;
-#define IOA0 _ioa0   
+#define IOA0 _ioa0
 __IO_EXTENDED IO_BYTE _ioal0;
-#define IOAL0 _ioal0   
+#define IOAL0 _ioal0
 __IO_EXTENDED IO_BYTE _ioah0;
-#define IOAH0 _ioah0   
+#define IOAH0 _ioah0
 __IO_EXTENDED IO_WORD _dct0;
-#define DCT0 _dct0   
+#define DCT0 _dct0
 __IO_EXTENDED IO_BYTE _dctl0;
-#define DCTL0 _dctl0   
+#define DCTL0 _dctl0
 __IO_EXTENDED IO_BYTE _dcth0;
-#define DCTH0 _dcth0   
+#define DCTH0 _dcth0
 __IO_EXTENDED IO_BYTE _bapl1;
-#define BAPL1 _bapl1   
+#define BAPL1 _bapl1
 __IO_EXTENDED IO_BYTE _bapm1;
-#define BAPM1 _bapm1   
+#define BAPM1 _bapm1
 __IO_EXTENDED IO_BYTE _baph1;
-#define BAPH1 _baph1   
-__IO_EXTENDED DMACS1STR _dmacs1;  
+#define BAPH1 _baph1
+__IO_EXTENDED DMACS1STR _dmacs1;
 #define DMACS1 _dmacs1.byte
 #define DMACS1_SE _dmacs1.bit._SE
 #define DMACS1_DIR _dmacs1.bit._DIR
@@ -16867,24 +16867,24 @@ __IO_EXTENDED DMACS1STR _dmacs1;
 #define DMACS1_IF _dmacs1.bit._IF
 #define DMACS1_BPD _dmacs1.bit._BPD
 __IO_EXTENDED IO_WORD _ioa1;
-#define IOA1 _ioa1   
+#define IOA1 _ioa1
 __IO_EXTENDED IO_BYTE _ioal1;
-#define IOAL1 _ioal1   
+#define IOAL1 _ioal1
 __IO_EXTENDED IO_BYTE _ioah1;
-#define IOAH1 _ioah1   
+#define IOAH1 _ioah1
 __IO_EXTENDED IO_WORD _dct1;
-#define DCT1 _dct1   
+#define DCT1 _dct1
 __IO_EXTENDED IO_BYTE _dctl1;
-#define DCTL1 _dctl1   
+#define DCTL1 _dctl1
 __IO_EXTENDED IO_BYTE _dcth1;
-#define DCTH1 _dcth1   
+#define DCTH1 _dcth1
 __IO_EXTENDED IO_BYTE _bapl2;
-#define BAPL2 _bapl2   
+#define BAPL2 _bapl2
 __IO_EXTENDED IO_BYTE _bapm2;
-#define BAPM2 _bapm2   
+#define BAPM2 _bapm2
 __IO_EXTENDED IO_BYTE _baph2;
-#define BAPH2 _baph2   
-__IO_EXTENDED DMACS2STR _dmacs2;  
+#define BAPH2 _baph2
+__IO_EXTENDED DMACS2STR _dmacs2;
 #define DMACS2 _dmacs2.byte
 #define DMACS2_SE _dmacs2.bit._SE
 #define DMACS2_DIR _dmacs2.bit._DIR
@@ -16893,24 +16893,24 @@ __IO_EXTENDED DMACS2STR _dmacs2;
 #define DMACS2_IF _dmacs2.bit._IF
 #define DMACS2_BPD _dmacs2.bit._BPD
 __IO_EXTENDED IO_WORD _ioa2;
-#define IOA2 _ioa2   
+#define IOA2 _ioa2
 __IO_EXTENDED IO_BYTE _ioal2;
-#define IOAL2 _ioal2   
+#define IOAL2 _ioal2
 __IO_EXTENDED IO_BYTE _ioah2;
-#define IOAH2 _ioah2   
+#define IOAH2 _ioah2
 __IO_EXTENDED IO_WORD _dct2;
-#define DCT2 _dct2   
+#define DCT2 _dct2
 __IO_EXTENDED IO_BYTE _dctl2;
-#define DCTL2 _dctl2   
+#define DCTL2 _dctl2
 __IO_EXTENDED IO_BYTE _dcth2;
-#define DCTH2 _dcth2   
+#define DCTH2 _dcth2
 __IO_EXTENDED IO_BYTE _bapl3;
-#define BAPL3 _bapl3   
+#define BAPL3 _bapl3
 __IO_EXTENDED IO_BYTE _bapm3;
-#define BAPM3 _bapm3   
+#define BAPM3 _bapm3
 __IO_EXTENDED IO_BYTE _baph3;
-#define BAPH3 _baph3   
-__IO_EXTENDED DMACS3STR _dmacs3;  
+#define BAPH3 _baph3
+__IO_EXTENDED DMACS3STR _dmacs3;
 #define DMACS3 _dmacs3.byte
 #define DMACS3_SE _dmacs3.bit._SE
 #define DMACS3_DIR _dmacs3.bit._DIR
@@ -16919,24 +16919,24 @@ __IO_EXTENDED DMACS3STR _dmacs3;
 #define DMACS3_IF _dmacs3.bit._IF
 #define DMACS3_BPD _dmacs3.bit._BPD
 __IO_EXTENDED IO_WORD _ioa3;
-#define IOA3 _ioa3   
+#define IOA3 _ioa3
 __IO_EXTENDED IO_BYTE _ioal3;
-#define IOAL3 _ioal3   
+#define IOAL3 _ioal3
 __IO_EXTENDED IO_BYTE _ioah3;
-#define IOAH3 _ioah3   
+#define IOAH3 _ioah3
 __IO_EXTENDED IO_WORD _dct3;
-#define DCT3 _dct3   
+#define DCT3 _dct3
 __IO_EXTENDED IO_BYTE _dctl3;
-#define DCTL3 _dctl3   
+#define DCTL3 _dctl3
 __IO_EXTENDED IO_BYTE _dcth3;
-#define DCTH3 _dcth3   
+#define DCTH3 _dcth3
 __IO_EXTENDED IO_BYTE _bapl4;
-#define BAPL4 _bapl4   
+#define BAPL4 _bapl4
 __IO_EXTENDED IO_BYTE _bapm4;
-#define BAPM4 _bapm4   
+#define BAPM4 _bapm4
 __IO_EXTENDED IO_BYTE _baph4;
-#define BAPH4 _baph4   
-__IO_EXTENDED DMACS4STR _dmacs4;  
+#define BAPH4 _baph4
+__IO_EXTENDED DMACS4STR _dmacs4;
 #define DMACS4 _dmacs4.byte
 #define DMACS4_SE _dmacs4.bit._SE
 #define DMACS4_DIR _dmacs4.bit._DIR
@@ -16945,24 +16945,24 @@ __IO_EXTENDED DMACS4STR _dmacs4;
 #define DMACS4_IF _dmacs4.bit._IF
 #define DMACS4_BPD _dmacs4.bit._BPD
 __IO_EXTENDED IO_WORD _ioa4;
-#define IOA4 _ioa4   
+#define IOA4 _ioa4
 __IO_EXTENDED IO_BYTE _ioal4;
-#define IOAL4 _ioal4   
+#define IOAL4 _ioal4
 __IO_EXTENDED IO_BYTE _ioah4;
-#define IOAH4 _ioah4   
+#define IOAH4 _ioah4
 __IO_EXTENDED IO_WORD _dct4;
-#define DCT4 _dct4   
+#define DCT4 _dct4
 __IO_EXTENDED IO_BYTE _dctl4;
-#define DCTL4 _dctl4   
+#define DCTL4 _dctl4
 __IO_EXTENDED IO_BYTE _dcth4;
-#define DCTH4 _dcth4   
+#define DCTH4 _dcth4
 __IO_EXTENDED IO_BYTE _bapl5;
-#define BAPL5 _bapl5   
+#define BAPL5 _bapl5
 __IO_EXTENDED IO_BYTE _bapm5;
-#define BAPM5 _bapm5   
+#define BAPM5 _bapm5
 __IO_EXTENDED IO_BYTE _baph5;
-#define BAPH5 _baph5   
-__IO_EXTENDED DMACS5STR _dmacs5;  
+#define BAPH5 _baph5
+__IO_EXTENDED DMACS5STR _dmacs5;
 #define DMACS5 _dmacs5.byte
 #define DMACS5_SE _dmacs5.bit._SE
 #define DMACS5_DIR _dmacs5.bit._DIR
@@ -16971,30 +16971,30 @@ __IO_EXTENDED DMACS5STR _dmacs5;
 #define DMACS5_IF _dmacs5.bit._IF
 #define DMACS5_BPD _dmacs5.bit._BPD
 __IO_EXTENDED IO_WORD _ioa5;
-#define IOA5 _ioa5   
+#define IOA5 _ioa5
 __IO_EXTENDED IO_BYTE _ioal5;
-#define IOAL5 _ioal5   
+#define IOAL5 _ioal5
 __IO_EXTENDED IO_BYTE _ioah5;
-#define IOAH5 _ioah5   
+#define IOAH5 _ioah5
 __IO_EXTENDED IO_WORD _dct5;
-#define DCT5 _dct5   
+#define DCT5 _dct5
 __IO_EXTENDED IO_BYTE _dctl5;
-#define DCTL5 _dctl5   
+#define DCTL5 _dctl5
 __IO_EXTENDED IO_BYTE _dcth5;
-#define DCTH5 _dcth5   
+#define DCTH5 _dcth5
 __IO_EXTENDED IO_BYTE _disel0;
-#define DISEL0 _disel0   
+#define DISEL0 _disel0
 __IO_EXTENDED IO_BYTE _disel1;
-#define DISEL1 _disel1   
+#define DISEL1 _disel1
 __IO_EXTENDED IO_BYTE _disel2;
-#define DISEL2 _disel2   
+#define DISEL2 _disel2
 __IO_EXTENDED IO_BYTE _disel3;
-#define DISEL3 _disel3   
+#define DISEL3 _disel3
 __IO_EXTENDED IO_BYTE _disel4;
-#define DISEL4 _disel4   
+#define DISEL4 _disel4
 __IO_EXTENDED IO_BYTE _disel5;
-#define DISEL5 _disel5   
-__IO_EXTENDED DSRSTR _dsr;  
+#define DISEL5 _disel5
+__IO_EXTENDED DSRSTR _dsr;
 #define DSR _dsr.word
 #define DSR_DTE0 _dsr.bit._DTE0
 #define DSR_DTE1 _dsr.bit._DTE1
@@ -17002,7 +17002,7 @@ __IO_EXTENDED DSRSTR _dsr;
 #define DSR_DTE3 _dsr.bit._DTE3
 #define DSR_DTE4 _dsr.bit._DTE4
 #define DSR_DTE5 _dsr.bit._DTE5
-__IO_EXTENDED DSRLSTR _dsrl;  
+__IO_EXTENDED DSRLSTR _dsrl;
 #define DSRL _dsrl.byte
 #define DSRL_DTE0 _dsrl.bit._DTE0
 #define DSRL_DTE1 _dsrl.bit._DTE1
@@ -17011,8 +17011,8 @@ __IO_EXTENDED DSRLSTR _dsrl;
 #define DSRL_DTE4 _dsrl.bit._DTE4
 #define DSRL_DTE5 _dsrl.bit._DTE5
 __IO_EXTENDED IO_BYTE _dsrh;
-#define DSRH _dsrh   
-__IO_EXTENDED DSSRSTR _dssr;  
+#define DSRH _dsrh
+__IO_EXTENDED DSSRSTR _dssr;
 #define DSSR _dssr.word
 #define DSSR_STP0 _dssr.bit._STP0
 #define DSSR_STP1 _dssr.bit._STP1
@@ -17020,7 +17020,7 @@ __IO_EXTENDED DSSRSTR _dssr;
 #define DSSR_STP3 _dssr.bit._STP3
 #define DSSR_STP4 _dssr.bit._STP4
 #define DSSR_STP5 _dssr.bit._STP5
-__IO_EXTENDED DSSRLSTR _dssrl;  
+__IO_EXTENDED DSSRLSTR _dssrl;
 #define DSSRL _dssrl.byte
 #define DSSRL_STP0 _dssrl.bit._STP0
 #define DSSRL_STP1 _dssrl.bit._STP1
@@ -17029,8 +17029,8 @@ __IO_EXTENDED DSSRLSTR _dssrl;
 #define DSSRL_STP4 _dssrl.bit._STP4
 #define DSSRL_STP5 _dssrl.bit._STP5
 __IO_EXTENDED IO_BYTE _dssrh;
-#define DSSRH _dssrh   
-__IO_EXTENDED DERSTR _der;  
+#define DSSRH _dssrh
+__IO_EXTENDED DERSTR _der;
 #define DER _der.word
 #define DER_EN0 _der.bit._EN0
 #define DER_EN1 _der.bit._EN1
@@ -17038,7 +17038,7 @@ __IO_EXTENDED DERSTR _der;
 #define DER_EN3 _der.bit._EN3
 #define DER_EN4 _der.bit._EN4
 #define DER_EN5 _der.bit._EN5
-__IO_EXTENDED DERLSTR _derl;  
+__IO_EXTENDED DERLSTR _derl;
 #define DERL _derl.byte
 #define DERL_EN0 _derl.bit._EN0
 #define DERL_EN1 _derl.bit._EN1
@@ -17047,8 +17047,8 @@ __IO_EXTENDED DERLSTR _derl;
 #define DERL_EN4 _derl.bit._EN4
 #define DERL_EN5 _derl.bit._EN5
 __IO_EXTENDED IO_BYTE _derh;
-#define DERH _derh   
-__IO_EXTENDED ICRSTR _icr;  
+#define DERH _derh
+__IO_EXTENDED ICRSTR _icr;
 #define ICR _icr.word
 #define ICR_IL0 _icr.bit._IL0
 #define ICR_IL1 _icr.bit._IL1
@@ -17063,13 +17063,13 @@ __IO_EXTENDED ICRSTR _icr;
 #define ICR_IX7 _icr.bit._IX7
 #define ICR_IL _icr.bitc._IL
 #define ICR_IX _icr.bitc._IX
-__IO_EXTENDED ILRSTR _ilr;  
+__IO_EXTENDED ILRSTR _ilr;
 #define ILR _ilr.byte
 #define ILR_IL0 _ilr.bit._IL0
 #define ILR_IL1 _ilr.bit._IL1
 #define ILR_IL2 _ilr.bit._IL2
 #define ILR_IL _ilr.bitc._IL
-__IO_EXTENDED IDXSTR _idx;  
+__IO_EXTENDED IDXSTR _idx;
 #define IDX _idx.byte
 #define IDX_IX0 _idx.bit._IX0
 #define IDX_IX1 _idx.bit._IX1
@@ -17080,7 +17080,7 @@ __IO_EXTENDED IDXSTR _idx;
 #define IDX_IX6 _idx.bit._IX6
 #define IDX_IX7 _idx.bit._IX7
 #define IDX_IX _idx.bitc._IX
-__IO_EXTENDED TBRSTR _tbr;  
+__IO_EXTENDED TBRSTR _tbr;
 #define TBR _tbr.word
 #define TBR_TB10 _tbr.bit._TB10
 #define TBR_TB11 _tbr.bit._TB11
@@ -17096,7 +17096,7 @@ __IO_EXTENDED TBRSTR _tbr;
 #define TBR_TB21 _tbr.bit._TB21
 #define TBR_TB22 _tbr.bit._TB22
 #define TBR_TB23 _tbr.bit._TB23
-__IO_EXTENDED TBRLSTR _tbrl;  
+__IO_EXTENDED TBRLSTR _tbrl;
 #define TBRL _tbrl.byte
 #define TBRL_TB10 _tbrl.bit._TB10
 #define TBRL_TB11 _tbrl.bit._TB11
@@ -17104,7 +17104,7 @@ __IO_EXTENDED TBRLSTR _tbrl;
 #define TBRL_TB13 _tbrl.bit._TB13
 #define TBRL_TB14 _tbrl.bit._TB14
 #define TBRL_TB15 _tbrl.bit._TB15
-__IO_EXTENDED TBRHSTR _tbrh;  
+__IO_EXTENDED TBRHSTR _tbrh;
 #define TBRH _tbrh.byte
 #define TBRH_TB16 _tbrh.bit._TB16
 #define TBRH_TB17 _tbrh.bit._TB17
@@ -17114,16 +17114,16 @@ __IO_EXTENDED TBRHSTR _tbrh;
 #define TBRH_TB21 _tbrh.bit._TB21
 #define TBRH_TB22 _tbrh.bit._TB22
 #define TBRH_TB23 _tbrh.bit._TB23
-__IO_EXTENDED DIRRSTR _dirr;  
+__IO_EXTENDED DIRRSTR _dirr;
 #define DIRR _dirr.byte
 #define DIRR_R0 _dirr.bit._R0
-__IO_EXTENDED NMISTR _nmi;  
+__IO_EXTENDED NMISTR _nmi;
 #define NMI _nmi.byte
 #define NMI_FLAG _nmi.bit._FLAG
 #define NMI_EN _nmi.bit._EN
 #define NMI_LEV _nmi.bit._LEV
 #define NMI_INT9FIX _nmi.bit._INT9FIX
-__IO_EXTENDED EDSU2STR _edsu2;  
+__IO_EXTENDED EDSU2STR _edsu2;
 #define EDSU2 _edsu2.word
 #define EDSU2_RSEL0 _edsu2.bit._RSEL0
 #define EDSU2_RSEL1 _edsu2.bit._RSEL1
@@ -17143,7 +17143,7 @@ __IO_EXTENDED EDSU2STR _edsu2;
 #define EDSU2_TSEL7 _edsu2.bit._TSEL7
 #define EDSU2_RSEL _edsu2.bitc._RSEL
 #define EDSU2_TSEL _edsu2.bitc._TSEL
-__IO_EXTENDED ROMMSTR _romm;  
+__IO_EXTENDED ROMMSTR _romm;
 #define ROMM _romm.byte
 #define ROMM_MI _romm.bit._MI
 #define ROMM_SZ0 _romm.bit._SZ0
@@ -17152,7 +17152,7 @@ __IO_EXTENDED ROMMSTR _romm;
 #define ROMM_BS1 _romm.bit._BS1
 #define ROMM_BS2 _romm.bit._BS2
 #define ROMM_BS3 _romm.bit._BS3
-__IO_EXTENDED EDSUSTR _edsu;  
+__IO_EXTENDED EDSUSTR _edsu;
 #define EDSU _edsu.byte
 #define EDSU_RINT _edsu.bit._RINT
 #define EDSU_RIE _edsu.bit._RIE
@@ -17162,7 +17162,7 @@ __IO_EXTENDED EDSUSTR _edsu;
 #define EDSU_TIE _edsu.bit._TIE
 #define EDSU_EN _edsu.bit._EN
 #define EDSU_SEL _edsu.bitc._SEL
-__IO_EXTENDED PFCS0STR _pfcs0;  
+__IO_EXTENDED PFCS0STR _pfcs0;
 #define PFCS0 _pfcs0.word
 #define PFCS0_I0 _pfcs0.bit._I0
 #define PFCS0_I1 _pfcs0.bit._I1
@@ -17180,7 +17180,7 @@ __IO_EXTENDED PFCS0STR _pfcs0;
 #define PFCS0_BYTE _pfcs0.bit._BYTE
 #define PFCS0_WRITE _pfcs0.bit._WRITE
 #define PFCS0_READ _pfcs0.bit._READ
-__IO_EXTENDED PFCS1STR _pfcs1;  
+__IO_EXTENDED PFCS1STR _pfcs1;
 #define PFCS1 _pfcs1.word
 #define PFCS1_I0 _pfcs1.bit._I0
 #define PFCS1_I1 _pfcs1.bit._I1
@@ -17198,7 +17198,7 @@ __IO_EXTENDED PFCS1STR _pfcs1;
 #define PFCS1_BYTE _pfcs1.bit._BYTE
 #define PFCS1_WRITE _pfcs1.bit._WRITE
 #define PFCS1_READ _pfcs1.bit._READ
-__IO_EXTENDED PFCS2STR _pfcs2;  
+__IO_EXTENDED PFCS2STR _pfcs2;
 #define PFCS2 _pfcs2.word
 #define PFCS2_I0 _pfcs2.bit._I0
 #define PFCS2_I1 _pfcs2.bit._I1
@@ -17216,7 +17216,7 @@ __IO_EXTENDED PFCS2STR _pfcs2;
 #define PFCS2_BYTE _pfcs2.bit._BYTE
 #define PFCS2_WRITE _pfcs2.bit._WRITE
 #define PFCS2_READ _pfcs2.bit._READ
-__IO_EXTENDED PFCS3STR _pfcs3;  
+__IO_EXTENDED PFCS3STR _pfcs3;
 #define PFCS3 _pfcs3.word
 #define PFCS3_I0 _pfcs3.bit._I0
 #define PFCS3_I1 _pfcs3.bit._I1
@@ -17234,7 +17234,7 @@ __IO_EXTENDED PFCS3STR _pfcs3;
 #define PFCS3_BYTE _pfcs3.bit._BYTE
 #define PFCS3_WRITE _pfcs3.bit._WRITE
 #define PFCS3_READ _pfcs3.bit._READ
-__IO_EXTENDED PFAL0STR _pfal0;  
+__IO_EXTENDED PFAL0STR _pfal0;
 #define PFAL0 _pfal0.byte
 #define PFAL0_PFA0 _pfal0.bit._PFA0
 #define PFAL0_PFA1 _pfal0.bit._PFA1
@@ -17244,7 +17244,7 @@ __IO_EXTENDED PFAL0STR _pfal0;
 #define PFAL0_PFA5 _pfal0.bit._PFA5
 #define PFAL0_PFA6 _pfal0.bit._PFA6
 #define PFAL0_PFA7 _pfal0.bit._PFA7
-__IO_EXTENDED PFAM0STR _pfam0;  
+__IO_EXTENDED PFAM0STR _pfam0;
 #define PFAM0 _pfam0.byte
 #define PFAM0_PFA8 _pfam0.bit._PFA8
 #define PFAM0_PFA9 _pfam0.bit._PFA9
@@ -17254,7 +17254,7 @@ __IO_EXTENDED PFAM0STR _pfam0;
 #define PFAM0_PFA13 _pfam0.bit._PFA13
 #define PFAM0_PFA14 _pfam0.bit._PFA14
 #define PFAM0_PFA15 _pfam0.bit._PFA15
-__IO_EXTENDED PFAH0STR _pfah0;  
+__IO_EXTENDED PFAH0STR _pfah0;
 #define PFAH0 _pfah0.byte
 #define PFAH0_PFA16 _pfah0.bit._PFA16
 #define PFAH0_PFA17 _pfah0.bit._PFA17
@@ -17264,7 +17264,7 @@ __IO_EXTENDED PFAH0STR _pfah0;
 #define PFAH0_PFA21 _pfah0.bit._PFA21
 #define PFAH0_PFA22 _pfah0.bit._PFA22
 #define PFAH0_PFA23 _pfah0.bit._PFA23
-__IO_EXTENDED PFAL1STR _pfal1;  
+__IO_EXTENDED PFAL1STR _pfal1;
 #define PFAL1 _pfal1.byte
 #define PFAL1_PFA0 _pfal1.bit._PFA0
 #define PFAL1_PFA1 _pfal1.bit._PFA1
@@ -17274,7 +17274,7 @@ __IO_EXTENDED PFAL1STR _pfal1;
 #define PFAL1_PFA5 _pfal1.bit._PFA5
 #define PFAL1_PFA6 _pfal1.bit._PFA6
 #define PFAL1_PFA7 _pfal1.bit._PFA7
-__IO_EXTENDED PFAM1STR _pfam1;  
+__IO_EXTENDED PFAM1STR _pfam1;
 #define PFAM1 _pfam1.byte
 #define PFAM1_PFA8 _pfam1.bit._PFA8
 #define PFAM1_PFA9 _pfam1.bit._PFA9
@@ -17284,7 +17284,7 @@ __IO_EXTENDED PFAM1STR _pfam1;
 #define PFAM1_PFA13 _pfam1.bit._PFA13
 #define PFAM1_PFA14 _pfam1.bit._PFA14
 #define PFAM1_PFA15 _pfam1.bit._PFA15
-__IO_EXTENDED PFAH1STR _pfah1;  
+__IO_EXTENDED PFAH1STR _pfah1;
 #define PFAH1 _pfah1.byte
 #define PFAH1_PFA16 _pfah1.bit._PFA16
 #define PFAH1_PFA17 _pfah1.bit._PFA17
@@ -17294,7 +17294,7 @@ __IO_EXTENDED PFAH1STR _pfah1;
 #define PFAH1_PFA21 _pfah1.bit._PFA21
 #define PFAH1_PFA22 _pfah1.bit._PFA22
 #define PFAH1_PFA23 _pfah1.bit._PFA23
-__IO_EXTENDED PFAL2STR _pfal2;  
+__IO_EXTENDED PFAL2STR _pfal2;
 #define PFAL2 _pfal2.byte
 #define PFAL2_PFA0 _pfal2.bit._PFA0
 #define PFAL2_PFA1 _pfal2.bit._PFA1
@@ -17304,7 +17304,7 @@ __IO_EXTENDED PFAL2STR _pfal2;
 #define PFAL2_PFA5 _pfal2.bit._PFA5
 #define PFAL2_PFA6 _pfal2.bit._PFA6
 #define PFAL2_PFA7 _pfal2.bit._PFA7
-__IO_EXTENDED PFAM2STR _pfam2;  
+__IO_EXTENDED PFAM2STR _pfam2;
 #define PFAM2 _pfam2.byte
 #define PFAM2_PFA8 _pfam2.bit._PFA8
 #define PFAM2_PFA9 _pfam2.bit._PFA9
@@ -17314,7 +17314,7 @@ __IO_EXTENDED PFAM2STR _pfam2;
 #define PFAM2_PFA13 _pfam2.bit._PFA13
 #define PFAM2_PFA14 _pfam2.bit._PFA14
 #define PFAM2_PFA15 _pfam2.bit._PFA15
-__IO_EXTENDED PFAH2STR _pfah2;  
+__IO_EXTENDED PFAH2STR _pfah2;
 #define PFAH2 _pfah2.byte
 #define PFAH2_PFA16 _pfah2.bit._PFA16
 #define PFAH2_PFA17 _pfah2.bit._PFA17
@@ -17324,7 +17324,7 @@ __IO_EXTENDED PFAH2STR _pfah2;
 #define PFAH2_PFA21 _pfah2.bit._PFA21
 #define PFAH2_PFA22 _pfah2.bit._PFA22
 #define PFAH2_PFA23 _pfah2.bit._PFA23
-__IO_EXTENDED PFAL3STR _pfal3;  
+__IO_EXTENDED PFAL3STR _pfal3;
 #define PFAL3 _pfal3.byte
 #define PFAL3_PFA0 _pfal3.bit._PFA0
 #define PFAL3_PFA1 _pfal3.bit._PFA1
@@ -17334,7 +17334,7 @@ __IO_EXTENDED PFAL3STR _pfal3;
 #define PFAL3_PFA5 _pfal3.bit._PFA5
 #define PFAL3_PFA6 _pfal3.bit._PFA6
 #define PFAL3_PFA7 _pfal3.bit._PFA7
-__IO_EXTENDED PFAM3STR _pfam3;  
+__IO_EXTENDED PFAM3STR _pfam3;
 #define PFAM3 _pfam3.byte
 #define PFAM3_PFA8 _pfam3.bit._PFA8
 #define PFAM3_PFA9 _pfam3.bit._PFA9
@@ -17344,7 +17344,7 @@ __IO_EXTENDED PFAM3STR _pfam3;
 #define PFAM3_PFA13 _pfam3.bit._PFA13
 #define PFAM3_PFA14 _pfam3.bit._PFA14
 #define PFAM3_PFA15 _pfam3.bit._PFA15
-__IO_EXTENDED PFAH3STR _pfah3;  
+__IO_EXTENDED PFAH3STR _pfah3;
 #define PFAH3 _pfah3.byte
 #define PFAH3_PFA16 _pfah3.bit._PFA16
 #define PFAH3_PFA17 _pfah3.bit._PFA17
@@ -17354,7 +17354,7 @@ __IO_EXTENDED PFAH3STR _pfah3;
 #define PFAH3_PFA21 _pfah3.bit._PFA21
 #define PFAH3_PFA22 _pfah3.bit._PFA22
 #define PFAH3_PFA23 _pfah3.bit._PFA23
-__IO_EXTENDED PFAL4STR _pfal4;  
+__IO_EXTENDED PFAL4STR _pfal4;
 #define PFAL4 _pfal4.byte
 #define PFAL4_PFA0 _pfal4.bit._PFA0
 #define PFAL4_PFA1 _pfal4.bit._PFA1
@@ -17364,7 +17364,7 @@ __IO_EXTENDED PFAL4STR _pfal4;
 #define PFAL4_PFA5 _pfal4.bit._PFA5
 #define PFAL4_PFA6 _pfal4.bit._PFA6
 #define PFAL4_PFA7 _pfal4.bit._PFA7
-__IO_EXTENDED PFAM4STR _pfam4;  
+__IO_EXTENDED PFAM4STR _pfam4;
 #define PFAM4 _pfam4.byte
 #define PFAM4_PFA8 _pfam4.bit._PFA8
 #define PFAM4_PFA9 _pfam4.bit._PFA9
@@ -17374,7 +17374,7 @@ __IO_EXTENDED PFAM4STR _pfam4;
 #define PFAM4_PFA13 _pfam4.bit._PFA13
 #define PFAM4_PFA14 _pfam4.bit._PFA14
 #define PFAM4_PFA15 _pfam4.bit._PFA15
-__IO_EXTENDED PFAH4STR _pfah4;  
+__IO_EXTENDED PFAH4STR _pfah4;
 #define PFAH4 _pfah4.byte
 #define PFAH4_PFA16 _pfah4.bit._PFA16
 #define PFAH4_PFA17 _pfah4.bit._PFA17
@@ -17384,7 +17384,7 @@ __IO_EXTENDED PFAH4STR _pfah4;
 #define PFAH4_PFA21 _pfah4.bit._PFA21
 #define PFAH4_PFA22 _pfah4.bit._PFA22
 #define PFAH4_PFA23 _pfah4.bit._PFA23
-__IO_EXTENDED PFAL5STR _pfal5;  
+__IO_EXTENDED PFAL5STR _pfal5;
 #define PFAL5 _pfal5.byte
 #define PFAL5_PFA0 _pfal5.bit._PFA0
 #define PFAL5_PFA1 _pfal5.bit._PFA1
@@ -17394,7 +17394,7 @@ __IO_EXTENDED PFAL5STR _pfal5;
 #define PFAL5_PFA5 _pfal5.bit._PFA5
 #define PFAL5_PFA6 _pfal5.bit._PFA6
 #define PFAL5_PFA7 _pfal5.bit._PFA7
-__IO_EXTENDED PFAM5STR _pfam5;  
+__IO_EXTENDED PFAM5STR _pfam5;
 #define PFAM5 _pfam5.byte
 #define PFAM5_PFA8 _pfam5.bit._PFA8
 #define PFAM5_PFA9 _pfam5.bit._PFA9
@@ -17404,7 +17404,7 @@ __IO_EXTENDED PFAM5STR _pfam5;
 #define PFAM5_PFA13 _pfam5.bit._PFA13
 #define PFAM5_PFA14 _pfam5.bit._PFA14
 #define PFAM5_PFA15 _pfam5.bit._PFA15
-__IO_EXTENDED PFAH5STR _pfah5;  
+__IO_EXTENDED PFAH5STR _pfah5;
 #define PFAH5 _pfah5.byte
 #define PFAH5_PFA16 _pfah5.bit._PFA16
 #define PFAH5_PFA17 _pfah5.bit._PFA17
@@ -17414,7 +17414,7 @@ __IO_EXTENDED PFAH5STR _pfah5;
 #define PFAH5_PFA21 _pfah5.bit._PFA21
 #define PFAH5_PFA22 _pfah5.bit._PFA22
 #define PFAH5_PFA23 _pfah5.bit._PFA23
-__IO_EXTENDED PFAL6STR _pfal6;  
+__IO_EXTENDED PFAL6STR _pfal6;
 #define PFAL6 _pfal6.byte
 #define PFAL6_PFA0 _pfal6.bit._PFA0
 #define PFAL6_PFA1 _pfal6.bit._PFA1
@@ -17424,7 +17424,7 @@ __IO_EXTENDED PFAL6STR _pfal6;
 #define PFAL6_PFA5 _pfal6.bit._PFA5
 #define PFAL6_PFA6 _pfal6.bit._PFA6
 #define PFAL6_PFA7 _pfal6.bit._PFA7
-__IO_EXTENDED PFAM6STR _pfam6;  
+__IO_EXTENDED PFAM6STR _pfam6;
 #define PFAM6 _pfam6.byte
 #define PFAM6_PFA8 _pfam6.bit._PFA8
 #define PFAM6_PFA9 _pfam6.bit._PFA9
@@ -17434,7 +17434,7 @@ __IO_EXTENDED PFAM6STR _pfam6;
 #define PFAM6_PFA13 _pfam6.bit._PFA13
 #define PFAM6_PFA14 _pfam6.bit._PFA14
 #define PFAM6_PFA15 _pfam6.bit._PFA15
-__IO_EXTENDED PFAH6STR _pfah6;  
+__IO_EXTENDED PFAH6STR _pfah6;
 #define PFAH6 _pfah6.byte
 #define PFAH6_PFA16 _pfah6.bit._PFA16
 #define PFAH6_PFA17 _pfah6.bit._PFA17
@@ -17444,7 +17444,7 @@ __IO_EXTENDED PFAH6STR _pfah6;
 #define PFAH6_PFA21 _pfah6.bit._PFA21
 #define PFAH6_PFA22 _pfah6.bit._PFA22
 #define PFAH6_PFA23 _pfah6.bit._PFA23
-__IO_EXTENDED PFAL7STR _pfal7;  
+__IO_EXTENDED PFAL7STR _pfal7;
 #define PFAL7 _pfal7.byte
 #define PFAL7_PFA0 _pfal7.bit._PFA0
 #define PFAL7_PFA1 _pfal7.bit._PFA1
@@ -17454,7 +17454,7 @@ __IO_EXTENDED PFAL7STR _pfal7;
 #define PFAL7_PFA5 _pfal7.bit._PFA5
 #define PFAL7_PFA6 _pfal7.bit._PFA6
 #define PFAL7_PFA7 _pfal7.bit._PFA7
-__IO_EXTENDED PFAM7STR _pfam7;  
+__IO_EXTENDED PFAM7STR _pfam7;
 #define PFAM7 _pfam7.byte
 #define PFAM7_PFA8 _pfam7.bit._PFA8
 #define PFAM7_PFA9 _pfam7.bit._PFA9
@@ -17464,7 +17464,7 @@ __IO_EXTENDED PFAM7STR _pfam7;
 #define PFAM7_PFA13 _pfam7.bit._PFA13
 #define PFAM7_PFA14 _pfam7.bit._PFA14
 #define PFAM7_PFA15 _pfam7.bit._PFA15
-__IO_EXTENDED PFAH7STR _pfah7;  
+__IO_EXTENDED PFAH7STR _pfah7;
 #define PFAH7 _pfah7.byte
 #define PFAH7_PFA16 _pfah7.bit._PFA16
 #define PFAH7_PFA17 _pfah7.bit._PFA17
@@ -17474,7 +17474,7 @@ __IO_EXTENDED PFAH7STR _pfah7;
 #define PFAH7_PFA21 _pfah7.bit._PFA21
 #define PFAH7_PFA22 _pfah7.bit._PFA22
 #define PFAH7_PFA23 _pfah7.bit._PFA23
-__IO_EXTENDED PFD0STR _pfd0;  
+__IO_EXTENDED PFD0STR _pfd0;
 #define PFD0 _pfd0.word
 #define PFD0_PFD0 _pfd0.bit._PFD0
 #define PFD0_PFD1 _pfd0.bit._PFD1
@@ -17493,7 +17493,7 @@ __IO_EXTENDED PFD0STR _pfd0;
 #define PFD0_PFD14 _pfd0.bit._PFD14
 #define PFD0_PFD15 _pfd0.bit._PFD15
 #define PFD0_PFD _pfd0.bitc._PFD
-__IO_EXTENDED PFDL0STR _pfdl0;  
+__IO_EXTENDED PFDL0STR _pfdl0;
 #define PFDL0 _pfdl0.byte
 #define PFDL0_PFD0 _pfdl0.bit._PFD0
 #define PFDL0_PFD1 _pfdl0.bit._PFD1
@@ -17503,7 +17503,7 @@ __IO_EXTENDED PFDL0STR _pfdl0;
 #define PFDL0_PFD5 _pfdl0.bit._PFD5
 #define PFDL0_PFD6 _pfdl0.bit._PFD6
 #define PFDL0_PFD7 _pfdl0.bit._PFD7
-__IO_EXTENDED PFDH0STR _pfdh0;  
+__IO_EXTENDED PFDH0STR _pfdh0;
 #define PFDH0 _pfdh0.byte
 #define PFDH0_PFD8 _pfdh0.bit._PFD8
 #define PFDH0_PFD9 _pfdh0.bit._PFD9
@@ -17513,7 +17513,7 @@ __IO_EXTENDED PFDH0STR _pfdh0;
 #define PFDH0_PFD13 _pfdh0.bit._PFD13
 #define PFDH0_PFD14 _pfdh0.bit._PFD14
 #define PFDH0_PFD15 _pfdh0.bit._PFD15
-__IO_EXTENDED PFD1STR _pfd1;  
+__IO_EXTENDED PFD1STR _pfd1;
 #define PFD1 _pfd1.word
 #define PFD1_PFD0 _pfd1.bit._PFD0
 #define PFD1_PFD1 _pfd1.bit._PFD1
@@ -17532,7 +17532,7 @@ __IO_EXTENDED PFD1STR _pfd1;
 #define PFD1_PFD14 _pfd1.bit._PFD14
 #define PFD1_PFD15 _pfd1.bit._PFD15
 #define PFD1_PFD _pfd1.bitc._PFD
-__IO_EXTENDED PFDL1STR _pfdl1;  
+__IO_EXTENDED PFDL1STR _pfdl1;
 #define PFDL1 _pfdl1.byte
 #define PFDL1_PFD0 _pfdl1.bit._PFD0
 #define PFDL1_PFD1 _pfdl1.bit._PFD1
@@ -17542,7 +17542,7 @@ __IO_EXTENDED PFDL1STR _pfdl1;
 #define PFDL1_PFD5 _pfdl1.bit._PFD5
 #define PFDL1_PFD6 _pfdl1.bit._PFD6
 #define PFDL1_PFD7 _pfdl1.bit._PFD7
-__IO_EXTENDED PFDH1STR _pfdh1;  
+__IO_EXTENDED PFDH1STR _pfdh1;
 #define PFDH1 _pfdh1.byte
 #define PFDH1_PFD8 _pfdh1.bit._PFD8
 #define PFDH1_PFD9 _pfdh1.bit._PFD9
@@ -17552,7 +17552,7 @@ __IO_EXTENDED PFDH1STR _pfdh1;
 #define PFDH1_PFD13 _pfdh1.bit._PFD13
 #define PFDH1_PFD14 _pfdh1.bit._PFD14
 #define PFDH1_PFD15 _pfdh1.bit._PFD15
-__IO_EXTENDED PFD2STR _pfd2;  
+__IO_EXTENDED PFD2STR _pfd2;
 #define PFD2 _pfd2.word
 #define PFD2_PFD0 _pfd2.bit._PFD0
 #define PFD2_PFD1 _pfd2.bit._PFD1
@@ -17571,7 +17571,7 @@ __IO_EXTENDED PFD2STR _pfd2;
 #define PFD2_PFD14 _pfd2.bit._PFD14
 #define PFD2_PFD15 _pfd2.bit._PFD15
 #define PFD2_PFD _pfd2.bitc._PFD
-__IO_EXTENDED PFDL2STR _pfdl2;  
+__IO_EXTENDED PFDL2STR _pfdl2;
 #define PFDL2 _pfdl2.byte
 #define PFDL2_PFD0 _pfdl2.bit._PFD0
 #define PFDL2_PFD1 _pfdl2.bit._PFD1
@@ -17581,7 +17581,7 @@ __IO_EXTENDED PFDL2STR _pfdl2;
 #define PFDL2_PFD5 _pfdl2.bit._PFD5
 #define PFDL2_PFD6 _pfdl2.bit._PFD6
 #define PFDL2_PFD7 _pfdl2.bit._PFD7
-__IO_EXTENDED PFDH2STR _pfdh2;  
+__IO_EXTENDED PFDH2STR _pfdh2;
 #define PFDH2 _pfdh2.byte
 #define PFDH2_PFD8 _pfdh2.bit._PFD8
 #define PFDH2_PFD9 _pfdh2.bit._PFD9
@@ -17591,7 +17591,7 @@ __IO_EXTENDED PFDH2STR _pfdh2;
 #define PFDH2_PFD13 _pfdh2.bit._PFD13
 #define PFDH2_PFD14 _pfdh2.bit._PFD14
 #define PFDH2_PFD15 _pfdh2.bit._PFD15
-__IO_EXTENDED PFD3STR _pfd3;  
+__IO_EXTENDED PFD3STR _pfd3;
 #define PFD3 _pfd3.word
 #define PFD3_PFD0 _pfd3.bit._PFD0
 #define PFD3_PFD1 _pfd3.bit._PFD1
@@ -17610,7 +17610,7 @@ __IO_EXTENDED PFD3STR _pfd3;
 #define PFD3_PFD14 _pfd3.bit._PFD14
 #define PFD3_PFD15 _pfd3.bit._PFD15
 #define PFD3_PFD _pfd3.bitc._PFD
-__IO_EXTENDED PFDL3STR _pfdl3;  
+__IO_EXTENDED PFDL3STR _pfdl3;
 #define PFDL3 _pfdl3.byte
 #define PFDL3_PFD0 _pfdl3.bit._PFD0
 #define PFDL3_PFD1 _pfdl3.bit._PFD1
@@ -17620,7 +17620,7 @@ __IO_EXTENDED PFDL3STR _pfdl3;
 #define PFDL3_PFD5 _pfdl3.bit._PFD5
 #define PFDL3_PFD6 _pfdl3.bit._PFD6
 #define PFDL3_PFD7 _pfdl3.bit._PFD7
-__IO_EXTENDED PFDH3STR _pfdh3;  
+__IO_EXTENDED PFDH3STR _pfdh3;
 #define PFDH3 _pfdh3.byte
 #define PFDH3_PFD8 _pfdh3.bit._PFD8
 #define PFDH3_PFD9 _pfdh3.bit._PFD9
@@ -17630,7 +17630,7 @@ __IO_EXTENDED PFDH3STR _pfdh3;
 #define PFDH3_PFD13 _pfdh3.bit._PFD13
 #define PFDH3_PFD14 _pfdh3.bit._PFD14
 #define PFDH3_PFD15 _pfdh3.bit._PFD15
-__IO_EXTENDED PFD4STR _pfd4;  
+__IO_EXTENDED PFD4STR _pfd4;
 #define PFD4 _pfd4.word
 #define PFD4_PFD0 _pfd4.bit._PFD0
 #define PFD4_PFD1 _pfd4.bit._PFD1
@@ -17649,7 +17649,7 @@ __IO_EXTENDED PFD4STR _pfd4;
 #define PFD4_PFD14 _pfd4.bit._PFD14
 #define PFD4_PFD15 _pfd4.bit._PFD15
 #define PFD4_PFD _pfd4.bitc._PFD
-__IO_EXTENDED PFDL4STR _pfdl4;  
+__IO_EXTENDED PFDL4STR _pfdl4;
 #define PFDL4 _pfdl4.byte
 #define PFDL4_PFD0 _pfdl4.bit._PFD0
 #define PFDL4_PFD1 _pfdl4.bit._PFD1
@@ -17659,7 +17659,7 @@ __IO_EXTENDED PFDL4STR _pfdl4;
 #define PFDL4_PFD5 _pfdl4.bit._PFD5
 #define PFDL4_PFD6 _pfdl4.bit._PFD6
 #define PFDL4_PFD7 _pfdl4.bit._PFD7
-__IO_EXTENDED PFDH4STR _pfdh4;  
+__IO_EXTENDED PFDH4STR _pfdh4;
 #define PFDH4 _pfdh4.byte
 #define PFDH4_PFD8 _pfdh4.bit._PFD8
 #define PFDH4_PFD9 _pfdh4.bit._PFD9
@@ -17669,7 +17669,7 @@ __IO_EXTENDED PFDH4STR _pfdh4;
 #define PFDH4_PFD13 _pfdh4.bit._PFD13
 #define PFDH4_PFD14 _pfdh4.bit._PFD14
 #define PFDH4_PFD15 _pfdh4.bit._PFD15
-__IO_EXTENDED PFD5STR _pfd5;  
+__IO_EXTENDED PFD5STR _pfd5;
 #define PFD5 _pfd5.word
 #define PFD5_PFD0 _pfd5.bit._PFD0
 #define PFD5_PFD1 _pfd5.bit._PFD1
@@ -17688,7 +17688,7 @@ __IO_EXTENDED PFD5STR _pfd5;
 #define PFD5_PFD14 _pfd5.bit._PFD14
 #define PFD5_PFD15 _pfd5.bit._PFD15
 #define PFD5_PFD _pfd5.bitc._PFD
-__IO_EXTENDED PFDL5STR _pfdl5;  
+__IO_EXTENDED PFDL5STR _pfdl5;
 #define PFDL5 _pfdl5.byte
 #define PFDL5_PFD0 _pfdl5.bit._PFD0
 #define PFDL5_PFD1 _pfdl5.bit._PFD1
@@ -17698,7 +17698,7 @@ __IO_EXTENDED PFDL5STR _pfdl5;
 #define PFDL5_PFD5 _pfdl5.bit._PFD5
 #define PFDL5_PFD6 _pfdl5.bit._PFD6
 #define PFDL5_PFD7 _pfdl5.bit._PFD7
-__IO_EXTENDED PFDH5STR _pfdh5;  
+__IO_EXTENDED PFDH5STR _pfdh5;
 #define PFDH5 _pfdh5.byte
 #define PFDH5_PFD8 _pfdh5.bit._PFD8
 #define PFDH5_PFD9 _pfdh5.bit._PFD9
@@ -17708,7 +17708,7 @@ __IO_EXTENDED PFDH5STR _pfdh5;
 #define PFDH5_PFD13 _pfdh5.bit._PFD13
 #define PFDH5_PFD14 _pfdh5.bit._PFD14
 #define PFDH5_PFD15 _pfdh5.bit._PFD15
-__IO_EXTENDED PFD6STR _pfd6;  
+__IO_EXTENDED PFD6STR _pfd6;
 #define PFD6 _pfd6.word
 #define PFD6_PFD0 _pfd6.bit._PFD0
 #define PFD6_PFD1 _pfd6.bit._PFD1
@@ -17727,7 +17727,7 @@ __IO_EXTENDED PFD6STR _pfd6;
 #define PFD6_PFD14 _pfd6.bit._PFD14
 #define PFD6_PFD15 _pfd6.bit._PFD15
 #define PFD6_PFD _pfd6.bitc._PFD
-__IO_EXTENDED PFDL6STR _pfdl6;  
+__IO_EXTENDED PFDL6STR _pfdl6;
 #define PFDL6 _pfdl6.byte
 #define PFDL6_PFD0 _pfdl6.bit._PFD0
 #define PFDL6_PFD1 _pfdl6.bit._PFD1
@@ -17737,7 +17737,7 @@ __IO_EXTENDED PFDL6STR _pfdl6;
 #define PFDL6_PFD5 _pfdl6.bit._PFD5
 #define PFDL6_PFD6 _pfdl6.bit._PFD6
 #define PFDL6_PFD7 _pfdl6.bit._PFD7
-__IO_EXTENDED PFDH6STR _pfdh6;  
+__IO_EXTENDED PFDH6STR _pfdh6;
 #define PFDH6 _pfdh6.byte
 #define PFDH6_PFD8 _pfdh6.bit._PFD8
 #define PFDH6_PFD9 _pfdh6.bit._PFD9
@@ -17747,7 +17747,7 @@ __IO_EXTENDED PFDH6STR _pfdh6;
 #define PFDH6_PFD13 _pfdh6.bit._PFD13
 #define PFDH6_PFD14 _pfdh6.bit._PFD14
 #define PFDH6_PFD15 _pfdh6.bit._PFD15
-__IO_EXTENDED PFD7STR _pfd7;  
+__IO_EXTENDED PFD7STR _pfd7;
 #define PFD7 _pfd7.word
 #define PFD7_PFD0 _pfd7.bit._PFD0
 #define PFD7_PFD1 _pfd7.bit._PFD1
@@ -17766,7 +17766,7 @@ __IO_EXTENDED PFD7STR _pfd7;
 #define PFD7_PFD14 _pfd7.bit._PFD14
 #define PFD7_PFD15 _pfd7.bit._PFD15
 #define PFD7_PFD _pfd7.bitc._PFD
-__IO_EXTENDED PFDL7STR _pfdl7;  
+__IO_EXTENDED PFDL7STR _pfdl7;
 #define PFDL7 _pfdl7.byte
 #define PFDL7_PFD0 _pfdl7.bit._PFD0
 #define PFDL7_PFD1 _pfdl7.bit._PFD1
@@ -17776,7 +17776,7 @@ __IO_EXTENDED PFDL7STR _pfdl7;
 #define PFDL7_PFD5 _pfdl7.bit._PFD5
 #define PFDL7_PFD6 _pfdl7.bit._PFD6
 #define PFDL7_PFD7 _pfdl7.bit._PFD7
-__IO_EXTENDED PFDH7STR _pfdh7;  
+__IO_EXTENDED PFDH7STR _pfdh7;
 #define PFDH7 _pfdh7.byte
 #define PFDH7_PFD8 _pfdh7.bit._PFD8
 #define PFDH7_PFD9 _pfdh7.bit._PFD9
@@ -17786,7 +17786,7 @@ __IO_EXTENDED PFDH7STR _pfdh7;
 #define PFDH7_PFD13 _pfdh7.bit._PFD13
 #define PFDH7_PFD14 _pfdh7.bit._PFD14
 #define PFDH7_PFD15 _pfdh7.bit._PFD15
-__IO_EXTENDED MFMCSSTR _mfmcs;  
+__IO_EXTENDED MFMCSSTR _mfmcs;
 #define MFMCS _mfmcs.byte
 #define MFMCS_RDY _mfmcs.bit._RDY
 #define MFMCS_RDYINT _mfmcs.bit._RDYINT
@@ -17795,7 +17795,7 @@ __IO_EXTENDED MFMCSSTR _mfmcs;
 #define MFMCS_CRBE _mfmcs.bit._CRBE
 #define MFMCS_DRBE _mfmcs.bit._DRBE
 #define MFMCS_RD19V _mfmcs.bit._RD19V
-__IO_EXTENDED MFMTCSTR _mfmtc;  
+__IO_EXTENDED MFMTCSTR _mfmtc;
 #define MFMTC _mfmtc.word
 #define MFMTC_FAWC0 _mfmtc.bit._FAWC0
 #define MFMTC_FAWC1 _mfmtc.bit._FAWC1
@@ -17816,7 +17816,7 @@ __IO_EXTENDED MFMTCSTR _mfmtc;
 #define MFMTC_ATDL _mfmtc.bitc._ATDL
 #define MFMTC_ATDEQD _mfmtc.bitc._ATDEQD
 #define MFMTC_EQL _mfmtc.bitc._EQL
-__IO_EXTENDED MFMTCLSTR _mfmtcl;  
+__IO_EXTENDED MFMTCLSTR _mfmtcl;
 #define MFMTCL _mfmtcl.byte
 #define MFMTCL_FAWC0 _mfmtcl.bit._FAWC0
 #define MFMTCL_FAWC1 _mfmtcl.bit._FAWC1
@@ -17826,7 +17826,7 @@ __IO_EXTENDED MFMTCLSTR _mfmtcl;
 #define MFMTCL_CLKBW _mfmtcl.bit._CLKBW
 #define MFMTCL_WEXL _mfmtcl.bit._WEXL
 #define MFMTCL_FAWC _mfmtcl.bitc._FAWC
-__IO_EXTENDED MFMTCHSTR _mfmtch;  
+__IO_EXTENDED MFMTCHSTR _mfmtch;
 #define MFMTCH _mfmtch.byte
 #define MFMTCH_ATDINIT _mfmtch.bit._ATDINIT
 #define MFMTCH_ATDL0 _mfmtch.bit._ATDL0
@@ -17839,7 +17839,7 @@ __IO_EXTENDED MFMTCHSTR _mfmtch;
 #define MFMTCH_ATDL _mfmtch.bitc._ATDL
 #define MFMTCH_ATDEQD _mfmtch.bitc._ATDEQD
 #define MFMTCH_EQL _mfmtch.bitc._EQL
-__IO_EXTENDED SFMCSSTR _sfmcs;  
+__IO_EXTENDED SFMCSSTR _sfmcs;
 #define SFMCS _sfmcs.byte
 #define SFMCS_RDY _sfmcs.bit._RDY
 #define SFMCS_RDYINT _sfmcs.bit._RDYINT
@@ -17848,7 +17848,7 @@ __IO_EXTENDED SFMCSSTR _sfmcs;
 #define SFMCS_CRBE _sfmcs.bit._CRBE
 #define SFMCS_DRBE _sfmcs.bit._DRBE
 #define SFMCS_RD19V _sfmcs.bit._RD19V
-__IO_EXTENDED SFMTCSTR _sfmtc;  
+__IO_EXTENDED SFMTCSTR _sfmtc;
 #define SFMTC _sfmtc.word
 #define SFMTC_FAWC0 _sfmtc.bit._FAWC0
 #define SFMTC_FAWC1 _sfmtc.bit._FAWC1
@@ -17869,7 +17869,7 @@ __IO_EXTENDED SFMTCSTR _sfmtc;
 #define SFMTC_ATDL _sfmtc.bitc._ATDL
 #define SFMTC_ATDEQD _sfmtc.bitc._ATDEQD
 #define SFMTC_EQL _sfmtc.bitc._EQL
-__IO_EXTENDED SFMTCLSTR _sfmtcl;  
+__IO_EXTENDED SFMTCLSTR _sfmtcl;
 #define SFMTCL _sfmtcl.byte
 #define SFMTCL_FAWC0 _sfmtcl.bit._FAWC0
 #define SFMTCL_FAWC1 _sfmtcl.bit._FAWC1
@@ -17879,7 +17879,7 @@ __IO_EXTENDED SFMTCLSTR _sfmtcl;
 #define SFMTCL_CLKBW _sfmtcl.bit._CLKBW
 #define SFMTCL_WEXL _sfmtcl.bit._WEXL
 #define SFMTCL_FAWC _sfmtcl.bitc._FAWC
-__IO_EXTENDED SFMTCHSTR _sfmtch;  
+__IO_EXTENDED SFMTCHSTR _sfmtch;
 #define SFMTCH _sfmtch.byte
 #define SFMTCH_ATDINIT _sfmtch.bit._ATDINIT
 #define SFMTCH_ATDL0 _sfmtch.bit._ATDL0
@@ -17892,14 +17892,14 @@ __IO_EXTENDED SFMTCHSTR _sfmtch;
 #define SFMTCH_ATDL _sfmtch.bitc._ATDL
 #define SFMTCH_ATDEQD _sfmtch.bitc._ATDEQD
 #define SFMTCH_EQL _sfmtch.bitc._EQL
-__IO_EXTENDED FMWC0STR _fmwc0;  
+__IO_EXTENDED FMWC0STR _fmwc0;
 #define FMWC0 _fmwc0.byte
 #define FMWC0_WCB0 _fmwc0.bit._WCB0
 #define FMWC0_WCB1 _fmwc0.bit._WCB1
 #define FMWC0_WCB2 _fmwc0.bit._WCB2
 #define FMWC0_WCB3 _fmwc0.bit._WCB3
 #define FMWC0_WCB _fmwc0.bitc._WCB
-__IO_EXTENDED FMWC1STR _fmwc1;  
+__IO_EXTENDED FMWC1STR _fmwc1;
 #define FMWC1 _fmwc1.byte
 #define FMWC1_WCA0 _fmwc1.bit._WCA0
 #define FMWC1_WCA1 _fmwc1.bit._WCA1
@@ -17907,12 +17907,12 @@ __IO_EXTENDED FMWC1STR _fmwc1;
 #define FMWC1_WCA3 _fmwc1.bit._WCA3
 #define FMWC1_WCA _fmwc1.bitc._WCA
 __IO_EXTENDED IO_BYTE _fmwc2;
-#define FMWC2 _fmwc2   
+#define FMWC2 _fmwc2
 __IO_EXTENDED IO_BYTE _fmwc3;
-#define FMWC3 _fmwc3   
+#define FMWC3 _fmwc3
 __IO_EXTENDED IO_BYTE _fmwc4;
-#define FMWC4 _fmwc4   
-__IO_EXTENDED FMWC5STR _fmwc5;  
+#define FMWC4 _fmwc4
+__IO_EXTENDED FMWC5STR _fmwc5;
 #define FMWC5 _fmwc5.byte
 #define FMWC5_WC32 _fmwc5.bit._WC32
 #define FMWC5_WC33 _fmwc5.bit._WC33
@@ -17923,13 +17923,13 @@ __IO_EXTENDED FMWC5STR _fmwc5;
 #define FMWC5_WC38 _fmwc5.bit._WC38
 #define FMWC5_WC39 _fmwc5.bit._WC39
 #define FMWC5_WC3 _fmwc5.bitc._WC3
-__IO_EXTENDED SMCRSTR _smcr;  
+__IO_EXTENDED SMCRSTR _smcr;
 #define SMCR _smcr.byte
 #define SMCR_SMS0 _smcr.bit._SMS0
 #define SMCR_SMS1 _smcr.bit._SMS1
 #define SMCR_SPL _smcr.bit._SPL
 #define SMCR_SMS _smcr.bitc._SMS
-__IO_EXTENDED CKSRSTR _cksr;  
+__IO_EXTENDED CKSRSTR _cksr;
 #define CKSR _cksr.byte
 #define CKSR_SC1S0 _cksr.bit._SC1S0
 #define CKSR_SC1S1 _cksr.bit._SC1S1
@@ -17940,7 +17940,7 @@ __IO_EXTENDED CKSRSTR _cksr;
 #define CKSR_PCE _cksr.bit._PCE
 #define CKSR_SC1S _cksr.bitc._SC1S
 #define CKSR_SC2S _cksr.bitc._SC2S
-__IO_EXTENDED CKSSRSTR _ckssr;  
+__IO_EXTENDED CKSSRSTR _ckssr;
 #define CKSSR _ckssr.byte
 #define CKSSR_MCST0 _ckssr.bit._MCST0
 #define CKSSR_MCST1 _ckssr.bit._MCST1
@@ -17948,7 +17948,7 @@ __IO_EXTENDED CKSSRSTR _ckssr;
 #define CKSSR_PCST _ckssr.bit._PCST
 #define CKSSR_MRFBE _ckssr.bit._MRFBE
 #define CKSSR_MCST _ckssr.bitc._MCST
-__IO_EXTENDED CKMRSTR _ckmr;  
+__IO_EXTENDED CKMRSTR _ckmr;
 #define CKMR _ckmr.byte
 #define CKMR_SC1M0 _ckmr.bit._SC1M0
 #define CKMR_SC1M1 _ckmr.bit._SC1M1
@@ -17959,7 +17959,7 @@ __IO_EXTENDED CKMRSTR _ckmr;
 #define CKMR_PCM _ckmr.bit._PCM
 #define CKMR_SC1M _ckmr.bitc._SC1M
 #define CKMR_SC2M _ckmr.bitc._SC2M
-__IO_EXTENDED CKFCRSTR _ckfcr;  
+__IO_EXTENDED CKFCRSTR _ckfcr;
 #define CKFCR _ckfcr.word
 #define CKFCR_RCFS _ckfcr.bit._RCFS
 #define CKFCR_BCD0 _ckfcr.bit._BCD0
@@ -17977,7 +17977,7 @@ __IO_EXTENDED CKFCRSTR _ckfcr;
 #define CKFCR_BCD _ckfcr.bitc._BCD
 #define CKFCR_PC1D _ckfcr.bitc._PC1D
 #define CKFCR_PC2D _ckfcr.bitc._PC2D
-__IO_EXTENDED CKFCRLSTR _ckfcrl;  
+__IO_EXTENDED CKFCRLSTR _ckfcrl;
 #define CKFCRL _ckfcrl.byte
 #define CKFCRL_RCFS _ckfcrl.bit._RCFS
 #define CKFCRL_BCD0 _ckfcrl.bit._BCD0
@@ -17985,7 +17985,7 @@ __IO_EXTENDED CKFCRLSTR _ckfcrl;
 #define CKFCRL_BCD2 _ckfcrl.bit._BCD2
 #define CKFCRL_BCD3 _ckfcrl.bit._BCD3
 #define CKFCRL_BCD _ckfcrl.bitc._BCD
-__IO_EXTENDED CKFCRHSTR _ckfcrh;  
+__IO_EXTENDED CKFCRHSTR _ckfcrh;
 #define CKFCRH _ckfcrh.byte
 #define CKFCRH_PC1D0 _ckfcrh.bit._PC1D0
 #define CKFCRH_PC1D1 _ckfcrh.bit._PC1D1
@@ -17997,7 +17997,7 @@ __IO_EXTENDED CKFCRHSTR _ckfcrh;
 #define CKFCRH_PC2D3 _ckfcrh.bit._PC2D3
 #define CKFCRH_PC1D _ckfcrh.bitc._PC1D
 #define CKFCRH_PC2D _ckfcrh.bitc._PC2D
-__IO_EXTENDED PLLCRSTR _pllcr;  
+__IO_EXTENDED PLLCRSTR _pllcr;
 #define PLLCR _pllcr.word
 #define PLLCR_PMS0 _pllcr.bit._PMS0
 #define PLLCR_PMS1 _pllcr.bit._PMS1
@@ -18014,7 +18014,7 @@ __IO_EXTENDED PLLCRSTR _pllcr;
 #define PLLCR_PMS _pllcr.bitc._PMS
 #define PLLCR_VMS _pllcr.bitc._VMS
 #define PLLCR_PC3D _pllcr.bitc._PC3D
-__IO_EXTENDED PLLCRLSTR _pllcrl;  
+__IO_EXTENDED PLLCRLSTR _pllcrl;
 #define PLLCRL _pllcrl.byte
 #define PLLCRL_PMS0 _pllcrl.bit._PMS0
 #define PLLCRL_PMS1 _pllcrl.bit._PMS1
@@ -18026,14 +18026,14 @@ __IO_EXTENDED PLLCRLSTR _pllcrl;
 #define PLLCRL_VMS2 _pllcrl.bit._VMS2
 #define PLLCRL_PMS _pllcrl.bitc._PMS
 #define PLLCRL_VMS _pllcrl.bitc._VMS
-__IO_EXTENDED PLLCRHSTR _pllcrh;  
+__IO_EXTENDED PLLCRHSTR _pllcrh;
 #define PLLCRH _pllcrh.byte
 #define PLLCRH_PC3D0 _pllcrh.bit._PC3D0
 #define PLLCRH_PC3D1 _pllcrh.bit._PC3D1
 #define PLLCRH_PC3D2 _pllcrh.bit._PC3D2
 #define PLLCRH_PC3D3 _pllcrh.bit._PC3D3
 #define PLLCRH_PC3D _pllcrh.bitc._PC3D
-__IO_EXTENDED RCTCRSTR _rctcr;  
+__IO_EXTENDED RCTCRSTR _rctcr;
 #define RCTCR _rctcr.byte
 #define RCTCR_RCTI0 _rctcr.bit._RCTI0
 #define RCTCR_RCTI1 _rctcr.bit._RCTI1
@@ -18043,7 +18043,7 @@ __IO_EXTENDED RCTCRSTR _rctcr;
 #define RCTCR_RCTIF _rctcr.bit._RCTIF
 #define RCTCR_RCTIE _rctcr.bit._RCTIE
 #define RCTCR_RCTI _rctcr.bitc._RCTI
-__IO_EXTENDED MCTCRSTR _mctcr;  
+__IO_EXTENDED MCTCRSTR _mctcr;
 #define MCTCR _mctcr.byte
 #define MCTCR_MCTI0 _mctcr.bit._MCTI0
 #define MCTCR_MCTI1 _mctcr.bit._MCTI1
@@ -18053,7 +18053,7 @@ __IO_EXTENDED MCTCRSTR _mctcr;
 #define MCTCR_MCTIF _mctcr.bit._MCTIF
 #define MCTCR_MCTIE _mctcr.bit._MCTIE
 #define MCTCR_MCTI _mctcr.bitc._MCTI
-__IO_EXTENDED RCCSRCSTR _rccsrc;  
+__IO_EXTENDED RCCSRCSTR _rccsrc;
 #define RCCSRC _rccsrc.byte
 #define RCCSRC_PRST _rccsrc.bit._PRST
 #define RCCSRC_ERST _rccsrc.bit._ERST
@@ -18061,14 +18061,14 @@ __IO_EXTENDED RCCSRCSTR _rccsrc;
 #define RCCSRC_SRST _rccsrc.bit._SRST
 #define RCCSRC_WRST _rccsrc.bit._WRST
 #define RCCSRC_MCMF _rccsrc.bit._MCMF
-__IO_EXTENDED RCRSTR _rcr;  
+__IO_EXTENDED RCRSTR _rcr;
 #define RCR _rcr.byte
 #define RCR_SRSTG _rcr.bit._SRSTG
 #define RCR_LVRE _rcr.bit._LVRE
 #define RCR_LVDE _rcr.bit._LVDE
 #define RCR_CSDRE _rcr.bit._CSDRE
 #define RCR_MCSDI _rcr.bit._MCSDI
-__IO_EXTENDED RCCSRSTR _rccsr;  
+__IO_EXTENDED RCCSRSTR _rccsr;
 #define RCCSR _rccsr.byte
 #define RCCSR_PRST _rccsr.bit._PRST
 #define RCCSR_ERST _rccsr.bit._ERST
@@ -18076,7 +18076,7 @@ __IO_EXTENDED RCCSRSTR _rccsr;
 #define RCCSR_SRST _rccsr.bit._SRST
 #define RCCSR_WRST _rccsr.bit._WRST
 #define RCCSR_MCMF _rccsr.bit._MCMF
-__IO_EXTENDED WDTCSTR _wdtc;  
+__IO_EXTENDED WDTCSTR _wdtc;
 #define WDTC _wdtc.byte
 #define WDTC_WTI0 _wdtc.bit._WTI0
 #define WDTC_WTI1 _wdtc.bit._WTI1
@@ -18087,7 +18087,7 @@ __IO_EXTENDED WDTCSTR _wdtc;
 #define WDTC_RSTP _wdtc.bit._RSTP
 #define WDTC_WTI _wdtc.bitc._WTI
 #define WDTC_WTCS _wdtc.bitc._WTCS
-__IO_EXTENDED WDTCPSTR _wdtcp;  
+__IO_EXTENDED WDTCPSTR _wdtcp;
 #define WDTCP _wdtcp.byte
 #define WDTCP_WCP0 _wdtcp.bit._WCP0
 #define WDTCP_WCP1 _wdtcp.bit._WCP1
@@ -18098,7 +18098,7 @@ __IO_EXTENDED WDTCPSTR _wdtcp;
 #define WDTCP_WCP6 _wdtcp.bit._WCP6
 #define WDTCP_WCP7 _wdtcp.bit._WCP7
 #define WDTCP_WCP _wdtcp.bitc._WCP
-__IO_EXTENDED COARSTR _coar;  
+__IO_EXTENDED COARSTR _coar;
 #define COAR _coar.byte
 #define COAR_CKOE0 _coar.bit._CKOE0
 #define COAR_CKOXE0 _coar.bit._CKOXE0
@@ -18108,7 +18108,7 @@ __IO_EXTENDED COARSTR _coar;
 #define COAR_CKOXE1 _coar.bit._CKOXE1
 #define COAR_RUNC1 _coar.bit._RUNC1
 #define COAR_RUNM1 _coar.bit._RUNM1
-__IO_EXTENDED COCR0STR _cocr0;  
+__IO_EXTENDED COCR0STR _cocr0;
 #define COCR0 _cocr0.byte
 #define COCR0_SEL0 _cocr0.bit._SEL0
 #define COCR0_SEL1 _cocr0.bit._SEL1
@@ -18119,7 +18119,7 @@ __IO_EXTENDED COCR0STR _cocr0;
 #define COCR0_DIV2 _cocr0.bit._DIV2
 #define COCR0_SEL _cocr0.bitc._SEL
 #define COCR0_DIV _cocr0.bitc._DIV
-__IO_EXTENDED COCR1STR _cocr1;  
+__IO_EXTENDED COCR1STR _cocr1;
 #define COCR1 _cocr1.byte
 #define COCR1_SEL0 _cocr1.bit._SEL0
 #define COCR1_SEL1 _cocr1.bit._SEL1
@@ -18130,12 +18130,12 @@ __IO_EXTENDED COCR1STR _cocr1;
 #define COCR1_DIV2 _cocr1.bit._DIV2
 #define COCR1_SEL _cocr1.bitc._SEL
 #define COCR1_DIV _cocr1.bitc._DIV
-__IO_EXTENDED CMCRSTR _cmcr;  
+__IO_EXTENDED CMCRSTR _cmcr;
 #define CMCR _cmcr.byte
 #define CMCR_PDX _cmcr.bit._PDX
 #define CMCR_MODEN _cmcr.bit._MODEN
 #define CMCR_MODRUN _cmcr.bit._MODRUN
-__IO_EXTENDED CMPRSTR _cmpr;  
+__IO_EXTENDED CMPRSTR _cmpr;
 #define CMPR _cmpr.word
 #define CMPR_C0 _cmpr.bit._C0
 #define CMPR_C1 _cmpr.bit._C1
@@ -18154,7 +18154,7 @@ __IO_EXTENDED CMPRSTR _cmpr;
 #define CMPR_C _cmpr.bitc._C
 #define CMPR_N _cmpr.bitc._N
 #define CMPR_K _cmpr.bitc._K
-__IO_EXTENDED CMPRLSTR _cmprl;  
+__IO_EXTENDED CMPRLSTR _cmprl;
 #define CMPRL _cmprl.byte
 #define CMPRL_C0 _cmprl.bit._C0
 #define CMPRL_C1 _cmprl.bit._C1
@@ -18166,7 +18166,7 @@ __IO_EXTENDED CMPRLSTR _cmprl;
 #define CMPRL_N2 _cmprl.bit._N2
 #define CMPRL_C _cmprl.bitc._C
 #define CMPRL_N _cmprl.bitc._N
-__IO_EXTENDED CMPRHSTR _cmprh;  
+__IO_EXTENDED CMPRHSTR _cmprh;
 #define CMPRH _cmprh.byte
 #define CMPRH_N3 _cmprh.bit._N3
 #define CMPRH_K0 _cmprh.bit._K0
@@ -18175,7 +18175,7 @@ __IO_EXTENDED CMPRHSTR _cmprh;
 #define CMPRH_K3 _cmprh.bit._K3
 #define CMPRH_K4 _cmprh.bit._K4
 #define CMPRH_K _cmprh.bitc._K
-__IO_EXTENDED VRCRSTR _vrcr;  
+__IO_EXTENDED VRCRSTR _vrcr;
 #define VRCR _vrcr.byte
 #define VRCR_LPBM0 _vrcr.bit._LPBM0
 #define VRCR_LPBM1 _vrcr.bit._LPBM1
@@ -18188,7 +18188,7 @@ __IO_EXTENDED VRCRSTR _vrcr;
 #define VRCR_LPBM _vrcr.bitc._LPBM
 #define VRCR_LPMA _vrcr.bitc._LPMA
 #define VRCR_HPM _vrcr.bitc._HPM
-__IO_EXTENDED DDR00STR _ddr00;  
+__IO_EXTENDED DDR00STR _ddr00;
 #define DDR00 _ddr00.byte
 #define DDR00_D0 _ddr00.bit._D0
 #define DDR00_D1 _ddr00.bit._D1
@@ -18198,7 +18198,7 @@ __IO_EXTENDED DDR00STR _ddr00;
 #define DDR00_D5 _ddr00.bit._D5
 #define DDR00_D6 _ddr00.bit._D6
 #define DDR00_D7 _ddr00.bit._D7
-__IO_EXTENDED DDR01STR _ddr01;  
+__IO_EXTENDED DDR01STR _ddr01;
 #define DDR01 _ddr01.byte
 #define DDR01_D0 _ddr01.bit._D0
 #define DDR01_D1 _ddr01.bit._D1
@@ -18208,7 +18208,7 @@ __IO_EXTENDED DDR01STR _ddr01;
 #define DDR01_D5 _ddr01.bit._D5
 #define DDR01_D6 _ddr01.bit._D6
 #define DDR01_D7 _ddr01.bit._D7
-__IO_EXTENDED DDR02STR _ddr02;  
+__IO_EXTENDED DDR02STR _ddr02;
 #define DDR02 _ddr02.byte
 #define DDR02_D0 _ddr02.bit._D0
 #define DDR02_D1 _ddr02.bit._D1
@@ -18218,7 +18218,7 @@ __IO_EXTENDED DDR02STR _ddr02;
 #define DDR02_D5 _ddr02.bit._D5
 #define DDR02_D6 _ddr02.bit._D6
 #define DDR02_D7 _ddr02.bit._D7
-__IO_EXTENDED DDR03STR _ddr03;  
+__IO_EXTENDED DDR03STR _ddr03;
 #define DDR03 _ddr03.byte
 #define DDR03_D0 _ddr03.bit._D0
 #define DDR03_D1 _ddr03.bit._D1
@@ -18228,7 +18228,7 @@ __IO_EXTENDED DDR03STR _ddr03;
 #define DDR03_D5 _ddr03.bit._D5
 #define DDR03_D6 _ddr03.bit._D6
 #define DDR03_D7 _ddr03.bit._D7
-__IO_EXTENDED DDR04STR _ddr04;  
+__IO_EXTENDED DDR04STR _ddr04;
 #define DDR04 _ddr04.byte
 #define DDR04_D0 _ddr04.bit._D0
 #define DDR04_D1 _ddr04.bit._D1
@@ -18238,7 +18238,7 @@ __IO_EXTENDED DDR04STR _ddr04;
 #define DDR04_D5 _ddr04.bit._D5
 #define DDR04_D6 _ddr04.bit._D6
 #define DDR04_D7 _ddr04.bit._D7
-__IO_EXTENDED DDR05STR _ddr05;  
+__IO_EXTENDED DDR05STR _ddr05;
 #define DDR05 _ddr05.byte
 #define DDR05_D0 _ddr05.bit._D0
 #define DDR05_D1 _ddr05.bit._D1
@@ -18248,7 +18248,7 @@ __IO_EXTENDED DDR05STR _ddr05;
 #define DDR05_D5 _ddr05.bit._D5
 #define DDR05_D6 _ddr05.bit._D6
 #define DDR05_D7 _ddr05.bit._D7
-__IO_EXTENDED DDR06STR _ddr06;  
+__IO_EXTENDED DDR06STR _ddr06;
 #define DDR06 _ddr06.byte
 #define DDR06_D0 _ddr06.bit._D0
 #define DDR06_D1 _ddr06.bit._D1
@@ -18258,7 +18258,7 @@ __IO_EXTENDED DDR06STR _ddr06;
 #define DDR06_D5 _ddr06.bit._D5
 #define DDR06_D6 _ddr06.bit._D6
 #define DDR06_D7 _ddr06.bit._D7
-__IO_EXTENDED DDR07STR _ddr07;  
+__IO_EXTENDED DDR07STR _ddr07;
 #define DDR07 _ddr07.byte
 #define DDR07_D0 _ddr07.bit._D0
 #define DDR07_D1 _ddr07.bit._D1
@@ -18268,7 +18268,7 @@ __IO_EXTENDED DDR07STR _ddr07;
 #define DDR07_D5 _ddr07.bit._D5
 #define DDR07_D6 _ddr07.bit._D6
 #define DDR07_D7 _ddr07.bit._D7
-__IO_EXTENDED DDR08STR _ddr08;  
+__IO_EXTENDED DDR08STR _ddr08;
 #define DDR08 _ddr08.byte
 #define DDR08_D0 _ddr08.bit._D0
 #define DDR08_D1 _ddr08.bit._D1
@@ -18278,7 +18278,7 @@ __IO_EXTENDED DDR08STR _ddr08;
 #define DDR08_D5 _ddr08.bit._D5
 #define DDR08_D6 _ddr08.bit._D6
 #define DDR08_D7 _ddr08.bit._D7
-__IO_EXTENDED DDR09STR _ddr09;  
+__IO_EXTENDED DDR09STR _ddr09;
 #define DDR09 _ddr09.byte
 #define DDR09_D0 _ddr09.bit._D0
 #define DDR09_D1 _ddr09.bit._D1
@@ -18288,11 +18288,11 @@ __IO_EXTENDED DDR09STR _ddr09;
 #define DDR09_D5 _ddr09.bit._D5
 #define DDR09_D6 _ddr09.bit._D6
 #define DDR09_D7 _ddr09.bit._D7
-__IO_EXTENDED DDR10STR _ddr10;  
+__IO_EXTENDED DDR10STR _ddr10;
 #define DDR10 _ddr10.byte
 #define DDR10_D0 _ddr10.bit._D0
 #define DDR10_D1 _ddr10.bit._D1
-__IO_EXTENDED PIER00STR _pier00;  
+__IO_EXTENDED PIER00STR _pier00;
 #define PIER00 _pier00.byte
 #define PIER00_IE0 _pier00.bit._IE0
 #define PIER00_IE1 _pier00.bit._IE1
@@ -18302,7 +18302,7 @@ __IO_EXTENDED PIER00STR _pier00;
 #define PIER00_IE5 _pier00.bit._IE5
 #define PIER00_IE6 _pier00.bit._IE6
 #define PIER00_IE7 _pier00.bit._IE7
-__IO_EXTENDED PIER01STR _pier01;  
+__IO_EXTENDED PIER01STR _pier01;
 #define PIER01 _pier01.byte
 #define PIER01_IE0 _pier01.bit._IE0
 #define PIER01_IE1 _pier01.bit._IE1
@@ -18312,7 +18312,7 @@ __IO_EXTENDED PIER01STR _pier01;
 #define PIER01_IE5 _pier01.bit._IE5
 #define PIER01_IE6 _pier01.bit._IE6
 #define PIER01_IE7 _pier01.bit._IE7
-__IO_EXTENDED PIER02STR _pier02;  
+__IO_EXTENDED PIER02STR _pier02;
 #define PIER02 _pier02.byte
 #define PIER02_IE0 _pier02.bit._IE0
 #define PIER02_IE1 _pier02.bit._IE1
@@ -18322,7 +18322,7 @@ __IO_EXTENDED PIER02STR _pier02;
 #define PIER02_IE5 _pier02.bit._IE5
 #define PIER02_IE6 _pier02.bit._IE6
 #define PIER02_IE7 _pier02.bit._IE7
-__IO_EXTENDED PIER03STR _pier03;  
+__IO_EXTENDED PIER03STR _pier03;
 #define PIER03 _pier03.byte
 #define PIER03_IE0 _pier03.bit._IE0
 #define PIER03_IE1 _pier03.bit._IE1
@@ -18332,7 +18332,7 @@ __IO_EXTENDED PIER03STR _pier03;
 #define PIER03_IE5 _pier03.bit._IE5
 #define PIER03_IE6 _pier03.bit._IE6
 #define PIER03_IE7 _pier03.bit._IE7
-__IO_EXTENDED PIER04STR _pier04;  
+__IO_EXTENDED PIER04STR _pier04;
 #define PIER04 _pier04.byte
 #define PIER04_IE0 _pier04.bit._IE0
 #define PIER04_IE1 _pier04.bit._IE1
@@ -18342,7 +18342,7 @@ __IO_EXTENDED PIER04STR _pier04;
 #define PIER04_IE5 _pier04.bit._IE5
 #define PIER04_IE6 _pier04.bit._IE6
 #define PIER04_IE7 _pier04.bit._IE7
-__IO_EXTENDED PIER05STR _pier05;  
+__IO_EXTENDED PIER05STR _pier05;
 #define PIER05 _pier05.byte
 #define PIER05_IE0 _pier05.bit._IE0
 #define PIER05_IE1 _pier05.bit._IE1
@@ -18352,7 +18352,7 @@ __IO_EXTENDED PIER05STR _pier05;
 #define PIER05_IE5 _pier05.bit._IE5
 #define PIER05_IE6 _pier05.bit._IE6
 #define PIER05_IE7 _pier05.bit._IE7
-__IO_EXTENDED PIER06STR _pier06;  
+__IO_EXTENDED PIER06STR _pier06;
 #define PIER06 _pier06.byte
 #define PIER06_IE0 _pier06.bit._IE0
 #define PIER06_IE1 _pier06.bit._IE1
@@ -18362,7 +18362,7 @@ __IO_EXTENDED PIER06STR _pier06;
 #define PIER06_IE5 _pier06.bit._IE5
 #define PIER06_IE6 _pier06.bit._IE6
 #define PIER06_IE7 _pier06.bit._IE7
-__IO_EXTENDED PIER07STR _pier07;  
+__IO_EXTENDED PIER07STR _pier07;
 #define PIER07 _pier07.byte
 #define PIER07_IE0 _pier07.bit._IE0
 #define PIER07_IE1 _pier07.bit._IE1
@@ -18372,7 +18372,7 @@ __IO_EXTENDED PIER07STR _pier07;
 #define PIER07_IE5 _pier07.bit._IE5
 #define PIER07_IE6 _pier07.bit._IE6
 #define PIER07_IE7 _pier07.bit._IE7
-__IO_EXTENDED PIER08STR _pier08;  
+__IO_EXTENDED PIER08STR _pier08;
 #define PIER08 _pier08.byte
 #define PIER08_IE0 _pier08.bit._IE0
 #define PIER08_IE1 _pier08.bit._IE1
@@ -18382,7 +18382,7 @@ __IO_EXTENDED PIER08STR _pier08;
 #define PIER08_IE5 _pier08.bit._IE5
 #define PIER08_IE6 _pier08.bit._IE6
 #define PIER08_IE7 _pier08.bit._IE7
-__IO_EXTENDED PIER09STR _pier09;  
+__IO_EXTENDED PIER09STR _pier09;
 #define PIER09 _pier09.byte
 #define PIER09_IE0 _pier09.bit._IE0
 #define PIER09_IE1 _pier09.bit._IE1
@@ -18392,11 +18392,11 @@ __IO_EXTENDED PIER09STR _pier09;
 #define PIER09_IE5 _pier09.bit._IE5
 #define PIER09_IE6 _pier09.bit._IE6
 #define PIER09_IE7 _pier09.bit._IE7
-__IO_EXTENDED PIER10STR _pier10;  
+__IO_EXTENDED PIER10STR _pier10;
 #define PIER10 _pier10.byte
 #define PIER10_IE0 _pier10.bit._IE0
 #define PIER10_IE1 _pier10.bit._IE1
-__IO_EXTENDED PILR00STR _pilr00;  
+__IO_EXTENDED PILR00STR _pilr00;
 #define PILR00 _pilr00.byte
 #define PILR00_IL0 _pilr00.bit._IL0
 #define PILR00_IL1 _pilr00.bit._IL1
@@ -18406,7 +18406,7 @@ __IO_EXTENDED PILR00STR _pilr00;
 #define PILR00_IL5 _pilr00.bit._IL5
 #define PILR00_IL6 _pilr00.bit._IL6
 #define PILR00_IL7 _pilr00.bit._IL7
-__IO_EXTENDED PILR01STR _pilr01;  
+__IO_EXTENDED PILR01STR _pilr01;
 #define PILR01 _pilr01.byte
 #define PILR01_IL0 _pilr01.bit._IL0
 #define PILR01_IL1 _pilr01.bit._IL1
@@ -18416,7 +18416,7 @@ __IO_EXTENDED PILR01STR _pilr01;
 #define PILR01_IL5 _pilr01.bit._IL5
 #define PILR01_IL6 _pilr01.bit._IL6
 #define PILR01_IL7 _pilr01.bit._IL7
-__IO_EXTENDED PILR02STR _pilr02;  
+__IO_EXTENDED PILR02STR _pilr02;
 #define PILR02 _pilr02.byte
 #define PILR02_IL0 _pilr02.bit._IL0
 #define PILR02_IL1 _pilr02.bit._IL1
@@ -18426,7 +18426,7 @@ __IO_EXTENDED PILR02STR _pilr02;
 #define PILR02_IL5 _pilr02.bit._IL5
 #define PILR02_IL6 _pilr02.bit._IL6
 #define PILR02_IL7 _pilr02.bit._IL7
-__IO_EXTENDED PILR03STR _pilr03;  
+__IO_EXTENDED PILR03STR _pilr03;
 #define PILR03 _pilr03.byte
 #define PILR03_IL0 _pilr03.bit._IL0
 #define PILR03_IL1 _pilr03.bit._IL1
@@ -18436,7 +18436,7 @@ __IO_EXTENDED PILR03STR _pilr03;
 #define PILR03_IL5 _pilr03.bit._IL5
 #define PILR03_IL6 _pilr03.bit._IL6
 #define PILR03_IL7 _pilr03.bit._IL7
-__IO_EXTENDED PILR04STR _pilr04;  
+__IO_EXTENDED PILR04STR _pilr04;
 #define PILR04 _pilr04.byte
 #define PILR04_IL0 _pilr04.bit._IL0
 #define PILR04_IL1 _pilr04.bit._IL1
@@ -18446,7 +18446,7 @@ __IO_EXTENDED PILR04STR _pilr04;
 #define PILR04_IL5 _pilr04.bit._IL5
 #define PILR04_IL6 _pilr04.bit._IL6
 #define PILR04_IL7 _pilr04.bit._IL7
-__IO_EXTENDED PILR05STR _pilr05;  
+__IO_EXTENDED PILR05STR _pilr05;
 #define PILR05 _pilr05.byte
 #define PILR05_IL0 _pilr05.bit._IL0
 #define PILR05_IL1 _pilr05.bit._IL1
@@ -18456,7 +18456,7 @@ __IO_EXTENDED PILR05STR _pilr05;
 #define PILR05_IL5 _pilr05.bit._IL5
 #define PILR05_IL6 _pilr05.bit._IL6
 #define PILR05_IL7 _pilr05.bit._IL7
-__IO_EXTENDED PILR06STR _pilr06;  
+__IO_EXTENDED PILR06STR _pilr06;
 #define PILR06 _pilr06.byte
 #define PILR06_IL0 _pilr06.bit._IL0
 #define PILR06_IL1 _pilr06.bit._IL1
@@ -18466,7 +18466,7 @@ __IO_EXTENDED PILR06STR _pilr06;
 #define PILR06_IL5 _pilr06.bit._IL5
 #define PILR06_IL6 _pilr06.bit._IL6
 #define PILR06_IL7 _pilr06.bit._IL7
-__IO_EXTENDED PILR07STR _pilr07;  
+__IO_EXTENDED PILR07STR _pilr07;
 #define PILR07 _pilr07.byte
 #define PILR07_IL0 _pilr07.bit._IL0
 #define PILR07_IL1 _pilr07.bit._IL1
@@ -18476,7 +18476,7 @@ __IO_EXTENDED PILR07STR _pilr07;
 #define PILR07_IL5 _pilr07.bit._IL5
 #define PILR07_IL6 _pilr07.bit._IL6
 #define PILR07_IL7 _pilr07.bit._IL7
-__IO_EXTENDED PILR08STR _pilr08;  
+__IO_EXTENDED PILR08STR _pilr08;
 #define PILR08 _pilr08.byte
 #define PILR08_IL0 _pilr08.bit._IL0
 #define PILR08_IL1 _pilr08.bit._IL1
@@ -18486,7 +18486,7 @@ __IO_EXTENDED PILR08STR _pilr08;
 #define PILR08_IL5 _pilr08.bit._IL5
 #define PILR08_IL6 _pilr08.bit._IL6
 #define PILR08_IL7 _pilr08.bit._IL7
-__IO_EXTENDED PILR09STR _pilr09;  
+__IO_EXTENDED PILR09STR _pilr09;
 #define PILR09 _pilr09.byte
 #define PILR09_IL0 _pilr09.bit._IL0
 #define PILR09_IL1 _pilr09.bit._IL1
@@ -18496,11 +18496,11 @@ __IO_EXTENDED PILR09STR _pilr09;
 #define PILR09_IL5 _pilr09.bit._IL5
 #define PILR09_IL6 _pilr09.bit._IL6
 #define PILR09_IL7 _pilr09.bit._IL7
-__IO_EXTENDED PILR10STR _pilr10;  
+__IO_EXTENDED PILR10STR _pilr10;
 #define PILR10 _pilr10.byte
 #define PILR10_IL0 _pilr10.bit._IL0
 #define PILR10_IL1 _pilr10.bit._IL1
-__IO_EXTENDED EPILR00STR _epilr00;  
+__IO_EXTENDED EPILR00STR _epilr00;
 #define EPILR00 _epilr00.byte
 #define EPILR00_EIL0 _epilr00.bit._EIL0
 #define EPILR00_EIL1 _epilr00.bit._EIL1
@@ -18510,7 +18510,7 @@ __IO_EXTENDED EPILR00STR _epilr00;
 #define EPILR00_EIL5 _epilr00.bit._EIL5
 #define EPILR00_EIL6 _epilr00.bit._EIL6
 #define EPILR00_EIL7 _epilr00.bit._EIL7
-__IO_EXTENDED EPILR01STR _epilr01;  
+__IO_EXTENDED EPILR01STR _epilr01;
 #define EPILR01 _epilr01.byte
 #define EPILR01_EIL0 _epilr01.bit._EIL0
 #define EPILR01_EIL1 _epilr01.bit._EIL1
@@ -18520,7 +18520,7 @@ __IO_EXTENDED EPILR01STR _epilr01;
 #define EPILR01_EIL5 _epilr01.bit._EIL5
 #define EPILR01_EIL6 _epilr01.bit._EIL6
 #define EPILR01_EIL7 _epilr01.bit._EIL7
-__IO_EXTENDED EPILR02STR _epilr02;  
+__IO_EXTENDED EPILR02STR _epilr02;
 #define EPILR02 _epilr02.byte
 #define EPILR02_EIL0 _epilr02.bit._EIL0
 #define EPILR02_EIL1 _epilr02.bit._EIL1
@@ -18530,7 +18530,7 @@ __IO_EXTENDED EPILR02STR _epilr02;
 #define EPILR02_EIL5 _epilr02.bit._EIL5
 #define EPILR02_EIL6 _epilr02.bit._EIL6
 #define EPILR02_EIL7 _epilr02.bit._EIL7
-__IO_EXTENDED EPILR03STR _epilr03;  
+__IO_EXTENDED EPILR03STR _epilr03;
 #define EPILR03 _epilr03.byte
 #define EPILR03_EIL0 _epilr03.bit._EIL0
 #define EPILR03_EIL1 _epilr03.bit._EIL1
@@ -18540,7 +18540,7 @@ __IO_EXTENDED EPILR03STR _epilr03;
 #define EPILR03_EIL5 _epilr03.bit._EIL5
 #define EPILR03_EIL6 _epilr03.bit._EIL6
 #define EPILR03_EIL7 _epilr03.bit._EIL7
-__IO_EXTENDED EPILR04STR _epilr04;  
+__IO_EXTENDED EPILR04STR _epilr04;
 #define EPILR04 _epilr04.byte
 #define EPILR04_EIL0 _epilr04.bit._EIL0
 #define EPILR04_EIL1 _epilr04.bit._EIL1
@@ -18550,7 +18550,7 @@ __IO_EXTENDED EPILR04STR _epilr04;
 #define EPILR04_EIL5 _epilr04.bit._EIL5
 #define EPILR04_EIL6 _epilr04.bit._EIL6
 #define EPILR04_EIL7 _epilr04.bit._EIL7
-__IO_EXTENDED EPILR05STR _epilr05;  
+__IO_EXTENDED EPILR05STR _epilr05;
 #define EPILR05 _epilr05.byte
 #define EPILR05_EIL0 _epilr05.bit._EIL0
 #define EPILR05_EIL1 _epilr05.bit._EIL1
@@ -18560,7 +18560,7 @@ __IO_EXTENDED EPILR05STR _epilr05;
 #define EPILR05_EIL5 _epilr05.bit._EIL5
 #define EPILR05_EIL6 _epilr05.bit._EIL6
 #define EPILR05_EIL7 _epilr05.bit._EIL7
-__IO_EXTENDED EPILR06STR _epilr06;  
+__IO_EXTENDED EPILR06STR _epilr06;
 #define EPILR06 _epilr06.byte
 #define EPILR06_EIL0 _epilr06.bit._EIL0
 #define EPILR06_EIL1 _epilr06.bit._EIL1
@@ -18570,7 +18570,7 @@ __IO_EXTENDED EPILR06STR _epilr06;
 #define EPILR06_EIL5 _epilr06.bit._EIL5
 #define EPILR06_EIL6 _epilr06.bit._EIL6
 #define EPILR06_EIL7 _epilr06.bit._EIL7
-__IO_EXTENDED EPILR07STR _epilr07;  
+__IO_EXTENDED EPILR07STR _epilr07;
 #define EPILR07 _epilr07.byte
 #define EPILR07_EIL0 _epilr07.bit._EIL0
 #define EPILR07_EIL1 _epilr07.bit._EIL1
@@ -18580,7 +18580,7 @@ __IO_EXTENDED EPILR07STR _epilr07;
 #define EPILR07_EIL5 _epilr07.bit._EIL5
 #define EPILR07_EIL6 _epilr07.bit._EIL6
 #define EPILR07_EIL7 _epilr07.bit._EIL7
-__IO_EXTENDED EPILR08STR _epilr08;  
+__IO_EXTENDED EPILR08STR _epilr08;
 #define EPILR08 _epilr08.byte
 #define EPILR08_EIL0 _epilr08.bit._EIL0
 #define EPILR08_EIL1 _epilr08.bit._EIL1
@@ -18590,7 +18590,7 @@ __IO_EXTENDED EPILR08STR _epilr08;
 #define EPILR08_EIL5 _epilr08.bit._EIL5
 #define EPILR08_EIL6 _epilr08.bit._EIL6
 #define EPILR08_EIL7 _epilr08.bit._EIL7
-__IO_EXTENDED EPILR09STR _epilr09;  
+__IO_EXTENDED EPILR09STR _epilr09;
 #define EPILR09 _epilr09.byte
 #define EPILR09_EIL0 _epilr09.bit._EIL0
 #define EPILR09_EIL1 _epilr09.bit._EIL1
@@ -18600,11 +18600,11 @@ __IO_EXTENDED EPILR09STR _epilr09;
 #define EPILR09_EIL5 _epilr09.bit._EIL5
 #define EPILR09_EIL6 _epilr09.bit._EIL6
 #define EPILR09_EIL7 _epilr09.bit._EIL7
-__IO_EXTENDED EPILR10STR _epilr10;  
+__IO_EXTENDED EPILR10STR _epilr10;
 #define EPILR10 _epilr10.byte
 #define EPILR10_EIL0 _epilr10.bit._EIL0
 #define EPILR10_EIL1 _epilr10.bit._EIL1
-__IO_EXTENDED PODR00STR _podr00;  
+__IO_EXTENDED PODR00STR _podr00;
 #define PODR00 _podr00.byte
 #define PODR00_OD0 _podr00.bit._OD0
 #define PODR00_OD1 _podr00.bit._OD1
@@ -18614,7 +18614,7 @@ __IO_EXTENDED PODR00STR _podr00;
 #define PODR00_OD5 _podr00.bit._OD5
 #define PODR00_OD6 _podr00.bit._OD6
 #define PODR00_OD7 _podr00.bit._OD7
-__IO_EXTENDED PODR01STR _podr01;  
+__IO_EXTENDED PODR01STR _podr01;
 #define PODR01 _podr01.byte
 #define PODR01_OD0 _podr01.bit._OD0
 #define PODR01_OD1 _podr01.bit._OD1
@@ -18624,7 +18624,7 @@ __IO_EXTENDED PODR01STR _podr01;
 #define PODR01_OD5 _podr01.bit._OD5
 #define PODR01_OD6 _podr01.bit._OD6
 #define PODR01_OD7 _podr01.bit._OD7
-__IO_EXTENDED PODR02STR _podr02;  
+__IO_EXTENDED PODR02STR _podr02;
 #define PODR02 _podr02.byte
 #define PODR02_OD0 _podr02.bit._OD0
 #define PODR02_OD1 _podr02.bit._OD1
@@ -18634,7 +18634,7 @@ __IO_EXTENDED PODR02STR _podr02;
 #define PODR02_OD5 _podr02.bit._OD5
 #define PODR02_OD6 _podr02.bit._OD6
 #define PODR02_OD7 _podr02.bit._OD7
-__IO_EXTENDED PODR03STR _podr03;  
+__IO_EXTENDED PODR03STR _podr03;
 #define PODR03 _podr03.byte
 #define PODR03_OD0 _podr03.bit._OD0
 #define PODR03_OD1 _podr03.bit._OD1
@@ -18644,7 +18644,7 @@ __IO_EXTENDED PODR03STR _podr03;
 #define PODR03_OD5 _podr03.bit._OD5
 #define PODR03_OD6 _podr03.bit._OD6
 #define PODR03_OD7 _podr03.bit._OD7
-__IO_EXTENDED PODR04STR _podr04;  
+__IO_EXTENDED PODR04STR _podr04;
 #define PODR04 _podr04.byte
 #define PODR04_OD0 _podr04.bit._OD0
 #define PODR04_OD1 _podr04.bit._OD1
@@ -18654,7 +18654,7 @@ __IO_EXTENDED PODR04STR _podr04;
 #define PODR04_OD5 _podr04.bit._OD5
 #define PODR04_OD6 _podr04.bit._OD6
 #define PODR04_OD7 _podr04.bit._OD7
-__IO_EXTENDED PODR05STR _podr05;  
+__IO_EXTENDED PODR05STR _podr05;
 #define PODR05 _podr05.byte
 #define PODR05_OD0 _podr05.bit._OD0
 #define PODR05_OD1 _podr05.bit._OD1
@@ -18664,7 +18664,7 @@ __IO_EXTENDED PODR05STR _podr05;
 #define PODR05_OD5 _podr05.bit._OD5
 #define PODR05_OD6 _podr05.bit._OD6
 #define PODR05_OD7 _podr05.bit._OD7
-__IO_EXTENDED PODR06STR _podr06;  
+__IO_EXTENDED PODR06STR _podr06;
 #define PODR06 _podr06.byte
 #define PODR06_OD0 _podr06.bit._OD0
 #define PODR06_OD1 _podr06.bit._OD1
@@ -18674,7 +18674,7 @@ __IO_EXTENDED PODR06STR _podr06;
 #define PODR06_OD5 _podr06.bit._OD5
 #define PODR06_OD6 _podr06.bit._OD6
 #define PODR06_OD7 _podr06.bit._OD7
-__IO_EXTENDED PODR07STR _podr07;  
+__IO_EXTENDED PODR07STR _podr07;
 #define PODR07 _podr07.byte
 #define PODR07_OD0 _podr07.bit._OD0
 #define PODR07_OD1 _podr07.bit._OD1
@@ -18684,7 +18684,7 @@ __IO_EXTENDED PODR07STR _podr07;
 #define PODR07_OD5 _podr07.bit._OD5
 #define PODR07_OD6 _podr07.bit._OD6
 #define PODR07_OD7 _podr07.bit._OD7
-__IO_EXTENDED PODR08STR _podr08;  
+__IO_EXTENDED PODR08STR _podr08;
 #define PODR08 _podr08.byte
 #define PODR08_OD0 _podr08.bit._OD0
 #define PODR08_OD1 _podr08.bit._OD1
@@ -18694,7 +18694,7 @@ __IO_EXTENDED PODR08STR _podr08;
 #define PODR08_OD5 _podr08.bit._OD5
 #define PODR08_OD6 _podr08.bit._OD6
 #define PODR08_OD7 _podr08.bit._OD7
-__IO_EXTENDED PODR09STR _podr09;  
+__IO_EXTENDED PODR09STR _podr09;
 #define PODR09 _podr09.byte
 #define PODR09_OD0 _podr09.bit._OD0
 #define PODR09_OD1 _podr09.bit._OD1
@@ -18704,11 +18704,11 @@ __IO_EXTENDED PODR09STR _podr09;
 #define PODR09_OD5 _podr09.bit._OD5
 #define PODR09_OD6 _podr09.bit._OD6
 #define PODR09_OD7 _podr09.bit._OD7
-__IO_EXTENDED PODR10STR _podr10;  
+__IO_EXTENDED PODR10STR _podr10;
 #define PODR10 _podr10.byte
 #define PODR10_OD0 _podr10.bit._OD0
 #define PODR10_OD1 _podr10.bit._OD1
-__IO_EXTENDED PHDR08STR _phdr08;  
+__IO_EXTENDED PHDR08STR _phdr08;
 #define PHDR08 _phdr08.byte
 #define PHDR08_HD0 _phdr08.bit._HD0
 #define PHDR08_HD1 _phdr08.bit._HD1
@@ -18718,7 +18718,7 @@ __IO_EXTENDED PHDR08STR _phdr08;
 #define PHDR08_HD5 _phdr08.bit._HD5
 #define PHDR08_HD6 _phdr08.bit._HD6
 #define PHDR08_HD7 _phdr08.bit._HD7
-__IO_EXTENDED PHDR09STR _phdr09;  
+__IO_EXTENDED PHDR09STR _phdr09;
 #define PHDR09 _phdr09.byte
 #define PHDR09_HD0 _phdr09.bit._HD0
 #define PHDR09_HD1 _phdr09.bit._HD1
@@ -18728,7 +18728,7 @@ __IO_EXTENDED PHDR09STR _phdr09;
 #define PHDR09_HD5 _phdr09.bit._HD5
 #define PHDR09_HD6 _phdr09.bit._HD6
 #define PHDR09_HD7 _phdr09.bit._HD7
-__IO_EXTENDED PHDR10STR _phdr10;  
+__IO_EXTENDED PHDR10STR _phdr10;
 #define PHDR10 _phdr10.byte
 #define PHDR10_HD0 _phdr10.bit._HD0
 #define PHDR10_HD1 _phdr10.bit._HD1
@@ -18738,7 +18738,7 @@ __IO_EXTENDED PHDR10STR _phdr10;
 #define PHDR10_HD5 _phdr10.bit._HD5
 #define PHDR10_HD6 _phdr10.bit._HD6
 #define PHDR10_HD7 _phdr10.bit._HD7
-__IO_EXTENDED PUCR00STR _pucr00;  
+__IO_EXTENDED PUCR00STR _pucr00;
 #define PUCR00 _pucr00.byte
 #define PUCR00_PU0 _pucr00.bit._PU0
 #define PUCR00_PU1 _pucr00.bit._PU1
@@ -18748,7 +18748,7 @@ __IO_EXTENDED PUCR00STR _pucr00;
 #define PUCR00_PU5 _pucr00.bit._PU5
 #define PUCR00_PU6 _pucr00.bit._PU6
 #define PUCR00_PU7 _pucr00.bit._PU7
-__IO_EXTENDED PUCR01STR _pucr01;  
+__IO_EXTENDED PUCR01STR _pucr01;
 #define PUCR01 _pucr01.byte
 #define PUCR01_PU0 _pucr01.bit._PU0
 #define PUCR01_PU1 _pucr01.bit._PU1
@@ -18758,7 +18758,7 @@ __IO_EXTENDED PUCR01STR _pucr01;
 #define PUCR01_PU5 _pucr01.bit._PU5
 #define PUCR01_PU6 _pucr01.bit._PU6
 #define PUCR01_PU7 _pucr01.bit._PU7
-__IO_EXTENDED PUCR02STR _pucr02;  
+__IO_EXTENDED PUCR02STR _pucr02;
 #define PUCR02 _pucr02.byte
 #define PUCR02_PU0 _pucr02.bit._PU0
 #define PUCR02_PU1 _pucr02.bit._PU1
@@ -18768,7 +18768,7 @@ __IO_EXTENDED PUCR02STR _pucr02;
 #define PUCR02_PU5 _pucr02.bit._PU5
 #define PUCR02_PU6 _pucr02.bit._PU6
 #define PUCR02_PU7 _pucr02.bit._PU7
-__IO_EXTENDED PUCR03STR _pucr03;  
+__IO_EXTENDED PUCR03STR _pucr03;
 #define PUCR03 _pucr03.byte
 #define PUCR03_PU0 _pucr03.bit._PU0
 #define PUCR03_PU1 _pucr03.bit._PU1
@@ -18778,7 +18778,7 @@ __IO_EXTENDED PUCR03STR _pucr03;
 #define PUCR03_PU5 _pucr03.bit._PU5
 #define PUCR03_PU6 _pucr03.bit._PU6
 #define PUCR03_PU7 _pucr03.bit._PU7
-__IO_EXTENDED PUCR04STR _pucr04;  
+__IO_EXTENDED PUCR04STR _pucr04;
 #define PUCR04 _pucr04.byte
 #define PUCR04_PU0 _pucr04.bit._PU0
 #define PUCR04_PU1 _pucr04.bit._PU1
@@ -18788,7 +18788,7 @@ __IO_EXTENDED PUCR04STR _pucr04;
 #define PUCR04_PU5 _pucr04.bit._PU5
 #define PUCR04_PU6 _pucr04.bit._PU6
 #define PUCR04_PU7 _pucr04.bit._PU7
-__IO_EXTENDED PUCR05STR _pucr05;  
+__IO_EXTENDED PUCR05STR _pucr05;
 #define PUCR05 _pucr05.byte
 #define PUCR05_PU0 _pucr05.bit._PU0
 #define PUCR05_PU1 _pucr05.bit._PU1
@@ -18798,7 +18798,7 @@ __IO_EXTENDED PUCR05STR _pucr05;
 #define PUCR05_PU5 _pucr05.bit._PU5
 #define PUCR05_PU6 _pucr05.bit._PU6
 #define PUCR05_PU7 _pucr05.bit._PU7
-__IO_EXTENDED PUCR06STR _pucr06;  
+__IO_EXTENDED PUCR06STR _pucr06;
 #define PUCR06 _pucr06.byte
 #define PUCR06_PU0 _pucr06.bit._PU0
 #define PUCR06_PU1 _pucr06.bit._PU1
@@ -18808,7 +18808,7 @@ __IO_EXTENDED PUCR06STR _pucr06;
 #define PUCR06_PU5 _pucr06.bit._PU5
 #define PUCR06_PU6 _pucr06.bit._PU6
 #define PUCR06_PU7 _pucr06.bit._PU7
-__IO_EXTENDED PUCR07STR _pucr07;  
+__IO_EXTENDED PUCR07STR _pucr07;
 #define PUCR07 _pucr07.byte
 #define PUCR07_PU0 _pucr07.bit._PU0
 #define PUCR07_PU1 _pucr07.bit._PU1
@@ -18818,7 +18818,7 @@ __IO_EXTENDED PUCR07STR _pucr07;
 #define PUCR07_PU5 _pucr07.bit._PU5
 #define PUCR07_PU6 _pucr07.bit._PU6
 #define PUCR07_PU7 _pucr07.bit._PU7
-__IO_EXTENDED PUCR08STR _pucr08;  
+__IO_EXTENDED PUCR08STR _pucr08;
 #define PUCR08 _pucr08.byte
 #define PUCR08_PU0 _pucr08.bit._PU0
 #define PUCR08_PU1 _pucr08.bit._PU1
@@ -18828,7 +18828,7 @@ __IO_EXTENDED PUCR08STR _pucr08;
 #define PUCR08_PU5 _pucr08.bit._PU5
 #define PUCR08_PU6 _pucr08.bit._PU6
 #define PUCR08_PU7 _pucr08.bit._PU7
-__IO_EXTENDED PUCR09STR _pucr09;  
+__IO_EXTENDED PUCR09STR _pucr09;
 #define PUCR09 _pucr09.byte
 #define PUCR09_PU0 _pucr09.bit._PU0
 #define PUCR09_PU1 _pucr09.bit._PU1
@@ -18838,11 +18838,11 @@ __IO_EXTENDED PUCR09STR _pucr09;
 #define PUCR09_PU5 _pucr09.bit._PU5
 #define PUCR09_PU6 _pucr09.bit._PU6
 #define PUCR09_PU7 _pucr09.bit._PU7
-__IO_EXTENDED PUCR10STR _pucr10;  
+__IO_EXTENDED PUCR10STR _pucr10;
 #define PUCR10 _pucr10.byte
 #define PUCR10_PU0 _pucr10.bit._PU0
 #define PUCR10_PU1 _pucr10.bit._PU1
-__IO_EXTENDED EPSR00STR _epsr00;  
+__IO_EXTENDED EPSR00STR _epsr00;
 #define EPSR00 _epsr00.byte
 #define EPSR00_PS0 _epsr00.bit._PS0
 #define EPSR00_PS1 _epsr00.bit._PS1
@@ -18852,7 +18852,7 @@ __IO_EXTENDED EPSR00STR _epsr00;
 #define EPSR00_PS5 _epsr00.bit._PS5
 #define EPSR00_PS6 _epsr00.bit._PS6
 #define EPSR00_PS7 _epsr00.bit._PS7
-__IO_EXTENDED EPSR01STR _epsr01;  
+__IO_EXTENDED EPSR01STR _epsr01;
 #define EPSR01 _epsr01.byte
 #define EPSR01_PS0 _epsr01.bit._PS0
 #define EPSR01_PS1 _epsr01.bit._PS1
@@ -18862,7 +18862,7 @@ __IO_EXTENDED EPSR01STR _epsr01;
 #define EPSR01_PS5 _epsr01.bit._PS5
 #define EPSR01_PS6 _epsr01.bit._PS6
 #define EPSR01_PS7 _epsr01.bit._PS7
-__IO_EXTENDED EPSR02STR _epsr02;  
+__IO_EXTENDED EPSR02STR _epsr02;
 #define EPSR02 _epsr02.byte
 #define EPSR02_PS0 _epsr02.bit._PS0
 #define EPSR02_PS1 _epsr02.bit._PS1
@@ -18872,7 +18872,7 @@ __IO_EXTENDED EPSR02STR _epsr02;
 #define EPSR02_PS5 _epsr02.bit._PS5
 #define EPSR02_PS6 _epsr02.bit._PS6
 #define EPSR02_PS7 _epsr02.bit._PS7
-__IO_EXTENDED EPSR03STR _epsr03;  
+__IO_EXTENDED EPSR03STR _epsr03;
 #define EPSR03 _epsr03.byte
 #define EPSR03_PS0 _epsr03.bit._PS0
 #define EPSR03_PS1 _epsr03.bit._PS1
@@ -18882,7 +18882,7 @@ __IO_EXTENDED EPSR03STR _epsr03;
 #define EPSR03_PS5 _epsr03.bit._PS5
 #define EPSR03_PS6 _epsr03.bit._PS6
 #define EPSR03_PS7 _epsr03.bit._PS7
-__IO_EXTENDED EPSR04STR _epsr04;  
+__IO_EXTENDED EPSR04STR _epsr04;
 #define EPSR04 _epsr04.byte
 #define EPSR04_PS0 _epsr04.bit._PS0
 #define EPSR04_PS1 _epsr04.bit._PS1
@@ -18892,7 +18892,7 @@ __IO_EXTENDED EPSR04STR _epsr04;
 #define EPSR04_PS5 _epsr04.bit._PS5
 #define EPSR04_PS6 _epsr04.bit._PS6
 #define EPSR04_PS7 _epsr04.bit._PS7
-__IO_EXTENDED EPSR05STR _epsr05;  
+__IO_EXTENDED EPSR05STR _epsr05;
 #define EPSR05 _epsr05.byte
 #define EPSR05_PS0 _epsr05.bit._PS0
 #define EPSR05_PS1 _epsr05.bit._PS1
@@ -18902,7 +18902,7 @@ __IO_EXTENDED EPSR05STR _epsr05;
 #define EPSR05_PS5 _epsr05.bit._PS5
 #define EPSR05_PS6 _epsr05.bit._PS6
 #define EPSR05_PS7 _epsr05.bit._PS7
-__IO_EXTENDED EPSR06STR _epsr06;  
+__IO_EXTENDED EPSR06STR _epsr06;
 #define EPSR06 _epsr06.byte
 #define EPSR06_PS0 _epsr06.bit._PS0
 #define EPSR06_PS1 _epsr06.bit._PS1
@@ -18912,7 +18912,7 @@ __IO_EXTENDED EPSR06STR _epsr06;
 #define EPSR06_PS5 _epsr06.bit._PS5
 #define EPSR06_PS6 _epsr06.bit._PS6
 #define EPSR06_PS7 _epsr06.bit._PS7
-__IO_EXTENDED EPSR07STR _epsr07;  
+__IO_EXTENDED EPSR07STR _epsr07;
 #define EPSR07 _epsr07.byte
 #define EPSR07_PS0 _epsr07.bit._PS0
 #define EPSR07_PS1 _epsr07.bit._PS1
@@ -18922,7 +18922,7 @@ __IO_EXTENDED EPSR07STR _epsr07;
 #define EPSR07_PS5 _epsr07.bit._PS5
 #define EPSR07_PS6 _epsr07.bit._PS6
 #define EPSR07_PS7 _epsr07.bit._PS7
-__IO_EXTENDED EPSR08STR _epsr08;  
+__IO_EXTENDED EPSR08STR _epsr08;
 #define EPSR08 _epsr08.byte
 #define EPSR08_PS0 _epsr08.bit._PS0
 #define EPSR08_PS1 _epsr08.bit._PS1
@@ -18932,7 +18932,7 @@ __IO_EXTENDED EPSR08STR _epsr08;
 #define EPSR08_PS5 _epsr08.bit._PS5
 #define EPSR08_PS6 _epsr08.bit._PS6
 #define EPSR08_PS7 _epsr08.bit._PS7
-__IO_EXTENDED EPSR09STR _epsr09;  
+__IO_EXTENDED EPSR09STR _epsr09;
 #define EPSR09 _epsr09.byte
 #define EPSR09_PS0 _epsr09.bit._PS0
 #define EPSR09_PS1 _epsr09.bit._PS1
@@ -18942,11 +18942,11 @@ __IO_EXTENDED EPSR09STR _epsr09;
 #define EPSR09_PS5 _epsr09.bit._PS5
 #define EPSR09_PS6 _epsr09.bit._PS6
 #define EPSR09_PS7 _epsr09.bit._PS7
-__IO_EXTENDED EPSR10STR _epsr10;  
+__IO_EXTENDED EPSR10STR _epsr10;
 #define EPSR10 _epsr10.byte
 #define EPSR10_PS0 _epsr10.bit._PS0
 #define EPSR10_PS1 _epsr10.bit._PS1
-__IO_EXTENDED ADER0STR _ader0;  
+__IO_EXTENDED ADER0STR _ader0;
 #define ADER0 _ader0.byte
 #define ADER0_ADE0 _ader0.bit._ADE0
 #define ADER0_ADE1 _ader0.bit._ADE1
@@ -18956,7 +18956,7 @@ __IO_EXTENDED ADER0STR _ader0;
 #define ADER0_ADE5 _ader0.bit._ADE5
 #define ADER0_ADE6 _ader0.bit._ADE6
 #define ADER0_ADE7 _ader0.bit._ADE7
-__IO_EXTENDED ADER1STR _ader1;  
+__IO_EXTENDED ADER1STR _ader1;
 #define ADER1 _ader1.byte
 #define ADER1_ADE8 _ader1.bit._ADE8
 #define ADER1_ADE9 _ader1.bit._ADE9
@@ -18966,7 +18966,7 @@ __IO_EXTENDED ADER1STR _ader1;
 #define ADER1_ADE13 _ader1.bit._ADE13
 #define ADER1_ADE14 _ader1.bit._ADE14
 #define ADER1_ADE15 _ader1.bit._ADE15
-__IO_EXTENDED ADER2STR _ader2;  
+__IO_EXTENDED ADER2STR _ader2;
 #define ADER2 _ader2.byte
 #define ADER2_ADE16 _ader2.bit._ADE16
 #define ADER2_ADE17 _ader2.bit._ADE17
@@ -18976,7 +18976,7 @@ __IO_EXTENDED ADER2STR _ader2;
 #define ADER2_ADE21 _ader2.bit._ADE21
 #define ADER2_ADE22 _ader2.bit._ADE22
 #define ADER2_ADE23 _ader2.bit._ADE23
-__IO_EXTENDED PRRR0STR _prrr0;  
+__IO_EXTENDED PRRR0STR _prrr0;
 #define PRRR0 _prrr0.byte
 #define PRRR0_INT0_R _prrr0.bit._INT0_R
 #define PRRR0_INT1_R _prrr0.bit._INT1_R
@@ -18986,7 +18986,7 @@ __IO_EXTENDED PRRR0STR _prrr0;
 #define PRRR0_INT5_R _prrr0.bit._INT5_R
 #define PRRR0_INT6_R _prrr0.bit._INT6_R
 #define PRRR0_INT7_R _prrr0.bit._INT7_R
-__IO_EXTENDED PRRR1STR _prrr1;  
+__IO_EXTENDED PRRR1STR _prrr1;
 #define PRRR1 _prrr1.byte
 #define PRRR1_INT8_R _prrr1.bit._INT8_R
 #define PRRR1_INT9_R _prrr1.bit._INT9_R
@@ -18996,7 +18996,7 @@ __IO_EXTENDED PRRR1STR _prrr1;
 #define PRRR1_INT13_R _prrr1.bit._INT13_R
 #define PRRR1_INT14_R _prrr1.bit._INT14_R
 #define PRRR1_INT15_R _prrr1.bit._INT15_R
-__IO_EXTENDED PRRR2STR _prrr2;  
+__IO_EXTENDED PRRR2STR _prrr2;
 #define PRRR2 _prrr2.byte
 #define PRRR2_PPG0_R _prrr2.bit._PPG0_R
 #define PRRR2_PPG1_R _prrr2.bit._PPG1_R
@@ -19006,7 +19006,7 @@ __IO_EXTENDED PRRR2STR _prrr2;
 #define PRRR2_PPG5_R _prrr2.bit._PPG5_R
 #define PRRR2_PPG6_R _prrr2.bit._PPG6_R
 #define PRRR2_PPG7_R _prrr2.bit._PPG7_R
-__IO_EXTENDED PRRR3STR _prrr3;  
+__IO_EXTENDED PRRR3STR _prrr3;
 #define PRRR3 _prrr3.byte
 #define PRRR3_TIN0_R _prrr3.bit._TIN0_R
 #define PRRR3_TOT0_R _prrr3.bit._TOT0_R
@@ -19016,7 +19016,7 @@ __IO_EXTENDED PRRR3STR _prrr3;
 #define PRRR3_TOT2_R _prrr3.bit._TOT2_R
 #define PRRR3_TIN3_R _prrr3.bit._TIN3_R
 #define PRRR3_TOT3_R _prrr3.bit._TOT3_R
-__IO_EXTENDED PRRR4STR _prrr4;  
+__IO_EXTENDED PRRR4STR _prrr4;
 #define PRRR4 _prrr4.byte
 #define PRRR4_IN0_R _prrr4.bit._IN0_R
 #define PRRR4_IN1_R _prrr4.bit._IN1_R
@@ -19026,7 +19026,7 @@ __IO_EXTENDED PRRR4STR _prrr4;
 #define PRRR4_IN5_R _prrr4.bit._IN5_R
 #define PRRR4_IN6_R _prrr4.bit._IN6_R
 #define PRRR4_IN7_R _prrr4.bit._IN7_R
-__IO_EXTENDED PRRR5STR _prrr5;  
+__IO_EXTENDED PRRR5STR _prrr5;
 #define PRRR5 _prrr5.byte
 #define PRRR5_OUT0_R _prrr5.bit._OUT0_R
 #define PRRR5_OUT1_R _prrr5.bit._OUT1_R
@@ -19034,7 +19034,7 @@ __IO_EXTENDED PRRR5STR _prrr5;
 #define PRRR5_OUT3_R _prrr5.bit._OUT3_R
 #define PRRR5_OUT6_R _prrr5.bit._OUT6_R
 #define PRRR5_OUT7_R _prrr5.bit._OUT7_R
-__IO_EXTENDED PRRR6STR _prrr6;  
+__IO_EXTENDED PRRR6STR _prrr6;
 #define PRRR6 _prrr6.byte
 #define PRRR6_SGO0_R _prrr6.bit._SGO0_R
 #define PRRR6_SGA0_R _prrr6.bit._SGA0_R
@@ -19044,7 +19044,7 @@ __IO_EXTENDED PRRR6STR _prrr6;
 #define PRRR6_SCK2_R _prrr6.bit._SCK2_R
 #define PRRR6_CKOT1_R _prrr6.bit._CKOT1_R
 #define PRRR6_CKOTX1_R _prrr6.bit._CKOTX1_R
-__IO_EXTENDED PRRR7STR _prrr7;  
+__IO_EXTENDED PRRR7STR _prrr7;
 #define PRRR7 _prrr7.byte
 #define PRRR7_ADTG_R _prrr7.bit._ADTG_R
 #define PRRR7_NMI_R _prrr7.bit._NMI_R
@@ -19054,7 +19054,7 @@ __IO_EXTENDED PRRR7STR _prrr7;
 #define PRRR7_INT5_R1 _prrr7.bit._INT5_R1
 #define PRRR7_RX2_R _prrr7.bit._RX2_R
 #define PRRR7_TX2_R _prrr7.bit._TX2_R
-__IO_EXTENDED PRRR8STR _prrr8;  
+__IO_EXTENDED PRRR8STR _prrr8;
 #define PRRR8 _prrr8.byte
 #define PRRR8_SIN7_R _prrr8.bit._SIN7_R
 #define PRRR8_SOT7_R _prrr8.bit._SOT7_R
@@ -19064,7 +19064,7 @@ __IO_EXTENDED PRRR8STR _prrr8;
 #define PRRR8_SCK8_R _prrr8.bit._SCK8_R
 #define PRRR8_SIN9_R _prrr8.bit._SIN9_R
 #define PRRR8_SOT9_R _prrr8.bit._SOT9_R
-__IO_EXTENDED PRRR9STR _prrr9;  
+__IO_EXTENDED PRRR9STR _prrr9;
 #define PRRR9 _prrr9.byte
 #define PRRR9_SCK9_R _prrr9.bit._SCK9_R
 #define PRRR9_SGO1_R _prrr9.bit._SGO1_R
@@ -19072,7 +19072,7 @@ __IO_EXTENDED PRRR9STR _prrr9;
 #define PRRR9_FRCK2_R _prrr9.bit._FRCK2_R
 #define PRRR9_OUT10_R _prrr9.bit._OUT10_R
 #define PRRR9_CKOT0_R _prrr9.bit._CKOT0_R
-__IO_EXTENDED WTBR0STR _wtbr0;  
+__IO_EXTENDED WTBR0STR _wtbr0;
 #define WTBR0 _wtbr0.word
 #define WTBR0_D0 _wtbr0.bit._D0
 #define WTBR0_D1 _wtbr0.bit._D1
@@ -19091,7 +19091,7 @@ __IO_EXTENDED WTBR0STR _wtbr0;
 #define WTBR0_D14 _wtbr0.bit._D14
 #define WTBR0_D15 _wtbr0.bit._D15
 #define WTBR0_D _wtbr0.bitc._D
-__IO_EXTENDED WTBRL0STR _wtbrl0;  
+__IO_EXTENDED WTBRL0STR _wtbrl0;
 #define WTBRL0 _wtbrl0.byte
 #define WTBRL0_D0 _wtbrl0.bit._D0
 #define WTBRL0_D1 _wtbrl0.bit._D1
@@ -19101,7 +19101,7 @@ __IO_EXTENDED WTBRL0STR _wtbrl0;
 #define WTBRL0_D5 _wtbrl0.bit._D5
 #define WTBRL0_D6 _wtbrl0.bit._D6
 #define WTBRL0_D7 _wtbrl0.bit._D7
-__IO_EXTENDED WTBRH0STR _wtbrh0;  
+__IO_EXTENDED WTBRH0STR _wtbrh0;
 #define WTBRH0 _wtbrh0.byte
 #define WTBRH0_D8 _wtbrh0.bit._D8
 #define WTBRH0_D9 _wtbrh0.bit._D9
@@ -19111,7 +19111,7 @@ __IO_EXTENDED WTBRH0STR _wtbrh0;
 #define WTBRH0_D13 _wtbrh0.bit._D13
 #define WTBRH0_D14 _wtbrh0.bit._D14
 #define WTBRH0_D15 _wtbrh0.bit._D15
-__IO_EXTENDED WTBR1STR _wtbr1;  
+__IO_EXTENDED WTBR1STR _wtbr1;
 #define WTBR1 _wtbr1.byte
 #define WTBR1_D16 _wtbr1.bit._D16
 #define WTBR1_D17 _wtbr1.bit._D17
@@ -19119,7 +19119,7 @@ __IO_EXTENDED WTBR1STR _wtbr1;
 #define WTBR1_D19 _wtbr1.bit._D19
 #define WTBR1_D20 _wtbr1.bit._D20
 #define WTBR1_D1 _wtbr1.bitc._D1
-__IO_EXTENDED WTSRSTR _wtsr;  
+__IO_EXTENDED WTSRSTR _wtsr;
 #define WTSR _wtsr.byte
 #define WTSR_S0 _wtsr.bit._S0
 #define WTSR_S1 _wtsr.bit._S1
@@ -19128,7 +19128,7 @@ __IO_EXTENDED WTSRSTR _wtsr;
 #define WTSR_S4 _wtsr.bit._S4
 #define WTSR_S5 _wtsr.bit._S5
 #define WTSR_S _wtsr.bitc._S
-__IO_EXTENDED WTMRSTR _wtmr;  
+__IO_EXTENDED WTMRSTR _wtmr;
 #define WTMR _wtmr.byte
 #define WTMR_M0 _wtmr.bit._M0
 #define WTMR_M1 _wtmr.bit._M1
@@ -19137,7 +19137,7 @@ __IO_EXTENDED WTMRSTR _wtmr;
 #define WTMR_M4 _wtmr.bit._M4
 #define WTMR_M5 _wtmr.bit._M5
 #define WTMR_M _wtmr.bitc._M
-__IO_EXTENDED WTHRSTR _wthr;  
+__IO_EXTENDED WTHRSTR _wthr;
 #define WTHR _wthr.byte
 #define WTHR_H0 _wthr.bit._H0
 #define WTHR_H1 _wthr.bit._H1
@@ -19145,16 +19145,16 @@ __IO_EXTENDED WTHRSTR _wthr;
 #define WTHR_H3 _wthr.bit._H3
 #define WTHR_H4 _wthr.bit._H4
 #define WTHR_H _wthr.bitc._H
-__IO_EXTENDED WTCERSTR _wtcer;  
+__IO_EXTENDED WTCERSTR _wtcer;
 #define WTCER _wtcer.byte
 #define WTCER_INT4 _wtcer.bit._INT4
 #define WTCER_INTE4 _wtcer.bit._INTE4
-__IO_EXTENDED WTCKSRSTR _wtcksr;  
+__IO_EXTENDED WTCKSRSTR _wtcksr;
 #define WTCKSR _wtcksr.byte
 #define WTCKSR_CKSEL0 _wtcksr.bit._CKSEL0
 #define WTCKSR_CKSEL1 _wtcksr.bit._CKSEL1
 #define WTCKSR_CKSEL _wtcksr.bitc._CKSEL
-__IO_EXTENDED WTCRSTR _wtcr;  
+__IO_EXTENDED WTCRSTR _wtcr;
 #define WTCR _wtcr.word
 #define WTCR_ST _wtcr.bit._ST
 #define WTCR_OE _wtcr.bit._OE
@@ -19168,13 +19168,13 @@ __IO_EXTENDED WTCRSTR _wtcr;
 #define WTCR_INTE2 _wtcr.bit._INTE2
 #define WTCR_INT3 _wtcr.bit._INT3
 #define WTCR_INTE3 _wtcr.bit._INTE3
-__IO_EXTENDED WTCRLSTR _wtcrl;  
+__IO_EXTENDED WTCRLSTR _wtcrl;
 #define WTCRL _wtcrl.byte
 #define WTCRL_ST _wtcrl.bit._ST
 #define WTCRL_OE _wtcrl.bit._OE
 #define WTCRL_UPDT _wtcrl.bit._UPDT
 #define WTCRL_RUN _wtcrl.bit._RUN
-__IO_EXTENDED WTCRHSTR _wtcrh;  
+__IO_EXTENDED WTCRHSTR _wtcrh;
 #define WTCRH _wtcrh.byte
 #define WTCRH_INT0 _wtcrh.bit._INT0
 #define WTCRH_INTE0 _wtcrh.bit._INTE0
@@ -19184,14 +19184,14 @@ __IO_EXTENDED WTCRHSTR _wtcrh;
 #define WTCRH_INTE2 _wtcrh.bit._INTE2
 #define WTCRH_INT3 _wtcrh.bit._INT3
 #define WTCRH_INTE3 _wtcrh.bit._INTE3
-__IO_EXTENDED CUCRSTR _cucr;  
+__IO_EXTENDED CUCRSTR _cucr;
 #define CUCR _cucr.byte
 #define CUCR_INTEN _cucr.bit._INTEN
 #define CUCR_INT _cucr.bit._INT
 #define CUCR_CKSEL _cucr.bit._CKSEL
 #define CUCR_STRT _cucr.bit._STRT
 #define CUCR_RESV _cucr.bit._RESV
-__IO_EXTENDED CUTDSTR _cutd;  
+__IO_EXTENDED CUTDSTR _cutd;
 #define CUTD _cutd.word
 #define CUTD_TDD0 _cutd.bit._TDD0
 #define CUTD_TDD1 _cutd.bit._TDD1
@@ -19210,7 +19210,7 @@ __IO_EXTENDED CUTDSTR _cutd;
 #define CUTD_TDD14 _cutd.bit._TDD14
 #define CUTD_TDD15 _cutd.bit._TDD15
 #define CUTD_TDD _cutd.bitc._TDD
-__IO_EXTENDED CUTDLSTR _cutdl;  
+__IO_EXTENDED CUTDLSTR _cutdl;
 #define CUTDL _cutdl.byte
 #define CUTDL_TDD0 _cutdl.bit._TDD0
 #define CUTDL_TDD1 _cutdl.bit._TDD1
@@ -19220,7 +19220,7 @@ __IO_EXTENDED CUTDLSTR _cutdl;
 #define CUTDL_TDD5 _cutdl.bit._TDD5
 #define CUTDL_TDD6 _cutdl.bit._TDD6
 #define CUTDL_TDD7 _cutdl.bit._TDD7
-__IO_EXTENDED CUTDHSTR _cutdh;  
+__IO_EXTENDED CUTDHSTR _cutdh;
 #define CUTDH _cutdh.byte
 #define CUTDH_TDD8 _cutdh.bit._TDD8
 #define CUTDH_TDD9 _cutdh.bit._TDD9
@@ -19230,7 +19230,7 @@ __IO_EXTENDED CUTDHSTR _cutdh;
 #define CUTDH_TDD13 _cutdh.bit._TDD13
 #define CUTDH_TDD14 _cutdh.bit._TDD14
 #define CUTDH_TDD15 _cutdh.bit._TDD15
-__IO_EXTENDED CUTRSTR _cutr;  
+__IO_EXTENDED CUTRSTR _cutr;
 #define CUTR _cutr.lword
 #define CUTR_TDR0 _cutr.bit._TDR0
 #define CUTR_TDR1 _cutr.bit._TDR1
@@ -19256,7 +19256,7 @@ __IO_EXTENDED CUTRSTR _cutr;
 #define CUTR_TDR21 _cutr.bit._TDR21
 #define CUTR_TDR22 _cutr.bit._TDR22
 #define CUTR_TDR23 _cutr.bit._TDR23
-__IO_EXTENDED CUTR2STR _cutr2;  
+__IO_EXTENDED CUTR2STR _cutr2;
 #define CUTR2 _cutr2.word
 #define CUTR2_TDR0 _cutr2.bit._TDR0
 #define CUTR2_TDR1 _cutr2.bit._TDR1
@@ -19274,7 +19274,7 @@ __IO_EXTENDED CUTR2STR _cutr2;
 #define CUTR2_TDR13 _cutr2.bit._TDR13
 #define CUTR2_TDR14 _cutr2.bit._TDR14
 #define CUTR2_TDR15 _cutr2.bit._TDR15
-__IO_EXTENDED CUTR2LSTR _cutr2l;  
+__IO_EXTENDED CUTR2LSTR _cutr2l;
 #define CUTR2L _cutr2l.byte
 #define CUTR2L_TDR0 _cutr2l.bit._TDR0
 #define CUTR2L_TDR1 _cutr2l.bit._TDR1
@@ -19284,7 +19284,7 @@ __IO_EXTENDED CUTR2LSTR _cutr2l;
 #define CUTR2L_TDR5 _cutr2l.bit._TDR5
 #define CUTR2L_TDR6 _cutr2l.bit._TDR6
 #define CUTR2L_TDR7 _cutr2l.bit._TDR7
-__IO_EXTENDED CUTR2HSTR _cutr2h;  
+__IO_EXTENDED CUTR2HSTR _cutr2h;
 #define CUTR2H _cutr2h.byte
 #define CUTR2H_TDR8 _cutr2h.bit._TDR8
 #define CUTR2H_TDR9 _cutr2h.bit._TDR9
@@ -19294,7 +19294,7 @@ __IO_EXTENDED CUTR2HSTR _cutr2h;
 #define CUTR2H_TDR13 _cutr2h.bit._TDR13
 #define CUTR2H_TDR14 _cutr2h.bit._TDR14
 #define CUTR2H_TDR15 _cutr2h.bit._TDR15
-__IO_EXTENDED CUTR1STR _cutr1;  
+__IO_EXTENDED CUTR1STR _cutr1;
 #define CUTR1 _cutr1.word
 #define CUTR1_TDR16 _cutr1.bit._TDR16
 #define CUTR1_TDR17 _cutr1.bit._TDR17
@@ -19304,7 +19304,7 @@ __IO_EXTENDED CUTR1STR _cutr1;
 #define CUTR1_TDR21 _cutr1.bit._TDR21
 #define CUTR1_TDR22 _cutr1.bit._TDR22
 #define CUTR1_TDR23 _cutr1.bit._TDR23
-__IO_EXTENDED CUTR1LSTR _cutr1l;  
+__IO_EXTENDED CUTR1LSTR _cutr1l;
 #define CUTR1L _cutr1l.byte
 #define CUTR1L_TDR16 _cutr1l.bit._TDR16
 #define CUTR1L_TDR17 _cutr1l.bit._TDR17
@@ -19314,9 +19314,9 @@ __IO_EXTENDED CUTR1LSTR _cutr1l;
 #define CUTR1L_TDR21 _cutr1l.bit._TDR21
 #define CUTR1L_TDR22 _cutr1l.bit._TDR22
 #define CUTR1L_TDR23 _cutr1l.bit._TDR23
-__IO_EXTENDED CUTR1HSTR _cutr1h;  
+__IO_EXTENDED CUTR1HSTR _cutr1h;
 #define CUTR1H _cutr1h.byte
-__IO_EXTENDED TMISRSTR _tmisr;  
+__IO_EXTENDED TMISRSTR _tmisr;
 #define TMISR _tmisr.byte
 #define TMISR_TMIS0 _tmisr.bit._TMIS0
 #define TMISR_TMIS1 _tmisr.bit._TMIS1
@@ -19324,7 +19324,7 @@ __IO_EXTENDED TMISRSTR _tmisr;
 #define TMISR_TMIS3 _tmisr.bit._TMIS3
 #define TMISR_TMIS4 _tmisr.bit._TMIS4
 #define TMISR_TMIS5 _tmisr.bit._TMIS5
-__IO_EXTENDED SMR7STR _smr7;  
+__IO_EXTENDED SMR7STR _smr7;
 #define SMR7 _smr7.byte
 #define SMR7_SOE _smr7.bit._SOE
 #define SMR7_SCKE _smr7.bit._SCKE
@@ -19335,7 +19335,7 @@ __IO_EXTENDED SMR7STR _smr7;
 #define SMR7_MD0 _smr7.bit._MD0
 #define SMR7_MD1 _smr7.bit._MD1
 #define SMR7_MD _smr7.bitc._MD
-__IO_EXTENDED SCR7STR _scr7;  
+__IO_EXTENDED SCR7STR _scr7;
 #define SCR7 _scr7.byte
 #define SCR7_TXE _scr7.bit._TXE
 #define SCR7_RXE _scr7.bit._RXE
@@ -19346,10 +19346,10 @@ __IO_EXTENDED SCR7STR _scr7;
 #define SCR7_P _scr7.bit._P
 #define SCR7_PEN _scr7.bit._PEN
 __IO_EXTENDED IO_BYTE _tdr7;
-#define TDR7 _tdr7   
+#define TDR7 _tdr7
 __IO_EXTENDED IO_BYTE _rdr7;
-#define RDR7 _rdr7   
-__IO_EXTENDED SSR7STR _ssr7;  
+#define RDR7 _rdr7
+__IO_EXTENDED SSR7STR _ssr7;
 #define SSR7 _ssr7.byte
 #define SSR7_TIE _ssr7.bit._TIE
 #define SSR7_RIE _ssr7.bit._RIE
@@ -19359,7 +19359,7 @@ __IO_EXTENDED SSR7STR _ssr7;
 #define SSR7_FRE _ssr7.bit._FRE
 #define SSR7_ORE _ssr7.bit._ORE
 #define SSR7_PE _ssr7.bit._PE
-__IO_EXTENDED ECCR7STR _eccr7;  
+__IO_EXTENDED ECCR7STR _eccr7;
 #define ECCR7 _eccr7.byte
 #define ECCR7_TBI _eccr7.bit._TBI
 #define ECCR7_RBI _eccr7.bit._RBI
@@ -19369,7 +19369,7 @@ __IO_EXTENDED ECCR7STR _eccr7;
 #define ECCR7_MS _eccr7.bit._MS
 #define ECCR7_LBR _eccr7.bit._LBR
 #define ECCR7_INV _eccr7.bit._INV
-__IO_EXTENDED ESCR7STR _escr7;  
+__IO_EXTENDED ESCR7STR _escr7;
 #define ESCR7 _escr7.byte
 #define ESCR7_SCES _escr7.bit._SCES
 #define ESCR7_CCO _escr7.bit._CCO
@@ -19380,7 +19380,7 @@ __IO_EXTENDED ESCR7STR _escr7;
 #define ESCR7_LBD _escr7.bit._LBD
 #define ESCR7_LBIE _escr7.bit._LBIE
 #define ESCR7_LBL _escr7.bitc._LBL
-__IO_EXTENDED BGR7STR _bgr7;  
+__IO_EXTENDED BGR7STR _bgr7;
 #define BGR7 _bgr7.word
 #define BGR7_BGR0 _bgr7.bit._BGR0
 #define BGR7_BGR1 _bgr7.bit._BGR1
@@ -19399,7 +19399,7 @@ __IO_EXTENDED BGR7STR _bgr7;
 #define BGR7_BGR14 _bgr7.bit._BGR14
 #define BGR7_BGR15 _bgr7.bit._BGR15
 #define BGR7_BGR _bgr7.bitc._BGR
-__IO_EXTENDED BGRL7STR _bgrl7;  
+__IO_EXTENDED BGRL7STR _bgrl7;
 #define BGRL7 _bgrl7.byte
 #define BGRL7_BGR0 _bgrl7.bit._BGR0
 #define BGRL7_BGR1 _bgrl7.bit._BGR1
@@ -19409,7 +19409,7 @@ __IO_EXTENDED BGRL7STR _bgrl7;
 #define BGRL7_BGR5 _bgrl7.bit._BGR5
 #define BGRL7_BGR6 _bgrl7.bit._BGR6
 #define BGRL7_BGR7 _bgrl7.bit._BGR7
-__IO_EXTENDED BGRH7STR _bgrh7;  
+__IO_EXTENDED BGRH7STR _bgrh7;
 #define BGRH7 _bgrh7.byte
 #define BGRH7_BGR8 _bgrh7.bit._BGR8
 #define BGRH7_BGR9 _bgrh7.bit._BGR9
@@ -19419,13 +19419,13 @@ __IO_EXTENDED BGRH7STR _bgrh7;
 #define BGRH7_BGR13 _bgrh7.bit._BGR13
 #define BGRH7_BGR14 _bgrh7.bit._BGR14
 #define BGRH7_BGR15 _bgrh7.bit._BGR15
-__IO_EXTENDED ESIR7STR _esir7;  
+__IO_EXTENDED ESIR7STR _esir7;
 #define ESIR7 _esir7.byte
 #define ESIR7_AICD _esir7.bit._AICD
 #define ESIR7_RBI _esir7.bit._RBI
 #define ESIR7_RDRF _esir7.bit._RDRF
 #define ESIR7_TDRE _esir7.bit._TDRE
-__IO_EXTENDED SMR8STR _smr8;  
+__IO_EXTENDED SMR8STR _smr8;
 #define SMR8 _smr8.byte
 #define SMR8_SOE _smr8.bit._SOE
 #define SMR8_SCKE _smr8.bit._SCKE
@@ -19436,7 +19436,7 @@ __IO_EXTENDED SMR8STR _smr8;
 #define SMR8_MD0 _smr8.bit._MD0
 #define SMR8_MD1 _smr8.bit._MD1
 #define SMR8_MD _smr8.bitc._MD
-__IO_EXTENDED SCR8STR _scr8;  
+__IO_EXTENDED SCR8STR _scr8;
 #define SCR8 _scr8.byte
 #define SCR8_TXE _scr8.bit._TXE
 #define SCR8_RXE _scr8.bit._RXE
@@ -19447,10 +19447,10 @@ __IO_EXTENDED SCR8STR _scr8;
 #define SCR8_P _scr8.bit._P
 #define SCR8_PEN _scr8.bit._PEN
 __IO_EXTENDED IO_BYTE _tdr8;
-#define TDR8 _tdr8   
+#define TDR8 _tdr8
 __IO_EXTENDED IO_BYTE _rdr8;
-#define RDR8 _rdr8   
-__IO_EXTENDED SSR8STR _ssr8;  
+#define RDR8 _rdr8
+__IO_EXTENDED SSR8STR _ssr8;
 #define SSR8 _ssr8.byte
 #define SSR8_TIE _ssr8.bit._TIE
 #define SSR8_RIE _ssr8.bit._RIE
@@ -19460,7 +19460,7 @@ __IO_EXTENDED SSR8STR _ssr8;
 #define SSR8_FRE _ssr8.bit._FRE
 #define SSR8_ORE _ssr8.bit._ORE
 #define SSR8_PE _ssr8.bit._PE
-__IO_EXTENDED ECCR8STR _eccr8;  
+__IO_EXTENDED ECCR8STR _eccr8;
 #define ECCR8 _eccr8.byte
 #define ECCR8_TBI _eccr8.bit._TBI
 #define ECCR8_RBI _eccr8.bit._RBI
@@ -19470,7 +19470,7 @@ __IO_EXTENDED ECCR8STR _eccr8;
 #define ECCR8_MS _eccr8.bit._MS
 #define ECCR8_LBR _eccr8.bit._LBR
 #define ECCR8_INV _eccr8.bit._INV
-__IO_EXTENDED ESCR8STR _escr8;  
+__IO_EXTENDED ESCR8STR _escr8;
 #define ESCR8 _escr8.byte
 #define ESCR8_SCES _escr8.bit._SCES
 #define ESCR8_CCO _escr8.bit._CCO
@@ -19481,7 +19481,7 @@ __IO_EXTENDED ESCR8STR _escr8;
 #define ESCR8_LBD _escr8.bit._LBD
 #define ESCR8_LBIE _escr8.bit._LBIE
 #define ESCR8_LBL _escr8.bitc._LBL
-__IO_EXTENDED BGR8STR _bgr8;  
+__IO_EXTENDED BGR8STR _bgr8;
 #define BGR8 _bgr8.word
 #define BGR8_BGR0 _bgr8.bit._BGR0
 #define BGR8_BGR1 _bgr8.bit._BGR1
@@ -19500,7 +19500,7 @@ __IO_EXTENDED BGR8STR _bgr8;
 #define BGR8_BGR14 _bgr8.bit._BGR14
 #define BGR8_BGR15 _bgr8.bit._BGR15
 #define BGR8_BGR _bgr8.bitc._BGR
-__IO_EXTENDED BGRL8STR _bgrl8;  
+__IO_EXTENDED BGRL8STR _bgrl8;
 #define BGRL8 _bgrl8.byte
 #define BGRL8_BGR0 _bgrl8.bit._BGR0
 #define BGRL8_BGR1 _bgrl8.bit._BGR1
@@ -19510,7 +19510,7 @@ __IO_EXTENDED BGRL8STR _bgrl8;
 #define BGRL8_BGR5 _bgrl8.bit._BGR5
 #define BGRL8_BGR6 _bgrl8.bit._BGR6
 #define BGRL8_BGR7 _bgrl8.bit._BGR7
-__IO_EXTENDED BGRH8STR _bgrh8;  
+__IO_EXTENDED BGRH8STR _bgrh8;
 #define BGRH8 _bgrh8.byte
 #define BGRH8_BGR8 _bgrh8.bit._BGR8
 #define BGRH8_BGR9 _bgrh8.bit._BGR9
@@ -19520,13 +19520,13 @@ __IO_EXTENDED BGRH8STR _bgrh8;
 #define BGRH8_BGR13 _bgrh8.bit._BGR13
 #define BGRH8_BGR14 _bgrh8.bit._BGR14
 #define BGRH8_BGR15 _bgrh8.bit._BGR15
-__IO_EXTENDED ESIR8STR _esir8;  
+__IO_EXTENDED ESIR8STR _esir8;
 #define ESIR8 _esir8.byte
 #define ESIR8_AICD _esir8.bit._AICD
 #define ESIR8_RBI _esir8.bit._RBI
 #define ESIR8_RDRF _esir8.bit._RDRF
 #define ESIR8_TDRE _esir8.bit._TDRE
-__IO_EXTENDED SMR9STR _smr9;  
+__IO_EXTENDED SMR9STR _smr9;
 #define SMR9 _smr9.byte
 #define SMR9_SOE _smr9.bit._SOE
 #define SMR9_SCKE _smr9.bit._SCKE
@@ -19537,7 +19537,7 @@ __IO_EXTENDED SMR9STR _smr9;
 #define SMR9_MD0 _smr9.bit._MD0
 #define SMR9_MD1 _smr9.bit._MD1
 #define SMR9_MD _smr9.bitc._MD
-__IO_EXTENDED SCR9STR _scr9;  
+__IO_EXTENDED SCR9STR _scr9;
 #define SCR9 _scr9.byte
 #define SCR9_TXE _scr9.bit._TXE
 #define SCR9_RXE _scr9.bit._RXE
@@ -19548,10 +19548,10 @@ __IO_EXTENDED SCR9STR _scr9;
 #define SCR9_P _scr9.bit._P
 #define SCR9_PEN _scr9.bit._PEN
 __IO_EXTENDED IO_BYTE _tdr9;
-#define TDR9 _tdr9   
+#define TDR9 _tdr9
 __IO_EXTENDED IO_BYTE _rdr9;
-#define RDR9 _rdr9   
-__IO_EXTENDED SSR9STR _ssr9;  
+#define RDR9 _rdr9
+__IO_EXTENDED SSR9STR _ssr9;
 #define SSR9 _ssr9.byte
 #define SSR9_TIE _ssr9.bit._TIE
 #define SSR9_RIE _ssr9.bit._RIE
@@ -19561,7 +19561,7 @@ __IO_EXTENDED SSR9STR _ssr9;
 #define SSR9_FRE _ssr9.bit._FRE
 #define SSR9_ORE _ssr9.bit._ORE
 #define SSR9_PE _ssr9.bit._PE
-__IO_EXTENDED ECCR9STR _eccr9;  
+__IO_EXTENDED ECCR9STR _eccr9;
 #define ECCR9 _eccr9.byte
 #define ECCR9_TBI _eccr9.bit._TBI
 #define ECCR9_RBI _eccr9.bit._RBI
@@ -19571,7 +19571,7 @@ __IO_EXTENDED ECCR9STR _eccr9;
 #define ECCR9_MS _eccr9.bit._MS
 #define ECCR9_LBR _eccr9.bit._LBR
 #define ECCR9_INV _eccr9.bit._INV
-__IO_EXTENDED ESCR9STR _escr9;  
+__IO_EXTENDED ESCR9STR _escr9;
 #define ESCR9 _escr9.byte
 #define ESCR9_SCES _escr9.bit._SCES
 #define ESCR9_CCO _escr9.bit._CCO
@@ -19582,7 +19582,7 @@ __IO_EXTENDED ESCR9STR _escr9;
 #define ESCR9_LBD _escr9.bit._LBD
 #define ESCR9_LBIE _escr9.bit._LBIE
 #define ESCR9_LBL _escr9.bitc._LBL
-__IO_EXTENDED BGR9STR _bgr9;  
+__IO_EXTENDED BGR9STR _bgr9;
 #define BGR9 _bgr9.word
 #define BGR9_BGR0 _bgr9.bit._BGR0
 #define BGR9_BGR1 _bgr9.bit._BGR1
@@ -19601,7 +19601,7 @@ __IO_EXTENDED BGR9STR _bgr9;
 #define BGR9_BGR14 _bgr9.bit._BGR14
 #define BGR9_BGR15 _bgr9.bit._BGR15
 #define BGR9_BGR _bgr9.bitc._BGR
-__IO_EXTENDED BGRL9STR _bgrl9;  
+__IO_EXTENDED BGRL9STR _bgrl9;
 #define BGRL9 _bgrl9.byte
 #define BGRL9_BGR0 _bgrl9.bit._BGR0
 #define BGRL9_BGR1 _bgrl9.bit._BGR1
@@ -19611,7 +19611,7 @@ __IO_EXTENDED BGRL9STR _bgrl9;
 #define BGRL9_BGR5 _bgrl9.bit._BGR5
 #define BGRL9_BGR6 _bgrl9.bit._BGR6
 #define BGRL9_BGR7 _bgrl9.bit._BGR7
-__IO_EXTENDED BGRH9STR _bgrh9;  
+__IO_EXTENDED BGRH9STR _bgrh9;
 #define BGRH9 _bgrh9.byte
 #define BGRH9_BGR8 _bgrh9.bit._BGR8
 #define BGRH9_BGR9 _bgrh9.bit._BGR9
@@ -19621,13 +19621,13 @@ __IO_EXTENDED BGRH9STR _bgrh9;
 #define BGRH9_BGR13 _bgrh9.bit._BGR13
 #define BGRH9_BGR14 _bgrh9.bit._BGR14
 #define BGRH9_BGR15 _bgrh9.bit._BGR15
-__IO_EXTENDED ESIR9STR _esir9;  
+__IO_EXTENDED ESIR9STR _esir9;
 #define ESIR9 _esir9.byte
 #define ESIR9_AICD _esir9.bit._AICD
 #define ESIR9_RBI _esir9.bit._RBI
 #define ESIR9_RDRF _esir9.bit._RDRF
 #define ESIR9_TDRE _esir9.bit._TDRE
-__IO_EXTENDED ACSR0STR _acsr0;  
+__IO_EXTENDED ACSR0STR _acsr0;
 #define ACSR0 _acsr0.byte
 #define ACSR0_PD _acsr0.bit._PD
 #define ACSR0_IEN _acsr0.bit._IEN
@@ -19637,11 +19637,11 @@ __IO_EXTENDED ACSR0STR _acsr0;
 #define ACSR0_UVEN _acsr0.bit._UVEN
 #define ACSR0_OVEN _acsr0.bit._OVEN
 #define ACSR0_CMD _acsr0.bit._CMD
-__IO_EXTENDED AECSR0STR _aecsr0;  
+__IO_EXTENDED AECSR0STR _aecsr0;
 #define AECSR0 _aecsr0.byte
 #define AECSR0_INTREF _aecsr0.bit._INTREF
 #define AECSR0_ACE _aecsr0.bit._ACE
-__IO_EXTENDED ACSR1STR _acsr1;  
+__IO_EXTENDED ACSR1STR _acsr1;
 #define ACSR1 _acsr1.byte
 #define ACSR1_PD _acsr1.bit._PD
 #define ACSR1_IEN _acsr1.bit._IEN
@@ -19651,11 +19651,11 @@ __IO_EXTENDED ACSR1STR _acsr1;
 #define ACSR1_UVEN _acsr1.bit._UVEN
 #define ACSR1_OVEN _acsr1.bit._OVEN
 #define ACSR1_CMD _acsr1.bit._CMD
-__IO_EXTENDED AECSR1STR _aecsr1;  
+__IO_EXTENDED AECSR1STR _aecsr1;
 #define AECSR1 _aecsr1.byte
 #define AECSR1_INTREF _aecsr1.bit._INTREF
 #define AECSR1_ACE _aecsr1.bit._ACE
-__IO_EXTENDED PTMR6STR _ptmr6;  
+__IO_EXTENDED PTMR6STR _ptmr6;
 #define PTMR6 _ptmr6.word
 #define PTMR6_D0 _ptmr6.bit._D0
 #define PTMR6_D1 _ptmr6.bit._D1
@@ -19674,7 +19674,7 @@ __IO_EXTENDED PTMR6STR _ptmr6;
 #define PTMR6_D14 _ptmr6.bit._D14
 #define PTMR6_D15 _ptmr6.bit._D15
 #define PTMR6_D _ptmr6.bitc._D
-__IO_EXTENDED PCSR6STR _pcsr6;  
+__IO_EXTENDED PCSR6STR _pcsr6;
 #define PCSR6 _pcsr6.word
 #define PCSR6_D0 _pcsr6.bit._D0
 #define PCSR6_D1 _pcsr6.bit._D1
@@ -19693,7 +19693,7 @@ __IO_EXTENDED PCSR6STR _pcsr6;
 #define PCSR6_D14 _pcsr6.bit._D14
 #define PCSR6_D15 _pcsr6.bit._D15
 #define PCSR6_D _pcsr6.bitc._D
-__IO_EXTENDED PDUT6STR _pdut6;  
+__IO_EXTENDED PDUT6STR _pdut6;
 #define PDUT6 _pdut6.word
 #define PDUT6_D0 _pdut6.bit._D0
 #define PDUT6_D1 _pdut6.bit._D1
@@ -19712,7 +19712,7 @@ __IO_EXTENDED PDUT6STR _pdut6;
 #define PDUT6_D14 _pdut6.bit._D14
 #define PDUT6_D15 _pdut6.bit._D15
 #define PDUT6_D _pdut6.bitc._D
-__IO_EXTENDED PCN6STR _pcn6;  
+__IO_EXTENDED PCN6STR _pcn6;
 #define PCN6 _pcn6.word
 #define PCN6_OSEL _pcn6.bit._OSEL
 #define PCN6_OE _pcn6.bit._OE
@@ -19732,7 +19732,7 @@ __IO_EXTENDED PCN6STR _pcn6;
 #define PCN6_IRS _pcn6.bitc._IRS
 #define PCN6_EGS _pcn6.bitc._EGS
 #define PCN6_CKS _pcn6.bitc._CKS
-__IO_EXTENDED PCNL6STR _pcnl6;  
+__IO_EXTENDED PCNL6STR _pcnl6;
 #define PCNL6 _pcnl6.byte
 #define PCNL6_OSEL _pcnl6.bit._OSEL
 #define PCNL6_OE _pcnl6.bit._OE
@@ -19744,7 +19744,7 @@ __IO_EXTENDED PCNL6STR _pcnl6;
 #define PCNL6_EGS1 _pcnl6.bit._EGS1
 #define PCNL6_IRS _pcnl6.bitc._IRS
 #define PCNL6_EGS _pcnl6.bitc._EGS
-__IO_EXTENDED PCNH6STR _pcnh6;  
+__IO_EXTENDED PCNH6STR _pcnh6;
 #define PCNH6 _pcnh6.byte
 #define PCNH6_PGMS _pcnh6.bit._PGMS
 #define PCNH6_CKS0 _pcnh6.bit._CKS0
@@ -19754,7 +19754,7 @@ __IO_EXTENDED PCNH6STR _pcnh6;
 #define PCNH6_STGR _pcnh6.bit._STGR
 #define PCNH6_CNTE _pcnh6.bit._CNTE
 #define PCNH6_CKS _pcnh6.bitc._CKS
-__IO_EXTENDED PTMR7STR _ptmr7;  
+__IO_EXTENDED PTMR7STR _ptmr7;
 #define PTMR7 _ptmr7.word
 #define PTMR7_D0 _ptmr7.bit._D0
 #define PTMR7_D1 _ptmr7.bit._D1
@@ -19773,7 +19773,7 @@ __IO_EXTENDED PTMR7STR _ptmr7;
 #define PTMR7_D14 _ptmr7.bit._D14
 #define PTMR7_D15 _ptmr7.bit._D15
 #define PTMR7_D _ptmr7.bitc._D
-__IO_EXTENDED PCSR7STR _pcsr7;  
+__IO_EXTENDED PCSR7STR _pcsr7;
 #define PCSR7 _pcsr7.word
 #define PCSR7_D0 _pcsr7.bit._D0
 #define PCSR7_D1 _pcsr7.bit._D1
@@ -19792,7 +19792,7 @@ __IO_EXTENDED PCSR7STR _pcsr7;
 #define PCSR7_D14 _pcsr7.bit._D14
 #define PCSR7_D15 _pcsr7.bit._D15
 #define PCSR7_D _pcsr7.bitc._D
-__IO_EXTENDED PDUT7STR _pdut7;  
+__IO_EXTENDED PDUT7STR _pdut7;
 #define PDUT7 _pdut7.word
 #define PDUT7_D0 _pdut7.bit._D0
 #define PDUT7_D1 _pdut7.bit._D1
@@ -19811,7 +19811,7 @@ __IO_EXTENDED PDUT7STR _pdut7;
 #define PDUT7_D14 _pdut7.bit._D14
 #define PDUT7_D15 _pdut7.bit._D15
 #define PDUT7_D _pdut7.bitc._D
-__IO_EXTENDED PCN7STR _pcn7;  
+__IO_EXTENDED PCN7STR _pcn7;
 #define PCN7 _pcn7.word
 #define PCN7_OSEL _pcn7.bit._OSEL
 #define PCN7_OE _pcn7.bit._OE
@@ -19831,7 +19831,7 @@ __IO_EXTENDED PCN7STR _pcn7;
 #define PCN7_IRS _pcn7.bitc._IRS
 #define PCN7_EGS _pcn7.bitc._EGS
 #define PCN7_CKS _pcn7.bitc._CKS
-__IO_EXTENDED PCNL7STR _pcnl7;  
+__IO_EXTENDED PCNL7STR _pcnl7;
 #define PCNL7 _pcnl7.byte
 #define PCNL7_OSEL _pcnl7.bit._OSEL
 #define PCNL7_OE _pcnl7.bit._OE
@@ -19843,7 +19843,7 @@ __IO_EXTENDED PCNL7STR _pcnl7;
 #define PCNL7_EGS1 _pcnl7.bit._EGS1
 #define PCNL7_IRS _pcnl7.bitc._IRS
 #define PCNL7_EGS _pcnl7.bitc._EGS
-__IO_EXTENDED PCNH7STR _pcnh7;  
+__IO_EXTENDED PCNH7STR _pcnh7;
 #define PCNH7 _pcnh7.byte
 #define PCNH7_PGMS _pcnh7.bit._PGMS
 #define PCNH7_CKS0 _pcnh7.bit._CKS0
@@ -19853,7 +19853,7 @@ __IO_EXTENDED PCNH7STR _pcnh7;
 #define PCNH7_STGR _pcnh7.bit._STGR
 #define PCNH7_CNTE _pcnh7.bit._CNTE
 #define PCNH7_CKS _pcnh7.bitc._CKS
-__IO_EXTENDED GCN12STR _gcn12;  
+__IO_EXTENDED GCN12STR _gcn12;
 #define GCN12 _gcn12.word
 #define GCN12_TSEL00 _gcn12.bit._TSEL00
 #define GCN12_TSEL01 _gcn12.bit._TSEL01
@@ -19875,7 +19875,7 @@ __IO_EXTENDED GCN12STR _gcn12;
 #define GCN12_TSEL1 _gcn12.bitc._TSEL1
 #define GCN12_TSEL2 _gcn12.bitc._TSEL2
 #define GCN12_TSEL3 _gcn12.bitc._TSEL3
-__IO_EXTENDED GCN1L2STR _gcn1l2;  
+__IO_EXTENDED GCN1L2STR _gcn1l2;
 #define GCN1L2 _gcn1l2.byte
 #define GCN1L2_TSEL00 _gcn1l2.bit._TSEL00
 #define GCN1L2_TSEL01 _gcn1l2.bit._TSEL01
@@ -19887,7 +19887,7 @@ __IO_EXTENDED GCN1L2STR _gcn1l2;
 #define GCN1L2_TSEL13 _gcn1l2.bit._TSEL13
 #define GCN1L2_TSEL0 _gcn1l2.bitc._TSEL0
 #define GCN1L2_TSEL1 _gcn1l2.bitc._TSEL1
-__IO_EXTENDED GCN1H2STR _gcn1h2;  
+__IO_EXTENDED GCN1H2STR _gcn1h2;
 #define GCN1H2 _gcn1h2.byte
 #define GCN1H2_TSEL20 _gcn1h2.bit._TSEL20
 #define GCN1H2_TSEL21 _gcn1h2.bit._TSEL21
@@ -19899,7 +19899,7 @@ __IO_EXTENDED GCN1H2STR _gcn1h2;
 #define GCN1H2_TSEL33 _gcn1h2.bit._TSEL33
 #define GCN1H2_TSEL2 _gcn1h2.bitc._TSEL2
 #define GCN1H2_TSEL3 _gcn1h2.bitc._TSEL3
-__IO_EXTENDED GCN22STR _gcn22;  
+__IO_EXTENDED GCN22STR _gcn22;
 #define GCN22 _gcn22.word
 #define GCN22_EN0 _gcn22.bit._EN0
 #define GCN22_EN1 _gcn22.bit._EN1
@@ -19911,21 +19911,21 @@ __IO_EXTENDED GCN22STR _gcn22;
 #define GCN22_CKSEL3 _gcn22.bit._CKSEL3
 #define GCN22_EN _gcn22.bitc._EN
 #define GCN22_CKSEL _gcn22.bitc._CKSEL
-__IO_EXTENDED GCN2L2STR _gcn2l2;  
+__IO_EXTENDED GCN2L2STR _gcn2l2;
 #define GCN2L2 _gcn2l2.byte
 #define GCN2L2_EN0 _gcn2l2.bit._EN0
 #define GCN2L2_EN1 _gcn2l2.bit._EN1
 #define GCN2L2_EN2 _gcn2l2.bit._EN2
 #define GCN2L2_EN3 _gcn2l2.bit._EN3
 #define GCN2L2_EN _gcn2l2.bitc._EN
-__IO_EXTENDED GCN2H2STR _gcn2h2;  
+__IO_EXTENDED GCN2H2STR _gcn2h2;
 #define GCN2H2 _gcn2h2.byte
 #define GCN2H2_CKSEL0 _gcn2h2.bit._CKSEL0
 #define GCN2H2_CKSEL1 _gcn2h2.bit._CKSEL1
 #define GCN2H2_CKSEL2 _gcn2h2.bit._CKSEL2
 #define GCN2H2_CKSEL3 _gcn2h2.bit._CKSEL3
 #define GCN2H2_CKSEL _gcn2h2.bitc._CKSEL
-__IO_EXTENDED PTMR8STR _ptmr8;  
+__IO_EXTENDED PTMR8STR _ptmr8;
 #define PTMR8 _ptmr8.word
 #define PTMR8_D0 _ptmr8.bit._D0
 #define PTMR8_D1 _ptmr8.bit._D1
@@ -19944,7 +19944,7 @@ __IO_EXTENDED PTMR8STR _ptmr8;
 #define PTMR8_D14 _ptmr8.bit._D14
 #define PTMR8_D15 _ptmr8.bit._D15
 #define PTMR8_D _ptmr8.bitc._D
-__IO_EXTENDED PCSR8STR _pcsr8;  
+__IO_EXTENDED PCSR8STR _pcsr8;
 #define PCSR8 _pcsr8.word
 #define PCSR8_D0 _pcsr8.bit._D0
 #define PCSR8_D1 _pcsr8.bit._D1
@@ -19963,7 +19963,7 @@ __IO_EXTENDED PCSR8STR _pcsr8;
 #define PCSR8_D14 _pcsr8.bit._D14
 #define PCSR8_D15 _pcsr8.bit._D15
 #define PCSR8_D _pcsr8.bitc._D
-__IO_EXTENDED PDUT8STR _pdut8;  
+__IO_EXTENDED PDUT8STR _pdut8;
 #define PDUT8 _pdut8.word
 #define PDUT8_D0 _pdut8.bit._D0
 #define PDUT8_D1 _pdut8.bit._D1
@@ -19982,7 +19982,7 @@ __IO_EXTENDED PDUT8STR _pdut8;
 #define PDUT8_D14 _pdut8.bit._D14
 #define PDUT8_D15 _pdut8.bit._D15
 #define PDUT8_D _pdut8.bitc._D
-__IO_EXTENDED PCN8STR _pcn8;  
+__IO_EXTENDED PCN8STR _pcn8;
 #define PCN8 _pcn8.word
 #define PCN8_OSEL _pcn8.bit._OSEL
 #define PCN8_OE _pcn8.bit._OE
@@ -20002,7 +20002,7 @@ __IO_EXTENDED PCN8STR _pcn8;
 #define PCN8_IRS _pcn8.bitc._IRS
 #define PCN8_EGS _pcn8.bitc._EGS
 #define PCN8_CKS _pcn8.bitc._CKS
-__IO_EXTENDED PCNL8STR _pcnl8;  
+__IO_EXTENDED PCNL8STR _pcnl8;
 #define PCNL8 _pcnl8.byte
 #define PCNL8_OSEL _pcnl8.bit._OSEL
 #define PCNL8_OE _pcnl8.bit._OE
@@ -20014,7 +20014,7 @@ __IO_EXTENDED PCNL8STR _pcnl8;
 #define PCNL8_EGS1 _pcnl8.bit._EGS1
 #define PCNL8_IRS _pcnl8.bitc._IRS
 #define PCNL8_EGS _pcnl8.bitc._EGS
-__IO_EXTENDED PCNH8STR _pcnh8;  
+__IO_EXTENDED PCNH8STR _pcnh8;
 #define PCNH8 _pcnh8.byte
 #define PCNH8_PGMS _pcnh8.bit._PGMS
 #define PCNH8_CKS0 _pcnh8.bit._CKS0
@@ -20024,7 +20024,7 @@ __IO_EXTENDED PCNH8STR _pcnh8;
 #define PCNH8_STGR _pcnh8.bit._STGR
 #define PCNH8_CNTE _pcnh8.bit._CNTE
 #define PCNH8_CKS _pcnh8.bitc._CKS
-__IO_EXTENDED PTMR9STR _ptmr9;  
+__IO_EXTENDED PTMR9STR _ptmr9;
 #define PTMR9 _ptmr9.word
 #define PTMR9_D0 _ptmr9.bit._D0
 #define PTMR9_D1 _ptmr9.bit._D1
@@ -20043,7 +20043,7 @@ __IO_EXTENDED PTMR9STR _ptmr9;
 #define PTMR9_D14 _ptmr9.bit._D14
 #define PTMR9_D15 _ptmr9.bit._D15
 #define PTMR9_D _ptmr9.bitc._D
-__IO_EXTENDED PCSR9STR _pcsr9;  
+__IO_EXTENDED PCSR9STR _pcsr9;
 #define PCSR9 _pcsr9.word
 #define PCSR9_D0 _pcsr9.bit._D0
 #define PCSR9_D1 _pcsr9.bit._D1
@@ -20062,7 +20062,7 @@ __IO_EXTENDED PCSR9STR _pcsr9;
 #define PCSR9_D14 _pcsr9.bit._D14
 #define PCSR9_D15 _pcsr9.bit._D15
 #define PCSR9_D _pcsr9.bitc._D
-__IO_EXTENDED PDUT9STR _pdut9;  
+__IO_EXTENDED PDUT9STR _pdut9;
 #define PDUT9 _pdut9.word
 #define PDUT9_D0 _pdut9.bit._D0
 #define PDUT9_D1 _pdut9.bit._D1
@@ -20081,7 +20081,7 @@ __IO_EXTENDED PDUT9STR _pdut9;
 #define PDUT9_D14 _pdut9.bit._D14
 #define PDUT9_D15 _pdut9.bit._D15
 #define PDUT9_D _pdut9.bitc._D
-__IO_EXTENDED PCN9STR _pcn9;  
+__IO_EXTENDED PCN9STR _pcn9;
 #define PCN9 _pcn9.word
 #define PCN9_OSEL _pcn9.bit._OSEL
 #define PCN9_OE _pcn9.bit._OE
@@ -20101,7 +20101,7 @@ __IO_EXTENDED PCN9STR _pcn9;
 #define PCN9_IRS _pcn9.bitc._IRS
 #define PCN9_EGS _pcn9.bitc._EGS
 #define PCN9_CKS _pcn9.bitc._CKS
-__IO_EXTENDED PCNL9STR _pcnl9;  
+__IO_EXTENDED PCNL9STR _pcnl9;
 #define PCNL9 _pcnl9.byte
 #define PCNL9_OSEL _pcnl9.bit._OSEL
 #define PCNL9_OE _pcnl9.bit._OE
@@ -20113,7 +20113,7 @@ __IO_EXTENDED PCNL9STR _pcnl9;
 #define PCNL9_EGS1 _pcnl9.bit._EGS1
 #define PCNL9_IRS _pcnl9.bitc._IRS
 #define PCNL9_EGS _pcnl9.bitc._EGS
-__IO_EXTENDED PCNH9STR _pcnh9;  
+__IO_EXTENDED PCNH9STR _pcnh9;
 #define PCNH9 _pcnh9.byte
 #define PCNH9_PGMS _pcnh9.bit._PGMS
 #define PCNH9_CKS0 _pcnh9.bit._CKS0
@@ -20123,7 +20123,7 @@ __IO_EXTENDED PCNH9STR _pcnh9;
 #define PCNH9_STGR _pcnh9.bit._STGR
 #define PCNH9_CNTE _pcnh9.bit._CNTE
 #define PCNH9_CKS _pcnh9.bitc._CKS
-__IO_EXTENDED PTMR10STR _ptmr10;  
+__IO_EXTENDED PTMR10STR _ptmr10;
 #define PTMR10 _ptmr10.word
 #define PTMR10_D0 _ptmr10.bit._D0
 #define PTMR10_D1 _ptmr10.bit._D1
@@ -20142,7 +20142,7 @@ __IO_EXTENDED PTMR10STR _ptmr10;
 #define PTMR10_D14 _ptmr10.bit._D14
 #define PTMR10_D15 _ptmr10.bit._D15
 #define PTMR10_D _ptmr10.bitc._D
-__IO_EXTENDED PCSR10STR _pcsr10;  
+__IO_EXTENDED PCSR10STR _pcsr10;
 #define PCSR10 _pcsr10.word
 #define PCSR10_D0 _pcsr10.bit._D0
 #define PCSR10_D1 _pcsr10.bit._D1
@@ -20161,7 +20161,7 @@ __IO_EXTENDED PCSR10STR _pcsr10;
 #define PCSR10_D14 _pcsr10.bit._D14
 #define PCSR10_D15 _pcsr10.bit._D15
 #define PCSR10_D _pcsr10.bitc._D
-__IO_EXTENDED PDUT10STR _pdut10;  
+__IO_EXTENDED PDUT10STR _pdut10;
 #define PDUT10 _pdut10.word
 #define PDUT10_D0 _pdut10.bit._D0
 #define PDUT10_D1 _pdut10.bit._D1
@@ -20180,7 +20180,7 @@ __IO_EXTENDED PDUT10STR _pdut10;
 #define PDUT10_D14 _pdut10.bit._D14
 #define PDUT10_D15 _pdut10.bit._D15
 #define PDUT10_D _pdut10.bitc._D
-__IO_EXTENDED PCN10STR _pcn10;  
+__IO_EXTENDED PCN10STR _pcn10;
 #define PCN10 _pcn10.word
 #define PCN10_OSEL _pcn10.bit._OSEL
 #define PCN10_OE _pcn10.bit._OE
@@ -20200,7 +20200,7 @@ __IO_EXTENDED PCN10STR _pcn10;
 #define PCN10_IRS _pcn10.bitc._IRS
 #define PCN10_EGS _pcn10.bitc._EGS
 #define PCN10_CKS _pcn10.bitc._CKS
-__IO_EXTENDED PCNL10STR _pcnl10;  
+__IO_EXTENDED PCNL10STR _pcnl10;
 #define PCNL10 _pcnl10.byte
 #define PCNL10_OSEL _pcnl10.bit._OSEL
 #define PCNL10_OE _pcnl10.bit._OE
@@ -20212,7 +20212,7 @@ __IO_EXTENDED PCNL10STR _pcnl10;
 #define PCNL10_EGS1 _pcnl10.bit._EGS1
 #define PCNL10_IRS _pcnl10.bitc._IRS
 #define PCNL10_EGS _pcnl10.bitc._EGS
-__IO_EXTENDED PCNH10STR _pcnh10;  
+__IO_EXTENDED PCNH10STR _pcnh10;
 #define PCNH10 _pcnh10.byte
 #define PCNH10_PGMS _pcnh10.bit._PGMS
 #define PCNH10_CKS0 _pcnh10.bit._CKS0
@@ -20222,7 +20222,7 @@ __IO_EXTENDED PCNH10STR _pcnh10;
 #define PCNH10_STGR _pcnh10.bit._STGR
 #define PCNH10_CNTE _pcnh10.bit._CNTE
 #define PCNH10_CKS _pcnh10.bitc._CKS
-__IO_EXTENDED PTMR11STR _ptmr11;  
+__IO_EXTENDED PTMR11STR _ptmr11;
 #define PTMR11 _ptmr11.word
 #define PTMR11_D0 _ptmr11.bit._D0
 #define PTMR11_D1 _ptmr11.bit._D1
@@ -20241,7 +20241,7 @@ __IO_EXTENDED PTMR11STR _ptmr11;
 #define PTMR11_D14 _ptmr11.bit._D14
 #define PTMR11_D15 _ptmr11.bit._D15
 #define PTMR11_D _ptmr11.bitc._D
-__IO_EXTENDED PCSR11STR _pcsr11;  
+__IO_EXTENDED PCSR11STR _pcsr11;
 #define PCSR11 _pcsr11.word
 #define PCSR11_D0 _pcsr11.bit._D0
 #define PCSR11_D1 _pcsr11.bit._D1
@@ -20260,7 +20260,7 @@ __IO_EXTENDED PCSR11STR _pcsr11;
 #define PCSR11_D14 _pcsr11.bit._D14
 #define PCSR11_D15 _pcsr11.bit._D15
 #define PCSR11_D _pcsr11.bitc._D
-__IO_EXTENDED PDUT11STR _pdut11;  
+__IO_EXTENDED PDUT11STR _pdut11;
 #define PDUT11 _pdut11.word
 #define PDUT11_D0 _pdut11.bit._D0
 #define PDUT11_D1 _pdut11.bit._D1
@@ -20279,7 +20279,7 @@ __IO_EXTENDED PDUT11STR _pdut11;
 #define PDUT11_D14 _pdut11.bit._D14
 #define PDUT11_D15 _pdut11.bit._D15
 #define PDUT11_D _pdut11.bitc._D
-__IO_EXTENDED PCN11STR _pcn11;  
+__IO_EXTENDED PCN11STR _pcn11;
 #define PCN11 _pcn11.word
 #define PCN11_OSEL _pcn11.bit._OSEL
 #define PCN11_OE _pcn11.bit._OE
@@ -20299,7 +20299,7 @@ __IO_EXTENDED PCN11STR _pcn11;
 #define PCN11_IRS _pcn11.bitc._IRS
 #define PCN11_EGS _pcn11.bitc._EGS
 #define PCN11_CKS _pcn11.bitc._CKS
-__IO_EXTENDED PCNL11STR _pcnl11;  
+__IO_EXTENDED PCNL11STR _pcnl11;
 #define PCNL11 _pcnl11.byte
 #define PCNL11_OSEL _pcnl11.bit._OSEL
 #define PCNL11_OE _pcnl11.bit._OE
@@ -20311,7 +20311,7 @@ __IO_EXTENDED PCNL11STR _pcnl11;
 #define PCNL11_EGS1 _pcnl11.bit._EGS1
 #define PCNL11_IRS _pcnl11.bitc._IRS
 #define PCNL11_EGS _pcnl11.bitc._EGS
-__IO_EXTENDED PCNH11STR _pcnh11;  
+__IO_EXTENDED PCNH11STR _pcnh11;
 #define PCNH11 _pcnh11.byte
 #define PCNH11_PGMS _pcnh11.bit._PGMS
 #define PCNH11_CKS0 _pcnh11.bit._CKS0
@@ -20321,7 +20321,7 @@ __IO_EXTENDED PCNH11STR _pcnh11;
 #define PCNH11_STGR _pcnh11.bit._STGR
 #define PCNH11_CNTE _pcnh11.bit._CNTE
 #define PCNH11_CKS _pcnh11.bitc._CKS
-__IO_EXTENDED GCN13STR _gcn13;  
+__IO_EXTENDED GCN13STR _gcn13;
 #define GCN13 _gcn13.word
 #define GCN13_TSEL00 _gcn13.bit._TSEL00
 #define GCN13_TSEL01 _gcn13.bit._TSEL01
@@ -20343,7 +20343,7 @@ __IO_EXTENDED GCN13STR _gcn13;
 #define GCN13_TSEL1 _gcn13.bitc._TSEL1
 #define GCN13_TSEL2 _gcn13.bitc._TSEL2
 #define GCN13_TSEL3 _gcn13.bitc._TSEL3
-__IO_EXTENDED GCN1L3STR _gcn1l3;  
+__IO_EXTENDED GCN1L3STR _gcn1l3;
 #define GCN1L3 _gcn1l3.byte
 #define GCN1L3_TSEL00 _gcn1l3.bit._TSEL00
 #define GCN1L3_TSEL01 _gcn1l3.bit._TSEL01
@@ -20355,7 +20355,7 @@ __IO_EXTENDED GCN1L3STR _gcn1l3;
 #define GCN1L3_TSEL13 _gcn1l3.bit._TSEL13
 #define GCN1L3_TSEL0 _gcn1l3.bitc._TSEL0
 #define GCN1L3_TSEL1 _gcn1l3.bitc._TSEL1
-__IO_EXTENDED GCN1H3STR _gcn1h3;  
+__IO_EXTENDED GCN1H3STR _gcn1h3;
 #define GCN1H3 _gcn1h3.byte
 #define GCN1H3_TSEL20 _gcn1h3.bit._TSEL20
 #define GCN1H3_TSEL21 _gcn1h3.bit._TSEL21
@@ -20367,7 +20367,7 @@ __IO_EXTENDED GCN1H3STR _gcn1h3;
 #define GCN1H3_TSEL33 _gcn1h3.bit._TSEL33
 #define GCN1H3_TSEL2 _gcn1h3.bitc._TSEL2
 #define GCN1H3_TSEL3 _gcn1h3.bitc._TSEL3
-__IO_EXTENDED GCN23STR _gcn23;  
+__IO_EXTENDED GCN23STR _gcn23;
 #define GCN23 _gcn23.word
 #define GCN23_EN0 _gcn23.bit._EN0
 #define GCN23_EN1 _gcn23.bit._EN1
@@ -20379,21 +20379,21 @@ __IO_EXTENDED GCN23STR _gcn23;
 #define GCN23_CKSEL3 _gcn23.bit._CKSEL3
 #define GCN23_EN _gcn23.bitc._EN
 #define GCN23_CKSEL _gcn23.bitc._CKSEL
-__IO_EXTENDED GCN2L3STR _gcn2l3;  
+__IO_EXTENDED GCN2L3STR _gcn2l3;
 #define GCN2L3 _gcn2l3.byte
 #define GCN2L3_EN0 _gcn2l3.bit._EN0
 #define GCN2L3_EN1 _gcn2l3.bit._EN1
 #define GCN2L3_EN2 _gcn2l3.bit._EN2
 #define GCN2L3_EN3 _gcn2l3.bit._EN3
 #define GCN2L3_EN _gcn2l3.bitc._EN
-__IO_EXTENDED GCN2H3STR _gcn2h3;  
+__IO_EXTENDED GCN2H3STR _gcn2h3;
 #define GCN2H3 _gcn2h3.byte
 #define GCN2H3_CKSEL0 _gcn2h3.bit._CKSEL0
 #define GCN2H3_CKSEL1 _gcn2h3.bit._CKSEL1
 #define GCN2H3_CKSEL2 _gcn2h3.bit._CKSEL2
 #define GCN2H3_CKSEL3 _gcn2h3.bit._CKSEL3
 #define GCN2H3_CKSEL _gcn2h3.bitc._CKSEL
-__IO_EXTENDED PTMR12STR _ptmr12;  
+__IO_EXTENDED PTMR12STR _ptmr12;
 #define PTMR12 _ptmr12.word
 #define PTMR12_D0 _ptmr12.bit._D0
 #define PTMR12_D1 _ptmr12.bit._D1
@@ -20412,7 +20412,7 @@ __IO_EXTENDED PTMR12STR _ptmr12;
 #define PTMR12_D14 _ptmr12.bit._D14
 #define PTMR12_D15 _ptmr12.bit._D15
 #define PTMR12_D _ptmr12.bitc._D
-__IO_EXTENDED PCSR12STR _pcsr12;  
+__IO_EXTENDED PCSR12STR _pcsr12;
 #define PCSR12 _pcsr12.word
 #define PCSR12_D0 _pcsr12.bit._D0
 #define PCSR12_D1 _pcsr12.bit._D1
@@ -20431,7 +20431,7 @@ __IO_EXTENDED PCSR12STR _pcsr12;
 #define PCSR12_D14 _pcsr12.bit._D14
 #define PCSR12_D15 _pcsr12.bit._D15
 #define PCSR12_D _pcsr12.bitc._D
-__IO_EXTENDED PDUT12STR _pdut12;  
+__IO_EXTENDED PDUT12STR _pdut12;
 #define PDUT12 _pdut12.word
 #define PDUT12_D0 _pdut12.bit._D0
 #define PDUT12_D1 _pdut12.bit._D1
@@ -20450,7 +20450,7 @@ __IO_EXTENDED PDUT12STR _pdut12;
 #define PDUT12_D14 _pdut12.bit._D14
 #define PDUT12_D15 _pdut12.bit._D15
 #define PDUT12_D _pdut12.bitc._D
-__IO_EXTENDED PCN12STR _pcn12;  
+__IO_EXTENDED PCN12STR _pcn12;
 #define PCN12 _pcn12.word
 #define PCN12_OSEL _pcn12.bit._OSEL
 #define PCN12_OE _pcn12.bit._OE
@@ -20470,7 +20470,7 @@ __IO_EXTENDED PCN12STR _pcn12;
 #define PCN12_IRS _pcn12.bitc._IRS
 #define PCN12_EGS _pcn12.bitc._EGS
 #define PCN12_CKS _pcn12.bitc._CKS
-__IO_EXTENDED PCNL12STR _pcnl12;  
+__IO_EXTENDED PCNL12STR _pcnl12;
 #define PCNL12 _pcnl12.byte
 #define PCNL12_OSEL _pcnl12.bit._OSEL
 #define PCNL12_OE _pcnl12.bit._OE
@@ -20482,7 +20482,7 @@ __IO_EXTENDED PCNL12STR _pcnl12;
 #define PCNL12_EGS1 _pcnl12.bit._EGS1
 #define PCNL12_IRS _pcnl12.bitc._IRS
 #define PCNL12_EGS _pcnl12.bitc._EGS
-__IO_EXTENDED PCNH12STR _pcnh12;  
+__IO_EXTENDED PCNH12STR _pcnh12;
 #define PCNH12 _pcnh12.byte
 #define PCNH12_PGMS _pcnh12.bit._PGMS
 #define PCNH12_CKS0 _pcnh12.bit._CKS0
@@ -20492,7 +20492,7 @@ __IO_EXTENDED PCNH12STR _pcnh12;
 #define PCNH12_STGR _pcnh12.bit._STGR
 #define PCNH12_CNTE _pcnh12.bit._CNTE
 #define PCNH12_CKS _pcnh12.bitc._CKS
-__IO_EXTENDED PTMR13STR _ptmr13;  
+__IO_EXTENDED PTMR13STR _ptmr13;
 #define PTMR13 _ptmr13.word
 #define PTMR13_D0 _ptmr13.bit._D0
 #define PTMR13_D1 _ptmr13.bit._D1
@@ -20511,7 +20511,7 @@ __IO_EXTENDED PTMR13STR _ptmr13;
 #define PTMR13_D14 _ptmr13.bit._D14
 #define PTMR13_D15 _ptmr13.bit._D15
 #define PTMR13_D _ptmr13.bitc._D
-__IO_EXTENDED PCSR13STR _pcsr13;  
+__IO_EXTENDED PCSR13STR _pcsr13;
 #define PCSR13 _pcsr13.word
 #define PCSR13_D0 _pcsr13.bit._D0
 #define PCSR13_D1 _pcsr13.bit._D1
@@ -20530,7 +20530,7 @@ __IO_EXTENDED PCSR13STR _pcsr13;
 #define PCSR13_D14 _pcsr13.bit._D14
 #define PCSR13_D15 _pcsr13.bit._D15
 #define PCSR13_D _pcsr13.bitc._D
-__IO_EXTENDED PDUT13STR _pdut13;  
+__IO_EXTENDED PDUT13STR _pdut13;
 #define PDUT13 _pdut13.word
 #define PDUT13_D0 _pdut13.bit._D0
 #define PDUT13_D1 _pdut13.bit._D1
@@ -20549,7 +20549,7 @@ __IO_EXTENDED PDUT13STR _pdut13;
 #define PDUT13_D14 _pdut13.bit._D14
 #define PDUT13_D15 _pdut13.bit._D15
 #define PDUT13_D _pdut13.bitc._D
-__IO_EXTENDED PCN13STR _pcn13;  
+__IO_EXTENDED PCN13STR _pcn13;
 #define PCN13 _pcn13.word
 #define PCN13_OSEL _pcn13.bit._OSEL
 #define PCN13_OE _pcn13.bit._OE
@@ -20569,7 +20569,7 @@ __IO_EXTENDED PCN13STR _pcn13;
 #define PCN13_IRS _pcn13.bitc._IRS
 #define PCN13_EGS _pcn13.bitc._EGS
 #define PCN13_CKS _pcn13.bitc._CKS
-__IO_EXTENDED PCNL13STR _pcnl13;  
+__IO_EXTENDED PCNL13STR _pcnl13;
 #define PCNL13 _pcnl13.byte
 #define PCNL13_OSEL _pcnl13.bit._OSEL
 #define PCNL13_OE _pcnl13.bit._OE
@@ -20581,7 +20581,7 @@ __IO_EXTENDED PCNL13STR _pcnl13;
 #define PCNL13_EGS1 _pcnl13.bit._EGS1
 #define PCNL13_IRS _pcnl13.bitc._IRS
 #define PCNL13_EGS _pcnl13.bitc._EGS
-__IO_EXTENDED PCNH13STR _pcnh13;  
+__IO_EXTENDED PCNH13STR _pcnh13;
 #define PCNH13 _pcnh13.byte
 #define PCNH13_PGMS _pcnh13.bit._PGMS
 #define PCNH13_CKS0 _pcnh13.bit._CKS0
@@ -20591,7 +20591,7 @@ __IO_EXTENDED PCNH13STR _pcnh13;
 #define PCNH13_STGR _pcnh13.bit._STGR
 #define PCNH13_CNTE _pcnh13.bit._CNTE
 #define PCNH13_CKS _pcnh13.bitc._CKS
-__IO_EXTENDED PTMR14STR _ptmr14;  
+__IO_EXTENDED PTMR14STR _ptmr14;
 #define PTMR14 _ptmr14.word
 #define PTMR14_D0 _ptmr14.bit._D0
 #define PTMR14_D1 _ptmr14.bit._D1
@@ -20610,7 +20610,7 @@ __IO_EXTENDED PTMR14STR _ptmr14;
 #define PTMR14_D14 _ptmr14.bit._D14
 #define PTMR14_D15 _ptmr14.bit._D15
 #define PTMR14_D _ptmr14.bitc._D
-__IO_EXTENDED PCSR14STR _pcsr14;  
+__IO_EXTENDED PCSR14STR _pcsr14;
 #define PCSR14 _pcsr14.word
 #define PCSR14_D0 _pcsr14.bit._D0
 #define PCSR14_D1 _pcsr14.bit._D1
@@ -20629,7 +20629,7 @@ __IO_EXTENDED PCSR14STR _pcsr14;
 #define PCSR14_D14 _pcsr14.bit._D14
 #define PCSR14_D15 _pcsr14.bit._D15
 #define PCSR14_D _pcsr14.bitc._D
-__IO_EXTENDED PDUT14STR _pdut14;  
+__IO_EXTENDED PDUT14STR _pdut14;
 #define PDUT14 _pdut14.word
 #define PDUT14_D0 _pdut14.bit._D0
 #define PDUT14_D1 _pdut14.bit._D1
@@ -20648,7 +20648,7 @@ __IO_EXTENDED PDUT14STR _pdut14;
 #define PDUT14_D14 _pdut14.bit._D14
 #define PDUT14_D15 _pdut14.bit._D15
 #define PDUT14_D _pdut14.bitc._D
-__IO_EXTENDED PCN14STR _pcn14;  
+__IO_EXTENDED PCN14STR _pcn14;
 #define PCN14 _pcn14.word
 #define PCN14_OSEL _pcn14.bit._OSEL
 #define PCN14_OE _pcn14.bit._OE
@@ -20668,7 +20668,7 @@ __IO_EXTENDED PCN14STR _pcn14;
 #define PCN14_IRS _pcn14.bitc._IRS
 #define PCN14_EGS _pcn14.bitc._EGS
 #define PCN14_CKS _pcn14.bitc._CKS
-__IO_EXTENDED PCNL14STR _pcnl14;  
+__IO_EXTENDED PCNL14STR _pcnl14;
 #define PCNL14 _pcnl14.byte
 #define PCNL14_OSEL _pcnl14.bit._OSEL
 #define PCNL14_OE _pcnl14.bit._OE
@@ -20680,7 +20680,7 @@ __IO_EXTENDED PCNL14STR _pcnl14;
 #define PCNL14_EGS1 _pcnl14.bit._EGS1
 #define PCNL14_IRS _pcnl14.bitc._IRS
 #define PCNL14_EGS _pcnl14.bitc._EGS
-__IO_EXTENDED PCNH14STR _pcnh14;  
+__IO_EXTENDED PCNH14STR _pcnh14;
 #define PCNH14 _pcnh14.byte
 #define PCNH14_PGMS _pcnh14.bit._PGMS
 #define PCNH14_CKS0 _pcnh14.bit._CKS0
@@ -20690,7 +20690,7 @@ __IO_EXTENDED PCNH14STR _pcnh14;
 #define PCNH14_STGR _pcnh14.bit._STGR
 #define PCNH14_CNTE _pcnh14.bit._CNTE
 #define PCNH14_CKS _pcnh14.bitc._CKS
-__IO_EXTENDED PTMR15STR _ptmr15;  
+__IO_EXTENDED PTMR15STR _ptmr15;
 #define PTMR15 _ptmr15.word
 #define PTMR15_D0 _ptmr15.bit._D0
 #define PTMR15_D1 _ptmr15.bit._D1
@@ -20709,7 +20709,7 @@ __IO_EXTENDED PTMR15STR _ptmr15;
 #define PTMR15_D14 _ptmr15.bit._D14
 #define PTMR15_D15 _ptmr15.bit._D15
 #define PTMR15_D _ptmr15.bitc._D
-__IO_EXTENDED PCSR15STR _pcsr15;  
+__IO_EXTENDED PCSR15STR _pcsr15;
 #define PCSR15 _pcsr15.word
 #define PCSR15_D0 _pcsr15.bit._D0
 #define PCSR15_D1 _pcsr15.bit._D1
@@ -20728,7 +20728,7 @@ __IO_EXTENDED PCSR15STR _pcsr15;
 #define PCSR15_D14 _pcsr15.bit._D14
 #define PCSR15_D15 _pcsr15.bit._D15
 #define PCSR15_D _pcsr15.bitc._D
-__IO_EXTENDED PDUT15STR _pdut15;  
+__IO_EXTENDED PDUT15STR _pdut15;
 #define PDUT15 _pdut15.word
 #define PDUT15_D0 _pdut15.bit._D0
 #define PDUT15_D1 _pdut15.bit._D1
@@ -20747,7 +20747,7 @@ __IO_EXTENDED PDUT15STR _pdut15;
 #define PDUT15_D14 _pdut15.bit._D14
 #define PDUT15_D15 _pdut15.bit._D15
 #define PDUT15_D _pdut15.bitc._D
-__IO_EXTENDED PCN15STR _pcn15;  
+__IO_EXTENDED PCN15STR _pcn15;
 #define PCN15 _pcn15.word
 #define PCN15_OSEL _pcn15.bit._OSEL
 #define PCN15_OE _pcn15.bit._OE
@@ -20767,7 +20767,7 @@ __IO_EXTENDED PCN15STR _pcn15;
 #define PCN15_IRS _pcn15.bitc._IRS
 #define PCN15_EGS _pcn15.bitc._EGS
 #define PCN15_CKS _pcn15.bitc._CKS
-__IO_EXTENDED PCNL15STR _pcnl15;  
+__IO_EXTENDED PCNL15STR _pcnl15;
 #define PCNL15 _pcnl15.byte
 #define PCNL15_OSEL _pcnl15.bit._OSEL
 #define PCNL15_OE _pcnl15.bit._OE
@@ -20779,7 +20779,7 @@ __IO_EXTENDED PCNL15STR _pcnl15;
 #define PCNL15_EGS1 _pcnl15.bit._EGS1
 #define PCNL15_IRS _pcnl15.bitc._IRS
 #define PCNL15_EGS _pcnl15.bitc._EGS
-__IO_EXTENDED PCNH15STR _pcnh15;  
+__IO_EXTENDED PCNH15STR _pcnh15;
 #define PCNH15 _pcnh15.byte
 #define PCNH15_PGMS _pcnh15.bit._PGMS
 #define PCNH15_CKS0 _pcnh15.bit._CKS0
@@ -20789,7 +20789,7 @@ __IO_EXTENDED PCNH15STR _pcnh15;
 #define PCNH15_STGR _pcnh15.bit._STGR
 #define PCNH15_CNTE _pcnh15.bit._CNTE
 #define PCNH15_CKS _pcnh15.bitc._CKS
-__IO_EXTENDED PRRR10STR _prrr10;  
+__IO_EXTENDED PRRR10STR _prrr10;
 #define PRRR10 _prrr10.byte
 #define PRRR10_PPG8_R _prrr10.bit._PPG8_R
 #define PRRR10_PPG9_R _prrr10.bit._PPG9_R
@@ -20799,7 +20799,7 @@ __IO_EXTENDED PRRR10STR _prrr10;
 #define PRRR10_TTG9_R _prrr10.bit._TTG9_R
 #define PRRR10_TTG10_R _prrr10.bit._TTG10_R
 #define PRRR10_TTG11_R _prrr10.bit._TTG11_R
-__IO_EXTENDED PRRR11STR _prrr11;  
+__IO_EXTENDED PRRR11STR _prrr11;
 #define PRRR11 _prrr11.byte
 #define PRRR11_PPG16_R _prrr11.bit._PPG16_R
 #define PRRR11_PPG17_R _prrr11.bit._PPG17_R
@@ -20809,16 +20809,16 @@ __IO_EXTENDED PRRR11STR _prrr11;
 #define PRRR11_TTG17_R _prrr11.bit._TTG17_R
 #define PRRR11_TTG18_R _prrr11.bit._TTG18_R
 #define PRRR11_TTG19_R _prrr11.bit._TTG19_R
-__IO_EXTENDED PRRR12STR _prrr12;  
+__IO_EXTENDED PRRR12STR _prrr12;
 #define PRRR12 _prrr12.byte
 #define PRRR12_CS0_R _prrr12.bit._CS0_R
 #define PRRR12_CS1_R _prrr12.bit._CS1_R
 #define PRRR12_CS2_R _prrr12.bit._CS2_R
 #define PRRR12_CS4_R _prrr12.bit._CS4_R
 #define PRRR12_CS5_R _prrr12.bit._CS5_R
-__IO_EXTENDED PRRR13STR _prrr13;  
+__IO_EXTENDED PRRR13STR _prrr13;
 #define PRRR13 _prrr13.byte
-__IO_EXTENDED EAC0STR _eac0;  
+__IO_EXTENDED EAC0STR _eac0;
 #define EAC0 _eac0.word
 #define EAC0_R0 _eac0.bit._R0
 #define EAC0_R1 _eac0.bit._R1
@@ -20832,7 +20832,7 @@ __IO_EXTENDED EAC0STR _eac0;
 #define EAC0_CSL _eac0.bit._CSL
 #define EAC0_ATL _eac0.bit._ATL
 #define EAC0_R _eac0.bitc._R
-__IO_EXTENDED EACL0STR _eacl0;  
+__IO_EXTENDED EACL0STR _eacl0;
 #define EACL0 _eacl0.byte
 #define EACL0_R0 _eacl0.bit._R0
 #define EACL0_R1 _eacl0.bit._R1
@@ -20843,12 +20843,12 @@ __IO_EXTENDED EACL0STR _eacl0;
 #define EACL0_ES _eacl0.bit._ES
 #define EACL0_BW _eacl0.bit._BW
 #define EACL0_R _eacl0.bitc._R
-__IO_EXTENDED EACH0STR _each0;  
+__IO_EXTENDED EACH0STR _each0;
 #define EACH0 _each0.byte
 #define EACH0_CSE _each0.bit._CSE
 #define EACH0_CSL _each0.bit._CSL
 #define EACH0_ATL _each0.bit._ATL
-__IO_EXTENDED EAC1STR _eac1;  
+__IO_EXTENDED EAC1STR _eac1;
 #define EAC1 _eac1.word
 #define EAC1_R0 _eac1.bit._R0
 #define EAC1_R1 _eac1.bit._R1
@@ -20862,7 +20862,7 @@ __IO_EXTENDED EAC1STR _eac1;
 #define EAC1_CSL _eac1.bit._CSL
 #define EAC1_ATL _eac1.bit._ATL
 #define EAC1_R _eac1.bitc._R
-__IO_EXTENDED EACL1STR _eacl1;  
+__IO_EXTENDED EACL1STR _eacl1;
 #define EACL1 _eacl1.byte
 #define EACL1_R0 _eacl1.bit._R0
 #define EACL1_R1 _eacl1.bit._R1
@@ -20873,12 +20873,12 @@ __IO_EXTENDED EACL1STR _eacl1;
 #define EACL1_ES _eacl1.bit._ES
 #define EACL1_BW _eacl1.bit._BW
 #define EACL1_R _eacl1.bitc._R
-__IO_EXTENDED EACH1STR _each1;  
+__IO_EXTENDED EACH1STR _each1;
 #define EACH1 _each1.byte
 #define EACH1_CSE _each1.bit._CSE
 #define EACH1_CSL _each1.bit._CSL
 #define EACH1_ATL _each1.bit._ATL
-__IO_EXTENDED EAC2STR _eac2;  
+__IO_EXTENDED EAC2STR _eac2;
 #define EAC2 _eac2.word
 #define EAC2_R0 _eac2.bit._R0
 #define EAC2_R1 _eac2.bit._R1
@@ -20896,7 +20896,7 @@ __IO_EXTENDED EAC2STR _eac2;
 #define EAC2_ATL _eac2.bit._ATL
 #define EAC2_R _eac2.bitc._R
 #define EAC2_EASZ _eac2.bitc._EASZ
-__IO_EXTENDED EACL2STR _eacl2;  
+__IO_EXTENDED EACL2STR _eacl2;
 #define EACL2 _eacl2.byte
 #define EACL2_R0 _eacl2.bit._R0
 #define EACL2_R1 _eacl2.bit._R1
@@ -20907,7 +20907,7 @@ __IO_EXTENDED EACL2STR _eacl2;
 #define EACL2_ES _eacl2.bit._ES
 #define EACL2_BW _eacl2.bit._BW
 #define EACL2_R _eacl2.bitc._R
-__IO_EXTENDED EACH2STR _each2;  
+__IO_EXTENDED EACH2STR _each2;
 #define EACH2 _each2.byte
 #define EACH2_EASZ0 _each2.bit._EASZ0
 #define EACH2_EASZ1 _each2.bit._EASZ1
@@ -20916,7 +20916,7 @@ __IO_EXTENDED EACH2STR _each2;
 #define EACH2_CSL _each2.bit._CSL
 #define EACH2_ATL _each2.bit._ATL
 #define EACH2_EASZ _each2.bitc._EASZ
-__IO_EXTENDED EAC3STR _eac3;  
+__IO_EXTENDED EAC3STR _eac3;
 #define EAC3 _eac3.word
 #define EAC3_R0 _eac3.bit._R0
 #define EAC3_R1 _eac3.bit._R1
@@ -20934,7 +20934,7 @@ __IO_EXTENDED EAC3STR _eac3;
 #define EAC3_ATL _eac3.bit._ATL
 #define EAC3_R _eac3.bitc._R
 #define EAC3_EASZ _eac3.bitc._EASZ
-__IO_EXTENDED EACL3STR _eacl3;  
+__IO_EXTENDED EACL3STR _eacl3;
 #define EACL3 _eacl3.byte
 #define EACL3_R0 _eacl3.bit._R0
 #define EACL3_R1 _eacl3.bit._R1
@@ -20945,7 +20945,7 @@ __IO_EXTENDED EACL3STR _eacl3;
 #define EACL3_ES _eacl3.bit._ES
 #define EACL3_BW _eacl3.bit._BW
 #define EACL3_R _eacl3.bitc._R
-__IO_EXTENDED EACH3STR _each3;  
+__IO_EXTENDED EACH3STR _each3;
 #define EACH3 _each3.byte
 #define EACH3_EASZ0 _each3.bit._EASZ0
 #define EACH3_EASZ1 _each3.bit._EASZ1
@@ -20954,7 +20954,7 @@ __IO_EXTENDED EACH3STR _each3;
 #define EACH3_CSL _each3.bit._CSL
 #define EACH3_ATL _each3.bit._ATL
 #define EACH3_EASZ _each3.bitc._EASZ
-__IO_EXTENDED EAC4STR _eac4;  
+__IO_EXTENDED EAC4STR _eac4;
 #define EAC4 _eac4.word
 #define EAC4_R0 _eac4.bit._R0
 #define EAC4_R1 _eac4.bit._R1
@@ -20972,7 +20972,7 @@ __IO_EXTENDED EAC4STR _eac4;
 #define EAC4_ATL _eac4.bit._ATL
 #define EAC4_R _eac4.bitc._R
 #define EAC4_EASZ _eac4.bitc._EASZ
-__IO_EXTENDED EACL4STR _eacl4;  
+__IO_EXTENDED EACL4STR _eacl4;
 #define EACL4 _eacl4.byte
 #define EACL4_R0 _eacl4.bit._R0
 #define EACL4_R1 _eacl4.bit._R1
@@ -20983,7 +20983,7 @@ __IO_EXTENDED EACL4STR _eacl4;
 #define EACL4_ES _eacl4.bit._ES
 #define EACL4_BW _eacl4.bit._BW
 #define EACL4_R _eacl4.bitc._R
-__IO_EXTENDED EACH4STR _each4;  
+__IO_EXTENDED EACH4STR _each4;
 #define EACH4 _each4.byte
 #define EACH4_EASZ0 _each4.bit._EASZ0
 #define EACH4_EASZ1 _each4.bit._EASZ1
@@ -20992,7 +20992,7 @@ __IO_EXTENDED EACH4STR _each4;
 #define EACH4_CSL _each4.bit._CSL
 #define EACH4_ATL _each4.bit._ATL
 #define EACH4_EASZ _each4.bitc._EASZ
-__IO_EXTENDED EAC5STR _eac5;  
+__IO_EXTENDED EAC5STR _eac5;
 #define EAC5 _eac5.word
 #define EAC5_R0 _eac5.bit._R0
 #define EAC5_R1 _eac5.bit._R1
@@ -21010,7 +21010,7 @@ __IO_EXTENDED EAC5STR _eac5;
 #define EAC5_ATL _eac5.bit._ATL
 #define EAC5_R _eac5.bitc._R
 #define EAC5_EASZ _eac5.bitc._EASZ
-__IO_EXTENDED EACL5STR _eacl5;  
+__IO_EXTENDED EACL5STR _eacl5;
 #define EACL5 _eacl5.byte
 #define EACL5_R0 _eacl5.bit._R0
 #define EACL5_R1 _eacl5.bit._R1
@@ -21021,7 +21021,7 @@ __IO_EXTENDED EACL5STR _eacl5;
 #define EACL5_ES _eacl5.bit._ES
 #define EACL5_BW _eacl5.bit._BW
 #define EACL5_R _eacl5.bitc._R
-__IO_EXTENDED EACH5STR _each5;  
+__IO_EXTENDED EACH5STR _each5;
 #define EACH5 _each5.byte
 #define EACH5_EASZ0 _each5.bit._EASZ0
 #define EACH5_EASZ1 _each5.bit._EASZ1
@@ -21030,7 +21030,7 @@ __IO_EXTENDED EACH5STR _each5;
 #define EACH5_CSL _each5.bit._CSL
 #define EACH5_ATL _each5.bit._ATL
 #define EACH5_EASZ _each5.bitc._EASZ
-__IO_EXTENDED EAS2STR _eas2;  
+__IO_EXTENDED EAS2STR _eas2;
 #define EAS2 _eas2.byte
 #define EAS2_A0 _eas2.bit._A0
 #define EAS2_A1 _eas2.bit._A1
@@ -21041,7 +21041,7 @@ __IO_EXTENDED EAS2STR _eas2;
 #define EAS2_A6 _eas2.bit._A6
 #define EAS2_A7 _eas2.bit._A7
 #define EAS2_A _eas2.bitc._A
-__IO_EXTENDED EAS3STR _eas3;  
+__IO_EXTENDED EAS3STR _eas3;
 #define EAS3 _eas3.byte
 #define EAS3_A0 _eas3.bit._A0
 #define EAS3_A1 _eas3.bit._A1
@@ -21052,7 +21052,7 @@ __IO_EXTENDED EAS3STR _eas3;
 #define EAS3_A6 _eas3.bit._A6
 #define EAS3_A7 _eas3.bit._A7
 #define EAS3_A _eas3.bitc._A
-__IO_EXTENDED EAS4STR _eas4;  
+__IO_EXTENDED EAS4STR _eas4;
 #define EAS4 _eas4.byte
 #define EAS4_A0 _eas4.bit._A0
 #define EAS4_A1 _eas4.bit._A1
@@ -21063,7 +21063,7 @@ __IO_EXTENDED EAS4STR _eas4;
 #define EAS4_A6 _eas4.bit._A6
 #define EAS4_A7 _eas4.bit._A7
 #define EAS4_A _eas4.bitc._A
-__IO_EXTENDED EAS5STR _eas5;  
+__IO_EXTENDED EAS5STR _eas5;
 #define EAS5 _eas5.byte
 #define EAS5_A0 _eas5.bit._A0
 #define EAS5_A1 _eas5.bit._A1
@@ -21073,7 +21073,7 @@ __IO_EXTENDED EAS5STR _eas5;
 #define EAS5_A5 _eas5.bit._A5
 #define EAS5_A6 _eas5.bit._A6
 #define EAS5_A7 _eas5.bit._A7
-__IO_EXTENDED EBMSTR _ebm;  
+__IO_EXTENDED EBMSTR _ebm;
 #define EBM _ebm.byte
 #define EBM_EAE0 _ebm.bit._EAE0
 #define EBM_EAE1 _ebm.bit._EAE1
@@ -21084,7 +21084,7 @@ __IO_EXTENDED EBMSTR _ebm;
 #define EBM_ERE _ebm.bit._ERE
 #define EBM_NMS _ebm.bit._NMS
 #define EBM_EAE _ebm.bitc._EAE
-__IO_EXTENDED EBCFSTR _ebcf;  
+__IO_EXTENDED EBCFSTR _ebcf;
 #define EBCF _ebcf.byte
 #define EBCF_DIV0 _ebcf.bit._DIV0
 #define EBCF_DIV1 _ebcf.bit._DIV1
@@ -21095,7 +21095,7 @@ __IO_EXTENDED EBCFSTR _ebcf;
 #define EBCF_RYE _ebcf.bit._RYE
 #define EBCF_HDE _ebcf.bit._HDE
 #define EBCF_DIV _ebcf.bitc._DIV
-__IO_EXTENDED EBAE0STR _ebae0;  
+__IO_EXTENDED EBAE0STR _ebae0;
 #define EBAE0 _ebae0.byte
 #define EBAE0_A00 _ebae0.bit._A00
 #define EBAE0_A01 _ebae0.bit._A01
@@ -21105,7 +21105,7 @@ __IO_EXTENDED EBAE0STR _ebae0;
 #define EBAE0_A05 _ebae0.bit._A05
 #define EBAE0_A06 _ebae0.bit._A06
 #define EBAE0_A07 _ebae0.bit._A07
-__IO_EXTENDED EBAE1STR _ebae1;  
+__IO_EXTENDED EBAE1STR _ebae1;
 #define EBAE1 _ebae1.byte
 #define EBAE1_A08 _ebae1.bit._A08
 #define EBAE1_A09 _ebae1.bit._A09
@@ -21115,7 +21115,7 @@ __IO_EXTENDED EBAE1STR _ebae1;
 #define EBAE1_A13 _ebae1.bit._A13
 #define EBAE1_A14 _ebae1.bit._A14
 #define EBAE1_A15 _ebae1.bit._A15
-__IO_EXTENDED EBAE2STR _ebae2;  
+__IO_EXTENDED EBAE2STR _ebae2;
 #define EBAE2 _ebae2.byte
 #define EBAE2_A16 _ebae2.bit._A16
 #define EBAE2_A17 _ebae2.bit._A17
@@ -21125,7 +21125,7 @@ __IO_EXTENDED EBAE2STR _ebae2;
 #define EBAE2_A21 _ebae2.bit._A21
 #define EBAE2_A22 _ebae2.bit._A22
 #define EBAE2_A23 _ebae2.bit._A23
-__IO_EXTENDED EBCSSTR _ebcs;  
+__IO_EXTENDED EBCSSTR _ebcs;
 #define EBCS _ebcs.byte
 #define EBCS_LBE _ebcs.bit._LBE
 #define EBCS_UBE _ebcs.bit._UBE
@@ -21134,7 +21134,7 @@ __IO_EXTENDED EBCSSTR _ebcs;
 #define EBCS_RDE _ebcs.bit._RDE
 #define EBCS_ASE _ebcs.bit._ASE
 #define EBCS_ASL _ebcs.bit._ASL
-__IO_EXTENDED CTRLR0STR _ctrlr0;  
+__IO_EXTENDED CTRLR0STR _ctrlr0;
 #define CTRLR0 _ctrlr0.word
 #define CTRLR0_INIT _ctrlr0.bit._INIT
 #define CTRLR0_IE _ctrlr0.bit._IE
@@ -21143,7 +21143,7 @@ __IO_EXTENDED CTRLR0STR _ctrlr0;
 #define CTRLR0_DAR _ctrlr0.bit._DAR
 #define CTRLR0_CCE _ctrlr0.bit._CCE
 #define CTRLR0_TEST _ctrlr0.bit._TEST
-__IO_EXTENDED CTRLRL0STR _ctrlrl0;  
+__IO_EXTENDED CTRLRL0STR _ctrlrl0;
 #define CTRLRL0 _ctrlrl0.byte
 #define CTRLRL0_INIT _ctrlrl0.bit._INIT
 #define CTRLRL0_IE _ctrlrl0.bit._IE
@@ -21152,9 +21152,9 @@ __IO_EXTENDED CTRLRL0STR _ctrlrl0;
 #define CTRLRL0_DAR _ctrlrl0.bit._DAR
 #define CTRLRL0_CCE _ctrlrl0.bit._CCE
 #define CTRLRL0_TEST _ctrlrl0.bit._TEST
-__IO_EXTENDED CTRLRH0STR _ctrlrh0;  
+__IO_EXTENDED CTRLRH0STR _ctrlrh0;
 #define CTRLRH0 _ctrlrh0.byte
-__IO_EXTENDED STATR0STR _statr0;  
+__IO_EXTENDED STATR0STR _statr0;
 #define STATR0 _statr0.word
 #define STATR0_LEC0 _statr0.bit._LEC0
 #define STATR0_LEC1 _statr0.bit._LEC1
@@ -21165,7 +21165,7 @@ __IO_EXTENDED STATR0STR _statr0;
 #define STATR0_EWARN _statr0.bit._EWARN
 #define STATR0_BOFF _statr0.bit._BOFF
 #define STATR0_LEC _statr0.bitc._LEC
-__IO_EXTENDED STATRL0STR _statrl0;  
+__IO_EXTENDED STATRL0STR _statrl0;
 #define STATRL0 _statrl0.byte
 #define STATRL0_LEC0 _statrl0.bit._LEC0
 #define STATRL0_LEC1 _statrl0.bit._LEC1
@@ -21176,9 +21176,9 @@ __IO_EXTENDED STATRL0STR _statrl0;
 #define STATRL0_EWARN _statrl0.bit._EWARN
 #define STATRL0_BOFF _statrl0.bit._BOFF
 #define STATRL0_LEC _statrl0.bitc._LEC
-__IO_EXTENDED STATRH0STR _statrh0;  
+__IO_EXTENDED STATRH0STR _statrh0;
 #define STATRH0 _statrh0.byte
-__IO_EXTENDED ERRCNT0STR _errcnt0;  
+__IO_EXTENDED ERRCNT0STR _errcnt0;
 #define ERRCNT0 _errcnt0.word
 #define ERRCNT0_TEC0 _errcnt0.bit._TEC0
 #define ERRCNT0_TEC1 _errcnt0.bit._TEC1
@@ -21198,7 +21198,7 @@ __IO_EXTENDED ERRCNT0STR _errcnt0;
 #define ERRCNT0_RP _errcnt0.bit._RP
 #define ERRCNT0_TEC _errcnt0.bitc._TEC
 #define ERRCNT0_REC _errcnt0.bitc._REC
-__IO_EXTENDED ERRCNTL0STR _errcntl0;  
+__IO_EXTENDED ERRCNTL0STR _errcntl0;
 #define ERRCNTL0 _errcntl0.byte
 #define ERRCNTL0_TEC0 _errcntl0.bit._TEC0
 #define ERRCNTL0_TEC1 _errcntl0.bit._TEC1
@@ -21209,7 +21209,7 @@ __IO_EXTENDED ERRCNTL0STR _errcntl0;
 #define ERRCNTL0_TEC6 _errcntl0.bit._TEC6
 #define ERRCNTL0_TEC7 _errcntl0.bit._TEC7
 #define ERRCNTL0_TEC _errcntl0.bitc._TEC
-__IO_EXTENDED ERRCNTH0STR _errcnth0;  
+__IO_EXTENDED ERRCNTH0STR _errcnth0;
 #define ERRCNTH0 _errcnth0.byte
 #define ERRCNTH0_REC0 _errcnth0.bit._REC0
 #define ERRCNTH0_REC1 _errcnth0.bit._REC1
@@ -21220,7 +21220,7 @@ __IO_EXTENDED ERRCNTH0STR _errcnth0;
 #define ERRCNTH0_REC6 _errcnth0.bit._REC6
 #define ERRCNTH0_RP _errcnth0.bit._RP
 #define ERRCNTH0_REC _errcnth0.bitc._REC
-__IO_EXTENDED BTR0STR _btr0;  
+__IO_EXTENDED BTR0STR _btr0;
 #define BTR0 _btr0.word
 #define BTR0_BRP0 _btr0.bit._BRP0
 #define BTR0_BRP1 _btr0.bit._BRP1
@@ -21241,7 +21241,7 @@ __IO_EXTENDED BTR0STR _btr0;
 #define BTR0_SJW _btr0.bitc._SJW
 #define BTR0_TSEG1 _btr0.bitc._TSEG1
 #define BTR0_TSEG2 _btr0.bitc._TSEG2
-__IO_EXTENDED BTRL0STR _btrl0;  
+__IO_EXTENDED BTRL0STR _btrl0;
 #define BTRL0 _btrl0.byte
 #define BTRL0_BRP0 _btrl0.bit._BRP0
 #define BTRL0_BRP1 _btrl0.bit._BRP1
@@ -21253,7 +21253,7 @@ __IO_EXTENDED BTRL0STR _btrl0;
 #define BTRL0_SJW1 _btrl0.bit._SJW1
 #define BTRL0_BRP _btrl0.bitc._BRP
 #define BTRL0_SJW _btrl0.bitc._SJW
-__IO_EXTENDED BTRH0STR _btrh0;  
+__IO_EXTENDED BTRH0STR _btrh0;
 #define BTRH0 _btrh0.byte
 #define BTRH0_TSEG10 _btrh0.bit._TSEG10
 #define BTRH0_TSEG11 _btrh0.bit._TSEG11
@@ -21264,7 +21264,7 @@ __IO_EXTENDED BTRH0STR _btrh0;
 #define BTRH0_TSEG22 _btrh0.bit._TSEG22
 #define BTRH0_TSEG1 _btrh0.bitc._TSEG1
 #define BTRH0_TSEG2 _btrh0.bitc._TSEG2
-__IO_EXTENDED INTR0STR _intr0;  
+__IO_EXTENDED INTR0STR _intr0;
 #define INTR0 _intr0.word
 #define INTR0_INTID0 _intr0.bit._INTID0
 #define INTR0_INTID1 _intr0.bit._INTID1
@@ -21283,7 +21283,7 @@ __IO_EXTENDED INTR0STR _intr0;
 #define INTR0_INTID14 _intr0.bit._INTID14
 #define INTR0_INTID15 _intr0.bit._INTID15
 #define INTR0_INTID _intr0.bitc._INTID
-__IO_EXTENDED INTRL0STR _intrl0;  
+__IO_EXTENDED INTRL0STR _intrl0;
 #define INTRL0 _intrl0.byte
 #define INTRL0_INTID0 _intrl0.bit._INTID0
 #define INTRL0_INTID1 _intrl0.bit._INTID1
@@ -21293,7 +21293,7 @@ __IO_EXTENDED INTRL0STR _intrl0;
 #define INTRL0_INTID5 _intrl0.bit._INTID5
 #define INTRL0_INTID6 _intrl0.bit._INTID6
 #define INTRL0_INTID7 _intrl0.bit._INTID7
-__IO_EXTENDED INTRH0STR _intrh0;  
+__IO_EXTENDED INTRH0STR _intrh0;
 #define INTRH0 _intrh0.byte
 #define INTRH0_INTID8 _intrh0.bit._INTID8
 #define INTRH0_INTID9 _intrh0.bit._INTID9
@@ -21303,7 +21303,7 @@ __IO_EXTENDED INTRH0STR _intrh0;
 #define INTRH0_INTID13 _intrh0.bit._INTID13
 #define INTRH0_INTID14 _intrh0.bit._INTID14
 #define INTRH0_INTID15 _intrh0.bit._INTID15
-__IO_EXTENDED TESTR0STR _testr0;  
+__IO_EXTENDED TESTR0STR _testr0;
 #define TESTR0 _testr0.word
 #define TESTR0_BASIC _testr0.bit._BASIC
 #define TESTR0_SILENT _testr0.bit._SILENT
@@ -21311,7 +21311,7 @@ __IO_EXTENDED TESTR0STR _testr0;
 #define TESTR0_TX0 _testr0.bit._TX0
 #define TESTR0_TX1 _testr0.bit._TX1
 #define TESTR0_RX _testr0.bit._RX
-__IO_EXTENDED TESTRL0STR _testrl0;  
+__IO_EXTENDED TESTRL0STR _testrl0;
 #define TESTRL0 _testrl0.byte
 #define TESTRL0_BASIC _testrl0.bit._BASIC
 #define TESTRL0_SILENT _testrl0.bit._SILENT
@@ -21319,25 +21319,25 @@ __IO_EXTENDED TESTRL0STR _testrl0;
 #define TESTRL0_TX0 _testrl0.bit._TX0
 #define TESTRL0_TX1 _testrl0.bit._TX1
 #define TESTRL0_RX _testrl0.bit._RX
-__IO_EXTENDED TESTRH0STR _testrh0;  
+__IO_EXTENDED TESTRH0STR _testrh0;
 #define TESTRH0 _testrh0.byte
-__IO_EXTENDED BRPER0STR _brper0;  
+__IO_EXTENDED BRPER0STR _brper0;
 #define BRPER0 _brper0.word
 #define BRPER0_BRPE0 _brper0.bit._BRPE0
 #define BRPER0_BRPE1 _brper0.bit._BRPE1
 #define BRPER0_BRPE2 _brper0.bit._BRPE2
 #define BRPER0_BRPE3 _brper0.bit._BRPE3
 #define BRPER0_BRPE _brper0.bitc._BRPE
-__IO_EXTENDED BRPERL0STR _brperl0;  
+__IO_EXTENDED BRPERL0STR _brperl0;
 #define BRPERL0 _brperl0.byte
 #define BRPERL0_BRPE0 _brperl0.bit._BRPE0
 #define BRPERL0_BRPE1 _brperl0.bit._BRPE1
 #define BRPERL0_BRPE2 _brperl0.bit._BRPE2
 #define BRPERL0_BRPE3 _brperl0.bit._BRPE3
 #define BRPERL0_BRPE _brperl0.bitc._BRPE
-__IO_EXTENDED BRPERH0STR _brperh0;  
+__IO_EXTENDED BRPERH0STR _brperh0;
 #define BRPERH0 _brperh0.byte
-__IO_EXTENDED IF1CREQ0STR _if1creq0;  
+__IO_EXTENDED IF1CREQ0STR _if1creq0;
 #define IF1CREQ0 _if1creq0.word
 #define IF1CREQ0_MSGN0 _if1creq0.bit._MSGN0
 #define IF1CREQ0_MSGN1 _if1creq0.bit._MSGN1
@@ -21348,7 +21348,7 @@ __IO_EXTENDED IF1CREQ0STR _if1creq0;
 #define IF1CREQ0_MSGN6 _if1creq0.bit._MSGN6
 #define IF1CREQ0_MSGN7 _if1creq0.bit._MSGN7
 #define IF1CREQ0_BUSY _if1creq0.bit._BUSY
-__IO_EXTENDED IF1CREQL0STR _if1creql0;  
+__IO_EXTENDED IF1CREQL0STR _if1creql0;
 #define IF1CREQL0 _if1creql0.byte
 #define IF1CREQL0_MSGN0 _if1creql0.bit._MSGN0
 #define IF1CREQL0_MSGN1 _if1creql0.bit._MSGN1
@@ -21358,10 +21358,10 @@ __IO_EXTENDED IF1CREQL0STR _if1creql0;
 #define IF1CREQL0_MSGN5 _if1creql0.bit._MSGN5
 #define IF1CREQL0_MSGN6 _if1creql0.bit._MSGN6
 #define IF1CREQL0_MSGN7 _if1creql0.bit._MSGN7
-__IO_EXTENDED IF1CREQH0STR _if1creqh0;  
+__IO_EXTENDED IF1CREQH0STR _if1creqh0;
 #define IF1CREQH0 _if1creqh0.byte
 #define IF1CREQH0_BUSY _if1creqh0.bit._BUSY
-__IO_EXTENDED IF1CMSK0STR _if1cmsk0;  
+__IO_EXTENDED IF1CMSK0STR _if1cmsk0;
 #define IF1CMSK0 _if1cmsk0.word
 #define IF1CMSK0_DATAB _if1cmsk0.bit._DATAB
 #define IF1CMSK0_DATAA _if1cmsk0.bit._DATAA
@@ -21371,7 +21371,7 @@ __IO_EXTENDED IF1CMSK0STR _if1cmsk0;
 #define IF1CMSK0_ARB _if1cmsk0.bit._ARB
 #define IF1CMSK0_MASK _if1cmsk0.bit._MASK
 #define IF1CMSK0_WRRD _if1cmsk0.bit._WRRD
-__IO_EXTENDED IF1CMSKL0STR _if1cmskl0;  
+__IO_EXTENDED IF1CMSKL0STR _if1cmskl0;
 #define IF1CMSKL0 _if1cmskl0.byte
 #define IF1CMSKL0_DATAB _if1cmskl0.bit._DATAB
 #define IF1CMSKL0_DATAA _if1cmskl0.bit._DATAA
@@ -21381,9 +21381,9 @@ __IO_EXTENDED IF1CMSKL0STR _if1cmskl0;
 #define IF1CMSKL0_ARB _if1cmskl0.bit._ARB
 #define IF1CMSKL0_MASK _if1cmskl0.bit._MASK
 #define IF1CMSKL0_WRRD _if1cmskl0.bit._WRRD
-__IO_EXTENDED IF1CMSKH0STR _if1cmskh0;  
+__IO_EXTENDED IF1CMSKH0STR _if1cmskh0;
 #define IF1CMSKH0 _if1cmskh0.byte
-__IO_EXTENDED IF1MSK0STR _if1msk0;  
+__IO_EXTENDED IF1MSK0STR _if1msk0;
 #define IF1MSK0 _if1msk0.lword
 #define IF1MSK0_MSK0 _if1msk0.bit._MSK0
 #define IF1MSK0_MSK1 _if1msk0.bit._MSK1
@@ -21417,7 +21417,7 @@ __IO_EXTENDED IF1MSK0STR _if1msk0;
 #define IF1MSK0_MDIR _if1msk0.bit._MDIR
 #define IF1MSK0_MXTD _if1msk0.bit._MXTD
 #define IF1MSK0_MSK _if1msk0.bitc._MSK
-__IO_EXTENDED IF1MSK10STR _if1msk10;  
+__IO_EXTENDED IF1MSK10STR _if1msk10;
 #define IF1MSK10 _if1msk10.word
 #define IF1MSK10_MSK0 _if1msk10.bit._MSK0
 #define IF1MSK10_MSK1 _if1msk10.bit._MSK1
@@ -21435,7 +21435,7 @@ __IO_EXTENDED IF1MSK10STR _if1msk10;
 #define IF1MSK10_MSK13 _if1msk10.bit._MSK13
 #define IF1MSK10_MSK14 _if1msk10.bit._MSK14
 #define IF1MSK10_MSK15 _if1msk10.bit._MSK15
-__IO_EXTENDED IF1MSK1L0STR _if1msk1l0;  
+__IO_EXTENDED IF1MSK1L0STR _if1msk1l0;
 #define IF1MSK1L0 _if1msk1l0.byte
 #define IF1MSK1L0_MSK0 _if1msk1l0.bit._MSK0
 #define IF1MSK1L0_MSK1 _if1msk1l0.bit._MSK1
@@ -21445,7 +21445,7 @@ __IO_EXTENDED IF1MSK1L0STR _if1msk1l0;
 #define IF1MSK1L0_MSK5 _if1msk1l0.bit._MSK5
 #define IF1MSK1L0_MSK6 _if1msk1l0.bit._MSK6
 #define IF1MSK1L0_MSK7 _if1msk1l0.bit._MSK7
-__IO_EXTENDED IF1MSK1H0STR _if1msk1h0;  
+__IO_EXTENDED IF1MSK1H0STR _if1msk1h0;
 #define IF1MSK1H0 _if1msk1h0.byte
 #define IF1MSK1H0_MSK8 _if1msk1h0.bit._MSK8
 #define IF1MSK1H0_MSK9 _if1msk1h0.bit._MSK9
@@ -21455,7 +21455,7 @@ __IO_EXTENDED IF1MSK1H0STR _if1msk1h0;
 #define IF1MSK1H0_MSK13 _if1msk1h0.bit._MSK13
 #define IF1MSK1H0_MSK14 _if1msk1h0.bit._MSK14
 #define IF1MSK1H0_MSK15 _if1msk1h0.bit._MSK15
-__IO_EXTENDED IF1MSK20STR _if1msk20;  
+__IO_EXTENDED IF1MSK20STR _if1msk20;
 #define IF1MSK20 _if1msk20.word
 #define IF1MSK20_MSK16 _if1msk20.bit._MSK16
 #define IF1MSK20_MSK17 _if1msk20.bit._MSK17
@@ -21472,7 +21472,7 @@ __IO_EXTENDED IF1MSK20STR _if1msk20;
 #define IF1MSK20_MSK28 _if1msk20.bit._MSK28
 #define IF1MSK20_MDIR _if1msk20.bit._MDIR
 #define IF1MSK20_MXTD _if1msk20.bit._MXTD
-__IO_EXTENDED IF1MSK2L0STR _if1msk2l0;  
+__IO_EXTENDED IF1MSK2L0STR _if1msk2l0;
 #define IF1MSK2L0 _if1msk2l0.byte
 #define IF1MSK2L0_MSK16 _if1msk2l0.bit._MSK16
 #define IF1MSK2L0_MSK17 _if1msk2l0.bit._MSK17
@@ -21482,7 +21482,7 @@ __IO_EXTENDED IF1MSK2L0STR _if1msk2l0;
 #define IF1MSK2L0_MSK21 _if1msk2l0.bit._MSK21
 #define IF1MSK2L0_MSK22 _if1msk2l0.bit._MSK22
 #define IF1MSK2L0_MSK23 _if1msk2l0.bit._MSK23
-__IO_EXTENDED IF1MSK2H0STR _if1msk2h0;  
+__IO_EXTENDED IF1MSK2H0STR _if1msk2h0;
 #define IF1MSK2H0 _if1msk2h0.byte
 #define IF1MSK2H0_MSK24 _if1msk2h0.bit._MSK24
 #define IF1MSK2H0_MSK25 _if1msk2h0.bit._MSK25
@@ -21491,7 +21491,7 @@ __IO_EXTENDED IF1MSK2H0STR _if1msk2h0;
 #define IF1MSK2H0_MSK28 _if1msk2h0.bit._MSK28
 #define IF1MSK2H0_MDIR _if1msk2h0.bit._MDIR
 #define IF1MSK2H0_MXTD _if1msk2h0.bit._MXTD
-__IO_EXTENDED IF1ARB0STR _if1arb0;  
+__IO_EXTENDED IF1ARB0STR _if1arb0;
 #define IF1ARB0 _if1arb0.lword
 #define IF1ARB0_ID0 _if1arb0.bit._ID0
 #define IF1ARB0_ID1 _if1arb0.bit._ID1
@@ -21526,7 +21526,7 @@ __IO_EXTENDED IF1ARB0STR _if1arb0;
 #define IF1ARB0_XTD _if1arb0.bit._XTD
 #define IF1ARB0_MSGVAL _if1arb0.bit._MSGVAL
 #define IF1ARB0_ID _if1arb0.bitc._ID
-__IO_EXTENDED IF1ARB10STR _if1arb10;  
+__IO_EXTENDED IF1ARB10STR _if1arb10;
 #define IF1ARB10 _if1arb10.word
 #define IF1ARB10_ID0 _if1arb10.bit._ID0
 #define IF1ARB10_ID1 _if1arb10.bit._ID1
@@ -21544,7 +21544,7 @@ __IO_EXTENDED IF1ARB10STR _if1arb10;
 #define IF1ARB10_ID13 _if1arb10.bit._ID13
 #define IF1ARB10_ID14 _if1arb10.bit._ID14
 #define IF1ARB10_ID15 _if1arb10.bit._ID15
-__IO_EXTENDED IF1ARB1L0STR _if1arb1l0;  
+__IO_EXTENDED IF1ARB1L0STR _if1arb1l0;
 #define IF1ARB1L0 _if1arb1l0.byte
 #define IF1ARB1L0_ID0 _if1arb1l0.bit._ID0
 #define IF1ARB1L0_ID1 _if1arb1l0.bit._ID1
@@ -21554,7 +21554,7 @@ __IO_EXTENDED IF1ARB1L0STR _if1arb1l0;
 #define IF1ARB1L0_ID5 _if1arb1l0.bit._ID5
 #define IF1ARB1L0_ID6 _if1arb1l0.bit._ID6
 #define IF1ARB1L0_ID7 _if1arb1l0.bit._ID7
-__IO_EXTENDED IF1ARB1H0STR _if1arb1h0;  
+__IO_EXTENDED IF1ARB1H0STR _if1arb1h0;
 #define IF1ARB1H0 _if1arb1h0.byte
 #define IF1ARB1H0_ID8 _if1arb1h0.bit._ID8
 #define IF1ARB1H0_ID9 _if1arb1h0.bit._ID9
@@ -21564,7 +21564,7 @@ __IO_EXTENDED IF1ARB1H0STR _if1arb1h0;
 #define IF1ARB1H0_ID13 _if1arb1h0.bit._ID13
 #define IF1ARB1H0_ID14 _if1arb1h0.bit._ID14
 #define IF1ARB1H0_ID15 _if1arb1h0.bit._ID15
-__IO_EXTENDED IF1ARB20STR _if1arb20;  
+__IO_EXTENDED IF1ARB20STR _if1arb20;
 #define IF1ARB20 _if1arb20.word
 #define IF1ARB20_ID16 _if1arb20.bit._ID16
 #define IF1ARB20_ID17 _if1arb20.bit._ID17
@@ -21582,7 +21582,7 @@ __IO_EXTENDED IF1ARB20STR _if1arb20;
 #define IF1ARB20_DIR _if1arb20.bit._DIR
 #define IF1ARB20_XTD _if1arb20.bit._XTD
 #define IF1ARB20_MSGVAL _if1arb20.bit._MSGVAL
-__IO_EXTENDED IF1ARB2L0STR _if1arb2l0;  
+__IO_EXTENDED IF1ARB2L0STR _if1arb2l0;
 #define IF1ARB2L0 _if1arb2l0.byte
 #define IF1ARB2L0_ID16 _if1arb2l0.bit._ID16
 #define IF1ARB2L0_ID17 _if1arb2l0.bit._ID17
@@ -21592,7 +21592,7 @@ __IO_EXTENDED IF1ARB2L0STR _if1arb2l0;
 #define IF1ARB2L0_ID21 _if1arb2l0.bit._ID21
 #define IF1ARB2L0_ID22 _if1arb2l0.bit._ID22
 #define IF1ARB2L0_ID23 _if1arb2l0.bit._ID23
-__IO_EXTENDED IF1ARB2H0STR _if1arb2h0;  
+__IO_EXTENDED IF1ARB2H0STR _if1arb2h0;
 #define IF1ARB2H0 _if1arb2h0.byte
 #define IF1ARB2H0_ID24 _if1arb2h0.bit._ID24
 #define IF1ARB2H0_ID25 _if1arb2h0.bit._ID25
@@ -21602,7 +21602,7 @@ __IO_EXTENDED IF1ARB2H0STR _if1arb2h0;
 #define IF1ARB2H0_DIR _if1arb2h0.bit._DIR
 #define IF1ARB2H0_XTD _if1arb2h0.bit._XTD
 #define IF1ARB2H0_MSGVAL _if1arb2h0.bit._MSGVAL
-__IO_EXTENDED IF1MCTR0STR _if1mctr0;  
+__IO_EXTENDED IF1MCTR0STR _if1mctr0;
 #define IF1MCTR0 _if1mctr0.word
 #define IF1MCTR0_DLC0 _if1mctr0.bit._DLC0
 #define IF1MCTR0_DLC1 _if1mctr0.bit._DLC1
@@ -21618,7 +21618,7 @@ __IO_EXTENDED IF1MCTR0STR _if1mctr0;
 #define IF1MCTR0_MSGLST _if1mctr0.bit._MSGLST
 #define IF1MCTR0_NEWDAT _if1mctr0.bit._NEWDAT
 #define IF1MCTR0_DLC _if1mctr0.bitc._DLC
-__IO_EXTENDED IF1MCTRL0STR _if1mctrl0;  
+__IO_EXTENDED IF1MCTRL0STR _if1mctrl0;
 #define IF1MCTRL0 _if1mctrl0.byte
 #define IF1MCTRL0_DLC0 _if1mctrl0.bit._DLC0
 #define IF1MCTRL0_DLC1 _if1mctrl0.bit._DLC1
@@ -21626,7 +21626,7 @@ __IO_EXTENDED IF1MCTRL0STR _if1mctrl0;
 #define IF1MCTRL0_DLC3 _if1mctrl0.bit._DLC3
 #define IF1MCTRL0_EOB _if1mctrl0.bit._EOB
 #define IF1MCTRL0_DLC _if1mctrl0.bitc._DLC
-__IO_EXTENDED IF1MCTRH0STR _if1mctrh0;  
+__IO_EXTENDED IF1MCTRH0STR _if1mctrh0;
 #define IF1MCTRH0 _if1mctrh0.byte
 #define IF1MCTRH0_TXRQST _if1mctrh0.bit._TXRQST
 #define IF1MCTRH0_RMTEN _if1mctrh0.bit._RMTEN
@@ -21636,35 +21636,35 @@ __IO_EXTENDED IF1MCTRH0STR _if1mctrh0;
 #define IF1MCTRH0_INTPND _if1mctrh0.bit._INTPND
 #define IF1MCTRH0_MSGLST _if1mctrh0.bit._MSGLST
 #define IF1MCTRH0_NEWDAT _if1mctrh0.bit._NEWDAT
-__IO_EXTENDED IF1DTA0STR _if1dta0;  
+__IO_EXTENDED IF1DTA0STR _if1dta0;
 #define IF1DTA0 _if1dta0.lword
-__IO_EXTENDED IF1DTA10STR _if1dta10;  
+__IO_EXTENDED IF1DTA10STR _if1dta10;
 #define IF1DTA10 _if1dta10.word
-__IO_EXTENDED IF1DTA1L0STR _if1dta1l0;  
+__IO_EXTENDED IF1DTA1L0STR _if1dta1l0;
 #define IF1DTA1L0 _if1dta1l0.byte
-__IO_EXTENDED IF1DTA1H0STR _if1dta1h0;  
+__IO_EXTENDED IF1DTA1H0STR _if1dta1h0;
 #define IF1DTA1H0 _if1dta1h0.byte
-__IO_EXTENDED IF1DTA20STR _if1dta20;  
+__IO_EXTENDED IF1DTA20STR _if1dta20;
 #define IF1DTA20 _if1dta20.word
-__IO_EXTENDED IF1DTA2L0STR _if1dta2l0;  
+__IO_EXTENDED IF1DTA2L0STR _if1dta2l0;
 #define IF1DTA2L0 _if1dta2l0.byte
-__IO_EXTENDED IF1DTA2H0STR _if1dta2h0;  
+__IO_EXTENDED IF1DTA2H0STR _if1dta2h0;
 #define IF1DTA2H0 _if1dta2h0.byte
-__IO_EXTENDED IF1DTB0STR _if1dtb0;  
+__IO_EXTENDED IF1DTB0STR _if1dtb0;
 #define IF1DTB0 _if1dtb0.lword
-__IO_EXTENDED IF1DTB10STR _if1dtb10;  
+__IO_EXTENDED IF1DTB10STR _if1dtb10;
 #define IF1DTB10 _if1dtb10.word
-__IO_EXTENDED IF1DTB1L0STR _if1dtb1l0;  
+__IO_EXTENDED IF1DTB1L0STR _if1dtb1l0;
 #define IF1DTB1L0 _if1dtb1l0.byte
-__IO_EXTENDED IF1DTB1H0STR _if1dtb1h0;  
+__IO_EXTENDED IF1DTB1H0STR _if1dtb1h0;
 #define IF1DTB1H0 _if1dtb1h0.byte
-__IO_EXTENDED IF1DTB20STR _if1dtb20;  
+__IO_EXTENDED IF1DTB20STR _if1dtb20;
 #define IF1DTB20 _if1dtb20.word
-__IO_EXTENDED IF1DTB2L0STR _if1dtb2l0;  
+__IO_EXTENDED IF1DTB2L0STR _if1dtb2l0;
 #define IF1DTB2L0 _if1dtb2l0.byte
-__IO_EXTENDED IF1DTB2H0STR _if1dtb2h0;  
+__IO_EXTENDED IF1DTB2H0STR _if1dtb2h0;
 #define IF1DTB2H0 _if1dtb2h0.byte
-__IO_EXTENDED IF2CREQ0STR _if2creq0;  
+__IO_EXTENDED IF2CREQ0STR _if2creq0;
 #define IF2CREQ0 _if2creq0.word
 #define IF2CREQ0_MSGN0 _if2creq0.bit._MSGN0
 #define IF2CREQ0_MSGN1 _if2creq0.bit._MSGN1
@@ -21675,7 +21675,7 @@ __IO_EXTENDED IF2CREQ0STR _if2creq0;
 #define IF2CREQ0_MSGN6 _if2creq0.bit._MSGN6
 #define IF2CREQ0_MSGN7 _if2creq0.bit._MSGN7
 #define IF2CREQ0_BUSY _if2creq0.bit._BUSY
-__IO_EXTENDED IF2CREQL0STR _if2creql0;  
+__IO_EXTENDED IF2CREQL0STR _if2creql0;
 #define IF2CREQL0 _if2creql0.byte
 #define IF2CREQL0_MSGN0 _if2creql0.bit._MSGN0
 #define IF2CREQL0_MSGN1 _if2creql0.bit._MSGN1
@@ -21685,10 +21685,10 @@ __IO_EXTENDED IF2CREQL0STR _if2creql0;
 #define IF2CREQL0_MSGN5 _if2creql0.bit._MSGN5
 #define IF2CREQL0_MSGN6 _if2creql0.bit._MSGN6
 #define IF2CREQL0_MSGN7 _if2creql0.bit._MSGN7
-__IO_EXTENDED IF2CREQH0STR _if2creqh0;  
+__IO_EXTENDED IF2CREQH0STR _if2creqh0;
 #define IF2CREQH0 _if2creqh0.byte
 #define IF2CREQH0_BUSY _if2creqh0.bit._BUSY
-__IO_EXTENDED IF2CMSK0STR _if2cmsk0;  
+__IO_EXTENDED IF2CMSK0STR _if2cmsk0;
 #define IF2CMSK0 _if2cmsk0.word
 #define IF2CMSK0_DATAB _if2cmsk0.bit._DATAB
 #define IF2CMSK0_DATAA _if2cmsk0.bit._DATAA
@@ -21698,7 +21698,7 @@ __IO_EXTENDED IF2CMSK0STR _if2cmsk0;
 #define IF2CMSK0_ARB _if2cmsk0.bit._ARB
 #define IF2CMSK0_MASK _if2cmsk0.bit._MASK
 #define IF2CMSK0_WRRD _if2cmsk0.bit._WRRD
-__IO_EXTENDED IF2CMSKL0STR _if2cmskl0;  
+__IO_EXTENDED IF2CMSKL0STR _if2cmskl0;
 #define IF2CMSKL0 _if2cmskl0.byte
 #define IF2CMSKL0_DATAB _if2cmskl0.bit._DATAB
 #define IF2CMSKL0_DATAA _if2cmskl0.bit._DATAA
@@ -21708,9 +21708,9 @@ __IO_EXTENDED IF2CMSKL0STR _if2cmskl0;
 #define IF2CMSKL0_ARB _if2cmskl0.bit._ARB
 #define IF2CMSKL0_MASK _if2cmskl0.bit._MASK
 #define IF2CMSKL0_WRRD _if2cmskl0.bit._WRRD
-__IO_EXTENDED IF2CMSKH0STR _if2cmskh0;  
+__IO_EXTENDED IF2CMSKH0STR _if2cmskh0;
 #define IF2CMSKH0 _if2cmskh0.byte
-__IO_EXTENDED IF2MSK0STR _if2msk0;  
+__IO_EXTENDED IF2MSK0STR _if2msk0;
 #define IF2MSK0 _if2msk0.lword
 #define IF2MSK0_MSK0 _if2msk0.bit._MSK0
 #define IF2MSK0_MSK1 _if2msk0.bit._MSK1
@@ -21744,7 +21744,7 @@ __IO_EXTENDED IF2MSK0STR _if2msk0;
 #define IF2MSK0_MDIR _if2msk0.bit._MDIR
 #define IF2MSK0_MXTD _if2msk0.bit._MXTD
 #define IF2MSK0_MSK _if2msk0.bitc._MSK
-__IO_EXTENDED IF2MSK10STR _if2msk10;  
+__IO_EXTENDED IF2MSK10STR _if2msk10;
 #define IF2MSK10 _if2msk10.word
 #define IF2MSK10_MSK0 _if2msk10.bit._MSK0
 #define IF2MSK10_MSK1 _if2msk10.bit._MSK1
@@ -21762,7 +21762,7 @@ __IO_EXTENDED IF2MSK10STR _if2msk10;
 #define IF2MSK10_MSK13 _if2msk10.bit._MSK13
 #define IF2MSK10_MSK14 _if2msk10.bit._MSK14
 #define IF2MSK10_MSK15 _if2msk10.bit._MSK15
-__IO_EXTENDED IF2MSK1L0STR _if2msk1l0;  
+__IO_EXTENDED IF2MSK1L0STR _if2msk1l0;
 #define IF2MSK1L0 _if2msk1l0.byte
 #define IF2MSK1L0_MSK0 _if2msk1l0.bit._MSK0
 #define IF2MSK1L0_MSK1 _if2msk1l0.bit._MSK1
@@ -21772,7 +21772,7 @@ __IO_EXTENDED IF2MSK1L0STR _if2msk1l0;
 #define IF2MSK1L0_MSK5 _if2msk1l0.bit._MSK5
 #define IF2MSK1L0_MSK6 _if2msk1l0.bit._MSK6
 #define IF2MSK1L0_MSK7 _if2msk1l0.bit._MSK7
-__IO_EXTENDED IF2MSK1H0STR _if2msk1h0;  
+__IO_EXTENDED IF2MSK1H0STR _if2msk1h0;
 #define IF2MSK1H0 _if2msk1h0.byte
 #define IF2MSK1H0_MSK8 _if2msk1h0.bit._MSK8
 #define IF2MSK1H0_MSK9 _if2msk1h0.bit._MSK9
@@ -21782,7 +21782,7 @@ __IO_EXTENDED IF2MSK1H0STR _if2msk1h0;
 #define IF2MSK1H0_MSK13 _if2msk1h0.bit._MSK13
 #define IF2MSK1H0_MSK14 _if2msk1h0.bit._MSK14
 #define IF2MSK1H0_MSK15 _if2msk1h0.bit._MSK15
-__IO_EXTENDED IF2MSK20STR _if2msk20;  
+__IO_EXTENDED IF2MSK20STR _if2msk20;
 #define IF2MSK20 _if2msk20.word
 #define IF2MSK20_MSK16 _if2msk20.bit._MSK16
 #define IF2MSK20_MSK17 _if2msk20.bit._MSK17
@@ -21799,7 +21799,7 @@ __IO_EXTENDED IF2MSK20STR _if2msk20;
 #define IF2MSK20_MSK28 _if2msk20.bit._MSK28
 #define IF2MSK20_MDIR _if2msk20.bit._MDIR
 #define IF2MSK20_MXTD _if2msk20.bit._MXTD
-__IO_EXTENDED IF2MSK2L0STR _if2msk2l0;  
+__IO_EXTENDED IF2MSK2L0STR _if2msk2l0;
 #define IF2MSK2L0 _if2msk2l0.byte
 #define IF2MSK2L0_MSK16 _if2msk2l0.bit._MSK16
 #define IF2MSK2L0_MSK17 _if2msk2l0.bit._MSK17
@@ -21809,7 +21809,7 @@ __IO_EXTENDED IF2MSK2L0STR _if2msk2l0;
 #define IF2MSK2L0_MSK21 _if2msk2l0.bit._MSK21
 #define IF2MSK2L0_MSK22 _if2msk2l0.bit._MSK22
 #define IF2MSK2L0_MSK23 _if2msk2l0.bit._MSK23
-__IO_EXTENDED IF2MSK2H0STR _if2msk2h0;  
+__IO_EXTENDED IF2MSK2H0STR _if2msk2h0;
 #define IF2MSK2H0 _if2msk2h0.byte
 #define IF2MSK2H0_MSK24 _if2msk2h0.bit._MSK24
 #define IF2MSK2H0_MSK25 _if2msk2h0.bit._MSK25
@@ -21818,7 +21818,7 @@ __IO_EXTENDED IF2MSK2H0STR _if2msk2h0;
 #define IF2MSK2H0_MSK28 _if2msk2h0.bit._MSK28
 #define IF2MSK2H0_MDIR _if2msk2h0.bit._MDIR
 #define IF2MSK2H0_MXTD _if2msk2h0.bit._MXTD
-__IO_EXTENDED IF2ARB0STR _if2arb0;  
+__IO_EXTENDED IF2ARB0STR _if2arb0;
 #define IF2ARB0 _if2arb0.lword
 #define IF2ARB0_ID0 _if2arb0.bit._ID0
 #define IF2ARB0_ID1 _if2arb0.bit._ID1
@@ -21853,7 +21853,7 @@ __IO_EXTENDED IF2ARB0STR _if2arb0;
 #define IF2ARB0_XTD _if2arb0.bit._XTD
 #define IF2ARB0_MSGVAL _if2arb0.bit._MSGVAL
 #define IF2ARB0_ID _if2arb0.bitc._ID
-__IO_EXTENDED IF2ARB10STR _if2arb10;  
+__IO_EXTENDED IF2ARB10STR _if2arb10;
 #define IF2ARB10 _if2arb10.word
 #define IF2ARB10_ID0 _if2arb10.bit._ID0
 #define IF2ARB10_ID1 _if2arb10.bit._ID1
@@ -21871,7 +21871,7 @@ __IO_EXTENDED IF2ARB10STR _if2arb10;
 #define IF2ARB10_ID13 _if2arb10.bit._ID13
 #define IF2ARB10_ID14 _if2arb10.bit._ID14
 #define IF2ARB10_ID15 _if2arb10.bit._ID15
-__IO_EXTENDED IF2ARB1L0STR _if2arb1l0;  
+__IO_EXTENDED IF2ARB1L0STR _if2arb1l0;
 #define IF2ARB1L0 _if2arb1l0.byte
 #define IF2ARB1L0_ID0 _if2arb1l0.bit._ID0
 #define IF2ARB1L0_ID1 _if2arb1l0.bit._ID1
@@ -21881,7 +21881,7 @@ __IO_EXTENDED IF2ARB1L0STR _if2arb1l0;
 #define IF2ARB1L0_ID5 _if2arb1l0.bit._ID5
 #define IF2ARB1L0_ID6 _if2arb1l0.bit._ID6
 #define IF2ARB1L0_ID7 _if2arb1l0.bit._ID7
-__IO_EXTENDED IF2ARB1H0STR _if2arb1h0;  
+__IO_EXTENDED IF2ARB1H0STR _if2arb1h0;
 #define IF2ARB1H0 _if2arb1h0.byte
 #define IF2ARB1H0_ID8 _if2arb1h0.bit._ID8
 #define IF2ARB1H0_ID9 _if2arb1h0.bit._ID9
@@ -21891,7 +21891,7 @@ __IO_EXTENDED IF2ARB1H0STR _if2arb1h0;
 #define IF2ARB1H0_ID13 _if2arb1h0.bit._ID13
 #define IF2ARB1H0_ID14 _if2arb1h0.bit._ID14
 #define IF2ARB1H0_ID15 _if2arb1h0.bit._ID15
-__IO_EXTENDED IF2ARB20STR _if2arb20;  
+__IO_EXTENDED IF2ARB20STR _if2arb20;
 #define IF2ARB20 _if2arb20.word
 #define IF2ARB20_ID16 _if2arb20.bit._ID16
 #define IF2ARB20_ID17 _if2arb20.bit._ID17
@@ -21909,7 +21909,7 @@ __IO_EXTENDED IF2ARB20STR _if2arb20;
 #define IF2ARB20_DIR _if2arb20.bit._DIR
 #define IF2ARB20_XTD _if2arb20.bit._XTD
 #define IF2ARB20_MSGVAL _if2arb20.bit._MSGVAL
-__IO_EXTENDED IF2ARB2L0STR _if2arb2l0;  
+__IO_EXTENDED IF2ARB2L0STR _if2arb2l0;
 #define IF2ARB2L0 _if2arb2l0.byte
 #define IF2ARB2L0_ID16 _if2arb2l0.bit._ID16
 #define IF2ARB2L0_ID17 _if2arb2l0.bit._ID17
@@ -21919,7 +21919,7 @@ __IO_EXTENDED IF2ARB2L0STR _if2arb2l0;
 #define IF2ARB2L0_ID21 _if2arb2l0.bit._ID21
 #define IF2ARB2L0_ID22 _if2arb2l0.bit._ID22
 #define IF2ARB2L0_ID23 _if2arb2l0.bit._ID23
-__IO_EXTENDED IF2ARB2H0STR _if2arb2h0;  
+__IO_EXTENDED IF2ARB2H0STR _if2arb2h0;
 #define IF2ARB2H0 _if2arb2h0.byte
 #define IF2ARB2H0_ID24 _if2arb2h0.bit._ID24
 #define IF2ARB2H0_ID25 _if2arb2h0.bit._ID25
@@ -21929,7 +21929,7 @@ __IO_EXTENDED IF2ARB2H0STR _if2arb2h0;
 #define IF2ARB2H0_DIR _if2arb2h0.bit._DIR
 #define IF2ARB2H0_XTD _if2arb2h0.bit._XTD
 #define IF2ARB2H0_MSGVAL _if2arb2h0.bit._MSGVAL
-__IO_EXTENDED IF2MCTR0STR _if2mctr0;  
+__IO_EXTENDED IF2MCTR0STR _if2mctr0;
 #define IF2MCTR0 _if2mctr0.word
 #define IF2MCTR0_DLC0 _if2mctr0.bit._DLC0
 #define IF2MCTR0_DLC1 _if2mctr0.bit._DLC1
@@ -21945,7 +21945,7 @@ __IO_EXTENDED IF2MCTR0STR _if2mctr0;
 #define IF2MCTR0_MSGLST _if2mctr0.bit._MSGLST
 #define IF2MCTR0_NEWDAT _if2mctr0.bit._NEWDAT
 #define IF2MCTR0_DLC _if2mctr0.bitc._DLC
-__IO_EXTENDED IF2MCTRL0STR _if2mctrl0;  
+__IO_EXTENDED IF2MCTRL0STR _if2mctrl0;
 #define IF2MCTRL0 _if2mctrl0.byte
 #define IF2MCTRL0_DLC0 _if2mctrl0.bit._DLC0
 #define IF2MCTRL0_DLC1 _if2mctrl0.bit._DLC1
@@ -21953,7 +21953,7 @@ __IO_EXTENDED IF2MCTRL0STR _if2mctrl0;
 #define IF2MCTRL0_DLC3 _if2mctrl0.bit._DLC3
 #define IF2MCTRL0_EOB _if2mctrl0.bit._EOB
 #define IF2MCTRL0_DLC _if2mctrl0.bitc._DLC
-__IO_EXTENDED IF2MCTRH0STR _if2mctrh0;  
+__IO_EXTENDED IF2MCTRH0STR _if2mctrh0;
 #define IF2MCTRH0 _if2mctrh0.byte
 #define IF2MCTRH0_TXRQST _if2mctrh0.bit._TXRQST
 #define IF2MCTRH0_RMTEN _if2mctrh0.bit._RMTEN
@@ -21963,35 +21963,35 @@ __IO_EXTENDED IF2MCTRH0STR _if2mctrh0;
 #define IF2MCTRH0_INTPND _if2mctrh0.bit._INTPND
 #define IF2MCTRH0_MSGLST _if2mctrh0.bit._MSGLST
 #define IF2MCTRH0_NEWDAT _if2mctrh0.bit._NEWDAT
-__IO_EXTENDED IF2DTA0STR _if2dta0;  
+__IO_EXTENDED IF2DTA0STR _if2dta0;
 #define IF2DTA0 _if2dta0.lword
-__IO_EXTENDED IF2DTA10STR _if2dta10;  
+__IO_EXTENDED IF2DTA10STR _if2dta10;
 #define IF2DTA10 _if2dta10.word
-__IO_EXTENDED IF2DTA1L0STR _if2dta1l0;  
+__IO_EXTENDED IF2DTA1L0STR _if2dta1l0;
 #define IF2DTA1L0 _if2dta1l0.byte
-__IO_EXTENDED IF2DTA1H0STR _if2dta1h0;  
+__IO_EXTENDED IF2DTA1H0STR _if2dta1h0;
 #define IF2DTA1H0 _if2dta1h0.byte
-__IO_EXTENDED IF2DTA20STR _if2dta20;  
+__IO_EXTENDED IF2DTA20STR _if2dta20;
 #define IF2DTA20 _if2dta20.word
-__IO_EXTENDED IF2DTA2L0STR _if2dta2l0;  
+__IO_EXTENDED IF2DTA2L0STR _if2dta2l0;
 #define IF2DTA2L0 _if2dta2l0.byte
-__IO_EXTENDED IF2DTA2H0STR _if2dta2h0;  
+__IO_EXTENDED IF2DTA2H0STR _if2dta2h0;
 #define IF2DTA2H0 _if2dta2h0.byte
-__IO_EXTENDED IF2DTB0STR _if2dtb0;  
+__IO_EXTENDED IF2DTB0STR _if2dtb0;
 #define IF2DTB0 _if2dtb0.lword
-__IO_EXTENDED IF2DTB10STR _if2dtb10;  
+__IO_EXTENDED IF2DTB10STR _if2dtb10;
 #define IF2DTB10 _if2dtb10.word
-__IO_EXTENDED IF2DTB1L0STR _if2dtb1l0;  
+__IO_EXTENDED IF2DTB1L0STR _if2dtb1l0;
 #define IF2DTB1L0 _if2dtb1l0.byte
-__IO_EXTENDED IF2DTB1H0STR _if2dtb1h0;  
+__IO_EXTENDED IF2DTB1H0STR _if2dtb1h0;
 #define IF2DTB1H0 _if2dtb1h0.byte
-__IO_EXTENDED IF2DTB20STR _if2dtb20;  
+__IO_EXTENDED IF2DTB20STR _if2dtb20;
 #define IF2DTB20 _if2dtb20.word
-__IO_EXTENDED IF2DTB2L0STR _if2dtb2l0;  
+__IO_EXTENDED IF2DTB2L0STR _if2dtb2l0;
 #define IF2DTB2L0 _if2dtb2l0.byte
-__IO_EXTENDED IF2DTB2H0STR _if2dtb2h0;  
+__IO_EXTENDED IF2DTB2H0STR _if2dtb2h0;
 #define IF2DTB2H0 _if2dtb2h0.byte
-__IO_EXTENDED TREQR0STR _treqr0;  
+__IO_EXTENDED TREQR0STR _treqr0;
 #define TREQR0 _treqr0.lword
 #define TREQR0_TXRQST1 _treqr0.bit._TXRQST1
 #define TREQR0_TXRQST2 _treqr0.bit._TXRQST2
@@ -22026,7 +22026,7 @@ __IO_EXTENDED TREQR0STR _treqr0;
 #define TREQR0_TXRQST31 _treqr0.bit._TXRQST31
 #define TREQR0_TXRQST32 _treqr0.bit._TXRQST32
 #define TREQR0_TXRQST _treqr0.bitc._TXRQST
-__IO_EXTENDED TREQR10STR _treqr10;  
+__IO_EXTENDED TREQR10STR _treqr10;
 #define TREQR10 _treqr10.word
 #define TREQR10_TXRQST1 _treqr10.bit._TXRQST1
 #define TREQR10_TXRQST2 _treqr10.bit._TXRQST2
@@ -22044,7 +22044,7 @@ __IO_EXTENDED TREQR10STR _treqr10;
 #define TREQR10_TXRQST14 _treqr10.bit._TXRQST14
 #define TREQR10_TXRQST15 _treqr10.bit._TXRQST15
 #define TREQR10_TXRQST16 _treqr10.bit._TXRQST16
-__IO_EXTENDED TREQR1L0STR _treqr1l0;  
+__IO_EXTENDED TREQR1L0STR _treqr1l0;
 #define TREQR1L0 _treqr1l0.byte
 #define TREQR1L0_TXRQST1 _treqr1l0.bit._TXRQST1
 #define TREQR1L0_TXRQST2 _treqr1l0.bit._TXRQST2
@@ -22054,7 +22054,7 @@ __IO_EXTENDED TREQR1L0STR _treqr1l0;
 #define TREQR1L0_TXRQST6 _treqr1l0.bit._TXRQST6
 #define TREQR1L0_TXRQST7 _treqr1l0.bit._TXRQST7
 #define TREQR1L0_TXRQST8 _treqr1l0.bit._TXRQST8
-__IO_EXTENDED TREQR1H0STR _treqr1h0;  
+__IO_EXTENDED TREQR1H0STR _treqr1h0;
 #define TREQR1H0 _treqr1h0.byte
 #define TREQR1H0_TXRQST9 _treqr1h0.bit._TXRQST9
 #define TREQR1H0_TXRQST10 _treqr1h0.bit._TXRQST10
@@ -22064,7 +22064,7 @@ __IO_EXTENDED TREQR1H0STR _treqr1h0;
 #define TREQR1H0_TXRQST14 _treqr1h0.bit._TXRQST14
 #define TREQR1H0_TXRQST15 _treqr1h0.bit._TXRQST15
 #define TREQR1H0_TXRQST16 _treqr1h0.bit._TXRQST16
-__IO_EXTENDED TREQR20STR _treqr20;  
+__IO_EXTENDED TREQR20STR _treqr20;
 #define TREQR20 _treqr20.word
 #define TREQR20_TXRQST17 _treqr20.bit._TXRQST17
 #define TREQR20_TXRQST18 _treqr20.bit._TXRQST18
@@ -22082,7 +22082,7 @@ __IO_EXTENDED TREQR20STR _treqr20;
 #define TREQR20_TXRQST30 _treqr20.bit._TXRQST30
 #define TREQR20_TXRQST31 _treqr20.bit._TXRQST31
 #define TREQR20_TXRQST32 _treqr20.bit._TXRQST32
-__IO_EXTENDED TREQR2L0STR _treqr2l0;  
+__IO_EXTENDED TREQR2L0STR _treqr2l0;
 #define TREQR2L0 _treqr2l0.byte
 #define TREQR2L0_TXRQST17 _treqr2l0.bit._TXRQST17
 #define TREQR2L0_TXRQST18 _treqr2l0.bit._TXRQST18
@@ -22092,7 +22092,7 @@ __IO_EXTENDED TREQR2L0STR _treqr2l0;
 #define TREQR2L0_TXRQST22 _treqr2l0.bit._TXRQST22
 #define TREQR2L0_TXRQST23 _treqr2l0.bit._TXRQST23
 #define TREQR2L0_TXRQST24 _treqr2l0.bit._TXRQST24
-__IO_EXTENDED TREQR2H0STR _treqr2h0;  
+__IO_EXTENDED TREQR2H0STR _treqr2h0;
 #define TREQR2H0 _treqr2h0.byte
 #define TREQR2H0_TXRQST25 _treqr2h0.bit._TXRQST25
 #define TREQR2H0_TXRQST26 _treqr2h0.bit._TXRQST26
@@ -22102,7 +22102,7 @@ __IO_EXTENDED TREQR2H0STR _treqr2h0;
 #define TREQR2H0_TXRQST30 _treqr2h0.bit._TXRQST30
 #define TREQR2H0_TXRQST31 _treqr2h0.bit._TXRQST31
 #define TREQR2H0_TXRQST32 _treqr2h0.bit._TXRQST32
-__IO_EXTENDED NEWDT0STR _newdt0;  
+__IO_EXTENDED NEWDT0STR _newdt0;
 #define NEWDT0 _newdt0.lword
 #define NEWDT0_NEWDAT1 _newdt0.bit._NEWDAT1
 #define NEWDT0_NEWDAT2 _newdt0.bit._NEWDAT2
@@ -22137,7 +22137,7 @@ __IO_EXTENDED NEWDT0STR _newdt0;
 #define NEWDT0_NEWDAT31 _newdt0.bit._NEWDAT31
 #define NEWDT0_NEWDAT32 _newdt0.bit._NEWDAT32
 #define NEWDT0_NEWDAT _newdt0.bitc._NEWDAT
-__IO_EXTENDED NEWDT10STR _newdt10;  
+__IO_EXTENDED NEWDT10STR _newdt10;
 #define NEWDT10 _newdt10.word
 #define NEWDT10_NEWDAT1 _newdt10.bit._NEWDAT1
 #define NEWDT10_NEWDAT2 _newdt10.bit._NEWDAT2
@@ -22155,7 +22155,7 @@ __IO_EXTENDED NEWDT10STR _newdt10;
 #define NEWDT10_NEWDAT14 _newdt10.bit._NEWDAT14
 #define NEWDT10_NEWDAT15 _newdt10.bit._NEWDAT15
 #define NEWDT10_NEWDAT16 _newdt10.bit._NEWDAT16
-__IO_EXTENDED NEWDT1L0STR _newdt1l0;  
+__IO_EXTENDED NEWDT1L0STR _newdt1l0;
 #define NEWDT1L0 _newdt1l0.byte
 #define NEWDT1L0_NEWDAT1 _newdt1l0.bit._NEWDAT1
 #define NEWDT1L0_NEWDAT2 _newdt1l0.bit._NEWDAT2
@@ -22165,7 +22165,7 @@ __IO_EXTENDED NEWDT1L0STR _newdt1l0;
 #define NEWDT1L0_NEWDAT6 _newdt1l0.bit._NEWDAT6
 #define NEWDT1L0_NEWDAT7 _newdt1l0.bit._NEWDAT7
 #define NEWDT1L0_NEWDAT8 _newdt1l0.bit._NEWDAT8
-__IO_EXTENDED NEWDT1H0STR _newdt1h0;  
+__IO_EXTENDED NEWDT1H0STR _newdt1h0;
 #define NEWDT1H0 _newdt1h0.byte
 #define NEWDT1H0_NEWDAT9 _newdt1h0.bit._NEWDAT9
 #define NEWDT1H0_NEWDAT10 _newdt1h0.bit._NEWDAT10
@@ -22175,7 +22175,7 @@ __IO_EXTENDED NEWDT1H0STR _newdt1h0;
 #define NEWDT1H0_NEWDAT14 _newdt1h0.bit._NEWDAT14
 #define NEWDT1H0_NEWDAT15 _newdt1h0.bit._NEWDAT15
 #define NEWDT1H0_NEWDAT16 _newdt1h0.bit._NEWDAT16
-__IO_EXTENDED NEWDT20STR _newdt20;  
+__IO_EXTENDED NEWDT20STR _newdt20;
 #define NEWDT20 _newdt20.word
 #define NEWDT20_NEWDAT17 _newdt20.bit._NEWDAT17
 #define NEWDT20_NEWDAT18 _newdt20.bit._NEWDAT18
@@ -22193,7 +22193,7 @@ __IO_EXTENDED NEWDT20STR _newdt20;
 #define NEWDT20_NEWDAT30 _newdt20.bit._NEWDAT30
 #define NEWDT20_NEWDAT31 _newdt20.bit._NEWDAT31
 #define NEWDT20_NEWDAT32 _newdt20.bit._NEWDAT32
-__IO_EXTENDED NEWDT2L0STR _newdt2l0;  
+__IO_EXTENDED NEWDT2L0STR _newdt2l0;
 #define NEWDT2L0 _newdt2l0.byte
 #define NEWDT2L0_NEWDAT17 _newdt2l0.bit._NEWDAT17
 #define NEWDT2L0_NEWDAT18 _newdt2l0.bit._NEWDAT18
@@ -22203,7 +22203,7 @@ __IO_EXTENDED NEWDT2L0STR _newdt2l0;
 #define NEWDT2L0_NEWDAT22 _newdt2l0.bit._NEWDAT22
 #define NEWDT2L0_NEWDAT23 _newdt2l0.bit._NEWDAT23
 #define NEWDT2L0_NEWDAT24 _newdt2l0.bit._NEWDAT24
-__IO_EXTENDED NEWDT2H0STR _newdt2h0;  
+__IO_EXTENDED NEWDT2H0STR _newdt2h0;
 #define NEWDT2H0 _newdt2h0.byte
 #define NEWDT2H0_NEWDAT25 _newdt2h0.bit._NEWDAT25
 #define NEWDT2H0_NEWDAT26 _newdt2h0.bit._NEWDAT26
@@ -22213,7 +22213,7 @@ __IO_EXTENDED NEWDT2H0STR _newdt2h0;
 #define NEWDT2H0_NEWDAT30 _newdt2h0.bit._NEWDAT30
 #define NEWDT2H0_NEWDAT31 _newdt2h0.bit._NEWDAT31
 #define NEWDT2H0_NEWDAT32 _newdt2h0.bit._NEWDAT32
-__IO_EXTENDED INTPND0STR _intpnd0;  
+__IO_EXTENDED INTPND0STR _intpnd0;
 #define INTPND0 _intpnd0.lword
 #define INTPND0_INTPND1 _intpnd0.bit._INTPND1
 #define INTPND0_INTPND2 _intpnd0.bit._INTPND2
@@ -22248,7 +22248,7 @@ __IO_EXTENDED INTPND0STR _intpnd0;
 #define INTPND0_INTPND31 _intpnd0.bit._INTPND31
 #define INTPND0_INTPND32 _intpnd0.bit._INTPND32
 #define INTPND0_INTPND _intpnd0.bitc._INTPND
-__IO_EXTENDED INTPND10STR _intpnd10;  
+__IO_EXTENDED INTPND10STR _intpnd10;
 #define INTPND10 _intpnd10.word
 #define INTPND10_INTPND1 _intpnd10.bit._INTPND1
 #define INTPND10_INTPND2 _intpnd10.bit._INTPND2
@@ -22266,7 +22266,7 @@ __IO_EXTENDED INTPND10STR _intpnd10;
 #define INTPND10_INTPND14 _intpnd10.bit._INTPND14
 #define INTPND10_INTPND15 _intpnd10.bit._INTPND15
 #define INTPND10_INTPND16 _intpnd10.bit._INTPND16
-__IO_EXTENDED INTPND1L0STR _intpnd1l0;  
+__IO_EXTENDED INTPND1L0STR _intpnd1l0;
 #define INTPND1L0 _intpnd1l0.byte
 #define INTPND1L0_INTPND1 _intpnd1l0.bit._INTPND1
 #define INTPND1L0_INTPND2 _intpnd1l0.bit._INTPND2
@@ -22276,7 +22276,7 @@ __IO_EXTENDED INTPND1L0STR _intpnd1l0;
 #define INTPND1L0_INTPND6 _intpnd1l0.bit._INTPND6
 #define INTPND1L0_INTPND7 _intpnd1l0.bit._INTPND7
 #define INTPND1L0_INTPND8 _intpnd1l0.bit._INTPND8
-__IO_EXTENDED INTPND1H0STR _intpnd1h0;  
+__IO_EXTENDED INTPND1H0STR _intpnd1h0;
 #define INTPND1H0 _intpnd1h0.byte
 #define INTPND1H0_INTPND9 _intpnd1h0.bit._INTPND9
 #define INTPND1H0_INTPND10 _intpnd1h0.bit._INTPND10
@@ -22286,7 +22286,7 @@ __IO_EXTENDED INTPND1H0STR _intpnd1h0;
 #define INTPND1H0_INTPND14 _intpnd1h0.bit._INTPND14
 #define INTPND1H0_INTPND15 _intpnd1h0.bit._INTPND15
 #define INTPND1H0_INTPND16 _intpnd1h0.bit._INTPND16
-__IO_EXTENDED INTPND20STR _intpnd20;  
+__IO_EXTENDED INTPND20STR _intpnd20;
 #define INTPND20 _intpnd20.word
 #define INTPND20_INTPND17 _intpnd20.bit._INTPND17
 #define INTPND20_INTPND18 _intpnd20.bit._INTPND18
@@ -22304,7 +22304,7 @@ __IO_EXTENDED INTPND20STR _intpnd20;
 #define INTPND20_INTPND30 _intpnd20.bit._INTPND30
 #define INTPND20_INTPND31 _intpnd20.bit._INTPND31
 #define INTPND20_INTPND32 _intpnd20.bit._INTPND32
-__IO_EXTENDED INTPND2L0STR _intpnd2l0;  
+__IO_EXTENDED INTPND2L0STR _intpnd2l0;
 #define INTPND2L0 _intpnd2l0.byte
 #define INTPND2L0_INTPND17 _intpnd2l0.bit._INTPND17
 #define INTPND2L0_INTPND18 _intpnd2l0.bit._INTPND18
@@ -22314,7 +22314,7 @@ __IO_EXTENDED INTPND2L0STR _intpnd2l0;
 #define INTPND2L0_INTPND22 _intpnd2l0.bit._INTPND22
 #define INTPND2L0_INTPND23 _intpnd2l0.bit._INTPND23
 #define INTPND2L0_INTPND24 _intpnd2l0.bit._INTPND24
-__IO_EXTENDED INTPND2H0STR _intpnd2h0;  
+__IO_EXTENDED INTPND2H0STR _intpnd2h0;
 #define INTPND2H0 _intpnd2h0.byte
 #define INTPND2H0_INTPND25 _intpnd2h0.bit._INTPND25
 #define INTPND2H0_INTPND26 _intpnd2h0.bit._INTPND26
@@ -22324,7 +22324,7 @@ __IO_EXTENDED INTPND2H0STR _intpnd2h0;
 #define INTPND2H0_INTPND30 _intpnd2h0.bit._INTPND30
 #define INTPND2H0_INTPND31 _intpnd2h0.bit._INTPND31
 #define INTPND2H0_INTPND32 _intpnd2h0.bit._INTPND32
-__IO_EXTENDED MSGVAL0STR _msgval0;  
+__IO_EXTENDED MSGVAL0STR _msgval0;
 #define MSGVAL0 _msgval0.lword
 #define MSGVAL0_MSGVAL1 _msgval0.bit._MSGVAL1
 #define MSGVAL0_MSGVAL2 _msgval0.bit._MSGVAL2
@@ -22359,7 +22359,7 @@ __IO_EXTENDED MSGVAL0STR _msgval0;
 #define MSGVAL0_MSGVAL31 _msgval0.bit._MSGVAL31
 #define MSGVAL0_MSGVAL32 _msgval0.bit._MSGVAL32
 #define MSGVAL0_MSGVAL _msgval0.bitc._MSGVAL
-__IO_EXTENDED MSGVAL10STR _msgval10;  
+__IO_EXTENDED MSGVAL10STR _msgval10;
 #define MSGVAL10 _msgval10.word
 #define MSGVAL10_MSGVAL1 _msgval10.bit._MSGVAL1
 #define MSGVAL10_MSGVAL2 _msgval10.bit._MSGVAL2
@@ -22377,7 +22377,7 @@ __IO_EXTENDED MSGVAL10STR _msgval10;
 #define MSGVAL10_MSGVAL14 _msgval10.bit._MSGVAL14
 #define MSGVAL10_MSGVAL15 _msgval10.bit._MSGVAL15
 #define MSGVAL10_MSGVAL16 _msgval10.bit._MSGVAL16
-__IO_EXTENDED MSGVAL1L0STR _msgval1l0;  
+__IO_EXTENDED MSGVAL1L0STR _msgval1l0;
 #define MSGVAL1L0 _msgval1l0.byte
 #define MSGVAL1L0_MSGVAL1 _msgval1l0.bit._MSGVAL1
 #define MSGVAL1L0_MSGVAL2 _msgval1l0.bit._MSGVAL2
@@ -22387,7 +22387,7 @@ __IO_EXTENDED MSGVAL1L0STR _msgval1l0;
 #define MSGVAL1L0_MSGVAL6 _msgval1l0.bit._MSGVAL6
 #define MSGVAL1L0_MSGVAL7 _msgval1l0.bit._MSGVAL7
 #define MSGVAL1L0_MSGVAL8 _msgval1l0.bit._MSGVAL8
-__IO_EXTENDED MSGVAL1H0STR _msgval1h0;  
+__IO_EXTENDED MSGVAL1H0STR _msgval1h0;
 #define MSGVAL1H0 _msgval1h0.byte
 #define MSGVAL1H0_MSGVAL9 _msgval1h0.bit._MSGVAL9
 #define MSGVAL1H0_MSGVAL10 _msgval1h0.bit._MSGVAL10
@@ -22397,7 +22397,7 @@ __IO_EXTENDED MSGVAL1H0STR _msgval1h0;
 #define MSGVAL1H0_MSGVAL14 _msgval1h0.bit._MSGVAL14
 #define MSGVAL1H0_MSGVAL15 _msgval1h0.bit._MSGVAL15
 #define MSGVAL1H0_MSGVAL16 _msgval1h0.bit._MSGVAL16
-__IO_EXTENDED MSGVAL20STR _msgval20;  
+__IO_EXTENDED MSGVAL20STR _msgval20;
 #define MSGVAL20 _msgval20.word
 #define MSGVAL20_MSGVAL17 _msgval20.bit._MSGVAL17
 #define MSGVAL20_MSGVAL18 _msgval20.bit._MSGVAL18
@@ -22415,7 +22415,7 @@ __IO_EXTENDED MSGVAL20STR _msgval20;
 #define MSGVAL20_MSGVAL30 _msgval20.bit._MSGVAL30
 #define MSGVAL20_MSGVAL31 _msgval20.bit._MSGVAL31
 #define MSGVAL20_MSGVAL32 _msgval20.bit._MSGVAL32
-__IO_EXTENDED MSGVAL2L0STR _msgval2l0;  
+__IO_EXTENDED MSGVAL2L0STR _msgval2l0;
 #define MSGVAL2L0 _msgval2l0.byte
 #define MSGVAL2L0_MSGVAL17 _msgval2l0.bit._MSGVAL17
 #define MSGVAL2L0_MSGVAL18 _msgval2l0.bit._MSGVAL18
@@ -22425,7 +22425,7 @@ __IO_EXTENDED MSGVAL2L0STR _msgval2l0;
 #define MSGVAL2L0_MSGVAL22 _msgval2l0.bit._MSGVAL22
 #define MSGVAL2L0_MSGVAL23 _msgval2l0.bit._MSGVAL23
 #define MSGVAL2L0_MSGVAL24 _msgval2l0.bit._MSGVAL24
-__IO_EXTENDED MSGVAL2H0STR _msgval2h0;  
+__IO_EXTENDED MSGVAL2H0STR _msgval2h0;
 #define MSGVAL2H0 _msgval2h0.byte
 #define MSGVAL2H0_MSGVAL25 _msgval2h0.bit._MSGVAL25
 #define MSGVAL2H0_MSGVAL26 _msgval2h0.bit._MSGVAL26
@@ -22435,10 +22435,10 @@ __IO_EXTENDED MSGVAL2H0STR _msgval2h0;
 #define MSGVAL2H0_MSGVAL30 _msgval2h0.bit._MSGVAL30
 #define MSGVAL2H0_MSGVAL31 _msgval2h0.bit._MSGVAL31
 #define MSGVAL2H0_MSGVAL32 _msgval2h0.bit._MSGVAL32
-__IO_EXTENDED COER0STR _coer0;  
+__IO_EXTENDED COER0STR _coer0;
 #define COER0 _coer0.byte
 #define COER0_OE _coer0.bit._OE
-__IO_EXTENDED CTRLR1STR _ctrlr1;  
+__IO_EXTENDED CTRLR1STR _ctrlr1;
 #define CTRLR1 _ctrlr1.word
 #define CTRLR1_INIT _ctrlr1.bit._INIT
 #define CTRLR1_IE _ctrlr1.bit._IE
@@ -22447,7 +22447,7 @@ __IO_EXTENDED CTRLR1STR _ctrlr1;
 #define CTRLR1_DAR _ctrlr1.bit._DAR
 #define CTRLR1_CCE _ctrlr1.bit._CCE
 #define CTRLR1_TEST _ctrlr1.bit._TEST
-__IO_EXTENDED CTRLRL1STR _ctrlrl1;  
+__IO_EXTENDED CTRLRL1STR _ctrlrl1;
 #define CTRLRL1 _ctrlrl1.byte
 #define CTRLRL1_INIT _ctrlrl1.bit._INIT
 #define CTRLRL1_IE _ctrlrl1.bit._IE
@@ -22456,9 +22456,9 @@ __IO_EXTENDED CTRLRL1STR _ctrlrl1;
 #define CTRLRL1_DAR _ctrlrl1.bit._DAR
 #define CTRLRL1_CCE _ctrlrl1.bit._CCE
 #define CTRLRL1_TEST _ctrlrl1.bit._TEST
-__IO_EXTENDED CTRLRH1STR _ctrlrh1;  
+__IO_EXTENDED CTRLRH1STR _ctrlrh1;
 #define CTRLRH1 _ctrlrh1.byte
-__IO_EXTENDED STATR1STR _statr1;  
+__IO_EXTENDED STATR1STR _statr1;
 #define STATR1 _statr1.word
 #define STATR1_LEC0 _statr1.bit._LEC0
 #define STATR1_LEC1 _statr1.bit._LEC1
@@ -22469,7 +22469,7 @@ __IO_EXTENDED STATR1STR _statr1;
 #define STATR1_EWARN _statr1.bit._EWARN
 #define STATR1_BOFF _statr1.bit._BOFF
 #define STATR1_LEC _statr1.bitc._LEC
-__IO_EXTENDED STATRL1STR _statrl1;  
+__IO_EXTENDED STATRL1STR _statrl1;
 #define STATRL1 _statrl1.byte
 #define STATRL1_LEC0 _statrl1.bit._LEC0
 #define STATRL1_LEC1 _statrl1.bit._LEC1
@@ -22480,9 +22480,9 @@ __IO_EXTENDED STATRL1STR _statrl1;
 #define STATRL1_EWARN _statrl1.bit._EWARN
 #define STATRL1_BOFF _statrl1.bit._BOFF
 #define STATRL1_LEC _statrl1.bitc._LEC
-__IO_EXTENDED STATRH1STR _statrh1;  
+__IO_EXTENDED STATRH1STR _statrh1;
 #define STATRH1 _statrh1.byte
-__IO_EXTENDED ERRCNT1STR _errcnt1;  
+__IO_EXTENDED ERRCNT1STR _errcnt1;
 #define ERRCNT1 _errcnt1.word
 #define ERRCNT1_TEC0 _errcnt1.bit._TEC0
 #define ERRCNT1_TEC1 _errcnt1.bit._TEC1
@@ -22502,7 +22502,7 @@ __IO_EXTENDED ERRCNT1STR _errcnt1;
 #define ERRCNT1_RP _errcnt1.bit._RP
 #define ERRCNT1_TEC _errcnt1.bitc._TEC
 #define ERRCNT1_REC _errcnt1.bitc._REC
-__IO_EXTENDED ERRCNTL1STR _errcntl1;  
+__IO_EXTENDED ERRCNTL1STR _errcntl1;
 #define ERRCNTL1 _errcntl1.byte
 #define ERRCNTL1_TEC0 _errcntl1.bit._TEC0
 #define ERRCNTL1_TEC1 _errcntl1.bit._TEC1
@@ -22513,7 +22513,7 @@ __IO_EXTENDED ERRCNTL1STR _errcntl1;
 #define ERRCNTL1_TEC6 _errcntl1.bit._TEC6
 #define ERRCNTL1_TEC7 _errcntl1.bit._TEC7
 #define ERRCNTL1_TEC _errcntl1.bitc._TEC
-__IO_EXTENDED ERRCNTH1STR _errcnth1;  
+__IO_EXTENDED ERRCNTH1STR _errcnth1;
 #define ERRCNTH1 _errcnth1.byte
 #define ERRCNTH1_REC0 _errcnth1.bit._REC0
 #define ERRCNTH1_REC1 _errcnth1.bit._REC1
@@ -22524,7 +22524,7 @@ __IO_EXTENDED ERRCNTH1STR _errcnth1;
 #define ERRCNTH1_REC6 _errcnth1.bit._REC6
 #define ERRCNTH1_RP _errcnth1.bit._RP
 #define ERRCNTH1_REC _errcnth1.bitc._REC
-__IO_EXTENDED BTR1STR _btr1;  
+__IO_EXTENDED BTR1STR _btr1;
 #define BTR1 _btr1.word
 #define BTR1_BRP0 _btr1.bit._BRP0
 #define BTR1_BRP1 _btr1.bit._BRP1
@@ -22545,7 +22545,7 @@ __IO_EXTENDED BTR1STR _btr1;
 #define BTR1_SJW _btr1.bitc._SJW
 #define BTR1_TSEG1 _btr1.bitc._TSEG1
 #define BTR1_TSEG2 _btr1.bitc._TSEG2
-__IO_EXTENDED BTRL1STR _btrl1;  
+__IO_EXTENDED BTRL1STR _btrl1;
 #define BTRL1 _btrl1.byte
 #define BTRL1_BRP0 _btrl1.bit._BRP0
 #define BTRL1_BRP1 _btrl1.bit._BRP1
@@ -22557,7 +22557,7 @@ __IO_EXTENDED BTRL1STR _btrl1;
 #define BTRL1_SJW1 _btrl1.bit._SJW1
 #define BTRL1_BRP _btrl1.bitc._BRP
 #define BTRL1_SJW _btrl1.bitc._SJW
-__IO_EXTENDED BTRH1STR _btrh1;  
+__IO_EXTENDED BTRH1STR _btrh1;
 #define BTRH1 _btrh1.byte
 #define BTRH1_TSEG10 _btrh1.bit._TSEG10
 #define BTRH1_TSEG11 _btrh1.bit._TSEG11
@@ -22568,7 +22568,7 @@ __IO_EXTENDED BTRH1STR _btrh1;
 #define BTRH1_TSEG22 _btrh1.bit._TSEG22
 #define BTRH1_TSEG1 _btrh1.bitc._TSEG1
 #define BTRH1_TSEG2 _btrh1.bitc._TSEG2
-__IO_EXTENDED INTR1STR _intr1;  
+__IO_EXTENDED INTR1STR _intr1;
 #define INTR1 _intr1.word
 #define INTR1_INTID0 _intr1.bit._INTID0
 #define INTR1_INTID1 _intr1.bit._INTID1
@@ -22587,7 +22587,7 @@ __IO_EXTENDED INTR1STR _intr1;
 #define INTR1_INTID14 _intr1.bit._INTID14
 #define INTR1_INTID15 _intr1.bit._INTID15
 #define INTR1_INTID _intr1.bitc._INTID
-__IO_EXTENDED INTRL1STR _intrl1;  
+__IO_EXTENDED INTRL1STR _intrl1;
 #define INTRL1 _intrl1.byte
 #define INTRL1_INTID0 _intrl1.bit._INTID0
 #define INTRL1_INTID1 _intrl1.bit._INTID1
@@ -22597,7 +22597,7 @@ __IO_EXTENDED INTRL1STR _intrl1;
 #define INTRL1_INTID5 _intrl1.bit._INTID5
 #define INTRL1_INTID6 _intrl1.bit._INTID6
 #define INTRL1_INTID7 _intrl1.bit._INTID7
-__IO_EXTENDED INTRH1STR _intrh1;  
+__IO_EXTENDED INTRH1STR _intrh1;
 #define INTRH1 _intrh1.byte
 #define INTRH1_INTID8 _intrh1.bit._INTID8
 #define INTRH1_INTID9 _intrh1.bit._INTID9
@@ -22607,7 +22607,7 @@ __IO_EXTENDED INTRH1STR _intrh1;
 #define INTRH1_INTID13 _intrh1.bit._INTID13
 #define INTRH1_INTID14 _intrh1.bit._INTID14
 #define INTRH1_INTID15 _intrh1.bit._INTID15
-__IO_EXTENDED TESTR1STR _testr1;  
+__IO_EXTENDED TESTR1STR _testr1;
 #define TESTR1 _testr1.word
 #define TESTR1_BASIC _testr1.bit._BASIC
 #define TESTR1_SILENT _testr1.bit._SILENT
@@ -22615,7 +22615,7 @@ __IO_EXTENDED TESTR1STR _testr1;
 #define TESTR1_TX0 _testr1.bit._TX0
 #define TESTR1_TX1 _testr1.bit._TX1
 #define TESTR1_RX _testr1.bit._RX
-__IO_EXTENDED TESTRL1STR _testrl1;  
+__IO_EXTENDED TESTRL1STR _testrl1;
 #define TESTRL1 _testrl1.byte
 #define TESTRL1_BASIC _testrl1.bit._BASIC
 #define TESTRL1_SILENT _testrl1.bit._SILENT
@@ -22623,25 +22623,25 @@ __IO_EXTENDED TESTRL1STR _testrl1;
 #define TESTRL1_TX0 _testrl1.bit._TX0
 #define TESTRL1_TX1 _testrl1.bit._TX1
 #define TESTRL1_RX _testrl1.bit._RX
-__IO_EXTENDED TESTRH1STR _testrh1;  
+__IO_EXTENDED TESTRH1STR _testrh1;
 #define TESTRH1 _testrh1.byte
-__IO_EXTENDED BRPER1STR _brper1;  
+__IO_EXTENDED BRPER1STR _brper1;
 #define BRPER1 _brper1.word
 #define BRPER1_BRPE0 _brper1.bit._BRPE0
 #define BRPER1_BRPE1 _brper1.bit._BRPE1
 #define BRPER1_BRPE2 _brper1.bit._BRPE2
 #define BRPER1_BRPE3 _brper1.bit._BRPE3
 #define BRPER1_BRPE _brper1.bitc._BRPE
-__IO_EXTENDED BRPERL1STR _brperl1;  
+__IO_EXTENDED BRPERL1STR _brperl1;
 #define BRPERL1 _brperl1.byte
 #define BRPERL1_BRPE0 _brperl1.bit._BRPE0
 #define BRPERL1_BRPE1 _brperl1.bit._BRPE1
 #define BRPERL1_BRPE2 _brperl1.bit._BRPE2
 #define BRPERL1_BRPE3 _brperl1.bit._BRPE3
 #define BRPERL1_BRPE _brperl1.bitc._BRPE
-__IO_EXTENDED BRPERH1STR _brperh1;  
+__IO_EXTENDED BRPERH1STR _brperh1;
 #define BRPERH1 _brperh1.byte
-__IO_EXTENDED IF1CREQ1STR _if1creq1;  
+__IO_EXTENDED IF1CREQ1STR _if1creq1;
 #define IF1CREQ1 _if1creq1.word
 #define IF1CREQ1_MSGN0 _if1creq1.bit._MSGN0
 #define IF1CREQ1_MSGN1 _if1creq1.bit._MSGN1
@@ -22652,7 +22652,7 @@ __IO_EXTENDED IF1CREQ1STR _if1creq1;
 #define IF1CREQ1_MSGN6 _if1creq1.bit._MSGN6
 #define IF1CREQ1_MSGN7 _if1creq1.bit._MSGN7
 #define IF1CREQ1_BUSY _if1creq1.bit._BUSY
-__IO_EXTENDED IF1CREQL1STR _if1creql1;  
+__IO_EXTENDED IF1CREQL1STR _if1creql1;
 #define IF1CREQL1 _if1creql1.byte
 #define IF1CREQL1_MSGN0 _if1creql1.bit._MSGN0
 #define IF1CREQL1_MSGN1 _if1creql1.bit._MSGN1
@@ -22662,10 +22662,10 @@ __IO_EXTENDED IF1CREQL1STR _if1creql1;
 #define IF1CREQL1_MSGN5 _if1creql1.bit._MSGN5
 #define IF1CREQL1_MSGN6 _if1creql1.bit._MSGN6
 #define IF1CREQL1_MSGN7 _if1creql1.bit._MSGN7
-__IO_EXTENDED IF1CREQH1STR _if1creqh1;  
+__IO_EXTENDED IF1CREQH1STR _if1creqh1;
 #define IF1CREQH1 _if1creqh1.byte
 #define IF1CREQH1_BUSY _if1creqh1.bit._BUSY
-__IO_EXTENDED IF1CMSK1STR _if1cmsk1;  
+__IO_EXTENDED IF1CMSK1STR _if1cmsk1;
 #define IF1CMSK1 _if1cmsk1.word
 #define IF1CMSK1_DATAB _if1cmsk1.bit._DATAB
 #define IF1CMSK1_DATAA _if1cmsk1.bit._DATAA
@@ -22675,7 +22675,7 @@ __IO_EXTENDED IF1CMSK1STR _if1cmsk1;
 #define IF1CMSK1_ARB _if1cmsk1.bit._ARB
 #define IF1CMSK1_MASK _if1cmsk1.bit._MASK
 #define IF1CMSK1_WRRD _if1cmsk1.bit._WRRD
-__IO_EXTENDED IF1CMSKL1STR _if1cmskl1;  
+__IO_EXTENDED IF1CMSKL1STR _if1cmskl1;
 #define IF1CMSKL1 _if1cmskl1.byte
 #define IF1CMSKL1_DATAB _if1cmskl1.bit._DATAB
 #define IF1CMSKL1_DATAA _if1cmskl1.bit._DATAA
@@ -22685,9 +22685,9 @@ __IO_EXTENDED IF1CMSKL1STR _if1cmskl1;
 #define IF1CMSKL1_ARB _if1cmskl1.bit._ARB
 #define IF1CMSKL1_MASK _if1cmskl1.bit._MASK
 #define IF1CMSKL1_WRRD _if1cmskl1.bit._WRRD
-__IO_EXTENDED IF1CMSKH1STR _if1cmskh1;  
+__IO_EXTENDED IF1CMSKH1STR _if1cmskh1;
 #define IF1CMSKH1 _if1cmskh1.byte
-__IO_EXTENDED IF1MSK1STR _if1msk1;  
+__IO_EXTENDED IF1MSK1STR _if1msk1;
 #define IF1MSK1 _if1msk1.lword
 #define IF1MSK1_MSK0 _if1msk1.bit._MSK0
 #define IF1MSK1_MSK1 _if1msk1.bit._MSK1
@@ -22721,7 +22721,7 @@ __IO_EXTENDED IF1MSK1STR _if1msk1;
 #define IF1MSK1_MDIR _if1msk1.bit._MDIR
 #define IF1MSK1_MXTD _if1msk1.bit._MXTD
 #define IF1MSK1_MSK _if1msk1.bitc._MSK
-__IO_EXTENDED IF1MSK11STR _if1msk11;  
+__IO_EXTENDED IF1MSK11STR _if1msk11;
 #define IF1MSK11 _if1msk11.word
 #define IF1MSK11_MSK0 _if1msk11.bit._MSK0
 #define IF1MSK11_MSK1 _if1msk11.bit._MSK1
@@ -22739,7 +22739,7 @@ __IO_EXTENDED IF1MSK11STR _if1msk11;
 #define IF1MSK11_MSK13 _if1msk11.bit._MSK13
 #define IF1MSK11_MSK14 _if1msk11.bit._MSK14
 #define IF1MSK11_MSK15 _if1msk11.bit._MSK15
-__IO_EXTENDED IF1MSK1L1STR _if1msk1l1;  
+__IO_EXTENDED IF1MSK1L1STR _if1msk1l1;
 #define IF1MSK1L1 _if1msk1l1.byte
 #define IF1MSK1L1_MSK0 _if1msk1l1.bit._MSK0
 #define IF1MSK1L1_MSK1 _if1msk1l1.bit._MSK1
@@ -22749,7 +22749,7 @@ __IO_EXTENDED IF1MSK1L1STR _if1msk1l1;
 #define IF1MSK1L1_MSK5 _if1msk1l1.bit._MSK5
 #define IF1MSK1L1_MSK6 _if1msk1l1.bit._MSK6
 #define IF1MSK1L1_MSK7 _if1msk1l1.bit._MSK7
-__IO_EXTENDED IF1MSK1H1STR _if1msk1h1;  
+__IO_EXTENDED IF1MSK1H1STR _if1msk1h1;
 #define IF1MSK1H1 _if1msk1h1.byte
 #define IF1MSK1H1_MSK8 _if1msk1h1.bit._MSK8
 #define IF1MSK1H1_MSK9 _if1msk1h1.bit._MSK9
@@ -22759,7 +22759,7 @@ __IO_EXTENDED IF1MSK1H1STR _if1msk1h1;
 #define IF1MSK1H1_MSK13 _if1msk1h1.bit._MSK13
 #define IF1MSK1H1_MSK14 _if1msk1h1.bit._MSK14
 #define IF1MSK1H1_MSK15 _if1msk1h1.bit._MSK15
-__IO_EXTENDED IF1MSK21STR _if1msk21;  
+__IO_EXTENDED IF1MSK21STR _if1msk21;
 #define IF1MSK21 _if1msk21.word
 #define IF1MSK21_MSK16 _if1msk21.bit._MSK16
 #define IF1MSK21_MSK17 _if1msk21.bit._MSK17
@@ -22776,7 +22776,7 @@ __IO_EXTENDED IF1MSK21STR _if1msk21;
 #define IF1MSK21_MSK28 _if1msk21.bit._MSK28
 #define IF1MSK21_MDIR _if1msk21.bit._MDIR
 #define IF1MSK21_MXTD _if1msk21.bit._MXTD
-__IO_EXTENDED IF1MSK2L1STR _if1msk2l1;  
+__IO_EXTENDED IF1MSK2L1STR _if1msk2l1;
 #define IF1MSK2L1 _if1msk2l1.byte
 #define IF1MSK2L1_MSK16 _if1msk2l1.bit._MSK16
 #define IF1MSK2L1_MSK17 _if1msk2l1.bit._MSK17
@@ -22786,7 +22786,7 @@ __IO_EXTENDED IF1MSK2L1STR _if1msk2l1;
 #define IF1MSK2L1_MSK21 _if1msk2l1.bit._MSK21
 #define IF1MSK2L1_MSK22 _if1msk2l1.bit._MSK22
 #define IF1MSK2L1_MSK23 _if1msk2l1.bit._MSK23
-__IO_EXTENDED IF1MSK2H1STR _if1msk2h1;  
+__IO_EXTENDED IF1MSK2H1STR _if1msk2h1;
 #define IF1MSK2H1 _if1msk2h1.byte
 #define IF1MSK2H1_MSK24 _if1msk2h1.bit._MSK24
 #define IF1MSK2H1_MSK25 _if1msk2h1.bit._MSK25
@@ -22795,7 +22795,7 @@ __IO_EXTENDED IF1MSK2H1STR _if1msk2h1;
 #define IF1MSK2H1_MSK28 _if1msk2h1.bit._MSK28
 #define IF1MSK2H1_MDIR _if1msk2h1.bit._MDIR
 #define IF1MSK2H1_MXTD _if1msk2h1.bit._MXTD
-__IO_EXTENDED IF1ARB1STR _if1arb1;  
+__IO_EXTENDED IF1ARB1STR _if1arb1;
 #define IF1ARB1 _if1arb1.lword
 #define IF1ARB1_ID0 _if1arb1.bit._ID0
 #define IF1ARB1_ID1 _if1arb1.bit._ID1
@@ -22830,7 +22830,7 @@ __IO_EXTENDED IF1ARB1STR _if1arb1;
 #define IF1ARB1_XTD _if1arb1.bit._XTD
 #define IF1ARB1_MSGVAL _if1arb1.bit._MSGVAL
 #define IF1ARB1_ID _if1arb1.bitc._ID
-__IO_EXTENDED IF1ARB11STR _if1arb11;  
+__IO_EXTENDED IF1ARB11STR _if1arb11;
 #define IF1ARB11 _if1arb11.word
 #define IF1ARB11_ID0 _if1arb11.bit._ID0
 #define IF1ARB11_ID1 _if1arb11.bit._ID1
@@ -22848,7 +22848,7 @@ __IO_EXTENDED IF1ARB11STR _if1arb11;
 #define IF1ARB11_ID13 _if1arb11.bit._ID13
 #define IF1ARB11_ID14 _if1arb11.bit._ID14
 #define IF1ARB11_ID15 _if1arb11.bit._ID15
-__IO_EXTENDED IF1ARB1L1STR _if1arb1l1;  
+__IO_EXTENDED IF1ARB1L1STR _if1arb1l1;
 #define IF1ARB1L1 _if1arb1l1.byte
 #define IF1ARB1L1_ID0 _if1arb1l1.bit._ID0
 #define IF1ARB1L1_ID1 _if1arb1l1.bit._ID1
@@ -22858,7 +22858,7 @@ __IO_EXTENDED IF1ARB1L1STR _if1arb1l1;
 #define IF1ARB1L1_ID5 _if1arb1l1.bit._ID5
 #define IF1ARB1L1_ID6 _if1arb1l1.bit._ID6
 #define IF1ARB1L1_ID7 _if1arb1l1.bit._ID7
-__IO_EXTENDED IF1ARB1H1STR _if1arb1h1;  
+__IO_EXTENDED IF1ARB1H1STR _if1arb1h1;
 #define IF1ARB1H1 _if1arb1h1.byte
 #define IF1ARB1H1_ID8 _if1arb1h1.bit._ID8
 #define IF1ARB1H1_ID9 _if1arb1h1.bit._ID9
@@ -22868,7 +22868,7 @@ __IO_EXTENDED IF1ARB1H1STR _if1arb1h1;
 #define IF1ARB1H1_ID13 _if1arb1h1.bit._ID13
 #define IF1ARB1H1_ID14 _if1arb1h1.bit._ID14
 #define IF1ARB1H1_ID15 _if1arb1h1.bit._ID15
-__IO_EXTENDED IF1ARB21STR _if1arb21;  
+__IO_EXTENDED IF1ARB21STR _if1arb21;
 #define IF1ARB21 _if1arb21.word
 #define IF1ARB21_ID16 _if1arb21.bit._ID16
 #define IF1ARB21_ID17 _if1arb21.bit._ID17
@@ -22886,7 +22886,7 @@ __IO_EXTENDED IF1ARB21STR _if1arb21;
 #define IF1ARB21_DIR _if1arb21.bit._DIR
 #define IF1ARB21_XTD _if1arb21.bit._XTD
 #define IF1ARB21_MSGVAL _if1arb21.bit._MSGVAL
-__IO_EXTENDED IF1ARB2L1STR _if1arb2l1;  
+__IO_EXTENDED IF1ARB2L1STR _if1arb2l1;
 #define IF1ARB2L1 _if1arb2l1.byte
 #define IF1ARB2L1_ID16 _if1arb2l1.bit._ID16
 #define IF1ARB2L1_ID17 _if1arb2l1.bit._ID17
@@ -22896,7 +22896,7 @@ __IO_EXTENDED IF1ARB2L1STR _if1arb2l1;
 #define IF1ARB2L1_ID21 _if1arb2l1.bit._ID21
 #define IF1ARB2L1_ID22 _if1arb2l1.bit._ID22
 #define IF1ARB2L1_ID23 _if1arb2l1.bit._ID23
-__IO_EXTENDED IF1ARB2H1STR _if1arb2h1;  
+__IO_EXTENDED IF1ARB2H1STR _if1arb2h1;
 #define IF1ARB2H1 _if1arb2h1.byte
 #define IF1ARB2H1_ID24 _if1arb2h1.bit._ID24
 #define IF1ARB2H1_ID25 _if1arb2h1.bit._ID25
@@ -22906,7 +22906,7 @@ __IO_EXTENDED IF1ARB2H1STR _if1arb2h1;
 #define IF1ARB2H1_DIR _if1arb2h1.bit._DIR
 #define IF1ARB2H1_XTD _if1arb2h1.bit._XTD
 #define IF1ARB2H1_MSGVAL _if1arb2h1.bit._MSGVAL
-__IO_EXTENDED IF1MCTR1STR _if1mctr1;  
+__IO_EXTENDED IF1MCTR1STR _if1mctr1;
 #define IF1MCTR1 _if1mctr1.word
 #define IF1MCTR1_DLC0 _if1mctr1.bit._DLC0
 #define IF1MCTR1_DLC1 _if1mctr1.bit._DLC1
@@ -22922,7 +22922,7 @@ __IO_EXTENDED IF1MCTR1STR _if1mctr1;
 #define IF1MCTR1_MSGLST _if1mctr1.bit._MSGLST
 #define IF1MCTR1_NEWDAT _if1mctr1.bit._NEWDAT
 #define IF1MCTR1_DLC _if1mctr1.bitc._DLC
-__IO_EXTENDED IF1MCTRL1STR _if1mctrl1;  
+__IO_EXTENDED IF1MCTRL1STR _if1mctrl1;
 #define IF1MCTRL1 _if1mctrl1.byte
 #define IF1MCTRL1_DLC0 _if1mctrl1.bit._DLC0
 #define IF1MCTRL1_DLC1 _if1mctrl1.bit._DLC1
@@ -22930,7 +22930,7 @@ __IO_EXTENDED IF1MCTRL1STR _if1mctrl1;
 #define IF1MCTRL1_DLC3 _if1mctrl1.bit._DLC3
 #define IF1MCTRL1_EOB _if1mctrl1.bit._EOB
 #define IF1MCTRL1_DLC _if1mctrl1.bitc._DLC
-__IO_EXTENDED IF1MCTRH1STR _if1mctrh1;  
+__IO_EXTENDED IF1MCTRH1STR _if1mctrh1;
 #define IF1MCTRH1 _if1mctrh1.byte
 #define IF1MCTRH1_TXRQST _if1mctrh1.bit._TXRQST
 #define IF1MCTRH1_RMTEN _if1mctrh1.bit._RMTEN
@@ -22940,35 +22940,35 @@ __IO_EXTENDED IF1MCTRH1STR _if1mctrh1;
 #define IF1MCTRH1_INTPND _if1mctrh1.bit._INTPND
 #define IF1MCTRH1_MSGLST _if1mctrh1.bit._MSGLST
 #define IF1MCTRH1_NEWDAT _if1mctrh1.bit._NEWDAT
-__IO_EXTENDED IF1DTA1STR _if1dta1;  
+__IO_EXTENDED IF1DTA1STR _if1dta1;
 #define IF1DTA1 _if1dta1.lword
-__IO_EXTENDED IF1DTA11STR _if1dta11;  
+__IO_EXTENDED IF1DTA11STR _if1dta11;
 #define IF1DTA11 _if1dta11.word
-__IO_EXTENDED IF1DTA1L1STR _if1dta1l1;  
+__IO_EXTENDED IF1DTA1L1STR _if1dta1l1;
 #define IF1DTA1L1 _if1dta1l1.byte
-__IO_EXTENDED IF1DTA1H1STR _if1dta1h1;  
+__IO_EXTENDED IF1DTA1H1STR _if1dta1h1;
 #define IF1DTA1H1 _if1dta1h1.byte
-__IO_EXTENDED IF1DTA21STR _if1dta21;  
+__IO_EXTENDED IF1DTA21STR _if1dta21;
 #define IF1DTA21 _if1dta21.word
-__IO_EXTENDED IF1DTA2L1STR _if1dta2l1;  
+__IO_EXTENDED IF1DTA2L1STR _if1dta2l1;
 #define IF1DTA2L1 _if1dta2l1.byte
-__IO_EXTENDED IF1DTA2H1STR _if1dta2h1;  
+__IO_EXTENDED IF1DTA2H1STR _if1dta2h1;
 #define IF1DTA2H1 _if1dta2h1.byte
-__IO_EXTENDED IF1DTB1STR _if1dtb1;  
+__IO_EXTENDED IF1DTB1STR _if1dtb1;
 #define IF1DTB1 _if1dtb1.lword
-__IO_EXTENDED IF1DTB11STR _if1dtb11;  
+__IO_EXTENDED IF1DTB11STR _if1dtb11;
 #define IF1DTB11 _if1dtb11.word
-__IO_EXTENDED IF1DTB1L1STR _if1dtb1l1;  
+__IO_EXTENDED IF1DTB1L1STR _if1dtb1l1;
 #define IF1DTB1L1 _if1dtb1l1.byte
-__IO_EXTENDED IF1DTB1H1STR _if1dtb1h1;  
+__IO_EXTENDED IF1DTB1H1STR _if1dtb1h1;
 #define IF1DTB1H1 _if1dtb1h1.byte
-__IO_EXTENDED IF1DTB21STR _if1dtb21;  
+__IO_EXTENDED IF1DTB21STR _if1dtb21;
 #define IF1DTB21 _if1dtb21.word
-__IO_EXTENDED IF1DTB2L1STR _if1dtb2l1;  
+__IO_EXTENDED IF1DTB2L1STR _if1dtb2l1;
 #define IF1DTB2L1 _if1dtb2l1.byte
-__IO_EXTENDED IF1DTB2H1STR _if1dtb2h1;  
+__IO_EXTENDED IF1DTB2H1STR _if1dtb2h1;
 #define IF1DTB2H1 _if1dtb2h1.byte
-__IO_EXTENDED IF2CREQ1STR _if2creq1;  
+__IO_EXTENDED IF2CREQ1STR _if2creq1;
 #define IF2CREQ1 _if2creq1.word
 #define IF2CREQ1_MSGN0 _if2creq1.bit._MSGN0
 #define IF2CREQ1_MSGN1 _if2creq1.bit._MSGN1
@@ -22979,7 +22979,7 @@ __IO_EXTENDED IF2CREQ1STR _if2creq1;
 #define IF2CREQ1_MSGN6 _if2creq1.bit._MSGN6
 #define IF2CREQ1_MSGN7 _if2creq1.bit._MSGN7
 #define IF2CREQ1_BUSY _if2creq1.bit._BUSY
-__IO_EXTENDED IF2CREQL1STR _if2creql1;  
+__IO_EXTENDED IF2CREQL1STR _if2creql1;
 #define IF2CREQL1 _if2creql1.byte
 #define IF2CREQL1_MSGN0 _if2creql1.bit._MSGN0
 #define IF2CREQL1_MSGN1 _if2creql1.bit._MSGN1
@@ -22989,10 +22989,10 @@ __IO_EXTENDED IF2CREQL1STR _if2creql1;
 #define IF2CREQL1_MSGN5 _if2creql1.bit._MSGN5
 #define IF2CREQL1_MSGN6 _if2creql1.bit._MSGN6
 #define IF2CREQL1_MSGN7 _if2creql1.bit._MSGN7
-__IO_EXTENDED IF2CREQH1STR _if2creqh1;  
+__IO_EXTENDED IF2CREQH1STR _if2creqh1;
 #define IF2CREQH1 _if2creqh1.byte
 #define IF2CREQH1_BUSY _if2creqh1.bit._BUSY
-__IO_EXTENDED IF2CMSK1STR _if2cmsk1;  
+__IO_EXTENDED IF2CMSK1STR _if2cmsk1;
 #define IF2CMSK1 _if2cmsk1.word
 #define IF2CMSK1_DATAB _if2cmsk1.bit._DATAB
 #define IF2CMSK1_DATAA _if2cmsk1.bit._DATAA
@@ -23002,7 +23002,7 @@ __IO_EXTENDED IF2CMSK1STR _if2cmsk1;
 #define IF2CMSK1_ARB _if2cmsk1.bit._ARB
 #define IF2CMSK1_MASK _if2cmsk1.bit._MASK
 #define IF2CMSK1_WRRD _if2cmsk1.bit._WRRD
-__IO_EXTENDED IF2CMSKL1STR _if2cmskl1;  
+__IO_EXTENDED IF2CMSKL1STR _if2cmskl1;
 #define IF2CMSKL1 _if2cmskl1.byte
 #define IF2CMSKL1_DATAB _if2cmskl1.bit._DATAB
 #define IF2CMSKL1_DATAA _if2cmskl1.bit._DATAA
@@ -23012,9 +23012,9 @@ __IO_EXTENDED IF2CMSKL1STR _if2cmskl1;
 #define IF2CMSKL1_ARB _if2cmskl1.bit._ARB
 #define IF2CMSKL1_MASK _if2cmskl1.bit._MASK
 #define IF2CMSKL1_WRRD _if2cmskl1.bit._WRRD
-__IO_EXTENDED IF2CMSKH1STR _if2cmskh1;  
+__IO_EXTENDED IF2CMSKH1STR _if2cmskh1;
 #define IF2CMSKH1 _if2cmskh1.byte
-__IO_EXTENDED IF2MSK1STR _if2msk1;  
+__IO_EXTENDED IF2MSK1STR _if2msk1;
 #define IF2MSK1 _if2msk1.lword
 #define IF2MSK1_MSK0 _if2msk1.bit._MSK0
 #define IF2MSK1_MSK1 _if2msk1.bit._MSK1
@@ -23048,7 +23048,7 @@ __IO_EXTENDED IF2MSK1STR _if2msk1;
 #define IF2MSK1_MDIR _if2msk1.bit._MDIR
 #define IF2MSK1_MXTD _if2msk1.bit._MXTD
 #define IF2MSK1_MSK _if2msk1.bitc._MSK
-__IO_EXTENDED IF2MSK11STR _if2msk11;  
+__IO_EXTENDED IF2MSK11STR _if2msk11;
 #define IF2MSK11 _if2msk11.word
 #define IF2MSK11_MSK0 _if2msk11.bit._MSK0
 #define IF2MSK11_MSK1 _if2msk11.bit._MSK1
@@ -23066,7 +23066,7 @@ __IO_EXTENDED IF2MSK11STR _if2msk11;
 #define IF2MSK11_MSK13 _if2msk11.bit._MSK13
 #define IF2MSK11_MSK14 _if2msk11.bit._MSK14
 #define IF2MSK11_MSK15 _if2msk11.bit._MSK15
-__IO_EXTENDED IF2MSK1L1STR _if2msk1l1;  
+__IO_EXTENDED IF2MSK1L1STR _if2msk1l1;
 #define IF2MSK1L1 _if2msk1l1.byte
 #define IF2MSK1L1_MSK0 _if2msk1l1.bit._MSK0
 #define IF2MSK1L1_MSK1 _if2msk1l1.bit._MSK1
@@ -23076,7 +23076,7 @@ __IO_EXTENDED IF2MSK1L1STR _if2msk1l1;
 #define IF2MSK1L1_MSK5 _if2msk1l1.bit._MSK5
 #define IF2MSK1L1_MSK6 _if2msk1l1.bit._MSK6
 #define IF2MSK1L1_MSK7 _if2msk1l1.bit._MSK7
-__IO_EXTENDED IF2MSK1H1STR _if2msk1h1;  
+__IO_EXTENDED IF2MSK1H1STR _if2msk1h1;
 #define IF2MSK1H1 _if2msk1h1.byte
 #define IF2MSK1H1_MSK8 _if2msk1h1.bit._MSK8
 #define IF2MSK1H1_MSK9 _if2msk1h1.bit._MSK9
@@ -23086,7 +23086,7 @@ __IO_EXTENDED IF2MSK1H1STR _if2msk1h1;
 #define IF2MSK1H1_MSK13 _if2msk1h1.bit._MSK13
 #define IF2MSK1H1_MSK14 _if2msk1h1.bit._MSK14
 #define IF2MSK1H1_MSK15 _if2msk1h1.bit._MSK15
-__IO_EXTENDED IF2MSK21STR _if2msk21;  
+__IO_EXTENDED IF2MSK21STR _if2msk21;
 #define IF2MSK21 _if2msk21.word
 #define IF2MSK21_MSK16 _if2msk21.bit._MSK16
 #define IF2MSK21_MSK17 _if2msk21.bit._MSK17
@@ -23103,7 +23103,7 @@ __IO_EXTENDED IF2MSK21STR _if2msk21;
 #define IF2MSK21_MSK28 _if2msk21.bit._MSK28
 #define IF2MSK21_MDIR _if2msk21.bit._MDIR
 #define IF2MSK21_MXTD _if2msk21.bit._MXTD
-__IO_EXTENDED IF2MSK2L1STR _if2msk2l1;  
+__IO_EXTENDED IF2MSK2L1STR _if2msk2l1;
 #define IF2MSK2L1 _if2msk2l1.byte
 #define IF2MSK2L1_MSK16 _if2msk2l1.bit._MSK16
 #define IF2MSK2L1_MSK17 _if2msk2l1.bit._MSK17
@@ -23113,7 +23113,7 @@ __IO_EXTENDED IF2MSK2L1STR _if2msk2l1;
 #define IF2MSK2L1_MSK21 _if2msk2l1.bit._MSK21
 #define IF2MSK2L1_MSK22 _if2msk2l1.bit._MSK22
 #define IF2MSK2L1_MSK23 _if2msk2l1.bit._MSK23
-__IO_EXTENDED IF2MSK2H1STR _if2msk2h1;  
+__IO_EXTENDED IF2MSK2H1STR _if2msk2h1;
 #define IF2MSK2H1 _if2msk2h1.byte
 #define IF2MSK2H1_MSK24 _if2msk2h1.bit._MSK24
 #define IF2MSK2H1_MSK25 _if2msk2h1.bit._MSK25
@@ -23122,7 +23122,7 @@ __IO_EXTENDED IF2MSK2H1STR _if2msk2h1;
 #define IF2MSK2H1_MSK28 _if2msk2h1.bit._MSK28
 #define IF2MSK2H1_MDIR _if2msk2h1.bit._MDIR
 #define IF2MSK2H1_MXTD _if2msk2h1.bit._MXTD
-__IO_EXTENDED IF2ARB1STR _if2arb1;  
+__IO_EXTENDED IF2ARB1STR _if2arb1;
 #define IF2ARB1 _if2arb1.lword
 #define IF2ARB1_ID0 _if2arb1.bit._ID0
 #define IF2ARB1_ID1 _if2arb1.bit._ID1
@@ -23157,7 +23157,7 @@ __IO_EXTENDED IF2ARB1STR _if2arb1;
 #define IF2ARB1_XTD _if2arb1.bit._XTD
 #define IF2ARB1_MSGVAL _if2arb1.bit._MSGVAL
 #define IF2ARB1_ID _if2arb1.bitc._ID
-__IO_EXTENDED IF2ARB11STR _if2arb11;  
+__IO_EXTENDED IF2ARB11STR _if2arb11;
 #define IF2ARB11 _if2arb11.word
 #define IF2ARB11_ID0 _if2arb11.bit._ID0
 #define IF2ARB11_ID1 _if2arb11.bit._ID1
@@ -23175,7 +23175,7 @@ __IO_EXTENDED IF2ARB11STR _if2arb11;
 #define IF2ARB11_ID13 _if2arb11.bit._ID13
 #define IF2ARB11_ID14 _if2arb11.bit._ID14
 #define IF2ARB11_ID15 _if2arb11.bit._ID15
-__IO_EXTENDED IF2ARB1L1STR _if2arb1l1;  
+__IO_EXTENDED IF2ARB1L1STR _if2arb1l1;
 #define IF2ARB1L1 _if2arb1l1.byte
 #define IF2ARB1L1_ID0 _if2arb1l1.bit._ID0
 #define IF2ARB1L1_ID1 _if2arb1l1.bit._ID1
@@ -23185,7 +23185,7 @@ __IO_EXTENDED IF2ARB1L1STR _if2arb1l1;
 #define IF2ARB1L1_ID5 _if2arb1l1.bit._ID5
 #define IF2ARB1L1_ID6 _if2arb1l1.bit._ID6
 #define IF2ARB1L1_ID7 _if2arb1l1.bit._ID7
-__IO_EXTENDED IF2ARB1H1STR _if2arb1h1;  
+__IO_EXTENDED IF2ARB1H1STR _if2arb1h1;
 #define IF2ARB1H1 _if2arb1h1.byte
 #define IF2ARB1H1_ID8 _if2arb1h1.bit._ID8
 #define IF2ARB1H1_ID9 _if2arb1h1.bit._ID9
@@ -23195,7 +23195,7 @@ __IO_EXTENDED IF2ARB1H1STR _if2arb1h1;
 #define IF2ARB1H1_ID13 _if2arb1h1.bit._ID13
 #define IF2ARB1H1_ID14 _if2arb1h1.bit._ID14
 #define IF2ARB1H1_ID15 _if2arb1h1.bit._ID15
-__IO_EXTENDED IF2ARB21STR _if2arb21;  
+__IO_EXTENDED IF2ARB21STR _if2arb21;
 #define IF2ARB21 _if2arb21.word
 #define IF2ARB21_ID16 _if2arb21.bit._ID16
 #define IF2ARB21_ID17 _if2arb21.bit._ID17
@@ -23213,7 +23213,7 @@ __IO_EXTENDED IF2ARB21STR _if2arb21;
 #define IF2ARB21_DIR _if2arb21.bit._DIR
 #define IF2ARB21_XTD _if2arb21.bit._XTD
 #define IF2ARB21_MSGVAL _if2arb21.bit._MSGVAL
-__IO_EXTENDED IF2ARB2L1STR _if2arb2l1;  
+__IO_EXTENDED IF2ARB2L1STR _if2arb2l1;
 #define IF2ARB2L1 _if2arb2l1.byte
 #define IF2ARB2L1_ID16 _if2arb2l1.bit._ID16
 #define IF2ARB2L1_ID17 _if2arb2l1.bit._ID17
@@ -23223,7 +23223,7 @@ __IO_EXTENDED IF2ARB2L1STR _if2arb2l1;
 #define IF2ARB2L1_ID21 _if2arb2l1.bit._ID21
 #define IF2ARB2L1_ID22 _if2arb2l1.bit._ID22
 #define IF2ARB2L1_ID23 _if2arb2l1.bit._ID23
-__IO_EXTENDED IF2ARB2H1STR _if2arb2h1;  
+__IO_EXTENDED IF2ARB2H1STR _if2arb2h1;
 #define IF2ARB2H1 _if2arb2h1.byte
 #define IF2ARB2H1_ID24 _if2arb2h1.bit._ID24
 #define IF2ARB2H1_ID25 _if2arb2h1.bit._ID25
@@ -23233,7 +23233,7 @@ __IO_EXTENDED IF2ARB2H1STR _if2arb2h1;
 #define IF2ARB2H1_DIR _if2arb2h1.bit._DIR
 #define IF2ARB2H1_XTD _if2arb2h1.bit._XTD
 #define IF2ARB2H1_MSGVAL _if2arb2h1.bit._MSGVAL
-__IO_EXTENDED IF2MCTR1STR _if2mctr1;  
+__IO_EXTENDED IF2MCTR1STR _if2mctr1;
 #define IF2MCTR1 _if2mctr1.word
 #define IF2MCTR1_DLC0 _if2mctr1.bit._DLC0
 #define IF2MCTR1_DLC1 _if2mctr1.bit._DLC1
@@ -23249,7 +23249,7 @@ __IO_EXTENDED IF2MCTR1STR _if2mctr1;
 #define IF2MCTR1_MSGLST _if2mctr1.bit._MSGLST
 #define IF2MCTR1_NEWDAT _if2mctr1.bit._NEWDAT
 #define IF2MCTR1_DLC _if2mctr1.bitc._DLC
-__IO_EXTENDED IF2MCTRL1STR _if2mctrl1;  
+__IO_EXTENDED IF2MCTRL1STR _if2mctrl1;
 #define IF2MCTRL1 _if2mctrl1.byte
 #define IF2MCTRL1_DLC0 _if2mctrl1.bit._DLC0
 #define IF2MCTRL1_DLC1 _if2mctrl1.bit._DLC1
@@ -23257,7 +23257,7 @@ __IO_EXTENDED IF2MCTRL1STR _if2mctrl1;
 #define IF2MCTRL1_DLC3 _if2mctrl1.bit._DLC3
 #define IF2MCTRL1_EOB _if2mctrl1.bit._EOB
 #define IF2MCTRL1_DLC _if2mctrl1.bitc._DLC
-__IO_EXTENDED IF2MCTRH1STR _if2mctrh1;  
+__IO_EXTENDED IF2MCTRH1STR _if2mctrh1;
 #define IF2MCTRH1 _if2mctrh1.byte
 #define IF2MCTRH1_TXRQST _if2mctrh1.bit._TXRQST
 #define IF2MCTRH1_RMTEN _if2mctrh1.bit._RMTEN
@@ -23267,35 +23267,35 @@ __IO_EXTENDED IF2MCTRH1STR _if2mctrh1;
 #define IF2MCTRH1_INTPND _if2mctrh1.bit._INTPND
 #define IF2MCTRH1_MSGLST _if2mctrh1.bit._MSGLST
 #define IF2MCTRH1_NEWDAT _if2mctrh1.bit._NEWDAT
-__IO_EXTENDED IF2DTA1STR _if2dta1;  
+__IO_EXTENDED IF2DTA1STR _if2dta1;
 #define IF2DTA1 _if2dta1.lword
-__IO_EXTENDED IF2DTA11STR _if2dta11;  
+__IO_EXTENDED IF2DTA11STR _if2dta11;
 #define IF2DTA11 _if2dta11.word
-__IO_EXTENDED IF2DTA1L1STR _if2dta1l1;  
+__IO_EXTENDED IF2DTA1L1STR _if2dta1l1;
 #define IF2DTA1L1 _if2dta1l1.byte
-__IO_EXTENDED IF2DTA1H1STR _if2dta1h1;  
+__IO_EXTENDED IF2DTA1H1STR _if2dta1h1;
 #define IF2DTA1H1 _if2dta1h1.byte
-__IO_EXTENDED IF2DTA21STR _if2dta21;  
+__IO_EXTENDED IF2DTA21STR _if2dta21;
 #define IF2DTA21 _if2dta21.word
-__IO_EXTENDED IF2DTA2L1STR _if2dta2l1;  
+__IO_EXTENDED IF2DTA2L1STR _if2dta2l1;
 #define IF2DTA2L1 _if2dta2l1.byte
-__IO_EXTENDED IF2DTA2H1STR _if2dta2h1;  
+__IO_EXTENDED IF2DTA2H1STR _if2dta2h1;
 #define IF2DTA2H1 _if2dta2h1.byte
-__IO_EXTENDED IF2DTB1STR _if2dtb1;  
+__IO_EXTENDED IF2DTB1STR _if2dtb1;
 #define IF2DTB1 _if2dtb1.lword
-__IO_EXTENDED IF2DTB11STR _if2dtb11;  
+__IO_EXTENDED IF2DTB11STR _if2dtb11;
 #define IF2DTB11 _if2dtb11.word
-__IO_EXTENDED IF2DTB1L1STR _if2dtb1l1;  
+__IO_EXTENDED IF2DTB1L1STR _if2dtb1l1;
 #define IF2DTB1L1 _if2dtb1l1.byte
-__IO_EXTENDED IF2DTB1H1STR _if2dtb1h1;  
+__IO_EXTENDED IF2DTB1H1STR _if2dtb1h1;
 #define IF2DTB1H1 _if2dtb1h1.byte
-__IO_EXTENDED IF2DTB21STR _if2dtb21;  
+__IO_EXTENDED IF2DTB21STR _if2dtb21;
 #define IF2DTB21 _if2dtb21.word
-__IO_EXTENDED IF2DTB2L1STR _if2dtb2l1;  
+__IO_EXTENDED IF2DTB2L1STR _if2dtb2l1;
 #define IF2DTB2L1 _if2dtb2l1.byte
-__IO_EXTENDED IF2DTB2H1STR _if2dtb2h1;  
+__IO_EXTENDED IF2DTB2H1STR _if2dtb2h1;
 #define IF2DTB2H1 _if2dtb2h1.byte
-__IO_EXTENDED TREQR1STR _treqr1;  
+__IO_EXTENDED TREQR1STR _treqr1;
 #define TREQR1 _treqr1.lword
 #define TREQR1_TXRQST1 _treqr1.bit._TXRQST1
 #define TREQR1_TXRQST2 _treqr1.bit._TXRQST2
@@ -23330,7 +23330,7 @@ __IO_EXTENDED TREQR1STR _treqr1;
 #define TREQR1_TXRQST31 _treqr1.bit._TXRQST31
 #define TREQR1_TXRQST32 _treqr1.bit._TXRQST32
 #define TREQR1_TXRQST _treqr1.bitc._TXRQST
-__IO_EXTENDED TREQR11STR _treqr11;  
+__IO_EXTENDED TREQR11STR _treqr11;
 #define TREQR11 _treqr11.word
 #define TREQR11_TXRQST1 _treqr11.bit._TXRQST1
 #define TREQR11_TXRQST2 _treqr11.bit._TXRQST2
@@ -23348,7 +23348,7 @@ __IO_EXTENDED TREQR11STR _treqr11;
 #define TREQR11_TXRQST14 _treqr11.bit._TXRQST14
 #define TREQR11_TXRQST15 _treqr11.bit._TXRQST15
 #define TREQR11_TXRQST16 _treqr11.bit._TXRQST16
-__IO_EXTENDED TREQR1L1STR _treqr1l1;  
+__IO_EXTENDED TREQR1L1STR _treqr1l1;
 #define TREQR1L1 _treqr1l1.byte
 #define TREQR1L1_TXRQST1 _treqr1l1.bit._TXRQST1
 #define TREQR1L1_TXRQST2 _treqr1l1.bit._TXRQST2
@@ -23358,7 +23358,7 @@ __IO_EXTENDED TREQR1L1STR _treqr1l1;
 #define TREQR1L1_TXRQST6 _treqr1l1.bit._TXRQST6
 #define TREQR1L1_TXRQST7 _treqr1l1.bit._TXRQST7
 #define TREQR1L1_TXRQST8 _treqr1l1.bit._TXRQST8
-__IO_EXTENDED TREQR1H1STR _treqr1h1;  
+__IO_EXTENDED TREQR1H1STR _treqr1h1;
 #define TREQR1H1 _treqr1h1.byte
 #define TREQR1H1_TXRQST9 _treqr1h1.bit._TXRQST9
 #define TREQR1H1_TXRQST10 _treqr1h1.bit._TXRQST10
@@ -23368,7 +23368,7 @@ __IO_EXTENDED TREQR1H1STR _treqr1h1;
 #define TREQR1H1_TXRQST14 _treqr1h1.bit._TXRQST14
 #define TREQR1H1_TXRQST15 _treqr1h1.bit._TXRQST15
 #define TREQR1H1_TXRQST16 _treqr1h1.bit._TXRQST16
-__IO_EXTENDED TREQR21STR _treqr21;  
+__IO_EXTENDED TREQR21STR _treqr21;
 #define TREQR21 _treqr21.word
 #define TREQR21_TXRQST17 _treqr21.bit._TXRQST17
 #define TREQR21_TXRQST18 _treqr21.bit._TXRQST18
@@ -23386,7 +23386,7 @@ __IO_EXTENDED TREQR21STR _treqr21;
 #define TREQR21_TXRQST30 _treqr21.bit._TXRQST30
 #define TREQR21_TXRQST31 _treqr21.bit._TXRQST31
 #define TREQR21_TXRQST32 _treqr21.bit._TXRQST32
-__IO_EXTENDED TREQR2L1STR _treqr2l1;  
+__IO_EXTENDED TREQR2L1STR _treqr2l1;
 #define TREQR2L1 _treqr2l1.byte
 #define TREQR2L1_TXRQST17 _treqr2l1.bit._TXRQST17
 #define TREQR2L1_TXRQST18 _treqr2l1.bit._TXRQST18
@@ -23396,7 +23396,7 @@ __IO_EXTENDED TREQR2L1STR _treqr2l1;
 #define TREQR2L1_TXRQST22 _treqr2l1.bit._TXRQST22
 #define TREQR2L1_TXRQST23 _treqr2l1.bit._TXRQST23
 #define TREQR2L1_TXRQST24 _treqr2l1.bit._TXRQST24
-__IO_EXTENDED TREQR2H1STR _treqr2h1;  
+__IO_EXTENDED TREQR2H1STR _treqr2h1;
 #define TREQR2H1 _treqr2h1.byte
 #define TREQR2H1_TXRQST25 _treqr2h1.bit._TXRQST25
 #define TREQR2H1_TXRQST26 _treqr2h1.bit._TXRQST26
@@ -23406,7 +23406,7 @@ __IO_EXTENDED TREQR2H1STR _treqr2h1;
 #define TREQR2H1_TXRQST30 _treqr2h1.bit._TXRQST30
 #define TREQR2H1_TXRQST31 _treqr2h1.bit._TXRQST31
 #define TREQR2H1_TXRQST32 _treqr2h1.bit._TXRQST32
-__IO_EXTENDED NEWDT1STR _newdt1;  
+__IO_EXTENDED NEWDT1STR _newdt1;
 #define NEWDT1 _newdt1.lword
 #define NEWDT1_NEWDAT1 _newdt1.bit._NEWDAT1
 #define NEWDT1_NEWDAT2 _newdt1.bit._NEWDAT2
@@ -23441,7 +23441,7 @@ __IO_EXTENDED NEWDT1STR _newdt1;
 #define NEWDT1_NEWDAT31 _newdt1.bit._NEWDAT31
 #define NEWDT1_NEWDAT32 _newdt1.bit._NEWDAT32
 #define NEWDT1_NEWDAT _newdt1.bitc._NEWDAT
-__IO_EXTENDED NEWDT11STR _newdt11;  
+__IO_EXTENDED NEWDT11STR _newdt11;
 #define NEWDT11 _newdt11.word
 #define NEWDT11_NEWDAT1 _newdt11.bit._NEWDAT1
 #define NEWDT11_NEWDAT2 _newdt11.bit._NEWDAT2
@@ -23459,7 +23459,7 @@ __IO_EXTENDED NEWDT11STR _newdt11;
 #define NEWDT11_NEWDAT14 _newdt11.bit._NEWDAT14
 #define NEWDT11_NEWDAT15 _newdt11.bit._NEWDAT15
 #define NEWDT11_NEWDAT16 _newdt11.bit._NEWDAT16
-__IO_EXTENDED NEWDT1L1STR _newdt1l1;  
+__IO_EXTENDED NEWDT1L1STR _newdt1l1;
 #define NEWDT1L1 _newdt1l1.byte
 #define NEWDT1L1_NEWDAT1 _newdt1l1.bit._NEWDAT1
 #define NEWDT1L1_NEWDAT2 _newdt1l1.bit._NEWDAT2
@@ -23469,7 +23469,7 @@ __IO_EXTENDED NEWDT1L1STR _newdt1l1;
 #define NEWDT1L1_NEWDAT6 _newdt1l1.bit._NEWDAT6
 #define NEWDT1L1_NEWDAT7 _newdt1l1.bit._NEWDAT7
 #define NEWDT1L1_NEWDAT8 _newdt1l1.bit._NEWDAT8
-__IO_EXTENDED NEWDT1H1STR _newdt1h1;  
+__IO_EXTENDED NEWDT1H1STR _newdt1h1;
 #define NEWDT1H1 _newdt1h1.byte
 #define NEWDT1H1_NEWDAT9 _newdt1h1.bit._NEWDAT9
 #define NEWDT1H1_NEWDAT10 _newdt1h1.bit._NEWDAT10
@@ -23479,7 +23479,7 @@ __IO_EXTENDED NEWDT1H1STR _newdt1h1;
 #define NEWDT1H1_NEWDAT14 _newdt1h1.bit._NEWDAT14
 #define NEWDT1H1_NEWDAT15 _newdt1h1.bit._NEWDAT15
 #define NEWDT1H1_NEWDAT16 _newdt1h1.bit._NEWDAT16
-__IO_EXTENDED NEWDT21STR _newdt21;  
+__IO_EXTENDED NEWDT21STR _newdt21;
 #define NEWDT21 _newdt21.word
 #define NEWDT21_NEWDAT17 _newdt21.bit._NEWDAT17
 #define NEWDT21_NEWDAT18 _newdt21.bit._NEWDAT18
@@ -23497,7 +23497,7 @@ __IO_EXTENDED NEWDT21STR _newdt21;
 #define NEWDT21_NEWDAT30 _newdt21.bit._NEWDAT30
 #define NEWDT21_NEWDAT31 _newdt21.bit._NEWDAT31
 #define NEWDT21_NEWDAT32 _newdt21.bit._NEWDAT32
-__IO_EXTENDED NEWDT2L1STR _newdt2l1;  
+__IO_EXTENDED NEWDT2L1STR _newdt2l1;
 #define NEWDT2L1 _newdt2l1.byte
 #define NEWDT2L1_NEWDAT17 _newdt2l1.bit._NEWDAT17
 #define NEWDT2L1_NEWDAT18 _newdt2l1.bit._NEWDAT18
@@ -23507,7 +23507,7 @@ __IO_EXTENDED NEWDT2L1STR _newdt2l1;
 #define NEWDT2L1_NEWDAT22 _newdt2l1.bit._NEWDAT22
 #define NEWDT2L1_NEWDAT23 _newdt2l1.bit._NEWDAT23
 #define NEWDT2L1_NEWDAT24 _newdt2l1.bit._NEWDAT24
-__IO_EXTENDED NEWDT2H1STR _newdt2h1;  
+__IO_EXTENDED NEWDT2H1STR _newdt2h1;
 #define NEWDT2H1 _newdt2h1.byte
 #define NEWDT2H1_NEWDAT25 _newdt2h1.bit._NEWDAT25
 #define NEWDT2H1_NEWDAT26 _newdt2h1.bit._NEWDAT26
@@ -23517,7 +23517,7 @@ __IO_EXTENDED NEWDT2H1STR _newdt2h1;
 #define NEWDT2H1_NEWDAT30 _newdt2h1.bit._NEWDAT30
 #define NEWDT2H1_NEWDAT31 _newdt2h1.bit._NEWDAT31
 #define NEWDT2H1_NEWDAT32 _newdt2h1.bit._NEWDAT32
-__IO_EXTENDED INTPND1STR _intpnd1;  
+__IO_EXTENDED INTPND1STR _intpnd1;
 #define INTPND1 _intpnd1.lword
 #define INTPND1_INTPND1 _intpnd1.bit._INTPND1
 #define INTPND1_INTPND2 _intpnd1.bit._INTPND2
@@ -23552,7 +23552,7 @@ __IO_EXTENDED INTPND1STR _intpnd1;
 #define INTPND1_INTPND31 _intpnd1.bit._INTPND31
 #define INTPND1_INTPND32 _intpnd1.bit._INTPND32
 #define INTPND1_INTPND _intpnd1.bitc._INTPND
-__IO_EXTENDED INTPND11STR _intpnd11;  
+__IO_EXTENDED INTPND11STR _intpnd11;
 #define INTPND11 _intpnd11.word
 #define INTPND11_INTPND1 _intpnd11.bit._INTPND1
 #define INTPND11_INTPND2 _intpnd11.bit._INTPND2
@@ -23570,7 +23570,7 @@ __IO_EXTENDED INTPND11STR _intpnd11;
 #define INTPND11_INTPND14 _intpnd11.bit._INTPND14
 #define INTPND11_INTPND15 _intpnd11.bit._INTPND15
 #define INTPND11_INTPND16 _intpnd11.bit._INTPND16
-__IO_EXTENDED INTPND1L1STR _intpnd1l1;  
+__IO_EXTENDED INTPND1L1STR _intpnd1l1;
 #define INTPND1L1 _intpnd1l1.byte
 #define INTPND1L1_INTPND1 _intpnd1l1.bit._INTPND1
 #define INTPND1L1_INTPND2 _intpnd1l1.bit._INTPND2
@@ -23580,7 +23580,7 @@ __IO_EXTENDED INTPND1L1STR _intpnd1l1;
 #define INTPND1L1_INTPND6 _intpnd1l1.bit._INTPND6
 #define INTPND1L1_INTPND7 _intpnd1l1.bit._INTPND7
 #define INTPND1L1_INTPND8 _intpnd1l1.bit._INTPND8
-__IO_EXTENDED INTPND1H1STR _intpnd1h1;  
+__IO_EXTENDED INTPND1H1STR _intpnd1h1;
 #define INTPND1H1 _intpnd1h1.byte
 #define INTPND1H1_INTPND9 _intpnd1h1.bit._INTPND9
 #define INTPND1H1_INTPND10 _intpnd1h1.bit._INTPND10
@@ -23590,7 +23590,7 @@ __IO_EXTENDED INTPND1H1STR _intpnd1h1;
 #define INTPND1H1_INTPND14 _intpnd1h1.bit._INTPND14
 #define INTPND1H1_INTPND15 _intpnd1h1.bit._INTPND15
 #define INTPND1H1_INTPND16 _intpnd1h1.bit._INTPND16
-__IO_EXTENDED INTPND21STR _intpnd21;  
+__IO_EXTENDED INTPND21STR _intpnd21;
 #define INTPND21 _intpnd21.word
 #define INTPND21_INTPND17 _intpnd21.bit._INTPND17
 #define INTPND21_INTPND18 _intpnd21.bit._INTPND18
@@ -23608,7 +23608,7 @@ __IO_EXTENDED INTPND21STR _intpnd21;
 #define INTPND21_INTPND30 _intpnd21.bit._INTPND30
 #define INTPND21_INTPND31 _intpnd21.bit._INTPND31
 #define INTPND21_INTPND32 _intpnd21.bit._INTPND32
-__IO_EXTENDED INTPND2L1STR _intpnd2l1;  
+__IO_EXTENDED INTPND2L1STR _intpnd2l1;
 #define INTPND2L1 _intpnd2l1.byte
 #define INTPND2L1_INTPND17 _intpnd2l1.bit._INTPND17
 #define INTPND2L1_INTPND18 _intpnd2l1.bit._INTPND18
@@ -23618,7 +23618,7 @@ __IO_EXTENDED INTPND2L1STR _intpnd2l1;
 #define INTPND2L1_INTPND22 _intpnd2l1.bit._INTPND22
 #define INTPND2L1_INTPND23 _intpnd2l1.bit._INTPND23
 #define INTPND2L1_INTPND24 _intpnd2l1.bit._INTPND24
-__IO_EXTENDED INTPND2H1STR _intpnd2h1;  
+__IO_EXTENDED INTPND2H1STR _intpnd2h1;
 #define INTPND2H1 _intpnd2h1.byte
 #define INTPND2H1_INTPND25 _intpnd2h1.bit._INTPND25
 #define INTPND2H1_INTPND26 _intpnd2h1.bit._INTPND26
@@ -23628,7 +23628,7 @@ __IO_EXTENDED INTPND2H1STR _intpnd2h1;
 #define INTPND2H1_INTPND30 _intpnd2h1.bit._INTPND30
 #define INTPND2H1_INTPND31 _intpnd2h1.bit._INTPND31
 #define INTPND2H1_INTPND32 _intpnd2h1.bit._INTPND32
-__IO_EXTENDED MSGVAL1STR _msgval1;  
+__IO_EXTENDED MSGVAL1STR _msgval1;
 #define MSGVAL1 _msgval1.lword
 #define MSGVAL1_MSGVAL1 _msgval1.bit._MSGVAL1
 #define MSGVAL1_MSGVAL2 _msgval1.bit._MSGVAL2
@@ -23663,7 +23663,7 @@ __IO_EXTENDED MSGVAL1STR _msgval1;
 #define MSGVAL1_MSGVAL31 _msgval1.bit._MSGVAL31
 #define MSGVAL1_MSGVAL32 _msgval1.bit._MSGVAL32
 #define MSGVAL1_MSGVAL _msgval1.bitc._MSGVAL
-__IO_EXTENDED MSGVAL11STR _msgval11;  
+__IO_EXTENDED MSGVAL11STR _msgval11;
 #define MSGVAL11 _msgval11.word
 #define MSGVAL11_MSGVAL1 _msgval11.bit._MSGVAL1
 #define MSGVAL11_MSGVAL2 _msgval11.bit._MSGVAL2
@@ -23681,7 +23681,7 @@ __IO_EXTENDED MSGVAL11STR _msgval11;
 #define MSGVAL11_MSGVAL14 _msgval11.bit._MSGVAL14
 #define MSGVAL11_MSGVAL15 _msgval11.bit._MSGVAL15
 #define MSGVAL11_MSGVAL16 _msgval11.bit._MSGVAL16
-__IO_EXTENDED MSGVAL1L1STR _msgval1l1;  
+__IO_EXTENDED MSGVAL1L1STR _msgval1l1;
 #define MSGVAL1L1 _msgval1l1.byte
 #define MSGVAL1L1_MSGVAL1 _msgval1l1.bit._MSGVAL1
 #define MSGVAL1L1_MSGVAL2 _msgval1l1.bit._MSGVAL2
@@ -23691,7 +23691,7 @@ __IO_EXTENDED MSGVAL1L1STR _msgval1l1;
 #define MSGVAL1L1_MSGVAL6 _msgval1l1.bit._MSGVAL6
 #define MSGVAL1L1_MSGVAL7 _msgval1l1.bit._MSGVAL7
 #define MSGVAL1L1_MSGVAL8 _msgval1l1.bit._MSGVAL8
-__IO_EXTENDED MSGVAL1H1STR _msgval1h1;  
+__IO_EXTENDED MSGVAL1H1STR _msgval1h1;
 #define MSGVAL1H1 _msgval1h1.byte
 #define MSGVAL1H1_MSGVAL9 _msgval1h1.bit._MSGVAL9
 #define MSGVAL1H1_MSGVAL10 _msgval1h1.bit._MSGVAL10
@@ -23701,7 +23701,7 @@ __IO_EXTENDED MSGVAL1H1STR _msgval1h1;
 #define MSGVAL1H1_MSGVAL14 _msgval1h1.bit._MSGVAL14
 #define MSGVAL1H1_MSGVAL15 _msgval1h1.bit._MSGVAL15
 #define MSGVAL1H1_MSGVAL16 _msgval1h1.bit._MSGVAL16
-__IO_EXTENDED MSGVAL21STR _msgval21;  
+__IO_EXTENDED MSGVAL21STR _msgval21;
 #define MSGVAL21 _msgval21.word
 #define MSGVAL21_MSGVAL17 _msgval21.bit._MSGVAL17
 #define MSGVAL21_MSGVAL18 _msgval21.bit._MSGVAL18
@@ -23719,7 +23719,7 @@ __IO_EXTENDED MSGVAL21STR _msgval21;
 #define MSGVAL21_MSGVAL30 _msgval21.bit._MSGVAL30
 #define MSGVAL21_MSGVAL31 _msgval21.bit._MSGVAL31
 #define MSGVAL21_MSGVAL32 _msgval21.bit._MSGVAL32
-__IO_EXTENDED MSGVAL2L1STR _msgval2l1;  
+__IO_EXTENDED MSGVAL2L1STR _msgval2l1;
 #define MSGVAL2L1 _msgval2l1.byte
 #define MSGVAL2L1_MSGVAL17 _msgval2l1.bit._MSGVAL17
 #define MSGVAL2L1_MSGVAL18 _msgval2l1.bit._MSGVAL18
@@ -23729,7 +23729,7 @@ __IO_EXTENDED MSGVAL2L1STR _msgval2l1;
 #define MSGVAL2L1_MSGVAL22 _msgval2l1.bit._MSGVAL22
 #define MSGVAL2L1_MSGVAL23 _msgval2l1.bit._MSGVAL23
 #define MSGVAL2L1_MSGVAL24 _msgval2l1.bit._MSGVAL24
-__IO_EXTENDED MSGVAL2H1STR _msgval2h1;  
+__IO_EXTENDED MSGVAL2H1STR _msgval2h1;
 #define MSGVAL2H1 _msgval2h1.byte
 #define MSGVAL2H1_MSGVAL25 _msgval2h1.bit._MSGVAL25
 #define MSGVAL2H1_MSGVAL26 _msgval2h1.bit._MSGVAL26
@@ -23739,7 +23739,7 @@ __IO_EXTENDED MSGVAL2H1STR _msgval2h1;
 #define MSGVAL2H1_MSGVAL30 _msgval2h1.bit._MSGVAL30
 #define MSGVAL2H1_MSGVAL31 _msgval2h1.bit._MSGVAL31
 #define MSGVAL2H1_MSGVAL32 _msgval2h1.bit._MSGVAL32
-__IO_EXTENDED COER1STR _coer1;  
+__IO_EXTENDED COER1STR _coer1;
 #define COER1 _coer1.byte
 #define COER1_OE _coer1.bit._OE
 #  undef ___IOWIDTH

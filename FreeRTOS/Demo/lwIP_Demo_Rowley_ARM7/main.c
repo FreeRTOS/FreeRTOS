@@ -288,5 +288,3 @@ char cTxByte;
 		}
 	}
 }
-
-

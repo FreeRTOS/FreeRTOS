@@ -1914,4 +1914,3 @@ static uint32_t FreeBlockCount(void)
     return ulFreeBlocks;
 }
 #endif /* REDCONF_READ_ONLY == 0 */
-

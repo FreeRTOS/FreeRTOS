@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace stack monitor APIs.
  */
 
@@ -46,10 +46,10 @@ typedef struct TraceStackMonitorBuffer
 
 /**
  * @internal Initialize trace stack monitor system.
- * 
+ *
  * @param[in] pxBuffer Pointer to memory that will be used by the trace
  * stack monitor system.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -57,9 +57,9 @@ traceResult xTraceStackMonitorInitialize(TraceStackMonitorBuffer_t* pxBuffer);
 
 /**
  * @brief Adds task/thread to trace stack monitor.
- * 
+ *
  * @param[in] pvTask Task/Thread.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -67,9 +67,9 @@ traceResult xTraceStackMonitorAdd(void* pvTask);
 
 /**
  * @brief Removes task/thread from trace stack monitor.
- * 
+ *
  * @param[in] pvTask Task/Thread.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -77,11 +77,11 @@ traceResult xTraceStackMonitorRemove(void* pvTask);
 
 /**
  * @brief Gets trace stack monitor tread/task at index.
- * 
+ *
  * @param[in] uiIndex Index.
  * @param[in] ppvTask Task/Thread.
  * @param[out] puxLowWaterMark Low water mark.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -89,11 +89,11 @@ traceResult xTraceStackMonitorGetAtIndex(uint32_t uiIndex, void** ppvTask, Trace
 
 /**
  * @brief Performs trace stack monitor reporting.
- * 
+ *
  * This routine performs a trace stack monitor check and report
  * for TRC_CFG_STACK_MONITOR_MAX_REPORTS number of registered
  * tasks/threads.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

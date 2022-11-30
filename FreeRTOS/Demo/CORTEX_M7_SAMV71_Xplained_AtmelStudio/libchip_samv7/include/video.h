@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -77,4 +77,3 @@ typedef struct _isi_Video
 extern void VIDEO_Ycc2Rgb(uint8_t *ycc, uint16_t *rgb, uint32_t len);
 
 #endif
-

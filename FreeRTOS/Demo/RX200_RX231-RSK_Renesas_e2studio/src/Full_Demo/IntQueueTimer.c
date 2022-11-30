@@ -114,7 +114,3 @@ void r_tmr_cmia2_interrupt( void )
 {
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-
-
-
-

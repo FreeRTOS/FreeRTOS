@@ -305,4 +305,3 @@ MP_API int sp_mul_d(sp_int* a, sp_int_digit n, sp_int* r);
 #endif
 
 #endif /* WOLF_CRYPT_SP_H */
-

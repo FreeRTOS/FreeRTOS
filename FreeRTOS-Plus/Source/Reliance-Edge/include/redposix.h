@@ -193,4 +193,3 @@ REDSTATUS *red_errnoptr(void);
 #endif
 
 #endif
-

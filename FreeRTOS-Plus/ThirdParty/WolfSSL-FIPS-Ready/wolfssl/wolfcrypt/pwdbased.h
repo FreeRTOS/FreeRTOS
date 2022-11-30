@@ -40,8 +40,8 @@
  * wolfssl/wolfcrypt/asn.h line 173 in enum Oid_Types
  */
 WOLFSSL_API int wc_PBKDF1_ex(byte* key, int keyLen, byte* iv, int ivLen,
-                      const byte* passwd, int passwdLen, 
-                      const byte* salt, int saltLen, int iterations, 
+                      const byte* passwd, int passwdLen,
+                      const byte* salt, int saltLen, int iterations,
                       int hashType, void* heap);
 WOLFSSL_API int wc_PBKDF1(byte* output, const byte* passwd, int pLen,
                       const byte* salt, int sLen, int iterations, int kLen,

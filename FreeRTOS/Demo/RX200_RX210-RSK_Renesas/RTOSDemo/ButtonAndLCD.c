@@ -387,4 +387,3 @@ portBASE_TYPE xHigherPriorityTaskWoken;
 	xHigherPriorityTaskWoken = prvSendCommandOnDebouncedInput( &xTimeLastInterrupt, ucCommand );
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
-

@@ -247,4 +247,3 @@ WOLFSSL_API int  wc_FreeRng(WC_RNG*);
 #endif
 
 #endif /* WOLF_CRYPT_RANDOM_H */
-

@@ -420,9 +420,3 @@ volatile uint32_t ulNextRand = ( uint32_t ) &pvParameters, ulValue;
 		}
 	}
 }
-
-
-
-
-
-

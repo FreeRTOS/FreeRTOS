@@ -138,4 +138,3 @@ extern CONST_IF_ONE_VOLUME uint8_t gbRedVolNum;
 extern VOLUME * CONST_IF_ONE_VOLUME gpRedVolume;
 
 #endif
-

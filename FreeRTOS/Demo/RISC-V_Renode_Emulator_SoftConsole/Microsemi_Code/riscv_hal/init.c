@@ -46,7 +46,7 @@ static void copy_section(uint32_t * p_load, uint32_t * p_vma, uint32_t * p_vma_e
 static void zero_section(uint32_t * start, uint32_t * end)
 {
     uint32_t * p_zero = start;
-    
+
     while(p_zero <= end)
     {
         *p_zero = 0;
@@ -64,7 +64,7 @@ void _init(void)
     copy_section(&__data_load, &__data_start, &__data_end);
     zero_section(&__sbss_start, &__sbss_end);
     zero_section(&__bss_start, &__bss_end);
-    
+
     main(1, argv);
 }
 
@@ -77,4 +77,3 @@ _fini()
 #ifdef __cplusplus
 }
 #endif
-

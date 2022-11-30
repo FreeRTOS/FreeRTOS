@@ -229,4 +229,3 @@ extern const S25fl1Desc * S25fl1_FindDevice(
     uint32_t jedecId);
 
 #endif /*#ifndef S25FL1_SPI_H */
-

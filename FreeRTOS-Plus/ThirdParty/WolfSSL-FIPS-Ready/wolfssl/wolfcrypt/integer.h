@@ -410,4 +410,3 @@ MP_API int mp_mod_d(mp_int* a, mp_digit b, mp_digit* c);
 #endif /* USE_FAST_MATH */
 
 #endif  /* WOLF_CRYPT_INTEGER_H */
-

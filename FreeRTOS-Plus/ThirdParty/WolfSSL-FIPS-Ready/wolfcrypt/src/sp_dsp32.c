@@ -725,52 +725,52 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     int64_t t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18;
     HVX_Vector av, splat;
     HVX_Vector vlow, vhi;
-    
+
     av = Q6_V_vzero();
     vlow = Q6_V_vzero();
     vhi = Q6_V_vzero();
-    
+
     XMEMCPY((byte*)&av, (byte*)a, 40);
-    
+
     splat = Q6_V_vsplat_R(b[0]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
     vlow = Q6_Vw_vmpyieacc_VwVwVuh(vlow, av, splat);
-    
+
     vhi = Q6_Vw_vmpye_VwVuh(av, splat);
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     unsigned int* loi = (unsigned int*)&vlow;
     int* hii = (int*)&vhi;
-    
+
     /* a[0] * b[0] */
     t0 = loi[0] | ((int64_t)hii[0] << 31);
-    
+
     /* a[1] * b[0] */
     t1 = loi[1] | ((int64_t)hii[1] << 31);
-    
+
     /* a[2] * b[0] */
     t2 = loi[2] | ((int64_t)hii[2] << 31);
-    
+
     /* a[3] * b[0] */
     t3 = loi[3] | ((int64_t)hii[3] << 31);
-    
+
     /* a[4] * b[0] */
     t4 = loi[4] | ((int64_t)hii[4] << 31);
-    
+
     /* a[5] * b[0] */
     t5 = loi[5] | ((int64_t)hii[5] << 31);
-    
+
     /* a[6] * b[0] */
     t6 = loi[6] | ((int64_t)hii[6] << 31);
-    
+
     /* a[7] * b[0] */
     t7 = loi[7] | ((int64_t)hii[7] << 31);
-    
+
     /* a[8] * b[0] */
     t8 = loi[8] | ((int64_t)hii[8] << 31);
-    
+
     /* a[9] * b[0] */
     t9 = loi[9] | ((int64_t)hii[9] << 31);
-    
+
     /* a[*] * b[1] */
     splat = Q6_V_vsplat_R(b[1]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -779,37 +779,37 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
+
     /* a[0] * b[1] */
     t1 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[1] */
     t2 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[1] */
     t3 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[1] */
     t4 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[1] */
     t5 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[1] */
     t6 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[1] */
     t7 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[1] */
     t8 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[1] */
     t9 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[1] */
     t10 = (loi[9] | ((int64_t)hii[9] << 31));
-    
+
     /* a[*] * b[2] */
     splat = Q6_V_vsplat_R(b[2]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -818,39 +818,39 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[2] */
     t2 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[2] */
     t3 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[2] */
     t4 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[2] */
     t5 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[2] */
     t6 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[2] */
     t7 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[2] */
     t8 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[2] */
     t9 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[2] */
     t10 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[2] */
     t11 = (loi[9] | ((int64_t)hii[9] << 31));
-    
-    
+
+
     /* a[*] * b[3] */
     splat = Q6_V_vsplat_R(b[3]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -859,39 +859,39 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[3] */
     t3 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[3] */
     t4 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[3] */
     t5 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[3] */
     t6 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[3] */
     t7 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[3] */
     t8 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[3] */
     t9 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[3] */
     t10 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[3] */
     t11 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[3] */
     t12 = (loi[9] | ((int64_t)hii[9] << 31));
-    
-    
+
+
     /* a[*] * b[4] */
     splat = Q6_V_vsplat_R(b[4]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -900,39 +900,39 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[4] */
     t4 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[4] */
     t5 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[4] */
     t6 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[4] */
     t7 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[4] */
     t8 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[4] */
     t9 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[4] */
     t10 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[4] */
     t11 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[4] */
     t12 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[4] */
     t13 = (loi[9] | ((int64_t)hii[9] << 31));
-    
-    
+
+
     /* a[*] * b[5] */
     splat = Q6_V_vsplat_R(b[5]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -941,39 +941,39 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[5] */
     t5 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[5] */
     t6 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[5] */
     t7 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[5] */
     t8 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[5] */
     t9 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[5] */
     t10 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[5] */
     t11 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[5] */
     t12 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[5] */
     t13 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[5] */
     t14 = (loi[9] | ((int64_t)hii[9] << 31));
-    
-    
+
+
     /* a[*] * b[6] */
     splat = Q6_V_vsplat_R(b[6]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -982,40 +982,40 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[6] */
     t6 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[6] */
     t7 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[6] */
     t8 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[6] */
     t9 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[6] */
     t10 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[6] */
     t11 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[6] */
     t12 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[6] */
     t13 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[6] */
     t14 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[6] */
     t15 = (loi[9] | ((int64_t)hii[9] << 31));
-    
-    
-    
+
+
+
     /* a[*] * b[7] */
     splat = Q6_V_vsplat_R(b[7]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -1024,39 +1024,39 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[7] */
     t7 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[7] */
     t8 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[7] */
     t9 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[7] */
     t10 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[7] */
     t11 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[7] */
     t12 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[7] */
     t13 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[7] */
     t14 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[7] */
     t15 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[7] */
     t16 = (loi[9] | ((int64_t)hii[9] << 31));
-    
-    
+
+
     /* a[*] * b[8] */
     splat = Q6_V_vsplat_R(b[8]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -1065,39 +1065,39 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[8] */
     t8 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[8] */
     t9 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[8] */
     t10 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[8] */
     t11 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[8] */
     t12 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[8] */
     t13 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[8] */
     t14 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[8] */
     t15 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[8] */
     t16 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[8] */
     t17 = (loi[9] | ((int64_t)hii[9] << 31));
-    
-    
+
+
     /* a[*] * b[9] */
     splat = Q6_V_vsplat_R(b[9]);
     vlow = Q6_Vw_vmpyieo_VhVh(av, splat);
@@ -1106,38 +1106,38 @@ SP_NOINLINE static void sp_256_mul_10(sp_digit* r, const sp_digit* a,
     vhi = Q6_Vw_vmpyoacc_VwVwVh_s1_sat_shift(vhi, av, splat);
     loi = (unsigned int*)&vlow;
     hii = (int*)&vhi;
-    
-    
+
+
     /* a[0] * b[9] */
     t9 += (loi[0] | ((int64_t)hii[0] << 31));
-    
+
     /* a[1] * b[9] */
     t10 += (loi[1] | ((int64_t)hii[1] << 31));
-    
+
     /* a[2] * b[9] */
     t11 += (loi[2] | ((int64_t)hii[2] << 31));
-    
+
     /* a[3] * b[9] */
     t12 += (loi[3] | ((int64_t)hii[3] << 31));
-    
+
     /* a[4] * b[9] */
     t13 += (loi[4] | ((int64_t)hii[4] << 31));
-    
+
     /* a[5] * b[9] */
     t14 += (loi[5] | ((int64_t)hii[5] << 31));
-    
+
     /* a[6] * b[9] */
     t15 += (loi[6] | ((int64_t)hii[6] << 31));
-    
+
     /* a[7] * b[9] */
     t16 += (loi[7] | ((int64_t)hii[7] << 31));
-    
+
     /* a[8] * b[9] */
     t17 += (loi[8] | ((int64_t)hii[8] << 31));
-    
+
     /* a[9] * b[9] */
     t18 = (loi[9] | ((int64_t)hii[9] << 31));
-    
+
         t1   += t0  >> 26; r[ 0] = t0  & 0x3ffffff;
         t2   += t1  >> 26; r[ 1] = t1  & 0x3ffffff;
         t3   += t2  >> 26; r[ 2] = t2  & 0x3ffffff;
@@ -4531,7 +4531,7 @@ void wc_ecc_fp_free(void)
 }
 
 
-AEEResult wolfSSL_open(const char *uri, remote_handle64 *handle) 
+AEEResult wolfSSL_open(const char *uri, remote_handle64 *handle)
 {
    void *tptr;
   /* can be any value or ignored, rpc layer doesn't care
@@ -4544,7 +4544,7 @@ AEEResult wolfSSL_open(const char *uri, remote_handle64 *handle)
    return 0;
 }
 
-AEEResult wolfSSL_close(remote_handle64 handle) 
+AEEResult wolfSSL_close(remote_handle64 handle)
 {
    if (handle)
       free((void*)handle);
@@ -4906,4 +4906,3 @@ int sp_ecc_uncompress_256(mp_int* xm, int odd, mp_int* ym)
 #endif /* WOLFSSL_HAVE_SP_ECC */
 #endif /* WOLFSSL_DSP */
 #endif /* WOLFSSL_HAVE_SP_ECC */
-

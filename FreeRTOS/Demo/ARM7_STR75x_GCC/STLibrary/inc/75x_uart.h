@@ -64,11 +64,11 @@ typedef enum
 #define UART_WordLength_6D          0x0020  /* 6 bits Data */
 #define UART_WordLength_7D          0x0040  /* 7 bits Data */
 #define UART_WordLength_8D          0x0060  /* 8 bits Data */
-                                                                                               
+
 /* UART Stop Bits */
-#define UART_StopBits_1             0xFFF7  /* One stop bit is transmitted at 
+#define UART_StopBits_1             0xFFF7  /* One stop bit is transmitted at
                                                the end of frame */
-#define UART_StopBits_2             0x0008  /* Tow stop bits are transmitted 
+#define UART_StopBits_2             0x0008  /* Tow stop bits are transmitted
                                                at the end of frame */
 
 /* UART Parity */

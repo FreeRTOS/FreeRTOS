@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -80,21 +80,21 @@
 #define OV7740_REG0C_MAX_EXPOSURE(value) \
 ((OV7740_REG0C_MAX_EXPOSURE_Msk & ((value) << OV7740_REG0C_MAX_EXPOSURE_Pos)))
 /**< \brief (OV7740_REG0C) High 8-bit MSB and LSB swap */
-#define OV7740_REG0C_BYTE_SWAP_Msk       (0x1u << 3) 
+#define OV7740_REG0C_BYTE_SWAP_Msk       (0x1u << 3)
 /**< \brief (OV7740_REG0C) output Y9,Y8...Y3,Y2,Y1,Y0 */
-#define OV7740_REG0C_BYTE_SWAP_DISABLE   (0x0u << 3) 
+#define OV7740_REG0C_BYTE_SWAP_DISABLE   (0x0u << 3)
 /**< \brief (OV7740_REG0C) output Y3,Y2...Y8,Y9,Y1,Y0 */
-#define OV7740_REG0C_BYTE_SWAP_ENABLE    (0x1u << 3) 
+#define OV7740_REG0C_BYTE_SWAP_ENABLE    (0x1u << 3)
 /**< \brief (OV7740_REG0C) YUV output, Y <-> UV swap */
-#define OV7740_REG0C_YUV_SWAP_Msk        (0x1u << 4) 
+#define OV7740_REG0C_YUV_SWAP_Msk        (0x1u << 4)
 /**< \brief (OV7740_REG0C) output YUYVYUYV */
-#define OV7740_REG0C_YUV_SWAP_DISABLE    (0x0u << 4) 
+#define OV7740_REG0C_YUV_SWAP_DISABLE    (0x0u << 4)
 /**< \brief (OV7740_REG0C) output UYVYUYVY */
-#define OV7740_REG0C_YUV_SWAP_ENABLE     (0x1u << 4) 
+#define OV7740_REG0C_YUV_SWAP_ENABLE     (0x1u << 4)
 /**< \brief (OV7740_REG0C) Mirror enable */
-#define OV7740_REG0C_MIRROR_ENABLE       (0x1u << 6) 
+#define OV7740_REG0C_MIRROR_ENABLE       (0x1u << 6)
 /**< \brief (OV7740_REG0C) Flip enable */
-#define OV7740_REG0C_FLIP_ENABLE         (0x1u << 7) 
+#define OV7740_REG0C_FLIP_ENABLE         (0x1u << 7)
 
 /* -------- OV7740_REG0D : (Address: 0x0d) Analog setting -------- */
 #define OV7740_REG0D                   (0x0du)
@@ -114,7 +114,7 @@
 /**< \brief (OV7740_REG0E) 4x */
 #define OV7740_REG0E_OUTPUT_4X          (0x3u << OV7740_REG0E_OUTPUT_Pos)
 /**< \brief (OV7740_REG0E) Sleep mode */
-#define OV7740_REG0E_SLEEP_MODE          (0x1u << 3) 
+#define OV7740_REG0E_SLEEP_MODE          (0x1u << 3)
 #define OV7740_REG0E_BLC_Pos             (5)
 /**< \brief (OV7740_REG0E) BLC line selection */
 #define OV7740_REG0E_BLC_Msk             (0x3u << OV7740_REG0E_BLC_Pos)
@@ -141,15 +141,15 @@
 
 /* -------- OV7740_CLK : (Address: 0x11) Clock settings -------- */
 /**< \brief (OV7740_CLK) sysclk=XVCLK1 x PLLDIV / [(CLK[5:0]+1) x2 xPreDiv] */
-#define OV7740_CLK                     (0x11u) 
+#define OV7740_CLK                     (0x11u)
 #define OV7740_CLK_DIVIDER_Pos           (0)
 /**< \brief (OV7740_CLK) Clock divider */
-#define OV7740_CLK_DIVIDER_Msk           (0x3fu << OV7740_CLK_DIVIDER_Pos) 
+#define OV7740_CLK_DIVIDER_Msk           (0x3fu << OV7740_CLK_DIVIDER_Pos)
 #define OV7740_CLK_DIVIDER(value) \
 		((OV7740_CLK_DIVIDER_Msk & ((value) << OV7740_CLK_DIVIDER_Pos)))
 #define OV7740_CLK_PLL_Pos               (6)
 /**< \brief (OV7740_CLK) PLL setting - Changing this value is not recommended */
-#define OV7740_CLK_PLL_Msk               (0x3u << OV7740_CLK_PLL_Pos) 
+#define OV7740_CLK_PLL_Msk               (0x3u << OV7740_CLK_PLL_Pos)
 #define OV7740_CLK_PLL(value) \
 		((OV7740_CLK_PLL_Msk & ((value) << OV7740_CLK_PLL_Pos)))
 
@@ -174,35 +174,35 @@
 /* -------- OV7740_REG13 : (Address: 0x13) -------- */
 #define OV7740_REG13                   (0x13u)
 /**< \brief (OV7740_REG13) Exposure auto/manual control selection */
-#define OV7740_REG13_EXPOSURE_Msk        (0x01u << 0) 
+#define OV7740_REG13_EXPOSURE_Msk        (0x01u << 0)
 #define OV7740_REG13_EXPOSURE_MANUAL     (0x0u << 0)
 #define OV7740_REG13_EXPOSURE_AUTO       (0x1u << 0)
 /**< \brief (OV7740_REG13) Auto white balance control selection */
-#define OV7740_REG13_WBAL_Msk            (0x1u << 1) 
+#define OV7740_REG13_WBAL_Msk            (0x1u << 1)
 #define OV7740_REG13_WBAL_MANUAL         (0x0u << 1)
 #define OV7740_REG13_WBAL_AUTO           (0x1u << 1)
 /**< \brief (OV7740_REG13) AGC auto/manual control selection */
-#define OV7740_REG13_AGC_Msk             (0x1u << 2) 
+#define OV7740_REG13_AGC_Msk             (0x1u << 2)
 #define OV7740_REG13_AGC_MANUAL          (0x0u << 2)
 #define OV7740_REG13_AGC_AUTO            (0x1u << 2)
 /**< \brief (OV7740_REG13) LAEC enable */
-#define OV7740_REG13_LAEC_Msk            (0x1u << 3) 
+#define OV7740_REG13_LAEC_Msk            (0x1u << 3)
 #define OV7740_REG13_LAEC_DISABLE        (0x0u << 3)
 #define OV7740_REG13_LAEC_ENABLE         (0x1u << 3)
  /**< \brief (OV7740_REG13) Banding option */
 #define OV7740_REG13_BANDING_OPT_Msk     (0x1u << 4)
-/**< \brief (OV7740_REG13) Minimum exposure is limited to 1/120 or 1/100 second 
+/**< \brief (OV7740_REG13) Minimum exposure is limited to 1/120 or 1/100 second
  when banding filter is enabled */
 #define OV7740_REG13_BANDING_OPT_LIMITED (0x0u << 4)
 /**< \brief (OV7740_REG13) Minimum exposure is allowed to be less than 1/120 or
  1/100 second when banding filter is enabled */
 #define OV7740_REG13_BANDING_OPT_ENABLE  (0x1u << 4)
 /**< \brief (OV7740_REG13) Banding enable */
-#define OV7740_REG13_BANDING_Mask        (0x1u << 5) 
+#define OV7740_REG13_BANDING_Mask        (0x1u << 5)
 #define OV7740_REG13_BANDING_DISABLE     (0x0u << 5)
 #define OV7740_REG13_BANDING_ENABLE      (0x1u << 5)
 /**< \brief (OV7740_REG13) Enable frame drop function */
-#define OV7740_REG13_FRAME_DROP_Mask     (0x1u << 6) 
+#define OV7740_REG13_FRAME_DROP_Mask     (0x1u << 6)
 #define OV7740_REG13_FRAME_DROP_DISABLE  (0x0u << 6)
 #define OV7740_REG13_FRAME_DROP_ENABLE   (0x1u << 6)
 /**< \brief (OV7740_REG13) AEC speed selection */
@@ -210,7 +210,7 @@
 /**< \brief (OV7740_REG13) Normal */
 #define OV7740_REG13_AEC_NORMAL          (0x0u << 7)
 /**< \brief (OV7740_REG13) Faster AEC correction */
-#define OV7740_REG13_AEC_FASTER          (0x1u << 7) 
+#define OV7740_REG13_AEC_FASTER          (0x1u << 7)
 
 /* -------- OV7740_REG14 : (Address: 0x14) -------- */
 #define OV7740_REG14                   (0x14u)
@@ -219,15 +219,15 @@
 #define OV7740_REG15                   (0x15u)
 #define OV7740_REG15_GAIN_Pos          (0)
 /**< \brief (OV7740_REG15) AGC MSBs (digital gain) (LSBs in GAIN[7:0]) */
-#define OV7740_REG15_GAIN_Msk          (0x3u << OV7740_REG15_GAIN_Pos) 
+#define OV7740_REG15_GAIN_Msk          (0x3u << OV7740_REG15_GAIN_Pos)
 #define OV7740_REG15_GAIN(value) \
 		((OV7740_REG15_GAIN_Msk & ((value) << OV7740_REG15_GAIN_Pos)))
 /**< \brief (OV7740_REG15) Night mode triggering point */
-#define OV7740_REG15_NIGHT_Mask        (0x3u << 2) 
+#define OV7740_REG15_NIGHT_Mask        (0x3u << 2)
 /**< \brief (OV7740_REG15) 2x gain */
-#define OV7740_REG15_NIGHT_2X_GAIN     (0x0u << 2) 
+#define OV7740_REG15_NIGHT_2X_GAIN     (0x0u << 2)
 /**< \brief (OV7740_REG15) 4x gain */
-#define OV7740_REG15_NIGHT_4X_GAIN     (0x1u << 2) 
+#define OV7740_REG15_NIGHT_4X_GAIN     (0x1u << 2)
 /**< \brief (OV7740_REG15) 8x gain */
 #define OV7740_REG15_NIGHT_8X_GAIN     (0x2u << 2)
 /**< \brief (OV7740_REG15) 16x gain */
@@ -245,7 +245,7 @@
 /**< \brief (OV7740_REG15) Up to 7 frames */
 #define OV7740_REG15_CEIL_7            (0x7u << 4)
 /**< \brief (OV7740_REG15) Enable inserting frames in night mode */
-#define OV7740_REG15_ENABLE_NIGHT      (0x1u << 7)  
+#define OV7740_REG15_ENABLE_NIGHT      (0x1u << 7)
 
 /*   OV7740_REG16 : (Address: 0x16)   */
 #define OV7740_REG16                   (0x16u)
@@ -256,20 +256,20 @@
  */
 #define OV7740_AHSTART                 (0x17u)
 
-/* 
- * OV7740_AHSIZE : (Address: 0x18) Sensor Horizontal output size 8 MSBs 
+/*
+ * OV7740_AHSIZE : (Address: 0x18) Sensor Horizontal output size 8 MSBs
  * (LSBs in REG16[4:3])
  */
 #define OV7740_AHSIZE                  (0x18u)
 
-/* 
- * OV7740_AVSTART : (Address: 0x19) Sensor Vertical output start point 8 MSBs 
+/*
+ * OV7740_AVSTART : (Address: 0x19) Sensor Vertical output start point 8 MSBs
  * (LSBs in REG16[2])
  */
 #define OV7740_AVSTART                 (0x19u)
 
-/* 
- * OV7740_AVSIZE : (Address: 0x1a) Sensor Vertical output size 8 MSBs 
+/*
+ * OV7740_AVSIZE : (Address: 0x1a) Sensor Vertical output size 8 MSBs
  * (LSBs in REG16[5])
  */
 #define OV7740_AVSIZE                  (0x1au)
@@ -300,14 +300,14 @@
 /* -------- OV7740_REG21 : (Address: 0x21) -------- */
 #define OV7740_REG21                   (0x21u)
 
-/*  OV7740_REG21 : (Address: 0x24) Luminance signal high range for AEC/AGC 
+/*  OV7740_REG21 : (Address: 0x24) Luminance signal high range for AEC/AGC
  * operation.
  */
 #define OV7740_WPT                     (0x24u)
 
 /*
- * OV7740_REG21 : (Address: 0x25) Luminance signal low range for AEC/AGC 
- * operation 
+ * OV7740_REG21 : (Address: 0x25) Luminance signal low range for AEC/AGC
+ * operation
  */
 #define OV7740_BPT                     (0x25u)
 
@@ -317,7 +317,7 @@
 /* -------- OV7740_REG27 : (Address: 0x27) -------- */
 #define OV7740_REG27                   (0x27u)
 /**< \brief (OV7740_REG27) Black sun cancellation enable */
-#define OV7740_REG27_BLACKSUN            (0x1u << 7) 
+#define OV7740_REG27_BLACKSUN            (0x1u << 7)
 
 /* -------- OV7740_REG28 : (Address: 0x28) -------- */
 #define OV7740_REG28                   (0x28u)
@@ -352,7 +352,7 @@
 /**< \brief (OV7740_REG28) HSYNC */
 #define OV7740_REG28_HREF_OUTPUT_HSYNC   (0x1u << 6)
 /**< \brief (OV7740_REG28) Output data bit reverse option */
-#define OV7740_REG28_OUTPUT_REVERSE      (0x1u << 7) 
+#define OV7740_REG28_OUTPUT_REVERSE      (0x1u << 7)
 
 /* -------- OV7740_REG65 : (Address: 0x65) -------- */
 #define OV7740_REG65                  (0x65u)
@@ -361,7 +361,7 @@
  /**< \brief (OV7740_REG65) Output DATA[9:0] */
 #define OV7740_REG65_BIT_SWAP_NORMAL    (0x0u << 3)
 /**< \brief (OV7740_REG65) Output DATA[0:9] */
-#define OV7740_REG65_BIT_SWAP_REVERSE   (0x1u << 3) 
+#define OV7740_REG65_BIT_SWAP_REVERSE   (0x1u << 3)
 
 /* -------- OV7740_YUV422CTRL : (Address: 0xd9) -------- */
 #define OV7740_YUV422CTRL             (0xd9u)
@@ -376,12 +376,11 @@
 #define OV7740_YUV422CTRL_V_FIRST_Msk   (0x1u << 1)
 /**< \brief (OV7740_YUV422CTRL) Output line will be YUYV... */
 #define OV7740_YUV422CTRL_V_FIRST_YUYV  (0x0u << 1)
-/**< \brief (OV7740_YUV422CTRL) Output line will be YVYU... (it will affect 
-definition of U/V in SDE. If it is set, all registers in SDE about U/V must be 
+/**< \brief (OV7740_YUV422CTRL) Output line will be YVYU... (it will affect
+definition of U/V in SDE. If it is set, all registers in SDE about U/V must be
 swapped */
-#define OV7740_YUV422CTRL_V_FIRST_YVYU  (0x1u << 1) 
+#define OV7740_YUV422CTRL_V_FIRST_YVYU  (0x1u << 1)
 
 
 
 #endif // #ifndef _YUV_H_
-

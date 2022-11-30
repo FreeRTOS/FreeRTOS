@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -54,7 +54,7 @@ void PMAP_configurePorts(const uint8_t *portMapping, uint8_t pxMAPy,
     PMAP->CTL = (PMAP->CTL & ~PMAP_CTL_PRECFG) | portMapReconfigure;
 
     //Configure Port Mapping:
-    
+
     for (i = 0; i < numberOfPorts * 8; i++)
     {
         HWREG8(PMAP_BASE + i + pxMAPy) = portMapping[i];
@@ -63,4 +63,3 @@ void PMAP_configurePorts(const uint8_t *portMapping, uint8_t pxMAPy,
     //Disable write-access to port mapping registers:
     PMAP->KEYID = 0;
 }
-

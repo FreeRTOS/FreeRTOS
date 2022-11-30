@@ -66,4 +66,3 @@ WOLFSSL_API int  wc_Md2Hash(const byte*, word32, byte*);
 
 #endif /* WOLFSSL_MD2 */
 #endif /* WOLF_CRYPT_MD2_H */
-

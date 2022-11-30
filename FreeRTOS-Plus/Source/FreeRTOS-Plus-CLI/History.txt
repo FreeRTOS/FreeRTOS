@@ -29,4 +29,3 @@ Changes between V1.0.0 and V1.0.1 released 05/07/2012
 	  xCommandLineInput to CLI_Command_Definition_t, as it was always intended
 	  to be.  A #define was added to map the old name to the new name for
 	  reasons of backward compatibility.
-

@@ -85,4 +85,3 @@ WOLFSSL_API int Base64_Decode(const byte* in, word32 inLen, byte* out,
 #endif
 
 #endif /* WOLF_CRYPT_CODING_H */
-

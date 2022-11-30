@@ -45,4 +45,3 @@ END
 INIT _EntryPoint                       /* The entry point of the application. This function is generated into the CPU module. */
 
 STACKSIZE 0x0030                       /* Size of the system stack. Value can be changed on the "Build options" tab */
-

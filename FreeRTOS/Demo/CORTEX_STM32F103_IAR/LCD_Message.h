@@ -499,4 +499,3 @@ const unsigned char pcBitmap[] =
 
 
 #endif
-

@@ -1,7 +1,7 @@
 /******************** (C) COPYRIGHT 2006 STMicroelectronics ********************
 * File Name          : 75x_i2c.c
 * Author             : MCD Application Team
-* Date First Issued  : 03/10/2006 
+* Date First Issued  : 03/10/2006
 * Description        : This file provides all the I2C software functions.
 ********************************************************************************
 * History:
@@ -10,9 +10,9 @@
 ********************************************************************************
 * THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
-* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, 
+* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,
 * INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE
-* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING 
+* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
@@ -46,9 +46,9 @@
 /* I2C Masks */
 #define  I2C_Frequency_Mask     0x1F
 #define  I2C_AddressHigh_Mask   0xF9
-#define  I2C_OwnAddress_Mask    0x0300  
-#define  I2C_StandardMode_Mask  0x7f 
-#define  I2C_FastMode_Mask      0x80  
+#define  I2C_OwnAddress_Mask    0x0300
+#define  I2C_StandardMode_Mask  0x7f
+#define  I2C_FastMode_Mask      0x80
 #define  I2C_Event_Mask         0x3FFF
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,29 +57,29 @@
 /* Private functions ---------------------------------------------------------*/
 
 /*******************************************************************************
-* Function Name  : I2C_DeInit                                                
+* Function Name  : I2C_DeInit
 * Description    : Deinitializes the I2C peripheral registers to their default
-*                  reset values.                 
-* Input          : None               
-* Output         : None                                                      
-* Return         : None                                                      
+*                  reset values.
+* Input          : None
+* Output         : None
+* Return         : None
 *******************************************************************************/
 void I2C_DeInit(void)
 {
   /* Reset the I2C registers values*/
   MRCC_PeripheralSWResetConfig(MRCC_Peripheral_I2C,ENABLE);
-  MRCC_PeripheralSWResetConfig(MRCC_Peripheral_I2C,DISABLE); 
+  MRCC_PeripheralSWResetConfig(MRCC_Peripheral_I2C,DISABLE);
 }
 
 /*******************************************************************************
-* Function Name  : I2C_Init                                                  
+* Function Name  : I2C_Init
 * Description    : Initializes the I2C peripheral according to the specified
 *                  parameters in the I2C_Initstruct.
 * Input          : - I2C_InitStruct: pointer to a I2C_InitTypeDef structure that
 *                  contains the configuration information for the specified I2C
-*                  peripheral.               
-* Output         : None                                                      
-* Return         : None                                                      
+*                  peripheral.
+* Output         : None
+* Return         : None
 *******************************************************************************/
 void I2C_Init(I2C_InitTypeDef* I2C_InitStruct)
 {
@@ -97,7 +97,7 @@ void I2C_Init(I2C_InitTypeDef* I2C_InitStruct)
   I2C_Cmd(DISABLE);
   /* Clear frequency FR[2:0] bits */
   I2C->OAR2 &= I2C_Frequency_Mask;
-  
+
   /* Set frequency bits depending on APBClock value */
   if (APBClock < 10000000)
     I2C->OAR2 &= 0x1F;
@@ -116,7 +116,7 @@ void I2C_Init(I2C_InitTypeDef* I2C_InitStruct)
   else if (APBClock < 100000000)
     I2C->OAR2 |= 0xE0;
   I2C_Cmd(ENABLE);
-  
+
   /* Restore the ITE bit state */
   I2C->CR |= ITEState;
 
@@ -131,7 +131,7 @@ void I2C_Init(I2C_InitTypeDef* I2C_InitStruct)
     /* Disable general call */
     I2C->CR &= I2C_GeneralCall_Disable;
   }
-  
+
   /* Configure acknowledgement */
   if (I2C_InitStruct->I2C_Ack == I2C_Ack_Enable)
   {
@@ -143,7 +143,7 @@ void I2C_Init(I2C_InitTypeDef* I2C_InitStruct)
     /* Disable acknowledgement */
     I2C->CR &= I2C_Ack_Disable;
   }
-  
+
   /* Configure LSB own address */
   I2C->OAR1 = I2C_InitStruct->I2C_OwnAddress;
   /* Clear MSB own address ADD[9:8] bits */
@@ -172,35 +172,35 @@ void I2C_Init(I2C_InitTypeDef* I2C_InitStruct)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_StructInit                   
+* Function Name  : I2C_StructInit
 * Description    : Fills each I2C_InitStruct member with its default value.
 * Input          : - I2C_InitStruct: pointer to an I2C_InitTypeDef structure
-                     which will be initialized.  
-* Output         : None              
-* Return         : None.                            
+                     which will be initialized.
+* Output         : None
+* Return         : None.
 *******************************************************************************/
 void I2C_StructInit(I2C_InitTypeDef* I2C_InitStruct)
 {
   /* Initialize the I2C_CLKSpeed member */
   I2C_InitStruct->I2C_CLKSpeed = 5000;
-  
+
   /* Initialize the I2C_OwnAddress member */
   I2C_InitStruct->I2C_OwnAddress = 0x0;
-  
+
   /* Initialize the I2C_GeneralCall member */
   I2C_InitStruct->I2C_GeneralCall = I2C_GeneralCall_Disable;
-  
+
   /* Initialize the I2C_Ack member */
   I2C_InitStruct->I2C_Ack = I2C_Ack_Disable;
 }
 
 /*******************************************************************************
-* Function Name  : I2C_Cmd                                                    
-* Description    : Enables or disables the I2C peripheral.      
+* Function Name  : I2C_Cmd
+* Description    : Enables or disables the I2C peripheral.
 * Input          : - NewState: new state of the I2C peripheral. This parameter
 *                    can be: ENABLE or DISABLE.
-* Output         : None                      
-* Return         : None.                                                      
+* Output         : None
+* Return         : None.
 *******************************************************************************/
 void I2C_Cmd(FunctionalState NewState)
 {
@@ -218,12 +218,12 @@ void I2C_Cmd(FunctionalState NewState)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_GenerateSTART                                          
-* Description    : Generates I2C communication START condition.               
+* Function Name  : I2C_GenerateSTART
+* Description    : Generates I2C communication START condition.
 * Input          : - NewState: new state of the I2C START condition generation.
-*                    This parameter can be: ENABLE or DISABLE.         
+*                    This parameter can be: ENABLE or DISABLE.
 * Output         : None
-* Return         : None.                                                      
+* Return         : None.
 *******************************************************************************/
 void I2C_GenerateSTART(FunctionalState NewState)
 {
@@ -240,12 +240,12 @@ void I2C_GenerateSTART(FunctionalState NewState)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_GenerateSTOP                                           
-* Description    : Generates I2C communication STOP condition.                
+* Function Name  : I2C_GenerateSTOP
+* Description    : Generates I2C communication STOP condition.
 * Input          : - NewState: new state of the I2C STOP condition generation.
-*                    This parameter can be: ENABLE or DISABLE.       
-* Output         : None                
-* Return         : None.                                                      
+*                    This parameter can be: ENABLE or DISABLE.
+* Output         : None
+* Return         : None.
 *******************************************************************************/
 void I2C_GenerateSTOP(FunctionalState NewState)
 {
@@ -262,12 +262,12 @@ void I2C_GenerateSTOP(FunctionalState NewState)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_AcknowledgeConfig                                      
-* Description    : Enables or disables I2C acknowledge feature.               
-* Input          : - NewState: new state of the I2C Acknowledgement. 
-*                    This parameter can be: ENABLE or DISABLE. 
-* Output         : None                     
-* Return         : None.                                                      
+* Function Name  : I2C_AcknowledgeConfig
+* Description    : Enables or disables I2C acknowledge feature.
+* Input          : - NewState: new state of the I2C Acknowledgement.
+*                    This parameter can be: ENABLE or DISABLE.
+* Output         : None
+* Return         : None.
 *******************************************************************************/
 void I2C_AcknowledgeConfig(FunctionalState NewState)
 {
@@ -284,12 +284,12 @@ void I2C_AcknowledgeConfig(FunctionalState NewState)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_ITConfig                                               
-* Description    : Enables or disables the I2C interrupt.                 
+* Function Name  : I2C_ITConfig
+* Description    : Enables or disables the I2C interrupt.
 * Input          : - NewState: new state of the I2C interrupt.
 *                    This parameter can be: ENABLE or DISABLE.
-* Output         : None                      
-* Return         : None.                                                      
+* Output         : None
+* Return         : None.
 *******************************************************************************/
 void I2C_ITConfig(FunctionalState NewState)
 {
@@ -306,11 +306,11 @@ void I2C_ITConfig(FunctionalState NewState)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_GetLastEvent                                  
-* Description    : Gets the last I2C event that has occurred.                  
-* Input          : None  
-* Output         : None                          
-* Return         : The Last happened Event.                           
+* Function Name  : I2C_GetLastEvent
+* Description    : Gets the last I2C event that has occurred.
+* Input          : None
+* Output         : None
+* Return         : The Last happened Event.
 *******************************************************************************/
 u16 I2C_GetLastEvent(void)
 {
@@ -326,25 +326,25 @@ u16 I2C_GetLastEvent(void)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_CheckEvent                                         
-* Description    : Checks whether the Last I2C Event is equal to the one passed 
-*                  as parameter.                                              
+* Function Name  : I2C_CheckEvent
+* Description    : Checks whether the Last I2C Event is equal to the one passed
+*                  as parameter.
 * Input          : - I2C_EVENT: specifies the event to be checked. This parameter
 *                    can be one of the following values:
 *                         - I2C_EVENT_SLAVE_ADDRESS_MATCHED
 *                         - I2C_EVENT_SLAVE_BYTE_RECEIVED
 *                         - I2C_EVENT_SLAVE_BYTE_TRANSMITTED
-*                         - I2C_EVENT_SLAVE_ACK_FAILURE 
+*                         - I2C_EVENT_SLAVE_ACK_FAILURE
 *                         - I2C_EVENT_MASTER_MODE_SELECT
 *                         - I2C_EVENT_MASTER_MODE_SELECTED
 *                         - I2C_EVENT_MASTER_BYTE_RECEIVED
 *                         - I2C_EVENT_MASTER_BYTE_TRANSMITTED
 *                         - I2C_EVENT_MASTER_MODE_ADDRESS10
 *                         - I2C_EVENT_SLAVE_STOP_DETECTED
-* Output         : None                                      
+* Output         : None
 * Return         : An ErrorStatus enumuration value:
 *                         - SUCCESS: Last event is equal to the I2C_Event
-*                         - ERROR: Last event is different from the I2C_Event        
+*                         - ERROR: Last event is different from the I2C_Event
 *******************************************************************************/
 ErrorStatus I2C_CheckEvent(u16 I2C_EVENT)
 {
@@ -364,11 +364,11 @@ ErrorStatus I2C_CheckEvent(u16 I2C_EVENT)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_SendData                                                
-* Description    : Sends a data byte.                                 
+* Function Name  : I2C_SendData
+* Description    : Sends a data byte.
 * Input          : - Data: indicates the byte to be transmitted.
-* Output         : None            
-* Return         : None.                                                       
+* Output         : None
+* Return         : None.
 *******************************************************************************/
 void I2C_SendData(u8 Data)
 {
@@ -377,11 +377,11 @@ void I2C_SendData(u8 Data)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_ReceiveData                                             
-* Description    : Reads the received byte. 
-* Input          : None 
-* Output         : None                                        
-* Return         : The received byte                                      
+* Function Name  : I2C_ReceiveData
+* Description    : Reads the received byte.
+* Input          : None
+* Output         : None
+* Return         : The received byte
 *******************************************************************************/
 u8 I2C_ReceiveData(void)
 {
@@ -390,16 +390,16 @@ u8 I2C_ReceiveData(void)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_Send7bitAddress                                             
-* Description    : Transmits the address byte to select the slave device.      
-* Input          : - Address: specifies the slave address which will be transmitted    
-*                  - Direction: specifies whether the I2C device will be a 
-*                    Transmitter or a Receiver. This parameter can be one of the 
+* Function Name  : I2C_Send7bitAddress
+* Description    : Transmits the address byte to select the slave device.
+* Input          : - Address: specifies the slave address which will be transmitted
+*                  - Direction: specifies whether the I2C device will be a
+*                    Transmitter or a Receiver. This parameter can be one of the
 *                    following values
 *                         - I2C_MODE_TRANSMITTER: Transmitter mode
-*                         - I2C_MODE_RECEIVER: Receiver mode  
-* Output         : None	
-* Return         : None.                                                       
+*                         - I2C_MODE_RECEIVER: Receiver mode
+* Output         : None
+* Return         : None.
 *******************************************************************************/
 void I2C_Send7bitAddress(u8 Address, u8 Direction)
 {
@@ -419,11 +419,11 @@ void I2C_Send7bitAddress(u8 Address, u8 Direction)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_ReadRegister                                            
-* Description    : Reads the specified I2C register and returns its value.    
+* Function Name  : I2C_ReadRegister
+* Description    : Reads the specified I2C register and returns its value.
 * Input1         : - I2C_Register: specifies the register to read.
-*                    This parameter can be one of the following values:        
-*                         - I2C_CR:   CR register. 
+*                    This parameter can be one of the following values:
+*                         - I2C_CR:   CR register.
 *                         - I2C_SR1:  SR1 register.
 *                         - I2C_SR2:  SR2 register.
 *                         - I2C_CCR:  CCR register.
@@ -432,7 +432,7 @@ void I2C_Send7bitAddress(u8 Address, u8 Direction)
 *                         - I2C_DR:   DR register.
 *                         - I2C_ECCR: ECCR register.
 * Output         : None
-* Return         : The value of the read register.              
+* Return         : The value of the read register.
 *******************************************************************************/
 u8 I2C_ReadRegister(u8 I2C_Register)
 {
@@ -441,40 +441,40 @@ u8 I2C_ReadRegister(u8 I2C_Register)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_GetFlagStatus  
+* Function Name  : I2C_GetFlagStatus
 * Description    : Checks whether the specified I2C flag is set or not.
-* Input          : - I2C_FLAG: specifies the flag to check. 
+* Input          : - I2C_FLAG: specifies the flag to check.
 *                    This parameter can be one of the following values:
-*                         - I2C_FLAG_SB: Start bit flag (Master mode)    
-*                         - I2C_FLAG_M_SL: Master/Slave flag   
-*                         - I2C_FLAG_ADSL: Address matched flag (Slave mode)    
-*                         - I2C_FLAG_BTF: Byte transfer finished flag    
-*                         - I2C_FLAG_BUSY: Bus busy flag    
-*                         - I2C_FLAG_TRA: Transmitter/Receiver flag    
-*                         - I2C_FLAG_ADD10: 10-bit addressing in Master mode flag   
-*                         - I2C_FLAG_EVF: Event flag     
-*                         - I2C_FLAG_GCAL: General call flag (slave mode)   
-*                         - I2C_FLAG_BERR: Bus error flag    
-*                         - I2C_FLAG_ARLO: Arbitration lost flag    
-*                         - I2C_FLAG_STOPF: Stop detection flag (slave mode)   
-*                         - I2C_FLAG_AF: Acknowledge failure flag      
-*                         - I2C_FLAG_ENDAD: End of address transmission flag   
-*                         - I2C_FLAG_ACK: Acknowledge enable flag     
-* Output         : None                                                   
-* Return         : The NewState of the I2C_FLAG (SET or RESET).              
+*                         - I2C_FLAG_SB: Start bit flag (Master mode)
+*                         - I2C_FLAG_M_SL: Master/Slave flag
+*                         - I2C_FLAG_ADSL: Address matched flag (Slave mode)
+*                         - I2C_FLAG_BTF: Byte transfer finished flag
+*                         - I2C_FLAG_BUSY: Bus busy flag
+*                         - I2C_FLAG_TRA: Transmitter/Receiver flag
+*                         - I2C_FLAG_ADD10: 10-bit addressing in Master mode flag
+*                         - I2C_FLAG_EVF: Event flag
+*                         - I2C_FLAG_GCAL: General call flag (slave mode)
+*                         - I2C_FLAG_BERR: Bus error flag
+*                         - I2C_FLAG_ARLO: Arbitration lost flag
+*                         - I2C_FLAG_STOPF: Stop detection flag (slave mode)
+*                         - I2C_FLAG_AF: Acknowledge failure flag
+*                         - I2C_FLAG_ENDAD: End of address transmission flag
+*                         - I2C_FLAG_ACK: Acknowledge enable flag
+* Output         : None
+* Return         : The NewState of the I2C_FLAG (SET or RESET).
 *******************************************************************************/
 FlagStatus I2C_GetFlagStatus(u16 I2C_FLAG)
-{ 
+{
     u16 Flag1 = 0, Flag2 = 0, Flag3 = 0, Tmp = 0;
 
   Flag1 = I2C->SR1;
   Flag2 = I2C->SR2;
   Flag2 = Flag2<<8;
   Flag3 = I2C->CR & 0x04;
-  
+
   /* Get all the I2C flags in a unique register*/
-  Tmp = (((Flag1 | (Flag2)) & I2C_Event_Mask) | (Flag3<<12)); 
-  
+  Tmp = (((Flag1 | (Flag2)) & I2C_Event_Mask) | (Flag3<<12));
+
   /* Check the status of the specified I2C flag */
   if((Tmp & I2C_FLAG) != RESET)
   {
@@ -489,29 +489,29 @@ FlagStatus I2C_GetFlagStatus(u16 I2C_FLAG)
 }
 
 /*******************************************************************************
-* Function Name  : I2C_ClearFlag                                 
-* Description    : Clears the I2C’s pending flags                            
-* Input          : - I2C_FLAG: specifies the flag to clear. 
+* Function Name  : I2C_ClearFlag
+* Description    : Clears the I2C’s pending flags
+* Input          : - I2C_FLAG: specifies the flag to clear.
 *                    This parameter can be one of the following values:
-*                         - I2C_FLAG_SB: Start bit flag    
-*                         - I2C_FLAG_M_SL: Master/Slave flag   
-*                         - I2C_FLAG_ADSL: Adress matched flag    
-*                         - I2C_FLAG_BTF: Byte transfer finished flag    
-*                         - I2C_FLAG_BUSY: Bus busy flag    
-*                         - I2C_FLAG_TRA: Transmitter/Receiver flag    
-*                         - I2C_FLAG_ADD10: 10-bit addressing in Master mode flag   
-*                         - I2C_FLAG_EVF: Event flag     
-*                         - I2C_FLAG_GCAL: General call flag    
-*                         - I2C_FLAG_BERR: Bus error flag    
-*                         - I2C_FLAG_ARLO: Arbitration lost flag    
-*                         - I2C_FLAG_STOPF: Stop detection flag   
-*                         - I2C_FLAG_AF: Acknowledge failure flag      
-*                         - I2C_FLAG_ENDAD: End of address transmission flag   
-*                         - I2C_FLAG_ACK: Acknowledge enable flag             
+*                         - I2C_FLAG_SB: Start bit flag
+*                         - I2C_FLAG_M_SL: Master/Slave flag
+*                         - I2C_FLAG_ADSL: Adress matched flag
+*                         - I2C_FLAG_BTF: Byte transfer finished flag
+*                         - I2C_FLAG_BUSY: Bus busy flag
+*                         - I2C_FLAG_TRA: Transmitter/Receiver flag
+*                         - I2C_FLAG_ADD10: 10-bit addressing in Master mode flag
+*                         - I2C_FLAG_EVF: Event flag
+*                         - I2C_FLAG_GCAL: General call flag
+*                         - I2C_FLAG_BERR: Bus error flag
+*                         - I2C_FLAG_ARLO: Arbitration lost flag
+*                         - I2C_FLAG_STOPF: Stop detection flag
+*                         - I2C_FLAG_AF: Acknowledge failure flag
+*                         - I2C_FLAG_ENDAD: End of address transmission flag
+*                         - I2C_FLAG_ACK: Acknowledge enable flag
 *                  - parameter needed in the case that the flag to be cleared
-*                    need a write in one register  
-* Output         : None	                                             
-* Return         : None                                                      
+*                    need a write in one register
+* Output         : None
+* Return         : None
 *******************************************************************************/
 void I2C_ClearFlag(u16 I2C_FLAG, ...)
 {
@@ -519,7 +519,7 @@ void I2C_ClearFlag(u16 I2C_FLAG, ...)
 
   /* flags that need a read of the SR2 register to be cleared */
   if ((I2C_FLAG == I2C_FLAG_ADD10) || (I2C_FLAG == I2C_FLAG_EVF) ||
-      (I2C_FLAG == I2C_FLAG_STOPF) || (I2C_FLAG == I2C_FLAG_AF)  || 
+      (I2C_FLAG == I2C_FLAG_STOPF) || (I2C_FLAG == I2C_FLAG_AF)  ||
       (I2C_FLAG == I2C_FLAG_BERR) ||  (I2C_FLAG == I2C_FLAG_ARLO) ||
       (I2C_FLAG == I2C_FLAG_ENDAD))
   {
@@ -531,9 +531,9 @@ void I2C_ClearFlag(u16 I2C_FLAG, ...)
     {
        case  I2C_FLAG_ADD10:
          /* Send the MSB 10bit address passed as second parameter */
-         I2C->DR = Tmp; 
+         I2C->DR = Tmp;
          break;
-       case  I2C_FLAG_ENDAD: 
+       case  I2C_FLAG_ENDAD:
          /* Write to the I2C_CR register by setting PE bit */
          I2C->CR |= I2C_PE_Set;
          break;

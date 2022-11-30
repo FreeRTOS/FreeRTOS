@@ -228,16 +228,16 @@ HAL_StatusTypeDef HAL_ADCEx_LinearCalibration_GetValue(ADC_HandleTypeDef* hadc, 
   uint32_t cnt;
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
   uint32_t temp_REG_IsConversionOngoing = 0UL;
-  
+
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
-  
+
   /* Enable the ADC ADEN = 1 to be able to read the linear calibration factor */
-  if(LL_ADC_IsEnabled(hadc->Instance) == 0UL) 
+  if(LL_ADC_IsEnabled(hadc->Instance) == 0UL)
   {
     tmp_hal_status = ADC_Enable(hadc);
   }
-  
+
   if (tmp_hal_status == HAL_OK)
   {
     if(LL_ADC_REG_IsConversionOngoing(hadc->Instance) != 0UL)
@@ -254,7 +254,7 @@ HAL_StatusTypeDef HAL_ADCEx_LinearCalibration_GetValue(ADC_HandleTypeDef* hadc, 
       LL_ADC_REG_StartConversion(hadc->Instance);
     }
   }
-  
+
   return tmp_hal_status;
 }
 
@@ -414,7 +414,7 @@ HAL_StatusTypeDef HAL_ADCEx_LinearCalibration_FactorLoad(ADC_HandleTypeDef *hadc
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
   uint32_t cnt, FactorOffset;
   uint32_t LinearCalib_Buffer[ADC_LINEAR_CALIB_REG_COUNT];
-  
+
   /* Linearity calibration is retrieved from engi bytes
      read values from registers and put them to the CALFACT2 register */
   /* If needed linearity calibration can be done in runtime using
@@ -428,8 +428,8 @@ HAL_StatusTypeDef HAL_ADCEx_LinearCalibration_FactorLoad(ADC_HandleTypeDef *hadc
    }else  /*Case ADC3*/
     {
      FactorOffset = 16UL;
-    } 
- 
+    }
+
   for (cnt = 0UL; cnt < ADC_LINEAR_CALIB_REG_COUNT; cnt++)
   {
     LinearCalib_Buffer[cnt] = *(uint32_t*)(ADC_LINEAR_CALIB_REG_1_ADDR + FactorOffset + cnt);

@@ -79,4 +79,3 @@ extern void IRQ_EnableIT(unsigned int source);
 extern void IRQ_DisableIT(unsigned int source);
 
 #endif //#ifndef IRQ_H
-

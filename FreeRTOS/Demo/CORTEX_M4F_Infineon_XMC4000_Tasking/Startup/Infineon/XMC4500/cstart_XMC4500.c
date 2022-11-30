@@ -22,14 +22,14 @@
 #include <dbg.h>
 
 #define VTOR            (*(volatile unsigned int *)0xE000ED08)
-/* In the absence of DAVE code engine, CMSIS SystemInit() must perform clock 
-   tree setup. 
-   
+/* In the absence of DAVE code engine, CMSIS SystemInit() must perform clock
+   tree setup.
+
    This decision routine defined here will always return TRUE.
-   
+
    When overridden by a definition defined in DAVE code engine, this routine
    returns FALSE indicating that the code engine has performed the clock setup
-*/   
+*/
 #pragma weak AllowPLLInitByStartup
 uint32_t AllowPLLInitByStartup( void )
 {
@@ -92,7 +92,7 @@ void    __interrupt() __frame() Reset_Handler( void )
          * start address
          */
         VTOR = (unsigned int)_lc_vtor_value;
-        
+
 #ifdef __POSIX__
         __setsp( _posix_boot_stack_top );
 #endif

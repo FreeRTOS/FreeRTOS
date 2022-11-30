@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 //------------------------------------------------------------------------------
 /// \unit
 /// !Purpose
@@ -38,8 +38,8 @@
 /// -# For IP features, see "AT91SAM3U4 - IP features".
 /// -# For misc, see "AT91SAM3U4 - Misc".
 //------------------------------------------------------------------------------
- 
-#ifndef CHIP_H 
+
+#ifndef CHIP_H
 #define CHIP_H
 
 //------------------------------------------------------------------------------
@@ -75,15 +75,15 @@
 // EFC GPNVM number
 #define CHIP_EFC_NUM_GPNVMS    3
 
-/// Indicates chip has an Enhanced EFC. 
-#define CHIP_FLASH_EEFC 
+/// Indicates chip has an Enhanced EFC.
+#define CHIP_FLASH_EEFC
 
 // DMA channels number
 #define CHIP_DMA_CHANNEL_NUM   4
 
-// Indicate chip has a nandflash controller. 
+// Indicate chip has a nandflash controller.
 #define CHIP_NAND_CTRL
- 
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -91,9 +91,8 @@
 /// This page lists misc features
 ///
 
-//Misc 
+//Misc
 
 //------------------------------------------------------------------------------
 
 #endif //#ifndef CHIP_H
-

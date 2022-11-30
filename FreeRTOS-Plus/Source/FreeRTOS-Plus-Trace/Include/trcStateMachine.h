@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace state machine APIs.
  */
 
@@ -33,10 +33,10 @@ extern "C" {
 
 /**
  * @brief Creates trace state machine.
- * 
+ *
  * @param[in] szName Name.
- * @param[out] pxStateMachineHandle Pointer to uninitialized trace state machine. 
- * 
+ * @param[out] pxStateMachineHandle Pointer to uninitialized trace state machine.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -44,11 +44,11 @@ traceResult xTraceStateMachineCreate(const char *szName, TraceStateMachineHandle
 
 /**
  * @brief Creates trace state machine state.
- * 
+ *
  * @param[in] xStateMachineHandle Pointer to initialized trace state machine.
  * @param[in] szName Name.
  * @param[out] pxStateHandle Pointer to uninitialized trace state machine state.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -56,10 +56,10 @@ traceResult xTraceStateMachineStateCreate(TraceStateMachineHandle_t xStateMachin
 
 /**
  * @brief Sets trace state machine state.
- * 
+ *
  * @param[in] xStateMachineHandle Pointer to initialized trace state machine.
  * @param[in] xStateHandle Pointer to initialized trace state machine state.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

@@ -471,5 +471,3 @@ return_error
 	mov r0, #0
 	bx lr
 }
-
-

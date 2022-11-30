@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #ifndef __ALT_FPGA_MGR_H__
@@ -310,7 +310,7 @@ uint32_t alt_fpga_mon_status_get(void);
  *
  * This function asserts and holds the FPGA in reset. Any FPGA configuration is
  * cleared. The FPGA must be reconfigured to resume operation.
- * 
+ *
  * The FPGA is reset by the assertion of the nCONFIG signal. The signal remains
  * asserted until alt_fgpa_reset_deassert() is called.
  *
@@ -327,8 +327,8 @@ ALT_STATUS_CODE alt_fgpa_reset_assert(void);
  *
  * This function deasserts the FPGA from reset. The FPGA must be reconfigured to
  * resume operation.
- * 
- * The FPGA is reset by the deassertion of the nCONFIG signal. 
+ *
+ * The FPGA is reset by the deassertion of the nCONFIG signal.
  *
  * \retval      ALT_E_SUCCESS           Successful status.
  * \retval      ALT_E_FPGA_PWR_OFF      FPGA is not powered on.
@@ -509,7 +509,7 @@ ALT_STATUS_CODE alt_fpga_cfg_mode_set(ALT_FPGA_CFG_MODE_t cfg_mode);
  *              A 32-bit data word for passing user defined data. The content
  *              of this parameter is user defined. The FPGA Manager merely
  *              forwards the \e user_data value when it invokes the callback.
- * 
+ *
  * \retval      >0      The number of bytes returned in buf.
  * \retval      =0      The end of the input stream has been reached.
  * \retval      <0      An error occurred on the input stream.
@@ -618,7 +618,7 @@ ALT_STATUS_CODE alt_fpga_configure_dma(const void* cfg_buf,
  * \param       cfg_stream
  *              A pointer to a callback function used to consecutively read
  *              configuration bitstream data from a user defined input stream.
- * 
+ *
  * \param       user_data
  *              A 32-bit user defined data word. The content of this parameter
  *              is user defined. The FPGA Manager merely forwards the \e
@@ -658,7 +658,7 @@ ALT_STATUS_CODE alt_fpga_istream_configure(alt_fpga_istream_t cfg_stream,
  * \param       cfg_stream
  *              A pointer to a callback function used to consecutively read
  *              configuration bitstream data from a user defined input stream.
- * 
+ *
  * \param       user_data
  *              A 32-bit user defined data word. The content of this parameter
  *              is user defined. The FPGA Manager merely forwards the \e
@@ -1018,7 +1018,7 @@ typedef enum ALT_FPGA_GPO_e
  * \b s2f_gp signal values to the FPGA. Output signals are only written if
  * their corresponding mask bits are set.
  *
- * NOTE: If the FPGA is not in User Mode then the effect of this operation is 
+ * NOTE: If the FPGA is not in User Mode then the effect of this operation is
  *       undefined.
  *
  * \param       mask

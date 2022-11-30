@@ -135,7 +135,7 @@ void BMP_displayHeader( uint32_t* pAddressHeader )
     BMPHeader *header;
 
     header = (BMPHeader*) pAddressHeader;
-    
+
     TRACE_INFO("BMP\n\r");
     TRACE_INFO("type       0x%X \n\r", header->type);
     TRACE_INFO("fileSize   %ld \n\r", header->fileSize);

@@ -58,4 +58,3 @@ uint32_t RedNameLen(
 }
 
 #endif
-

@@ -85,5 +85,3 @@ static __INLINE int16_t HDIV_Mod(int32_t x, int16_t y)
 #endif //__HDIV_H__
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
-
-

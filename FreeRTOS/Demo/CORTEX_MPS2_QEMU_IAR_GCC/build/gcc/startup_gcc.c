@@ -163,5 +163,3 @@ void HardFault_Handler( void )
         " handler2_address_const: .word prvGetRegistersFromStack    \n"
     );
 }
-
-

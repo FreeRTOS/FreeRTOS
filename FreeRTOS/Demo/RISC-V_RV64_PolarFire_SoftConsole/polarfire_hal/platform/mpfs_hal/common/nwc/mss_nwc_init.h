@@ -152,5 +152,3 @@ mtime_delay
 #endif
 
 #endif /* __MSS_DDRC_H_ */
-
-

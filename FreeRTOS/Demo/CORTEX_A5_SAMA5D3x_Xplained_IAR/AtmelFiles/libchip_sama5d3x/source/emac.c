@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -521,7 +521,7 @@ void EMAC_SetAddress32(Emac *pEmac, uint8_t bIndex, uint32_t dwMacT, uint32_t dw
 void EMAC_SetAddress64(Emac *pEmac, uint8_t bIndex, uint64_t ddwMac)
 {
     pEmac->EMAC_SA[bIndex].EMAC_SAxB = (uint32_t)ddwMac;
-    pEmac->EMAC_SA[bIndex].EMAC_SAxT = (uint32_t)(ddwMac >> 32);    
+    pEmac->EMAC_SA[bIndex].EMAC_SAxT = (uint32_t)(ddwMac >> 32);
 }
 
 /**
@@ -559,4 +559,3 @@ void EMAC_TransceiverClockEnable(Emac *pEmac, uint8_t bEnaDis)
 }
 
 /**@}*/
-

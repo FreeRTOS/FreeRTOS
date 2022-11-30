@@ -171,4 +171,3 @@ extern struct hpet_info PrintInfo[3];
 #endif
 
 #endif /* HPET_H */
-

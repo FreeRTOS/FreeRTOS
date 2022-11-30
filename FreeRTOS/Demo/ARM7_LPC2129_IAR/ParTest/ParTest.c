@@ -92,5 +92,3 @@ unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 		}
 	}
 }
-
-

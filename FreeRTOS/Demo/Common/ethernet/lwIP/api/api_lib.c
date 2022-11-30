@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -11,21 +11,21 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission. 
+ *    derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
- * 
+ *
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
@@ -157,13 +157,13 @@ netbuf_copy_partial(struct netbuf *buf, void *dataptr, u16_t len, u16_t offset)
   if(buf == NULL || dataptr == NULL) {
     return;
   }
-  
+
   /* This implementation is bad. It should use bcopy
      instead. */
   for(p = buf->p; left < len && p != NULL; p = p->next) {
     if (offset != 0 && offset >= p->len) {
       offset -= p->len;
-    } else {    
+    } else {
       for(i = offset; i < p->len; ++i) {
   ((u8_t *)dataptr)[left] = ((u8_t *)p->payload)[i];
   if (++left >= len) {
@@ -204,7 +204,7 @@ netconn *netconn_new_with_proto_and_callback(enum netconn_type t, u16_t proto,
   if (conn == NULL) {
     return NULL;
   }
-  
+
   conn->err = ERR_OK;
   conn->type = t;
   conn->pcb.tcp = NULL;
@@ -229,11 +229,11 @@ netconn *netconn_new_with_proto_and_callback(enum netconn_type t, u16_t proto,
     memp_free(MEMP_NETCONN, conn);
     return NULL;
   }
-  
+
   msg->type = API_MSG_NEWCONN;
   msg->msg.msg.bc.port = proto; /* misusing the port field */
   msg->msg.conn = conn;
-  api_msg_post(msg);  
+  api_msg_post(msg);
   sys_mbox_fetch(conn->mbox, NULL);
   memp_free(MEMP_API_MSG, msg);
 
@@ -265,18 +265,18 @@ netconn_delete(struct netconn *conn)
 {
   struct api_msg *msg;
   void *mem;
-  
+
   if (conn == NULL) {
     return ERR_OK;
   }
-  
+
   if ((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
     return ERR_MEM;
   }
-  
+
   msg->type = API_MSG_DELCONN;
   msg->msg.conn = conn;
-  api_msg_post(msg);  
+  api_msg_post(msg);
   sys_mbox_fetch(conn->mbox, NULL);
   memp_free(MEMP_API_MSG, msg);
 
@@ -293,14 +293,14 @@ netconn_delete(struct netconn *conn)
     sys_mbox_free(conn->recvmbox);
     conn->recvmbox = SYS_MBOX_NULL;
   }
- 
+
 
   /* Drain the acceptmbox. */
   if (conn->acceptmbox != SYS_MBOX_NULL) {
     while (sys_arch_mbox_fetch(conn->acceptmbox, &mem, 1) != SYS_ARCH_TIMEOUT) {
       netconn_delete((struct netconn *)mem);
     }
-    
+
     sys_mbox_free(conn->acceptmbox);
     conn->acceptmbox = SYS_MBOX_NULL;
   }
@@ -387,7 +387,7 @@ netconn_bind(struct netconn *conn, struct ip_addr *addr,
       return ERR_MEM;
     }
   }
-  
+
   if ((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
     return (conn->err = ERR_MEM);
   }
@@ -407,7 +407,7 @@ netconn_connect(struct netconn *conn, struct ip_addr *addr,
        u16_t port)
 {
   struct api_msg *msg;
-  
+
   if (conn == NULL) {
     return ERR_VAL;
   }
@@ -418,12 +418,12 @@ netconn_connect(struct netconn *conn, struct ip_addr *addr,
       return ERR_MEM;
     }
   }
-  
+
   if ((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
     return ERR_MEM;
   }
   msg->type = API_MSG_CONNECT;
-  msg->msg.conn = conn;  
+  msg->msg.conn = conn;
   msg->msg.msg.bc.ipaddr = addr;
   msg->msg.msg.bc.port = port;
   api_msg_post(msg);
@@ -436,7 +436,7 @@ err_t
 netconn_disconnect(struct netconn *conn)
 {
   struct api_msg *msg;
-  
+
   if (conn == NULL) {
     return ERR_VAL;
   }
@@ -445,7 +445,7 @@ netconn_disconnect(struct netconn *conn)
     return ERR_MEM;
   }
   msg->type = API_MSG_DISCONNECT;
-  msg->msg.conn = conn;  
+  msg->msg.conn = conn;
   api_msg_post(msg);
   sys_mbox_fetch(conn->mbox, NULL);
   memp_free(MEMP_API_MSG, msg);
@@ -468,7 +468,7 @@ netconn_listen(struct netconn *conn)
       return ERR_MEM;
     }
   }
-  
+
   if ((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
     return (conn->err = ERR_MEM);
   }
@@ -484,16 +484,16 @@ struct netconn *
 netconn_accept(struct netconn *conn)
 {
   struct netconn *newconn;
-  
+
   if (conn == NULL) {
     return NULL;
   }
-  
+
   sys_mbox_fetch(conn->acceptmbox, (void *)&newconn);
   /* Register event with callback */
   if (conn->callback)
       (*conn->callback)(conn, NETCONN_EVT_RCVMINUS, 0);
-  
+
   return newconn;
 }
 
@@ -504,11 +504,11 @@ netconn_recv(struct netconn *conn)
   struct netbuf *buf;
   struct pbuf *p;
   u16_t len;
-    
+
   if (conn == NULL) {
     return NULL;
   }
-  
+
   if (conn->recvmbox == SYS_MBOX_NULL) {
     conn->err = ERR_CONN;
     return NULL;
@@ -531,7 +531,7 @@ netconn_recv(struct netconn *conn)
       conn->err = ERR_MEM;
       return NULL;
     }
-    
+
     sys_mbox_fetch(conn->recvmbox, (void *)&p);
 
     if (p != NULL)
@@ -541,7 +541,7 @@ netconn_recv(struct netconn *conn)
     }
     else
         len = 0;
-    
+
     /* Register event with callback */
       if (conn->callback)
         (*conn->callback)(conn, NETCONN_EVT_RCVMINUS, len);
@@ -584,9 +584,9 @@ netconn_recv(struct netconn *conn)
         (*conn->callback)(conn, NETCONN_EVT_RCVMINUS, buf->p->tot_len);
   }
 
-  
 
-    
+
+
   LWIP_DEBUGF(API_LIB_DEBUG, ("netconn_recv: received %p (err %d)\n", (void *)buf, conn->err));
 
 
@@ -626,7 +626,7 @@ netconn_write(struct netconn *conn, void *dataptr, u16_t size, u8_t copy)
 {
   struct api_msg *msg;
   u16_t len;
-  
+
   if (conn == NULL) {
     return ERR_VAL;
   }
@@ -640,13 +640,13 @@ netconn_write(struct netconn *conn, void *dataptr, u16_t size, u8_t copy)
   }
   msg->type = API_MSG_WRITE;
   msg->msg.conn = conn;
-        
+
 
   conn->state = NETCONN_WRITE;
   while (conn->err == ERR_OK && size > 0) {
     msg->msg.msg.w.dataptr = dataptr;
     msg->msg.msg.w.copy = copy;
-    
+
     if (conn->type == NETCONN_TCP) {
       if (tcp_sndbuf(conn->pcb.tcp) == 0) {
   sys_sem_wait(conn->sem);
@@ -664,11 +664,11 @@ netconn_write(struct netconn *conn, void *dataptr, u16_t size, u8_t copy)
     } else {
       len = size;
     }
-    
+
     LWIP_DEBUGF(API_LIB_DEBUG, ("netconn_write: writing %d bytes (%d)\n", len, copy));
     msg->msg.msg.w.len = len;
     api_msg_post(msg);
-    sys_mbox_fetch(conn->mbox, NULL);    
+    sys_mbox_fetch(conn->mbox, NULL);
     if (conn->err == ERR_OK) {
       dataptr = (void *)((u8_t *)dataptr + len);
       size -= len;
@@ -682,7 +682,7 @@ netconn_write(struct netconn *conn, void *dataptr, u16_t size, u8_t copy)
  ret:
   memp_free(MEMP_API_MSG, msg);
   conn->state = NETCONN_NONE;
-  
+
   return conn->err;
 }
 
@@ -719,4 +719,3 @@ netconn_err(struct netconn *conn)
 {
   return conn->err;
 }
-

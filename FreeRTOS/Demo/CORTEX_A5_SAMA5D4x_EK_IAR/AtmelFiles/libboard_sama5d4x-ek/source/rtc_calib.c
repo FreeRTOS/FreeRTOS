@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -164,7 +164,7 @@ const RTC_PPMLookup PPM_Lookup[] =
     {83 ,-134 , 0, 1 ,28 },
     {84 ,-138 , 0, 1 ,27 },
     {85 ,-143 , 0, 1 ,26 }
-} ;    
+} ;
 
 /**
  * \brief RTC calibration for Temperature or PPM drift
@@ -173,22 +173,22 @@ extern void RTC_ClockCalibration( Rtc* pRtc, int32_t CurrentTempr)
 {
   uint16_t i;
   uint32_t MR_Reg, Size;
-  
+
   Size = sizeof(PPM_Lookup);
-  
+
   MR_Reg =0;
   for(i=0; i< Size; i++)
   {
   if(PPM_Lookup[i].Tempr == CurrentTempr)
       {
-          MR_Reg |= RTC_MR_CORRECTION(PPM_Lookup[i].CORRECTION);  
+          MR_Reg |= RTC_MR_CORRECTION(PPM_Lookup[i].CORRECTION);
           MR_Reg |= (PPM_Lookup[i].HIGHPPM << 15);
           MR_Reg |= (PPM_Lookup[i].NEGPPM << 4);
           pRtc->RTC_MR = MR_Reg;    // update the calibration value
           break;
       }
   }
-  
- 
-  
+
+
+
 }

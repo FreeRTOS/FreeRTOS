@@ -166,7 +166,7 @@ static const CLI_Command_Definition_t xParameterEcho =
 void vRegisterSampleCLICommands( void )
 {
 	/* Register all the command line commands defined immediately above. */
-	FreeRTOS_CLIRegisterCommand( &xTaskStats );	
+	FreeRTOS_CLIRegisterCommand( &xTaskStats );
 	FreeRTOS_CLIRegisterCommand( &xThreeParameterEcho );
 	FreeRTOS_CLIRegisterCommand( &xParameterEcho );
 
@@ -175,7 +175,7 @@ void vRegisterSampleCLICommands( void )
 		FreeRTOS_CLIRegisterCommand( &xRunTimeStats );
 	}
 	#endif
-	
+
 	#if( configINCLUDE_QUERY_HEAP_COMMAND == 1 )
 	{
 		FreeRTOS_CLIRegisterCommand( &xQueryHeap );
@@ -249,7 +249,7 @@ BaseType_t xSpacePadding;
 /*-----------------------------------------------------------*/
 
 #if( configGENERATE_RUN_TIME_STATS == 1 )
-	
+
 	static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
 	const char * const pcHeader = "  Abs Time      % Time\r\n****************************************\r\n";
@@ -287,7 +287,7 @@ BaseType_t xSpacePadding;
 		pdFALSE. */
 		return pdFALSE;
 	}
-	
+
 #endif /* configGENERATE_RUN_TIME_STATS */
 /*-----------------------------------------------------------*/
 

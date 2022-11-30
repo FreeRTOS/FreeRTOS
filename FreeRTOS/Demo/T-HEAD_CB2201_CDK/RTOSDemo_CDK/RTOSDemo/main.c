@@ -94,8 +94,8 @@ static void prvQueueReceiveTask( void *pvParameters )
 		if( ulReceivedValue == 100UL )
 		{
 			printf("Recieve expected value : %d\n", ulReceivedValue);
-		} 
-		else 
+		}
+		else
 		{
 			printf("Recieve unexpected value : %d\n", ulReceivedValue);
 		}
@@ -103,7 +103,7 @@ static void prvQueueReceiveTask( void *pvParameters )
 	}
 
 }
- 
+
 int main()
 {
 	SystemInit();
@@ -114,10 +114,10 @@ int main()
 		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
 
 		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
-		
+
 		vTaskStartScheduler();
 	}
-	
+
 
     return 0;
 }

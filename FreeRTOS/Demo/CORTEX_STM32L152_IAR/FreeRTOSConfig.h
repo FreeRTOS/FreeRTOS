@@ -107,4 +107,3 @@ is included from an asm file. */
 	}
 
 #endif /* FREERTOS_CONFIG_H */
-

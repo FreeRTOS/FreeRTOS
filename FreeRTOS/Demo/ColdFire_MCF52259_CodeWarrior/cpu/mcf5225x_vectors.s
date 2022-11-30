@@ -1,7 +1,7 @@
 /*
  * File:	vectors.s
  * Purpose:	MCF5225x vector table
- * 
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */
@@ -21,7 +21,7 @@
 	.extern _asm_exception_handler
 	.extern _vPIT0InterruptHandler
 	.extern vPortYieldISR
-	.extern _vFECISRHandler	
+	.extern _vFECISRHandler
 	.text
 
 /*
@@ -156,7 +156,7 @@ vector7B:	.long	_asm_exception_handler
 vector7C:	.long	_asm_exception_handler
 vector7D:	.long	_asm_exception_handler
 vector7E:	.long	_asm_exception_handler
-vector7F:	.long	_asm_exception_handler	
+vector7F:	.long	_asm_exception_handler
 vector80:	.long	_asm_exception_handler
 vector81:	.long	_asm_exception_handler
 vector82:	.long	_asm_exception_handler
@@ -224,8 +224,8 @@ vectorBF:	.long	_asm_exception_handler
 
     .org 0x400
 
-/* 
- * CFM Flash Configuration Field 
+/*
+ * CFM Flash Configuration Field
  */
 KEY_UPPER:  .long   0x00000000
 KEY_LOWER:  .long   0x00000000

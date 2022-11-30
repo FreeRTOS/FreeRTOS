@@ -7,7 +7,7 @@ wolfSSL FIPS Ready includes FIPS-enabled cryptography layer code along with the 
 
 Next to this folder you will see another demo folder named "FreeRTOS_Plus_WolfSSL_Windows_Simulator". The demo uses regular (non-FIPS-Ready) wolfSSL. If you compare both demos, you will notice that there are no changes to the client code, and will also notice that some additional tests run prior to your main program in this FIPS-Ready demo.
 
-This demo shows that wolfSSL FIPS Ready provides a FIPS compliant cryptographic module with minimal impact on client code. 
+This demo shows that wolfSSL FIPS Ready provides a FIPS compliant cryptographic module with minimal impact on client code.
 
 # What does FIPS 140-2 specify?
 
@@ -17,7 +17,7 @@ FIPS 140-2 enforces cryptographic modules to follow best practices, including:
 2. Include a default entry point
 3. Perform a Power On Self Test (POST)
 
-wolfSSL FIPS Ready fulfils these requirements. The third requirement means that the POST should run automatically whenever the application using the FIPS code starts up. For wolfSSL FIPS Ready, the POST consits of two tests: 
+wolfSSL FIPS Ready fulfils these requirements. The third requirement means that the POST should run automatically whenever the application using the FIPS code starts up. For wolfSSL FIPS Ready, the POST consits of two tests:
 
 - In-Core Integrity Check (HMAC-SHA256 over cryptographic algorithm object files)
 - Known Answer Tests (KATs)
@@ -28,12 +28,12 @@ The KAT (Known Answer Tests) run algorithm test cases using pre-computed NIST te
 
 # How to build and run the Demo application
 
-By double-clicking the solution file named "FreeRTOS_Plus_WolfSSL_FIPS_Ready.sln" included in this folder, Visual Studio starts and shows you a project in its solution explorer. It is named "RTOSDemo" and provides a console application program which runs on windows. 
+By double-clicking the solution file named "FreeRTOS_Plus_WolfSSL_FIPS_Ready.sln" included in this folder, Visual Studio starts and shows you a project in its solution explorer. It is named "RTOSDemo" and provides a console application program which runs on windows.
 
 All required settings have been set in the user_settings.h header file included in the RTOSDemo/FreeRTOS+/wolfSSL folder in the solution explorer pane. The next step is to build the RTOSDemo application:
 
 1. Build the RTOSDemo project
-2. Run the RTOSDemo.exe 
+2. Run the RTOSDemo.exe
 
 You will see a console that pops up, and it shows output like the following:
 
@@ -43,7 +43,7 @@ Starting Power On Self Test
 In core integrity check error: hash = C66491A040D5B9686BAA7A75A280290D91B49...
 ```
 
-Do not worry about this result, an error is expected at this point. Error number "-203" means In-Core-integrity-check failed. The check is identical to the "In Core Integrity Test" listed in the previous section. And the subsequent KAT also failed due to the first error. Once FIPS Ready has failed POST, it enters an error state and never allows subsequent cryptographic operations until the device is restarted and the tests can complete successfully. 
+Do not worry about this result, an error is expected at this point. Error number "-203" means In-Core-integrity-check failed. The check is identical to the "In Core Integrity Test" listed in the previous section. And the subsequent KAT also failed due to the first error. Once FIPS Ready has failed POST, it enters an error state and never allows subsequent cryptographic operations until the device is restarted and the tests can complete successfully.
 
 The in-core integrity check requires a pre-calculated hash value to be stored in the fips_test.c source file. Remember that you did not yet set this pre-calculated value during the build process. Because the hash does not match the stored value is the reason why this first run will fail.
 
@@ -53,7 +53,7 @@ The in-core integrity check requires a pre-calculated hash value to be stored in
 
 2. Find and open the file named "**fips_test.c**" under the RTOSDemo/FreeRTOS+/wolfSSL/wolfcrypt folder in the Visual Studio solution explorer pane. Or you can reach the file by traversing "../../ThirdParty/WolfSSL-FIPS-Ready/wolfcrypt/src/fips_test.c" starting from the folder where this README is included.
 
-3. In the fips_test.c, find the following statement: 
+3. In the fips_test.c, find the following statement:
 
     ```
     static const char verifyCore[] =
@@ -74,9 +74,9 @@ The in-core integrity check requires a pre-calculated hash value to be stored in
     Received by the secure server: Message number 0
 
     Received by the secure server: Message number 1
-    
+
         ...
-    
+
     Received by the secure server: Message number 9
 
     Connection closed, back to start
@@ -85,6 +85,6 @@ The in-core integrity check requires a pre-calculated hash value to be stored in
 
     This time, the in-core integrity check and KAT finished successfully, and Demo application was allowed to continue and perform its own tasks.
 
-    # When is the hash value update needed? 
+    # When is the hash value update needed?
 
 Whenever the FIPS boundary files have had changes made to them, such as options, location in the application, hash value, code, etc. the verifyHash value in fips_test.c will need to be updated. Even you just add or remove your code in your application, it may shift the FIPS boundary code in the memory, thus requiring a new hash value to be computed and updated.

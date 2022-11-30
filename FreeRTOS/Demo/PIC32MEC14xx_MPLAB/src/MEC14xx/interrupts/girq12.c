@@ -67,4 +67,3 @@ girq12_b2(void)
 /* end girq12.c */
 /**   @}
  */
-

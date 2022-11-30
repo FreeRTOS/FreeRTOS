@@ -53,8 +53,8 @@
  - it may not work on all architectures, and all processors, particularly
    if they have issues with alignment and 16 bit access.
 
- - in this case you will need to port it to your architecture and 
-   #define LWIP_CHKSUM <your_checksum_routine> 
+ - in this case you will need to port it to your architecture and
+   #define LWIP_CHKSUM <your_checksum_routine>
    in your sys_arch.h
 */
 #ifndef LWIP_CHKSUM
@@ -189,8 +189,8 @@ inet_chksum_pbuf(struct pbuf *p)
 #define isxdigit(c)          (isdigit(c) || in_range(c, 'a', 'f') || in_range(c, 'A', 'F'))
 #define islower(c)           in_range(c, 'a', 'z')
 #define isspace(c)           (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v')
-#endif		
-		
+#endif
+
 
  /*
   * Ascii internet address interpretation routine.

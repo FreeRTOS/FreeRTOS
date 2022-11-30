@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -153,7 +153,7 @@ static uint32_t _MciDMAPrepare(sMcid *pMcid, uint8_t bRd)
 	if (bRd) {
 		pMcid->dwDmaCh = XDMAD_AllocateChannel
 				(pXdmad, pMcid->bID, XDMAD_TRANSFER_MEMORY);
-	} else { 
+	} else {
 		pMcid->dwDmaCh = XDMAD_AllocateChannel
 				(pXdmad, XDMAD_TRANSFER_MEMORY, pMcid->bID);
 	}
@@ -194,9 +194,9 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
 		hsmciId = ID_HSMCI;
 		if (bRd) {
 			for ( i = 0; i < pCmd->wNbBlocks; i++) {
-				dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1 
+				dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1
 					| (( i == pCmd->wNbBlocks - 1) ? 0: XDMA_UBC_NDE_FETCH_EN)
-					| XDMA_UBC_NDEN_UPDATED 
+					| XDMA_UBC_NDEN_UPDATED
 					| pCmd->wBlockSize /4 ;
 				dmaLinkList[i].mbr_sa  = (uint32_t)&(pHw->HSMCI_FIFO[i]);
 				dmaLinkList[i].mbr_da = (uint32_t)&pCmd->pData[i * pCmd->wBlockSize];
@@ -205,68 +205,68 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
 				else
 					dmaLinkList[i].mbr_nda = (uint32_t)&dmaLinkList[ i + 1 ];
 			}
-			xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN 
-				| XDMAC_CC_MBSIZE_SINGLE 
-				| XDMAC_CC_DSYNC_PER2MEM 
-				| XDMAC_CC_CSIZE_CHK_1 
+			xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+				| XDMAC_CC_MBSIZE_SINGLE
+				| XDMAC_CC_DSYNC_PER2MEM
+				| XDMAC_CC_CSIZE_CHK_1
 				| XDMAC_CC_DWIDTH_WORD
-				| XDMAC_CC_SIF_AHB_IF1 
-				| XDMAC_CC_DIF_AHB_IF0 
-				| XDMAC_CC_SAM_FIXED_AM 
-				| XDMAC_CC_DAM_INCREMENTED_AM 
+				| XDMAC_CC_SIF_AHB_IF1
+				| XDMAC_CC_DIF_AHB_IF0
+				| XDMAC_CC_SAM_FIXED_AM
+				| XDMAC_CC_DAM_INCREMENTED_AM
 				| XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber
 					(hsmciId, XDMAD_TRANSFER_RX ));
-			xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1 
-				| XDMAC_CNDC_NDE_DSCR_FETCH_EN 
+			xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1
+				| XDMAC_CNDC_NDE_DSCR_FETCH_EN
 				| XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
 				| XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED ;
-		
-			
-			if (XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh, 
+
+
+			if (XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh,
 					&xdmadRxCfg, xdmaCndc, (uint32_t)&dmaLinkList[0],
 						XDMAC_CIE_LIE)) {
 				return 0;
 			}
 			// cache maintenance
 			SCB_CleanInvalidateDCache();
-			
+
 			if (XDMAD_StartTransfer(pXdmad,pMcid->dwDmaCh)) {
 				return 0;
 			}
 			//Write
 		} else {
 			for ( i = 0; i < pCmd->wNbBlocks; i++){
-				dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1 
+				dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1
 					|(( i == pCmd->wNbBlocks - 1) ? 0: XDMA_UBC_NDE_FETCH_EN)
-					| XDMA_UBC_NDEN_UPDATED 
+					| XDMA_UBC_NDEN_UPDATED
 					| pCmd->wBlockSize /4 ;
 				dmaLinkList[i].mbr_sa = (uint32_t)&pCmd->pData[i * pCmd->wBlockSize];
 				dmaLinkList[i].mbr_da = (uint32_t)&(pHw->HSMCI_FIFO[i]);
 				if ( i == pCmd->wNbBlocks - 1) dmaLinkList[i].mbr_nda = 0;
 				else dmaLinkList[i].mbr_nda = (uint32_t)&dmaLinkList[ i + 1 ];
 			}
-			xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN 
-				| XDMAC_CC_MBSIZE_SINGLE 
-				| XDMAC_CC_DSYNC_MEM2PER 
-				| XDMAC_CC_CSIZE_CHK_1 
+			xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+				| XDMAC_CC_MBSIZE_SINGLE
+				| XDMAC_CC_DSYNC_MEM2PER
+				| XDMAC_CC_CSIZE_CHK_1
 				| XDMAC_CC_DWIDTH_WORD
-				| XDMAC_CC_SIF_AHB_IF0 
-				| XDMAC_CC_DIF_AHB_IF1 
-				| XDMAC_CC_SAM_INCREMENTED_AM 
-				| XDMAC_CC_DAM_FIXED_AM 
+				| XDMAC_CC_SIF_AHB_IF0
+				| XDMAC_CC_DIF_AHB_IF1
+				| XDMAC_CC_SAM_INCREMENTED_AM
+				| XDMAC_CC_DAM_FIXED_AM
 				| XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(hsmciId, XDMAD_TRANSFER_TX ));
-			xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1 
-				| XDMAC_CNDC_NDE_DSCR_FETCH_EN 
+			xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1
+				| XDMAC_CNDC_NDE_DSCR_FETCH_EN
 				| XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
-				| XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED ; 
-			if(XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh, 
+				| XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED ;
+			if(XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh,
 					&xdmadTxCfg, xdmaCndc, (uint32_t)&dmaLinkList[0],
 					XDMAC_CIE_LIE)){
 				return 0;
 			}
 			// cache maintenance
 			SCB_CleanInvalidateDCache();
-			
+
 			if (XDMAD_StartTransfer(pXdmad,pMcid->dwDmaCh)) {
 				return 0;
 			}
@@ -308,12 +308,12 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
 				 XDMAC_CIE_RBIE  |
 				 XDMAC_CIE_WBIE  |
 				 XDMAC_CIE_ROIE);
-			
+
 			XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh, &xdmadRxCfg,
 					0, 0, xdmaInt);
 		} else {
 			xdmadTxCfg.mbr_ubc = toWCOUNT(pMcid->dwXSize);
-			xdmadTxCfg.mbr_sa = (uint32_t)memAddress; 
+			xdmadTxCfg.mbr_sa = (uint32_t)memAddress;
 			xdmadTxCfg.mbr_da = (uint32_t)&(pHw->HSMCI_TDR);
 			xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
 				XDMAC_CC_MEMSET_NORMAL_MODE |
@@ -325,14 +325,14 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
 				XDMAC_CC_SAM_INCREMENTED_AM |
 				XDMAC_CC_DAM_FIXED_AM;
 			xdmadTxCfg.mbr_bc = 0;
-			
+
 			xdmaInt =  (XDMAC_CIE_BIE   |
 				 XDMAC_CIE_DIE   |
 				 XDMAC_CIE_FIE   |
 				 XDMAC_CIE_RBIE  |
 				 XDMAC_CIE_WBIE  |
 				 XDMAC_CIE_ROIE);
-			
+
 			XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh, &xdmadTxCfg,
 					0, 0, xdmaInt);
 		}
@@ -399,7 +399,7 @@ static void _FinishCmd( sMcid* pMcid, uint8_t bStatus )
 	if (pMcid->dwDmaCh != XDMAD_ALLOC_FAILED) {
 		if (XDMAD_FreeChannel(pXdmad, pMcid->dwDmaCh)) {
 		  TRACE_ERROR(" Can't free channel \n\r" );
-		  TRACE_DEBUG(" Channel is in %d state\n\r", 
+		  TRACE_DEBUG(" Channel is in %d state\n\r",
 			pXdmad->XdmaChannels[pMcid->dwDmaCh].state );
 		}
 		pMcid->dwDmaCh = XDMAD_ALLOC_FAILED;
@@ -640,7 +640,7 @@ uint32_t MCID_SendCmd(sMcid *pMcid, void *pCommand)
 				cmdr |= HSMCI_CMDR_TRCMD_STOP_DATA;
 				break;
 		}
-		
+
 		switch(pCmd->cmdOp.bmBits.respType) {
 		case 3: case 4:
 			/* ignore CRC error */

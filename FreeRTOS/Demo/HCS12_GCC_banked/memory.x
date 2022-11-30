@@ -1,7 +1,7 @@
 /* Flash Memory Banks
    For Wytec Dragon12, Technological Arts Adapt9S12DP256
    with DBug12 v4 bootloader
-   
+
    Author Jefferson L Smith; Robotronics, Inc.
   */
 
@@ -14,10 +14,10 @@ MEMORY
 
   eeprom (rx): ORIGIN = 0x0400, LENGTH = 3k
   text (rx)  : ORIGIN = 0x4000, LENGTH = 16k
-  
+
   /* high fixed bank, reserve 0x100 vectors and security. */
   text_h (rx)  : ORIGIN = 0xc000, LENGTH = 16k-0x100
-  
+
   /* Flash memory banks */
   bank0  (rx)   : ORIGIN = 0x0d0000, LENGTH = 16k
   bank1  (rx)   : ORIGIN = 0x0d4000, LENGTH = 16k
@@ -33,7 +33,7 @@ MEMORY
   bank11 (rx)   : ORIGIN = 0x0fc000, LENGTH = 16k
   bank12 (rx)   : ORIGIN = 0x100000, LENGTH = 16k
   bank13 (rx)   : ORIGIN = 0x104000, LENGTH = 16k
-  
+
   bank14 (rx)   : ORIGIN = 0x108000, LENGTH = 16k
   bank15 (rx)   : ORIGIN = 0x10c000, LENGTH = 16k-0x100
 }
@@ -60,4 +60,3 @@ SECTIONS
   } > bank3
 
 }
-

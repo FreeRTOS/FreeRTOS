@@ -131,8 +131,8 @@
 *		      Added notes for CR 710483 that the XUL_FIFO_SIZE is not
 *		      used in the driver. This is the size of the FIFO for
 *		      Transmit/Receive FIFOs which cannot be changed.
-* 3.0 adk 17/12/13  Fixed CR:741186,761863 Changes are made in the file 
-*		      xuartlite_selftest.c      
+* 3.0 adk 17/12/13  Fixed CR:741186,761863 Changes are made in the file
+*		      xuartlite_selftest.c
 * 3.0 adk 19/12/13  Update the driver as per new TCL API's
 * 3.1 nsk 21/07/15  Updated XUartLite_ReceiveBuffer function in xuartlite.c
 *		    to update the receive data into user buffer in critical

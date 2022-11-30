@@ -38,9 +38,9 @@ traceResult xTraceEventBufferInitialize(TraceEventBuffer_t* pxTraceEventBuffer, 
 
 /**
  * @brief Pops the oldest event from the Event Buffer.
- * 
+ *
  * @param[in] pxTraceEventBuffer Pointer to initialized trace event buffer.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -63,13 +63,13 @@ static traceResult prvTraceEventBufferPop(TraceEventBuffer_t *pxTraceEventBuffer
 traceResult xTraceEventBufferPush(TraceEventBuffer_t *pxTraceEventBuffer, void *pxData, uint32_t uiDataSize, int32_t *piBytesWritten)
 {
 	uint32_t uiBufferSize;
-	
+
 	/* This should never fail */
 	TRC_ASSERT(pxTraceEventBuffer != 0);
-	
+
 	/* This should never fail */
 	TRC_ASSERT(pxData != 0);
-	
+
 	uiBufferSize = pxTraceEventBuffer->uiSize;
 
 	/* Check if the data size is larger than the buffer */

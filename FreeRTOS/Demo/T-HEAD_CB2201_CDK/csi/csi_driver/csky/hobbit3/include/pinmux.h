@@ -96,4 +96,3 @@ int32_t pin_mux(pin_name_t pin, uint16_t function);
 
 
 #endif /* HOBBIT_PINMUX_H */
-

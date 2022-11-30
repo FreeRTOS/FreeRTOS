@@ -75,5 +75,3 @@ We use --gc-sections when linking, so there is no harm is setting all of these t
 
 
 #endif /* FREERTOS_CONFIG_H */
-
-

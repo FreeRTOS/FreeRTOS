@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -63,11 +63,11 @@
 #define CIRC_CNT(head,tail,size) (((head) - (tail)) & ((size)-1))
 
 // Return space available, 0..size-1
-// We always leave one free char as a completely full buffer 
+// We always leave one free char as a completely full buffer
 // has head == tail, which is the same as empty
 #define CIRC_SPACE(head,tail,size) CIRC_CNT((tail),((head)+1),(size))
 
-// Return count up to the end of the buffer.  
+// Return count up to the end of the buffer.
 // Carefully avoid accessing head and tail more than once,
 // so they can change underneath us without returning inconsistent results
 #define CIRC_CNT_TO_END(head,tail,size) \
@@ -141,9 +141,9 @@ typedef struct {
 //         Internal variables
 //------------------------------------------------------------------------------
 // Receive Transfer Descriptor buffer
-static volatile RxTd rxTd; 
+static volatile RxTd rxTd;
 // Transmit Transfer Descriptor buffer
-static volatile TxTd txTd; 
+static volatile TxTd txTd;
 /// Send Buffer
 // Section 3.6 of AMBA 2.0 spec states that burst should not cross 1K Boundaries.
 // Receive buffer manager writes are burst of 2 words => 3 lsb bits of the address shall be set to 0
@@ -203,7 +203,7 @@ static unsigned char EMAC_WaitPhy( unsigned int retry )
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-/// Set MDC clock according to current board clock. Per 802.3, MDC should be 
+/// Set MDC clock according to current board clock. Per 802.3, MDC should be
 /// less then 2.5MHz.
 /// Return 1 if successfully, 0 if MDC clock not found.
 //-----------------------------------------------------------------------------
@@ -424,7 +424,7 @@ void EMAC_Handler(void)
         // Sanity check: Tx buffers have to be scheduled
         ASSERT(!CIRC_EMPTY(&txTd),
             "-F- EMAC Tx interrupt received meanwhile no TX buffers has been scheduled\n\r");
-        
+
         // Check the buffers
         while (CIRC_CNT(txTd.head, txTd.tail, TX_BUFFERS)) {
             pTxTd = txTd.td + txTd.tail;
@@ -434,16 +434,16 @@ void EMAC_Handler(void)
             if ((pTxTd->status & EMAC_TX_USED_BIT) == 0) {
                 break;
             }
-            
+
             // Notify upper layer that packet has been sent
             if (*pTxCb) {
                 (*pTxCb)(txStatusFlag);
             }
-            
+
             CIRC_INC( txTd.tail, TX_BUFFERS );
         }
 
-        // If a wakeup has been scheduled, notify upper layer that it can send 
+        // If a wakeup has been scheduled, notify upper layer that it can send
         // other packets, send will be successfull.
         if( (CIRC_SPACE(txTd.head, txTd.tail, TX_BUFFERS) >= txTd.wakeupThreshold)
          &&  txTd.wakeupCb) {
@@ -461,7 +461,7 @@ void EMAC_Handler(void)
 /// \param enableCAF    enable AT91C_EMAC_CAF if needed by application
 /// \param enableNBC    AT91C_EMAC_NBC if needed by application
 //-----------------------------------------------------------------------------
-void EMAC_Init( unsigned char id, const unsigned char *pMacAddress, 
+void EMAC_Init( unsigned char id, const unsigned char *pMacAddress,
                 unsigned char enableCAF, unsigned char enableNBC )
 {
     int Index;
@@ -479,7 +479,7 @@ void EMAC_Init( unsigned char id, const unsigned char *pMacAddress,
     // Disable TX & RX and more
     AT91C_BASE_EMAC->EMAC_NCR = 0;
 
-    // disable 
+    // disable
     AT91C_BASE_EMAC->EMAC_IDR = ~0;
 
     rxTd.idx = 0;
@@ -573,7 +573,7 @@ void EMAC_GetStatistics(EmacStats *pStats, unsigned char reset)
     if (pStats == (EmacStats *) 0) {
         return;
     }
-    
+
     ncrBackup = AT91C_BASE_EMAC->EMAC_NCR & (AT91C_EMAC_TE | AT91C_EMAC_RE);
 
     // Disable TX/RX
@@ -601,8 +601,8 @@ void EMAC_GetStatistics(EmacStats *pStats, unsigned char reset)
 /// \param fWakeUpCb   TX Wakeup
 /// \return         OK, Busy or invalid packet
 //-----------------------------------------------------------------------------
-unsigned char EMAC_Send(void *pBuffer, 
-                        unsigned int size, 
+unsigned char EMAC_Send(void *pBuffer,
+                        unsigned int size,
                         EMAC_TxCallback fEMAC_TxCallback)
 {
     volatile EmacTxTDescriptor *pTxTd;
@@ -630,7 +630,7 @@ unsigned char EMAC_Send(void *pBuffer,
     pTxCb = txTd.txCb + txTd.head;
 
     // Sanity check
-    ASSERT((pTxTd->status & EMAC_TX_USED_BIT) != 0, 
+    ASSERT((pTxTd->status & EMAC_TX_USED_BIT) != 0,
         "-F- Buffer is still under EMAC control\n\r");
 
     // Setup/Copy data to transmition buffer
@@ -638,7 +638,7 @@ unsigned char EMAC_Send(void *pBuffer,
         // Driver manage the ring buffer
         memcpy((void *)pTxTd->addr, pBuffer, size);
     }
-    
+
     // Tx Callback
     *pTxCb = fEMAC_TxCallback;
 
@@ -646,13 +646,13 @@ unsigned char EMAC_Send(void *pBuffer,
     // The buffer size defined is length of ethernet frame
     // so it's always the last buffer of the frame.
     if (txTd.head == TX_BUFFERS-1) {
-        pTxTd->status = 
+        pTxTd->status =
             (size & EMAC_LENGTH_FRAME) | EMAC_TX_LAST_BUFFER_BIT | EMAC_TX_WRAP_BIT;
     }
     else {
         pTxTd->status = (size & EMAC_LENGTH_FRAME) | EMAC_TX_LAST_BUFFER_BIT;
     }
-    
+
     CIRC_INC(txTd.head, TX_BUFFERS)
 
     // Tx packets count
@@ -732,19 +732,19 @@ unsigned char EMAC_Poll(unsigned char *pFrame,
             memcpy(pTmpFrame, (void*)(pRxTd->addr & EMAC_ADDRESS_MASK), bufferLength);
             pTmpFrame += bufferLength;
             tmpFrameSize += bufferLength;
-            
+
             // An end of frame has been received, return the data
             if ((pRxTd->status & EMAC_RX_EOF_BIT) == EMAC_RX_EOF_BIT) {
                 // Frame size from the EMAC
                 *pRcvSize = (pRxTd->status & EMAC_LENGTH_FRAME);
-                
+
                 // Application frame buffer is too small all data have not been copied
                 if (tmpFrameSize < *pRcvSize) {
                     printf("size req %d size allocated %d\n\r", *pRcvSize, frameSize);
-                    
+
                     return EMAC_RX_FRAME_SIZE_TOO_SMALL;
                 }
-                
+
                 TRACE_DEBUG("packet %d-%d (%d)\n\r", rxTd.idx, tmpIdx, *pRcvSize);
                 // All data have been copied in the application frame buffer => release TD
                 while (rxTd.idx != tmpIdx) {
@@ -756,17 +756,17 @@ unsigned char EMAC_Poll(unsigned char *pFrame,
                 return EMAC_RX_OK;
             }
         }
-        
+
         // SOF has not been detected, skip the fragment
         else {
            pRxTd->addr &= ~(EMAC_RX_OWNERSHIP_BIT);
            rxTd.idx = tmpIdx;
         }
-       
+
         // Process the next buffer
         pRxTd = rxTd.td + tmpIdx;
     }
-    
+
     //TRACE_DEBUG("E");
     return EMAC_RX_NO_DATA;
 }
@@ -775,7 +775,7 @@ unsigned char EMAC_Poll(unsigned char *pFrame,
 /// Registers pRxCb callback. Callback will be invoked after the next received
 /// frame.
 /// When EMAC_Poll() returns EMAC_RX_NO_DATA the application task call EMAC_Set_RxCb()
-/// to register pRxCb() callback and enters suspend state. The callback is in charge 
+/// to register pRxCb() callback and enters suspend state. The callback is in charge
 /// to resume the task once a new frame has been received. The next time EMAC_Poll()
 /// is called, it will be successfull.
 /// \param pRxCb            Pointer to callback function
@@ -783,26 +783,26 @@ unsigned char EMAC_Poll(unsigned char *pFrame,
 void EMAC_Set_RxCb(EMAC_RxCallback pRxCb)
 {
     rxTd.rxCb = pRxCb;
-    AT91C_BASE_EMAC->EMAC_IER = AT91C_EMAC_RCOMP; 
+    AT91C_BASE_EMAC->EMAC_IER = AT91C_EMAC_RCOMP;
 }
 
 //-----------------------------------------------------------------------------
 /// Remove the RX callback function.
-/// This function is usually invoked from the RX callback itself. Once the callback 
+/// This function is usually invoked from the RX callback itself. Once the callback
 /// has resumed the application task, there is no need to invoke the callback again.
 //-----------------------------------------------------------------------------
 void EMAC_Clear_RxCb(void)
 {
-    AT91C_BASE_EMAC->EMAC_IDR = AT91C_EMAC_RCOMP; 
+    AT91C_BASE_EMAC->EMAC_IDR = AT91C_EMAC_RCOMP;
     rxTd.rxCb = (EMAC_RxCallback) 0;
 }
 
 //-----------------------------------------------------------------------------
 /// Registers TX wakeup callback callback. Callback will be invoked once several
 /// transfer descriptors are available.
-/// When EMAC_Send() returns EMAC_TX_BUFFER_BUSY (all TD busy) the application 
-/// task calls EMAC_Set_TxWakeUpCb() to register pTxWakeUpCb() callback and 
-/// enters suspend state. The callback is in charge to resume the task once 
+/// When EMAC_Send() returns EMAC_TX_BUFFER_BUSY (all TD busy) the application
+/// task calls EMAC_Set_TxWakeUpCb() to register pTxWakeUpCb() callback and
+/// enters suspend state. The callback is in charge to resume the task once
 /// several TD have been released. The next time EMAC_Send() will be called, it
 /// shall be successfull.
 /// \param pTxWakeUpCb   Pointer to callback function
@@ -821,12 +821,10 @@ char EMAC_Set_TxWakeUpCb(EMAC_WakeupCallback pTxWakeUpCb, unsigned short thresho
 
 //-----------------------------------------------------------------------------
 /// Remove the TX wakeup callback function.
-/// This function is usually invoked from the TX wakeup callback itself. Once the callback 
+/// This function is usually invoked from the TX wakeup callback itself. Once the callback
 /// has resumed the application task, there is no need to invoke the callback again.
 //-----------------------------------------------------------------------------
 void EMAC_Clear_TxWakeUpCb(void)
 {
     txTd.wakeupCb = (EMAC_WakeupCallback) 0;
 }
-    
-

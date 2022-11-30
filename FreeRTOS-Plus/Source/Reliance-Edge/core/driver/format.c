@@ -232,4 +232,3 @@ REDSTATUS RedVolFormat(void)
 
 
 #endif /* FORMAT_SUPPORTED */
-

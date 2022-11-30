@@ -68,4 +68,3 @@ void CDCLineCoding_Initialize(CDCLineCoding *lineCoding,
 }
 
 /**@}*/
-

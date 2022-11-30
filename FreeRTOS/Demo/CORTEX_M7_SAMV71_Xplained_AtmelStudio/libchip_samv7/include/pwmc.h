@@ -39,9 +39,9 @@
  *
  *    -# Configures PWM clocks A & B to run at the given frequencies using
  *       \ref PWMC_ConfigureClocks().
- *    -# Configure PWMC channel using \ref PWMC_ConfigureChannel(), 
+ *    -# Configure PWMC channel using \ref PWMC_ConfigureChannel(),
  * \ref PWMC_ConfigureChannelExt()
- *       \ref PWMC_SetPeriod(), \ref PWMC_SetDutyCycle() and 
+ *       \ref PWMC_SetPeriod(), \ref PWMC_SetDutyCycle() and
  * \ref PWMC_SetDeadTime().
  *    -# Enable & disable channel using \ref PWMC_EnableChannel() and
  *       \ref PWMC_DisableChannel().
@@ -50,7 +50,7 @@
  *    -# Enable & disable the selected interrupts sources on a PWMC peripheral
  *       using  \ref PWMC_EnableIt() and \ref PWMC_DisableIt().
  *    -# Control synchronous channel using \ref PWMC_ConfigureSyncChannel(),
- *       \ref PWMC_SetSyncChannelUpdatePeriod() and 
+ *       \ref PWMC_SetSyncChannelUpdatePeriod() and
  * \ref PWMC_SetSyncChannelUpdateUnlock().
  *    -# Control PWM override output using \ref PWMC_SetOverrideValue(),
  *       \ref PWMC_EnableOverrideOutput() and \ref PWMC_DisableOverrideOutput().
@@ -123,7 +123,7 @@ extern void PWMC_SetFaultMode( Pwm* pPwm, uint32_t mode);
 extern void PWMC_FaultClear( Pwm* pPwm, uint32_t fault);
 extern void PWMC_SetFaultProtectionValue( Pwm* pPwm, uint32_t value);
 extern void PWMC_EnableFaultProtection( Pwm* pPwm, uint32_t value);
-extern void PWMC_ConfigureComparisonUnit( Pwm* pPwm, uint32_t x, 
+extern void PWMC_ConfigureComparisonUnit( Pwm* pPwm, uint32_t x,
 	uint32_t value, uint32_t mode);
 extern void PWMC_ConfigureEventLineMode( Pwm* pPwm, uint32_t x, uint32_t mode);
 extern uint32_t PWMC_GetStatus2( Pwm* pPwm);
@@ -132,4 +132,3 @@ extern uint32_t PWMC_GetStatus2( Pwm* pPwm);
 #endif
 
 #endif /* #ifndef _PWMC_ */
-

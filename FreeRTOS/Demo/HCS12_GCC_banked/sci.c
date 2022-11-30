@@ -1,4 +1,4 @@
-/** 
+/**
  * sci.c controls SCI for GCC/HCS12 version of FreeRTOS Demo
  * Parts taken from the CodeWarrior Demo in order to work similar.
  *
@@ -72,4 +72,3 @@ void SCI_Init(void)
   SCICR2 = 0x2c;                         /* Disable error interrupts */
 }
 #endif
-

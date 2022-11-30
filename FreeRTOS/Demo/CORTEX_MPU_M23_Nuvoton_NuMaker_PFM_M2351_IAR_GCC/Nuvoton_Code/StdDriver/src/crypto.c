@@ -56,7 +56,7 @@ static int  get_nibble_value(char c);
 
 /**
   * @brief  Open PRNG function
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32KeySize   it is PRNG key size, including:
   *         - \ref PRNG_KEY_SIZE_64
   *         - \ref PRNG_KEY_SIZE_128
@@ -81,7 +81,7 @@ void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32
 
 /**
   * @brief  Start to generate one PRNG key.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @return None
   */
 void PRNG_Start(CRPT_T *crpt)
@@ -91,7 +91,7 @@ void PRNG_Start(CRPT_T *crpt)
 
 /**
   * @brief  Read the PRNG key.
-  * @param[in]   crpt         The pointer of CRYPTO module 
+  * @param[in]   crpt         The pointer of CRYPTO module
   * @param[out]  u32RandKey  The key buffer to store newly generated PRNG key.
   * @return None
   */
@@ -112,7 +112,7 @@ void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[])
 
 /**
   * @brief  Open AES encrypt/decrypt function.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   AES channel. Must be 0~3.
   * @param[in]  u32EncDec    1: AES encode;  0: AES decode
   * @param[in]  u32OpMode    AES operation mode, including:
@@ -148,7 +148,7 @@ void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
 
 /**
   * @brief  Start AES encrypt/decrypt
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  u32DMAMode  AES DMA control, including:
   *         - \ref CRYPTO_DMA_ONE_SHOT   One shop AES encrypt/decrypt.
@@ -164,7 +164,7 @@ void AES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode)
 
 /**
   * @brief  Set AES keys
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  au32Keys    An word array contains AES keys.
   * @param[in]  u32KeySize is AES key size, including:
@@ -189,7 +189,7 @@ void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t
 
 /**
   * @brief  Set AES initial vectors
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  au32IV      A four entry word array contains AES initial vectors.
   * @return None
@@ -209,7 +209,7 @@ void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[])
 
 /**
   * @brief  Set AES DMA transfer configuration.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   AES channel. Must be 0~3.
   * @param[in]  u32SrcAddr   AES DMA source address
   * @param[in]  u32DstAddr   AES DMA destination address
@@ -233,7 +233,7 @@ void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
 
 /**
   * @brief  Open TDES encrypt/decrypt function.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   TDES channel. Must be 0~3.
   * @param[in]  u32EncDec    1: TDES encode; 0: TDES decode
   * @param[in]  Is3DES       1: TDES; 0: DES
@@ -273,7 +273,7 @@ void TDES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, int32_t Is
 
 /**
   * @brief  Start TDES encrypt/decrypt
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  TDES channel. Must be 0~3.
   * @param[in]  u32DMAMode  TDES DMA control, including:
   *         - \ref CRYPTO_DMA_ONE_SHOT   One shop TDES encrypt/decrypt.
@@ -289,7 +289,7 @@ void TDES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode)
 
 /**
   * @brief  Set TDES keys
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  TDES channel. Must be 0~3.
   * @param[in]  au32Keys    The TDES keys. au32Keys[0][0] is Key0 high word and au32Keys[0][1] is key0 low word.
   * @return None
@@ -311,7 +311,7 @@ void TDES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[3][2])
 
 /**
   * @brief  Set TDES initial vectors
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  TDES channel. Must be 0~3.
   * @param[in]  u32IVH      TDES initial vector high word.
   * @param[in]  u32IVL      TDES initial vector low word.
@@ -330,7 +330,7 @@ void TDES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32IVH, uint32
 
 /**
   * @brief  Set TDES DMA transfer configuration.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   TDES channel. Must be 0~3.
   * @param[in]  u32SrcAddr   TDES DMA source address
   * @param[in]  u32DstAddr   TDES DMA destination address
@@ -354,7 +354,7 @@ void TDES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
 
 /**
   * @brief  Open SHA encrypt function.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32OpMode   SHA operation mode, including:
   *         - \ref SHA_MODE_SHA1
   *         - \ref SHA_MODE_SHA224
@@ -380,7 +380,7 @@ void SHA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32SwapType, uint32_t h
 
 /**
   * @brief  Start SHA encrypt
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32DMAMode  TDES DMA control, including:
   *         - \ref CRYPTO_DMA_ONE_SHOT   One shop SHA encrypt.
   *         - \ref CRYPTO_DMA_CONTINUE   Continuous SHA encrypt.
@@ -395,7 +395,7 @@ void SHA_Start(CRPT_T *crpt, uint32_t u32DMAMode)
 
 /**
   * @brief  Set SHA DMA transfer
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32SrcAddr   SHA DMA source address
   * @param[in]  u32TransCnt  SHA DMA transfer byte count
   * @return None
@@ -408,7 +408,7 @@ void SHA_SetDMATransfer(CRPT_T *crpt, uint32_t u32SrcAddr, uint32_t u32TransCnt)
 
 /**
   * @brief  Read the SHA digest.
-  * @param[in]   crpt       The pointer of CRYPTO module 
+  * @param[in]   crpt       The pointer of CRYPTO module
   * @param[out]  u32Digest  The SHA encrypt output digest.
   * @return None
   */
@@ -972,7 +972,7 @@ static int  get_nibble_value(char c)
 
 /**
   * @brief  Check if the private key is located in valid range of curve.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  private_k   The input private key.
   * @return  1    Is valid.
@@ -1018,7 +1018,7 @@ int ECC_IsPrivateKeyValid(CRPT_T *crpt, E_ECC_CURVE ecc_curve,  char private_k[]
 
 /**
   * @brief  Given a private key and curve to generate the public key pair.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  private_k   The input private key.
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[out] public_k1   The output publick key 1.
@@ -1076,7 +1076,7 @@ int32_t  ECC_GeneratePublicKey(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *privat
 
 /**
   * @brief  Given a curve parameter, the other party's public key, and one's own private key to generate the secret Z.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  private_k   One's own private key.
   * @param[in]  public_k1   The other party's publick key 1.
@@ -1185,7 +1185,7 @@ static void run_ecc_codec(CRPT_T *crpt, uint32_t mode)
 
 /**
   * @brief  ECDSA digital signature generation.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  message     The hash value of source context.
   * @param[in]  d           The private key.
@@ -1420,7 +1420,7 @@ int32_t  ECC_GenerateSignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *messag
 
 /**
   * @brief  ECDSA dogotal signature verification.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  message     The hash value of source context.
   * @param[in]  public_k1   The public key 1.
@@ -3490,4 +3490,3 @@ static ECC_CURVE * get_curve(E_ECC_CURVE ecc_curve)
 /*@}*/ /* end of group Standard_Driver */
 
 /*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/
-

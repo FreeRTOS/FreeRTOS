@@ -98,12 +98,12 @@ static uint8_t _DacConfigureDmaChannels( DacDma* pDacd )
     /* Allocate a DMA channel for DAC0/1 TX. */
     dacDmaTxChannel = XDMAD_AllocateChannel( pDacd->pXdmad, XDMAD_TRANSFER_MEMORY, ID_DACC);
     {
-        if ( dacDmaTxChannel == XDMAD_ALLOC_FAILED ) 
+        if ( dacDmaTxChannel == XDMAD_ALLOC_FAILED )
         {
             return DAC_ERROR;
         }
     }
-    if ( XDMAD_PrepareChannel( pDacd->pXdmad, dacDmaTxChannel )) 
+    if ( XDMAD_PrepareChannel( pDacd->pXdmad, dacDmaTxChannel ))
         return DAC_ERROR;
     return DAC_OK;
 }
@@ -125,7 +125,7 @@ static uint8_t _Dac_configureLinkList(Dacc *pDacHw, void *pXdmad, DacCmd *pComma
     uint8_t i;
     pBuffer = (uint32_t *)pCommand->pTxBuff;
     for(i = 0; i < pCommand->TxSize; i++){
-        dmaWriteLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1 
+        dmaWriteLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1
             | XDMA_UBC_NDE_FETCH_EN
             | XDMA_UBC_NSEN_UPDATED
             | XDMAC_CUBC_UBLEN(4);
@@ -143,18 +143,18 @@ static uint8_t _Dac_configureLinkList(Dacc *pDacHw, void *pXdmad, DacCmd *pComma
         }
         pBuffer++;
     }
-    xdmadCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN 
-        | XDMAC_CC_MBSIZE_SINGLE 
-        | XDMAC_CC_DSYNC_MEM2PER 
-        | XDMAC_CC_CSIZE_CHK_1 
+    xdmadCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+        | XDMAC_CC_MBSIZE_SINGLE
+        | XDMAC_CC_DSYNC_MEM2PER
+        | XDMAC_CC_CSIZE_CHK_1
         | XDMAC_CC_DWIDTH_WORD
-        | XDMAC_CC_SIF_AHB_IF0 
-        | XDMAC_CC_DIF_AHB_IF1 
-        | XDMAC_CC_SAM_INCREMENTED_AM 
-        | XDMAC_CC_DAM_FIXED_AM 
+        | XDMAC_CC_SIF_AHB_IF0
+        | XDMAC_CC_DIF_AHB_IF1
+        | XDMAC_CC_SAM_INCREMENTED_AM
+        | XDMAC_CC_DAM_FIXED_AM
         | XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(ID_DACC, XDMAD_TRANSFER_TX ));
-    xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1 
-        | XDMAC_CNDC_NDE_DSCR_FETCH_EN 
+    xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1
+        | XDMAC_CNDC_NDE_DSCR_FETCH_EN
         | XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
         | XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED ;
     XDMAD_ConfigureTransfer( pXdmad, dacDmaTxChannel, &xdmadCfg, xdmaCndc, (uint32_t)&dmaWriteLinkList[0]);
@@ -175,7 +175,7 @@ static uint8_t _Dac_configureLinkList(Dacc *pDacHw, void *pXdmad, DacCmd *pComma
  * \param pDacd  Pointer to a DacDma instance.
  * \param pDacHw Associated Dac peripheral.
  * \param DacId  Dac peripheral identifier.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
 uint32_t Dac_ConfigureDma( DacDma *pDacd ,
         Dacc *pDacHw ,
@@ -224,7 +224,7 @@ uint32_t Dac_SendData( DacDma *pDacd, DacCmd *pCommand)
 
 
     /* Start DMA TX */
-    if (XDMAD_StartTransfer( pDacd->pXdmad, dacDmaTxChannel )) 
+    if (XDMAD_StartTransfer( pDacd->pXdmad, dacDmaTxChannel ))
         return DAC_ERROR_LOCK;
     return DAC_OK;;
 }
@@ -272,7 +272,7 @@ uint8_t dacConfigureDmaChannel(void)
     /* Allocate a DMA channel for DAC TX. */
     dacDmaTxChannel = XDMAD_AllocateChannel( &dacDma, XDMAD_TRANSFER_MEMORY, ID_DACC);
     {
-        if ( dacDmaTxChannel == XDMAD_ALLOC_FAILED ) 
+        if ( dacDmaTxChannel == XDMAD_ALLOC_FAILED )
         {
             return UARTD_ERROR;
         }
@@ -297,7 +297,7 @@ uint8_t dacConfigureLinkList(Dacc *pDACC, uint32_t *pBuffer, uint32_t len, uint3
     sXdmadCfg xdmadCfg;
     assert (len < MAX_LINKER_LIST);
     for(i = 0; i < len; i++){
-        dmaWriteLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1 
+        dmaWriteLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1
             | XDMA_UBC_NDE_FETCH_EN
             | XDMA_UBC_NSEN_UPDATED
             | XDMAC_CUBC_UBLEN(4);
@@ -315,18 +315,18 @@ uint8_t dacConfigureLinkList(Dacc *pDACC, uint32_t *pBuffer, uint32_t len, uint3
         }
         pBuffer++;
     }
-    xdmadCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN 
-        | XDMAC_CC_MBSIZE_SINGLE 
-        | XDMAC_CC_DSYNC_MEM2PER 
-        | XDMAC_CC_CSIZE_CHK_1 
+    xdmadCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+        | XDMAC_CC_MBSIZE_SINGLE
+        | XDMAC_CC_DSYNC_MEM2PER
+        | XDMAC_CC_CSIZE_CHK_1
         | XDMAC_CC_DWIDTH_WORD
-        | XDMAC_CC_SIF_AHB_IF0 
-        | XDMAC_CC_DIF_AHB_IF1 
-        | XDMAC_CC_SAM_INCREMENTED_AM 
-        | XDMAC_CC_DAM_FIXED_AM 
+        | XDMAC_CC_SIF_AHB_IF0
+        | XDMAC_CC_DIF_AHB_IF1
+        | XDMAC_CC_SAM_INCREMENTED_AM
+        | XDMAC_CC_DAM_FIXED_AM
         | XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(ID_DACC, XDMAD_TRANSFER_TX ));
-    xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1 
-        | XDMAC_CNDC_NDE_DSCR_FETCH_EN 
+    xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1
+        | XDMAC_CNDC_NDE_DSCR_FETCH_EN
         | XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
         | XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED ;
     XDMAD_ConfigureTransfer( &dacDma, dacDmaTxChannel, &xdmadCfg, xdmaCndc, (uint32_t)&dmaWriteLinkList[0]);

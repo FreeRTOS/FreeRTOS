@@ -221,9 +221,3 @@ void vSerialClose( xComPortHandle xPort )
 	/* Not supported as not required by the demo application. */
 }
 /*-----------------------------------------------------------*/
-
-
-
-
-
-

@@ -311,7 +311,7 @@ uint32_t btmr_get_hw_addr(uint8_t btmr_id);
 
 void btmr_sleep_en(uint8_t tmr_id, uint8_t sleep_en);
 void btmr_reset(uint8_t tmr_id);
-void btmr_init(uint8_t tmr_id, 
+void btmr_init(uint8_t tmr_id,
                uint16_t tmr_cntl,
                uint16_t prescaler,
                uint32_t initial_count,
@@ -333,7 +333,7 @@ void btmr_uhalt(uint8_t tmr_id);
  * End Basic 16-bit Timer API
  ******************************************************************************/
 
- 
+
 #ifdef __cplusplus
 }
 #endif

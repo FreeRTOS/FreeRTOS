@@ -632,4 +632,3 @@ void LL_DMA2D_ConfigSize(DMA2D_TypeDef *DMA2Dx, uint32_t NbrOfLines, uint32_t Nb
 #endif /* USE_FULL_LL_DRIVER */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

@@ -16,7 +16,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2009 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_dbgmcu.h"
@@ -25,10 +25,10 @@
   * @{
   */
 
-/** @defgroup DBGMCU 
+/** @defgroup DBGMCU
   * @brief DBGMCU driver modules
   * @{
-  */ 
+  */
 
 /** @defgroup DBGMCU_Private_TypesDefinitions
   * @{
@@ -100,24 +100,24 @@ uint32_t DBGMCU_GetDEVID(void)
   *   when the MCU under Debug mode.
   * @param DBGMCU_Periph: specifies the peripheral and low power mode.
   *   This parameter can be any combination of the following values:
-  * @arg DBGMCU_SLEEP: Keep debugger connection during SLEEP mode              
-  * @arg DBGMCU_STOP: Keep debugger connection during STOP mode               
-  * @arg DBGMCU_STANDBY: Keep debugger connection during STANDBY mode            
-  * @arg DBGMCU_IWDG_STOP: Debug IWDG stopped when Core is halted          
-  * @arg DBGMCU_WWDG_STOP: Debug WWDG stopped when Core is halted          
-  * @arg DBGMCU_TIM1_STOP: TIM1 counter stopped when Core is halted          
-  * @arg DBGMCU_TIM2_STOP: TIM2 counter stopped when Core is halted          
-  * @arg DBGMCU_TIM3_STOP: TIM3 counter stopped when Core is halted          
-  * @arg DBGMCU_TIM4_STOP: TIM4 counter stopped when Core is halted          
-  * @arg DBGMCU_CAN1_STOP: Debug CAN 1 stopped when Core is halted           
-  * @arg DBGMCU_I2C1_SMBUS_TIMEOUT: I2C1 SMBUS timeout mode stopped when Core is 
+  * @arg DBGMCU_SLEEP: Keep debugger connection during SLEEP mode
+  * @arg DBGMCU_STOP: Keep debugger connection during STOP mode
+  * @arg DBGMCU_STANDBY: Keep debugger connection during STANDBY mode
+  * @arg DBGMCU_IWDG_STOP: Debug IWDG stopped when Core is halted
+  * @arg DBGMCU_WWDG_STOP: Debug WWDG stopped when Core is halted
+  * @arg DBGMCU_TIM1_STOP: TIM1 counter stopped when Core is halted
+  * @arg DBGMCU_TIM2_STOP: TIM2 counter stopped when Core is halted
+  * @arg DBGMCU_TIM3_STOP: TIM3 counter stopped when Core is halted
+  * @arg DBGMCU_TIM4_STOP: TIM4 counter stopped when Core is halted
+  * @arg DBGMCU_CAN1_STOP: Debug CAN 1 stopped when Core is halted
+  * @arg DBGMCU_I2C1_SMBUS_TIMEOUT: I2C1 SMBUS timeout mode stopped when Core is
   *                                 halted
-  * @arg DBGMCU_I2C2_SMBUS_TIMEOUT: I2C2 SMBUS timeout mode stopped when Core is 
+  * @arg DBGMCU_I2C2_SMBUS_TIMEOUT: I2C2 SMBUS timeout mode stopped when Core is
   *                                 halted
-  * @arg DBGMCU_TIM5_STOP: TIM5 counter stopped when Core is halted          
-  * @arg DBGMCU_TIM6_STOP: TIM6 counter stopped when Core is halted          
-  * @arg DBGMCU_TIM7_STOP: TIM7 counter stopped when Core is halted          
-  * @arg DBGMCU_TIM8_STOP: TIM8 counter stopped when Core is halted          
+  * @arg DBGMCU_TIM5_STOP: TIM5 counter stopped when Core is halted
+  * @arg DBGMCU_TIM6_STOP: TIM6 counter stopped when Core is halted
+  * @arg DBGMCU_TIM7_STOP: TIM7 counter stopped when Core is halted
+  * @arg DBGMCU_TIM8_STOP: TIM8 counter stopped when Core is halted
   * @param NewState: new state of the specified peripheral in Debug mode.
   *   This parameter can be: ENABLE or DISABLE.
   * @retval : None

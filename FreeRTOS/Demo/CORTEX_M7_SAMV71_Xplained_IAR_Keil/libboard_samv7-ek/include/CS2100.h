@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -80,5 +80,3 @@ extern uint16_t CS2100_Read(Twid *pTwid, uint32_t device, uint32_t regAddr);
 extern void CS2100_Write(Twid *pTwid, uint32_t device, uint32_t regAddr, uint16_t data);
 extern uint8_t CS2100_Init(Twid *pTwid, uint32_t device, uint32_t PCK);
 #endif // CS2100_H
-
-

@@ -27,7 +27,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
 	TraceRingBuffer_t* pxRingBuffer;
 
 	TRC_ASSERT_EQUAL_SIZE(TraceStreamPortBuffer_t, TraceStreamPortData_t);
-	
+
 	if (pxBuffer == 0)
 	{
 		return TRC_FAIL;
@@ -37,7 +37,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
 	RecorderDataPtr = pxRingBuffer = &pxStreamPortData->xRingBuffer;
 
 	pxRingBuffer->xEventBuffer.uiSize = sizeof(pxRingBuffer->xEventBuffer.uiBuffer);
-	
+
 #if (TRC_CFG_STREAM_PORT_RINGBUFFER_MODE == TRC_STREAM_PORT_RINGBUFFER_MODE_OVERWRITE_WHEN_FULL)
 	if (xTraceMultiCoreEventBufferInitialize(&pxStreamPortData->xMultiCoreEventBuffer, TRC_EVENT_BUFFER_OPTION_OVERWRITE, pxRingBuffer->xEventBuffer.uiBuffer, sizeof(pxRingBuffer->xEventBuffer.uiBuffer)) == TRC_FAIL)
 	{
@@ -54,12 +54,12 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	if (xTraceEntryTableInitialize(&pxRingBuffer->xEntryTableBuffer) == TRC_FAIL)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	if (xTraceTimestampInitialize(&pxRingBuffer->xTimestampInfo) == TRC_FAIL)
 	{
 		return TRC_FAIL;
@@ -69,12 +69,12 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
 	pxRingBuffer->END_MARKERS[1] = 0x0B;
 	pxRingBuffer->END_MARKERS[2] = 0x0C;
 	pxRingBuffer->END_MARKERS[3] = 0x0D;
-	
+
 	pxRingBuffer->END_MARKERS[4] = 0x71;
 	pxRingBuffer->END_MARKERS[5] = 0x72;
 	pxRingBuffer->END_MARKERS[6] = 0x73;
 	pxRingBuffer->END_MARKERS[7] = 0x74;
-	
+
 	pxRingBuffer->END_MARKERS[8] = 0xF1;
 	pxRingBuffer->END_MARKERS[9] = 0xF2;
 	pxRingBuffer->END_MARKERS[10] = 0xF3;
@@ -84,17 +84,17 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
 	pxRingBuffer->START_MARKERS[1] = 0x06;
 	pxRingBuffer->START_MARKERS[2] = 0x07;
 	pxRingBuffer->START_MARKERS[3] = 0x08;
-	
+
 	pxRingBuffer->START_MARKERS[4] = 0x75;
 	pxRingBuffer->START_MARKERS[5] = 0x76;
 	pxRingBuffer->START_MARKERS[6] = 0x77;
 	pxRingBuffer->START_MARKERS[7] = 0x78;
-	
+
 	pxRingBuffer->START_MARKERS[8] = 0xF5;
 	pxRingBuffer->START_MARKERS[9] = 0xF6;
 	pxRingBuffer->START_MARKERS[10] = 0xF7;
 	pxRingBuffer->START_MARKERS[11] = 0xF8;
-	
+
 	return TRC_SUCCESS;
 }
 

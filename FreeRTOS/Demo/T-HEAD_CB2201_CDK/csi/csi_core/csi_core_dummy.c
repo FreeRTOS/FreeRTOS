@@ -142,4 +142,3 @@ _WEAK_ uint32_t drv_coret_config(uint32_t ticks, int32_t irq_num)
 {
     return 0;
 }
-

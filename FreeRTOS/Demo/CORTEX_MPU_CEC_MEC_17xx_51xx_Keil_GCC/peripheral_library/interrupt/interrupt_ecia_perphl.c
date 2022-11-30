@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/09/22 08:03:49 $ 
+$Revision: #1 $
+$DateTime: 2016/09/22 08:03:49 $
 $Author: pramans $
 Last Change:	Initial Draft
 ******************************************************************************/
 /** @file interrupt_ecia_perphl.c
 * \brief Interrupt ECIA Peripheral Source File
 * \author jvasanth
-* 
-* This file implements the ECIA peripheral functions  
+*
+* This file implements the ECIA peripheral functions
 ******************************************************************************/
 
 /** @defgroup Interrupt
@@ -47,7 +47,7 @@ Last Change:	Initial Draft
 /* ------------------------------------------------------------------------------- */
 
 /** Enable specified GIRQ in ECIA block
- * @param girq_id - enum MEC_GIRQ_IDS 
+ * @param girq_id - enum MEC_GIRQ_IDS
  */
 void p_interrupt_ecia_block_enable_set(uint8_t girq_id)
 {
@@ -56,28 +56,28 @@ void p_interrupt_ecia_block_enable_set(uint8_t girq_id)
     }
 }
 
-/** Enable GIRQs in ECIA Block 
- * @param girq_bitmask - Bitmask of GIRQs to be enabled in ECIA Block  
+/** Enable GIRQs in ECIA Block
+ * @param girq_bitmask - Bitmask of GIRQs to be enabled in ECIA Block
  */
 void p_interrupt_ecia_block_enable_bitmask_set(uint32_t girq_bitmask)
-{    
-    ECIA->BLOCK_ENABLE_SET = girq_bitmask;    
+{
+    ECIA->BLOCK_ENABLE_SET = girq_bitmask;
 }
 
 /** Check if specified GIRQ block enabled or not
- * @param girq_id - enum MEC_GIRQ_IDS 
+ * @param girq_id - enum MEC_GIRQ_IDS
  * @return retVal - 1 if the particular GIRQ block enabled, else 0
  */
 uint8_t p_interrupt_ecia_block_enable_get(uint8_t girq_id)
 {
     uint8_t retVal;
-    
+
     retVal = 0;
-    if ( girq_id < (MEC_GIRQ_ID_MAX) ) 
-    {        
+    if ( girq_id < (MEC_GIRQ_ID_MAX) )
+    {
         if ((ECIA->BLOCK_ENABLE_SET) & (1ul << ((girq_id + 8) & 0x1Fu)))
         {
-           retVal = 1; 
+           retVal = 1;
         }
     }
     return retVal;
@@ -85,12 +85,12 @@ uint8_t p_interrupt_ecia_block_enable_get(uint8_t girq_id)
 
 /** Set all GIRQ block enables */
 void p_interrupt_ecia_block_enable_all_set(void)
-{    
-    ECIA->BLOCK_ENABLE_SET = 0xfffffffful; 
+{
+    ECIA->BLOCK_ENABLE_SET = 0xfffffffful;
 }
 
-/** Clear specified GIRQ in ECIA Block 
- * @param girq_id - enum MEC_GIRQ_IDS 
+/** Clear specified GIRQ in ECIA Block
+ * @param girq_id - enum MEC_GIRQ_IDS
  */
 void p_interrupt_ecia_block_enable_clr(uint8_t girq_id)
 {
@@ -99,43 +99,43 @@ void p_interrupt_ecia_block_enable_clr(uint8_t girq_id)
     }
 }
 
-/** Clear GIRQs in ECIA Block 
- * @param girq_bitmask - Bitmask of GIRQs to be cleared in ECIA Block  
+/** Clear GIRQs in ECIA Block
+ * @param girq_bitmask - Bitmask of GIRQs to be cleared in ECIA Block
  */
 void p_interrupt_ecia_block_enable_bitmask_clr(uint32_t girq_bitmask)
-{    
-    ECIA->BLOCK_ENABLE_CLEAR = girq_bitmask;    
+{
+    ECIA->BLOCK_ENABLE_CLEAR = girq_bitmask;
 }
 
 /** p_interrupt_ecia_block_enable_all_clr - Clears all GIRQ block enables */
  void p_interrupt_ecia_block_enable_all_clr(void)
-{    
-    ECIA->BLOCK_ENABLE_CLEAR = 0xfffffffful; 
+{
+    ECIA->BLOCK_ENABLE_CLEAR = 0xfffffffful;
 }
 
 /** Get status of GIRQ in ECIA Block
- * @param girq_id - enum MEC_GIRQ_IDS  
+ * @param girq_id - enum MEC_GIRQ_IDS
  * @return 0 if status bit not set; else non-zero value
  */
 uint32_t p_interrupt_ecia_block_irq_status_get(uint8_t girq_id)
-{ 	
+{
     uint32_t retVal;
 
     retVal = ECIA->BLOCK_IRQ_VECTOR & (1ul << ((girq_id + 8) & 0x1Fu));
 
-    return retVal;		
+    return retVal;
 }
 
 /** Reads the Block IRQ Vector Register
   * @return 32-bit value
  */
 uint32_t p_interrupt_ecia_block_irq_all_status_get(void)
-{ 	
+{
     uint32_t retVal;
 
     retVal = ECIA->BLOCK_IRQ_VECTOR;
 
-    return retVal;		
+    return retVal;
 }
 
 
@@ -150,12 +150,12 @@ uint32_t p_interrupt_ecia_block_irq_all_status_get(void)
 void p_interrupt_ecia_girq_source_clr(int16_t girq_id, uint8_t bitnum)
 {
 	  __IO uint32_t *girq_source = (uint32_t*)ECIA;
-		  
+
     if ( girq_id < (MEC_GIRQ_ID_MAX) ) {
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
@@ -173,19 +173,19 @@ uint32_t p_interrupt_ecia_girq_source_get(int16_t girq_id, uint8_t bitnum)
 {
     uint32_t retVal;
 	  __IO uint32_t *girq_source = (uint32_t*)ECIA;
-	
+
     retVal = 0;
     if ( girq_id < (MEC_GIRQ_ID_MAX) ) {
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
-			  girq_source += (5 * girq_id);			
+			  girq_source += (5 * girq_id);
         retVal = (*girq_source & (1ul << (bitnum & 0x1Fu)));
-    }		
+    }
     return retVal;
 }
 
@@ -196,16 +196,16 @@ uint32_t p_interrupt_ecia_girq_source_get(int16_t girq_id, uint8_t bitnum)
 void p_interrupt_ecia_girq_enable_set(uint16_t girq_id, uint8_t bitnum)
 {
 	  __IO uint32_t *girq_enable_set = (uint32_t*)(&(ECIA->GIRQ08_EN_SET));
-	
+
     if ( girq_id < (MEC_GIRQ_ID_MAX) ) {
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
-			  girq_enable_set += (5 * girq_id);			
+			  girq_enable_set += (5 * girq_id);
         *girq_enable_set |= (1ul << (bitnum & 0x1Fu));
     }
 }
@@ -217,16 +217,16 @@ void p_interrupt_ecia_girq_enable_set(uint16_t girq_id, uint8_t bitnum)
 void p_interrupt_ecia_girq_enable_clr(uint16_t girq_id, uint8_t bitnum)
 {
 	  __IO uint32_t *girq_enable_clr = (uint32_t*)(&(ECIA->GIRQ08_EN_CLR));
-	
+
     if ( girq_id < (MEC_GIRQ_ID_MAX) ) {
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
-			  girq_enable_clr += (5 * girq_id);			
+			  girq_enable_clr += (5 * girq_id);
         *girq_enable_clr |= (1ul << (bitnum & 0x1Fu));
     }
 }
@@ -246,11 +246,11 @@ uint32_t p_interrupt_ecia_girq_enable_get(uint16_t girq_id, uint8_t bitnum)
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
-			  girq_enable_set += (5 * girq_id);			
+			  girq_enable_set += (5 * girq_id);
         retVal = (*girq_enable_set  & (1ul << (bitnum & 0x1Fu)));
     }
     return retVal;
@@ -265,20 +265,20 @@ uint32_t p_interrupt_ecia_girq_result_get(int16_t girq_id, uint8_t bitnum)
 {
     uint32_t retVal;
 	  __IO uint32_t *girq_result = (uint32_t*)(&(ECIA->GIRQ08_RESULT));
-	
+
     retVal = 0;
     if ( girq_id < (MEC_GIRQ_ID_MAX) ) {
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
-			  girq_result += (5 * girq_id);			
+			  girq_result += (5 * girq_id);
         retVal = (*girq_result & (1ul << (bitnum & 0x1Fu)));
     }
-		
+
     return retVal;
 }
 
@@ -296,13 +296,13 @@ void p_interrupt_ecia_girqs_source_reset(void)
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
-			  girq_source += 5;			
+			  girq_source += 5;
         *girq_source = 0xfffffffful;
-    }    
+    }
 }
 
 /** Clear all aggregator GIRQn enables */
@@ -315,32 +315,32 @@ void p_interrupt_ecia_girqs_source_reset(void)
 			/* Each GIRQ has 5 32bit fields: SRC, ENABLE_SET, ENABLE_CLR, RESULT & RESERVED
 			 * please refer INTS_Type in MCHP_device_internal.h
 			 * Based on the girq id calculate the offset in the structure INTS_Type
-			 * 
+			 *
 			 * BASED ON THE STRUCTURE DEFINITION OF INTS_Type ALL FIELDS ARE ALIGNED ON
 			 * 32 BIT BOUNDARY, FOLLOWING WILL NOT WORK IF THIS SCHEME CHANGES
 			*/
-			  girq_enable_clr += 5;				
+			  girq_enable_clr += 5;
         *girq_enable_clr = 0xfffffffful;
-    }    
+    }
 }
 
 /* ------------------------------------------------------------------------------- */
 /*                  Function to set interrupt control                              */
 /* ------------------------------------------------------------------------------- */
 
-/** Set interrupt control 
+/** Set interrupt control
  * @param nvic_en_flag : 0 = Alternate NVIC disabled, 1 = Alternate NVIC enabled
  */
 void p_interrupt_control_set(uint8_t nvic_en_flag)
-{		
+{
     ECS->INTERRUPT_CONTROL = nvic_en_flag;
 }
 
-/** Read interrupt control 
+/** Read interrupt control
  * @return uint8_t - 0 = Alternate NVIC disabled, 1 = Alternate NVIC enabled
  */
 uint8_t p_interrupt_control_get(void)
-{		
+{
     return (ECS->INTERRUPT_CONTROL & 0x1);
 }
 

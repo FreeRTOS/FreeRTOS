@@ -71,6 +71,3 @@ void vButtonISRWrapper( void )
 	completes. */
 	portRESTORE_CONTEXT();
 }
-
-
-

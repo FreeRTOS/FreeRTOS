@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -77,4 +77,3 @@ extern unsigned char TC_FindMckDivisor(
     unsigned int *tcclks);
 
 #endif //#ifndef TC_H
-

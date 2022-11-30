@@ -98,4 +98,3 @@ extern void RTC_SetWaveForm( Rtc* pRtc, uint32_t dwWaveMode );
 #endif
 
 #endif /* #ifndef _RTC_ */
-

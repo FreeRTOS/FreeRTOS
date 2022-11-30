@@ -710,7 +710,7 @@ Macro definitions
 
 /* Invalid for ICCRX.
    Because the initilaze function of TFU is called automatically when the TFU function is called. */
-#define R_BSP_INIT_TFU()      
+#define R_BSP_INIT_TFU()
 
 #endif
 
@@ -819,4 +819,3 @@ R_BSP_ATTRIB_INLINE_ASM void R_BSP_CalcAtan_SquareRoot(float y, float x, float *
 
 /* End of multiple inclusion prevention macro */
 #endif  /* R_RX_INTRINSIC_FUNCTIONS_H */
-

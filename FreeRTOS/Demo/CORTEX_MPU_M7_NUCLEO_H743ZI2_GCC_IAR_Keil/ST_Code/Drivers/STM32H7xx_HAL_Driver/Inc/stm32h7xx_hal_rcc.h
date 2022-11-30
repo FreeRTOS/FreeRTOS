@@ -57,9 +57,9 @@ typedef struct
                             This parameter must be a number between Min_Data = 1 and Max_Data = 63    */
 
   uint32_t PLLN;       /*!< PLLN: Multiplication factor for PLL VCO output clock.
-                            This parameter must be a number between Min_Data = 4 and Max_Data = 512 
+                            This parameter must be a number between Min_Data = 4 and Max_Data = 512
                             or between Min_Data = 8 and Max_Data = 420(*)
-                            (*) : For stm32h7a3xx and stm32h7b3xx family lines.                       */                        
+                            (*) : For stm32h7a3xx and stm32h7b3xx family lines.                       */
 
   uint32_t PLLP;       /*!< PLLP: Division factor for system clock.
                             This parameter must be a number between Min_Data = 2 and Max_Data = 128
@@ -7226,7 +7226,7 @@ typedef struct
   *          This parameter must be a number between 1 and 128
   *
   * @note   To insure an optimal behavior of the PLL when one of the post-divider (DIVP, DIVQ or DIVR)
-  *         is not used, application shall clear the enable bit (DIVyEN) and assign lowest possible 
+  *         is not used, application shall clear the enable bit (DIVyEN) and assign lowest possible
   *         value to  __PLL1P__, __PLL1Q__ or __PLL1R__ parameters.
   * @retval None
   *

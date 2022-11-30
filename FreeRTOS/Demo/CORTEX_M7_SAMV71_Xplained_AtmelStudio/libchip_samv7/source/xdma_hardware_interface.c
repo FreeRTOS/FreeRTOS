@@ -31,13 +31,13 @@
  *
  * \section DmaHw Dma Hardware Interface Usage
  * <ul>
- * <li> The DMA controller can handle the transfer between peripherals and memory 
- * and so receives the triggers from the peripherals. The hardware interface 
+ * <li> The DMA controller can handle the transfer between peripherals and memory
+ * and so receives the triggers from the peripherals. The hardware interface
  * number are getting from DMAIF_Get_ChannelNumber().</li>
 
- * <li> DMAIF_IsValidatedPeripherOnDma() helps to check if the given DMAC has  
+ * <li> DMAIF_IsValidatedPeripherOnDma() helps to check if the given DMAC has
  * associated peripheral identifier coded by the given  peripheral.</li>
- * 
+ *
  * </ul>
  */
 /*@{*/
@@ -123,7 +123,7 @@ uint8_t XDMAIF_Get_ChannelNumber (uint8_t bPeriphID,
 	uint8_t NumOfPeripheral = ((XDMAC_GetType(XDMAC) & 0x00FF0000) >> 16);
 	for (i = 0; i <=NumOfPeripheral; i++)
 	{
-		if ( (xdmaHwIf[i].bPeriphID == bPeriphID) && 
+		if ( (xdmaHwIf[i].bPeriphID == bPeriphID) &&
 				(xdmaHwIf[i].bTransfer == bTransfer)) {
 			return xdmaHwIf[i].bIfID;
 		}
@@ -137,7 +137,7 @@ uint8_t XDMAIF_Get_ChannelNumber (uint8_t bPeriphID,
  *
  * \param bDmac      DMA Controller number.
  * \param bPeriphID  Peripheral ID (0xff : memory only).
- * \return 1:  Is a validated peripheral. 0: no associated peripheral identifier 
+ * \return 1:  Is a validated peripheral. 0: no associated peripheral identifier
  * coded.
  */
 uint8_t XDMAIF_IsValidatedPeripherOnDma( uint8_t bPeriphID)

@@ -919,4 +919,3 @@ int wc_ed448_sig_size(ed448_key* key)
 }
 
 #endif /* HAVE_ED448 */
-

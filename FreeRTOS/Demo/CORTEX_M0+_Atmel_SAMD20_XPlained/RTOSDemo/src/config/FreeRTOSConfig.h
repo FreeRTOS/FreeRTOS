@@ -111,4 +111,3 @@ command interpreter running. */
 #define configCOMMAND_INT_MAX_OUTPUT_SIZE 2048
 
 #endif /* FREERTOS_CONFIG_H */
-

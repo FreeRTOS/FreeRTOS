@@ -378,4 +378,3 @@ void TWI_SendSTOPCondition(Twihs *pTwi)
 
     pTwi->TWIHS_CR |= TWIHS_CR_STOP;
 }
-

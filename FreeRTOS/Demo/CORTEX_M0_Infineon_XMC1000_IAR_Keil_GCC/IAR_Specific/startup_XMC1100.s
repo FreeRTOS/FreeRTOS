@@ -7,12 +7,12 @@
 ;*
 ;* $Revision: 64600 $
 ;*
-;******************* Version History **********************************************   
-;  V5, Feb, 6, 2013 TYS:a) Add DAVE3_CE defination, 
+;******************* Version History **********************************************
+;  V5, Feb, 6, 2013 TYS:a) Add DAVE3_CE defination,
 ;                       b) Remove Math,ADC,CCU8,POSIF,LEDTS,BCCU0 interrupt
-;                       c) Change AllowPLLInitByStartup to AllowClkInitByStartup 
-;  V6, May, 16,2013 TYS:a) Add XMC1100_SCU.inc 
-;     
+;                       c) Change AllowPLLInitByStartup to AllowClkInitByStartup
+;  V6, May, 16,2013 TYS:a) Add XMC1100_SCU.inc
+;
 ;**********************************************************************************
 ;
 ; The modules in this file are included in the libraries, and may be replaced
@@ -32,7 +32,7 @@
 #else
 #define CLKVAL1_SSW 0x00000100
 #define CLKVAL2_SSW 0x00000000
-#endif 
+#endif
 
         ;; Forward declaration of sections.
         SECTION CSTACK:DATA:NOROOT(3)

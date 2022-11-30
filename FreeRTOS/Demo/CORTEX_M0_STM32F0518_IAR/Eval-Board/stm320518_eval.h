@@ -22,7 +22,7 @@
   * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
   ******************************************************************************
   */
-  
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM320518_EVAL_H
 #define __STM320518_EVAL_H
@@ -46,15 +46,15 @@
 /** @addtogroup STM320518_EVAL
   * @{
   */
-      
+
 /** @addtogroup STM320518_EVAL_LOW_LEVEL
   * @{
-  */ 
+  */
 
 /** @defgroup STM320518_EVAL_LOW_LEVEL_Exported_Types
   * @{
   */
-typedef enum 
+typedef enum
 {
   LED1 = 0,
   LED2 = 1,
@@ -62,7 +62,7 @@ typedef enum
   LED4 = 3
 } Led_TypeDef;
 
-typedef enum 
+typedef enum
 {
   BUTTON_TAMPER = 0,
   BUTTON_KEY = 1,
@@ -73,14 +73,14 @@ typedef enum
   BUTTON_SEL = 6
 } Button_TypeDef;
 
-typedef enum 
-{  
+typedef enum
+{
   BUTTON_MODE_GPIO = 0,
   BUTTON_MODE_EXTI = 1
 } ButtonMode_TypeDef;
 
-typedef enum 
-{ 
+typedef enum
+{
   JOY_NONE = 0,
   JOY_SEL = 1,
   JOY_DOWN = 2,
@@ -90,22 +90,22 @@ typedef enum
 } JOYState_TypeDef
 ;
 
-typedef enum 
+typedef enum
 {
   COM1 = 0,
   COM2 = 1
-} COM_TypeDef;   
+} COM_TypeDef;
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup STM320518_EVAL_LOW_LEVEL_Exported_Constants
   * @{
-  */ 
+  */
 
-/** 
-  * @brief  Define for STM320518_EVAL board  
-  */ 
+/**
+  * @brief  Define for STM320518_EVAL board
+  */
 #if !defined (USE_STM320518_EVAL)
  #define USE_STM320518_EVAL
 #endif
@@ -118,26 +118,26 @@ typedef enum
 #define LED1_PIN                         GPIO_Pin_10
 #define LED1_GPIO_PORT                   GPIOC
 #define LED1_GPIO_CLK                    RCC_AHBPeriph_GPIOC
-  
+
 #define LED2_PIN                         GPIO_Pin_11
 #define LED2_GPIO_PORT                   GPIOC
 #define LED2_GPIO_CLK                    RCC_AHBPeriph_GPIOC
-  
+
 #define LED3_PIN                         GPIO_Pin_12
 #define LED3_GPIO_PORT                   GPIOC
 #define LED3_GPIO_CLK                    RCC_AHBPeriph_GPIOC
-  
+
 #define LED4_PIN                         GPIO_Pin_2
 #define LED4_GPIO_PORT                   GPIOD
 #define LED4_GPIO_CLK                    RCC_AHBPeriph_GPIOD
 
 /**
   * @}
-  */ 
+  */
 
 /** @addtogroup STM320518_EVAL_LOW_LEVEL_BUTTON
   * @{
-  */  
+  */
 #define BUTTONn                          7
 
 /**
@@ -149,7 +149,7 @@ typedef enum
 #define TAMPER_BUTTON_EXTI_LINE          EXTI_Line13
 #define TAMPER_BUTTON_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOC
 #define TAMPER_BUTTON_EXTI_PIN_SOURCE    EXTI_PinSource13
-#define TAMPER_BUTTON_EXTI_IRQn          EXTI4_15_IRQn 
+#define TAMPER_BUTTON_EXTI_IRQn          EXTI4_15_IRQn
 
 /**
  * @brief Key push-button
@@ -182,7 +182,7 @@ typedef enum
 #define LEFT_BUTTON_EXTI_LINE            EXTI_Line9
 #define LEFT_BUTTON_EXTI_PORT_SOURCE     EXTI_PortSourceGPIOC
 #define LEFT_BUTTON_EXTI_PIN_SOURCE      EXTI_PinSource9
-#define LEFT_BUTTON_EXTI_IRQn            EXTI4_15_IRQn  
+#define LEFT_BUTTON_EXTI_IRQn            EXTI4_15_IRQn
 
 /**
  * @brief Joystick Up push-button
@@ -193,18 +193,18 @@ typedef enum
 #define UP_BUTTON_EXTI_LINE              EXTI_Line6
 #define UP_BUTTON_EXTI_PORT_SOURCE       EXTI_PortSourceGPIOC
 #define UP_BUTTON_EXTI_PIN_SOURCE        EXTI_PinSource6
-#define UP_BUTTON_EXTI_IRQn              EXTI4_15_IRQn  
+#define UP_BUTTON_EXTI_IRQn              EXTI4_15_IRQn
 
 /**
  * @brief Joystick Down push-button
- */  
+ */
 #define DOWN_BUTTON_PIN                  GPIO_Pin_7
 #define DOWN_BUTTON_GPIO_PORT            GPIOC
 #define DOWN_BUTTON_GPIO_CLK             RCC_AHBPeriph_GPIOC
 #define DOWN_BUTTON_EXTI_LINE            EXTI_Line7
 #define DOWN_BUTTON_EXTI_PORT_SOURCE     EXTI_PortSourceGPIOC
 #define DOWN_BUTTON_EXTI_PIN_SOURCE      EXTI_PinSource7
-#define DOWN_BUTTON_EXTI_IRQn            EXTI4_15_IRQn  
+#define DOWN_BUTTON_EXTI_IRQn            EXTI4_15_IRQn
 
 /**
  * @brief Joystick Sel push-button
@@ -215,11 +215,11 @@ typedef enum
 #define SEL_BUTTON_EXTI_LINE             EXTI_Line0
 #define SEL_BUTTON_EXTI_PORT_SOURCE      EXTI_PortSourceGPIOA
 #define SEL_BUTTON_EXTI_PIN_SOURCE       EXTI_PinSource0
-#define SEL_BUTTON_EXTI_IRQn             EXTI0_1_IRQn 
+#define SEL_BUTTON_EXTI_IRQn             EXTI0_1_IRQn
 
 /**
   * @}
-  */ 
+  */
 
 
 /** @addtogroup STM320518_EVAL_LOW_LEVEL_COM
@@ -229,7 +229,7 @@ typedef enum
 
 /**
  * @brief Definition for COM port1, connected to USART1
- */ 
+ */
 #define EVAL_COM1                        USART1
 #define EVAL_COM1_CLK                    RCC_APB2Periph_USART1
 
@@ -256,7 +256,7 @@ typedef enum
 #define EVAL_COM1_RTS_GPIO_CLK           RCC_AHBPeriph_GPIOA
 #define EVAL_COM1_RTS_SOURCE             GPIO_PinSource12
 #define EVAL_COM1_RTS_AF                 GPIO_AF_1
-   
+
 #define EVAL_COM1_IRQn                   USART1_IRQn
 
 /**
@@ -294,7 +294,7 @@ typedef enum
 #define SD_CS_GPIO_PORT                  GPIOF                       /* GPIOF */
 #define SD_CS_GPIO_CLK                   RCC_AHBPeriph_GPIOF
 
-   
+
 #define SD_DETECT_PIN                    GPIO_Pin_15                 /* PB.15 */
 #define SD_DETECT_EXTI_LINE              EXTI_Line15
 #define SD_DETECT_EXTI_PIN_SOURCE        EXTI_PinSource15
@@ -338,16 +338,16 @@ typedef enum
 /**
   * @}
   */
-   
+
 /** @addtogroup STM320518_EVAL_LOW_LEVEL_I2C_EE
   * @{
   */
 /**
   * @brief  I2C EEPROM Interface pins
-  */  
+  */
 #define sEE_I2C                          I2C1
 #define sEE_I2C_CLK                      RCC_APB1Periph_I2C1
-   
+
 #define sEE_I2C_SCL_PIN                  GPIO_Pin_6                  /* PB.06 */
 #define sEE_I2C_SCL_GPIO_PORT            GPIOB                       /* GPIOB */
 #define sEE_I2C_SCL_GPIO_CLK             RCC_AHBPeriph_GPIOB
@@ -375,18 +375,18 @@ void STM_EVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode);
 uint32_t STM_EVAL_PBGetState(Button_TypeDef Button);
 void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
 void SD_LowLevel_DeInit(void);
-void SD_LowLevel_Init(void); 
+void SD_LowLevel_Init(void);
 void sFLASH_LowLevel_DeInit(void);
 void sFLASH_LowLevel_Init(void);
 void LM75_LowLevel_DeInit(void);
 void LM75_LowLevel_Init(void);
 void sEE_LowLevel_DeInit(void);
-void sEE_LowLevel_Init(void); 
+void sEE_LowLevel_Init(void);
 
 /**
   * @}
   */
-  
+
 #ifdef __cplusplus
 }
 #endif
@@ -394,11 +394,7 @@ void sEE_LowLevel_Init(void);
 #endif /* __STM320518_EVAL_H */
 /**
   * @}
-  */ 
-
-/**
-  * @}
-  */ 
+  */
 
 /**
   * @}
@@ -406,6 +402,10 @@ void sEE_LowLevel_Init(void);
 
 /**
   * @}
-  */  
+  */
+
+/**
+  * @}
+  */
 
 /******************* (C) COPYRIGHT 2012 STMicroelectronics *****END OF FILE****/

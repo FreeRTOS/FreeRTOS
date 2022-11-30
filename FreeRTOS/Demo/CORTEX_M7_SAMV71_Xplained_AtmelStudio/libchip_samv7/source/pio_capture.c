@@ -29,7 +29,7 @@
 
 /** \addtogroup pio_capture_module Working with PIO Parallel Capture Mode
  *  \ingroup peripherals_module
- * The PIO Parallel Capture Mode driver provides the interface to configure 
+ * The PIO Parallel Capture Mode driver provides the interface to configure
  * and use the PIO Parallel Capture Mode peripheral.\n
  *
  * The PIO Controller integrates an interface able to read data from a CMOS digital
@@ -49,26 +49,26 @@
  *   <li> Read the DATA </li>
  * </ul>
  *
- * For more accurate information, please look at the PIO Parallel Capture Mode 
+ * For more accurate information, please look at the PIO Parallel Capture Mode
  * section of the Datasheet.
  *
  * <b>API Usage:</b>
  *
- *  -# Configurate the interrupt for PIOA, can be done by 
+ *  -# Configurate the interrupt for PIOA, can be done by
  * PIO_InitializeInterrupts()
- *  -# Initialize the PIO Parallel Capture API by filing the SpioCaptureInit 
- *     structure 
+ *  -# Initialize the PIO Parallel Capture API by filing the SpioCaptureInit
+ *     structure
  * options:
  *       - alwaysSampling: for sample data with or without take in account
  *         ENABLE pins.
  *       - halfSampling: for sample all data or only one time out of two
  *  -# Call PIO_CaptureInit() for init and enable the PDC, init the PIO capture.
  *  -# Call PIO_CaptureEnable() for enable the PIO Parallel Capture.
- *  -# When an interrupt is received, the PIO_CaptureHandler() is call and the 
+ *  -# When an interrupt is received, the PIO_CaptureHandler() is call and the
  *     respective callback is launch.
  *  -# When the transfer is complete, the user need to disable interrupt with
  *     PIO_CaptureDisableIt(). Otherwise, the PDC will send an interrupt.
- *  -# The data receive by the PIO Parallel Capture is inside the buffer passed 
+ *  -# The data receive by the PIO Parallel Capture is inside the buffer passed
  *     in the PIO_CaptureInit().
  *
  * Related files :\n
@@ -258,4 +258,3 @@ void PIO_CaptureInit( SpioCaptureInit *pInit )
 		PIOA->PIO_PCIER = PIO_PCISR_RXBUFF;
 	}
 }
-

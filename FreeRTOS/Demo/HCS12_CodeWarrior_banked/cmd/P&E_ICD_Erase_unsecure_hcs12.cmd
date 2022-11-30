@@ -63,4 +63,3 @@ reset
 
 FLASH MEMMAP     // restore regular flash programming monitor
 undef CLKDIV     // undefine variable
-

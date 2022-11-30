@@ -345,4 +345,3 @@
 #define FSL_FEATURE_USBHSH_VERSION (300)
 
 #endif /* _LPC54018_FEATURES_H_ */
-

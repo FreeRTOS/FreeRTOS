@@ -342,5 +342,3 @@ const uint32_t ulPrescale = 10, ulTCR2Offset = 24UL;
 	return ulReturn;
 }
 /*-----------------------------------------------------------*/
-
-

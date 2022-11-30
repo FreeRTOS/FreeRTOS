@@ -691,4 +691,3 @@ static void prvRegisterCheckTask2( void *pvParameters )
 }
 
 /*-----------------------------------------------------------*/
-

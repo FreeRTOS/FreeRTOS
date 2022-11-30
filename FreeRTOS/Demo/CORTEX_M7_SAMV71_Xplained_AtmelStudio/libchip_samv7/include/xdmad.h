@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -30,7 +30,7 @@
 #ifndef _XDMAD_H
 #define _XDMAD_H
 
- 
+
 /*----------------------------------------------------------------------------
  *        Includes
  *----------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ typedef enum _XdmadStatus {
 typedef enum _XdmadState {
     XDMAD_STATE_FREE = 0,      /**< Free channel */
     XDMAD_STATE_ALLOCATED,     /**< Allocated to some peripheral */
-    XDMAD_STATE_START,         /**< DMA started */ 
+    XDMAD_STATE_START,         /**< DMA started */
     XDMAD_STATE_IN_XFR,        /**< DMA in transferring */
     XDMAD_STATE_DONE,          /**< DMA transfer done */
     XDMAD_STATE_HALTED,        /**< DMA transfer stopped */
@@ -155,7 +155,7 @@ typedef struct _XdmadCfg {
 
 /** \brief Structure for storing parameters for DMA view0 that can be
  * performed by the DMA Master transfer.*/
-typedef struct _LinkedListDescriporView0 
+typedef struct _LinkedListDescriporView0
 {
     /** Next Descriptor Address number. */
     uint32_t mbr_nda;
@@ -248,13 +248,12 @@ extern eXdmadRC XDMAD_IsTransferDone( sXdmad *pXdmad, uint32_t dwChannel );
 
 extern eXdmadRC XDMAD_StartTransfer( sXdmad *pXdmad, uint32_t dwChannel );
 
-extern eXdmadRC XDMAD_SetCallback( sXdmad *pXdmad, 
+extern eXdmadRC XDMAD_SetCallback( sXdmad *pXdmad,
                                    uint32_t dwChannel,
-                                   XdmadTransferCallback fCallback, 
+                                   XdmadTransferCallback fCallback,
                                    void* pArg );
 
 extern eXdmadRC XDMAD_StopTransfer( sXdmad *pXdmad, uint32_t dwChannel );
 /**     @}*/
 /**@}*/
 #endif //#ifndef _XDMAD_H
-

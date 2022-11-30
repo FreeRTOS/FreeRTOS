@@ -192,7 +192,7 @@ LVD_Handler
                 SECTION .text:CODE:REORDER(1)
 MFT_WG_IRQHandler
                 B       MFT_WG_IRQHandler
-                
+
                 PUBWEAK INT0_7_Handler
                 SECTION .text:CODE:REORDER(1)
 INT0_7_Handler
@@ -202,7 +202,7 @@ INT0_7_Handler
                 SECTION .text:CODE:REORDER(1)
 INT8_15_Handler
                 B       INT8_15_Handler
-                
+
                 PUBWEAK DT_Handler
                 SECTION .text:CODE:REORDER(1)
 DT_Handler

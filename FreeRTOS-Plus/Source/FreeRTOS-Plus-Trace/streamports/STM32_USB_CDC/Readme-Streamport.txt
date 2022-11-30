@@ -28,10 +28,10 @@ and verify that Snapshot mode works. The basic integration of the recorder libra
 2.1. Under "Middleware", enable "USB_DEVICE" and...
 - In "USB_DEVICE Mode and Configuration", set the "Class for FS IP" to "Communication Device Class (Virtual Com Port)".
 - Under Configuration -> Parameter Settings, set the TX and RX buffer sizes to a small value (e.g. 1).
-The default TX and RX buffers are not used by the trace recorder library, so this avoids wasting RAM. 
+The default TX and RX buffers are not used by the trace recorder library, so this avoids wasting RAM.
 
-2.2. Under "Connectivity", open "USB_OTG_FS" and... 
-- In "USB_OTG_FS Mode and Configuration", make sure "Mode" is set to "Device_Only" 
+2.2. Under "Connectivity", open "USB_OTG_FS" and...
+- In "USB_OTG_FS Mode and Configuration", make sure "Mode" is set to "Device_Only"
 - Under "Configuration", open "NVIC Settings" and make sure "USB OTG FS global interrupt" is enabled.
 
 3. Open trcConfig.h and set TRC_CFG_RECORDER_MODE to TRC_RECORDER_MODE_STREAMING.
@@ -57,7 +57,7 @@ bits, data rate etc.) are irrelevant for USB serial connections and not used.
 You should now see a live display of the trace, while it is being received.
 Make sure there are no warnings about "Dropped Events" (in that case, see Troubleshooting, below).
 
-Note that you can still debug and use breakpoints while streaming the trace. 
+Note that you can still debug and use breakpoints while streaming the trace.
 
 --- Further reading ---
 
@@ -67,27 +67,27 @@ Note that you can still debug and use breakpoints while streaming the trace.
 
 --- Troubleshooting ---
 
-A. If you get an error about "multiple definition of SysTick_Handler", open 
-FreeRTOSConfig.h (found in Core/Inc) and add this line in the bottom, 
+A. If you get an error about "multiple definition of SysTick_Handler", open
+FreeRTOSConfig.h (found in Core/Inc) and add this line in the bottom,
 after the definition of xPortSysTickHandler.
 
 #undef xPortSysTickHandler
 
 B. If you get "Missed Events" in the Live Stream window, it is typically because
-your application produces more trace data than can be transferred, so the trace 
+your application produces more trace data than can be transferred, so the trace
 buffer overflows.
 You may try the following to start with:
-- Increase TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT and/or TRC_CFG_PAGED_EVENT_BUFFER_PAGE_SIZE in trcStreamingConfig.h 
-- Decrease TRC_CFG_CTRL_TASK_DELAY in trcConfig.h 
-- Increase TRC_CFG_CTRL_TASK_PRIORITY in trcConfig.h 
+- Increase TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT and/or TRC_CFG_PAGED_EVENT_BUFFER_PAGE_SIZE in trcStreamingConfig.h
+- Decrease TRC_CFG_CTRL_TASK_DELAY in trcConfig.h
+- Increase TRC_CFG_CTRL_TASK_PRIORITY in trcConfig.h
 
-Also see the "tuning" guide at https://percepio.com/2018/10/11/tuning-your-custom-trace-streaming/ 
+Also see the "tuning" guide at https://percepio.com/2018/10/11/tuning-your-custom-trace-streaming/
 
-Also note that this USB stream port has a diagnostics option that might come handy. 
+Also note that this USB stream port has a diagnostics option that might come handy.
 Enable USB_PERF_DIAGNOSTICS in trcStreamPort.h. This will save additional "user events"
-each time a buffer page is transmitted, showing the number of bytes sent and the 
+each time a buffer page is transmitted, showing the number of bytes sent and the
 remaining capacity in the trace buffer (if this goes down to zero, data is lost).
 
-#define USB_PERF_DIAGNOSTICS 1 
+#define USB_PERF_DIAGNOSTICS 1
 
 If you need assistence, feel free to contact support@percepio.com.

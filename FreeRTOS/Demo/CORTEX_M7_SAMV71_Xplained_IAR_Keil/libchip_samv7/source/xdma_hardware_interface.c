@@ -31,13 +31,13 @@
  *
  * \section DmaHw Dma Hardware Interface Usage
  * <ul>
- * <li> The DMA controller can handle the transfer between peripherals and memory 
+ * <li> The DMA controller can handle the transfer between peripherals and memory
  * and so receives the triggers from the peripherals. The hardware interface number
  * are getting from DMAIF_Get_ChannelNumber().</li>
 
- * <li> DMAIF_IsValidatedPeripherOnDma() helps to check if the given DMAC has associated 
+ * <li> DMAIF_IsValidatedPeripherOnDma() helps to check if the given DMAC has associated
  * peripheral identifier coded by the given  peripheral.</li>
- * 
+ *
  * </ul>
  */
 /*@{*/
@@ -160,5 +160,3 @@ uint8_t XDMAIF_IsValidatedPeripherOnDma( uint8_t bPeriphID)
     }
     return 0;
 }
-
-

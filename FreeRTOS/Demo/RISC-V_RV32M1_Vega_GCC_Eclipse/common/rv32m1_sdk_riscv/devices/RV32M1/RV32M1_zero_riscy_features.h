@@ -1579,4 +1579,3 @@
 #define FSL_FEATURE_XRDC_DOMAIN_COUNT (3)
 
 #endif /* _RV32M1_zero_riscy_FEATURES_H_ */
-

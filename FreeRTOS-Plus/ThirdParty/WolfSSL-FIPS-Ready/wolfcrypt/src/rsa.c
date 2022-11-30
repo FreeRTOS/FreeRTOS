@@ -651,7 +651,7 @@ int wc_CheckRsaKey(RsaKey* key)
                 break;
     #endif /* WOLFSSL_SP_4096 */
                 default:
-                /* If using only single prcsision math then issue key size error, 
+                /* If using only single prcsision math then issue key size error,
                     otherwise fall-back to multi-precision math calculation */
                 #ifdef WOLFSSL_SP_MATH
                     ret = WC_KEY_SIZE_E;

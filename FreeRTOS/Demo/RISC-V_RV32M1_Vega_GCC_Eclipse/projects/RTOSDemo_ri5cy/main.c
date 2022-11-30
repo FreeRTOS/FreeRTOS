@@ -228,4 +228,3 @@ extern const irq_handler_t isrTable[];
     isrTable[ ulInterruptNumber ]();
 }
 /*-----------------------------------------------------------*/
-

@@ -58,6 +58,3 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		Byte1_NegBit( uxLED );
 	portEXIT_CRITICAL();
 }
-
-
-

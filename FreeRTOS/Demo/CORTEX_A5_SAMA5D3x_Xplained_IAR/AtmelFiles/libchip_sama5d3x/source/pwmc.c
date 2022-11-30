@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -78,7 +78,7 @@
  *----------------------------------------------------------------------------*/
 
 /**
- * \brief Configures PWM clocks  
+ * \brief Configures PWM clocks
  */
 void PWMC_ConfigureClocks(Pwm* pPwm, uint32_t mode)
 {
@@ -94,7 +94,7 @@ void PWMC_ConfigureClocks(Pwm* pPwm, uint32_t mode)
  */
 void PWMC_EnableChannel(Pwm* pPwm,uint8_t channel)
 {
-    pPwm->PWM_ENA= 0x1ul<<channel;  
+    pPwm->PWM_ENA= 0x1ul<<channel;
 }
 
 /**
@@ -108,19 +108,19 @@ void PWMC_EnableChannel(Pwm* pPwm,uint8_t channel)
  */
 void PWMC_DisableChannel(Pwm* pPwm,uint8_t channel)
 {
-    pPwm->PWM_DIS= 0x1ul<<channel;    
+    pPwm->PWM_DIS= 0x1ul<<channel;
 }
 
 /**
- * \brief Enables the selected interrupts sources on a PWMC peripheral. 
+ * \brief Enables the selected interrupts sources on a PWMC peripheral.
  */
 void PWMC_EnableChannelIt(Pwm* pPwm,uint8_t channel)
 {
-    pPwm->PWM_IER1= 0x1ul<<channel;  
+    pPwm->PWM_IER1= 0x1ul<<channel;
 }
 
 /**
- * \brief Disables the selected interrupts sources on a PWMC peripheral. 
+ * \brief Disables the selected interrupts sources on a PWMC peripheral.
  */
 void PWMC_DisableChannelIt(Pwm* pPwm,uint8_t channel)
 {
@@ -188,5 +188,3 @@ void PWMC_SetDutyCycle( Pwm* pPwm, uint8_t channel, uint16_t duty)
         pPwm->PWM_CH_NUM[channel].PWM_CPRDUPD = duty;
     }
 }
-
-

@@ -57,7 +57,7 @@ void Hitex_CGU_Init(void)
 	CGU_SetXTALOSC(__CRYSTAL);
 	CGU_EnableEntity(CGU_CLKSRC_XTAL_OSC, ENABLE);
 	CGU_EntityConnect(CGU_CLKSRC_XTAL_OSC, CGU_BASE_M3);
-	
+
 	/* Set PL160M 12*1 = 12 MHz */
 	CGU_EntityConnect(CGU_CLKSRC_XTAL_OSC, CGU_CLKSRC_PLL1);
 	CGU_SetPLL1(1);

@@ -118,5 +118,3 @@ volatile int iReturn, iIndex = 0;
 
 	return iReturn;
 }
-
-

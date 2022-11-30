@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -89,18 +89,18 @@
 
 /** @}*/
 
-/* Should be a power of 2. 
-   - Buffer Length to store the timestamps of 1588 event messages 
+/* Should be a power of 2.
+   - Buffer Length to store the timestamps of 1588 event messages
 */
 #define EFRS_BUFFER_LEN	(1u)
 
 /*---------------------------------------------------------------------------
 *             Types
-*---------------------------------------------------------------------------*/ 
+*---------------------------------------------------------------------------*/
 /** \addtogroup gmacd_types
 	@{*/
 
-typedef enum ptpMsgType_t  
+typedef enum ptpMsgType_t
 {
 	SYNC_MSG_TYPE = 0,
 	DELAY_REQ_MSG_TYPE = 1,
@@ -108,8 +108,8 @@ typedef enum ptpMsgType_t
 	PDELAY_RESP_TYPE = 3,
 	FOLLOW_UP_MSG_TYPE = 8,
 	DELAY_RESP_MSG_TYPE = 9
-}ptpMsgType; 
-	
+}ptpMsgType;
+
 
 
 /** RX callback */
@@ -173,11 +173,11 @@ typedef struct _GmacQueueDriver {
 
 	/** Number of free TD before wakeup callback is invoked */
 	uint8_t  bWakeupThreshold;
-	
+
    /** RX buffer size */
 	uint16_t wTxBufferSize;
 	uint16_t wRxBufferSize;
-	
+
 } sGmacQd;
 
 /**
@@ -190,7 +190,7 @@ typedef struct _GmacDriver {
 	/** HW ID */
 	uint8_t bId;
 	/** Base Queue list params **/
-	sGmacQd     queueList[NUM_GMAC_QUEUES];    
+	sGmacQd     queueList[NUM_GMAC_QUEUES];
 } sGmacd;
 
 /**
@@ -203,17 +203,17 @@ typedef struct _GmacInit {
 	uint8_t bDmaBurstLength;
 
 	/** RX descriptor and data buffers */
-	uint8_t *pRxBuffer;        
-	/** RX data buffers: should be wRxBufferSize * wRxSize byte long in a DMA 
+	uint8_t *pRxBuffer;
+	/** RX data buffers: should be wRxBufferSize * wRxSize byte long in a DMA
 	capable memory region */
-	sGmacRxDescriptor *pRxD;    
-	/** RX buffer descriptors: should have wRxSize entries in a DMA 
+	sGmacRxDescriptor *pRxD;
+	/** RX buffer descriptors: should have wRxSize entries in a DMA
 	capable memory region */
 	uint16_t wRxBufferSize;     /** size of a single RX data buffer */
 	uint16_t wRxSize;           /** number of RX descriptor and data buffers */
 
 	/** TX descriptor and data buffers */
-	/** TX data buffers: should be wTxBufferSize * wTxSize byte long 
+	/** TX data buffers: should be wTxBufferSize * wTxSize byte long
 		in a DMA capable memory region */
 	uint8_t *pTxBuffer;
 	/** TX buffer descriptors: should have wTxSize entries
@@ -239,8 +239,8 @@ extern void GMACD_Handler(sGmacd *pGmacd , gmacQueList_t queIdx);
 
 extern void GMACD_Init(sGmacd *pGmacd,
 					   Gmac *pHw,
-					   uint8_t bID, 
-					   uint8_t enableCAF, 
+					   uint8_t bID,
+					   uint8_t enableCAF,
 					   uint8_t enableNBC );
 
 extern uint8_t GMACD_InitTransfer(sGmacd *pGmacd,
@@ -250,33 +250,33 @@ extern void GMACD_Reset(sGmacd *pGmacd);
 
 extern uint8_t GMACD_SendSG(sGmacd *pGmacd,
 							const sGmacSGList *sgl,
-							fGmacdTransferCallback fTxCb, 
+							fGmacdTransferCallback fTxCb,
 							gmacQueList_t queIdx);
 
 extern uint8_t GMACD_Send(sGmacd *pGmacd,
 						 void *pBuffer,
 						 uint32_t size,
-						 fGmacdTransferCallback fTxCb, 
+						 fGmacdTransferCallback fTxCb,
 						 gmacQueList_t queIdx );
 
 extern  uint32_t GMACD_TxLoad(sGmacd *pGmacd, gmacQueList_t queIdx);
 
-extern  uint8_t GMACD_Poll(sGmacd * pGmacd, 
-						  uint8_t *pFrame, 
-						  uint32_t frameSize, 
-						  uint32_t *pRcvSize, 
+extern  uint8_t GMACD_Poll(sGmacd * pGmacd,
+						  uint8_t *pFrame,
+						  uint32_t frameSize,
+						  uint32_t *pRcvSize,
 						  gmacQueList_t queIdx);
 
-extern void GMACD_SetRxCallback(sGmacd * pGmacd, fGmacdTransferCallback 
+extern void GMACD_SetRxCallback(sGmacd * pGmacd, fGmacdTransferCallback
 		fRxCb, gmacQueList_t queIdx);
 
 extern uint8_t GMACD_SetTxWakeupCallback(sGmacd * pGmacd,
 										 fGmacdWakeupCallback fWakeup,
-										 uint8_t bThreshold, 
+										 uint8_t bThreshold,
 										 gmacQueList_t queIdx);
- 
-extern void GMACD_TxPtpEvtMsgCBRegister (sGmacd * pGmacd, 
-										  fGmacdTxPtpEvtCallBack pTxPtpEvtCb, 
+
+extern void GMACD_TxPtpEvtMsgCBRegister (sGmacd * pGmacd,
+										  fGmacdTxPtpEvtCallBack pTxPtpEvtCb,
 										  gmacQueList_t queIdx);
 
 /** @}*/

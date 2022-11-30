@@ -31,10 +31,10 @@ User Includes
 #include "lcd.h"
 
 /*****************************************************************************
-Name:			InitDisplay 
-Parameters:		none				
+Name:			InitDisplay
+Parameters:		none
 Returns:		none
-Description:	Intializes the LCD display. 
+Description:	Intializes the LCD display.
 *****************************************************************************/
 void InitialiseDisplay( void )
 {
@@ -42,7 +42,7 @@ void InitialiseDisplay( void )
 	EN_PIN = SET_BIT_HIGH;
 	DisplayDelay(7000);
 	EN_PIN = SET_BIT_LOW;
-  
+
 	/* Display initialises in 8 bit mode - so send one write (seen as 8 bit)
 		to set to 4 bit mode. */
 
@@ -50,7 +50,7 @@ void InitialiseDisplay( void )
 	LCD_nibble_write(CTRL_WR,0x03);
 	LCD_nibble_write(CTRL_WR,0x03);
 	DisplayDelay(39);
- 
+
 	/* Configure display */
 	LCD_nibble_write(CTRL_WR,0x03);
 	LCD_nibble_write(CTRL_WR,0x02);
@@ -72,10 +72,10 @@ void InitialiseDisplay( void )
 }
 /**********************************************************************************
 End of function InitialiseDisplay
-***********************************************************************************/   
+***********************************************************************************/
 
 /*****************************************************************************
-Name:		DisplayString   
+Name:		DisplayString
 Parameters:	position  Line number of display
 			string	Pointer to data to be written to display.
 					Last character should be null.
@@ -91,7 +91,7 @@ void DisplayString(unsigned char position, char * string)
 {
 	static unsigned char next_pos = 0xFF;
 
-	/* Set line position if needed. We don't want to if we don't need 
+	/* Set line position if needed. We don't want to if we don't need
 		to because LCD control operations take longer than LCD data
 		operations. */
 	if( next_pos != position)
@@ -107,20 +107,20 @@ void DisplayString(unsigned char position, char * string)
 			LCD_write(CTRL_WR, (unsigned char)(LCD_HOME_L2 + position - LCD_LINE2) );
 		}
 		/* set position index to known value */
-		next_pos = position;	
+		next_pos = position;
 	}
 
 	do
 	{
 		LCD_write(DATA_WR,*string++);
 		/* increment position index */
-		next_pos++;	   
+		next_pos++;
 	}
 	while(*string);
 }
 /**********************************************************************************
 End of function DisplayString
-***********************************************************************************/   
+***********************************************************************************/
 
 /*****************************************************************************
 Name:		LCD_write
@@ -130,7 +130,7 @@ Parameters:	value - the value to write
 							0 = CONTROL
 Returns:	none
 
-Description:	Writes data to display. Sends command to display.  
+Description:	Writes data to display. Sends command to display.
 *****************************************************************************/
 void LCD_write(unsigned char data_or_ctrl, unsigned char value)
 {
@@ -142,7 +142,7 @@ void LCD_write(unsigned char data_or_ctrl, unsigned char value)
 }
 /**********************************************************************************
 End of function LCD_write
-***********************************************************************************/   
+***********************************************************************************/
 
 /*****************************************************************************
 Name:		LCD_nibble_write
@@ -152,7 +152,7 @@ Parameters:	value - the value to write
 							0 = CONTROL
 Returns:	none
 
-Description:	Writes data to display. Sends command to display.  
+Description:	Writes data to display. Sends command to display.
 *****************************************************************************/
 void LCD_nibble_write(unsigned char data_or_ctrl, unsigned char value)
 {
@@ -169,38 +169,38 @@ void LCD_nibble_write(unsigned char data_or_ctrl, unsigned char value)
 	DisplayDelay(1);
 	/* EN enable chip (HIGH) */
 	EN_PIN = SET_BIT_HIGH;
-	/* Tiny delay */		
+	/* Tiny delay */
 	DisplayDelay(1);
-	/* Clear port bits used */  
+	/* Clear port bits used */
 	/* Set upper lower 4 bits of nibble on port pins. */
 	ucStore = DATA_PORT;
 	ucStore &= ~DATA_PORT_MASK;
-	/* OR in data */  
+	/* OR in data */
 	ucStore |= ((value << DATA_PORT_SHIFT) & DATA_PORT_MASK );
 	/* Write lower 4 bits of nibble */
 	DATA_PORT = ucStore;
 
 	/* write delay while En High */
 	DisplayDelay(20);
-	/* Latch data by dropping EN */		 
+	/* Latch data by dropping EN */
 	EN_PIN = SET_BIT_LOW;
-	/* Data hold delay */	   
-	DisplayDelay(20);		 
+	/* Data hold delay */
+	DisplayDelay(20);
 
 	if(data_or_ctrl == CTRL_WR)
 	{
 		/* Extra delay needed for control writes */
-		DisplayDelay(40);	   
-	}	   
+		DisplayDelay(40);
+	}
 }
 /**********************************************************************************
 End of function LCD_nibble_write
-***********************************************************************************/   
+***********************************************************************************/
 
 /*****************************************************************************
-Name:		DisplayDelay 
-Parameters:	units - Approximately in microseconds				   
-Returns:	none 
+Name:		DisplayDelay
+Parameters:	units - Approximately in microseconds
+Returns:	none
 
 Description:   Delay routine for LCD display.
 *****************************************************************************/
@@ -214,6 +214,4 @@ void DisplayDelay(unsigned long int units)
 }
 /**********************************************************************************
 End of function DisplayDelay
-***********************************************************************************/   
-
-
+***********************************************************************************/

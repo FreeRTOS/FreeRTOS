@@ -92,4 +92,3 @@ extern uint32_t power( uint32_t dwX, uint32_t dwY )
 
     return dwResult ;
 }
-

@@ -1558,13 +1558,13 @@ Assembler=D:\devtools\Cygnal\IDEfiles\C51\BIN\a51.exe
 [WorkState_v1_1.AssFlag]
 AssFlag=-f -i -s
 [WorkState_v1_1.AssFormat]
-AssFormat=<Executable Name> <Input File(s)> <Flags> 
+AssFormat=<Executable Name> <Input File(s)> <Flags>
 [WorkState_v1_1.Compiler]
 Compiler=D:\devtools\Cygnal\IDEfiles\C51\BIN\C51.exe
 [WorkState_v1_1.CompFlag]
 CompFlag=-c -l -s m=3
 [WorkState_v1_1.CompFormat]
-CompFormat=<Executable Name> <Input File(s)> <Output File> <Flags> 
+CompFormat=<Executable Name> <Input File(s)> <Output File> <Flags>
 [WorkState_v1_1.RunOptimizer]
 RunOptimizer=0
 [WorkState_v1_1.Linker]
@@ -1572,11 +1572,11 @@ Linker=D:\devtools\Cygnal\IDEfiles\C51\BIN\bl51.exe
 [WorkState_v1_1.LinkFlag]
 LinkFlag=i=\mc\lib51\medium.lib -l l=\mc\lib51 -s
 [WorkState_v1_1.LinkFormat]
-LinkFormat=<Executable Name> <Input File(s)> <Flags> <Output File> 
+LinkFormat=<Executable Name> <Input File(s)> <Flags> <Output File>
 [WorkState_v1_1.PreprocFlag]
 PreprocFlag=-c -l
 [WorkState_v1_1.PreprocFormat]
-PreprocFormat=<Executable Name> <Input File(s)> <Output File> <Flags> 
+PreprocFormat=<Executable Name> <Input File(s)> <Output File> <Flags>
 [WorkState_v1_1.DisList]
 DisList=1
 [WorkState_v1_1.DisOP]

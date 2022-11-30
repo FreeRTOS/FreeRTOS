@@ -4,32 +4,32 @@
  *
  * This software is developed by Microchip Technology Inc. and its
  * subsidiaries ("Microchip").
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * 1.      Redistributions of source code must retain the above copyright
  *         notice, this list of conditions and the following disclaimer.
- * 2.      Redistributions in binary form must reproduce the above 
- *         copyright notice, this list of conditions and the following 
- *         disclaimer in the documentation and/or other materials provided 
+ * 2.      Redistributions in binary form must reproduce the above
+ *         copyright notice, this list of conditions and the following
+ *         disclaimer in the documentation and/or other materials provided
  *         with the distribution.
  * 3.      Microchip's name may not be used to endorse or promote products
- *         derived from this software without specific prior written 
+ *         derived from this software without specific prior written
  *         permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY MICROCHIP "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * MERCHANTABILITY AND FITNESS FOR PURPOSE ARE DISCLAIMED. IN NO EVENT
  * SHALL MICROCHIP BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA OR PROFITS;
  * OR BUSINESS INTERRUPTION) HOWSOEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  *-------------------------------------------------------------------------*/
 
 /* Default linker script, for normal executables */
@@ -95,20 +95,20 @@ SECTIONS
     KEEP(*(.gen_handler))
   } > kseg0_program_mem
 
-  /* MEC14x4 JTVIC has 19 aggregated interrupt sources in its 
-   * power-on-reset configuration. MEC14xx data sheet uses nomenclature 
+  /* MEC14x4 JTVIC has 19 aggregated interrupt sources in its
+   * power-on-reset configuration. MEC14xx data sheet uses nomenclature
    * GIRQ00 - GIRQ18.
-   * MEC14x4 M14K core was built to support EIC Mode 2 only. The JTVIC 
-   * supplies a 17-bit offset to the M14K core. The M14K combines this 
+   * MEC14x4 M14K core was built to support EIC Mode 2 only. The JTVIC
+   * supplies a 17-bit offset to the M14K core. The M14K combines this
    * 17-bit offset with EBASE to produce the final vector location.
-   * Similar to the PIC32MZ EVIC, the JTVIC has a register for each 
+   * Similar to the PIC32MZ EVIC, the JTVIC has a register for each
    * GIRQx containing the 17-bit value supplied to the M14K core.
-   * This means ISR's can be located anywhere above EBASE except for 
+   * This means ISR's can be located anywhere above EBASE except for
    * the fixed location of the General Exception at EBASE + 0x180.
-   * To avoid overhead of XC32 .vector_N long jumps we will program 
-   * the address of the C ISR directly into the JTVIC. All ISR's 
-   * can be in .text 
-   * C ISR's must also be marked with the interrupt(XXX_IPL) attribute 
+   * To avoid overhead of XC32 .vector_N long jumps we will program
+   * the address of the C ISR directly into the JTVIC. All ISR's
+   * can be in .text
+   * C ISR's must also be marked with the interrupt(XXX_IPL) attribute
    * so the compiler knows about priority, etc.
    */
   .vectors _ebase_address + 0x200 :
@@ -139,16 +139,16 @@ SECTIONS
   } > kseg0_program_mem
 
   /*  The startup code is in the .reset.startup section.
-  *  SRAM Application startup code does NOT need to be 
+  *  SRAM Application startup code does NOT need to be
   *  located at the beginning of CODE SRAM. A processor/chip
-  *  reset will go to the BootROM reset/startup code and 
+  *  reset will go to the BootROM reset/startup code and
   *  begin the BootROM SPI application load sequence.
-  *  Upon a successful SPI load and verification, BootROM 
-  *  will jump into the Application. We expect the jump address 
-  *  to be .startup(reset handler) of the application because 
+  *  Upon a successful SPI load and verification, BootROM
+  *  will jump into the Application. We expect the jump address
+  *  to be .startup(reset handler) of the application because
   *  .startup runs the XC32 startup code and calls C main.
-  *  Since application .startup is never entered on a real HW 
-  *  reset/nmi/soft-reset it can be located anywhere in SRAM 
+  *  Since application .startup is never entered on a real HW
+  *  reset/nmi/soft-reset it can be located anywhere in SRAM
   *  CODE space.
   */
   .startup :
@@ -446,7 +446,7 @@ SECTIONS
   .stab.index    0 : { *(.stab.index) }
   .stab.indexstr 0 : { *(.stab.indexstr) }
   .comment       0 : { *(.comment) }
-  /* DWARF debug sections used by MPLAB X for source-level debugging. 
+  /* DWARF debug sections used by MPLAB X for source-level debugging.
      Symbols in the DWARF debugging sections are relative to the beginning
      of the section so we begin them at 0.  */
   /* DWARF 1 */
@@ -478,4 +478,3 @@ SECTIONS
   /DISCARD/ : { *(.note.GNU-stack) }
   /DISCARD/ : { *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) *(.discard) }
 }
-

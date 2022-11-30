@@ -164,4 +164,3 @@ void handle_m_soft_interrupt(void)
     /*Clear software interrupt*/
     clear_soft_interrupt();
 }
-

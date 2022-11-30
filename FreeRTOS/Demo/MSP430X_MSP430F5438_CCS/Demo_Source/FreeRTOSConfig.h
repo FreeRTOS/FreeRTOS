@@ -103,4 +103,3 @@ case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 
 #endif /* FREERTOS_CONFIG_H */
-

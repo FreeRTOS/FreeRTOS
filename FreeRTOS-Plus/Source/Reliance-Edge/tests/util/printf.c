@@ -1262,4 +1262,3 @@ static uint32_t FinishToA(
 
     return ulIdx;
 }
-

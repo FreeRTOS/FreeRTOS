@@ -76,7 +76,7 @@ typedef union {
     #define PORTA_BIT6 _PORTAB.Overlap_STR.PORTASTR.Bits.BIT6
     #define PORTA_BIT7 _PORTAB.Overlap_STR.PORTASTR.Bits.BIT7
     #define PORTA_BIT _PORTAB.Overlap_STR.PORTASTR.MergedBits.grpBIT
-    
+
     /*** PORTB - Port B Register; 0x00000001 ***/
     union {
       byte Byte;
@@ -104,7 +104,7 @@ typedef union {
     #define PORTB_BIT6 _PORTAB.Overlap_STR.PORTBSTR.Bits.BIT6
     #define PORTB_BIT7 _PORTAB.Overlap_STR.PORTBSTR.Bits.BIT7
     #define PORTB_BIT _PORTAB.Overlap_STR.PORTBSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -182,7 +182,7 @@ typedef union {
     #define DDRA_BIT6 _DDRAB.Overlap_STR.DDRASTR.Bits.BIT6
     #define DDRA_BIT7 _DDRAB.Overlap_STR.DDRASTR.Bits.BIT7
     #define DDRA_BIT _DDRAB.Overlap_STR.DDRASTR.MergedBits.grpBIT
-    
+
     /*** DDRB - Port B Data Direction Register; 0x00000003 ***/
     union {
       byte Byte;
@@ -210,7 +210,7 @@ typedef union {
     #define DDRB_BIT6 _DDRAB.Overlap_STR.DDRBSTR.Bits.BIT6
     #define DDRB_BIT7 _DDRAB.Overlap_STR.DDRBSTR.Bits.BIT7
     #define DDRB_BIT _DDRAB.Overlap_STR.DDRBSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -284,7 +284,7 @@ typedef union {
     #define TCNTHi_BIT10 _TCNT.Overlap_STR.TCNTHiSTR.Bits.BIT10
     #define TCNTHi_BIT9 _TCNT.Overlap_STR.TCNTHiSTR.Bits.BIT9
     #define TCNTHi_BIT8 _TCNT.Overlap_STR.TCNTHiSTR.Bits.BIT8
-    
+
     /*** TCNTLo - Timer Count Register Low; 0x00000045 ***/
     union {
       byte Byte;
@@ -312,7 +312,7 @@ typedef union {
     #define TCNTLo_BIT6 _TCNT.Overlap_STR.TCNTLoSTR.Bits.BIT6
     #define TCNTLo_BIT7 _TCNT.Overlap_STR.TCNTLoSTR.Bits.BIT7
     #define TCNTLo_BIT _TCNT.Overlap_STR.TCNTLoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -357,7 +357,7 @@ typedef union {
     #define TC0Hi_BIT15 _TC0.Overlap_STR.TC0HiSTR.Bits.BIT15
     #define TC0Hi_BIT_8 _TC0.Overlap_STR.TC0HiSTR.MergedBits.grpBIT_8
     #define TC0Hi_BIT TC0Hi_BIT_8
-    
+
     /*** TC0Lo - Timer Input Capture/Output Compare Register 0 Low; 0x00000051 ***/
     union {
       byte Byte;
@@ -385,7 +385,7 @@ typedef union {
     #define TC0Lo_BIT6 _TC0.Overlap_STR.TC0LoSTR.Bits.BIT6
     #define TC0Lo_BIT7 _TC0.Overlap_STR.TC0LoSTR.Bits.BIT7
     #define TC0Lo_BIT _TC0.Overlap_STR.TC0LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -430,7 +430,7 @@ typedef union {
     #define TC1Hi_BIT15 _TC1.Overlap_STR.TC1HiSTR.Bits.BIT15
     #define TC1Hi_BIT_8 _TC1.Overlap_STR.TC1HiSTR.MergedBits.grpBIT_8
     #define TC1Hi_BIT TC1Hi_BIT_8
-    
+
     /*** TC1Lo - Timer Input Capture/Output Compare Register 1 Low; 0x00000053 ***/
     union {
       byte Byte;
@@ -458,7 +458,7 @@ typedef union {
     #define TC1Lo_BIT6 _TC1.Overlap_STR.TC1LoSTR.Bits.BIT6
     #define TC1Lo_BIT7 _TC1.Overlap_STR.TC1LoSTR.Bits.BIT7
     #define TC1Lo_BIT _TC1.Overlap_STR.TC1LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -503,7 +503,7 @@ typedef union {
     #define TC2Hi_BIT15 _TC2.Overlap_STR.TC2HiSTR.Bits.BIT15
     #define TC2Hi_BIT_8 _TC2.Overlap_STR.TC2HiSTR.MergedBits.grpBIT_8
     #define TC2Hi_BIT TC2Hi_BIT_8
-    
+
     /*** TC2Lo - Timer Input Capture/Output Compare Register 2 Low; 0x00000055 ***/
     union {
       byte Byte;
@@ -531,7 +531,7 @@ typedef union {
     #define TC2Lo_BIT6 _TC2.Overlap_STR.TC2LoSTR.Bits.BIT6
     #define TC2Lo_BIT7 _TC2.Overlap_STR.TC2LoSTR.Bits.BIT7
     #define TC2Lo_BIT _TC2.Overlap_STR.TC2LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -576,7 +576,7 @@ typedef union {
     #define TC3Hi_BIT15 _TC3.Overlap_STR.TC3HiSTR.Bits.BIT15
     #define TC3Hi_BIT_8 _TC3.Overlap_STR.TC3HiSTR.MergedBits.grpBIT_8
     #define TC3Hi_BIT TC3Hi_BIT_8
-    
+
     /*** TC3Lo - Timer Input Capture/Output Compare Register 3 Low; 0x00000057 ***/
     union {
       byte Byte;
@@ -604,7 +604,7 @@ typedef union {
     #define TC3Lo_BIT6 _TC3.Overlap_STR.TC3LoSTR.Bits.BIT6
     #define TC3Lo_BIT7 _TC3.Overlap_STR.TC3LoSTR.Bits.BIT7
     #define TC3Lo_BIT _TC3.Overlap_STR.TC3LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -649,7 +649,7 @@ typedef union {
     #define TC4Hi_BIT15 _TC4.Overlap_STR.TC4HiSTR.Bits.BIT15
     #define TC4Hi_BIT_8 _TC4.Overlap_STR.TC4HiSTR.MergedBits.grpBIT_8
     #define TC4Hi_BIT TC4Hi_BIT_8
-    
+
     /*** TC4Lo - Timer Input Capture/Output Compare Register 4 Low; 0x00000059 ***/
     union {
       byte Byte;
@@ -677,7 +677,7 @@ typedef union {
     #define TC4Lo_BIT6 _TC4.Overlap_STR.TC4LoSTR.Bits.BIT6
     #define TC4Lo_BIT7 _TC4.Overlap_STR.TC4LoSTR.Bits.BIT7
     #define TC4Lo_BIT _TC4.Overlap_STR.TC4LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -722,7 +722,7 @@ typedef union {
     #define TC5Hi_BIT15 _TC5.Overlap_STR.TC5HiSTR.Bits.BIT15
     #define TC5Hi_BIT_8 _TC5.Overlap_STR.TC5HiSTR.MergedBits.grpBIT_8
     #define TC5Hi_BIT TC5Hi_BIT_8
-    
+
     /*** TC5Lo - Timer Input Capture/Output Compare Register 5 Low; 0x0000005B ***/
     union {
       byte Byte;
@@ -750,7 +750,7 @@ typedef union {
     #define TC5Lo_BIT6 _TC5.Overlap_STR.TC5LoSTR.Bits.BIT6
     #define TC5Lo_BIT7 _TC5.Overlap_STR.TC5LoSTR.Bits.BIT7
     #define TC5Lo_BIT _TC5.Overlap_STR.TC5LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -795,7 +795,7 @@ typedef union {
     #define TC6Hi_BIT15 _TC6.Overlap_STR.TC6HiSTR.Bits.BIT15
     #define TC6Hi_BIT_8 _TC6.Overlap_STR.TC6HiSTR.MergedBits.grpBIT_8
     #define TC6Hi_BIT TC6Hi_BIT_8
-    
+
     /*** TC6Lo - Timer Input Capture/Output Compare Register 6 Low; 0x0000005D ***/
     union {
       byte Byte;
@@ -823,7 +823,7 @@ typedef union {
     #define TC6Lo_BIT6 _TC6.Overlap_STR.TC6LoSTR.Bits.BIT6
     #define TC6Lo_BIT7 _TC6.Overlap_STR.TC6LoSTR.Bits.BIT7
     #define TC6Lo_BIT _TC6.Overlap_STR.TC6LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -868,7 +868,7 @@ typedef union {
     #define TC7Hi_BIT15 _TC7.Overlap_STR.TC7HiSTR.Bits.BIT15
     #define TC7Hi_BIT_8 _TC7.Overlap_STR.TC7HiSTR.MergedBits.grpBIT_8
     #define TC7Hi_BIT TC7Hi_BIT_8
-    
+
     /*** TC7Lo - Timer Input Capture/Output Compare Register 7 Low; 0x0000005F ***/
     union {
       byte Byte;
@@ -896,7 +896,7 @@ typedef union {
     #define TC7Lo_BIT6 _TC7.Overlap_STR.TC7LoSTR.Bits.BIT6
     #define TC7Lo_BIT7 _TC7.Overlap_STR.TC7LoSTR.Bits.BIT7
     #define TC7Lo_BIT _TC7.Overlap_STR.TC7LoSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -922,7 +922,7 @@ typedef union {
     } PACN3STR;
     #define PACN3 _PACN32.Overlap_STR.PACN3STR.Byte
     #define PACN3_BIT _PACN32.Overlap_STR.PACN3STR.MergedBits.grpBIT
-    
+
     /*** PACN2 - Pulse Accumulators Count 2 Register; 0x00000063 ***/
     union {
       byte Byte;
@@ -932,7 +932,7 @@ typedef union {
     } PACN2STR;
     #define PACN2 _PACN32.Overlap_STR.PACN2STR.Byte
     #define PACN2_BIT _PACN32.Overlap_STR.PACN2STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -958,7 +958,7 @@ typedef union {
     } PACN1STR;
     #define PACN1 _PACN10.Overlap_STR.PACN1STR.Byte
     #define PACN1_BIT _PACN10.Overlap_STR.PACN1STR.MergedBits.grpBIT
-    
+
     /*** PACN0 - Pulse Accumulators Count 0 Register; 0x00000065 ***/
     union {
       byte Byte;
@@ -968,7 +968,7 @@ typedef union {
     } PACN0STR;
     #define PACN0 _PACN10.Overlap_STR.PACN0STR.Byte
     #define PACN0_BIT _PACN10.Overlap_STR.PACN0STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1012,7 +1012,7 @@ typedef union {
     #define PA3H_BIT6 _PA32H.Overlap_STR.PA3HSTR.Bits.BIT6
     #define PA3H_BIT7 _PA32H.Overlap_STR.PA3HSTR.Bits.BIT7
     #define PA3H_BIT _PA32H.Overlap_STR.PA3HSTR.MergedBits.grpBIT
-    
+
     /*** PA2H - 8-Bit Pulse Accumulators Holding 2 Register; 0x00000073 ***/
     union {
       byte Byte;
@@ -1040,7 +1040,7 @@ typedef union {
     #define PA2H_BIT6 _PA32H.Overlap_STR.PA2HSTR.Bits.BIT6
     #define PA2H_BIT7 _PA32H.Overlap_STR.PA2HSTR.Bits.BIT7
     #define PA2H_BIT _PA32H.Overlap_STR.PA2HSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1118,7 +1118,7 @@ typedef union {
     #define PA1H_BIT6 _PA10H.Overlap_STR.PA1HSTR.Bits.BIT6
     #define PA1H_BIT7 _PA10H.Overlap_STR.PA1HSTR.Bits.BIT7
     #define PA1H_BIT _PA10H.Overlap_STR.PA1HSTR.MergedBits.grpBIT
-    
+
     /*** PA0H - 8-Bit Pulse Accumulators Holding 0 Register; 0x00000075 ***/
     union {
       byte Byte;
@@ -1146,7 +1146,7 @@ typedef union {
     #define PA0H_BIT6 _PA10H.Overlap_STR.PA0HSTR.Bits.BIT6
     #define PA0H_BIT7 _PA10H.Overlap_STR.PA0HSTR.Bits.BIT7
     #define PA0H_BIT _PA10H.Overlap_STR.PA0HSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1225,7 +1225,7 @@ typedef union {
     #define MCCNThi_BIT15 _MCCNT.Overlap_STR.MCCNThiSTR.Bits.BIT15
     #define MCCNThi_BIT_8 _MCCNT.Overlap_STR.MCCNThiSTR.MergedBits.grpBIT_8
     #define MCCNThi_BIT MCCNThi_BIT_8
-    
+
     /*** MCCNTlo - Modulus Down-Counter Count Register Low; 0x00000077 ***/
     union {
       byte Byte;
@@ -1253,7 +1253,7 @@ typedef union {
     #define MCCNTlo_BIT6 _MCCNT.Overlap_STR.MCCNTloSTR.Bits.BIT6
     #define MCCNTlo_BIT7 _MCCNT.Overlap_STR.MCCNTloSTR.Bits.BIT7
     #define MCCNTlo_BIT _MCCNT.Overlap_STR.MCCNTloSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1298,7 +1298,7 @@ typedef union {
     #define TC0Hhi_BIT15 _TC0H.Overlap_STR.TC0HhiSTR.Bits.BIT15
     #define TC0Hhi_BIT_8 _TC0H.Overlap_STR.TC0HhiSTR.MergedBits.grpBIT_8
     #define TC0Hhi_BIT TC0Hhi_BIT_8
-    
+
     /*** TC0Hlo - Timer Input Capture Holding Registers 0 Low; 0x00000079 ***/
     union {
       byte Byte;
@@ -1326,7 +1326,7 @@ typedef union {
     #define TC0Hlo_BIT6 _TC0H.Overlap_STR.TC0HloSTR.Bits.BIT6
     #define TC0Hlo_BIT7 _TC0H.Overlap_STR.TC0HloSTR.Bits.BIT7
     #define TC0Hlo_BIT _TC0H.Overlap_STR.TC0HloSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1405,7 +1405,7 @@ typedef union {
     #define TC1Hhi_BIT15 _TC1H.Overlap_STR.TC1HhiSTR.Bits.BIT15
     #define TC1Hhi_BIT_8 _TC1H.Overlap_STR.TC1HhiSTR.MergedBits.grpBIT_8
     #define TC1Hhi_BIT TC1Hhi_BIT_8
-    
+
     /*** TC1Hlo - Timer Input Capture Holding Registers 1 Low; 0x0000007B ***/
     union {
       byte Byte;
@@ -1433,7 +1433,7 @@ typedef union {
     #define TC1Hlo_BIT6 _TC1H.Overlap_STR.TC1HloSTR.Bits.BIT6
     #define TC1Hlo_BIT7 _TC1H.Overlap_STR.TC1HloSTR.Bits.BIT7
     #define TC1Hlo_BIT _TC1H.Overlap_STR.TC1HloSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1512,7 +1512,7 @@ typedef union {
     #define TC2Hhi_BIT15 _TC2H.Overlap_STR.TC2HhiSTR.Bits.BIT15
     #define TC2Hhi_BIT_8 _TC2H.Overlap_STR.TC2HhiSTR.MergedBits.grpBIT_8
     #define TC2Hhi_BIT TC2Hhi_BIT_8
-    
+
     /*** TC2Hlo - Timer Input Capture Holding Registers 2 Low; 0x0000007D ***/
     union {
       byte Byte;
@@ -1540,7 +1540,7 @@ typedef union {
     #define TC2Hlo_BIT6 _TC2H.Overlap_STR.TC2HloSTR.Bits.BIT6
     #define TC2Hlo_BIT7 _TC2H.Overlap_STR.TC2HloSTR.Bits.BIT7
     #define TC2Hlo_BIT _TC2H.Overlap_STR.TC2HloSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1619,7 +1619,7 @@ typedef union {
     #define TC3Hhi_BIT15 _TC3H.Overlap_STR.TC3HhiSTR.Bits.BIT15
     #define TC3Hhi_BIT_8 _TC3H.Overlap_STR.TC3HhiSTR.MergedBits.grpBIT_8
     #define TC3Hhi_BIT TC3Hhi_BIT_8
-    
+
     /*** TC3Hlo - Timer Input Capture Holding Registers 3 Low; 0x0000007F ***/
     union {
       byte Byte;
@@ -1647,7 +1647,7 @@ typedef union {
     #define TC3Hlo_BIT6 _TC3H.Overlap_STR.TC3HloSTR.Bits.BIT6
     #define TC3Hlo_BIT7 _TC3H.Overlap_STR.TC3HloSTR.Bits.BIT7
     #define TC3Hlo_BIT _TC3H.Overlap_STR.TC3HloSTR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -1721,7 +1721,7 @@ typedef union {
     #define ATD0CTL2_AWAI _ATD0CTL23.Overlap_STR.ATD0CTL2STR.Bits.AWAI
     #define ATD0CTL2_AFFC _ATD0CTL23.Overlap_STR.ATD0CTL2STR.Bits.AFFC
     #define ATD0CTL2_ADPU _ATD0CTL23.Overlap_STR.ATD0CTL2STR.Bits.ADPU
-    
+
     /*** ATD0CTL3 - ATD 0 Control Register 3; 0x00000083 ***/
     union {
       byte Byte;
@@ -1733,7 +1733,7 @@ typedef union {
         byte S2C         :1;                                       /* Conversion Sequence Length 2 */
         byte S4C         :1;                                       /* Conversion Sequence Length 4 */
         byte S8C         :1;                                       /* Conversion Sequence Length 8 */
-        byte             :1; 
+        byte             :1;
       } Bits;
       struct {
         byte grpFRZ :2;
@@ -1754,7 +1754,7 @@ typedef union {
     #define ATD0CTL3_S4C _ATD0CTL23.Overlap_STR.ATD0CTL3STR.Bits.S4C
     #define ATD0CTL3_S8C _ATD0CTL23.Overlap_STR.ATD0CTL3STR.Bits.S8C
     #define ATD0CTL3_FRZ _ATD0CTL23.Overlap_STR.ATD0CTL3STR.MergedBits.grpFRZ
-    
+
   } Overlap_STR;
 
   struct {
@@ -1765,7 +1765,7 @@ typedef union {
     word S2C         :1;                                       /* Conversion Sequence Length 2 */
     word S4C         :1;                                       /* Conversion Sequence Length 4 */
     word S8C         :1;                                       /* Conversion Sequence Length 8 */
-    word             :1; 
+    word             :1;
     word ASCIF       :1;                                       /* ATD 0 Sequence Complete Interrupt Flag */
     word ASCIE       :1;                                       /* ATD 0 Sequence Complete Interrupt Enable */
     word ETRIGE      :1;                                       /* External Trigger Mode enable */
@@ -1848,7 +1848,7 @@ typedef union {
     #define ATD0CTL4_SRES8 _ATD0CTL45.Overlap_STR.ATD0CTL4STR.Bits.SRES8
     #define ATD0CTL4_PRS _ATD0CTL45.Overlap_STR.ATD0CTL4STR.MergedBits.grpPRS
     #define ATD0CTL4_SMP _ATD0CTL45.Overlap_STR.ATD0CTL4STR.MergedBits.grpSMP
-    
+
     /*** ATD0CTL5 - ATD 0 Control Register 5; 0x00000085 ***/
     union {
       byte Byte;
@@ -1856,7 +1856,7 @@ typedef union {
         byte CA          :1;                                       /* Analog Input Channel Select Code A */
         byte CB          :1;                                       /* Analog Input Channel Select Code B */
         byte CC          :1;                                       /* Analog Input Channel Select Code C */
-        byte             :1; 
+        byte             :1;
         byte MULT        :1;                                       /* Multi-Channel Sample Mode */
         byte SCAN        :1;                                       /* Continuous Conversion Sequence Mode */
         byte DSGN        :1;                                       /* Signed/Unsigned Result Data Mode */
@@ -1871,14 +1871,14 @@ typedef union {
     #define ATD0CTL5_SCAN _ATD0CTL45.Overlap_STR.ATD0CTL5STR.Bits.SCAN
     #define ATD0CTL5_DSGN _ATD0CTL45.Overlap_STR.ATD0CTL5STR.Bits.DSGN
     #define ATD0CTL5_DJM _ATD0CTL45.Overlap_STR.ATD0CTL5STR.Bits.DJM
-    
+
   } Overlap_STR;
 
   struct {
     word CA          :1;                                       /* Analog Input Channel Select Code A */
     word CB          :1;                                       /* Analog Input Channel Select Code B */
     word CC          :1;                                       /* Analog Input Channel Select Code C */
-    word             :1; 
+    word             :1;
     word MULT        :1;                                       /* Multi-Channel Sample Mode */
     word SCAN        :1;                                       /* Continuous Conversion Sequence Mode */
     word DSGN        :1;                                       /* Signed/Unsigned Result Data Mode */
@@ -1960,17 +1960,17 @@ typedef union {
     #define ATD0DR0H_BIT15 _ATD0DR0.Overlap_STR.ATD0DR0HSTR.Bits.BIT15
     #define ATD0DR0H_BIT_8 _ATD0DR0.Overlap_STR.ATD0DR0HSTR.MergedBits.grpBIT_8
     #define ATD0DR0H_BIT ATD0DR0H_BIT_8
-    
+
     /*** ATD0DR0L - ATD 0 Conversion Result Register 0 Low; 0x00000091 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -1989,16 +1989,16 @@ typedef union {
     #define ATD0DR0L_BIT7 _ATD0DR0.Overlap_STR.ATD0DR0LSTR.Bits.BIT7
     #define ATD0DR0L_BIT_6 _ATD0DR0.Overlap_STR.ATD0DR0LSTR.MergedBits.grpBIT_6
     #define ATD0DR0L_BIT ATD0DR0L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2069,17 +2069,17 @@ typedef union {
     #define ATD0DR1H_BIT15 _ATD0DR1.Overlap_STR.ATD0DR1HSTR.Bits.BIT15
     #define ATD0DR1H_BIT_8 _ATD0DR1.Overlap_STR.ATD0DR1HSTR.MergedBits.grpBIT_8
     #define ATD0DR1H_BIT ATD0DR1H_BIT_8
-    
+
     /*** ATD0DR1L - ATD 0 Conversion Result Register 1 Low; 0x00000093 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -2098,16 +2098,16 @@ typedef union {
     #define ATD0DR1L_BIT7 _ATD0DR1.Overlap_STR.ATD0DR1LSTR.Bits.BIT7
     #define ATD0DR1L_BIT_6 _ATD0DR1.Overlap_STR.ATD0DR1LSTR.MergedBits.grpBIT_6
     #define ATD0DR1L_BIT ATD0DR1L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2178,17 +2178,17 @@ typedef union {
     #define ATD0DR2H_BIT15 _ATD0DR2.Overlap_STR.ATD0DR2HSTR.Bits.BIT15
     #define ATD0DR2H_BIT_8 _ATD0DR2.Overlap_STR.ATD0DR2HSTR.MergedBits.grpBIT_8
     #define ATD0DR2H_BIT ATD0DR2H_BIT_8
-    
+
     /*** ATD0DR2L - ATD 0 Conversion Result Register 2 Low; 0x00000095 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -2207,16 +2207,16 @@ typedef union {
     #define ATD0DR2L_BIT7 _ATD0DR2.Overlap_STR.ATD0DR2LSTR.Bits.BIT7
     #define ATD0DR2L_BIT_6 _ATD0DR2.Overlap_STR.ATD0DR2LSTR.MergedBits.grpBIT_6
     #define ATD0DR2L_BIT ATD0DR2L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2287,17 +2287,17 @@ typedef union {
     #define ATD0DR3H_BIT15 _ATD0DR3.Overlap_STR.ATD0DR3HSTR.Bits.BIT15
     #define ATD0DR3H_BIT_8 _ATD0DR3.Overlap_STR.ATD0DR3HSTR.MergedBits.grpBIT_8
     #define ATD0DR3H_BIT ATD0DR3H_BIT_8
-    
+
     /*** ATD0DR3L - ATD 0 Conversion Result Register 3 Low; 0x00000097 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -2316,16 +2316,16 @@ typedef union {
     #define ATD0DR3L_BIT7 _ATD0DR3.Overlap_STR.ATD0DR3LSTR.Bits.BIT7
     #define ATD0DR3L_BIT_6 _ATD0DR3.Overlap_STR.ATD0DR3LSTR.MergedBits.grpBIT_6
     #define ATD0DR3L_BIT ATD0DR3L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2396,17 +2396,17 @@ typedef union {
     #define ATD0DR4H_BIT15 _ATD0DR4.Overlap_STR.ATD0DR4HSTR.Bits.BIT15
     #define ATD0DR4H_BIT_8 _ATD0DR4.Overlap_STR.ATD0DR4HSTR.MergedBits.grpBIT_8
     #define ATD0DR4H_BIT ATD0DR4H_BIT_8
-    
+
     /*** ATD0DR4L - ATD 0 Conversion Result Register 4 Low; 0x00000099 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -2425,16 +2425,16 @@ typedef union {
     #define ATD0DR4L_BIT7 _ATD0DR4.Overlap_STR.ATD0DR4LSTR.Bits.BIT7
     #define ATD0DR4L_BIT_6 _ATD0DR4.Overlap_STR.ATD0DR4LSTR.MergedBits.grpBIT_6
     #define ATD0DR4L_BIT ATD0DR4L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2505,17 +2505,17 @@ typedef union {
     #define ATD0DR5H_BIT15 _ATD0DR5.Overlap_STR.ATD0DR5HSTR.Bits.BIT15
     #define ATD0DR5H_BIT_8 _ATD0DR5.Overlap_STR.ATD0DR5HSTR.MergedBits.grpBIT_8
     #define ATD0DR5H_BIT ATD0DR5H_BIT_8
-    
+
     /*** ATD0DR5L - ATD 0 Conversion Result Register 5 Low; 0x0000009B ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -2534,16 +2534,16 @@ typedef union {
     #define ATD0DR5L_BIT7 _ATD0DR5.Overlap_STR.ATD0DR5LSTR.Bits.BIT7
     #define ATD0DR5L_BIT_6 _ATD0DR5.Overlap_STR.ATD0DR5LSTR.MergedBits.grpBIT_6
     #define ATD0DR5L_BIT ATD0DR5L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2614,17 +2614,17 @@ typedef union {
     #define ATD0DR6H_BIT15 _ATD0DR6.Overlap_STR.ATD0DR6HSTR.Bits.BIT15
     #define ATD0DR6H_BIT_8 _ATD0DR6.Overlap_STR.ATD0DR6HSTR.MergedBits.grpBIT_8
     #define ATD0DR6H_BIT ATD0DR6H_BIT_8
-    
+
     /*** ATD0DR6L - ATD 0 Conversion Result Register 6 Low; 0x0000009D ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -2643,16 +2643,16 @@ typedef union {
     #define ATD0DR6L_BIT7 _ATD0DR6.Overlap_STR.ATD0DR6LSTR.Bits.BIT7
     #define ATD0DR6L_BIT_6 _ATD0DR6.Overlap_STR.ATD0DR6LSTR.MergedBits.grpBIT_6
     #define ATD0DR6L_BIT ATD0DR6L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2723,17 +2723,17 @@ typedef union {
     #define ATD0DR7H_BIT15 _ATD0DR7.Overlap_STR.ATD0DR7HSTR.Bits.BIT15
     #define ATD0DR7H_BIT_8 _ATD0DR7.Overlap_STR.ATD0DR7HSTR.MergedBits.grpBIT_8
     #define ATD0DR7H_BIT ATD0DR7H_BIT_8
-    
+
     /*** ATD0DR7L - ATD 0 Conversion Result Register 7 Low; 0x0000009F ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -2752,16 +2752,16 @@ typedef union {
     #define ATD0DR7L_BIT7 _ATD0DR7.Overlap_STR.ATD0DR7LSTR.Bits.BIT7
     #define ATD0DR7L_BIT_6 _ATD0DR7.Overlap_STR.ATD0DR7LSTR.MergedBits.grpBIT_6
     #define ATD0DR7L_BIT ATD0DR7L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -2813,7 +2813,7 @@ typedef union {
     } PWMCNT0STR;
     #define PWMCNT0 _PWMCNT01.Overlap_STR.PWMCNT0STR.Byte
     #define PWMCNT0_BIT _PWMCNT01.Overlap_STR.PWMCNT0STR.MergedBits.grpBIT
-    
+
     /*** PWMCNT1 - PWM Channel Counter 1 Register; 0x000000AD ***/
     union {
       byte Byte;
@@ -2823,7 +2823,7 @@ typedef union {
     } PWMCNT1STR;
     #define PWMCNT1 _PWMCNT01.Overlap_STR.PWMCNT1STR.Byte
     #define PWMCNT1_BIT _PWMCNT01.Overlap_STR.PWMCNT1STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -2849,7 +2849,7 @@ typedef union {
     } PWMCNT2STR;
     #define PWMCNT2 _PWMCNT23.Overlap_STR.PWMCNT2STR.Byte
     #define PWMCNT2_BIT _PWMCNT23.Overlap_STR.PWMCNT2STR.MergedBits.grpBIT
-    
+
     /*** PWMCNT3 - PWM Channel Counter 3 Register; 0x000000AF ***/
     union {
       byte Byte;
@@ -2859,7 +2859,7 @@ typedef union {
     } PWMCNT3STR;
     #define PWMCNT3 _PWMCNT23.Overlap_STR.PWMCNT3STR.Byte
     #define PWMCNT3_BIT _PWMCNT23.Overlap_STR.PWMCNT3STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -2885,7 +2885,7 @@ typedef union {
     } PWMCNT4STR;
     #define PWMCNT4 _PWMCNT45.Overlap_STR.PWMCNT4STR.Byte
     #define PWMCNT4_BIT _PWMCNT45.Overlap_STR.PWMCNT4STR.MergedBits.grpBIT
-    
+
     /*** PWMCNT5 - PWM Channel Counter 5 Register; 0x000000B1 ***/
     union {
       byte Byte;
@@ -2895,7 +2895,7 @@ typedef union {
     } PWMCNT5STR;
     #define PWMCNT5 _PWMCNT45.Overlap_STR.PWMCNT5STR.Byte
     #define PWMCNT5_BIT _PWMCNT45.Overlap_STR.PWMCNT5STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -2921,7 +2921,7 @@ typedef union {
     } PWMCNT6STR;
     #define PWMCNT6 _PWMCNT67.Overlap_STR.PWMCNT6STR.Byte
     #define PWMCNT6_BIT _PWMCNT67.Overlap_STR.PWMCNT6STR.MergedBits.grpBIT
-    
+
     /*** PWMCNT7 - PWM Channel Counter 7 Register; 0x000000B3 ***/
     union {
       byte Byte;
@@ -2931,7 +2931,7 @@ typedef union {
     } PWMCNT7STR;
     #define PWMCNT7 _PWMCNT67.Overlap_STR.PWMCNT7STR.Byte
     #define PWMCNT7_BIT _PWMCNT67.Overlap_STR.PWMCNT7STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -2957,7 +2957,7 @@ typedef union {
     } PWMPER0STR;
     #define PWMPER0 _PWMPER01.Overlap_STR.PWMPER0STR.Byte
     #define PWMPER0_BIT _PWMPER01.Overlap_STR.PWMPER0STR.MergedBits.grpBIT
-    
+
     /*** PWMPER1 - PWM Channel Period 1 Register; 0x000000B5 ***/
     union {
       byte Byte;
@@ -2967,7 +2967,7 @@ typedef union {
     } PWMPER1STR;
     #define PWMPER1 _PWMPER01.Overlap_STR.PWMPER1STR.Byte
     #define PWMPER1_BIT _PWMPER01.Overlap_STR.PWMPER1STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -2993,7 +2993,7 @@ typedef union {
     } PWMPER2STR;
     #define PWMPER2 _PWMPER23.Overlap_STR.PWMPER2STR.Byte
     #define PWMPER2_BIT _PWMPER23.Overlap_STR.PWMPER2STR.MergedBits.grpBIT
-    
+
     /*** PWMPER3 - PWM Channel Period 3 Register; 0x000000B7 ***/
     union {
       byte Byte;
@@ -3003,7 +3003,7 @@ typedef union {
     } PWMPER3STR;
     #define PWMPER3 _PWMPER23.Overlap_STR.PWMPER3STR.Byte
     #define PWMPER3_BIT _PWMPER23.Overlap_STR.PWMPER3STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -3029,7 +3029,7 @@ typedef union {
     } PWMPER4STR;
     #define PWMPER4 _PWMPER45.Overlap_STR.PWMPER4STR.Byte
     #define PWMPER4_BIT _PWMPER45.Overlap_STR.PWMPER4STR.MergedBits.grpBIT
-    
+
     /*** PWMPER5 - PWM Channel Period 5 Register; 0x000000B9 ***/
     union {
       byte Byte;
@@ -3039,7 +3039,7 @@ typedef union {
     } PWMPER5STR;
     #define PWMPER5 _PWMPER45.Overlap_STR.PWMPER5STR.Byte
     #define PWMPER5_BIT _PWMPER45.Overlap_STR.PWMPER5STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -3065,7 +3065,7 @@ typedef union {
     } PWMPER6STR;
     #define PWMPER6 _PWMPER67.Overlap_STR.PWMPER6STR.Byte
     #define PWMPER6_BIT _PWMPER67.Overlap_STR.PWMPER6STR.MergedBits.grpBIT
-    
+
     /*** PWMPER7 - PWM Channel Period 7 Register; 0x000000BB ***/
     union {
       byte Byte;
@@ -3075,7 +3075,7 @@ typedef union {
     } PWMPER7STR;
     #define PWMPER7 _PWMPER67.Overlap_STR.PWMPER7STR.Byte
     #define PWMPER7_BIT _PWMPER67.Overlap_STR.PWMPER7STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -3101,7 +3101,7 @@ typedef union {
     } PWMDTY0STR;
     #define PWMDTY0 _PWMDTY01.Overlap_STR.PWMDTY0STR.Byte
     #define PWMDTY0_BIT _PWMDTY01.Overlap_STR.PWMDTY0STR.MergedBits.grpBIT
-    
+
     /*** PWMDTY1 - PWM Channel Duty 1 Register; 0x000000BD ***/
     union {
       byte Byte;
@@ -3111,7 +3111,7 @@ typedef union {
     } PWMDTY1STR;
     #define PWMDTY1 _PWMDTY01.Overlap_STR.PWMDTY1STR.Byte
     #define PWMDTY1_BIT _PWMDTY01.Overlap_STR.PWMDTY1STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -3137,7 +3137,7 @@ typedef union {
     } PWMDTY2STR;
     #define PWMDTY2 _PWMDTY23.Overlap_STR.PWMDTY2STR.Byte
     #define PWMDTY2_BIT _PWMDTY23.Overlap_STR.PWMDTY2STR.MergedBits.grpBIT
-    
+
     /*** PWMDTY3 - PWM Channel Duty 3 Register; 0x000000BF ***/
     union {
       byte Byte;
@@ -3147,7 +3147,7 @@ typedef union {
     } PWMDTY3STR;
     #define PWMDTY3 _PWMDTY23.Overlap_STR.PWMDTY3STR.Byte
     #define PWMDTY3_BIT _PWMDTY23.Overlap_STR.PWMDTY3STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -3173,7 +3173,7 @@ typedef union {
     } PWMDTY4STR;
     #define PWMDTY4 _PWMDTY45.Overlap_STR.PWMDTY4STR.Byte
     #define PWMDTY4_BIT _PWMDTY45.Overlap_STR.PWMDTY4STR.MergedBits.grpBIT
-    
+
     /*** PWMDTY5 - PWM Channel Duty 5 Register; 0x000000C1 ***/
     union {
       byte Byte;
@@ -3183,7 +3183,7 @@ typedef union {
     } PWMDTY5STR;
     #define PWMDTY5 _PWMDTY45.Overlap_STR.PWMDTY5STR.Byte
     #define PWMDTY5_BIT _PWMDTY45.Overlap_STR.PWMDTY5STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -3209,7 +3209,7 @@ typedef union {
     } PWMDTY6STR;
     #define PWMDTY6 _PWMDTY67.Overlap_STR.PWMDTY6STR.Byte
     #define PWMDTY6_BIT _PWMDTY67.Overlap_STR.PWMDTY6STR.MergedBits.grpBIT
-    
+
     /*** PWMDTY7 - PWM Channel Duty 7 Register; 0x000000C3 ***/
     union {
       byte Byte;
@@ -3219,7 +3219,7 @@ typedef union {
     } PWMDTY7STR;
     #define PWMDTY7 _PWMDTY67.Overlap_STR.PWMDTY7STR.Byte
     #define PWMDTY7_BIT _PWMDTY67.Overlap_STR.PWMDTY7STR.MergedBits.grpBIT
-    
+
   } Overlap_STR;
 
   struct {
@@ -3245,9 +3245,9 @@ typedef union {
         byte SBR10       :1;                                       /* SCI 0 baud rate Bit 10 */
         byte SBR11       :1;                                       /* SCI 0 baud rate Bit 11 */
         byte SBR12       :1;                                       /* SCI 0 baud rate Bit 12 */
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
       } Bits;
       struct {
         byte grpSBR_8 :5;
@@ -3264,7 +3264,7 @@ typedef union {
     #define SCI0BDH_SBR12 _SCI0BD.Overlap_STR.SCI0BDHSTR.Bits.SBR12
     #define SCI0BDH_SBR_8 _SCI0BD.Overlap_STR.SCI0BDHSTR.MergedBits.grpSBR_8
     #define SCI0BDH_SBR SCI0BDH_SBR_8
-    
+
     /*** SCI0BDL - SCI 0 Baud Rate Register Low; 0x000000C9 ***/
     union {
       byte Byte;
@@ -3292,7 +3292,7 @@ typedef union {
     #define SCI0BDL_SBR6 _SCI0BD.Overlap_STR.SCI0BDLSTR.Bits.SBR6
     #define SCI0BDL_SBR7 _SCI0BD.Overlap_STR.SCI0BDLSTR.Bits.SBR7
     #define SCI0BDL_SBR _SCI0BD.Overlap_STR.SCI0BDLSTR.MergedBits.grpSBR
-    
+
   } Overlap_STR;
 
   struct {
@@ -3309,9 +3309,9 @@ typedef union {
     word SBR10       :1;                                       /* SCI 0 baud rate Bit 10 */
     word SBR11       :1;                                       /* SCI 0 baud rate Bit 11 */
     word SBR12       :1;                                       /* SCI 0 baud rate Bit 12 */
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
   } Bits;
   struct {
     word grpSBR  :13;
@@ -3352,9 +3352,9 @@ typedef union {
         byte SBR10       :1;                                       /* SCI 1 baud rate Bit 10 */
         byte SBR11       :1;                                       /* SCI 1 baud rate Bit 11 */
         byte SBR12       :1;                                       /* SCI 1 baud rate Bit 12 */
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
       } Bits;
       struct {
         byte grpSBR_8 :5;
@@ -3371,7 +3371,7 @@ typedef union {
     #define SCI1BDH_SBR12 _SCI1BD.Overlap_STR.SCI1BDHSTR.Bits.SBR12
     #define SCI1BDH_SBR_8 _SCI1BD.Overlap_STR.SCI1BDHSTR.MergedBits.grpSBR_8
     #define SCI1BDH_SBR SCI1BDH_SBR_8
-    
+
     /*** SCI1BDL - SCI 1 Baud Rate Register Low; 0x000000D1 ***/
     union {
       byte Byte;
@@ -3399,7 +3399,7 @@ typedef union {
     #define SCI1BDL_SBR6 _SCI1BD.Overlap_STR.SCI1BDLSTR.Bits.SBR6
     #define SCI1BDL_SBR7 _SCI1BD.Overlap_STR.SCI1BDLSTR.Bits.SBR7
     #define SCI1BDL_SBR _SCI1BD.Overlap_STR.SCI1BDLSTR.MergedBits.grpSBR
-    
+
   } Overlap_STR;
 
   struct {
@@ -3416,9 +3416,9 @@ typedef union {
     word SBR10       :1;                                       /* SCI 1 baud rate Bit 10 */
     word SBR11       :1;                                       /* SCI 1 baud rate Bit 11 */
     word SBR12       :1;                                       /* SCI 1 baud rate Bit 12 */
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
   } Bits;
   struct {
     word grpSBR  :13;
@@ -3473,7 +3473,7 @@ typedef union {
     #define ATD1CTL2_AWAI _ATD1CTL23.Overlap_STR.ATD1CTL2STR.Bits.AWAI
     #define ATD1CTL2_AFFC _ATD1CTL23.Overlap_STR.ATD1CTL2STR.Bits.AFFC
     #define ATD1CTL2_ADPU _ATD1CTL23.Overlap_STR.ATD1CTL2STR.Bits.ADPU
-    
+
     /*** ATD1CTL3 - ATD 1 Control Register 3; 0x00000123 ***/
     union {
       byte Byte;
@@ -3485,7 +3485,7 @@ typedef union {
         byte S2C         :1;                                       /* Conversion Sequence Length 2 */
         byte S4C         :1;                                       /* Conversion Sequence Length 4 */
         byte S8C         :1;                                       /* Conversion Sequence Length 8 */
-        byte             :1; 
+        byte             :1;
       } Bits;
       struct {
         byte grpFRZ :2;
@@ -3506,7 +3506,7 @@ typedef union {
     #define ATD1CTL3_S4C _ATD1CTL23.Overlap_STR.ATD1CTL3STR.Bits.S4C
     #define ATD1CTL3_S8C _ATD1CTL23.Overlap_STR.ATD1CTL3STR.Bits.S8C
     #define ATD1CTL3_FRZ _ATD1CTL23.Overlap_STR.ATD1CTL3STR.MergedBits.grpFRZ
-    
+
   } Overlap_STR;
 
   struct {
@@ -3517,7 +3517,7 @@ typedef union {
     word S2C         :1;                                       /* Conversion Sequence Length 2 */
     word S4C         :1;                                       /* Conversion Sequence Length 4 */
     word S8C         :1;                                       /* Conversion Sequence Length 8 */
-    word             :1; 
+    word             :1;
     word ASCIF       :1;                                       /* ATD 1 Sequence Complete Interrupt Flag */
     word ASCIE       :1;                                       /* ATD 1 Sequence Complete Interrupt Enable */
     word ETRIGE      :1;                                       /* External Trigger Mode enable */
@@ -3600,7 +3600,7 @@ typedef union {
     #define ATD1CTL4_SRES8 _ATD1CTL45.Overlap_STR.ATD1CTL4STR.Bits.SRES8
     #define ATD1CTL4_PRS _ATD1CTL45.Overlap_STR.ATD1CTL4STR.MergedBits.grpPRS
     #define ATD1CTL4_SMP _ATD1CTL45.Overlap_STR.ATD1CTL4STR.MergedBits.grpSMP
-    
+
     /*** ATD1CTL5 - ATD 1 Control Register 5; 0x00000125 ***/
     union {
       byte Byte;
@@ -3608,7 +3608,7 @@ typedef union {
         byte CA          :1;                                       /* Analog Input Channel Select Code A */
         byte CB          :1;                                       /* Analog Input Channel Select Code B */
         byte CC          :1;                                       /* Analog Input Channel Select Code C */
-        byte             :1; 
+        byte             :1;
         byte MULT        :1;                                       /* Multi-Channel Sample Mode */
         byte SCAN        :1;                                       /* Continuous Conversion Sequence Mode */
         byte DSGN        :1;                                       /* Signed/Unsigned Result Data Mode */
@@ -3623,14 +3623,14 @@ typedef union {
     #define ATD1CTL5_SCAN _ATD1CTL45.Overlap_STR.ATD1CTL5STR.Bits.SCAN
     #define ATD1CTL5_DSGN _ATD1CTL45.Overlap_STR.ATD1CTL5STR.Bits.DSGN
     #define ATD1CTL5_DJM _ATD1CTL45.Overlap_STR.ATD1CTL5STR.Bits.DJM
-    
+
   } Overlap_STR;
 
   struct {
     word CA          :1;                                       /* Analog Input Channel Select Code A */
     word CB          :1;                                       /* Analog Input Channel Select Code B */
     word CC          :1;                                       /* Analog Input Channel Select Code C */
-    word             :1; 
+    word             :1;
     word MULT        :1;                                       /* Multi-Channel Sample Mode */
     word SCAN        :1;                                       /* Continuous Conversion Sequence Mode */
     word DSGN        :1;                                       /* Signed/Unsigned Result Data Mode */
@@ -3712,17 +3712,17 @@ typedef union {
     #define ATD1DR0H_BIT15 _ATD1DR0.Overlap_STR.ATD1DR0HSTR.Bits.BIT15
     #define ATD1DR0H_BIT_8 _ATD1DR0.Overlap_STR.ATD1DR0HSTR.MergedBits.grpBIT_8
     #define ATD1DR0H_BIT ATD1DR0H_BIT_8
-    
+
     /*** ATD1DR0L - ATD 1 Conversion Result Register 0 Low; 0x00000131 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -3741,16 +3741,16 @@ typedef union {
     #define ATD1DR0L_BIT7 _ATD1DR0.Overlap_STR.ATD1DR0LSTR.Bits.BIT7
     #define ATD1DR0L_BIT_6 _ATD1DR0.Overlap_STR.ATD1DR0LSTR.MergedBits.grpBIT_6
     #define ATD1DR0L_BIT ATD1DR0L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -3821,17 +3821,17 @@ typedef union {
     #define ATD1DR1H_BIT15 _ATD1DR1.Overlap_STR.ATD1DR1HSTR.Bits.BIT15
     #define ATD1DR1H_BIT_8 _ATD1DR1.Overlap_STR.ATD1DR1HSTR.MergedBits.grpBIT_8
     #define ATD1DR1H_BIT ATD1DR1H_BIT_8
-    
+
     /*** ATD1DR1L - ATD 1 Conversion Result Register 1 Low; 0x00000133 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -3850,16 +3850,16 @@ typedef union {
     #define ATD1DR1L_BIT7 _ATD1DR1.Overlap_STR.ATD1DR1LSTR.Bits.BIT7
     #define ATD1DR1L_BIT_6 _ATD1DR1.Overlap_STR.ATD1DR1LSTR.MergedBits.grpBIT_6
     #define ATD1DR1L_BIT ATD1DR1L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -3930,17 +3930,17 @@ typedef union {
     #define ATD1DR2H_BIT15 _ATD1DR2.Overlap_STR.ATD1DR2HSTR.Bits.BIT15
     #define ATD1DR2H_BIT_8 _ATD1DR2.Overlap_STR.ATD1DR2HSTR.MergedBits.grpBIT_8
     #define ATD1DR2H_BIT ATD1DR2H_BIT_8
-    
+
     /*** ATD1DR2L - ATD 1 Conversion Result Register 2 Low; 0x00000135 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -3959,16 +3959,16 @@ typedef union {
     #define ATD1DR2L_BIT7 _ATD1DR2.Overlap_STR.ATD1DR2LSTR.Bits.BIT7
     #define ATD1DR2L_BIT_6 _ATD1DR2.Overlap_STR.ATD1DR2LSTR.MergedBits.grpBIT_6
     #define ATD1DR2L_BIT ATD1DR2L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -4039,17 +4039,17 @@ typedef union {
     #define ATD1DR3H_BIT15 _ATD1DR3.Overlap_STR.ATD1DR3HSTR.Bits.BIT15
     #define ATD1DR3H_BIT_8 _ATD1DR3.Overlap_STR.ATD1DR3HSTR.MergedBits.grpBIT_8
     #define ATD1DR3H_BIT ATD1DR3H_BIT_8
-    
+
     /*** ATD1DR3L - ATD 1 Conversion Result Register 3 Low; 0x00000137 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -4068,16 +4068,16 @@ typedef union {
     #define ATD1DR3L_BIT7 _ATD1DR3.Overlap_STR.ATD1DR3LSTR.Bits.BIT7
     #define ATD1DR3L_BIT_6 _ATD1DR3.Overlap_STR.ATD1DR3LSTR.MergedBits.grpBIT_6
     #define ATD1DR3L_BIT ATD1DR3L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -4148,17 +4148,17 @@ typedef union {
     #define ATD1DR4H_BIT15 _ATD1DR4.Overlap_STR.ATD1DR4HSTR.Bits.BIT15
     #define ATD1DR4H_BIT_8 _ATD1DR4.Overlap_STR.ATD1DR4HSTR.MergedBits.grpBIT_8
     #define ATD1DR4H_BIT ATD1DR4H_BIT_8
-    
+
     /*** ATD1DR4L - ATD 1 Conversion Result Register 4 Low; 0x00000139 ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -4177,16 +4177,16 @@ typedef union {
     #define ATD1DR4L_BIT7 _ATD1DR4.Overlap_STR.ATD1DR4LSTR.Bits.BIT7
     #define ATD1DR4L_BIT_6 _ATD1DR4.Overlap_STR.ATD1DR4LSTR.MergedBits.grpBIT_6
     #define ATD1DR4L_BIT ATD1DR4L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -4257,17 +4257,17 @@ typedef union {
     #define ATD1DR5H_BIT15 _ATD1DR5.Overlap_STR.ATD1DR5HSTR.Bits.BIT15
     #define ATD1DR5H_BIT_8 _ATD1DR5.Overlap_STR.ATD1DR5HSTR.MergedBits.grpBIT_8
     #define ATD1DR5H_BIT ATD1DR5H_BIT_8
-    
+
     /*** ATD1DR5L - ATD 1 Conversion Result Register 5 Low; 0x0000013B ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -4286,16 +4286,16 @@ typedef union {
     #define ATD1DR5L_BIT7 _ATD1DR5.Overlap_STR.ATD1DR5LSTR.Bits.BIT7
     #define ATD1DR5L_BIT_6 _ATD1DR5.Overlap_STR.ATD1DR5LSTR.MergedBits.grpBIT_6
     #define ATD1DR5L_BIT ATD1DR5L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -4366,17 +4366,17 @@ typedef union {
     #define ATD1DR6H_BIT15 _ATD1DR6.Overlap_STR.ATD1DR6HSTR.Bits.BIT15
     #define ATD1DR6H_BIT_8 _ATD1DR6.Overlap_STR.ATD1DR6HSTR.MergedBits.grpBIT_8
     #define ATD1DR6H_BIT ATD1DR6H_BIT_8
-    
+
     /*** ATD1DR6L - ATD 1 Conversion Result Register 6 Low; 0x0000013D ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -4395,16 +4395,16 @@ typedef union {
     #define ATD1DR6L_BIT7 _ATD1DR6.Overlap_STR.ATD1DR6LSTR.Bits.BIT7
     #define ATD1DR6L_BIT_6 _ATD1DR6.Overlap_STR.ATD1DR6LSTR.MergedBits.grpBIT_6
     #define ATD1DR6L_BIT ATD1DR6L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -4475,17 +4475,17 @@ typedef union {
     #define ATD1DR7H_BIT15 _ATD1DR7.Overlap_STR.ATD1DR7HSTR.Bits.BIT15
     #define ATD1DR7H_BIT_8 _ATD1DR7.Overlap_STR.ATD1DR7HSTR.MergedBits.grpBIT_8
     #define ATD1DR7H_BIT ATD1DR7H_BIT_8
-    
+
     /*** ATD1DR7L - ATD 1 Conversion Result Register 7 Low; 0x0000013F ***/
     union {
       byte Byte;
       struct {
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
-        byte             :1; 
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
+        byte             :1;
         byte BIT6        :1;                                       /* Bit 6 */
         byte BIT7        :1;                                       /* Bit 7 */
       } Bits;
@@ -4504,16 +4504,16 @@ typedef union {
     #define ATD1DR7L_BIT7 _ATD1DR7.Overlap_STR.ATD1DR7LSTR.Bits.BIT7
     #define ATD1DR7L_BIT_6 _ATD1DR7.Overlap_STR.ATD1DR7LSTR.MergedBits.grpBIT_6
     #define ATD1DR7L_BIT ATD1DR7L_BIT_6
-    
+
   } Overlap_STR;
 
   struct {
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
-    word             :1; 
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
+    word             :1;
     word BIT6        :1;                                       /* Bit 6 */
     word BIT7        :1;                                       /* Bit 7 */
     word BIT8        :1;                                       /* Bit 8 */
@@ -4615,13 +4615,13 @@ extern volatile DDRESTR _DDRE @(REG_BASE + 0x00000009);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte RDWE        :1;                                       /* Read / Write Enable */
     byte LSTRE       :1;                                       /* Low Strobe (LSTRB) Enable */
     byte NECLK       :1;                                       /* No External E Clock */
     byte PIPOE       :1;                                       /* Pipe Status Signal Output Enable */
-    byte             :1; 
+    byte             :1;
     byte NOACCE      :1;                                       /* CPU No Access Output Enable */
   } Bits;
 } PEARSTR;
@@ -4640,9 +4640,9 @@ typedef union {
   struct {
     byte EME         :1;                                       /* Emulate Port E */
     byte EMK         :1;                                       /* Emulate Port K */
-    byte             :1; 
+    byte             :1;
     byte IVIS        :1;                                       /* Internal Visibility */
-    byte             :1; 
+    byte             :1;
     byte MODA        :1;                                       /* Mode Select Bit A */
     byte MODB        :1;                                       /* Mode Select Bit B */
     byte MODC        :1;                                       /* Mode Select Bit C */
@@ -4664,11 +4664,11 @@ typedef union {
   struct {
     byte PUPAE       :1;                                       /* Pull-Up Port A Enable */
     byte PUPBE       :1;                                       /* Pull-Up Port B Enable */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte PUPEE       :1;                                       /* Pull-Up Port E Enable */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte PUPKE       :1;                                       /* Pull-Up Port K Enable */
   } Bits;
 } PUCRSTR;
@@ -4686,11 +4686,11 @@ typedef union {
   struct {
     byte RDPA        :1;                                       /* Reduced Drive of Port A */
     byte RDPB        :1;                                       /* Reduced Drive of Port B */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte RDPE        :1;                                       /* Reduced Drive of Port E */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte RDPK        :1;                                       /* Reduced Drive of Port K */
   } Bits;
 } RDRIVSTR;
@@ -4707,13 +4707,13 @@ typedef union {
   byte Byte;
   struct {
     byte ESTR        :1;                                       /* E Stretches */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } EBICTLSTR;
 extern volatile EBICTLSTR _EBICTL @(REG_BASE + 0x0000000E);
@@ -4726,8 +4726,8 @@ typedef union {
   byte Byte;
   struct {
     byte RAMHAL      :1;                                       /* Internal RAM map alignment */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte RAM11       :1;                                       /* Internal RAM map position Bit 11 */
     byte RAM12       :1;                                       /* Internal RAM map position Bit 12 */
     byte RAM13       :1;                                       /* Internal RAM map position Bit 13 */
@@ -4757,14 +4757,14 @@ extern volatile INITRMSTR _INITRM @(REG_BASE + 0x00000010);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte REG11       :1;                                       /* Internal register map position REG11 */
     byte REG12       :1;                                       /* Internal register map position REG12 */
     byte REG13       :1;                                       /* Internal register map position REG13 */
     byte REG14       :1;                                       /* Internal register map position REG14 */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte         :1;
@@ -4789,9 +4789,9 @@ typedef union {
   byte Byte;
   struct {
     byte EEON        :1;                                       /* Internal EEPROM On */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte EE12        :1;                                       /* Internal EEPROM map position Bit 12 */
     byte EE13        :1;                                       /* Internal EEPROM map position Bit 13 */
     byte EE14        :1;                                       /* Internal EEPROM map position Bit 14 */
@@ -4824,10 +4824,10 @@ typedef union {
     byte ROMHM       :1;                                       /* Flash EEPROM only in second half of memory map */
     byte EXSTR0      :1;                                       /* External Access Stretch Bit 0 */
     byte EXSTR1      :1;                                       /* External Access Stretch Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte         :1;
@@ -4887,9 +4887,9 @@ typedef union {
     byte ADR2        :1;                                       /* Test register select Bit 2 */
     byte ADR3        :1;                                       /* Test register select Bit 3 */
     byte WRTINT      :1;                                       /* Write to the Interrupt Test Registers */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpADR  :4;
@@ -5028,10 +5028,10 @@ typedef union {
     byte ram_sw0     :1;                                       /* Allocated RAM Memory Space Bit 0 */
     byte ram_sw1     :1;                                       /* Allocated RAM Memory Space Bit 1 */
     byte ram_sw2     :1;                                       /* Allocated RAM Memory Space Bit 2 */
-    byte             :1; 
+    byte             :1;
     byte eep_sw0     :1;                                       /* Allocated EEPROM Memory Space Bit 0 */
     byte eep_sw1     :1;                                       /* Allocated EEPROM Memory Space Bit 1 */
-    byte             :1; 
+    byte             :1;
     byte reg_sw0     :1;                                       /* Allocated System Register Space */
   } Bits;
   struct {
@@ -5060,10 +5060,10 @@ typedef union {
   struct {
     byte pag_sw0     :1;                                       /* Allocated Off-Chip Memory Options Bit 0 */
     byte pag_sw1     :1;                                       /* Allocated Off-Chip Memory Options Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte rom_sw0     :1;                                       /* Allocated Flash EEPROM/ROM Physical Memory Space Bit 0 */
     byte rom_sw1     :1;                                       /* Allocated Flash EEPROM/ROM Physical Memory Space Bit 1 */
   } Bits;
@@ -5090,12 +5090,12 @@ extern volatile MEMSIZ1STR _MEMSIZ1 @(REG_BASE + 0x0000001D);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte IRQEN       :1;                                       /* External IRQ Enable */
     byte IRQE        :1;                                       /* IRQ Select Edge Sensitive Only */
   } Bits;
@@ -5110,7 +5110,7 @@ extern volatile INTCRSTR _INTCR @(REG_BASE + 0x0000001E);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
+    byte             :1;
     byte PSEL1       :1;                                       /* Highest Priority I Interrupt Bit 1 */
     byte PSEL2       :1;                                       /* Highest Priority I Interrupt Bit 2 */
     byte PSEL3       :1;                                       /* Highest Priority I Interrupt Bit 3 */
@@ -5141,10 +5141,10 @@ extern volatile HPRIOSTR _HPRIO @(REG_BASE + 0x0000001F);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte BKTAG       :1;                                       /* Breakpoint on Tag */
     byte BKBDM       :1;                                       /* Breakpoint Background Debug Mode Enable */
     byte BKFULL      :1;                                       /* Full Breakpoint Mode Enable */
@@ -5195,8 +5195,8 @@ typedef union {
     byte BK0V3       :1;                                       /* First Address Breakpoint Expansion Address Value Bit 3 */
     byte BK0V4       :1;                                       /* First Address Breakpoint Expansion Address Value Bit 4 */
     byte BK0V5       :1;                                       /* First Address Breakpoint Expansion Address Value Bit 5 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpBK0V :6;
@@ -5286,8 +5286,8 @@ typedef union {
     byte BK1V3       :1;                                       /* Second Address Breakpoint Expansion Address Value Bit 3 */
     byte BK1V4       :1;                                       /* Second Address Breakpoint Expansion Address Value Bit 4 */
     byte BK1V5       :1;                                       /* Second Address Breakpoint Expansion Address Value Bit 5 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpBK1V :6;
@@ -5377,8 +5377,8 @@ typedef union {
     byte PIX3        :1;                                       /* Page Index Register Bit 3 */
     byte PIX4        :1;                                       /* Page Index Register Bit 4 */
     byte PIX5        :1;                                       /* Page Index Register Bit 5 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpPIX  :6;
@@ -5407,7 +5407,7 @@ typedef union {
     byte BIT3        :1;                                       /* Port K Bit 3 */
     byte BIT4        :1;                                       /* Port K Bit 4 */
     byte BIT5        :1;                                       /* Port K Bit 5 */
-    byte             :1; 
+    byte             :1;
     byte BIT7        :1;                                       /* Port K Bit 7 */
   } Bits;
   struct {
@@ -5438,7 +5438,7 @@ typedef union {
     byte DDK3        :1;                                       /* Port K Data Direction Bit 3 */
     byte DDK4        :1;                                       /* Port K Data Direction Bit 4 */
     byte DDK5        :1;                                       /* Port K Data Direction Bit 5 */
-    byte             :1; 
+    byte             :1;
     byte DDK7        :1;                                       /* Port K Data Direction Bit 7 */
   } Bits;
   struct {
@@ -5469,8 +5469,8 @@ typedef union {
     byte SYN3        :1;                                       /* CRG Synthesizer Bit 3 */
     byte SYN4        :1;                                       /* CRG Synthesizer Bit 4 */
     byte SYN5        :1;                                       /* CRG Synthesizer Bit 5 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpSYN  :6;
@@ -5497,10 +5497,10 @@ typedef union {
     byte REFDV1      :1;                                       /* CRG Reference Divider Bit 1 */
     byte REFDV2      :1;                                       /* CRG Reference Divider Bit 2 */
     byte REFDV3      :1;                                       /* CRG Reference Divider Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpREFDV :4;
@@ -5558,7 +5558,7 @@ typedef union {
     byte TRACK       :1;                                       /* Track Status */
     byte LOCK        :1;                                       /* Lock Status */
     byte LOCKIF      :1;                                       /* PLL Lock Interrupt Flag */
-    byte             :1; 
+    byte             :1;
     byte PORF        :1;                                       /* Power on Reset Flag */
     byte RTIF        :1;                                       /* Real Time Interrupt Flag */
   } Bits;
@@ -5578,13 +5578,13 @@ extern volatile CRGFLGSTR _CRGFLG @(REG_BASE + 0x00000037);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
+    byte             :1;
     byte SCMIE       :1;                                       /* Self-clock mode Interrupt Enable */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte LOCKIE      :1;                                       /* Lock Interrupt Enable */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte RTIE        :1;                                       /* Real Time Interrupt Enable */
   } Bits;
 } CRGINTSTR;
@@ -5626,9 +5626,9 @@ typedef union {
   byte Byte;
   struct {
     byte SCME        :1;                                       /* Self-clock mode enable */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte ACQ         :1;                                       /* Acquisition */
     byte AUTO        :1;                                       /* Automatic Bandwidth Control */
     byte PLLON       :1;                                       /* Phase Lock Loop On */
@@ -5655,7 +5655,7 @@ typedef union {
     byte RTR4        :1;                                       /* Real Time Interrupt Prescale Rate Select */
     byte RTR5        :1;                                       /* Real Time Interrupt Prescale Rate Select */
     byte RTR6        :1;                                       /* Real Time Interrupt Prescale Rate Select */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpRTR  :7;
@@ -5681,9 +5681,9 @@ typedef union {
     byte CR0         :1;                                       /* COP Watchdog Timer Rate select Bit 0 */
     byte CR1         :1;                                       /* COP Watchdog Timer Rate select Bit 1 */
     byte CR2         :1;                                       /* COP Watchdog Timer Rate select Bit 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte RSBCK       :1;                                       /* COP and RTI stop in Active BDM mode Bit */
     byte WCOP        :1;                                       /* Window COP mode */
   } Bits;
@@ -5902,10 +5902,10 @@ extern volatile OC7DSTR _OC7D @(REG_BASE + 0x00000043);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte TFFCA       :1;                                       /* Timer Fast Flag Clear All */
     byte TSFRZ       :1;                                       /* Timer and Modulus Counter Stop While in Freeze Mode */
     byte TSWAI       :1;                                       /* Timer Module Stops While in Wait */
@@ -6088,9 +6088,9 @@ typedef union {
     byte PR1         :1;                                       /* Timer Prescaler Select Bit 1 */
     byte PR2         :1;                                       /* Timer Prescaler Select Bit 2 */
     byte TCRE        :1;                                       /* Timer Counter Reset Enable */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte TOI         :1;                                       /* Timer Overflow Interrupt Enable */
   } Bits;
   struct {
@@ -6142,13 +6142,13 @@ extern volatile TFLG1STR _TFLG1 @(REG_BASE + 0x0000004E);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte TOF         :1;                                       /* Timer Overflow Flag */
   } Bits;
 } TFLG2STR;
@@ -6168,7 +6168,7 @@ typedef union {
     byte PEDGE       :1;                                       /* Pulse Accumulator Edge Control */
     byte PAMOD       :1;                                       /* Pulse Accumulator Mode */
     byte PAEN        :1;                                       /* Pulse Accumulator A System Enable */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte         :1;
@@ -6198,12 +6198,12 @@ typedef union {
   struct {
     byte PAIF        :1;                                       /* Pulse Accumulator Input edge Flag */
     byte PAOVF       :1;                                       /* Pulse Accumulator A Overflow Flag */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } PAFLGSTR;
 extern volatile PAFLGSTR _PAFLG @(REG_BASE + 0x00000061);
@@ -6256,9 +6256,9 @@ typedef union {
     byte POLF1       :1;                                       /* First Input Capture Polarity Status 1 */
     byte POLF2       :1;                                       /* First Input Capture Polarity Status 2 */
     byte POLF3       :1;                                       /* First Input Capture Polarity Status 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte MCZF        :1;                                       /* Modulus Counter Underflow Flag */
   } Bits;
   struct {
@@ -6287,10 +6287,10 @@ typedef union {
     byte PA1EN       :1;                                       /* 8-Bit Pulse Accumulator 1 Enable */
     byte PA2EN       :1;                                       /* 8-Bit Pulse Accumulator 2 Enable */
     byte PA3EN       :1;                                       /* 8-Bit Pulse Accumulator 3 Enable */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } ICPARSTR;
 extern volatile ICPARSTR _ICPAR @(REG_BASE + 0x00000068);
@@ -6307,12 +6307,12 @@ typedef union {
   struct {
     byte DLY0        :1;                                       /* Delay Counter Select 0 */
     byte DLY1        :1;                                       /* Delay Counter Select 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLY  :2;
@@ -6391,14 +6391,14 @@ extern volatile ICSYSSTR _ICSYS @(REG_BASE + 0x0000006B);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
+    byte             :1;
     byte TCBYP       :1;                                       /* Main Timer Divider Chain Bypass */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } TIMTSTSTR;
 extern volatile TIMTSTSTR _TIMTST @(REG_BASE + 0x0000006D);
@@ -6410,14 +6410,14 @@ extern volatile TIMTSTSTR _TIMTST @(REG_BASE + 0x0000006D);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
+    byte             :1;
     byte PBOVI       :1;                                       /* Pulse Accumulator B Overflow Interrupt enable */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte PBEN        :1;                                       /* Pulse Accumulator B System Enable */
-    byte             :1; 
+    byte             :1;
   } Bits;
 } PBCTLSTR;
 extern volatile PBCTLSTR _PBCTL @(REG_BASE + 0x00000070);
@@ -6430,14 +6430,14 @@ extern volatile PBCTLSTR _PBCTL @(REG_BASE + 0x00000070);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
+    byte             :1;
     byte PBOVF       :1;                                       /* Pulse Accumulator B Overflow Flag */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } PBFLGSTR;
 extern volatile PBFLGSTR _PBFLG @(REG_BASE + 0x00000071);
@@ -6452,10 +6452,10 @@ typedef union {
     byte CC0         :1;                                       /* Conversion Counter 0 */
     byte CC1         :1;                                       /* Conversion Counter 1 */
     byte CC2         :1;                                       /* Conversion Counter 2 */
-    byte             :1; 
+    byte             :1;
     byte FIFOR       :1;                                       /* FIFO Over Run Flag */
     byte ETORF       :1;                                       /* External Trigger Overrun Flag */
-    byte             :1; 
+    byte             :1;
     byte SCF         :1;                                       /* Sequence Complete Flag */
   } Bits;
   struct {
@@ -6665,11 +6665,11 @@ typedef union {
     byte PCKA0       :1;                                       /* Prescaler Select for Clock A 0 */
     byte PCKA1       :1;                                       /* Prescaler Select for Clock A 1 */
     byte PCKA2       :1;                                       /* Prescaler Select for Clock A 2 */
-    byte             :1; 
+    byte             :1;
     byte PCKB0       :1;                                       /* Prescaler Select for Clock B 0 */
     byte PCKB1       :1;                                       /* Prescaler Select for Clock B 1 */
     byte PCKB2       :1;                                       /* Prescaler Select for Clock B 2 */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpPCKA :3;
@@ -6724,8 +6724,8 @@ extern volatile PWMCAESTR _PWMCAE @(REG_BASE + 0x000000A4);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte PFRZ        :1;                                       /* PWM Counters Stop in Freeze Mode */
     byte PSWAI       :1;                                       /* PWM Stops in Wait Mode */
     byte CON01       :1;                                       /* Concatenate channels 0 and 1 */
@@ -6811,7 +6811,7 @@ typedef union {
     byte PWM7ENA     :1;                                       /* PWM emergency shutdown Enable */
     byte PWM7INL     :1;                                       /* PWM shutdown active input level for ch. 7 */
     byte PWM7IN      :1;                                       /* PWM channel 7 input status */
-    byte             :1; 
+    byte             :1;
     byte PWMLVL      :1;                                       /* PWM shutdown output Level */
     byte PWMRSTRT    :1;                                       /* PWM Restart */
     byte PWMIE       :1;                                       /* PWM Interrupt Enable */
@@ -6914,11 +6914,11 @@ typedef union {
     byte RAF         :1;                                       /* Receiver Active Flag */
     byte TXDIR       :1;                                       /* Transmitter pin data direction in Single-Wire mode */
     byte BRK13       :1;                                       /* Break Transmit character length */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } SCI0SR2STR;
 extern volatile SCI0SR2STR _SCI0SR2 @(REG_BASE + 0x000000CD);
@@ -6932,12 +6932,12 @@ extern volatile SCI0SR2STR _SCI0SR2 @(REG_BASE + 0x000000CD);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte T8          :1;                                       /* Transmit Bit 8 */
     byte R8          :1;                                       /* Received Bit 8 */
   } Bits;
@@ -7059,11 +7059,11 @@ typedef union {
     byte RAF         :1;                                       /* Receiver Active Flag */
     byte TXDIR       :1;                                       /* Transmitter pin data direction in Single-Wire mode */
     byte BRK13       :1;                                       /* Break Transmit character length */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } SCI1SR2STR;
 extern volatile SCI1SR2STR _SCI1SR2 @(REG_BASE + 0x000000D5);
@@ -7077,12 +7077,12 @@ extern volatile SCI1SR2STR _SCI1SR2 @(REG_BASE + 0x000000D5);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte T8          :1;                                       /* Transmit Bit 8 */
     byte R8          :1;                                       /* Received Bit 8 */
   } Bits;
@@ -7151,12 +7151,12 @@ typedef union {
   struct {
     byte SPC0        :1;                                       /* Serial Pin Control Bit 0 */
     byte SPISWAI     :1;                                       /* SPI 0 Stop in Wait Mode Bit */
-    byte             :1; 
+    byte             :1;
     byte BIDIROE     :1;                                       /* Output enable in the Bidirectional mode of operation */
     byte MODFEN      :1;                                       /* Mode Fault Enable Bit */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } SPI0CR2STR;
 extern volatile SPI0CR2STR _SPI0CR2 @(REG_BASE + 0x000000D9);
@@ -7174,11 +7174,11 @@ typedef union {
     byte SPR0        :1;                                       /* SPI 0 Baud Rate Selection Bit 0 */
     byte SPR1        :1;                                       /* SPI 0 Baud Rate Selection Bit 1 */
     byte SPR2        :1;                                       /* SPI 0 Baud Rate Selection Bit 2 */
-    byte             :1; 
+    byte             :1;
     byte SPPR0       :1;                                       /* SPI 0 Baud Rate Preselection Bits 0 */
     byte SPPR1       :1;                                       /* SPI 0 Baud Rate Preselection Bits 1 */
     byte SPPR2       :1;                                       /* SPI 0 Baud Rate Preselection Bits 2 */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpSPR  :3;
@@ -7203,13 +7203,13 @@ extern volatile SPI0BRSTR _SPI0BR @(REG_BASE + 0x000000DA);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte MODF        :1;                                       /* Mode Fault Flag */
     byte SPTEF       :1;                                       /* SPI 0 Transmit Empty Interrupt Flag */
-    byte             :1; 
+    byte             :1;
     byte SPIF        :1;                                       /* SPIF Receive Interrupt Flag */
   } Bits;
 } SPI0SRSTR;
@@ -7236,7 +7236,7 @@ extern volatile SPI0DRSTR _SPI0DR @(REG_BASE + 0x000000DD);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
+    byte             :1;
     byte ADR1        :1;                                       /* Slave Address Bit 1 */
     byte ADR2        :1;                                       /* Slave Address Bit 2 */
     byte ADR3        :1;                                       /* Slave Address Bit 3 */
@@ -7298,7 +7298,7 @@ typedef union {
   byte Byte;
   struct {
     byte IBSWAI      :1;                                       /* I-Bus Interface Stop in WAIT mode */
-    byte             :1; 
+    byte             :1;
     byte RSTA        :1;                                       /* Repeat Start */
     byte TXAK        :1;                                       /* Transmit Acknowledge enable */
     byte TX_RX       :1;                                       /* Transmit/Receive mode select bit */
@@ -7325,7 +7325,7 @@ typedef union {
     byte RXAK        :1;                                       /* Received Acknowledge */
     byte IBIF        :1;                                       /* I-Bus Interrupt */
     byte SRW         :1;                                       /* Slave Read/Write */
-    byte             :1; 
+    byte             :1;
     byte IBAL        :1;                                       /* Arbitration Lost */
     byte IBB         :1;                                       /* Bus busy bit */
     byte IAAS        :1;                                       /* Addressed as a slave bit */
@@ -7379,10 +7379,10 @@ typedef union {
   struct {
     byte WCM         :1;                                       /* Wait Clock Mode */
     byte IE          :1;                                       /* Interrupt Enable */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte CLKS        :1;                                       /* Clock Select */
     byte IMSG        :1;                                       /* Ignore Message */
   } Bits;
@@ -7399,14 +7399,14 @@ extern volatile DLCBCR1STR _DLCBCR1 @(REG_BASE + 0x000000E8);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte I0          :1;                                       /* Interrupt State Vector Bit 0 */
     byte I1          :1;                                       /* Interrupt State Vector Bit 1 */
     byte I2          :1;                                       /* Interrupt State Vector Bit 2 */
     byte I3          :1;                                       /* Interrupt State Vector Bit 3 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte         :1;
@@ -7499,10 +7499,10 @@ typedef union {
     byte BO1         :1;                                       /* BDLC Analog Roundtrip Delay Offset Field 1 */
     byte BO2         :1;                                       /* BDLC Analog Roundtrip Delay Offset Field 2 */
     byte BO3         :1;                                       /* BDLC Analog Roundtrip Delay Offset Field 3 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte RXPOL       :1;                                       /* Receive Pin Polarity */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpBO   :4;
@@ -7532,8 +7532,8 @@ typedef union {
     byte R3          :1;                                       /* Rate Select 3 */
     byte R4          :1;                                       /* Rate Select 4 */
     byte R5          :1;                                       /* Rate Select 5 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpR    :6;
@@ -7556,14 +7556,14 @@ extern volatile DLCBRSRSTR _DLCBRSR @(REG_BASE + 0x000000ED);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte BDLCE       :1;                                       /* BDLC Enable */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } DLCSCRSTR;
 extern volatile DLCSCRSTR _DLCSCR @(REG_BASE + 0x000000EE);
@@ -7603,12 +7603,12 @@ typedef union {
   struct {
     byte SPC0        :1;                                       /* Serial Pin Control Bit 0 */
     byte SPISWAI     :1;                                       /* SPI 1 Stop in Wait Mode Bit */
-    byte             :1; 
+    byte             :1;
     byte BIDIROE     :1;                                       /* Output enable in the Bidirectional mode of operation */
     byte MODFEN      :1;                                       /* Mode Fault Enable Bit */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } SPI1CR2STR;
 extern volatile SPI1CR2STR _SPI1CR2 @(REG_BASE + 0x000000F1);
@@ -7626,11 +7626,11 @@ typedef union {
     byte SPR0        :1;                                       /* SPI 1 Baud Rate Selection Bit 0 */
     byte SPR1        :1;                                       /* SPI 1 Baud Rate Selection Bit 1 */
     byte SPR2        :1;                                       /* SPI 1 Baud Rate Selection Bit 2 */
-    byte             :1; 
+    byte             :1;
     byte SPPR0       :1;                                       /* SPI 1 Baud Rate Preselection Bits 0 */
     byte SPPR1       :1;                                       /* SPI 1 Baud Rate Preselection Bits 1 */
     byte SPPR2       :1;                                       /* SPI 1 Baud Rate Preselection Bits 2 */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpSPR  :3;
@@ -7655,13 +7655,13 @@ extern volatile SPI1BRSTR _SPI1BR @(REG_BASE + 0x000000F2);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte MODF        :1;                                       /* Mode Fault Flag */
     byte SPTEF       :1;                                       /* SPI 1 Transmit Empty Interrupt Flag */
-    byte             :1; 
+    byte             :1;
     byte SPIF        :1;                                       /* SPIF Receive Interrupt Flag */
   } Bits;
 } SPI1SRSTR;
@@ -7716,12 +7716,12 @@ typedef union {
   struct {
     byte SPC0        :1;                                       /* Serial Pin Control Bit 0 */
     byte SPISWAI     :1;                                       /* SPI 2 Stop in Wait Mode Bit */
-    byte             :1; 
+    byte             :1;
     byte BIDIROE     :1;                                       /* Output enable in the Bidirectional mode of operation */
     byte MODFEN      :1;                                       /* Mode Fault Enable Bit */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
 } SPI2CR2STR;
 extern volatile SPI2CR2STR _SPI2CR2 @(REG_BASE + 0x000000F9);
@@ -7739,11 +7739,11 @@ typedef union {
     byte SPR0        :1;                                       /* SPI 2 Baud Rate Selection Bit 0 */
     byte SPR1        :1;                                       /* SPI 2 Baud Rate Selection Bit 1 */
     byte SPR2        :1;                                       /* SPI 2 Baud Rate Selection Bit 2 */
-    byte             :1; 
+    byte             :1;
     byte SPPR0       :1;                                       /* SPI 2 Baud Rate Preselection Bits 0 */
     byte SPPR1       :1;                                       /* SPI 2 Baud Rate Preselection Bits 1 */
     byte SPPR2       :1;                                       /* SPI 2 Baud Rate Preselection Bits 2 */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpSPR  :3;
@@ -7768,13 +7768,13 @@ extern volatile SPI2BRSTR _SPI2BR @(REG_BASE + 0x000000FA);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte MODF        :1;                                       /* Mode Fault Flag */
     byte SPTEF       :1;                                       /* SPI 2 Transmit Empty Interrupt Flag */
-    byte             :1; 
+    byte             :1;
     byte SPIF        :1;                                       /* SPIF Receive Interrupt Flag */
   } Bits;
 } SPI2SRSTR;
@@ -7869,9 +7869,9 @@ typedef union {
   struct {
     byte BKSEL0      :1;                                       /* Register bank select 0 */
     byte BKSEL1      :1;                                       /* Register bank select 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte KEYACC      :1;                                       /* Enable Security Key Writing */
     byte CCIE        :1;                                       /* Command Complete Interrupt Enable */
     byte CBEIE       :1;                                       /* Command Buffers Empty Interrupt Enable */
@@ -7936,10 +7936,10 @@ extern volatile FPROTSTR _FPROT @(REG_BASE + 0x00000104);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte BLANK       :1;                                       /* Blank Verify Flag */
-    byte             :1; 
+    byte             :1;
     byte ACCERR      :1;                                       /* Access error */
     byte PVIOL       :1;                                       /* Protection violation */
     byte CCIF        :1;                                       /* Command Complete Interrupt Flag */
@@ -7960,13 +7960,13 @@ typedef union {
   byte Byte;
   struct {
     byte CMDB0       :1;                                       /* NVM User Mode Command Bit 0 */
-    byte             :1; 
+    byte             :1;
     byte CMDB2       :1;                                       /* NVM User Mode Command Bit 2 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte CMDB5       :1;                                       /* NVM User Mode Command Bit 5 */
     byte CMDB6       :1;                                       /* NVM User Mode Command Bit 6 */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpCMDB :1;
@@ -8024,12 +8024,12 @@ extern volatile ECLKDIVSTR _ECLKDIV @(REG_BASE + 0x00000110);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte CCIE        :1;                                       /* Command Complete Interrupt Enable */
     byte CBEIE       :1;                                       /* Command Buffers Empty Interrupt Enable */
   } Bits;
@@ -8048,9 +8048,9 @@ typedef union {
     byte EP1         :1;                                       /* EEPROM Protection address size 1 */
     byte EP2         :1;                                       /* EEPROM Protection address size 2 */
     byte EPDIS       :1;                                       /* EEPROM Protection disable */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte EPOPEN      :1;                                       /* Opens the EEPROM block or a subsection of it for program or erase */
   } Bits;
   struct {
@@ -8076,10 +8076,10 @@ extern volatile EPROTSTR _EPROT @(REG_BASE + 0x00000114);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte BLANK       :1;                                       /* Blank Verify Flag */
-    byte             :1; 
+    byte             :1;
     byte ACCERR      :1;                                       /* Access error */
     byte PVIOL       :1;                                       /* Protection violation */
     byte CCIF        :1;                                       /* Command Complete Interrupt Flag */
@@ -8100,13 +8100,13 @@ typedef union {
   byte Byte;
   struct {
     byte CMDB0       :1;                                       /* EEPROM User Mode Command 0 */
-    byte             :1; 
+    byte             :1;
     byte CMDB2       :1;                                       /* EEPROM User Mode Command 2 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
     byte CMDB5       :1;                                       /* EEPROM User Mode Command 5 */
     byte CMDB6       :1;                                       /* EEPROM User Mode Command 6 */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpCMDB :1;
@@ -8135,10 +8135,10 @@ typedef union {
     byte CC0         :1;                                       /* Conversion Counter 0 */
     byte CC1         :1;                                       /* Conversion Counter 1 */
     byte CC2         :1;                                       /* Conversion Counter 2 */
-    byte             :1; 
+    byte             :1;
     byte FIFOR       :1;                                       /* FIFO Over Run Flag */
     byte ETORF       :1;                                       /* External Trigger Overrun Flag */
-    byte             :1; 
+    byte             :1;
     byte SCF         :1;                                       /* Sequence Complete Flag */
   } Bits;
   struct {
@@ -8284,7 +8284,7 @@ typedef union {
     byte INITAK      :1;                                       /* Initialization Mode Acknowledge */
     byte SLPAK       :1;                                       /* Sleep Mode Acknowledge */
     byte WUPM        :1;                                       /* Wake-Up Mode */
-    byte             :1; 
+    byte             :1;
     byte LISTEN      :1;                                       /* Listen Only Mode */
     byte LOOPB       :1;                                       /* Loop Back Self Test Mode */
     byte CLKSRC      :1;                                       /* MSCAN 0 Clock Source */
@@ -8447,11 +8447,11 @@ typedef union {
     byte TXE0        :1;                                       /* Transmitter Buffer Empty 0 */
     byte TXE1        :1;                                       /* Transmitter Buffer Empty 1 */
     byte TXE2        :1;                                       /* Transmitter Buffer Empty 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXE  :3;
@@ -8477,11 +8477,11 @@ typedef union {
     byte TXEIE0      :1;                                       /* Transmitter Empty Interrupt Enable 0 */
     byte TXEIE1      :1;                                       /* Transmitter Empty Interrupt Enable 1 */
     byte TXEIE2      :1;                                       /* Transmitter Empty Interrupt Enable 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXEIE :3;
@@ -8507,11 +8507,11 @@ typedef union {
     byte ABTRQ0      :1;                                       /* Abort Request 0 */
     byte ABTRQ1      :1;                                       /* Abort Request 1 */
     byte ABTRQ2      :1;                                       /* Abort Request 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTRQ :3;
@@ -8537,11 +8537,11 @@ typedef union {
     byte ABTAK0      :1;                                       /* Abort Acknowledge 0 */
     byte ABTAK1      :1;                                       /* Abort Acknowledge 1 */
     byte ABTAK2      :1;                                       /* Abort Acknowledge 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTAK :3;
@@ -8567,11 +8567,11 @@ typedef union {
     byte TX0         :1;                                       /* Transmit Buffer Select 0 */
     byte TX1         :1;                                       /* Transmit Buffer Select 1 */
     byte TX2         :1;                                       /* Transmit Buffer Select 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTX   :3;
@@ -8597,11 +8597,11 @@ typedef union {
     byte IDHIT0      :1;                                       /* Identifier Acceptance Hit Indicator 0 */
     byte IDHIT1      :1;                                       /* Identifier Acceptance Hit Indicator 1 */
     byte IDHIT2      :1;                                       /* Identifier Acceptance Hit Indicator 2 */
-    byte             :1; 
+    byte             :1;
     byte IDAM0       :1;                                       /* Identifier Acceptance Mode 0 */
     byte IDAM1       :1;                                       /* Identifier Acceptance Mode 1 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpIDHIT :3;
@@ -9538,10 +9538,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -9936,10 +9936,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -10021,7 +10021,7 @@ typedef union {
     byte INITAK      :1;                                       /* Initialization Mode Acknowledge */
     byte SLPAK       :1;                                       /* Sleep Mode Acknowledge */
     byte WUPM        :1;                                       /* Wake-Up Mode */
-    byte             :1; 
+    byte             :1;
     byte LISTEN      :1;                                       /* Listen Only Mode */
     byte LOOPB       :1;                                       /* Loop Back Self Test Mode */
     byte CLKSRC      :1;                                       /* MSCAN 1 Clock Source */
@@ -10184,11 +10184,11 @@ typedef union {
     byte TXE0        :1;                                       /* Transmitter Buffer Empty 0 */
     byte TXE1        :1;                                       /* Transmitter Buffer Empty 1 */
     byte TXE2        :1;                                       /* Transmitter Buffer Empty 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXE  :3;
@@ -10214,11 +10214,11 @@ typedef union {
     byte TXEIE0      :1;                                       /* Transmitter Empty Interrupt Enable 0 */
     byte TXEIE1      :1;                                       /* Transmitter Empty Interrupt Enable 1 */
     byte TXEIE2      :1;                                       /* Transmitter Empty Interrupt Enable 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXEIE :3;
@@ -10244,11 +10244,11 @@ typedef union {
     byte ABTRQ0      :1;                                       /* Abort Request 0 */
     byte ABTRQ1      :1;                                       /* Abort Request 1 */
     byte ABTRQ2      :1;                                       /* Abort Request 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTRQ :3;
@@ -10274,11 +10274,11 @@ typedef union {
     byte ABTAK0      :1;                                       /* Abort Acknowledge 0 */
     byte ABTAK1      :1;                                       /* Abort Acknowledge 1 */
     byte ABTAK2      :1;                                       /* Abort Acknowledge 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTAK :3;
@@ -10304,11 +10304,11 @@ typedef union {
     byte TX0         :1;                                       /* Transmit Buffer Select 0 */
     byte TX1         :1;                                       /* Transmit Buffer Select 1 */
     byte TX2         :1;                                       /* Transmit Buffer Select 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTX   :3;
@@ -10334,11 +10334,11 @@ typedef union {
     byte IDHIT0      :1;                                       /* Identifier Acceptance Hit Indicator 0 */
     byte IDHIT1      :1;                                       /* Identifier Acceptance Hit Indicator 1 */
     byte IDHIT2      :1;                                       /* Identifier Acceptance Hit Indicator 2 */
-    byte             :1; 
+    byte             :1;
     byte IDAM0       :1;                                       /* Identifier Acceptance Mode 0 */
     byte IDAM1       :1;                                       /* Identifier Acceptance Mode 1 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpIDHIT :3;
@@ -11275,10 +11275,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -11673,10 +11673,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -11758,7 +11758,7 @@ typedef union {
     byte INITAK      :1;                                       /* Initialization Mode Acknowledge */
     byte SLPAK       :1;                                       /* Sleep Mode Acknowledge */
     byte WUPM        :1;                                       /* Wake-Up Mode */
-    byte             :1; 
+    byte             :1;
     byte LISTEN      :1;                                       /* Listen Only Mode */
     byte LOOPB       :1;                                       /* Loop Back Self Test Mode */
     byte CLKSRC      :1;                                       /* MSCAN 2 Clock Source */
@@ -11921,11 +11921,11 @@ typedef union {
     byte TXE0        :1;                                       /* Transmitter Buffer Empty 0 */
     byte TXE1        :1;                                       /* Transmitter Buffer Empty 1 */
     byte TXE2        :1;                                       /* Transmitter Buffer Empty 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXE  :3;
@@ -11951,11 +11951,11 @@ typedef union {
     byte TXEIE0      :1;                                       /* Transmitter Empty Interrupt Enable 0 */
     byte TXEIE1      :1;                                       /* Transmitter Empty Interrupt Enable 1 */
     byte TXEIE2      :1;                                       /* Transmitter Empty Interrupt Enable 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXEIE :3;
@@ -11981,11 +11981,11 @@ typedef union {
     byte ABTRQ0      :1;                                       /* Abort Request 0 */
     byte ABTRQ1      :1;                                       /* Abort Request 1 */
     byte ABTRQ2      :1;                                       /* Abort Request 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTRQ :3;
@@ -12011,11 +12011,11 @@ typedef union {
     byte ABTAK0      :1;                                       /* Abort Acknowledge 0 */
     byte ABTAK1      :1;                                       /* Abort Acknowledge 1 */
     byte ABTAK2      :1;                                       /* Abort Acknowledge 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTAK :3;
@@ -12041,11 +12041,11 @@ typedef union {
     byte TX0         :1;                                       /* Transmit Buffer Select 0 */
     byte TX1         :1;                                       /* Transmit Buffer Select 1 */
     byte TX2         :1;                                       /* Transmit Buffer Select 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTX   :3;
@@ -12071,11 +12071,11 @@ typedef union {
     byte IDHIT0      :1;                                       /* Identifier Acceptance Hit Indicator 0 */
     byte IDHIT1      :1;                                       /* Identifier Acceptance Hit Indicator 1 */
     byte IDHIT2      :1;                                       /* Identifier Acceptance Hit Indicator 2 */
-    byte             :1; 
+    byte             :1;
     byte IDAM0       :1;                                       /* Identifier Acceptance Mode 0 */
     byte IDAM1       :1;                                       /* Identifier Acceptance Mode 1 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpIDHIT :3;
@@ -13012,10 +13012,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -13410,10 +13410,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -13495,7 +13495,7 @@ typedef union {
     byte INITAK      :1;                                       /* Initialization Mode Acknowledge */
     byte SLPAK       :1;                                       /* Sleep Mode Acknowledge */
     byte WUPM        :1;                                       /* Wake-Up Mode */
-    byte             :1; 
+    byte             :1;
     byte LISTEN      :1;                                       /* Listen Only Mode */
     byte LOOPB       :1;                                       /* Loop Back Self Test Mode */
     byte CLKSRC      :1;                                       /* MSCAN 3 Clock Source */
@@ -13658,11 +13658,11 @@ typedef union {
     byte TXE0        :1;                                       /* Transmitter Buffer Empty 0 */
     byte TXE1        :1;                                       /* Transmitter Buffer Empty 1 */
     byte TXE2        :1;                                       /* Transmitter Buffer Empty 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXE  :3;
@@ -13688,11 +13688,11 @@ typedef union {
     byte TXEIE0      :1;                                       /* Transmitter Empty Interrupt Enable 0 */
     byte TXEIE1      :1;                                       /* Transmitter Empty Interrupt Enable 1 */
     byte TXEIE2      :1;                                       /* Transmitter Empty Interrupt Enable 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXEIE :3;
@@ -13718,11 +13718,11 @@ typedef union {
     byte ABTRQ0      :1;                                       /* Abort Request 0 */
     byte ABTRQ1      :1;                                       /* Abort Request 1 */
     byte ABTRQ2      :1;                                       /* Abort Request 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTRQ :3;
@@ -13748,11 +13748,11 @@ typedef union {
     byte ABTAK0      :1;                                       /* Abort Acknowledge 0 */
     byte ABTAK1      :1;                                       /* Abort Acknowledge 1 */
     byte ABTAK2      :1;                                       /* Abort Acknowledge 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTAK :3;
@@ -13778,11 +13778,11 @@ typedef union {
     byte TX0         :1;                                       /* Transmit Buffer Select 0 */
     byte TX1         :1;                                       /* Transmit Buffer Select 1 */
     byte TX2         :1;                                       /* Transmit Buffer Select 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTX   :3;
@@ -13808,11 +13808,11 @@ typedef union {
     byte IDHIT0      :1;                                       /* Identifier Acceptance Hit Indicator 0 */
     byte IDHIT1      :1;                                       /* Identifier Acceptance Hit Indicator 1 */
     byte IDHIT2      :1;                                       /* Identifier Acceptance Hit Indicator 2 */
-    byte             :1; 
+    byte             :1;
     byte IDAM0       :1;                                       /* Identifier Acceptance Mode 0 */
     byte IDAM1       :1;                                       /* Identifier Acceptance Mode 1 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpIDHIT :3;
@@ -14749,10 +14749,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -15147,10 +15147,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -15810,7 +15810,7 @@ typedef union {
     byte MODRR4      :1;                                       /* SPI0 Routing */
     byte MODRR5      :1;                                       /* SPI1 Routing */
     byte MODRR6      :1;                                       /* SPI2 Routing */
-    byte             :1; 
+    byte             :1;
   } Bits;
   struct {
     byte grpMODRR :7;
@@ -16315,10 +16315,10 @@ typedef union {
   struct {
     byte PTJ0        :1;                                       /* Port J Bit 0 */
     byte PTJ1        :1;                                       /* Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte PTJ6        :1;                                       /* Port J Bit 6 */
     byte PTJ7        :1;                                       /* Port J Bit 7 */
   } Bits;
@@ -16347,10 +16347,10 @@ typedef union {
   struct {
     byte PTIJ0       :1;                                       /* Port J Bit 0 */
     byte PTIJ1       :1;                                       /* Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte PTIJ6       :1;                                       /* Port J Bit 6 */
     byte PTIJ7       :1;                                       /* Port J Bit 7 */
   } Bits;
@@ -16379,10 +16379,10 @@ typedef union {
   struct {
     byte DDRJ0       :1;                                       /* Data Direction Port J Bit 0 */
     byte DDRJ1       :1;                                       /* Data Direction Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte DDRJ6       :1;                                       /* Data Direction Port J Bit 6 */
     byte DDRJ7       :1;                                       /* Data Direction Port J Bit 7 */
   } Bits;
@@ -16411,10 +16411,10 @@ typedef union {
   struct {
     byte RDRJ0       :1;                                       /* Reduced Drive Port J Bit 0 */
     byte RDRJ1       :1;                                       /* Reduced Drive Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte RDRJ6       :1;                                       /* Reduced Drive Port J Bit 6 */
     byte RDRJ7       :1;                                       /* Reduced Drive Port J Bit 7 */
   } Bits;
@@ -16443,10 +16443,10 @@ typedef union {
   struct {
     byte PERJ0       :1;                                       /* Pull Device Enable Port J Bit 0 */
     byte PERJ1       :1;                                       /* Pull Device Enable Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte PERJ6       :1;                                       /* Pull Device Enable Port J Bit 6 */
     byte PERJ7       :1;                                       /* Pull Device Enable Port J Bit 7 */
   } Bits;
@@ -16475,10 +16475,10 @@ typedef union {
   struct {
     byte PPSJ0       :1;                                       /* Pull Select Port J Bit 0 */
     byte PPSJ1       :1;                                       /* Pull Select Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte PPSJ6       :1;                                       /* Pull Select Port J Bit 6 */
     byte PPSJ7       :1;                                       /* Pull Select Port J Bit 7 */
   } Bits;
@@ -16507,10 +16507,10 @@ typedef union {
   struct {
     byte PIEJ0       :1;                                       /* Interrupt Enable Port J Bit 0 */
     byte PIEJ1       :1;                                       /* Interrupt Enable Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte PIEJ6       :1;                                       /* Interrupt Enable Port J Bit 6 */
     byte PIEJ7       :1;                                       /* Interrupt Enable Port J Bit 7 */
   } Bits;
@@ -16539,10 +16539,10 @@ typedef union {
   struct {
     byte PIFJ0       :1;                                       /* Interrupt Flags Port J Bit 0 */
     byte PIFJ1       :1;                                       /* Interrupt Flags Port J Bit 1 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte PIFJ6       :1;                                       /* Interrupt Flags Port J Bit 6 */
     byte PIFJ7       :1;                                       /* Interrupt Flags Port J Bit 7 */
   } Bits;
@@ -16598,7 +16598,7 @@ typedef union {
     byte INITAK      :1;                                       /* Initialization Mode Acknowledge */
     byte SLPAK       :1;                                       /* Sleep Mode Acknowledge */
     byte WUPM        :1;                                       /* Wake-Up Mode */
-    byte             :1; 
+    byte             :1;
     byte LISTEN      :1;                                       /* Listen Only Mode */
     byte LOOPB       :1;                                       /* Loop Back Self Test Mode */
     byte CLKSRC      :1;                                       /* MSCAN4 Clock Source */
@@ -16761,11 +16761,11 @@ typedef union {
     byte TXE0        :1;                                       /* Transmitter Buffer Empty 0 */
     byte TXE1        :1;                                       /* Transmitter Buffer Empty 1 */
     byte TXE2        :1;                                       /* Transmitter Buffer Empty 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXE  :3;
@@ -16791,11 +16791,11 @@ typedef union {
     byte TXEIE0      :1;                                       /* Transmitter Empty Interrupt Enable 0 */
     byte TXEIE1      :1;                                       /* Transmitter Empty Interrupt Enable 1 */
     byte TXEIE2      :1;                                       /* Transmitter Empty Interrupt Enable 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTXEIE :3;
@@ -16821,11 +16821,11 @@ typedef union {
     byte ABTRQ0      :1;                                       /* Abort Request 0 */
     byte ABTRQ1      :1;                                       /* Abort Request 1 */
     byte ABTRQ2      :1;                                       /* Abort Request 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTRQ :3;
@@ -16851,11 +16851,11 @@ typedef union {
     byte ABTAK0      :1;                                       /* Abort Acknowledge 0 */
     byte ABTAK1      :1;                                       /* Abort Acknowledge 1 */
     byte ABTAK2      :1;                                       /* Abort Acknowledge 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpABTAK :3;
@@ -16881,11 +16881,11 @@ typedef union {
     byte TX0         :1;                                       /* Transmit Buffer Select 0 */
     byte TX1         :1;                                       /* Transmit Buffer Select 1 */
     byte TX2         :1;                                       /* Transmit Buffer Select 2 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpTX   :3;
@@ -16911,11 +16911,11 @@ typedef union {
     byte IDHIT0      :1;                                       /* Identifier Acceptance Hit Indicator 0 */
     byte IDHIT1      :1;                                       /* Identifier Acceptance Hit Indicator 1 */
     byte IDHIT2      :1;                                       /* Identifier Acceptance Hit Indicator 2 */
-    byte             :1; 
+    byte             :1;
     byte IDAM0       :1;                                       /* Identifier Acceptance Mode 0 */
     byte IDAM1       :1;                                       /* Identifier Acceptance Mode 1 */
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpIDHIT :3;
@@ -17852,10 +17852,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -18250,10 +18250,10 @@ typedef union {
     byte DLC1        :1;                                       /* Data Length Code Bit 1 */
     byte DLC2        :1;                                       /* Data Length Code Bit 2 */
     byte DLC3        :1;                                       /* Data Length Code Bit 3 */
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
+    byte             :1;
   } Bits;
   struct {
     byte grpDLC  :4;
@@ -18306,7 +18306,7 @@ extern volatile CAN4TXTBPRSTR _CAN4TXTBPR @(REG_BASE + 0x000002BF);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
+    byte             :1;
     byte UNSEC       :1;                                       /* Unsecure */
     byte CLKSW       :1;                                       /* Clock switch */
     byte TRACE       :1;                                       /* TRACE1 BDM firmware command is being executed */
@@ -18361,9 +18361,9 @@ extern volatile BDMCCRSTR _BDMCCR @(0x0000FF06);
 typedef union {
   byte Byte;
   struct {
-    byte             :1; 
-    byte             :1; 
-    byte             :1; 
+    byte             :1;
+    byte             :1;
+    byte             :1;
     byte REG11       :1;                                       /* Internal register map position */
     byte REG12       :1;                                       /* Internal register map position */
     byte REG13       :1;                                       /* Internal register map position */
@@ -18400,9 +18400,8 @@ extern volatile BDMINRSTR _BDMINR @(0x0000FF07);
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################
 */
-

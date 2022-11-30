@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -72,7 +72,7 @@
 
 #include "chip.h"
 #include "stdlib.h"
-#include "string.h"   
+#include "string.h"
 
 #include <stdint.h>
 
@@ -192,13 +192,13 @@ __STATIC_INLINE void QSPI_WriteSPI( Qspi *pQspi, uint16_t wData )
  * \param EnableFlag    Enable/disable scramble
  * \param Random        Add random value with given key
  */
-__STATIC_INLINE void QSPI_ScrambleData( Qspi *pQspi, uint32_t wKey, 
+__STATIC_INLINE void QSPI_ScrambleData( Qspi *pQspi, uint32_t wKey,
 		uint8_t EnableFlag, uint8_t Random )
 {
 	assert(pQspi);
 	assert(EnableFlag < 2);
 	assert(Random < 2 );
-	
+
 	if(EnableFlag) {
 	  pQspi->QSPI_SKR = wKey;
 	}
@@ -307,7 +307,7 @@ uint32_t QSPI_GetStatus( Qspi *pQspi, const QspiStatus_t rStatus )
 }
 
 /**
- * \brief Configures peripheral clock of a QSPI/SPI peripheral. 
+ * \brief Configures peripheral clock of a QSPI/SPI peripheral.
  *
  * \param pQspi   Pointer to an Qspi instance.
  * \param dwConfiguration  Desired clock configuration.
@@ -320,24 +320,24 @@ void QSPI_ConfigureClock( Qspi *pQspi, QspiClockMode_t ClockMode, uint32_t dwClo
 }
 
 /**
- * \brief Configures QSPI/SPI 
+ * \brief Configures QSPI/SPI
  *
  * \param pQspi             Pointer to an Qspi instance.
- * \param Mode              Mode for QSPI or SPI 
+ * \param Mode              Mode for QSPI or SPI
  * \param dwConfiguration   Config of SPI or QSPI mode
  */
-QspidStatus_t QSPI_ConfigureInterface( Qspid_t *pQspid, QspiMode_t Mode, 
+QspidStatus_t QSPI_ConfigureInterface( Qspid_t *pQspid, QspiMode_t Mode,
 		uint32_t dwConfiguration)
-{    
+{
 	pQspid->pQspiHw = QSPI;
-	pQspid->qspiId = ID_QSPI;    
-	
+	pQspid->qspiId = ID_QSPI;
+
 	QSPI_Disable(pQspid->pQspiHw);
 	QSPI_SwReset(pQspid->pQspiHw);
-	
+
 	QSPI_ConfigureMode(pQspid->pQspiHw, Mode);
-	QSPI_Configure(pQspid->pQspiHw, dwConfiguration);  
-	
+	QSPI_Configure(pQspid->pQspiHw, dwConfiguration);
+
 	return QSPI_SUCCESS;
 }
 
@@ -352,7 +352,7 @@ QspidStatus_t QSPI_EndTransfer( Qspi *pQspi )
 	assert(pQspi);
 	while(!QSPI_GetStatus(pQspi, IsTxEmpty));
 	pQspi->QSPI_CR = QSPI_CR_LASTXFER ;
-	
+
 	return QSPI_SUCCESS;
 }
 
@@ -374,7 +374,7 @@ QspidStatus_t QSPI_SingleReadSPI( Qspid_t *pQspid, uint16_t* const pData )
 	Qspi *pQspi = pQspid->pQspiHw;
 	uint32_t NumOfAttempt = 0;
 	uint16_t Dummy= 0xFF;
-	
+
 	for(; ;) {
 		if( QSPI_GetStatus(pQspi, IsReceived)) {
 			*pData = QSPI_ReadSPI(pQspi) ;
@@ -387,7 +387,7 @@ QspidStatus_t QSPI_SingleReadSPI( Qspid_t *pQspid, uint16_t* const pData )
 				Status = QSPI_READ_ERROR;
 				TRACE_ERROR(" SPI Read Error \n\r");
 				break;
-			} else { 
+			} else {
 				Status = QSPI_READ_ERROR;
 				NumOfAttempt++;
 			}
@@ -403,10 +403,10 @@ QspidStatus_t QSPI_SingleReadSPI( Qspid_t *pQspid, uint16_t* const pData )
  * \param pQspid        Pointer to a Qspi instance.
  * \param pData         Pointer to read buffer
  * \param NumOfBytes    Num of bytes to read
- * 
+ *
  * \return Qspi status
  */
-QspidStatus_t QSPI_MultiReadSPI( Qspid_t *pQspid, uint16_t* const pData, 
+QspidStatus_t QSPI_MultiReadSPI( Qspid_t *pQspid, uint16_t* const pData,
 							uint32_t NumOfBytes )
 {
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
@@ -415,8 +415,8 @@ QspidStatus_t QSPI_MultiReadSPI( Qspid_t *pQspid, uint16_t* const pData,
 	uint32_t NumOfAttempt = 0;
 	uint8_t *pwData = (uint8_t *)pData;
 	uint16_t Dummy=0xFF;
-	
-	/* Dummy read  and write to discard  first bytes recvd and start 
+
+	/* Dummy read  and write to discard  first bytes recvd and start
 		receiving new data*/
 	Dummy = QSPI_ReadSPI(pQspi) ;
 	QSPI_WriteSPI(pQspi, Dummy);
@@ -437,7 +437,7 @@ QspidStatus_t QSPI_MultiReadSPI( Qspid_t *pQspid, uint16_t* const pData,
 				Status = QSPI_READ_ERROR;
 				TRACE_ERROR(" SPI MultiRead Error \n\r");
 				break;
-			} else { 
+			} else {
 				Status = QSPI_READ_ERROR;
 				NumOfAttempt++;
 			}
@@ -451,7 +451,7 @@ QspidStatus_t QSPI_MultiReadSPI( Qspid_t *pQspid, uint16_t* const pData,
  *
  * \param pQspid    Pointer to a Qspi instance.
  * \param pData     Pointer to Tx data
- * 
+ *
  * \return Qspi status
  */
 QspidStatus_t QSPI_SingleWriteSPI( Qspid_t *pQspid, uint16_t const *pData )
@@ -459,7 +459,7 @@ QspidStatus_t QSPI_SingleWriteSPI( Qspid_t *pQspid, uint16_t const *pData )
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
 	Qspi *pQspi = pQspid->pQspiHw;
 	uint32_t NumOfAttempt = 0;
-	
+
 	for(;;) {
 		if( QSPI_GetStatus(pQspi, IsTxSent)) {
 			QSPI_WriteSPI(pQspi, *pData);
@@ -477,17 +477,17 @@ QspidStatus_t QSPI_SingleWriteSPI( Qspid_t *pQspid, uint16_t const *pData )
 		}
 	}
 	return Status;
-	
+
 }
 
 /**
- * \brief Sends multiple data through a SPI peripheral. 
+ * \brief Sends multiple data through a SPI peripheral.
  *
  * \param pQspid        Pointer to a Qspi instance.
- * \param pData         Pointer to a Tx buffer 
+ * \param pData         Pointer to a Tx buffer
  * \param NumOfBytes    Num of data to send.
  */
-QspidStatus_t QSPI_MultiWriteSPI( Qspid_t *pQspid, uint16_t const *pData, 
+QspidStatus_t QSPI_MultiWriteSPI( Qspid_t *pQspid, uint16_t const *pData,
 								uint32_t NumOfBytes )
 {
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
@@ -496,13 +496,13 @@ QspidStatus_t QSPI_MultiWriteSPI( Qspid_t *pQspid, uint16_t const *pData,
 	uint32_t NumOfAttempt = 0;
 	uint8_t *pwData = (uint8_t *)pData;
 	uint8_t Addr_Inc = 0;
-	
+
 	if(pQspi->QSPI_MR & QSPI_MR_NBBITS_Msk) {
 		Addr_Inc = sizeof(uint16_t);
 	} else {
 		Addr_Inc = sizeof(uint8_t);
 	}
-	
+
 	for(; NumOfBytesWrite < NumOfBytes; NumOfBytesWrite++) {
 		if( QSPI_GetStatus(pQspi, IsTxEmpty)) {
 			QSPI_WriteSPI(pQspi, (uint16_t )*pwData);
@@ -520,7 +520,7 @@ QspidStatus_t QSPI_MultiWriteSPI( Qspid_t *pQspid, uint16_t const *pData,
 		}
 	}
 	return Status;
-	
+
 }
 
 /*----------------------------------------------------------------------------
@@ -533,26 +533,26 @@ QspidStatus_t QSPI_MultiWriteSPI( Qspid_t *pQspid, uint16_t const *pData,
  * \param pQspi     Pointer to an Qspi instance.
  * \param KeepCfg   To keep Instruction fram value or restes to zero
  *
- * \return Returns 1 if At least one instruction end has been detected since 
+ * \return Returns 1 if At least one instruction end has been detected since
  * the last read of QSPI_SR.; otherwise
  * returns 0.
  */
 QspidStatus_t QSPI_SendCommand( Qspid_t *pQspid, uint8_t const KeepCfg)
-{  
+{
 	QspiInstFrame_t*  const pFrame = pQspid->pQspiFrame;
 	QspiMemCmd_t  pCommand = pQspid->qspiCommand;
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
-	
+
 	if( pFrame->InstFrame.bm.bAddrEn)
 	{
 	  QSPI_SetInstAddr(pQspid->pQspiHw, pFrame->Addr);
 	}
-	QSPI_SetInst(pQspid->pQspiHw, (pCommand.Instruction & 0xFF), 
+	QSPI_SetInst(pQspid->pQspiHw, (pCommand.Instruction & 0xFF),
 			( (pCommand.Option >> QSPI_ICR_OPT_Pos) & 0xFF));
 	QSPI_SetInstFrame(pQspid->pQspiHw, pFrame );
-	
-	memory_sync(); 
-	while(!(pQspid->pQspiHw->QSPI_SR & QSPI_SR_INSTRE));            
+
+	memory_sync();
+	while(!(pQspid->pQspiHw->QSPI_SR & QSPI_SR_INSTRE));
 	// poll CR reg to know status if instruction has end
 	if(!KeepCfg) {
 	  pFrame->InstFrame.val = 0;
@@ -568,36 +568,36 @@ QspidStatus_t QSPI_SendCommand( Qspid_t *pQspid, uint8_t const KeepCfg)
  * \param pQspi     Pointer to an Qspi instance.
  * \param KeepCfg   To keep Instruction fram value or restes to zero
  *
- * \return Returns 1 if At least one instruction end has been detected 
+ * \return Returns 1 if At least one instruction end has been detected
  *  since the last read of QSPI_SR.; otherwise returns 0.
  */
 QspidStatus_t QSPI_SendCommandWithData( Qspid_t *pQspid, uint8_t const KeepCfg)
-{  
+{
 	QspiInstFrame_t* const  pFrame = pQspid->pQspiFrame;
 	QspiMemCmd_t  pCommand = pQspid->qspiCommand;
 	QspiBuffer_t    pBuffer     =  pQspid->qspiBuffer;
 	uint32_t *pQspiBuffer = (uint32_t *)QSPIMEM_ADDR;
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
-   
+
 	//assert(pBuffer.pDataRx);
 	assert(pBuffer.pDataTx);
-		
+
 	QSPI_SetInst(pQspid->pQspiHw, (pCommand.Instruction & 0xFF), (pCommand.Option & 0xFF) );
 	QSPI_SetInstFrame(pQspid->pQspiHw, pFrame );
-	
-	QSPI_GetInstFrame(pQspid->pQspiHw); 
+
+	QSPI_GetInstFrame(pQspid->pQspiHw);
 	// to synchronize system bus accesses
 	if(!KeepCfg) {
 	  pFrame->InstFrame.val = 0;
 	}
-	
-	memcpy(pQspiBuffer  ,pBuffer.pDataTx ,  pBuffer.TxDataSize ); 
+
+	memcpy(pQspiBuffer  ,pBuffer.pDataTx ,  pBuffer.TxDataSize );
 	memory_sync();
-	QSPI_EndTransfer(pQspid->pQspiHw ) ; 
+	QSPI_EndTransfer(pQspid->pQspiHw ) ;
 	// End transmission after all data has been sent
-	while(!(pQspid->pQspiHw->QSPI_SR & QSPI_SR_INSTRE)); 
+	while(!(pQspid->pQspiHw->QSPI_SR & QSPI_SR_INSTRE));
 	// poll CR reg to know status if instruction has end
-	
+
 	return Status;
 }
 
@@ -607,35 +607,35 @@ QspidStatus_t QSPI_SendCommandWithData( Qspid_t *pQspid, uint8_t const KeepCfg)
  * \param pQspi     Pointer to an Qspi instance.
  * \param KeepCfg   To keep Instruction from value or resets to zero
  *
- * \return Returns 1 if At least one instruction end has been detected 
+ * \return Returns 1 if At least one instruction end has been detected
  * since the last read of QSPI_SR.; otherwise returns 0.
  */
 QspidStatus_t QSPI_ReadCommand( Qspid_t *pQspid, uint8_t const KeepCfg)
-{  
+{
 	QspiInstFrame_t* const  pFrame = pQspid->pQspiFrame;
 	QspiMemCmd_t  pCommand = pQspid->qspiCommand;
 	QspiBuffer_t    pBuffer     =  pQspid->qspiBuffer;
 	uint32_t *pQspiBuffer = (uint32_t *)QSPIMEM_ADDR;
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
-	
+
 	assert(pBuffer.pDataRx);
-	  
-	QSPI_SetInst(pQspid->pQspiHw, (pCommand.Instruction & 0xFF), 
+
+	QSPI_SetInst(pQspid->pQspiHw, (pCommand.Instruction & 0xFF),
 			(pCommand.Option & 0xFF) );
 	QSPI_SetInstFrame(pQspid->pQspiHw, pFrame );
-	
+
 	QSPI_GetInstFrame(pQspid->pQspiHw);
-		// to synchronize system bus accesses   
+		// to synchronize system bus accesses
 	if(!KeepCfg) {
 	  pFrame->InstFrame.val = 0;
 	}
-	memcpy(pBuffer.pDataRx , pQspiBuffer,  pBuffer.RxDataSize ); 
+	memcpy(pBuffer.pDataRx , pQspiBuffer,  pBuffer.RxDataSize );
 	memory_sync();
-	QSPI_EndTransfer(pQspid->pQspiHw ) ;                   
+	QSPI_EndTransfer(pQspid->pQspiHw ) ;
 	// End transmission after all data has been sent
-	while(!(pQspid->pQspiHw->QSPI_SR & QSPI_SR_INSTRE));             
+	while(!(pQspid->pQspiHw->QSPI_SR & QSPI_SR_INSTRE));
 	// poll CR reg to know status if instruction has end
-	
+
 	return Status;
 }
 
@@ -647,63 +647,63 @@ QspidStatus_t QSPI_ReadCommand( Qspid_t *pQspid, uint8_t const KeepCfg)
  * \param KeepCfg       To keep Instruction from value or resets to zero
  * \param ScrambleFlag  Enable or disable scramble on QSPI
  *
- * \return Returns 1 if At least one instruction end has been detected since 
+ * \return Returns 1 if At least one instruction end has been detected since
  * the last read of QSPI_SR.; otherwise returns 0.
  */
-QspidStatus_t QSPI_EnableMemAccess( Qspid_t *pQspid, uint8_t const KeepCfg, 
+QspidStatus_t QSPI_EnableMemAccess( Qspid_t *pQspid, uint8_t const KeepCfg,
 									uint8_t ScrambleFlag)
-{  
+{
 	QspiInstFrame_t* const pFrame = pQspid->pQspiFrame;
 	QspiMemCmd_t  pCommand = pQspid->qspiCommand;
-		
+
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
-	 
-	QSPI_SetInst(pQspid->pQspiHw, (pCommand.Instruction & 0xFF), 
+
+	QSPI_SetInst(pQspid->pQspiHw, (pCommand.Instruction & 0xFF),
 			(pCommand.Option & 0xFF) );
-	
+
 	if(ScrambleFlag) {
 	  QSPI_ScrambleData(pQspid->pQspiHw, SCRAMBLE_KEY, ScrambleFlag, 1);
 	}
-	
+
 	QSPI_SetInstFrame(pQspid->pQspiHw, pFrame );
-	
+
 	QSPI_GetInstFrame(pQspid->pQspiHw);
-	// to synchronize system bus accesses   
+	// to synchronize system bus accesses
 	if(!KeepCfg) {
 	  pFrame->InstFrame.val = 0;
-	} 
+	}
 	Status = QSPI_SUCCESS;
 	return Status;
 }
 
 /**
- * \brief Writes or reads the QSPI memory (0x80000000) to transmit or 
+ * \brief Writes or reads the QSPI memory (0x80000000) to transmit or
  * receive data from Flash memory
  * \param pQspi         Pointer to an Qspi instance.
  * \param ReadWrite     Flag to indicate read/write QSPI memory access
  *
- * \return Returns 1 if At least one instruction end has been detected since 
+ * \return Returns 1 if At least one instruction end has been detected since
  * the last read of QSPI_SR.; otherwise returns 0.
  */
 QspidStatus_t QSPI_ReadWriteMem( Qspid_t *pQspid, Access_t const ReadWrite)
-{  
+{
 	QspidStatus_t Status = QSPI_UNKNOWN_ERROR;
 	QspiInstFrame_t* const pFrame = pQspid->pQspiFrame;
 	uint32_t *pQspiMem = (uint32_t *)( QSPIMEM_ADDR | pFrame->Addr);
 	QspiBuffer_t    pBuffer     =  pQspid->qspiBuffer;
-	
+
 	assert( ( (ReadWrite > CmdAccess) && (ReadWrite <= WriteAccess) ) ? true: false );
 	if (ReadWrite == WriteAccess) {
-	  memcpy(pQspiMem, pBuffer.pDataTx , pBuffer.TxDataSize ); 
+	  memcpy(pQspiMem, pBuffer.pDataTx , pBuffer.TxDataSize );
 	} else {
-	  memcpy(pBuffer.pDataRx, pQspiMem, pBuffer.RxDataSize ); 
+	  memcpy(pBuffer.pDataRx, pQspiMem, pBuffer.RxDataSize );
 	}
 	memory_sync();
 	QSPI_EndTransfer(pQspid->pQspiHw ) ;
 	// End transmission after all data has been sent
 	while(!(pQspid->pQspiHw->QSPI_SR & QSPI_SR_INSTRE));
 	// poll CR reg to know status if instruction has end
-	
+
 	Status = QSPI_SUCCESS;
 	return Status;
 }

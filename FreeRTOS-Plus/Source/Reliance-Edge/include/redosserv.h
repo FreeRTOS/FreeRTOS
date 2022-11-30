@@ -83,4 +83,3 @@ void RedOsAssertFail(const char *pszFileName, uint32_t ulLineNum);
 
 
 #endif
-

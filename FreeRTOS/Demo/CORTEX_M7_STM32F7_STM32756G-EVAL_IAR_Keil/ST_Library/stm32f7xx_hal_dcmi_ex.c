@@ -5,21 +5,21 @@
   * @version V1.0.0
   * @date    12-May-2015
   * @brief   DCMI Extension HAL module driver.
-  *          This file provides firmware functions to manage the following 
+  *          This file provides firmware functions to manage the following
   *          functionalities of DCMI extension peripheral:
-  *           + Extension features functions 
-  *           
-  @verbatim      
+  *           + Extension features functions
+  *
+  @verbatim
   ==============================================================================
                ##### DCMI peripheral extension features  #####
   ==============================================================================
-           
-  [..]  Support of Black and White cameras 
-   
+
+  [..]  Support of Black and White cameras
+
                      ##### How to use this driver #####
   ==============================================================================
   [..] This driver provides functions to manage the Black and White feature
-    
+
   @endverbatim
   ******************************************************************************
   * @attention
@@ -49,7 +49,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
@@ -78,18 +78,18 @@
 /** @defgroup DCMIEx_Exported_Functions_Group1 Initialization and Configuration functions
  *  @brief   Initialization and Configuration functions
  *
-@verbatim   
+@verbatim
  ===============================================================================
                 ##### Initialization and Configuration functions #####
- ===============================================================================  
+ ===============================================================================
     [..]  This section provides functions allowing to:
       (+) Initialize and configure the DCMI
-      (+) De-initialize the DCMI 
+      (+) De-initialize the DCMI
 
 @endverbatim
   * @{
   */
-  
+
 /**
   * @brief  Initializes the DCMI according to the specified
   *         parameters in the DCMI_InitTypeDef and create the associated handle.
@@ -98,13 +98,13 @@
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
-{     
+{
   /* Check the DCMI peripheral state */
   if(hdcmi == NULL)
   {
      return HAL_ERROR;
   }
-  
+
   /* Check function parameters */
   assert_param(IS_DCMI_ALL_INSTANCE(hdcmi->Instance));
   assert_param(IS_DCMI_PCKPOLARITY(hdcmi->Init.PCKPolarity));
@@ -119,15 +119,15 @@ HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
   assert_param(IS_DCMI_BYTE_SELECT_START(hdcmi->Init.ByteSelectStart));
   assert_param(IS_DCMI_LINE_SELECT_MODE(hdcmi->Init.LineSelectMode));
   assert_param(IS_DCMI_LINE_SELECT_START(hdcmi->Init.LineSelectStart));
-                
+
   if(hdcmi->State == HAL_DCMI_STATE_RESET)
   {
     /* Init the low level hardware */
     HAL_DCMI_MspInit(hdcmi);
-  } 
-  
+  }
+
   /* Change the DCMI state */
-  hdcmi->State = HAL_DCMI_STATE_BUSY; 
+  hdcmi->State = HAL_DCMI_STATE_BUSY;
                           /* Configures the HS, VS, DE and PC polarity */
   hdcmi->Instance->CR &= ~(DCMI_CR_PCKPOL | DCMI_CR_HSPOL  | DCMI_CR_VSPOL  | DCMI_CR_EDM_0 |\
                            DCMI_CR_EDM_1  | DCMI_CR_FCRC_0 | DCMI_CR_FCRC_1 | DCMI_CR_JPEG  |\
@@ -140,7 +140,7 @@ HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
                                      hdcmi->Init.JPEGMode | hdcmi->Init.ByteSelectMode |\
                                      hdcmi->Init.ByteSelectStart | hdcmi->Init.LineSelectMode |\
                                      hdcmi->Init.LineSelectStart);
-                                     
+
   if(hdcmi->Init.SynchroMode == DCMI_SYNCHRO_EMBEDDED)
   {
     DCMI->ESCR = (((uint32_t)hdcmi->Init.SyncroCode.FrameStartCode)    |
@@ -170,7 +170,7 @@ HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
 
   /* Update error code */
   hdcmi->ErrorCode = HAL_DCMI_ERROR_NONE;
-  
+
   /* Initialize the DCMI state*/
   hdcmi->State  = HAL_DCMI_STATE_READY;
 
@@ -185,7 +185,7 @@ HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

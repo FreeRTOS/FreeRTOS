@@ -237,7 +237,7 @@ uint32_t pmc_get_status(void);
 /**
  * \name Power management
  *
- * The following functions are used to configure sleep mode and additionnal 
+ * The following functions are used to configure sleep mode and additionnal
  * wake up inputs.
  */
 //@{
@@ -299,7 +299,7 @@ uint32_t pmc_get_writeprotect_status(void);
  * \subsection pmc_basic_use_case_setup_code Code
  * The following function needs to be added to the user application, to flash a
  * board LED a variable number of times at a rate given in CPU ticks.
- * 
+ *
  * \code
  * #define FLASH_TICK_COUNT   0x00012345
  *
@@ -307,7 +307,7 @@ uint32_t pmc_get_writeprotect_status(void);
  * {
  *     SysTick->CTRL = SysTick_CTRL_ENABLE_Msk;
  *     SysTick->LOAD = tick_count;
- * 
+ *
  *     while (flash_count--)
  *     {
  *         gpio_toggle_pin(LED0_GPIO);
@@ -345,25 +345,25 @@ uint32_t pmc_get_writeprotect_status(void);
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  * -# Switch the Master CPU frequency to the internal 8MHz RC oscillator, flash
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_8_MHz);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  * -# Switch the Master CPU frequency to the internal 4MHz RC oscillator, flash
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  * -# Switch the Master CPU frequency to the external crystal oscillator, flash
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_xtal(0);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  */
 

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -58,7 +58,7 @@ void SSC_Configure(AT91S_SSC *ssc,
 
     // Configure clock frequency
     if (bitRate != 0) {
-    
+
         ssc->SSC_CMR = masterClock / (2 * bitRate);
     }
     else {
@@ -194,7 +194,7 @@ unsigned char SSC_WriteBuffer(AT91S_SSC *ssc,
         ssc->SSC_TNCR = length;
         return 1;
     }
-      
+
     // No free banks
     return 0;
 }
@@ -240,4 +240,3 @@ unsigned char SSC_ReadBuffer(AT91S_SSC *ssc,
     // No free bank
     return 0;
 }
-

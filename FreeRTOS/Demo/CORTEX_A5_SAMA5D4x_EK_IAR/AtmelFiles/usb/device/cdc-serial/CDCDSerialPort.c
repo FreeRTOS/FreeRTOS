@@ -53,7 +53,7 @@ typedef struct _CDCDParseData {
     CDCDSerialPort * pCdcd;
     /** Pointer to found interface descriptor */
     USBInterfaceDescriptor * pIfDesc;
-    
+
 } CDCDParseData;
 
 /*------------------------------------------------------------------------------
@@ -455,4 +455,3 @@ void CDCDSerialPort_SetSerialState(CDCDSerialPort * pCdcd,
 }
 
 /**@}*/
-

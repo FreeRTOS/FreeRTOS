@@ -16,9 +16,7 @@
 @REM                     session afterwards.
 @REM   --silent          Omits the sign-on message.
 @REM   --timeout         Limits the maximum allowed execution time.
-@REM 
+@REM
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 6.5\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\config\flashloader\Infineon\FlashXMC1200.board" --backend -B "--endian=little" "--cpu=Cortex-M0" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\CONFIG\debugger\Infineon\xmc1200.ddf" "--drv_verify_download" "--semihosting" "--device=xmc1200" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" "--drv_catch_exceptions=0x000" "--drv_swo_clock_setup=72000000,0,2000000" 
-
-
+"C:\devtools\IAR Systems\Embedded Workbench 6.5\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\config\flashloader\Infineon\FlashXMC1200.board" --backend -B "--endian=little" "--cpu=Cortex-M0" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\CONFIG\debugger\Infineon\xmc1200.ddf" "--drv_verify_download" "--semihosting" "--device=xmc1200" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" "--drv_catch_exceptions=0x000" "--drv_swo_clock_setup=72000000,0,2000000"

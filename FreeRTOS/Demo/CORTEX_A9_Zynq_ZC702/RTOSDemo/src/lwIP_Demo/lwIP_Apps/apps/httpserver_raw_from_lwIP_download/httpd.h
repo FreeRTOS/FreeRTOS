@@ -48,7 +48,7 @@
 
 /** Set this to 1 to support SSI (Server-Side-Includes) */
 #ifndef LWIP_HTTPD_SSI
-#define LWIP_HTTPD_SSI            1     
+#define LWIP_HTTPD_SSI            1
 #endif
 
 /** Set this to 1 to support HTTP POST */

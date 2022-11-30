@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -384,4 +384,3 @@ void PIO_DisableIt(const Pin *pPin)
 
     pPin->pio->PIO_IDR = pPin->mask;
 }
-

@@ -63,7 +63,7 @@ const Font gFont = {10, 14};
  * \param c  Character to output.
  * \param color  Character color.
  */
-extern void LCDD_DrawChar(uint16_t* pCanvasBuffer, uint32_t x, uint32_t y, 
+extern void LCDD_DrawChar(uint16_t* pCanvasBuffer, uint32_t x, uint32_t y,
 						uint8_t c, uint32_t color )
 {
 	uint32_t row, col;
@@ -77,7 +77,7 @@ extern void LCDD_DrawChar(uint16_t* pCanvasBuffer, uint32_t x, uint32_t y,
 			}
 		}
 		for (row = 0; row < 6; row++ ) {
-			if((pCharset10x14[((c - 0x20) * 20) + col * 2 + 1] 
+			if((pCharset10x14[((c - 0x20) * 20) + col * 2 + 1]
 							>> (7 - row)) & 0x1) {
 				LCDD_DrawPixel(pCanvasBuffer, x+col, y+row+8, color );
 			}
@@ -94,7 +94,7 @@ extern void LCDD_DrawChar(uint16_t* pCanvasBuffer, uint32_t x, uint32_t y,
  * \param dwY      Y-coordinate of string top-left corner.
  * \param pString  String to display.
  */
-extern void LCD_DrawString(uint16_t* pCanvasBuffer, uint32_t dwX, uint32_t dwY, 
+extern void LCD_DrawString(uint16_t* pCanvasBuffer, uint32_t dwX, uint32_t dwY,
 						const uint8_t *pString, uint32_t color )
 {
 	uint32_t dwXorg = dwX;
@@ -110,5 +110,3 @@ extern void LCD_DrawString(uint16_t* pCanvasBuffer, uint32_t dwX, uint32_t dwY,
 		pString++;
 	}
 }
-
-

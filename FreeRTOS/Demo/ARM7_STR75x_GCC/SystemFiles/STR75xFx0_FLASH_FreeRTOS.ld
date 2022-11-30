@@ -11,5 +11,3 @@ INCLUDE "systemfiles/STR75xFx0_DEF_FreeRTOS.ld"
 
 /* include the sections management sub-script for FLASH mode */
 INCLUDE "systemfiles/sections_FLASH_FreeRTOS.ld"
-
-

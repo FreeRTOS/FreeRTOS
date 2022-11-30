@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -49,4 +49,3 @@ extern const capture_size ov_sizes[];
 extern void ov_configure(Twid *pTwid, uint8_t type, uint32_t width, uint32_t heigth);
 extern void ov_5640Afc_Firmware(Twid *pTwid);
 #endif
-

@@ -241,4 +241,3 @@ int32_t iReturn;
 		configASSERT( iReturn == SSL_SUCCESS );
     }
 }
-

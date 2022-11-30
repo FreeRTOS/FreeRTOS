@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -71,8 +71,8 @@
 /*---------------------------------------------------------------------------
  *         Types
  *---------------------------------------------------------------------------*/
- 
- 
+
+
 /** The DM9161 instance */
 typedef struct _GMacb {
     sGmacd *pGmacd;     /**< Driver */
@@ -89,7 +89,7 @@ extern void GMACB_SetupTimeout(GMacb *pMacb, uint32_t toMax);
 
 extern void GMACB_Init(GMacb *pMacb, sGmacd *pGmacd, uint8_t phyAddress);
 
-extern uint8_t GMACB_InitPhy(GMacb *pMacb, 
+extern uint8_t GMACB_InitPhy(GMacb *pMacb,
                                     uint32_t mck,
                                     const Pin *pResetPins,
                                     uint32_t nbResetPins,
@@ -109,4 +109,3 @@ extern void GMACB_DumpRegisters(GMacb *pMacb);
 extern uint8_t GMACB_ResetPhy(GMacb *pMacb);
 
 #endif // #ifndef _GMACB_H
-

@@ -68,7 +68,7 @@ extern "C" {
  * IER_ETBEI:
  *   ETBEI field of register IER.
  *------------------------------------------------------------------------------
- * Enables the Transmitter Holding Register Empty Interrupt. 0 - Disabled; 1 - 
+ * Enables the Transmitter Holding Register Empty Interrupt. 0 - Disabled; 1 -
  * Enabled
  */
 #define IER_ETBEI_OFFSET   0x04U
@@ -154,7 +154,7 @@ extern "C" {
  * FCR_Bit1:
  *   Bit1 field of register FCR.
  *------------------------------------------------------------------------------
- * Clears all bytes in the RX FIFO and resets its counter logic. The shift 
+ * Clears all bytes in the RX FIFO and resets its counter logic. The shift
  * register is not cleared.  0 - Disabled; 1 - Enabled
  */
 #define FCR_BIT1_OFFSET   0x08U
@@ -169,7 +169,7 @@ extern "C" {
  * FCR_Bit2:
  *   Bit2 field of register FCR.
  *------------------------------------------------------------------------------
- * Clears all bytes in the TX FIFO and resets its counter logic. The shift 
+ * Clears all bytes in the TX FIFO and resets its counter logic. The shift
  * register is not cleared.  0 - Disabled; 1 - Enabled
  */
 #define FCR_BIT2_OFFSET   0x08U
@@ -198,7 +198,7 @@ extern "C" {
  * FCR_Bit6:
  *   Bit6 field of register FCR.
  *------------------------------------------------------------------------------
- * These bits are used to set the trigger level for the RX FIFO interrupt. RX 
+ * These bits are used to set the trigger level for the RX FIFO interrupt. RX
  * FIFO Trigger Level: 0 - 1; 1 - 4; 2 - 8; 3 - 14
  */
 #define FCR_BIT6_OFFSET   0x08U
@@ -230,7 +230,7 @@ extern "C" {
  * LCR_STB:
  *   STB field of register LCR.
  *------------------------------------------------------------------------------
- * Number of Stop Bits: 0 - 1 stop bit; 1 - 1½ stop bits when WLS = 00, 2 stop 
+ * Number of Stop Bits: 0 - 1 stop bit; 1 - 1½ stop bits when WLS = 00, 2 stop
  * bits in other cases
  */
 #define LCR_STB_OFFSET   0x0CU
@@ -241,7 +241,7 @@ extern "C" {
  * LCR_PEN:
  *   PEN field of register LCR.
  *------------------------------------------------------------------------------
- * Parity Enable 0 - Disabled; 1 - Enabled. Parity is added in transmission and 
+ * Parity Enable 0 - Disabled; 1 - Enabled. Parity is added in transmission and
  * checked in receiving.
  */
 #define LCR_PEN_OFFSET   0x0CU
@@ -262,9 +262,9 @@ extern "C" {
  * LCR_SP:
  *   SP field of register LCR.
  *------------------------------------------------------------------------------
- * Stick Parity 0 - Disabled; 1 - Enabled When stick parity is enabled, it 
- * works as follows: Bits 4..3, 11 - 0 will be sent as a parity bit, and 
- * checked in receiving.  01 - 1 will be sent as a parity bit, and checked in 
+ * Stick Parity 0 - Disabled; 1 - Enabled When stick parity is enabled, it
+ * works as follows: Bits 4..3, 11 - 0 will be sent as a parity bit, and
+ * checked in receiving.  01 - 1 will be sent as a parity bit, and checked in
  * receiving.
  */
 #define LCR_SP_OFFSET   0x0CU
@@ -275,8 +275,8 @@ extern "C" {
  * LCR_SB:
  *   SB field of register LCR.
  *------------------------------------------------------------------------------
- * Set Break 0 - Disabled 1 - Set break. SOUT is forced to 0. This does not 
- * have any effect on transmitter logic. The break is disabled by setting the 
+ * Set Break 0 - Disabled 1 - Set break. SOUT is forced to 0. This does not
+ * have any effect on transmitter logic. The break is disabled by setting the
  * bit to 0.
  */
 #define LCR_SB_OFFSET   0x0CU
@@ -287,8 +287,8 @@ extern "C" {
  * LCR_DLAB:
  *   DLAB field of register LCR.
  *------------------------------------------------------------------------------
- * Divisor Latch Access Bit 0 - Disabled. Normal addressing mode in use 1 - 
- * Enabled. Enables access to the Divisor Latch registers during read or write 
+ * Divisor Latch Access Bit 0 - Disabled. Normal addressing mode in use 1 -
+ * Enabled. Enables access to the Divisor Latch registers during read or write
  * operation to addresses 0 and 1.
  */
 #define LCR_DLAB_OFFSET   0x0CU
@@ -346,13 +346,13 @@ extern "C" {
  * MCR_Loop:
  *   Loop field of register MCR.
  *------------------------------------------------------------------------------
- * Loop enable bit 0 - Disabled; 1 - Enabled. The following happens in loop 
- * mode: SOUT is set to 1. The SIN, DSRn, CTSn, RIn, and DCDn inputs are 
- * disconnected.  The output of the Transmitter Shift Register is looped back 
- * into the Receiver Shift Register. The modem control outputs (DTRn, RTSn, 
- * OUT1n, and OUT2n) are connected internally to the modem control inputs, and 
- * the modem control output pins are set at 1. In loopback mode, the 
- * transmitted data is immediately received, allowing the CPU to check the 
+ * Loop enable bit 0 - Disabled; 1 - Enabled. The following happens in loop
+ * mode: SOUT is set to 1. The SIN, DSRn, CTSn, RIn, and DCDn inputs are
+ * disconnected.  The output of the Transmitter Shift Register is looped back
+ * into the Receiver Shift Register. The modem control outputs (DTRn, RTSn,
+ * OUT1n, and OUT2n) are connected internally to the modem control inputs, and
+ * the modem control output pins are set at 1. In loopback mode, the
+ * transmitted data is immediately received, allowing the CPU to check the
  * operation of the UART. The interrupts are operating in loop mode.
  */
 #define MCR_LOOP_OFFSET   0x10U
@@ -370,7 +370,7 @@ extern "C" {
  * LSR_DR:
  *   DR field of register LSR.
  *------------------------------------------------------------------------------
- * Data Ready indicator 1 when a data byte has been received and stored in the 
+ * Data Ready indicator 1 when a data byte has been received and stored in the
  * FIFO. DR is cleared to 0 when the CPU reads the data from the FIFO.
  */
 #define LSR_DR_OFFSET   0x14U
@@ -381,12 +381,12 @@ extern "C" {
  * LSR_OE:
  *   OE field of register LSR.
  *------------------------------------------------------------------------------
- * Overrun Error indicator Indicates that the new byte was received before the 
- * CPU read the byte from the receive buffer, and that the earlier data byte 
- * was destroyed. OE is cleared when the CPU reads the Line Status Register. If 
- * the data continues to fill the FIFO beyond the trigger level, an overrun 
- * error will occur once the FIFO is full and the next character has been 
- * completely received in the shift register. The character in the shift 
+ * Overrun Error indicator Indicates that the new byte was received before the
+ * CPU read the byte from the receive buffer, and that the earlier data byte
+ * was destroyed. OE is cleared when the CPU reads the Line Status Register. If
+ * the data continues to fill the FIFO beyond the trigger level, an overrun
+ * error will occur once the FIFO is full and the next character has been
+ * completely received in the shift register. The character in the shift
  * register is overwritten, but it is not transferred to the FIFO.
  */
 #define LSR_OE_OFFSET   0x14U
@@ -397,8 +397,8 @@ extern "C" {
  * LSR_PE:
  *   PE field of register LSR.
  *------------------------------------------------------------------------------
- * Parity Error indicator Indicates that the received byte had a parity error. 
- * PE is cleared when the CPU reads the Line Status Register. This error is 
+ * Parity Error indicator Indicates that the received byte had a parity error.
+ * PE is cleared when the CPU reads the Line Status Register. This error is
  * revealed to the CPU when its associated character is at the top of the FIFO.
  */
 #define LSR_PE_OFFSET   0x14U
@@ -409,11 +409,11 @@ extern "C" {
  * LSR_FE:
  *   FE field of register LSR.
  *------------------------------------------------------------------------------
- *  Framing Error indicator Indicates that the received byte did not have a 
- * valid Stop bit. FE is cleared when the CPU reads the Line Status Register. 
+ *  Framing Error indicator Indicates that the received byte did not have a
+ * valid Stop bit. FE is cleared when the CPU reads the Line Status Register.
  * The UART will try to re-synchronize after a framing error. To do this, it
- * assumes that the framing error was due to the next start bit, so it samples 
- * this start bit twice, and then starts receiving the data.  This error is 
+ * assumes that the framing error was due to the next start bit, so it samples
+ * this start bit twice, and then starts receiving the data.  This error is
  * revealed to the CPU when its associated character is at the top of the FIFO.
  */
 #define LSR_FE_OFFSET   0x14U
@@ -424,10 +424,10 @@ extern "C" {
  * LSR_BI:
  *   BI field of register LSR.
  *------------------------------------------------------------------------------
- * Break Interrupt indicator Indicates that the received data is at 0 longer 
- * than a full word transmission time (start bit + data bits + parity + stop 
- * bits). BI is cleared when the CPU reads the Line Status Register. This error 
- * is revealed to the CPU when its associated character is at the top of the 
+ * Break Interrupt indicator Indicates that the received data is at 0 longer
+ * than a full word transmission time (start bit + data bits + parity + stop
+ * bits). BI is cleared when the CPU reads the Line Status Register. This error
+ * is revealed to the CPU when its associated character is at the top of the
  * FIFO. When break occurs, only one zero character is loaded into the FIFO.
  */
 #define LSR_BI_OFFSET   0x14U
@@ -438,10 +438,10 @@ extern "C" {
  * LSR_THRE:
  *   THRE field of register LSR.
  *------------------------------------------------------------------------------
- *  Transmitter Holding Register Empty indicator Indicates that the UART is 
- * ready to transmit a new data byte. THRE causes an interrupt to the CPU when 
- * bit 1 (ETBEI) in the Interrupt Enable Register is 1.  This bit is set when 
- * the TX FIFO is empty. It is cleared when at least one byte is written to the 
+ *  Transmitter Holding Register Empty indicator Indicates that the UART is
+ * ready to transmit a new data byte. THRE causes an interrupt to the CPU when
+ * bit 1 (ETBEI) in the Interrupt Enable Register is 1.  This bit is set when
+ * the TX FIFO is empty. It is cleared when at least one byte is written to the
  * TX FIFO.
  */
 #define LSR_THRE_OFFSET   0x14U
@@ -452,7 +452,7 @@ extern "C" {
  * LSR_TEMT:
  *   TEMT field of register LSR.
  *------------------------------------------------------------------------------
- *  Transmitter Empty indicator This bit is set to 1 when both the transmitter 
+ *  Transmitter Empty indicator This bit is set to 1 when both the transmitter
  * FIFO and shift registers are empty.
  */
 #define LSR_TEMT_OFFSET   0x14U
@@ -463,8 +463,8 @@ extern "C" {
  * LSR_FIER:
  *   FIER field of register LSR.
  *------------------------------------------------------------------------------
- *  This bit is set when there is at least one parity error, framing error, or 
- * break indication in the FIFO. FIER is cleared when the CPU reads the LSR if 
+ *  This bit is set when there is at least one parity error, framing error, or
+ * break indication in the FIFO. FIER is cleared when the CPU reads the LSR if
  * there are no subsequent errors in the FIFO.
  */
 #define LSR_FIER_OFFSET   0x14U
@@ -482,7 +482,7 @@ extern "C" {
  * MSR_DCTS:
  *   DCTS field of register MSR.
  *------------------------------------------------------------------------------
- * Delta Clear to Send indicator.  Indicates that the CTSn input has changed 
+ * Delta Clear to Send indicator.  Indicates that the CTSn input has changed
  * state since the last time it was read by the CPU.
  */
 #define MSR_DCTS_OFFSET   0x18U
@@ -493,7 +493,7 @@ extern "C" {
  * MSR_DDSR:
  *   DDSR field of register MSR.
  *------------------------------------------------------------------------------
- * Delta Data Set Ready indicator Indicates that the DSRn input has changed 
+ * Delta Data Set Ready indicator Indicates that the DSRn input has changed
  * state since the last time it was read by the CPU.
  */
 #define MSR_DDSR_OFFSET   0x18U
@@ -504,7 +504,7 @@ extern "C" {
  * MSR_TERI:
  *   TERI field of register MSR.
  *------------------------------------------------------------------------------
- * Trailing Edge of Ring Indicator detector. Indicates that RI input has 
+ * Trailing Edge of Ring Indicator detector. Indicates that RI input has
  * changed from 0 to 1.
  */
 #define MSR_TERI_OFFSET   0x18U
@@ -515,8 +515,8 @@ extern "C" {
  * MSR_DDCD:
  *   DDCD field of register MSR.
  *------------------------------------------------------------------------------
- * Delta Data Carrier Detect indicator Indicates that DCD input has changed 
- * state.  NOTE: Whenever bit 0, 1, 2, or 3 is set to 1, a Modem Status 
+ * Delta Data Carrier Detect indicator Indicates that DCD input has changed
+ * state.  NOTE: Whenever bit 0, 1, 2, or 3 is set to 1, a Modem Status
  * Interrupt is generated.
  */
 #define MSR_DDCD_OFFSET   0x18U
@@ -527,8 +527,8 @@ extern "C" {
  * MSR_CTS:
  *   CTS field of register MSR.
  *------------------------------------------------------------------------------
- * Clear to Send The complement of the CTSn input. When bit 4 of the Modem 
- * Control Register (MCR) is set to 1 (loop), this bit is equivalent to DTR in 
+ * Clear to Send The complement of the CTSn input. When bit 4 of the Modem
+ * Control Register (MCR) is set to 1 (loop), this bit is equivalent to DTR in
  * the MCR.
  */
 #define MSR_CTS_OFFSET   0x18U
@@ -539,7 +539,7 @@ extern "C" {
  * MSR_DSR:
  *   DSR field of register MSR.
  *------------------------------------------------------------------------------
- * Data Set Ready The complement of the DSR input. When bit 4 of the MCR is set 
+ * Data Set Ready The complement of the DSR input. When bit 4 of the MCR is set
  * to 1 (loop), this bit is equivalent to RTSn in the MCR.
  */
 #define MSR_DSR_OFFSET   0x18U
@@ -550,7 +550,7 @@ extern "C" {
  * MSR_RI:
  *   RI field of register MSR.
  *------------------------------------------------------------------------------
- * Ring Indicator The complement of the RIn input. When bit 4 of the MCR is set 
+ * Ring Indicator The complement of the RIn input. When bit 4 of the MCR is set
  * to 1 (loop), this bit is equivalent to OUT1 in the MCR.
  */
 #define MSR_RI_OFFSET   0x18U
@@ -561,7 +561,7 @@ extern "C" {
  * MSR_DCD:
  *   DCD field of register MSR.
  *------------------------------------------------------------------------------
- * Data Carrier Detect The complement of DCDn input. When bit 4 of the MCR is 
+ * Data Carrier Detect The complement of DCDn input. When bit 4 of the MCR is
  * set to 1 (loop), this bit is equivalent to OUT2 in the MCR.
  */
 #define MSR_DCD_OFFSET   0x18U

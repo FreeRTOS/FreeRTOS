@@ -10490,5 +10490,3 @@ ErrorStatus LL_HRTIM_DeInit(HRTIM_TypeDef* HRTIMx);
 #endif /* STM32H7xx_LL_HRTIM_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
-

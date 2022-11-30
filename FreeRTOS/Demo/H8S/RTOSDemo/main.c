@@ -363,4 +363,3 @@ static long lErrorOccurred = pdFALSE;
 void hw_initialise (void)
 {
 }
-

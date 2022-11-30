@@ -93,7 +93,7 @@ void LED_Handler_hw( enum LED_id id )
    {
    int            counter;
    enum LED_mode  mode;
-   
+
    // Choose the right LED parameters.
    if( id == LED_GREEN )
       {

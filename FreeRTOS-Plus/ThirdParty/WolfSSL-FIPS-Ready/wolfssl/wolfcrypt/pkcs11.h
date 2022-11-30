@@ -364,7 +364,7 @@ struct CK_FUNCTION_LIST {
                                 CK_MECHANISM_INFO_PTR pInfo);
     CK_RV (*C_InitToken)(CK_SLOT_ID slotID, CK_UTF8CHAR_PTR pPin,
                          CK_ULONG ulPinLen, CK_UTF8CHAR_PTR pLabel);
-    CK_RV (*C_InitPIN)(CK_SESSION_HANDLE hSession, CK_UTF8CHAR_PTR pPin, 
+    CK_RV (*C_InitPIN)(CK_SESSION_HANDLE hSession, CK_UTF8CHAR_PTR pPin,
                        CK_ULONG ulPinLen);
     CK_RV (*C_SetPIN)(CK_SESSION_HANDLE hSession, CK_UTF8CHAR_PTR pOldPin,
                       CK_ULONG ulOldLen, CK_UTF8CHAR_PTR pNewPin,
@@ -534,4 +534,3 @@ struct CK_FUNCTION_LIST {
 #endif
 
 #endif /* _PKCS11_H_ */
-

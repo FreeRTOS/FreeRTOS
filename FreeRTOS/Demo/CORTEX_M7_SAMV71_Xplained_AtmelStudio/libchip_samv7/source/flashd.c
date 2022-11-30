@@ -28,37 +28,37 @@
  */
 
 /** \addtogroup flashd_module Flash Memory Interface
- * The flash driver manages the programming, erasing, locking and unlocking 
+ * The flash driver manages the programming, erasing, locking and unlocking
  * sequences with dedicated commands.
  *
- * To implement flash programming operation, the user has to follow these few 
+ * To implement flash programming operation, the user has to follow these few
  * steps :
  * <ul>
  * <li>Configure flash wait states to initializes the flash. </li>
  * <li>Checks whether a region to be programmed is locked. </li>
- * <li>Unlocks the user region to be programmed if the region have locked 
+ * <li>Unlocks the user region to be programmed if the region have locked
  * before.</li>
  * <li>Erases the user page before program (optional).</li>
  * <li>Writes the user page from the page buffer.</li>
  * <li>Locks the region of programmed area if any.</li>
  * </ul>
  *
- * Writing 8-bit and 16-bit data is not allowed and may lead to unpredictable 
+ * Writing 8-bit and 16-bit data is not allowed and may lead to unpredictable
  * data corruption.
- * A check of this validity and padding for 32-bit alignment should be done in 
+ * A check of this validity and padding for 32-bit alignment should be done in
  * write algorithm.
  * Lock/unlock range associated with the user address range is automatically
  * translated.
  *
- * This security bit can be enabled through the command "Set General Purpose 
+ * This security bit can be enabled through the command "Set General Purpose
  * NVM Bit 0".
  *
- * A 128-bit factory programmed unique ID could be read to serve several 
+ * A 128-bit factory programmed unique ID could be read to serve several
  * purposes.
  *
  * The driver accesses the flash memory by calling the lowlevel module provided
  * in \ref efc_module.
- * For more accurate information, please look at the EEFC section of the 
+ * For more accurate information, please look at the EEFC section of the
  * Datasheet.
  *
  * Related files :\n
@@ -113,7 +113,7 @@ static uint32_t _dwUseIAP = 1; /* Use IAP interface by default. */
  * \param pdwActualStart  Actual start address of lock range.
  * \param pdwActualEnd  Actual end address of lock range.
  */
-static void ComputeLockRange( uint32_t dwStart, uint32_t dwEnd, 
+static void ComputeLockRange( uint32_t dwStart, uint32_t dwEnd,
 							uint32_t *pdwActualStart, uint32_t *pdwActualEnd )
 {
 	Efc* pStartEfc ;
@@ -267,7 +267,7 @@ extern uint32_t FLASHD_ErasePages( uint32_t dwAddress, uint32_t dwPageNum )
  * \param size  Size of data buffer in bytes.
  * \return 0 if successful, otherwise returns an error code.
  */
-extern uint32_t FLASHD_Write( uint32_t dwAddress, 
+extern uint32_t FLASHD_Write( uint32_t dwAddress,
 							const void *pvBuffer, uint32_t dwSize )
 {
 	Efc* pEfc ;
@@ -302,11 +302,11 @@ extern uint32_t FLASHD_Write( uint32_t dwAddress,
 		memcpy( pucPageBuffer + offset, pvBuffer, writeSize);
 
 		/* Post-buffer data */
-		memcpy( pucPageBuffer + offset + writeSize, 
+		memcpy( pucPageBuffer + offset + writeSize,
 			(void *) (pageAddress + offset + writeSize), padding);
 
 		/* Write page
-		 * Writing 8-bit and 16-bit data is not allowed and may 
+		 * Writing 8-bit and 16-bit data is not allowed and may
 			lead to unpredictable data corruption
 		 */
 		pAlignedDestination = (uint32_t*)pageAddress ;
@@ -316,7 +316,7 @@ extern uint32_t FLASHD_Write( uint32_t dwAddress,
 		}
 
 		/* Note: It is not possible to use Erase and write Command (EWP) on all Flash
-		(this command is available on the First 2 Small Sector, 16K Bytes). 
+		(this command is available on the First 2 Small Sector, 16K Bytes).
 		For the next block, Erase them first then use Write page command. */
 
 		/* Send writing command */
@@ -336,7 +336,7 @@ extern uint32_t FLASHD_Write( uint32_t dwAddress,
 }
 
 /**
- * \brief Locks all the regions in the given address range. The actual lock 
+ * \brief Locks all the regions in the given address range. The actual lock
  * range is reported through two output parameters.
  *
  * \param start  Start address of lock range.
@@ -345,7 +345,7 @@ extern uint32_t FLASHD_Write( uint32_t dwAddress,
  * \param pActualEnd  End address of the actual lock range (optional).
  * \return 0 if successful, otherwise returns an error code.
  */
-extern uint32_t FLASHD_Lock( uint32_t start, uint32_t end, 
+extern uint32_t FLASHD_Lock( uint32_t start, uint32_t end,
 							uint32_t *pActualStart, uint32_t *pActualEnd )
 {
 	Efc *pEfc ;
@@ -380,7 +380,7 @@ extern uint32_t FLASHD_Lock( uint32_t start, uint32_t end,
 }
 
 /**
- * \brief Unlocks all the regions in the given address range. The actual unlock 
+ * \brief Unlocks all the regions in the given address range. The actual unlock
  * range is reported through two output parameters.
  * \param start  Start address of unlock range.
  * \param end  End address of unlock range.
@@ -388,7 +388,7 @@ extern uint32_t FLASHD_Lock( uint32_t start, uint32_t end,
  * \param pActualEnd  End address of the actual unlock range (optional).
  * \return 0 if successful, otherwise returns an error code.
  */
-extern uint32_t FLASHD_Unlock( uint32_t start, uint32_t end, 
+extern uint32_t FLASHD_Unlock( uint32_t start, uint32_t end,
 							uint32_t *pActualStart, uint32_t *pActualEnd )
 {
 	Efc* pEfc ;
@@ -582,4 +582,3 @@ uint32_t FLASHD_ReadUniqueID( uint32_t* pdwUniqueID )
 
 	return 0;
 }
-

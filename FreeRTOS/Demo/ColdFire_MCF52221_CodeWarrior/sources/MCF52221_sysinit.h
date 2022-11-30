@@ -15,7 +15,7 @@ extern "C" {
 
 
 
-#if ENABLE_UART_SUPPORT==1 
+#if ENABLE_UART_SUPPORT==1
 
 #define TERMINAL_PORT       0
 #define TERMINAL_BAUD       kBaud19200
@@ -27,8 +27,8 @@ extern "C" {
 
 /********************************************************************/
 /* __initialize_hardware Startup code routine
- * 
- * __initialize_hardware is called by the startup code right after reset, 
+ *
+ * __initialize_hardware is called by the startup code right after reset,
  * with interrupt disabled and SP pre-set to a valid memory area.
  * Here you should initialize memory and some peripherics;
  * at this point global variables are not initialized yet.
@@ -38,10 +38,10 @@ void __initialize_hardware(void);
 
 /********************************************************************/
 /* __initialize_system Startup code routine
- * 
- * __initialize_system is called by the startup code when all languages 
+ *
+ * __initialize_system is called by the startup code when all languages
  * specific initialization are done to allow additional hardware setup.
- */ 
+ */
 void __initialize_system(void);
 
 
@@ -51,5 +51,3 @@ void __initialize_system(void);
 #endif
 
 #endif /* __MCF52221DEMO_SYSINIT_H__ */
-
-

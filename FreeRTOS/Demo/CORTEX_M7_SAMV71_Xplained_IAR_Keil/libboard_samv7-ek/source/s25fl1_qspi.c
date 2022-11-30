@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -28,14 +28,14 @@
  */
 
 
-/** 
+/**
  * \addtogroup at25_spi_module S25FL1 SPI driver
  * \ingroup lib_spiflash
  *
  * The S25FL1 serial firmware dataflash driver is based on top of the
  * corresponding Spi driver. A Dataflash structure instance has to be
- * initialized using the S25FL1_Configure() function. Then a command can be send 
- * to the serial flash using the SPI_SendCommand() function. 
+ * initialized using the S25FL1_Configure() function. Then a command can be send
+ * to the serial flash using the SPI_SendCommand() function.
  *
  * \section Usage
  * <ul>
@@ -164,8 +164,8 @@ uint8_t S25FL1_IsBusy(S25fl1 *pS25fl1)
  */
 uint8_t S25FL1_SendCommand(uint8_t Instr, uint8_t ReadWrite)
 
-{  
-    pDev->Instruction = Instr; 
+{
+    pDev->Instruction = Instr;
     QSPI_SendFrame(QSPI, pDev, ReadWrite);
 }
 

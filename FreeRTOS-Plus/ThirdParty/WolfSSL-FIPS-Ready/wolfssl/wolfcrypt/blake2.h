@@ -93,4 +93,3 @@ WOLFSSL_API int wc_Blake2sFinal(Blake2s*, byte*, word32);
 
 #endif  /* HAVE_BLAKE2 || HAVE_BLAKE2S */
 #endif  /* WOLF_CRYPT_BLAKE2_H */
-

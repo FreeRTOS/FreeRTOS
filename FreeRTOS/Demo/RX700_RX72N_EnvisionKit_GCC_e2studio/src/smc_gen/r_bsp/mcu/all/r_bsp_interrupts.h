@@ -18,7 +18,7 @@
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * File Name    : r_bsp_interrupts.h
-* Description  : This module allows for callbacks to be registered for certain interrupts. 
+* Description  : This module allows for callbacks to be registered for certain interrupts.
 *                And handle exception interrupts.
 ***********************************************************************************************************************/
 /**********************************************************************************************************************
@@ -80,4 +80,3 @@ R_BSP_PRAGMA_INTERRUPT(bus_error_isr, VECT(BSC,BUSERR))
 #endif
 
 #endif  /* End of multiple inclusion prevention macro */
-

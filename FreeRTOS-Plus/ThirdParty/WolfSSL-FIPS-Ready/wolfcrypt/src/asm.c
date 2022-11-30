@@ -1780,4 +1780,3 @@ __asm__(                          \
 #endif
 
 /* end fp_mul_comba.c asm */
-

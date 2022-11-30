@@ -3,7 +3,7 @@
 * Copyright (C) 2010 - 2015 Xilinx, Inc.  All rights reserved.
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal 
+* of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
@@ -20,7 +20,7 @@
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 * XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
@@ -69,7 +69,7 @@
 
 /*****************************************************************************/
 /**
-* This function perform the reset sequence to the given usbps interface by 
+* This function perform the reset sequence to the given usbps interface by
 * configuring the appropriate control bits in the usbps specifc registers.
 * the usbps reset sequence involves the below steps
 * 	Disbale the interrupts
@@ -87,7 +87,7 @@ void XUsbPs_ResetHw(u32 BaseAddress)
 {
 	u32 RegVal;
 	u32 Timeout = 0;
-	
+
 	/* Host and device mode */
 	/* Disable the interrupts */
 	XUsbPs_WriteReg(BaseAddress,XUSBPS_IER_OFFSET,0x0);
@@ -95,7 +95,7 @@ void XUsbPs_ResetHw(u32 BaseAddress)
 	RegVal = XUsbPs_ReadReg(BaseAddress,XUSBPS_ISR_OFFSET);
 	XUsbPs_WriteReg(BaseAddress,XUSBPS_ISR_OFFSET,RegVal);
 
-	/* Perform the reset operation using USB CMD register */	
+	/* Perform the reset operation using USB CMD register */
 	RegVal = XUsbPs_ReadReg(BaseAddress,XUSBPS_CMD_OFFSET);
 	RegVal = RegVal | XUSBPS_CMD_RST_MASK;
 	XUsbPs_WriteReg(BaseAddress,XUSBPS_CMD_OFFSET,RegVal);
@@ -107,14 +107,14 @@ void XUsbPs_ResetHw(u32 BaseAddress)
 	*/
 	while ((RegVal & XUSBPS_CMD_RST_MASK) && (Timeout < XUSBPS_RESET_TIMEOUT))
 	{
-		RegVal = XUsbPs_ReadReg(BaseAddress,XUSBPS_CMD_OFFSET);	
+		RegVal = XUsbPs_ReadReg(BaseAddress,XUSBPS_CMD_OFFSET);
 		Timeout++;
 	}
-	/* Update periodic list base address register with reset value */		
-	XUsbPs_WriteReg(BaseAddress,XUSBPS_LISTBASE_OFFSET,0x0);	
-	/* Update async/endpoint list base address register with reset value */		
-	XUsbPs_WriteReg(BaseAddress,XUSBPS_ASYNCLISTADDR_OFFSET,0x0);		
-	
+	/* Update periodic list base address register with reset value */
+	XUsbPs_WriteReg(BaseAddress,XUSBPS_LISTBASE_OFFSET,0x0);
+	/* Update async/endpoint list base address register with reset value */
+	XUsbPs_WriteReg(BaseAddress,XUSBPS_ASYNCLISTADDR_OFFSET,0x0);
+
 }
 
 

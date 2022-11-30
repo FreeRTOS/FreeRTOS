@@ -401,7 +401,7 @@ SysCtlPeripheralReset(unsigned long ulPeripheral)
     // Put the peripheral into the reset state.
     //
     HWREG(g_pulSRCRRegs[ulPeripheral >> 28]) |= ulPeripheral & 0x0fffffff;
-    
+
     //
     // Delay for a little bit.
     //

@@ -281,7 +281,7 @@ cflags-gnu-y += -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused
 cflags-gnu-y += -Wuninitialized -Wunknown-pragmas -Wfloat-equal
 # -Wundef
 cflags-gnu-y += -Wshadow -Wbad-function-cast -Wwrite-strings
-cflags-gnu-y += -Wsign-compare -Waggregate-return 
+cflags-gnu-y += -Wsign-compare -Waggregate-return
 cflags-gnu-y += -Wmissing-declarations
 cflags-gnu-y += -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations
 cflags-gnu-y += -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long

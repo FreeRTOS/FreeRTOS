@@ -36,7 +36,7 @@
  *
  * \section Contents
  *
- *  - sama5d3-xplained 
+ *  - sama5d3-xplained
  *  - For sama5d3-xplained information, see \subpage sama5d3x_ek_board_info.
  *  - For operating frequency information, see \subpage sama5d3x_ek_opfreq.
  *  - For using portable PIO definitions, see \subpage sama5d3x_ek_piodef.
@@ -64,7 +64,7 @@
 /**
  *  \file board.h
  *
- *  Definition of sama5d3-xplained 
+ *  Definition of sama5d3-xplained
  *  characteristics, sama5d3x-dependant PIOs and external components interfacing.
  */
 
@@ -158,7 +158,7 @@
  * - \ref PIN_USART0_RTS
  * - \ref PIN_USART0_CTS
  * - \ref PIN_USART0_SCK
- * 
+ *
  * TWI0
  * - \ref PIN_TWI_TWD0
  * - \ref PIN_TWI_TWCK0
@@ -210,7 +210,7 @@
  * - \ref PIN_ISI_HSYNC
  * - \ref PIN_ISI_PCK
  * - \ref PIN_ISI_PINS_DATA
- * - \ref PINS_ISI 
+ * - \ref PINS_ISI
  */
 
 /** List of all DBGU pin definitions. */
@@ -392,8 +392,8 @@
 /** Address for transferring command bytes to the nandflash, CLE A22*/
 #define BOARD_NF_COMMAND_ADDR   0x60400000
 /** Address for transferring address bytes to the nandflash, ALE A21*/
-#define BOARD_NF_ADDRESS_ADDR   0x60200000 
-/** Address for transferring data bytes to the nandflash.*/ 
+#define BOARD_NF_ADDRESS_ADDR   0x60200000
+/** Address for transferring data bytes to the nandflash.*/
 #define BOARD_NF_DATA_ADDR      0x60000000
 
 /** Address for transferring command bytes to the norflash. */
@@ -454,7 +454,7 @@
  * - \ref BOARD_EMAC_RST_PINS
  * - \ref BOARD_EMAC_PHY_ADDR
  * - \ref BOARD_EMAC_RUN_PINS
- * 
+ *
  * \section board_lcd LCD Properties
  * - \ref BOARD_LCD_WIDTH
  * - \ref BOARD_LCD_HEIGHT
@@ -565,12 +565,12 @@
  * Push buttons
  * - \ref PIN_PUSHBUTTON_1
   * - \ref PINS_PUSHBUTTONS
- 
+
  *
- * PCK0 
+ * PCK0
  * - \ref PIN_PCK0
  *
- * PCK1 
+ * PCK1
  * - \ref  PIN_PCK1
  */
 
@@ -605,7 +605,7 @@
 /** List of all LEDs definitions. */
 #define PINS_LEDS   PIN_LED_0, PIN_LED_1
 #endif
- 
+
 /** Push button #0 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
 #define PIN_PUSHBUTTON_1  {PIO_PE29, PIOE, ID_PIOE, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
 
@@ -643,7 +643,7 @@
 /*----------------------------------------------------------------------------
  *        Headers for board
  *----------------------------------------------------------------------------*/
- 
+
 #include "include/board_lowlevel.h"
 #include "include/board_memories.h"
 #include "include/bmp.h"
@@ -681,4 +681,3 @@
 #include "include/omnivision.h"
 #include "include/ovyuv.h"
 #endif /* #ifndef _BOARD_ */
-

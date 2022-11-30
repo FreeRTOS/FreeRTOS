@@ -565,14 +565,14 @@
 					</trimLayout>
 				</UDEPersistance></UDEWorkbenchSettings></EclipsePlacementRoot><UDEDebugSelWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></UDEDebugSelWin><StdUDECmdWin type="key"><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:28:11:619</FrameCreated><ViewSrv type="key"><History0 type="string"></History0><History1 type="string"></History1><History2 type="string"></History2><History3 type="string"></History3><History4 type="string"></History4><History5 type="string"></History5><History6 type="string"></History6><History7 type="string"></History7><History8 type="string"></History8><History9 type="string"></History9><History10 type="string"></History10><History11 type="string"></History11><History12 type="string"></History12><History13 type="string"></History13><History14 type="string"></History14><History15 type="string"></History15><History16 type="string"></History16><History17 type="string"></History17><History18 type="string"></History18><History19 type="string"></History19><History20 type="string"></History20><History21 type="string"></History21><History22 type="string"></History22><History23 type="string"></History23><History24 type="string"></History24><History25 type="string"></History25><History26 type="string"></History26><History27 type="string"></History27><History28 type="string"></History28><History29 type="string"></History29><History30 type="string"></History30><History31 type="string"></History31><History32 type="string"></History32><History33 type="string"></History33><History34 type="string"></History34><History35 type="string"></History35><History36 type="string"></History36><History37 type="string"></History37><History38 type="string"></History38><History39 type="string"></History39><History40 type="string"></History40><History41 type="string"></History41><History42 type="string"></History42><History43 type="string"></History43><History44 type="string"></History44><History45 type="string"></History45><History46 type="string"></History46><History47 type="string"></History47><History48 type="string"></History48><History49 type="string"></History49><History50 type="string"></History50><History51 type="string"></History51><History52 type="string"></History52><History53 type="string"></History53><History54 type="string"></History54><History55 type="string"></History55><History56 type="string"></History56><History57 type="string"></History57><History58 type="string"></History58><History59 type="string"></History59><History60 type="string"></History60><History61 type="string"></History61><History62 type="string"></History62><History63 type="string"></History63><History64 type="string"></History64><History65 type="string"></History65><History66 type="string"></History66><History67 type="string"></History67><History68 type="string"></History68><History69 type="string"></History69><History70 type="string"></History70><History71 type="string"></History71><History72 type="string"></History72><History73 type="string"></History73><History74 type="string"></History74><History75 type="string"></History75><History76 type="string"></History76><History77 type="string"></History77><History78 type="string"></History78><History79 type="string"></History79><History80 type="string"></History80><History81 type="string"></History81><History82 type="string"></History82><History83 type="string"></History83><History84 type="string"></History84><History85 type="string"></History85><History86 type="string"></History86><History87 type="string"></History87><History88 type="string"></History88><History89 type="string"></History89><History90 type="string"></History90><History91 type="string"></History91><History92 type="string"></History92><History93 type="string"></History93><History94 type="string"></History94><History95 type="string"></History95><History96 type="string"></History96><History97 type="string"></History97><History98 type="string"></History98><History99 type="string"></History99><DefParaFormat type="bin" size="156">nAAAAD8AAYAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat></ViewSrv><EclipseFrameMode type="int">151552</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDECmdWin><StdUDEWspHTMLView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEWspHTMLView><SelectedPrinter type="string">Samsung SCX-3200 Series</SelectedPrinter></MainFrame><INI_SECTION type="key"><Macro type="key"><MacroLib type="string">..\..\..\..\Program Files (x86)\pls\UDE 3.0\StdLibrary.mso</MacroLib></Macro><Loader type="key"><LOADER_REGKEY_WSP type="string">{7c641d47-534f-4ed9-9070-088b60a3befa}</LOADER_REGKEY_WSP></Loader></INI_SECTION><AddOns type="key"><UDE.Script type="key"><MacroGuiEntries type="key"><LastScriptFilePath type="string">..\..\..\..\Users\Public\Documents\pls\UDE 3.0</LastScriptFilePath><Macro_24_11_11_11_51_57_0 type="key"><ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
-and fill target memory ranges</ScriptDescription><ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath><ScriptSource type="string">'	
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat></ViewSrv><EclipseFrameMode type="int">151552</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDECmdWin><StdUDEWspHTMLView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEWspHTMLView><SelectedPrinter type="string">Samsung SCX-3200 Series</SelectedPrinter></MainFrame><INI_SECTION type="key"><Macro type="key"><MacroLib type="string">..\..\..\..\Program Files (x86)\pls\UDE 3.0\StdLibrary.mso</MacroLib></Macro><Loader type="key"><LOADER_REGKEY_WSP type="string">{7c641d47-534f-4ed9-9070-088b60a3befa}</LOADER_REGKEY_WSP></Loader></INI_SECTION><AddOns type="key"><UDE.Script type="key"><MacroGuiEntries type="key"><LastScriptFilePath type="string">..\..\..\..\Users\Public\Documents\pls\UDE 3.0</LastScriptFilePath><Macro_24_11_11_11_51_57_0 type="key"><ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats
+and fill target memory ranges</ScriptDescription><ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath><ScriptSource type="string">'
 '	$Header: /Ude/AddOns/Macro/MacroLibrary/StdMacros.dsm 3     30.04.04 9:34 Weisses $
 '_______________________________________________________
 '
 '	universal debug engine
-'	 
-'	Standard command line macros - part 1 
+'
+'	Standard command line macros - part 1
 '
 '	pls Development Tools 1999-2004
 '
@@ -583,8 +583,8 @@ and fill target memory ranges</ScriptDescription><ScriptPath type="string">V:\UD
 '_______________________________________________________
 '
 '	UnAss command line function
-' 
-'	generates disassembly file 
+'
+'	generates disassembly file
 '
 '	command line UnAss output-file range1 [range2] [range3] .....
 '	range description:
@@ -600,11 +600,11 @@ Sub UnAss(File,ParameterObj)
 	set DisASMObj = debugger.DisASMObj
 	If Not IsObject(ParameterObj) Then
 	  	MsgBox "Number of parameters wrong"
-		Exit Sub 		
+		Exit Sub
 	End If
 	If IsNumeric(File) Then
 	  	MsgBox "File parameter wrong - " &amp; File
-		Exit Sub 		
+		Exit Sub
 	End If
 	DisASMObj.OutputPath = CStr(File)
 	bRetVal = DisASMObj.CreateStream(True,"UDE Disassembler output of current Program",False)
@@ -612,18 +612,18 @@ Sub UnAss(File,ParameterObj)
 		ParmeterCnt = ParameterObj.ParameterCount
 		If ParmeterCnt = 0 Then
 	  		MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-			Exit Sub 		
+			Exit Sub
 		End If
 		If ( ParmeterCnt Mod 3 ) &lt;&gt; 0 Then
 	  		MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-			Exit Sub 		
+			Exit Sub
 		End If
 		RangeCnt = ParmeterCnt/3
 		ParamIndex = 0
-		For Range = 0 To RangeCnt -1 
-			KindOfRange = CStr(ParameterObj.Parameter(ParamIndex)) 
+		For Range = 0 To RangeCnt -1
+			KindOfRange = CStr(ParameterObj.Parameter(ParamIndex))
 			KindOfRange = UCase(KindOfRange)
-			Address = CLng(ParameterObj.Parameter(ParamIndex +1))		
+			Address = CLng(ParameterObj.Parameter(ParamIndex +1))
 			Length = CLng(ParameterObj.Parameter(ParamIndex +2))
 			ParamIndex = ParamIndex +3
 			If IsNumeric(KindOfRange) Then
@@ -635,7 +635,7 @@ Sub UnAss(File,ParameterObj)
  					DisASMObj.AddRange Address,Length,4
 				Else
 	  				MsgBox "Invalid range type " &amp; KindOfRange &amp;  "of range " &amp; Range +1
-					Exit Sub 		
+					Exit Sub
 			 	End If
 			Else
 				If KindOfRange = "C" Then
@@ -648,7 +648,7 @@ Sub UnAss(File,ParameterObj)
  					DisASMObj.AddRange Address,Length,4
 				Else
 	  				MsgBox "Invalid range type " &amp; KindOfRange &amp;  "of range " &amp; Range +1
-					Exit Sub 		
+					Exit Sub
 				End If
 			End If
 		Next
@@ -662,12 +662,12 @@ End Sub
 '_______________________________________________________
 '
 '	SaveHEX command line function
-' 
-'	generates intel-HEX file 
+'
+'	generates intel-HEX file
 '
 '	command line SaveHex output-file range1 [range2] [range3] .....
 '	range description:
-'		&lt;startaddress&gt;,&lt;length&gt; 
+'		&lt;startaddress&gt;,&lt;length&gt;
 '_______________________________________________________
 
 Sub SaveHEX(File,ParameterObj)
@@ -676,11 +676,11 @@ Sub SaveHEX(File,ParameterObj)
 	set DisASMObj = debugger.DisASMObj
 	If Not IsObject(ParameterObj) Then
 	  	MsgBox "Number of parameters wrong"
-		Exit Sub 		
+		Exit Sub
 	End If
 	If IsNumeric(File) Then
 	  	MsgBox "File parameter wrong - " &amp; File
-		Exit Sub 		
+		Exit Sub
 	End If
 	DisASMObj.OutputPath = CStr(File)
 	bRetVal = DisASMObj.CreateStream(True,"UDE generated intel-Hex file of current Program",False)
@@ -688,16 +688,16 @@ Sub SaveHEX(File,ParameterObj)
 		ParmeterCnt = ParameterObj.ParameterCount
 		If ParmeterCnt = 0 Then
 	  		MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-			Exit Sub 		
+			Exit Sub
 		End If
 		If ( ParmeterCnt Mod 2 ) &lt;&gt; 0 Then
 	  		MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-			Exit Sub 		
+			Exit Sub
 		End If
 		RangeCnt = ParmeterCnt/2
 		ParamIndex = 0
-		For Range = 0 To RangeCnt -1 
-			Address = CLng(ParameterObj.Parameter(ParamIndex))		
+		For Range = 0 To RangeCnt -1
+			Address = CLng(ParameterObj.Parameter(ParamIndex))
 			Length = CLng(ParameterObj.Parameter(ParamIndex +1))
 			ParamIndex = ParamIndex +2
  			DisASMObj.AddRange Address,Length,0
@@ -711,12 +711,12 @@ End Sub
 '_______________________________________________________
 '
 '	FillByte command line function
-' 
-'	fills memory range with byte pattern 
+'
+'	fills memory range with byte pattern
 '
 '	command line FillByte range1,pattern1 [range2,pattern2] [range3,pattern3] .....
 '	range description:
-'		&lt;startaddress&gt;,&lt;length&gt; 
+'		&lt;startaddress&gt;,&lt;length&gt;
 '_______________________________________________________
 
 Sub FillByte(ParameterObj)
@@ -725,22 +725,22 @@ Sub FillByte(ParameterObj)
 	set DisASMObj = debugger.DisASMObj
 	If Not IsObject(ParameterObj) Then
 	  	MsgBox "Number of parameters wrong"
-		Exit Sub 		
+		Exit Sub
 	End If
 	ParmeterCnt = ParameterObj.ParameterCount
 	If ParmeterCnt = 0 Then
 	  	MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-		Exit Sub 		
+		Exit Sub
 	End If
 	If ( ParmeterCnt Mod 3 ) &lt;&gt; 0 Then
 	  	MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-		Exit Sub 		
+		Exit Sub
 	End If
 	RangeCnt = ParmeterCnt/3
 	ParamIndex = 0
 	set udearrayobj = debugger.ByteArrayObj(1)
-	For Range = 0 To RangeCnt -1 
-		Address = CLng(ParameterObj.Parameter(ParamIndex))		
+	For Range = 0 To RangeCnt -1
+		Address = CLng(ParameterObj.Parameter(ParamIndex))
 		Length = CLng(ParameterObj.Parameter(ParamIndex +1))
 		Pattern = CLng(ParameterObj.Parameter(ParamIndex +2))
 		ParamIndex = ParamIndex +3
@@ -754,12 +754,12 @@ End Sub
 '_______________________________________________________
 '
 '	FillWord command line function
-' 
-'	fills memory range with word pattern 
+'
+'	fills memory range with word pattern
 '
 '	command line FillWord range1,pattern1 [range2,pattern2] [range3,pattern3] .....
 '	range description:
-'		&lt;startaddress&gt;,&lt;length&gt; 
+'		&lt;startaddress&gt;,&lt;length&gt;
 '_______________________________________________________
 
 Sub FillWord(ParameterObj)
@@ -768,22 +768,22 @@ Sub FillWord(ParameterObj)
 	set DisASMObj = debugger.DisASMObj
 	If Not IsObject(ParameterObj) Then
 	  	MsgBox "Number of parameters wrong"
-		Exit Sub 		
+		Exit Sub
 	End If
 	ParmeterCnt = ParameterObj.ParameterCount
 	If ParmeterCnt = 0 Then
 	  	MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-		Exit Sub 		
+		Exit Sub
 	End If
 	If ( ParmeterCnt Mod 3 ) &lt;&gt; 0 Then
 	  	MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-		Exit Sub 		
+		Exit Sub
 	End If
 	RangeCnt = ParmeterCnt/3
 	ParamIndex = 0
 	set udearrayobj = debugger.WordArrayObj(1)
-	For Range = 0 To RangeCnt -1 
-		Address = CLng(ParameterObj.Parameter(ParamIndex))		
+	For Range = 0 To RangeCnt -1
+		Address = CLng(ParameterObj.Parameter(ParamIndex))
 		Length = CLng(ParameterObj.Parameter(ParamIndex +1)/2)
 		Pattern = CLng(ParameterObj.Parameter(ParamIndex +2))
 		ParamIndex = ParamIndex +3
@@ -797,12 +797,12 @@ End Sub
 '_______________________________________________________
 '
 '	FillDWord command line function
-' 
-'	fills memory range with dword pattern 
+'
+'	fills memory range with dword pattern
 '
 '	command line FillDWord range1,pattern1 [range2,pattern2] [range3,pattern3] .....
 '	range description:
-'		&lt;startaddress&gt;,&lt;length&gt; 
+'		&lt;startaddress&gt;,&lt;length&gt;
 '_______________________________________________________
 
 Sub FillDWord(ParameterObj)
@@ -811,22 +811,22 @@ Sub FillDWord(ParameterObj)
 	set DisASMObj = debugger.DisASMObj
 	If Not IsObject(ParameterObj) Then
 	  	MsgBox "Number of parameters wrong"
-		Exit Sub 		
+		Exit Sub
 	End If
 	ParmeterCnt = ParameterObj.ParameterCount
 	If ParmeterCnt = 0 Then
 	  	MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-		Exit Sub 		
+		Exit Sub
 	End If
 	If ( ParmeterCnt Mod 3 ) &lt;&gt; 0 Then
 	  	MsgBox "Number of parameters wrong " &amp; ParmeterCnt
-		Exit Sub 		
+		Exit Sub
 	End If
 	RangeCnt = ParmeterCnt/3
 	ParamIndex = 0
 	set udearrayobj = debugger.DWordArrayObj(1)
-	For Range = 0 To RangeCnt -1 
-		Address = CLng(ParameterObj.Parameter(ParamIndex))		
+	For Range = 0 To RangeCnt -1
+		Address = CLng(ParameterObj.Parameter(ParamIndex))
 		Length = CLng(ParameterObj.Parameter(ParamIndex +1)/4)
 		Pattern = CLng(ParameterObj.Parameter(ParamIndex +2))
 		ParamIndex = ParamIndex +3

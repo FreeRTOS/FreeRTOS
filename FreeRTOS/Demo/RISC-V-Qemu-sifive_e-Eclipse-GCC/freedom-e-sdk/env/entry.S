@@ -6,7 +6,7 @@
 #include "encoding.h"
 #include "sifive/bits.h"
 
-  .section      .text.entry	
+  .section      .text.entry
   .align 2
   .weak trap_entry
   .global trap_entry
@@ -94,5 +94,5 @@ trap_entry:
 handle_trap:
 1:
   j 1b
-	
+
 #endif

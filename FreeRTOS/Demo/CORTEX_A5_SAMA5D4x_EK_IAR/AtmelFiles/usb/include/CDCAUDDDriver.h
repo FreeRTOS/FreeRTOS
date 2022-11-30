@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -33,7 +33,7 @@
  * \section Purpose
  *
  *   Definitions and methods for USB composite device implement.
- * 
+ *
  */
 
 #ifndef CDCAUDDDRIVER_H
@@ -304,4 +304,3 @@ extern void CDCAUDDDriver_RequestHandler(const USBGenericRequest *request);
 
 /**@}*/
 #endif //#ifndef CDCHIDDDRIVER_H
-

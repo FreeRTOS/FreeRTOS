@@ -386,4 +386,3 @@ Using distinct declarations in the two blocks allows the compiler to check for
 failure to initialize the variable in the second block.  If there is a single
 declaration, the (now meaningless) value left over from the first block can be
 used erroneously in the second block.
-

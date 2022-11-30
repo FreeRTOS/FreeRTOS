@@ -42,5 +42,3 @@ place in VEC_region { section .vectors };
 place in RAM_region { readonly };
 place in RAM_region { section .cstartup };
 place in RAM_region { readwrite, block IRQ_STACK, block FIQ_STACK, block ABT_STACK, block UND_STACK, block CSTACK, block HEAP };
-
-

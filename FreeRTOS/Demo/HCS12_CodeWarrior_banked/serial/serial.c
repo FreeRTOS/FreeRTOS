@@ -168,4 +168,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 }
 
 #pragma CODE_SEG DEFAULT
-

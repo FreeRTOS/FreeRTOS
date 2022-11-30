@@ -1709,11 +1709,11 @@ static int sp_2048_mod_exp_18(sp_digit* r, const sp_digit* a, const sp_digit* e,
             sp_2048_mont_mul_18(t[y^1], t[0], t[1], m, mp);
 
             XMEMCPY(t[2], (void*)(((size_t)t[0] & addr_mask[y^1]) +
-                                  ((size_t)t[1] & addr_mask[y])), 
+                                  ((size_t)t[1] & addr_mask[y])),
                                   sizeof(*t[2]) * 18 * 2);
             sp_2048_mont_sqr_18(t[2], t[2], m, mp);
             XMEMCPY((void*)(((size_t)t[0] & addr_mask[y^1]) +
-                            ((size_t)t[1] & addr_mask[y])), t[2], 
+                            ((size_t)t[1] & addr_mask[y])), t[2],
                             sizeof(*t[2]) * 18 * 2);
         }
 
@@ -2654,11 +2654,11 @@ static int sp_2048_mod_exp_36(sp_digit* r, const sp_digit* a, const sp_digit* e,
             sp_2048_mont_mul_36(t[y^1], t[0], t[1], m, mp);
 
             XMEMCPY(t[2], (void*)(((size_t)t[0] & addr_mask[y^1]) +
-                                  ((size_t)t[1] & addr_mask[y])), 
+                                  ((size_t)t[1] & addr_mask[y])),
                                   sizeof(*t[2]) * 36 * 2);
             sp_2048_mont_sqr_36(t[2], t[2], m, mp);
             XMEMCPY((void*)(((size_t)t[0] & addr_mask[y^1]) +
-                            ((size_t)t[1] & addr_mask[y])), t[2], 
+                            ((size_t)t[1] & addr_mask[y])), t[2],
                             sizeof(*t[2]) * 36 * 2);
         }
 
@@ -3472,7 +3472,7 @@ int sp_ModExp_2048(mp_int* base, mp_int* exp, mp_int* mod, mp_int* res)
             err = MP_READ_E;
         }
     }
-    
+
     if (err == MP_OKAY) {
         if (mp_count_bits(mod) != 2048) {
             err = MP_READ_E;
@@ -3980,7 +3980,7 @@ int sp_ModExp_1024(mp_int* base, mp_int* exp, mp_int* mod, mp_int* res)
             err = MP_READ_E;
         }
     }
-    
+
     if (err == MP_OKAY) {
         if (mp_count_bits(mod) != 1024) {
             err = MP_READ_E;
@@ -5890,11 +5890,11 @@ static int sp_3072_mod_exp_27(sp_digit* r, const sp_digit* a, const sp_digit* e,
             sp_3072_mont_mul_27(t[y^1], t[0], t[1], m, mp);
 
             XMEMCPY(t[2], (void*)(((size_t)t[0] & addr_mask[y^1]) +
-                                  ((size_t)t[1] & addr_mask[y])), 
+                                  ((size_t)t[1] & addr_mask[y])),
                                   sizeof(*t[2]) * 27 * 2);
             sp_3072_mont_sqr_27(t[2], t[2], m, mp);
             XMEMCPY((void*)(((size_t)t[0] & addr_mask[y^1]) +
-                            ((size_t)t[1] & addr_mask[y])), t[2], 
+                            ((size_t)t[1] & addr_mask[y])), t[2],
                             sizeof(*t[2]) * 27 * 2);
         }
 
@@ -6805,11 +6805,11 @@ static int sp_3072_mod_exp_54(sp_digit* r, const sp_digit* a, const sp_digit* e,
             sp_3072_mont_mul_54(t[y^1], t[0], t[1], m, mp);
 
             XMEMCPY(t[2], (void*)(((size_t)t[0] & addr_mask[y^1]) +
-                                  ((size_t)t[1] & addr_mask[y])), 
+                                  ((size_t)t[1] & addr_mask[y])),
                                   sizeof(*t[2]) * 54 * 2);
             sp_3072_mont_sqr_54(t[2], t[2], m, mp);
             XMEMCPY((void*)(((size_t)t[0] & addr_mask[y^1]) +
-                            ((size_t)t[1] & addr_mask[y])), t[2], 
+                            ((size_t)t[1] & addr_mask[y])), t[2],
                             sizeof(*t[2]) * 54 * 2);
         }
 
@@ -7623,7 +7623,7 @@ int sp_ModExp_3072(mp_int* base, mp_int* exp, mp_int* mod, mp_int* res)
             err = MP_READ_E;
         }
     }
-    
+
     if (err == MP_OKAY) {
         if (mp_count_bits(mod) != 3072) {
             err = MP_READ_E;
@@ -8167,7 +8167,7 @@ int sp_ModExp_1536(mp_int* base, mp_int* exp, mp_int* mod, mp_int* res)
             err = MP_READ_E;
         }
     }
-    
+
     if (err == MP_OKAY) {
         if (mp_count_bits(mod) != 1536) {
             err = MP_READ_E;
@@ -10187,11 +10187,11 @@ static int sp_4096_mod_exp_39(sp_digit* r, const sp_digit* a, const sp_digit* e,
             sp_4096_mont_mul_39(t[y^1], t[0], t[1], m, mp);
 
             XMEMCPY(t[2], (void*)(((size_t)t[0] & addr_mask[y^1]) +
-                                  ((size_t)t[1] & addr_mask[y])), 
+                                  ((size_t)t[1] & addr_mask[y])),
                                   sizeof(*t[2]) * 39 * 2);
             sp_4096_mont_sqr_39(t[2], t[2], m, mp);
             XMEMCPY((void*)(((size_t)t[0] & addr_mask[y^1]) +
-                            ((size_t)t[1] & addr_mask[y])), t[2], 
+                            ((size_t)t[1] & addr_mask[y])), t[2],
                             sizeof(*t[2]) * 39 * 2);
         }
 
@@ -11201,11 +11201,11 @@ static int sp_4096_mod_exp_78(sp_digit* r, const sp_digit* a, const sp_digit* e,
             sp_4096_mont_mul_78(t[y^1], t[0], t[1], m, mp);
 
             XMEMCPY(t[2], (void*)(((size_t)t[0] & addr_mask[y^1]) +
-                                  ((size_t)t[1] & addr_mask[y])), 
+                                  ((size_t)t[1] & addr_mask[y])),
                                   sizeof(*t[2]) * 78 * 2);
             sp_4096_mont_sqr_78(t[2], t[2], m, mp);
             XMEMCPY((void*)(((size_t)t[0] & addr_mask[y^1]) +
-                            ((size_t)t[1] & addr_mask[y])), t[2], 
+                            ((size_t)t[1] & addr_mask[y])), t[2],
                             sizeof(*t[2]) * 78 * 2);
         }
 
@@ -12019,7 +12019,7 @@ int sp_ModExp_4096(mp_int* base, mp_int* exp, mp_int* mod, mp_int* res)
             err = MP_READ_E;
         }
     }
-    
+
     if (err == MP_OKAY) {
         if (mp_count_bits(mod) != 4096) {
             err = MP_READ_E;
@@ -13901,7 +13901,7 @@ typedef struct sp_256_proj_point_add_5_ctx {
     sp_digit* z;
 } sp_256_proj_point_add_5_ctx;
 
-static int sp_256_proj_point_add_5_nb(sp_ecc_ctx_t* sp_ctx, sp_point_256* r, 
+static int sp_256_proj_point_add_5_nb(sp_ecc_ctx_t* sp_ctx, sp_point_256* r,
     const sp_point_256* p, const sp_point_256* q, sp_digit* t)
 {
     int err = FP_WOULDBLOCK;
@@ -14202,7 +14202,7 @@ typedef struct sp_256_ecc_mulmod_5_ctx {
     int y;
 } sp_256_ecc_mulmod_5_ctx;
 
-static int sp_256_ecc_mulmod_5_nb(sp_ecc_ctx_t* sp_ctx, sp_point_256* r, 
+static int sp_256_ecc_mulmod_5_nb(sp_ecc_ctx_t* sp_ctx, sp_point_256* r,
     const sp_point_256* g, const sp_digit* k, int map, int ct, void* heap)
 {
     int err = FP_WOULDBLOCK;
@@ -14254,7 +14254,7 @@ static int sp_256_ecc_mulmod_5_nb(sp_ecc_ctx_t* sp_ctx, sp_point_256* r,
         ctx->state = 5;
         break;
     case 5: /* ADD */
-        err = sp_256_proj_point_add_5_nb((sp_ecc_ctx_t*)&ctx->add_ctx, 
+        err = sp_256_proj_point_add_5_nb((sp_ecc_ctx_t*)&ctx->add_ctx,
             &ctx->t[ctx->y^1], &ctx->t[0], &ctx->t[1], ctx->tmp);
         if (err == MP_OKAY) {
             XMEMCPY(&ctx->t[2], (void*)(((size_t)&ctx->t[0] & addr_mask[ctx->y^1]) +
@@ -14265,7 +14265,7 @@ static int sp_256_ecc_mulmod_5_nb(sp_ecc_ctx_t* sp_ctx, sp_point_256* r,
         }
         break;
     case 6: /* DBL */
-        err = sp_256_proj_point_dbl_5_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->t[2], 
+        err = sp_256_proj_point_dbl_5_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->t[2],
             &ctx->t[2], ctx->tmp);
         if (err == MP_OKAY) {
             XMEMCPY((void*)(((size_t)&ctx->t[0] & addr_mask[ctx->y^1]) +
@@ -17362,7 +17362,7 @@ static int sp_256_mont_inv_order_5_nb(sp_ecc_ctx_t* sp_ctx, sp_digit* r, const s
 {
     int err = FP_WOULDBLOCK;
     sp_256_mont_inv_order_5_ctx* ctx = (sp_256_mont_inv_order_5_ctx*)sp_ctx;
-    
+
     typedef char ctx_size_test[sizeof(sp_256_mont_inv_order_5_ctx) >= sizeof(*sp_ctx) ? -1 : 1];
     (void)sizeof(ctx_size_test);
 
@@ -17561,9 +17561,9 @@ int sp_ecc_sign_256_nb(sp_ecc_ctx_t* sp_ctx, const byte* hash, word32 hashLen, W
         }
         XMEMSET(&ctx->mulmod_ctx, 0, sizeof(ctx->mulmod_ctx));
         ctx->state = 2;
-        break; 
+        break;
     case 2: /* MULMOD */
-        err = sp_256_ecc_mulmod_5_nb((sp_ecc_ctx_t*)&ctx->mulmod_ctx, 
+        err = sp_256_ecc_mulmod_5_nb((sp_ecc_ctx_t*)&ctx->mulmod_ctx,
             &ctx->point, &p256_base, ctx->k, 1, 1, heap);
         if (err == MP_OKAY) {
             ctx->state = 3;
@@ -17941,7 +17941,7 @@ int sp_ecc_verify_256_nb(sp_ecc_ctx_t* sp_ctx, const byte* hash, word32 hashLen,
         ctx->state = 11;
         break;
     case 10: /* DBL */
-        err = sp_256_proj_point_dbl_5_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->p1, 
+        err = sp_256_proj_point_dbl_5_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->p1,
             &ctx->p2, ctx->tmp);
         if (err == MP_OKAY) {
             ctx->state = 11;
@@ -20169,7 +20169,7 @@ typedef struct sp_384_proj_point_add_7_ctx {
     sp_digit* z;
 } sp_384_proj_point_add_7_ctx;
 
-static int sp_384_proj_point_add_7_nb(sp_ecc_ctx_t* sp_ctx, sp_point_384* r, 
+static int sp_384_proj_point_add_7_nb(sp_ecc_ctx_t* sp_ctx, sp_point_384* r,
     const sp_point_384* p, const sp_point_384* q, sp_digit* t)
 {
     int err = FP_WOULDBLOCK;
@@ -20470,7 +20470,7 @@ typedef struct sp_384_ecc_mulmod_7_ctx {
     int y;
 } sp_384_ecc_mulmod_7_ctx;
 
-static int sp_384_ecc_mulmod_7_nb(sp_ecc_ctx_t* sp_ctx, sp_point_384* r, 
+static int sp_384_ecc_mulmod_7_nb(sp_ecc_ctx_t* sp_ctx, sp_point_384* r,
     const sp_point_384* g, const sp_digit* k, int map, int ct, void* heap)
 {
     int err = FP_WOULDBLOCK;
@@ -20522,7 +20522,7 @@ static int sp_384_ecc_mulmod_7_nb(sp_ecc_ctx_t* sp_ctx, sp_point_384* r,
         ctx->state = 5;
         break;
     case 5: /* ADD */
-        err = sp_384_proj_point_add_7_nb((sp_ecc_ctx_t*)&ctx->add_ctx, 
+        err = sp_384_proj_point_add_7_nb((sp_ecc_ctx_t*)&ctx->add_ctx,
             &ctx->t[ctx->y^1], &ctx->t[0], &ctx->t[1], ctx->tmp);
         if (err == MP_OKAY) {
             XMEMCPY(&ctx->t[2], (void*)(((size_t)&ctx->t[0] & addr_mask[ctx->y^1]) +
@@ -20533,7 +20533,7 @@ static int sp_384_ecc_mulmod_7_nb(sp_ecc_ctx_t* sp_ctx, sp_point_384* r,
         }
         break;
     case 6: /* DBL */
-        err = sp_384_proj_point_dbl_7_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->t[2], 
+        err = sp_384_proj_point_dbl_7_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->t[2],
             &ctx->t[2], ctx->tmp);
         if (err == MP_OKAY) {
             XMEMCPY((void*)(((size_t)&ctx->t[0] & addr_mask[ctx->y^1]) +
@@ -24122,7 +24122,7 @@ static const uint64_t p384_order_minus_2[6] = {
 /* The low half of the order-2 of the P384 curve. */
 static const uint64_t p384_order_low[3] = {
     0xecec196accc52971U,0x581a0db248b0a77aU,0xc7634d81f4372ddfU
-    
+
 };
 #endif /* WOLFSSL_SP_SMALL */
 
@@ -24185,7 +24185,7 @@ static int sp_384_mont_inv_order_7_nb(sp_ecc_ctx_t* sp_ctx, sp_digit* r, const s
 {
     int err = FP_WOULDBLOCK;
     sp_384_mont_inv_order_7_ctx* ctx = (sp_384_mont_inv_order_7_ctx*)sp_ctx;
-    
+
     typedef char ctx_size_test[sizeof(sp_384_mont_inv_order_7_ctx) >= sizeof(*sp_ctx) ? -1 : 1];
     (void)sizeof(ctx_size_test);
 
@@ -24355,9 +24355,9 @@ int sp_ecc_sign_384_nb(sp_ecc_ctx_t* sp_ctx, const byte* hash, word32 hashLen, W
         }
         XMEMSET(&ctx->mulmod_ctx, 0, sizeof(ctx->mulmod_ctx));
         ctx->state = 2;
-        break; 
+        break;
     case 2: /* MULMOD */
-        err = sp_384_ecc_mulmod_7_nb((sp_ecc_ctx_t*)&ctx->mulmod_ctx, 
+        err = sp_384_ecc_mulmod_7_nb((sp_ecc_ctx_t*)&ctx->mulmod_ctx,
             &ctx->point, &p384_base, ctx->k, 1, 1, heap);
         if (err == MP_OKAY) {
             ctx->state = 3;
@@ -24735,7 +24735,7 @@ int sp_ecc_verify_384_nb(sp_ecc_ctx_t* sp_ctx, const byte* hash, word32 hashLen,
         ctx->state = 11;
         break;
     case 10: /* DBL */
-        err = sp_384_proj_point_dbl_7_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->p1, 
+        err = sp_384_proj_point_dbl_7_nb((sp_ecc_ctx_t*)&ctx->dbl_ctx, &ctx->p1,
             &ctx->p2, ctx->tmp);
         if (err == MP_OKAY) {
             ctx->state = 11;

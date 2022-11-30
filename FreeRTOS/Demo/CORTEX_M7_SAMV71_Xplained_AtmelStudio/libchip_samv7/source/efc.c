@@ -34,7 +34,7 @@
  *
  * The user needs to set the number of wait states depending on the frequency
  * used.\n
- * Configure number of cycles for flash read/write operations in the FWS field 
+ * Configure number of cycles for flash read/write operations in the FWS field
  * of EEFC_FMR.
  *
  * It offers a function to send flash command to EEFC and waits for the
@@ -44,14 +44,14 @@
  * <ul>
  * <li>Write a correct key, command and argument in EEFC_FCR. </li>
  * <li>Or, Use IAP (In Application Programming) function which is executed from
- * ROM directly, this allows flash programming to be done by code running in 
+ * ROM directly, this allows flash programming to be done by code running in
  * flash.</li>
- * <li>Once the command is achieved, it can be detected even by polling 
+ * <li>Once the command is achieved, it can be detected even by polling
  * EEFC_FSR or interrupt.
  * </ul>
  *
- * The command argument could be a page number,GPNVM number or nothing, it 
- * depends on the command itself. Some useful functions in this driver could 
+ * The command argument could be a page number,GPNVM number or nothing, it
+ * depends on the command itself. Some useful functions in this driver could
  * help user translate physical flash address into a page number and vice verse.
  *
  * For more accurate information, please look at the EEFC section of the
@@ -80,9 +80,9 @@
 
 #include <assert.h>
 
- 
+
 /*----------------------------------------------------------------------------
- *        Macro 
+ *        Macro
  *----------------------------------------------------------------------------*/
 #define EEFC_FCR_FCMD(value) ((EEFC_FCR_FCMD_Msk & ((value) << EEFC_FCR_FCMD_Pos)))
 
@@ -148,7 +148,7 @@ extern void EFC_SetWaitState( Efc* efc, uint8_t ucCycles )
 /**
  * \brief Returns the current status of the EEFC.
  *
- * \note Keep in mind that this function clears the value of some status bits 
+ * \note Keep in mind that this function clears the value of some status bits
  * (LOCKE, PROGE).
  *
  * \param efc  Pointer to a Efc instance
@@ -236,24 +236,24 @@ extern void EFC_ComputeAddress( Efc *efc, uint16_t wPage, uint16_t wOffset,
  * \return 0 if successful, otherwise returns an error code.
  */
 
-extern uint32_t EFC_PerformCommand( Efc* efc, uint32_t dwCommand, 
+extern uint32_t EFC_PerformCommand( Efc* efc, uint32_t dwCommand,
 								uint32_t dwArgument, uint32_t dwUseIAP )
 {
 	if ( dwUseIAP != 0 ) {
 		/* Pointer on IAP function in ROM */
 		static uint32_t (*IAP_PerformCommand)( uint32_t, uint32_t ) ;
 
-		IAP_PerformCommand = (uint32_t (*)( uint32_t, uint32_t )) 
+		IAP_PerformCommand = (uint32_t (*)( uint32_t, uint32_t ))
 				*((uint32_t*)CHIP_FLASH_IAP_ADDRESS ) ;
 		if (efc == EFC) {
-			IAP_PerformCommand( 0, EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(dwArgument) 
+			IAP_PerformCommand( 0, EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(dwArgument)
 					| EEFC_FCR_FCMD(dwCommand) ) ;
 		}
 		return (efc->EEFC_FSR & (EEFC_FSR_FLOCKE | EEFC_FSR_FCMDE | EEFC_FSR_FLERR)) ;
 	} else {
 		uint32_t dwStatus ;
 
-		efc->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(dwArgument) 
+		efc->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(dwArgument)
 				| EEFC_FCR_FCMD(dwCommand) ;
 		do {
 			dwStatus = efc->EEFC_FSR ;
@@ -276,4 +276,3 @@ extern void EFC_SetFlashAccessMode(Efc* efc, uint32_t dwMode)
 	dwFmr = dwMode;
 	EFC_WriteFMR(efc, dwFmr);
 }
-

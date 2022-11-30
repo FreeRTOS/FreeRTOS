@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -67,4 +67,3 @@ extern WEAK void CDCDSerial_ControlLineStateChanged(uint8_t DTR,
     /* Do nothing */
     DTR = DTR; RTS = RTS;
 }
-

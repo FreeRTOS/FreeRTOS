@@ -1334,7 +1334,3 @@ int32_t alt_gpt_mode_get(ALT_GPT_TIMER_t tmr_id)
     }
     return    ret;
 }
-
-
-
-

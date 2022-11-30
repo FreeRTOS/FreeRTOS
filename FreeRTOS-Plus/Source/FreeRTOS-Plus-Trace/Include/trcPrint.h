@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace print APIs.
  */
 
@@ -47,10 +47,10 @@ typedef struct TracePrintBuffer
 
 /**
  * @internal Initialize print trace system.
- * 
+ *
  * @param[in] pxBuffer Pointer to memory that will be used by the print
  * trace system.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -58,7 +58,7 @@ traceResult xTracePrintInitialize(TracePrintBuffer_t* pxBuffer);
 
 /**
  * @brief Generate "User Events" with unformatted text.
- * 
+ *
  * User Events can be used for very efficient application logging, and are shown
  * as yellow labels in the main trace view.
  *
@@ -77,10 +77,10 @@ traceResult xTracePrintInitialize(TracePrintBuffer_t* pxBuffer);
  *	 TraceStringHandle_t xChannel = xTraceStringRegister("MyChannel");
  *	 ...
  *	 xTracePrint(xChannel, "Hello World!");
- * 
+ *
  * @param[in] xChannel Channel.
  * @param[in] szString String.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -88,21 +88,21 @@ traceResult xTracePrint(TraceStringHandle_t xChannel, const char* szString);
 
 /**
  * @brief Wrapper for vTracePrintF for printing to default channel.
- * 
+ *
  * Wrapper for vTracePrintF, using the default channel. Can be used as a drop-in
  * replacement for printf and similar functions, e.g. in a debug logging macro.
- * 
+ *
  * Example:
  * 	// Old: #define LogString debug_console_printf
- * 	
+ *
  *  // New, log to Tracealyzer instead:
  *  #define LogString xTraceConsoleChannelPrintF
  *  ...
  *  LogString("My value is: %d", myValue);
- * 
+ *
  * @param[in] szFormat Format
- * @param[in] ... 
- * 
+ * @param[in] ...
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -110,7 +110,7 @@ traceResult xTraceConsoleChannelPrintF(const char* szFormat, ...);
 
 /**
  * @brief Generates "User Events" with formatted text and data.
- * 
+ *
  * Generates "User Events", with formatted text and data, similar to a "printf".
  * It is very fast since the actual formatting is done on the host side when the
  * trace is displayed.
@@ -152,11 +152,11 @@ traceResult xTraceConsoleChannelPrintF(const char* szFormat, ...);
  * including 8 byte for the base event fields and the format string. So with
  * one data argument, the maximum string length is 48 chars. If this is exceeded
  * the string is truncated (4 bytes at a time).
- * 
+ *
  * @param[in] xChannel Channel.
  * @param[in] szFormat Format.
- * @param[in] ... 
- * 
+ * @param[in] ...
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -164,11 +164,11 @@ traceResult xTracePrintF(TraceStringHandle_t xChannel, const char* szFormat, ...
 
 /**
  * @brief Generates "User Events" with formatted text and data.
- * 
+ *
  * @param[in] xChannel Channel.
  * @param[in] szFormat Format.
  * @param[in] xVL Variable list arguments.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

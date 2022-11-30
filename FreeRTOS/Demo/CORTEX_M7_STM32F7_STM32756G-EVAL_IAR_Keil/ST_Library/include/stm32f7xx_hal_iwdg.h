@@ -33,7 +33,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F7xx_HAL_IWDG_H
@@ -59,7 +59,7 @@
   * @{
   */
 
-/** 
+/**
   * @brief  IWDG HAL State Structure definition
   */
 typedef enum
@@ -72,7 +72,7 @@ typedef enum
 
 }HAL_IWDG_StateTypeDef;
 
-/** 
+/**
   * @brief  IWDG Init structure definition
   */
 typedef struct
@@ -88,8 +88,8 @@ typedef struct
 
 } IWDG_InitTypeDef;
 
-/** 
-  * @brief  IWDG Handle Structure definition  
+/**
+  * @brief  IWDG Handle Structure definition
   */
 typedef struct
 {

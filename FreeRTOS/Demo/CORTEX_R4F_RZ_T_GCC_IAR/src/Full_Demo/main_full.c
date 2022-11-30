@@ -479,7 +479,3 @@ void vFullDemoTickHook( void )
 	/* Use mutexes from interrupts. */
 	vInterruptSemaphorePeriodicTest();
 }
-
-
-
-

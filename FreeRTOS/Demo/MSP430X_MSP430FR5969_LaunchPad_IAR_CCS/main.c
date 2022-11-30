@@ -257,5 +257,3 @@ int _system_pre_init( void )
     /* Return 1 for segments to be initialised. */
     return 1;
 }
-
-

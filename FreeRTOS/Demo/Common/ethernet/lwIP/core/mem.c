@@ -411,4 +411,3 @@ mem_malloc(mem_size_t size)
 #endif
 
 #endif /* MEM_LIBC_MALLOC == 0 */
-

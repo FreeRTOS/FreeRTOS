@@ -54,10 +54,10 @@ static StaticSemaphore_t xMutexBuffer;
 REDSTATUS RedOsMutexInit(void)
 {
     REDSTATUS ret = 0;
-    
+
   #if defined(configSUPPORT_STATIC_ALLOCATION) && (configSUPPORT_STATIC_ALLOCATION == 1)
     xMutex = xSemaphoreCreateMutexStatic(&xMutexBuffer);
-    
+
     if(xMutex == NULL)
     {
         /*  The only error case for xSemaphoreCreateMutexStatic is that the mutex
@@ -65,8 +65,8 @@ REDSTATUS RedOsMutexInit(void)
         */
         REDERROR();
         ret = -RED_EINVAL;
-    }        
-    
+    }
+
   #else
     xMutex = xSemaphoreCreateMutex();
     if(xMutex == NULL)
@@ -131,4 +131,3 @@ void RedOsMutexRelease(void)
 }
 
 #endif
-

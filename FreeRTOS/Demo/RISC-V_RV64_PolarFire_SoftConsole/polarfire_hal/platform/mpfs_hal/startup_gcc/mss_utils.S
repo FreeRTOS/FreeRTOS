@@ -184,5 +184,3 @@ config_64_copy:
     bnez    a2,1b
 2:
     ret
-
-

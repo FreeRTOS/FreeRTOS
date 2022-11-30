@@ -29,7 +29,7 @@
 
 /** \addtogroup afe_dma_module Working with AFE (DMA support)
  *  \ingroup peripherals_module
- * The afec driver provides the interface to configure and use the afecC 
+ * The afec driver provides the interface to configure and use the afecC
  * peripheral with DMA support.\n
  *
  * For more accurate information, please look at the AFEC section of the
@@ -67,7 +67,7 @@ static uint32_t afeDmaRxChannel;
  * Invoked on AFE DMA reception done.
  * \param channel DMA channel.
  * \param pArg Pointer to callback argument - Pointer to AfeDma instance.
- */ 
+ */
 static void Afe_Rx_Cb(uint32_t channel, AfeDma* pArg)
 {
 	AfeCmd *pAfedCmd = pArg->pCurrentCommand;
@@ -106,14 +106,14 @@ static uint8_t _AfeConfigureDmaChannels( AfeDma* pAfed )
 	XDMAD_FreeChannel( pAfed->pXdmad, afeDmaRxChannel);
 
 	/* Allocate a DMA channel for AFE0/1 RX. */
-	afeDmaRxChannel = 
+	afeDmaRxChannel =
 		XDMAD_AllocateChannel( pAfed->pXdmad, pAfed->afeId, XDMAD_TRANSFER_MEMORY);
 	if ( afeDmaRxChannel == XDMAD_ALLOC_FAILED ) {
 		return AFE_ERROR;
 	}
 
 	/* Setup callbacks for AFE0/1 RX */
-	XDMAD_SetCallback(pAfed->pXdmad, afeDmaRxChannel, 
+	XDMAD_SetCallback(pAfed->pXdmad, afeDmaRxChannel,
 			(XdmadTransferCallback)Afe_Rx_Cb, pAfed);
 	if (XDMAD_PrepareChannel( pAfed->pXdmad, afeDmaRxChannel ))
 		return AFE_ERROR;
@@ -165,7 +165,7 @@ static uint8_t _Afe_configureLinkList(Afec *pAfeHw, void *pXdmad, AfeCmd *pComma
 				XDMAC_CIE_WBIE  |
 				XDMAC_CIE_ROIE);
 	xdmaCndc = 0;
-	if (XDMAD_ConfigureTransfer( pXdmad, afeDmaRxChannel, 
+	if (XDMAD_ConfigureTransfer( pXdmad, afeDmaRxChannel,
 			&xdmadRxCfg, xdmaCndc, 0, xdmaInt))
 		return AFE_ERROR;
 	SCB_CleanInvalidateDCache();
@@ -186,7 +186,7 @@ static uint8_t _Afe_configureLinkList(Afec *pAfeHw, void *pXdmad, AfeCmd *pComma
  * \param pAfed  Pointer to a AfeDma instance.
  * \param pAfeHw Associated Afe peripheral.
  * \param AfeId  Afe peripheral identifier.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
 uint32_t Afe_ConfigureDma( AfeDma *pAfed ,
 		Afec *pAfeHw ,
@@ -241,7 +241,7 @@ uint32_t Afe_SendData( AfeDma *pAfed, AfeCmd *pCommand)
 	AFEC_StartConversion(pAfeHw);
 	/* Start DMA 0(RX) */
 	SCB_CleanInvalidateDCache();
-	if (XDMAD_StartTransfer( pAfed->pXdmad, afeDmaRxChannel )) 
+	if (XDMAD_StartTransfer( pAfed->pXdmad, afeDmaRxChannel ))
 		return AFE_ERROR_LOCK;
 
 	return AFE_OK;;

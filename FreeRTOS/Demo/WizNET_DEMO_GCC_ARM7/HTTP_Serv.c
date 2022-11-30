@@ -77,4 +77,3 @@ void vHTTPServerTask( void *pvParameters )
 		vTaskDelay( tcpCONNECTION_DELAY );
 	}
 }
-

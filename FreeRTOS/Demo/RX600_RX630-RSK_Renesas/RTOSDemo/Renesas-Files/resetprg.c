@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,7 +25,7 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
@@ -62,7 +62,7 @@ extern void _CLOSEALL(void);
 
 //extern void srand(_UINT);		// Remove the comment when you use rand()
 //extern _SBYTE *_s1ptr;				// Remove the comment when you use strtok()
-		
+
 //#ifdef __cplusplus				// Use Hardware Setup
 //extern "C" {
 //#endif
@@ -70,7 +70,7 @@ extern void _CLOSEALL(void);
 //#ifdef __cplusplus
 //}
 //#endif
-	
+
 //#ifdef __cplusplus			// Remove the comment when you use global class object
 //extern "C" {					// Sections C$INIT and C$END will be generated
 //#endif
@@ -85,7 +85,7 @@ extern void _CLOSEALL(void);
 #pragma entry PowerON_Reset_PC
 
 void PowerON_Reset_PC(void)
-{ 
+{
 	set_intb((unsigned long)__sectop("C$VECT"));
 	set_fpsw(FPSW_init);
 
@@ -96,7 +96,7 @@ void PowerON_Reset_PC(void)
 //	errno=0;						// Remove the comment when you use errno
 //	srand((_UINT)1);				// Remove the comment when you use rand()
 //	_s1ptr=NULL;					// Remove the comment when you use strtok()
-		
+
 //	HardwareSetup();				// Use Hardware Setup
     nop();
 
@@ -109,7 +109,7 @@ void PowerON_Reset_PC(void)
 	main();
 
 //	_CLOSEALL();					// Use SIM I/O
-	
+
 //	_CALL_END();					// Remove the comment when you use global class object
 
 	brk();

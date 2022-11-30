@@ -1262,6 +1262,3 @@ volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 		}
 	}
 }
-
-
-

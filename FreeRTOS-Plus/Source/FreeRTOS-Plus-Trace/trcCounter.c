@@ -55,7 +55,7 @@ traceResult xTraceCounterCreate(const char *szName, TraceBaseType_t xInitialValu
 	}
 
 	*pxCounterHandle = (TraceIntervalHandle_t)xObjectHandle;
-	
+
 	return TRC_SUCCESS;
 }
 

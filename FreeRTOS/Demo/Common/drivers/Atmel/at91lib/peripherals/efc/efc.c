@@ -384,4 +384,3 @@ unsigned int EFC_GetStatus(AT91S_EFC *pEfc)
 }
 
 #endif //#ifdef BOARD_FLASH_EFC
-

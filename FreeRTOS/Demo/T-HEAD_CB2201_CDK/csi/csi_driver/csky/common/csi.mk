@@ -49,4 +49,3 @@ endif
 TEE_SRC += $(CSI_DIR)/csi_driver/csky/common/wdt/dw_wdt.c
 
 TEE_SRC += $(CSI_DIR)/csi_driver/csky/common/eflash/ck_eflash.c
-

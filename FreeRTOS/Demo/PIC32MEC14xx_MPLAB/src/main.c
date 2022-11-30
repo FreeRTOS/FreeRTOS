@@ -236,4 +236,3 @@ volatile unsigned long ulLineNumber;
 		__asm volatile( "NOP" );
 	}
 }
-

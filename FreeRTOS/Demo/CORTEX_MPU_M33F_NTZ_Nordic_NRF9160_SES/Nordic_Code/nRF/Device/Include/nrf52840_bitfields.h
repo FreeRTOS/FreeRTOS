@@ -4712,8 +4712,8 @@ POSSIBILITY OF SUCH DAMAGE.
 /* Register: NFCT_SLEEPSTATE */
 /* Description: Sleep state during automatic collision resolution */
 
-/* Bit 0 : Reflects the sleep state during automatic collision resolution. Set to IDLE 
-        by a GOIDLE task. Set to SLEEP_A when a valid SLEEP_REQ frame is received or by a 
+/* Bit 0 : Reflects the sleep state during automatic collision resolution. Set to IDLE
+        by a GOIDLE task. Set to SLEEP_A when a valid SLEEP_REQ frame is received or by a
         GOSLEEP task. */
 #define NFCT_SLEEPSTATE_SLEEPSTATE_Pos (0UL) /*!< Position of SLEEPSTATE field. */
 #define NFCT_SLEEPSTATE_SLEEPSTATE_Msk (0x1UL << NFCT_SLEEPSTATE_SLEEPSTATE_Pos) /*!< Bit mask of SLEEPSTATE field. */

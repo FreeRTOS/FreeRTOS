@@ -371,4 +371,3 @@ static void prvSetupHighFrequencyTimerTest( TimerHandle_t xTimer )
 	This is a one-shot timer - so the setup routine will only be executed once. */
 	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
 }
-

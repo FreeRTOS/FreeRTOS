@@ -580,7 +580,7 @@ SSIDataGet(unsigned long ulBase, unsigned long *pulData)
 #if defined(GROUP_datanonblockingget) || defined(BUILD_ALL) || defined(DOXYGEN)
 long
 SSIDataNonBlockingGet(unsigned long ulBase, unsigned long *pulData)
-{ 
+{
    //
     // Check the arguments.
     //

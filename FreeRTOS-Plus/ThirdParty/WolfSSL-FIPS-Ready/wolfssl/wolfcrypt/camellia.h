@@ -98,4 +98,3 @@ WOLFSSL_API int wc_CamelliaCbcDecrypt(Camellia* cam,
 
 #endif /* HAVE_CAMELLIA */
 #endif /* WOLF_CRYPT_CAMELLIA_H */
-

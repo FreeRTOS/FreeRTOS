@@ -385,4 +385,3 @@ long lHigherPriorityTaskWoken = pdFALSE;
 		portYIELD_FROM_ISR( lHigherPriorityTaskWoken );
 	}
 }
-

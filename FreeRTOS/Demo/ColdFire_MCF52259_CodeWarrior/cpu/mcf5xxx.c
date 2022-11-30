@@ -2,8 +2,8 @@
  * File:    mcf5xxx.c
  * Purpose: Generic high-level routines for generic ColdFire processors
  *
- * Notes:       
- * 
+ * Notes:
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */
@@ -20,10 +20,10 @@
  * exceptions do nothing, but some of the more important ones are
  * handled to some extent.
  *
- * Called by asm_exception_handler 
+ * Called by asm_exception_handler
  */
-void 
-mcf5xxx_exception_handler (void *framep) 
+void
+mcf5xxx_exception_handler (void *framep)
 {
     switch (MCF5XXX_RD_SF_FORMAT(framep))
     {
@@ -420,7 +420,7 @@ mcf5xxx_interpret_d0d1(int d0, int d1)
             printf("512B\n");
             break;
         case 2:
-            printf("1KB\n"); 
+            printf("1KB\n");
             break;
         case 3:
             printf("2KB\n");
@@ -500,7 +500,7 @@ mcf5xxx_irq_disable (void)
 /*
  * Write new interrupt vector handler into the vector table
  * Return previous handler address
- */ 
+ */
 
 ADDRESS
 mcf5xxx_set_handler (int vector, ADDRESS new_handler)

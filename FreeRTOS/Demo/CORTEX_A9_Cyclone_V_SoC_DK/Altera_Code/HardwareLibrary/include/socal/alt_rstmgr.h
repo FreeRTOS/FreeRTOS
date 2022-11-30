@@ -41,69 +41,69 @@ extern "C"
 /*
  * Component : Reset Manager Module - ALT_RSTMGR
  * Reset Manager Module
- * 
+ *
  * Registers in the Reset Manager module
- * 
+ *
  */
 /*
  * Register : Status Register - stat
- * 
+ *
  * The STAT register contains bits that indicate the reset source or a timeout
  * event. For reset sources, a field is 1 if its associated reset requester caused
  * the reset. For timeout events, a field is 1 if its associated timeout occured as
  * part of a hardware sequenced warm/debug reset.
- * 
+ *
  * Software clears bits by writing them with a value of 1. Writes to bits with a
  * value of 0 are ignored.
- * 
+ *
  * After a cold reset is complete, all bits are reset to their reset value except
  * for the bit(s) that indicate the source of the cold reset. If multiple cold
  * reset requests overlap with each other, the source de-asserts the request last
  * will be logged. The other reset request source(s)  de-assert the request in the
  * same cycle will also be logged, the rest of the fields are reset to default
  * value of 0.
- * 
+ *
  * After a warm reset is complete, the bit(s) that indicate the source of  the warm
  * reset are set to 1. A warm reset doesn't clear any of the bits  in the STAT
  * register; these bits must be cleared by software writing  the STAT register.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                         
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------------------
  *  [0]     | RW     | 0x0   | Power-On Voltage Detector Cold Reset
- *  [1]     | RW     | 0x0   | nPOR Pin Cold Reset                 
- *  [2]     | RW     | 0x0   | FPGA Core Cold Reset                
- *  [3]     | RW     | 0x0   | CONFIG_IO Cold Reset                
- *  [4]     | RW     | 0x0   | Software Cold Reset                 
- *  [7:5]   | ???    | 0x0   | *UNDEFINED*                         
- *  [8]     | RW     | 0x0   | nRST Pin Warm Reset                 
- *  [9]     | RW     | 0x0   | FPGA Core Warm Reset                
- *  [10]    | RW     | 0x0   | Software Warm Reset                 
- *  [11]    | ???    | 0x0   | *UNDEFINED*                         
- *  [12]    | RW     | 0x0   | MPU Watchdog 0 Warm Reset           
- *  [13]    | RW     | 0x0   | MPU Watchdog 1 Warm Reset           
- *  [14]    | RW     | 0x0   | L4 Watchdog 0 Warm Reset            
- *  [15]    | RW     | 0x0   | L4 Watchdog 1 Warm Reset            
- *  [17:16] | ???    | 0x0   | *UNDEFINED*                         
- *  [18]    | RW     | 0x0   | FPGA Core Debug Reset               
- *  [19]    | RW     | 0x0   | DAP Debug Reset                     
- *  [23:20] | ???    | 0x0   | *UNDEFINED*                         
- *  [24]    | RW     | 0x0   | SDRAM Self-Refresh Timeout          
- *  [25]    | RW     | 0x0   | FPGA manager handshake Timeout      
- *  [26]    | RW     | 0x0   | SCAN manager handshake Timeout      
- *  [27]    | RW     | 0x0   | FPGA handshake Timeout              
- *  [28]    | RW     | 0x0   | ETR Stall Timeout                   
- *  [31:29] | ???    | 0x0   | *UNDEFINED*                         
- * 
+ *  [1]     | RW     | 0x0   | nPOR Pin Cold Reset
+ *  [2]     | RW     | 0x0   | FPGA Core Cold Reset
+ *  [3]     | RW     | 0x0   | CONFIG_IO Cold Reset
+ *  [4]     | RW     | 0x0   | Software Cold Reset
+ *  [7:5]   | ???    | 0x0   | *UNDEFINED*
+ *  [8]     | RW     | 0x0   | nRST Pin Warm Reset
+ *  [9]     | RW     | 0x0   | FPGA Core Warm Reset
+ *  [10]    | RW     | 0x0   | Software Warm Reset
+ *  [11]    | ???    | 0x0   | *UNDEFINED*
+ *  [12]    | RW     | 0x0   | MPU Watchdog 0 Warm Reset
+ *  [13]    | RW     | 0x0   | MPU Watchdog 1 Warm Reset
+ *  [14]    | RW     | 0x0   | L4 Watchdog 0 Warm Reset
+ *  [15]    | RW     | 0x0   | L4 Watchdog 1 Warm Reset
+ *  [17:16] | ???    | 0x0   | *UNDEFINED*
+ *  [18]    | RW     | 0x0   | FPGA Core Debug Reset
+ *  [19]    | RW     | 0x0   | DAP Debug Reset
+ *  [23:20] | ???    | 0x0   | *UNDEFINED*
+ *  [24]    | RW     | 0x0   | SDRAM Self-Refresh Timeout
+ *  [25]    | RW     | 0x0   | FPGA manager handshake Timeout
+ *  [26]    | RW     | 0x0   | SCAN manager handshake Timeout
+ *  [27]    | RW     | 0x0   | FPGA handshake Timeout
+ *  [28]    | RW     | 0x0   | ETR Stall Timeout
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Power-On Voltage Detector Cold Reset - porvoltrst
- * 
+ *
  * Built-in POR voltage detector triggered a cold reset (por_voltage_req = 1)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_PORVOLTRST register field. */
 #define ALT_RSTMGR_STAT_PORVOLTRST_LSB        0
@@ -124,11 +124,11 @@ extern "C"
 
 /*
  * Field : nPOR Pin Cold Reset - nporpinrst
- * 
+ *
  * nPOR pin triggered a cold reset (por_pin_req = 1)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_NPORPINRST register field. */
 #define ALT_RSTMGR_STAT_NPORPINRST_LSB        1
@@ -149,11 +149,11 @@ extern "C"
 
 /*
  * Field : FPGA Core Cold Reset - fpgacoldrst
- * 
+ *
  * FPGA core triggered a cold reset (f2h_cold_rst_req_n = 1)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_FPGACOLDRST register field. */
 #define ALT_RSTMGR_STAT_FPGACOLDRST_LSB        2
@@ -174,11 +174,11 @@ extern "C"
 
 /*
  * Field : CONFIG_IO Cold Reset - configiocoldrst
- * 
+ *
  * FPGA entered CONFIG_IO mode and a triggered a cold reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_CFGIOCOLDRST register field. */
 #define ALT_RSTMGR_STAT_CFGIOCOLDRST_LSB        3
@@ -199,11 +199,11 @@ extern "C"
 
 /*
  * Field : Software Cold Reset - swcoldrst
- * 
+ *
  * Software wrote CTRL.SWCOLDRSTREQ to 1 and triggered a cold reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_SWCOLDRST register field. */
 #define ALT_RSTMGR_STAT_SWCOLDRST_LSB        4
@@ -224,11 +224,11 @@ extern "C"
 
 /*
  * Field : nRST Pin Warm Reset - nrstpinrst
- * 
+ *
  * nRST pin triggered a hardware sequenced warm reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_NRSTPINRST register field. */
 #define ALT_RSTMGR_STAT_NRSTPINRST_LSB        8
@@ -249,11 +249,11 @@ extern "C"
 
 /*
  * Field : FPGA Core Warm Reset - fpgawarmrst
- * 
+ *
  * FPGA core triggered a hardware sequenced warm reset (f2h_warm_rst_req_n = 1)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_FPGAWARMRST register field. */
 #define ALT_RSTMGR_STAT_FPGAWARMRST_LSB        9
@@ -274,12 +274,12 @@ extern "C"
 
 /*
  * Field : Software Warm Reset - swwarmrst
- * 
+ *
  * Software wrote CTRL.SWWARMRSTREQ to 1 and triggered a hardware sequenced warm
  * reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_SWWARMRST register field. */
 #define ALT_RSTMGR_STAT_SWWARMRST_LSB        10
@@ -300,11 +300,11 @@ extern "C"
 
 /*
  * Field : MPU Watchdog 0 Warm Reset - mpuwd0rst
- * 
+ *
  * MPU Watchdog 0 triggered a hardware sequenced warm reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_MPUWD0RST register field. */
 #define ALT_RSTMGR_STAT_MPUWD0RST_LSB        12
@@ -325,11 +325,11 @@ extern "C"
 
 /*
  * Field : MPU Watchdog 1 Warm Reset - mpuwd1rst
- * 
+ *
  * MPU Watchdog 1 triggered a hardware sequenced warm reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_MPUWD1RST register field. */
 #define ALT_RSTMGR_STAT_MPUWD1RST_LSB        13
@@ -350,11 +350,11 @@ extern "C"
 
 /*
  * Field : L4 Watchdog 0 Warm Reset - l4wd0rst
- * 
+ *
  * L4 Watchdog 0 triggered a hardware sequenced warm reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_L4WD0RST register field. */
 #define ALT_RSTMGR_STAT_L4WD0RST_LSB        14
@@ -375,11 +375,11 @@ extern "C"
 
 /*
  * Field : L4 Watchdog 1 Warm Reset - l4wd1rst
- * 
+ *
  * L4 Watchdog 1 triggered a hardware sequenced warm reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_L4WD1RST register field. */
 #define ALT_RSTMGR_STAT_L4WD1RST_LSB        15
@@ -400,11 +400,11 @@ extern "C"
 
 /*
  * Field : FPGA Core Debug Reset - fpgadbgrst
- * 
+ *
  * FPGA triggered debug reset (f2h_dbg_rst_req_n = 1)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_FPGADBGRST register field. */
 #define ALT_RSTMGR_STAT_FPGADBGRST_LSB        18
@@ -425,11 +425,11 @@ extern "C"
 
 /*
  * Field : DAP Debug Reset - cdbgreqrst
- * 
+ *
  * DAP triggered debug reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_CDBGREQRST register field. */
 #define ALT_RSTMGR_STAT_CDBGREQRST_LSB        19
@@ -450,14 +450,14 @@ extern "C"
 
 /*
  * Field : SDRAM Self-Refresh Timeout - sdrselfreftimeout
- * 
+ *
  * A 1 indicates that Reset Manager's request to the SDRAM Controller Subsystem to
  * put the SDRAM devices into self-refresh mode before starting a hardware
  * sequenced warm reset timed-out and the Reset Manager had to proceed with the
  * warm reset anyway.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_SDRSELFREFTMO register field. */
 #define ALT_RSTMGR_STAT_SDRSELFREFTMO_LSB        24
@@ -478,13 +478,13 @@ extern "C"
 
 /*
  * Field : FPGA manager handshake Timeout - fpgamgrhstimeout
- * 
+ *
  * A 1 indicates that Reset Manager's request to the FPGA manager to stop driving
  * configuration clock to FPGA CB before starting a hardware sequenced warm reset
  * timed-out and the Reset Manager had to proceed with the warm reset anyway.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_FPGAMGRHSTMO register field. */
 #define ALT_RSTMGR_STAT_FPGAMGRHSTMO_LSB        25
@@ -505,13 +505,13 @@ extern "C"
 
 /*
  * Field : SCAN manager handshake Timeout - scanhstimeout
- * 
+ *
  * A 1 indicates that Reset Manager's request to the SCAN manager to stop driving
  * JTAG clock to FPGA CB before starting a hardware sequenced warm reset timed-out
  * and the Reset Manager had to proceed with the warm reset anyway.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_SCANHSTMO register field. */
 #define ALT_RSTMGR_STAT_SCANHSTMO_LSB        26
@@ -532,13 +532,13 @@ extern "C"
 
 /*
  * Field : FPGA handshake Timeout - fpgahstimeout
- * 
+ *
  * A 1 indicates that Reset Manager's handshake request to FPGA before starting a
  * hardware sequenced warm reset timed-out and the Reset Manager had to proceed
  * with the warm reset anyway.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_FPGAHSTMO register field. */
 #define ALT_RSTMGR_STAT_FPGAHSTMO_LSB        27
@@ -559,13 +559,13 @@ extern "C"
 
 /*
  * Field : ETR Stall Timeout - etrstalltimeout
- * 
+ *
  * A 1 indicates that Reset Manager's request to the ETR (Embedded Trace Router) to
  * stall its AXI master port before starting a hardware sequenced warm reset timed-
  * out and the Reset Manager had to proceed with the warm reset anyway.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_STAT_ETRSTALLTMO register field. */
 #define ALT_RSTMGR_STAT_ETRSTALLTMO_LSB        28
@@ -592,7 +592,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_STAT.
  */
 struct ALT_RSTMGR_STAT_s
@@ -632,54 +632,54 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Register : Control Register - ctrl
- * 
+ *
  * The CTRL register is used by software to control reset behavior.It includes
  * fields for software to initiate the cold and warm reset, enable hardware
  * handshake with other modules before warm reset, and perform software handshake.
  * The software handshake sequence must match the hardware sequence. Software
  * mustde-assert the handshake request after asserting warm reset and before de-
  * assert the warm reset.
- * 
+ *
  * Fields are only reset by a cold reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                                       
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------------------------
- *  [0]     | RW     | 0x0     | Software Cold Reset Request                       
- *  [1]     | RW     | 0x0     | Software Warm Reset Request                       
- *  [3:2]   | ???    | 0x0     | *UNDEFINED*                                       
- *  [4]     | RW     | 0x0     | SDRAM Self-Refresh Enable                         
- *  [5]     | RW     | 0x0     | SDRAM Self-Refresh Request                        
- *  [6]     | R      | 0x0     | SDRAM Self-Refresh Acknowledge                    
- *  [7]     | ???    | 0x0     | *UNDEFINED*                                       
- *  [8]     | RW     | 0x0     | FPGA Manager Handshake Enable                     
- *  [9]     | RW     | 0x0     | FPGA Manager Handshake Request                    
- *  [10]    | R      | Unknown | FPGA Manager Handshake Acknowledge                
- *  [11]    | ???    | 0x0     | *UNDEFINED*                                       
- *  [12]    | RW     | 0x0     | SCAN Manager Handshake Enable                     
- *  [13]    | RW     | 0x0     | SCAN Manager Handshake Request                    
- *  [14]    | R      | Unknown | SCAN Manager Handshake Acknowledge                
- *  [15]    | ???    | 0x0     | *UNDEFINED*                                       
- *  [16]    | RW     | 0x0     | FPGA Handshake Enable                             
- *  [17]    | RW     | 0x0     | FPGA Handshake Request                            
- *  [18]    | R      | Unknown | FPGA Handshake Acknowledge                        
- *  [19]    | ???    | 0x0     | *UNDEFINED*                                       
- *  [20]    | RW     | 0x1     | ETR (Embedded Trace Router) Stall Enable          
- *  [21]    | RW     | 0x0     | ETR (Embedded Trace Router) Stall Request         
- *  [22]    | R      | 0x0     | ETR (Embedded Trace Router) Stall Acknowledge     
+ *  [0]     | RW     | 0x0     | Software Cold Reset Request
+ *  [1]     | RW     | 0x0     | Software Warm Reset Request
+ *  [3:2]   | ???    | 0x0     | *UNDEFINED*
+ *  [4]     | RW     | 0x0     | SDRAM Self-Refresh Enable
+ *  [5]     | RW     | 0x0     | SDRAM Self-Refresh Request
+ *  [6]     | R      | 0x0     | SDRAM Self-Refresh Acknowledge
+ *  [7]     | ???    | 0x0     | *UNDEFINED*
+ *  [8]     | RW     | 0x0     | FPGA Manager Handshake Enable
+ *  [9]     | RW     | 0x0     | FPGA Manager Handshake Request
+ *  [10]    | R      | Unknown | FPGA Manager Handshake Acknowledge
+ *  [11]    | ???    | 0x0     | *UNDEFINED*
+ *  [12]    | RW     | 0x0     | SCAN Manager Handshake Enable
+ *  [13]    | RW     | 0x0     | SCAN Manager Handshake Request
+ *  [14]    | R      | Unknown | SCAN Manager Handshake Acknowledge
+ *  [15]    | ???    | 0x0     | *UNDEFINED*
+ *  [16]    | RW     | 0x0     | FPGA Handshake Enable
+ *  [17]    | RW     | 0x0     | FPGA Handshake Request
+ *  [18]    | R      | Unknown | FPGA Handshake Acknowledge
+ *  [19]    | ???    | 0x0     | *UNDEFINED*
+ *  [20]    | RW     | 0x1     | ETR (Embedded Trace Router) Stall Enable
+ *  [21]    | RW     | 0x0     | ETR (Embedded Trace Router) Stall Request
+ *  [22]    | R      | 0x0     | ETR (Embedded Trace Router) Stall Acknowledge
  *  [23]    | RW     | 0x0     | ETR (Embedded Trace Router) Stall After Warm Reset
- *  [31:24] | ???    | 0x0     | *UNDEFINED*                                       
- * 
+ *  [31:24] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Software Cold Reset Request - swcoldrstreq
- * 
+ *
  * This is a one-shot bit written by software to 1 to trigger a cold reset. It
  * always reads the value 0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SWCOLDRSTREQ register field. */
 #define ALT_RSTMGR_CTL_SWCOLDRSTREQ_LSB        0
@@ -700,12 +700,12 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : Software Warm Reset Request - swwarmrstreq
- * 
+ *
  * This is a one-shot bit written by software to 1 to trigger a hardware sequenced
  * warm reset. It always reads the value 0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SWWARMRSTREQ register field. */
 #define ALT_RSTMGR_CTL_SWWARMRSTREQ_LSB        1
@@ -726,15 +726,15 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : SDRAM Self-Refresh Enable - sdrselfrefen
- * 
+ *
  * This field controls whether the contents of SDRAM devices survive a hardware
  * sequenced warm reset. If set to 1, the Reset Manager makes a request to the
  * SDRAM Controller Subsystem to put the SDRAM devices into self-refresh mode
  * before asserting warm reset signals. However, if SDRAM is already in warm reset,
  * Handshake with SDRAM is not performed.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SDRSELFREFEN register field. */
 #define ALT_RSTMGR_CTL_SDRSELFREFEN_LSB        4
@@ -755,17 +755,17 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : SDRAM Self-Refresh Request - sdrselfrefreq
- * 
+ *
  * Software writes this field 1 to request to the SDRAM Controller Subsystem that
  * it puts the SDRAM devices into self-refresh mode. This is done to preserve SDRAM
  * contents across a software warm reset.
- * 
+ *
  * Software waits for the SDRSELFREFACK to be 1 and then writes this field to 0.
  * Note that it is possible for the SDRAM Controller Subsystem to never assert
  * SDRSELFREFACK so software should timeout if SDRSELFREFACK is never asserted.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SDRSELFREFREQ register field. */
 #define ALT_RSTMGR_CTL_SDRSELFREFREQ_LSB        5
@@ -786,13 +786,13 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : SDRAM Self-Refresh Acknowledge - sdrselfreqack
- * 
+ *
  * This is the acknowlege for a SDRAM self-refresh mode request initiated by the
  * SDRSELFREFREQ field.  A 1 indicates that the SDRAM Controller Subsystem has put
  * the SDRAM devices into self-refresh mode.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SDRSELFREQACK register field. */
 #define ALT_RSTMGR_CTL_SDRSELFREQACK_LSB        6
@@ -813,21 +813,21 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : FPGA Manager Handshake Enable - fpgamgrhsen
- * 
+ *
  * Enables a handshake between the Reset Manager and FPGA Manager before a warm
  * reset. The handshake is used to warn the FPGA Manager that a warm reset it
  * coming so it can prepare for it. When the FPGA Manager receives a warm reset
  * handshake, the FPGA Manager drives its output clock to a quiescent state to
  * avoid glitches.
- * 
+ *
  * If set to 1, the  Manager makes a request to the FPGA Managerbefore asserting
  * warm reset signals. However if the FPGA Manager is already in warm reset, the
  * handshake is skipped.
- * 
+ *
  * If set to 0, the handshake is skipped.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_FPGAMGRHSEN register field. */
 #define ALT_RSTMGR_CTL_FPGAMGRHSEN_LSB        8
@@ -848,16 +848,16 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : FPGA Manager Handshake Request - fpgamgrhsreq
- * 
+ *
  * Software writes this field 1 to request to the FPGA Manager to idle its output
  * clock.
- * 
+ *
  * Software waits for the FPGAMGRHSACK to be 1 and then writes this field to 0.
  * Note that it is possible for the FPGA Manager to never assert FPGAMGRHSACK so
  * software should timeout in this case.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_FPGAMGRHSREQ register field. */
 #define ALT_RSTMGR_CTL_FPGAMGRHSREQ_LSB        9
@@ -878,12 +878,12 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : FPGA Manager Handshake Acknowledge - fpgamgrhsack
- * 
+ *
  * This is the acknowlege (high active) that the FPGA manager has successfully
  * idled its output clock.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_FPGAMGRHSACK register field. */
 #define ALT_RSTMGR_CTL_FPGAMGRHSACK_LSB        10
@@ -904,21 +904,21 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : SCAN Manager Handshake Enable - scanmgrhsen
- * 
+ *
  * Enables a handshake between the Reset Manager and Scan Manager before a warm
  * reset. The handshake is used to warn the Scan Manager that a warm reset it
  * coming so it can prepare for it. When the Scan Manager receives a warm reset
  * handshake, the Scan Manager drives its output clocks to a quiescent state to
  * avoid glitches.
- * 
+ *
  * If set to 1, the Reset Manager makes a request to the Scan Managerbefore
  * asserting warm reset signals. However if the Scan Manager is already in warm
  * reset, the handshake is skipped.
- * 
+ *
  * If set to 0, the handshake is skipped.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SCANMGRHSEN register field. */
 #define ALT_RSTMGR_CTL_SCANMGRHSEN_LSB        12
@@ -939,16 +939,16 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : SCAN Manager Handshake Request - scanmgrhsreq
- * 
+ *
  * Software writes this field 1 to request to the SCAN manager to idle its output
  * clocks.
- * 
+ *
  * Software waits for the SCANMGRHSACK to be 1 and then writes this field to 0.
  * Note that it is possible for the Scan Manager to never assert SCANMGRHSACK (e.g.
  * its input clock is disabled) so software should timeout in this case.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SCANMGRHSREQ register field. */
 #define ALT_RSTMGR_CTL_SCANMGRHSREQ_LSB        13
@@ -969,12 +969,12 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : SCAN Manager Handshake Acknowledge - scanmgrhsack
- * 
+ *
  * This is the acknowlege (high active) that the SCAN manager has   successfully
  * idled its output clocks.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_SCANMGRHSACK register field. */
 #define ALT_RSTMGR_CTL_SCANMGRHSACK_LSB        14
@@ -995,18 +995,18 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : FPGA Handshake Enable - fpgahsen
- * 
+ *
  * This field controls whether to perform handshake with FPGA before asserting warm
  * reset.
- * 
+ *
  * If set to 1, the Reset Manager makes a request to the FPGAbefore asserting warm
  * reset signals. However if FPGA is already in warm reset state, the handshake is
  * not performed.
- * 
+ *
  * If set to 0, the handshake is not performed
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_FPGAHSEN register field. */
 #define ALT_RSTMGR_CTL_FPGAHSEN_LSB        16
@@ -1027,15 +1027,15 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : FPGA Handshake Request - fpgahsreq
- * 
+ *
  * Software writes this field 1 to initiate handshake  request to FPGA .
- * 
+ *
  * Software waits for the FPGAHSACK to be active and then writes this field to 0.
  * Note that it is possible for the FPGA to never assert FPGAHSACK so software
  * should timeout in this case.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_FPGAHSREQ register field. */
 #define ALT_RSTMGR_CTL_FPGAHSREQ_LSB        17
@@ -1056,12 +1056,12 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : FPGA Handshake Acknowledge - fpgahsack
- * 
+ *
  * This is the acknowlege (high active) that the FPGA handshake   acknowledge has
  * been received by Reset Manager.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_FPGAHSACK register field. */
 #define ALT_RSTMGR_CTL_FPGAHSACK_LSB        18
@@ -1082,7 +1082,7 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : ETR (Embedded Trace Router) Stall Enable - etrstallen
- * 
+ *
  * This field controls whether the ETR is requested to idle its AXI master
  * interface (i.e. finish outstanding transactions and not initiate any more) to
  * the L3 Interconnect before a warm or debug reset. If set to 1, the Reset Manager
@@ -1092,9 +1092,9 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
  * (including the ETR) is reset on a debug reset and the ETR AXI master is
  * connected to the L3 Interconnect which is reset on a warm reset and these resets
  * can happen independently.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_ETRSTALLEN register field. */
 #define ALT_RSTMGR_CTL_ETRSTALLEN_LSB        20
@@ -1115,16 +1115,16 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : ETR (Embedded Trace Router) Stall Request - etrstallreq
- * 
+ *
  * Software writes this field 1 to request to the ETR that it stalls its AXI master
  * to the L3 Interconnect.
- * 
+ *
  * Software waits for the ETRSTALLACK to be 1 and then writes this field to 0.
  * Note that it is possible for the ETR to never assert ETRSTALLACK so software
  * should timeout if ETRSTALLACK is never asserted.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_ETRSTALLREQ register field. */
 #define ALT_RSTMGR_CTL_ETRSTALLREQ_LSB        21
@@ -1145,12 +1145,12 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : ETR (Embedded Trace Router) Stall Acknowledge - etrstallack
- * 
+ *
  * This is the acknowlege for a ETR AXI master stall initiated by the ETRSTALLREQ
  * field.  A 1 indicates that the ETR has stalled its AXI master
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_ETRSTALLACK register field. */
 #define ALT_RSTMGR_CTL_ETRSTALLACK_LSB        22
@@ -1171,15 +1171,15 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
 
 /*
  * Field : ETR (Embedded Trace Router) Stall After Warm Reset - etrstallwarmrst
- * 
+ *
  * If a warm reset occurs and ETRSTALLEN is 1, hardware sets this bit to 1 to
  * indicate that the stall of the ETR AXI master is pending. Hardware leaves the
  * ETR stalled until software clears this field by writing it with 1. Software must
  * only clear this field when it is ready to have the ETR AXI master start making
  * AXI requests to write trace data.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_CTL_ETRSTALLWARMRST register field. */
 #define ALT_RSTMGR_CTL_ETRSTALLWARMRST_LSB        23
@@ -1206,7 +1206,7 @@ typedef volatile struct ALT_RSTMGR_STAT_s  ALT_RSTMGR_STAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_CTL.
  */
 struct ALT_RSTMGR_CTL_s
@@ -1246,30 +1246,30 @@ typedef volatile struct ALT_RSTMGR_CTL_s  ALT_RSTMGR_CTL_t;
 
 /*
  * Register : Reset Cycles Count Register - counts
- * 
+ *
  * The COUNTS register is used by software to control reset behavior.It includes
  * fields for software to control the behavior of the warm reset and nRST pin.
- * 
+ *
  * Fields are only reset by a cold reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                   
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------------
  *  [7:0]   | RW     | 0x80  | Warm reset release delay count
- *  [27:8]  | RW     | 0x800 | nRST Pin Count                
- *  [31:28] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [27:8]  | RW     | 0x800 | nRST Pin Count
+ *  [31:28] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Warm reset release delay count - warmrstcycles
- * 
+ *
  * On a warm reset, the Reset Manager releases the reset to the Clock Manager, and
  * then waits for the number of cycles specified in this register before releasing
  * the rest of the hardware controlled resets.  Value must be greater than 16.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_COUNTS_WARMRSTCYCLES register field. */
 #define ALT_RSTMGR_COUNTS_WARMRSTCYCLES_LSB        0
@@ -1290,13 +1290,13 @@ typedef volatile struct ALT_RSTMGR_CTL_s  ALT_RSTMGR_CTL_t;
 
 /*
  * Field : nRST Pin Count - nrstcnt
- * 
+ *
  * The Reset Manager pulls down the nRST pin on a warm reset for the number of
  * cycles specified in this register. A value of 0x0 prevents the Reset Manager
  * from pulling down the nRST pin.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_COUNTS_NRSTCNT register field. */
 #define ALT_RSTMGR_COUNTS_NRSTCNT_LSB        8
@@ -1323,7 +1323,7 @@ typedef volatile struct ALT_RSTMGR_CTL_s  ALT_RSTMGR_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_COUNTS.
  */
 struct ALT_RSTMGR_COUNTS_s
@@ -1342,7 +1342,7 @@ typedef volatile struct ALT_RSTMGR_COUNTS_s  ALT_RSTMGR_COUNTS_t;
 
 /*
  * Register : MPU Module Reset Register - mpumodrst
- * 
+ *
  * The MPUMODRST register is used by software to trigger module resets (individual
  * module reset signals). Software explicitly asserts and de-asserts module reset
  * signals by writing bits in the appropriate *MODRST register. It is up to
@@ -1351,42 +1351,42 @@ typedef volatile struct ALT_RSTMGR_COUNTS_s  ALT_RSTMGR_COUNTS_t;
  * not assert a module reset signal that would prevent software from de-asserting
  * the module reset signal. For example, software should not assert the module
  * reset to the CPU executing the software.
- * 
+ *
  * Software writes a bit to 1 to assert the module reset signal and to 0 to de-
  * assert the module reset signal.
- * 
+ *
  * All fields except CPU1 are only reset by a cold reset. The CPU1 field is reset
  * by a cold reset. The CPU1 field is also reset by a warm reset if not masked by
  * the corresponding MPUWARMMASK field.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
- *  [0]    | RW     | 0x0   | CPU0           
- *  [1]    | RW     | 0x1   | CPU1           
- *  [2]    | RW     | 0x0   | Watchdogs      
+ *  [0]    | RW     | 0x0   | CPU0
+ *  [1]    | RW     | 0x1   | CPU1
+ *  [2]    | RW     | 0x0   | Watchdogs
  *  [3]    | RW     | 0x0   | SCU/Peripherals
- *  [4]    | RW     | 0x0   | L2             
- *  [31:5] | ???    | 0x0   | *UNDEFINED*    
- * 
+ *  [4]    | RW     | 0x0   | L2
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : CPU0 - cpu0
- * 
+ *
  * Resets Cortex-A9 CPU0 in MPU. Whe software changes this field from 0 to 1,
  * ittriggers the following sequence:  1. CPU0 reset is asserted. cpu0 clkoff is
  * de-asserted 2. after 32 osc1_clk cycles, cpu0 clkoff is asserted.
- * 
+ *
  * When software changes this field from 1 to 0, it triggers the following
  * sequence: 1.CPU0 reset is de-asserted. 2. after 32 cycles, cpu0 clkoff is de-
  * asserted.
- * 
+ *
  * Software needs to wait for at least 64 osc1_clk cycles between each change of
  * this field to keep the proper reset/clkoff sequence.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MPUMODRST_CPU0 register field. */
 #define ALT_RSTMGR_MPUMODRST_CPU0_LSB        0
@@ -1407,18 +1407,18 @@ typedef volatile struct ALT_RSTMGR_COUNTS_s  ALT_RSTMGR_COUNTS_t;
 
 /*
  * Field : CPU1 - cpu1
- * 
+ *
  * Resets Cortex-A9 CPU1 in MPU.
- * 
+ *
  * It is reset to 1 on a cold or warm reset. This holds CPU1 in reset until
  * software is ready to release CPU1 from reset by writing 0 to this field.
- * 
+ *
  * On single-core devices, writes to this field are ignored.On dual-core devices,
  * writes to this field trigger the same sequence as writes to the CPU0 field
  * (except the sequence is performed on CPU1).
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MPUMODRST_CPU1 register field. */
 #define ALT_RSTMGR_MPUMODRST_CPU1_LSB        1
@@ -1439,11 +1439,11 @@ typedef volatile struct ALT_RSTMGR_COUNTS_s  ALT_RSTMGR_COUNTS_t;
 
 /*
  * Field : Watchdogs - wds
- * 
+ *
  * Resets both per-CPU Watchdog Reset Status registers in MPU.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MPUMODRST_WDS register field. */
 #define ALT_RSTMGR_MPUMODRST_WDS_LSB        2
@@ -1464,13 +1464,13 @@ typedef volatile struct ALT_RSTMGR_COUNTS_s  ALT_RSTMGR_COUNTS_t;
 
 /*
  * Field : SCU/Peripherals - scuper
- * 
+ *
  * Resets SCU and peripherals. Peripherals consist of the interrupt controller,
  * global timer, both per-CPU private timers, and both per-CPU watchdogs (except
  * for the Watchdog Reset Status registers).
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MPUMODRST_SCUPER register field. */
 #define ALT_RSTMGR_MPUMODRST_SCUPER_LSB        3
@@ -1491,11 +1491,11 @@ typedef volatile struct ALT_RSTMGR_COUNTS_s  ALT_RSTMGR_COUNTS_t;
 
 /*
  * Field : L2 - l2
- * 
+ *
  * Resets L2 cache controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MPUMODRST_L2 register field. */
 #define ALT_RSTMGR_MPUMODRST_L2_LSB        4
@@ -1522,7 +1522,7 @@ typedef volatile struct ALT_RSTMGR_COUNTS_s  ALT_RSTMGR_COUNTS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_MPUMODRST.
  */
 struct ALT_RSTMGR_MPUMODRST_s
@@ -1544,7 +1544,7 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Register : Peripheral Module Reset Register - permodrst
- * 
+ *
  * The PERMODRST register is used by software to trigger module resets (individual
  * module reset signals). Software explicitly asserts and de-asserts module reset
  * signals by writing bits in the appropriate *MODRST register. It is up to
@@ -1553,61 +1553,61 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
  * not assert a module reset signal that would prevent software from de-asserting
  * the module reset signal. For example, software should not assert the module
  * reset to the CPU executing the software.
- * 
+ *
  * Software writes a bit to 1 to assert the module reset signal and to 0 to de-
  * assert the module reset signal.
- * 
+ *
  * All fields are reset by a cold reset.All fields are also reset by a warm reset
  * if not masked by the corresponding PERWARMMASK field.
- * 
+ *
  * The reset value of all fields is 1. This holds the corresponding module in reset
  * until software is ready to release the module from reset by writing 0 to its
  * field.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description               
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------
- *  [0]     | RW     | 0x1   | EMAC0                     
- *  [1]     | RW     | 0x1   | EMAC1                     
- *  [2]     | RW     | 0x1   | USB0                      
- *  [3]     | RW     | 0x1   | USB1                      
- *  [4]     | RW     | 0x1   | NAND Flash                
- *  [5]     | RW     | 0x1   | QSPI Flash                
- *  [6]     | RW     | 0x1   | L4 Watchdog 0             
- *  [7]     | RW     | 0x1   | L4 Watchdog 1             
- *  [8]     | RW     | 0x1   | OSC1 Timer 0              
- *  [9]     | RW     | 0x1   | OSC1 Timer 1              
- *  [10]    | RW     | 0x1   | SP Timer 0                
- *  [11]    | RW     | 0x1   | SP Timer 1                
- *  [12]    | RW     | 0x1   | I2C0                      
- *  [13]    | RW     | 0x1   | I2C1                      
- *  [14]    | RW     | 0x1   | I2C2                      
- *  [15]    | RW     | 0x1   | I2C3                      
- *  [16]    | RW     | 0x1   | UART0                     
- *  [17]    | RW     | 0x1   | UART1                     
- *  [18]    | RW     | 0x1   | SPIM0                     
- *  [19]    | RW     | 0x1   | SPIM1                     
- *  [20]    | RW     | 0x1   | SPIS0                     
- *  [21]    | RW     | 0x1   | SPIS1                     
- *  [22]    | RW     | 0x1   | SD/MMC                    
- *  [23]    | RW     | 0x1   | CAN0                      
- *  [24]    | RW     | 0x1   | CAN1                      
- *  [25]    | RW     | 0x1   | GPIO0                     
- *  [26]    | RW     | 0x1   | GPIO1                     
- *  [27]    | RW     | 0x1   | GPIO2                     
- *  [28]    | RW     | 0x1   | DMA Controller            
+ *  [0]     | RW     | 0x1   | EMAC0
+ *  [1]     | RW     | 0x1   | EMAC1
+ *  [2]     | RW     | 0x1   | USB0
+ *  [3]     | RW     | 0x1   | USB1
+ *  [4]     | RW     | 0x1   | NAND Flash
+ *  [5]     | RW     | 0x1   | QSPI Flash
+ *  [6]     | RW     | 0x1   | L4 Watchdog 0
+ *  [7]     | RW     | 0x1   | L4 Watchdog 1
+ *  [8]     | RW     | 0x1   | OSC1 Timer 0
+ *  [9]     | RW     | 0x1   | OSC1 Timer 1
+ *  [10]    | RW     | 0x1   | SP Timer 0
+ *  [11]    | RW     | 0x1   | SP Timer 1
+ *  [12]    | RW     | 0x1   | I2C0
+ *  [13]    | RW     | 0x1   | I2C1
+ *  [14]    | RW     | 0x1   | I2C2
+ *  [15]    | RW     | 0x1   | I2C3
+ *  [16]    | RW     | 0x1   | UART0
+ *  [17]    | RW     | 0x1   | UART1
+ *  [18]    | RW     | 0x1   | SPIM0
+ *  [19]    | RW     | 0x1   | SPIM1
+ *  [20]    | RW     | 0x1   | SPIS0
+ *  [21]    | RW     | 0x1   | SPIS1
+ *  [22]    | RW     | 0x1   | SD/MMC
+ *  [23]    | RW     | 0x1   | CAN0
+ *  [24]    | RW     | 0x1   | CAN1
+ *  [25]    | RW     | 0x1   | GPIO0
+ *  [26]    | RW     | 0x1   | GPIO1
+ *  [27]    | RW     | 0x1   | GPIO2
+ *  [28]    | RW     | 0x1   | DMA Controller
  *  [29]    | RW     | 0x1   | SDRAM Controller Subsystem
- *  [31:30] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:30] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : EMAC0 - emac0
- * 
+ *
  * Resets EMAC0
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_EMAC0 register field. */
 #define ALT_RSTMGR_PERMODRST_EMAC0_LSB        0
@@ -1628,11 +1628,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : EMAC1 - emac1
- * 
+ *
  * Resets EMAC1
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_EMAC1 register field. */
 #define ALT_RSTMGR_PERMODRST_EMAC1_LSB        1
@@ -1653,11 +1653,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : USB0 - usb0
- * 
+ *
  * Resets USB0
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_USB0 register field. */
 #define ALT_RSTMGR_PERMODRST_USB0_LSB        2
@@ -1678,11 +1678,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : USB1 - usb1
- * 
+ *
  * Resets USB1
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_USB1 register field. */
 #define ALT_RSTMGR_PERMODRST_USB1_LSB        3
@@ -1703,11 +1703,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : NAND Flash - nand
- * 
+ *
  * Resets NAND flash controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_NAND register field. */
 #define ALT_RSTMGR_PERMODRST_NAND_LSB        4
@@ -1728,11 +1728,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : QSPI Flash - qspi
- * 
+ *
  * Resets QSPI flash controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_QSPI register field. */
 #define ALT_RSTMGR_PERMODRST_QSPI_LSB        5
@@ -1753,11 +1753,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : L4 Watchdog 0 - l4wd0
- * 
+ *
  * Resets watchdog 0 connected to L4
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_L4WD0 register field. */
 #define ALT_RSTMGR_PERMODRST_L4WD0_LSB        6
@@ -1778,11 +1778,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : L4 Watchdog 1 - l4wd1
- * 
+ *
  * Resets watchdog 1 connected to L4
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_L4WD1 register field. */
 #define ALT_RSTMGR_PERMODRST_L4WD1_LSB        7
@@ -1803,11 +1803,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : OSC1 Timer 0 - osc1timer0
- * 
+ *
  * Resets OSC1 timer 0 connected to L4
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_OSC1TMR0 register field. */
 #define ALT_RSTMGR_PERMODRST_OSC1TMR0_LSB        8
@@ -1828,11 +1828,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : OSC1 Timer 1 - osc1timer1
- * 
+ *
  * Resets OSC1 timer 1 connected to L4
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_OSC1TMR1 register field. */
 #define ALT_RSTMGR_PERMODRST_OSC1TMR1_LSB        9
@@ -1853,11 +1853,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SP Timer 0 - sptimer0
- * 
+ *
  * Resets SP timer 0 connected to L4
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SPTMR0 register field. */
 #define ALT_RSTMGR_PERMODRST_SPTMR0_LSB        10
@@ -1878,11 +1878,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SP Timer 1 - sptimer1
- * 
+ *
  * Resets SP timer 1 connected to L4
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SPTMR1 register field. */
 #define ALT_RSTMGR_PERMODRST_SPTMR1_LSB        11
@@ -1903,11 +1903,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : I2C0 - i2c0
- * 
+ *
  * Resets I2C0 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_I2C0 register field. */
 #define ALT_RSTMGR_PERMODRST_I2C0_LSB        12
@@ -1928,11 +1928,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : I2C1 - i2c1
- * 
+ *
  * Resets I2C1 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_I2C1 register field. */
 #define ALT_RSTMGR_PERMODRST_I2C1_LSB        13
@@ -1953,11 +1953,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : I2C2 - i2c2
- * 
+ *
  * Resets I2C2 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_I2C2 register field. */
 #define ALT_RSTMGR_PERMODRST_I2C2_LSB        14
@@ -1978,11 +1978,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : I2C3 - i2c3
- * 
+ *
  * Resets I2C3 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_I2C3 register field. */
 #define ALT_RSTMGR_PERMODRST_I2C3_LSB        15
@@ -2003,11 +2003,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : UART0 - uart0
- * 
+ *
  * Resets UART0
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_UART0 register field. */
 #define ALT_RSTMGR_PERMODRST_UART0_LSB        16
@@ -2028,11 +2028,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : UART1 - uart1
- * 
+ *
  * Resets UART1
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_UART1 register field. */
 #define ALT_RSTMGR_PERMODRST_UART1_LSB        17
@@ -2053,11 +2053,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SPIM0 - spim0
- * 
+ *
  * Resets SPIM0 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SPIM0 register field. */
 #define ALT_RSTMGR_PERMODRST_SPIM0_LSB        18
@@ -2078,11 +2078,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SPIM1 - spim1
- * 
+ *
  * Resets SPIM1 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SPIM1 register field. */
 #define ALT_RSTMGR_PERMODRST_SPIM1_LSB        19
@@ -2103,11 +2103,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SPIS0 - spis0
- * 
+ *
  * Resets SPIS0 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SPIS0 register field. */
 #define ALT_RSTMGR_PERMODRST_SPIS0_LSB        20
@@ -2128,11 +2128,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SPIS1 - spis1
- * 
+ *
  * Resets SPIS1 controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SPIS1 register field. */
 #define ALT_RSTMGR_PERMODRST_SPIS1_LSB        21
@@ -2153,11 +2153,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SD/MMC - sdmmc
- * 
+ *
  * Resets SD/MMC controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SDMMC register field. */
 #define ALT_RSTMGR_PERMODRST_SDMMC_LSB        22
@@ -2178,13 +2178,13 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : CAN0 - can0
- * 
+ *
  * Resets CAN0 controller.
- * 
+ *
  * Writes to this field on devices not containing CAN controllers will be ignored.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_CAN0 register field. */
 #define ALT_RSTMGR_PERMODRST_CAN0_LSB        23
@@ -2205,13 +2205,13 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : CAN1 - can1
- * 
+ *
  * Resets CAN1 controller.
- * 
+ *
  * Writes to this field on devices not containing CAN controllers will be ignored.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_CAN1 register field. */
 #define ALT_RSTMGR_PERMODRST_CAN1_LSB        24
@@ -2232,11 +2232,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : GPIO0 - gpio0
- * 
+ *
  * Resets GPIO0
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_GPIO0 register field. */
 #define ALT_RSTMGR_PERMODRST_GPIO0_LSB        25
@@ -2257,11 +2257,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : GPIO1 - gpio1
- * 
+ *
  * Resets GPIO1
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_GPIO1 register field. */
 #define ALT_RSTMGR_PERMODRST_GPIO1_LSB        26
@@ -2282,11 +2282,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : GPIO2 - gpio2
- * 
+ *
  * Resets GPIO2
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_GPIO2 register field. */
 #define ALT_RSTMGR_PERMODRST_GPIO2_LSB        27
@@ -2307,11 +2307,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : DMA Controller - dma
- * 
+ *
  * Resets DMA controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_DMA register field. */
 #define ALT_RSTMGR_PERMODRST_DMA_LSB        28
@@ -2332,11 +2332,11 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
 
 /*
  * Field : SDRAM Controller Subsystem - sdr
- * 
+ *
  * Resets SDRAM Controller Subsystem affected by a warm or cold reset.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PERMODRST_SDR register field. */
 #define ALT_RSTMGR_PERMODRST_SDR_LSB        29
@@ -2363,7 +2363,7 @@ typedef volatile struct ALT_RSTMGR_MPUMODRST_s  ALT_RSTMGR_MPUMODRST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_PERMODRST.
  */
 struct ALT_RSTMGR_PERMODRST_s
@@ -2410,7 +2410,7 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Register : Peripheral 2 Module Reset Register - per2modrst
- * 
+ *
  * The PER2MODRST register is used by software to trigger module resets (individual
  * module reset signals). Software explicitly asserts and de-asserts module reset
  * signals by writing bits in the appropriate *MODRST register. It is up to
@@ -2419,40 +2419,40 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
  * not assert a module reset signal that would prevent software from de-asserting
  * the module reset signal. For example, software should not assert the module
  * reset to the CPU executing the software.
- * 
+ *
  * Software writes a bit to 1 to assert the module reset signal and to 0 to de-
  * assert the module reset signal.
- * 
+ *
  * All fields are reset by a cold reset.All fields are also reset by a warm reset
  * if not masked by the corresponding PERWARMMASK field.
- * 
+ *
  * The reset value of all fields is 1. This holds the corresponding module in reset
  * until software is ready to release the module from reset by writing 0 to its
  * field.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [0]    | RW     | 0x1   | FPGA DMA0  
- *  [1]    | RW     | 0x1   | FPGA DMA1  
- *  [2]    | RW     | 0x1   | FPGA DMA2  
- *  [3]    | RW     | 0x1   | FPGA DMA3  
- *  [4]    | RW     | 0x1   | FPGA DMA4  
- *  [5]    | RW     | 0x1   | FPGA DMA5  
- *  [6]    | RW     | 0x1   | FPGA DMA6  
- *  [7]    | RW     | 0x1   | FPGA DMA7  
+ *  [0]    | RW     | 0x1   | FPGA DMA0
+ *  [1]    | RW     | 0x1   | FPGA DMA1
+ *  [2]    | RW     | 0x1   | FPGA DMA2
+ *  [3]    | RW     | 0x1   | FPGA DMA3
+ *  [4]    | RW     | 0x1   | FPGA DMA4
+ *  [5]    | RW     | 0x1   | FPGA DMA5
+ *  [6]    | RW     | 0x1   | FPGA DMA6
+ *  [7]    | RW     | 0x1   | FPGA DMA7
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : FPGA DMA0 - dmaif0
- * 
+ *
  * Resets DMA channel 0 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF0 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF0_LSB        0
@@ -2473,12 +2473,12 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Field : FPGA DMA1 - dmaif1
- * 
+ *
  * Resets DMA channel 1 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF1 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF1_LSB        1
@@ -2499,12 +2499,12 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Field : FPGA DMA2 - dmaif2
- * 
+ *
  * Resets DMA channel 2 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF2 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF2_LSB        2
@@ -2525,12 +2525,12 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Field : FPGA DMA3 - dmaif3
- * 
+ *
  * Resets DMA channel 3 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF3 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF3_LSB        3
@@ -2551,12 +2551,12 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Field : FPGA DMA4 - dmaif4
- * 
+ *
  * Resets DMA channel 4 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF4 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF4_LSB        4
@@ -2577,12 +2577,12 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Field : FPGA DMA5 - dmaif5
- * 
+ *
  * Resets DMA channel 5 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF5 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF5_LSB        5
@@ -2603,12 +2603,12 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Field : FPGA DMA6 - dmaif6
- * 
+ *
  * Resets DMA channel 6 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF6 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF6_LSB        6
@@ -2629,12 +2629,12 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
 
 /*
  * Field : FPGA DMA7 - dmaif7
- * 
+ *
  * Resets DMA channel 7 interface adapter between FPGA Fabric and HPS DMA
  * Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_PER2MODRST_DMAIF7 register field. */
 #define ALT_RSTMGR_PER2MODRST_DMAIF7_LSB        7
@@ -2661,7 +2661,7 @@ typedef volatile struct ALT_RSTMGR_PERMODRST_s  ALT_RSTMGR_PERMODRST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_PER2MODRST.
  */
 struct ALT_RSTMGR_PER2MODRST_s
@@ -2686,7 +2686,7 @@ typedef volatile struct ALT_RSTMGR_PER2MODRST_s  ALT_RSTMGR_PER2MODRST_t;
 
 /*
  * Register : Bridge Module Reset Register - brgmodrst
- * 
+ *
  * The BRGMODRST register is used by software to trigger module resets (individual
  * module reset signals). Software explicitly asserts and de-asserts module reset
  * signals by writing bits in the appropriate *MODRST register. It is up to
@@ -2695,34 +2695,34 @@ typedef volatile struct ALT_RSTMGR_PER2MODRST_s  ALT_RSTMGR_PER2MODRST_t;
  * not assert a module reset signal that would prevent software from de-asserting
  * the module reset signal. For example, software should not assert the module
  * reset to the CPU executing the software.
- * 
+ *
  * Software writes a bit to 1 to assert the module reset signal and to 0 to de-
  * assert the module reset signal.
- * 
+ *
  * All fields are reset by a cold reset.All fields are also reset by a warm reset
  * if not masked by the corresponding BRGWARMMASK field.
- * 
+ *
  * The reset value of all fields is 1. This holds the corresponding module in reset
  * until software is ready to release the module from reset by writing 0 to its
  * field.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------
- *  [0]    | RW     | 0x1   | HPS2FPGA Bridge  
+ *  [0]    | RW     | 0x1   | HPS2FPGA Bridge
  *  [1]    | RW     | 0x1   | LWHPS2FPGA Bridge
- *  [2]    | RW     | 0x1   | FPGA2HPS Bridge  
- *  [31:3] | ???    | 0x0   | *UNDEFINED*      
- * 
+ *  [2]    | RW     | 0x1   | FPGA2HPS Bridge
+ *  [31:3] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : HPS2FPGA Bridge - hps2fpga
- * 
+ *
  * Resets HPS2FPGA Bridge
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_BRGMODRST_H2F register field. */
 #define ALT_RSTMGR_BRGMODRST_H2F_LSB        0
@@ -2743,11 +2743,11 @@ typedef volatile struct ALT_RSTMGR_PER2MODRST_s  ALT_RSTMGR_PER2MODRST_t;
 
 /*
  * Field : LWHPS2FPGA Bridge - lwhps2fpga
- * 
+ *
  * Resets LWHPS2FPGA Bridge
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_BRGMODRST_LWH2F register field. */
 #define ALT_RSTMGR_BRGMODRST_LWH2F_LSB        1
@@ -2768,11 +2768,11 @@ typedef volatile struct ALT_RSTMGR_PER2MODRST_s  ALT_RSTMGR_PER2MODRST_t;
 
 /*
  * Field : FPGA2HPS Bridge - fpga2hps
- * 
+ *
  * Resets FPGA2HPS Bridge
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_BRGMODRST_F2H register field. */
 #define ALT_RSTMGR_BRGMODRST_F2H_LSB        2
@@ -2799,7 +2799,7 @@ typedef volatile struct ALT_RSTMGR_PER2MODRST_s  ALT_RSTMGR_PER2MODRST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_BRGMODRST.
  */
 struct ALT_RSTMGR_BRGMODRST_s
@@ -2819,7 +2819,7 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Register : Miscellaneous Module Reset Register - miscmodrst
- * 
+ *
  * The MISCMODRST register is used by software to trigger module resets (individual
  * module reset signals). Software explicitly asserts and de-asserts module reset
  * signals by writing bits in the appropriate *MODRST register. It is up to
@@ -2828,43 +2828,43 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
  * not assert a module reset signal that would prevent software from de-asserting
  * the module reset signal. For example, software should not assert the module
  * reset to the CPU executing the software.
- * 
+ *
  * Software writes a bit to 1 to assert the module reset signal and to 0 to de-
  * assert the module reset signal.
- * 
+ *
  * All fields are only reset by a cold reset
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                          
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------------------------
- *  [0]     | RW     | 0x0   | Boot ROM                             
- *  [1]     | RW     | 0x0   | On-chip RAM                          
- *  [2]     | RW     | 0x0   | System Manager (Cold or Warm)        
- *  [3]     | RW     | 0x0   | System Manager (Cold-only)           
- *  [4]     | RW     | 0x0   | FPGA Manager                         
- *  [5]     | RW     | 0x0   | ACP ID Mapper                        
- *  [6]     | RW     | 0x0   | HPS to FPGA Core (Cold or Warm)      
- *  [7]     | RW     | 0x0   | HPS to FPGA Core (Cold-only)         
- *  [8]     | RW     | 0x0   | nRST Pin                             
- *  [9]     | RW     | 0x0   | Timestamp                            
- *  [10]    | RW     | 0x0   | Clock Manager                        
- *  [11]    | RW     | 0x0   | Scan Manager                         
- *  [12]    | RW     | 0x0   | Freeze Controller                    
- *  [13]    | RW     | 0x0   | System/Debug                         
- *  [14]    | RW     | 0x0   | Debug                                
- *  [15]    | RW     | 0x0   | TAP Controller                       
+ *  [0]     | RW     | 0x0   | Boot ROM
+ *  [1]     | RW     | 0x0   | On-chip RAM
+ *  [2]     | RW     | 0x0   | System Manager (Cold or Warm)
+ *  [3]     | RW     | 0x0   | System Manager (Cold-only)
+ *  [4]     | RW     | 0x0   | FPGA Manager
+ *  [5]     | RW     | 0x0   | ACP ID Mapper
+ *  [6]     | RW     | 0x0   | HPS to FPGA Core (Cold or Warm)
+ *  [7]     | RW     | 0x0   | HPS to FPGA Core (Cold-only)
+ *  [8]     | RW     | 0x0   | nRST Pin
+ *  [9]     | RW     | 0x0   | Timestamp
+ *  [10]    | RW     | 0x0   | Clock Manager
+ *  [11]    | RW     | 0x0   | Scan Manager
+ *  [12]    | RW     | 0x0   | Freeze Controller
+ *  [13]    | RW     | 0x0   | System/Debug
+ *  [14]    | RW     | 0x0   | Debug
+ *  [15]    | RW     | 0x0   | TAP Controller
  *  [16]    | RW     | 0x0   | SDRAM Controller Subsystem Cold Reset
- *  [31:17] | ???    | 0x0   | *UNDEFINED*                          
- * 
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Boot ROM - rom
- * 
+ *
  * Resets Boot ROM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_ROM register field. */
 #define ALT_RSTMGR_MISCMODRST_ROM_LSB        0
@@ -2885,11 +2885,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : On-chip RAM - ocram
- * 
+ *
  * Resets On-chip RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_OCRAM register field. */
 #define ALT_RSTMGR_MISCMODRST_OCRAM_LSB        1
@@ -2910,12 +2910,12 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : System Manager (Cold or Warm) - sysmgr
- * 
+ *
  * Resets logic in System Manager that doesn't differentiate between cold and warm
  * resets
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_SYSMGR register field. */
 #define ALT_RSTMGR_MISCMODRST_SYSMGR_LSB        2
@@ -2936,12 +2936,12 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : System Manager (Cold-only) - sysmgrcold
- * 
+ *
  * Resets logic in System Manager that is only reset by a cold reset (ignores warm
  * reset)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_SYSMGRCOLD register field. */
 #define ALT_RSTMGR_MISCMODRST_SYSMGRCOLD_LSB        3
@@ -2962,11 +2962,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : FPGA Manager - fpgamgr
- * 
+ *
  * Resets FPGA Manager
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_FPGAMGR register field. */
 #define ALT_RSTMGR_MISCMODRST_FPGAMGR_LSB        4
@@ -2987,11 +2987,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : ACP ID Mapper - acpidmap
- * 
+ *
  * Resets ACP ID Mapper
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_ACPIDMAP register field. */
 #define ALT_RSTMGR_MISCMODRST_ACPIDMAP_LSB        5
@@ -3012,12 +3012,12 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : HPS to FPGA Core (Cold or Warm) - s2f
- * 
+ *
  * Resets logic in FPGA core that doesn't differentiate between HPS cold and warm
  * resets (h2f_rst_n = 1)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_S2F register field. */
 #define ALT_RSTMGR_MISCMODRST_S2F_LSB        6
@@ -3038,12 +3038,12 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : HPS to FPGA Core (Cold-only) - s2fcold
- * 
+ *
  * Resets logic in FPGA core that is only reset by a cold reset (ignores warm
  * reset) (h2f_cold_rst_n = 1)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_S2FCOLD register field. */
 #define ALT_RSTMGR_MISCMODRST_S2FCOLD_LSB        7
@@ -3064,11 +3064,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : nRST Pin - nrstpin
- * 
+ *
  * Pulls nRST pin low
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_NRSTPIN register field. */
 #define ALT_RSTMGR_MISCMODRST_NRSTPIN_LSB        8
@@ -3089,11 +3089,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : Timestamp - timestampcold
- * 
+ *
  * Resets debug timestamp to 0 (cold reset only)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_TSCOLD register field. */
 #define ALT_RSTMGR_MISCMODRST_TSCOLD_LSB        9
@@ -3114,11 +3114,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : Clock Manager - clkmgrcold
- * 
+ *
  * Resets Clock Manager (cold reset only)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_CLKMGRCOLD register field. */
 #define ALT_RSTMGR_MISCMODRST_CLKMGRCOLD_LSB        10
@@ -3139,11 +3139,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : Scan Manager - scanmgr
- * 
+ *
  * Resets Scan Manager
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_SCANMGR register field. */
 #define ALT_RSTMGR_MISCMODRST_SCANMGR_LSB        11
@@ -3164,11 +3164,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : Freeze Controller - frzctrlcold
- * 
+ *
  * Resets Freeze Controller in System Manager (cold reset only)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_FRZCTLCOLD register field. */
 #define ALT_RSTMGR_MISCMODRST_FRZCTLCOLD_LSB        12
@@ -3189,11 +3189,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : System/Debug - sysdbg
- * 
+ *
  * Resets logic that spans the system and debug domains.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_SYSDBG register field. */
 #define ALT_RSTMGR_MISCMODRST_SYSDBG_LSB        13
@@ -3214,11 +3214,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : Debug - dbg
- * 
+ *
  * Resets logic located only in the debug domain.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_DBG register field. */
 #define ALT_RSTMGR_MISCMODRST_DBG_LSB        14
@@ -3239,12 +3239,12 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : TAP Controller - tapcold
- * 
+ *
  * Resets portion of DAP JTAG TAP controller no reset by a debug probe reset (i.e.
  * nTRST pin).  Cold reset only.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_TAPCOLD register field. */
 #define ALT_RSTMGR_MISCMODRST_TAPCOLD_LSB        15
@@ -3265,11 +3265,11 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
 
 /*
  * Field : SDRAM Controller Subsystem Cold Reset - sdrcold
- * 
+ *
  * Resets logic in SDRAM Controller Subsystem affected only by a cold reset.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_RSTMGR_MISCMODRST_SDRCOLD register field. */
 #define ALT_RSTMGR_MISCMODRST_SDRCOLD_LSB        16
@@ -3296,7 +3296,7 @@ typedef volatile struct ALT_RSTMGR_BRGMODRST_s  ALT_RSTMGR_BRGMODRST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_RSTMGR_MISCMODRST.
  */
 struct ALT_RSTMGR_MISCMODRST_s
@@ -3336,7 +3336,7 @@ typedef volatile struct ALT_RSTMGR_MISCMODRST_s  ALT_RSTMGR_MISCMODRST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_RSTMGR.
  */
 struct ALT_RSTMGR_s
@@ -3379,4 +3379,3 @@ typedef volatile struct ALT_RSTMGR_raw_s  ALT_RSTMGR_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_RSTMGR_H__ */
-

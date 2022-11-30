@@ -163,4 +163,3 @@ standard names.  WORKAROUND_PMU_CM001 is defined at the top of this file. */
 
 
 #endif /* FREERTOS_CONFIG_H */
-

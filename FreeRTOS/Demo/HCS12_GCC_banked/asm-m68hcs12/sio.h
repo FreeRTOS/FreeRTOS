@@ -78,4 +78,3 @@ extern void serial_print (const char *msg);
 extern void serial_getline (char *buf);
 
 #endif /* _M68HC11_SIO_H */
-

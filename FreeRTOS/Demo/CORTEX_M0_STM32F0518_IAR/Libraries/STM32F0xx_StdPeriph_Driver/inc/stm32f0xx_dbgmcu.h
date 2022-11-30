@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the DBGMCU firmware 
+  * @brief   This file contains all the functions prototypes for the DBGMCU firmware
   *          library.
   ******************************************************************************
   * @attention
@@ -40,8 +40,8 @@
 
 /** @addtogroup DBGMCU
   * @{
-  */ 
-/* Exported types ------------------------------------------------------------*/ 
+  */
+/* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
 
@@ -71,16 +71,16 @@
 
 /**
   * @}
-  */ 
+  */
 
 /* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */ 
+/* Exported functions ------------------------------------------------------- */
 
-/* Device and Revision ID management functions ********************************/ 
+/* Device and Revision ID management functions ********************************/
 uint32_t DBGMCU_GetREVID(void);
 uint32_t DBGMCU_GetDEVID(void);
 
-/* Peripherals Configuration functions ****************************************/ 
+/* Peripherals Configuration functions ****************************************/
 void DBGMCU_Config(uint32_t DBGMCU_Periph, FunctionalState NewState);
 void DBGMCU_APB1PeriphConfig(uint32_t DBGMCU_Periph, FunctionalState NewState);
 void DBGMCU_APB2PeriphConfig(uint32_t DBGMCU_Periph, FunctionalState NewState);
@@ -93,10 +93,10 @@ void DBGMCU_APB2PeriphConfig(uint32_t DBGMCU_Periph, FunctionalState NewState);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2012 STMicroelectronics *****END OF FILE****/

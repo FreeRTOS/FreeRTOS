@@ -41,57 +41,57 @@ extern "C"
 /*
  * Component : L3 (NIC-301) GPV Registers - ALT_L3
  * L3 (NIC-301) GPV Registers
- * 
+ *
  * Registers to control L3 interconnect settings
- * 
+ *
  */
 /*
  * Register : Remap - remap
- * 
+ *
  * The L3 interconnect has separate address maps for the various L3 Masters.
  * Generally, the addresses are the same for most masters. However, the sparse
  * interconnect of the L3 switch causes some masters to have holes in their memory
  * maps. The remap bits are not mutually exclusive. Each bit can be set
  * independently and in combinations. Priority for the bits is determined by the
  * bit offset: lower offset bits take precedence over higher offset bits.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
- *  [0]    | W      | 0x0   | MPU at 0x0                      
- *  [1]    | W      | 0x0   | Non-MPU at 0x0                  
- *  [2]    | ???    | 0x0   | *UNDEFINED*                     
- *  [3]    | W      | 0x0   | HPS2FPGA AXI Bridge Visibility  
+ *  [0]    | W      | 0x0   | MPU at 0x0
+ *  [1]    | W      | 0x0   | Non-MPU at 0x0
+ *  [2]    | ???    | 0x0   | *UNDEFINED*
+ *  [3]    | W      | 0x0   | HPS2FPGA AXI Bridge Visibility
  *  [4]    | W      | 0x0   | LWHPS2FPGA AXI Bridge Visibility
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : MPU at 0x0 - mpuzero
- * 
+ *
  * Controls whether address 0x0 for the MPU L3 master is mapped to the Boot ROM or
  * On-chip RAM.  This field only has an effect on the MPU L3 master.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                                     
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:-------------------------------------------------
- *  ALT_L3_REMAP_MPUZERO_E_BOOTROM | 0x0   | Maps the Boot ROM to address 0x0 for the MPU L3 
- * :                               |       | master. Note that the Boot ROM is also always   
- * :                               |       | mapped to address 0xfffd_0000 for the MPU L3    
- * :                               |       | master independent of this field's value.       
- *  ALT_L3_REMAP_MPUZERO_E_OCRAM   | 0x1   | Maps the On-chip RAM to address 0x0 for the MPU 
- * :                               |       | L3 master. Note that the On-chip RAM is also    
+ *  ALT_L3_REMAP_MPUZERO_E_BOOTROM | 0x0   | Maps the Boot ROM to address 0x0 for the MPU L3
+ * :                               |       | master. Note that the Boot ROM is also always
+ * :                               |       | mapped to address 0xfffd_0000 for the MPU L3
+ * :                               |       | master independent of this field's value.
+ *  ALT_L3_REMAP_MPUZERO_E_OCRAM   | 0x1   | Maps the On-chip RAM to address 0x0 for the MPU
+ * :                               |       | L3 master. Note that the On-chip RAM is also
  * :                               |       | always mapped to address 0xffff_0000 for the MPU
- * :                               |       | L3 master independent of this field's value.    
- * 
+ * :                               |       | L3 master independent of this field's value.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_REMAP_MPUZERO
- * 
+ *
  * Maps the Boot ROM to address 0x0 for the MPU L3 master. Note that the Boot ROM
  * is also always mapped to address 0xfffd_0000 for the MPU L3 master independent
  * of this field's value.
@@ -99,7 +99,7 @@ extern "C"
 #define ALT_L3_REMAP_MPUZERO_E_BOOTROM  0x0
 /*
  * Enumerated value for register field ALT_L3_REMAP_MPUZERO
- * 
+ *
  * Maps the On-chip RAM to address 0x0 for the MPU L3 master. Note that the On-chip
  * RAM is also always mapped to address 0xffff_0000 for the MPU L3 master
  * independent of this field's value.
@@ -125,36 +125,36 @@ extern "C"
 
 /*
  * Field : Non-MPU at 0x0 - nonmpuzero
- * 
+ *
  * Controls whether address 0x0 for the non-MPU L3 masters is mapped to the SDRAM
  * or On-chip RAM.  This field only has an effect on the non-MPU L3 masters. The
  * non-MPU L3 masters are the DMA controllers (standalone and those built-in to
  * peripherals), the FPGA2HPS AXI Bridge, and the DAP.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                                     
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:-------------------------------------------------
  *  ALT_L3_REMAP_NONMPUZERO_E_SDRAM | 0x0   | Maps the SDRAM to address 0x0 for the non-MPU L3
- * :                                |       | masters.                                        
+ * :                                |       | masters.
  *  ALT_L3_REMAP_NONMPUZERO_E_OCRAM | 0x1   | Maps the On-chip RAM to address 0x0 for the non-
- * :                                |       | MPU L3 masters. Note that the On-chip RAM is    
- * :                                |       | also always mapped to address 0xffff_0000 for   
- * :                                |       | the non-MPU L3 masters independent of this      
- * :                                |       | field's value.                                  
- * 
+ * :                                |       | MPU L3 masters. Note that the On-chip RAM is
+ * :                                |       | also always mapped to address 0xffff_0000 for
+ * :                                |       | the non-MPU L3 masters independent of this
+ * :                                |       | field's value.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_REMAP_NONMPUZERO
- * 
+ *
  * Maps the SDRAM to address 0x0 for the non-MPU L3 masters.
  */
 #define ALT_L3_REMAP_NONMPUZERO_E_SDRAM 0x0
 /*
  * Enumerated value for register field ALT_L3_REMAP_NONMPUZERO
- * 
+ *
  * Maps the On-chip RAM to address 0x0 for the non-MPU L3 masters. Note that the
  * On-chip RAM is also always mapped to address 0xffff_0000 for the non-MPU L3
  * masters independent of this field's value.
@@ -180,32 +180,32 @@ extern "C"
 
 /*
  * Field : HPS2FPGA AXI Bridge Visibility - hps2fpga
- * 
+ *
  * Controls whether the HPS2FPGA AXI Bridge is visible to L3 masters or not.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                                    
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:------------------------------------------------
- *  ALT_L3_REMAP_H2F_E_INVISIBLE | 0x0   | The HPS2FPGA AXI Bridge is not visible to L3   
- * :                             |       | masters. Accesses to the associated address    
+ *  ALT_L3_REMAP_H2F_E_INVISIBLE | 0x0   | The HPS2FPGA AXI Bridge is not visible to L3
+ * :                             |       | masters. Accesses to the associated address
  * :                             |       | range return an AXI decode error to the master.
- *  ALT_L3_REMAP_H2F_E_VISIBLE   | 0x1   | The HPS2FPGA AXI Bridge is visible to L3       
- * :                             |       | masters.                                       
- * 
+ *  ALT_L3_REMAP_H2F_E_VISIBLE   | 0x1   | The HPS2FPGA AXI Bridge is visible to L3
+ * :                             |       | masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_REMAP_H2F
- * 
+ *
  * The HPS2FPGA AXI Bridge is not visible to L3 masters. Accesses to the associated
  * address range return an AXI decode error to the master.
  */
 #define ALT_L3_REMAP_H2F_E_INVISIBLE    0x0
 /*
  * Enumerated value for register field ALT_L3_REMAP_H2F
- * 
+ *
  * The HPS2FPGA AXI Bridge is visible to L3 masters.
  */
 #define ALT_L3_REMAP_H2F_E_VISIBLE      0x1
@@ -229,33 +229,33 @@ extern "C"
 
 /*
  * Field : LWHPS2FPGA AXI Bridge Visibility - lwhps2fpga
- * 
+ *
  * Controls whether the Lightweight HPS2FPGA AXI Bridge is visible to L3 masters or
  * not.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                                    
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:------------------------------------------------
- *  ALT_L3_REMAP_LWH2F_E_INVISIBLE | 0x0   | The LWHPS2FPGA AXI Bridge is not visible to L3 
- * :                               |       | masters. Accesses to the associated address    
+ *  ALT_L3_REMAP_LWH2F_E_INVISIBLE | 0x0   | The LWHPS2FPGA AXI Bridge is not visible to L3
+ * :                               |       | masters. Accesses to the associated address
  * :                               |       | range return an AXI decode error to the master.
- *  ALT_L3_REMAP_LWH2F_E_VISIBLE   | 0x1   | The LWHPS2FPGA AXI Bridge is visible to L3     
- * :                               |       | masters.                                       
- * 
+ *  ALT_L3_REMAP_LWH2F_E_VISIBLE   | 0x1   | The LWHPS2FPGA AXI Bridge is visible to L3
+ * :                               |       | masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_REMAP_LWH2F
- * 
+ *
  * The LWHPS2FPGA AXI Bridge is not visible to L3 masters. Accesses to the
  * associated address range return an AXI decode error to the master.
  */
 #define ALT_L3_REMAP_LWH2F_E_INVISIBLE  0x0
 /*
  * Enumerated value for register field ALT_L3_REMAP_LWH2F
- * 
+ *
  * The LWHPS2FPGA AXI Bridge is visible to L3 masters.
  */
 #define ALT_L3_REMAP_LWH2F_E_VISIBLE    0x1
@@ -285,7 +285,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_REMAP.
  */
 struct ALT_L3_REMAP_s
@@ -308,52 +308,52 @@ typedef volatile struct ALT_L3_REMAP_s  ALT_L3_REMAP_t;
 /*
  * Register Group : Security Register Group - ALT_L3_SECGRP
  * Security Register Group
- * 
+ *
  * Registers that control slave security.
- * 
+ *
  */
 /*
  * Register : L4 Main Peripherals Security - l4main
- * 
+ *
  * Controls security settings for L4 Main peripherals.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
- *  [0]    | W      | 0x0   | SPI Slave 0 Security   
- *  [1]    | W      | 0x0   | SPI Slave 1 Security   
- *  [2]    | W      | 0x0   | DMA Secure Security    
+ *  [0]    | W      | 0x0   | SPI Slave 0 Security
+ *  [1]    | W      | 0x0   | SPI Slave 1 Security
+ *  [2]    | W      | 0x0   | DMA Secure Security
  *  [3]    | W      | 0x0   | DMA Non-secure Security
- *  [31:4] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:4] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : SPI Slave 0 Security - spis0
- * 
+ *
  * Controls whether secure or non-secure masters can access the SPI Slave 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MAIN_SPIS0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4MAIN_SPIS0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4MAIN_SPIS0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_SPIS0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MAIN_SPIS0_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_SPIS0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MAIN_SPIS0_E_NONSECURE 0x1
@@ -377,30 +377,30 @@ typedef volatile struct ALT_L3_REMAP_s  ALT_L3_REMAP_t;
 
 /*
  * Field : SPI Slave 1 Security - spis1
- * 
+ *
  * Controls whether secure or non-secure masters can access the SPI Slave 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MAIN_SPIS1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4MAIN_SPIS1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4MAIN_SPIS1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_SPIS1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MAIN_SPIS1_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_SPIS1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MAIN_SPIS1_E_NONSECURE 0x1
@@ -424,30 +424,30 @@ typedef volatile struct ALT_L3_REMAP_s  ALT_L3_REMAP_t;
 
 /*
  * Field : DMA Secure Security - dmasecure
- * 
+ *
  * Controls whether secure or non-secure masters can access the DMA Secure slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                  
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MAIN_DMASECURE_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                        |       | master.                                      
+ *  ALT_L3_SEC_L4MAIN_DMASECURE_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                        |       | master.
  *  ALT_L3_SEC_L4MAIN_DMASECURE_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                        |       | non-secure masters.                          
- * 
+ * :                                        |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_DMASECURE
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MAIN_DMASECURE_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_DMASECURE
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MAIN_DMASECURE_E_NONSECURE 0x1
@@ -471,31 +471,31 @@ typedef volatile struct ALT_L3_REMAP_s  ALT_L3_REMAP_t;
 
 /*
  * Field : DMA Non-secure Security - dmanonsecure
- * 
+ *
  * Controls whether secure or non-secure masters can access the DMA Non-secure
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                                  
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MAIN_DMANONSECURE_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                           |       | master.                                      
+ *  ALT_L3_SEC_L4MAIN_DMANONSECURE_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                           |       | master.
  *  ALT_L3_SEC_L4MAIN_DMANONSECURE_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                           |       | non-secure masters.                          
- * 
+ * :                                           |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_DMANONSECURE
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MAIN_DMANONSECURE_E_SECURE     0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MAIN_DMANONSECURE
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MAIN_DMANONSECURE_E_NONSECURE  0x1
@@ -525,7 +525,7 @@ typedef volatile struct ALT_L3_REMAP_s  ALT_L3_REMAP_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_L4MAIN.
  */
 struct ALT_L3_SEC_L4MAIN_s
@@ -546,54 +546,54 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Register : L4 SP Peripherals Security - l4sp
- * 
+ *
  * Controls security settings for L4 SP peripherals.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description             
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------
  *  [0]     | W      | 0x0   | SDRAM Registers Security
- *  [1]     | W      | 0x0   | SP Timer 0 Security     
- *  [2]     | W      | 0x0   | I2C0 Security           
- *  [3]     | W      | 0x0   | I2C1 Security           
- *  [4]     | W      | 0x0   | I2C2 (EMAC 0) Security  
- *  [5]     | W      | 0x0   | I2C3 (EMAC 1) Security  
- *  [6]     | W      | 0x0   | UART 0 Security         
- *  [7]     | W      | 0x0   | UART 1 Security         
- *  [8]     | W      | 0x0   | CAN 0 Security          
- *  [9]     | W      | 0x0   | CAN 1 Security          
- *  [10]    | W      | 0x0   | SP Timer 1 Security     
- *  [31:11] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [1]     | W      | 0x0   | SP Timer 0 Security
+ *  [2]     | W      | 0x0   | I2C0 Security
+ *  [3]     | W      | 0x0   | I2C1 Security
+ *  [4]     | W      | 0x0   | I2C2 (EMAC 0) Security
+ *  [5]     | W      | 0x0   | I2C3 (EMAC 1) Security
+ *  [6]     | W      | 0x0   | UART 0 Security
+ *  [7]     | W      | 0x0   | UART 1 Security
+ *  [8]     | W      | 0x0   | CAN 0 Security
+ *  [9]     | W      | 0x0   | CAN 1 Security
+ *  [10]    | W      | 0x0   | SP Timer 1 Security
+ *  [31:11] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : SDRAM Registers Security - sdrregs
- * 
+ *
  * Controls whether secure or non-secure masters can access the SDRAM Registers
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_SDRREGS_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4SP_SDRREGS_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4SP_SDRREGS_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_SDRREGS
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_SDRREGS_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_SDRREGS
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_SDRREGS_E_NONSECURE 0x1
@@ -617,30 +617,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : SP Timer 0 Security - sptimer0
- * 
+ *
  * Controls whether secure or non-secure masters can access the SP Timer 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                                  
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_SPTMR0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                   |       | master.                                      
+ *  ALT_L3_SEC_L4SP_SPTMR0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                   |       | master.
  *  ALT_L3_SEC_L4SP_SPTMR0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                   |       | non-secure masters.                          
- * 
+ * :                                   |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_SPTMR0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_SPTMR0_E_SECURE     0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_SPTMR0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_SPTMR0_E_NONSECURE  0x1
@@ -664,30 +664,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : I2C0 Security - i2c0
- * 
+ *
  * Controls whether secure or non-secure masters can access the I2C0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_I2C0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_L4SP_I2C0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_L4SP_I2C0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_I2C0_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_I2C0_E_NONSECURE    0x1
@@ -711,30 +711,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : I2C1 Security - i2c1
- * 
+ *
  * Controls whether secure or non-secure masters can access the I2C1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_I2C1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_L4SP_I2C1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_L4SP_I2C1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_I2C1_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_I2C1_E_NONSECURE    0x1
@@ -758,31 +758,31 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : I2C2 (EMAC 0) Security - i2c2
- * 
+ *
  * Controls whether secure or non-secure masters can access the I2C2 (EMAC 0)
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_I2C2_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_L4SP_I2C2_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_L4SP_I2C2_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C2
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_I2C2_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C2
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_I2C2_E_NONSECURE    0x1
@@ -806,31 +806,31 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : I2C3 (EMAC 1) Security - i2c3
- * 
+ *
  * Controls whether secure or non-secure masters can access the I2C3 (EMAC 1)
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_I2C3_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_L4SP_I2C3_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_L4SP_I2C3_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C3
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_I2C3_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_I2C3
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_I2C3_E_NONSECURE    0x1
@@ -854,30 +854,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : UART 0 Security - uart0
- * 
+ *
  * Controls whether secure or non-secure masters can access the UART 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_UART0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4SP_UART0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4SP_UART0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_UART0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_UART0_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_UART0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_UART0_E_NONSECURE   0x1
@@ -901,30 +901,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : UART 1 Security - uart1
- * 
+ *
  * Controls whether secure or non-secure masters can access the UART 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_UART1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4SP_UART1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4SP_UART1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_UART1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_UART1_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_UART1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_UART1_E_NONSECURE   0x1
@@ -948,30 +948,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : CAN 0 Security - can0
- * 
+ *
  * Controls whether secure or non-secure masters can access the CAN 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_CAN0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_L4SP_CAN0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_L4SP_CAN0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_CAN0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_CAN0_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_CAN0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_CAN0_E_NONSECURE    0x1
@@ -995,30 +995,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : CAN 1 Security - can1
- * 
+ *
  * Controls whether secure or non-secure masters can access the CAN 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_CAN1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_L4SP_CAN1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_L4SP_CAN1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_CAN1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_CAN1_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_CAN1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_CAN1_E_NONSECURE    0x1
@@ -1042,30 +1042,30 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
 
 /*
  * Field : SP Timer 1 Security - sptimer1
- * 
+ *
  * Controls whether secure or non-secure masters can access the SP Timer 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                                  
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SP_SPTMR1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                   |       | master.                                      
+ *  ALT_L3_SEC_L4SP_SPTMR1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                   |       | master.
  *  ALT_L3_SEC_L4SP_SPTMR1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                   |       | non-secure masters.                          
- * 
+ * :                                   |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_SPTMR1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SP_SPTMR1_E_SECURE     0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SP_SPTMR1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SP_SPTMR1_E_NONSECURE  0x1
@@ -1095,7 +1095,7 @@ typedef volatile struct ALT_L3_SEC_L4MAIN_s  ALT_L3_SEC_L4MAIN_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_L4SP.
  */
 struct ALT_L3_SEC_L4SP_s
@@ -1123,53 +1123,53 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Register : L4 MP Peripherals Security - l4mp
- * 
+ *
  * Controls security settings for L4 MP peripherals.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                   
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------------
  *  [0]     | W      | 0x0   | FPGA Manager Register Security
- *  [1]     | W      | 0x0   | DAP Security                  
- *  [2]     | W      | 0x0   | QSPI Registers Security       
- *  [3]     | W      | 0x0   | SDMMC Security                
- *  [4]     | W      | 0x0   | EMAC 0 Security               
- *  [5]     | W      | 0x0   | EMAC 1 Security               
- *  [6]     | W      | 0x0   | ACP ID Mapper Security        
- *  [7]     | W      | 0x0   | GPIO 0 Security               
- *  [8]     | W      | 0x0   | GPIO 1 Security               
- *  [9]     | W      | 0x0   | GPIO 2 Security               
- *  [31:10] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [1]     | W      | 0x0   | DAP Security
+ *  [2]     | W      | 0x0   | QSPI Registers Security
+ *  [3]     | W      | 0x0   | SDMMC Security
+ *  [4]     | W      | 0x0   | EMAC 0 Security
+ *  [5]     | W      | 0x0   | EMAC 1 Security
+ *  [6]     | W      | 0x0   | ACP ID Mapper Security
+ *  [7]     | W      | 0x0   | GPIO 0 Security
+ *  [8]     | W      | 0x0   | GPIO 1 Security
+ *  [9]     | W      | 0x0   | GPIO 2 Security
+ *  [31:10] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : FPGA Manager Register Security - fpgamgrregs
- * 
+ *
  * Controls whether secure or non-secure masters can access the FPGA Manager
  * Register slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_FPGAMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4MP_FPGAMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4MP_FPGAMGR_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_FPGAMGR
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_FPGAMGR_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_FPGAMGR
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_FPGAMGR_E_NONSECURE 0x1
@@ -1193,30 +1193,30 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : DAP Security - dap
- * 
+ *
  * Controls whether secure or non-secure masters can access the DAP slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                                  
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_DAP_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                |       | master.                                      
+ *  ALT_L3_SEC_L4MP_DAP_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                |       | master.
  *  ALT_L3_SEC_L4MP_DAP_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                |       | non-secure masters.                          
- * 
+ * :                                |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_DAP
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_DAP_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_DAP
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_DAP_E_NONSECURE 0x1
@@ -1240,31 +1240,31 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : QSPI Registers Security - qspiregs
- * 
+ *
  * Controls whether secure or non-secure masters can access the QSPI Registers
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_QSPI_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_L4MP_QSPI_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_L4MP_QSPI_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_QSPI
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_QSPI_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_QSPI
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_QSPI_E_NONSECURE    0x1
@@ -1288,30 +1288,30 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : SDMMC Security - sdmmc
- * 
+ *
  * Controls whether secure or non-secure masters can access the SDMMC slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_SDMMC_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4MP_SDMMC_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4MP_SDMMC_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_SDMMC
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_SDMMC_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_SDMMC
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_SDMMC_E_NONSECURE   0x1
@@ -1335,30 +1335,30 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : EMAC 0 Security - emac0
- * 
+ *
  * Controls whether secure or non-secure masters can access the EMAC 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_EMAC0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4MP_EMAC0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4MP_EMAC0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_EMAC0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_EMAC0_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_EMAC0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_EMAC0_E_NONSECURE   0x1
@@ -1382,30 +1382,30 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : EMAC 1 Security - emac1
- * 
+ *
  * Controls whether secure or non-secure masters can access the EMAC 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_EMAC1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4MP_EMAC1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4MP_EMAC1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_EMAC1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_EMAC1_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_EMAC1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_EMAC1_E_NONSECURE   0x1
@@ -1429,31 +1429,31 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : ACP ID Mapper Security - acpidmap
- * 
+ *
  * Controls whether secure or non-secure masters can access the ACP ID Mapper
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                  
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_ACPIDMAP_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                     |       | master.                                      
+ *  ALT_L3_SEC_L4MP_ACPIDMAP_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                     |       | master.
  *  ALT_L3_SEC_L4MP_ACPIDMAP_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                     |       | non-secure masters.                          
- * 
+ * :                                     |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_ACPIDMAP
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_ACPIDMAP_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_ACPIDMAP
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_ACPIDMAP_E_NONSECURE    0x1
@@ -1477,30 +1477,30 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : GPIO 0 Security - gpio0
- * 
+ *
  * Controls whether secure or non-secure masters can access the GPIO 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_GPIO0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4MP_GPIO0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4MP_GPIO0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_GPIO0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_GPIO0_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_GPIO0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_GPIO0_E_NONSECURE   0x1
@@ -1524,30 +1524,30 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : GPIO 1 Security - gpio1
- * 
+ *
  * Controls whether secure or non-secure masters can access the GPIO 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_GPIO1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4MP_GPIO1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4MP_GPIO1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_GPIO1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_GPIO1_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_GPIO1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_GPIO1_E_NONSECURE   0x1
@@ -1571,30 +1571,30 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
 
 /*
  * Field : GPIO 2 Security - gpio2
- * 
+ *
  * Controls whether secure or non-secure masters can access the GPIO 2 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4MP_GPIO2_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_L4MP_GPIO2_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_L4MP_GPIO2_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_GPIO2
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4MP_GPIO2_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4MP_GPIO2
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4MP_GPIO2_E_NONSECURE   0x1
@@ -1624,7 +1624,7 @@ typedef volatile struct ALT_L3_SEC_L4SP_s  ALT_L3_SEC_L4SP_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_L4MP.
  */
 struct ALT_L3_SEC_L4MP_s
@@ -1651,50 +1651,50 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
 
 /*
  * Register : L4 OSC1 Peripherals Security - l4osc1
- * 
+ *
  * Controls security settings for L4 OSC1 peripherals.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [0]    | W      | 0x0   | L4 Watchdog Timer 0 Security
  *  [1]    | W      | 0x0   | L4 Watchdog Timer 0 Security
- *  [2]    | W      | 0x0   | Clock Manager Security      
- *  [3]    | W      | 0x0   | Reset Manager Security      
- *  [4]    | W      | 0x0   | System Manager Security     
- *  [5]    | W      | 0x0   | OSC1 Timer 0 Security       
- *  [6]    | W      | 0x0   | OSC1 Timer 1 Security       
- *  [31:7] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [2]    | W      | 0x0   | Clock Manager Security
+ *  [3]    | W      | 0x0   | Reset Manager Security
+ *  [4]    | W      | 0x0   | System Manager Security
+ *  [5]    | W      | 0x0   | OSC1 Timer 0 Security
+ *  [6]    | W      | 0x0   | OSC1 Timer 1 Security
+ *  [31:7] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : L4 Watchdog Timer 0 Security - l4wd0
- * 
+ *
  * Controls whether secure or non-secure masters can access the L4 Watchdog Timer 0
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4OSC1_L4WD0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4OSC1_L4WD0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4OSC1_L4WD0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_L4WD0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4OSC1_L4WD0_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_L4WD0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4OSC1_L4WD0_E_NONSECURE 0x1
@@ -1718,31 +1718,31 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
 
 /*
  * Field : L4 Watchdog Timer 0 Security - l4wd1
- * 
+ *
  * Controls whether secure or non-secure masters can access the L4 Watchdog Timer 0
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4OSC1_L4WD1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4OSC1_L4WD1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4OSC1_L4WD1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_L4WD1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4OSC1_L4WD1_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_L4WD1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4OSC1_L4WD1_E_NONSECURE 0x1
@@ -1766,31 +1766,31 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
 
 /*
  * Field : Clock Manager Security - clkmgr
- * 
+ *
  * Controls whether secure or non-secure masters can access the Clock Manager
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                  
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4OSC1_CLKMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                     |       | master.                                      
+ *  ALT_L3_SEC_L4OSC1_CLKMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                     |       | master.
  *  ALT_L3_SEC_L4OSC1_CLKMGR_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                     |       | non-secure masters.                          
- * 
+ * :                                     |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_CLKMGR
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4OSC1_CLKMGR_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_CLKMGR
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4OSC1_CLKMGR_E_NONSECURE    0x1
@@ -1814,31 +1814,31 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
 
 /*
  * Field : Reset Manager Security - rstmgr
- * 
+ *
  * Controls whether secure or non-secure masters can access the Reset Manager
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                  
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4OSC1_RSTMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                     |       | master.                                      
+ *  ALT_L3_SEC_L4OSC1_RSTMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                     |       | master.
  *  ALT_L3_SEC_L4OSC1_RSTMGR_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                     |       | non-secure masters.                          
- * 
+ * :                                     |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_RSTMGR
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4OSC1_RSTMGR_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_RSTMGR
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4OSC1_RSTMGR_E_NONSECURE    0x1
@@ -1862,31 +1862,31 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
 
 /*
  * Field : System Manager Security - sysmgr
- * 
+ *
  * Controls whether secure or non-secure masters can access the System Manager
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                  
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4OSC1_SYSMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                     |       | master.                                      
+ *  ALT_L3_SEC_L4OSC1_SYSMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                     |       | master.
  *  ALT_L3_SEC_L4OSC1_SYSMGR_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                     |       | non-secure masters.                          
- * 
+ * :                                     |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_SYSMGR
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4OSC1_SYSMGR_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_SYSMGR
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4OSC1_SYSMGR_E_NONSECURE    0x1
@@ -1910,30 +1910,30 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
 
 /*
  * Field : OSC1 Timer 0 Security - osc1timer0
- * 
+ *
  * Controls whether secure or non-secure masters can access the OSC1 Timer 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                                  
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4OSC1_OSC1TMR0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                       |       | master.                                      
+ *  ALT_L3_SEC_L4OSC1_OSC1TMR0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                       |       | master.
  *  ALT_L3_SEC_L4OSC1_OSC1TMR0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                       |       | non-secure masters.                          
- * 
+ * :                                       |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_OSC1TMR0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4OSC1_OSC1TMR0_E_SECURE     0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_OSC1TMR0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4OSC1_OSC1TMR0_E_NONSECURE  0x1
@@ -1957,30 +1957,30 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
 
 /*
  * Field : OSC1 Timer 1 Security - osc1timer1
- * 
+ *
  * Controls whether secure or non-secure masters can access the OSC1 Timer 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                                  
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4OSC1_OSC1TMR1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                       |       | master.                                      
+ *  ALT_L3_SEC_L4OSC1_OSC1TMR1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                       |       | master.
  *  ALT_L3_SEC_L4OSC1_OSC1TMR1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                       |       | non-secure masters.                          
- * 
+ * :                                       |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_OSC1TMR1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4OSC1_OSC1TMR1_E_SECURE     0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4OSC1_OSC1TMR1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4OSC1_OSC1TMR1_E_NONSECURE  0x1
@@ -2010,7 +2010,7 @@ typedef volatile struct ALT_L3_SEC_L4MP_s  ALT_L3_SEC_L4MP_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_L4OSC1.
  */
 struct ALT_L3_SEC_L4OSC1_s
@@ -2034,45 +2034,45 @@ typedef volatile struct ALT_L3_SEC_L4OSC1_s  ALT_L3_SEC_L4OSC1_t;
 
 /*
  * Register : L4 SPIM Peripherals Security - l4spim
- * 
+ *
  * Controls security settings for L4 SPIM peripherals.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [0]    | W      | 0x0   | SPI Master 0 Security
  *  [1]    | W      | 0x0   | SPI Master 1 Security
  *  [2]    | W      | 0x0   | Scan Manager Security
- *  [31:3] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [31:3] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : SPI Master 0 Security - spim0
- * 
+ *
  * Controls whether secure or non-secure masters can access the SPI Master 0 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SPIM_SPIM0_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4SPIM_SPIM0_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4SPIM_SPIM0_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SPIM_SPIM0
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SPIM_SPIM0_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SPIM_SPIM0
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SPIM_SPIM0_E_NONSECURE 0x1
@@ -2096,30 +2096,30 @@ typedef volatile struct ALT_L3_SEC_L4OSC1_s  ALT_L3_SEC_L4OSC1_t;
 
 /*
  * Field : SPI Master 1 Security - spim1
- * 
+ *
  * Controls whether secure or non-secure masters can access the SPI Master 1 slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                  
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SPIM_SPIM1_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                    |       | master.                                      
+ *  ALT_L3_SEC_L4SPIM_SPIM1_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                    |       | master.
  *  ALT_L3_SEC_L4SPIM_SPIM1_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                    |       | non-secure masters.                          
- * 
+ * :                                    |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SPIM_SPIM1
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SPIM_SPIM1_E_SECURE    0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SPIM_SPIM1
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SPIM_SPIM1_E_NONSECURE 0x1
@@ -2143,30 +2143,30 @@ typedef volatile struct ALT_L3_SEC_L4OSC1_s  ALT_L3_SEC_L4OSC1_t;
 
 /*
  * Field : Scan Manager Security - scanmgr
- * 
+ *
  * Controls whether secure or non-secure masters can access the Scan Manager slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                                  
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_L4SPIM_SCANMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                      |       | master.                                      
+ *  ALT_L3_SEC_L4SPIM_SCANMGR_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                      |       | master.
  *  ALT_L3_SEC_L4SPIM_SCANMGR_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                      |       | non-secure masters.                          
- * 
+ * :                                      |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SPIM_SCANMGR
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_L4SPIM_SCANMGR_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_L4SPIM_SCANMGR
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_L4SPIM_SCANMGR_E_NONSECURE   0x1
@@ -2196,7 +2196,7 @@ typedef volatile struct ALT_L3_SEC_L4OSC1_s  ALT_L3_SEC_L4OSC1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_L4SPIM.
  */
 struct ALT_L3_SEC_L4SPIM_s
@@ -2216,43 +2216,43 @@ typedef volatile struct ALT_L3_SEC_L4SPIM_s  ALT_L3_SEC_L4SPIM_t;
 
 /*
  * Register : STM Peripheral Security - stm
- * 
+ *
  * Controls security settings for STM peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [0]    | W      | 0x0   | STM Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : STM Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the STM slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                                  
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_STM_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                             |       | master.                                      
+ *  ALT_L3_SEC_STM_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                             |       | master.
  *  ALT_L3_SEC_STM_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                             |       | non-secure masters.                          
- * 
+ * :                             |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_STM_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_STM_S_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_STM_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_STM_S_E_NONSECURE    0x1
@@ -2282,7 +2282,7 @@ typedef volatile struct ALT_L3_SEC_L4SPIM_s  ALT_L3_SEC_L4SPIM_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_STM.
  */
 struct ALT_L3_SEC_STM_s
@@ -2300,44 +2300,44 @@ typedef volatile struct ALT_L3_SEC_STM_s  ALT_L3_SEC_STM_t;
 
 /*
  * Register : LWHPS2FPGA AXI Bridge Registers Peripheral Security - lwhps2fpgaregs
- * 
+ *
  * Controls security settings for LWHPS2FPGA AXI Bridge Registers peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------------------
  *  [0]    | W      | 0x0   | LWHPS2FPGA AXI Bridge Registers Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                             
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : LWHPS2FPGA AXI Bridge Registers Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the LWHPS2FPGA AXI
  * Bridge Registers slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                                  
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_LWH2F_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                               |       | master.                                      
+ *  ALT_L3_SEC_LWH2F_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                               |       | master.
  *  ALT_L3_SEC_LWH2F_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                               |       | non-secure masters.                          
- * 
+ * :                               |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_LWH2F_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_LWH2F_S_E_SECURE     0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_LWH2F_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_LWH2F_S_E_NONSECURE  0x1
@@ -2367,7 +2367,7 @@ typedef volatile struct ALT_L3_SEC_STM_s  ALT_L3_SEC_STM_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_LWH2F.
  */
 struct ALT_L3_SEC_LWH2F_s
@@ -2385,44 +2385,44 @@ typedef volatile struct ALT_L3_SEC_LWH2F_s  ALT_L3_SEC_LWH2F_t;
 
 /*
  * Register : USB1 Registers Peripheral Security - usb1
- * 
+ *
  * Controls security settings for USB1 Registers peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | W      | 0x0   | USB1 Registers Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : USB1 Registers Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the USB1 Registers
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                  
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_USB1_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                              |       | master.                                      
+ *  ALT_L3_SEC_USB1_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                              |       | master.
  *  ALT_L3_SEC_USB1_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                              |       | non-secure masters.                          
- * 
+ * :                              |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_USB1_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_USB1_S_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_USB1_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_USB1_S_E_NONSECURE   0x1
@@ -2452,7 +2452,7 @@ typedef volatile struct ALT_L3_SEC_LWH2F_s  ALT_L3_SEC_LWH2F_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_USB1.
  */
 struct ALT_L3_SEC_USB1_s
@@ -2470,44 +2470,44 @@ typedef volatile struct ALT_L3_SEC_USB1_s  ALT_L3_SEC_USB1_t;
 
 /*
  * Register : NAND Flash Controller Data Peripheral Security - nanddata
- * 
+ *
  * Controls security settings for NAND Flash Controller Data peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------------
  *  [0]    | W      | 0x0   | NAND Flash Controller Data Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                        
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : NAND Flash Controller Data Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the NAND Flash
  * Controller Data slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_NANDDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_NANDDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_NANDDATA_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_NANDDATA_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_NANDDATA_S_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_NANDDATA_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_NANDDATA_S_E_NONSECURE   0x1
@@ -2537,7 +2537,7 @@ typedef volatile struct ALT_L3_SEC_USB1_s  ALT_L3_SEC_USB1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_NANDDATA.
  */
 struct ALT_L3_SEC_NANDDATA_s
@@ -2555,44 +2555,44 @@ typedef volatile struct ALT_L3_SEC_NANDDATA_s  ALT_L3_SEC_NANDDATA_t;
 
 /*
  * Register : USB0 Registers Peripheral Security - usb0
- * 
+ *
  * Controls security settings for USB0 Registers peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | W      | 0x0   | USB0 Registers Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : USB0 Registers Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the USB0 Registers
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                  
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_USB0_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                              |       | master.                                      
+ *  ALT_L3_SEC_USB0_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                              |       | master.
  *  ALT_L3_SEC_USB0_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                              |       | non-secure masters.                          
- * 
+ * :                              |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_USB0_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_USB0_S_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_USB0_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_USB0_S_E_NONSECURE   0x1
@@ -2622,7 +2622,7 @@ typedef volatile struct ALT_L3_SEC_NANDDATA_s  ALT_L3_SEC_NANDDATA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_USB0.
  */
 struct ALT_L3_SEC_USB0_s
@@ -2640,44 +2640,44 @@ typedef volatile struct ALT_L3_SEC_USB0_s  ALT_L3_SEC_USB0_t;
 
 /*
  * Register : NAND Flash Controller Registers Peripheral Security - nandregs
- * 
+ *
  * Controls security settings for NAND Flash Controller Registers peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------------------
  *  [0]    | W      | 0x0   | NAND Flash Controller Registers Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                             
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : NAND Flash Controller Registers Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the NAND Flash
  * Controller Registers slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                  
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_NAND_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                              |       | master.                                      
+ *  ALT_L3_SEC_NAND_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                              |       | master.
  *  ALT_L3_SEC_NAND_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                              |       | non-secure masters.                          
- * 
+ * :                              |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_NAND_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_NAND_S_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_NAND_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_NAND_S_E_NONSECURE   0x1
@@ -2707,7 +2707,7 @@ typedef volatile struct ALT_L3_SEC_USB0_s  ALT_L3_SEC_USB0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_NAND.
  */
 struct ALT_L3_SEC_NAND_s
@@ -2725,44 +2725,44 @@ typedef volatile struct ALT_L3_SEC_NAND_s  ALT_L3_SEC_NAND_t;
 
 /*
  * Register : QSPI Flash Controller Data Peripheral Security - qspidata
- * 
+ *
  * Controls security settings for QSPI Flash Controller Data peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------------
  *  [0]    | W      | 0x0   | QSPI Flash Controller Data Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                        
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : QSPI Flash Controller Data Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the QSPI Flash
  * Controller Data slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_QSPIDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                  |       | master.                                      
+ *  ALT_L3_SEC_QSPIDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                  |       | master.
  *  ALT_L3_SEC_QSPIDATA_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                  |       | non-secure masters.                          
- * 
+ * :                                  |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_QSPIDATA_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_QSPIDATA_S_E_SECURE      0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_QSPIDATA_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_QSPIDATA_S_E_NONSECURE   0x1
@@ -2792,7 +2792,7 @@ typedef volatile struct ALT_L3_SEC_NAND_s  ALT_L3_SEC_NAND_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_QSPIDATA.
  */
 struct ALT_L3_SEC_QSPIDATA_s
@@ -2810,44 +2810,44 @@ typedef volatile struct ALT_L3_SEC_QSPIDATA_s  ALT_L3_SEC_QSPIDATA_t;
 
 /*
  * Register : FPGA Manager Data Peripheral Security - fpgamgrdata
- * 
+ *
  * Controls security settings for FPGA Manager Data peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
  *  [0]    | W      | 0x0   | FPGA Manager Data Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : FPGA Manager Data Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the FPGA Manager Data
  * slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                  
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_FPGAMGRDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                     |       | master.                                      
+ *  ALT_L3_SEC_FPGAMGRDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                     |       | master.
  *  ALT_L3_SEC_FPGAMGRDATA_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                     |       | non-secure masters.                          
- * 
+ * :                                     |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_FPGAMGRDATA_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_FPGAMGRDATA_S_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_FPGAMGRDATA_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_FPGAMGRDATA_S_E_NONSECURE    0x1
@@ -2877,7 +2877,7 @@ typedef volatile struct ALT_L3_SEC_QSPIDATA_s  ALT_L3_SEC_QSPIDATA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_FPGAMGRDATA.
  */
 struct ALT_L3_SEC_FPGAMGRDATA_s
@@ -2895,44 +2895,44 @@ typedef volatile struct ALT_L3_SEC_FPGAMGRDATA_s  ALT_L3_SEC_FPGAMGRDATA_t;
 
 /*
  * Register : HPS2FPGA AXI Bridge Registers Peripheral Security - hps2fpgaregs
- * 
+ *
  * Controls security settings for HPS2FPGA AXI Bridge Registers peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | W      | 0x0   | HPS2FPGA AXI Bridge Registers Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : HPS2FPGA AXI Bridge Registers Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the HPS2FPGA AXI Bridge
  * Registers slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                                  
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_H2F_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                             |       | master.                                      
+ *  ALT_L3_SEC_H2F_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                             |       | master.
  *  ALT_L3_SEC_H2F_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                             |       | non-secure masters.                          
- * 
+ * :                             |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_H2F_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_H2F_S_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_H2F_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_H2F_S_E_NONSECURE    0x1
@@ -2962,7 +2962,7 @@ typedef volatile struct ALT_L3_SEC_FPGAMGRDATA_s  ALT_L3_SEC_FPGAMGRDATA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_H2F.
  */
 struct ALT_L3_SEC_H2F_s
@@ -2980,43 +2980,43 @@ typedef volatile struct ALT_L3_SEC_H2F_s  ALT_L3_SEC_H2F_t;
 
 /*
  * Register : MPU ACP Peripheral Security - acp
- * 
+ *
  * Controls security settings for MPU ACP peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------
  *  [0]    | W      | 0x0   | MPU ACP Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : MPU ACP Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the MPU ACP slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                                  
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_ACP_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                             |       | master.                                      
+ *  ALT_L3_SEC_ACP_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                             |       | master.
  *  ALT_L3_SEC_ACP_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                             |       | non-secure masters.                          
- * 
+ * :                             |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_ACP_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_ACP_S_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_ACP_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_ACP_S_E_NONSECURE    0x1
@@ -3046,7 +3046,7 @@ typedef volatile struct ALT_L3_SEC_H2F_s  ALT_L3_SEC_H2F_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_ACP.
  */
 struct ALT_L3_SEC_ACP_s
@@ -3064,43 +3064,43 @@ typedef volatile struct ALT_L3_SEC_ACP_s  ALT_L3_SEC_ACP_t;
 
 /*
  * Register : ROM Peripheral Security - rom
- * 
+ *
  * Controls security settings for ROM peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [0]    | W      | 0x0   | ROM Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : ROM Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the ROM slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                                  
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_ROM_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                             |       | master.                                      
+ *  ALT_L3_SEC_ROM_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                             |       | master.
  *  ALT_L3_SEC_ROM_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                             |       | non-secure masters.                          
- * 
+ * :                             |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_ROM_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_ROM_S_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_ROM_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_ROM_S_E_NONSECURE    0x1
@@ -3130,7 +3130,7 @@ typedef volatile struct ALT_L3_SEC_ACP_s  ALT_L3_SEC_ACP_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_ROM.
  */
 struct ALT_L3_SEC_ROM_s
@@ -3148,43 +3148,43 @@ typedef volatile struct ALT_L3_SEC_ROM_s  ALT_L3_SEC_ROM_t;
 
 /*
  * Register : On-chip RAM Peripheral Security - ocram
- * 
+ *
  * Controls security settings for On-chip RAM peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------
  *  [0]    | W      | 0x0   | On-chip RAM Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*         
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : On-chip RAM Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the On-chip RAM slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                                  
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_OCRAM_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                               |       | master.                                      
+ *  ALT_L3_SEC_OCRAM_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                               |       | master.
  *  ALT_L3_SEC_OCRAM_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                               |       | non-secure masters.                          
- * 
+ * :                               |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_OCRAM_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_OCRAM_S_E_SECURE     0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_OCRAM_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_OCRAM_S_E_NONSECURE  0x1
@@ -3214,7 +3214,7 @@ typedef volatile struct ALT_L3_SEC_ROM_s  ALT_L3_SEC_ROM_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_OCRAM.
  */
 struct ALT_L3_SEC_OCRAM_s
@@ -3232,43 +3232,43 @@ typedef volatile struct ALT_L3_SEC_OCRAM_s  ALT_L3_SEC_OCRAM_t;
 
 /*
  * Register : SDRAM Data Peripheral Security - sdrdata
- * 
+ *
  * Controls security settings for SDRAM Data peripheral.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------
  *  [0]    | W      | 0x0   | SDRAM Data Security
- *  [31:1] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : SDRAM Data Security - s
- * 
+ *
  * Controls whether secure or non-secure masters can access the SDRAM Data slave.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------------------------
- *  ALT_L3_SEC_SDRDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure   
- * :                                 |       | master.                                      
+ *  ALT_L3_SEC_SDRDATA_S_E_SECURE    | 0x0   | The slave can only be accessed by a secure
+ * :                                 |       | master.
  *  ALT_L3_SEC_SDRDATA_S_E_NONSECURE | 0x1   | The slave can only be accessed by a secure or
- * :                                 |       | non-secure masters.                          
- * 
+ * :                                 |       | non-secure masters.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_SEC_SDRDATA_S
- * 
+ *
  * The slave can only be accessed by a secure master.
  */
 #define ALT_L3_SEC_SDRDATA_S_E_SECURE       0x0
 /*
  * Enumerated value for register field ALT_L3_SEC_SDRDATA_S
- * 
+ *
  * The slave can only be accessed by a secure or non-secure masters.
  */
 #define ALT_L3_SEC_SDRDATA_S_E_NONSECURE    0x1
@@ -3298,7 +3298,7 @@ typedef volatile struct ALT_L3_SEC_OCRAM_s  ALT_L3_SEC_OCRAM_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_SEC_SDRDATA.
  */
 struct ALT_L3_SEC_SDRDATA_s
@@ -3322,7 +3322,7 @@ typedef volatile struct ALT_L3_SEC_SDRDATA_s  ALT_L3_SEC_SDRDATA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SECGRP.
  */
 struct ALT_L3_SECGRP_s
@@ -3384,30 +3384,30 @@ typedef volatile struct ALT_L3_SECGRP_raw_s  ALT_L3_SECGRP_raw_t;
 /*
  * Register Group : ID Register Group - ALT_L3_IDGRP
  * ID Register Group
- * 
+ *
  * Contains registers that identify the ARM NIC-301 IP Core.
- * 
+ *
  */
 /*
  * Register : Peripheral ID4 Register - periph_id_4
- * 
+ *
  * JEP106 continuation code
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------
  *  [7:0]  | R      | 0x4   | Peripheral ID4
- *  [31:8] | ???    | 0x0   | *UNDEFINED*   
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Peripheral ID4 - periph_id_4
- * 
+ *
  * JEP106 continuation code
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_PERIPH_ID_4_PERIPH_ID_4 register field. */
 #define ALT_L3_ID_PERIPH_ID_4_PERIPH_ID_4_LSB        0
@@ -3434,7 +3434,7 @@ typedef volatile struct ALT_L3_SECGRP_raw_s  ALT_L3_SECGRP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_PERIPH_ID_4.
  */
 struct ALT_L3_ID_PERIPH_ID_4_s
@@ -3452,24 +3452,24 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_4_s  ALT_L3_ID_PERIPH_ID_4_t;
 
 /*
  * Register : Peripheral ID0 Register - periph_id_0
- * 
+ *
  * Peripheral ID0
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------
  *  [7:0]  | R      | 0x1   | Part Number [7:0]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*      
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Part Number [7:0] - pn7to0
- * 
+ *
  * Part Number [7:0]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_PERIPH_ID_0_PN7TO0 register field. */
 #define ALT_L3_ID_PERIPH_ID_0_PN7TO0_LSB        0
@@ -3496,7 +3496,7 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_4_s  ALT_L3_ID_PERIPH_ID_4_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_PERIPH_ID_0.
  */
 struct ALT_L3_ID_PERIPH_ID_0_s
@@ -3514,24 +3514,24 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_0_s  ALT_L3_ID_PERIPH_ID_0_t;
 
 /*
  * Register : Peripheral ID1 Register - periph_id_1
- * 
+ *
  * Peripheral ID1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [7:0]  | R      | 0xb3  | JEP106[3:0], Part Number [11:8]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : JEP106[3:0], Part Number [11:8] - jep3to0_pn11to8
- * 
+ *
  * JEP106[3:0], Part Number [11:8]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_PERIPH_ID_1_JEP3TO0_PN11TO8 register field. */
 #define ALT_L3_ID_PERIPH_ID_1_JEP3TO0_PN11TO8_LSB        0
@@ -3558,7 +3558,7 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_0_s  ALT_L3_ID_PERIPH_ID_0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_PERIPH_ID_1.
  */
 struct ALT_L3_ID_PERIPH_ID_1_s
@@ -3576,24 +3576,24 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_1_s  ALT_L3_ID_PERIPH_ID_1_t;
 
 /*
  * Register : Peripheral ID2 Register - periph_id_2
- * 
+ *
  * Peripheral ID2
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [7:0]  | R      | 0x6b  | Revision, JEP106 code flag, JEP106[6:4]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Revision, JEP106 code flag, JEP106[6:4] - rev_jepcode_jep6to4
- * 
+ *
  * Revision, JEP106 code flag, JEP106[6:4]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_PERIPH_ID_2_REV_JEPCODE_JEP6TO4 register field. */
 #define ALT_L3_ID_PERIPH_ID_2_REV_JEPCODE_JEP6TO4_LSB        0
@@ -3620,7 +3620,7 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_1_s  ALT_L3_ID_PERIPH_ID_1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_PERIPH_ID_2.
  */
 struct ALT_L3_ID_PERIPH_ID_2_s
@@ -3638,25 +3638,25 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_2_s  ALT_L3_ID_PERIPH_ID_2_t;
 
 /*
  * Register : Peripheral ID3 Register - periph_id_3
- * 
+ *
  * Peripheral ID3
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [3:0]  | R      | 0x0   | Customer Model Number
- *  [7:4]  | R      | 0x0   | Revision             
- *  [31:8] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [7:4]  | R      | 0x0   | Revision
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Customer Model Number - cust_mod_num
- * 
+ *
  * Customer Model Number
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_PERIPH_ID_3_CUST_MOD_NUM register field. */
 #define ALT_L3_ID_PERIPH_ID_3_CUST_MOD_NUM_LSB        0
@@ -3677,11 +3677,11 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_2_s  ALT_L3_ID_PERIPH_ID_2_t;
 
 /*
  * Field : Revision - rev_and
- * 
+ *
  * Revision
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_PERIPH_ID_3_REV_AND register field. */
 #define ALT_L3_ID_PERIPH_ID_3_REV_AND_LSB        4
@@ -3708,7 +3708,7 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_2_s  ALT_L3_ID_PERIPH_ID_2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_PERIPH_ID_3.
  */
 struct ALT_L3_ID_PERIPH_ID_3_s
@@ -3727,24 +3727,24 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_3_s  ALT_L3_ID_PERIPH_ID_3_t;
 
 /*
  * Register : Component ID0 Register - comp_id_0
- * 
+ *
  * Component ID0
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0xd   | Preamble   
+ *  [7:0]  | R      | 0xd   | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_COMP_ID_0_PREAMBLE register field. */
 #define ALT_L3_ID_COMP_ID_0_PREAMBLE_LSB        0
@@ -3771,7 +3771,7 @@ typedef volatile struct ALT_L3_ID_PERIPH_ID_3_s  ALT_L3_ID_PERIPH_ID_3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_COMP_ID_0.
  */
 struct ALT_L3_ID_COMP_ID_0_s
@@ -3789,24 +3789,24 @@ typedef volatile struct ALT_L3_ID_COMP_ID_0_s  ALT_L3_ID_COMP_ID_0_t;
 
 /*
  * Register : Component ID1 Register - comp_id_1
- * 
+ *
  * Component ID1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------------
  *  [7:0]  | R      | 0xf0  | Generic IP component class, Preamble
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                         
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Generic IP component class, Preamble - genipcompcls_preamble
- * 
+ *
  * Generic IP component class, Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_COMP_ID_1_GENIPCOMPCLS_PREAMBLE register field. */
 #define ALT_L3_ID_COMP_ID_1_GENIPCOMPCLS_PREAMBLE_LSB        0
@@ -3833,7 +3833,7 @@ typedef volatile struct ALT_L3_ID_COMP_ID_0_s  ALT_L3_ID_COMP_ID_0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_COMP_ID_1.
  */
 struct ALT_L3_ID_COMP_ID_1_s
@@ -3851,24 +3851,24 @@ typedef volatile struct ALT_L3_ID_COMP_ID_1_s  ALT_L3_ID_COMP_ID_1_t;
 
 /*
  * Register : Component ID2 Register - comp_id_2
- * 
+ *
  * Component ID2
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0x5   | Preamble   
+ *  [7:0]  | R      | 0x5   | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_COMP_ID_2_PREAMBLE register field. */
 #define ALT_L3_ID_COMP_ID_2_PREAMBLE_LSB        0
@@ -3895,7 +3895,7 @@ typedef volatile struct ALT_L3_ID_COMP_ID_1_s  ALT_L3_ID_COMP_ID_1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_COMP_ID_2.
  */
 struct ALT_L3_ID_COMP_ID_2_s
@@ -3913,24 +3913,24 @@ typedef volatile struct ALT_L3_ID_COMP_ID_2_s  ALT_L3_ID_COMP_ID_2_t;
 
 /*
  * Register : Component ID3 Register - comp_id_3
- * 
+ *
  * Component ID3
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0xb1  | Preamble   
+ *  [7:0]  | R      | 0xb1  | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_ID_COMP_ID_3_PREAMBLE register field. */
 #define ALT_L3_ID_COMP_ID_3_PREAMBLE_LSB        0
@@ -3957,7 +3957,7 @@ typedef volatile struct ALT_L3_ID_COMP_ID_2_s  ALT_L3_ID_COMP_ID_2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_ID_COMP_ID_3.
  */
 struct ALT_L3_ID_COMP_ID_3_s
@@ -3981,7 +3981,7 @@ typedef volatile struct ALT_L3_ID_COMP_ID_3_s  ALT_L3_ID_COMP_ID_3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_IDGRP.
  */
 struct ALT_L3_IDGRP_s
@@ -4025,56 +4025,56 @@ typedef volatile struct ALT_L3_IDGRP_raw_s  ALT_L3_IDGRP_raw_t;
 /*
  * Register Group : Master Register Group - ALT_L3_MSTGRP
  * Master Register Group
- * 
+ *
  * Registers associated with master interfaces in the L3 Interconnect. Note that a
  * master in the L3 Interconnect connects to a slave in a module.
- * 
+ *
  */
 /*
  * Register Group : L4 MAIN - ALT_L3_MST_L4MAIN
  * L4 MAIN
- * 
+ *
  * Registers associated with the L4 MAIN master. This master is used to access the
  * APB slaves on the L4 MAIN bus.
- * 
+ *
  */
 /*
  * Register : Bus Matrix Issuing Functionality Modification Register - fn_mod_bm_iss
- * 
+ *
  * Sets the issuing capability of the preceding switch arbitration scheme to
  * multiple or single outstanding transactions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | RW     | 0x0   | ALT_L3_FN_MOD_BM_ISS_RD
  *  [1]    | RW     | 0x0   | ALT_L3_FN_MOD_BM_ISS_WR
- *  [31:2] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : rd
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                               
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-------------------------------------------
- *  ALT_L3_FN_MOD_BM_ISS_RD_E_MULT   | 0x0   | Multiple outstanding read transactions    
+ *  ALT_L3_FN_MOD_BM_ISS_RD_E_MULT   | 0x0   | Multiple outstanding read transactions
  *  ALT_L3_FN_MOD_BM_ISS_RD_E_SINGLE | 0x1   | Only a single outstanding read transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_BM_ISS_RD
- * 
+ *
  * Multiple outstanding read transactions
  */
 #define ALT_L3_FN_MOD_BM_ISS_RD_E_MULT      0x0
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_BM_ISS_RD
- * 
+ *
  * Only a single outstanding read transaction
  */
 #define ALT_L3_FN_MOD_BM_ISS_RD_E_SINGLE    0x1
@@ -4098,26 +4098,26 @@ typedef volatile struct ALT_L3_IDGRP_raw_s  ALT_L3_IDGRP_raw_t;
 
 /*
  * Field : wr
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:--------------------------------------------
- *  ALT_L3_FN_MOD_BM_ISS_WR_E_MULT   | 0x0   | Multiple outstanding write transactions    
+ *  ALT_L3_FN_MOD_BM_ISS_WR_E_MULT   | 0x0   | Multiple outstanding write transactions
  *  ALT_L3_FN_MOD_BM_ISS_WR_E_SINGLE | 0x1   | Only a single outstanding write transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_BM_ISS_WR
- * 
+ *
  * Multiple outstanding write transactions
  */
 #define ALT_L3_FN_MOD_BM_ISS_WR_E_MULT      0x0
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_BM_ISS_WR
- * 
+ *
  * Only a single outstanding write transaction
  */
 #define ALT_L3_FN_MOD_BM_ISS_WR_E_SINGLE    0x1
@@ -4147,7 +4147,7 @@ typedef volatile struct ALT_L3_IDGRP_raw_s  ALT_L3_IDGRP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_FN_MOD_BM_ISS.
  */
 struct ALT_L3_FN_MOD_BM_ISS_s
@@ -4174,7 +4174,7 @@ typedef volatile struct ALT_L3_FN_MOD_BM_ISS_s  ALT_L3_FN_MOD_BM_ISS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_L4MAIN.
  */
 struct ALT_L3_MST_L4MAIN_s
@@ -4200,10 +4200,10 @@ typedef volatile struct ALT_L3_MST_L4MAIN_raw_s  ALT_L3_MST_L4MAIN_raw_t;
 /*
  * Register Group : L4 SP - ALT_L3_MST_L4SP
  * L4 SP
- * 
+ *
  * Registers associated with the L4 SP master. This master is used to access the
  * APB slaves on the L4 SP bus.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4213,7 +4213,7 @@ typedef volatile struct ALT_L3_MST_L4MAIN_raw_s  ALT_L3_MST_L4MAIN_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_L4SP.
  */
 struct ALT_L3_MST_L4SP_s
@@ -4239,10 +4239,10 @@ typedef volatile struct ALT_L3_MST_L4SP_raw_s  ALT_L3_MST_L4SP_raw_t;
 /*
  * Register Group : L4 MP - ALT_L3_MST_L4MP
  * L4 MP
- * 
+ *
  * Registers associated with the L4 MP master. This master is used to access the
  * APB slaves on the L4 MP bus.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4252,7 +4252,7 @@ typedef volatile struct ALT_L3_MST_L4SP_raw_s  ALT_L3_MST_L4SP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_L4MP.
  */
 struct ALT_L3_MST_L4MP_s
@@ -4278,10 +4278,10 @@ typedef volatile struct ALT_L3_MST_L4MP_raw_s  ALT_L3_MST_L4MP_raw_t;
 /*
  * Register Group : L4 OSC1 - ALT_L3_MST_L4OSC1
  * L4 OSC1
- * 
+ *
  * Registers associated with the L4 OSC1 master. This master is used to access the
  * APB slaves on the L4 OSC1 bus.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4291,7 +4291,7 @@ typedef volatile struct ALT_L3_MST_L4MP_raw_s  ALT_L3_MST_L4MP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_L4OSC1.
  */
 struct ALT_L3_MST_L4OSC1_s
@@ -4317,10 +4317,10 @@ typedef volatile struct ALT_L3_MST_L4OSC1_raw_s  ALT_L3_MST_L4OSC1_raw_t;
 /*
  * Register Group : L4 SPIM - ALT_L3_MST_L4SPIM
  * L4 SPIM
- * 
+ *
  * Registers associated with the L4 SPIM master. This master is used to access the
  * APB slaves on the L4 SPIM bus.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4330,7 +4330,7 @@ typedef volatile struct ALT_L3_MST_L4OSC1_raw_s  ALT_L3_MST_L4OSC1_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_L4SPIM.
  */
 struct ALT_L3_MST_L4SPIM_s
@@ -4356,48 +4356,48 @@ typedef volatile struct ALT_L3_MST_L4SPIM_raw_s  ALT_L3_MST_L4SPIM_raw_t;
 /*
  * Register Group : STM - ALT_L3_MST_STM
  * STM
- * 
+ *
  * Registers associated with the STM master. This master is used to access the STM
  * AXI slave.
- * 
+ *
  */
 /*
  * Register : Issuing Functionality Modification Register - fn_mod
- * 
+ *
  * Sets the block issuing capability to multiple or single outstanding
  * transactions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------
  *  [0]    | RW     | 0x0   | ALT_L3_FN_MOD_RD
  *  [1]    | RW     | 0x0   | ALT_L3_FN_MOD_WR
- *  [31:2] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : rd
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                               
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-------------------------------------------
- *  ALT_L3_FN_MOD_RD_E_MULT   | 0x0   | Multiple outstanding read transactions    
+ *  ALT_L3_FN_MOD_RD_E_MULT   | 0x0   | Multiple outstanding read transactions
  *  ALT_L3_FN_MOD_RD_E_SINGLE | 0x1   | Only a single outstanding read transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_RD
- * 
+ *
  * Multiple outstanding read transactions
  */
 #define ALT_L3_FN_MOD_RD_E_MULT     0x0
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_RD
- * 
+ *
  * Only a single outstanding read transaction
  */
 #define ALT_L3_FN_MOD_RD_E_SINGLE   0x1
@@ -4421,26 +4421,26 @@ typedef volatile struct ALT_L3_MST_L4SPIM_raw_s  ALT_L3_MST_L4SPIM_raw_t;
 
 /*
  * Field : wr
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                                
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:--------------------------------------------
- *  ALT_L3_FN_MOD_WR_E_MULT   | 0x0   | Multiple outstanding write transactions    
+ *  ALT_L3_FN_MOD_WR_E_MULT   | 0x0   | Multiple outstanding write transactions
  *  ALT_L3_FN_MOD_WR_E_SINGLE | 0x1   | Only a single outstanding write transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_WR
- * 
+ *
  * Multiple outstanding write transactions
  */
 #define ALT_L3_FN_MOD_WR_E_MULT     0x0
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_WR
- * 
+ *
  * Only a single outstanding write transaction
  */
 #define ALT_L3_FN_MOD_WR_E_SINGLE   0x1
@@ -4470,7 +4470,7 @@ typedef volatile struct ALT_L3_MST_L4SPIM_raw_s  ALT_L3_MST_L4SPIM_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_FN_MOD.
  */
 struct ALT_L3_FN_MOD_s
@@ -4497,7 +4497,7 @@ typedef volatile struct ALT_L3_FN_MOD_s  ALT_L3_FN_MOD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_STM.
  */
 struct ALT_L3_MST_STM_s
@@ -4527,12 +4527,12 @@ typedef volatile struct ALT_L3_MST_STM_raw_s  ALT_L3_MST_STM_raw_t;
 /*
  * Register Group : LWHPS2FPGA - ALT_L3_MST_LWH2F
  * LWHPS2FPGA
- * 
+ *
  * Registers associated with the LWHPS2FPGA AXI Bridge master. This master is used
  * to access the LWHPS2FPGA AXI Bridge slave. This slave is used to access the
  * registers for all 3 AXI bridges and to access slaves in the FPGA connected to
  * the LWHPS2FPGA AXI Bridge.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4542,7 +4542,7 @@ typedef volatile struct ALT_L3_MST_STM_raw_s  ALT_L3_MST_STM_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_LWH2F.
  */
 struct ALT_L3_MST_LWH2F_s
@@ -4572,50 +4572,50 @@ typedef volatile struct ALT_L3_MST_LWH2F_raw_s  ALT_L3_MST_LWH2F_raw_t;
 /*
  * Register Group : USB1 - ALT_L3_MST_USB1
  * USB1
- * 
+ *
  * Registers associated with the USB1 master. This master is used to access the
  * registers in USB1.
- * 
+ *
  */
 /*
  * Register : AHB Control Register - ahb_cntl
- * 
+ *
  * Sets the block issuing capability to one outstanding transaction.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
- *  [0]    | RW     | 0x0   | ALT_L3_AHB_CNTL_DECERR_EN 
+ *  [0]    | RW     | 0x0   | ALT_L3_AHB_CNTL_DECERR_EN
  *  [1]    | RW     | 0x0   | ALT_L3_AHB_CNTL_FORCE_INCR
- *  [31:2] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : decerr_en
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                                     
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:-------------------------------------------------
- *  ALT_L3_AHB_CNTL_DECERR_EN_E_DIS | 0x0   | No DECERR response.                             
+ *  ALT_L3_AHB_CNTL_DECERR_EN_E_DIS | 0x0   | No DECERR response.
  *  ALT_L3_AHB_CNTL_DECERR_EN_E_EN  | 0x1   | If the AHB protocol conversion function receives
- * :                                |       | an unaligned address or a write data beat       
- * :                                |       | without all the byte strobes set, creates a     
- * :                                |       | DECERR response.                                
- * 
+ * :                                |       | an unaligned address or a write data beat
+ * :                                |       | without all the byte strobes set, creates a
+ * :                                |       | DECERR response.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_AHB_CNTL_DECERR_EN
- * 
+ *
  * No DECERR response.
  */
 #define ALT_L3_AHB_CNTL_DECERR_EN_E_DIS 0x0
 /*
  * Enumerated value for register field ALT_L3_AHB_CNTL_DECERR_EN
- * 
+ *
  * If the AHB protocol conversion function receives an unaligned address or a write
  * data beat without all the byte strobes set, creates a DECERR response.
  */
@@ -4640,30 +4640,30 @@ typedef volatile struct ALT_L3_MST_LWH2F_raw_s  ALT_L3_MST_LWH2F_raw_t;
 
 /*
  * Field : force_incr
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                                     
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-------------------------------------------------
- *  ALT_L3_AHB_CNTL_FORCE_INCR_E_DIS | 0x0   | Multiple outstanding write transactions         
- *  ALT_L3_AHB_CNTL_FORCE_INCR_E_EN  | 0x1   | If a beat is received that has no write data    
- * :                                 |       | strobes set, that write data beat is replaced   
+ *  ALT_L3_AHB_CNTL_FORCE_INCR_E_DIS | 0x0   | Multiple outstanding write transactions
+ *  ALT_L3_AHB_CNTL_FORCE_INCR_E_EN  | 0x1   | If a beat is received that has no write data
+ * :                                 |       | strobes set, that write data beat is replaced
  * :                                 |       | with an IDLE beat. Also, causes all transactions
  * :                                 |       | that are to be output to the AHB domain to be an
- * :                                 |       | undefined length INCR.                          
- * 
+ * :                                 |       | undefined length INCR.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_AHB_CNTL_FORCE_INCR
- * 
+ *
  * Multiple outstanding write transactions
  */
 #define ALT_L3_AHB_CNTL_FORCE_INCR_E_DIS    0x0
 /*
  * Enumerated value for register field ALT_L3_AHB_CNTL_FORCE_INCR
- * 
+ *
  * If a beat is received that has no write data strobes set, that write data beat
  * is replaced with an IDLE beat. Also, causes all transactions that are to be
  * output to the AHB domain to be an undefined length INCR.
@@ -4695,7 +4695,7 @@ typedef volatile struct ALT_L3_MST_LWH2F_raw_s  ALT_L3_MST_LWH2F_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_AHB_CNTL.
  */
 struct ALT_L3_AHB_CNTL_s
@@ -4722,7 +4722,7 @@ typedef volatile struct ALT_L3_AHB_CNTL_s  ALT_L3_AHB_CNTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_USB1.
  */
 struct ALT_L3_MST_USB1_s
@@ -4752,10 +4752,10 @@ typedef volatile struct ALT_L3_MST_USB1_raw_s  ALT_L3_MST_USB1_raw_t;
 /*
  * Register Group : NANDDATA - ALT_L3_MST_NANDDATA
  * NANDDATA
- * 
+ *
  * Registers associated with the NANDDATA master. This master is used to access
  * data in the NAND flash controller.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4765,7 +4765,7 @@ typedef volatile struct ALT_L3_MST_USB1_raw_s  ALT_L3_MST_USB1_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_NANDDATA.
  */
 struct ALT_L3_MST_NANDDATA_s
@@ -4795,10 +4795,10 @@ typedef volatile struct ALT_L3_MST_NANDDATA_raw_s  ALT_L3_MST_NANDDATA_raw_t;
 /*
  * Register Group : USB0 - ALT_L3_MST_USB0
  * USB0
- * 
+ *
  * Registers associated with the USB0 master. This master is used to access the
  * registers in USB0.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4808,7 +4808,7 @@ typedef volatile struct ALT_L3_MST_NANDDATA_raw_s  ALT_L3_MST_NANDDATA_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_USB0.
  */
 struct ALT_L3_MST_USB0_s
@@ -4838,10 +4838,10 @@ typedef volatile struct ALT_L3_MST_USB0_raw_s  ALT_L3_MST_USB0_raw_t;
 /*
  * Register Group : NANDREGS - ALT_L3_MST_NAND
  * NANDREGS
- * 
+ *
  * Registers associated with the NANDREGS master. This master is used to access the
  * registers in the NAND flash controller.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4851,7 +4851,7 @@ typedef volatile struct ALT_L3_MST_USB0_raw_s  ALT_L3_MST_USB0_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_NAND.
  */
 struct ALT_L3_MST_NAND_s
@@ -4881,10 +4881,10 @@ typedef volatile struct ALT_L3_MST_NAND_raw_s  ALT_L3_MST_NAND_raw_t;
 /*
  * Register Group : QSPIDATA - ALT_L3_MST_QSPIDATA
  * QSPIDATA
- * 
+ *
  * Registers associated with the QSPIDATA master. This master is used to access
  * data in the QSPI flash controller.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -4894,7 +4894,7 @@ typedef volatile struct ALT_L3_MST_NAND_raw_s  ALT_L3_MST_NAND_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_QSPIDATA.
  */
 struct ALT_L3_MST_QSPIDATA_s
@@ -4924,34 +4924,34 @@ typedef volatile struct ALT_L3_MST_QSPIDATA_raw_s  ALT_L3_MST_QSPIDATA_raw_t;
 /*
  * Register Group : FPGAMGRDATA - ALT_L3_MST_FPGAMGRDATA
  * FPGAMGRDATA
- * 
+ *
  * Registers associated with the FPGAMGRDATA master. This master is used to send
  * FPGA configuration image data to the FPGA Manager.
- * 
+ *
  */
 /*
  * Register : Write Tidemark - wr_tidemark
- * 
+ *
  * Controls the release of the transaction in the write data FIFO.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [3:0]  | RW     | 0x4   | Level      
+ *  [3:0]  | RW     | 0x4   | Level
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Level - level
- * 
+ *
  * Stalls the transaction in the write data FIFO until the number of occupied slots
  * in the write data FIFO exceeds the level. Note that the transaction is released
  * before this level is achieved if the network receives the WLAST beat or the
  * write FIFO becomes full.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_WR_TIDEMARK_LEVEL register field. */
 #define ALT_L3_WR_TIDEMARK_LEVEL_LSB        0
@@ -4978,7 +4978,7 @@ typedef volatile struct ALT_L3_MST_QSPIDATA_raw_s  ALT_L3_MST_QSPIDATA_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_WR_TIDEMARK.
  */
 struct ALT_L3_WR_TIDEMARK_s
@@ -5004,7 +5004,7 @@ typedef volatile struct ALT_L3_WR_TIDEMARK_s  ALT_L3_WR_TIDEMARK_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_FPGAMGRDATA.
  */
 struct ALT_L3_MST_FPGAMGRDATA_s
@@ -5038,11 +5038,11 @@ typedef volatile struct ALT_L3_MST_FPGAMGRDATA_raw_s  ALT_L3_MST_FPGAMGRDATA_raw
 /*
  * Register Group : HPS2FPGA - ALT_L3_MST_H2F
  * HPS2FPGA
- * 
+ *
  * Registers associated with the HPS2FPGA AXI Bridge master. This master is used to
  * access the HPS2FPGA AXI Bridge slave. This slave is used to access slaves in the
  * FPGA connected to the HPS2FPGA AXI Bridge.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5052,7 +5052,7 @@ typedef volatile struct ALT_L3_MST_FPGAMGRDATA_raw_s  ALT_L3_MST_FPGAMGRDATA_raw
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_H2F.
  */
 struct ALT_L3_MST_H2F_s
@@ -5086,10 +5086,10 @@ typedef volatile struct ALT_L3_MST_H2F_raw_s  ALT_L3_MST_H2F_raw_t;
 /*
  * Register Group : ACP - ALT_L3_MST_ACP
  * ACP
- * 
+ *
  * Registers associated with the ACP master. This master is used to access the MPU
  * ACP slave via the ACP ID Mapper.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5099,7 +5099,7 @@ typedef volatile struct ALT_L3_MST_H2F_raw_s  ALT_L3_MST_H2F_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_ACP.
  */
 struct ALT_L3_MST_ACP_s
@@ -5129,10 +5129,10 @@ typedef volatile struct ALT_L3_MST_ACP_raw_s  ALT_L3_MST_ACP_raw_t;
 /*
  * Register Group : Boot ROM - ALT_L3_MST_ROM
  * Boot ROM
- * 
+ *
  * Registers associated with the Boot ROM master. This master is used to access the
  * contents of the Boot ROM.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5142,7 +5142,7 @@ typedef volatile struct ALT_L3_MST_ACP_raw_s  ALT_L3_MST_ACP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_ROM.
  */
 struct ALT_L3_MST_ROM_s
@@ -5172,10 +5172,10 @@ typedef volatile struct ALT_L3_MST_ROM_raw_s  ALT_L3_MST_ROM_raw_t;
 /*
  * Register Group : On-chip RAM - ALT_L3_MST_OCRAM
  * On-chip RAM
- * 
+ *
  * Registers associated with the On-chip RAM master. This master is used to access
  * the contents of the On-chip RAM.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5185,7 +5185,7 @@ typedef volatile struct ALT_L3_MST_ROM_raw_s  ALT_L3_MST_ROM_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MST_OCRAM.
  */
 struct ALT_L3_MST_OCRAM_s
@@ -5224,7 +5224,7 @@ typedef volatile struct ALT_L3_MST_OCRAM_raw_s  ALT_L3_MST_OCRAM_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_MSTGRP.
  */
 struct ALT_L3_MSTGRP_s
@@ -5312,57 +5312,57 @@ typedef volatile struct ALT_L3_MSTGRP_raw_s  ALT_L3_MSTGRP_raw_t;
 /*
  * Register Group : Slave Register Group - ALT_L3_SLVGRP
  * Slave Register Group
- * 
+ *
  * Registers associated with slave interfaces.
- * 
+ *
  */
 /*
  * Register Group : DAP - ALT_L3_SLV_DAP
  * DAP
- * 
+ *
  * Registers associated with the DAP slave interface. This slave is used by the DAP
  * to access slaves attached to the L3/L4 Interconnect.
- * 
+ *
  */
 /*
  * Register : Functionality Modification 2 Register - fn_mod2
- * 
+ *
  * Controls bypass merge of upsizing/downsizing.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [0]    | RW     | 0x0   | Bypass Merge
- *  [31:1] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Bypass Merge - bypass_merge
- * 
+ *
  * Controls bypass merge of upsizing/downsizing.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                                     
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:-------------------------------------------------
- *  ALT_L3_FN_MOD2_BYPASS_MERGE_E_ALTER   | 0x0   | The network can alter transactions.             
+ *  ALT_L3_FN_MOD2_BYPASS_MERGE_E_ALTER   | 0x0   | The network can alter transactions.
  *  ALT_L3_FN_MOD2_BYPASS_MERGE_E_NOALTER | 0x1   | The network does not alter any transactions that
- * :                                      |       | could pass through the upsizer legally without  
- * :                                      |       | alteration.                                     
- * 
+ * :                                      |       | could pass through the upsizer legally without
+ * :                                      |       | alteration.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_FN_MOD2_BYPASS_MERGE
- * 
+ *
  * The network can alter transactions.
  */
 #define ALT_L3_FN_MOD2_BYPASS_MERGE_E_ALTER     0x0
 /*
  * Enumerated value for register field ALT_L3_FN_MOD2_BYPASS_MERGE
- * 
+ *
  * The network does not alter any transactions that could pass through the upsizer
  * legally without alteration.
  */
@@ -5393,7 +5393,7 @@ typedef volatile struct ALT_L3_MSTGRP_raw_s  ALT_L3_MSTGRP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_FN_MOD2.
  */
 struct ALT_L3_FN_MOD2_s
@@ -5413,40 +5413,40 @@ typedef volatile struct ALT_L3_FN_MOD2_s  ALT_L3_FN_MOD2_t;
 
 /*
  * Register : Functionality Modification AHB Register - fn_mod_ahb
- * 
+ *
  * Controls how AHB-lite burst transactions are converted to AXI tranactions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
- *  [0]    | RW     | 0x0   | Read Increment Override 
+ *  [0]    | RW     | 0x0   | Read Increment Override
  *  [1]    | RW     | 0x0   | Write Increment Override
- *  [31:2] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Read Increment Override - rd_incr_override
- * 
+ *
  * Controls how AHB-lite read burst transactions are converted to AXI tranactions.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description                                  
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE_E_DEFAULT | 0x0   | The L3 Interconnect converts AHB-lite read   
+ *  ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE_E_DEFAULT | 0x0   | The L3 Interconnect converts AHB-lite read
  * :                                             |       | bursts to AXI transactions in accordance with
- * :                                             |       | the default behavior as specified in the ARM 
- * :                                             |       | NIC-301 documentation.                       
- *  ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE_E_SINGLES | 0x1   | The L3 Interconnect converts AHB-lite read   
- * :                                             |       | bursts to AXI single transactions.           
- * 
+ * :                                             |       | the default behavior as specified in the ARM
+ * :                                             |       | NIC-301 documentation.
+ *  ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE_E_SINGLES | 0x1   | The L3 Interconnect converts AHB-lite read
+ * :                                             |       | bursts to AXI single transactions.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE
- * 
+ *
  * The L3 Interconnect converts AHB-lite read bursts to AXI transactions in
  * accordance with the default behavior as specified in the ARM NIC-301
  * documentation.
@@ -5454,7 +5454,7 @@ typedef volatile struct ALT_L3_FN_MOD2_s  ALT_L3_FN_MOD2_t;
 #define ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE_E_DEFAULT    0x0
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE
- * 
+ *
  * The L3 Interconnect converts AHB-lite read bursts to AXI single transactions.
  */
 #define ALT_L3_FN_MOD_AHB_RD_INCR_OVERRIDE_E_SINGLES    0x1
@@ -5478,26 +5478,26 @@ typedef volatile struct ALT_L3_FN_MOD2_s  ALT_L3_FN_MOD2_t;
 
 /*
  * Field : Write Increment Override - wr_incr_override
- * 
+ *
  * Controls how AHB-lite write burst transactions are converted to AXI tranactions.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description                                  
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:----------------------------------------------
- *  ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE_E_DEFAULT | 0x0   | The L3 Interconnect converts AHB-lite write  
+ *  ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE_E_DEFAULT | 0x0   | The L3 Interconnect converts AHB-lite write
  * :                                             |       | bursts to AXI transactions in accordance with
- * :                                             |       | the default behavior as specified in the ARM 
- * :                                             |       | NIC-301 documentation.                       
- *  ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE_E_SINGLES | 0x1   | The L3 Interconnect converts AHB-lite write  
- * :                                             |       | bursts to AXI single transactions.           
- * 
+ * :                                             |       | the default behavior as specified in the ARM
+ * :                                             |       | NIC-301 documentation.
+ *  ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE_E_SINGLES | 0x1   | The L3 Interconnect converts AHB-lite write
+ * :                                             |       | bursts to AXI single transactions.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE
- * 
+ *
  * The L3 Interconnect converts AHB-lite write bursts to AXI transactions in
  * accordance with the default behavior as specified in the ARM NIC-301
  * documentation.
@@ -5505,7 +5505,7 @@ typedef volatile struct ALT_L3_FN_MOD2_s  ALT_L3_FN_MOD2_t;
 #define ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE_E_DEFAULT    0x0
 /*
  * Enumerated value for register field ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE
- * 
+ *
  * The L3 Interconnect converts AHB-lite write bursts to AXI single transactions.
  */
 #define ALT_L3_FN_MOD_AHB_WR_INCR_OVERRIDE_E_SINGLES    0x1
@@ -5535,7 +5535,7 @@ typedef volatile struct ALT_L3_FN_MOD2_s  ALT_L3_FN_MOD2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_FN_MOD_AHB.
  */
 struct ALT_L3_FN_MOD_AHB_s
@@ -5556,25 +5556,25 @@ typedef volatile struct ALT_L3_FN_MOD_AHB_s  ALT_L3_FN_MOD_AHB_t;
 
 /*
  * Register : Read Channel QoS Value - read_qos
- * 
+ *
  * QoS (Quality of Service) value for the read channel.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [3:0]  | RW     | 0x0   | Priority   
+ *  [3:0]  | RW     | 0x0   | Priority
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Priority - pri
- * 
+ *
  * QoS (Quality of Service) value for the read channel. A higher value has a higher
  * priority.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_RD_QOS_PRI register field. */
 #define ALT_L3_RD_QOS_PRI_LSB        0
@@ -5601,7 +5601,7 @@ typedef volatile struct ALT_L3_FN_MOD_AHB_s  ALT_L3_FN_MOD_AHB_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_RD_QOS.
  */
 struct ALT_L3_RD_QOS_s
@@ -5621,25 +5621,25 @@ typedef volatile struct ALT_L3_RD_QOS_s  ALT_L3_RD_QOS_t;
 
 /*
  * Register : Write Channel QoS Value - write_qos
- * 
+ *
  * QoS (Quality of Service) value for the write channel.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [3:0]  | RW     | 0x0   | Priority   
+ *  [3:0]  | RW     | 0x0   | Priority
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Priority - pri
- * 
+ *
  * QoS (Quality of Service) value for the write channel. A higher value has a
  * higher priority.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L3_WR_QOS_PRI register field. */
 #define ALT_L3_WR_QOS_PRI_LSB        0
@@ -5666,7 +5666,7 @@ typedef volatile struct ALT_L3_RD_QOS_s  ALT_L3_RD_QOS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L3_WR_QOS.
  */
 struct ALT_L3_WR_QOS_s
@@ -5692,7 +5692,7 @@ typedef volatile struct ALT_L3_WR_QOS_s  ALT_L3_WR_QOS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_DAP.
  */
 struct ALT_L3_SLV_DAP_s
@@ -5728,10 +5728,10 @@ typedef volatile struct ALT_L3_SLV_DAP_raw_s  ALT_L3_SLV_DAP_raw_t;
 /*
  * Register Group : MPU - ALT_L3_SLV_MPU
  * MPU
- * 
+ *
  * Registers associated with the MPU slave interface. This slave is used by the MPU
  * to access slaves attached to the L3/L4 Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5741,7 +5741,7 @@ typedef volatile struct ALT_L3_SLV_DAP_raw_s  ALT_L3_SLV_DAP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_MPU.
  */
 struct ALT_L3_SLV_MPU_s
@@ -5771,11 +5771,11 @@ typedef volatile struct ALT_L3_SLV_MPU_raw_s  ALT_L3_SLV_MPU_raw_t;
 /*
  * Register Group : SDMMC - ALT_L3_SLV_SDMMC
  * SDMMC
- * 
+ *
  * Registers associated with the SDMMC slave interface. This slave is used by the
  * DMA controller built into the SDMMC to access slaves attached to the L3/L4
  * Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5785,7 +5785,7 @@ typedef volatile struct ALT_L3_SLV_MPU_raw_s  ALT_L3_SLV_MPU_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_SDMMC.
  */
 struct ALT_L3_SLV_SDMMC_s
@@ -5819,10 +5819,10 @@ typedef volatile struct ALT_L3_SLV_SDMMC_raw_s  ALT_L3_SLV_SDMMC_raw_t;
 /*
  * Register Group : DMA - ALT_L3_SLV_DMA
  * DMA
- * 
+ *
  * Registers associated with the DMA Controller slave interface. This slave is used
  * by the DMA Controller to access slaves attached to the L3/L4 Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5832,7 +5832,7 @@ typedef volatile struct ALT_L3_SLV_SDMMC_raw_s  ALT_L3_SLV_SDMMC_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_DMA.
  */
 struct ALT_L3_SLV_DMA_s
@@ -5862,11 +5862,11 @@ typedef volatile struct ALT_L3_SLV_DMA_raw_s  ALT_L3_SLV_DMA_raw_t;
 /*
  * Register Group : FPGA2HPS - ALT_L3_SLV_F2H
  * FPGA2HPS
- * 
+ *
  * Registers associated with the FPGA2HPS AXI Bridge slave interface. This slave is
  * used by the FPGA2HPS AXI Bridge to access slaves attached to the L3/L4
  * Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5876,7 +5876,7 @@ typedef volatile struct ALT_L3_SLV_DMA_raw_s  ALT_L3_SLV_DMA_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_F2H.
  */
 struct ALT_L3_SLV_F2H_s
@@ -5910,10 +5910,10 @@ typedef volatile struct ALT_L3_SLV_F2H_raw_s  ALT_L3_SLV_F2H_raw_t;
 /*
  * Register Group : ETR - ALT_L3_SLV_ETR
  * ETR
- * 
+ *
  * Registers associated with the ETR (TMC) slave interface. This slave is used by
  * the ETR to access slaves attached to the L3/L4 Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5923,7 +5923,7 @@ typedef volatile struct ALT_L3_SLV_F2H_raw_s  ALT_L3_SLV_F2H_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_ETR.
  */
 struct ALT_L3_SLV_ETR_s
@@ -5953,11 +5953,11 @@ typedef volatile struct ALT_L3_SLV_ETR_raw_s  ALT_L3_SLV_ETR_raw_t;
 /*
  * Register Group : EMAC0 - ALT_L3_SLV_EMAC0
  * EMAC0
- * 
+ *
  * Registers associated with the EMAC0 slave interface. This slave is used by the
  * DMA controller built into the EMAC0 to access slaves attached to the L3/L4
  * Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -5967,7 +5967,7 @@ typedef volatile struct ALT_L3_SLV_ETR_raw_s  ALT_L3_SLV_ETR_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_EMAC0.
  */
 struct ALT_L3_SLV_EMAC0_s
@@ -5997,11 +5997,11 @@ typedef volatile struct ALT_L3_SLV_EMAC0_raw_s  ALT_L3_SLV_EMAC0_raw_t;
 /*
  * Register Group : EMAC1 - ALT_L3_SLV_EMAC1
  * EMAC1
- * 
+ *
  * Registers associated with the EMAC1 slave interface. This slave is used by the
  * DMA controller built into the EMAC1 to access slaves attached to the L3/L4
  * Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -6011,7 +6011,7 @@ typedef volatile struct ALT_L3_SLV_EMAC0_raw_s  ALT_L3_SLV_EMAC0_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_EMAC1.
  */
 struct ALT_L3_SLV_EMAC1_s
@@ -6041,11 +6041,11 @@ typedef volatile struct ALT_L3_SLV_EMAC1_raw_s  ALT_L3_SLV_EMAC1_raw_t;
 /*
  * Register Group : USB0 - ALT_L3_SLV_USB0
  * USB0
- * 
+ *
  * Registers associated with the USB0 slave interface. This slave is used by the
  * DMA controller built into the USB0 to access slaves attached to the L3/L4
  * Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -6055,7 +6055,7 @@ typedef volatile struct ALT_L3_SLV_EMAC1_raw_s  ALT_L3_SLV_EMAC1_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_USB0.
  */
 struct ALT_L3_SLV_USB0_s
@@ -6089,11 +6089,11 @@ typedef volatile struct ALT_L3_SLV_USB0_raw_s  ALT_L3_SLV_USB0_raw_t;
 /*
  * Register Group : NAND - ALT_L3_SLV_NAND
  * NAND
- * 
+ *
  * Registers associated with the NAND slave interface. This slave is used by the
  * DMA controller built into the NAND flash controller to access slaves attached to
  * the L3/L4 Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -6103,7 +6103,7 @@ typedef volatile struct ALT_L3_SLV_USB0_raw_s  ALT_L3_SLV_USB0_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_NAND.
  */
 struct ALT_L3_SLV_NAND_s
@@ -6133,11 +6133,11 @@ typedef volatile struct ALT_L3_SLV_NAND_raw_s  ALT_L3_SLV_NAND_raw_t;
 /*
  * Register Group : USB1 - ALT_L3_SLV_USB1
  * USB1
- * 
+ *
  * Registers associated with the USB1 slave interface. This slave is used by the
  * DMA controller built into the USB1 to access slaves attached to the L3/L4
  * Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -6147,7 +6147,7 @@ typedef volatile struct ALT_L3_SLV_NAND_raw_s  ALT_L3_SLV_NAND_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLV_USB1.
  */
 struct ALT_L3_SLV_USB1_s
@@ -6186,7 +6186,7 @@ typedef volatile struct ALT_L3_SLV_USB1_raw_s  ALT_L3_SLV_USB1_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3_SLVGRP.
  */
 struct ALT_L3_SLVGRP_s
@@ -6255,7 +6255,7 @@ typedef volatile struct ALT_L3_SLVGRP_raw_s  ALT_L3_SLVGRP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L3.
  */
 struct ALT_L3_s
@@ -6296,4 +6296,3 @@ typedef volatile struct ALT_L3_raw_s  ALT_L3_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_L3_H__ */
-

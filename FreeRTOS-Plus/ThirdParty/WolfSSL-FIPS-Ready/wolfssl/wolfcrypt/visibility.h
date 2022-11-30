@@ -76,4 +76,3 @@
 
 #endif /* HAVE_FIPS */
 #endif /* WOLF_CRYPT_VISIBILITY_H */
-

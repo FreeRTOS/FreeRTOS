@@ -2137,9 +2137,9 @@ int wc_DhImportKeyPair(DhKey* key, const byte* priv, word32 privSz,
     return 0;
 }
 
-/* Can be used with WOLFSSL_DH_EXTRA when key is loaded with 
+/* Can be used with WOLFSSL_DH_EXTRA when key is loaded with
     wc_DhKeyDecode or wc_DhImportKeyPair */
-int wc_DhExportKeyPair(DhKey* key, byte* priv, word32* pPrivSz, 
+int wc_DhExportKeyPair(DhKey* key, byte* priv, word32* pPrivSz,
     byte* pub, word32* pPubSz)
 {
     int ret = 0;

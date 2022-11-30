@@ -94,5 +94,3 @@ void vPortInitialiseBlocks( void )
 	/* Only required when static memory is not cleared. */
 	xNextFreeByte = ( size_t ) 0;
 }
-
-

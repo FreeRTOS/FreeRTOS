@@ -41,12 +41,11 @@ extern "C"
 /*
  * Component : On-chip RAM Module - ALT_OCRAM
  * On-chip RAM Module
- * 
- * 
+ *
+ *
  */
 
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_OCRAM_H__ */
-

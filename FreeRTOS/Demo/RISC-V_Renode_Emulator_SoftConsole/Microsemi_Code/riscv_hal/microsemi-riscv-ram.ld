@@ -136,4 +136,3 @@ SECTIONS
 	__freertos_irq_stack_top = .;
   } > ram
 }
-

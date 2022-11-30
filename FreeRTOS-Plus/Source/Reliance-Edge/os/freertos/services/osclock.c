@@ -76,4 +76,3 @@ uint32_t RedOsClockGetTime(void)
     */
     return 0;
 }
-

@@ -267,7 +267,7 @@ void LCD_CtrlLinesWrite(GPIO_TypeDef* GPIOx, u32 CtrlPins, BitAction BitVal)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void LCD_CheckMasterStatus(void)			
+void LCD_CheckMasterStatus(void)
 {
   u8 MasterStatus = 0;
 
@@ -280,7 +280,7 @@ void LCD_CheckMasterStatus(void)
   LCD_CtrlLinesWrite(GPIO2, CtrlPin_E1, Bit_SET);     /* E1 = 1 */
   MasterStatus = GPIO_Read(GPIO2);
   LCD_CtrlLinesWrite(GPIO2, CtrlPin_E1, Bit_RESET);   /* E1 = 0 */
-	
+
   /* Wait until BF is cleared: D7 line */
   while ((MasterStatus & 0x20000))
   {
@@ -297,20 +297,20 @@ void LCD_CheckMasterStatus(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void LCD_CheckSlaveStatus(void)			
+void LCD_CheckSlaveStatus(void)
 {
   u8 SlaveStatus = 0;
 
   /* Configure Data lines as Input */
   LCD_DataLinesConfig(Input);
   /* Start the slave read sequence */
-  LCD_CtrlLinesWrite(GPIO2, CtrlPin_E2, Bit_RESET);   /* E2 = 0 */	
+  LCD_CtrlLinesWrite(GPIO2, CtrlPin_E2, Bit_RESET);   /* E2 = 0 */
   LCD_CtrlLinesWrite(GPIO2, CtrlPin_RW, Bit_SET);     /* RW = 1 */
   LCD_CtrlLinesWrite(GPIO2, CtrlPin_DI, Bit_RESET);   /* DI = 0 */
   LCD_CtrlLinesWrite(GPIO2, CtrlPin_E2, Bit_SET);     /* E2 = 1 */
   SlaveStatus = GPIO_Read(GPIO2);
   LCD_CtrlLinesWrite(GPIO2, CtrlPin_E2, Bit_RESET);   /* E2 = 0 */
-	
+
   /* Wait until BF is cleared: D7 line */
   while ((SlaveStatus & 0x20000))
   {
@@ -479,7 +479,7 @@ void LCD_Init(void)
   MRCC_PeripheralClockConfig(MRCC_Peripheral_GPIO, ENABLE);
 
   /* Configure control lines signals as output mode */
-  LCD_CtrlLinesConfig();	
+  LCD_CtrlLinesConfig();
 
   /* Master LCD Init */
   LCD_SendMasterCmd(SOFTWARE_RESET);
@@ -503,9 +503,9 @@ void LCD_Init(void)
   LCD_SendSlaveCmd(START_LINE);             /* Set slave display start line to 0 */
   LCD_SendSlaveCmd(DISPLAY_ON);
 
-  /* Clear LCD */	
+  /* Clear LCD */
   LCD_Clear();
-  /* Set current Page to 0 for Master and Slave LCDs */	
+  /* Set current Page to 0 for Master and Slave LCDs */
   LCD_SetSlavePage(0);
   LCD_SetMasterPage(0);
 }
@@ -597,7 +597,7 @@ void LCD_SetTextColor(TextColorMode_TypeDef TextColor)
 *******************************************************************************/
 void LCD_Clear(void)
 {
-  u8 Page = 0, Column = 0;	
+  u8 Page = 0, Column = 0;
 
   /* Clear master and slave LCDs page by page */
   for (Page=0; Page<4; Page++)
@@ -616,7 +616,7 @@ void LCD_Clear(void)
     }
   }
 }
-	
+
 /*******************************************************************************
 * Function Name  : LCD_ClearLine
 * Description    : Clear the selected line of the LCD.
@@ -628,7 +628,7 @@ void LCD_Clear(void)
 *******************************************************************************/
 void LCD_ClearLine(u8 Line)
 {
-  u8 Page = 0, Column = 0;	
+  u8 Page = 0, Column = 0;
 
   /* Clear the slected master and slave line */
   for (Page=Line; Page<Line+2; Page++)
@@ -658,7 +658,7 @@ void LCD_ClearLine(u8 Line)
 void LCD_ClearMaster(void)
 {
   u8 Page = 0, Column = 0;
-	
+
   /* Clear all master LCD pages */
   for (Page=0; Page<4; Page++)
   {
@@ -683,7 +683,7 @@ void LCD_ClearMaster(void)
 *******************************************************************************/
 void LCD_ClearSlave()
 {
-  u8 Page = 0, Column = 0;	
+  u8 Page = 0, Column = 0;
 
   /* Clear all slave LCD pages */
   for (Page=0; Page<4; Page++)
@@ -728,7 +728,7 @@ void LCD_DrawChar(u8 Line, u8 Column, u8 Width, u8 *Bmp)
       /* Return if column exceeded 121 */
       return;
     }
-    if (X > 60) 	
+    if (X > 60)
     {
       /* To be displayed on slave LCD (Window = 1) */
       Window = 1;
@@ -736,7 +736,7 @@ void LCD_DrawChar(u8 Line, u8 Column, u8 Width, u8 *Bmp)
       ActualColumn = X%61;
     }
     else
-    {	
+    {
       /* To be displayed on master LCD (Window = 0) */
       ActualColumn = X;
     }
@@ -809,7 +809,7 @@ void LCD_DisplayChar(u8 Line, u8 Column, u8 Ascii, TextColorMode_TypeDef CharMod
       }
       else
       {
-        DotBuffer[i] = ~AsciiDotsTable[Ascii*14+i-1];	
+        DotBuffer[i] = ~AsciiDotsTable[Ascii*14+i-1];
       }
     }
     /* Character displayed as black Text on white buttom  */
@@ -817,11 +817,11 @@ void LCD_DisplayChar(u8 Line, u8 Column, u8 Ascii, TextColorMode_TypeDef CharMod
     {
       if(i%2==0)
       {
-        DotBuffer[i] = AsciiDotsTable[Ascii*14+i+1];			
+        DotBuffer[i] = AsciiDotsTable[Ascii*14+i+1];
       }
       else
       {
-        DotBuffer[i] = AsciiDotsTable[Ascii*14+i-1];	
+        DotBuffer[i] = AsciiDotsTable[Ascii*14+i-1];
       }
     }
   }
@@ -841,7 +841,7 @@ u8 LCD_HexToAsciiLow(u8 byte)
 {
   /* Keep lower nibble only */
   byte = byte & 0x0F;
-  /* If the ascii is a number */	
+  /* If the ascii is a number */
   if (byte <= 0x09)
   {
     /* Add 0x30 to its ascii */
@@ -865,7 +865,7 @@ u8 LCD_HexToAsciiLow(u8 byte)
 u8 LCD_HexToAsciiHigh(u8 byte)
 {
   /* Keep upper nibble only */
-  byte = byte & 0xF0;	
+  byte = byte & 0xF0;
   byte = byte >> 4;
   /* If the ascii is a number */
   if (byte <= 0x09)
@@ -1087,8 +1087,8 @@ void LCD_Printf(u8 *ptr, ...)
         }
       }
       else
-      {	
-        /* Display characters different from (\r, \n, %) */ 			
+      {
+        /* Display characters different from (\r, \n, %) */
         LCD_DisplayChar(RefPage, RefColumn, c1, TextMode);
         RefColumn+=7;
         ptr++;
@@ -1400,4 +1400,3 @@ void LCD_DrawBox(u8 XPos, u8 YPos, u8 Dx, u8 Dy)
 }
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE******/
-

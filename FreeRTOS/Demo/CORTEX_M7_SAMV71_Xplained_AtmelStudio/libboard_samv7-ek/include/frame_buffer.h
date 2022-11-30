@@ -58,7 +58,7 @@ extern uint32_t FB_DrawPixel( uint32_t x, uint32_t y );
 extern uint32_t FB_DrawCircle( uint32_t x, uint32_t y, uint32_t r );
 extern uint32_t FB_DrawFilledCircle(
 				uint32_t dwX,
-				uint32_t dwY, 
+				uint32_t dwY,
 				uint32_t dwRadius);
 
 extern uint32_t FB_DrawRectangle(

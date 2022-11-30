@@ -46,7 +46,7 @@ with newer versions.
 
     * Moved stack-internal parts of tcp.h to tcp_impl.h, tcp.h now only contains
       the actual application programmer's API
-  
+
     * Separated timer implementation from sys.h/.c, moved to timers.h/.c;
       Added timer implementation for NO_SYS==1, set NO_SYS_NO_TIMERS==1 if you
       still want to use your own timer implementation for NO_SYS==0 (as before).
@@ -120,7 +120,7 @@ with newer versions.
     off any more, if this is set to 0, only one packet (the most recent one) is
     queued (like demanded by RFC 1122).
 
-  
+
   ++ Major bugfixes/improvements
 
   * Implemented tcp_shutdown() to only shut down one end of a connection

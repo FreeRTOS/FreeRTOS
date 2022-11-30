@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -33,11 +33,11 @@
  * \addtogroup tsd_module TouchScreen Driver
  *
  * \section Purpose
- * 
+ *
  * This unit provides a very powerful touchscreen driver which handles all the
  * complexity. This includes touchscreen calibration, retrieving measurements,
  * configuring the TSADC, etc.
- * 
+ *
  * \section Usage
  *
  * -# Implement ADC interrupt handler in application, to invoke TSD_Handler()

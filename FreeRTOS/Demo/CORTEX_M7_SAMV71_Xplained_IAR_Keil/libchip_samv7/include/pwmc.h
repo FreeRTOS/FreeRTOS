@@ -125,4 +125,3 @@ extern uint32_t PWMC_GetStatus2( Pwm* pPwm);
 #endif
 
 #endif /* #ifndef _PWMC_ */
-

@@ -15,7 +15,7 @@
 ; CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
 ; INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 ;*******************************************************************************
-    
+
   SECTION .text:CODE(2)
 
   ; Exported functions
@@ -39,7 +39,7 @@
   EXPORT __BASEPRICONFIG
   EXPORT __GetBASEPRI
   EXPORT __REV_HalfWord
-  EXPORT __REV_Word  
+  EXPORT __REV_Word
 
 ;*******************************************************************************
 ; Function Name  : __WFI
@@ -47,8 +47,8 @@
 ; Input          : None
 ; Return         : None
 ;*******************************************************************************
-__WFI 
- 
+__WFI
+
     WFI
     BX r14
 
@@ -132,7 +132,7 @@ __MRS_CONTROL
 ;*******************************************************************************
 ; Function Name  : __MSR_CONTROL
 ; Description    : Assembler function for the MSR instruction.
-; Input          : - r0 : Cortex-M3 CONTROL register new value.  
+; Input          : - r0 : Cortex-M3 CONTROL register new value.
 ; Return         : None
 ;*******************************************************************************
 __MSR_CONTROL
@@ -188,7 +188,7 @@ __MSR_MSP
 ;*******************************************************************************
 ; Function Name  : __SETPRIMASK
 ; Description    : Assembler function to set the PRIMASK.
-; Input          : None 
+; Input          : None
 ; Return         : None
 ;*******************************************************************************
 __SETPRIMASK
@@ -199,7 +199,7 @@ __SETPRIMASK
 ;*******************************************************************************
 ; Function Name  : __RESETPRIMASK
 ; Description    : Assembler function to reset the PRIMASK.
-; Input          : None 
+; Input          : None
 ; Return         : None
 ;*******************************************************************************
 __RESETPRIMASK
@@ -210,7 +210,7 @@ __RESETPRIMASK
 ;*******************************************************************************
 ; Function Name  : __SETFAULTMASK
 ; Description    : Assembler function to set the FAULTMASK.
-; Input          : None 
+; Input          : None
 ; Return         : None
 ;*******************************************************************************
 __SETFAULTMASK
@@ -221,7 +221,7 @@ __SETFAULTMASK
 ;*******************************************************************************
 ; Function Name  : __RESETFAULTMASK
 ; Description    : Assembler function to reset the FAULTMASK.
-; Input          : None 
+; Input          : None
 ; Return         : None
 ;*******************************************************************************
 __RESETFAULTMASK
@@ -232,7 +232,7 @@ __RESETFAULTMASK
 ;*******************************************************************************
 ; Function Name  : __BASEPRICONFIG
 ; Description    : Assembler function to set the Base Priority.
-; Input          : - r0 : Base Priority new value  
+; Input          : - r0 : Base Priority new value
 ; Return         : None
 ;*******************************************************************************
 __BASEPRICONFIG
@@ -243,8 +243,8 @@ __BASEPRICONFIG
 ;*******************************************************************************
 ; Function Name  : __GetBASEPRI
 ; Description    : Assembler function to get the Base Priority value.
-; Input          : None 
-; Return         : - r0 : Base Priority value 
+; Input          : None
+; Return         : - r0 : Base Priority value
 ;*******************************************************************************
 __GetBASEPRI
 
@@ -257,8 +257,8 @@ __GetBASEPRI
 ; Input          : - r0 : specifies the input variable
 ; Return         : - r0 : holds tve variable value after byte reversing.
 ;*******************************************************************************
-__REV_HalfWord 
- 
+__REV_HalfWord
+
   REV16 r0, r0
   BX r14
 
@@ -268,11 +268,11 @@ __REV_HalfWord
 ; Input          : - r0 : specifies the input variable
 ; Return         : - r0 : holds tve variable value after byte reversing.
 ;*******************************************************************************
-__REV_Word 
- 
+__REV_Word
+
   REV r0, r0
   BX r14
-  
+
   END
-  
+
 ;******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE*****

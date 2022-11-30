@@ -595,4 +595,3 @@ uint32_t RedCrcNode(
 
     return ulCrc;
 }
-

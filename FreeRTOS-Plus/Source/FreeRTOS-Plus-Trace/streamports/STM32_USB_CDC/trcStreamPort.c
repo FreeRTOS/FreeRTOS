@@ -82,9 +82,9 @@ traceResult prvTraceCDCReceive(void *data, uint32_t uiSize, int32_t* piBytesRece
 			{
 				pxUSBBuffers->bufferUSB[i] = pxUSBBuffers->bufferUSB[i + uiSize];
 			}
-			
+
 			*piBytesReceived = uiSize;
-			
+
 			pxUSBBuffers->idx = uiDiff;
 		}
 	}
@@ -92,7 +92,7 @@ traceResult prvTraceCDCReceive(void *data, uint32_t uiSize, int32_t* piBytesRece
 	{
 		*piBytesReceived = 0;
 	}
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -106,7 +106,7 @@ traceResult prvTraceCDCTransmit(void* pvData, uint32_t uiSize, int32_t * piBytes
 	*piBytesSent = 0;
 
 	result = CDC_Transmit_FS(pvData, uiSize);
-	
+
 	if (result == USBD_OK)
 	{
 		fail_counter = 0;
@@ -148,4 +148,3 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
 
 #endif	/*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
 #endif  /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
-

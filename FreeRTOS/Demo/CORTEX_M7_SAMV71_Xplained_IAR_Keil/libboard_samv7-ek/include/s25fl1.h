@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -102,12 +102,12 @@
 #define STATUS_SPRL_UNLOCKED   (0 << 7)
 /** Sector protection registers are locked. */
 #define STATUS_SPRL_LOCKED     (1 << 7)
-   
+
 /** Quad enable bit */
 #define STATUS_QUAD_ENABLE     (1 << 1)
    /** Quad enable bit */
 #define STATUS_WRAP_ENABLE     (0 << 4)
-   
+
 #define STATUS_WRAP_BYTE       (1 << 5)
 
 /** Read array command code. */
@@ -117,11 +117,11 @@
 /** Fast Read array  command code. */
 #define READ_ARRAY_DUAL        0x3B
 /** Fast Read array  command code. */
-#define READ_ARRAY_QUAD        0x6B   
+#define READ_ARRAY_QUAD        0x6B
 /** Fast Read array  command code. */
 #define READ_ARRAY_DUAL_IO     0xBB
 /** Fast Read array  command code. */
-#define READ_ARRAY_QUAD_IO     0xEB   
+#define READ_ARRAY_QUAD_IO     0xEB
 /** Block erase command code (4K block). */
 #define BLOCK_ERASE_4K         0x20
 /** Block erase command code (32K block). */
@@ -164,7 +164,7 @@
 #define SOFT_RESET             0x99
 /** Resume from deep power-down command code. */
 #define WRAP_ENABLE            0x77
-   
+
 
 
 /** SPI Flash Manufacturer JEDEC ID */
@@ -232,4 +232,3 @@ extern unsigned char S25FL1D_ReadQuadIO(
     uint8_t ContMode);
 
 #endif // #ifndef S25FL1_H
-

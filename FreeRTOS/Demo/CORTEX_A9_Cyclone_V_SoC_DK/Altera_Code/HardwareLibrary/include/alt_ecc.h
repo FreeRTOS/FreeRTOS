@@ -5,20 +5,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -29,7 +29,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #ifndef __ALT_ECC_H__
@@ -47,7 +47,7 @@ extern "C"
  *
  * This module provides programmatic access and control of the Error-Correcting
  * Code (ECC) protection features for the embedded RAM blocks in HPS peripherals.
- * 
+ *
  * ECC protection can be enabled or disabled for each of the following HPS
  * peripheral embedded RAM blocks:
  *  * L2 Cache Data RAM
@@ -94,8 +94,8 @@ typedef enum ALT_ECC_RAM_ENUM_e
     ALT_ECC_RAM_EMAC0,              /*!< EMAC0 Receive/Transmit Data FIFO Buffer RAMs */
     ALT_ECC_RAM_EMAC1,              /*!< EMAC1 Receive/Transmit Data FIFO Buffer RAMs */
     ALT_ECC_RAM_DMA,                /*!< DMA Controller RAM */
-    ALT_ECC_RAM_CAN0,               /*!< CAN0 RAM */ 
-    ALT_ECC_RAM_CAN1,               /*!< CAN1 RAM */ 
+    ALT_ECC_RAM_CAN0,               /*!< CAN0 RAM */
+    ALT_ECC_RAM_CAN1,               /*!< CAN1 RAM */
     ALT_ECC_RAM_NAND,               /*!< NAND Controller Buffer, Read FIFO, Write FIFO RAMs */
     ALT_ECC_RAM_QSPI,               /*!< QSPI Controller RAM */
     ALT_ECC_RAM_SDMMC               /*!< SD/MMC Controller Port A and Port B RAMs */
@@ -127,7 +127,7 @@ typedef enum ALT_ECC_ERROR_STATUS_e
                                              *   Interrupt: \b l2_ecc_byte_wr_IRQ
                                              */
     ALT_ECC_ERROR_L2_SERR = 0x2,            /*!< L2 Cache
-                                             *   ECC single bit, correctable error status 
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b l2_ecc_corrected_IRQ
                                              */
     ALT_ECC_ERROR_L2_DERR = 0x4,            /*!< L2 Cache
@@ -135,80 +135,80 @@ typedef enum ALT_ECC_ERROR_STATUS_e
                                              *   Interrupt: \b l2_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_OCRAM_SERR = 0x1,         /*!< On-chip RAM 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_OCRAM_SERR = 0x1,         /*!< On-chip RAM
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b ram_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_OCRAM_DERR = 0x2,         /*!< On-chip RAM 
+    ALT_ECC_ERROR_OCRAM_DERR = 0x2,         /*!< On-chip RAM
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b ram_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_USB0_SERR = 0x1,          /*!< USB0 Controller 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_USB0_SERR = 0x1,          /*!< USB0 Controller
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b usb0_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_USB0_DERR = 0x2,          /*!< USB0 Controller 
+    ALT_ECC_ERROR_USB0_DERR = 0x2,          /*!< USB0 Controller
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b usb0_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_USB1_SERR = 0x1,          /*!< USB1 Controller 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_USB1_SERR = 0x1,          /*!< USB1 Controller
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b usb1_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_USB1_DERR = 0x2,          /*!< USB1 Controller 
+    ALT_ECC_ERROR_USB1_DERR = 0x2,          /*!< USB1 Controller
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b usb1_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_EMAC0_TX_FIFO_SERR = 0x1, /*!< EMAC0 Transmit Data FIFO Buffer 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_EMAC0_TX_FIFO_SERR = 0x1, /*!< EMAC0 Transmit Data FIFO Buffer
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b emac0_tx_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_EMAC0_TX_FIFO_DERR = 0x2, /*!< EMAC0 Transmit Data FIFO Buffer 
+    ALT_ECC_ERROR_EMAC0_TX_FIFO_DERR = 0x2, /*!< EMAC0 Transmit Data FIFO Buffer
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b emac0_tx_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_EMAC0_RX_FIFO_SERR = 0x4, /*!< EMAC0 Receive Data FIFO Buffer 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_EMAC0_RX_FIFO_SERR = 0x4, /*!< EMAC0 Receive Data FIFO Buffer
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b emac0_rx_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_EMAC0_RX_FIFO_DERR = 0x8, /*!< EMAC0 Receive Data FIFO Buffer 
+    ALT_ECC_ERROR_EMAC0_RX_FIFO_DERR = 0x8, /*!< EMAC0 Receive Data FIFO Buffer
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b emac0_rx_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_EMAC1_TX_FIFO_SERR = 0x1, /*!< EMAC1 Transmit Data FIFO Buffer 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_EMAC1_TX_FIFO_SERR = 0x1, /*!< EMAC1 Transmit Data FIFO Buffer
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b emac1_tx_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_EMAC1_TX_FIFO_DERR = 0x2, /*!< EMAC1 Transmit Data FIFO Buffer 
+    ALT_ECC_ERROR_EMAC1_TX_FIFO_DERR = 0x2, /*!< EMAC1 Transmit Data FIFO Buffer
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b emac1_tx_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_EMAC1_RX_FIFO_SERR = 0x4, /*!< EMAC1 Receive Data FIFO Buffer 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_EMAC1_RX_FIFO_SERR = 0x4, /*!< EMAC1 Receive Data FIFO Buffer
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b emac1_rx_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_EMAC1_RX_FIFO_DERR = 0x8, /*!< EMAC1 Receive Data FIFO Buffer 
+    ALT_ECC_ERROR_EMAC1_RX_FIFO_DERR = 0x8, /*!< EMAC1 Receive Data FIFO Buffer
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b emac1_rx_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_DMA_SERR = 0x1,           /*!< DMA Controller 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_DMA_SERR = 0x1,           /*!< DMA Controller
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b dma_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_DMA_DERR = 0x2,           /*!< DMA Controller 
+    ALT_ECC_ERROR_DMA_DERR = 0x2,           /*!< DMA Controller
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b dma_ecc_uncorrected_IRQ
                                              */
 
     ALT_ECC_ERROR_CAN0_SERR = 0x1,          /*!< CAN0 Controller
-                                             *   ECC single bit, correctable error status 
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b can0_ecc_corrected_IRQ
                                              */
     ALT_ECC_ERROR_CAN0_DERR = 0x2,          /*!< CAN0 Controller
@@ -217,7 +217,7 @@ typedef enum ALT_ECC_ERROR_STATUS_e
                                              */
 
     ALT_ECC_ERROR_CAN1_SERR = 0x1,          /*!< CAN1 Controller
-                                             *   ECC single bit, correctable error status 
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b can1_ecc_corrected_IRQ
                                              */
     ALT_ECC_ERROR_CAN1_DERR = 0x2,          /*!< CAN1 Controller
@@ -225,56 +225,56 @@ typedef enum ALT_ECC_ERROR_STATUS_e
                                              *   Interrupt: \b can1_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_NAND_BUFFER_SERR = 0x1,   /*!< NAND Controller Buffer RAM 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_NAND_BUFFER_SERR = 0x1,   /*!< NAND Controller Buffer RAM
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b nande_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_NAND_BUFFER_DERR = 0x2,   /*!< NAND Controller Buffer RAM 
+    ALT_ECC_ERROR_NAND_BUFFER_DERR = 0x2,   /*!< NAND Controller Buffer RAM
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b nande_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_NAND_WR_FIFO_SERR = 0x4,  /*!< NAND Controller Write FIFO 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_NAND_WR_FIFO_SERR = 0x4,  /*!< NAND Controller Write FIFO
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b nandw_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_NAND_WR_FIFO_DERR = 0x8,  /*!< NAND Controller Write FIFO 
+    ALT_ECC_ERROR_NAND_WR_FIFO_DERR = 0x8,  /*!< NAND Controller Write FIFO
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b nandw_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_NAND_RD_FIFO_SERR = 0x10, /*!< NAND Controller Read FIFO 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_NAND_RD_FIFO_SERR = 0x10, /*!< NAND Controller Read FIFO
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b nandr_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_NAND_RD_FIFO_DERR = 0x20, /*!< NAND Controller Read FIFO 
+    ALT_ECC_ERROR_NAND_RD_FIFO_DERR = 0x20, /*!< NAND Controller Read FIFO
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b nandr_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_QSPI_SERR = 0x1,          /*!< QSPI Controller 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_QSPI_SERR = 0x1,          /*!< QSPI Controller
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b qspi_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_QSPI_DERR = 0x2,          /*!< QSPI Controller 
+    ALT_ECC_ERROR_QSPI_DERR = 0x2,          /*!< QSPI Controller
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b qspi_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_SDMMC_PORT_A_SERR = 0x1,  /*!< SD/MMC Controller Port A 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_SDMMC_PORT_A_SERR = 0x1,  /*!< SD/MMC Controller Port A
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b sdmmc_porta_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_SDMMC_PORT_A_DERR = 0x2,  /*!< SD/MMC Controller Port A 
+    ALT_ECC_ERROR_SDMMC_PORT_A_DERR = 0x2,  /*!< SD/MMC Controller Port A
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b sdmmc_porta_ecc_uncorrected_IRQ
                                              */
 
-    ALT_ECC_ERROR_SDMMC_PORT_B_SERR = 0x4,  /*!< SD/MMC Controller Port B 
-                                             *   ECC single bit, correctable error status 
+    ALT_ECC_ERROR_SDMMC_PORT_B_SERR = 0x4,  /*!< SD/MMC Controller Port B
+                                             *   ECC single bit, correctable error status
                                              *   Interrupt: \b sdmmc_portb_ecc_corrected_IRQ
                                              */
-    ALT_ECC_ERROR_SDMMC_PORT_B_DERR = 0x8   /*!< SD/MMC Controller Port B 
+    ALT_ECC_ERROR_SDMMC_PORT_B_DERR = 0x8   /*!< SD/MMC Controller Port B
                                              *   ECC double bit, non-correctable error status
                                              *   Interrupt: \b sdmmc_portb_ecc_uncorrected_IRQ
                                              */
@@ -353,7 +353,7 @@ ALT_STATUS_CODE alt_ecc_is_enabled(const ALT_ECC_RAM_ENUM_t ram_block);
  *
  * The returned bit mask reflects the ECC status conditions for the specified RAM
  * block.
- * 
+ *
  * \param       ram_block
  *              The RAM block to return the ECC error status mask for.
  *
@@ -389,10 +389,10 @@ ALT_STATUS_CODE alt_ecc_status_get(const ALT_ECC_RAM_ENUM_t ram_block,
  *
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     An invalid \e ecc_mask was specified.
- * \retval      ALT_E_BAD_ARG   Either the \e ram_block or \e ecc_mask argument 
+ * \retval      ALT_E_BAD_ARG   Either the \e ram_block or \e ecc_mask argument
  *                              is invalid.
  */
-ALT_STATUS_CODE alt_ecc_status_clear(const ALT_ECC_RAM_ENUM_t ram_block, 
+ALT_STATUS_CODE alt_ecc_status_clear(const ALT_ECC_RAM_ENUM_t ram_block,
                                      const uint32_t ecc_mask);
 
 /******************************************************************************/

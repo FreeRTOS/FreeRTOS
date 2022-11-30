@@ -1,4 +1,4 @@
-/** 
+/**
  * sci.c controls SCI for GCC/HCS12 version of FreeRTOS Demo
  * To replace CodeWarrior Cpu.h
  *

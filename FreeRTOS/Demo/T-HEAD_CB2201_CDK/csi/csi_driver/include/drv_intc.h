@@ -160,4 +160,3 @@ int csi_intc_ack_irq(int32_t IRQn);
 int csi_intc_set_attribute(int32_t IRQn, uint32_t priority,int_trigger_mode_t trigger_mode);
 
 #endif /* _CSI_INTC_H_ */
-

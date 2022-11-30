@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -34,9 +34,9 @@
 /// \unit
 ///
 /// !Purpose
-/// 
+///
 /// Methods to manage the Advanced Encryption Standard (AES)
-/// 
+///
 /// !Usage
 ///
 /// -# Configure AES
@@ -73,4 +73,3 @@ extern void AES_Start(void);
 extern unsigned int AES_GetStatus(void);
 
 #endif //#ifndef AES_H
-

@@ -156,5 +156,3 @@ IRQ_LC14:
         j metal_lc14_interrupt_vector_handler
 IRQ_LC15:
         j metal_lc15_interrupt_vector_handler
-
-

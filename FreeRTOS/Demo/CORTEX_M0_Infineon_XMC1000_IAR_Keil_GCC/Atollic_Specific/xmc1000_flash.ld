@@ -80,7 +80,7 @@ SECTIONS
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
   } >FLASH
-  
+
   .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
   .ARM : {
     __exidx_start = .;
@@ -112,16 +112,16 @@ SECTIONS
   . = ALIGN(4);
   eROData = . ;
 
-  /* Initialize XMC Veneer interrupt code */ 
+  /* Initialize XMC Veneer interrupt code */
   VeneerLoadAddr = ABSOLUTE(eROData);
-  .VENEER_Code ABSOLUTE(0x2000000C) : 
+  .VENEER_Code ABSOLUTE(0x2000000C) :
   {
     VeneerStart = .;
     KEEP(*(.XmcVeneerCode)) /* Keep the VeneerCode */
     *(.XmcVeneerCode);
     . = ALIGN(4);
     VeneerEnd = .;
-    
+
   } >RAM AT> FLASH
 
   VeneerSize = ABSOLUTE(VeneerEnd) - ABSOLUTE(VeneerStart);
@@ -130,7 +130,7 @@ SECTIONS
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data : 
+  .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */

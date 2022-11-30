@@ -158,7 +158,7 @@ ARFLAGS = cru
 AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
-am__v_AR_1 = 
+am__v_AR_1 =
 libmetal_gloss_a_AR = $(AR) $(ARFLAGS)
 libmetal_gloss_a_LIBADD =
 am__libmetal_gloss_a_SOURCES_DIST = gloss/crt0.S gloss/nanosleep.c \
@@ -270,11 +270,11 @@ am__v_P_1 = :
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 = 
+am__v_GEN_1 =
 AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
-am__v_at_1 = 
+am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -284,19 +284,19 @@ CPPASCOMPILE = $(CCAS) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 AM_V_CPPAS = $(am__v_CPPAS_@AM_V@)
 am__v_CPPAS_ = $(am__v_CPPAS_@AM_DEFAULT_V@)
 am__v_CPPAS_0 = @echo "  CPPAS   " $@;
-am__v_CPPAS_1 = 
+am__v_CPPAS_1 =
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_@AM_V@)
 am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
 am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
+am__v_CC_1 =
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
+am__v_CCLD_1 =
 SOURCES = $(libmetal_gloss_a_SOURCES) $(libmetal_segger_a_SOURCES) \
 	$(libmetal_a_SOURCES)
 DIST_SOURCES = $(am__libmetal_gloss_a_SOURCES_DIST) \
@@ -744,7 +744,7 @@ gloss/sys_wait.$(OBJEXT): gloss/$(am__dirstamp) \
 gloss/sys_write.$(OBJEXT): gloss/$(am__dirstamp) \
 	gloss/$(DEPDIR)/$(am__dirstamp)
 
-libmetal-gloss.a: $(libmetal_gloss_a_OBJECTS) $(libmetal_gloss_a_DEPENDENCIES) $(EXTRA_libmetal_gloss_a_DEPENDENCIES) 
+libmetal-gloss.a: $(libmetal_gloss_a_OBJECTS) $(libmetal_gloss_a_DEPENDENCIES) $(EXTRA_libmetal_gloss_a_DEPENDENCIES)
 	$(AM_V_at)-rm -f libmetal-gloss.a
 	$(AM_V_AR)$(libmetal_gloss_a_AR) libmetal-gloss.a $(libmetal_gloss_a_OBJECTS) $(libmetal_gloss_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libmetal-gloss.a
@@ -757,7 +757,7 @@ segger/$(DEPDIR)/$(am__dirstamp):
 segger/SEGGER_target_metal.$(OBJEXT): segger/$(am__dirstamp) \
 	segger/$(DEPDIR)/$(am__dirstamp)
 
-libmetal-segger.a: $(libmetal_segger_a_OBJECTS) $(libmetal_segger_a_DEPENDENCIES) $(EXTRA_libmetal_segger_a_DEPENDENCIES) 
+libmetal-segger.a: $(libmetal_segger_a_OBJECTS) $(libmetal_segger_a_DEPENDENCIES) $(EXTRA_libmetal_segger_a_DEPENDENCIES)
 	$(AM_V_at)-rm -f libmetal-segger.a
 	$(AM_V_AR)$(libmetal_segger_a_AR) libmetal-segger.a $(libmetal_segger_a_OBJECTS) $(libmetal_segger_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libmetal-segger.a
@@ -885,7 +885,7 @@ src/vector.$(OBJEXT): src/$(am__dirstamp) \
 src/watchdog.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 
-libmetal.a: $(libmetal_a_OBJECTS) $(libmetal_a_DEPENDENCIES) $(EXTRA_libmetal_a_DEPENDENCIES) 
+libmetal.a: $(libmetal_a_OBJECTS) $(libmetal_a_DEPENDENCIES) $(EXTRA_libmetal_a_DEPENDENCIES)
 	$(AM_V_at)-rm -f libmetal.a
 	$(AM_V_AR)$(libmetal_a_AR) libmetal.a $(libmetal_a_OBJECTS) $(libmetal_a_LIBADD)
 	$(AM_V_at)$(RANLIB) libmetal.a

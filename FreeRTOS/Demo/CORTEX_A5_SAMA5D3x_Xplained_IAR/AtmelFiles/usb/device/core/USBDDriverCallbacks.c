@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,12 +30,12 @@
 /** \file
  *
  * \section Purpose
- * 
+ *
  *    Definition of several callbacks which are triggered by the USB software
  *    driver after receiving specific requests.
- * 
+ *
  * \section Usage
- * 
+ *
  *    -# Re-implement the USBDDriverCallbacks_ConfigurationChanged
  *        callback to know when the hosts changes the active configuration of
  *        the device.
@@ -43,7 +43,7 @@
  *        callback to get notified whenever the active setting of an interface
  *        is changed by the host.
  *
- * \addtogroup usbd_interface 
+ * \addtogroup usbd_interface
  *@{
  */
 

@@ -254,4 +254,3 @@ WOLFSSL_API int wc_Sha224Copy(wc_Sha224* src, wc_Sha224* dst);
 
 #endif /* NO_SHA256 */
 #endif /* WOLF_CRYPT_SHA256_H */
-

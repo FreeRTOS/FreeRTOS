@@ -91,7 +91,7 @@ alt_premain FUNCTION
     ISB
     MOV r0, #0x40000000       ; Switch on the VFP and NEON hardware
     VMSR fpexc, r0            ; Set EN bit in FPEXC
-	
+
     B __main
 
     ENDFUNC

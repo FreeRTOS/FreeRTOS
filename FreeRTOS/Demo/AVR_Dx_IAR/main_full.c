@@ -26,18 +26,18 @@ static void prvCheckTask( void *pvParameters );
 
 void main_full( void )
 {
-    
+
     vStartSemaphoreTasks(mainSEM_TEST_PRIORITY);
     vStartTaskNotifyTask();
     vStartRegTestTasks();
     vStartRecursiveMutexTasks();
-    
+
     /* Create the task that performs the 'check' functionality, as described at
     the top of this file. */
     xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
     vTaskStartScheduler();
-    
+
     /* If all is well, the scheduler will now be running, and the following
     line will never be reached.  If the following line does execute, then
     there was either insufficient FreeRTOS heap memory available for the idle
@@ -67,7 +67,7 @@ unsigned long ulErrorFound = pdFALSE;
     xLastExecutionTime = xTaskGetTickCount();
 
     /* Cycle for ever, delaying then checking all the other tasks are still
-    operating without error.  The onboard LED is toggled on each iteration 
+    operating without error.  The onboard LED is toggled on each iteration
     unless an error occurred. */
     for( ;; )
     {
@@ -80,22 +80,22 @@ unsigned long ulErrorFound = pdFALSE;
         {
             ulErrorFound |= 1UL << 0UL;
         }
-                
+
         if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
         {
             ulErrorFound |= 1UL << 1UL;
         }
-        
+
         if( xAreRegTestTasksStillRunning() != pdTRUE )
         {
             ulErrorFound |= 1UL << 2UL;
         }
-        
+
         if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
         {
             ulErrorFound |= 1UL << 3UL;
         }
-        
+
         if( ulErrorFound == pdFALSE )
         {
             /* Toggle the LED if everything is okay so we know if an error occurs even if not

@@ -213,4 +213,3 @@ extern int32_t outl( int32_t, int32_t) ;
 #endif
 
 #endif /* GALILEO_GEN_DEFS */
-

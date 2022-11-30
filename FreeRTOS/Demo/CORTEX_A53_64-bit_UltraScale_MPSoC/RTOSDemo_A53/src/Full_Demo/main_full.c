@@ -454,6 +454,3 @@ void vFullDemoTickHook( void )
 	/* Call the code that 'gives' a task notification from an ISR. */
 	xNotifyTaskFromISR();
 }
-
-
-

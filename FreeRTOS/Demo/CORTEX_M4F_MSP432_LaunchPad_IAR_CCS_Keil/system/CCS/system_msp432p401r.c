@@ -158,7 +158,7 @@ void SystemCoreClockUpdate(void)
         break;
     case CS_CTL1_SELM__DCOCLK:
         dcoTune = (CS->CTL0 & CS_CTL0_DCOTUNE_MASK) >> CS_CTL0_DCOTUNE_OFS;
-    
+
         switch(CS->CTL0 & CS_CTL0_DCORSEL_MASK)
         {
         case CS_CTL0_DCORSEL_0:
@@ -396,4 +396,3 @@ void SystemInit(void)
     #endif
 
 }
-

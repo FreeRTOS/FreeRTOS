@@ -220,5 +220,3 @@ unsigned long ulValue;
 	ulValue = ( ulValue & ~0x07) | 0x03;
 	__asm volatile( "mtc0 %0, $16, 0" :: "r" ( ulValue ) );
 }
-
-

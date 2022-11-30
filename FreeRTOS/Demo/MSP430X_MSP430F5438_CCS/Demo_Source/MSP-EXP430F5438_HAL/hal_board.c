@@ -30,7 +30,7 @@ void halBoardOutputSystemClock(void) //outputs clock to testpoints
 void halBoardStopOutputSystemClock(void)
 {
   CLK_PORT_OUT &= ~0x07;
-  CLK_PORT_DIR |= 0x07;	
+  CLK_PORT_DIR |= 0x07;
   CLK_PORT_SEL &= ~0x07;
 }
 

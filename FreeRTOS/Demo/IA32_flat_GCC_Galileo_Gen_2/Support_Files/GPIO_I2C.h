@@ -292,4 +292,3 @@ void vGalileoBlinkLEDUsingLegacyGPIO(uint32_t Level);
 #endif
 
 #endif /* __GPIO_I2C_H__ */
-

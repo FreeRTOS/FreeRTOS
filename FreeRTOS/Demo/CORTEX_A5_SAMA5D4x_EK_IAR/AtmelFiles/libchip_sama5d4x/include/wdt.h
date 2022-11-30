@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -73,4 +73,3 @@ extern uint32_t WDT_GetCounterValue( Wdt* pWDT ) ;
 #endif
 
 #endif /* #ifndef _WDT_ */
-

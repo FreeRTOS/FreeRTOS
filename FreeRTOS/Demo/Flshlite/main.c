@@ -376,5 +376,3 @@ const unsigned short usLEDBit = 0x400;
 
 	sLED = !sLED;
 }
-
-

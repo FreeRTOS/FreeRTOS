@@ -67,7 +67,7 @@ FreeRTOSConfig.h as it is a demo application constant. */
 
 /* Rx and Tx time outs are used to ensure the sockets do not wait too long for
 missing data. */
-static const TickType_t xConnectTimeOut = pdMS_TO_TICKS( 300 );
+static const TickType_t xConnectTimeOut = pdMS_TO_TICKS( 1000 );
 static const TickType_t xReceiveTimeOut = portMAX_DELAY;
 static const TickType_t xSendTimeOut = pdMS_TO_TICKS( 10000 );
 
@@ -111,18 +111,14 @@ void vStartPacketDrillHandlerTask( uint16_t usTaskStackSize, UBaseType_t uxTaskP
 static void handlePacketDrillCommand(void *pvParameters) {
 
     for (;;) {
-        while (__AFL_LOOP(1000)) {
-
-            if (uxStreamBufferGetSize( xSendBuffer ) < sizeof( struct SyscallPackage )) {
-                vTaskDelay( configWINDOWS_MAC_INTERRUPT_SIMULATOR_DELAY );
-                continue;
-            }
 
             struct SyscallPackage syscallPackage;
 
-            uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) &syscallPackage, sizeof( struct SyscallPackage ), pdFALSE );
+            BaseType_t receiveResponse = xQueueReceive(packetDrillQueue, &syscallPackage, portMAX_DELAY);
 
-            //xQueueReceive( packetDrillQueue, &syscallPackage, portMAX_DELAY );
+            if (receiveResponse != pdPASS) {
+                FreeRTOS_debug_printf(("Error receiving syscall package from PD thread...\n"));
+            }
 
             FreeRTOS_debug_printf(("Packetdrill command received: %s\n", syscallPackage.syscallId));
 
@@ -204,8 +200,13 @@ static void handlePacketDrillCommand(void *pvParameters) {
 
                 struct freertos_sockaddr xClient;
                 socklen_t xSize = sizeof( xClient );
+
+                FreeRTOS_setsockopt( socketArray[acceptPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xReceiveTimeOut ) );
+
                 //TODO: Return the client socket to packetdrill
                 Socket_t xConnectedSocket = FreeRTOS_accept( socketArray[acceptPackage.sockfd], &xClient, &xSize );
+
+                FreeRTOS_setsockopt( socketArray[acceptPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
 
                 if ( xConnectedSocket == FREERTOS_INVALID_SOCKET ) {
                     response = 0;
@@ -324,27 +325,19 @@ static void handlePacketDrillCommand(void *pvParameters) {
 
         }
 
-    }
+    
 
 
 }
 
 static void sendSyscallResponseToThread(struct SyscallResponsePackage syscallResponse) {
 
-    size_t xSpace;
-    xSpace = uxStreamBufferGetSpace( xRecvBuffer );
+    BaseType_t  sendResponse = xQueueSend(packetDrillResponseQueue, &syscallResponse, (TickType_t)0);
 
-    if (xSpace < sizeof(struct SyscallResponsePackage)) {
-        FreeRTOS_debug_printf(("Not enough buffer space to send syscall result...\n"));
-        return;
+    if (sendResponse != pdPASS) {
+        FreeRTOS_debug_printf(("Error sending syscall response to PD thread...\n"));
     }
-
-    uxStreamBufferAdd( xRecvBuffer,
-                       0,
-                       ( const uint8_t * ) &syscallResponse,
-                       sizeof(struct SyscallResponsePackage) );
-
-    event_signal( pvSendEvent );
+    
 }
 
 

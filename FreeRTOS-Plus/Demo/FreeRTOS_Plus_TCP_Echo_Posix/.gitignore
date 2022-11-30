@@ -4,3 +4,5 @@
 /gcov_posix_demo.info
 /in/
 /out/
+/afl-pd-scripts/
+afl-fuzz-output.txt

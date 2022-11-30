@@ -44,6 +44,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <errno.h>
 
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
@@ -117,10 +118,8 @@ static int prvCreateThreadSafeBuffers( void );
  */
 static void prvMiscInitialisation( void );
 
-static void *packetDrillBridgeThread (void *pvParameters);
+static void packetDrillBridgeThread (void *pvParameters);
 size_t IntToString1(char *s, int x);
-
-struct event * pvSendEvent = NULL;
 
 static pthread_t packetDrillBridgeThreadHandle;
 
@@ -154,7 +153,9 @@ static UBaseType_t ulNextRand;
 
 /*-----------------------------------------------------------*/
 
+#ifdef __AFL_HAVE_MANUAL_CONTROL
 __AFL_FUZZ_INIT();
+#endif
 
 void main_tcp_echo_client_tasks( void )
 {
@@ -205,9 +206,8 @@ void main_tcp_echo_client_tasks( void )
 }
 /*-----------------------------------------------------------*/
 
-#define mbaTASK_MESSAGE_BUFFER_SIZE       ( 60 )
-StreamBuffer_t * xSendBuffer = NULL;
-StreamBuffer_t * xRecvBuffer = NULL;
+QueueHandle_t packetDrillQueue = NULL;
+QueueHandle_t packetDrillResponseQueue = NULL;
 
 
 /* ====================== Static Function definitions ======================= */
@@ -216,53 +216,11 @@ StreamBuffer_t * xRecvBuffer = NULL;
  * @brief create thread safe buffers to send/receive packets between threads
  * @returns
  */
-static int prvCreateThreadSafeBuffers( void )
-{
-    int ret = pdFAIL;
+static int prvCreateThreadSafeBuffers( void ) {
+    packetDrillQueue = xQueueCreate(1, sizeof(struct SyscallPackage));
+    packetDrillResponseQueue = xQueueCreate(1, sizeof(struct SyscallResponsePackage));
 
-    /* The buffer used to pass data to be transmitted from a FreeRTOS task to
-     * the linux thread that sends via the pcap library. */
-    do
-    {
-        if( xSendBuffer == NULL )
-        {
-            xSendBuffer = ( StreamBuffer_t * ) malloc( sizeof( *xSendBuffer ) - sizeof( xSendBuffer->ucArray ) + xSEND_BUFFER_SIZE + 1 );
-
-            if( xSendBuffer == NULL )
-            {
-                break;
-            }
-
-            configASSERT( xSendBuffer );
-            memset( xSendBuffer, '\0', sizeof( *xSendBuffer ) - sizeof( xSendBuffer->ucArray ) );
-            xSendBuffer->LENGTH = xSEND_BUFFER_SIZE + 1;
-        }
-
-        /* The buffer used to pass received data from the pthread that receives
-         * via the pcap library to the FreeRTOS task. */
-        if( xRecvBuffer == NULL )
-        {
-            xRecvBuffer = ( StreamBuffer_t * ) malloc( sizeof( *xRecvBuffer ) - sizeof( xRecvBuffer->ucArray ) + xRECV_BUFFER_SIZE + 1 );
-
-            if( xRecvBuffer == NULL )
-            {
-                break;
-            }
-
-            configASSERT( xRecvBuffer );
-            memset( xRecvBuffer, '\0', sizeof( *xRecvBuffer ) - sizeof( xRecvBuffer->ucArray ) );
-            xRecvBuffer->LENGTH = xRECV_BUFFER_SIZE + 1;
-        }
-
-        ret = pdPASS;
-    } while( 0 );
-
-    if (pvSendEvent == NULL) {
-        pvSendEvent = event_create();
-    }
-
-
-    return ret;
+    return packetDrillQueue != NULL && packetDrillResponseQueue != NULL;
 }
 
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
@@ -301,7 +259,14 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
                     BaseType_t ret = prvCreateThreadSafeBuffers();
 
                     if (ret == pdPASS) {
-                        pthread_create(&packetDrillBridgeThreadHandle, NULL, packetDrillBridgeThread, NULL);
+                        //pthread_create(&packetDrillBridgeThreadHandle, NULL, packetDrillBridgeThread, NULL);
+                        xTaskCreate(packetDrillBridgeThread,
+                            "PacketDrillHandlerThread",
+                            mainECHO_CLIENT_TASK_STACK_SIZE,
+                            (void *) 1,
+                            mainPACKETDRILL_HANDLER_PRIORITY - 1,
+                            NULL
+                        );
                         vStartPacketDrillHandlerTask(mainECHO_CLIENT_TASK_STACK_SIZE, mainPACKETDRILL_HANDLER_PRIORITY);
                     } else {
                         FreeRTOS_debug_printf(("We could not create the thread buffers...\n"));
@@ -434,6 +399,15 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
     return uxRand();
 }
 
+ssize_t readBlocking(int fd, struct SyscallPackage *syscallPackage, size_t syscallBytes) {
+
+    taskENTER_CRITICAL();
+    int numRead = read(fd, syscallPackage, syscallBytes);
+    taskEXIT_CRITICAL();
+
+    return numRead;
+}
+
 /*
  * Supply a random number to FreeRTOS+TCP stack.
  * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
@@ -449,12 +423,12 @@ BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
 #define SOCKET_NAME "/tmp/mysocket1"
 #define BUF_SIZE 20
 
-static void *packetDrillBridgeThread (void *pvParameters)
+static void packetDrillBridgeThread (void *pvParameters)
 {
-    sigset_t set;
+   /*  sigset_t set;
     sigfillset( &set );
     pthread_sigmask( SIG_SETMASK, &set, NULL);
-
+ */
     const time_t xMaxMSToWait = 500000;
 
     FreeRTOS_debug_printf(("PacketDrill Bridge Thread started...\n"));
@@ -467,7 +441,7 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
     if (sfd == -1) {
         FreeRTOS_debug_printf(("Error creating socket...\n"));
-        return NULL;
+        return;
     }
 
     // Zero out the address, and set family and path.
@@ -477,12 +451,12 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
     if (bind(sfd, (struct sockaddr *) &addr, sizeof(struct sockaddr_un)) == -1) {
         FreeRTOS_debug_printf(("Error binding socket to port...\n"));
-        return NULL;
+        return;
     }
 
     if (listen(sfd, BACKLOG) ==-1) {
         FreeRTOS_debug_printf(("Error listening on socket...\n"));
-        return NULL;
+        return;
     }
 
     for (;;) {
@@ -497,13 +471,15 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
             FreeRTOS_debug_printf(("Waiting to accept a connection...\n"));
 
-            FreeRTOS_debug_printf(("%s\n", buf));
+            //FreeRTOS_debug_printf(("%s\n", buf));
 
+            taskENTER_CRITICAL();
             int cfd = accept(sfd, NULL, NULL);
+            taskEXIT_CRITICAL();
 
             if (cfd == -1) {
                 FreeRTOS_debug_printf(("Error accepting connection...\n"));
-                return NULL;
+                return;
             }
             FreeRTOS_debug_printf(("Accepted socket fd = %d\n", cfd));
 
@@ -514,10 +490,8 @@ static void *packetDrillBridgeThread (void *pvParameters)
             ssize_t numRead;
             struct SyscallPackage syscallPackage; 
 
-            size_t xSpace;
-
                 // Read at most BUF_SIZE bytes from the socket into buf.
-            while ((numRead = read(cfd, &syscallPackage, sizeof(struct SyscallPackage))) > 0) {
+            while ((numRead = readBlocking(cfd, &syscallPackage, sizeof(struct SyscallPackage))) > 0) {
 
                 if (syscallPackage.bufferedMessage == 1) {
                     void *buffer = malloc(syscallPackage.bufferedCount);
@@ -535,32 +509,20 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
                 }
 
-                xSpace = uxStreamBufferGetSpace( xSendBuffer );
+                BaseType_t  sendResponse = xQueueSend(packetDrillQueue, &syscallPackage, (TickType_t)0);
 
-                if (xSpace >= sizeof(struct SyscallPackage)) {
-                    uxStreamBufferAdd( xSendBuffer,
-                                    0,
-                                    ( const uint8_t * ) &syscallPackage,
-                                    sizeof( struct SyscallPackage ) );
-
-                } else {
-                    FreeRTOS_debug_printf(("There is not enough space in send buffer...\n"));
-                    continue;
+                if (sendResponse != pdPASS) {
+                    FreeRTOS_debug_printf(("Error sending syscall to PD handler...\n"));
                 }
-
-                //TODO: Modify the wait time such that for calls like accept, it waits indefinitely,
-                // while it returns an error for other non-blocking calls.
-
-                event_wait_timed( pvSendEvent, xMaxMSToWait );
 
                 size_t data_size = sizeof(struct SyscallResponsePackage);
                 struct SyscallResponsePackage syscallResponse;
 
-                if (uxStreamBufferGetSize( xRecvBuffer ) < data_size) {
-                    FreeRTOS_debug_printf(("Not enough data in receive buffer...\n"));
-                }
+                BaseType_t receiveResponse = xQueueReceive(packetDrillResponseQueue, &syscallResponse, portMAX_DELAY);
 
-                uxStreamBufferGet( xRecvBuffer, 0, ( uint8_t * ) &syscallResponse, data_size, pdFALSE );
+                if (receiveResponse != pdPASS) {
+                    FreeRTOS_debug_printf(("Error receiving syscall response from PD handler...\n"));
+                }
 
                 FreeRTOS_debug_printf(("Syscall response buffer received: %d...\n", syscallResponse.result));
 
@@ -580,7 +542,7 @@ static void *packetDrillBridgeThread (void *pvParameters)
             }
 
             if (numRead == -1) {
-            FreeRTOS_debug_printf(("Error reading from socket...\n"));
+            FreeRTOS_debug_printf(("Error reading from socket with errno %d...\n", errno));
 
             }
 

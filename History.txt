@@ -1,5 +1,33 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS 202112.00 and FreeRTOS 202211.00 released November 2022
+
+	+ Released LTS 2.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11,
+	  coreHTTP, coreJSON, AWS IoT Over-the-air-Updates (OTA), AWS IoT Device Shadow, AWS IoT Jobs,
+	  AWS IoT Device Defender, Backoff Algorithm, AWS IoT Fleet Provisioning, coreSNTP,
+	  SigV4, and FreeRTOS Cellular Interface libraries
+	    - FreeRTOS Kernel V10.5.1
+		- FreeRTOS+TCP V3.1.0
+		- coreMQTT v2.1.1
+		- corePKCS11 v3.5.0
+		- coreJSON v3.2.0
+		- AWS IoT Over-the-air (OTA) Update v3.4.0
+		- AWS IoT Device Shadow v1.3.0
+		- AWS IoT Jobs v1.3.0
+		- AWS IoT Device Defender v1.3.0
+		- Backoff Algorithm v1.3.0
+		- AWS IoT Fleet Provisioning v1.1.0
+		- coreSNTP v1.2.0
+		- SigV4 v1.2.0
+		- FreeRTOS Cellular Interface v1.3.0
+	+ Updated coreMQTT Agent library to v1.2.0 to be compatible with coreMQTT v2.X.X.
+	+ Demo Updates
+	    - Added Visual Studio static library projects for FreeRTOS Kernel, FreeRTOS+TCP, 
+		  Logging, MbedTLS, coreHTTP, and corePKCS11 in FreeRTOS-Plus/VisualStudio_StaticProjects.
+		- All demos dependent on coreMQTT have been updated to be compatible with coreMQTT v2.X.X.
+		- All Windows Simulator projects have been updated to use new static Visual Studio projects.
+	+ Updated MbedTLS version to 3.2.1.
+
 Changes between FreeRTOS 202111.00 and FreeRTOS 202112.00 released December 2021
 
 	+ Added Fleet Provisioning library and demo showcasing the use of Fleet Provisioning library.

@@ -39,8 +39,6 @@
 /* FreeRTOS Kernel includes. */
 #include "FreeRTOS.h"
 
-#define SOCKETS_INVALID_SOCKET      ( ( Socket_t ) ~0U )
-
 /* Error codes. */
 #define TCP_SOCKETS_ERRNO_NONE                ( 0 )   /*!< No error. */
 #define TCP_SOCKETS_ERRNO_ERROR               ( -1 )  /*!< Catch-all sockets error code. */

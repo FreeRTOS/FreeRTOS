@@ -697,10 +697,10 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         pTlsTransportParams = pNetworkContext->pParams;
-        
+
         /* Initialize tcpSocket. */
-        pTlsTransportParams->tcpSocket = SOCKETS_INVALID_SOCKET;
-        
+        pTlsTransportParams->tcpSocket = NULL;
+
         socketStatus = TCP_Sockets_Connect( &( pTlsTransportParams->tcpSocket ),
                                             pHostName,
                                             port,
@@ -720,7 +720,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         isSocketConnected = pdTRUE;
-        
+
         returnStatus = tlsSetup( pNetworkContext, pHostName, pNetworkCredentials );
     }
 
@@ -730,7 +730,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         if( isSocketConnected == pdTRUE )
         {
             TCP_Sockets_Disconnect( pTlsTransportParams->tcpSocket );
-            pTlsTransportParams->tcpSocket = SOCKETS_INVALID_SOCKET;
+            pTlsTransportParams->tcpSocket = NULL;
         }
     }
     else

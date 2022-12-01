@@ -73,7 +73,7 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetwo
         pPlaintextTransportParams = pNetworkContext->pParams;
 
         /* Initialize tcpSocket. */
-        pPlaintextTransportParams->tcpSocket = SOCKETS_INVALID_SOCKET;
+        pPlaintextTransportParams->tcpSocket = NULL;
 
         /* Establish a TCP connection with the server. */
         socketStatus = TCP_Sockets_Connect( &( pPlaintextTransportParams->tcpSocket ),

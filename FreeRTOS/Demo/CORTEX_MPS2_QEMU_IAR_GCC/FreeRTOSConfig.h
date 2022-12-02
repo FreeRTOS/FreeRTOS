@@ -39,6 +39,12 @@
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
+#define configUSE_TRACE_FACILITY 1
+#define configGENERATE_RUN_TIME_STATS 1
+
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
+#define portGET_RUN_TIME_COUNTER_VALUE() 0
+
 #define configUSE_TICKLESS_IDLE         0
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
@@ -48,7 +54,6 @@
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 60 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_MUTEXES				1

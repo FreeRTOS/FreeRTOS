@@ -215,7 +215,7 @@ void vAssertCalled( const char * const pcFileName,
     /* Called if an assertion passed to configASSERT() fails.  See
     http://www.freertos.org/a00110.html#configASSERT for more information. */
 
-	printf( "vAssertCalled( %s, %u )\n", pcFileName, ulLine );
+	printf( "vAssertCalled( %s, %lu )\n", pcFileName, ulLine );
     exit(1);
 
 }

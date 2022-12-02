@@ -1,0 +1,129 @@
+name: FreeRTOS Demos
+on: pull_request
+
+jobs:
+  WIN32-MSVC:
+    name: Microsoft Visual C Compiler (WIN32)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Kernel Submodule
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 FreeRTOS/Source
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build WIN32-MSVC Demo
+        working-directory: FreeRTOS/Demo/WIN32-MSVC
+        run: msbuild WIN32.sln -t:rebuild
+
+      - name: Build WIN32-MSVC-Static-Allocation-Only Demo
+        working-directory: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only
+        run: msbuild WIN32.sln -t:rebuild
+
+  POSIX-GCC:
+    name: Native GCC
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Kernel Submodule
+        shell: bash
+        run: git submodule update --checkout --init --depth 1 FreeRTOS/Source
+
+      - name: Install GCC
+        shell: bash
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install build-essential
+
+      - name: Build Posix_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/Posix_GCC
+        run: make -j
+
+  MSP430-GCC:
+    name: GNU MSP430 Toolchain
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Kernel Submodule
+        shell: bash
+        run: git submodule update --checkout --init --depth 1 FreeRTOS/Source
+
+      - name: Install MSP430 Toolchain
+        shell: bash
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install gcc-msp430 build-essential
+
+      - name: Build msp430_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/msp430_GCC
+        run: make -j
+
+  ARM-GCC:
+    name: GNU ARM Toolchain
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Kernel Submodule
+        shell: bash
+        run: git submodule update --checkout --init --depth 1 FreeRTOS/Source
+
+      - name: Install GNU ARM Toolchain
+        shell: bash
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
+
+      - name: Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC
+        run: make -j
+
+      - name: Build CORTEX_LM3S102_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_LM3S102_GCC
+        run: make -j
+
+      - name: Build CORTEX_M3_MPS2_QEMU_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
+        run: |
+          make clean
+          make -j
+
+      - name: Build CORTEX_M3_MPS2_QEMU_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
+        run: |
+          make clean
+          make FULL_DEMO=1 -j
+
+      - name: Build CORTEX_LM3S811_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_LM3S811_GCC
+        run: make -j
+
+      - name: Build CORTEX_M0+_RP2040 Demos
+        shell: bash
+        working-directory: FreeRTOS/Demo/ThirdParty/Community-Supported/CORTEX_M0+_RP2040
+        run: |
+          git clone https://github.com/raspberrypi/pico-sdk.git
+          cmake -B build -DPICO_SDK_PATH=pico-sdk -GNinja
+          ninja -C build --verbose
+
+      - name: Build CORTEX_MPS2_QEMU_IAR_GCC Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC
+        run: make -C build/gcc -j

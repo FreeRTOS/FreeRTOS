@@ -145,6 +145,9 @@
     <ClInclude Include="..\..\Source\include\semphr.h" />
     <ClInclude Include="..\..\Source\include\task.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortSnapshotConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcSnapshotConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

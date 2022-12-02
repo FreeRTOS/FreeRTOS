@@ -204,6 +204,15 @@
     <ClInclude Include="..\..\Source\include\stream_buffer.h">
       <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortSnapshotConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcSnapshotConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

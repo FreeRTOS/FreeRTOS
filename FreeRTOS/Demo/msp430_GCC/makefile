@@ -33,7 +33,7 @@ OPT=-Os
 WARNINGS=-Wall -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare \
 		-Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
 
-CFLAGS=-mmcu=msp430x449 $(OPT) $(DEBUG) -I. -I../../Source/include -I../Common/include -DGCC_MSP430 $(WARNINGS)
+CFLAGS=-mcpu=430 -mmcu=msp430f449 $(OPT) $(DEBUG) -I. -I../../Source/include -I../Common/include -DGCC_MSP430 $(WARNINGS)
 
 # Setup paths to source code
 SOURCE_PATH = ../../Source
@@ -69,16 +69,4 @@ $(OBJ) : %.o : %.c makefile
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean :
-	touch makefile
-
-
-
-
-
-
-
-
-
-
-
-
+	${RM} ${OBJ} a.out

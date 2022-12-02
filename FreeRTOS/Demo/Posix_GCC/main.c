@@ -56,6 +56,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <signal.h>
+#include <string.h>
 #include <errno.h>
 #include <sys/select.h>
 #include <time.h>
@@ -84,7 +85,7 @@
 #ifdef USER_DEMO
     #define     mainSELECTED_APPLICATION    USER_DEMO
 #else /* Default Setting */
-    #define    mainSELECTED_APPLICATION     BLINKY_DEMO
+    #define    mainSELECTED_APPLICATION     FULL_DEMO
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
@@ -487,6 +488,9 @@ uint32_t uiTraceTimerGetValue( void )
     struct timespec tp;
     uint32_t result = 0;
 
+    if (frequency == 0) {
+        uiTraceTimerGetFrequency();
+    }
     xRet = clock_gettime( cid, &tp );
     if( xRet == 0 )
     {

@@ -73,7 +73,7 @@
  * If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
  * demo application will be built.  The comprehensive test and demo application is
  * implemented and described in main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
 
 /* This demo uses heap_5.c, and these constants define the sizes of the regions
  * that make up the total heap.  heap_5 is only used for test and example purposes
@@ -249,10 +249,10 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationTickHook( void )
 {
     /* This function will be called by each tick interrupt if
-     * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-     * added here, but the tick hook is called from an interrupt context, so
-     * code must not attempt to block, and only the interrupt safe FreeRTOS API
-     * functions can be used (those that end in FromISR()). */
+    * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+    * added here, but the tick hook is called from an interrupt context, so
+    * code must not attempt to block, and only the interrupt safe FreeRTOS API
+    * functions can be used (those that end in FromISR()). */
 
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
         {
@@ -425,6 +425,9 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
+/*-----------------------------------------------------------*/
+
+/* The below code is used by the trace recorder for timing. */
 static uint32_t ulEntryTime = 0;
 
 void vTraceTimerReset( void )

@@ -270,6 +270,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcConfig\.c.*',
     r'.*/trcSnapshotConfig\.h.*',
     r'.*/trcKernelPortConfig\.h.*',
+    r'.*/trcKernelPortSnapshotConfig\.h.*',
     r'.*/MicroZed_hw_platform.*',
     r'.*/ThirdParty/.*',
     r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*',
@@ -302,7 +303,8 @@ FREERTOS_IGNORED_FILES = [
     'FreeRTOS_asm_vectors.S',
     'interrupt_vector.s',
     'reg_test.S',
-    'gdbinit'
+    'gdbinit',
+
 ]
 
 FREERTOS_HEADER = [

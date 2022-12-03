@@ -42,8 +42,11 @@
 #define configUSE_TRACE_FACILITY 1
 #define configGENERATE_RUN_TIME_STATS 1
 
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
-#define portGET_RUN_TIME_COUNTER_VALUE() 0
+void vConfigureTimerForRunTimeStats( void );
+unsigned long ulGetRunTimeCounterValue( void );
+
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats( )
+#define portGET_RUN_TIME_COUNTER_VALUE()         ulGetRunTimeCounterValue()
 
 #define configUSE_TICKLESS_IDLE         0
 #define configUSE_PREEMPTION			1

@@ -50,6 +50,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "CMSDK_CM3.h"
+
 /* Standard includes. */
 #include <stdio.h>
 #include <string.h>
@@ -74,6 +76,11 @@ required UART registers. */
 #define UART0_CTRL		( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 8UL ) ) ) )
 #define UART0_BAUDDIV	( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 16UL ) ) ) )
 #define TX_BUFFER_MASK	( 1UL )
+
+#define TIMER_POSTSCALER    ( 8UL )
+
+/* Time at start of day (in ns). */
+static volatile unsigned long ulRunTimeOverflowCount = 0U;
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -307,6 +314,37 @@ void *malloc( size_t size )
 	for( ;; );
 
 }
+/*-----------------------------------------------------------*/
 
+void vConfigureTimerForRunTimeStats( void )
+{
+    /* PCLK / SystemCoreClock is 25MHz, Timer clock is always PCLK */
 
+    CMSDK_TIMER0->CTRL &= ~( CMSDK_TIMER_CTRL_EN_Msk );
+
+    CMSDK_TIMER0->RELOAD = 0xFFFFFFFF;
+
+    /* Enable overflow interrupt and start the timer */
+    CMSDK_TIMER0->CTRL |= CMSDK_TIMER_CTRL_IRQEN_Msk;
+    CMSDK_TIMER0->CTRL |= CMSDK_TIMER_CTRL_EN_Msk;
+
+}
+/*-----------------------------------------------------------*/
+
+unsigned long ulGetRunTimeCounterValue( void )
+{
+    unsigned long ulTimerValue = CMSDK_TIMER0->RELOAD - CMSDK_TIMER0->VALUE;
+
+    /*
+     * 32 bits will overflow after ~ ( 2**32 / 25000000 ) == 171 seconds,
+     * So we remove the lower 8 bits and borrow 8 bits from the overflow counter.
+     */
+
+    ulTimerValue = ( ulTimerValue >> TIMER_POSTSCALER );
+
+    /* Add remaining 8 bits from ulRunTimeOverflowCount */
+    ulTimerValue |= ( ulRunTimeOverflowCount << ( 32UL - TIMER_POSTSCALER ) );
+
+    return ulTimerValue;
+}
 

@@ -25,7 +25,7 @@
  */
 
 /**
- * @file sockets_wrapper.h
+ * @file tcp_sockets_wrapper.h
  * @brief TCP transport functions wrapper.
  */
 

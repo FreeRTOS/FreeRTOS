@@ -170,6 +170,7 @@ BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
         if( tcpSocket != FREERTOS_INVALID_SOCKET )
         {
             ( void ) FreeRTOS_closesocket( tcpSocket );
+            tcpSocket = FREERTOS_INVALID_SOCKET;
         }
     }
     else
@@ -192,7 +193,7 @@ void TCP_Sockets_Disconnect( Socket_t tcpSocket )
     BaseType_t waitForShutdownLoopCount = 0;
     uint8_t pDummyBuffer[ 2 ];
 
-    if( tcpSocket != FREERTOS_INVALID_SOCKET )
+    if( ( tcpSocket != NULL ) && ( tcpSocket != FREERTOS_INVALID_SOCKET ) )
     {
         /* Initiate graceful shutdown. */
         ( void ) FreeRTOS_shutdown( tcpSocket, FREERTOS_SHUT_RDWR );

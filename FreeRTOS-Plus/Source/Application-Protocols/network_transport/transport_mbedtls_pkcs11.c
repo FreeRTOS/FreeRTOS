@@ -669,6 +669,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     TlsTransportParams_t * pTlsTransportParams = NULL;
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     BaseType_t socketStatus = 0;
+    BaseType_t isSocketConnected = pdFALSE;
 
     if( ( pNetworkContext == NULL ) ||
         ( pNetworkContext->pParams == NULL ) ||
@@ -696,6 +697,10 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         pTlsTransportParams = pNetworkContext->pParams;
+
+        /* Initialize tcpSocket. */
+        pTlsTransportParams->tcpSocket = NULL;
+
         socketStatus = TCP_Sockets_Connect( &( pTlsTransportParams->tcpSocket ),
                                             pHostName,
                                             port,
@@ -714,13 +719,19 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Perform TLS handshake. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
+        isSocketConnected = pdTRUE;
+
         returnStatus = tlsSetup( pNetworkContext, pHostName, pNetworkCredentials );
     }
 
     /* Clean up on failure. */
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
-        TCP_Sockets_Disconnect( pTlsTransportParams->tcpSocket );
+        if( isSocketConnected == pdTRUE )
+        {
+            TCP_Sockets_Disconnect( pTlsTransportParams->tcpSocket );
+            pTlsTransportParams->tcpSocket = NULL;
+        }
     }
     else
     {

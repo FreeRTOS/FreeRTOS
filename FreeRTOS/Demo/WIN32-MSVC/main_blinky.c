@@ -161,7 +161,7 @@ const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 		/* Create the software timer, but don't start it yet. */
 		xTimer = xTimerCreate( "Timer",				/* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
 								xTimerPeriod,		/* The period of the software timer in ticks. */
-								pdTRUE,			    /* xAutoReload is set to pdTRUE, so this is timer repeatedly goes off. */
+								pdTRUE,			    /* xAutoReload is set to pdTRUE, so this timer goes off periodically with a period of xTimerPeriod ticks. */
 								NULL,				/* The timer's ID is not used. */
 								prvQueueSendTimerCallback );/* The function executed when the timer expires. */
 

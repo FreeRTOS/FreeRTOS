@@ -210,6 +210,9 @@ int main( void )
         0,                             /* Creation flags. */
         NULL);
 
+    /* Use the cores that are not used by the FreeRTOS tasks. */
+    SetThreadAffinityMask( xWindowsKeyboardInputThreadHandle, ~0x01u );
+
     /* Start keyboard interrupt simulator task. */
     xTaskCreate(
         prvKeyboardInterruptSimulatorTask, /* The function that implements the task. */

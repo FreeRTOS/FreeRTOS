@@ -39,14 +39,8 @@
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
-#define configUSE_TRACE_FACILITY 1
-#define configGENERATE_RUN_TIME_STATS 1
-
-void vConfigureTimerForRunTimeStats( void );
-unsigned long ulGetRunTimeCounterValue( void );
-
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats( )
-#define portGET_RUN_TIME_COUNTER_VALUE()         ulGetRunTimeCounterValue()
+#define configUSE_TRACE_FACILITY 0
+#define configGENERATE_RUN_TIME_STATS 0
 
 #define configUSE_TICKLESS_IDLE         0
 #define configUSE_PREEMPTION			1
@@ -103,7 +97,7 @@ to exclude the API function. */
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS	0
 
 #define configKERNEL_INTERRUPT_PRIORITY 		( 255 )	/* All eight bits as QEMU doesn't model the priority bits. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!

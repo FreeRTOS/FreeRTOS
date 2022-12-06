@@ -180,13 +180,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
                                    const char * pcLabelName );
 
 /**
- * @brief Stub function to satisfy mbedtls checks before sign operations
- *
- * @return 1.
- */
-int canDoStub( mbedtls_pk_type_t type );
-
-/**
  * @brief Sign a cryptographic hash with the private key.
  *
  * @param[in] pvContext Crypto context.
@@ -237,8 +230,7 @@ static void sslContextFree( SSLContext_t * pSslContext )
     mbedtls_x509_crt_free( &( pSslContext->clientCert ) );
     mbedtls_ssl_config_free( &( pSslContext->config ) );
 
-
-    ( void ) lPKCS11PkMbedtlsCloseSessionAndFree( &( pSslContext->privKey ) );
+    mbedtls_pk_free( &( pSslContext->privKey ) );
 
     pSslContext->pxP11FunctionList->C_CloseSession( pSslContext->xP11Session );
 }

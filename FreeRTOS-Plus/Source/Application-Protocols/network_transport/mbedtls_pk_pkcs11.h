@@ -47,15 +47,6 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
                                     CK_OBJECT_HANDLE xPkHandle );
 
 /**
- * @brief Close the PKCS11 session and free the relevant pk context.
- *
- * @param pxMbedtlsPkCtx Pointer to the mbedtls_pk_context to free
- * @return 0 on success
- * @return A negative number on failure
- */
-int lPKCS11PkMbedtlsCloseSessionAndFree( mbedtls_pk_context * pxMbedtlsPkCtx );
-
-/**
  * @brief Callback to generate random data with the PKCS11 module.
  *
  * @param[in] pvCtx void pointer to the
@@ -67,7 +58,5 @@ int lPKCS11PkMbedtlsCloseSessionAndFree( mbedtls_pk_context * pxMbedtlsPkCtx );
 int lPKCS11RandomCallback( void * pvCtx,
                            unsigned char * pucOutput,
                            size_t uxLen );
-
-
 
 #endif /* MBEDTLS_PK_PKCS11_H */

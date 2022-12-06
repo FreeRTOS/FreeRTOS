@@ -387,56 +387,6 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
 
 /*-----------------------------------------------------------*/
 
-int lPKCS11PkMbedtlsCloseSessionAndFree( mbedtls_pk_context * pxMbedtlsPkCtx )
-{
-    CK_RV xResult = CKR_OK;
-    P11PkCtx_t * pxP11Ctx = NULL;
-    CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
-
-    configASSERT( pxMbedtlsPkCtx );
-
-    if( pxMbedtlsPkCtx )
-    {
-        if( pxMbedtlsPkCtx->pk_info->type == MBEDTLS_PK_ECKEY )
-        {
-            pxP11Ctx = &( ( ( P11EcDsaCtx_t * ) ( pxMbedtlsPkCtx->pk_ctx ) )->xP11PkCtx );
-        }
-        else if( pxMbedtlsPkCtx->pk_info->type == MBEDTLS_PK_RSA )
-        {
-            pxP11Ctx = &( ( ( P11RsaCtx_t * ) ( pxMbedtlsPkCtx->pk_ctx ) )->xP11PkCtx );
-        }
-        else
-        {
-            pxP11Ctx = NULL;
-            xResult = CKR_FUNCTION_FAILED;
-        }
-    }
-    else
-    {
-        xResult = CKR_FUNCTION_FAILED;
-    }
-
-    if( xResult == CKR_OK )
-    {
-        xResult = C_GetFunctionList( &pxFunctionList );
-    }
-
-    if( xResult == CKR_OK )
-    {
-        configASSERT( pxFunctionList );
-        xResult = pxFunctionList->C_CloseSession( pxP11Ctx->xSessionHandle );
-    }
-
-    if( xResult == CKR_OK )
-    {
-        pxP11Ctx->xSessionHandle = CK_INVALID_HANDLE;
-    }
-
-    return( xResult == CKR_OK ? 0 : -1 );
-}
-
-/*-----------------------------------------------------------*/
-
 int lPKCS11RandomCallback( void * pvCtx,
                            unsigned char * pucOutput,
                            size_t uxLen )

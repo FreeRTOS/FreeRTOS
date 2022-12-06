@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202211.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -51,6 +51,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <time.h>
+#include <errno.h>
+#include <string.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -58,6 +61,8 @@
 
 /* Local includes. */
 #include "console.h"
+
+#include <trcRecorder.h>
 
 #define    ECHO_CLIENT_DEMO  0
 
@@ -67,7 +72,7 @@
 
 /*-----------------------------------------------------------*/
 extern void main_tcp_echo_client_tasks( void );
-// static void traceOnEnter( void );
+static void traceOnEnter( void );
 
 /*
  * Prototypes for the standard FreeRTOS application hook (callback) functions
@@ -89,7 +94,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
  * Writes trace data to a disk file when the trace recording is stopped.
  * This function will simply overwrite any trace files that already exist.
  */
-// static void prvSaveTraceFile( void );
+static void prvSaveTraceFile( void );
 
 /*-----------------------------------------------------------*/
 
@@ -101,12 +106,27 @@ in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 /* Notes if the trace is running or not. */
-// static BaseType_t xTraceRunning = pdTRUE;
+static BaseType_t xTraceRunning = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
+    /* Do not include trace code when performing a code coverage analysis. */
+    #if ( projCOVERAGE_TEST != 1 )
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+        See http://www.FreeRTOS.org/trace for more information. */
+        xTraceEnable( TRC_START );
+
+        /* Start the trace recording - the recording is written to a file if
+        configASSERT() is called. */
+        printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+        printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+        traceSTART();
+    }
+    #endif
+
     console_init();
     #if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
     {
@@ -155,7 +175,7 @@ void vApplicationIdleHook( void )
 
 
     usleep(15000);
-    // traceOnEnter();
+    traceOnEnter();
 }
 /*-----------------------------------------------------------*/
 
@@ -183,6 +203,35 @@ void vApplicationTickHook( void )
     functions can be used (those that end in FromISR()). */
 }
 
+void traceOnEnter()
+{
+        int xReturn;
+        struct timeval tv = { 0L, 0L };
+        fd_set fds;
+
+        FD_ZERO( &fds );
+        FD_SET( STDIN_FILENO, &fds );
+
+        xReturn = select( STDIN_FILENO + 1, &fds, NULL, NULL, &tv );
+
+        if( xReturn > 0 )
+        {
+            if( xTraceRunning == pdTRUE )
+            {
+                taskENTER_CRITICAL();
+                {
+                    prvSaveTraceFile();
+                }
+                taskEXIT_CRITICAL();
+                
+            }
+
+            /* clear the buffer */
+            char buffer[ 1 ];
+            read( STDIN_FILENO, &buffer, 1 );
+        }
+}
+
 void vLoggingPrintf( const char *pcFormat,
                      ... )
 {
@@ -208,16 +257,64 @@ void vAssertCalled( const char * const pcFileName,
 {
     static BaseType_t xPrinted = pdFALSE;
     volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
-    /* Copy the parameters to local volatile variables, just for debugging */
-    volatile char * pcFile = ( volatile char * ) pcFileName;
-    volatile uint32_t ulLineNumber = ulLine;
 
     /* Called if an assertion passed to configASSERT() fails.  See
-    http://www.freertos.org/a00110.html#configASSERT for more information. */
+     * https://www.FreeRTOS.org/a00110.html#configASSERT for more information. */
 
-	printf( "vAssertCalled( %s, %lu )\n", pcFileName, ulLine );
-    exit(1);
+    /* Parameters are not used. */
+    ( void ) ulLine;
+    ( void ) pcFileName;
 
+    taskENTER_CRITICAL();
+    {
+        /* Stop the trace recording. */
+        if( xPrinted == pdFALSE )
+        {
+            xPrinted = pdTRUE;
+
+            if( xTraceRunning == pdTRUE )
+            {
+                prvSaveTraceFile();
+            }
+        }
+
+        /* You can step out of this function to debug the assertion by using
+         * the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+         * value. */
+        while( ulSetToNonZeroInDebuggerToContinue == 1 )
+        {
+            __asm volatile ( "NOP" );
+            __asm volatile ( "NOP" );
+        }
+    }
+    taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
+static void prvSaveTraceFile( void )
+{
+    /* Tracing is not used when code coverage analysis is being performed. */
+    #if ( projCOVERAGE_TEST != 1 )
+        {
+            FILE * pxOutputFile;
+            pxOutputFile = fopen( "Trace.dump", "wb" );
+
+            if( pxOutputFile != NULL )
+            {
+                {
+                    xTraceDisable();
+                    fwrite(RecorderDataPtr, sizeof(RecorderDataType), 1, pxOutputFile);
+                    fclose(pxOutputFile);
+                    printf("\r\nTrace output saved to Trace.dump\r\n");
+                    xTraceEnable(TRC_START);
+                }
+            }
+            else
+            {
+                printf( "\r\nFailed to create trace dump file\r\n" );
+            }
+        }
+    #endif /* if ( projCOVERAGE_TEST != 1 ) */
 }
 /*-----------------------------------------------------------*/
 
@@ -271,4 +368,21 @@ the stack and so not exists after this function exits. */
     Note that, as the array is necessarily of type StackType_t,
     configMINIMAL_STACK_SIZE is specified in words, not bytes. */
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+
+static uint32_t ulEntryTime = 0U;
+
+void vTraceTimerReset( void )
+{
+    ulEntryTime = xTaskGetTickCount();
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    return configTICK_RATE_HZ;
+}
+
+uint32_t uiTraceTimerGetValue( void )
+{
+	return ( xTaskGetTickCount() - ulEntryTime );
 }

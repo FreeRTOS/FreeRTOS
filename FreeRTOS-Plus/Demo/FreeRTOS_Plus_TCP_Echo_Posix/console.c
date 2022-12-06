@@ -39,7 +39,7 @@ StaticSemaphore_t xStdioMutexBuffer;
 
 void console_init(void)
 {
-    xStdioMutex = xSemaphoreCreateMutex();
+    xStdioMutex = xSemaphoreCreateMutexStatic(&xStdioMutexBuffer);
 }
 
 void console_print(const char *fmt, ...)

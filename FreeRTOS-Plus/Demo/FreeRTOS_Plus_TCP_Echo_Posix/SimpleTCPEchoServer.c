@@ -67,6 +67,7 @@
 /* Standard includes. */
 #include <stdint.h>
 #include <stdio.h>
+#include <limits.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -125,12 +126,27 @@ static void prvServerConnectionInstance( void *pvParameters );
 reused when the server listening task creates tasks to handle connections. */
 static uint16_t usUsedStackSize = 0;
 
+/* Create task stack and buffers for use in the Listening and Server connection tasks */
+static StaticTask_t listenerTaskBuffer;
+static StackType_t listenerTaskStack[PTHREAD_STACK_MIN];
+
+static StaticTask_t echoServerTaskBuffer;
+static StackType_t echoServerTaskStack[PTHREAD_STACK_MIN];
+
 /*-----------------------------------------------------------*/
 
 void vStartSimpleTCPServerTasks( uint16_t usStackSize, UBaseType_t uxPriority )
 {
 	/* Create the TCP echo server. */
-	xTaskCreate( prvConnectionListeningTask, "ServerListener", usStackSize, NULL, uxPriority + 1, NULL );
+
+ 	//xTaskCreateStatic(TzCtrl, STRING_CAST("TzCtrl"), TRC_CFG_CTRL_TASK_STACK_SIZE, 0, TRC_CFG_CTRL_TASK_PRIORITY, stackTzCtrl, &tcbTzCtrl);
+	xTaskCreateStatic( 	prvConnectionListeningTask,
+						"ServerListener",
+						PTHREAD_STACK_MIN,
+						NULL,
+						uxPriority + 1,
+						listenerTaskStack,
+						&listenerTaskBuffer);
 
 	/* Remember the requested stack size so it can be re-used by the server
 	listening task when it creates tasks to handle connections. */
@@ -187,7 +203,14 @@ const BaseType_t xBacklog = 20;
 		configASSERT( xConnectedSocket != FREERTOS_INVALID_SOCKET );
 
 		/* Spawn a task to handle the connection. */
-		xTaskCreate( prvServerConnectionInstance, "EchoServer", usUsedStackSize, ( void * ) xConnectedSocket, tskIDLE_PRIORITY, NULL );
+		//xTaskCreateStatic( prvConnectionListeningTask, "ServerListener", PTHREAD_STACK_MIN, NULL, uxPriority + 1, serverTasksStack );
+		xTaskCreateStatic( 	prvServerConnectionInstance,
+							"EchoServer",
+							PTHREAD_STACK_MIN,
+							( void * ) xConnectedSocket,
+							tskIDLE_PRIORITY,
+							echoServerTaskStack,
+							&echoServerTaskBuffer );
 	}
 }
 /*-----------------------------------------------------------*/

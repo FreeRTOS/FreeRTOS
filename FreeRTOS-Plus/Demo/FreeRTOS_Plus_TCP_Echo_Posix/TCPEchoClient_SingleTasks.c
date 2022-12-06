@@ -101,6 +101,9 @@ missing data. */
 	static char cTxBuffers[ echoNUM_ECHO_CLIENTS ][ echoBUFFER_SIZES ],
 				cRxBuffers[ echoNUM_ECHO_CLIENTS ][ echoBUFFER_SIZES ];
 
+static StaticTask_t echoServerTaskBuffer;
+static StackType_t echoServerTaskStack[PTHREAD_STACK_MIN];
+
 /*-----------------------------------------------------------*/
 
 	void vStartTCPEchoClientTasks_SingleTasks( uint16_t usTaskStackSize,
@@ -111,12 +114,13 @@ missing data. */
 		/* Create the echo client tasks. */
 		for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
 		{
-			xTaskCreate( prvEchoClientTask, /* The function that implements the task. */
+			xTaskCreateStatic( prvEchoClientTask, /* The function that implements the task. */
 						 "Echo0",           /* Just a text name for the task to aid debugging. */
 						 usTaskStackSize,   /* The stack size is defined in FreeRTOSIPConfig.h. */
 						 ( void * ) x,      /* The task parameter, not used in this case. */
 						 uxTaskPriority,    /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
-						 NULL );            /* The task handle is not used. */
+						 echoServerTaskStack,
+						 &echoServerTaskBuffer );            /* The task handle is not used. */
 		}
 	}
 /*-----------------------------------------------------------*/

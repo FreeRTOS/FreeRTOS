@@ -273,15 +273,15 @@ uint32_t ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
-/* Called from vApplicationIdleHook(), which is defined in main.c. */
-void vBlinkyDemoIdleFunction( int xKeyPressed )
+/* Called from prvKeyboardIntteruptSimulatorTask(), which is defined in main.c. */
+void vBlinkyKeyboardInterruptHandler( int xKeyPressed )
 {
     /* Handle keyboard input. */
     switch ( xKeyPressed )
     {
     case mainRESET_TIMER_KEY:
 
-        if (xTimer != NULL)
+        if ( xTimer != NULL )
         {
             /* Critical section around printf to prevent a deadlock
                on context switch. */
@@ -294,6 +294,10 @@ void vBlinkyDemoIdleFunction( int xKeyPressed )
             /* Reset the software timer. */
             xTimerReset( xTimer, portMAX_DELAY );
         }
+
+        break;
+
+    default:
         break;
     }
 }

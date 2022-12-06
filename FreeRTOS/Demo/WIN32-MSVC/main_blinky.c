@@ -273,7 +273,7 @@ uint32_t ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
-/* Called from prvKeyboardIntteruptSimulatorTask(), which is defined in main.c. */
+/* Called from prvKeyboardInterruptSimulatorTask(), which is defined in main.c. */
 void vBlinkyKeyboardInterruptHandler( int xKeyPressed )
 {
     /* Handle keyboard input. */

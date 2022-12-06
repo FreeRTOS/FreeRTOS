@@ -42,8 +42,10 @@
 #define configUSE_TRACE_FACILITY 1
 #define configGENERATE_RUN_TIME_STATS 1
 
-void vConfigureTimerForRunTimeStats( void );
-unsigned long ulGetRunTimeCounterValue( void );
+#ifndef __IASMARM__ /* Prevent C code being included in IAR asm files. */
+    void vConfigureTimerForRunTimeStats( void );
+    unsigned long ulGetRunTimeCounterValue( void );
+#endif
 
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats( )
 #define portGET_RUN_TIME_COUNTER_VALUE()         ulGetRunTimeCounterValue()

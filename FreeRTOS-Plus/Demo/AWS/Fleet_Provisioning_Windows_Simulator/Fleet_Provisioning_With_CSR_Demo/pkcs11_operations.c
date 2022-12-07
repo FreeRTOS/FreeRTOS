@@ -44,7 +44,7 @@
 #include "core_pkcs11_config.h"
 #include "core_pki_utils.h"
 #include "mbedtls_utils.h"
-#include "mbedtls_pk_pkcs11.h"
+#include "mbedtls_pkcs11.h"
 
 /* MbedTLS include. */
 #include "mbedtls/error.h"
@@ -257,7 +257,7 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
             mbedtls_x509write_csr_set_key( &xReq, &xPrivKey );
 
             ulMbedtlsRet = mbedtls_x509write_csr_pem( &xReq, ( unsigned char * ) pcCsrBuffer,
-                                                      xCsrBufferLength, &lPKCS11RandomCallback,
+                                                      xCsrBufferLength, &lMbedCryptoRngCallbackPKCS11,
                                                       &xP11Session );
         }
 

@@ -24,39 +24,57 @@
  *
  */
 
-#ifndef MBEDTLS_PK_PKCS11_H
-#define MBEDTLS_PK_PKCS11_H
+#include "logging_levels.h"
 
-#include <string.h>
-#include "mbedtls/pk.h"
+#define LIBRARY_LOG_NAME     "MbedTLSRNGP11"
+#define LIBRARY_LOG_LEVEL    LOG_ERROR
+
+#include "logging_stack.h"
+
+/**
+ * @file mbedtls_rng_pkcs11.c
+ * @brief Implements an mbedtls RNG callback using the PKCS#11 API
+ */
+
 #include "core_pkcs11_config.h"
 #include "core_pkcs11.h"
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Initialize an mbedtls_pk_context for the given PKCS11 object handle.
- *
- * @param pxMbedtlsPkCtx Pointer to an MbedTLS PK context to initialize.
- * @param xSessionHandle Handle of an initialize PKCS#11 session.
- * @param xPkHandle Handle of a PKCS11 Private Key object.
- * @return CK_RV CKR_OK on success.
- */
-CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
-                                    CK_SESSION_HANDLE xSessionHandle,
-                                    CK_OBJECT_HANDLE xPkHandle );
+int lMbedCryptoRngCallbackPKCS11( void * pvCtx,
+                                  unsigned char * pucOutput,
+                                  size_t uxLen )
+{
+    int lRslt;
+    CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
+    CK_SESSION_HANDLE * pxSessionHandle = ( CK_SESSION_HANDLE * ) pvCtx;
 
-/**
- * @brief Callback to generate random data with the PKCS11 module.
- *
- * @param[in] pvCtx void pointer to the
- * @param[in] pucRandom Byte array to fill with random data.
- * @param[in] xRandomLength Length of byte array.
- *
- * @return 0 on success.
- */
-int lPKCS11RandomCallback( void * pvCtx,
-                           unsigned char * pucOutput,
-                           size_t uxLen );
+    if( pucOutput == NULL )
+    {
+        lRslt = -1;
+    }
+    else if( pvCtx == NULL )
+    {
+        lRslt = -1;
+        LogError( ( "pvCtx must not be NULL." ) );
+    }
+    else
+    {
+        lRslt = ( int ) C_GetFunctionList( &pxFunctionList );
+    }
 
-#endif /* MBEDTLS_PK_PKCS11_H */
+    if( ( lRslt != CKR_OK ) ||
+        ( pxFunctionList == NULL ) ||
+        ( pxFunctionList->C_GenerateRandom == NULL ) )
+    {
+        lRslt = -1;
+    }
+    else
+    {
+        lRslt = ( int ) pxFunctionList->C_GenerateRandom( *pxSessionHandle, pucOutput, uxLen );
+    }
+
+    return lRslt;
+}
+
+/*-----------------------------------------------------------*/

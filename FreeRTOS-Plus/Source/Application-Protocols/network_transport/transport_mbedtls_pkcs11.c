@@ -52,7 +52,7 @@
 
 /* TLS transport header. */
 #include "transport_mbedtls_pkcs11.h"
-#include "mbedtls_pk_pkcs11.h"
+#include "mbedtls_pkcs11.h"
 
 /* PKCS #11 includes. */
 #include "core_pkcs11_config.h"

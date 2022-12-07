@@ -159,6 +159,7 @@
     <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_rng_pkcs11.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.c" />
     <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
@@ -172,7 +173,7 @@
     <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h" />
-    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pkcs11.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h" />
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />

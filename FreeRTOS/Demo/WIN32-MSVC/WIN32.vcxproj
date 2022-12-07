@@ -131,6 +131,8 @@
     <ClCompile Include="Run-time-stats-utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\Include\trcRecorder.h" />
     <ClInclude Include="..\..\Source\include\event_groups.h" />
     <ClInclude Include="..\..\Source\include\message_buffer.h" />
     <ClInclude Include="..\..\Source\include\stream_buffer.h" />
@@ -145,6 +147,9 @@
     <ClInclude Include="..\..\Source\include\semphr.h" />
     <ClInclude Include="..\..\Source\include\task.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortSnapshotConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcSnapshotConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

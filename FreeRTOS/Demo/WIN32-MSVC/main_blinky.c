@@ -108,6 +108,10 @@ queue send software timer respectively. */
 #define mainVALUE_SENT_FROM_TASK			( 100UL )
 #define mainVALUE_SENT_FROM_TIMER			( 200UL )
 
+/* This demo allows for users to perform actions with the keyboard. */
+#define mainNO_KEY_PRESS_VALUE              ( -1 )
+#define mainRESET_TIMER_KEY                 ( 'r' )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -136,6 +140,8 @@ void main_blinky( void )
 {
 const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 
+    printf( "\r\nStarting the blinky demo. Press \'%c\' to reset the software timer used in this demo.\r\n\r\n", mainRESET_TIMER_KEY );
+
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
@@ -155,7 +161,7 @@ const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 		/* Create the software timer, but don't start it yet. */
 		xTimer = xTimerCreate( "Timer",				/* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
 								xTimerPeriod,		/* The period of the software timer in ticks. */
-								pdFALSE,			/* xAutoReload is set to pdFALSE, so this is a one-shot timer. */
+								pdTRUE,			    /* xAutoReload is set to pdTRUE, so this timer goes off periodically with a period of xTimerPeriod ticks. */
 								NULL,				/* The timer's ID is not used. */
 								prvQueueSendTimerCallback );/* The function executed when the timer expires. */
 
@@ -237,37 +243,63 @@ uint32_t ulReceivedValue;
 		Blocked state. */
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have been received from the queue, but
-		is it an expected value?  Normally calling printf() from a task is not
-		a good idea.  Here there is lots of stack space and only one task is
-		using console IO so it is ok.  However, note the comments at the top of
-		this file about the risks of making Windows system calls (such as
-		console output) from a FreeRTOS task. */
-		if( ulReceivedValue == mainVALUE_SENT_FROM_TASK )
-		{
-			printf( "Message received from task - idle time %llu%%\r\n", ulTaskGetIdleRunTimePercent() );
-		}
-		else if( ulReceivedValue == mainVALUE_SENT_FROM_TIMER )
-		{
-			printf( "Message received from software timer\r\n" );
-		}
-		else
-		{
-			printf( "Unexpected message\r\n" );
-		}
-
-		/* Reset the timer if a key has been pressed.  The timer will write
-		mainVALUE_SENT_FROM_TIMER to the queue when it expires. */
-		if( _kbhit() != 0 )
-		{
-			/* Remove the key from the input buffer. */
-			( void ) _getch();
-
-			/* Reset the software timer. */
-			xTimerReset( xTimer, portMAX_DELAY );
-		}
+        /* Enter critical section to use printf. Not doing this could potentially cause
+           a deadlock if the FreeRTOS simulator switches contexts and another task
+           tries to call printf - it should be noted that use of printf within
+           the FreeRTOS simulator is unsafe, but used here for simplicity. */
+        taskENTER_CRITICAL();
+        {
+            /*  To get here something must have been received from the queue, but
+            is it an expected value?  Normally calling printf() from a task is not
+            a good idea.  Here there is lots of stack space and only one task is
+            using console IO so it is ok.  However, note the comments at the top of
+            this file about the risks of making Windows system calls (such as
+            console output) from a FreeRTOS task. */
+            if (ulReceivedValue == mainVALUE_SENT_FROM_TASK)
+            {
+                printf("Message received from task - idle time %llu%%\r\n", ulTaskGetIdleRunTimePercent());
+            }
+            else if (ulReceivedValue == mainVALUE_SENT_FROM_TIMER)
+            {
+                printf("Message received from software timer\r\n");
+            }
+            else
+            {
+                printf("Unexpected message\r\n");
+            }
+        }
+        taskEXIT_CRITICAL();
 	}
 }
 /*-----------------------------------------------------------*/
+
+/* Called from prvKeyboardInterruptSimulatorTask(), which is defined in main.c. */
+void vBlinkyKeyboardInterruptHandler( int xKeyPressed )
+{
+    /* Handle keyboard input. */
+    switch ( xKeyPressed )
+    {
+    case mainRESET_TIMER_KEY:
+
+        if ( xTimer != NULL )
+        {
+            /* Critical section around printf to prevent a deadlock
+               on context switch. */
+            taskENTER_CRITICAL();
+            {
+                printf("\r\nResetting software timer.\r\n\r\n");
+            }
+            taskEXIT_CRITICAL();
+
+            /* Reset the software timer. */
+            xTimerReset( xTimer, portMAX_DELAY );
+        }
+
+        break;
+
+    default:
+        break;
+    }
+}
 
 

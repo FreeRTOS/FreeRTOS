@@ -1132,6 +1132,7 @@ juse
 katy
 kbhit
 keil
+keyboardinterrupt
 keygen
 keytype
 khz
@@ -1918,6 +1919,7 @@ prvisrblocktask
 prvisroneshottimercallback
 prvisrtriggeredtask
 prvjobsdemotask
+prvkeyboardinterruptsimulatortask
 prvlcdtask
 prvlcdtaskline
 prvledtimercallback
@@ -2029,6 +2031,7 @@ prvunlockqueue
 prvupdateacceptedhandler
 prvupdatedeltahandler
 prvwin
+prvwindowskeyboardinputthread
 prvwinpcaprecvthread
 prvwinpcapsendthread
 prvzerocopyechoclienttask

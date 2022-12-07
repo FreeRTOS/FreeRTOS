@@ -387,44 +387,6 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
 
 /*-----------------------------------------------------------*/
 
-int lPKCS11RandomCallback( void * pvCtx,
-                           unsigned char * pucOutput,
-                           size_t uxLen )
-{
-    int lRslt;
-    CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
-    CK_SESSION_HANDLE * pxSessionHandle = ( CK_SESSION_HANDLE * ) pvCtx;
-
-    if( pucOutput == NULL )
-    {
-        lRslt = -1;
-    }
-    else if( pvCtx == NULL )
-    {
-        lRslt = -1;
-        LogError( ( "pvCtx must not be NULL." ) );
-    }
-    else
-    {
-        lRslt = ( int ) C_GetFunctionList( &pxFunctionList );
-    }
-
-    if( ( lRslt != CKR_OK ) ||
-        ( pxFunctionList == NULL ) ||
-        ( pxFunctionList->C_GenerateRandom == NULL ) )
-    {
-        lRslt = -1;
-    }
-    else
-    {
-        lRslt = ( int ) pxFunctionList->C_GenerateRandom( *pxSessionHandle, pucOutput, uxLen );
-    }
-
-    return lRslt;
-}
-
-/*-----------------------------------------------------------*/
-
 static void * p11_ecdsa_ctx_alloc( void )
 {
     void * pvCtx = NULL;

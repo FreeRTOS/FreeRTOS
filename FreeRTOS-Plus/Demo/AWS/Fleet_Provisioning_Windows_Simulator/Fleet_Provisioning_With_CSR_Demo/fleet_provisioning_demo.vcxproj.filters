@@ -108,6 +108,9 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.c">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_rng_pkcs11.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.c">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport</Filter>
     </ClCompile>
@@ -176,7 +179,7 @@
     <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.h">
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_pkcs11.h">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h">

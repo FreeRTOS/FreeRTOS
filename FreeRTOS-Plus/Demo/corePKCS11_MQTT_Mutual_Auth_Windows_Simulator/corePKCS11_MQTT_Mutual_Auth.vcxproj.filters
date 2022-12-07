@@ -98,7 +98,7 @@
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.h">
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pkcs11.h">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h">

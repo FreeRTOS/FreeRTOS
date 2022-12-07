@@ -139,8 +139,6 @@
                                      UBaseType_t uxPriority )
     {
         /* Create the TCP echo server. */
-
-        /*xTaskCreateStatic(TzCtrl, STRING_CAST("TzCtrl"), TRC_CFG_CTRL_TASK_STACK_SIZE, 0, TRC_CFG_CTRL_TASK_PRIORITY, stackTzCtrl, &tcbTzCtrl); */
         xTaskCreateStatic( prvConnectionListeningTask,
                            "ServerListener",
                            PTHREAD_STACK_MIN,
@@ -204,7 +202,6 @@
             configASSERT( xConnectedSocket != FREERTOS_INVALID_SOCKET );
 
             /* Spawn a task to handle the connection. */
-            /*xTaskCreateStatic( prvConnectionListeningTask, "ServerListener", PTHREAD_STACK_MIN, NULL, uxPriority + 1, serverTasksStack ); */
             xTaskCreateStatic( prvServerConnectionInstance,
                                "EchoServer",
                                PTHREAD_STACK_MIN,

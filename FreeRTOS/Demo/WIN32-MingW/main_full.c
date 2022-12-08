@@ -869,7 +869,7 @@ const TickType_t x100ms = pdMS_TO_TICKS( 100UL );
         x100ms,
         pdFALSE, /* Created as a one-shot timer. */
         0,
-        rvReloadModeTestTimerCallback );
+        prvReloadModeTestTimerCallback );
         
     configASSERT( xTimer );
     configASSERT( xTimerIsTimerActive( xTimer ) == pdFALSE );

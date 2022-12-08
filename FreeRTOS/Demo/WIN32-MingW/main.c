@@ -159,9 +159,6 @@ declared here, as a global, so it can be checked by a test that is implemented
 in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
-/* Notes if the trace is running or not. */
-static BaseType_t xTraceRunning = pdTRUE;
-
 /* Thread handle for the keyboard input Windows thread. */
 static HANDLE xWindowsKeyboardInputThreadHandle = NULL;
 

@@ -67,16 +67,16 @@ The blinky demo is implemented and described in main_blinky.c.
 If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
 demo application will be built.  The comprehensive test and demo application is
 implemented and described in main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
 
 /* This demo uses heap_5.c, and these constants define the sizes of the regions
 that make up the total heap.  heap_5 is only used for test and example purposes
 as this demo could easily create one large heap region instead of multiple
 smaller heap regions - in which case heap_4.c would be the more appropriate
 choice.  See http://www.freertos.org/a00111.html for an explanation. */
-#define mainREGION_1_SIZE	8201
-#define mainREGION_2_SIZE	40905
-#define mainREGION_3_SIZE	50007
+#define mainREGION_1_SIZE    8201
+#define mainREGION_2_SIZE    40905
+#define mainREGION_3_SIZE    50007
 
 /* This demo allows for users to perform actions with the keyboard. */
 #define mainNO_KEY_PRESS_VALUE                -1
@@ -172,143 +172,143 @@ static int xKeyPressed = mainNO_KEY_PRESS_VALUE;
 
 int main( void )
 {
-	/* Set interrupt handler for keyboard input. */
-	vPortSetInterruptHandler( mainINTERRUPT_NUMBER_KEYBOARD, prvKeyboardInterruptHandler );
+    /* Set interrupt handler for keyboard input. */
+    vPortSetInterruptHandler( mainINTERRUPT_NUMBER_KEYBOARD, prvKeyboardInterruptHandler );
 
-	/* Start keyboard input handling thread. */
+    /* Start keyboard input handling thread. */
     xWindowsKeyboardInputThreadHandle = CreateThread(
-	    NULL,                          /* Pointer to thread security attributes. */
-	    0,                             /* Initial thread stack size, in bytes. */
-	    prvWindowsKeyboardInputThread, /* Pointer to thread function. */
-	    NULL,                          /* Argument for new thread. */
-	    0,                             /* Creation flags. */
-	    NULL);
+        NULL,                          /* Pointer to thread security attributes. */
+        0,                             /* Initial thread stack size, in bytes. */
+        prvWindowsKeyboardInputThread, /* Pointer to thread function. */
+        NULL,                          /* Argument for new thread. */
+        0,                             /* Creation flags. */
+        NULL);
 
     fflush( stdout );
 
     /* Use the cores that are not used by the FreeRTOS tasks. */
-	SetThreadAffinityMask( xWindowsKeyboardInputThreadHandle, ~0x01u );
+    SetThreadAffinityMask( xWindowsKeyboardInputThreadHandle, ~0x01u );
 
-	/* This demo uses heap_5.c, so start by defining some heap regions.  heap_5
-	is only used for test and example reasons.  Heap_4 is more appropriate.  See
-	http://www.freertos.org/a00111.html for an explanation. */
-	prvInitialiseHeap();
+    /* This demo uses heap_5.c, so start by defining some heap regions.  heap_5
+    is only used for test and example reasons.  Heap_4 is more appropriate.  See
+    http://www.freertos.org/a00111.html for an explanation. */
+    prvInitialiseHeap();
 
-	/* Do not include trace code when performing a code coverage analysis. */
-	#if( projCOVERAGE_TEST != 1 )
-	{
-		/* Initialise the trace recorder.  Use of the trace recorder is optional.
-		See http://www.FreeRTOS.org/trace for more information. */
-		configASSERT( xTraceInitialize() == TRC_SUCCESS );
+    /* Do not include trace code when performing a code coverage analysis. */
+    #if( projCOVERAGE_TEST != 1 )
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+        See http://www.FreeRTOS.org/trace for more information. */
+        configASSERT( xTraceInitialize() == TRC_SUCCESS );
 
-		/* Start the trace recording - the recording is written to a file if
-		configASSERT() is called. */
-		printf(
-				"Trace started.\r\n"
-				"Note that the trace output uses the ring buffer mode, meaning that the output trace\r\n"
-				"will only be the most recent data able to fit within the trace recorder buffer.\r\n\r\n"
-				"The trace will be dumped to the file \"%s\" whenever a call to configASSERT()\r\n"
-				"fails or the \'%c\' key is pressed.\r\n"
-				"Note that key presses cannot be captured in the Eclipse console, so for key presses to work\r\n"
-				"you will have to run this demo in a Windows console.\r\n\r\n",
-		        mainTRACE_FILE_NAME, mainOUTPUT_TRACE_KEY );
-		fflush( stdout );
-		configASSERT( xTraceEnable( TRC_START ) == TRC_SUCCESS );
-	}
-	#endif
+        /* Start the trace recording - the recording is written to a file if
+        configASSERT() is called. */
+        printf(
+                "Trace started.\r\n"
+                "Note that the trace output uses the ring buffer mode, meaning that the output trace\r\n"
+                "will only be the most recent data able to fit within the trace recorder buffer.\r\n\r\n"
+                "The trace will be dumped to the file \"%s\" whenever a call to configASSERT()\r\n"
+                "fails or the \'%c\' key is pressed.\r\n"
+                "Note that key presses cannot be captured in the Eclipse console, so for key presses to work\r\n"
+                "you will have to run this demo in a Windows console.\r\n\r\n",
+                mainTRACE_FILE_NAME, mainOUTPUT_TRACE_KEY );
+        fflush( stdout );
+        configASSERT( xTraceEnable( TRC_START ) == TRC_SUCCESS );
+    }
+    #endif
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
-	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+    of this file. */
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 
-	return 0;
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c, heap_2.c or heap_4.c is being used, then the
-	size of the	heap available to pvPortMalloc() is defined by
-	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
-	API function can be used to query the size of free heap space that remains
-	(although it does not provide information on how the remaining heap might be
-	fragmented).  See http://www.freertos.org/a00111.html for more
-	information. */
-	vAssertCalled( __LINE__, __FILE__ );
+    /* vApplicationMallocFailedHook() will only be called if
+    configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h. It is a hook
+    function that will get called if a call to pvPortMalloc() fails.
+    pvPortMalloc() is called internally by the kernel whenever a task, queue,
+    timer or semaphore is created.  It is also called by various parts of the
+    demo application. If heap_1.c, heap_2.c or heap_4.c is being used, then the
+    size of the heap available to pvPortMalloc() is defined by
+    configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+    API function can be used to query the size of free heap space that remains
+    (although it does not provide information on how the remaining heap might be
+    fragmented).  See http://www.freertos.org/a00111.html for more
+    information. */
+    vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
-	task.  It is essential that code added to this hook function never attempts
-	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If application tasks make use of the
-	vTaskDelete() API function to delete themselves then it is also important
-	that vApplicationIdleHook() is permitted to return to its calling function,
-	because it is the responsibility of the idle task to clean up memory
-	allocated by the kernel to any task that has since deleted itself. */
+    /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+    to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+    task.  It is essential that code added to this hook function never attempts
+    to block in any way (for example, call xQueueReceive() with a block time
+    specified, or call vTaskDelay()).  If application tasks make use of the
+    vTaskDelete() API function to delete themselves then it is also important
+    that vApplicationIdleHook() is permitted to return to its calling function,
+    because it is the responsibility of the idle task to clean up memory
+    allocated by the kernel to any task that has since deleted itself. */
 
-	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-	{
-		/* Call the idle task processing used by the full demo.  The simple
-		blinky demo does not use the idle task hook. */
-		vFullDemoIdleFunction();
-	}
-	#endif
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+    {
+        /* Call the idle task processing used by the full demo.  The simple
+        blinky demo does not use the idle task hook. */
+        vFullDemoIdleFunction();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected.  This function is
-	provided as an example only as stack overflow checking does not function
-	when running the FreeRTOS Windows port. */
-	vAssertCalled( __LINE__, __FILE__ );
+    /* Run time stack overflow checking is performed if
+    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected.  This function is
+    provided as an example only as stack overflow checking does not function
+    when running the FreeRTOS Windows port. */
+    vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* This function will be called by each tick interrupt if
-	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-	added here, but the tick hook is called from an interrupt context, so
-	code must not attempt to block, and only the interrupt safe FreeRTOS API
-	functions can be used (those that end in FromISR()). */
+    /* This function will be called by each tick interrupt if
+    configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+    added here, but the tick hook is called from an interrupt context, so
+    code must not attempt to block, and only the interrupt safe FreeRTOS API
+    functions can be used (those that end in FromISR()). */
 
-	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-	{
-		vFullDemoTickHookFunction();
-	}
-	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+    {
+        vFullDemoTickHookFunction();
+    }
+    #endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationDaemonTaskStartupHook( void )
 {
-	/* This function will be called once only, when the daemon task starts to
-	execute	(sometimes called the timer task).  This is useful if the
-	application includes initialisation code that would benefit from executing
-	after the scheduler has been started. */
+    /* This function will be called once only, when the daemon task starts to
+    execute (sometimes called the timer task). This is useful if the
+    application includes initialisation code that would benefit from executing
+    after the scheduler has been started. */
 }
 /*-----------------------------------------------------------*/
 
@@ -316,64 +316,64 @@ void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
-	/* Called if an assertion passed to configASSERT() fails.  See
-	http://www.freertos.org/a00110.html#configASSERT for more information. */
+    /* Called if an assertion passed to configASSERT() fails.  See
+    http://www.freertos.org/a00110.html#configASSERT for more information. */
 
-	/* Parameters are not used. */
-	( void ) ulLine;
-	( void ) pcFileName;
+    /* Parameters are not used. */
+    ( void ) ulLine;
+    ( void ) pcFileName;
 
 
- 	taskENTER_CRITICAL();
-	{
- 		printf("ASSERT! Line %ld, file %s, GetLastError() %ld\r\n", ulLine, pcFileName, GetLastError());
- 		fflush( stdout );
+    taskENTER_CRITICAL();
+    {
+        printf("ASSERT! Line %ld, file %s, GetLastError() %ld\r\n", ulLine, pcFileName, GetLastError());
+        fflush( stdout );
 
-		/* Stop the trace recording. */
- 		( void ) xTraceDisable();
- 		prvSaveTraceFile();
+        /* Stop the trace recording. */
+        ( void ) xTraceDisable();
+        prvSaveTraceFile();
 
-		/* You can step out of this function to debug the assertion by using
-		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
-		value. */
-		while( ulSetToNonZeroInDebuggerToContinue == 0 )
-		{
-			__asm volatile( "NOP" );
-			__asm volatile( "NOP" );
-		}
+        /* You can step out of this function to debug the assertion by using
+        the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+        value. */
+        while( ulSetToNonZeroInDebuggerToContinue == 0 )
+        {
+            __asm volatile( "NOP" );
+            __asm volatile( "NOP" );
+        }
 
-		/* Re-enable recording */
-		( void ) xTraceEnable( TRC_START );
-	}
-	taskEXIT_CRITICAL();
+        /* Re-enable recording */
+        ( void ) xTraceEnable( TRC_START );
+    }
+    taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
 static void prvSaveTraceFile( void )
 {
-	/* Tracing is not used when code coverage analysis is being performed. */
-	#if( projCOVERAGE_TEST != 1 )
-	{
-		FILE* pxOutputFile;
+    /* Tracing is not used when code coverage analysis is being performed. */
+    #if( projCOVERAGE_TEST != 1 )
+    {
+        FILE* pxOutputFile;
 
-		vTraceStop();
+        vTraceStop();
 
-		pxOutputFile = fopen( mainTRACE_FILE_NAME, "wb");
+        pxOutputFile = fopen( mainTRACE_FILE_NAME, "wb");
 
-		if( pxOutputFile != NULL )
-		{
-			fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
-			fclose( pxOutputFile );
-			printf( "\r\nTrace output saved to %s\r\n", mainTRACE_FILE_NAME );
-			fflush( stdout );
-		}
-		else
-		{
-			printf( "\r\nFailed to create trace dump file\r\n" );
-			fflush( stdout );
-		}
-	}
-	#endif
+        if( pxOutputFile != NULL )
+        {
+            fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+            fclose( pxOutputFile );
+            printf( "\r\nTrace output saved to %s\r\n", mainTRACE_FILE_NAME );
+            fflush( stdout );
+        }
+        else
+        {
+            printf( "\r\nFailed to create trace dump file\r\n" );
+            fflush( stdout );
+        }
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -394,27 +394,27 @@ volatile uint32_t ulAdditionalOffset = 19; /* Just to prevent 'condition is alwa
 HeapStats_t xHeapStats;
 const HeapRegion_t xHeapRegions[] =
 {
-	/* Start address with dummy offsets						Size */
-	{ ucHeap + 1,											mainREGION_1_SIZE },
-	{ ucHeap + 15 + mainREGION_1_SIZE,						mainREGION_2_SIZE },
-	{ ucHeap + 19 + mainREGION_1_SIZE + mainREGION_2_SIZE,	mainREGION_3_SIZE },
-	{ NULL, 0 }
+    /* Start address with dummy offsets                       Size */
+    { ucHeap + 1,                                             mainREGION_1_SIZE },
+    { ucHeap + 15 + mainREGION_1_SIZE,                        mainREGION_2_SIZE },
+    { ucHeap + 19 + mainREGION_1_SIZE + mainREGION_2_SIZE,    mainREGION_3_SIZE },
+    { NULL, 0 }
 };
 
-	/* Sanity check that the sizes and offsets defined actually fit into the
-	array. */
-	configASSERT( ( ulAdditionalOffset + mainREGION_1_SIZE + mainREGION_2_SIZE + mainREGION_3_SIZE ) < configTOTAL_HEAP_SIZE );
+    /* Sanity check that the sizes and offsets defined actually fit into the
+    array. */
+    configASSERT( ( ulAdditionalOffset + mainREGION_1_SIZE + mainREGION_2_SIZE + mainREGION_3_SIZE ) < configTOTAL_HEAP_SIZE );
 
-	/* Prevent compiler warnings when configASSERT() is not defined. */
-	( void ) ulAdditionalOffset;
+    /* Prevent compiler warnings when configASSERT() is not defined. */
+    ( void ) ulAdditionalOffset;
 
-	/* The heap has not been initialised yet so expect stats to all be zero. */
-	vPortGetHeapStats( &xHeapStats );
+    /* The heap has not been initialised yet so expect stats to all be zero. */
+    vPortGetHeapStats( &xHeapStats );
 
-	vPortDefineHeapRegions( xHeapRegions );
+    vPortDefineHeapRegions( xHeapRegions );
 
-	/* Sanity check vTaskGetHeapStats(). */
-	prvExerciseHeapStats();
+    /* Sanity check vTaskGetHeapStats(). */
+    prvExerciseHeapStats();
 }
 /*-----------------------------------------------------------*/
 
@@ -427,60 +427,60 @@ void *pvAllocatedBlock;
 const size_t xArraySize = 5, xBlockSize = 1000UL;
 void *pvAllocatedBlocks[ xArraySize ];
 
-	/* Check heap stats are as expected after initialisation but before any
-	allocations. */
-	vPortGetHeapStats( &xHeapStats );
+    /* Check heap stats are as expected after initialisation but before any
+    allocations. */
+    vPortGetHeapStats( &xHeapStats );
 
-	/* Minimum ever free bytes remaining should be the same as the total number
-	of bytes as nothing has been allocated yet. */
-	configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xHeapStats.xAvailableHeapSpaceInBytes );
-	configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xInitialFreeSpace );
+    /* Minimum ever free bytes remaining should be the same as the total number
+    of bytes as nothing has been allocated yet. */
+    configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xHeapStats.xAvailableHeapSpaceInBytes );
+    configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xInitialFreeSpace );
 
-	/* Nothing has been allocated or freed yet. */
-	configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == 0 );
-	configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 0 );
+    /* Nothing has been allocated or freed yet. */
+    configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == 0 );
+    configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 0 );
 
-	/* Allocate a 1000 byte block then measure what the overhead of the
-	allocation in regards to how many bytes more than 1000 were actually
-	removed from the heap in order to store metadata about the allocation. */
-	pvAllocatedBlock = pvPortMalloc( xBlockSize );
-	configASSERT( pvAllocatedBlock );
-	xMetaDataOverhead = ( xInitialFreeSpace - xPortGetFreeHeapSize() ) - xBlockSize;
+    /* Allocate a 1000 byte block then measure what the overhead of the
+    allocation in regards to how many bytes more than 1000 were actually
+    removed from the heap in order to store metadata about the allocation. */
+    pvAllocatedBlock = pvPortMalloc( xBlockSize );
+    configASSERT( pvAllocatedBlock );
+    xMetaDataOverhead = ( xInitialFreeSpace - xPortGetFreeHeapSize() ) - xBlockSize;
 
-	/* Free the block again to get back to where we started. */
-	vPortFree( pvAllocatedBlock );
-	vPortGetHeapStats( &xHeapStats );
-	configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xInitialFreeSpace );
-	configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == 1 );
-	configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 1 );
+    /* Free the block again to get back to where we started. */
+    vPortFree( pvAllocatedBlock );
+    vPortGetHeapStats( &xHeapStats );
+    configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xInitialFreeSpace );
+    configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == 1 );
+    configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 1 );
 
-	/* Allocate blocks checking some stats value on each allocation. */
-	for( i = 0; i < xArraySize; i++ )
-	{
-		pvAllocatedBlocks[ i ] = pvPortMalloc( xBlockSize );
-		configASSERT( pvAllocatedBlocks[ i ] );
-		vPortGetHeapStats( &xHeapStats );
-		configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == ( xInitialFreeSpace - ( ( i + 1 ) * ( xBlockSize + xMetaDataOverhead ) ) ) );
-		configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xHeapStats.xAvailableHeapSpaceInBytes );
-		configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == ( 2Ul + i ) );
-		configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 1 ); /* Does not increase during allocations. */
-	}
+    /* Allocate blocks checking some stats value on each allocation. */
+    for( i = 0; i < xArraySize; i++ )
+    {
+        pvAllocatedBlocks[ i ] = pvPortMalloc( xBlockSize );
+        configASSERT( pvAllocatedBlocks[ i ] );
+        vPortGetHeapStats( &xHeapStats );
+        configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == ( xInitialFreeSpace - ( ( i + 1 ) * ( xBlockSize + xMetaDataOverhead ) ) ) );
+        configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xHeapStats.xAvailableHeapSpaceInBytes );
+        configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == ( 2Ul + i ) );
+        configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 1 ); /* Does not increase during allocations. */
+    }
 
-	configASSERT( xPortGetFreeHeapSize() == xPortGetMinimumEverFreeHeapSize() );
-	xMinimumFreeBytes = xPortGetFreeHeapSize();
+    configASSERT( xPortGetFreeHeapSize() == xPortGetMinimumEverFreeHeapSize() );
+    xMinimumFreeBytes = xPortGetFreeHeapSize();
 
-	/* Free the blocks again. */
-	for( i = 0; i < xArraySize; i++ )
-	{
-		vPortFree( pvAllocatedBlocks[ i ] );
-		vPortGetHeapStats( &xHeapStats );
-		configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == ( xInitialFreeSpace - ( ( ( xArraySize - i - 1 ) * ( xBlockSize + xMetaDataOverhead ) ) ) ) );
-		configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == ( xArraySize + 1 ) ); /* Does not increase during frees. */
-		configASSERT( xHeapStats.xNumberOfSuccessfulFrees == ( 2UL + i ) );
-	}
+    /* Free the blocks again. */
+    for( i = 0; i < xArraySize; i++ )
+    {
+        vPortFree( pvAllocatedBlocks[ i ] );
+        vPortGetHeapStats( &xHeapStats );
+        configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == ( xInitialFreeSpace - ( ( ( xArraySize - i - 1 ) * ( xBlockSize + xMetaDataOverhead ) ) ) ) );
+        configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == ( xArraySize + 1 ) ); /* Does not increase during frees. */
+        configASSERT( xHeapStats.xNumberOfSuccessfulFrees == ( 2UL + i ) );
+    }
 
-	/* The minimum ever free heap size should not change as blocks are freed. */
-	configASSERT( xMinimumFreeBytes == xPortGetMinimumEverFreeHeapSize() );
+    /* The minimum ever free heap size should not change as blocks are freed. */
+    configASSERT( xMinimumFreeBytes == xPortGetMinimumEverFreeHeapSize() );
 }
 /*-----------------------------------------------------------*/
 
@@ -495,17 +495,17 @@ the stack and so not exists after this function exits. */
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
-	/* Pass out a pointer to the StaticTask_t structure in which the Idle task's
-	state will be stored. */
-	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+    /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
+    state will be stored. */
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
-	/* Pass out the array that will be used as the Idle task's stack. */
-	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
+    /* Pass out the array that will be used as the Idle task's stack. */
+    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
 
-	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
-	Note that, as the array is necessarily of type StackType_t,
-	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+    /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
+    Note that, as the array is necessarily of type StackType_t,
+    configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 
 /*-----------------------------------------------------------*/
@@ -520,17 +520,17 @@ function then they must be declared static - otherwise they will be allocated on
 the stack and so not exists after this function exits. */
 static StaticTask_t xTimerTaskTCB;
 
-	/* Pass out a pointer to the StaticTask_t structure in which the Timer
-	task's state will be stored. */
-	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+    /* Pass out a pointer to the StaticTask_t structure in which the Timer
+    task's state will be stored. */
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
 
-	/* Pass out the array that will be used as the Timer task's stack. */
-	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
+    /* Pass out the array that will be used as the Timer task's stack. */
+    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
 
-	/* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
-	Note that, as the array is necessarily of type StackType_t,
-	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+    /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
+    Note that, as the array is necessarily of type StackType_t,
+    configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
 /*-----------------------------------------------------------*/
@@ -540,7 +540,7 @@ static StaticTask_t xTimerTaskTCB;
  */
 static uint32_t prvKeyboardInterruptHandler( void )
 {
-	/* Handle keyboard input. */
+    /* Handle keyboard input. */
     switch ( xKeyPressed )
     {
     case mainNO_KEY_PRESS_VALUE:
@@ -560,15 +560,15 @@ static uint32_t prvKeyboardInterruptHandler( void )
     default:
         #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
             {
-            	/* Call the keyboard interrupt handler for the blinky demo. */
-            	vBlinkyKeyboardInterruptHandler( xKeyPressed );
+                /* Call the keyboard interrupt handler for the blinky demo. */
+                vBlinkyKeyboardInterruptHandler( xKeyPressed );
             }
         #endif
         break;
     }
 
-	/* This interrupt does not require a context switch so return pdFALSE */
-	return pdFALSE;
+    /* This interrupt does not require a context switch so return pdFALSE */
+    return pdFALSE;
 }
 
 /*-----------------------------------------------------------*/
@@ -584,7 +584,7 @@ static DWORD WINAPI prvWindowsKeyboardInputThread( void * pvParam )
 
     for ( ; ; )
     {
-    	/* Block on acquiring a key press */
+        /* Block on acquiring a key press */
         xKeyPressed = _getch();
 
         /* Notify FreeRTOS simulator that there is a keyboard interrupt.

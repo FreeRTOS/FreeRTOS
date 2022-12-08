@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -68,7 +68,7 @@ unsigned short usThisCount, usDifference;
 
 	/* Capture the free running timer value as we enter the interrupt. */
 	usThisCount = Timer_48MHz_ReadCounter();
-		
+
 	if( usSettleCount >= timerSETTLE_TIME )
 	{
 		/* What is the difference between the timer value in this interrupt
@@ -82,7 +82,7 @@ unsigned short usThisCount, usDifference;
 		if( usDifference > usMaxDifference )
 		{
 			usMaxDifference = usDifference;
-			
+
 			/* Calculate the Jitter based on the difference we expect. */
 			usMaxJitter = usMaxDifference - timerEXPECTED_DIFFERENCE_VALUE;
 		}

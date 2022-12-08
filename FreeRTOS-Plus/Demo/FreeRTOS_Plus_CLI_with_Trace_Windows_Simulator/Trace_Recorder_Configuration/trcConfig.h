@@ -52,7 +52,7 @@
 extern "C" {
 #endif
 
-#include "trcPortDefines.h"
+#include "trcDefines.h"
 
 /******************************************************************************
  * Include of processor header file
@@ -396,6 +396,8 @@ extern "C" {
  * other traceQUEUE_SEND trace points. Then set this to TRC_ACKNOWLEDGED.
  *****************************************************************************/
 #define TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND TRC_ACKNOWLEDGED /* 0 or TRC_ACKNOWLEDGED */
+
+#define TRC_CFG_RECORDER_DATA_ATTRIBUTE
 
 /* Specific configuration, depending on Streaming/Snapshot mode */
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT)

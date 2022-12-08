@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -31,7 +31,7 @@
 
 	Changes from V2.4.1
 
-		+ Split serial.c into serial.c and serialISR.c.  serial.c can be 
+		+ Split serial.c into serial.c and serialISR.c.  serial.c can be
 		  compiled using ARM or THUMB modes.  serialISR.c must always be
 		  compiled in ARM mode.
 		+ Another small change to cSerialPutChar().
@@ -44,8 +44,8 @@
 
 */
 
-/* 
-	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0. 
+/*
+	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
 
 	This file contains all the serial port components that can be compiled to
 	either ARM or THUMB mode.  Components that must be compiled to ARM mode are
@@ -89,17 +89,17 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
 /* Communication flag between the interrupt service routine and serial API. */
 static volatile long *plTHREEmpty;
 
-/* 
+/*
  * The queues are created in serialISR.c as they are used from the ISR.
- * Obtain references to the queues and THRE Empty flag. 
+ * Obtain references to the queues and THRE Empty flag.
  */
 extern void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, QueueHandle_t *pxCharsForTx, long volatile **pplTHREEmptyFlag );
 
@@ -115,10 +115,10 @@ extern void ( vUART_ISR_Wrapper )( void );
 	serialISR.c (which is always compiled to ARM mode. */
 	vSerialISRCreateQueues( uxQueueLength, &xRxedChars, &xCharsForTx, &plTHREEmpty );
 
-	if( 
-		( xRxedChars != serINVALID_QUEUE ) && 
-		( xCharsForTx != serINVALID_QUEUE ) && 
-		( ulWantedBaud != ( unsigned long ) 0 ) 
+	if(
+		( xRxedChars != serINVALID_QUEUE ) &&
+		( xCharsForTx != serINVALID_QUEUE ) &&
+		( ulWantedBaud != ( unsigned long ) 0 )
 	  )
 	{
 		portENTER_CRITICAL();
@@ -212,21 +212,21 @@ signed portBASE_TYPE xReturn;
 		/* Is there space to write directly to the UART? */
 		if( *plTHREEmpty == ( long ) pdTRUE )
 		{
-			/* We wrote the character directly to the UART, so was 
+			/* We wrote the character directly to the UART, so was
 			successful. */
 			*plTHREEmpty = pdFALSE;
 			UART0_THR = cOutChar;
 			xReturn = pdPASS;
 		}
-		else 
+		else
 		{
 			/* We cannot write directly to the UART, so queue the character.
 			Block for a maximum of xBlockTime if there is no space in the
 			queue. */
 			xReturn = xQueueSend( xCharsForTx, &cOutChar, xBlockTime );
 
-			/* Depending on queue sizing and task prioritisation:  While we 
-			were blocked waiting to post interrupts were not disabled.  It is 
+			/* Depending on queue sizing and task prioritisation:  While we
+			were blocked waiting to post interrupts were not disabled.  It is
 			possible that the serial ISR has emptied the Tx queue, in which
 			case we need to start the Tx off again. */
 			if( ( *plTHREEmpty == ( long ) pdTRUE ) && ( xReturn == pdPASS ) )
@@ -254,4 +254,4 @@ void vSerialClose( xComPortHandle xPort )
 
 
 
-	
+

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -61,7 +61,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 	if( uxLED < partstNUM_LEDs )
 	{
 		taskENTER_CRITICAL();
-		{		
+		{
 			/* Toggle the state of the single genuine on board LED. */
 			if( sState[ uxLED ] )
 			{
@@ -71,9 +71,9 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 			{
 				PDR09 &= ~( 1 << uxLED );
 			}
-		
+
 			sState[uxLED] = !( sState[ uxLED ] );
-		}		
+		}
 		taskEXIT_CRITICAL();
 	}
 	else
@@ -81,11 +81,11 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		uxLED -= partstNUM_LEDs;
 
 		if( uxLED < partstNUM_LEDs )
-		{		
+		{
 			taskENTER_CRITICAL();
-			{		
+			{
 				/* Toggle the state of the single genuine on board LED. */
-				if( sState1[uxLED])	
+				if( sState1[uxLED])
 				{
 					PDR00 |= ( 1 << uxLED );
 				}
@@ -93,7 +93,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 				{
 					PDR00 &= ~( 1 << uxLED );
 				}
-			
+
 				sState1[ uxLED ] = !( sState1[ uxLED ] );
 			}
 			taskEXIT_CRITICAL();
@@ -122,7 +122,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		}
 		taskEXIT_CRITICAL();
 	}
-	else 
+	else
 	{
 		uxLED -= partstNUM_LEDs;
 

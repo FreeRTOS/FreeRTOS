@@ -7,7 +7,7 @@ on:
 
 jobs:
   git-secrets:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,7 +26,7 @@ jobs:
           git-secrets --scan
 
   formatting:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Install Uncrustify
@@ -82,6 +82,8 @@ jobs:
           # List of directories containing libraries whose doxygen output will be generated.
           libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols,FreeRTOS-Plus/Source/Utilities
           generate_zip: true
+          doxygen_link: "https://sourceforge.net/projects/doxygen/files/rel-1.9.2/doxygen-1.9.2.linux.bin.tar.gz"
+          doxygen_dependencies: libclang-9-dev libclang-cpp9 graphviz
       - name: Upload doxygen artifact if main branch
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
         env:
@@ -93,7 +95,7 @@ jobs:
           retention-days: 2
 
   spell-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Parent Repo
         uses: actions/checkout@v2
@@ -114,7 +116,7 @@ jobs:
           # Add path to the tool to the environment variable.
           PATH=$PATH:commonCI/spellings/tools
           # Make sure that only Amazon licenced files are checked.
-          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]"`/g' commonCI/spellings/tools/find-unknown-comment-words
+          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]" | grep -v "FreeRTOS\/FreeRTOS\/Test\/VeriFast"`/g' commonCI/spellings/tools/find-unknown-comment-words
           # Run the spell check script.
           find-unknown-comment-words --directory FreeRTOS/ --lexicon FreeRTOS/lexicon.txt
           # Check the exit status.
@@ -125,7 +127,7 @@ jobs:
           fi
 
   verify-manifest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -143,7 +145,7 @@ jobs:
           fail-on-incorrect-version: true
 
   memory-statistics:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
     steps:

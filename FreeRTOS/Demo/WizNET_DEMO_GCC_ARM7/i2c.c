@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -96,11 +96,11 @@ signed portBASE_TYPE xReturn;
 
 		/* Fill the message with the data to be sent. */
 
-		/* Pointer to the actual data.  Only a pointer is stored (i.e. the 
+		/* Pointer to the actual data.  Only a pointer is stored (i.e. the
 		actual data is not copied, so the data being pointed to must still
 		be valid when the message eventually gets sent (it may be queued for
 		a while. */
-		pxNextFreeMessage->pucBuffer = ( unsigned char * ) pucMessage;		
+		pxNextFreeMessage->pucBuffer = ( unsigned char * ) pucMessage;
 
 		/* This is the address of the I2C device we are going to transmit this
 		message to. */
@@ -114,7 +114,7 @@ signed portBASE_TYPE xReturn;
 		/* How many bytes are to be sent? */
 		pxNextFreeMessage->lMessageLength = lMessageLength;
 
-		/* The address within the WIZnet device to which the data will be 
+		/* The address within the WIZnet device to which the data will be
 		written.  This could be the address of a register, or alternatively
 		a location within the WIZnet Tx buffer. */
 		pxNextFreeMessage->ucBufferAddressLowByte = ( unsigned char ) ( usBufferAddress & 0xff );
@@ -137,9 +137,9 @@ signed portBASE_TYPE xReturn;
 			can start the ISR sending this message immediately. */
 			pxCurrentMessage = pxNextFreeMessage;
 
-			I2C_I2CONCLR = i2cSI_BIT;	
+			I2C_I2CONCLR = i2cSI_BIT;
 			I2C_I2CONSET = i2cSTA_BIT;
-			
+
 			*pulBusFree = ( unsigned long ) pdFALSE;
 		}
 		else
@@ -154,15 +154,15 @@ signed portBASE_TYPE xReturn;
 			message. */
 			if( ( *pulBusFree == ( unsigned long ) pdTRUE ) && ( xReturn == pdPASS ) )
 			{
-				/* Get the next message in the queue (this should be the 
+				/* Get the next message in the queue (this should be the
 				message we just posted) and start off the transmission
 				again. */
 				xQueueReceive( xMessagesForTx, &pxNextFreeMessage, i2cNO_BLOCK );
 				pxCurrentMessage = pxNextFreeMessage;
 
-				I2C_I2CONCLR = i2cSI_BIT;	
+				I2C_I2CONCLR = i2cSI_BIT;
 				I2C_I2CONSET = i2cSTA_BIT;
-				
+
 				*pulBusFree = ( unsigned long ) pdFALSE;
 			}
 		}
@@ -180,7 +180,7 @@ extern void ( vI2C_ISR_Wrapper )( void );
 
 	/* Configure the I2C hardware. */
 
-	I2C_I2CONCLR = 0xff; 
+	I2C_I2CONCLR = 0xff;
 
 	PCB_PINSEL0 |= mainSDA_ENABLE;
 	PCB_PINSEL0 |= mainSCL_ENABLE;

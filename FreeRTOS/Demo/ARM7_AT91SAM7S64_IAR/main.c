@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,13 +20,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
-/* 
+/*
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used.
@@ -36,17 +36,17 @@
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.  The SAM7
  * includes a sample USB that emulates a Joystick input to a USB host.
- * 
- * Main.c also creates a task called "Check".  This only executes every three 
- * seconds but has the highest priority so is guaranteed to get processor time.  
+ *
+ * Main.c also creates a task called "Check".  This only executes every three
+ * seconds but has the highest priority so is guaranteed to get processor time.
  * Its main function is to check that all the other tasks are still operational.
- * Each task (other than the "flash" tasks) maintains a unique count that is 
- * incremented each time the task successfully completes its function.  Should 
- * any error occur within such a task the count is permanently halted.  The 
+ * Each task (other than the "flash" tasks) maintains a unique count that is
+ * incremented each time the task successfully completes its function.  Should
+ * any error occur within such a task the count is permanently halted.  The
  * check task inspects the count of each task to ensure it has changed since
- * the last time the check task executed.  If all the count variables have 
+ * the last time the check task executed.  If all the count variables have
  * changed all the tasks are still executing error free, and the check task
- * toggles the onboard LED.  Should any task contain an error at any time 
+ * toggles the onboard LED.  Should any task contain an error at any time
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
  */
@@ -88,7 +88,7 @@
 #define mainCOM_TEST_LED			( 4 ) /* Off the board. */
 
 /*
- * The task that executes at the highest priority and calls 
+ * The task that executes at the highest priority and calls
  * prvCheckOtherTasksAreStillRunning().  See the description at the top
  * of the file.
  */
@@ -111,7 +111,7 @@ static long prvCheckOtherTasksAreStillRunning( void );
 /*-----------------------------------------------------------*/
 
 /*
- * Starts all the other tasks, then starts the scheduler. 
+ * Starts all the other tasks, then starts the scheduler.
  */
 void main( void )
 {
@@ -130,17 +130,17 @@ void main( void )
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartDynamicPriorityTasks();
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	
+
 	/* Also start the USB demo which is just for the SAM7. */
 	xTaskCreate( vUSBDemoTask, "USB", configMINIMAL_STACK_SIZE, NULL, mainUSB_PRIORITY, NULL );
-	
+
 	/* Start the check task - which is defined in this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler.
 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used here. */
@@ -158,14 +158,14 @@ static void prvSetupHardware( void )
 	the correct default state.  This line just ensures that this does not
 	cause all interrupts to be masked at the start. */
 	AT91C_BASE_AIC->AIC_EOICR = 0;
-	
-	/* Most setup is performed by the low level init function called from the 
+
+	/* Most setup is performed by the low level init function called from the
 	startup asm file. */
 
-	/* Configure the PIO Lines corresponding to LED1 to LED4 to be outputs as 
+	/* Configure the PIO Lines corresponding to LED1 to LED4 to be outputs as
 	well as the UART Tx line. */
 	AT91F_PIO_CfgOutput( AT91C_BASE_PIOA, LED_MASK );
-	
+
 	/* Enable the peripheral clock. */
 	AT91F_PMC_EnablePeriphClock( AT91C_BASE_PMC, 1 << AT91C_ID_PIOA );
 }
@@ -187,15 +187,15 @@ TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 	{
 		/* Delay until it is time to execute again. */
 		vTaskDelay( xDelayPeriod );
-	
-		/* Check all the standard demo application tasks are executing without 
+
+		/* Check all the standard demo application tasks are executing without
 		error. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
 		{
 			/* An error has been detected in one of the tasks - flash faster. */
 			xDelayPeriod = mainERROR_FLASH_PERIOD;
 		}
-		
+
 		vParTestToggleLED( mainCHECK_TASK_LED );
 	}
 }

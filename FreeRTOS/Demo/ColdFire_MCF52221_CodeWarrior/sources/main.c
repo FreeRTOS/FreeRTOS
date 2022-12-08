@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -57,7 +57,6 @@
 
 /* Demo app includes. */
 #include "BlockQ.h"
-#include "crflash.h"
 #include "partest.h"
 #include "semtest.h"
 #include "GenQTest.h"
@@ -87,9 +86,6 @@ error have been detected. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
-
-/* Co-routines are used to flash the LEDs. */
-#define mainNUM_FLASH_CO_ROUTINES			( 3 )
 
 /* The baud rate used by the comtest tasks. */
 #define mainBAUD_RATE 						( 38400 )
@@ -133,9 +129,6 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainBAUD_RATE, mainCOM_LED );
-
-	/* For demo purposes use some co-routines to flash the LEDs. */
-	vStartFlashCoRoutines( mainNUM_FLASH_CO_ROUTINES );
 
 	/* Create the check task. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -256,8 +249,6 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 void vApplicationIdleHook( void );
 void vApplicationIdleHook( void )
 {
-	/* The co-routines run in the idle task. */
-	vCoRoutineSchedule();
 }
 /*-----------------------------------------------------------*/
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,13 +20,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 
-/* 
-  BASIC INTERRUPT DRIVEN DRIVER FOR USB. 
+/*
+  BASIC INTERRUPT DRIVEN DRIVER FOR USB.
 
   This file contains all the usb components that must be compiled
   to ARM mode.  The components that can be compiled to either ARM or THUMB
@@ -78,14 +78,14 @@ unsigned char ucFifoIndex;
 
     /* Clear interrupts from ICR. */
 	AT91C_BASE_UDP->UDP_ICR = AT91C_BASE_UDP->UDP_IMR | AT91C_UDP_ENDBUSRES;
-	
-    
-	/* Process incoming FIFO data.  Must set DIR (if needed) and clear RXSETUP 
+
+
+	/* Process incoming FIFO data.  Must set DIR (if needed) and clear RXSETUP
 	before exit. */
 
     /* Read CSR and get incoming byte count. */
 	ulRxBytes = ( pxMessage->ulCSR0 >> 16 ) & usbRX_COUNT_MASK;
-	
+
 	/* Receive control transfers on endpoint 0. */
 	if( pxMessage->ulCSR0 & ( AT91C_UDP_RXSETUP | AT91C_UDP_RX_DATA_BK0 ) )
 	{
@@ -95,7 +95,7 @@ unsigned char ucFifoIndex;
 			pxMessage->ucFifoData[ ucFifoIndex ] = AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_0 ];
 		}
 
-		/* Set direction for data stage.  Must be done before RXSETUP is 
+		/* Set direction for data stage.  Must be done before RXSETUP is
 		cleared. */
 		if( ( AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] & AT91C_UDP_RXSETUP ) )
 		{
@@ -122,17 +122,17 @@ unsigned char ucFifoIndex;
 		   while ( AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] & AT91C_UDP_RX_DATA_BK0 );
 		}
 	}
-	
-	/* If we received data on endpoint 1, disable its interrupts until it is 
+
+	/* If we received data on endpoint 1, disable its interrupts until it is
 	processed in the main loop */
 	if( AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ] & ( AT91C_UDP_RX_DATA_BK0 | AT91C_UDP_RX_DATA_BK1 ) )
 	{
 		AT91C_BASE_UDP->UDP_IDR = AT91C_UDP_EPINT1;
 	}
-	
+
 	AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] &= ~( AT91C_UDP_TXCOMP | AT91C_UDP_STALLSENT );
-     
-	/* Clear interrupts for the other endpoints, retain data flags for endpoint 
+
+	/* Clear interrupts for the other endpoints, retain data flags for endpoint
 	1. */
 	AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ] &= ~( AT91C_UDP_TXCOMP | AT91C_UDP_STALLSENT | AT91C_UDP_RXSETUP );
 	AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_2 ] &= ~usbINT_CLEAR_MASK;

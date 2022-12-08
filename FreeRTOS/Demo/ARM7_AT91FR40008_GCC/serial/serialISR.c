@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,13 +20,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 
-/* 
-  BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART0. 
+/*
+  BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART0.
 
   This file contains all the serial port components that must be compiled
   to ARM mode.  The components that can be compiled to either ARM or THUMB
@@ -61,8 +61,8 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -70,7 +70,7 @@ static QueueHandle_t xCharsForTx;
 be declared "naked". */
 void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
 
-/* The ISR function that actually performs the work.  This must be separate 
+/* The ISR function that actually performs the work.  This must be separate
 from the wrapper to ensure the correct stack frame is set up. */
 void vUART_ISR_Handler( void ) __attribute__ ((noinline));
 
@@ -81,7 +81,7 @@ void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, QueueHandle_t
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
-	/* Pass back a reference to the queues so the serial API file can 
+	/* Pass back a reference to the queues so the serial API file can
 	post/receive characters. */
 	*pxRxedChars = xRxedChars;
 	*pxCharsForTx = xCharsForTx;
@@ -93,7 +93,7 @@ void vUART_ISR_Wrapper( void )
 	/* Save the context of the interrupted task. */
 	portSAVE_CONTEXT();
 
-	/* Call the handler.  This must be a separate function to ensure the 
+	/* Call the handler.  This must be a separate function to ensure the
 	stack frame is correctly set up. */
 	__asm volatile( "bl vUART_ISR_Handler" );
 
@@ -126,7 +126,7 @@ unsigned long ulStatus;
 		{
 			/* Queue empty, nothing to send so turn off the Tx interrupt. */
 			AT91C_BASE_US0->US_IDR = US_TXRDY;
-		}    
+		}
 	}
 
 	if (ulStatus & US_RXRDY)

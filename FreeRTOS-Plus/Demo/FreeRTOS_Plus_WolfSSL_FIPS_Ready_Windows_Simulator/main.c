@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -90,26 +90,6 @@ const unsigned long ulMSToSleep = 5;
 	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
 	load. */
 	Sleep( ulMSToSleep );
-}
-/*-----------------------------------------------------------*/
-
-void vAssertCalled( void )
-{
-const unsigned long ulLongSleep = 1000UL;
-
-	taskDISABLE_INTERRUPTS();
-	for( ;; )
-	{
-		/* Cause debugger break point if being debugged.
-
-		If you see reach here and the console shows "In core integrity check error"
-		then you have not updated the expected build hash since building this
-		project.  See README_wolfSSL_FIPS_ready.md in the directory that contains
-		this Visual Studio project for instructions. */
-		__debugbreak();
-
-		Sleep( ulLongSleep );
-	}
 }
 /*-----------------------------------------------------------*/
 

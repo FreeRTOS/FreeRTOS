@@ -204,10 +204,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Source\croutine.c">
-      <SubType>compile</SubType>
-      <Link>FreeRTOS\croutine.c</Link>
-    </Compile>
     <Compile Include="..\..\..\Source\event_groups.c">
       <SubType>compile</SubType>
       <Link>FreeRTOS\event_groups.c</Link>
@@ -215,10 +211,6 @@
     <Compile Include="..\..\..\Source\include\atomic.h">
       <SubType>compile</SubType>
       <Link>FreeRTOS\include\atomic.h</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\include\croutine.h">
-      <SubType>compile</SubType>
-      <Link>FreeRTOS\include\croutine.h</Link>
     </Compile>
     <Compile Include="..\..\..\Source\include\deprecated_definitions.h">
       <SubType>compile</SubType>

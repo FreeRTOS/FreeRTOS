@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -24,24 +24,25 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #define configSUPPORT_DYNAMIC_ALLOCATION    1
 #define configSUPPORT_STATIC_ALLOCATION     0
 
 void vQueueDelete( QueueHandle_t xQueue )
-
 /*@requires queue(xQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs) &*&
- *  queuelists(xQueue) &*&
- *  xQueue->irqMask |-> _ &*&
- *  xQueue->schedulerSuspend |-> _ &*&
- *  xQueue->locked |-> _;@*/
+    queuelists(xQueue) &*&
+    xQueue->irqMask |-> _ &*&
+    xQueue->schedulerSuspend |-> _ &*&
+    xQueue->locked |-> _;@*/
 /*@ensures true;@*/
 {
-    #ifdef VERIFAST /*< const pointer declaration */
-        Queue_t * pxQueue = xQueue;
-    #else
-        Queue_t * const pxQueue = xQueue;
-    #endif
+#ifdef VERIFAST /*< const pointer declaration */
+    Queue_t * pxQueue = xQueue;
+#else
+    Queue_t * const pxQueue = xQueue;
+#endif
 
     configASSERT( pxQueue );
     traceQUEUE_DELETE( pxQueue );
@@ -57,10 +58,10 @@ void vQueueDelete( QueueHandle_t xQueue )
         /* The queue can only have been allocated dynamically - free it
          * again. */
         vPortFree( pxQueue );
-        #ifdef VERIFAST     /*< leak ghost state on deletion */
-            /*@leak buffer(_, _, _, _);@*/
-            /*@leak malloc_block(_, _);@*/
-        #endif
+#ifdef VERIFAST /*< leak ghost state on deletion */
+        /*@leak buffer(_, _, _, _);@*/
+        /*@leak malloc_block(_, _);@*/
+#endif
     }
     #elif ( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
     {
@@ -83,3 +84,5 @@ void vQueueDelete( QueueHandle_t xQueue )
     }
     #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 }
+
+/* *INDENT-ON* */

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -260,27 +260,27 @@ unsigned long ulErrorFound = pdFALSE;
 	{
 		ulErrorFound |= 1UL << 11UL;
 	}
-	
+
 	if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 	{
 		ulErrorFound |= 1UL << 12UL;
 	}
-	
+
 	if( xAreTimerDemoTasksStillRunning( mainCHECK_TIMER_PERIOD_MS ) != pdTRUE )
 	{
 		ulErrorFound |= 1UL << 13UL;
 	}
-	
+
 	if( xAreEventGroupTasksStillRunning() != pdTRUE )
 	{
 		ulErrorFound |= 1UL << 14UL;
 	}
-	
+
 	if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		ulErrorFound |= 1UL << 15UL;
 	}
-	
+
 
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
@@ -309,10 +309,10 @@ unsigned long ulErrorFound = pdFALSE;
 void vFullDemoIdleHook( void )
 {
 static TimerHandle_t xCheckTimer = NULL;
-		
+
 	if( xCheckTimer == NULL )
 	{
-		/* Create the software timer that performs the 'check' 
+		/* Create the software timer that performs the 'check'
 		functionality, in the full demo.  This is not done before the
 		scheduler is started as to do so would prevent the standard demo
 		timer tasks from passing their tests (they expect the timer
@@ -328,7 +328,7 @@ static TimerHandle_t xCheckTimer = NULL;
 		{
 			xTimerStart( xCheckTimer, mainDONT_BLOCK );
 		}
-		
+
 		/* Also start some timers that just flash LEDs. */
 		vStartLEDFlashTimers( mainNUMBER_OF_FLASH_TIMERS_LEDS );
 	}
@@ -339,16 +339,16 @@ void vFullDemoTickHook( void )
 {
 	/* In this case the tick hook is used as part of the queue set test. */
 	vQueueSetAccessQueueSetFromISR();
-		
+
 	/* Use task notifications from an interrupt. */
 	xNotifyTaskFromISR();
-		
+
 	/* Use timers from an interrupt. */
 	vTimerPeriodicISRTests();
-	
+
 	/* Use event groups from an interrupt. */
 	vPeriodicEventGroupsProcessing();
-	
+
 	/* Use mutexes from interrupts. */
 	vInterruptSemaphorePeriodicTest();
 }

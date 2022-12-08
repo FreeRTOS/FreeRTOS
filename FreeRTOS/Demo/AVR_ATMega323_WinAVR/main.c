@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -68,10 +68,6 @@ Changes from V2.6.1
 
 	+ The IAR and WinAVR AVR ports are now maintained separately.
 
-Changes from V4.0.5
-
-	+ Modified to demonstrate the use of co-routines.
-
 */
 
 #include <stdlib.h>
@@ -85,14 +81,12 @@ Changes from V4.0.5
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "croutine.h"
 
 /* Demo file headers. */
 #include "PollQ.h"
 #include "integer.h"
 #include "serial.h"
 #include "comtest.h"
-#include "crflash.h"
 #include "print.h"
 #include "partest.h"
 #include "regtest.h"
@@ -124,9 +118,6 @@ again. */
 the demo application is not unexpectedly resetting. */
 #define mainRESET_COUNT_ADDRESS			( ( void * ) 0x50 )
 
-/* The number of coroutines to create. */
-#define mainNUM_FLASH_COROUTINES		( 3 )
-
 /*
  * The task function for the "Check" task.
  */
@@ -145,7 +136,7 @@ static void prvCheckOtherTasksAreStillRunning( void );
 static void prvIncrementResetCount( void );
 
 /*
- * The idle hook is used to scheduler co-routines.
+ * The idle hook is unused.
  */
 void vApplicationIdleHook( void );
 
@@ -166,9 +157,6 @@ short main( void )
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-
-	/* Create the co-routines that flash the LED's. */
-	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
 
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION
 	as 1 in portmacro.h.  To use the cooperative scheduler define
@@ -247,6 +235,5 @@ unsigned char ucCount;
 
 void vApplicationIdleHook( void )
 {
-	vCoRoutineSchedule();
 }
 

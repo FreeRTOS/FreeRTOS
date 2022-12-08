@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -99,7 +99,7 @@ short sError = pdFALSE;
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pulTaskCheckVariable = ( unsigned long * ) pvParameters;
-    
+
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
 	{

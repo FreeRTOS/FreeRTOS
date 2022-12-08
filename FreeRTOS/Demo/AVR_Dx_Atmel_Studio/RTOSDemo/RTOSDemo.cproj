@@ -152,10 +152,6 @@
     <Compile Include="FreeRTOSConfig.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="..\..\..\Source\croutine.c">
-      <SubType>compile</SubType>
-      <Link>freeRTOS\croutine.c</Link>
-    </Compile>
     <Compile Include="..\..\..\Source\event_groups.c">
       <SubType>compile</SubType>
       <Link>freeRTOS\event_groups.c</Link>
@@ -199,10 +195,6 @@
     <Compile Include="..\..\..\Source\include\atomic.h">
       <SubType>compile</SubType>
       <Link>freeRTOS\include\atomic.h</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\include\croutine.h">
-      <SubType>compile</SubType>
-      <Link>freeRTOS\include\croutine.h</Link>
     </Compile>
     <Compile Include="..\..\..\Source\include\deprecated_definitions.h">
       <SubType>compile</SubType>
@@ -315,14 +307,6 @@
     <Compile Include="..\..\..\Demo\Common\Minimal\PollQ.c">
       <SubType>compile</SubType>
       <Link>Common\Minimal\PollQ.c</Link>
-    </Compile>
-    <Compile Include="..\..\..\Demo\Common\include\crflash.h">
-      <SubType>compile</SubType>
-      <Link>Common\include\crflash.h</Link>
-    </Compile>
-    <Compile Include="..\..\..\Demo\Common\Minimal\crflash.c">
-      <SubType>compile</SubType>
-      <Link>Common\Minimal\crflash.c</Link>
     </Compile>
     <Compile Include="..\..\..\Demo\Common\include\serial.h">
       <SubType>compile</SubType>

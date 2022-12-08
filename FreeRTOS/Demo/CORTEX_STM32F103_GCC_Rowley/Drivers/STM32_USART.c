@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -55,8 +55,8 @@ constant sets the maximum number of characters that can be contained in such a
 queue at any one time. */
 #define serTX_QUEUE_LEN					( 100 )
 
-/* Queues are used to hold characters that have been received but not yet 
-processed.  This constant sets the maximum number of characters that can be 
+/* Queues are used to hold characters that have been received but not yet
+processed.  This constant sets the maximum number of characters that can be
 contained in such a queue. */
 #define serRX_QUEUE_LEN					( 100 )
 
@@ -121,27 +121,27 @@ GPIO_InitTypeDef GPIO_InitStructure;
 			xRxedChars[ 0 ] = xQueueCreate( serRX_QUEUE_LEN, sizeof( char ) );
 
 			/* Enable COM0 clock - the ST libraries start numbering from UART1. */
-			RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE );	
+			RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE );
 
 			/* Configure USART1 Rx (PA10) as input floating */
 			GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 			GPIO_Init( GPIOA, &GPIO_InitStructure );
-			
+
 			/* Configure USART1 Tx (PA9) as alternate function push-pull */
 			GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 			GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 			GPIO_Init( GPIOA, &GPIO_InitStructure );
 
-			USART_Init( USART1, &USART_InitStructure );		
+			USART_Init( USART1, &USART_InitStructure );
 			USART_ITConfig( USART1, USART_IT_RXNE, ENABLE );
-			
+
 			NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQChannel;
 			NVIC_Init( &NVIC_InitStructure );
-			
+
             USART_DMACmd( USART1, ( USART_DMAReq_Tx | USART_DMAReq_Rx ), ENABLE );
-			USART_Cmd( USART1, ENABLE );	
+			USART_Cmd( USART1, ENABLE );
 
 			/* Everything is ok. */
 			lReturn = pdPASS;
@@ -155,37 +155,37 @@ GPIO_InitTypeDef GPIO_InitStructure;
 			xRxedChars[ 1 ] = xQueueCreate( serRX_QUEUE_LEN, sizeof( char ) );
 
 			/* Enable COM0 clock - the ST libraries start numbering from 1. */
-			RCC_APB2PeriphClockCmd( RCC_APB1Periph_USART2 | RCC_APB2Periph_GPIOA, ENABLE );	
+			RCC_APB2PeriphClockCmd( RCC_APB1Periph_USART2 | RCC_APB2Periph_GPIOA, ENABLE );
 
 			/* Configure USART2 Rx (PA3) as input floating */
 			GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
 			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 			GPIO_Init( GPIOA, &GPIO_InitStructure );
-			
+
 			/* Configure USART2 Tx (PA2) as alternate function push-pull */
 			GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
 			GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 			GPIO_Init( GPIOA, &GPIO_InitStructure );
 
-			USART_Init( USART2, &USART_InitStructure );		
+			USART_Init( USART2, &USART_InitStructure );
 			USART_ITConfig( USART2, USART_IT_RXNE, ENABLE );
-			
+
 			NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQChannel;
 			NVIC_Init( &NVIC_InitStructure );
-			
+
             USART_DMACmd( USART2, ( USART_DMAReq_Tx | USART_DMAReq_Rx ), ENABLE );
-			USART_Cmd( USART2, ENABLE );	
+			USART_Cmd( USART2, ENABLE );
 
 			/* Everything is ok. */
 			lReturn = pdPASS;
-		}	
+		}
 		else
 		{
 			/* Nothing to do unless more than two ports are supported. */
 		}
 	}
-	
+
 	return lReturn;
 }
 /*-----------------------------------------------------------*/
@@ -194,7 +194,7 @@ signed long xSerialGetChar( long lPort, signed char *pcRxedChar, TickType_t xBlo
 {
 long lReturn = pdFAIL;
 
-	if( lPort < serNUM_COM_PORTS ) 
+	if( lPort < serNUM_COM_PORTS )
 	{
 		if( xQueueReceive( xRxedChars[ lPort ], pcRxedChar, xBlockTime ) == pdPASS )
 		{
@@ -219,7 +219,7 @@ unsigned long ul;
 		{
 			if( xQueueSend( xCharsForTx[ lPort ], &( pcString[ ul ] ), serPUT_STRING_CHAR_DELAY ) != pdPASS )
 			{
-				/* Cannot fit any more in the queue.  Try turning the Tx on to 
+				/* Cannot fit any more in the queue.  Try turning the Tx on to
 				clear some space. */
 				USART_ITConfig( xUARTS[ lPort ], USART_IT_TXE, ENABLE );
 				vTaskDelay( serPUT_STRING_CHAR_DELAY );
@@ -275,16 +275,16 @@ char cChar;
 		}
 		else
 		{
-			USART_ITConfig( USART1, USART_IT_TXE, DISABLE );		
-		}		
+			USART_ITConfig( USART1, USART_IT_TXE, DISABLE );
+		}
 	}
-	
+
 	if( USART_GetITStatus( USART1, USART_IT_RXNE ) == SET )
 	{
 		cChar = USART_ReceiveData( USART1 );
 		xQueueSendFromISR( xRxedChars[ 0 ], &cChar, &xHigherPriorityTaskWoken );
-	}	
-	
+	}
+
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
@@ -296,4 +296,4 @@ void USART2_IRQHandler( void )
 
 
 
-	
+

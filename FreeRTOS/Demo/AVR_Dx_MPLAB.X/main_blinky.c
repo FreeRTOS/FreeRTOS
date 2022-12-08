@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -88,7 +88,7 @@ void main_blinky( void )
 {
     /* Create the queue. */
      xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
- 
+
     if( xQueue != NULL )
     {
         /* Start the two tasks as described in the comments at the top of this

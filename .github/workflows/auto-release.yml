@@ -14,7 +14,7 @@ on:
 jobs:
   auto-release:
     name: Auto Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Tool Setup
         uses: actions/setup-python@v2

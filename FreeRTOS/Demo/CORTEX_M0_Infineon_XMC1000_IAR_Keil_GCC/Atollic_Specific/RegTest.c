@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,11 +20,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
-/* 
+/*
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register maintains its expected value for the lifetime of the
  * task.  Each task uses a different set of values.  The reg test tasks execute
@@ -32,7 +32,7 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  */
- 
+
 void vRegTest1Task( void ) __attribute__((naked));
 void vRegTest2Task( void ) __attribute__((naked));
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -47,26 +47,26 @@
  * signal which triggers a single interrupt with a fixed priority for all
  * interrupt levels. Alternatively the signals can be disaggregated into unique
  * interrupt events which can be vectored via a dispatch table to unique
- * handlers for each interrupt source.  This mechanism allows, for instance, a 
- * single interrupt handler for a large number of IO pins yet unique handlers 
+ * handlers for each interrupt source.  This mechanism allows, for instance, a
+ * single interrupt handler for a large number of IO pins yet unique handlers
  * for timers and other signals.
- * 
+ *
  * When operating in disaggregated mode certain restrictions apply. The
  * interrupt event and status registers are shared between timers due to their
  * proximity in the memory map.  Similarly the software interrupt control
  * registers are shared with other interrupt sources.  The JTVIC maps interrupt
- * levels into MIPs core interrupt levels consequently JTVIC priorities of 0, 1, 
- * 3, and 4 map to the MIPs core values of 1, 3, 5, and 7.  The parameter 
- * configTIMERS_DISAGGREGATED_ISRS is used to control if the timers in register 
- * GIRQ23 are operating in disaggregated mode.  Similarly 
+ * levels into MIPs core interrupt levels consequently JTVIC priorities of 0, 1,
+ * 3, and 4 map to the MIPs core values of 1, 3, 5, and 7.  The parameter
+ * configTIMERS_DISAGGREGATED_ISRS is used to control if the timers in register
+ * GIRQ23 are operating in disaggregated mode.  Similarly
  * configCPU_DISAGGREGATED_ISRS controls the mode for GIRQ24.
- * 
+ *
  * Note:
  * Disaggregated mode is the more natural manner in which to operate the ISRs
  * and currently only this mode has been tested with the demo application.  If
  * you wish to use aggregated mode then an alternative interrupt handler scheme
- * will need to be used that marshals all interrupts from a single GIRQ through 
- * a common handler function that tests which interrupt occurred and dispatches 
+ * will need to be used that marshals all interrupts from a single GIRQ through
+ * a common handler function that tests which interrupt occurred and dispatches
  * to the relevant handlers.
  */
 #define configTIMERS_DISAGGREGATED_ISRS			 	1
@@ -99,9 +99,6 @@
 #define configUSE_COUNTING_SEMAPHORES				1
 #define configGENERATE_RUN_TIME_STATS				0
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES						0
-#define configMAX_CO_ROUTINE_PRIORITIES				( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS							1

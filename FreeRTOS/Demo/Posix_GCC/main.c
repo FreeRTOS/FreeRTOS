@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -56,8 +56,10 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <signal.h>
+#include <string.h>
 #include <errno.h>
 #include <sys/select.h>
+#include <time.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -65,6 +67,10 @@
 
 /* Local includes. */
 #include "console.h"
+
+#if ( projCOVERAGE_TEST != 1 )
+    #include <trcRecorder.h>
+#endif
 
 #define    BLINKY_DEMO    0
 #define    FULL_DEMO      1
@@ -79,7 +85,7 @@
 #ifdef USER_DEMO
     #define     mainSELECTED_APPLICATION    USER_DEMO
 #else /* Default Setting */
-    #define    mainSELECTED_APPLICATION     BLINKY_DEMO
+    #define    mainSELECTED_APPLICATION     FULL_DEMO
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
@@ -140,6 +146,8 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
     static BaseType_t xTraceRunning = pdTRUE;
 #endif
 
+static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -161,7 +169,6 @@ int main( void )
             #if ( TRACE_ON_ENTER == 1 )
                 printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
             #endif
-            uiTraceStart();
         }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 
@@ -280,7 +287,7 @@ void traceOnEnter()
             }
 
             /* clear the buffer */
-            char buffer[ 0 ];
+            char buffer[ 1 ];
             read( STDIN_FILENO, &buffer, 1 );
         }
     #endif /* if ( TRACE_ON_ENTER == 1 ) */
@@ -437,3 +444,21 @@ void handle_sigint( int signal )
 
     exit( 2 );
 }
+
+static uint32_t ulEntryTime = 0;
+
+void vTraceTimerReset( void )
+{
+	ulEntryTime = xTaskGetTickCount();
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    return configTICK_RATE_HZ;
+}
+
+uint32_t uiTraceTimerGetValue( void )
+{
+	return ( xTaskGetTickCount() - ulEntryTime );
+}
+

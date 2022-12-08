@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -48,7 +48,7 @@ __premain (void)
 	COPCTL = RSBCK;
 	// stops TCNT counter when debugging stops
 	TSCR1 |= (1<<5);			// TFRZ
-	
+
 	// PLL
 	CLKSEL = 0;				// disable PLL to configure
 	// xtal 16MHz, bus 24MHz
@@ -75,6 +75,6 @@ __premain (void)
 #elif PORT_LED==M6811_PTH	//PTH
 	DDRH = 0xff;
 #endif
-	
+
 }
 

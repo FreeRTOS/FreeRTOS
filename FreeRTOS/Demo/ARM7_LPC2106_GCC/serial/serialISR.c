@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,13 +20,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 
-/* 
-	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0. 
+/*
+	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
 
 	This file contains all the serial port components that must be compiled
 	to ARM mode.  The components that can be compiled to either ARM or THUMB
@@ -59,15 +59,15 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 static volatile long lTHREEmpty;
 
 /*-----------------------------------------------------------*/
 
-/* 
+/*
  * The queues are created in serialISR.c as they are used from the ISR.
- * Obtain references to the queues and THRE Empty flag. 
+ * Obtain references to the queues and THRE Empty flag.
  */
 void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, QueueHandle_t *pxCharsForTx, long volatile **pplTHREEmptyFlag );
 
@@ -78,14 +78,14 @@ void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
 void vUART_ISR_Handler( void ) __attribute__ ((noinline));
 
 /*-----------------------------------------------------------*/
-void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, 
+void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars,
 								QueueHandle_t *pxCharsForTx, long volatile **pplTHREEmptyFlag )
 {
 	/* Create the queues used to hold Rx and Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
-	/* Pass back a reference to the queues so the serial API file can 
+	/* Pass back a reference to the queues so the serial API file can
 	post/receive characters. */
 	*pxRxedChars = xRxedChars;
 	*pxCharsForTx = xCharsForTx;
@@ -130,15 +130,15 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 								}
 								else
 								{
-									/* There are no further characters 
-									queued to send so we can indicate 
+									/* There are no further characters
+									queued to send so we can indicate
 									that the THRE is available. */
 									lTHREEmpty = pdTRUE;
 								}
 								break;
 
 		case serSOURCE_RX_TIMEOUT :
-		case serSOURCE_RX	:	/* A character was received.  Place it in 
+		case serSOURCE_RX	:	/* A character was received.  Place it in
 								the queue of received characters. */
 								cChar = UART0_RBR;
 								xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
@@ -162,4 +162,4 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 
 
-	
+

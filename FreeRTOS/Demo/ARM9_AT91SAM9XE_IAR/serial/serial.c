@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -88,7 +88,7 @@ xComPortHandle xReturn = serHANDLE;
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
 	{
-		PMC_EnablePeripheral( AT91C_ID_US0 );	
+		PMC_EnablePeripheral( AT91C_ID_US0 );
 		portENTER_CRITICAL();
 		{
 			USART_Configure( serCOM0, ( AT91C_US_CHRL_8_BITS | AT91C_US_PAR_NONE ), ulWantedBaud, configCPU_CLOCK_HZ );
@@ -164,7 +164,7 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 {
 	/* Just to remove compiler warning. */
 	( void ) pxPort;
-	
+
 	/* Place the character in the queue of characters to be transmitted. */
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 	{
@@ -215,7 +215,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			/* Queue empty, nothing to send so turn off the Tx interrupt. */
 			vInterruptOff();
-		}		
+		}
 	}
 
 	if( ulStatus & AT91C_US_RXRDY )
@@ -238,4 +238,4 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 
 
-	
+

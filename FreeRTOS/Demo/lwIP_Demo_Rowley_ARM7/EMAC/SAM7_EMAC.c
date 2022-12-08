@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,14 +20,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 /*
  * Interrupt driven driver for the EMAC peripheral.  This driver is not
  * reentrant, re-entrancy is handled by a semaphore at the network interface
- * level. 
+ * level.
  */
 
 
@@ -164,7 +164,7 @@ void vEMACISR_Wrapper( void ) __attribute__ ((naked));
 static void prvSetupDescriptors(void);
 
 /*
- * Write our MAC address into the EMAC.  
+ * Write our MAC address into the EMAC.
  */
 static void prvSetupMACAddress( void );
 
@@ -223,13 +223,13 @@ unsigned long ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthT
 				vTaskDelay( emacBUFFER_WAIT_DELAY );
 			}
 		}
-	
+
 		/* lReturn will only be pdPASS if a buffer is available. */
 		if( lReturn == pdPASS )
 		{
 			portENTER_CRITICAL();
 			{
-				/* Get the address of the buffer from the descriptor, then copy 
+				/* Get the address of the buffer from the descriptor, then copy
 				the data into the buffer. */
 				pcBuffer = ( char * ) xTxDescriptors[ uxTxBufferIndex ].addr;
 
@@ -253,7 +253,7 @@ unsigned long ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthT
 				/* Is this the last data for the frame? */
 				if( lEndOfFrame && ( ulDataBuffered >= ulLength ) )
 				{
-					/* No more data remains for this frame so we can start the 
+					/* No more data remains for this frame so we can start the
 					transmission. */
 					ulLastBuffer = AT91C_LAST_BUFFER;
 				}
@@ -262,11 +262,11 @@ unsigned long ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthT
 					/* More data to come for this frame. */
 					ulLastBuffer = 0;
 				}
-	
-				/* Fill out the necessary in the descriptor to get the data sent, 
+
+				/* Fill out the necessary in the descriptor to get the data sent,
 				then move to the next descriptor, wrapping if necessary. */
 				if( uxTxBufferIndex >= ( NB_TX_BUFFERS - 1 ) )
-				{				
+				{
 					xTxDescriptors[ uxTxBufferIndex ].U_Status.status = 	( ulLengthToSend & ( unsigned long ) AT91C_LENGTH_FRAME )
 																			| ulLastBuffer
 																			| AT91C_TRANSMIT_WRAP;
@@ -278,7 +278,7 @@ unsigned long ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthT
 																			| ulLastBuffer;
 					uxTxBufferIndex++;
 				}
-	
+
 				/* If this is the last buffer to be sent for this frame we can
 				start the transmission. */
 				if( ulLastBuffer )
@@ -308,7 +308,7 @@ register unsigned long ulIndex, ulLength = 0;
 	while( ( xRxDescriptors[ ulNextRxBuffer ].addr & AT91C_OWNERSHIP_BIT ) && !( xRxDescriptors[ ulNextRxBuffer ].U_Status.status & AT91C_SOF ) )
 	{
 		/* Ignoring this buffer.  Mark it as free again. */
-		xRxDescriptors[ ulNextRxBuffer ].addr &= ~( AT91C_OWNERSHIP_BIT );		
+		xRxDescriptors[ ulNextRxBuffer ].addr &= ~( AT91C_OWNERSHIP_BIT );
 		ulNextRxBuffer++;
 		if( ulNextRxBuffer >= NB_RX_BUFFERS )
 		{
@@ -316,12 +316,12 @@ register unsigned long ulIndex, ulLength = 0;
 		}
 	}
 
-	/* We are going to walk through the descriptors that make up this frame, 
+	/* We are going to walk through the descriptors that make up this frame,
 	but don't want to alter ulNextRxBuffer as this would prevent vEMACRead()
 	from finding the data.  Therefore use a copy of ulNextRxBuffer instead. */
 	ulIndex = ulNextRxBuffer;
 
-	/* Walk through the descriptors until we find the last buffer for this 
+	/* Walk through the descriptors until we find the last buffer for this
 	frame.  The last buffer will give us the length of the entire frame. */
 	while( ( xRxDescriptors[ ulIndex ].addr & AT91C_OWNERSHIP_BIT ) && !ulLength )
 	{
@@ -348,19 +348,19 @@ register unsigned long ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 
 	/* Read ulSectionLength bytes from the Rx buffers.  This is not necessarily any
 	correspondence between the length of our Rx buffers, and the length of the
-	data we are returning or the length of the data being requested.  Therefore, 
-	between calls  we have to remember not only which buffer we are currently 
+	data we are returning or the length of the data being requested.  Therefore,
+	between calls  we have to remember not only which buffer we are currently
 	processing, but our position within that buffer.  This would be greatly
 	simplified if PBUF_POOL_BUFSIZE could be guaranteed to be greater than
 	the size of each Rx buffer, and that memory fragmentation did not occur.
-	
+
 	This function should only be called after a call to ulEMACInputLength().
 	This will ensure ulNextRxBuffer is set to the correct buffer. */
 
 
 
 	/* vEMACRead is called with pcTo set to NULL to indicate that we are about
-	to read a new frame.  Any fragments remaining in the frame we were 
+	to read a new frame.  Any fragments remaining in the frame we were
 	processing during the last call should be dropped. */
 	if( pcTo == NULL )
 	{
@@ -383,14 +383,14 @@ register unsigned long ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 			data remains in the buffer? */
 			ulBytesRemainingInBuffer = ( ETH_RX_BUFFER_SIZE - ulBufferPosition );
 
-			/* How many more bytes do we need to read before we have the 
+			/* How many more bytes do we need to read before we have the
 			required amount of data? */
             ulRemainingSectionBytes = ulSectionLength - ulSectionBytesReadSoFar;
 
 			/* Do we want more data than remains in the buffer? */
 			if( ulRemainingSectionBytes > ulBytesRemainingInBuffer )
 			{
-				/* We want more data than remains in the buffer so we can 
+				/* We want more data than remains in the buffer so we can
 				write the remains of the buffer to the destination, then move
 				onto the next buffer to get the rest. */
 				memcpy( &( pcTo[ ulSectionBytesReadSoFar ] ), &( pcSource[ ulBufferPosition ] ), ulBytesRemainingInBuffer );
@@ -417,7 +417,7 @@ register unsigned long ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 				enough data and remember how far we read up to. */
 				memcpy( &( pcTo[ ulSectionBytesReadSoFar ] ), &( pcSource[ ulBufferPosition ] ), ulRemainingSectionBytes );
 
-				/* There may be more data in this buffer yet.  Increment our 
+				/* There may be more data in this buffer yet.  Increment our
 				position in this buffer past the data we have just read. */
 				ulBufferPosition += ulRemainingSectionBytes;
 				ulSectionBytesReadSoFar += ulRemainingSectionBytes;
@@ -435,7 +435,7 @@ register unsigned long ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 					{
 						ulNextRxBuffer = 0;
 					}
-	
+
 					pcSource = ( char * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
 					ulBufferPosition = 0;
 				}
@@ -482,10 +482,10 @@ SemaphoreHandle_t xEMACInit( void )
 	/* Enable com between EMAC PHY.
 
 	Enable management port. */
-	AT91C_BASE_EMAC->EMAC_NCR |= AT91C_EMAC_MPE;	
+	AT91C_BASE_EMAC->EMAC_NCR |= AT91C_EMAC_MPE;
 
 	/* MDC = MCK/32. */
-	AT91C_BASE_EMAC->EMAC_NCFGR |= ( 2 ) << 10;	
+	AT91C_BASE_EMAC->EMAC_NCFGR |= ( 2 ) << 10;
 
 	/* Wait for PHY auto init end (rather crude delay!). */
 	vTaskDelay( emacPHY_INIT_DELAY );
@@ -519,7 +519,7 @@ SemaphoreHandle_t xEMACInit( void )
 
 	/* Setup the buffers and descriptors. */
 	prvSetupDescriptors();
-	
+
 	/* Load our MAC address into the EMAC. */
 	prvSetupMACAddress();
 
@@ -544,7 +544,7 @@ void vClearEMACTxBuffer( void )
 {
 static unsigned portBASE_TYPE uxNextBufferToClear = 0;
 
-	/* Called on Tx interrupt events to reset the AT91C_TRANSMIT_OK bit in each 
+	/* Called on Tx interrupt events to reset the AT91C_TRANSMIT_OK bit in each
 	Tx buffer within the frame just transmitted.  This marks all the buffers
 	as available again.
 
@@ -591,7 +591,7 @@ unsigned long ulAddress;
 		the data at this address when this descriptor is being used.  Mask off
 		the bottom bits of the address as these have special meaning. */
 		xRxDescriptors[ xIndex ].addr = ulAddress & emacADDRESS_MASK;
-	}	
+	}
 
 	/* The last buffer has the wrap bit set so the EMAC knows to wrap back
 	to the first buffer. */
@@ -607,7 +607,7 @@ unsigned long ulAddress;
 		data from here when the descriptor is being used. */
 		xTxDescriptors[ xIndex ].addr = ulAddress & emacADDRESS_MASK;
 		xTxDescriptors[ xIndex ].U_Status.status = AT91C_TRANSMIT_OK;
-	}	
+	}
 
 	/* The last buffer has the wrap bit set so the EMAC knows to wrap back
 	to the first buffer. */
@@ -616,17 +616,17 @@ unsigned long ulAddress;
 	/* Tell the EMAC where to find the descriptors. */
 	AT91C_BASE_EMAC->EMAC_RBQP = ( unsigned long ) xRxDescriptors;
 	AT91C_BASE_EMAC->EMAC_TBQP = ( unsigned long ) xTxDescriptors;
-	
+
 	/* Clear all the bits in the receive status register. */
 	AT91C_BASE_EMAC->EMAC_RSR = ( AT91C_EMAC_OVR | AT91C_EMAC_REC | AT91C_EMAC_BNA );
 
-	/* Enable the copy of data into the buffers, ignore broadcasts, 
+	/* Enable the copy of data into the buffers, ignore broadcasts,
 	and don't copy FCS. */
 	AT91C_BASE_EMAC->EMAC_NCFGR |= ( AT91C_EMAC_CAF | AT91C_EMAC_NBC | AT91C_EMAC_DRFCS);
 
 	/* Enable Rx and Tx, plus the stats register. */
 	AT91C_BASE_EMAC->EMAC_NCR |= ( AT91C_EMAC_TE | AT91C_EMAC_RE | AT91C_EMAC_WESTAT );
-}	
+}
 /*-----------------------------------------------------------*/
 
 static void prvSetupMACAddress( void )
@@ -678,11 +678,11 @@ static portBASE_TYPE prvProbePHY( void )
 {
 unsigned long ulPHYId1, ulPHYId2, ulStatus;
 portBASE_TYPE xReturn = pdPASS;
-	
+
 	/* Code supplied by Atmel (reformatted) -----------------*/
 
 	/* Enable management port */
-	AT91C_BASE_EMAC->EMAC_NCR |= AT91C_EMAC_MPE;	
+	AT91C_BASE_EMAC->EMAC_NCR |= AT91C_EMAC_MPE;
    	AT91C_BASE_EMAC->EMAC_NCFGR |= ( 2 ) << 10;
 
 	/* Read the PHY ID. */
@@ -711,7 +711,7 @@ portBASE_TYPE xReturn = pdPASS;
 	}
 
 	/* Disable management port */
-	AT91C_BASE_EMAC->EMAC_NCR &= ~AT91C_EMAC_MPE;	
+	AT91C_BASE_EMAC->EMAC_NCR &= ~AT91C_EMAC_MPE;
 
 	/* End of code supplied by Atmel ------------------------*/
 
@@ -734,7 +734,7 @@ static void vReadPHY( unsigned char ucPHYAddress, unsigned char ucAddress, unsig
 		__asm( "NOP" );
 	}
 
-	*pulValue = ( AT91C_BASE_EMAC->EMAC_MAN & 0x0000ffff );	
+	*pulValue = ( AT91C_BASE_EMAC->EMAC_MAN & 0x0000ffff );
 
 	/* End of code supplied by Atmel ------------------------*/
 }
@@ -773,20 +773,20 @@ static portBASE_TYPE xGetLinkSpeed( void )
 	vReadPHY(AT91C_PHY_ADDR, MII_BMSR, &ulBMSR);
 
 	if( !( ulBMSR & BMSR_LSTATUS ) )
-	{	
+	{
 		/* No Link. */
 		return pdFAIL;
 	}
 
 	vReadPHY(AT91C_PHY_ADDR, MII_BMCR, &ulBMCR);
 	if (ulBMCR & BMCR_ANENABLE)
-	{				
+	{
 		/* AutoNegotiation is enabled. */
 		if (!(ulBMSR & BMSR_ANEGCOMPLETE))
 		{
 			/* Auto-negotitation in progress. */
-			return pdFAIL;				
-		}		
+			return pdFAIL;
+		}
 
 		vReadPHY(AT91C_PHY_ADDR, MII_LPA, &ulLPA);
 		if( ( ulLPA & LPA_100FULL ) || ( ulLPA & LPA_100HALF ) )
@@ -823,7 +823,7 @@ static portBASE_TYPE xGetLinkSpeed( void )
 			AT91C_BASE_EMAC->EMAC_NCFGR = ulMACCfg | AT91C_EMAC_SPD | AT91C_EMAC_FD;
 		}
 		else
-		{					
+		{
 			/* 100 Half Duplex */
 			AT91C_BASE_EMAC->EMAC_NCFGR = ulMACCfg | AT91C_EMAC_SPD;
 		}

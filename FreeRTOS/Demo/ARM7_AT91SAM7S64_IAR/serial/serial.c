@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,15 +20,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
-/* 
-	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0. 
+/*
+	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
 */
 
-/* Standard includes. */ 
+/* Standard includes. */
 #include <stdlib.h>
 
 /* Scheduler includes. */
@@ -58,8 +58,8 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -83,7 +83,7 @@ extern void ( vUART_ISR )( void );
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
-	/* If the queues were created correctly then setup the serial port 
+	/* If the queues were created correctly then setup the serial port
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
 	{
@@ -115,7 +115,7 @@ extern void ( vUART_ISR )( void );
 		xReturn = ( xComPortHandle ) 0;
 	}
 
-	/* This demo file only supports a single port but we have to return 
+	/* This demo file only supports a single port but we have to return
 	something to comply with the standard demo header file. */
 	return xReturn;
 }
@@ -214,19 +214,19 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			/* Queue empty, nothing to send so turn off the Tx interrupt. */
 			vInterruptOff();
-		}		
+		}
 	}
 
 	if( ulStatus & AT91C_US_RXRDY )
 	{
 		/* The interrupt was caused by a character being received.  Grab the
-		character from the RHR and place it in the queue or received 
+		character from the RHR and place it in the queue or received
 		characters. */
 		cChar = serCOM0->US_RHR;
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}
 
-	/* If a task was woken by either a character being received or a character 
+	/* If a task was woken by either a character being received or a character
 	being transmitted then we may need to switch to another task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 
@@ -237,4 +237,4 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 
 
-	
+

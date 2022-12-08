@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -41,6 +41,7 @@
 #include "TwoEchoClients.h"
 #include "UDPCommandInterpreter.h"
 #include "logging.h"
+#include "user_settings.h"
 
 /* UDP command server task parameters. */
 #define mainUDP_CLI_TASK_PRIORITY					( tskIDLE_PRIORITY )
@@ -170,85 +171,6 @@ const unsigned long ulMSToSleep = 5;
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( void )
-{
-const unsigned long ulLongSleep = 1000UL;
-volatile uint32_t ulBlockVariable = 0UL;
-
-	/* Setting ulBlockVariable to a non-zero value in the debugger will allow
-	this function to be exited. */
-	taskDISABLE_INTERRUPTS();
-	{
-		while( ulBlockVariable == 0UL )
-		{
-			Sleep( ulLongSleep );
-		}
-	}
-	taskENABLE_INTERRUPTS();
-}
-/*-----------------------------------------------------------*/
-
-/* Called by FreeRTOS+TCP when the network connects. */
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
-{
-uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
-int8_t cBuffer[ 16 ];
-static BaseType_t xTasksAlreadyCreated = pdFALSE;
-
-	if( eNetworkEvent == eNetworkUp )
-	{
-		/* Create the tasks that use the IP stack if they have not already been
-		created. */
-		if( xTasksAlreadyCreated == pdFALSE )
-		{
-			#if( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
-			{
-				/* Create tasks that demonstrate sending and receiving in both
-				standard and zero copy mode. */
-				vStartSimpleUDPClientServerTasks( mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE, mainSIMPLE_CLIENT_SERVER_PORT, mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY );
-			}
-			#endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
-
-			#if( mainCREATE_UDP_ECHO_TASKS == 1 )
-			{
-				/* Create the tasks that transmit to and receive from a standard
-				echo server (see the web documentation for this port) in both
-				standard and zero copy mode. */
-				vStartEchoClientTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
-			}
-			#endif /* mainCREATE_UDP_ECHO_TASKS */
-
-			#if( mainCREATE_UDP_CLI_TASKS == 1 )
-			{
-				/* Create the task that handles the CLI on a UDP port.  The port number
-				is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
-				vStartUDPCommandInterpreterTask( mainUDP_CLI_TASK_STACK_SIZE, mainUDP_CLI_PORT_NUMBER, mainUDP_CLI_TASK_PRIORITY );
-			}
-			#endif /* mainCREATE_UDP_CLI_TASKS */
-
-			xTasksAlreadyCreated = pdTRUE;
-		}
-
-		/* Print out the network configuration, which may have come from a DHCP
-		server. */
-		FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
-		FreeRTOS_debug_printf( ( "IP Address: " ) );
-		FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\nSubnet Mask: " ) );
-		FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\nGateway Address: " ) );
-		FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\nDNS Server Address: " ) );
-		FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\n\r\n" ) );
-	}
-}
-/*-----------------------------------------------------------*/
-
 /* Called automatically when a reply to an outgoing ping is received. */
 void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifier )
 {
@@ -342,24 +264,3 @@ void vApplicationMallocFailedHook( void )
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
 /*-----------------------------------------------------------*/
 
-UBaseType_t uxRand( void )
-{
-    const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
-
-    /* Utility function to generate a pseudo random number. */
-
-    ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-    return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
-}
-
-
-/*
- * Supply a random number to FreeRTOS+TCP stack.
- * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
- * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
- */
-BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
-{
-    *( pulNumber ) = uxRand();
-    return pdTRUE;
-}

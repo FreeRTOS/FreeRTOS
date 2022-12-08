@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -50,15 +50,15 @@ const unsigned short usGPIOState = 0xFF00U;
 
 	/* Analog inputs are not used on the LED outputs. */
 	FM3_GPIO->ADE  = 0x00FF;
-	
+
 	/* LED seg1 to GPIO output (P18->P1F). */
 	FM3_GPIO->DDR1 = 0xFF00;
 	FM3_GPIO->PFR1 = 0x0000;
-	
+
 	/* LED seg2 to GPIO output (P30->P3F). */
 	FM3_GPIO->DDR3 = 0xFF00;
 	FM3_GPIO->PFR3 = 0x0000;
-	
+
 	/* Start with all LEDs off. */
 	FM3_GPIO->PDOR3 = usGPIOState;
 	FM3_GPIO->PDOR1 = usGPIOState;

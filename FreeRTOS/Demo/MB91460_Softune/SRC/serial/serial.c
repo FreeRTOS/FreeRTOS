@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,14 +20,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 
-/* 
- * BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.   
- * 
+/*
+ * BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.
+ *
  * This file only supports UART 2
  */
 
@@ -43,10 +43,10 @@
 #include "serial.h"
 
 /* The queue used to hold received characters. */
-static QueueHandle_t xRxedChars; 
+static QueueHandle_t xRxedChars;
 
 /* The queue used to hold characters waiting transmission. */
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xCharsForTx;
 
 static volatile short sTHREEmpty;
 
@@ -62,7 +62,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 
 		 /* Initialize UART asynchronous mode */
 		BGR02 = configPER_CLOCK_HZ / ulWantedBaud;
-		  
+
 		SCR02 = 0x17;	/* 8N1 */
 		SMR02 = 0x0d;	/* enable SOT3, Reset, normal mode */
 		SSR02 = 0x02;	/* LSB first, enable receive interrupts */
@@ -73,7 +73,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 		EPFR20_D1 = 0;  /* enable UART */
 	}
 	portEXIT_CRITICAL();
-	
+
 	/* Unlike other ports, this serial code does not allow for more than one
 	com port.  We therefore don't return a pointer to a port structure and can
 	instead just return NULL. */
@@ -105,7 +105,7 @@ signed portBASE_TYPE xReturn;
 	{
 		if( sTHREEmpty == pdTRUE )
 		{
-			/* If sTHREEmpty is true then the UART Tx ISR has indicated that 
+			/* If sTHREEmpty is true then the UART Tx ISR has indicated that
 			there are no characters queued to be transmitted - so we can
 			write the character directly to the shift Tx register. */
 			sTHREEmpty = pdFALSE;
@@ -115,10 +115,10 @@ signed portBASE_TYPE xReturn;
 		else
 		{
 			/* sTHREEmpty is false, so there are still characters waiting to be
-			transmitted.  We have to queue this character so it gets 
+			transmitted.  We have to queue this character so it gets
 			transmitted	in turn. */
 
-			/* Return false if after the block time there is no room on the Tx 
+			/* Return false if after the block time there is no room on the Tx
 			queue.  It is ok to block inside a critical section as each task
 			maintains it's own critical section status. */
 			if (xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) == pdTRUE)
@@ -130,7 +130,7 @@ signed portBASE_TYPE xReturn;
 				xReturn = pdFAIL;
 			}
 		}
-		
+
 		if (pdPASS == xReturn)
 		{
 			/* Turn on the Tx interrupt so the ISR will remove the character from the
@@ -139,7 +139,7 @@ signed portBASE_TYPE xReturn;
 			will simply turn off the Tx interrupt again. */
 			SSR02_TIE = 1;
 		}
-		
+
 	}
 	portEXIT_CRITICAL();
 
@@ -155,7 +155,7 @@ signed portBASE_TYPE xReturn;
 	signed char cChar;
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	/* Get the character from the UART and post it on the queue of Rxed 
+	/* Get the character from the UART and post it on the queue of Rxed
 	characters. */
 	cChar = RDR02;
 
@@ -163,8 +163,8 @@ signed portBASE_TYPE xReturn;
 
 	if( xHigherPriorityTaskWoken )
 	{
-		/*If the post causes a task to wake force a context switch 
-		as the woken task may have a higher priority than the task we have 
+		/*If the post causes a task to wake force a context switch
+		as the woken task may have a higher priority than the task we have
 		interrupted. */
 		portYIELD_FROM_ISR();
 	}
@@ -191,7 +191,7 @@ __interrupt void UART2_TxISR (void)
 	{
 		/* There were no other characters to transmit. */
 		sTHREEmpty = pdTRUE;
-		
+
 		/* Disable transmit interrupts */
 		SSR02_TIE = 0;
 	}

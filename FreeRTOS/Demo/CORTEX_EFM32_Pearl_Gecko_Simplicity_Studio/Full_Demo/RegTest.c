@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -411,7 +411,7 @@ void vRegTest2Implementation( void )
 		/* If this line is hit then there was an error in a core register value.
 		This loop ensures the loop counter variable stops incrementing. */
 		"b reg2_error_loop				\n"
-		
+
 	); /* __asm volatile */
 }
 /*-----------------------------------------------------------*/

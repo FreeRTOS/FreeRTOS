@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -46,6 +46,9 @@
 /* FreeRTOS+UDP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+
+/* Demo Includes */
+#include "user_settings.h"
 
 /* Small delay used between attempts to obtain a zero copy buffer. */
 #define echoTINY_DELAY	( ( portTickType ) 2 )

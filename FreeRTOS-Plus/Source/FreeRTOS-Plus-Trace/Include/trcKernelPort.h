@@ -1,52 +1,18 @@
-/*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.4.0
- * Percepio AB, www.percepio.com
- *
- * Terms of Use
- * This file is part of the trace recorder library (RECORDER), which is the 
- * intellectual property of Percepio AB (PERCEPIO) and provided under a
- * license as follows.
- * The RECORDER may be used free of charge for the purpose of recording data
- * intended for analysis in PERCEPIO products. It may not be used or modified
- * for other purposes without explicit permission from PERCEPIO.
- * You may distribute the RECORDER in its original source code form, assuming
- * this text (terms of use, disclaimer, copyright notice) is unchanged. You are
- * allowed to distribute the RECORDER with minor modifications intended for
- * configuration or porting of the RECORDER, e.g., to allow using it on a 
- * specific processor, processor family or with a specific communication
- * interface. Any such modifications should be documented directly below
- * this comment block.  
- *
- * Disclaimer
- * The RECORDER is being delivered to you AS IS and PERCEPIO makes no warranty
- * as to its use or performance. PERCEPIO does not and cannot warrant the 
- * performance or results you may obtain by using the RECORDER or documentation.
- * PERCEPIO make no warranties, express or implied, as to noninfringement of
- * third party rights, merchantability, or fitness for any particular purpose.
- * In no event will PERCEPIO, its technology partners, or distributors be liable
- * to you for any consequential, incidental or special damages, including any
- * lost profits or lost savings, even if a representative of PERCEPIO has been
- * advised of the possibility of such damages, or for any claim by any third
- * party. Some jurisdictions do not allow the exclusion or limitation of
- * incidental, consequential or special damages, or the exclusion of implied
- * warranties or limitations on how long an implied warranty may last, so the
- * above limitations may not apply to you.
- *
- * FreeRTOS-specific definitions needed by the trace recorder
- *
- * <LICENSE INFO>
- *
- * Tabs are used for indent in this file (1 tab = 4 spaces)
- *
- * Copyright Percepio AB, 2018.
+/*
+ * Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
  * www.percepio.com
- ******************************************************************************/
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * FreeRTOS specific definitions needed by the trace recorder
+ */
 
 #ifndef TRC_KERNEL_PORT_H
 #define TRC_KERNEL_PORT_H
 
-#include "FreeRTOS.h"	/* Defines configUSE_TRACE_FACILITY */
-#include "trcPortDefines.h"
+#include <trcDefines.h>
+#include <FreeRTOS.h>	/* Defines configUSE_TRACE_FACILITY */
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,7 +20,7 @@ extern "C" {
 
 #define TRC_USE_TRACEALYZER_RECORDER configUSE_TRACE_FACILITY
 
-/*** FreeRTOS version codes **************************************************/
+/* FreeRTOS version codes */
 #define FREERTOS_VERSION_NOT_SET				0
 #define TRC_FREERTOS_VERSION_7_3_X				1 /* v7.3 is earliest supported.*/
 #define TRC_FREERTOS_VERSION_7_4_X				2
@@ -82,7 +48,7 @@ extern "C" {
 #define TRC_FREERTOS_VERSION_8_X				TRC_FREERTOS_VERSION_8_X_X
 
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
-#define prvGetStreamBufferType(x) ((( StreamBuffer_t * )x )->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER)
+#define prvGetStreamBufferType(x) ((( StreamBuffer_t * )(x) )->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER)
 #else
 #define prvGetStreamBufferType(x) 0
 #endif
@@ -97,337 +63,342 @@ extern "C" {
 #else
 	/* FreeRTOS v8.0 and later */
 	#define STRING_CAST(x) x
-	#define TickType TickType_t
-	#define TaskType TaskHandle_t
+	#define TraceKernelPortTickType_t TickType_t
+	#define TraceKernelPortTaskHandle_t TaskHandle_t
 #endif
-
-
 
 #if (defined(TRC_USE_TRACEALYZER_RECORDER)) && (TRC_USE_TRACEALYZER_RECORDER == 1)
 
+#define TRC_PLATFORM_CFG "FreeRTOS"
+#define TRC_PLATFORM_CFG_MAJOR 1
+#define TRC_PLATFORM_CFG_MINOR 0
+#define TRC_PLATFORM_CFG_PATCH 0
+
 #if defined(TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1) && (TRC_CFG_SCHEDULING_ONLY == 0)
-	/* Required for this feature */
+
+/* Required for stack monitoring */
 #undef INCLUDE_uxTaskGetStackHighWaterMark
 #define INCLUDE_uxTaskGetStackHighWaterMark 1
-#endif /* defined(TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1) && (TRC_CFG_SCHEDULING_ONLY == 0) */
 
-/*******************************************************************************
- * INCLUDE_xTaskGetCurrentTaskHandle must be set to 1 for tracing to work properly
- ******************************************************************************/
+#endif
+
+/* INCLUDE_xTaskGetCurrentTaskHandle must be set to 1 for tracing to work properly */
 #undef INCLUDE_xTaskGetCurrentTaskHandle
 #define INCLUDE_xTaskGetCurrentTaskHandle 1
 
+#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+#include <trcHeap.h>
+
+#define TRC_KERNEL_PORT_BUFFER_SIZE (sizeof(TraceHeapHandle_t) + sizeof(void*))
+#elif (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT)
+#define TRC_KERNEL_PORT_BUFFER_SIZE (sizeof(TraceUnsignedBaseType_t))
+#endif
+
+/**
+ * @internal The kernel port data buffer
+ */
+typedef struct TraceKernelPortDataBuffer
+{
+	uint8_t buffer[TRC_KERNEL_PORT_BUFFER_SIZE];
+} TraceKernelPortDataBuffer_t;
+
+/**
+ * @internal Initializes the kernel port
+ * 
+ * @param[in] pxBuffer Kernel port data buffer
+ *
+ * @retval TRC_FAIL Failure
+ * @retval TRC_SUCCESS Success
+ */
+traceResult xTraceKernelPortInitialize(TraceKernelPortDataBuffer_t* pxBuffer);
+
+/**
+ * @internal Enables the kernel port
+ * 
+ * @retval TRC_FAIL Failure
+ * @retval TRC_SUCCESS Success
+ */
+traceResult xTraceKernelPortEnable(void);
+
+/**
+ * @internal Calls on FreeRTOS vTaskDelay(...)
+ *
+ * @param[in] uiTicks Tick count to delay
+ * 
+ * @retval TRC_FAIL Failure
+ * @retval TRC_SUCCESS Success
+ */
+traceResult xTraceKernelPortDelay(uint32_t uiTicks);
+
+/**
+ * @internal Query if FreeRTOS scheduler is suspended
+ *
+ * @retval 1 Scheduler suspended
+ * @retval 0 Scheduler not suspended
+ */
+unsigned char xTraceKernelPortIsSchedulerSuspended(void);
+
+/**
+ * @brief Kernel specific way to properly allocate critical sections
+ */
+#define TRC_KERNEL_PORT_ALLOC_CRITICAL_SECTION() 
+
+/**
+ * @brief Kernel specific way to properly allocate critical sections
+ */
+#define TRC_KERNEL_PORT_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
+
+/**
+ * @brief Kernel specific way to properly allocate critical sections
+ */
+#define TRC_KERNEL_PORT_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
+
+/**
+* @brief Kernel specific way to set interrupt mask
+*/
+#define TRC_KERNEL_PORT_SET_INTERRUPT_MASK() ((TraceBaseType_t)portSET_INTERRUPT_MASK_FROM_ISR())
+
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X)
+
+/**
+ * @brief Kernel specific way to clear interrupt mask
+ */
+#define TRC_KERNEL_PORT_CLEAR_INTERRUPT_MASK(xMask) portCLEAR_INTERRUPT_MASK_FROM_ISR((UBaseType_t)(xMask))
+
+#else
+
+/**
+ * @brief Kernel specific way to clear interrupt mask
+ */
+#define TRC_KERNEL_PORT_CLEAR_INTERRUPT_MASK(xMask) portCLEAR_INTERRUPT_MASK_FROM_ISR((unsigned portBASE_TYPE)xMask)
+#endif
+
 #if (TRC_CFG_SCHEDULING_ONLY == 0)
-/*******************************************************************************
- * vTraceSetQueueName(void* object, const char* name)
- *
- * Parameter object: pointer to the Queue that shall be named
- * Parameter name: the name to set (const string literal)
- *
- * Sets a name for Queue objects for display in Tracealyzer.
- ******************************************************************************/
-void vTraceSetQueueName(void* object, const char* name);
 
-/*******************************************************************************
- * vTraceSetSemaphoreName(void* object, const char* name)
+/**
+ * @brief Set the queue name
  *
- * Parameter object: pointer to the Semaphore that shall be named
- * Parameter name: the name to set (const string literal)
- *
- * Sets a name for Semaphore objects for display in Tracealyzer.
- ******************************************************************************/
-void vTraceSetSemaphoreName(void* object, const char* name);
+ * @param[in] pvQueue Queue pointer
+ * @param[in] szName Queue name
+ */
+void vTraceSetQueueName(void* pvQueue, const char* szName);
 
-/*******************************************************************************
- * vTraceSetMutexName(void* object, const char* name)
+/**
+ * @brief Set the semaphore name
  *
- * Parameter object: pointer to the Mutex that shall be named
- * Parameter name: the name to set (const string literal)
+ * @param[in] pvSemaphore Semaphore pointer
+ * @param[in] szName Semaphore name
+ */
+void vTraceSetSemaphoreName(void* pvSemaphore, const char* szName);
+
+/**
+ * @brief Set the mutex name
  *
- * Sets a name for Semaphore objects for display in Tracealyzer.
- ******************************************************************************/
-void vTraceSetMutexName(void* object, const char* name);
+ * @param[in] pvMutex Mutex pointer
+ * @param[in] szName Mutex name
+ */
+void vTraceSetMutexName(void* pvMutex, const char* szName);
 
 #if (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1)
-/*******************************************************************************
-* vTraceSetEventGroupName(void* object, const char* name)
-*
-* Parameter object: pointer to the EventGroup that shall be named
-* Parameter name: the name to set (const string literal)
-*
-* Sets a name for EventGroup objects for display in Tracealyzer.
-******************************************************************************/
-void vTraceSetEventGroupName(void* object, const char* name);
-#else /* (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1) */
-#define vTraceSetEventGroupName(object, name) /* Do nothing */
-#endif /* (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1) */
+
+/**
+ * @brief Set the event group name
+ *
+ * @param[in] pvEventGroup Event group pointer
+ * @param[in] szName Event group name
+ */
+void vTraceSetEventGroupName(void* pvEventGroup, const char* szName);
+
+#else
+
+/**
+ * @brief Disabled by TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS
+ */
+#define vTraceSetEventGroupName(__pvEventGroup, __szName) ((void)(__pvEventGroup), (void)(__szName))
+
+#endif
 
 #if (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1)
-/*******************************************************************************
-* vTraceSetStreamBufferName(void* object, const char* name)
-*
-* Parameter object: pointer to the StreamBuffer that shall be named
-* Parameter name: the name to set (const string literal)
-*
-* Sets a name for StreamBuffer objects for display in Tracealyzer.
-******************************************************************************/
-void vTraceSetStreamBufferName(void* object, const char* name);
-#else /* (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1) */
-#define vTraceSetStreamBufferName(object, name) /* Do nothing */
-#endif /* (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1) */
 
-#if (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1)
-/*******************************************************************************
- * vTraceSetMessageBufferName(void* object, const char* name)
+/**
+ * @brief Set the stream buffer name
  *
- * Parameter object: pointer to the MessageBuffer that shall be named
- * Parameter name: the name to set (const string literal)
+ * @param[in] pvStreamBuffer Stream buffer pointer
+ * @param[in] szName Stream buffer name
+ */
+void vTraceSetStreamBufferName(void* pvStreamBuffer, const char* szName);
+
+/**
+ * @brief Set the message buffer name
  *
- * Sets a name for MessageBuffer objects for display in Tracealyzer.
- ******************************************************************************/
-void vTraceSetMessageBufferName(void* object, const char* name);
-#else /* (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1) */
-#define vTraceSetMessageBufferName(object, name) /* Do nothing */
-#endif /* (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1) */
+ * @param[in] pvMessageBuffer Message buffer pointer
+ * @param[in] szName Message buffer name
+ */
+void vTraceSetMessageBufferName(void* pvMessageBuffer, const char* szName);
 
-#if defined (TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1)
-void prvAddTaskToStackMonitor(void* task);
-void prvRemoveTaskFromStackMonitor(void* task);
-#else /* defined (TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1) */
-#define prvAddTaskToStackMonitor(task)
-#define prvRemoveTaskFromStackMonitor(task)
-#endif /* defined (TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1) */
+#else
 
-#else /* (TRC_CFG_SCHEDULING_ONLY == 0) */
+/**
+ * @brief Disabled by TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS
+ */
+#define vTraceSetStreamBufferName(__pvStreamBuffer, __szName) ((void)(__pvStreamBuffer), (void)(__szName))
 
-#define vTraceSetQueueName(object, name) /* Do nothing */
-#define vTraceSetSemaphoreName(object, name) /* Do nothing */
-#define vTraceSetMutexName(object, name) /* Do nothing */
-#define vTraceSetEventGroupName(object, name) /* Do nothing */
-#define vTraceSetStreamBufferName(object, name) /* Do nothing */
-#define vTraceSetMessageBufferName(object, name) /* Do nothing */
-#define prvAddTaskToStackMonitor(task) /* Do nothing */
-#define prvRemoveTaskFromStackMonitor(task) /* Do nothing */
+/**
+ * @brief Disabled by TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS
+ */
+#define vTraceSetMessageBufferName(__pvMessageBuffer, __szName) ((void)(__pvMessageBuffer), (void)(__szName))
 
-#endif /* (TRC_CFG_SCHEDULING_ONLY == 0) */
+#endif
 
-/*******************************************************************************
- * Note: Setting names for event groups is difficult to support, this has been 
- * excluded intentionally. This since we don't know if event_groups.c is 
- * included in the build, so referencing it from the recorder may cause errors.
- ******************************************************************************/
+#if defined(TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1)
 
-/* Gives the currently executing task (wrapper for RTOS-specific function) */
-void* prvTraceGetCurrentTaskHandle(void);
+ /**
+  * @internal Retrieves the unused stack for a task
+  *
+  * @param[in] pvTask Task pointer
+  * @param[out] puxUnusedStack The unused stack
+  *
+  * @retval TRC_FAIL Failure
+  * @retval TRC_SUCCESS Success
+  */
+traceResult xTraceKernelPortGetUnusedStack(void* pvTask, TraceUnsignedBaseType_t *puxUnusedStack);
+
+#endif
+
+#else
+
+/**
+ * @brief Disabled by TRC_CFG_SCHEDULING_ONLY
+ */
+#define vTraceSetQueueName(__pvQueue, __szName) ((void)(__pvQueue), (void)(__szName))
+
+/**
+ * @brief Disabled by TRC_CFG_SCHEDULING_ONLY
+ */
+#define vTraceSetSemaphoreName(__pvSemaphore, __szName) ((void)(__pvSemaphore), (void)(__szName))
+
+/**
+ * @brief Disabled by TRC_CFG_SCHEDULING_ONLY
+ */
+#define vTraceSetMutexName(__pvMutex, __szName) ((void)(__pvMutex), (void)(__szName))
+
+/**
+ * @brief Disabled by TRC_CFG_SCHEDULING_ONLY
+ */
+#define vTraceSetEventGroupName(__pvEventGroup, __szName) ((void)(__pvEventGroup), (void)(__szName))
+
+/**
+ * @brief Disabled by TRC_CFG_SCHEDULING_ONLY
+ */
+#define vTraceSetStreamBufferName(__pvStreamBuffer, __szName) ((void)(__pvStreamBuffer), (void)(__szName))
+
+/**
+ * @brief Disabled by TRC_CFG_SCHEDULING_ONLY
+ */
+#define vTraceSetMessageBufferName(__pvMessageBuffer, __szName) ((void)(__pvMessageBuffer), (void)(__szName))
+
+/**
+ * @brief Disabled by TRC_CFG_SCHEDULING_ONLY
+ */
+#define xTraceKernelPortGetUnusedStack(pvTask, puxUnusedStack) ((void)(pvTask), (void)(puxUnusedStack))
+
+#endif
 
 #if (((TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT) && (TRC_CFG_INCLUDE_ISR_TRACING == 1)) || (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING))
-/* Tells if the scheduler currently is suspended (task-switches can't occur) */
-unsigned char prvTraceIsSchedulerSuspended(void);
 
-/*******************************************************************************
- * INCLUDE_xTaskGetSchedulerState must be set to 1 for tracing to work properly
- ******************************************************************************/
+/* Required for ISR tracing and Streaming */
 #undef INCLUDE_xTaskGetSchedulerState
 #define INCLUDE_xTaskGetSchedulerState 1
 
-#endif /* (((TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT) && (TRC_CFG_INCLUDE_ISR_TRACING == 1)) || (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)) */
+#endif
 
+/**
+ * @internal Legacy ID used by Tracealyzer to identify FreeRTOS traces
+ */
 #define TRACE_KERNEL_VERSION 0x1AA1
-#define TRACE_TICK_RATE_HZ configTICK_RATE_HZ /* Defined in "FreeRTOS.h" */
+
+/**
+ * @internal Kernel specific tick rate frequency definition
+ */
+#define TRC_TICK_RATE_HZ configTICK_RATE_HZ /* Defined in "FreeRTOS.h" */
+
+/**
+ * @internal Kernel specific CPU clock frequency definition
+ */
 #define TRACE_CPU_CLOCK_HZ configCPU_CLOCK_HZ /* Defined in "FreeRTOSConfig.h" */
-#define TRACE_GET_CURRENT_TASK() prvTraceGetCurrentTaskHandle()
 
-#define TRACE_GET_OS_TICKS() (uiTraceTickCount) /* Streaming only */
-
-/* If using dynamic allocation of snapshot trace buffer... */
+/**
+ * @internal Kernel specific malloc definition
+ */
 #define TRACE_MALLOC(size) pvPortMalloc(size) 	
 
-#if defined(configUSE_TIMERS)
-#if (configUSE_TIMERS == 1)
+#if (defined(configUSE_TIMERS) && (configUSE_TIMERS == 1))
+
 #undef INCLUDE_xTimerGetTimerDaemonTaskHandle
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle 1
-#endif /* configUSE_TIMERS == 1*/
-#endif /* configUSE_TIMERS */
-
-/* For ARM Cortex-M devices - assumes the ARM CMSIS API is available */
-#if (defined (__CORTEX_M))	
-	#define TRACE_ALLOC_CRITICAL_SECTION() uint32_t __irq_status;
-	#define TRACE_ENTER_CRITICAL_SECTION() {__irq_status = __get_PRIMASK(); __set_PRIMASK(1);} /* PRIMASK disables ALL interrupts - allows for tracing in any ISR */
-	#define TRACE_EXIT_CRITICAL_SECTION() {__set_PRIMASK(__irq_status);}
-#endif
-
-#if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_CORTEX_A9) || (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XILINX_ZyncUltraScaleR5)
-
-	/**************************************************************************
-	 * Disables "FreeRTOS-enabled" interrupts only , i.e. with priorities up to
-	 * configMAX_API_CALL_INTERRUPT_PRIORITY. Don't add tracing in ISRs with
-	 * greater priority.
-	 *************************************************************************/
-
-	extern int cortex_a9_r5_enter_critical(void);
-	extern void cortex_a9_r5_exit_critical(int irq_already_masked_at_enter);
-
-	#define TRACE_ALLOC_CRITICAL_SECTION() uint32_t __irq_mask_status;
-
-	#define TRACE_ENTER_CRITICAL_SECTION() { __irq_mask_status = cortex_a9_r5_enter_critical(); }
-
-	#define TRACE_EXIT_CRITICAL_SECTION() { cortex_a9_r5_exit_critical(__irq_mask_status); }
 
 #endif
 
-#if ( (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Renesas_RX600) || (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_MICROCHIP_PIC24_PIC32))
-	#define TRACE_ALLOC_CRITICAL_SECTION() int __irq_status;
-	#define TRACE_ENTER_CRITICAL_SECTION() {__irq_status = portSET_INTERRUPT_MASK_FROM_ISR();}
-	#define TRACE_EXIT_CRITICAL_SECTION() {portCLEAR_INTERRUPT_MASK_FROM_ISR(__irq_status);}
-#endif
+#if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XMOS_XCOREAI)
 
-#if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Altera_NiosII)
-	#include "system.h"
-	#include "sys/alt_irq.h"
-	#define TRACE_ALLOC_CRITICAL_SECTION() alt_irq_context __irq_status;
-	#define TRACE_ENTER_CRITICAL_SECTION(){__irq_status = alt_irq_disable_all();}
-	#define TRACE_EXIT_CRITICAL_SECTION() {alt_irq_enable_all(__irq_status);}
-#endif
+#undef TRC_CFG_CORE_COUNT
+#define TRC_CFG_CORE_COUNT configNUM_CORES
 
-#if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Win32)
-    /* In the Win32 port, there are no real interrupts, so we can use the normal critical sections */
-	#define TRACE_ALLOC_CRITICAL_SECTION()
-	#define TRACE_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
-	#define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
-#endif
+#undef TRC_CFG_GET_CURRENT_CORE
+#define TRC_CFG_GET_CURRENT_CORE() rtos_core_id_get()
 
-#if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_POWERPC_Z4)
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X)
-    /* FreeRTOS v8.0 or later */    
-	#define TRACE_ALLOC_CRITICAL_SECTION() UBaseType_t __irq_status;
-    #define TRACE_ENTER_CRITICAL_SECTION() {__irq_status = portSET_INTERRUPT_MASK_FROM_ISR();}
-    #define TRACE_EXIT_CRITICAL_SECTION() {portCLEAR_INTERRUPT_MASK_FROM_ISR(__irq_status);}
-#else 
-	/* FreeRTOS v7.x */
-    #define TRACE_ALLOC_CRITICAL_SECTION() unsigned portBASE_TYPE __irq_status;
-    #define TRACE_ENTER_CRITICAL_SECTION() {__irq_status = portSET_INTERRUPT_MASK_FROM_ISR();}
-    #define TRACE_EXIT_CRITICAL_SECTION() {portCLEAR_INTERRUPT_MASK_FROM_ISR(__irq_status);}
 #endif
-#endif
-
-#ifndef TRACE_ENTER_CRITICAL_SECTION
-	#error "This hardware port has no definition for critical sections! See http://percepio.com/2014/10/27/how-to-define-critical-sections-for-the-recorder/"
-#endif
-
 
 #if (TRC_CFG_FREERTOS_VERSION == TRC_FREERTOS_VERSION_9_0_1)
-	/******************************************************************************
-	* Fix for FreeRTOS v9.0.1 to correctly identify xQueuePeek events.
-	*
-	* In FreeRTOS v9.0.1, the below trace hooks are incorrectly used from three
-	* different functions. This as the earlier function xQueueGenericReceive
-	* has been replaced by xQueuePeek, xQueueSemaphoreTake and xQueueReceive.
-	*
-	* xQueueGenericReceive had a parameter "xJustPeeking", used by the trace hooks
-	* to tell between xQueuePeek events and others. This is no longer present, so
-	* we need another way to correctly identify peek events. Since all three
-	* functions call the same trace macros, the context of these macro is unknown.
-	*
-	* We therefore check the __LINE__ macro inside of the trace macros. This gives
-	* the line number of queue.c, where the macros are used. This can be used to
-	* tell if the context is xQueuePeek or another function.
-	* __LINE__ is a standard compiler feature since ancient times, so it should
-	* work on all common compilers.
-	*
-	* This might seem as a quite brittle and unusual solution, but works in this
-	* particular case and is only for FreeRTOS v9.0.1.
-	* Future versions of FreeRTOS should not need this fix, as we have submitted
-	* a correction of queue.c with individual trace macros for each function.
-	******************************************************************************/
+
+/**
+ * @brief Fix for FreeRTOS v9.0.1 to correctly identify xQueuePeek events.
+ *
+ * In FreeRTOS v9.0.1, the below trace hooks are incorrectly used from three
+ * different functions. This as the earlier function xQueueGenericReceive
+ * has been replaced by xQueuePeek, xQueueSemaphoreTake and xQueueReceive.
+ *
+ * xQueueGenericReceive had a parameter "xJustPeeking", used by the trace hooks
+ * to tell between xQueuePeek events and others. This is no longer present, so
+ * we need another way to correctly identify peek events. Since all three
+ * functions call the same trace macros, the context of these macro is unknown.
+ *
+ * We therefore check the __LINE__ macro inside of the trace macros. This gives
+ * the line number of queue.c, where the macros are used. This can be used to
+ * tell if the context is xQueuePeek or another function.
+ * __LINE__ is a standard compiler feature since ancient times, so it should
+ * work on all common compilers.
+ *
+ * This might seem as a quite brittle and unusual solution, but works in this
+ * particular case and is only for FreeRTOS v9.0.1.
+ * Future versions of FreeRTOS should not need this fix, as we have submitted
+ * a correction of queue.c with individual trace macros for each function.
+ */
 #define isQueueReceiveHookActuallyPeek (__LINE__ > 1674) /* Half way between the closes trace points */
 
 #elif (TRC_CFG_FREERTOS_VERSION <= TRC_FREERTOS_VERSION_9_0_0)
+
+/**
+ * @brief Is receive actually a peek
+ */
 #define isQueueReceiveHookActuallyPeek xJustPeeking
 
 #elif (TRC_CFG_FREERTOS_VERSION > TRC_FREERTOS_VERSION_9_0_1)
+
+/**
+ * @brief Is never a peek for this FreeRTOS version
+ */
 #define isQueueReceiveHookActuallyPeek (__LINE__ < 0) /* instead of pdFALSE to fix a warning of "constant condition" */
 
 #endif
-
-extern uint16_t CurrentFilterMask;
-
-extern uint16_t CurrentFilterGroup;
-
-uint8_t prvTraceGetQueueType(void* handle);
-uint16_t prvTraceGetTaskNumberLow16(void* handle);
-uint16_t prvTraceGetTaskNumberHigh16(void* handle);
-void prvTraceSetTaskNumberLow16(void* handle, uint16_t value);
-void prvTraceSetTaskNumberHigh16(void* handle, uint16_t value);
-
-uint16_t prvTraceGetQueueNumberLow16(void* handle);
-uint16_t prvTraceGetQueueNumberHigh16(void* handle);
-void prvTraceSetQueueNumberLow16(void* handle, uint16_t value);
-void prvTraceSetQueueNumberHigh16(void* handle, uint16_t value);
-
-#if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
-uint16_t prvTraceGetTimerNumberLow16(void* handle);
-uint16_t prvTraceGetTimerNumberHigh16(void* handle);
-void prvTraceSetTimerNumberLow16(void* handle, uint16_t value);
-void prvTraceSetTimerNumberHigh16(void* handle, uint16_t value);
-#endif /* (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
-
-#if (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
-uint16_t prvTraceGetEventGroupNumberLow16(void* handle);
-uint16_t prvTraceGetEventGroupNumberHigh16(void* handle);
-void prvTraceSetEventGroupNumberLow16(void* handle, uint16_t value);
-void prvTraceSetEventGroupNumberHigh16(void* handle, uint16_t value);
-#endif /* (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
-
-#if (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
-uint16_t prvTraceGetStreamBufferNumberLow16(void* handle);
-uint16_t prvTraceGetStreamBufferNumberHigh16(void* handle);
-void prvTraceSetStreamBufferNumberLow16(void* handle, uint16_t value);
-void prvTraceSetStreamBufferNumberHigh16(void* handle, uint16_t value);
-#endif /* (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
-
-#define TRACE_GET_TASK_FILTER(pxTask) prvTraceGetTaskNumberHigh16((void*)pxTask)
-#define TRACE_SET_TASK_FILTER(pxTask, group) prvTraceSetTaskNumberHigh16((void*)pxTask, group)
-
-#define TRACE_GET_QUEUE_FILTER(pxObject) prvTraceGetQueueNumberHigh16((void*)pxObject)
-#define TRACE_SET_QUEUE_FILTER(pxObject, group) prvTraceSetQueueNumberHigh16((void*)pxObject, group)
-
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
-#define TRACE_GET_EVENTGROUP_FILTER(pxObject) prvTraceGetEventGroupNumberHigh16((void*)pxObject)
-#define TRACE_SET_EVENTGROUP_FILTER(pxObject, group) prvTraceSetEventGroupNumberHigh16((void*)pxObject, group)
-#else /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
-/* FreeRTOS versions before v10.0 does not support filtering for event groups */
-#define TRACE_GET_EVENTGROUP_FILTER(pxObject) 1
-#define TRACE_SET_EVENTGROUP_FILTER(pxObject, group) 
-#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
-
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
-#define TRACE_GET_TIMER_FILTER(pxObject) prvTraceGetTimerNumberHigh16((void*)pxObject)
-#define TRACE_SET_TIMER_FILTER(pxObject, group) prvTraceSetTimerNumberHigh16((void*)pxObject, group)
-#else /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
-/* FreeRTOS versions before v10.0 does not support filtering for timers */
-#define TRACE_GET_TIMER_FILTER(pxObject) 1
-#define TRACE_SET_TIMER_FILTER(pxObject, group) 
-#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
-
-#define TRACE_GET_STREAMBUFFER_FILTER(pxObject) prvTraceGetStreamBufferNumberHigh16((void*)pxObject)
-#define TRACE_SET_STREAMBUFFER_FILTER(pxObject, group) prvTraceSetStreamBufferNumberHigh16((void*)pxObject, group)
-
-/* We can only support filtering if FreeRTOS is at least v8.0 */
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X)
-#define TRACE_GET_OBJECT_FILTER(CLASS, pxObject) TRACE_GET_##CLASS##_FILTER(pxObject)
-#define TRACE_SET_OBJECT_FILTER(CLASS, pxObject, group) TRACE_SET_##CLASS##_FILTER(pxObject, group)
-#else /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X) */
-#define TRACE_GET_OBJECT_FILTER(CLASS, pxObject) 0xFFFF
-#define TRACE_SET_OBJECT_FILTER(CLASS, pxObject, group) 
-#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X) */
 
 /* Helpers needed to correctly expand names */
 #define TZ__CAT2(a,b) a ## b
 #define TZ__CAT(a,b) TZ__CAT2(a, b)
 
-/**************************************************************************/
-/* Makes sure xQueueGiveFromISR also has a xCopyPosition parameter        */
-/**************************************************************************/
+/*
+ * The following xQueueGiveFromISR macro hacks make sure xQueueGiveFromISR also has a xCopyPosition parameter
+ */
 
 /* Expands name if this header is included... uxQueueType must be a macro that only exists in queue.c or whatever, and it must expand to nothing or to something that's valid in identifiers */
 #define xQueueGiveFromISR(a,b) TZ__CAT(xQueueGiveFromISR__, uxQueueType) (a,b)
@@ -440,17 +411,353 @@ BaseType_t MyWrapper_xQueueGiveFromISR(__a, __b, const BaseType_t xCopyPosition)
 /* If not in queue.c, "uxQueueType" isn't expanded */
 #define xQueueGiveFromISR__uxQueueType(__a, __b) xQueueGiveFromISR(__a,__b)
 
-/**************************************************************************/
-/* End of xQueueGiveFromISR fix                                           */
-/**************************************************************************/
-
-/******************************************************************************/
-/*** Definitions for Snapshot mode ********************************************/
-/******************************************************************************/
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT)
 
-/*** The object classes *******************************************************/
+/**
+ * @internal Kernel specific way to get current task handle
+ */
+#define TRACE_GET_CURRENT_TASK() prvTraceGetCurrentTaskHandle()
 
+extern uint16_t CurrentFilterMask;
+extern uint16_t CurrentFilterGroup;
+
+/**
+ * @internal Get specific queue type
+ *
+ * @param[in] pvQueue Queue handle
+ *
+ * @returns uint8_t Queue type
+ */
+uint8_t prvTraceGetQueueType(void* pvQueue);
+
+/**
+ * @internal Retrieve lower 16-bit of task number
+ *
+ * @param[in] pvTask Task handle
+ *
+ * @returns uint16_t Lower 16-bit of task number
+ */
+uint16_t prvTraceGetTaskNumberLow16(void* pvTask);
+
+/**
+ * @internal Retrieve upper 16-bit of task number
+ *
+ * @param[in] pvTask Task handle
+ *
+ * @returns uint16_t Upper 16-bit of task number
+ */
+uint16_t prvTraceGetTaskNumberHigh16(void* pvTask);
+
+/**
+ * @internal Set lower 16-bit of task number
+ *
+ * @param[in] pvTask Task handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetTaskNumberLow16(void* pvTask, uint16_t uiValue);
+
+/**
+ * @internal Set upper 16-bit of task number
+ *
+ * @param[in] pvTask Task handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetTaskNumberHigh16(void* pvTask, uint16_t uiValue);
+
+/**
+ * @internal Retrieve lower 16-bit of queue number
+ *
+ * @param[in] pvQueue Queue handle
+ *
+ * @returns uint16_t Lower 16-bit of queue number
+ */
+uint16_t prvTraceGetQueueNumberLow16(void* pvQueue);
+
+/**
+ * @internal Retrieve upper 16-bit of queue number
+ *
+ * @param[in] pvQueuevQueue handle
+ *
+ * @returns uint16_t Upper 16-bit of queue number
+ */
+uint16_t prvTraceGetQueueNumberHigh16(void* pvQueue);
+
+
+/**
+ * @internal Set lower 16-bit of queue number
+ *
+ * @param[in] pvQueue Queue handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetQueueNumberLow16(void* pvQueue, uint16_t uiValue);
+
+
+/**
+ * @internal Set upper 16-bit of queue number
+ *
+ * @param[in] pvQueue Queue handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetQueueNumberHigh16(void* pvQueue, uint16_t uiValue);
+
+#if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+/**
+ * @internal Retrieve lower 16-bit of timer number
+ *
+ * @param[in] pvTimer Timer handle
+ *
+ * @returns uint16_t Lower 16-bit of timer number
+ */
+uint16_t prvTraceGetTimerNumberLow16(void* pvTimer);
+
+/**
+ * @internal Retrieve upper 16-bit of timer number
+ *
+ * @param[in] pvTimer Timer handle
+ *
+ * @returns uint16_t Upper 16-bit of timer number
+ */
+uint16_t prvTraceGetTimerNumberHigh16(void* pvTimer);
+
+/**
+ * @internal Set lower 16-bit of timer number
+ *
+ * @param[in] pvTimer Timer handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetTimerNumberLow16(void* pvTimer, uint16_t uiValue);
+
+/**
+ * @internal Set upper 16-bit of timer number
+ *
+ * @param[in] pvTimer Timer handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetTimerNumberHigh16(void* pvTimer, uint16_t uiValue);
+
+#endif
+
+#if (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+/**
+ * @internal Retrieve lower 16-bit of event group number
+ *
+ * @param[in] pvEventGroup Event group handle
+ *
+ * @returns uint16_t Lower 16-bit of event group number
+ */
+uint16_t prvTraceGetEventGroupNumberLow16(void* pvEventGroup);
+
+/**
+ * @internal Retrieve upper 16-bit of event group number
+ *
+ * @param[in] pvEventGroup Event group handle
+ *
+ * @returns uint16_t Upper 16-bit of event group number
+ */
+uint16_t prvTraceGetEventGroupNumberHigh16(void* pvEventGroup);
+
+/**
+ * @internal Set lower 16-bit of event group number
+ *
+ * @param[in] pvEventGroup Event group handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetEventGroupNumberLow16(void* pvEventGroup, uint16_t uiValue);
+
+/**
+ * @internal Set upper 16-bit of event group number
+ *
+ * @param[in] pvEventGroup Event group handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetEventGroupNumberHigh16(void* handle, uint16_t value);
+
+#endif
+
+#if (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+/**
+ * @internal Retrieve lower 16-bit of stream buffer number
+ *
+ * @param[in] pvStreamBuffer Stream buffer handle
+ *
+ * @returns uint16_t Lower 16-bit of stream buffer number
+ */
+uint16_t prvTraceGetStreamBufferNumberLow16(void* pvStreamBuffer);
+
+/**
+ * @internal Retrieve upper 16-bit of stream buffer number
+ *
+ * @param[in] pvStreamBuffer Stream buffer handle
+ *
+ * @returns uint16_t Upper 16-bit of stream buffer number
+ */
+uint16_t prvTraceGetStreamBufferNumberHigh16(void* pvStreamBuffer);
+
+/**
+ * @internal Set lower 16-bit of stream buffer number
+ *
+ * @param[in] pvStreamBuffer Stream buffer handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetStreamBufferNumberLow16(void* pvStreamBuffer, uint16_t uiValue);
+
+/**
+ * @internal Set upper 16-bit of stream buffer number
+ *
+ * @param[in] pvStreamBuffer Stream buffer handle
+ * @param[in] uiValue Value
+ */
+void prvTraceSetStreamBufferNumberHigh16(void* pvStreamBuffer, uint16_t uiValue);
+
+#endif
+
+/**
+ * @brief Retrieve filter of task
+ *
+ * @param[in] pxTask Task handle
+ *
+ * @returns uint16_t Task filter
+ */
+#define TRACE_GET_TASK_FILTER(pxTask) prvTraceGetTaskNumberHigh16((void*)pxTask)
+
+/**
+ * @brief Set filter of task
+ *
+ * @param[in] pxTask Task handle
+ * @param[in] group Group
+ */
+#define TRACE_SET_TASK_FILTER(pxTask, group) prvTraceSetTaskNumberHigh16((void*)pxTask, group)
+
+/**
+ * @brief Retrieve filter of queue
+ *
+ * @param[in] pxQueue Queue handle
+ *
+ * @returns uint16_t Queue filter
+ */
+#define TRACE_GET_QUEUE_FILTER(pxQueue) prvTraceGetQueueNumberHigh16((void*)pxQueue)
+
+/**
+ * @brief Set filter of queue
+ *
+ * @param[in] pxQueue Queue handle
+ * @param[in] group Group
+ */
+#define TRACE_SET_QUEUE_FILTER(pxQueue, group) prvTraceSetQueueNumberHigh16((void*)pxQueue, group)
+
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+/**
+ * @brief Retrieve filter of event group
+ *
+ * @param[in] pxEventGroup Queue handle
+ *
+ * @returns uint16_t Queue filter
+ */
+#define TRACE_GET_EVENTGROUP_FILTER(pxEventGroup) prvTraceGetEventGroupNumberHigh16((void*)pxEventGroup)
+
+/**
+ * @brief Set filter of event group
+ *
+ * @param[in] pxEventGroup Queue handle
+ * @param[in] group Group
+ */
+#define TRACE_SET_EVENTGROUP_FILTER(pxEventGroup, group) prvTraceSetEventGroupNumberHigh16((void*)pxEventGroup, group)
+
+#else
+
+/**
+ * @brief Disabled by TRC_CFG_FREERTOS_VERSION
+ */
+#define TRACE_GET_EVENTGROUP_FILTER(pxEventGroup) ((void)(pxEventGroup), 1)
+
+/**
+ * @brief Disabled by TRC_CFG_FREERTOS_VERSION
+ */
+#define TRACE_SET_EVENTGROUP_FILTER(pxEventGroup, group) ((void)(pxEventGroup), (void)(group))
+
+#endif
+
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+/**
+ * @brief Retrieve filter of timer
+ *
+ * @param[in] pxEventGroup Timer handle
+ *
+ * @returns uint16_t Timer filter
+ */
+#define TRACE_GET_TIMER_FILTER(pxTimer) prvTraceGetTimerNumberHigh16((void*)pxTimer)
+
+/**
+ * @brief Set filter of timer
+ *
+ * @param[in] pxTimer Timer handle
+ * @param[in] group Group
+ */
+#define TRACE_SET_TIMER_FILTER(pxTimer, group) prvTraceSetTimerNumberHigh16((void*)pxTimer, group)
+
+#else
+
+/**
+ * @brief Disabled by TRC_CFG_FREERTOS_VERSION
+ */
+#define TRACE_GET_TIMER_FILTER(pxTimer) ((void)(pxTimer), 1)
+
+/**
+ * @brief Disabled by TRC_CFG_FREERTOS_VERSION
+ */
+#define TRACE_SET_TIMER_FILTER(pxTimer, group) ((void)(pxTimer), (void)(group))
+
+#endif
+
+/**
+ * @brief Retrieve filter of stream buffer
+ *
+ * @param[in] pxStreamBuffer Stream buffer handle
+ *
+ * @returns uint16_t Timer filter
+ */
+#define TRACE_GET_STREAMBUFFER_FILTER(pxStreamBuffer) prvTraceGetStreamBufferNumberHigh16((void*)pxStreamBuffer)
+
+/**
+ * @brief Set filter of stream buffer
+ *
+ * @param[in] pxStreamBuffer Stream buffer handle
+ * @param[in] group Group
+ */
+#define TRACE_SET_STREAMBUFFER_FILTER(pxStreamBuffer, group) prvTraceSetStreamBufferNumberHigh16((void*)pxStreamBuffer, group)
+
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X)
+
+/**
+ * @internal Get object filter
+ */
+#define TRACE_GET_OBJECT_FILTER(CLASS, pxObject) TRACE_GET_##CLASS##_FILTER(pxObject)
+
+/**
+ * @internal Set object filter
+ */
+#define TRACE_SET_OBJECT_FILTER(CLASS, pxObject, group) TRACE_SET_##CLASS##_FILTER(pxObject, group)
+
+#else
+
+/**
+ * @internal Disabled by TRC_CFG_FREERTOS_VERSION
+ */
+#define TRACE_GET_OBJECT_FILTER(CLASS, pxObject) 0xFFFF
+
+/**
+ * @internal Disabled by TRC_CFG_FREERTOS_VERSION
+ */
+#define TRACE_SET_OBJECT_FILTER(CLASS, pxObject, group)
+
+#endif
+
+/* The object classes */
 #define TRACE_NCLASSES 9
 #define TRACE_CLASS_QUEUE ((traceObjectClass)0)
 #define TRACE_CLASS_SEMAPHORE ((traceObjectClass)1)
@@ -462,7 +769,7 @@ BaseType_t MyWrapper_xQueueGiveFromISR(__a, __b, const BaseType_t xCopyPosition)
 #define TRACE_CLASS_STREAMBUFFER ((traceObjectClass)7)
 #define TRACE_CLASS_MESSAGEBUFFER ((traceObjectClass)8)
 
-/*** Definitions for Object Table ********************************************/
+/* Definitions for Object Table */
 #define TRACE_KERNEL_OBJECT_COUNT ((TRC_CFG_NQUEUE) + (TRC_CFG_NSEMAPHORE) + (TRC_CFG_NMUTEX) + (TRC_CFG_NTASK) + (TRC_CFG_NISR) + (TRC_CFG_NTIMER) + (TRC_CFG_NEVENTGROUP) + (TRC_CFG_NSTREAMBUFFER) + (TRC_CFG_NMESSAGEBUFFER))
 
 /* Queue properties (except name):	current number of message in queue */
@@ -514,22 +821,26 @@ BaseType_t MyWrapper_xQueueGiveFromISR(__a, __b, const BaseType_t xCopyPosition)
 /* Flag to tell the context of tracePEND_FUNC_CALL_FROM_ISR */
 extern int uiInEventGroupSetBitsFromISR;
 
-/* Initialization of the object property table */
-void vTraceInitObjectPropertyTable(void);
+/**
+ * @internal Initialized the object property table
+ */
+traceResult xTraceKernelPortInitObjectPropertyTable(void);
 
-/* Initialization of the handle mechanism, see e.g, prvTraceGetObjectHandle */
-void vTraceInitObjectHandleStack(void);
+/**
+ * @internal Initialized the object handle stack
+ */
+traceResult xTraceKernelPortInitObjectHandleStack(void);
 
-/* Returns the "Not enough handles" error message for the specified object class */
+/**
+ * @internal Retrieve error string
+ */
 const char* pszTraceGetErrorNotEnoughHandles(traceObjectClass objectclass);
 
+/**
+ * @internal Retrieve current task handle
+ */
 void* prvTraceGetCurrentTaskHandle(void);
 
-/******************************************************************************
- * TraceQueueClassTable
- * Translates a FreeRTOS QueueType into trace objects classes (TRACE_CLASS_).
- * Has one entry for each QueueType, gives TRACE_CLASS ID.
- ******************************************************************************/			
 extern traceObjectClass TraceQueueClassTable[5];
 
 
@@ -960,7 +1271,7 @@ extern volatile uint32_t uiTraceSystemState;
 /* Called on vTaskCreate */
 #undef traceTASK_CREATE
 #define traceTASK_CREATE(pxNewTCB) \
-	if (pxNewTCB != NULL) \
+	if (pxNewTCB != 0) \
 	{ \
 		trcKERNEL_HOOKS_TASK_CREATE(TRACE_GET_OBJECT_EVENT_CODE(CREATE_OBJ, TRCSUCCESS, TASK, pxNewTCB), TASK, pxNewTCB); \
 		prvAddTaskToStackMonitor(pxNewTCB); \
@@ -969,7 +1280,7 @@ extern volatile uint32_t uiTraceSystemState;
 /* Called in vTaskCreate, if it fails (typically if the stack can not be allocated) */
 #undef traceTASK_CREATE_FAILED
 #define traceTASK_CREATE_FAILED() \
-	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, TASK, NOT_USED), 0);
+	trcKERNEL_HOOKS_OBJECT_CREATE_FAILED(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, TASK, NOT_USED), TRACE_GET_CLASS_TRACE_CLASS(TASK, NOT_USED))
 
 /* Called on vTaskDelete */
 #undef traceTASK_DELETE
@@ -982,8 +1293,7 @@ extern volatile uint32_t uiTraceSystemState;
 
 #if (TRC_CFG_SCHEDULING_ONLY == 0)
 
-#if defined(configUSE_TICKLESS_IDLE)
-#if (configUSE_TICKLESS_IDLE != 0)
+#if defined(configUSE_TICKLESS_IDLE) && (configUSE_TICKLESS_IDLE != 0)
 
 #undef traceLOW_POWER_IDLE_BEGIN
 #define traceLOW_POWER_IDLE_BEGIN() \
@@ -1001,8 +1311,7 @@ extern volatile uint32_t uiTraceSystemState;
 		prvTraceStoreLowPower(1); \
 	}
 
-#endif /* (configUSE_TICKLESS_IDLE != 0) */
-#endif /* defined(configUSE_TICKLESS_IDLE)  */
+#endif
 
 /* Called on vTaskSuspend */
 #undef traceTASK_SUSPEND
@@ -1023,15 +1332,18 @@ extern volatile uint32_t uiTraceSystemState;
 
 /* Called on vTaskDelayUntil - note the use of FreeRTOS variable xTimeToWake */
 #undef traceTASK_DELAY_UNTIL
-#if TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
+
 #define traceTASK_DELAY_UNTIL(xTimeToWake) \
 	trcKERNEL_HOOKS_TASK_DELAY(TASK_DELAY_UNTIL, pxCurrentTCB, xTimeToWake); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
+#else
+
 #define traceTASK_DELAY_UNTIL() \
 	trcKERNEL_HOOKS_TASK_DELAY(TASK_DELAY_UNTIL, pxCurrentTCB, xTimeToWake); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
+
+#endif
 
 /* Called in xQueueCreate, and thereby for all other object based on queues, such as semaphores. */
 #undef traceQUEUE_CREATE
@@ -1041,7 +1353,7 @@ extern volatile uint32_t uiTraceSystemState;
 /* Called in xQueueCreate, if the queue creation fails */
 #undef traceQUEUE_CREATE_FAILED
 #define traceQUEUE_CREATE_FAILED( queueType ) \
-	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, QUEUE, queueType), 0);
+	trcKERNEL_HOOKS_OBJECT_CREATE_FAILED(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, QUEUE, queueType), TRACE_GET_CLASS_TRACE_CLASS(QUEUE, queueType))
 
 /* Called on vQueueDelete */
 #undef traceQUEUE_DELETE
@@ -1053,6 +1365,7 @@ extern volatile uint32_t uiTraceSystemState;
 
 /* This macro is not necessary as of FreeRTOS v9.0.0 */
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0)
+
 /* Called in xQueueCreateMutex, and thereby also from xSemaphoreCreateMutex and xSemaphoreCreateRecursiveMutex */
 #undef traceCREATE_MUTEX
 #define traceCREATE_MUTEX( pxNewQueue ) \
@@ -1062,7 +1375,8 @@ extern volatile uint32_t uiTraceSystemState;
 #undef traceCREATE_MUTEX_FAILED
 #define traceCREATE_MUTEX_FAILED() \
 	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, QUEUE, queueQUEUE_TYPE_MUTEX), 0);
-#endif /* (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0) */
+
+#endif
 
 /* Called when the Mutex can not be given, since not holder */
 #undef traceGIVE_MUTEX_RECURSIVE_FAILED
@@ -1224,7 +1538,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 #define traceFREE( pvAddress, uiSize ) \
 	vTraceStoreMemMangEvent(MEM_FREE_SIZE, ( uint32_t ) pvAddress, -((int32_t)uiSize));
 
-#endif /* (TRC_CFG_INCLUDE_MEMMANG_EVENTS == 1) */
+#endif
 
 #if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1)
 
@@ -1235,7 +1549,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 
 #undef traceTIMER_CREATE_FAILED
 #define traceTIMER_CREATE_FAILED() \
-	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY(TIMER_CREATE_TRCFAILED, 0);
+	trcKERNEL_HOOKS_OBJECT_CREATE_FAILED(TIMER_CREATE_TRCFAILED, TRACE_GET_CLASS_TRACE_CLASS(TIMER, NOT_USED))
 
 /* Note that xCommandID can never be tmrCOMMAND_EXECUTE_CALLBACK (-1) since the trace macro is not called in that case */
 #undef traceTIMER_COMMAND_SEND
@@ -1266,7 +1580,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 #define traceTIMER_EXPIRED(tmr) \
 	trcKERNEL_HOOKS_KERNEL_SERVICE(TIMER_EXPIRED, TIMER, tmr);
 
-#endif /* (TRC_CFG_INCLUDE_TIMER_EVENTS == 1) */
+#endif
 
 #if (TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS == 1)
 
@@ -1286,19 +1600,19 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 		prvTraceStoreKernelCall(PEND_FUNC_CALL_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTimerGetTimerDaemonTaskHandle()) ); \
 	uiInEventGroupSetBitsFromISR = 0;
 
-#endif /* (TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS == 1) */
+#endif
 
-#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X) */
+#endif
 
 #if (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1)
 
 #undef traceEVENT_GROUP_CREATE
 #define traceEVENT_GROUP_CREATE(eg) \
-	trcKERNEL_HOOKS_OBJECT_CREATE(EVENT_GROUP_CREATE, EVENTGROUP, eg);
+	trcKERNEL_HOOKS_OBJECT_CREATE(EVENT_GROUP_CREATE, EVENTGROUP, eg)
 
 #undef traceEVENT_GROUP_CREATE_FAILED
 #define traceEVENT_GROUP_CREATE_FAILED() \
-	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY(EVENT_GROUP_CREATE_TRCFAILED, 0);
+	trcKERNEL_HOOKS_OBJECT_CREATE_FAILED(EVENT_GROUP_CREATE_TRCFAILED, TRACE_GET_CLASS_TRACE_CLASS(EVENTGROUP, NOT_USED))
 
 #undef traceEVENT_GROUP_DELETE
 #define traceEVENT_GROUP_DELETE(eg) \
@@ -1355,10 +1669,11 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM_FROM_ISR(EVENT_GROUP_SET_BITS_FROM_ISR, EVENTGROUP, eg, bitsToSet); \
 	uiInEventGroupSetBitsFromISR = 1;
 
-#endif /* (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1) */
+#endif
 
 #undef traceTASK_NOTIFY_TAKE
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0)
+
 #define traceTASK_NOTIFY_TAKE() \
 	if (pxCurrentTCB->eNotifyState == eNotified){ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE, TASK, pxCurrentTCB, xTicksToWait); \
@@ -1366,33 +1681,43 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 	else{ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE_TRCFAILED, TASK, pxCurrentTCB, xTicksToWait); \
 	}
+
 #elif (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY_TAKE() \
 	if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED){ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE, TASK, pxCurrentTCB, xTicksToWait); \
 	}else{ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE_TRCFAILED, TASK, pxCurrentTCB, xTicksToWait);}
-#else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0 */
+
+#else
+
 #define traceTASK_NOTIFY_TAKE(index) \
 	if (pxCurrentTCB->ucNotifyState[index] == taskNOTIFICATION_RECEIVED){ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE, TASK, pxCurrentTCB, xTicksToWait); \
 	}else{ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE_TRCFAILED, TASK, pxCurrentTCB, xTicksToWait);}
-#endif /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0 */
+
+#endif
 
 #undef traceTASK_NOTIFY_TAKE_BLOCK
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY_TAKE_BLOCK() \
 	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE_TRCBLOCK, TASK, pxCurrentTCB, xTicksToWait); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
-#else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#else
+
 #define traceTASK_NOTIFY_TAKE_BLOCK(index) \
 	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE_TRCBLOCK, TASK, pxCurrentTCB, xTicksToWait); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
-#endif /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#endif
 
 #undef traceTASK_NOTIFY_WAIT
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0)
+
 #define traceTASK_NOTIFY_WAIT() \
 	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 	{ \
@@ -1401,7 +1726,9 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 		else \
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCFAILED, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 	}
+
 #elif (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY_WAIT() \
 	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 	{ \
@@ -1410,7 +1737,9 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 		else \
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCFAILED, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 	}
-#else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0 */
+
+#else
+
 #define traceTASK_NOTIFY_WAIT(index) \
 	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 	{ \
@@ -1419,55 +1748,72 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 		else \
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCFAILED, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 	}
-#endif /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0 */
+
+#endif
 
 #undef traceTASK_NOTIFY_WAIT_BLOCK
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY_WAIT_BLOCK() \
 	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 		prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCBLOCK, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
-#else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#else
+
 #define traceTASK_NOTIFY_WAIT_BLOCK(index) \
 	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 		prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCBLOCK, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
-#endif /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#endif
 
 #undef traceTASK_NOTIFY
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY() \
 	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 			prvTraceStoreKernelCall(TRACE_TASK_NOTIFY, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
-#else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#else
+
 #define traceTASK_NOTIFY(index) \
 	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 			prvTraceStoreKernelCall(TRACE_TASK_NOTIFY, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
-#endif /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#endif
 
 #undef traceTASK_NOTIFY_FROM_ISR
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY_FROM_ISR() \
 	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreKernelCall(TRACE_TASK_NOTIFY_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
-#else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#else
+
 #define traceTASK_NOTIFY_FROM_ISR(index) \
 	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreKernelCall(TRACE_TASK_NOTIFY_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
-#endif /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#endif
 	
 #undef traceTASK_NOTIFY_GIVE_FROM_ISR
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY_GIVE_FROM_ISR() \
 	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreKernelCall(TRACE_TASK_NOTIFY_GIVE_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
-#else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#else
+
 #define traceTASK_NOTIFY_GIVE_FROM_ISR(index) \
 	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreKernelCall(TRACE_TASK_NOTIFY_GIVE_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
-#endif /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0 */
+
+#endif
 
 #if (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1)
 
@@ -1477,7 +1823,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 
 #undef traceSTREAM_BUFFER_CREATE_FAILED
 #define traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer ) \
-	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, STREAMBUFFER, xIsMessageBuffer), 0);
+	trcKERNEL_HOOKS_OBJECT_CREATE_FAILED(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, STREAMBUFFER, xIsMessageBuffer), TRACE_GET_CLASS_TRACE_CLASS(STREAMBUFFER, xIsMessageBuffer))
 	
 #undef traceSTREAM_BUFFER_CREATE_STATIC_FAILED
 #define traceSTREAM_BUFFER_CREATE_STATIC_FAILED( xReturn, xIsMessageBuffer ) \
@@ -1543,33 +1889,15 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 		trcKERNEL_HOOKS_KERNEL_SERVICE_FROM_ISR(TRACE_GET_OBJECT_EVENT_CODE(RECEIVE_FROM_ISR, TRCFAILED, STREAMBUFFER, xStreamBuffer), STREAMBUFFER, xStreamBuffer); \
 	}
 
-#endif /* (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1) */
+#endif
 
-#endif /* (TRC_CFG_SCHEDULING_ONLY == 0) */
+#endif
 
-#endif /*#if TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT */
+#endif
 
-/******************************************************************************/
-/*** Definitions for Streaming mode *******************************************/
-/******************************************************************************/
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
 
-/*******************************************************************************
-* vTraceStoreKernelObjectName
-*
-* Set the name for a kernel object (defined by its address).
-******************************************************************************/			
-void vTraceStoreKernelObjectName(void* object, const char* name); 
-
-/*******************************************************************************
-* prvIsNewTCB
-*
-* Tells if this task is already executing, or if there has been a task-switch.
-* Assumed to be called within a trace hook in kernel context.
-*******************************************************************************/
-uint32_t prvIsNewTCB(void* pNewTCB);
-
-#define TRACE_GET_CURRENT_TASK() prvTraceGetCurrentTaskHandle()
+TraceHeapHandle_t xTraceKernelPortGetSystemHeapHandle(void);
 
 /*************************************************************************/
 /* KERNEL SPECIFIC OBJECT CONFIGURATION									 */
@@ -1741,14 +2069,10 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #define PSF_EVENT_MUTEX_TAKE_RECURSIVE_FAILED				0xC8
 
 #define PSF_EVENT_TASK_NOTIFY								0xC9
-#define PSF_EVENT_TASK_NOTIFY_TAKE							0xCA
-#define PSF_EVENT_TASK_NOTIFY_TAKE_BLOCK					0xCB
-#define PSF_EVENT_TASK_NOTIFY_TAKE_FAILED					0xCC
-#define PSF_EVENT_TASK_NOTIFY_WAIT							0xCD
-#define PSF_EVENT_TASK_NOTIFY_WAIT_BLOCK					0xCE
-#define PSF_EVENT_TASK_NOTIFY_WAIT_FAILED					0xCF
-#define PSF_EVENT_TASK_NOTIFY_FROM_ISR						0xD0
-#define PSF_EVENT_TASK_NOTIFY_GIVE_FROM_ISR					0xD1
+#define PSF_EVENT_TASK_NOTIFY_WAIT							0xCA
+#define PSF_EVENT_TASK_NOTIFY_WAIT_BLOCK					0xCB
+#define PSF_EVENT_TASK_NOTIFY_WAIT_FAILED					0xCC
+#define PSF_EVENT_TASK_NOTIFY_FROM_ISR						0xCD
 
 #define PSF_EVENT_TIMER_EXPIRED								0xD2
 
@@ -1777,20 +2101,44 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #define PSF_EVENT_MESSAGEBUFFER_RESET						0xE8
 
 #define PSF_EVENT_MALLOC_FAILED								0xE9
+#define PSF_EVENT_FREE_FAILED								0xEA
 
-#define PSF_EVENT_UNUSED_STACK								0xEA
+#define PSF_EVENT_UNUSED_STACK								0xEB
+
+#define PSF_EVENT_STATEMACHINE_STATE_CREATE					0xEC
+#define PSF_EVENT_STATEMACHINE_CREATE						0xED
+#define PSF_EVENT_STATEMACHINE_STATECHANGE					0xEE
+
+#define PSF_EVENT_INTERVAL_CREATE							0xEF
+#define PSF_EVENT_INTERVAL_STATECHANGE						0xF0
+
+#define PSF_EVENT_EXTENSION_CREATE							0xF1
+
+#define PSF_EVENT_HEAP_CREATE								0xF2
+
+#define PSF_EVENT_COUNTER_CREATE							0xF3
+#define PSF_EVENT_COUNTER_CHANGE							0xF4
+#define PSF_EVENT_COUNTER_LIMIT_EXCEEDED					0xF5
+
+#define PSF_EVENT_MUTEX_TAKE_RECURSIVE_BLOCK				0xF6
+
+#define TRC_EVENT_LAST_ID									PSF_EVENT_COUNTER_LIMIT_EXCEEDED
 
 /*** The trace macros for streaming ******************************************/
 
 /* A macro that will update the tick count when returning from tickless idle */
 #undef traceINCREASE_TICK_COUNT
 /* Note: This can handle time adjustments of max 2^32 ticks, i.e., 35 seconds at 120 MHz. Thus, tick-less idle periods longer than 2^32 ticks will appear "compressed" on the time line.*/
-#define traceINCREASE_TICK_COUNT( xCount ) { extern uint32_t uiTraceTickCount; uiTraceTickCount += xCount; }
+#define traceINCREASE_TICK_COUNT( xCount ) { uint32_t uiTraceTickCount; xTraceTimestampGetOsTickCount(&uiTraceTickCount); xTraceTimestampSetOsTickCount(uiTraceTickCount + (xCount)); }
 
 #if (TRC_CFG_INCLUDE_OSTICK_EVENTS == 1)
-#define OS_TICK_EVENT(uxSchedulerSuspended, xTickCount) if (uxSchedulerSuspended == (unsigned portBASE_TYPE) pdFALSE) { prvTraceStoreEvent1(PSF_EVENT_NEW_TIME, (uint32_t)(xTickCount + 1)); }
+
+#define OS_TICK_EVENT(uxSchedulerSuspended, xTickCount) if ((uxSchedulerSuspended) == (unsigned portBASE_TYPE) pdFALSE) { prvTraceStoreEvent_Param(PSF_EVENT_NEW_TIME, (uint32_t)(xTickCount)); }
+
 #else
-#define OS_TICK_EVENT(uxSchedulerSuspended, xTickCount) 
+
+#define OS_TICK_EVENT(uxSchedulerSuspended, xTickCount)
+
 #endif
 
 /* Called on each OS tick. Will call uiPortGetTimestamp to make sure it is called at least once every OS tick. */
@@ -1798,90 +2146,61 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #if TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_3_0
 
 #define traceTASK_INCREMENT_TICK( xTickCount ) \
-	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || xPendedTicks == 0) { extern uint32_t uiTraceTickCount; uiTraceTickCount++; } \
-	OS_TICK_EVENT(uxSchedulerSuspended, xTickCount)
+	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || xPendedTicks == 0) { xTraceTimestampSetOsTickCount((xTickCount) + 1); } \
+	OS_TICK_EVENT(uxSchedulerSuspended, (xTickCount) + 1)
 
 #elif TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_5_X
 
 #define traceTASK_INCREMENT_TICK( xTickCount ) \
-	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || uxPendedTicks == 0) { extern uint32_t uiTraceTickCount; uiTraceTickCount++; } \
-	OS_TICK_EVENT(uxSchedulerSuspended, xTickCount)
+	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || uxPendedTicks == 0) { xTraceTimestampSetOsTickCount(xTickCount + 1); } \
+	OS_TICK_EVENT(uxSchedulerSuspended, xTickCount + 1)
 
 #else
 
 #define traceTASK_INCREMENT_TICK( xTickCount ) \
-	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || uxMissedTicks == 0) { extern uint32_t uiTraceTickCount; uiTraceTickCount++; } \
-	OS_TICK_EVENT(uxSchedulerSuspended, xTickCount)
+	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || uxMissedTicks == 0) { xTraceTimestampSetOsTickCount(xTickCount + 1); } \
+	OS_TICK_EVENT(uxSchedulerSuspended, xTickCount + 1)
 
 #endif
-
-extern volatile uint32_t uiTraceSystemState;
 
 /* Called on each task-switch */
 #undef traceTASK_SWITCHED_IN
 #define traceTASK_SWITCHED_IN() \
-	uiTraceSystemState = TRC_STATE_IN_TASKSWITCH; \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-	{ \
-		if (prvIsNewTCB(pxCurrentTCB)) \
-		{ \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_ACTIVATE, (uint32_t)pxCurrentTCB, pxCurrentTCB->uxPriority); \
-		} \
-	} \
-	uiTraceSystemState = TRC_STATE_IN_APPLICATION;
+	xTraceTaskSwitch(pxCurrentTCB, pxCurrentTCB->uxPriority)
 
 /* Called for each task that becomes ready */
-#if (TRC_CFG_INCLUDE_READY_EVENTS == 1)
 #undef traceMOVED_TASK_TO_READY_STATE
 #define traceMOVED_TASK_TO_READY_STATE( pxTCB ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, pxTCB) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_READY, (uint32_t)pxTCB);
-#endif
+	xTraceTaskReady(pxTCB)
 
 #undef traceTASK_CREATE
 #if TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0
+
 #define traceTASK_CREATE(pxNewTCB) \
-	if (pxNewTCB != NULL) \
+	if ((pxNewTCB) != 0) \
 	{ \
-		prvAddTaskToStackMonitor(pxNewTCB); \
-		prvTraceSaveObjectSymbol(pxNewTCB, pxNewTCB->pcTaskName); \
-		prvTraceSaveObjectData(pxNewTCB, pxNewTCB->uxPriority); \
-		prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, pxNewTCB->pcTaskName, pxNewTCB); \
-		TRACE_SET_OBJECT_FILTER(TASK, pxNewTCB, CurrentFilterGroup); \
-		if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-			if (TRACE_GET_OBJECT_FILTER(TASK, pxNewTCB) & CurrentFilterMask) \
-				prvTraceStoreEvent2(PSF_EVENT_TASK_CREATE, (uint32_t)pxNewTCB, pxNewTCB->uxPriority); \
+		xTraceTaskRegisterWithoutHandle((void*)(pxNewTCB), (pxNewTCB)->pcTaskName, (pxNewTCB)->uxPriority); \
 	}
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
+
+#else
+
 #define traceTASK_CREATE(pxNewTCB) \
-	if (pxNewTCB != NULL) \
+	if (pxNewTCB != 0) \
 	{ \
-		prvAddTaskToStackMonitor(pxNewTCB); \
-		prvTraceSaveObjectSymbol(pxNewTCB, (const char*)pcName); \
-		prvTraceSaveObjectData(pxNewTCB, uxPriority); \
-		prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, (const char*)pcName, pxNewTCB); \
-		TRACE_SET_OBJECT_FILTER(TASK, pxNewTCB, CurrentFilterGroup); \
-		if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-			if (TRACE_GET_OBJECT_FILTER(TASK, pxNewTCB) & CurrentFilterMask) \
-				prvTraceStoreEvent2(PSF_EVENT_TASK_CREATE, (uint32_t)pxNewTCB, uxPriority); \
+		xTraceTaskRegisterWithoutHandle((void*)pxNewTCB, (const char*)pcName, (uint32_t)uxPriority); \
 	}
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
+
+#endif
 
 /* Called in vTaskCreate, if it fails (typically if the stack can not be allocated) */
 #undef traceTASK_CREATE_FAILED
 #define traceTASK_CREATE_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent0(PSF_EVENT_TASK_CREATE_FAILED);
+	prvTraceStoreEvent_None(PSF_EVENT_TASK_CREATE_FAILED)
 
 /* Called on vTaskDelete */
 #undef traceTASK_DELETE				// We don't allow for filtering out "delete" events. They are important and not very frequent. Moreover, we can't exclude create events, so this should be symmetrical.
 #define traceTASK_DELETE( pxTaskToDelete ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToDelete) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_DELETE, (uint32_t)pxTaskToDelete, (pxTaskToDelete != NULL) ? (pxTaskToDelete->uxPriority) : 0); \
-	prvTraceDeleteSymbol(pxTaskToDelete); \
-	prvTraceDeleteObjectData(pxTaskToDelete); \
-	prvRemoveTaskFromStackMonitor(pxTaskToDelete);
+	xTraceTaskUnregisterWithoutHandle(pxTaskToDelete, (pxTaskToDelete)->uxPriority)
 
 #if (TRC_CFG_SCHEDULING_ONLY == 0)
 
@@ -1889,802 +2208,685 @@ extern volatile uint32_t uiTraceSystemState;
 
 #undef traceLOW_POWER_IDLE_BEGIN
 #define traceLOW_POWER_IDLE_BEGIN() \
-	{ \
-		prvTraceStoreEvent1(PSF_EVENT_LOWPOWER_BEGIN, xExpectedIdleTime); \
-	}
+	prvTraceStoreEvent_Param(PSF_EVENT_LOWPOWER_BEGIN, xExpectedIdleTime)
 
 #undef traceLOW_POWER_IDLE_END
 #define traceLOW_POWER_IDLE_END() \
-	{ \
-		prvTraceStoreEvent0(PSF_EVENT_LOWPOWER_END); \
-	}
+	prvTraceStoreEvent_None(PSF_EVENT_LOWPOWER_END)
 
-#endif /* (defined(configUSE_TICKLESS_IDLE) && configUSE_TICKLESS_IDLE != 0) */
+#endif
 
 /* Called on vTaskSuspend */
 #undef traceTASK_SUSPEND
 #define traceTASK_SUSPEND( pxTaskToSuspend ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToSuspend) & CurrentFilterMask) \
-			prvTraceStoreEvent1(PSF_EVENT_TASK_SUSPEND, (uint32_t)pxTaskToSuspend);
+	prvTraceStoreEvent_Handle(PSF_EVENT_TASK_SUSPEND, pxTaskToSuspend)
 
 /* Called on vTaskDelay - note the use of FreeRTOS variable xTicksToDelay */
 #undef traceTASK_DELAY
 #define traceTASK_DELAY() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_DELAY, xTicksToDelay);
+	prvTraceStoreEvent_Param(PSF_EVENT_TASK_DELAY, xTicksToDelay)
 
 /* Called on vTaskDelayUntil - note the use of FreeRTOS variable xTimeToWake */
 #undef traceTASK_DELAY_UNTIL
 #if TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0
+
 #define traceTASK_DELAY_UNTIL(xTimeToWake) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_DELAY_UNTIL, (uint32_t)xTimeToWake);
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
+	prvTraceStoreEvent_Param(PSF_EVENT_TASK_DELAY_UNTIL, (xTimeToWake))
+
+#else
+
 #define traceTASK_DELAY_UNTIL() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_DELAY_UNTIL, (uint32_t)xTimeToWake);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
+	prvTraceStoreEvent_Param(PSF_EVENT_TASK_DELAY_UNTIL, xTimeToWake)
+
+#endif
 
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
+
 #define traceQUEUE_CREATE_HELPER() \
 		case queueQUEUE_TYPE_MUTEX: \
-			prvTraceStoreEvent1(PSF_EVENT_MUTEX_CREATE, (uint32_t)pxNewQueue); \
+			xTraceObjectRegisterWithoutHandle(PSF_EVENT_MUTEX_CREATE, (void*)pxNewQueue, "", 0); \
 			break; \
 		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-			prvTraceStoreEvent1(PSF_EVENT_MUTEX_RECURSIVE_CREATE, (uint32_t)pxNewQueue); \
+			xTraceObjectRegisterWithoutHandle(PSF_EVENT_MUTEX_RECURSIVE_CREATE, (void*)pxNewQueue, "", 0); \
 			break;
+
 #else
+
 #define traceQUEUE_CREATE_HELPER()
-#endif /* (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0) */
+
+#endif
 
 /* Called in xQueueCreate, and thereby for all other object based on queues, such as semaphores. */
 #undef traceQUEUE_CREATE
 #define traceQUEUE_CREATE( pxNewQueue )\
-	TRACE_SET_OBJECT_FILTER(QUEUE, pxNewQueue, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	switch ((pxNewQueue)->ucQueueType) \
 	{ \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxNewQueue) & CurrentFilterMask) \
-		{ \
-			switch (pxNewQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent2(PSF_EVENT_QUEUE_CREATE, (uint32_t)pxNewQueue, uxQueueLength); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-					prvTraceStoreEvent1(PSF_EVENT_SEMAPHORE_BINARY_CREATE, (uint32_t)pxNewQueue); \
-					break; \
-				traceQUEUE_CREATE_HELPER() \
-			} \
-		} \
+		case queueQUEUE_TYPE_BASE: \
+			xTraceObjectRegisterWithoutHandle(PSF_EVENT_QUEUE_CREATE, (void*)(pxNewQueue), "", (uint32_t)uxQueueLength); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+			xTraceObjectRegisterWithoutHandle(PSF_EVENT_SEMAPHORE_BINARY_CREATE, (void*)(pxNewQueue), "", 0); \
+			break; \
+		traceQUEUE_CREATE_HELPER() \
 	}
 
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
+
 #define traceQUEUE_CREATE_FAILED_HELPER() \
 		case queueQUEUE_TYPE_MUTEX: \
-			prvTraceStoreEvent1(PSF_EVENT_MUTEX_CREATE_FAILED, 0); \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_MUTEX_CREATE_FAILED, 0, 0); \
 			break; \
 		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-			prvTraceStoreEvent1(PSF_EVENT_MUTEX_RECURSIVE_CREATE_FAILED, 0); \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_MUTEX_RECURSIVE_CREATE_FAILED, 0, 0); \
 			break;
+
 #else
+
 #define traceQUEUE_CREATE_FAILED_HELPER()
-#endif /* (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0) */
+
+#endif
 
 /* Called in xQueueCreate, if the queue creation fails */
 #undef traceQUEUE_CREATE_FAILED
 #define traceQUEUE_CREATE_FAILED( queueType ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	switch (queueType) \
 	{ \
-		switch (queueType) \
-		{ \
-			case queueQUEUE_TYPE_BASE: \
-				prvTraceStoreEvent2(PSF_EVENT_QUEUE_CREATE_FAILED, 0, uxQueueLength); \
-				break; \
-			case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				prvTraceStoreEvent1(PSF_EVENT_SEMAPHORE_BINARY_CREATE_FAILED, 0); \
-				break; \
-			traceQUEUE_CREATE_FAILED_HELPER() \
-		} \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_QUEUE_CREATE_FAILED, 0, uxQueueLength); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_BINARY_CREATE_FAILED, 0, 0); \
+			break; \
+		traceQUEUE_CREATE_FAILED_HELPER() \
 	}
 
 #undef traceQUEUE_DELETE			// We don't allow for filtering out "delete" events. They are important and not very frequent. Moreover, we can't exclude create events, so this should be symmetrical.
 #define traceQUEUE_DELETE( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	switch ((pxQueue)->ucQueueType) \
 	{ \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-		{ \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent2(PSF_EVENT_QUEUE_DELETE, (uint32_t)pxQueue, (pxQueue != NULL) ? (pxQueue->uxMessagesWaiting) : 0); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent2(PSF_EVENT_MUTEX_DELETE, (uint32_t)pxQueue, (pxQueue != NULL) ? (pxQueue->uxMessagesWaiting) : 0); \
-					break; \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-					prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_DELETE, (uint32_t)pxQueue, (pxQueue != NULL) ? (pxQueue->uxMessagesWaiting) : 0); \
-					break; \
-			} \
-		} \
-	} \
-	prvTraceDeleteSymbol(pxQueue);
+		case queueQUEUE_TYPE_BASE: \
+			xTraceObjectUnregisterWithoutHandle(PSF_EVENT_QUEUE_DELETE, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			xTraceObjectUnregisterWithoutHandle(PSF_EVENT_MUTEX_DELETE, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+			xTraceObjectUnregisterWithoutHandle(PSF_EVENT_SEMAPHORE_DELETE, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+	}
 
 /* Called in xQueueCreateCountingSemaphore, if the queue creation fails */
 #undef traceCREATE_COUNTING_SEMAPHORE
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X)
+
 #define traceCREATE_COUNTING_SEMAPHORE() \
-	TRACE_SET_OBJECT_FILTER(QUEUE, xHandle, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, xHandle) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)xHandle, uxMaxCount)
+	xTraceObjectRegisterWithoutHandle(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (void*)xHandle, "", (uint32_t)uxMaxCount)
+
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_5_X)
+
 #define traceCREATE_COUNTING_SEMAPHORE() \
-	TRACE_SET_OBJECT_FILTER(QUEUE, xHandle, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, xHandle) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)xHandle, uxInitialCount);
+	xTraceObjectRegisterWithoutHandle(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (void*)xHandle, "", uxInitialCount)
+
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_4_X)
+
 #define traceCREATE_COUNTING_SEMAPHORE() \
-	TRACE_SET_OBJECT_FILTER(QUEUE, xHandle, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, xHandle) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)xHandle, uxCountValue);
+	xTraceObjectRegisterWithoutHandle(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (void*)xHandle, "", uxCountValue)
+
 #else
+
 #define traceCREATE_COUNTING_SEMAPHORE() \
-	TRACE_SET_OBJECT_FILTER(QUEUE, pxHandle, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxHandle) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)pxHandle, uxCountValue);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X */
+	xTraceObjectRegisterWithoutHandle(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (void*)pxHandle, "", uxCountValue)
+
+#endif
 
 #undef traceCREATE_COUNTING_SEMAPHORE_FAILED
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X)
+
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxMaxCount);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxMaxCount)
+
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_5_X)
+
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxInitialCount);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxInitialCount)
+
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_4_X)
+
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxCountValue);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxCountValue)
+
 #else
+
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxCountValue);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X */
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxCountValue)
+
+#endif
 
 
 /* This macro is not necessary as of FreeRTOS v9.0.0 */
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0)
+
 /* Called in xQueueCreateMutex, and thereby also from xSemaphoreCreateMutex and xSemaphoreCreateRecursiveMutex */
 #undef traceCREATE_MUTEX
 #define traceCREATE_MUTEX( pxNewQueue ) \
-	TRACE_SET_OBJECT_FILTER(QUEUE, pxNewQueue, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	switch (pxNewQueue->ucQueueType) \
 	{ \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxNewQueue) & CurrentFilterMask) \
-		{ \
-			switch (pxNewQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_MUTEX: \
-					prvTraceStoreEvent1(PSF_EVENT_MUTEX_CREATE, (uint32_t)pxNewQueue); \
-					break; \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent1(PSF_EVENT_MUTEX_RECURSIVE_CREATE, (uint32_t)pxNewQueue); \
-					break; \
-			} \
-		}\
+		case queueQUEUE_TYPE_MUTEX: \
+			xTraceObjectRegisterWithoutHandle(PSF_EVENT_MUTEX_CREATE, (void*)(pxNewQueue), "", 0); \
+			break; \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			xTraceObjectRegisterWithoutHandle(PSF_EVENT_MUTEX_RECURSIVE_CREATE, (void*)(pxNewQueue), "", 0); \
+			break; \
 	}
 
 /* Called in xQueueCreateMutex when the operation fails (when memory allocation fails) */
 #undef traceCREATE_MUTEX_FAILED
 #define traceCREATE_MUTEX_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_MUTEX_CREATE_FAILED, 0);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_MUTEX_CREATE_FAILED, 0, 0)
 #endif /* (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0) */
+
+/* Called when the Mutex can not be given, since not holder */
+#undef traceGIVE_MUTEX_RECURSIVE_FAILED
+#define traceGIVE_MUTEX_RECURSIVE_FAILED( pxMutex ) \
+	prvTraceStoreEvent_Handle(PSF_EVENT_MUTEX_GIVE_RECURSIVE_FAILED, (void*)(pxMutex))
 
 /* Called when a message is sent to a queue */	/* CS IS NEW ! */
 #undef traceQUEUE_SEND
 #define traceQUEUE_SEND( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent2(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND : PSF_EVENT_QUEUE_SEND_FRONT, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting + 1); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_GIVE, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting + 1); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent1(PSF_EVENT_MUTEX_GIVE, (uint32_t)pxQueue); \
-					break; \
-			}
-			
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND : PSF_EVENT_QUEUE_SEND_FRONT, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting + 1); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_GIVE, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting + 1); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+			prvTraceStoreEvent_Handle(PSF_EVENT_MUTEX_GIVE, (void*)(pxQueue)); \
+			break; \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_Handle(PSF_EVENT_MUTEX_GIVE_RECURSIVE, (void*)(pxQueue)); \
+			break; \
+	}
+
 #undef traceQUEUE_SET_SEND
 #define traceQUEUE_SET_SEND( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_QUEUE_SEND, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting + 1);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_QUEUE_SEND, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting + 1)
 
 /* Called when a message failed to be sent to a queue (timeout) */
 #undef traceQUEUE_SEND_FAILED
 #define traceQUEUE_SEND_FAILED( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent2(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_FAILED : PSF_EVENT_QUEUE_SEND_FRONT_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_GIVE_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent1(PSF_EVENT_MUTEX_GIVE_FAILED, (uint32_t)pxQueue); \
-					break; \
-			}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_FAILED : PSF_EVENT_QUEUE_SEND_FRONT_FAILED, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_GIVE_FAILED, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_Handle(PSF_EVENT_MUTEX_GIVE_FAILED, (void*)(pxQueue)); \
+			break; \
+	}
 
 /* Called when the task is blocked due to a send operation on a full queue */
 #undef traceBLOCKING_ON_QUEUE_SEND
 #define traceBLOCKING_ON_QUEUE_SEND( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent2(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_BLOCK : PSF_EVENT_QUEUE_SEND_FRONT_BLOCK, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_GIVE_BLOCK, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent1(PSF_EVENT_MUTEX_GIVE_BLOCK, (uint32_t)pxQueue); \
-					break; \
-			}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_BLOCK : PSF_EVENT_QUEUE_SEND_FRONT_BLOCK, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_GIVE_BLOCK, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_Handle(PSF_EVENT_MUTEX_GIVE_BLOCK, (void*)(pxQueue)); \
+			break; \
+	}
 
 /* Called when a message is sent from interrupt context, e.g., using xQueueSendFromISR */
 #undef traceQUEUE_SEND_FROM_ISR
 #define traceQUEUE_SEND_FROM_ISR( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-		switch (pxQueue->ucQueueType) \
-		{ \
-			case queueQUEUE_TYPE_BASE: \
-				prvTraceStoreEvent2(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_FROMISR : PSF_EVENT_QUEUE_SEND_FRONT_FROMISR, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting + 1); \
-				break; \
-			case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-			case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-				prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_GIVE_FROMISR, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting + 1); \
-				break; \
-		}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_FROMISR : PSF_EVENT_QUEUE_SEND_FRONT_FROMISR, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting + 1); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_GIVE_FROMISR, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting + 1); \
+			break; \
+	}
 
 /* Called when a message send from interrupt context fails (since the queue was full) */
 #undef traceQUEUE_SEND_FROM_ISR_FAILED
 #define traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-		switch (pxQueue->ucQueueType) \
-		{ \
-			case queueQUEUE_TYPE_BASE: \
-				prvTraceStoreEvent2(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_FROMISR_FAILED : PSF_EVENT_QUEUE_SEND_FRONT_FROMISR_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-				break; \
-			case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-			case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-				prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_GIVE_FROMISR_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-				break; \
-		}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(xCopyPosition == queueSEND_TO_BACK ? PSF_EVENT_QUEUE_SEND_FROMISR_FAILED : PSF_EVENT_QUEUE_SEND_FRONT_FROMISR_FAILED, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_GIVE_FROMISR_FAILED, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+	}
 
 /* Called when a message is received from a queue */
 #undef traceQUEUE_RECEIVE
 #define traceQUEUE_RECEIVE( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			if (isQueueReceiveHookActuallyPeek) \
 			{ \
-				case queueQUEUE_TYPE_BASE: \
-					if (isQueueReceiveHookActuallyPeek) \
-						prvTraceStoreEvent3(PSF_EVENT_QUEUE_PEEK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting - 1); \
-					else\
-						prvTraceStoreEvent3(PSF_EVENT_QUEUE_RECEIVE, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting - 1); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					if (isQueueReceiveHookActuallyPeek) \
-						prvTraceStoreEvent3(PSF_EVENT_SEMAPHORE_PEEK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting - 1); \
-					else \
-						prvTraceStoreEvent3(PSF_EVENT_SEMAPHORE_TAKE, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting - 1); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					if (isQueueReceiveHookActuallyPeek) \
-						prvTraceStoreEvent2(PSF_EVENT_MUTEX_PEEK, (uint32_t)pxQueue, xTicksToWait); \
-					else \
-						prvTraceStoreEvent2(PSF_EVENT_MUTEX_TAKE, (uint32_t)pxQueue, xTicksToWait); \
-					break; \
-			}
+				prvTraceStoreEvent_HandleParamParam(PSF_EVENT_QUEUE_PEEK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting - 1); \
+			} \
+			else\
+			{ \
+				prvTraceStoreEvent_HandleParamParam(PSF_EVENT_QUEUE_RECEIVE, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting - 1); \
+			} \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			if (isQueueReceiveHookActuallyPeek) \
+			{ \
+				prvTraceStoreEvent_HandleParamParam(PSF_EVENT_SEMAPHORE_PEEK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting - 1); \
+			} \
+			else \
+			{ \
+				prvTraceStoreEvent_HandleParamParam(PSF_EVENT_SEMAPHORE_TAKE, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting - 1); \
+			} \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK : PSF_EVENT_MUTEX_TAKE, (void*)(pxQueue), xTicksToWait); \
+			break; \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK : PSF_EVENT_MUTEX_TAKE_RECURSIVE, (void*)(pxQueue), xTicksToWait); \
+			break; \
+	}
 
 /* Called when a receive operation on a queue fails (timeout) */
 #undef traceQUEUE_RECEIVE_FAILED
 #define traceQUEUE_RECEIVE_FAILED( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent3(isQueueReceiveHookActuallyPeek ? PSF_EVENT_QUEUE_PEEK_FAILED : PSF_EVENT_QUEUE_RECEIVE_FAILED, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent3(isQueueReceiveHookActuallyPeek ? PSF_EVENT_SEMAPHORE_PEEK_FAILED : PSF_EVENT_SEMAPHORE_TAKE_FAILED, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent2(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_FAILED : PSF_EVENT_MUTEX_TAKE_FAILED, (uint32_t)pxQueue, xTicksToWait); \
-					break; \
-			}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParamParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_QUEUE_PEEK_FAILED : PSF_EVENT_QUEUE_RECEIVE_FAILED, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParamParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_SEMAPHORE_PEEK_FAILED : PSF_EVENT_SEMAPHORE_TAKE_FAILED, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_FAILED : PSF_EVENT_MUTEX_TAKE_FAILED, (void*)(pxQueue), xTicksToWait); \
+			break; \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_FAILED : PSF_EVENT_MUTEX_TAKE_RECURSIVE_FAILED, (void*)(pxQueue), xTicksToWait); \
+			break; \
+	}
 
 /* Called when the task is blocked due to a receive operation on an empty queue */
 #undef traceBLOCKING_ON_QUEUE_RECEIVE
 #define traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent3(isQueueReceiveHookActuallyPeek ? PSF_EVENT_QUEUE_PEEK_BLOCK : PSF_EVENT_QUEUE_RECEIVE_BLOCK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent3(isQueueReceiveHookActuallyPeek ? PSF_EVENT_SEMAPHORE_PEEK_BLOCK : PSF_EVENT_SEMAPHORE_TAKE_BLOCK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent2(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_BLOCK : PSF_EVENT_MUTEX_TAKE_BLOCK, (uint32_t)pxQueue, xTicksToWait); \
-					break; \
-			}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParamParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_QUEUE_PEEK_BLOCK : PSF_EVENT_QUEUE_RECEIVE_BLOCK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParamParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_SEMAPHORE_PEEK_BLOCK : PSF_EVENT_SEMAPHORE_TAKE_BLOCK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_BLOCK : PSF_EVENT_MUTEX_TAKE_BLOCK, (void*)(pxQueue), xTicksToWait); \
+			break; \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_BLOCK : PSF_EVENT_MUTEX_TAKE_RECURSIVE_BLOCK, (void*)(pxQueue), xTicksToWait); \
+			break; \
+	}
 
 #if (TRC_CFG_FREERTOS_VERSION > TRC_FREERTOS_VERSION_9_0_1)
+
 /* Called when a peek operation on a queue fails (timeout) */
 #undef traceQUEUE_PEEK_FAILED
 #define traceQUEUE_PEEK_FAILED( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent3(PSF_EVENT_QUEUE_PEEK_FAILED, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent3(PSF_EVENT_SEMAPHORE_PEEK_FAILED, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent2(PSF_EVENT_MUTEX_PEEK_FAILED, (uint32_t)pxQueue, xTicksToWait); \
-					break; \
-			}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParamParam(PSF_EVENT_QUEUE_PEEK_FAILED, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParamParam(PSF_EVENT_SEMAPHORE_PEEK_FAILED, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_MUTEX_PEEK_FAILED, (void*)(pxQueue), xTicksToWait); \
+			break; \
+	}
 
 /* Called when the task is blocked due to a peek operation on an empty queue */
 #undef traceBLOCKING_ON_QUEUE_PEEK
 #define traceBLOCKING_ON_QUEUE_PEEK( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent3(PSF_EVENT_QUEUE_PEEK_BLOCK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent3(PSF_EVENT_SEMAPHORE_PEEK_BLOCK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent2(PSF_EVENT_MUTEX_PEEK_BLOCK, (uint32_t)pxQueue, xTicksToWait); \
-					break; \
-			}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParamParam(PSF_EVENT_QUEUE_PEEK_BLOCK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParamParam(PSF_EVENT_SEMAPHORE_PEEK_BLOCK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_MUTEX_PEEK_BLOCK, (void*)(pxQueue), xTicksToWait); \
+			break; \
+	}
 
-#endif /* (TRC_CFG_FREERTOS_VERSION > TRC_FREERTOS_VERSION_9_0_1) */
+#endif
 
 /* Called when a message is received in interrupt context, e.g., using xQueueReceiveFromISR */
 #undef traceQUEUE_RECEIVE_FROM_ISR
 #define traceQUEUE_RECEIVE_FROM_ISR( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-		switch (pxQueue->ucQueueType) \
-		{ \
-			case queueQUEUE_TYPE_BASE: \
-				prvTraceStoreEvent2(PSF_EVENT_QUEUE_RECEIVE_FROMISR, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting - 1); \
-				break; \
-			case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-			case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-				prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_TAKE_FROMISR, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting - 1); \
-				break; \
-		}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_QUEUE_RECEIVE_FROMISR, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting - 1); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_TAKE_FROMISR, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting - 1); \
+			break; \
+	}
 
 /* Called when a message receive from interrupt context fails (since the queue was empty) */
 #undef traceQUEUE_RECEIVE_FROM_ISR_FAILED
 #define traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-		switch (pxQueue->ucQueueType) \
-		{ \
-			case queueQUEUE_TYPE_BASE: \
-				prvTraceStoreEvent2(PSF_EVENT_QUEUE_RECEIVE_FROMISR_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-				break; \
-			case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-			case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-				prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_TAKE_FROMISR_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
-				break; \
-		}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_QUEUE_RECEIVE_FROMISR_FAILED, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_SEMAPHORE_TAKE_FROMISR_FAILED, (void*)(pxQueue), (pxQueue)->uxMessagesWaiting); \
+			break; \
+	}
 
 /* Called on xQueuePeek */
 #undef traceQUEUE_PEEK
 #define traceQUEUE_PEEK( pxQueue ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
-			switch (pxQueue->ucQueueType) \
-			{ \
-				case queueQUEUE_TYPE_BASE: \
-					prvTraceStoreEvent3(PSF_EVENT_QUEUE_PEEK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
-				case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
-					prvTraceStoreEvent3(PSF_EVENT_SEMAPHORE_PEEK, (uint32_t)pxQueue, xTicksToWait, pxQueue->uxMessagesWaiting); \
-					break; \
-				case queueQUEUE_TYPE_MUTEX: \
-				case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
-					prvTraceStoreEvent1(PSF_EVENT_MUTEX_PEEK, (uint32_t)pxQueue); \
-					break; \
-			}
+	switch ((pxQueue)->ucQueueType) \
+	{ \
+		case queueQUEUE_TYPE_BASE: \
+			prvTraceStoreEvent_HandleParamParam(PSF_EVENT_QUEUE_PEEK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_BINARY_SEMAPHORE: \
+		case queueQUEUE_TYPE_COUNTING_SEMAPHORE: \
+			prvTraceStoreEvent_HandleParamParam(PSF_EVENT_SEMAPHORE_PEEK, (void*)(pxQueue), xTicksToWait, (pxQueue)->uxMessagesWaiting); \
+			break; \
+		case queueQUEUE_TYPE_MUTEX: \
+		case queueQUEUE_TYPE_RECURSIVE_MUTEX: \
+			prvTraceStoreEvent_HandleParam(PSF_EVENT_MUTEX_PEEK, (void*)(pxQueue), xTicksToWait); \
+			break; \
+	}
 
 /* Called in vTaskPrioritySet */
 #undef traceTASK_PRIORITY_SET
 #define traceTASK_PRIORITY_SET( pxTask, uxNewPriority ) \
-	prvTraceSaveObjectData(pxTask, uxNewPriority); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, pxTask) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_PRIORITY, (uint32_t)pxTask, uxNewPriority);
+	xTraceTaskSetPriorityWithoutHandle(pxTask, uxNewPriority)
 	
 /* Called in vTaskPriorityInherit, which is called by Mutex operations */
 #undef traceTASK_PRIORITY_INHERIT
 #define traceTASK_PRIORITY_INHERIT( pxTask, uxNewPriority ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, pxTask) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_PRIO_INHERIT, (uint32_t)pxTask, uxNewPriority);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_TASK_PRIO_INHERIT, (void*)(pxTask), uxNewPriority)
 
 /* Called in vTaskPriorityDisinherit, which is called by Mutex operations */
 #undef traceTASK_PRIORITY_DISINHERIT
 #define traceTASK_PRIORITY_DISINHERIT( pxTask, uxNewPriority ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, pxTask) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_PRIO_DISINHERIT, (uint32_t)pxTask, uxNewPriority);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_TASK_PRIO_DISINHERIT, (void*)(pxTask), uxNewPriority)
 
 /* Called in vTaskResume */
 #undef traceTASK_RESUME
 #define traceTASK_RESUME( pxTaskToResume ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToResume) & CurrentFilterMask) \
-			prvTraceStoreEvent1(PSF_EVENT_TASK_RESUME, (uint32_t)pxTaskToResume);
+	prvTraceStoreEvent_Handle(PSF_EVENT_TASK_RESUME, (void*)(pxTaskToResume))
 
 /* Called in vTaskResumeFromISR */
 #undef traceTASK_RESUME_FROM_ISR
 #define traceTASK_RESUME_FROM_ISR( pxTaskToResume ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToResume) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_RESUME_FROMISR, (uint32_t)pxTaskToResume);
+	prvTraceStoreEvent_Handle(PSF_EVENT_TASK_RESUME_FROMISR, (void*)(pxTaskToResume))
 
 #if (TRC_CFG_INCLUDE_MEMMANG_EVENTS == 1)
 
-extern uint32_t trcHeapCounter;
-
 #undef traceMALLOC
 #define traceMALLOC( pvAddress, uiSize ) \
-	if (pvAddress != 0) \
+	if (xTraceIsRecorderEnabled()) \
 	{ \
-		trcHeapCounter += uiSize; \
-	} \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-	{ \
-		if (pvAddress != 0) \
-		{ \
-			prvTraceStoreEvent2(PSF_EVENT_MALLOC, (uint32_t)pvAddress, uiSize); \
-		} \
-		else \
-		{ \
-			prvTraceStoreEvent2(PSF_EVENT_MALLOC_FAILED, (uint32_t)pvAddress, uiSize); \
-		} \
+		xTraceHeapAlloc(xTraceKernelPortGetSystemHeapHandle(), pvAddress, uiSize); \
 	}
 
 #undef traceFREE
 #define traceFREE( pvAddress, uiSize ) \
-	trcHeapCounter -= uiSize; \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_FREE, (uint32_t)pvAddress, (uint32_t)(0 - uiSize)); /* "0 -" instead of just "-" to get rid of a warning... */
+	if (xTraceIsRecorderEnabled()) \
+	{ \
+		xTraceHeapFree(xTraceKernelPortGetSystemHeapHandle(), pvAddress, uiSize); \
+	}
 
-#endif /* (TRC_CFG_INCLUDE_MEMMANG_EVENTS == 1) */
+#endif
 
 #if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1)
 
 /* Called in timer.c - xTimerCreate */
 #undef traceTIMER_CREATE
 #define traceTIMER_CREATE(tmr) \
-	TRACE_SET_OBJECT_FILTER(TIMER, tmr, CurrentFilterGroup); \
-	prvTraceSaveObjectSymbol(tmr, (const char*)tmr->pcTimerName); \
-	prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, (const char*)tmr->pcTimerName, tmr); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TIMER, tmr) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_TIMER_CREATE, (uint32_t)tmr, tmr->xTimerPeriodInTicks);
+	xTraceObjectRegisterWithoutHandle(PSF_EVENT_TIMER_CREATE, (void*)(tmr), (const char*)(tmr)->pcTimerName, (uint32_t)(tmr)->xTimerPeriodInTicks)
 
 #undef traceTIMER_CREATE_FAILED
 #define traceTIMER_CREATE_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent0(PSF_EVENT_TIMER_CREATE_FAILED);
+	prvTraceStoreEvent_None(PSF_EVENT_TIMER_CREATE_FAILED);
 
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X)
+
 #define traceTIMER_COMMAND_SEND_8_0_CASES(tmr) \
-				case tmrCOMMAND_RESET: \
-					prvTraceStoreEvent2((xReturn == pdPASS) ? PSF_EVENT_TIMER_RESET : PSF_EVENT_TIMER_RESET_FAILED, (uint32_t)tmr, xOptionalValue); \
-					break; \
-				case tmrCOMMAND_START_FROM_ISR: \
-					prvTraceStoreEvent2((xReturn == pdPASS) ? PSF_EVENT_TIMER_START_FROMISR : PSF_EVENT_TIMER_START_FROMISR_FAILED, (uint32_t)tmr, xOptionalValue); \
-					break; \
-				case tmrCOMMAND_RESET_FROM_ISR: \
-					prvTraceStoreEvent2((xReturn == pdPASS) ? PSF_EVENT_TIMER_RESET_FROMISR : PSF_EVENT_TIMER_RESET_FROMISR_FAILED, (uint32_t)tmr, xOptionalValue); \
-					break; \
-				case tmrCOMMAND_STOP_FROM_ISR: \
-					prvTraceStoreEvent2((xReturn == pdPASS) ? PSF_EVENT_TIMER_STOP_FROMISR : PSF_EVENT_TIMER_STOP_FROMISR_FAILED, (uint32_t)tmr, xOptionalValue); \
-					break; \
-				case tmrCOMMAND_CHANGE_PERIOD_FROM_ISR: \
-					prvTraceStoreEvent2((xReturn == pdPASS) ? PSF_EVENT_TIMER_CHANGEPERIOD_FROMISR : PSF_EVENT_TIMER_CHANGEPERIOD_FROMISR_FAILED, (uint32_t)tmr, xOptionalValue); \
-					break;
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X */
-#define traceTIMER_COMMAND_SEND_8_0_CASES(tmr) 
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X_X */
+		case tmrCOMMAND_RESET: \
+			prvTraceStoreEvent_HandleParam((xReturn == pdPASS) ? PSF_EVENT_TIMER_RESET : PSF_EVENT_TIMER_RESET_FAILED, (void*)(tmr), xOptionalValue); \
+			break; \
+		case tmrCOMMAND_START_FROM_ISR: \
+			prvTraceStoreEvent_HandleParam((xReturn == pdPASS) ? PSF_EVENT_TIMER_START_FROMISR : PSF_EVENT_TIMER_START_FROMISR_FAILED, (void*)(tmr), xOptionalValue); \
+			break; \
+		case tmrCOMMAND_RESET_FROM_ISR: \
+			prvTraceStoreEvent_HandleParam((xReturn == pdPASS) ? PSF_EVENT_TIMER_RESET_FROMISR : PSF_EVENT_TIMER_RESET_FROMISR_FAILED, (void*)(tmr), xOptionalValue); \
+			break; \
+		case tmrCOMMAND_STOP_FROM_ISR: \
+			prvTraceStoreEvent_HandleParam((xReturn == pdPASS) ? PSF_EVENT_TIMER_STOP_FROMISR : PSF_EVENT_TIMER_STOP_FROMISR_FAILED, (void*)(tmr), xOptionalValue); \
+			break; \
+		case tmrCOMMAND_CHANGE_PERIOD_FROM_ISR: \
+			prvTraceStoreEvent_HandleParam((xReturn == pdPASS) ? PSF_EVENT_TIMER_CHANGEPERIOD_FROMISR : PSF_EVENT_TIMER_CHANGEPERIOD_FROMISR_FAILED, (void*)(tmr), xOptionalValue); \
+			break;
+#else
+
+#define traceTIMER_COMMAND_SEND_8_0_CASES(tmr)
+
+#endif
 
 /* Note that xCommandID can never be tmrCOMMAND_EXECUTE_CALLBACK (-1) since the trace macro is not called in that case */
 #undef traceTIMER_COMMAND_SEND
 #define traceTIMER_COMMAND_SEND(tmr, xCommandID, xOptionalValue, xReturn) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TIMER, tmr) & CurrentFilterMask) \
-			switch(xCommandID) \
-			{ \
-				case tmrCOMMAND_START: \
-					prvTraceStoreEvent1((xReturn == pdPASS) ? PSF_EVENT_TIMER_START : PSF_EVENT_TIMER_START_FAILED, (uint32_t)tmr); \
-					break; \
-				case tmrCOMMAND_STOP: \
-					prvTraceStoreEvent1((xReturn == pdPASS) ? PSF_EVENT_TIMER_STOP : PSF_EVENT_TIMER_STOP_FAILED, (uint32_t)tmr); \
-					break; \
-				case tmrCOMMAND_CHANGE_PERIOD: \
-					prvTraceStoreEvent2((xReturn == pdPASS) ? PSF_EVENT_TIMER_CHANGEPERIOD : PSF_EVENT_TIMER_CHANGEPERIOD_FAILED, (uint32_t)tmr, xOptionalValue); \
-					break; \
-				case tmrCOMMAND_DELETE: \
-					prvTraceStoreEvent1((xReturn == pdPASS) ? PSF_EVENT_TIMER_DELETE : PSF_EVENT_TIMER_DELETE_FAILED, (uint32_t)tmr); \
-					break; \
-				traceTIMER_COMMAND_SEND_8_0_CASES(tmr) \
-			}
+	switch(xCommandID) \
+	{ \
+		case tmrCOMMAND_START: \
+			prvTraceStoreEvent_Handle(((xReturn) == pdPASS) ? PSF_EVENT_TIMER_START : PSF_EVENT_TIMER_START_FAILED, (void*)(tmr)); \
+			break; \
+		case tmrCOMMAND_STOP: \
+			prvTraceStoreEvent_Handle(((xReturn) == pdPASS) ? PSF_EVENT_TIMER_STOP : PSF_EVENT_TIMER_STOP_FAILED, (void*)(tmr)); \
+			break; \
+		case tmrCOMMAND_CHANGE_PERIOD: \
+			prvTraceStoreEvent_HandleParam(((xReturn) == pdPASS) ? PSF_EVENT_TIMER_CHANGEPERIOD : PSF_EVENT_TIMER_CHANGEPERIOD_FAILED, (void*)(tmr), xOptionalValue); \
+			break; \
+		case tmrCOMMAND_DELETE: \
+			xTraceObjectUnregisterWithoutHandle(((xReturn) == pdPASS) ? PSF_EVENT_TIMER_DELETE : PSF_EVENT_TIMER_DELETE_FAILED, (void*)(tmr), 0); \
+			break; \
+		traceTIMER_COMMAND_SEND_8_0_CASES(tmr) \
+	}
 
 #undef traceTIMER_EXPIRED
 #define traceTIMER_EXPIRED(tmr) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TIMER, tmr) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_TIMER_EXPIRED, (uint32_t)tmr->pxCallbackFunction, (uint32_t)tmr->pvTimerID);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_TIMER_EXPIRED, (void*)(tmr), (uint32_t)((tmr)->pxCallbackFunction))
 
-#endif /* #if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1) */
+#endif
 
 
 #if (TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS == 1)
 
 #undef tracePEND_FUNC_CALL
 #define tracePEND_FUNC_CALL(func, arg1, arg2, ret) \
-	prvTraceStoreEvent1((ret == pdPASS) ? PSF_EVENT_TIMER_PENDFUNCCALL : PSF_EVENT_TIMER_PENDFUNCCALL_FAILED, (uint32_t)func);
+	prvTraceStoreEvent_Param(((ret) == pdPASS) ? PSF_EVENT_TIMER_PENDFUNCCALL : PSF_EVENT_TIMER_PENDFUNCCALL_FAILED, (uint32_t)(func))
 
 #undef tracePEND_FUNC_CALL_FROM_ISR
 #define tracePEND_FUNC_CALL_FROM_ISR(func, arg1, arg2, ret) \
-	prvTraceStoreEvent1((ret == pdPASS) ? PSF_EVENT_TIMER_PENDFUNCCALL_FROMISR : PSF_EVENT_TIMER_PENDFUNCCALL_FROMISR_FAILED, (uint32_t)func);
+	prvTraceStoreEvent_Param(((ret) == pdPASS) ? PSF_EVENT_TIMER_PENDFUNCCALL_FROMISR : PSF_EVENT_TIMER_PENDFUNCCALL_FROMISR_FAILED, (uint32_t)(func))
 
-#endif /* (TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS == 1) */
+#endif
 
 #if (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1)
 
 #undef traceEVENT_GROUP_CREATE
-#define traceEVENT_GROUP_CREATE(eg) \
-	TRACE_SET_OBJECT_FILTER(EVENTGROUP, eg, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent1(PSF_EVENT_EVENTGROUP_CREATE, (uint32_t)eg);
+#define traceEVENT_GROUP_CREATE(eg)  \
+	xTraceObjectRegisterWithoutHandle(PSF_EVENT_EVENTGROUP_CREATE, (void*)(eg), 0, (uint32_t)(eg)->uxEventBits)
 
 #undef traceEVENT_GROUP_DELETE
 #define traceEVENT_GROUP_DELETE(eg) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent1(PSF_EVENT_EVENTGROUP_DELETE, (uint32_t)eg); \
-	prvTraceDeleteSymbol(eg);
+	xTraceObjectUnregisterWithoutHandle(PSF_EVENT_EVENTGROUP_DELETE, (void*)(eg), (uint32_t)(eg)->uxEventBits)
 
 #undef traceEVENT_GROUP_CREATE_FAILED
 #define traceEVENT_GROUP_CREATE_FAILED() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent0(PSF_EVENT_EVENTGROUP_CREATE_FAILED);
+	prvTraceStoreEvent_None(PSF_EVENT_EVENTGROUP_CREATE_FAILED)
 
 #undef traceEVENT_GROUP_SYNC_BLOCK
 #define traceEVENT_GROUP_SYNC_BLOCK(eg, bitsToSet, bitsToWaitFor) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_SYNC_BLOCK, (uint32_t)eg, bitsToWaitFor);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_EVENTGROUP_SYNC_BLOCK, (void*)(eg), bitsToWaitFor)
 
 #undef traceEVENT_GROUP_SYNC_END
 #define traceEVENT_GROUP_SYNC_END(eg, bitsToSet, bitsToWaitFor, wasTimeout) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent2((wasTimeout != pdTRUE) ? PSF_EVENT_EVENTGROUP_SYNC : PSF_EVENT_EVENTGROUP_SYNC_FAILED, (uint32_t)eg, bitsToWaitFor);
+	prvTraceStoreEvent_HandleParam(((wasTimeout) != pdTRUE) ? PSF_EVENT_EVENTGROUP_SYNC : PSF_EVENT_EVENTGROUP_SYNC_FAILED, (void*)(eg), bitsToWaitFor)
 
 #undef traceEVENT_GROUP_WAIT_BITS_BLOCK
 #define traceEVENT_GROUP_WAIT_BITS_BLOCK(eg, bitsToWaitFor) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_WAITBITS_BLOCK, (uint32_t)eg, bitsToWaitFor);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_EVENTGROUP_WAITBITS_BLOCK, (void*)(eg), bitsToWaitFor)
 
 #undef traceEVENT_GROUP_WAIT_BITS_END
 #define traceEVENT_GROUP_WAIT_BITS_END(eg, bitsToWaitFor, wasTimeout) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent2((wasTimeout != pdTRUE) ? PSF_EVENT_EVENTGROUP_WAITBITS : PSF_EVENT_EVENTGROUP_WAITBITS_FAILED, (uint32_t)eg, bitsToWaitFor);
+	prvTraceStoreEvent_HandleParam(((wasTimeout) != pdTRUE) ? PSF_EVENT_EVENTGROUP_WAITBITS : PSF_EVENT_EVENTGROUP_WAITBITS_FAILED, (void*)(eg), bitsToWaitFor)
 
 #undef traceEVENT_GROUP_CLEAR_BITS
 #define traceEVENT_GROUP_CLEAR_BITS(eg, bitsToClear) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_CLEARBITS, (uint32_t)eg, bitsToClear);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_EVENTGROUP_CLEARBITS, (void*)(eg), bitsToClear)
 
 #undef traceEVENT_GROUP_CLEAR_BITS_FROM_ISR
 #define traceEVENT_GROUP_CLEAR_BITS_FROM_ISR(eg, bitsToClear) \
-	if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_CLEARBITS_FROMISR, (uint32_t)eg, bitsToClear);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_EVENTGROUP_CLEARBITS_FROMISR, (void*)(eg), bitsToClear)
 
 #undef traceEVENT_GROUP_SET_BITS
 #define traceEVENT_GROUP_SET_BITS(eg, bitsToSet) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_SETBITS, (uint32_t)eg, bitsToSet);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_EVENTGROUP_SETBITS, (void*)(eg), bitsToSet)
 
 #undef traceEVENT_GROUP_SET_BITS_FROM_ISR
 #define traceEVENT_GROUP_SET_BITS_FROM_ISR(eg, bitsToSet) \
-	if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_SETBITS_FROMISR, (uint32_t)eg, bitsToSet);
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_EVENTGROUP_SETBITS_FROMISR, (void*)(eg), bitsToSet)
 
-#endif /* (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1) */
-
-#undef traceTASK_NOTIFY_TAKE
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
-#define traceTASK_NOTIFY_TAKE(index) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
-		if (pxCurrentTCB->ucNotifyState[index] == taskNOTIFICATION_RECEIVED) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE, (uint32_t)pxCurrentTCB, xTicksToWait); \
-		else \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
-#elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
-#define traceTASK_NOTIFY_TAKE() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
-		if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE, (uint32_t)pxCurrentTCB, xTicksToWait); \
-		else \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-#define traceTASK_NOTIFY_TAKE() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
-		if (pxCurrentTCB->eNotifyState == eNotified) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE, (uint32_t)pxCurrentTCB, xTicksToWait); \
-		else \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-
-#undef traceTASK_NOTIFY_TAKE_BLOCK
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
-#define traceTASK_NOTIFY_TAKE_BLOCK(index) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_BLOCK, (uint32_t)pxCurrentTCB, xTicksToWait);
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-#define traceTASK_NOTIFY_TAKE_BLOCK() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_BLOCK, (uint32_t)pxCurrentTCB, xTicksToWait);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-
-#undef traceTASK_NOTIFY_WAIT
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
-#define traceTASK_NOTIFY_WAIT(index) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
-		if (pxCurrentTCB->ucNotifyState[index] == taskNOTIFICATION_RECEIVED) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT, (uint32_t)pxCurrentTCB, xTicksToWait); \
-		else \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
-#elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
-#define traceTASK_NOTIFY_WAIT() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
-		if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT, (uint32_t)pxCurrentTCB, xTicksToWait); \
-		else \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-#define traceTASK_NOTIFY_WAIT() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
-		if (pxCurrentTCB->eNotifyState == eNotified) \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT, (uint32_t)pxCurrentTCB, xTicksToWait); \
-		else \
-			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-
-#undef traceTASK_NOTIFY_WAIT_BLOCK
-#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
-#define traceTASK_NOTIFY_WAIT_BLOCK(index) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_BLOCK, (uint32_t)pxCurrentTCB, xTicksToWait);
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-#define traceTASK_NOTIFY_WAIT_BLOCK() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_BLOCK, (uint32_t)pxCurrentTCB, xTicksToWait);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
+#endif
 
 #undef traceTASK_NOTIFY
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY(index) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
-			prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY, (uint32_t)xTaskToNotify);
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
+	prvTraceStoreEvent_Handle(PSF_EVENT_TASK_NOTIFY, (void*)xTaskToNotify)
+
+#else
+
 #define traceTASK_NOTIFY() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
-			prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY, (uint32_t)xTaskToNotify);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
+	prvTraceStoreEvent_Handle(PSF_EVENT_TASK_NOTIFY, (void*)xTaskToNotify)
+
+#endif
 
 #undef traceTASK_NOTIFY_FROM_ISR
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
+
 #define traceTASK_NOTIFY_FROM_ISR(index) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY_FROM_ISR, (uint32_t)xTaskToNotify);
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
+	prvTraceStoreEvent_Handle(PSF_EVENT_TASK_NOTIFY_FROM_ISR, (void*)xTaskToNotify)
+
+#else
+
 #define traceTASK_NOTIFY_FROM_ISR() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY_FROM_ISR, (uint32_t)xTaskToNotify);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-	
+	prvTraceStoreEvent_Handle(PSF_EVENT_TASK_NOTIFY_FROM_ISR, (void*)xTaskToNotify)
+
+#endif
+
+/* NOTIFY and NOTIFY_GIVE will be handled identically */
 #undef traceTASK_NOTIFY_GIVE_FROM_ISR
+#define traceTASK_NOTIFY_GIVE_FROM_ISR traceTASK_NOTIFY_FROM_ISR
+
+#undef traceTASK_NOTIFY_WAIT
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
-#define traceTASK_NOTIFY_GIVE_FROM_ISR(index) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY_GIVE_FROM_ISR, (uint32_t)xTaskToNotify);
-#else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
-#define traceTASK_NOTIFY_GIVE_FROM_ISR() \
-	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
-		prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY_GIVE_FROM_ISR, (uint32_t)xTaskToNotify);
-#endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0 */
+
+#define traceTASK_NOTIFY_WAIT(index) \
+	prvTraceStoreEvent_HandleParam(pxCurrentTCB->ucNotifyState[index] == taskNOTIFICATION_RECEIVED ? PSF_EVENT_TASK_NOTIFY_WAIT : PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (void*)pxCurrentTCB, xTicksToWait)
+
+#elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
+
+#define traceTASK_NOTIFY_WAIT() \
+	prvTraceStoreEvent_HandleParam(pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED ? PSF_EVENT_TASK_NOTIFY_WAIT : PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (void*)pxCurrentTCB, xTicksToWait)
+
+#else
+
+#define traceTASK_NOTIFY_WAIT() \
+	prvTraceStoreEvent_HandleParam(pxCurrentTCB->eNotifyState == eNotified ? PSF_EVENT_TASK_NOTIFY_WAIT : PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (void*)pxCurrentTCB, xTicksToWait)
+
+#endif
+
+/* WAIT and TAKE will be handled identically */
+#undef traceTASK_NOTIFY_TAKE
+#define traceTASK_NOTIFY_TAKE traceTASK_NOTIFY_WAIT
+
+#undef traceTASK_NOTIFY_WAIT_BLOCK
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_4_0)
+
+#define traceTASK_NOTIFY_WAIT_BLOCK(index) \
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_TASK_NOTIFY_WAIT_BLOCK, (void*)pxCurrentTCB, xTicksToWait)
+
+#else
+
+#define traceTASK_NOTIFY_WAIT_BLOCK() \
+	prvTraceStoreEvent_HandleParam(PSF_EVENT_TASK_NOTIFY_WAIT_BLOCK, (void*)pxCurrentTCB, xTicksToWait)
+
+#endif
+
+/* WAIT_BLOCK and TAKE_BLOCK will be handled identically */
+#undef traceTASK_NOTIFY_TAKE_BLOCK
+#define traceTASK_NOTIFY_TAKE_BLOCK traceTASK_NOTIFY_WAIT_BLOCK
 
 #undef traceQUEUE_REGISTRY_ADD
 #define traceQUEUE_REGISTRY_ADD(object, name) \
-	prvTraceSaveObjectSymbol(object, (const char*)name); \
-	prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, name, object);
+	xTraceObjectSetNameWithoutHandle(object, (const char*)(name));
 
 #if (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1)
 
 #undef traceSTREAM_BUFFER_CREATE
 #define traceSTREAM_BUFFER_CREATE( pxStreamBuffer, xIsMessageBuffer ) \
-	TRACE_SET_OBJECT_FILTER(STREAMBUFFER, pxStreamBuffer, CurrentFilterGroup); \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, pxStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent2(xIsMessageBuffer == 1 ? PSF_EVENT_MESSAGEBUFFER_CREATE : PSF_EVENT_STREAMBUFFER_CREATE, (uint32_t)pxStreamBuffer, xBufferSizeBytes);
+	xTraceObjectRegisterWithoutHandle((xIsMessageBuffer) == 1 ? PSF_EVENT_MESSAGEBUFFER_CREATE : PSF_EVENT_STREAMBUFFER_CREATE, (void*)(pxStreamBuffer), "", (uint32_t)xBufferSizeBytes)
 
 #undef traceSTREAM_BUFFER_CREATE_FAILED
 #define traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		prvTraceStoreEvent2(xIsMessageBuffer == 1 ? PSF_EVENT_MESSAGEBUFFER_CREATE_FAILED : PSF_EVENT_STREAMBUFFER_CREATE_FAILED, 0 , xBufferSizeBytes);
+	prvTraceStoreEvent_HandleParam((xIsMessageBuffer) == 1 ? PSF_EVENT_MESSAGEBUFFER_CREATE_FAILED : PSF_EVENT_STREAMBUFFER_CREATE_FAILED, 0 , xBufferSizeBytes)
 
 #undef traceSTREAM_BUFFER_CREATE_STATIC_FAILED
 #define traceSTREAM_BUFFER_CREATE_STATIC_FAILED( xReturn, xIsMessageBuffer ) \
@@ -2692,88 +2894,65 @@ extern uint32_t trcHeapCounter;
 
 #undef traceSTREAM_BUFFER_DELETE
 #define traceSTREAM_BUFFER_DELETE( xStreamBuffer ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, pxStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_DELETE : PSF_EVENT_STREAMBUFFER_DELETE, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer)); \
-	prvTraceDeleteSymbol(xStreamBuffer);
+	xTraceObjectUnregisterWithoutHandle(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_DELETE : PSF_EVENT_STREAMBUFFER_DELETE, (void*)(xStreamBuffer), prvBytesInBuffer(xStreamBuffer));
 
 #undef traceSTREAM_BUFFER_RESET
 #define traceSTREAM_BUFFER_RESET( xStreamBuffer ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RESET : PSF_EVENT_STREAMBUFFER_RESET, (uint32_t)xStreamBuffer, 0);
+	prvTraceStoreEvent_HandleParam(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RESET : PSF_EVENT_STREAMBUFFER_RESET, (void*)(xStreamBuffer), 0)
 
 #undef traceSTREAM_BUFFER_SEND
 #define traceSTREAM_BUFFER_SEND( xStreamBuffer, xReturn ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND : PSF_EVENT_STREAMBUFFER_SEND, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer));
+	prvTraceStoreEvent_HandleParam(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND : PSF_EVENT_STREAMBUFFER_SEND, (void*)(xStreamBuffer), prvBytesInBuffer(xStreamBuffer))
 
 #undef traceBLOCKING_ON_STREAM_BUFFER_SEND
 #define traceBLOCKING_ON_STREAM_BUFFER_SEND( xStreamBuffer ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_BLOCK : PSF_EVENT_STREAMBUFFER_SEND_BLOCK, (uint32_t)xStreamBuffer);
+	prvTraceStoreEvent_Handle(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_BLOCK : PSF_EVENT_STREAMBUFFER_SEND_BLOCK, (void*)(xStreamBuffer))
 
 #undef traceSTREAM_BUFFER_SEND_FAILED
 #define traceSTREAM_BUFFER_SEND_FAILED( xStreamBuffer ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_FAILED : PSF_EVENT_STREAMBUFFER_SEND_FAILED, (uint32_t)xStreamBuffer);
+	prvTraceStoreEvent_Handle(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_FAILED : PSF_EVENT_STREAMBUFFER_SEND_FAILED, (void*)(xStreamBuffer))
 
 #undef traceSTREAM_BUFFER_RECEIVE
 #define traceSTREAM_BUFFER_RECEIVE( xStreamBuffer, xReceivedLength ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE: PSF_EVENT_STREAMBUFFER_RECEIVE, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer));
+	prvTraceStoreEvent_HandleParam(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE: PSF_EVENT_STREAMBUFFER_RECEIVE, (void*)(xStreamBuffer), prvBytesInBuffer(xStreamBuffer))
 
 #undef traceBLOCKING_ON_STREAM_BUFFER_RECEIVE
 #define traceBLOCKING_ON_STREAM_BUFFER_RECEIVE( xStreamBuffer ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_BLOCK: PSF_EVENT_STREAMBUFFER_RECEIVE_BLOCK, (uint32_t)xStreamBuffer);
+	prvTraceStoreEvent_Handle(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_BLOCK: PSF_EVENT_STREAMBUFFER_RECEIVE_BLOCK, (void*)(xStreamBuffer))
 
 #undef traceSTREAM_BUFFER_RECEIVE_FAILED
 #define traceSTREAM_BUFFER_RECEIVE_FAILED( xStreamBuffer ) \
-	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
-			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_FAILED: PSF_EVENT_STREAMBUFFER_RECEIVE_FAILED, (uint32_t)xStreamBuffer);
+	prvTraceStoreEvent_Handle(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_FAILED: PSF_EVENT_STREAMBUFFER_RECEIVE_FAILED, (void*)(xStreamBuffer))
 
 #undef traceSTREAM_BUFFER_SEND_FROM_ISR
 #define traceSTREAM_BUFFER_SEND_FROM_ISR( xStreamBuffer, xReturn ) \
-	if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
+	if ( (xReturn) > ( size_t ) 0 ) \
 	{ \
-		if ( xReturn > ( size_t ) 0 ) \
-		{ \
-			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_FROM_ISR : PSF_EVENT_STREAMBUFFER_SEND_FROM_ISR, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer)); \
-		} \
-		else \
-		{ \
-			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_FROM_ISR_FAILED : PSF_EVENT_STREAMBUFFER_SEND_FROM_ISR_FAILED, (uint32_t)xStreamBuffer); \
-		} \
+		prvTraceStoreEvent_HandleParam(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_FROM_ISR : PSF_EVENT_STREAMBUFFER_SEND_FROM_ISR, (void*)(xStreamBuffer), prvBytesInBuffer(xStreamBuffer)); \
+	} \
+	else \
+	{ \
+		prvTraceStoreEvent_Handle(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_FROM_ISR_FAILED : PSF_EVENT_STREAMBUFFER_SEND_FROM_ISR_FAILED, (void*)(xStreamBuffer)); \
 	}
 
 #undef traceSTREAM_BUFFER_RECEIVE_FROM_ISR
 #define traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength ) \
-if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
+	if ( (xReceivedLength) > ( size_t ) 0 ) \
 	{ \
-		if ( xReceivedLength > ( size_t ) 0 ) \
-		{ \
-			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_FROM_ISR : PSF_EVENT_STREAMBUFFER_RECEIVE_FROM_ISR, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer)); \
-		} \
-		else \
-		{ \
-			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_FROM_ISR_FAILED : PSF_EVENT_STREAMBUFFER_RECEIVE_FROM_ISR_FAILED, (uint32_t)xStreamBuffer); \
-		} \
+		prvTraceStoreEvent_HandleParam(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_FROM_ISR : PSF_EVENT_STREAMBUFFER_RECEIVE_FROM_ISR, (void*)(xStreamBuffer), prvBytesInBuffer(xStreamBuffer)); \
+	} \
+	else \
+	{ \
+		prvTraceStoreEvent_Handle(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_FROM_ISR_FAILED : PSF_EVENT_STREAMBUFFER_RECEIVE_FROM_ISR_FAILED, (void*)(xStreamBuffer)); \
 	}
 
-#endif /* (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1) */
+#endif
 
-#endif /* (TRC_CFG_SCHEDULING_ONLY == 0) */
+#endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+#endif
 
-#else /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+#else
 	
 /* When recorder is disabled */
 #define vTraceSetQueueName(object, name)
@@ -2783,7 +2962,7 @@ if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 #define vTraceSetStreamBufferName(object, name)
 #define vTraceSetMessageBufferName(object, name)
 	
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+#endif
 
 #ifdef __cplusplus
 }

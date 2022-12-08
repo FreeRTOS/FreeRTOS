@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 #include "msp430.h"
@@ -37,12 +37,12 @@
 	IMPORT usRegTest1Counter
 	IMPORT usRegTest2Counter
 	IMPORT vPortYield
-	
+
 	EXPORT vRegTest1Task
 	EXPORT vRegTest2Task
 
 	RSEG CODE
-	
+
 	EVEN
 
 vRegTest1Task:
@@ -60,7 +60,7 @@ vRegTest1Task:
 	mov_x	#0xdddd, r13
 	mov_x	#0xeeee, r14
 	mov_x	#0xffff, r15
-	
+
 prvRegTest1Loop:
 
 	/* Test each general purpose register to check that it still contains the
@@ -90,22 +90,22 @@ prvRegTest1Loop:
 	jne		vRegTest1Error
 	cmp_x	#0xffff, r15
 	jne		vRegTest1Error
-	
+
 	/* This task is still running without jumping to vRegTest1Error, so increment
 	the loop counter so the check task knows the task is running error free. */
 	incx.w	&usRegTest1Counter
-	
+
 	/* Loop again, performing the same tests. */
 	jmp		prvRegTest1Loop
 	nop
 
-	
+
 	EVEN
-	
+
 vRegTest1Error:
 	jmp vRegTest1Error
 	nop
-	
+
 /*-----------------------------------------------------------*/
 
 /* See the comments in vRegTest1Task.  This task is the same, it just uses
@@ -124,7 +124,7 @@ vRegTest2Task:
 	mov_x	#0xddd1, r13
 	mov_x	#0xeee1, r14
 	mov_x	#0xfff1, r15
-	
+
 prvRegTest2Loop:
 
 	cmp_x	#0x4441, r4
@@ -151,20 +151,20 @@ prvRegTest2Loop:
 	jne		vRegTest2Error
 	cmp_x	#0xfff1, r15
 	jne		vRegTest2Error
-	
+
 	/* Also perform a manual yield, just to increase the scope of the test. */
 	calla 	#vPortYield
-	
+
 	incx.w	&usRegTest2Counter
 	jmp		prvRegTest2Loop
 	nop
 
-	
+
 vRegTest2Error:
 	jmp vRegTest2Error
 	nop
 /*-----------------------------------------------------------*/
 
-     		
+
 	END
-		
+

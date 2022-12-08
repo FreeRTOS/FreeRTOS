@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -30,9 +30,9 @@
 /* Device specific includes. */
 #include "mb96348hs.h"
 
-/* 
- * The below define should be same as the option selected by the Memory 
- * Model (Project->Setup Project->C Compiler->Category->Target Depend ) 
+/*
+ * The below define should be same as the option selected by the Memory
+ * Model (Project->Setup Project->C Compiler->Category->Target Depend )
  *
  * Valid settings here include:
  * ------- Memory models ---------      Data	  Code
@@ -55,7 +55,7 @@ the ComTest tasks will be included in place of the trace task. */
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *----------------------------------------------------------*/
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK			1
@@ -72,10 +72,6 @@ the ComTest tasks will be included in place of the trace task. */
 #define configUSE_MUTEXES			1
 #define configUSE_TRACE_FACILITY	1
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES			1
-#define configMAX_CO_ROUTINE_PRIORITIES ( 4 )
-
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet			1
@@ -91,7 +87,7 @@ to exclude the API function. */
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 

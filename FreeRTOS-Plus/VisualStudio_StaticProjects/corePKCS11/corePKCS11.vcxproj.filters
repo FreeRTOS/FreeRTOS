@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="pkcs11_api">
+      <UniqueIdentifier>{87f448f0-826d-4964-8c17-2dafde7cdc17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="corePKCS11">
+      <UniqueIdentifier>{f837be63-52d6-4f7a-b057-323ad9c20295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="corePKCS11\include">
+      <UniqueIdentifier>{a67eb7ab-543a-475e-88ea-d2543002780c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c">
+      <Filter>corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c">
+      <Filter>corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c">
+      <Filter>corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c">
+      <Filter>corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c">
+      <Filter>corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c">
+      <Filter>corePKCS11</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h">
+      <Filter>pkcs11_api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h">
+      <Filter>pkcs11_api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h">
+      <Filter>pkcs11_api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h">
+      <Filter>corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_config_defaults.h">
+      <Filter>corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h">
+      <Filter>corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h">
+      <Filter>corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h">
+      <Filter>corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.h">
+      <Filter>corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="core_pkcs11_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

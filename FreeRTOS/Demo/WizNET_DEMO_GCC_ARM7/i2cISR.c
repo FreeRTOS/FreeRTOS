@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202211.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -83,7 +83,7 @@ typedef enum
 /*-----------------------------------------------------------*/
 
 /* Points to the message currently being sent. */
-volatile xI2CMessage *pxCurrentMessage = NULL;	
+volatile xI2CMessage *pxCurrentMessage = NULL;
 
 /* The queue of messages waiting to be transmitted. */
 static QueueHandle_t xMessagesForTx;
@@ -91,7 +91,7 @@ static QueueHandle_t xMessagesForTx;
 /* Flag used to indicate whether or not the ISR is amid sending a message. */
 unsigned long ulBusFree = ( unsigned long ) pdTRUE;
 
-/* Setting this to true will cause the TCP task to think a message is 
+/* Setting this to true will cause the TCP task to think a message is
 complete and thus restart.  It can therefore be used under error states
 to force a restart. */
 volatile long lTransactionCompleted = pdTRUE;
@@ -103,7 +103,7 @@ void vI2CISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *p
 	/* Create the queues used to hold Rx and Tx characters. */
 	xMessagesForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( xI2CMessage * ) );
 
-	/* Pass back a reference to the queue and bus free flag so the I2C API file 
+	/* Pass back a reference to the queue and bus free flag so the I2C API file
 	can post messages. */
 	*pxTxMessages = xMessagesForTx;
 	*ppulBusFree = &ulBusFree;
@@ -135,7 +135,7 @@ void vI2C_ISR_Wrapper( void )
 
 void vI2C_ISR_Handler( void )
 {
-/* Holds the current transmission state. */							
+/* Holds the current transmission state. */
 static I2C_STATE eCurrentState = eSentStart;
 static long lMessageIndex = -i2cBUFFER_ADDRESS_BYTES; /* There are two address bytes to send prior to the data. */
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
@@ -144,7 +144,7 @@ long lBytesLeft;
 	/* The action taken for this interrupt depends on our current state. */
 	switch( eCurrentState )
 	{
-		case eSentStart	:	
+		case eSentStart	:
 
 				/* We sent a start bit, if it was successful we can
 				go on to send the slave address. */
@@ -155,10 +155,10 @@ long lBytesLeft;
 
 					if( pxCurrentMessage->ucSlaveAddress & i2cREAD )
 					{
-						/* We are then going to read bytes back from the 
+						/* We are then going to read bytes back from the
 						slave. */
 						eCurrentState = eSentAddressForRead;
-						
+
 						/* Initialise the buffer index so the first byte goes
 						into the first buffer position. */
 						lMessageIndex = 0;
@@ -177,10 +177,10 @@ long lBytesLeft;
 				else
 				{
 					/* Could not send the start bit so give up. */
-					i2cEND_TRANSMISSION( pdFAIL );					
+					i2cEND_TRANSMISSION( pdFAIL );
 				}
 
-				I2C_I2CONCLR = i2cSTA_BIT;				
+				I2C_I2CONCLR = i2cSTA_BIT;
 
 				break;
 
@@ -190,8 +190,8 @@ long lBytesLeft;
 				If this was acknowledged we	can go on to send the data. */
 				if( I2C_I2STAT == i2cSTATUS_TX_ADDR_ACKED )
 				{
-					/* Start the first byte transmitting which is the 
-					first byte of the buffer address to which the data will 
+					/* Start the first byte transmitting which is the
+					first byte of the buffer address to which the data will
 					be sent. */
 					I2C_I2DAT = pxCurrentMessage->ucBufferAddressHighByte;
 					eCurrentState = eSentData;
@@ -199,8 +199,8 @@ long lBytesLeft;
 				else
 				{
 					/* Address was not acknowledged so give up. */
-					i2cEND_TRANSMISSION( pdFAIL );					
-				}					
+					i2cEND_TRANSMISSION( pdFAIL );
+				}
 				break;
 
 		case eSentAddressForRead :
@@ -214,21 +214,21 @@ long lBytesLeft;
 					{
 						/* Don't ack the last byte of the message. */
 						I2C_I2CONSET = i2cAA_BIT;
-					}					
+					}
 				}
 				else
 				{
 					/* Something unexpected happened - give up. */
-					i2cEND_TRANSMISSION( pdFAIL );					
+					i2cEND_TRANSMISSION( pdFAIL );
 				}
 				break;
 
 		case eReceiveData :
-				
+
 				/* We have just received a byte from the slave. */
 				if( ( I2C_I2STAT == i2cSTATUS_DATA_RXED ) || ( I2C_I2STAT == i2cSTATUS_LAST_BYTE_RXED ) )
 				{
-					/* Buffer the byte just received then increment the index 
+					/* Buffer the byte just received then increment the index
 					so it points to the next free space. */
 					pxCurrentMessage->pucBuffer[ lMessageIndex ] = I2C_I2DAT;
 					lMessageIndex++;
@@ -259,30 +259,30 @@ long lBytesLeft;
 						{
 							/* No more messages were found to be waiting for
 							transaction so the bus is free. */
-							ulBusFree = ( unsigned long ) pdTRUE;			
-						}						
+							ulBusFree = ( unsigned long ) pdTRUE;
+						}
 					}
 					else
 					{
-						/* There are more bytes to receive but don't ack the 
+						/* There are more bytes to receive but don't ack the
 						last byte. */
 						if( lBytesLeft <= i2cJUST_ONE_BYTE_TO_RX )
 						{
 							I2C_I2CONCLR = i2cAA_BIT;
-						}							 
+						}
 					}
 				}
 				else
 				{
 					/* Something unexpected happened - give up. */
-					i2cEND_TRANSMISSION( pdFAIL );					
+					i2cEND_TRANSMISSION( pdFAIL );
 				}
 
 				break;
-				
-		case eSentData	:	
 
-				/* We sent a data byte, if successful send the	next byte in 
+		case eSentData	:
+
+				/* We sent a data byte, if successful send the	next byte in
 				the message. */
 				if( I2C_I2STAT == i2cSTATUS_DATA_TXED )
 				{
@@ -290,21 +290,21 @@ long lBytesLeft;
 					lMessageIndex++;
 					if( lMessageIndex < 0 )
 					{
-						/* lMessage index is still negative so we have so far 
-						only sent the first byte of the buffer address.  Send 
+						/* lMessage index is still negative so we have so far
+						only sent the first byte of the buffer address.  Send
 						the second byte now, then initialise the buffer index
-						to zero so the next byte sent comes from the actual 
+						to zero so the next byte sent comes from the actual
 						data buffer. */
 						I2C_I2DAT = pxCurrentMessage->ucBufferAddressLowByte;
 					}
 					else if( lMessageIndex < pxCurrentMessage->lMessageLength )
 					{
 						/* Simply send the next byte in the tx buffer. */
-						I2C_I2DAT = pxCurrentMessage->pucBuffer[ lMessageIndex ];										
+						I2C_I2DAT = pxCurrentMessage->pucBuffer[ lMessageIndex ];
 					}
 					else
 					{
-						/* No more bytes in this message to be send.  Finished 
+						/* No more bytes in this message to be send.  Finished
 						sending message - send a stop bit. */
 						i2cEND_TRANSMISSION( pdPASS );
 
@@ -324,25 +324,25 @@ long lBytesLeft;
 						}
 						else
 						{
-							/* No more message were queues for transaction so 
+							/* No more message were queues for transaction so
 							the bus is free. */
-							ulBusFree = ( unsigned long ) pdTRUE;			
+							ulBusFree = ( unsigned long ) pdTRUE;
 						}
 					}
 				}
 				else
 				{
 					/* Something unexpected happened, give up. */
-					i2cEND_TRANSMISSION( pdFAIL );					
+					i2cEND_TRANSMISSION( pdFAIL );
 				}
 				break;
 
-		default	:	
-		
+		default	:
+
 				/* Should never get here. */
 				eCurrentState = eSentStart;
 				break;
-	}	
+	}
 
 	/* Clear the interrupt. */
 	I2C_I2CONCLR = i2cSI_BIT;

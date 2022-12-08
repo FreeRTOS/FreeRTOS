@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202211.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -258,7 +258,7 @@ int main_full( void )
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
+const TickType_t xCyclePeriod = pdMS_TO_TICKS( 5000UL );
 HeapStats_t xHeapStats;
 
 	/* Just to remove compiler warning. */
@@ -270,13 +270,13 @@ HeapStats_t xHeapStats;
 	for( ;; )
 	{
 		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
+		vTaskDelayUntil( &xNextWakeTime, xCyclePeriod );
 
 		/* Check the standard demo tasks are running without error. */
 		#if( configUSE_PREEMPTION != 0 )
 		{
 			/* These tasks are only created when preemption is used. */
-			if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
+			if( xAreTimerDemoTasksStillRunning( xCyclePeriod ) != pdTRUE )
 			{
 				pcStatusMessage = "Error: TimerDemo";
 			}

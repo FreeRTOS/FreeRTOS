@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202211.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -74,9 +74,17 @@ that make up the total heap.  heap_5 is only used for test and example purposes
 as this demo could easily create one large heap region instead of multiple
 smaller heap regions - in which case heap_4.c would be the more appropriate
 choice.  See http://www.freertos.org/a00111.html for an explanation. */
-#define mainREGION_1_SIZE	10801
-#define mainREGION_2_SIZE	29905
-#define mainREGION_3_SIZE	6007
+#define mainREGION_1_SIZE	8201
+#define mainREGION_2_SIZE	40905
+#define mainREGION_3_SIZE	50007
+
+/* This demo allows for users to perform actions with the keyboard. */
+#define mainNO_KEY_PRESS_VALUE                -1
+#define mainOUTPUT_TRACE_KEY                  't'
+#define mainINTERRUPT_NUMBER_KEYBOARD         3
+
+/* This demo allows to save a trace file. */
+#define mainTRACE_FILE_NAME                   "Trace.dump"
 
 /*-----------------------------------------------------------*/
 
@@ -125,6 +133,23 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
  */
 static void prvSaveTraceFile( void );
 
+/*
+ * Windows thread function to capture keyboard input from outside of the
+ * FreeRTOS simulator. This thread passes data safely into the FreeRTOS
+ * simulator using a stream buffer.
+ */
+static DWORD WINAPI prvWindowsKeyboardInputThread( void * pvParam );
+
+/*
+ * Interrupt handler for when keyboard input is received.
+ */
+static uint32_t prvKeyboardInterruptHandler( void );
+
+/*
+ * Keyboard interrupt handler for the blinky demo.
+ */
+extern void vBlinkyKeyboardInterruptHandler( int xKeyPressed );
+
 /*-----------------------------------------------------------*/
 
 /* When configSUPPORT_STATIC_ALLOCATION is set to 1 the application writer can
@@ -137,10 +162,36 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 /* Notes if the trace is running or not. */
 static BaseType_t xTraceRunning = pdTRUE;
 
+/* Thread handle for the keyboard input Windows thread. */
+static HANDLE xWindowsKeyboardInputThreadHandle = NULL;
+
+/* This stores the last key pressed that has not been handled.
+ * Keyboard input is retrieved by the prvWindowsKeyboardInputThread
+ * Windows thread and stored here. This is then read by the idle
+ * task and handled appropriately. */
+static int xKeyPressed = mainNO_KEY_PRESS_VALUE;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
+	/* Set interrupt handler for keyboard input. */
+	vPortSetInterruptHandler( mainINTERRUPT_NUMBER_KEYBOARD, prvKeyboardInterruptHandler );
+
+	/* Start keyboard input handling thread. */
+    xWindowsKeyboardInputThreadHandle = CreateThread(
+	    NULL,                          /* Pointer to thread security attributes. */
+	    0,                             /* Initial thread stack size, in bytes. */
+	    prvWindowsKeyboardInputThread, /* Pointer to thread function. */
+	    NULL,                          /* Argument for new thread. */
+	    0,                             /* Creation flags. */
+	    NULL);
+
+    fflush( stdout );
+
+    /* Use the cores that are not used by the FreeRTOS tasks. */
+	SetThreadAffinityMask( xWindowsKeyboardInputThreadHandle, ~0x01u );
+
 	/* This demo uses heap_5.c, so start by defining some heap regions.  heap_5
 	is only used for test and example reasons.  Heap_4 is more appropriate.  See
 	http://www.freertos.org/a00111.html for an explanation. */
@@ -151,13 +202,21 @@ int main( void )
 	{
 		/* Initialise the trace recorder.  Use of the trace recorder is optional.
 		See http://www.FreeRTOS.org/trace for more information. */
-		vTraceEnable( TRC_START );
+		configASSERT( xTraceInitialize() == TRC_SUCCESS );
 
 		/* Start the trace recording - the recording is written to a file if
 		configASSERT() is called. */
-		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-		printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
-		uiTraceStart();
+		printf(
+				"Trace started.\r\n"
+				"Note that the trace output uses the ring buffer mode, meaning that the output trace\r\n"
+				"will only be the most recent data able to fit within the trace recorder buffer.\r\n\r\n"
+				"The trace will be dumped to the file \"%s\" whenever a call to configASSERT()\r\n"
+				"fails or the \'%c\' key is pressed.\r\n"
+				"Note that key presses cannot be captured in the Eclipse console, so for key presses to work\r\n"
+				"you will have to run this demo in a Windows console.\r\n\r\n",
+		        mainTRACE_FILE_NAME, mainOUTPUT_TRACE_KEY );
+		fflush( stdout );
+		configASSERT( xTraceEnable( TRC_START ) == TRC_SUCCESS );
 	}
 	#endif
 
@@ -206,21 +265,6 @@ void vApplicationIdleHook( void )
 	that vApplicationIdleHook() is permitted to return to its calling function,
 	because it is the responsibility of the idle task to clean up memory
 	allocated by the kernel to any task that has since deleted itself. */
-
-	/* Uncomment the following code to allow the trace to be stopped with any
-	key press.  The code is commented out by default as the kbhit() function
-	interferes with the run time behaviour. */
-	/*
-		if( _kbhit() != pdFALSE )
-		{
-			if( xTraceRunning == pdTRUE )
-			{
-				vTraceStop();
-				prvSaveTraceFile();
-				xTraceRunning = pdFALSE;
-			}
-		}
-	*/
 
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
 	{
@@ -273,7 +317,6 @@ void vApplicationDaemonTaskStartupHook( void )
 
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
-static BaseType_t xPrinted = pdFALSE;
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
 	/* Called if an assertion passed to configASSERT() fails.  See
@@ -286,15 +329,12 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
  	taskENTER_CRITICAL();
 	{
+ 		printf("ASSERT! Line %ld, file %s, GetLastError() %ld\r\n", ulLine, pcFileName, GetLastError());
+ 		fflush( stdout );
+
 		/* Stop the trace recording. */
-		if( xPrinted == pdFALSE )
-		{
-			xPrinted = pdTRUE;
-			if( xTraceRunning == pdTRUE )
-			{
-				prvSaveTraceFile();
-			}
-		}
+ 		( void ) xTraceDisable();
+ 		prvSaveTraceFile();
 
 		/* You can step out of this function to debug the assertion by using
 		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
@@ -304,6 +344,9 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 			__asm volatile( "NOP" );
 			__asm volatile( "NOP" );
 		}
+
+		/* Re-enable recording */
+		( void ) xTraceEnable( TRC_START );
 	}
 	taskEXIT_CRITICAL();
 }
@@ -318,17 +361,19 @@ static void prvSaveTraceFile( void )
 
 		vTraceStop();
 
-		pxOutputFile = fopen( "Trace.dump", "wb");
+		pxOutputFile = fopen( mainTRACE_FILE_NAME, "wb");
 
 		if( pxOutputFile != NULL )
 		{
 			fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
 			fclose( pxOutputFile );
-			printf( "\r\nTrace output saved to Trace.dump\r\n" );
+			printf( "\r\nTrace output saved to %s\r\n", mainTRACE_FILE_NAME );
+			fflush( stdout );
 		}
 		else
 		{
 			printf( "\r\nFailed to create trace dump file\r\n" );
+			fflush( stdout );
 		}
 	}
 	#endif
@@ -465,6 +510,7 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
 	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
+
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
@@ -490,3 +536,86 @@ static StaticTask_t xTimerTaskTCB;
 	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
+/*-----------------------------------------------------------*/
+
+/*
+ * Interrupt handler for when keyboard input is received.
+ */
+static uint32_t prvKeyboardInterruptHandler( void )
+{
+	/* Handle keyboard input. */
+    switch ( xKeyPressed )
+    {
+    case mainNO_KEY_PRESS_VALUE:
+        break;
+    case mainOUTPUT_TRACE_KEY:
+        /* Saving the trace file requires Windows system calls, so enter a critical
+           section to prevent deadlock or errors resulting from calling a Windows
+           system call from within the FreeRTOS simulator. */
+        portENTER_CRITICAL();
+        {
+            ( void ) xTraceDisable();
+            prvSaveTraceFile();
+            ( void) xTraceEnable( TRC_START );
+        }
+        portEXIT_CRITICAL();
+        break;
+    default:
+        #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+            {
+            	/* Call the keyboard interrupt handler for the blinky demo. */
+            	vBlinkyKeyboardInterruptHandler( xKeyPressed );
+            }
+        #endif
+        break;
+    }
+
+	/* This interrupt does not require a context switch so return pdFALSE */
+	return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+
+/*
+ * Windows thread function to capture keyboard input from outside of the
+ * FreeRTOS simulator. This thread passes data into the simulator using
+ * an integer.
+ */
+static DWORD WINAPI prvWindowsKeyboardInputThread( void * pvParam )
+{
+    ( void ) pvParam;
+
+    for ( ; ; )
+    {
+    	/* Block on acquiring a key press */
+        xKeyPressed = _getch();
+
+        /* Notify FreeRTOS simulator that there is a keyboard interrupt.
+         * This will trigger prvKeyboardInterruptHandler.
+         */
+        vPortGenerateSimulatedInterrupt( mainINTERRUPT_NUMBER_KEYBOARD );
+    }
+
+    /* Should not get here, report negative exit status. */
+    return -1;
+}
+
+/*-----------------------------------------------------------*/
+
+/* The below code is used by the trace recorder for timing. */
+static uint32_t ulEntryTime = 0;
+
+void vTraceTimerReset( void )
+{
+    ulEntryTime = xTaskGetTickCount();
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    return configTICK_RATE_HZ;
+}
+
+uint32_t uiTraceTimerGetValue( void )
+{
+    return( xTaskGetTickCount() - ulEntryTime );
+}

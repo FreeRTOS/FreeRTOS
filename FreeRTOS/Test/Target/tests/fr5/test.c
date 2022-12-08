@@ -20,8 +20,13 @@ as ( configMAX_PRIORITIES - 1 ). */
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
+char strbuf_good[] = "TEST PASSED";
+size_t strbuf_good_len = sizeof(strbuf_good) / sizeof(char);
+
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
+
+TaskHandle_t taskA, taskB;
 
 #if configNUM_CORES != 2
 #error Require two cores be configured for FreeRTOS
@@ -29,10 +34,12 @@ static void prvTaskB(void *pvParameters);
 
 void setup_test_fr5_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, NULL);
+              mainTASK_A_PRIORITY, &taskA);
+  vTaskCoreAffinitySet(taskA, 0x1);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, NULL);
+              mainTASK_B_PRIORITY, &taskB);
+  vTaskCoreAffinitySet(taskB, 0x2);
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -60,28 +67,26 @@ int main(void) {
 static uint32_t taskBState = 0;
 
 static void prvTaskA(void *pvParameters) {
-  int handlerNum = -1;
-  TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
-  bool taskBObservedRunning = false;
-  int idx;
-  int numTasksRunning;
+  char strbuf_bad[] = "task A running on the wrong core";
+  size_t strbuf_bad_len = sizeof(strbuf_bad) / sizeof(char);
+  BaseType_t core;
 
-  while(!taskBObservedRunning)
+  int iter;
+
+  vTaskDelay(pdMS_TO_TICKS(5000));
+
+  for(iter=1;iter < 10;iter++)
   {
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
-
-    for(idx=0; idx < numTasksRunning; idx++)
+    vTaskDelay(pdMS_TO_TICKS(100));
+    core = portGET_CORE_ID();
+    if (core != 0)
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
-      {
-        taskBObservedRunning = true;
-      }
+      sendReport(strbuf_bad, strbuf_bad_len);
     }
+    TEST_ASSERT_EQUAL_INT(core, 0);
   }
 
-  setPin(LED_PIN);
+  sendReport(strbuf_good, strbuf_good_len);
 
   // idle the task
   for (;;) {
@@ -90,13 +95,26 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  int iter = 1;
-  int numIters = 10;
-  char strbuf[] = "task B enter critical section";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
+  char strbuf_bad[] = "task B running on the wrong core";
+  size_t strbuf_bad_len = sizeof(strbuf_bad) / sizeof(char);
+  BaseType_t core;
 
-  clearPin(LED_PIN);
-  taskBState++;
+  int iter;
+
+  vTaskDelay(pdMS_TO_TICKS(5000));
+
+  for(iter=1;iter < 10;iter++)
+  {
+    vTaskDelay(pdMS_TO_TICKS(100));
+    core = portGET_CORE_ID();
+    if (core != 1)
+    {
+      sendReport(strbuf_bad, strbuf_bad_len);
+    }
+    TEST_ASSERT_EQUAL_INT(core, 1);
+  }
+
+  sendReport(strbuf_good, strbuf_good_len);
 
   // idle the task
   for (;;) {

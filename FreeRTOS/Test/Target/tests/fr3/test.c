@@ -30,8 +30,6 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-#define traceTASK_SWITCHED_IN() test_fr3TASK_SWITCHED_IN()
-
 void test_fr3TASK_SWITCHED_IN(void) {
   static SchedTraceLog schedTraceLog;
 

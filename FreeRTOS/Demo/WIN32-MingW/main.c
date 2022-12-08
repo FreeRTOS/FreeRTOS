@@ -329,9 +329,13 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
         printf("ASSERT! Line %ld, file %s, GetLastError() %ld\r\n", ulLine, pcFileName, GetLastError());
         fflush( stdout );
 
-        /* Stop the trace recording. */
-        ( void ) xTraceDisable();
-        prvSaveTraceFile();
+        #if( projCOVERAGE_TEST != 1 )
+        {
+            /* Stop the trace recording. */
+            ( void ) xTraceDisable();
+            prvSaveTraceFile();
+        }
+        #endif
 
         /* You can step out of this function to debug the assertion by using
         the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
@@ -342,8 +346,12 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
             __asm volatile( "NOP" );
         }
 
-        /* Re-enable recording */
-        ( void ) xTraceEnable( TRC_START );
+        #if( projCOVERAGE_TEST != 1 )
+        {
+            /* Re-enable recording */
+            ( void ) xTraceEnable( TRC_START );
+        }
+        #endif
     }
     taskEXIT_CRITICAL();
 }
@@ -544,16 +552,20 @@ static uint32_t prvKeyboardInterruptHandler( void )
     case mainNO_KEY_PRESS_VALUE:
         break;
     case mainOUTPUT_TRACE_KEY:
-        /* Saving the trace file requires Windows system calls, so enter a critical
-           section to prevent deadlock or errors resulting from calling a Windows
-           system call from within the FreeRTOS simulator. */
-        portENTER_CRITICAL();
+        #if( projCOVERAGE_TEST != 1 )
         {
-            ( void ) xTraceDisable();
-            prvSaveTraceFile();
-            ( void) xTraceEnable( TRC_START );
+            /* Saving the trace file requires Windows system calls, so enter a critical
+             * section to prevent deadlock or errors resulting from calling a Windows
+             * system call from within the FreeRTOS simulator. */
+            portENTER_CRITICAL();
+            {
+                ( void ) xTraceDisable();
+                prvSaveTraceFile();
+                ( void ) xTraceEnable( TRC_START );
+            }
+            portEXIT_CRITICAL();
         }
-        portEXIT_CRITICAL();
+        #endif
         break;
     default:
         #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )

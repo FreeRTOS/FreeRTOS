@@ -56,6 +56,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <signal.h>
+#include <string.h>
 #include <errno.h>
 #include <sys/select.h>
 #include <time.h>
@@ -84,7 +85,7 @@
 #ifdef USER_DEMO
     #define     mainSELECTED_APPLICATION    USER_DEMO
 #else /* Default Setting */
-    #define    mainSELECTED_APPLICATION     BLINKY_DEMO
+    #define    mainSELECTED_APPLICATION     FULL_DEMO
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
@@ -146,7 +147,6 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 #endif
 
 static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
-static uint32_t frequency;
 
 /*-----------------------------------------------------------*/
 
@@ -287,7 +287,7 @@ void traceOnEnter()
             }
 
             /* clear the buffer */
-            char buffer[ 0 ];
+            char buffer[ 1 ];
             read( STDIN_FILENO, &buffer, 1 );
         }
     #endif /* if ( TRACE_ON_ENTER == 1 ) */
@@ -359,7 +359,6 @@ static void prvSaveTraceFile( void )
     #if ( projCOVERAGE_TEST != 1 )
         {
             FILE * pxOutputFile;
-            extern RecorderDataType* RecorderDataPtr;
 
             vTraceStop();
 
@@ -446,57 +445,20 @@ void handle_sigint( int signal )
     exit( 2 );
 }
 
+static uint32_t ulEntryTime = 0;
+
 void vTraceTimerReset( void )
 {
-    int xRet;
-    struct timespec ts;
-    ts.tv_sec = 0;
-    ts.tv_nsec = 0;
-
-    xRet = clock_settime( cid, &ts );
-    if( xRet != 0 )
-    {
-        printf( "Could not reset time: %s\n", strerror( errno ) );
-    }
+	ulEntryTime = xTaskGetTickCount();
 }
 
 uint32_t uiTraceTimerGetFrequency( void )
 {
-    struct timespec res;
-    int xRet;
-
-    res.tv_nsec = 0;
-    res.tv_sec = 0;
-
-    xRet = clock_getres( cid, &res );
-    if( xRet == 0 )
-    {
-        // calculate frequency from timer definition
-        frequency = (uint64_t) 1000000000 / res.tv_nsec;
-    }
-    else
-    {
-        printf( "Could not get clock frequency: %s\n", strerror( errno ) );
-    }
-    return frequency;
+    return configTICK_RATE_HZ;
 }
 
 uint32_t uiTraceTimerGetValue( void )
 {
-    int xRet;
-    struct timespec tp;
-    uint32_t result = 0;
-
-    xRet = clock_gettime( cid, &tp );
-    if( xRet == 0 )
-    {
-        result = tp.tv_nsec / frequency;
-        result += (tp.tv_sec * 1000000000) / frequency;
-    }
-    else
-    {
-        printf( "Could not get time: %s\n", strerror( errno ) );
-    }
-    return result;
+	return ( xTaskGetTickCount() - ulEntryTime );
 }
 

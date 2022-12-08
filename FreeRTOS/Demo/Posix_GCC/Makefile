@@ -13,6 +13,7 @@ FREERTOS_PLUS_DIR     := $(abspath $(FREERTOS_PLUS_DIR_REL))
 KERNEL_DIR            := ${FREERTOS_DIR}/Source
 
 INCLUDE_DIRS          := -I.
+INCLUDE_DIRS          += -I./Trace_Recorder_Configuration
 INCLUDE_DIRS          += -I${KERNEL_DIR}/include
 INCLUDE_DIRS          += -I${KERNEL_DIR}/portable/ThirdParty/GCC/Posix
 INCLUDE_DIRS          += -I${KERNEL_DIR}/portable/ThirdParty/GCC/Posix/utils

@@ -426,7 +426,7 @@ static void prvCheckTask( void * pvParameters )
             }
         #endif /* configSUPPORT_STATIC_ALLOCATION */
 
-        printf( "%s - tick count %u \r\n",
+        printf( "%s - tick count %lu \r\n",
                 pcStatusMessage,
                 xTaskGetTickCount() );
 

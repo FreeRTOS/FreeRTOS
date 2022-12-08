@@ -355,9 +355,7 @@ static void prvSaveTraceFile( void )
     #if( projCOVERAGE_TEST != 1 )
     {
         FILE* pxOutputFile;
-
-        vTraceStop();
-
+		
         pxOutputFile = fopen( mainTRACE_FILE_NAME, "wb");
 
         if( pxOutputFile != NULL )

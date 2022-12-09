@@ -1,5 +1,5 @@
 name : "FreeRTOS"
-version: "202211.00"
+version: "202212.00"
 description: "This is the standard distribution of FreeRTOS."
 
 dependencies:

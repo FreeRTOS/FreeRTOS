@@ -1920,6 +1920,7 @@ prvisrblocktask
 prvisroneshottimercallback
 prvisrtriggeredtask
 prvjobsdemotask
+prvkeyboardinterrupthandler
 prvkeyboardinterruptsimulatortask
 prvlcdtask
 prvlcdtaskline

@@ -87,7 +87,7 @@
 /* This demo allows for users to perform actions with the keyboard. */
 #define mainNO_KEY_PRESS_VALUE                -1
 #define mainOUTPUT_TRACE_KEY                  't'
-#define mainKEYBOARD_INTERRUPT_YIELD_MS       200
+#define mainINTERRUPT_NUMBER_KEYBOARD         3
 
 /* This demo allows to save a trace file. */
 #define mainTRACE_FILE_NAME                   "Trace.dump"
@@ -146,11 +146,9 @@ static void prvSaveTraceFile( void );
 static DWORD WINAPI prvWindowsKeyboardInputThread( void * pvParam );
 
 /*
- * FreeRTOS task function that simulates keyboard interrupts by 
- * periodically polling data coming from the Windows thread
- * capturing keyboard input.
+ * Interrupt handler for when keyboard input is received.
  */
-static void prvKeyboardInterruptSimulatorTask( void * pvParam );
+static uint32_t prvKeyboardInterruptHandler( void );
 
 /*
  * Keyboard interrupt handler for the blinky demo. 
@@ -187,7 +185,8 @@ int main( void )
 
     /* Initialise the trace recorder.  Use of the trace recorder is optional.
      * See http://www.FreeRTOS.org/trace for more information. */
-    vTraceEnable( TRC_START );
+
+    configASSERT( xTraceInitialize() == TRC_SUCCESS );
 
     /* Start the trace recording - the recording is written to a file if
      * configASSERT() is called. */
@@ -199,7 +198,10 @@ int main( void )
         "will only be the most recent data able to fit within the trace recorder buffer.\r\n",
         mainTRACE_FILE_NAME, mainOUTPUT_TRACE_KEY );
 
-    traceSTART();
+    configASSERT( xTraceEnable(TRC_START) == TRC_SUCCESS );
+    
+    /* Set interrupt handler for keyboard input. */
+    vPortSetInterruptHandler( mainINTERRUPT_NUMBER_KEYBOARD, prvKeyboardInterruptHandler );
 
     /* Start keyboard input handling thread. */
     xWindowsKeyboardInputThreadHandle = CreateThread(
@@ -210,17 +212,8 @@ int main( void )
         0,                             /* Creation flags. */
         NULL);
 
-    /* Use the cores that are not used by the FreeRTOS tasks. */
+    /* Use the cores that are not used by the FreeRTOS tasks for the Windows thread. */
     SetThreadAffinityMask( xWindowsKeyboardInputThreadHandle, ~0x01u );
-
-    /* Start keyboard interrupt simulator task. */
-    xTaskCreate(
-        prvKeyboardInterruptSimulatorTask, /* The function that implements the task. */
-        "KeyboardInterrupt",               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-        configMINIMAL_STACK_SIZE,          /* The size of the stack to allocate to the task. */
-        NULL, 					           /* The parameter passed to the task - not used in this simple case. */
-        configMAX_PRIORITIES - 1,          /* The priority assigned to the task. The priority is very high as this task simulates an interrupt coming from the keyboard. */
-        NULL);							   /* The task handle is not required, so NULL is passed. */
 
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
      * of this file. */
@@ -337,7 +330,7 @@ void vAssertCalled( unsigned long ulLine,
         printf("ASSERT! Line %ld, file %s, GetLastError() %ld\r\n", ulLine, pcFileName, GetLastError());
 
         /* Stop the trace recording and save the trace. */
-        vTraceStop();
+        ( void ) xTraceDisable();
         prvSaveTraceFile();
 
         /* Cause debugger break point if being debugged. */
@@ -357,7 +350,7 @@ void vAssertCalled( unsigned long ulLine,
         }
 
         /* Re-enable the trace recording. */
-        vTraceEnable( TRC_START );
+        ( void ) xTraceEnable( TRC_START );
     }
     taskEXIT_CRITICAL();
 }
@@ -470,6 +463,43 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
 /*-----------------------------------------------------------*/
 
 /*
+ * Interrupt handler for when keyboard input is received.
+ */
+static uint32_t prvKeyboardInterruptHandler(void)
+{
+    /* Handle keyboard input. */
+    switch (xKeyPressed)
+    {
+    case mainNO_KEY_PRESS_VALUE:
+        break;
+    case mainOUTPUT_TRACE_KEY:
+        /* Saving the trace file requires Windows system calls, so enter a critical
+           section to prevent deadlock or errors resulting from calling a Windows
+           system call from within the FreeRTOS simulator. */
+        portENTER_CRITICAL();
+        {
+            ( void ) xTraceDisable();
+            prvSaveTraceFile();
+            ( void ) xTraceEnable(TRC_START);
+        }
+        portEXIT_CRITICAL();
+        break;
+    default:
+        #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+            {
+                /* Call the keyboard interrupt handler for the blinky demo. */
+                vBlinkyKeyboardInterruptHandler( xKeyPressed );
+            }
+        #endif
+    break;
+    }
+
+    /* This interrupt does not require a context switch so return pdFALSE */
+    return pdFALSE;
+}
+
+/*-----------------------------------------------------------*/
+/*
  * Windows thread function to capture keyboard input from outside of the
  * FreeRTOS simulator. This thread passes data into the simulator using
  * an integer.
@@ -480,52 +510,20 @@ static DWORD WINAPI prvWindowsKeyboardInputThread( void * pvParam )
 
     for ( ; ; )
     {
+        /* Block on acquiring a key press. */
         xKeyPressed = _getch();
+        
+        /* Notify FreeRTOS simulator that there is a keyboard interrupt.
+         * This will trigger prvKeyboardInterruptHandler.
+         */
+        vPortGenerateSimulatedInterrupt( mainINTERRUPT_NUMBER_KEYBOARD );
     }
+
+    /* Should not get here so return negative exit status. */
+    return -1;
 }
 
 /*-----------------------------------------------------------*/
-
-static void prvKeyboardInterruptSimulatorTask( void * pvParam )
-{
-    ( void ) pvParam;
-
-    for ( ; ; )
-    {
-        /* Handle keyboard input. */
-        switch ( xKeyPressed )
-        {
-        case mainNO_KEY_PRESS_VALUE:
-            break;
-        case mainOUTPUT_TRACE_KEY:
-            /* Saving the trace file requires Windows system calls, so enter a critical
-               section to prevent deadlock or errors resulting from calling a Windows
-               system call from within the FreeRTOS simulator. */
-            taskENTER_CRITICAL();
-            {
-                vTraceStop();
-                prvSaveTraceFile();
-                vTraceEnable(TRC_START);
-            }
-            taskEXIT_CRITICAL();
-            break;
-        default:
-            #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-                {
-                    /* Call the keyboard interrupt handler for the blinky demo. */
-                    vBlinkyKeyboardInterruptHandler(xKeyPressed);
-                }
-            #endif
-            break;
-        }
-
-        /* Clear the handled key press. */
-        xKeyPressed = mainNO_KEY_PRESS_VALUE;
-
-        /* Yield to allow other tasks to run. */
-        vTaskDelay( pdMS_TO_TICKS( mainKEYBOARD_INTERRUPT_YIELD_MS ) );
-    }
-}
 
 /* The below code is used by the trace recorder for timing. */
 static uint32_t ulEntryTime = 0;

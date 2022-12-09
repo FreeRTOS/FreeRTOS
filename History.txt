@@ -1,6 +1,6 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
-Changes between FreeRTOS 202112.00 and FreeRTOS 202211.00 released November 2022
+Changes between FreeRTOS 202112.00 and FreeRTOS 202212.00 released December 2022
 
 	+ Released LTS 2.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11,
 	  coreHTTP, coreJSON, AWS IoT Over-the-air-Updates (OTA), AWS IoT Device Shadow, AWS IoT Jobs,

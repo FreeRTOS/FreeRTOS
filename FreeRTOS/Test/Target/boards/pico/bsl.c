@@ -60,7 +60,7 @@ int reportSchedTraceLog(SchedTraceLog *traceLog)
 
       printf("SchedTraceLog: %lld\n", logRow->number);
       for(coreNum=0; coreNum < MAX_CORES; coreNum++) {
-        printf("  CORE %d: %s\n", coreNum, logRow->taskStatus[coreNum].pcTaskName, logRow->taskStatus[coreNum].eCurrentState);
+        printf("  CORE %d: %s\n", coreNum, logRow->taskStatus[coreNum].pcTaskName); // , logRow->taskStatus[coreNum].eCurrentState); eRunning, eReady, eBlocked, eSuspended, eDeleted
       }
     }
 

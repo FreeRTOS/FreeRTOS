@@ -101,7 +101,7 @@ static volatile uint32_t ulCountSubMachinesComplete = 0;
 #include "pico/mutex.h"
 #include "pico/sem.h"
 
-#if configNUM_CORES > 1
+#if configNUMBER_OF_CORES > 1
 #error Require only one core configured for FreeRTOS
 #endif
 

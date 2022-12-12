@@ -102,7 +102,7 @@
 */
 
 /* SMP port only */
-#define configNUM_CORES                         2 
+#define configNUMBER_OF_CORES                   2
 #define configTICK_CORE                         1
 #define configRUN_MULTIPLE_PRIORITIES           0
 #define configUSE_CORE_AFFINITY 1

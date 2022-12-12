@@ -26,7 +26,7 @@ static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 static void prvTaskC(void *pvParameters);
 
-#if configNUM_CORES != 2
+#if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
 

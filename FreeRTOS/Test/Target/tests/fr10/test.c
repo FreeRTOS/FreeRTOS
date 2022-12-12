@@ -28,7 +28,7 @@ static void prvTaskC(void *pvParameters);
 
 TaskHandle_t taskAHandle;
 
-#if configNUM_CORES != 2
+#if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
 

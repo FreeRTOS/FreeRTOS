@@ -30,14 +30,9 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
+static SchedTraceLog schedTraceLog;
 void test_fr2TASK_SWITCHED_IN(void) {
-  static SchedTraceLog schedTraceLog;
-
-  setPin(LED_PIN);
-
   logSchedTrace(&schedTraceLog);
-
-  reportSchedTraceLog(&schedTraceLog);
 }
 
 void setup_test_fr2_001(void) {
@@ -62,8 +57,6 @@ int main(void) {
 
   RUN_TEST(setup_test_fr2_001);
 
-  clearPin(LED_PIN);
-
   vTaskStartScheduler();
   // AMPLaunchOnCore(1, vTaskStartScheduler);
 
@@ -85,6 +78,8 @@ static void prvTaskA(void *pvParameters) {
 
 static void prvTaskB(void *pvParameters) {
   vTaskDelay(pdMS_TO_TICKS(5000));
+  
+  reportSchedTraceLog(&schedTraceLog);
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

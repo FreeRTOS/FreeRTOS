@@ -59,6 +59,11 @@ int main(void) {
 
 static uint32_t taskBState = 0;
 
+char strbuf_pass[] = "TEST PASSED\n";
+size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
+char strbuf_fail[] = "TEST FAILED\n";
+size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
+
 static void prvTaskA(void *pvParameters) {
   int handlerNum = -1;
   TaskStatus_t taskStatus[16];
@@ -66,7 +71,10 @@ static void prvTaskA(void *pvParameters) {
   unsigned long totalRunTime;
   bool taskBObservedRunning = false;
   int idx;
+  int attempt = 1;
   int numTasksRunning;
+
+  vTaskDelay(pdMS_TO_TICKS(5000));
 
   while(!taskBObservedRunning)
   {
@@ -79,9 +87,22 @@ static void prvTaskA(void *pvParameters) {
         taskBObservedRunning = true;
       }
     }
+
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+
+    attempt++;
+
+    if (attempt > 10) {
+      sendReport(strbuf_fail, strbuf_fail_len);
+      break;
+    }
   }
 
-  setPin(LED_PIN);
+  if (taskBObservedRunning)
+  {
+    setPin(LED_PIN);
+    sendReport(strbuf_pass, strbuf_pass_len);
+  }
 
   // idle the task
   for (;;) {
@@ -90,10 +111,9 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  int iter = 1;
-  int numIters = 10;
-
   clearPin(LED_PIN);
+  vTaskDelay(pdMS_TO_TICKS(5000));
+
   taskBState++;
 
   // idle the task

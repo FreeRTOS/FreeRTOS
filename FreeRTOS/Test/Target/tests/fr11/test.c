@@ -15,13 +15,15 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
+#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
+#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
+
+TaskHandle_t taskA, taskB;
 
 #if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
@@ -29,10 +31,10 @@ static void prvTaskB(void *pvParameters);
 
 void setup_test_fr11_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, NULL);
+              mainTASK_A_PRIORITY, &taskA);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, NULL);
+              mainTASK_B_PRIORITY, &taskB);
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -59,6 +61,11 @@ int main(void) {
 
 static uint32_t taskBState = 0;
 
+char strbuf_pass[] = "TEST PASSED\n";
+size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
+char strbuf_fail[] = "TEST FAILED\n";
+size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
+
 static void prvTaskA(void *pvParameters) {
   int handlerNum = -1;
   TaskStatus_t taskStatus[16];
@@ -67,6 +74,13 @@ static void prvTaskA(void *pvParameters) {
   bool taskBObservedRunning = false;
   int idx;
   int numTasksRunning;
+  int attempt = 0;
+
+  vTaskDelay(pdMS_TO_TICKS(5000));
+
+  vTaskSuspendAll();
+
+  vTaskPrioritySet(taskB, mainTASK_A_PRIORITY+1);
 
   while(!taskBObservedRunning)
   {
@@ -76,12 +90,31 @@ static void prvTaskA(void *pvParameters) {
     {
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
-        vTaskDelete(taskStatus[idx].xHandle);
+        taskBObservedRunning = true;
       }
+    }
+
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+
+    attempt++;
+
+    if (attempt > 10) {
+      break;
     }
   }
 
-  setPin(LED_PIN);
+  xTaskResumeAll();
+
+  if (taskBObservedRunning)
+  {
+    sendReport(strbuf_fail, strbuf_fail_len);
+  }
+  else
+  {
+    setPin(LED_PIN);
+    sendReport(strbuf_pass, strbuf_pass_len);
+  }
+
 
   // idle the task
   for (;;) {
@@ -96,10 +129,10 @@ static void prvTaskB(void *pvParameters) {
   size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   clearPin(LED_PIN);
-  taskBState++;
 
   // idle the task
   for (;;) {
+    taskBState++;
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 }

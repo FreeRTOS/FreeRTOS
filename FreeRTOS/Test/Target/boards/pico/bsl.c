@@ -76,9 +76,6 @@ int reportSchedTraceLog(SchedTraceLog *traceLog)
 void initTestEnvironment(void) {
   //xSemLogSchedTrace = xSemaphoreCreateBinary();
 
-  /* Want to be able to printf */
-  stdio_init_all();
-
   /* And flash LED */
   gpio_init(PICO_DEFAULT_LED_PIN);
   gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
@@ -88,9 +85,22 @@ void initTestEnvironment(void) {
     GPIO_IRQ_EDGE_FALL |
     GPIO_IRQ_EDGE_RISE,
     false);
+
+
+  /* Want to be able to printf */
+  stdio_init_all();
+  while (!stdio_usb_connected())
+  {
+    setPin(LED_PIN);
+    sleep_ms(250);
+    clearPin(LED_PIN);
+    sleep_ms(250);
+  }
+
+
 }
 
-void sendReport(char *buffer, size_t len) { printf("%.*s", len, buffer); }
+void sendReport(char *buffer, size_t len) { printf("%s", buffer); stdio_flush(); }
 
 void setPin(int pinNum) { gpio_put(pinNum, 1); }
 

@@ -61,9 +61,9 @@ int main(void) {
 
 static uint32_t taskBState = 0;
 
-char strbuf_pass[] = "TEST PASSED\n";
+char strbuf_pass[] = "TEST PASSED\n\0";
 size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
-char strbuf_fail[] = "TEST FAILED\n";
+char strbuf_fail[] = "TEST FAILED\n\0";
 size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
 
 static void prvTaskA(void *pvParameters) {
@@ -105,6 +105,8 @@ static void prvTaskA(void *pvParameters) {
 
   xTaskResumeAll();
 
+  TEST_ASSERT_EQUAL_INT((int)taskBObservedRunning, (int)false);
+
   if (taskBObservedRunning)
   {
     sendReport(strbuf_fail, strbuf_fail_len);
@@ -112,13 +114,15 @@ static void prvTaskA(void *pvParameters) {
   else
   {
     setPin(LED_PIN);
-    sendReport(strbuf_pass, strbuf_pass_len);
+    sendReport(strbuf_pass, strbuf_pass_len); // <-- appears to be hanging here...
   }
 
 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    clearPin(LED_PIN);
+    sendReport(strbuf_pass, strbuf_pass_len);
   }
 }
 
@@ -127,6 +131,8 @@ static void prvTaskB(void *pvParameters) {
   int numIters = 10;
   char strbuf[] = "task B enter critical section";
   size_t strbuf_len = sizeof(strbuf) / sizeof(char);
+
+  vTaskDelay(pdMS_TO_TICKS(5000));
 
   clearPin(LED_PIN);
 

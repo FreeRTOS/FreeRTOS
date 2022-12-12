@@ -20,7 +20,7 @@ as ( configMAX_PRIORITIES - 1 ). */
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
-char strbuf_good[] = "TEST PASSED";
+char strbuf_good[] = "TEST PASSED\n\0";
 size_t strbuf_good_len = sizeof(strbuf_good) / sizeof(char);
 
 static void prvTaskA(void *pvParameters);
@@ -67,7 +67,7 @@ int main(void) {
 static uint32_t taskBState = 0;
 
 static void prvTaskA(void *pvParameters) {
-  char strbuf_bad[] = "task A running on the wrong core";
+  char strbuf_bad[] = "task A running on the wrong core\n\0";
   size_t strbuf_bad_len = sizeof(strbuf_bad) / sizeof(char);
   BaseType_t core;
 
@@ -95,7 +95,7 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  char strbuf_bad[] = "task B running on the wrong core";
+  char strbuf_bad[] = "task B running on the wrong core\n\0";
   size_t strbuf_bad_len = sizeof(strbuf_bad) / sizeof(char);
   BaseType_t core;
 
@@ -141,7 +141,7 @@ void vApplicationTickHook(void) {
 }
 
 void vApplicationMallocFailedHook(void) {
-  char strbuf[] = "Malloc Failed";
+  char strbuf[] = "Malloc Failed\n\0";
   size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   sendReport(strbuf, strbuf_len);

@@ -5,6 +5,9 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "task.h"
+
+#define PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS (5000)
+
 #include "pico/stdlib.h"
 
 #include <stddef.h>
@@ -13,6 +16,7 @@
 #define CPUTIME_TO_MS_DIVISOR                                                  \
   (123456) // XXXADS must tune to platform if needed. some platforms will have a
            // time-sycned source but it will be relative to something
+
 
 #define LED_PIN (PICO_DEFAULT_LED_PIN)
 #define MAX_CORES (2)

@@ -108,7 +108,7 @@
 #define configUSE_CORE_AFFINITY 1
 #define configUSE_MINIMAL_IDLE_HOOK 0
 //#define configUSE_TIME_SLICING 0
-#define configUSE_TASK_PREEMPTION_DISABLE 0
+#define configUSE_TASK_PREEMPTION_DISABLE 1
 
 
 /* RP2040 specific */

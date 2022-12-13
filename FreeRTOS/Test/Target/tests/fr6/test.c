@@ -15,8 +15,8 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
+#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 3)
+#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
@@ -146,9 +146,9 @@ static void checkTestStatus(void) {
 
 static void prvTaskA(void *pvParameters) {
   // wait with preemption disable
-  taskENTER_CRITICAL();
+  vTaskPreemptionDisable(taskA);
   busyWaitMicroseconds(2000000);
-  taskEXIT_CRITICAL();
+  vTaskPreemptionEnable(taskA);
 
   // idle the task
   for (;;) {

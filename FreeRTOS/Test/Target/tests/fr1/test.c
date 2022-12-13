@@ -74,8 +74,6 @@ static void prvTaskA(void *pvParameters) {
   int attempt = 1;
   int numTasksRunning;
 
-  vTaskDelay(pdMS_TO_TICKS(5000));
-
   while(!taskBObservedRunning)
   {
     numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
@@ -92,7 +90,7 @@ static void prvTaskA(void *pvParameters) {
 
     attempt++;
 
-    if (attempt > 10) {
+    if (attempt > 100) {
       sendReport(strbuf_fail, strbuf_fail_len);
       break;
     }
@@ -111,14 +109,11 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  clearPin(LED_PIN);
-  vTaskDelay(pdMS_TO_TICKS(5000));
-
-  taskBState++;
-
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    taskBState++;
+    busyWaitMicroseconds(100000);
   }
 }
 

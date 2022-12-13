@@ -145,6 +145,7 @@ static void prvTaskA(void *pvParameters) {
   for (;;) {
     validateTraceLog();
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    busyWaitMicroseconds(100000);
   }
 }
 
@@ -153,6 +154,7 @@ static void prvTaskB(void *pvParameters) {
   for (;;) {
     validateTraceLog();
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    busyWaitMicroseconds(100000);
   }
 }
 
@@ -161,6 +163,7 @@ static void prvTaskC(void *pvParameters) {
   for (;;) {
     validateTraceLog();
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    busyWaitMicroseconds(100000);
   }
 }
 

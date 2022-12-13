@@ -73,8 +73,6 @@ static void prvTaskA(void *pvParameters) {
 
   int iter;
 
-  vTaskDelay(pdMS_TO_TICKS(5000));
-
   for(iter=1;iter < 10;iter++)
   {
     vTaskDelay(pdMS_TO_TICKS(100));
@@ -100,8 +98,6 @@ static void prvTaskB(void *pvParameters) {
   BaseType_t core;
 
   int iter;
-
-  vTaskDelay(pdMS_TO_TICKS(5000));
 
   for(iter=1;iter < 10;iter++)
   {

@@ -59,9 +59,9 @@ int main(void) {
 
 static uint32_t taskBState = 0;
 
-char strbuf_pass[] = "TEST PASSED\n";
+char strbuf_pass[] = "TEST PASSED\n\0";
 size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
-char strbuf_fail[] = "TEST FAILED\n";
+char strbuf_fail[] = "TEST FAILED\n\0";
 size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
 
 static void prvTaskA(void *pvParameters) {
@@ -73,8 +73,6 @@ static void prvTaskA(void *pvParameters) {
   int idx;
   int attempt = 1;
   int numTasksRunning;
-
-  vTaskDelay(pdMS_TO_TICKS(5000));
 
   while(!taskBObservedRunning)
   {
@@ -92,7 +90,7 @@ static void prvTaskA(void *pvParameters) {
 
     attempt++;
 
-    if (attempt > 10) {
+    if (attempt > 100) {
       break;
     }
   }
@@ -114,14 +112,12 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  clearPin(LED_PIN);
-  vTaskDelay(pdMS_TO_TICKS(5000));
-
   taskBState++;
 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    busyWaitMicroseconds(100000);
   }
 }
 

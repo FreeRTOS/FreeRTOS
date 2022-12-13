@@ -30,9 +30,66 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-static SchedTraceLog schedTraceLog;
+char strbuf_pass[] = "TEST PASSED\n";
+size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
+char strbuf_fail[] = "TEST FAILED\n";
+size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
+
+bool testFailed = false;
+bool testPassed = false;
+
 void test_fr2TASK_SWITCHED_IN(void) {
-  logSchedTrace(&schedTraceLog);
+  UBaseType_t idx, numTasksRunning;
+  TaskStatus_t taskStatus[16];
+  UBaseType_t taskStatusArraySize = 16;
+  unsigned long totalRunTime;
+  int coreIndex = 0;
+  SchedTraceLogRow *logRow;
+  int retcode = 0;
+
+  static int taskSwitchCount = 0;
+  static bool taskARan = false;
+  static bool taskBRan = false;
+  static bool taskCRan = false;
+
+  if (!(testPassed || testFailed))
+  {
+    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+
+    for(idx = 0; idx < numTasksRunning; idx++)
+    {
+      if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      {
+        taskARan = true;
+      }
+      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      {
+        taskBRan = true;
+      }
+      if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      {
+        taskCRan = true;
+      }
+    }
+
+    if (taskBRan)
+    {
+      if (!(taskARan && taskCRan))
+      {
+        testFailed = true;
+      }
+      else
+      {
+        testPassed = true;
+      }
+    }
+
+    taskSwitchCount++;
+    if (taskSwitchCount > 2048)
+    {
+      testFailed = true;
+    }
+  }
 }
 
 void setup_test_fr2_001(void) {
@@ -68,28 +125,47 @@ int main(void) {
             // instead.
 }
 
+static void validateTraceLog(void) {
+  static bool statusReported = false;
+
+  if (!statusReported)
+  {
+    if (testPassed)
+    {
+      setPin(LED_PIN);
+      sendReport(strbuf_pass, strbuf_pass_len);
+      TEST_ASSERT_TRUE(testPassed);
+      statusReported = true;
+    }
+    else if (testFailed)
+    {
+      sendReport(strbuf_fail, strbuf_fail_len);
+      TEST_ASSERT_TRUE(!testFailed);
+      statusReported = true;
+    }
+  }
+}
+
 static void prvTaskA(void *pvParameters) {
-  vTaskDelay(pdMS_TO_TICKS(5000));
   // idle the task
   for (;;) {
+    validateTraceLog();
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 }
 
 static void prvTaskB(void *pvParameters) {
-  vTaskDelay(pdMS_TO_TICKS(5000));
-  
-  reportSchedTraceLog(&schedTraceLog);
   // idle the task
   for (;;) {
+    validateTraceLog();
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 }
 
 static void prvTaskC(void *pvParameters) {
-  vTaskDelay(pdMS_TO_TICKS(5000));
   // idle the task
   for (;;) {
+    validateTraceLog();
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 }

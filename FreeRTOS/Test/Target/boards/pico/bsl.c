@@ -31,13 +31,14 @@ int logSchedTrace(SchedTraceLog *traceLog) {
       {
         logRow = &(traceLog->rows[traceLog->offset]);
         logRow->valid = pdTRUE;
-        logRow->number = logSchedTraceNumber++;
+        logRow->number = logSchedTraceNumber;
         memcpy(&logRow->taskStatus[coreIndex], &taskStatus[index], sizeof(struct xTASK_STATUS));
 
         coreIndex++;
       }
   }
 
+  logSchedTraceNumber++;
   traceLog->offset++;
   if (traceLog->offset >= MAX_SCHED_TRACE_LOG_ROWS) {
     traceLog->offset = 0;

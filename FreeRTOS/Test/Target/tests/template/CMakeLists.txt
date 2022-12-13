@@ -11,7 +11,7 @@ target_include_directories(template_common INTERFACE
         ${CMAKE_CURRENT_LIST_DIR}
         ${BSL_PATHS}
         )
-bsl_library_variant(bsl_template ${CMAKE_CURRENT_LIST_DIR})
+bsl_library_variant(bsl_template ${CMAKE_CURRENT_LIST_DIR} "")
 target_link_libraries(template_common INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap1

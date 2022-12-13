@@ -104,7 +104,7 @@
 /* SMP port only */
 #define configNUMBER_OF_CORES                   2
 #define configTICK_CORE                         1
-#define configRUN_MULTIPLE_PRIORITIES           0
+#define configRUN_MULTIPLE_PRIORITIES           1
 #define configUSE_CORE_AFFINITY 1
 #define configUSE_MINIMAL_IDLE_HOOK 0
 //#define configUSE_TIME_SLICING 0
@@ -139,6 +139,8 @@ to exclude the API function. */
 #define INCLUDE_xQueueGetMutexHolder            1
 
 /* A header file that defines trace macro can be included here. */
+extern void test_fr6TASK_SWITCHED_IN(void);
+#define traceTASK_SWITCHED_IN() test_fr6TASK_SWITCHED_IN()
 
 #endif /* FREERTOS_CONFIG_H */
 

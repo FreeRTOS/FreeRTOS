@@ -19,7 +19,13 @@
 
 
 #define LED_PIN (PICO_DEFAULT_LED_PIN)
+#define GPIO0_PIN (PICO_DEFAULT_UART_TX_PIN)
 #define MAX_CORES (2)
+
+extern char testPassedString[];
+extern size_t testPassedStringLen;
+extern char testFailedString[];
+extern size_t testFailedStringLen;
 
 typedef void (* softwareInterruptHandler)(void);
 
@@ -60,5 +66,11 @@ extern void triggerSoftwareInterrupt(int num);
 #define CPUTIME_TO_MS(CPUTIME_INPUT)                                           \
   ((uin32_t)(CPUTIME_INPUT / CPUTIME_TO_MS_DIVISOR))
 #define MS_TO_CPUTIME(MS_INPUT) ((uint64_t)(MS_INPUT * CPUTIME_TO_MS_DIVISOR))
+
+#ifdef USE_BSL_DEFAULT_HOOKS
+extern void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName);
+extern void vApplicationTickHook(void);
+extern void vApplicationMallocFailedHook(void);
+#endif
 
 #endif

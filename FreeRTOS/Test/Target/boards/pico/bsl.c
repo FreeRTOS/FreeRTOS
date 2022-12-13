@@ -10,6 +10,11 @@
 #include <stdio.h>
 #include <string.h>
 
+char testPassedString[] = "TEST PASSED\n\0";
+size_t testPassedStringLen = sizeof(testPassedString) / sizeof(char);
+char testFailedString[] = "TEST FAILED\n\0";
+size_t testFailedStringLen = sizeof(testFailedString) / sizeof(char);
+
 static SemaphoreHandle_t xSemLogSchedTrace = NULL;
 uint64_t logSchedTraceNumber = 0;
 
@@ -77,7 +82,7 @@ int reportSchedTraceLog(SchedTraceLog *traceLog)
 void initTestEnvironment(void) {
   //xSemLogSchedTrace = xSemaphoreCreateBinary();
 
-  /* And flash LED */
+  /* Setup LED I/O */
   gpio_init(PICO_DEFAULT_LED_PIN);
   gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
   gpio_set_irq_enabled(PICO_DEFAULT_LED_PIN,
@@ -87,14 +92,28 @@ void initTestEnvironment(void) {
     GPIO_IRQ_EDGE_RISE,
     false);
 
+  /* Setup Output on GPIO0 */
+  gpio_init(PICO_DEFAULT_UART_TX_PIN);
+  gpio_set_function(PICO_DEFAULT_UART_TX_PIN, GPIO_FUNC_NULL);
+  gpio_set_dir(PICO_DEFAULT_UART_TX_PIN, GPIO_OUT);
+  gpio_set_slew_rate(PICO_DEFAULT_UART_TX_PIN, GPIO_SLEW_RATE_FAST);
+  gpio_set_drive_strength(PICO_DEFAULT_UART_TX_PIN, GPIO_DRIVE_STRENGTH_8MA);
+  gpio_set_irq_enabled(PICO_DEFAULT_UART_TX_PIN,
+    GPIO_IRQ_LEVEL_LOW |
+    GPIO_IRQ_LEVEL_HIGH |
+    GPIO_IRQ_EDGE_FALL |
+    GPIO_IRQ_EDGE_RISE,
+    false);
 
   /* Want to be able to printf */
   stdio_init_all();
   while (!stdio_usb_connected())
   {
     setPin(LED_PIN);
+    setPin(GPIO0_PIN);
     sleep_ms(250);
     clearPin(LED_PIN);
+    clearPin(GPIO0_PIN);
     sleep_ms(250);
   }
 
@@ -137,3 +156,30 @@ void deleteSoftwareInterruptHandler(int num, softwareInterruptHandler handler) {
 void triggerSoftwareInterrupt(int num) {
   irq_set_pending(num);
 }
+
+#ifdef USE_BSL_DEFAULT_HOOKS
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
+  (void)pcTaskName;
+  (void)xTask;
+
+  /* Run time stack overflow checking is performed if
+  configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+  function is called if a stack overflow is detected.  pxCurrentTCB can be
+  inspected in the debugger if the task name passed into this function is
+  corrupt. */
+  for (;;)
+    ;
+}
+
+void vApplicationTickHook(void) {
+  static uint32_t ulCount = 0;
+  ulCount++;
+}
+
+void vApplicationMallocFailedHook(void) {
+  char strbuf[] = "Malloc Failed\n\0";
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
+
+  sendReport(strbuf, strbuf_len);
+}
+#endif

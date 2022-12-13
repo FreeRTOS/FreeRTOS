@@ -120,28 +120,3 @@ static void prvTaskB(void *pvParameters) {
     busyWaitMicroseconds(100000);
   }
 }
-
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
-  (void)pcTaskName;
-  (void)xTask;
-
-  /* Run time stack overflow checking is performed if
-  configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-  function is called if a stack overflow is detected.  pxCurrentTCB can be
-  inspected in the debugger if the task name passed into this function is
-  corrupt. */
-  for (;;)
-    ;
-}
-
-void vApplicationTickHook(void) {
-  static uint32_t ulCount = 0;
-  ulCount++;
-}
-
-void vApplicationMallocFailedHook(void) {
-  char strbuf[] = "Malloc Failed";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  sendReport(strbuf, strbuf_len);
-}

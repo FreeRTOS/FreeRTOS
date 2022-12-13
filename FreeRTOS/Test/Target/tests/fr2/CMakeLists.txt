@@ -11,7 +11,7 @@ target_include_directories(fr2_common INTERFACE
         ${CMAKE_CURRENT_LIST_DIR}
         ${BSL_PATHS}
         )
-bsl_library_variant(bsl_fr2 ${CMAKE_CURRENT_LIST_DIR})
+bsl_library_variant(bsl_fr2 ${CMAKE_CURRENT_LIST_DIR} "-DUSE_BSL_DEFAULT_HOOKS")
 target_link_libraries(fr2_common INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap1

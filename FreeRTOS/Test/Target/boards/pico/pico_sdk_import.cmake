@@ -89,8 +89,9 @@ endforeach()
 
 set(BSL_LIBRARY_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE INTERNAL "")
 
-macro(bsl_library_variant VARIANT_NAME INCLUDE_DIR)
+macro(bsl_library_variant VARIANT_NAME INCLUDE_DIR DEFINES)
     add_library(${VARIANT_NAME} STATIC "${BSL_LIBRARY_DIR}/bsl.c")
+    target_compile_definitions(${VARIANT_NAME} PUBLIC ${DEFINES})
     pico_enable_stdio_usb(${VARIANT_NAME} 1)
     target_include_directories(${VARIANT_NAME} PUBLIC ${BSL_PATHS} ${PICO_INCLUDE_DIRS} ${BSL_LIBRARY_DIR}/../../../../Source/include ${INCLUDE_DIR})
     target_link_libraries(${VARIANT_NAME} PUBLIC pico_stdlib pico_multicore)

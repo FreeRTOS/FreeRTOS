@@ -17,15 +17,74 @@
 as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
+#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 3)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
+static void prvTaskC(void *pvParameters);
 
 #if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
+
+bool testFailed = false;
+bool testPassed = false;
+
+void test_fr6TASK_SWITCHED_IN(void) {
+  UBaseType_t idx, numTasksRunning;
+  TaskStatus_t taskStatus[16];
+  UBaseType_t taskStatusArraySize = 16;
+  unsigned long totalRunTime;
+  int coreIndex = 0;
+  SchedTraceLogRow *logRow;
+  int retcode = 0;
+
+  static int taskSwitchCount = 0;
+  static bool taskARan = false;
+  static bool taskBRan = false;
+  static bool taskCRan = false;
+
+  if (!(testPassed || testFailed))
+  {
+    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+
+    for(idx = 0; idx < numTasksRunning; idx++)
+    {
+      if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      {
+        taskARan = true;
+      }
+      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      {
+        taskBRan = true;
+      }
+      if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      {
+        taskCRan = true;
+      }
+    }
+
+    if (taskBRan)
+    {
+      if (!(taskARan && taskCRan))
+      {
+        testFailed = true;
+      }
+      else
+      {
+        testPassed = true;
+      }
+    }
+
+    taskSwitchCount++;
+    if (taskSwitchCount > 2048)
+    {
+      testFailed = true;
+    }
+  }
+}
 
 void setup_test_fr6_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
@@ -33,6 +92,9 @@ void setup_test_fr6_001(void) {
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_B_PRIORITY, NULL);
+
+  xTaskCreate(prvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
+              mainTASK_C_PRIORITY, NULL);
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -89,42 +151,43 @@ static void prvTaskA(void *pvParameters) {
   }
 }
 
-static void prvTaskB(void *pvParameters) {
-  int iter = 1;
-  int numIters = 10;
-  char strbuf[] = "task B enter critical section";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
+static void checkTestStatus(void) {
+  static bool statusReported = false;
 
-  clearPin(LED_PIN);
+  if (!statusReported)
+  {
+    if (testPassed)
+    {
+      setPin(LED_PIN);
+      sendReport(testPassedString, testPassedStringLen);
+      TEST_ASSERT_TRUE(testPassed);
+      statusReported = true;
+    }
+    else if (testFailed)
+    {
+      sendReport(testFailedString, testFailedStringLen);
+      TEST_ASSERT_TRUE(!testFailed);
+      statusReported = true;
+    }
+  }
+}
+
+static void prvTaskB(void *pvParameters) {
   taskBState++;
 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    checkTestStatus();
+    busyWaitMicroseconds(100000);
   }
 }
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
-  (void)pcTaskName;
-  (void)xTask;
-
-  /* Run time stack overflow checking is performed if
-  configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-  function is called if a stack overflow is detected.  pxCurrentTCB can be
-  inspected in the debugger if the task name passed into this function is
-  corrupt. */
-  for (;;)
-    ;
-}
-
-void vApplicationTickHook(void) {
-  static uint32_t ulCount = 0;
-  ulCount++;
-}
-
-void vApplicationMallocFailedHook(void) {
-  char strbuf[] = "Malloc Failed";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  sendReport(strbuf, strbuf_len);
+static void prvTaskC(void *pvParameters) {
+  // idle the task
+  for (;;) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    checkTestStatus();
+    busyWaitMicroseconds(100000);
+  }
 }

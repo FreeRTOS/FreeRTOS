@@ -30,13 +30,8 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-char strbuf_pass[] = "TEST PASSED\n";
-size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
-char strbuf_fail[] = "TEST FAILED\n";
-size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
-
-bool testFailed = false;
-bool testPassed = false;
+static bool testFailed = false;
+static bool testPassed = false;
 
 void test_fr2TASK_SWITCHED_IN(void) {
   UBaseType_t idx, numTasksRunning;
@@ -112,7 +107,7 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr2_001);
+  setup_test_fr2_001();
 
   vTaskStartScheduler();
   // AMPLaunchOnCore(1, vTaskStartScheduler);
@@ -125,22 +120,29 @@ int main(void) {
             // instead.
 }
 
+static void reportStatus(void) {
+  TEST_ASSERT_TRUE(testPassed);
+
+  if (testPassed)
+  {
+      setPin(LED_PIN);
+      sendReport(testPassedString, testPassedStringLen);
+  }
+  else
+  {
+      sendReport(testFailedString, testFailedStringLen);
+  }
+}
+
 static void checkTestStatus(void) {
   static bool statusReported = false;
 
   if (!statusReported)
   {
-    if (testPassed)
+    if (testPassed || testFailed)
     {
-      setPin(LED_PIN);
-      sendReport(strbuf_pass, strbuf_pass_len);
-      TEST_ASSERT_TRUE(testPassed);
-      statusReported = true;
-    }
-    else if (testFailed)
-    {
-      sendReport(strbuf_fail, strbuf_fail_len);
-      TEST_ASSERT_TRUE(!testFailed);
+      RUN_TEST(reportStatus);
+      UNITY_END();
       statusReported = true;
     }
   }

@@ -28,7 +28,7 @@ static void prvTaskB(void *pvParameters);
 #endif
 
 void setup_test_fr1_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE * 2, NULL,
               mainTASK_A_PRIORITY, NULL);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
@@ -113,7 +113,7 @@ static void prvTaskA(void *pvParameters) {
 static void prvTaskB(void *pvParameters) {
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    // vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
     taskBState++;
     busyWaitMicroseconds(100000);
   }

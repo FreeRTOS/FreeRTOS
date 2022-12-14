@@ -27,8 +27,8 @@ static void prvTaskB(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-void setup_test_fr1_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+void setup_test_fr4_001(void) {
+  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE * 2, NULL,
               mainTASK_A_PRIORITY, NULL);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
@@ -44,7 +44,7 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr1_001);
+  RUN_TEST(setup_test_fr4_001);
 
   vTaskStartScheduler();
   // AMPLaunchOnCore(1, vTaskStartScheduler);

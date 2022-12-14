@@ -130,7 +130,13 @@ void delayMs(uint32_t ms) { sleep_ms(ms); }
 
 void busyWaitMicroseconds(uint32_t us) { busy_wait_us(us); }
 
-uint64_t getCPUTime(void) { return (uint64_t)get_absolute_time(); }
+uint64_t getCPUTime(void) {
+  #ifdef NDEBUG
+    return (uint64_t)get_absolute_time();
+  #else
+    return get_absolute_time()._private_us_since_boot;
+  #endif
+}
 
 int AMPLaunchOnCore(int coreNum, void (*function)(void)) {
   int rvb = -1;

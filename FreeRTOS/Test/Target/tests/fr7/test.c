@@ -15,26 +15,32 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
+#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
+#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
+static void prvTaskC(void *pvParameters);
 
 #if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
 
-TaskHandle_t taskAHandle, taskBHandle;
+TaskHandle_t taskA, taskB;
 
 void setup_test_fr7_001(void) {
+  xTaskCreate(prvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
+              mainTASK_C_PRIORITY, NULL);
+
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, &taskAHandle);
+              mainTASK_A_PRIORITY, &taskA);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, &taskBHandle);
+              mainTASK_B_PRIORITY, &taskB);
+  
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -60,15 +66,19 @@ int main(void) {
 }
 
 static uint32_t taskAState = 0;
+static uint32_t taskBState = 0;
+uint32_t originalFreeHeap;
 
 static void prvTaskA(void *pvParameters) {
-  setPin(LED_PIN);
-
-  vTaskDelay(pdMS_TO_TICKS(5000));
-
-  clearPin(LED_PIN);
+  while (taskBState < 0) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+  }
 
   taskAState++;
+
+  originalFreeHeap = xPortGetFreeHeapSize();
+
+  vTaskDelete(taskA);
 
   // idle the task
   for (;;) {
@@ -77,29 +87,41 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  int iter = 1;
-  int numIters = 10;
-  char strbuf[] = "task B enter critical section";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-  //HeapStats_t heapStats;
-  //size_t bytesAvailBefore, bytesAvailDelta;
 
-  while(taskAState < 1) {
+  taskBState++;
+
+  // idle the task
+  for (;;) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+  }
+}
+
+static void prvTaskC(void *pvParameters) {
+  int attempt;
+  uint32_t freeHeap;
+
+  while (taskAState < 0) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 
-  //vPortGetHeapState(&heapStats);
-  //bytesAvailBefore = heapStats.xAvailableHeapSpaceInBytes;
+  vTaskDelete(taskB);
 
-  vTaskDelete(taskAHandle);
-  vTaskDelay(pdMS_TO_TICKS(1000));
+  for(attempt=1; attempt<100; attempt++)
+  {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    freeHeap = xPortGetFreeHeapSize();
+    if (freeHeap == originalFreeHeap) {
+      setPin(LED_PIN);
+      sendReport(testPassedString, testPassedStringLen);
+      break;
+    }
+  }
 
-  setPin(LED_PIN);
-
-  //vPortGetHeapState(&heapStats);
-  // XXXADS assert that before - current isn't negative. That would indicate
-  // test failure.
-  //bytesAvailDelta = bytesAvailBefore - heapStats.xAvailableHeapSpaceInBytes;
+  if (freeHeap != originalFreeHeap)
+  {
+      sendReport(testFailedString, testFailedStringLen);
+  }
+  TEST_ASSERT_TRUE(freeHeap == originalFreeHeap);
 
   // idle the task
   for (;;) {

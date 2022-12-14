@@ -142,6 +142,5 @@ to exclude the API function. */
 extern void test_fr9TASK_SWITCHED_IN(void);
 #define traceTASK_SWITCHED_IN() test_fr9TASK_SWITCHED_IN()
 
-
 #endif /* FREERTOS_CONFIG_H */
 

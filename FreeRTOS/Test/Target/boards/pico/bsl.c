@@ -165,8 +165,12 @@ void triggerSoftwareInterrupt(int num) {
 
 #ifdef USE_BSL_DEFAULT_HOOKS
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
+  char strbuf[] = "ERROR: Stack Overflow\n\0";
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
   (void)pcTaskName;
   (void)xTask;
+
+  sendReport(strbuf, strbuf_len);
 
   /* Run time stack overflow checking is performed if
   configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
@@ -183,7 +187,7 @@ void vApplicationTickHook(void) {
 }
 
 void vApplicationMallocFailedHook(void) {
-  char strbuf[] = "Malloc Failed\n\0";
+  char strbuf[] = "ERROR: Malloc Failed\n\0";
   size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   sendReport(strbuf, strbuf_len);

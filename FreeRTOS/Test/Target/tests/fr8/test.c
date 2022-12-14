@@ -63,10 +63,10 @@ static void softwareInterruptHandlerSimple(void) {
   int i;
   UBaseType_t uxSavedInterruptStatus;
 
-  char strbuf_a[] = "ISR enter";
+  char strbuf_a[] = "TRACE: ISR enter\n\0";
   size_t strbuf_a_len = sizeof(strbuf_a) / sizeof(char);
 
-  char strbuf_b[] = "ISR exit";
+  char strbuf_b[] = "TRCE: ISR exit\n\0";
   size_t strbuf_b_len = sizeof(strbuf_b) / sizeof(char);
 
   sendReport(strbuf_a, strbuf_a_len);
@@ -107,10 +107,8 @@ static void prvTaskA(void *pvParameters) {
 static void prvTaskB(void *pvParameters) {
   int iter = 1;
   int numIters = 10;
-  char strbuf[] = "task B enter critical section";
+  char strbuf[] = "TRACE: task B enter critical section\n\0";
   size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  vTaskDelay(pdMS_TO_TICKS(5000));
 
   sendReport(strbuf, strbuf_len);
 
@@ -134,43 +132,3 @@ static void prvTaskB(void *pvParameters) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 }
-
-#if 0
-static void prvTaskC(void *pvParameters) {
-  BaseType_t xReturned;
-
-  while (fr8_001_taskCompletions < 2) {
-    vTaskDelay(pdMS_TO_TICKS(33));
-  }
-
-  xReturned = xTaskNotify( xTaskD, 0x00, eSetValueWithOverwrite );
-  configASSERT( xReturned == pdPASS );
-  ( void ) xReturned; /* In case configASSERT() is not defined. */
-
-  xReturned = xTaskNotify( xTaskD, 0x01, eSetValueWithOverwrite );
-  configASSERT( xReturned == pdPASS );
-  ( void ) xReturned; /* In case configASSERT() is not defined. */
-}
-
-static void prvTaskD(void *pvParameters) {
-  int aStateCopy;
-  int iter=1;
-  int numIters=5;
-
-  while (fr8_001_taskCompletions < 2) {
-    vTaskDelay(pdMS_TO_TICKS(33));
-  }
-
-  aStateCopy = taskAState;
-
-  taskENTER_CRITICAL( );
-
-  for (iter=1;iter< numIters;iter++) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    TEST_ASSERT_EQUAL_INT(aStateCopy, taskAState);
-    taskBState++;
-  }
-
-  taskEXIT_CRITICAL(  );
-}
-#endif

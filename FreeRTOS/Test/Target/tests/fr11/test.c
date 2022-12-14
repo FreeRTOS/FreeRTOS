@@ -49,10 +49,9 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr11_001);
+  setup_test_fr11_001();
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();
@@ -63,15 +62,24 @@ int main(void) {
 }
 
 static uint32_t uTaskBState = 0;
+static uint32_t uTempTaskBState = 0;
 
-char strbuf_pass[] = "TEST PASSED\n\0";
-size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
-char strbuf_fail[] = "TEST FAILED\n\0";
-size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
+static void reportStatus(void) {
+  TEST_ASSERT_TRUE(uTempTaskBState == 0);
+
+  if( uTempTaskBState == 0 )
+  {
+    setPin(LED_PIN);
+    sendReport(testPassedString, testPassedStringLen);
+  }
+  else
+  {
+    sendReport(testFailedString, testFailedStringLen);
+  }
+}
 
 static void prvTaskA(void *pvParameters) {
   uint32_t uAttempTime = 0;
-  uint32_t uTempTaskBState = 0;
 
   vTaskSuspendAll();
 
@@ -96,16 +104,10 @@ static void prvTaskA(void *pvParameters) {
 
   xTaskResumeAll();
 
-  if( uTempTaskBState != 0 )
-  {
-    sendReport(strbuf_fail, strbuf_fail_len);
-  }
-  else
-  {
-    setPin(LED_PIN);
-    sendReport(strbuf_pass, strbuf_pass_len);
-  }
+  RUN_TEST(reportStatus);
 
+  UNITY_END();
+ 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

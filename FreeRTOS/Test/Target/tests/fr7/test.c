@@ -52,7 +52,7 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr7_001);
+  setup_test_fr7_001();
 
   vTaskStartScheduler();
   // AMPLaunchOnCore(1, vTaskStartScheduler);
@@ -67,7 +67,8 @@ int main(void) {
 
 static uint32_t taskAState = 0;
 static uint32_t taskBState = 0;
-uint32_t originalFreeHeap;
+static uint32_t originalFreeHeap;
+static uint32_t freeHeap;
 
 static void prvTaskA(void *pvParameters) {
   while (taskBState < 0) {
@@ -96,9 +97,21 @@ static void prvTaskB(void *pvParameters) {
   }
 }
 
+static void reportStatus(void) {
+  TEST_ASSERT_TRUE(freeHeap == originalFreeHeap);
+  if (freeHeap == originalFreeHeap)
+  {
+      setPin(LED_PIN);
+      sendReport(testPassedString, testPassedStringLen);
+  }
+  else
+  {
+      sendReport(testFailedString, testFailedStringLen);
+  }
+}
+
 static void prvTaskC(void *pvParameters) {
   int attempt;
-  uint32_t freeHeap;
 
   while (taskAState < 0) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
@@ -111,17 +124,13 @@ static void prvTaskC(void *pvParameters) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
     freeHeap = xPortGetFreeHeapSize();
     if (freeHeap == originalFreeHeap) {
-      setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
       break;
     }
   }
 
-  if (freeHeap != originalFreeHeap)
-  {
-      sendReport(testFailedString, testFailedStringLen);
-  }
-  TEST_ASSERT_TRUE(freeHeap == originalFreeHeap);
+  RUN_TEST(reportStatus);
+
+  UNITY_END();
 
   // idle the task
   for (;;) {

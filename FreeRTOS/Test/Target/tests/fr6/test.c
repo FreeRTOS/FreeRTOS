@@ -113,7 +113,6 @@ int main(void) {
   setup_test_fr6_001();
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();
@@ -123,22 +122,29 @@ int main(void) {
             // instead.
 }
 
+static void reportStatus(void) {
+  TEST_ASSERT_TRUE(testPassed);
+
+  if (testPassed)
+  {
+      setPin(LED_PIN);
+      sendReport(testPassedString, testPassedStringLen);
+  }
+  else
+  {
+      sendReport(testFailedString, testFailedStringLen);
+  }
+}
+
 static void checkTestStatus(void) {
   static bool statusReported = false;
 
   if (!statusReported)
   {
-    if (testPassed)
+    if (testPassed || testFailed)
     {
-      setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
-      TEST_ASSERT_TRUE(testPassed);
-      statusReported = true;
-    }
-    else if (testFailed)
-    {
-      sendReport(testFailedString, testFailedStringLen);
-      TEST_ASSERT_TRUE(!testFailed);
+      RUN_TEST(reportStatus);
+      UNITY_END();
       statusReported = true;
     }
   }
@@ -153,7 +159,6 @@ static void prvTaskA(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    checkTestStatus();
   }
 }
 
@@ -172,7 +177,6 @@ static void prvTaskC(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    checkTestStatus();
     busyWaitMicroseconds(100000);
   }
 }

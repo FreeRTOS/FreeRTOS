@@ -43,10 +43,9 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr8_001);
+  setup_test_fr8_001();
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();
@@ -72,14 +71,40 @@ static void softwareInterruptHandlerSimple(void) {
   sendReport(strbuf_a, strbuf_a_len);
   uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
 
-  //TEST_ASSERT_EQUAL_INT(taskBState, 6);
-
   clearPin(LED_PIN);
 
   taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
   sendReport(strbuf_b, strbuf_b_len);
 
   isrAssertionComplete = true;
+}
+
+static void reportStatus(void) {
+  TEST_ASSERT_TRUE(isrAssertionComplete);
+
+  if (isrAssertionComplete)
+  {
+      setPin(LED_PIN);
+      sendReport(testPassedString, testPassedStringLen);
+  }
+  else
+  {
+      sendReport(testFailedString, testFailedStringLen);
+  }
+}
+
+static void checkTestStatus(void) {
+  static bool statusReported = false;
+
+  if (!statusReported)
+  {
+    if (isrAssertionComplete)
+    {
+      RUN_TEST(reportStatus);
+      UNITY_END();
+      statusReported = true;
+    }
+  }
 }
 
 static void prvTaskA(void *pvParameters) {
@@ -101,6 +126,7 @@ static void prvTaskA(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    checkTestStatus();
   }
 }
 

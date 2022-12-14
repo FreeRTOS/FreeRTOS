@@ -58,7 +58,6 @@ int main(void) {
   clearPin(LED_PIN);
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();

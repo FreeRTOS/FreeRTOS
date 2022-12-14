@@ -20,6 +20,9 @@ as ( configMAX_PRIORITIES - 1 ). */
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
+#define TASK_BLOCK_TIME_MS ( 3000 )
+#define TASK_BUSYLOOP_TIME_MS ( 100 )
+
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 
@@ -30,7 +33,7 @@ TaskHandle_t taskA, taskB;
 #endif
 
 void setup_test_fr11_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE * 2, NULL,
               mainTASK_A_PRIORITY, &taskA);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
@@ -59,7 +62,7 @@ int main(void) {
             // instead.
 }
 
-static uint32_t taskBState = 0;
+static uint32_t uTaskBState = 0;
 
 char strbuf_pass[] = "TEST PASSED\n\0";
 size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
@@ -67,78 +70,53 @@ char strbuf_fail[] = "TEST FAILED\n\0";
 size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
 
 static void prvTaskA(void *pvParameters) {
-  int handlerNum = -1;
-  TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
-  bool taskBObservedRunning = false;
-  int idx;
-  int numTasksRunning;
-  int attempt = 0;
-
-  vTaskDelay(pdMS_TO_TICKS(5000));
+  uint32_t uAttempTime = 0;
+  uint32_t uTempTaskBState = 0;
 
   vTaskSuspendAll();
 
   vTaskPrioritySet(taskB, mainTASK_A_PRIORITY+1);
 
-  while(!taskBObservedRunning)
+  while( uTaskBState == 0 )
   {
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+    uAttempTime++;
 
-    for(idx=0; idx < numTasksRunning; idx++)
+    if( uAttempTime > ( TASK_BLOCK_TIME_MS / TASK_BUSYLOOP_TIME_MS ) )
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
-      {
-        taskBObservedRunning = true;
-      }
-    }
-
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-
-    attempt++;
-
-    if (attempt > 10) {
+      /* Break after polling 30 times. (total 3s) */
       break;
     }
+
+    /* Wait 100ms. */
+    busyWaitMicroseconds( TASK_BUSYLOOP_TIME_MS * 1000 );
   }
+
+  /* Cache uTaskBState before resuming all tasks. */
+  uTempTaskBState = uTaskBState;
 
   xTaskResumeAll();
 
-  TEST_ASSERT_EQUAL_INT((int)taskBObservedRunning, (int)false);
-
-  if (taskBObservedRunning)
+  if( uTempTaskBState != 0 )
   {
     sendReport(strbuf_fail, strbuf_fail_len);
   }
   else
   {
     setPin(LED_PIN);
-    sendReport(strbuf_pass, strbuf_pass_len); // <-- appears to be hanging here...
+    sendReport(strbuf_pass, strbuf_pass_len);
   }
-
 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    clearPin(LED_PIN);
-    sendReport(strbuf_pass, strbuf_pass_len);
   }
 }
 
 static void prvTaskB(void *pvParameters) {
-  int iter = 1;
-  int numIters = 10;
-  char strbuf[] = "task B enter critical section";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  vTaskDelay(pdMS_TO_TICKS(5000));
-
-  clearPin(LED_PIN);
+  uTaskBState++;
 
   // idle the task
   for (;;) {
-    taskBState++;
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 }

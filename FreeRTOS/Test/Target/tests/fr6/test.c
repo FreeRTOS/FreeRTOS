@@ -17,7 +17,7 @@
 as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 3)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
+#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 2)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
@@ -145,7 +145,7 @@ static void checkTestStatus(void) {
 }
 
 static void prvTaskA(void *pvParameters) {
-  // wait with preemption disable
+  // wait with preemption disabled
   vTaskPreemptionDisable(taskA);
   busyWaitMicroseconds(2000000);
   vTaskPreemptionEnable(taskA);

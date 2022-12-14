@@ -44,10 +44,9 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr1_001);
+  setup_test_fr1_001();
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();
@@ -57,19 +56,27 @@ int main(void) {
             // instead.
 }
 
-static uint32_t taskBState = 0;
+static bool taskBObservedRunning = false;
 
-char strbuf_pass[] = "TEST PASSED\n";
-size_t strbuf_pass_len = sizeof(strbuf_pass) / sizeof(char);
-char strbuf_fail[] = "TEST FAILED\n";
-size_t strbuf_fail_len = sizeof(strbuf_fail) / sizeof(char);
+static void reportResults(void) {
+  TEST_ASSERT_TRUE(taskBObservedRunning);
+
+  if (taskBObservedRunning)
+  {
+    setPin(LED_PIN);
+    sendReport(testPassedString, testPassedStringLen);
+  }
+  else
+  {
+    sendReport(testFailedString, testFailedStringLen);
+  }
+}
 
 static void prvTaskA(void *pvParameters) {
   int handlerNum = -1;
   TaskStatus_t taskStatus[16];
   UBaseType_t taskStatusArraySize = 16;
   unsigned long totalRunTime;
-  bool taskBObservedRunning = false;
   int idx;
   int attempt = 1;
   int numTasksRunning;
@@ -91,18 +98,13 @@ static void prvTaskA(void *pvParameters) {
     attempt++;
 
     if (attempt > 100) {
-      TEST_ASSERT_TRUE(false);
-      sendReport(strbuf_fail, strbuf_fail_len);
       break;
     }
   }
 
-  if (taskBObservedRunning)
-  {
-    setPin(LED_PIN);
-    TEST_ASSERT_TRUE(true);
-    sendReport(strbuf_pass, strbuf_pass_len);
-  }
+  RUN_TEST(reportResults);
+
+  UNITY_END();
 
   // idle the task
   for (;;) {
@@ -114,7 +116,6 @@ static void prvTaskB(void *pvParameters) {
   // idle the task
   for (;;) {
     // vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    taskBState++;
     busyWaitMicroseconds(100000);
   }
 }

@@ -20,9 +20,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
-char strbuf_good[] = "TEST PASSED\n\0";
-size_t strbuf_good_len = sizeof(strbuf_good) / sizeof(char);
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 
@@ -51,10 +48,9 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr5_001);
+  setup_test_fr5_001();
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();
@@ -64,7 +60,9 @@ int main(void) {
             // instead.
 }
 
-static uint32_t taskBState = 0;
+static bool taskADone = false;
+static bool taskAOnCorrectCore = true;
+static bool taskBOnCorrectCore = true;
 
 static void prvTaskA(void *pvParameters) {
   char strbuf_bad[] = "task A running on the wrong core\n\0";
@@ -73,22 +71,35 @@ static void prvTaskA(void *pvParameters) {
 
   int iter;
 
-  for(iter=1;iter < 10;iter++)
+  for(iter=1;iter < 25;iter++)
   {
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(10));
     core = portGET_CORE_ID();
     if (core != 0)
     {
-      sendReport(strbuf_bad, strbuf_bad_len);
+      taskAOnCorrectCore = false;
     }
-    TEST_ASSERT_EQUAL_INT(core, 0);
   }
 
-  sendReport(strbuf_good, strbuf_good_len);
+  taskADone = true;
 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+  }
+}
+
+static void reportResults(void) {
+  TEST_ASSERT_TRUE(taskAOnCorrectCore && taskBOnCorrectCore);
+
+  if (taskAOnCorrectCore && taskBOnCorrectCore)
+  {
+    setPin(LED_PIN);
+    sendReport(testPassedString, testPassedStringLen);
+  }
+  else
+  {
+    sendReport(testFailedString, testFailedStringLen);
   }
 }
 
@@ -99,18 +110,19 @@ static void prvTaskB(void *pvParameters) {
 
   int iter;
 
-  for(iter=1;iter < 10;iter++)
+  for(iter=1;iter < 25;iter++)
   {
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(10));
     core = portGET_CORE_ID();
     if (core != 1)
     {
-      sendReport(strbuf_bad, strbuf_bad_len);
+      taskBOnCorrectCore = false;
     }
-    TEST_ASSERT_EQUAL_INT(core, 1);
   }
 
-  sendReport(strbuf_good, strbuf_good_len);
+  RUN_TEST(reportResults);
+
+  UNITY_END();
 
   // idle the task
   for (;;) {

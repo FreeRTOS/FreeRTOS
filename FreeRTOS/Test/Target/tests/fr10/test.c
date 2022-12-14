@@ -16,43 +16,34 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 3)
+#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
+#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
+
+#define COUNTER_MAX ( 3000 )
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
-static void prvTaskA(void *pvParameters);
+static void prvUnityStarter(void *pvParameters);
+static void fr10_onlyOneTaskEnterSuspendAll();
+static void prvTaskA(void);
 static void prvTaskB(void *pvParameters);
-static void prvTaskC(void *pvParameters);
 
 TaskHandle_t taskAHandle;
+volatile BaseType_t xTaskACounter = 0;
+volatile BaseType_t xIsTaskBFinished = pdFALSE;
 
 #if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
 
-#define traceTASK_SWITCHED_IN() test_fr10TASK_SWITCHED_IN()
-
-void test_fr10TASK_SWITCHED_IN(void) {
-  static SchedTraceLog schedTraceLog;
-
-  setPin(LED_PIN);
-
-  logSchedTrace(&schedTraceLog);
-
-  reportSchedTraceLog(&schedTraceLog);
-}
-
-void setup_test_fr10_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+void setup_test_task(void) {
+  /* unityStarter run as Task A after setting Unity. */
+  xTaskCreate(prvUnityStarter, "unityStarter", configMINIMAL_STACK_SIZE * 2, NULL,
               mainTASK_A_PRIORITY, &taskAHandle);
 
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+  /* Create task B to run on another core. */
+  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
               mainTASK_B_PRIORITY, NULL);
-
-  xTaskCreate(prvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_C_PRIORITY, NULL);
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -62,9 +53,7 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
-  RUN_TEST(setup_test_fr10_001);
+  setup_test_task();
 
   clearPin(LED_PIN);
 
@@ -79,28 +68,79 @@ int main(void) {
             // instead.
 }
 
-static void prvTaskA(void *pvParameters) {
-  vTaskDelay(pdMS_TO_TICKS(5000));
-  setPin(LED_PIN);
+static void prvUnityStarter(void *pvParameters)
+{
+  UNITY_BEGIN();
+  
+  RUN_TEST( fr10_onlyOneTaskEnterSuspendAll );
+
+  UNITY_END();
+
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 }
 
-static void prvTaskB(void *pvParameters) {
-  vTaskDelay(pdMS_TO_TICKS(5000));
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
+static void fr10_onlyOneTaskEnterSuspendAll()
+{
+  /* Run as Task A. */
+  prvTaskA();
 }
 
-static void prvTaskC(void *pvParameters) {
+static void prvTaskA(void)
+{
+  BaseType_t xLocalTaskCounter = 0;
+  BaseType_t xTaskFailure = pdFALSE;
+
   vTaskSuspendAll();
-  vTaskPrioritySet(taskAHandle, tskIDLE_PRIORITY + 4);
-  vTaskDelay(pdMS_TO_TICKS(5000));
+  for( ;; )
+  {
+    xTaskACounter++;
+    xLocalTaskCounter++;
+    busyWaitMicroseconds( 1000 );
+
+    if( xTaskACounter != xLocalTaskCounter )
+    {
+      xTaskFailure = pdTRUE;
+      break;
+    }
+    else if( xTaskACounter >= COUNTER_MAX )
+    {
+      break;
+    }
+  }
   xTaskResumeAll();
+
+  TEST_ASSERT_TRUE( xTaskFailure == pdFALSE );
+  TEST_ASSERT_EQUAL_INT( xLocalTaskCounter, COUNTER_MAX );
+
+  while( xIsTaskBFinished == pdFALSE )
+  {
+    busyWaitMicroseconds( 100000 );
+  }
+}
+
+static void prvTaskB(void *pvParameters)
+{
+  while( xTaskACounter < 1 )
+    asm("");
+  
+  vTaskSuspendAll();
+  for( ;; )
+  {
+    xTaskACounter++;
+
+    if( xTaskACounter >= COUNTER_MAX )
+    {
+      break;
+    }
+  }
+  xTaskResumeAll();
+
+  TEST_ASSERT_EQUAL_INT( xTaskACounter, COUNTER_MAX + 1 );
+  xIsTaskBFinished = pdTRUE;
+
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

@@ -55,17 +55,17 @@ void test_fr9TASK_SWITCHED_IN(void) {
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskARan = true;
-        sendReport("taskA\n\0", 0);
+        sendReport("TRACE: taskA\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskBRan = true;
-        sendReport("taskB\n\0", 0);
+        sendReport("TRACE: taskB\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskCRan = true;
-        sendReport("taskC\n\0", 0);
+        sendReport("TRACE: taskC\n\0", 0);
       }
     }
 
@@ -82,7 +82,7 @@ void test_fr9TASK_SWITCHED_IN(void) {
   }
 }
 
-TaskHandle_t taskA;
+TaskHandle_t taskA, taskB;
 
 void setup_test_fr9_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
@@ -90,7 +90,7 @@ void setup_test_fr9_001(void) {
   vTaskCoreAffinitySet(taskA, 0x2);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, NULL);
+              mainTASK_B_PRIORITY, &taskB);
 
   xTaskCreate(prvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_C_PRIORITY, NULL);
@@ -147,13 +147,14 @@ static void checkTestStatus(void) {
 
 static void prvTaskA(void *pvParameters) {
   taskENTER_CRITICAL();
-  busyWaitMicroseconds(2000000);
+  busyWaitMicroseconds(250000);
+  xTaskNotify(taskB, 0, eNoAction);
+  busyWaitMicroseconds(1000000);
   taskEXIT_CRITICAL();
 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    checkTestStatus();
     busyWaitMicroseconds(100000);
   }
 }
@@ -164,16 +165,15 @@ static void prvTaskB(void *pvParameters) {
   char strbuf[] = "TRACE: task B enter critical section\n\0";
   size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
-  vTaskDelay(pdMS_TO_TICKS(250));
+  vTaskDelay(pdMS_TO_TICKS(10));
 
   taskENTER_CRITICAL();
-  busyWaitMicroseconds(2000000);
+  busyWaitMicroseconds(1000000);
   taskEXIT_CRITICAL();
 
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    checkTestStatus();
     busyWaitMicroseconds(100000);
   }
 }

@@ -115,7 +115,7 @@
     <ListValues>
       <Value>../../../../Source</Value>
       <Value>../../../../Source/portable/MemMang</Value>
-      <Value>../../../../Source/portable/GCC/AVR_AVRDx</Value>
+      <Value>../../../../Source/portable/ThirdParty/Partner-Supported-Ports/GCC/AVR_AVRDx</Value>
       <Value>../../../../Source/include</Value>
       <Value>../../../Common/include</Value>
       <Value>../../../Common/Minimal</Value>
@@ -180,17 +180,17 @@
       <SubType>compile</SubType>
       <Link>freeRTOS\portable\MemMang\heap_1.c</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_AVRDx\port.c">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_AVRDx\port.c">
       <SubType>compile</SubType>
-      <Link>freeRTOS\portable\GCC\AVR_AVRDx\port.c</Link>
+      <Link>freeRTOS\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_AVRDx\port.c</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_AVRDx\portmacro.h">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_AVRDx\portmacro.h">
       <SubType>compile</SubType>
-      <Link>freeRTOS\portable\GCC\AVR_AVRDx\portmacro.h</Link>
+      <Link>freeRTOS\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_AVRDx\portmacro.h</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_AVRDx\porthardware.h">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_AVRDx\porthardware.h">
       <SubType>compile</SubType>
-      <Link>freeRTOS\portable\GCC\AVR_AVRDx\porthardware.h</Link>
+      <Link>freeRTOS\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_AVRDx\porthardware.h</Link>
     </Compile>
     <Compile Include="..\..\..\Source\include\atomic.h">
       <SubType>compile</SubType>
@@ -354,7 +354,7 @@
     <Folder Include="freeRTOS\include" />
     <Folder Include="freeRTOS\portable" />
     <Folder Include="freeRTOS\portable\GCC" />
-    <Folder Include="freeRTOS\portable\GCC\AVR_AVRDx" />
+    <Folder Include="freeRTOS\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_AVRDx" />
     <Folder Include="freeRTOS\portable\MemMang" />
     <Folder Include="serial" />
     <Folder Include="ParTest" />

@@ -3294,7 +3294,7 @@ void prvReportStackUsage()
 		if (tasksInStackMonitor[i].tcb != 0)
 		{
 			/* Get the amount of unused stack */
-			uint32_t unusedStackSpace;
+			TraceUnsignedBaseType_t unusedStackSpace;
 			xTraceKernelPortGetUnusedStack(tasksInStackMonitor[i].tcb, &unusedStackSpace);
 
 			/* Store for later use */

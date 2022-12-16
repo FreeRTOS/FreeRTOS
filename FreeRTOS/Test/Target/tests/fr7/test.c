@@ -21,9 +21,12 @@ as ( configMAX_PRIORITIES - 1 ). */
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
+static void prvUnityStarter(void *pvParameters);
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
-static void prvTaskC(void *pvParameters);
+
+static void fr07_memoryFreedTaskRemoteDeleted();
+static void fr07_memoryFreedTaskSelfDeleted();
 
 #if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
@@ -32,15 +35,8 @@ static void prvTaskC(void *pvParameters);
 TaskHandle_t taskA, taskB;
 
 void setup_test_fr7_001(void) {
-  xTaskCreate(prvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
+  xTaskCreate(prvUnityStarter, "unityStarter", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_C_PRIORITY, NULL);
-
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, &taskA);
-
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, &taskB);
-  
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -49,8 +45,6 @@ void tearDown(void) {
 
 int main(void) {
   initTestEnvironment();
-
-  UNITY_BEGIN();
 
   setup_test_fr7_001();
 
@@ -65,21 +59,19 @@ int main(void) {
             // instead.
 }
 
-static uint32_t taskAState = 0;
-static uint32_t taskBState = 0;
-static uint32_t originalFreeHeap;
-static uint32_t freeHeap;
+static volatile uint32_t taskAState = 0;
+static volatile uint32_t taskBState = 0;
 
-static void prvTaskA(void *pvParameters) {
-  while (taskBState < 0) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
+static uint32_t ulOriginalFreeHeapSize;
 
-  taskAState++;
+static void prvUnityStarter(void *pvParameters)
+{
+  UNITY_BEGIN();
+  
+  RUN_TEST( fr07_memoryFreedTaskSelfDeleted );
+  RUN_TEST( fr07_memoryFreedTaskRemoteDeleted );
 
-  originalFreeHeap = xPortGetFreeHeapSize();
-
-  vTaskDelete(taskA);
+  UNITY_END();
 
   // idle the task
   for (;;) {
@@ -87,8 +79,25 @@ static void prvTaskA(void *pvParameters) {
   }
 }
 
-static void prvTaskB(void *pvParameters) {
+static void createSelfDeleteTaskA()
+{
+  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+              mainTASK_A_PRIORITY, &taskA);
+}
 
+static void createRemoteDeleteTaskB()
+{
+  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+              mainTASK_B_PRIORITY, &taskB);
+}
+
+static void prvTaskA(void *pvParameters) {
+  taskAState++;
+
+  vTaskDelete( NULL );
+}
+
+static void prvTaskB(void *pvParameters) {
   taskBState++;
 
   // idle the task
@@ -97,23 +106,40 @@ static void prvTaskB(void *pvParameters) {
   }
 }
 
-static void reportStatus(void) {
-  TEST_ASSERT_TRUE(freeHeap == originalFreeHeap);
-  if (freeHeap == originalFreeHeap)
-  {
-      setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
+static void fr07_memoryFreedTaskSelfDeleted() {
+  int attempt;
+  uint32_t ulFreeHeapSize = 0;
+
+  ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
+
+  createSelfDeleteTaskA();
+
+  while (taskAState <= 0) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
-  else
+
+  for(attempt=1; attempt<100; attempt++)
   {
-      sendReport(testFailedString, testFailedStringLen);
+    /* Reserve for idle task to delete the entire task. */
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    ulFreeHeapSize = xPortGetFreeHeapSize();
+    if (ulFreeHeapSize == ulOriginalFreeHeapSize) {
+      break;
+    }
   }
+  
+  TEST_ASSERT_TRUE(ulFreeHeapSize == ulOriginalFreeHeapSize);
 }
 
-static void prvTaskC(void *pvParameters) {
+static void fr07_memoryFreedTaskRemoteDeleted() {
   int attempt;
+  uint32_t ulFreeHeapSize = 0;
 
-  while (taskAState < 0) {
+  ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
+
+  createRemoteDeleteTaskB();
+
+  while (taskBState <= 0) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 
@@ -121,19 +147,13 @@ static void prvTaskC(void *pvParameters) {
 
   for(attempt=1; attempt<100; attempt++)
   {
+    /* Reserve for idle task to delete the entire task. */
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    freeHeap = xPortGetFreeHeapSize();
-    if (freeHeap == originalFreeHeap) {
+    ulFreeHeapSize = xPortGetFreeHeapSize();
+    if (ulFreeHeapSize == ulOriginalFreeHeapSize) {
       break;
     }
   }
-
-  RUN_TEST(reportStatus);
-
-  UNITY_END();
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
+  
+  TEST_ASSERT_TRUE(ulFreeHeapSize == ulOriginalFreeHeapSize);
 }

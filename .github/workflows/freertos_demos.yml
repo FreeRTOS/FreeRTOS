@@ -3,7 +3,7 @@ on: pull_request
 
 jobs:
   WIN32-MSVC:
-    name: Microsoft Visual C Compiler (WIN32)
+    name: WIN32 MSVC
     runs-on: windows-latest
     steps:
       - name: Checkout Repository
@@ -24,6 +24,30 @@ jobs:
       - name: Build WIN32-MSVC-Static-Allocation-Only Demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only
         run: msbuild WIN32.sln -t:rebuild
+
+  WIN32-MingW:
+    name: WIN32 MingW
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Kernel Submodule
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 FreeRTOS/Source
+
+      - name: Fetch Kernel Submodule
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 FreeRTOS/Source
+
+      - name: Build WIN32-MingW Demo
+        working-directory: FreeRTOS/Demo/WIN32-MingW
+        run: |
+          gcc --version
+          make --version
+          make
 
   POSIX-GCC:
     name: Native GCC

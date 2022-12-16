@@ -19,7 +19,7 @@
 
 
 #define LED_PIN (PICO_DEFAULT_LED_PIN)
-#define GPIO0_PIN (PICO_DEFAULT_UART_TX_PIN)
+#define GPIO0_PIN (2)
 #define MAX_CORES (2)
 
 extern char testPassedString[];

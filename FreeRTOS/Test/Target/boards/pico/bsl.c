@@ -83,9 +83,9 @@ void initTestEnvironment(void) {
   //xSemLogSchedTrace = xSemaphoreCreateBinary();
 
   /* Setup LED I/O */
-  gpio_init(PICO_DEFAULT_LED_PIN);
-  gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-  gpio_set_irq_enabled(PICO_DEFAULT_LED_PIN,
+  gpio_init(LED_PIN);
+  gpio_set_dir(LED_PIN, GPIO_OUT);
+  gpio_set_irq_enabled(LED_PIN,
     GPIO_IRQ_LEVEL_LOW |
     GPIO_IRQ_LEVEL_HIGH |
     GPIO_IRQ_EDGE_FALL |
@@ -93,12 +93,12 @@ void initTestEnvironment(void) {
     false);
 
   /* Setup Output on GPIO0 */
-  gpio_init(PICO_DEFAULT_UART_TX_PIN);
-  gpio_set_function(PICO_DEFAULT_UART_TX_PIN, GPIO_FUNC_NULL);
-  gpio_set_dir(PICO_DEFAULT_UART_TX_PIN, GPIO_OUT);
-  gpio_set_slew_rate(PICO_DEFAULT_UART_TX_PIN, GPIO_SLEW_RATE_FAST);
-  gpio_set_drive_strength(PICO_DEFAULT_UART_TX_PIN, GPIO_DRIVE_STRENGTH_8MA);
-  gpio_set_irq_enabled(PICO_DEFAULT_UART_TX_PIN,
+  gpio_init(GPIO0_PIN);
+  // gpio_set_function(GPIO0_PIN, GPIO_FUNC_NULL);
+  gpio_set_dir(GPIO0_PIN, GPIO_OUT);
+  gpio_set_slew_rate(GPIO0_PIN, GPIO_SLEW_RATE_FAST);
+  gpio_set_drive_strength(GPIO0_PIN, GPIO_DRIVE_STRENGTH_2MA);
+  gpio_set_irq_enabled(GPIO0_PIN,
     GPIO_IRQ_LEVEL_LOW |
     GPIO_IRQ_LEVEL_HIGH |
     GPIO_IRQ_EDGE_FALL |

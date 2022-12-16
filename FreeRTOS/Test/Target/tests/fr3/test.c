@@ -20,8 +20,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 static void prvTaskC(void *pvParameters);
@@ -97,11 +95,7 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr3_001();
-
-  clearPin(LED_PIN);
 
   vTaskStartScheduler();
 
@@ -113,38 +107,10 @@ int main(void) {
             // instead.
 }
 
-static void reportStatus(void) {
-  TEST_ASSERT_TRUE(testPassed);
-
-  if (testPassed)
-  {
-      setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
-  }
-  else
-  {
-      sendReport(testFailedString, testFailedStringLen);
-  }
-}
-
-static void validateTraceLog(void) {
-  static bool statusReported = false;
-
-  if (!statusReported)
-  {
-    if (testPassed || testFailed)
-    {
-      RUN_TEST(reportStatus);
-      UNITY_END();
-      statusReported = true;
-    }
-  }
-}
-
 static void prvTaskA(void *pvParameters) {
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }
@@ -152,16 +118,47 @@ static void prvTaskA(void *pvParameters) {
 static void prvTaskB(void *pvParameters) {
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }
 
+static void fr03_validateAllTasksHaveRun(void) {
+  int attempt;
+
+  for(attempt=1; attempt<100; attempt++)
+  {
+    if (testPassed || testFailed)
+    {
+      break;
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+
+  TEST_ASSERT_TRUE((testPassed && !testFailed));
+
+  if (testPassed && !testFailed)
+  {
+      setPin(LED_PIN);
+      sendReport(testPassedString, testPassedStringLen);
+  } else
+  {
+      sendReport(testFailedString, testFailedStringLen);
+  }
+}
+
 static void prvTaskC(void *pvParameters) {
+
+  UNITY_BEGIN();
+
+  RUN_TEST(fr03_validateAllTasksHaveRun);
+
+  UNITY_END();
+
   // idle the task
   for (;;) {
-    validateTraceLog();
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }

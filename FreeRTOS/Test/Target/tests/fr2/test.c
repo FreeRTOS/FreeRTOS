@@ -20,8 +20,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 3)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 static void prvTaskC(void *pvParameters);
@@ -30,8 +28,8 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-static bool testFailed = false;
 static bool testPassed = false;
+static bool testFailed = false;
 
 void test_fr2TASK_SWITCHED_IN(void) {
   UBaseType_t idx, numTasksRunning;
@@ -105,12 +103,9 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr2_001();
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();
@@ -120,10 +115,22 @@ int main(void) {
             // instead.
 }
 
-static void reportStatus(void) {
+static void prvTaskA(void *pvParameters) {
+  // idle the task
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(100000);
+  }
+}
+
+static void fr02_validateHigherPriorityTasksAlreadyRan(void)
+{
+  // testPassed and testFailed set by trace hook: test_fr2TASK_SWITCHED_IN
+
+  TEST_ASSERT_FALSE(testFailed);
   TEST_ASSERT_TRUE(testPassed);
 
-  if (testPassed)
+  if (testPassed && !testFailed)
   {
       setPin(LED_PIN);
       sendReport(testPassedString, testPassedStringLen);
@@ -134,34 +141,16 @@ static void reportStatus(void) {
   }
 }
 
-static void checkTestStatus(void) {
-  static bool statusReported = false;
-
-  if (!statusReported)
-  {
-    if (testPassed || testFailed)
-    {
-      RUN_TEST(reportStatus);
-      UNITY_END();
-      statusReported = true;
-    }
-  }
-}
-
-static void prvTaskA(void *pvParameters) {
-  // idle the task
-  for (;;) {
-    checkTestStatus();
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    busyWaitMicroseconds(100000);
-  }
-}
-
 static void prvTaskB(void *pvParameters) {
+  UNITY_BEGIN();
+
+  RUN_TEST(fr02_validateHigherPriorityTasksAlreadyRan);
+
+  UNITY_END();
+
   // idle the task
   for (;;) {
-    checkTestStatus();
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }
@@ -169,8 +158,7 @@ static void prvTaskB(void *pvParameters) {
 static void prvTaskC(void *pvParameters) {
   // idle the task
   for (;;) {
-    checkTestStatus();
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }

@@ -108,8 +108,6 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr6_001();
 
   vTaskStartScheduler();
@@ -122,10 +120,44 @@ int main(void) {
             // instead.
 }
 
-static void reportStatus(void) {
-  TEST_ASSERT_TRUE(testPassed);
+static void prvTaskA(void *pvParameters) {
+  // wait with preemption disabled
+  vTaskPreemptionDisable(taskA);
+  busyWaitMicroseconds(2000000);
+  vTaskPreemptionEnable(taskA);
 
-  if (testPassed)
+  // idle the task
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+}
+
+static void prvTaskB(void *pvParameters) {
+  busyWaitMicroseconds(2000000);
+
+  // idle the task
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(100000);
+  }
+}
+
+static void fr06_validate_vTaskPreemptionDisable(void) {
+  int attempt;
+
+  for(attempt=1; attempt < 25; attempt++)
+  {
+    if (testPassed || testFailed)
+    {
+      break;
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+
+  TEST_ASSERT_TRUE(testPassed && !testFailed);
+
+  if (testPassed && !testFailed)
   {
       setPin(LED_PIN);
       sendReport(testPassedString, testPassedStringLen);
@@ -136,47 +168,17 @@ static void reportStatus(void) {
   }
 }
 
-static void checkTestStatus(void) {
-  static bool statusReported = false;
-
-  if (!statusReported)
-  {
-    if (testPassed || testFailed)
-    {
-      RUN_TEST(reportStatus);
-      UNITY_END();
-      statusReported = true;
-    }
-  }
-}
-
-static void prvTaskA(void *pvParameters) {
-  // wait with preemption disabled
-  vTaskPreemptionDisable(taskA);
-  busyWaitMicroseconds(2000000);
-  vTaskPreemptionEnable(taskA);
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
-}
-
-static void prvTaskB(void *pvParameters) {
-  busyWaitMicroseconds(2000000);
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    checkTestStatus();
-    busyWaitMicroseconds(100000);
-  }
-}
-
 static void prvTaskC(void *pvParameters) {
+
+  UNITY_BEGIN();
+
+  RUN_TEST(fr06_validate_vTaskPreemptionDisable);
+
+  UNITY_END();
+
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }

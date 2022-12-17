@@ -18,8 +18,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 
@@ -42,12 +40,9 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr4_001();
 
   vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
 
   /* should never reach here */
   panic_unsupported();
@@ -59,21 +54,7 @@ int main(void) {
 
 static bool taskBObservedRunning = false;
 
-static void reportResults(void) {
-  TEST_ASSERT_TRUE(!taskBObservedRunning);
-
-  if (taskBObservedRunning)
-  {
-    sendReport(testFailedString, testFailedStringLen);
-  }
-  else
-  {
-    setPin(LED_PIN);
-    sendReport(testPassedString, testPassedStringLen);
-  }
-}
-
-static void prvTaskA(void *pvParameters) {
+static void fr04_validateTasksDoNotRunAtSameTime(void) {
   int handlerNum = -1;
   TaskStatus_t taskStatus[16];
   UBaseType_t taskStatusArraySize = 16;
@@ -94,7 +75,7 @@ static void prvTaskA(void *pvParameters) {
       }
     }
 
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
 
     attempt++;
 
@@ -103,20 +84,37 @@ static void prvTaskA(void *pvParameters) {
     }
   }
 
-  RUN_TEST(reportResults);
+  TEST_ASSERT_TRUE(!taskBObservedRunning);
+
+  if (taskBObservedRunning)
+  {
+    sendReport(testFailedString, testFailedStringLen);
+  }
+  else
+  {
+    setPin(LED_PIN);
+    sendReport(testPassedString, testPassedStringLen);
+  }
+}
+
+static void prvTaskA(void *pvParameters) {
+  UNITY_BEGIN();
+
+  RUN_TEST(fr04_validateTasksDoNotRunAtSameTime);
 
   UNITY_END();
 
-  // idle the task
+// idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(100000);
   }
 }
 
 static void prvTaskB(void *pvParameters) {
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }

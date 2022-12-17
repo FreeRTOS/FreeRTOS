@@ -18,16 +18,14 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
-
-TaskHandle_t taskA, taskB;
 
 #if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
+
+TaskHandle_t taskA, taskB;
 
 void setup_test_fr5_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
@@ -46,8 +44,6 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr5_001();
 
   vTaskStartScheduler();
@@ -65,8 +61,6 @@ static bool taskAOnCorrectCore = true;
 static bool taskBOnCorrectCore = true;
 
 static void prvTaskA(void *pvParameters) {
-  char strbuf_bad[] = "task A running on the wrong core\n\0";
-  size_t strbuf_bad_len = sizeof(strbuf_bad) / sizeof(char);
   BaseType_t core;
 
   int iter;
@@ -85,11 +79,31 @@ static void prvTaskA(void *pvParameters) {
 
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(100000);
   }
 }
 
-static void reportResults(void) {
+static void fr05_validateTasksOnlyRunOnAssignedCores(void) {
+  BaseType_t core;
+  int iter;
+
+  for(iter=1;iter < 25;iter++)
+  {
+    vTaskDelay(pdMS_TO_TICKS(10));
+    core = portGET_CORE_ID();
+    if (core != 1)
+    {
+      taskBOnCorrectCore = false;
+    }
+  }
+
+  while(!taskADone)
+  {
+    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(100000);
+  }
+
   TEST_ASSERT_TRUE(taskAOnCorrectCore && taskBOnCorrectCore);
 
   if (taskAOnCorrectCore && taskBOnCorrectCore)
@@ -103,29 +117,15 @@ static void reportResults(void) {
   }
 }
 
-static void prvTaskB(void *pvParameters) {
-  char strbuf_bad[] = "task B running on the wrong core\n\0";
-  size_t strbuf_bad_len = sizeof(strbuf_bad) / sizeof(char);
-  BaseType_t core;
+static void prvTaskB(void *pvParameters)
+{
+  UNITY_BEGIN();
 
-  int iter;
-
-  for(iter=1;iter < 25;iter++)
-  {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    core = portGET_CORE_ID();
-    if (core != 1)
-    {
-      taskBOnCorrectCore = false;
-    }
-  }
-
-  RUN_TEST(reportResults);
+  RUN_TEST(fr05_validateTasksOnlyRunOnAssignedCores);
 
   UNITY_END();
-
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }

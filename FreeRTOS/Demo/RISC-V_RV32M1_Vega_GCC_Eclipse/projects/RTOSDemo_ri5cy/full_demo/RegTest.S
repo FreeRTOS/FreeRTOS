@@ -34,10 +34,10 @@
 
 /* Constants to define the additional registers found on the Pulpino RI5KY. */
 #define lpstart0     0x7b0
-#define lpend0         0x7b1
+#define lpend0       0x7b1
 #define lpcount0     0x7b2
 #define lpstart1     0x7b4
-#define lpend1         0x7b5
+#define lpend1       0x7b5
 #define lpcount1     0x7b6
 
 /*-----------------------------------------------------------*/

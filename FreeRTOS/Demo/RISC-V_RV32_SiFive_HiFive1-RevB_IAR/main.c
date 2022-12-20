@@ -242,7 +242,6 @@ void vApplicationMallocFailedHook( void )
      * to query the size of free heap space that remains (although it does not
      * provide information on how the remaining heap might be fragmented). */
     taskDISABLE_INTERRUPTS();
-    __asm volatile( "ebreak" );
     for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -270,7 +269,6 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
      * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
      * function is called if a stack overflow is detected. */
     taskDISABLE_INTERRUPTS();
-    __asm volatile( "ebreak" );
     for( ;; );
 }
 /*-----------------------------------------------------------*/

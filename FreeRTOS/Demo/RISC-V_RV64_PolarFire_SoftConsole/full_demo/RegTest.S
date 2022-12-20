@@ -74,57 +74,57 @@ reg1_loop:
      * vRegTest1Implementation uses x31 as the temporary, vRegTest2Implementation
      * uses x5 as the temporary. */
     li x31, 0x5
-    bne x31, x5, reg1_error
+    bne x31, x5, reg1_error_loop
     li x31, 0x6
-    bne x31, x6, reg1_error
+    bne x31, x6, reg1_error_loop
     li x31, 0x7
-    bne x31, x7, reg1_error
+    bne x31, x7, reg1_error_loop
     li x31, 0x8
-    bne x31, x8, reg1_error
+    bne x31, x8, reg1_error_loop
     li x31, 0x9
-    bne x31, x9, reg1_error
+    bne x31, x9, reg1_error_loop
     li x31, 0xa
-    bne x31, x10, reg1_error
+    bne x31, x10, reg1_error_loop
     li x31, 0xb
-    bne x31, x11, reg1_error
+    bne x31, x11, reg1_error_loop
     li x31, 0xc
-    bne x31, x12, reg1_error
+    bne x31, x12, reg1_error_loop
     li x31, 0xd
-    bne x31, x13, reg1_error
+    bne x31, x13, reg1_error_loop
     li x31, 0xe
-    bne x31, x14, reg1_error
+    bne x31, x14, reg1_error_loop
     li x31, 0xf
-    bne x31, x15, reg1_error
+    bne x31, x15, reg1_error_loop
     li x31, 0x10
-    bne x31, x16, reg1_error
+    bne x31, x16, reg1_error_loop
     li x31, 0x11
-    bne x31, x17, reg1_error
+    bne x31, x17, reg1_error_loop
     li x31, 0x12
-    bne x31, x18, reg1_error
+    bne x31, x18, reg1_error_loop
     li x31, 0x13
-    bne x31, x19, reg1_error
+    bne x31, x19, reg1_error_loop
     li x31, 0x14
-    bne x31, x20, reg1_error
+    bne x31, x20, reg1_error_loop
     li x31, 0x15
-    bne x31, x21, reg1_error
+    bne x31, x21, reg1_error_loop
     li x31, 0x16
-    bne x31, x22, reg1_error
+    bne x31, x22, reg1_error_loop
     li x31, 0x17
-    bne x31, x23, reg1_error
+    bne x31, x23, reg1_error_loop
     li x31, 0x18
-    bne x31, x24, reg1_error
+    bne x31, x24, reg1_error_loop
     li x31, 0x19
-    bne x31, x25, reg1_error
+    bne x31, x25, reg1_error_loop
     li x31, 0x1a
-    bne x31, x26, reg1_error
+    bne x31, x26, reg1_error_loop
     li x31, 0x1b
-    bne x31, x27, reg1_error
+    bne x31, x27, reg1_error_loop
     li x31, 0x1c
-    bne x31, x28, reg1_error
+    bne x31, x28, reg1_error_loop
     li x31, 0x1d
-    bne x31, x29, reg1_error
+    bne x31, x29, reg1_error_loop
     li x31, 0x1e
-    bne x31, x30, reg1_error
+    bne x31, x30, reg1_error_loop
 
     /* Everything passed, increment the loop counter. */
     lw x31, ulRegisterTest1CounterConst
@@ -140,12 +140,6 @@ reg1_loop:
 
     /* Start again. */
     jal reg1_loop
-
-reg1_error:
-    /* Jump here if a register contains an uxpected value.  This stops the loop
-    counter being incremented so the check task knows an error was found. */
-    ebreak
-    jal reg1_error_loop
 
 reg1_error_loop:
     /* Busy loop which holds the task. */
@@ -193,57 +187,57 @@ Reg2_loop:
      * vRegTest2Implementation uses x5 as the temporary, vRegTest1Implementation
      * uses x31 as the temporary. */
     li x5, 0x61
-    bne x5, x6, reg2_error
+    bne x5, x6, reg2_error_loop
     li x5, 0x71
-    bne x5, x7, reg2_error
+    bne x5, x7, reg2_error_loop
     li x5, 0x81
-    bne x5, x8, reg2_error
+    bne x5, x8, reg2_error_loop
     li x5, 0x91
-    bne x5, x9, reg2_error
+    bne x5, x9, reg2_error_loop
     li x5, 0xa1
-    bne x5, x10, reg2_error
+    bne x5, x10, reg2_error_loop
     li x5, 0xb1
-    bne x5, x11, reg2_error
+    bne x5, x11, reg2_error_loop
     li x5, 0xc1
-    bne x5, x12, reg2_error
+    bne x5, x12, reg2_error_loop
     li x5, 0xd1
-    bne x5, x13, reg2_error
+    bne x5, x13, reg2_error_loop
     li x5, 0xe1
-    bne x5, x14, reg2_error
+    bne x5, x14, reg2_error_loop
     li x5, 0xf1
-    bne x5, x15, reg2_error
+    bne x5, x15, reg2_error_loop
     li x5, 0x20
-    bne x5, x16, reg2_error
+    bne x5, x16, reg2_error_loop
     li x5, 0x21
-    bne x5, x17, reg2_error
+    bne x5, x17, reg2_error_loop
     li x5, 0x22
-    bne x5, x18, reg2_error
+    bne x5, x18, reg2_error_loop
     li x5, 0x23
-    bne x5, x19, reg2_error
+    bne x5, x19, reg2_error_loop
     li x5, 0x24
-    bne x5, x20, reg2_error
+    bne x5, x20, reg2_error_loop
     li x5, 0x25
-    bne x5, x21, reg2_error
+    bne x5, x21, reg2_error_loop
     li x5, 0x26
-    bne x5, x22, reg2_error
+    bne x5, x22, reg2_error_loop
     li x5, 0x27
-    bne x5, x23, reg2_error
+    bne x5, x23, reg2_error_loop
     li x5, 0x28
-    bne x5, x24, reg2_error
+    bne x5, x24, reg2_error_loop
     li x5, 0x29
-    bne x5, x25, reg2_error
+    bne x5, x25, reg2_error_loop
     li x5, 0x2a
-    bne x5, x26, reg2_error
+    bne x5, x26, reg2_error_loop
     li x5, 0x2b
-    bne x5, x27, reg2_error
+    bne x5, x27, reg2_error_loop
     li x5, 0x2c
-    bne x5, x28, reg2_error
+    bne x5, x28, reg2_error_loop
     li x5, 0x2d
-    bne x5, x29, reg2_error
+    bne x5, x29, reg2_error_loop
     li x5, 0x2e
-    bne x5, x30, reg2_error
+    bne x5, x30, reg2_error_loop
     li x5, 0x2f
-    bne x5, x31, reg2_error
+    bne x5, x31, reg2_error_loop
 
     /* Everything passed, increment the loop counter. */
     lw x5, ulRegisterTest2CounterConst
@@ -256,12 +250,6 @@ Reg2_loop:
 
     /* Start again. */
     jal Reg2_loop
-
-reg2_error:
-    /* Jump here if a register contains an uxpected value.  This stops the loop
-     * counter being incremented so the check task knows an error was found. */
-    ebreak
-    jal reg2_error_loop
 
 reg2_error_loop:
     /* Busy loop which holds the task. */

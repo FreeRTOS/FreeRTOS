@@ -1026,13 +1026,27 @@ void test_xTaskResumeAll_success_2_tasks_running( void )
     BaseType_t ret;
     TaskHandle_t taskHandle;
 
+    /* Start the scheduler. */
+    xSchedulerRunning = pdTRUE;
+
+    /* Create one running task. */
+    create_task_priority = 3;
+    taskHandle = create_task();
+    pxCurrentTCB = taskHandle;
+    vListInsertEnd_Ignore();
+    vTaskSuspendAll();
+    TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
+
+    /* Create another higher priority task when scheduler is suspended. This task
+     * will be put into the xPendingReadyList and added to ready list when scheduler
+     * is resumed. */
+    create_task_priority = 4;
     taskHandle = create_task();
     ptcb = ( TCB_t * ) taskHandle;
-    vListInsertEnd_Ignore();
-    create_task();
-    vTaskSuspendAll();
+
     TEST_ASSERT_EQUAL( 2, uxCurrentNumberOfTasks );
 
+    /* Resume the scheduler. */
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdFALSE );
     listGET_OWNER_OF_HEAD_ENTRY_ExpectAnyArgsAndReturn( ptcb );
     listREMOVE_ITEM_Expect( &( ptcb->xEventListItem ) );
@@ -1041,6 +1055,8 @@ void test_xTaskResumeAll_success_2_tasks_running( void )
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     ret = xTaskResumeAll();
+
+    /* The higher priority task should preempt current running task. */
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 0, uxSchedulerSuspended );
     TEST_ASSERT_TRUE( xYieldPending );
@@ -1069,7 +1085,7 @@ void test_xTaskResumeAll_success_2_tasks_running_xpendedticks_gt_zero( void )
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     /* xTaskIncrementTick */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ],
-                                             0 );
+                                             2 );
     ret = xTaskResumeAll();
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 0, uxSchedulerSuspended );
@@ -1596,6 +1612,51 @@ void test_vTaskDelay_success_gt_0_yield_not_called( void )
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
+/* Test the scenario that a higher priority task is added to xPendingReadyList when
+ * current task calls xTaskDelay. Scheduler yields for the higher priority task in
+ * vTaskResumeAll function. */
+void test_vTaskDelay_success_gt_0_already_yielded( void )
+{
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    /* Create one task. This is the current running task. */
+    create_task_priority = 3;
+    task_handle = create_task();
+
+    /* Create a higher priority task to be added to xPendingReadyList. */
+    create_task_priority = 4;
+    task_handle2 = create_task();
+
+    pxCurrentTCB = task_handle;
+    ptcb = ( TCB_t * ) task_handle;
+    TickType_t delay = 34;
+    /* Expectations */
+    /* prvAddCurrentTaskToDelayedList */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
+                                    xTickCount + delay );
+    vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
+
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( &xPendingReadyList, task_handle2 );
+    listREMOVE_ITEM_Expect( &( task_handle2->xEventListItem ) );
+    listREMOVE_ITEM_Expect( &( task_handle2->xStateListItem ) );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ task_handle2->uxPriority ],
+                           &task_handle2->xStateListItem );
+    /* back to xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+
+    /* API Call */
+    vTaskDelay( delay );
+    /* Validations */
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
+}
+
 /* ensures that with a delay of zero no other operation or sleeping is done, the
  * task in only yielded */
 void test_vTaskDelay_success_eq_0( void )
@@ -1964,6 +2025,54 @@ void test_xTaskDelayUntil_success_lt_tickCount2( void )
     TEST_ASSERT_TRUE( ret_xtask_delay );
 }
 
+/* Test the scenario that a higher priority task is added to xPendingReadyList when
+ * current task calls xTaskDelayUntil. Scheduler yields for the higher priority task
+ * in vTaskResumeAll function. */
+void test_xTaskDelayUntil_success_yield_already( void )
+{
+    BaseType_t ret_xtask_delay;
+    TickType_t previousWakeTime = xTickCount - 3; /* 500 - 3 = 497 */
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+    TickType_t xTimeIncrement = UINT32_MAX;
+
+    /* Setup */
+    create_task_priority = 3;
+    task_handle = create_task();
+
+    /* Create another higher priority task to be added in xPendingReadyList. */
+    create_task_priority = 4;
+    task_handle2 = create_task();
+
+    ptcb = ( TCB_t * ) task_handle;
+    pxCurrentTCB = ( TCB_t * ) task_handle;
+
+    /* Expectations */
+    /* xTaskResumeAll */
+    /* prvResetNextTaskUnblockTime */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
+    listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
+                                    ( ( previousWakeTime - 1 ) ) );
+    vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
+
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( &xPendingReadyList, task_handle2 );
+    listREMOVE_ITEM_Expect( &( task_handle2->xEventListItem ) );
+    listREMOVE_ITEM_Expect( &( task_handle2->xStateListItem ) );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ task_handle2->uxPriority ],
+                           &task_handle2->xStateListItem );
+    /* back to xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* API Call */
+    ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
+    /* Validations */
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
+    TEST_ASSERT_TRUE( ret_xtask_delay );
+}
 
 /* ----------------------- testing INCLUDE_vTaskSuspend ----------------------*/
 void test_vTaskSuspend_success( void )

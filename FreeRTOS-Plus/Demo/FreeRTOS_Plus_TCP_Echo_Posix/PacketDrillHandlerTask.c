@@ -214,6 +214,12 @@ static void handlePacketDrillCommand(void *pvParameters) {
 
                     sendResultToThread(response);
                     continue;
+                } else if (xConnectedSocket == NULL) {
+                    response = 0;
+                    FreeRTOS_debug_printf(("Error connecting to client socket with null...\n"));
+
+                    sendResultToThread(response);
+                    continue;
                 }
 
                 // TODO: Check for array out of bounds access

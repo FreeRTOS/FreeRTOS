@@ -2381,29 +2381,36 @@ void test_vTaskResume_success_eq_curr_prio_not_yield( void )
 void test_xTaskResumeFromISR_success( void )
 {
     TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
     BaseType_t ret_task_resume;
 
     create_task_priority = 3;
     task_handle = create_task();
+
+    /* Create another higher priority task to be resumed. */
+    create_task_priority = 4;
+    task_handle2 = create_task();
+
     ptcb = task_handle;
+    pxCurrentTCB = task_handle;
     /* Expectations */
     /* prvTaskIsTaskSuspended */
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
-                                             &ptcb->xStateListItem,
+                                             &task_handle2->xStateListItem,
                                              pdTRUE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
-                                             &ptcb->xEventListItem,
+                                             &task_handle2->xEventListItem,
                                              pdFALSE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
-                                             &ptcb->xEventListItem,
+                                             &task_handle2->xEventListItem,
                                              pdTRUE );
     /* back */
-    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    uxListRemove_ExpectAndReturn( &task_handle2->xStateListItem, pdTRUE );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ create_task_priority ],
-                           &ptcb->xStateListItem );
+                           &task_handle2->xStateListItem );
     /* API Call */
-    ret_task_resume = xTaskResumeFromISR( task_handle );
+    ret_task_resume = xTaskResumeFromISR( task_handle2 );
 
     /* Validations */
     TEST_ASSERT_EQUAL( pdTRUE, ret_task_resume );

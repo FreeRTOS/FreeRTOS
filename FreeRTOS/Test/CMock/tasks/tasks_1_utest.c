@@ -1238,6 +1238,44 @@ void test_vTaskPrioritySet_success_gt_curr_prio_curr_tcb( void )
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
+/* Test the scenario that setting a priority of a task in the ready list equal to
+ * current task doesn't preempt current running task. */
+void test_vTaskPrioritySet_success_eq_curr_prio_curr_tcb( void )
+{
+    TaskHandle_t taskHandle;
+    TaskHandle_t taskHandle2;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    create_task_priority = 4;
+    taskHandle2 = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, taskHandle2 );
+
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0 );
+    listSET_LIST_ITEM_VALUE_Expect( &( ptcb->xEventListItem ), ( configMAX_PRIORITIES - create_task_priority ) );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 3 ],
+                                             &( ptcb->xStateListItem ),
+                                             pdTRUE );
+    uxListRemove_ExpectAndReturn( &( ptcb->xStateListItem ), 0 );
+    /* port Reset ready priority */
+    /* add task to ready list */
+    listINSERT_END_Expect( &( pxReadyTasksLists[ 4 ] ),
+                           &( ptcb->xStateListItem ) );
+
+    TEST_ASSERT_EQUAL( 3, ptcb->uxBasePriority );
+    TEST_ASSERT_EQUAL( 3, ptcb->uxPriority );
+
+    /* Set priority of taskHandle to the same as taskHandle2. */
+    vTaskPrioritySet( taskHandle, 4 );
+    TEST_ASSERT_EQUAL( 4, ptcb->uxBasePriority );
+    TEST_ASSERT_EQUAL( 4, ptcb->uxPriority );
+
+    /* portYIELD_WITHIN_API() should not be called. */
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
+}
+
 void test_vTaskPrioritySet_success_gt_max_prio( void )
 {
     TaskHandle_t taskHandle;
@@ -2299,6 +2337,45 @@ void test_vTaskResume_success_yield( void )
 
     /* Validations */
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
+}
+
+/* Test the scenario that current running task will not be preempted if a equal
+ * priority task is resumed. */
+void test_vTaskResume_success_eq_curr_prio_not_yield( void )
+{
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    create_task_priority = 3;
+    task_handle = create_task();
+    create_task_priority = 3;
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+
+    /* Current running task should be task_handle2 now. */
+    pxCurrentTCB = task_handle2;
+
+    /* back */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    /* prvAddTaskToReadyList*/
+    listINSERT_END_Expect( &pxReadyTasksLists[ 3 ],
+                           &ptcb->xStateListItem );
+    /* API Call */
+    vTaskResume( task_handle ); /* not current tcb */
+
+    /* Resuming a task with equal priority. */
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_xTaskResumeFromISR_success( void )

@@ -104,10 +104,13 @@ processor and application]
 */
 
 /* SMP port only */
-#define configNUMBER_OF_CORES 1
-#define configTICK_CORE 1
-#define configRUN_MULTIPLE_PRIORITIES 1
+#define configNUMBER_OF_CORES                   1
+#define configTICK_CORE                         1
+#define configRUN_MULTIPLE_PRIORITIES           1
+#define configUSE_CORE_AFFINITY 1
 #define configUSE_MINIMAL_IDLE_HOOK 0
+//#define configUSE_TIME_SLICING 0
+#define configUSE_TASK_PREEMPTION_DISABLE 0
 
 /* RP2040 specific */
 #define configSUPPORT_PICO_SYNC_INTEROP 1

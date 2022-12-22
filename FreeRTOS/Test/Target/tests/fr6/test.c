@@ -31,6 +31,7 @@ static void prvTaskC(void *pvParameters);
 
 bool testFailed = false;
 bool testPassed = false;
+int taskBState = 0;
 
 void test_fr6TASK_SWITCHED_IN(void) {
   UBaseType_t idx, numTasksRunning;
@@ -42,6 +43,7 @@ void test_fr6TASK_SWITCHED_IN(void) {
   int retcode = 0;
 
   static int taskSwitchCount = 0;
+  static bool taskARan = false;
   static bool taskBRan = false;
   static bool taskCRan = false;
 
@@ -56,18 +58,22 @@ void test_fr6TASK_SWITCHED_IN(void) {
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskARunning = true;
+        taskARan = true;
+        //sendReport("TaskA\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskBRan = true;
+        //sendReport("TaskB\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskCRan = true;
+        //sendReport("TaskC\n\0", 0);
       }
     }
 
-    if (taskCRan)
+    if ((taskBState > 0) && taskCRan)
     {
       if (!(taskARunning && taskBRan))
       {
@@ -82,6 +88,7 @@ void test_fr6TASK_SWITCHED_IN(void) {
     taskSwitchCount++;
     if (taskSwitchCount > 2048)
     {
+      //sendReport("2k task swiches.\n\0", 0);
       testFailed = true;
     }
   }
@@ -133,6 +140,9 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
+  taskBState++;
+
+  sendReport("TaskB Entering busyWait...\n\0", 0);
   busyWaitMicroseconds(2000000);
 
   // idle the task
@@ -169,6 +179,11 @@ static void fr06_validate_vTaskPreemptionDisable(void) {
 }
 
 static void prvTaskC(void *pvParameters) {
+  while (taskBState == 0) {
+    busyWaitMicroseconds(1);
+  }
+
+  sendReport("TaskC Past Guard\n\0", 0);
 
   UNITY_BEGIN();
 

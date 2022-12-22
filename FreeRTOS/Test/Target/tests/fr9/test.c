@@ -55,17 +55,17 @@ void test_fr9TASK_SWITCHED_IN(void) {
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskARan = true;
-        sendReport("TRACE: taskA\n\0", 0);
+        //sendReport("TRACE: taskA\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskBRan = true;
-        sendReport("TRACE: taskB\n\0", 0);
+        //sendReport("TRACE: taskB\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskCRan = true;
-        sendReport("TRACE: taskC\n\0", 0);
+        //sendReport("TRACE: taskC\n\0", 0);
       }
     }
 

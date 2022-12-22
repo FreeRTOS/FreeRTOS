@@ -17,8 +17,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 
@@ -41,8 +39,6 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr8_001();
 
   vTaskStartScheduler();
@@ -57,32 +53,52 @@ int main(void) {
 
 static uint32_t taskBState = 0;
 static bool isrAssertionComplete = false;
+static bool isrObservedTaskBInsideCriticalSection = false;
+static bool insideTaskBCriticalSection = false;
 
 static void softwareInterruptHandlerSimple(void) {
-  int i;
+  int iter;
   UBaseType_t uxSavedInterruptStatus;
 
-  char strbuf_a[] = "TRACE: ISR enter\n\0";
-  size_t strbuf_a_len = sizeof(strbuf_a) / sizeof(char);
-
-  char strbuf_b[] = "TRCE: ISR exit\n\0";
-  size_t strbuf_b_len = sizeof(strbuf_b) / sizeof(char);
-
-  sendReport(strbuf_a, strbuf_a_len);
-  uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-
-  clearPin(LED_PIN);
-
-  taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
-  sendReport(strbuf_b, strbuf_b_len);
+  for(iter = 1; iter < 10; iter++)
+  {
+    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+    if (insideTaskBCriticalSection)
+    {
+      isrObservedTaskBInsideCriticalSection = true;
+    }
+    busyWaitMicroseconds(10000);
+    taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
+  }
 
   isrAssertionComplete = true;
 }
 
-static void reportStatus(void) {
-  TEST_ASSERT_TRUE(isrAssertionComplete);
+static void prvTaskA(void *pvParameters) {
+  int handlerNum = -1;
 
-  if (isrAssertionComplete)
+  // wait for Task B to get to 6 itertions
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(10));
+    if (taskBState > 5) {
+      break;
+    }
+  }
+
+  handlerNum = registerSoftwareInterruptHandler(softwareInterruptHandlerSimple);
+  triggerSoftwareInterrupt(handlerNum);
+
+  // idle the task
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+}
+
+void fr08_validateOnlyOneCriticalSectionRanAtATime(void)
+{
+  TEST_ASSERT_TRUE(isrAssertionComplete && !isrObservedTaskBInsideCriticalSection);
+
+  if (isrAssertionComplete && !isrObservedTaskBInsideCriticalSection)
   {
       setPin(LED_PIN);
       sendReport(testPassedString, testPassedStringLen);
@@ -93,68 +109,34 @@ static void reportStatus(void) {
   }
 }
 
-static void checkTestStatus(void) {
-  static bool statusReported = false;
-
-  if (!statusReported)
-  {
-    if (isrAssertionComplete)
-    {
-      RUN_TEST(reportStatus);
-      UNITY_END();
-      statusReported = true;
-    }
-  }
-}
-
-static void prvTaskA(void *pvParameters) {
-  int handlerNum = -1;
-
-  // wait for Task B to get to 6 itertions
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    if (taskBState > 5) {
-      break;
-    }
-  }
-
-  setPin(LED_PIN);
-
-  handlerNum = registerSoftwareInterruptHandler(softwareInterruptHandlerSimple);
-  triggerSoftwareInterrupt(handlerNum);
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    checkTestStatus();
-  }
-}
-
 static void prvTaskB(void *pvParameters) {
   int iter = 1;
-  int numIters = 10;
-  char strbuf[] = "TRACE: task B enter critical section\n\0";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
-  sendReport(strbuf, strbuf_len);
-
-  for (iter = 1; iter < numIters; iter++) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS * 50);
+  for (iter = 1; iter < 10; iter++) {
+    vTaskDelay(pdMS_TO_TICKS(10));
     while (taskBState == 6 && !isrAssertionComplete) {
-      vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS * 50);
+      vTaskDelay(pdMS_TO_TICKS(10));
     }
     taskENTER_CRITICAL();
+    insideTaskBCriticalSection = true;
+    busyWaitMicroseconds(10000);
     taskBState++;
-    if ((iter % 2) == 0) {
-      clearPin(LED_PIN);
-    } else {
-      setPin(LED_PIN);
-    }
+    insideTaskBCriticalSection = false;
     taskEXIT_CRITICAL();
   }
 
+  while (!isrAssertionComplete) {
+      vTaskDelay(pdMS_TO_TICKS(10));
+  }
+
+  UNITY_BEGIN();
+
+  RUN_TEST(fr08_validateOnlyOneCriticalSectionRanAtATime);
+
+  UNITY_END();
+
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }

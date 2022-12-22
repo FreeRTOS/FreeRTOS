@@ -2845,13 +2845,15 @@ void test_task_premption_change_affinity( void )
 }
 
 /**
- * @brief AWS_IoT-FreeRTOS_SMP_TC-75
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-87
  * Tasks of equal priority waiting in the ready queue. The one waiting for the longest
  * time should be selected to run.
  *
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
  * #define configNUMBER_OF_CORES                            (N > 1)
+ * #define configUSE_CORE_AFFINITY 1
+ * #define configUSE_TASK_PREEMPTION_DISABLE 1
  *
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2864,9 +2866,9 @@ void test_task_premption_change_affinity( void )
  *
  * After calling vTaskStartScheduler()
  *
- * Task (T0)	     Task (TN)         Task (TN + 1)
- * Priority – 1      Priority – 1      Priority – 1
- * State - Running	 State - Ready   State - Ready
+ * Task (T0)	      Task (TN - 1)     Task (TN)         Task (TN + 1)
+ * Priority – 1       Priority – 1      Priority – 1      Priority – 1
+ * State - Running	  State - Running   State - Ready     State - Ready
  *
  * Task T1 yields on core 1
  *
@@ -2920,7 +2922,7 @@ void test_task_yield_run_wait_longest( void )
         }
     }
 
-    /* T1 yield itself on core 1. TN should be choosed to run on core 1.
+    /* T1 yield itself on core 1. TN should be selected to run on core 1.
      * The tasks running status:
      *      T0 : core 0
      *      T1 : in ready list
@@ -2950,7 +2952,7 @@ void test_task_yield_run_wait_longest( void )
         }
     }
 
-    /* T0 yield itself on core 0. TN + 1 should be choosed to run on core 0.
+    /* T0 yield itself on core 0. TN + 1 should be selected to run on core 0.
      * The tasks running status:
      *      T0 : in ready list
      *      T1 : in ready list
@@ -3016,7 +3018,7 @@ void test_task_yield_run_wait_longest( void )
 }
 
 /**
- * @brief AWS_IoT-FreeRTOS_SMP_TC-76
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-88
  * Tasks of equal priority waiting in the ready queue. The new task of equal priority
  * should be selected to run when a running task yields itself.
  *

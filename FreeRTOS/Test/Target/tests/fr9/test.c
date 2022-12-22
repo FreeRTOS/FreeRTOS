@@ -19,8 +19,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 static void prvTaskC(void *pvParameters);
@@ -30,7 +28,15 @@ static void prvTaskC(void *pvParameters);
 #endif
 
 static bool testFailed = false;
-static bool testPassed = false;
+static bool allTasksHaveRun = false;
+static bool taskAHasEnteredCriticalSection = false;
+static bool taskAHasExitedCriticalSection = false;
+static bool taskBHasEnteredCriticalSection = false;
+
+static int taskSwitchCount = 0;
+static bool taskARan = false;
+static bool taskBRan = false;
+static bool taskCRan = false;
 
 void test_fr9TASK_SWITCHED_IN(void) {
   UBaseType_t idx, numTasksRunning;
@@ -41,12 +47,7 @@ void test_fr9TASK_SWITCHED_IN(void) {
   SchedTraceLogRow *logRow;
   int retcode = 0;
 
-  static int taskSwitchCount = 0;
-  static bool taskARan = false;
-  static bool taskBRan = false;
-  static bool taskCRan = false;
-
-  if (!(testPassed || testFailed))
+  if (!(allTasksHaveRun || testFailed))
   {
     numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
 
@@ -55,23 +56,20 @@ void test_fr9TASK_SWITCHED_IN(void) {
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskARan = true;
-        //sendReport("TRACE: taskA\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskBRan = true;
-        //sendReport("TRACE: taskB\n\0", 0);
       }
       if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
       {
         taskCRan = true;
-        //sendReport("TRACE: taskC\n\0", 0);
       }
     }
 
-    if (taskCRan && taskBRan)
+    if (taskARan && taskCRan && taskBRan)
     {
-      testPassed = true;
+      allTasksHaveRun = true;
     }
 
     taskSwitchCount++;
@@ -103,8 +101,6 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr9_001();
 
   vTaskStartScheduler();
@@ -112,15 +108,66 @@ int main(void) {
   /* should never reach here */
   panic_unsupported();
 
-  return 0; // UNITY_END is unreachable via this path. a state machine and
-            // counter is used so that just one child task will call it
-            // instead.
+  return 0;
 }
 
-static void reportStatus(void) {
-  TEST_ASSERT_TRUE(testPassed);
+static void prvTaskA(void *pvParameters) {
+  taskENTER_CRITICAL();
+  taskAHasEnteredCriticalSection=true;
+  busyWaitMicroseconds(250000);
+  xTaskNotify(taskB, 0, eNoAction);
+  busyWaitMicroseconds(10000000);
+  taskEXIT_CRITICAL();
+  taskAHasExitedCriticalSection = true;
 
-  if (testPassed)
+  // idle the task
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(100000);
+  }
+}
+
+static void prvTaskB(void *pvParameters) {
+  vTaskDelay(pdMS_TO_TICKS(10));
+
+  taskENTER_CRITICAL();
+  taskBHasEnteredCriticalSection = true;
+  busyWaitMicroseconds(8000000);
+  taskEXIT_CRITICAL();
+
+  // idle the task
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(100000);
+  }
+}
+
+static void fr09_validateAllTasksHaveRun(void)
+{
+  char str[100];
+
+  //TEST_ASSERT_TRUE(allTasksHaveRun && !taskBHasEnteredCriticalSection);
+
+  sprintf(str, "TRACE: switchCount=%d, %s,%s,%s %s,%s,%s\n\0", taskSwitchCount,
+    taskARan ? "T" : "F",
+    taskBRan ? "T" : "F",
+    taskCRan ? "T" : "F",
+    taskAHasEnteredCriticalSection ? "T" : "F",
+    taskAHasExitedCriticalSection ? "T" : "F",
+    taskBHasEnteredCriticalSection ? "T" : "F");
+  sendReport(str, 0);
+
+  if (allTasksHaveRun)
+  {
+    sendReport("allTasksHaveRun\n\0", 0);
+  }
+
+  if (taskBHasEnteredCriticalSection)
+  {
+    sendReport("taskBHasEnteredCriticalSection\n\0", 0);
+  }
+
+  if (allTasksHaveRun && !taskBHasEnteredCriticalSection)
   {
       setPin(LED_PIN);
       sendReport(testPassedString, testPassedStringLen);
@@ -131,58 +178,18 @@ static void reportStatus(void) {
   }
 }
 
-static void checkTestStatus(void) {
-  static bool statusReported = false;
-
-  if (!statusReported)
-  {
-    if (testPassed || testFailed)
-    {
-      RUN_TEST(reportStatus);
-      UNITY_END();
-      statusReported = true;
-    }
-  }
-}
-
-static void prvTaskA(void *pvParameters) {
-  taskENTER_CRITICAL();
-  busyWaitMicroseconds(250000);
-  xTaskNotify(taskB, 0, eNoAction);
-  busyWaitMicroseconds(1000000);
-  taskEXIT_CRITICAL();
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    busyWaitMicroseconds(100000);
-  }
-}
-
-static void prvTaskB(void *pvParameters) {
-  int iter = 1;
-  int numIters = 10;
-  char strbuf[] = "TRACE: task B enter critical section\n\0";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  vTaskDelay(pdMS_TO_TICKS(10));
-
-  taskENTER_CRITICAL();
-  busyWaitMicroseconds(1000000);
-  taskEXIT_CRITICAL();
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    busyWaitMicroseconds(100000);
-  }
-}
-
 static void prvTaskC(void *pvParameters) {
+  busyWaitMicroseconds(250000);
+
+  UNITY_BEGIN();
+
+  RUN_TEST(fr09_validateAllTasksHaveRun);
+  
+  UNITY_END();
+
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    checkTestStatus();
+    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }

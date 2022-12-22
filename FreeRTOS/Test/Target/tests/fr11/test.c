@@ -18,8 +18,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 #define TASK_BLOCK_TIME_MS ( 3000 )
 #define TASK_BUSYLOOP_TIME_MS ( 100 )
 
@@ -47,8 +45,6 @@ void tearDown(void) {
 int main(void) {
   initTestEnvironment();
 
-  UNITY_BEGIN();
-
   setup_test_fr11_001();
 
   vTaskStartScheduler();
@@ -56,15 +52,13 @@ int main(void) {
   /* should never reach here */
   panic_unsupported();
 
-  return 0; // UNITY_END is unreachable via this path. a state machine and
-            // counter is used so that just one child task will call it
-            // instead.
+  return 0; 
 }
 
 static uint32_t uTaskBState = 0;
 static uint32_t uTempTaskBState = 0;
 
-static void reportStatus(void) {
+static void fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended(void) {
   TEST_ASSERT_TRUE(uTempTaskBState == 0);
 
   if( uTempTaskBState == 0 )
@@ -104,13 +98,15 @@ static void prvTaskA(void *pvParameters) {
 
   xTaskResumeAll();
 
-  RUN_TEST(reportStatus);
+  UNITY_BEGIN();
+
+  RUN_TEST(fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended);
 
   UNITY_END();
  
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -119,6 +115,6 @@ static void prvTaskB(void *pvParameters) {
 
   // idle the task
   for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }

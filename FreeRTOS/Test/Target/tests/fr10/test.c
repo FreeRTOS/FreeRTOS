@@ -62,9 +62,7 @@ int main(void) {
   /* should never reach here */
   panic_unsupported();
 
-  return 0; // UNITY_END is unreachable via this path. a state machine and
-            // counter is used so that just one child task will call it
-            // instead.
+  return 0; 
 }
 
 static void prvUnityStarter(void *pvParameters)

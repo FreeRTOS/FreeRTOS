@@ -19,8 +19,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 2)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
-
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 static void prvTaskC(void *pvParameters);

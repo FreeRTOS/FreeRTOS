@@ -2377,6 +2377,7 @@ void test_vTaskResume_success_yield( void )
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
+
 /* Test the scenario that current running task will not be preempted if a equal
  * priority task is resumed. */
 void test_vTaskResume_success_eq_curr_prio_not_yield( void )

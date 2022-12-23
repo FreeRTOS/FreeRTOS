@@ -28,8 +28,8 @@ add_library(unity STATIC
 target_include_directories(unity PUBLIC
         "${UNITY_DIR}/src/")
 
-#add_subdirectory(tests/template)
-#add_subdirectory(tests/hello_world)
+add_subdirectory(tests/template)
+add_subdirectory(tests/hello_world)
 add_subdirectory(tests/fr1)
 add_subdirectory(tests/fr2)
 add_subdirectory(tests/fr3)
@@ -41,4 +41,3 @@ add_subdirectory(tests/fr8)
 add_subdirectory(tests/fr9)
 add_subdirectory(tests/fr10)
 add_subdirectory(tests/fr11)
-add_subdirectory(tests/v795215469)

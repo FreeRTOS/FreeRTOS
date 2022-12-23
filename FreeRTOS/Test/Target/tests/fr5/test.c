@@ -28,13 +28,11 @@ static void prvTaskB(void *pvParameters);
 TaskHandle_t taskA, taskB;
 
 void setup_test_fr5_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, &taskA);
-  vTaskCoreAffinitySet(taskA, 0x1);
+  xTaskCreateAffinitySet(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+              mainTASK_A_PRIORITY, 0x1, &taskA);
 
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, &taskB);
-  vTaskCoreAffinitySet(taskB, 0x2);
+  xTaskCreateAffinitySet(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+              mainTASK_B_PRIORITY, 0x2, &taskB);
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */

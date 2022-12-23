@@ -83,9 +83,8 @@ void test_fr9TASK_SWITCHED_IN(void) {
 TaskHandle_t taskA, taskB;
 
 void setup_test_fr9_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, &taskA);
-  vTaskCoreAffinitySet(taskA, 0x2);
+  xTaskCreateAffinitySet(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+              mainTASK_A_PRIORITY, 0x2, &taskA);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_B_PRIORITY, &taskB);

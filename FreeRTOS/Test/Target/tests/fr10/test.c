@@ -29,7 +29,7 @@ static void prvTaskA(void);
 static void prvTaskB(void *pvParameters);
 
 TaskHandle_t taskAHandle;
-volatile BaseType_t xTaskACounter = 0;
+volatile BaseType_t xTaskCounter = 0;
 volatile BaseType_t xIsTaskBFinished = pdFALSE;
 
 #if configNUMBER_OF_CORES != 2
@@ -40,10 +40,6 @@ void setup_test_task(void) {
   /* unityStarter run as Task A after setting Unity. */
   xTaskCreate(prvUnityStarter, "unityStarter", configMINIMAL_STACK_SIZE * 2, NULL,
               mainTASK_A_PRIORITY, &taskAHandle);
-
-  /* Create task B to run on another core. */
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
-              mainTASK_B_PRIORITY, NULL);
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -65,6 +61,7 @@ int main(void) {
   return 0; 
 }
 
+/* The entry of test. */
 static void prvUnityStarter(void *pvParameters)
 {
   UNITY_BEGIN();
@@ -79,8 +76,21 @@ static void prvUnityStarter(void *pvParameters)
   }
 }
 
+/* In FR10, we're verifying that Only one task shall be able to enter the section 
+ * protected by vTaskSuspendAll/xTaskResumeAll. We have two tasks, A and B, running in parallel.
+ * Test flow lists in order below:
+ *   - Task A calls vTaskSuspendAll
+ *   - Task A increases the counter to COUNTER_MAX
+ *   - Task A calls xTaskResumeAll
+ *   - Task B calls vTaskSuspendAll 
+ *   - Task B increases the counter to COUNTER_MAX + 1
+ *   - Task B calls xTaskResumeAll */
 static void fr10_onlyOneTaskEnterSuspendAll()
 {
+  /* Create task B to run on another core. */
+  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
+              mainTASK_B_PRIORITY, NULL);
+
   /* Run as Task A. */
   prvTaskA();
 }
@@ -93,16 +103,19 @@ static void prvTaskA(void)
   vTaskSuspendAll();
   for( ;; )
   {
-    xTaskACounter++;
+    /* Increase xTaskCounter and xLocalTaskCounter at the same time and compare them to 
+     * make sure they're same. They would be different only if Task B enters vTaskSuspendAll and
+     * increase xTaskCounter during this step. */
+    xTaskCounter++;
     xLocalTaskCounter++;
     busyWaitMicroseconds( 1000 );
 
-    if( xTaskACounter != xLocalTaskCounter )
+    if( xTaskCounter != xLocalTaskCounter )
     {
       xTaskFailure = pdTRUE;
       break;
     }
-    else if( xTaskACounter >= COUNTER_MAX )
+    else if( xTaskCounter >= COUNTER_MAX )
     {
       break;
     }
@@ -116,30 +129,29 @@ static void prvTaskA(void)
   {
     busyWaitMicroseconds( 100000 );
   }
+  
+  /* Make sure xTaskCounter was increased by task B to COUNTER_MAX + 1. */
+  TEST_ASSERT_EQUAL_INT( xTaskCounter, COUNTER_MAX + 1 );
 }
 
 static void prvTaskB(void *pvParameters)
 {
-  while( xTaskACounter < 1 )
-    asm("");
+  while( xTaskCounter < 1 )
+    busyWaitMicroseconds( 1 );
   
   vTaskSuspendAll();
   for( ;; )
   {
-    xTaskACounter++;
+    xTaskCounter++;
 
-    if( xTaskACounter >= COUNTER_MAX )
+    if( xTaskCounter >= COUNTER_MAX )
     {
       break;
     }
   }
   xTaskResumeAll();
 
-  TEST_ASSERT_EQUAL_INT( xTaskACounter, COUNTER_MAX + 1 );
   xIsTaskBFinished = pdTRUE;
 
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
+  vTaskDelete( NULL );
 }

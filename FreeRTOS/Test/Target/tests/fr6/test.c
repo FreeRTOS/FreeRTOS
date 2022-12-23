@@ -15,7 +15,7 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 3)
+#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 2)
 
@@ -29,6 +29,7 @@ static void prvTaskC(void *pvParameters);
 
 bool testFailed = false;
 bool testPassed = false;
+int taskAState = 0;
 int taskBState = 0;
 
 void test_fr6TASK_SWITCHED_IN(void) {
@@ -71,7 +72,7 @@ void test_fr6TASK_SWITCHED_IN(void) {
       }
     }
 
-    if ((taskBState > 0) && taskCRan)
+    if (taskARunning && (taskBState > 0) && taskCRan)
     {
       if (!(taskARunning && taskBRan))
       {
@@ -125,6 +126,7 @@ int main(void) {
 static void prvTaskA(void *pvParameters) {
   // wait with preemption disabled
   vTaskPreemptionDisable(taskA);
+  taskAState++;
   busyWaitMicroseconds(2000000);
   vTaskPreemptionEnable(taskA);
 

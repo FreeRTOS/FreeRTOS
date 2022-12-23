@@ -108,7 +108,6 @@ int main(void) {
 static void prvTaskA(void *pvParameters) {
   // idle the task
   for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }
@@ -116,7 +115,6 @@ static void prvTaskA(void *pvParameters) {
 static void prvTaskB(void *pvParameters) {
   // idle the task
   for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }
@@ -131,7 +129,7 @@ static void fr03_validateAllTasksHaveRun(void) {
       break;
     }
 
-    vTaskDelay(pdMS_TO_TICKS(10));
+    busyWaitMicroseconds(10000);
   }
 
   TEST_ASSERT_TRUE((testPassed && !testFailed));
@@ -156,7 +154,6 @@ static void prvTaskC(void *pvParameters) {
 
   // idle the task
   for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 }

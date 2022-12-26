@@ -14,7 +14,7 @@ target_include_directories(fr8_common INTERFACE
 bsl_library_variant(bsl_fr8 ${CMAKE_CURRENT_LIST_DIR} "-DUSE_BSL_DEFAULT_HOOKS")
 target_link_libraries(fr8_common INTERFACE
         FreeRTOS-Kernel
-        FreeRTOS-Kernel-Heap1
+        FreeRTOS-Kernel-Heap4
         ${BSL_LINK_LIBRARIES} bsl_fr8)
 
 add_executable(test_fr8)

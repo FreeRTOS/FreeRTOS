@@ -52,22 +52,22 @@
 /**
  * @brief Task priority for task A.
  */
-#define mainTASK_A_PRIORITY             ( tskIDLE_PRIORITY + 2 )
+#define mainTASK_A_PRIORITY              ( tskIDLE_PRIORITY + 2 )
 
 /**
  * @brief Task priority for task B.
  */
-#define mainTASK_B_PRIORITY             ( tskIDLE_PRIORITY + 1 )
+#define mainTASK_B_PRIORITY              ( tskIDLE_PRIORITY + 1 )
 
 /**
  * @brief Maximum value for counter to increase to.
  */
-#define COUNTER_MAX                     ( 3000 )
+#define COUNTER_MAX                      ( 3000 )
 
 /**
  * @brief Idle period for prvTestRunnerTask to delay at the end.
  */
-#define mainSOFTWARE_TIMER_PERIOD_MS    pdMS_TO_TICKS( 10 )
+#define mainSOFTWARE_TIMER_PERIOD_MS     pdMS_TO_TICKS( 10 )
 
 /**
  * @brief Timeout value for task A to wait for Task B.
@@ -77,11 +77,11 @@
 /**
  * @brief Polling value for task A to wait for Task B.
  */
-#define WAIT_TASK_B_POLLING_MS    ( 100 )
+#define WAIT_TASK_B_POLLING_MS           ( 100 )
 
 /*-----------------------------------------------------------*/
 
-#if configNUMBER_OF_CORES != 2
+#if configNUMBER_OF_CORES <= 1
     #error Require two cores be configured for FreeRTOS
 #endif
 
@@ -99,63 +99,25 @@ static volatile BaseType_t xIsTaskBFinished = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief A start entry for unity to start with.
- *
- * @param[in] pvParameters parameter for task entry, useless in this test.
- */
+/* Function declaration. */
 static void prvTestRunnerTask( void * pvParameters );
-
-/**
- * @brief Test case FR10 to verify that only one task shall be able to enter the section
- * protected by vTaskSuspendAll/xTaskResumeAll. We have two tasks, A and B, running in parallel.
- * Test flow lists in order below:
- *   - Task A calls vTaskSuspendAll
- *   - Task A increases the counter to COUNTER_MAX
- *   - Task A calls xTaskResumeAll
- *   - Task B calls vTaskSuspendAll
- *   - Task B increases the counter to COUNTER_MAX + 1
- *   - Task B calls xTaskResumeAll
- */
-static void fr10_onlyOneTaskEnterSuspendAll();
-
-/**
- * @brief Task A entry function, called by prvTestRunnerTask directly.
- */
+static void fr10_onlyOneTaskEnterSuspendAll( void );
 static void prvTaskA( void );
-
-/**
- * @brief Task B entry function, created by xTaskCreate.
- *
- * @param[in] pvParameters parameter for task entry, useless in this test.
- */
 static void prvTaskB( void * pvParameters );
-
-/**
- * @brief To create prvTestRunnerTask.
- */
-static void setup_test_task( void );
 
 /*-----------------------------------------------------------*/
 
-static void setup_test_task( void )
+/* Is run before every test, put unit init calls here. */
+void setUp( void )
 {
-    /* prvTestRunnerTask run as Task A after setting Unity. */
-    xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
-                 mainTASK_A_PRIORITY, NULL );
 }
 
 /*-----------------------------------------------------------*/
 
-void setUp( void )
-{
-}                   /* Is run before every test, put unit init calls here. */
-
-/*-----------------------------------------------------------*/
-
+/* Is run after every test, put unit clean-up calls here. */
 void tearDown( void )
 {
-} /* Is run after every test, put unit clean-up calls here. */
+}
 
 /*-----------------------------------------------------------*/
 
@@ -163,7 +125,9 @@ int main( void )
 {
     initTestEnvironment();
 
-    setup_test_task();
+    /* prvTestRunnerTask run as Task A after setting Unity. */
+    xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
+                 mainTASK_A_PRIORITY, NULL );
 
     vTaskStartScheduler();
 
@@ -175,6 +139,11 @@ int main( void )
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief A start entry for unity to start with.
+ *
+ * @param[in] pvParameters parameter for task entry, useless in this test.
+ */
 static void prvTestRunnerTask( void * pvParameters )
 {
     UNITY_BEGIN();
@@ -192,7 +161,18 @@ static void prvTestRunnerTask( void * pvParameters )
 
 /*-----------------------------------------------------------*/
 
-static void fr10_onlyOneTaskEnterSuspendAll()
+/**
+ * @brief Test case FR10 to verify that only one task shall be able to enter the section
+ * protected by vTaskSuspendAll/xTaskResumeAll. We have two tasks, A and B, running in parallel.
+ * Test flow lists in order below:
+ *   - Task A calls vTaskSuspendAll
+ *   - Task A increases the counter to COUNTER_MAX
+ *   - Task A calls xTaskResumeAll
+ *   - Task B calls vTaskSuspendAll
+ *   - Task B increases the counter by 1
+ *   - Task B calls xTaskResumeAll
+ */
+static void fr10_onlyOneTaskEnterSuspendAll( void )
 {
     /* Create task B to run on another core. */
     xTaskCreate( prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
@@ -204,15 +184,18 @@ static void fr10_onlyOneTaskEnterSuspendAll()
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Task A entry function, called by prvTestRunnerTask directly.
+ */
 static void prvTaskA( void )
 {
     uint32_t ulIndex = 0;
-    uint32_t ulRemainingWaitTimeMs = WAIT_TASK_B_FINISH_TIMEOUT_MS;
+    int32_t lRemainingWaitTimeMs = WAIT_TASK_B_FINISH_TIMEOUT_MS;
     BaseType_t xTempCounter = 0;
 
     vTaskSuspendAll();
 
-    for( ulIndex = 0 ; ulIndex < COUNTER_MAX ; ulIndex++ )
+    for( ulIndex = 0; ulIndex < COUNTER_MAX; ulIndex++ )
     {
         /* Increase xTaskCounter COUNTER_MAX time. xTaskCounter is not COUNTER_MAX if task B enters vTaskSuspendAll. */
         xTaskCounter++;
@@ -223,24 +206,44 @@ static void prvTaskA( void )
     xTempCounter = xTaskCounter;
 
     xTaskResumeAll();
-    
+
+    /* If task B increases before task A calling xTaskResumeAll, xTempCounter might NOT be COUNTER_MAX.
+     * This checks below scenario:
+     *   - Task A read xTaskCounter(N) value to register.
+     *   - Task A increases xTaskCounter value by 1(N+1).
+     *   - Task A stores xTaskCounter value(N+1) back to memory.
+     *   - Task B read xTaskCounter value(N+1) to register.
+     *   - Task B increases xTaskCounter value by 1(N+2).
+     *   - Task B stores xTaskCounter value(N+2) back to memory. */
     TEST_ASSERT_EQUAL_INT( xTempCounter, COUNTER_MAX );
 
-    while( xIsTaskBFinished == pdFALSE && ulRemainingWaitTimeMs > 0 )
+    while( ( xIsTaskBFinished == pdFALSE ) && ( lRemainingWaitTimeMs > 0 ) )
     {
         busyWaitMicroseconds( WAIT_TASK_B_POLLING_MS * 1000 );
-        ulRemainingWaitTimeMs -= WAIT_TASK_B_POLLING_MS;
+        lRemainingWaitTimeMs -= WAIT_TASK_B_POLLING_MS;
     }
 
     /* Make sure Task B is finished normally. */
     TEST_ASSERT_TRUE( xIsTaskBFinished == pdTRUE );
 
-    /* Make sure xTaskCounter was increased by task B to COUNTER_MAX + 1. */
+    /* If task B increases before task A calling xTaskResumeAll, xTempCounter might NOT be COUNTER_MAX + 1.
+     * This checks below scenario:
+     *   - Task A read xTaskCounter value(N) to register.
+     *   - Task A increases xTaskCounter value by 1(N+1).
+     *   - Task B read xTaskCounter value(N) to register.
+     *   - Task B increases xTaskCounter value by 1(N+1).
+     *   - Task A stores xTaskCounter value(N+1) back to memory.
+     *   - Task B stores xTaskCounter value(N+1) back to memory. */
     TEST_ASSERT_EQUAL_INT( xTaskCounter, COUNTER_MAX + 1 );
 }
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Task B entry function, created by xTaskCreate.
+ *
+ * @param[in] pvParameters parameter for task entry, useless in this test.
+ */
 static void prvTaskB( void * pvParameters )
 {
     /* Wait task A to start first. */

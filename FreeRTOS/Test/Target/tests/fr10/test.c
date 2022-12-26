@@ -1,3 +1,36 @@
+/*
+ * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
+/**
+ * @file test.c
+ * @brief Implements FR10 test functions for SMP on target test.
+ */
+
 /* Kernel includes. */
 
 #include "FreeRTOS.h" /* Must come first. */
@@ -14,144 +47,219 @@
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
 
-/* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
+/*-----------------------------------------------------------*/
 
-#define COUNTER_MAX ( 3000 )
+/**
+ * @brief Task priority for task A.
+ */
+#define mainTASK_A_PRIORITY             ( tskIDLE_PRIORITY + 2 )
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
+/**
+ * @brief Task priority for task B.
+ */
+#define mainTASK_B_PRIORITY             ( tskIDLE_PRIORITY + 1 )
 
-static void prvUnityStarter(void *pvParameters);
-static void fr10_onlyOneTaskEnterSuspendAll();
-static void prvTaskA(void);
-static void prvTaskB(void *pvParameters);
+/**
+ * @brief Maximum value for counter to increase to.
+ */
+#define COUNTER_MAX                     ( 3000 )
 
-TaskHandle_t taskAHandle;
-volatile BaseType_t xTaskCounter = 0;
-volatile BaseType_t xIsTaskBFinished = pdFALSE;
+/**
+ * @brief Idle period for prvTestRunnerTask to delay at the end.
+ */
+#define mainSOFTWARE_TIMER_PERIOD_MS    pdMS_TO_TICKS( 10 )
+
+/**
+ * @brief Timeout value for task A to wait for Task B.
+ */
+#define WAIT_TASK_B_FINISH_TIMEOUT_MS    ( 3000 )
+
+/**
+ * @brief Polling value for task A to wait for Task B.
+ */
+#define WAIT_TASK_B_POLLING_MS    ( 100 )
+
+/*-----------------------------------------------------------*/
 
 #if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
+    #error Require two cores be configured for FreeRTOS
 #endif
 
-void setup_test_task(void) {
-  /* unityStarter run as Task A after setting Unity. */
-  xTaskCreate(prvUnityStarter, "unityStarter", configMINIMAL_STACK_SIZE * 2, NULL,
-              mainTASK_A_PRIORITY, &taskAHandle);
-}
+/*-----------------------------------------------------------*/
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/**
+ * @brief A counter for task A&B to increase.
+ */
+static volatile BaseType_t xTaskCounter = 0;
 
-int main(void) {
-  initTestEnvironment();
+/**
+ * @brief A flag to show if task B is finished.
+ */
+static volatile BaseType_t xIsTaskBFinished = pdFALSE;
 
-  setup_test_task();
+/*-----------------------------------------------------------*/
 
-  clearPin(LED_PIN);
+/**
+ * @brief A start entry for unity to start with.
+ *
+ * @param[in] pvParameters parameter for task entry, useless in this test.
+ */
+static void prvTestRunnerTask( void * pvParameters );
 
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0; 
-}
-
-/* The entry of test. */
-static void prvUnityStarter(void *pvParameters)
-{
-  UNITY_BEGIN();
-  
-  RUN_TEST( fr10_onlyOneTaskEnterSuspendAll );
-
-  UNITY_END();
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
-}
-
-/* In FR10, we're verifying that Only one task shall be able to enter the section 
+/**
+ * @brief Test case FR10 to verify that only one task shall be able to enter the section
  * protected by vTaskSuspendAll/xTaskResumeAll. We have two tasks, A and B, running in parallel.
  * Test flow lists in order below:
  *   - Task A calls vTaskSuspendAll
  *   - Task A increases the counter to COUNTER_MAX
  *   - Task A calls xTaskResumeAll
- *   - Task B calls vTaskSuspendAll 
+ *   - Task B calls vTaskSuspendAll
  *   - Task B increases the counter to COUNTER_MAX + 1
- *   - Task B calls xTaskResumeAll */
+ *   - Task B calls xTaskResumeAll
+ */
+static void fr10_onlyOneTaskEnterSuspendAll();
+
+/**
+ * @brief Task A entry function, called by prvTestRunnerTask directly.
+ */
+static void prvTaskA( void );
+
+/**
+ * @brief Task B entry function, created by xTaskCreate.
+ *
+ * @param[in] pvParameters parameter for task entry, useless in this test.
+ */
+static void prvTaskB( void * pvParameters );
+
+/**
+ * @brief To create prvTestRunnerTask.
+ */
+static void setup_test_task( void );
+
+/*-----------------------------------------------------------*/
+
+static void setup_test_task( void )
+{
+    /* prvTestRunnerTask run as Task A after setting Unity. */
+    xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
+                 mainTASK_A_PRIORITY, NULL );
+}
+
+/*-----------------------------------------------------------*/
+
+void setUp( void )
+{
+}                   /* Is run before every test, put unit init calls here. */
+
+/*-----------------------------------------------------------*/
+
+void tearDown( void )
+{
+} /* Is run after every test, put unit clean-up calls here. */
+
+/*-----------------------------------------------------------*/
+
+int main( void )
+{
+    initTestEnvironment();
+
+    setup_test_task();
+
+    vTaskStartScheduler();
+
+    /* should never reach here */
+    panic_unsupported();
+
+    return 0;
+}
+
+/*-----------------------------------------------------------*/
+
+static void prvTestRunnerTask( void * pvParameters )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr10_onlyOneTaskEnterSuspendAll );
+
+    UNITY_END();
+
+    /* idle the task */
+    for( ; ; )
+    {
+        vTaskDelay( mainSOFTWARE_TIMER_PERIOD_MS );
+    }
+}
+
+/*-----------------------------------------------------------*/
+
 static void fr10_onlyOneTaskEnterSuspendAll()
 {
-  /* Create task B to run on another core. */
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
-              mainTASK_B_PRIORITY, NULL);
+    /* Create task B to run on another core. */
+    xTaskCreate( prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
+                 mainTASK_B_PRIORITY, NULL );
 
-  /* Run as Task A. */
-  prvTaskA();
+    /* Run as Task A. */
+    prvTaskA();
 }
 
-static void prvTaskA(void)
+/*-----------------------------------------------------------*/
+
+static void prvTaskA( void )
 {
-  BaseType_t xLocalTaskCounter = 0;
-  BaseType_t xTaskFailure = pdFALSE;
+    uint32_t ulIndex = 0;
+    uint32_t ulRemainingWaitTimeMs = WAIT_TASK_B_FINISH_TIMEOUT_MS;
+    BaseType_t xTempCounter = 0;
 
-  vTaskSuspendAll();
-  for( ;; )
-  {
-    /* Increase xTaskCounter and xLocalTaskCounter at the same time and compare them to 
-     * make sure they're same. They would be different only if Task B enters vTaskSuspendAll and
-     * increase xTaskCounter during this step. */
-    xTaskCounter++;
-    xLocalTaskCounter++;
-    busyWaitMicroseconds( 1000 );
+    vTaskSuspendAll();
 
-    if( xTaskCounter != xLocalTaskCounter )
+    for( ulIndex = 0 ; ulIndex < COUNTER_MAX ; ulIndex++ )
     {
-      xTaskFailure = pdTRUE;
-      break;
+        /* Increase xTaskCounter COUNTER_MAX time. xTaskCounter is not COUNTER_MAX if task B enters vTaskSuspendAll. */
+        xTaskCounter++;
+        busyWaitMicroseconds( 1000 );
     }
-    else if( xTaskCounter >= COUNTER_MAX )
+
+    /* Record current counter value because we can't get error message from UNITY_ASSERT* functions in vTaskSuspendAll. */
+    xTempCounter = xTaskCounter;
+
+    xTaskResumeAll();
+    
+    TEST_ASSERT_EQUAL_INT( xTempCounter, COUNTER_MAX );
+
+    while( xIsTaskBFinished == pdFALSE && ulRemainingWaitTimeMs > 0 )
     {
-      break;
+        busyWaitMicroseconds( WAIT_TASK_B_POLLING_MS * 1000 );
+        ulRemainingWaitTimeMs -= WAIT_TASK_B_POLLING_MS;
     }
-  }
-  xTaskResumeAll();
 
-  TEST_ASSERT_TRUE( xTaskFailure == pdFALSE );
-  TEST_ASSERT_EQUAL_INT( xLocalTaskCounter, COUNTER_MAX );
+    /* Make sure Task B is finished normally. */
+    TEST_ASSERT_TRUE( xIsTaskBFinished == pdTRUE );
 
-  while( xIsTaskBFinished == pdFALSE )
-  {
-    busyWaitMicroseconds( 100000 );
-  }
-  
-  /* Make sure xTaskCounter was increased by task B to COUNTER_MAX + 1. */
-  TEST_ASSERT_EQUAL_INT( xTaskCounter, COUNTER_MAX + 1 );
+    /* Make sure xTaskCounter was increased by task B to COUNTER_MAX + 1. */
+    TEST_ASSERT_EQUAL_INT( xTaskCounter, COUNTER_MAX + 1 );
 }
 
-static void prvTaskB(void *pvParameters)
+/*-----------------------------------------------------------*/
+
+static void prvTaskB( void * pvParameters )
 {
-  while( xTaskCounter < 1 )
-    busyWaitMicroseconds( 1 );
-  
-  vTaskSuspendAll();
-  for( ;; )
-  {
+    /* Wait task A to start first. */
+    while( xTaskCounter < 1 )
+    {
+        busyWaitMicroseconds( 1 );
+    }
+
+    vTaskSuspendAll();
+
+    /* Increase 1 to xTaskCounter and it should be COUNTER_MAX + 1 after increasing. */
     xTaskCounter++;
 
-    if( xTaskCounter >= COUNTER_MAX )
-    {
-      break;
-    }
-  }
-  xTaskResumeAll();
+    xTaskResumeAll();
 
-  xIsTaskBFinished = pdTRUE;
+    /* Set xIsTaskBFinished to pdTRUE to let task A know that task B is finished. */
+    xIsTaskBFinished = pdTRUE;
 
-  vTaskDelete( NULL );
+    vTaskDelete( NULL );
 }
+
+/*-----------------------------------------------------------*/

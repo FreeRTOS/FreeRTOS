@@ -99,11 +99,11 @@ static void fr08_validateOnlyOneCriticalSectionRanAtATime(void)
   if (isrAssertionComplete && !isrObservedTaskBInsideCriticalSection)
   {
       setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
+      sendReport(pcTestPassedString, xTestPassedStringLen);
   }
   else
   {
-      sendReport(testFailedString, testFailedStringLen);
+      sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 

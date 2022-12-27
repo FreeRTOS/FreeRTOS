@@ -64,11 +64,11 @@ static void fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended(void) 
   if( uTempTaskBState == 0 )
   {
     setPin(LED_PIN);
-    sendReport(testPassedString, testPassedStringLen);
+    sendReport(pcTestPassedString, xTestPassedStringLen);
   }
   else
   {
-    sendReport(testFailedString, testFailedStringLen);
+    sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 

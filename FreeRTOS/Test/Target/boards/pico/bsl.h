@@ -22,10 +22,10 @@
 #define GPIO0_PIN (2)
 #define MAX_CORES (2)
 
-extern char testPassedString[];
-extern size_t testPassedStringLen;
-extern char testFailedString[];
-extern size_t testFailedStringLen;
+extern char pcTestPassedString[];
+extern size_t xTestPassedStringLen;
+extern char pcTestFailedString[];
+extern size_t xTestFailedStringLen;
 
 typedef void (* softwareInterruptHandler)(void);
 

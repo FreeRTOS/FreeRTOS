@@ -167,11 +167,11 @@ static void fr06_validate_vTaskPreemptionDisable(void) {
   if (testPassed && !testFailed)
   {
       setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
+      sendReport(pcTestPassedString, xTestPassedStringLen);
   }
   else
   {
-      sendReport(testFailedString, testFailedStringLen);
+      sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 

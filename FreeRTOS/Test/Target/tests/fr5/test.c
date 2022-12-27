@@ -105,11 +105,11 @@ static void fr05_validateTasksOnlyRunOnAssignedCores(void) {
   if (taskAOnCorrectCore && taskBOnCorrectCore)
   {
     setPin(LED_PIN);
-    sendReport(testPassedString, testPassedStringLen);
+    sendReport(pcTestPassedString, xTestPassedStringLen);
   }
   else
   {
-    sendReport(testFailedString, testFailedStringLen);
+    sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 

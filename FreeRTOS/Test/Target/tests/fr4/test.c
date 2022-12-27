@@ -86,12 +86,12 @@ static void fr04_validateTasksDoNotRunAtSameTime(void) {
 
   if (taskBObservedRunning)
   {
-    sendReport(testFailedString, testFailedStringLen);
+    sendReport(pcTestFailedString, xTestFailedStringLen);
   }
   else
   {
     setPin(LED_PIN);
-    sendReport(testPassedString, testPassedStringLen);
+    sendReport(pcTestPassedString, xTestPassedStringLen);
   }
 }
 

@@ -10,10 +10,10 @@
 #include <stdio.h>
 #include <string.h>
 
-char testPassedString[] = "TEST PASSED\n\0";
-size_t testPassedStringLen = sizeof(testPassedString) / sizeof(char);
-char testFailedString[] = "TEST FAILED\n\0";
-size_t testFailedStringLen = sizeof(testFailedString) / sizeof(char);
+char pcTestPassedString[] = "TEST PASSED\n\0";
+size_t xTestPassedStringLen = sizeof(pcTestPassedString) / sizeof(char);
+char pcTestFailedString[] = "TEST FAILED\n\0";
+size_t xTestFailedStringLen = sizeof(pcTestFailedString) / sizeof(char);
 
 static SemaphoreHandle_t xSemLogSchedTrace = NULL;
 uint64_t logSchedTraceNumber = 0;

@@ -18,24 +18,30 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 
-static void prvTaskA(void *pvParameters);
-static void prvTaskB(void *pvParameters);
+static void vPrvTaskA(void *pvParameters);
+static void vPrvTaskB(void *pvParameters);
 
 #if configNUMBER_OF_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
 
 void setup_test_fr1_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE * 2, NULL,
+  xTaskCreate(vPrvTaskA, "TaskA", configMINIMAL_STACK_SIZE * 2, NULL,
               mainTASK_A_PRIORITY, NULL);
 
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+  xTaskCreate(vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_B_PRIORITY, NULL);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{ 
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+} 
 
 int main(void) {
   initTestEnvironment();
@@ -50,59 +56,58 @@ int main(void) {
   return 0;
 }
 
-static bool taskBObservedRunning = false;
+static BaseType_t xTaskBObservedRunning = pdFALSE;
 
-static void prvTaskB(void *pvParameters) {
-  // idle the task
+static void vPrvTaskB(void *pvParameters) {
+  /* busyloop for observation by vPrvTaskA. */
   for (;;) {
-    // vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
     busyWaitMicroseconds(100000);
   }
 }
 
 static void fr01_validateOtherTaskRuns(void) {
-  int handlerNum = -1;
+  int32_t lHandlerNum = -1;
   TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
-  int idx;
-  int attempt = 1;
-  int numTasksRunning;
+  UBaseType_t xTaskStatusArraySize = 16;
+  unsigned long ulTotalRunTime;
+  UBaseType_t xIdx;
+  uint32_t ulAttempt = 1;
+  UBaseType_t xNumTasksRunning;
 
-  while(!taskBObservedRunning)
+  while(xTaskBObservedRunning == pdFALSE)
   {
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+    xNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, xTaskStatusArraySize, &ulTotalRunTime);
 
-    for(idx=0; idx < numTasksRunning; idx++)
+    for(xIdx=0; xIdx < xNumTasksRunning; xIdx++)
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskB") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskBObservedRunning = true;
+        xTaskBObservedRunning = pdTRUE;
       }
     }
 
     vTaskDelay(pdMS_TO_TICKS(10));
 
-    attempt++;
+    ulAttempt++;
 
-    if (attempt > 100) {
+    if (ulAttempt > 100) {
       break;
     }
   }
 
-  TEST_ASSERT_TRUE(taskBObservedRunning);
-  if (taskBObservedRunning)
+  TEST_ASSERT_TRUE(xTaskBObservedRunning == pdTRUE);
+  if (xTaskBObservedRunning == pdTRUE)
   {
     setPin(LED_PIN);
-    sendReport(testPassedString, testPassedStringLen);
+    sendReport(pcTestPassedString, xTestPassedStringLen);
   }
   else
   {
-    sendReport(testFailedString, testFailedStringLen);
+    sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 
-static void prvTaskA(void *pvParameters) {
+static void vPrvTaskA(void *pvParameters) {
   UNITY_BEGIN();
 
   RUN_TEST(fr01_validateOtherTaskRuns);
@@ -111,7 +116,6 @@ static void prvTaskA(void *pvParameters) {
 
   // idle the task
   for (;;) {
-    // vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    busyWaitMicroseconds(100000);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }

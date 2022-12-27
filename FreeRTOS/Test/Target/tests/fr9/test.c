@@ -169,11 +169,11 @@ static void fr09_validateAllTasksHaveRun(void)
   if (allTasksHaveRun && !taskBHasEnteredCriticalSection)
   {
       setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
+      sendReport(pcTestPassedString, xTestPassedStringLen);
   }
   else
   {
-      sendReport(testFailedString, testFailedStringLen);
+      sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 

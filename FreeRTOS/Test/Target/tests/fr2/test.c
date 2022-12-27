@@ -28,59 +28,57 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-static bool testPassed = false;
-static bool testFailed = false;
+static BaseType_t xTestPassed = pdFALSE;
+static BaseType_t xTestFailed = pdFALSE;
 
 void test_fr2TASK_SWITCHED_IN(void) {
-  UBaseType_t idx, numTasksRunning;
+  UBaseType_t xIdx, xNumTasksRunning;
   TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
-  int coreIndex = 0;
+  UBaseType_t xTaskStatusArraySize = 16;
+  unsigned long ulTotalRunTime;
   SchedTraceLogRow *logRow;
-  int retcode = 0;
 
-  static int taskSwitchCount = 0;
-  static bool taskARan = false;
-  static bool taskBRan = false;
-  static bool taskCRan = false;
+  static uint32_t ulTaskSwitchCount = 0;
+  static BaseType_t xTaskARan = pdFALSE;
+  static BaseType_t xTaskBRan = pdFALSE;
+  static BaseType_t xTaskCRan = pdFALSE;
 
-  if (!(testPassed || testFailed))
+  if (!(xTestPassed || xTestFailed))
   {
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+    xNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, xTaskStatusArraySize, &ulTotalRunTime);
 
-    for(idx = 0; idx < numTasksRunning; idx++)
+    for(xIdx = 0; xIdx < xNumTasksRunning; xIdx++)
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskA") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskARan = true;
+        xTaskARan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskB") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskBRan = true;
+        xTaskBRan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskC") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskCRan = true;
+        xTaskCRan = pdTRUE;
       }
     }
 
-    if (taskBRan)
+    if (xTaskBRan == pdTRUE)
     {
-      if (!(taskARan && taskCRan))
+      if (!((xTaskARan == pdTRUE) && (xTaskCRan == pdTRUE)))
       {
-        testFailed = true;
+        xTestFailed = pdTRUE;
       }
       else
       {
-        testPassed = true;
+        xTestPassed = pdTRUE;
       }
     }
 
-    taskSwitchCount++;
-    if (taskSwitchCount > 2048)
+    ulTaskSwitchCount++;
+    if (ulTaskSwitchCount > 2048)
     {
-      testFailed = true;
+      xTestFailed = pdTRUE;
     }
   }
 }
@@ -123,19 +121,19 @@ static void prvTaskA(void *pvParameters) {
 
 static void fr02_validateHigherPriorityTasksAlreadyRan(void)
 {
-  // testPassed and testFailed set by trace hook: test_fr2TASK_SWITCHED_IN
+  // xTestPassed and xTestFailed set by trace hook: test_fr2TASK_SWITCHED_IN
 
-  TEST_ASSERT_FALSE(testFailed);
-  TEST_ASSERT_TRUE(testPassed);
+  TEST_ASSERT_FALSE(xTestFailed == pdTRUE);
+  TEST_ASSERT_TRUE(xTestPassed == pdTRUE);
 
-  if (testPassed && !testFailed)
+  if ((xTestPassed == pdTRUE) && (xTestFailed == pdFALSE))
   {
       setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
+      sendReport(pcTestPassedString, xTestPassedStringLen);
   }
   else
   {
-      sendReport(testFailedString, testFailedStringLen);
+      sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 

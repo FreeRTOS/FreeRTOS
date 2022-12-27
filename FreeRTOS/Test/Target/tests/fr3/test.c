@@ -28,50 +28,54 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-bool testFailed = false;
-bool testPassed = false;
+BaseType_t xTestFailed = pdFALSE;
+BaseType_t xTestPassed = pdFALSE;
 
 void test_fr3TASK_SWITCHED_IN(void) {
-  UBaseType_t idx, numTasksRunning;
+  UBaseType_t xIdx, xNumTasksRunning;
   TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
-  int coreIndex = 0;
+  UBaseType_t xTaskStatusArraySize = 16;
+  unsigned long ulTotalRunTime;
   SchedTraceLogRow *logRow;
-  int retcode = 0;
 
-  static int taskSwitchCount = 0;
-  static bool taskARan = false;
-  static bool taskBRan = false;
-  static bool taskCRan = false;
+  static uint32_t ulTaskSwitchCount = 0;
+  static BaseType_t xTaskARan = pdFALSE;
+  static BaseType_t xTaskBRan = pdFALSE;
+  static BaseType_t xTaskCRan = pdFALSE;
 
-  if (!(testPassed || testFailed))
+  if (((xTestPassed == pdFALSE) && (xTestFailed == pdFALSE)))
   {
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+    xNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, xTaskStatusArraySize, &ulTotalRunTime);
 
-    for(idx = 0; idx < numTasksRunning; idx++)
+    for(xIdx = 0; xIdx < xNumTasksRunning; xIdx++)
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskA") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskARan = true;
+        xTaskARan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskB") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskBRan = true;
+        xTaskBRan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskC") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskCRan = true;
+        xTaskCRan = pdTRUE;
       }
     }
 
-    taskSwitchCount++;
-    if (taskSwitchCount > 2048)
+    if ((xTaskARan == pdTRUE) && (xTaskBRan == pdTRUE) && (xTaskCRan == pdTRUE))
     {
-      if (taskARan && taskBRan && taskCRan) {
-        testPassed = true;
+        xTestPassed = pdTRUE;
+    }
+     
+    ulTaskSwitchCount++;
+    if (ulTaskSwitchCount > 2048)
+    {
+      if ((xTaskARan == pdTRUE) && (xTaskBRan == pdTRUE) && (xTaskCRan == pdTRUE))
+      {
+        xTestPassed = pdTRUE;
       } else {
-        testFailed = true;
+        xTestFailed = pdTRUE;
       }
     }
   }
@@ -88,9 +92,15 @@ void setup_test_fr3_001(void) {
               mainTASK_C_PRIORITY, NULL);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+} 
 
 int main(void) {
   initTestEnvironment();
@@ -120,11 +130,11 @@ static void prvTaskB(void *pvParameters) {
 }
 
 static void fr03_validateAllTasksHaveRun(void) {
-  int attempt;
+  BaseType_t xAttempt;
 
-  for(attempt=1; attempt<100; attempt++)
+  for(xAttempt=1; xAttempt<100; xAttempt++)
   {
-    if (testPassed || testFailed)
+    if ((xTestPassed == pdTRUE) || (xTestFailed == pdTRUE))
     {
       break;
     }
@@ -132,15 +142,15 @@ static void fr03_validateAllTasksHaveRun(void) {
     busyWaitMicroseconds(10000);
   }
 
-  TEST_ASSERT_TRUE((testPassed && !testFailed));
+  TEST_ASSERT_TRUE(((xTestPassed == pdTRUE) && (xTestFailed == pdFALSE)));
 
-  if (testPassed && !testFailed)
+  if ((xTestPassed == pdTRUE) && (xTestFailed == pdFALSE))
   {
       setPin(LED_PIN);
-      sendReport(testPassedString, testPassedStringLen);
+      sendReport(pcTestPassedString, xTestPassedStringLen);
   } else
   {
-      sendReport(testFailedString, testFailedStringLen);
+      sendReport(pcTestFailedString, xTestFailedStringLen);
   }
 }
 

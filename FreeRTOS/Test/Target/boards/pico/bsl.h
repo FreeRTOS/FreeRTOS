@@ -29,25 +29,6 @@ extern size_t xTestFailedStringLen;
 
 typedef void (* softwareInterruptHandler)(void);
 
-typedef struct SchedTraceLogRow {
-  bool valid;
-  uint64_t number;
-  struct xTASK_STATUS taskStatus[MAX_CORES];
-} SchedTraceLogRow;
-
-#define MAX_SCHED_TRACE_LOG_ROWS (128)
-
-typedef struct SchedTraceLog {
-  UBaseType_t offset;
-  SchedTraceLogRow rows[MAX_SCHED_TRACE_LOG_ROWS];
-} SchedTraceLog;
-
-// traceTASK_SWITCHED_IN();
-// vTaskStartScheduler() ... -> traceTASK_SWITCHED_IN()
-//                           -> vxPortStartScheduler()
-extern int logSchedTrace(SchedTraceLog *traceLog);
-extern int reportSchedTraceLog(SchedTraceLog *traceLog);
-
 extern void initTestEnvironment(void);
 extern void sendReport(char *buffer, size_t len);
 extern void setPin(int pinNum);

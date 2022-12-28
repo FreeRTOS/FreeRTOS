@@ -1,3 +1,35 @@
+/*
+ * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
+/**
+ * @file test.c
+ * @brief Implements FR5 test functions for SMP on target testing.
+ */
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "queue.h"    /* RTOS queue related API prototypes. */
@@ -35,9 +67,15 @@ void setup_test_fr5_001(void) {
               mainTASK_B_PRIORITY, 0x2, &taskB);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+}
 
 int main(void) {
   initTestEnvironment();
@@ -52,26 +90,26 @@ int main(void) {
   return 0;
 }
 
-static bool taskADone = false;
-static bool taskAOnCorrectCore = true;
-static bool taskBOnCorrectCore = true;
+static BaseType_t xTaskADone = pdFALSE;
+static BaseType_t xTaskAOnCorrectCore = pdTRUE;
+static BaseType_t xTaskBOnCorrectCore = pdTRUE;
 
 static void prvTaskA(void *pvParameters) {
-  BaseType_t core;
+  BaseType_t xCore;
 
-  int iter;
+  uint32_t ulIter;
 
-  for(iter=1;iter < 25;iter++)
+  for(ulIter=1;ulIter < 25;ulIter++)
   {
     vTaskDelay(pdMS_TO_TICKS(10));
-    core = portGET_CORE_ID();
-    if (core != 0)
+    xCore = portGET_CORE_ID();
+    if (xCore != 0)
     {
-      taskAOnCorrectCore = false;
+      xTaskAOnCorrectCore = pdFALSE;
     }
   }
 
-  taskADone = true;
+  xTaskADone = pdTRUE;
 
   // idle the task
   for (;;) {
@@ -81,36 +119,26 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void fr05_validateTasksOnlyRunOnAssignedCores(void) {
-  BaseType_t core;
-  int iter;
+  BaseType_t xCore;
+  uint32_t ulIter;
 
-  for(iter=1;iter < 25;iter++)
+  for(ulIter=1;ulIter < 25;ulIter++)
   {
     vTaskDelay(pdMS_TO_TICKS(10));
-    core = portGET_CORE_ID();
-    if (core != 1)
+    xCore = portGET_CORE_ID();
+    if (xCore != 1)
     {
-      taskBOnCorrectCore = false;
+      xTaskBOnCorrectCore = pdFALSE;
     }
   }
 
-  while(!taskADone)
+  while((xTaskADone == pdFALSE))
   {
     vTaskDelay(pdMS_TO_TICKS(10));
     busyWaitMicroseconds(100000);
   }
 
-  TEST_ASSERT_TRUE(taskAOnCorrectCore && taskBOnCorrectCore);
-
-  if (taskAOnCorrectCore && taskBOnCorrectCore)
-  {
-    setPin(LED_PIN);
-    sendReport(pcTestPassedString, xTestPassedStringLen);
-  }
-  else
-  {
-    sendReport(pcTestFailedString, xTestFailedStringLen);
-  }
+  TEST_ASSERT_TRUE((xTaskAOnCorrectCore == pdTRUE) && (xTaskBOnCorrectCore == pdTRUE));
 }
 
 static void prvTaskB(void *pvParameters)
@@ -120,8 +148,9 @@ static void prvTaskB(void *pvParameters)
   RUN_TEST(fr05_validateTasksOnlyRunOnAssignedCores);
 
   UNITY_END();
+
   // idle the task
   for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }

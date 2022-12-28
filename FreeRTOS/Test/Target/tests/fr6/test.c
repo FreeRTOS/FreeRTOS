@@ -1,3 +1,36 @@
+/*
+ * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
+/**
+ * @file test.c
+ * @brief Implements FR6 test functions for SMP on target testing.
+ */
+
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "queue.h"    /* RTOS queue related API prototypes. */
@@ -27,68 +60,62 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-bool testFailed = false;
-bool testPassed = false;
-int taskAState = 0;
-int taskBState = 0;
+BaseType_t xTestFailed = pdFALSE;
+BaseType_t xTestPassed = pdFALSE;
+BaseType_t xTaskAState = 0;
+BaseType_t xTaskBState = 0;
 
 void test_fr6TASK_SWITCHED_IN(void) {
-  UBaseType_t idx, numTasksRunning;
+  UBaseType_t uxIdx, uxNumTasksRunning;
   TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
-  int coreIndex = 0;
-  SchedTraceLogRow *logRow;
-  int retcode = 0;
+  UBaseType_t uxTaskStatusArraySize = 16;
+  unsigned long ulTotalRunTime;
 
-  static int taskSwitchCount = 0;
-  static bool taskARan = false;
-  static bool taskBRan = false;
-  static bool taskCRan = false;
+  static uint32_t ulTaskSwitchCount = 0;
+  static BaseType_t xTaskARan = pdFALSE;
+  static BaseType_t xTaskBRan = pdFALSE;
+  static BaseType_t xTaskCRan = pdFALSE;
 
-  if (!(testPassed || testFailed))
+  if ((xTestPassed == pdFALSE) && (xTestFailed == pdFALSE))
   {
-    bool taskARunning = false;
+    BaseType_t xTaskARunning = pdFALSE;
 
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+    uxNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, uxTaskStatusArraySize, &ulTotalRunTime);
 
-    for(idx = 0; idx < numTasksRunning; idx++)
+    for(uxIdx = 0; uxIdx < uxNumTasksRunning; uxIdx++)
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskA") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
       {
-        taskARunning = true;
-        taskARan = true;
-        //sendReport("TaskA\n\0", 0);
+        xTaskARunning = pdTRUE;
+        xTaskARan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskB") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
       {
-        taskBRan = true;
-        //sendReport("TaskB\n\0", 0);
+        xTaskBRan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskC") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
       {
-        taskCRan = true;
-        //sendReport("TaskC\n\0", 0);
+        xTaskCRan = pdTRUE;
       }
     }
 
-    if (taskARunning && (taskBState > 0) && taskCRan)
+    if ((xTaskARunning == pdTRUE)&& (xTaskBState > 0) && (xTaskCRan == pdTRUE))
     {
-      if (!(taskARunning && taskBRan))
+      if (!((xTaskARunning == pdTRUE) &&(xTaskBRan == pdTRUE)))
       {
-        testFailed = true;
+        xTestFailed = pdTRUE;
       }
       else
       {
-        testPassed = true;
+        xTestPassed = pdTRUE;
       }
     }
 
-    taskSwitchCount++;
-    if (taskSwitchCount > 2048)
+    ulTaskSwitchCount++;
+    if (ulTaskSwitchCount > 2048)
     {
       //sendReport("2k task swiches.\n\0", 0);
-      testFailed = true;
+      xTestFailed = pdTRUE;
     }
   }
 }
@@ -106,9 +133,15 @@ void setup_test_fr6_001(void) {
               mainTASK_C_PRIORITY, NULL);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+}
 
 int main(void) {
   initTestEnvironment();
@@ -126,7 +159,7 @@ int main(void) {
 static void prvTaskA(void *pvParameters) {
   // wait with preemption disabled
   vTaskPreemptionDisable(taskA);
-  taskAState++;
+  xTaskAState++;
   busyWaitMicroseconds(2000000);
   vTaskPreemptionEnable(taskA);
 
@@ -137,7 +170,7 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  taskBState++;
+  xTaskBState++;
 
   sendReport("TaskB Entering busyWait...\n\0", 0);
   busyWaitMicroseconds(2000000);
@@ -154,7 +187,7 @@ static void fr06_validate_vTaskPreemptionDisable(void) {
 
   for(attempt=1; attempt < 25; attempt++)
   {
-    if (testPassed || testFailed)
+    if (xTestPassed || xTestFailed)
     {
       break;
     }
@@ -162,21 +195,11 @@ static void fr06_validate_vTaskPreemptionDisable(void) {
     vTaskDelay(pdMS_TO_TICKS(10));
   }
 
-  TEST_ASSERT_TRUE(testPassed && !testFailed);
-
-  if (testPassed && !testFailed)
-  {
-      setPin(LED_PIN);
-      sendReport(pcTestPassedString, xTestPassedStringLen);
-  }
-  else
-  {
-      sendReport(pcTestFailedString, xTestFailedStringLen);
-  }
+  TEST_ASSERT_TRUE(xTestPassed && !xTestFailed);
 }
 
 static void prvTaskC(void *pvParameters) {
-  while (taskBState == 0) {
+  while (xTaskBState == 0) {
     busyWaitMicroseconds(1);
   }
 

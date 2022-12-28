@@ -1,3 +1,36 @@
+/*
+ * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
+/**
+ * @file test.c
+ * @brief Implements FR8 test functions for SMP on target testing.
+ */
+
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "queue.h"    /* RTOS queue related API prototypes. */
@@ -49,42 +82,42 @@ int main(void) {
   return 0;
 }
 
-static uint32_t taskBState = 0;
-static bool isrAssertionComplete = false;
-static bool isrObservedTaskBInsideCriticalSection = false;
-static bool insideTaskBCriticalSection = false;
+static BaseType_t xTaskBState = 0;
+static BaseType_t xIsrAssertionComplete = pdFALSE;
+static BaseType_t xIsrObservedTaskBInsideCriticalSection = pdFALSE;
+static BaseType_t xInsideTaskBCriticalSection = pdFALSE;
 
 static void softwareInterruptHandlerSimple(void) {
-  int iter;
+  BaseType_t xIter;
   UBaseType_t uxSavedInterruptStatus;
 
-  for(iter = 1; iter < 10; iter++)
+  for(xIter = 1; xIter < 10; xIter++)
   {
     uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-    if (insideTaskBCriticalSection)
+    if (xInsideTaskBCriticalSection)
     {
-      isrObservedTaskBInsideCriticalSection = true;
+      xIsrObservedTaskBInsideCriticalSection = true;
     }
     busyWaitMicroseconds(10000);
     taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
   }
 
-  isrAssertionComplete = true;
+  xIsrAssertionComplete = true;
 }
 
 static void prvTaskA(void *pvParameters) {
-  int handlerNum = -1;
+  int lHandlerNum = -1;
 
   // wait for Task B to get to 6 itertions
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    if (taskBState > 5) {
+    if (xTaskBState > 5) {
       break;
     }
   }
 
-  handlerNum = registerSoftwareInterruptHandler(softwareInterruptHandlerSimple);
-  triggerSoftwareInterrupt(handlerNum);
+  lHandlerNum = registerSoftwareInterruptHandler(softwareInterruptHandlerSimple);
+  triggerSoftwareInterrupt(lHandlerNum);
 
   // idle the task
   for (;;) {
@@ -94,36 +127,26 @@ static void prvTaskA(void *pvParameters) {
 
 static void fr08_validateOnlyOneCriticalSectionRanAtATime(void)
 {
-  TEST_ASSERT_TRUE(isrAssertionComplete && !isrObservedTaskBInsideCriticalSection);
-
-  if (isrAssertionComplete && !isrObservedTaskBInsideCriticalSection)
-  {
-      setPin(LED_PIN);
-      sendReport(pcTestPassedString, xTestPassedStringLen);
-  }
-  else
-  {
-      sendReport(pcTestFailedString, xTestFailedStringLen);
-  }
+  TEST_ASSERT_TRUE(xIsrAssertionComplete && !xIsrObservedTaskBInsideCriticalSection);
 }
 
 static void prvTaskB(void *pvParameters) {
-  int iter = 1;
+  BaseType_t xIter = 1;
 
-  for (iter = 1; iter < 10; iter++) {
+  for (xIter = 1; xIter < 10; xIter++) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    while (taskBState == 6 && !isrAssertionComplete) {
+    while (xTaskBState == 6 && !xIsrAssertionComplete) {
       vTaskDelay(pdMS_TO_TICKS(10));
     }
     taskENTER_CRITICAL();
-    insideTaskBCriticalSection = true;
+    xInsideTaskBCriticalSection = true;
     busyWaitMicroseconds(10000);
-    taskBState++;
-    insideTaskBCriticalSection = false;
+    xTaskBState++;
+    xInsideTaskBCriticalSection = false;
     taskEXIT_CRITICAL();
   }
 
-  while (!isrAssertionComplete) {
+  while (!xIsrAssertionComplete) {
       vTaskDelay(pdMS_TO_TICKS(10));
   }
 

@@ -1,3 +1,5 @@
+
+
 /* Kernel includes. */
 
 #include "FreeRTOS.h" /* Must come first. */
@@ -36,7 +38,6 @@ void test_fr2TASK_SWITCHED_IN(void) {
   TaskStatus_t taskStatus[16];
   UBaseType_t xTaskStatusArraySize = 16;
   unsigned long ulTotalRunTime;
-  SchedTraceLogRow *logRow;
 
   static uint32_t ulTaskSwitchCount = 0;
   static BaseType_t xTaskARan = pdFALSE;
@@ -125,16 +126,6 @@ static void fr02_validateHigherPriorityTasksAlreadyRan(void)
 
   TEST_ASSERT_FALSE(xTestFailed == pdTRUE);
   TEST_ASSERT_TRUE(xTestPassed == pdTRUE);
-
-  if ((xTestPassed == pdTRUE) && (xTestFailed == pdFALSE))
-  {
-      setPin(LED_PIN);
-      sendReport(pcTestPassedString, xTestPassedStringLen);
-  }
-  else
-  {
-      sendReport(pcTestFailedString, xTestFailedStringLen);
-  }
 }
 
 static void prvTaskB(void *pvParameters) {

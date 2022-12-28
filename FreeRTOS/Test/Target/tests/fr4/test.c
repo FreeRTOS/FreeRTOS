@@ -1,3 +1,36 @@
+/*
+ * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
+/**
+ * @file test.c
+ * @brief Implements FR4 test functions for SMP on target testing.
+ */
+
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "queue.h"    /* RTOS queue related API prototypes. */
@@ -33,9 +66,15 @@ void setup_test_fr4_001(void) {
               mainTASK_B_PRIORITY, NULL);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+}
 
 int main(void) {
   initTestEnvironment();
@@ -50,49 +89,38 @@ int main(void) {
   return 0;
 }
 
-static bool taskBObservedRunning = false;
+static BaseType_t xTaskBObservedRunning = pdFALSE;
 
 static void fr04_validateTasksDoNotRunAtSameTime(void) {
-  int handlerNum = -1;
   TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
-  int idx;
-  int attempt = 1;
-  int numTasksRunning;
+  UBaseType_t xTaskStatusArraySize = 16;
+  unsigned long ulTotalRunTime;
+  BaseType_t xIdx;
+  BaseType_t xAttempt = 1;
+  BaseType_t xNumTasksRunning;
 
-  while(!taskBObservedRunning)
+  while(!xTaskBObservedRunning)
   {
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+    xNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, xTaskStatusArraySize, &ulTotalRunTime);
 
-    for(idx=0; idx < numTasksRunning; idx++)
+    for(xIdx=0; xIdx < xNumTasksRunning; xIdx++)
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskB") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
       {
-        taskBObservedRunning = true;
+        xTaskBObservedRunning = true;
       }
     }
 
     vTaskDelay(pdMS_TO_TICKS(10));
 
-    attempt++;
+    xAttempt++;
 
-    if (attempt > 25) {
+    if (xAttempt > 25) {
       break;
     }
   }
 
-  TEST_ASSERT_TRUE(!taskBObservedRunning);
-
-  if (taskBObservedRunning)
-  {
-    sendReport(pcTestFailedString, xTestFailedStringLen);
-  }
-  else
-  {
-    setPin(LED_PIN);
-    sendReport(pcTestPassedString, xTestPassedStringLen);
-  }
+  TEST_ASSERT_TRUE(!xTaskBObservedRunning);
 }
 
 static void prvTaskA(void *pvParameters) {

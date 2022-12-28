@@ -88,13 +88,13 @@ int main(void) {
   return 0; 
 }
 
-static uint32_t uTaskBState = 0;
-static uint32_t uTempTaskBState = 0;
+static uint32_t ulTaskBState = 0;
+static uint32_t ulTempTaskBState = 0;
 
 static void fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended(void) {
-  TEST_ASSERT_TRUE(uTempTaskBState == 0);
+  TEST_ASSERT_TRUE(ulTempTaskBState == 0);
 
-  if( uTempTaskBState == 0 )
+  if( ulTempTaskBState == 0 )
   {
     setPin(LED_PIN);
     sendReport(pcTestPassedString, xTestPassedStringLen);
@@ -106,17 +106,17 @@ static void fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended(void) 
 }
 
 static void prvTaskA(void *pvParameters) {
-  uint32_t uAttempTime = 0;
+  uint32_t ulAttempTime = 0;
 
   vTaskSuspendAll();
 
   vTaskPrioritySet(taskB, mainTASK_A_PRIORITY+1);
 
-  while( uTaskBState == 0 )
+  while( ulTaskBState == 0 )
   {
-    uAttempTime++;
+    ulAttempTime++;
 
-    if( uAttempTime > ( TASK_BLOCK_TIME_MS / TASK_BUSYLOOP_TIME_MS ) )
+    if( ulAttempTime > ( TASK_BLOCK_TIME_MS / TASK_BUSYLOOP_TIME_MS ) )
     {
       /* Break after polling 30 times. (total 3s) */
       break;
@@ -127,7 +127,7 @@ static void prvTaskA(void *pvParameters) {
   }
 
   /* Cache uTaskBState before resuming all tasks. */
-  uTempTaskBState = uTaskBState;
+  ulTempTaskBState = ulTaskBState;
 
   xTaskResumeAll();
 
@@ -144,7 +144,7 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  uTaskBState++;
+  ulTaskBState++;
 
   // idle the task
   for (;;) {

@@ -60,52 +60,52 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-static bool testFailed = false;
-static bool allTasksHaveRun = false;
-static bool taskAHasEnteredCriticalSection = false;
-static bool taskAHasExitedCriticalSection = false;
-static bool taskBHasEnteredCriticalSection = false;
+static BaseType_t xTestFailed = pdFALSE;
+static BaseType_t xAllTasksHaveRun = pdFALSE;
+static BaseType_t xTaskAHasEnteredCriticalSection = pdFALSE;
+static BaseType_t xTaskAHasExitedCriticalSection = pdFALSE;
+static BaseType_t xTaskBHasEnteredCriticalSection = pdFALSE;
 
-static int taskSwitchCount = 0;
-static bool taskARan = false;
-static bool taskBRan = false;
-static bool taskCRan = false;
+static uint32_t ulTaskSwitchCount = 0;
+static BaseType_t xTaskARan = pdFALSE;
+static BaseType_t xTaskBRan = pdFALSE;
+static BaseType_t xTaskCRan = pdFALSE;
 
 void test_fr9TASK_SWITCHED_IN(void) {
-  UBaseType_t idx, numTasksRunning;
+  UBaseType_t uxIdx, uxNumTasksRunning;
   TaskStatus_t taskStatus[16];
-  UBaseType_t taskStatusArraySize = 16;
-  unsigned long totalRunTime;
+  UBaseType_t uxTaskStatusArraySize = 16;
+  unsigned long ulTotalRunTime;
 
-  if (!(allTasksHaveRun || testFailed))
+  if (((xAllTasksHaveRun == pdFALSE) && (xTestFailed == pdFALSE)))
   {
-    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+    uxNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, uxTaskStatusArraySize, &ulTotalRunTime);
 
-    for(idx = 0; idx < numTasksRunning; idx++)
+    for(uxIdx = 0; uxIdx < uxNumTasksRunning; uxIdx++)
     {
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskA") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskA") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
       {
-        taskARan = true;
+        xTaskARan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskB") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskB") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
       {
-        taskBRan = true;
+        xTaskBRan = pdTRUE;
       }
-      if ((strcmp(taskStatus[idx].pcTaskName, "TaskC") == 0) && (taskStatus[idx].eCurrentState == eRunning))
+      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskC") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
       {
-        taskCRan = true;
+        xTaskCRan = pdTRUE;
       }
     }
 
-    if (taskARan && taskCRan && taskBRan)
+    if ((xTaskARan == pdTRUE) && (xTaskCRan == pdTRUE) && (xTaskBRan == pdTRUE))
     {
-      allTasksHaveRun = true;
+      xAllTasksHaveRun = pdTRUE;
     }
 
-    taskSwitchCount++;
-    if (taskSwitchCount > 1500)
+    ulTaskSwitchCount++;
+    if (ulTaskSwitchCount > 1500)
     {
-      testFailed = true;
+      xTestFailed = pdTRUE;
     }
   }
 }
@@ -142,12 +142,12 @@ int main(void) {
 
 static void prvTaskA(void *pvParameters) {
   taskENTER_CRITICAL();
-  taskAHasEnteredCriticalSection=true;
+  xTaskAHasEnteredCriticalSection = pdTRUE;
   busyWaitMicroseconds(250000);
   xTaskNotify(taskB, 0, eNoAction);
   busyWaitMicroseconds(10000000);
   taskEXIT_CRITICAL();
-  taskAHasExitedCriticalSection = true;
+  xTaskAHasExitedCriticalSection = pdTRUE;
 
   // idle the task
   for (;;) {
@@ -160,7 +160,7 @@ static void prvTaskB(void *pvParameters) {
   vTaskDelay(pdMS_TO_TICKS(10));
 
   taskENTER_CRITICAL();
-  taskBHasEnteredCriticalSection = true;
+  xTaskBHasEnteredCriticalSection = pdTRUE;
   busyWaitMicroseconds(8000000);
   taskEXIT_CRITICAL();
 
@@ -177,26 +177,26 @@ static void fr09_validateAllTasksHaveRun(void)
 
   //TEST_ASSERT_TRUE(allTasksHaveRun && !taskBHasEnteredCriticalSection);
 
-  sprintf(str, "TRACE: switchCount=%d, %s,%s,%s %s,%s,%s\n\0", taskSwitchCount,
-    taskARan ? "T" : "F",
-    taskBRan ? "T" : "F",
-    taskCRan ? "T" : "F",
-    taskAHasEnteredCriticalSection ? "T" : "F",
-    taskAHasExitedCriticalSection ? "T" : "F",
-    taskBHasEnteredCriticalSection ? "T" : "F");
+  sprintf(str, "TRACE: switchCount=%d, %s,%s,%s %s,%s,%s\n\0", ulTaskSwitchCount,
+    xTaskARan ? "T" : "F",
+    xTaskBRan ? "T" : "F",
+    xTaskCRan ? "T" : "F",
+    xTaskAHasEnteredCriticalSection ? "T" : "F",
+    xTaskAHasExitedCriticalSection ? "T" : "F",
+    xTaskBHasEnteredCriticalSection ? "T" : "F");
   sendReport(str, 0);
 
-  if (allTasksHaveRun)
+  if (xAllTasksHaveRun)
   {
     sendReport("allTasksHaveRun\n\0", 0);
   }
 
-  if (taskBHasEnteredCriticalSection)
+  if (xTaskBHasEnteredCriticalSection)
   {
     sendReport("taskBHasEnteredCriticalSection\n\0", 0);
   }
 
-  if (allTasksHaveRun && !taskBHasEnteredCriticalSection)
+  if ((xAllTasksHaveRun == pdTRUE) && (xTaskBHasEnteredCriticalSection == pdFALSE))
   {
       setPin(LED_PIN);
       sendReport(pcTestPassedString, xTestPassedStringLen);

@@ -18,7 +18,7 @@
            // time-sycned source but it will be relative to something
 
 
-#define LED_PIN (PICO_DEFAULT_LED_PIN)
+#define LED_PIN ((int32_t)PICO_DEFAULT_LED_PIN)
 #define GPIO0_PIN (2)
 #define MAX_CORES (2)
 
@@ -27,22 +27,22 @@ extern size_t xTestPassedStringLen;
 extern char pcTestFailedString[];
 extern size_t xTestFailedStringLen;
 
-typedef void (* softwareInterruptHandler)(void);
+typedef void (* SoftwareInterruptHandler_t)(void);
 
-extern void initTestEnvironment(void);
-extern void sendReport(char *buffer, size_t len);
-extern void setPin(int pinNum);
-extern void clearPin(int pinNum);
-extern void delayMs(uint32_t ms);
-extern void busyWaitMicroseconds(uint32_t us);
-extern uint64_t getCPUTime(void);
+extern void vPortInitTestEnvironment(void);
+extern void vPortSetPin(int32_t lPinNum);
+extern void vPortClearPin(int32_t lPinNum);
+extern void vPortDelayMs(uint32_t ulMilliseconds);
+extern void vPortBusyWaitMicroseconds(uint32_t ulMicroseconds);
+extern uint64_t uyPortGetCPUTime(void);
 
-extern int AMPLaunchOnCore(int coreNum, void (*function)(void));
+extern BaseType_t xPortAMPLaunchOnCore(BaseType_t xCoreNum, void (*pvFunction)(void));
 
-extern int registerSoftwareInterruptHandler(softwareInterruptHandler handler);
-extern void deleteSoftwareInterruptHandler(int num, softwareInterruptHandler handler);
-extern void triggerSoftwareInterrupt(int num);
+extern BaseType_t xPortRegisterSoftwareInterruptHandler(SoftwareInterruptHandler_t pvFunction);
+extern void vPortDeleteSoftwareInterruptHandler(BaseType_t xNum, SoftwareInterruptHandler_t pvFunction);
+extern void vPortTriggerSoftwareInterrupt(BaseType_t xNum);
 
+extern void vPortSerialLog(char *pcBuffer);
 
 #define CPUTIME_TO_MS(CPUTIME_INPUT)                                           \
   ((uin32_t)(CPUTIME_INPUT / CPUTIME_TO_MS_DIVISOR))

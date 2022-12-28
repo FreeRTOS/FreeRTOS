@@ -100,7 +100,7 @@ void tearDown(void) {
 } /* Is run after every test, put unit clean-up calls here. */
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr2_001();
 
@@ -116,7 +116,7 @@ static void prvTaskA(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
@@ -138,7 +138,7 @@ static void prvTaskB(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
@@ -146,6 +146,7 @@ static void prvTaskC(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }

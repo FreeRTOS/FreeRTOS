@@ -65,12 +65,18 @@ void setup_test_fr8_001(void) {
               mainTASK_B_PRIORITY, NULL);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+}
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr8_001();
 
@@ -98,7 +104,7 @@ static void softwareInterruptHandlerSimple(void) {
     {
       xIsrObservedTaskBInsideCriticalSection = true;
     }
-    busyWaitMicroseconds(10000);
+    vPortBusyWaitMicroseconds((uint32_t)10000);
     taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
   }
 
@@ -106,7 +112,7 @@ static void softwareInterruptHandlerSimple(void) {
 }
 
 static void prvTaskA(void *pvParameters) {
-  int lHandlerNum = -1;
+  BaseType_t xHandlerNum = -1;
 
   // wait for Task B to get to 6 itertions
   for (;;) {
@@ -116,8 +122,8 @@ static void prvTaskA(void *pvParameters) {
     }
   }
 
-  lHandlerNum = registerSoftwareInterruptHandler(softwareInterruptHandlerSimple);
-  triggerSoftwareInterrupt(lHandlerNum);
+  xHandlerNum = xPortRegisterSoftwareInterruptHandler(softwareInterruptHandlerSimple);
+  vPortTriggerSoftwareInterrupt(xHandlerNum);
 
   // idle the task
   for (;;) {
@@ -140,7 +146,7 @@ static void prvTaskB(void *pvParameters) {
     }
     taskENTER_CRITICAL();
     xInsideTaskBCriticalSection = true;
-    busyWaitMicroseconds(10000);
+    vPortBusyWaitMicroseconds((uint32_t)10000);
     xTaskBState++;
     xInsideTaskBCriticalSection = false;
     taskEXIT_CRITICAL();

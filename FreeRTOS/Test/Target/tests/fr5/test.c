@@ -78,7 +78,7 @@ void tearDown(void)
 }
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr5_001();
 
@@ -114,7 +114,7 @@ static void prvTaskA(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
@@ -135,7 +135,7 @@ static void fr05_validateTasksOnlyRunOnAssignedCores(void) {
   while((xTaskADone == pdFALSE))
   {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 
   TEST_ASSERT_TRUE((xTaskAOnCorrectCore == pdTRUE) && (xTaskBOnCorrectCore == pdTRUE));

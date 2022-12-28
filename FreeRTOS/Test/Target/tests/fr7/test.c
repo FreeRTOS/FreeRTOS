@@ -83,7 +83,7 @@ void tearDown(void)
 }
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr7_001();
 

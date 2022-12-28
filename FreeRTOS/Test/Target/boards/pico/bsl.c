@@ -15,7 +15,7 @@ size_t xTestPassedStringLen = sizeof(pcTestPassedString) / sizeof(char);
 char pcTestFailedString[] = "TEST FAILED\n\0";
 size_t xTestFailedStringLen = sizeof(pcTestFailedString) / sizeof(char);
 
-void initTestEnvironment(void) {
+void vPortInitTestEnvironment(void) {
   /* Setup LED I/O */
   gpio_init(LED_PIN);
   gpio_set_dir(LED_PIN, GPIO_OUT);
@@ -43,28 +43,28 @@ void initTestEnvironment(void) {
   stdio_init_all();
   while (!stdio_usb_connected())
   {
-    setPin(LED_PIN);
-    setPin(GPIO0_PIN);
+    vPortSetPin(LED_PIN);
+    vPortSetPin(GPIO0_PIN);
     sleep_ms(250);
-    clearPin(LED_PIN);
-    clearPin(GPIO0_PIN);
+    vPortClearPin(LED_PIN);
+    vPortClearPin(GPIO0_PIN);
     sleep_ms(250);
   }
 
 
 }
 
-void sendReport(char *buffer, size_t len) { printf("%s", buffer); stdio_flush(); }
+void vPortSerialLog(char *pcBuffer) { printf("%s", pcBuffer); stdio_flush(); }
 
-void setPin(int pinNum) { gpio_put(pinNum, 1); }
+void vPortSetPin(int32_t lPinNum) { gpio_put((int)lPinNum, 1); }
 
-void clearPin(int pinNum) { gpio_put(pinNum, 0); }
+void vPortClearPin(int32_t lPinNum) { gpio_put((int)lPinNum, 0); }
 
-void delayMs(uint32_t ms) { sleep_ms(ms); }
+void vPortDelayMs(uint32_t ulMilliseconds) { sleep_ms(ulMilliseconds); }
 
-void busyWaitMicroseconds(uint32_t us) { busy_wait_us(us); }
+void vPortBusyWaitMicroseconds(uint32_t ulMicroseconds) { busy_wait_us(ulMicroseconds); }
 
-uint64_t getCPUTime(void) {
+uint64_t uyPortGetCPUTime(void) {
   #ifdef NDEBUG
     return (uint64_t)get_absolute_time();
   #else
@@ -72,39 +72,37 @@ uint64_t getCPUTime(void) {
   #endif
 }
 
-int AMPLaunchOnCore(int coreNum, void (*function)(void)) {
-  int rvb = -1;
+BaseType_t xPortAMPLaunchOnCore(BaseType_t xCoreNum, void (*function)(void)) {
+  BaseType_t xRvb = -1;
 
-  if (coreNum == 1) {
+  if (xCoreNum == 1) {
     multicore_launch_core1(*function);
-    rvb = 0;
+    xRvb = 0;
   }
 
-  return rvb;
+  return xRvb;
 }
 
-int registerSoftwareInterruptHandler(softwareInterruptHandler handler) {
-  irq_add_shared_handler(26, (irq_handler_t)handler, 0);
+BaseType_t xPortRegisterSoftwareInterruptHandler(SoftwareInterruptHandler_t pvFunction) {
+  irq_add_shared_handler(26, (irq_handler_t)pvFunction, 0);
   irq_set_enabled(26, true);
-  return 26;
+  return (BaseType_t)26;
 }
 
-void deleteSoftwareInterruptHandler(int num, softwareInterruptHandler handler) {
-  irq_remove_handler(num, (irq_handler_t)handler);
+void vPortDeleteSoftwareInterruptHandler(BaseType_t xNum, SoftwareInterruptHandler_t pvFunction) {
+  irq_remove_handler((int)xNum, (irq_handler_t)pvFunction);
 }
 
-void triggerSoftwareInterrupt(int num) {
-  irq_set_pending(num);
+void vPortTriggerSoftwareInterrupt(BaseType_t xNum) {
+  irq_set_pending((int)xNum);
 }
 
 #ifdef USE_BSL_DEFAULT_HOOKS
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
-  char strbuf[] = "ERROR: Stack Overflow\n\0";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
   (void)pcTaskName;
   (void)xTask;
 
-  sendReport(strbuf, strbuf_len);
+  vPortSerialLog("ERROR: Stack Overflow\n\0");
 
   /* Run time stack overflow checking is performed if
   configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
@@ -121,9 +119,6 @@ void vApplicationTickHook(void) {
 }
 
 void vApplicationMallocFailedHook(void) {
-  char strbuf[] = "ERROR: Malloc Failed\n\0";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  sendReport(strbuf, strbuf_len);
+  vPortSerialLog("ERROR: Malloc Failed\n\0");
 }
 #endif

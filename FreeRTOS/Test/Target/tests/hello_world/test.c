@@ -16,16 +16,13 @@ void tearDown(void) {
 } /* Is run after every test, put unit clean-up calls here. */
 
 void hello_world(void) {
-  char strbuf[] = "Hello World\n";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  sendReport(strbuf, strbuf_len);
+  vPortSerialLog("Hello World\n\0");
 
   UNITY_END();
 }
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   UNITY_BEGIN();
 
@@ -42,8 +39,5 @@ void vApplicationTickHook(void) {
 }
 
 void vApplicationMallocFailedHook(void) {
-  char strbuf[] = "Malloc Failed";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-
-  sendReport(strbuf, strbuf_len);
+  vPortSerialLog("Malloc Failed\n\0");
 }

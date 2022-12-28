@@ -123,7 +123,7 @@ void tearDown( void )
 
 int main( void )
 {
-    initTestEnvironment();
+    vPortInitTestEnvironment();
 
     /* prvTestRunnerTask run as Task A after setting Unity. */
     xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
@@ -199,7 +199,7 @@ static void prvTaskA( void )
     {
         /* Increase xTaskCounter COUNTER_MAX time. xTaskCounter is not COUNTER_MAX if task B enters vTaskSuspendAll. */
         xTaskCounter++;
-        busyWaitMicroseconds( 1000 );
+        vPortBusyWaitMicroseconds( (uint32_t) 1000 );
     }
 
     /* Record current counter value because we can't get error message from UNITY_ASSERT* functions in vTaskSuspendAll. */
@@ -219,7 +219,7 @@ static void prvTaskA( void )
 
     while( ( xIsTaskBFinished == pdFALSE ) && ( lRemainingWaitTimeMs > 0 ) )
     {
-        busyWaitMicroseconds( WAIT_TASK_B_POLLING_MS * 1000 );
+        vPortBusyWaitMicroseconds( (uint32_t) (WAIT_TASK_B_POLLING_MS * 1000) );
         lRemainingWaitTimeMs -= WAIT_TASK_B_POLLING_MS;
     }
 
@@ -249,7 +249,7 @@ static void prvTaskB( void * pvParameters )
     /* Wait task A to start first. */
     while( xTaskCounter < 1 )
     {
-        busyWaitMicroseconds( 1 );
+        vPortBusyWaitMicroseconds( (uint32_t) 1 );
     }
 
     vTaskSuspendAll();

@@ -71,12 +71,18 @@ void setup_test_fr11_001(void) {
               mainTASK_B_PRIORITY, &taskB);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+}
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr11_001();
 
@@ -93,16 +99,6 @@ static uint32_t ulTempTaskBState = 0;
 
 static void fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended(void) {
   TEST_ASSERT_TRUE(ulTempTaskBState == 0);
-
-  if( ulTempTaskBState == 0 )
-  {
-    setPin(LED_PIN);
-    sendReport(pcTestPassedString, xTestPassedStringLen);
-  }
-  else
-  {
-    sendReport(pcTestFailedString, xTestFailedStringLen);
-  }
 }
 
 static void prvTaskA(void *pvParameters) {
@@ -123,7 +119,7 @@ static void prvTaskA(void *pvParameters) {
     }
 
     /* Wait 100ms. */
-    busyWaitMicroseconds( TASK_BUSYLOOP_TIME_MS * 1000 );
+    vPortBusyWaitMicroseconds( (uint32_t) (TASK_BUSYLOOP_TIME_MS * 1000) );
   }
 
   /* Cache uTaskBState before resuming all tasks. */

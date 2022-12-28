@@ -77,7 +77,7 @@ void tearDown(void)
 } 
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr1_001();
 
@@ -94,7 +94,7 @@ static BaseType_t xTaskBObservedRunning = pdFALSE;
 static void vPrvTaskB(void *pvParameters) {
   /* busyloop for observation by vPrvTaskA. */
   for (;;) {
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 

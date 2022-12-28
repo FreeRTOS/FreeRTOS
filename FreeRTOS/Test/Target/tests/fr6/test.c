@@ -144,7 +144,7 @@ void tearDown(void)
 }
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr6_001();
 
@@ -160,7 +160,7 @@ static void prvTaskA(void *pvParameters) {
   // wait with preemption disabled
   vTaskPreemptionDisable(taskA);
   xTaskAState++;
-  busyWaitMicroseconds(2000000);
+  vPortBusyWaitMicroseconds((uint32_t)2000000);
   vTaskPreemptionEnable(taskA);
 
   // idle the task
@@ -172,13 +172,13 @@ static void prvTaskA(void *pvParameters) {
 static void prvTaskB(void *pvParameters) {
   xTaskBState++;
 
-  sendReport("TaskB Entering busyWait...\n\0", 0);
-  busyWaitMicroseconds(2000000);
+  vPortSerialLog("TaskB Entering busyWait...\n\0");
+  vPortBusyWaitMicroseconds((uint32_t)2000000);
 
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
@@ -200,10 +200,10 @@ static void fr06_validate_vTaskPreemptionDisable(void) {
 
 static void prvTaskC(void *pvParameters) {
   while (xTaskBState == 0) {
-    busyWaitMicroseconds(1);
+    vPortBusyWaitMicroseconds((uint32_t)1);
   }
 
-  sendReport("TaskC Past Guard\n\0", 0);
+  vPortSerialLog("TaskC Past Guard\n\0");
 
   UNITY_BEGIN();
 
@@ -214,6 +214,6 @@ static void prvTaskC(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }

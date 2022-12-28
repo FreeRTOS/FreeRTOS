@@ -108,17 +108,17 @@ static void prvNonRTOSWorker() {
   while (counter < TEST_ITERATIONS) {
     xSemaphoreTake(xSDKMutex, portMAX_DELAY);
     printf("Core %d: Acquire SDK mutex\n", get_core_num());
-    uint64_t end_time = getCPUTime() + MS_TO_CPUTIME(10);
-    while (getCPUTime() != end_time) {
+    uint64_t end_time = uyPortGetCPUTime() + MS_TO_CPUTIME(10);
+    while (uyPortGetCPUTime() != end_time) {
       printf("Core %d: Busy work with mutex %d\n", get_core_num(), counter);
-      busyWaitMicroseconds(50);
-      delayMs(50);
+      vPortBusyWaitMicroseconds((uint32_t)50);
+      vPortDelayMs((uint32_t)50);
     }
     printf("Core %d: Release SDK mutex\n", get_core_num());
     counter++;
     xSemaphoreGive(xSDKMutex);
     printf("Core %d: Starting SDK sleep\n", get_core_num());
-    delayMs(200);
+    vPortDelayMs((uint32_t)200);
     printf("Core %d: Finish SDK sleep; release SDK semaphore\n",
            get_core_num());
     xSemaphoreGive(xSDKSemaphore);
@@ -154,7 +154,7 @@ void test_Template(void) {
 
   /* Configure the system ready to run the demo.  The clock configuration
   can be done here if it was not done before main() was called. */
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   /* Create the queue used by the queue send and queue receive tasks. */
   xQueue = xQueueCreate(/* The number of items the queue can hold. */
@@ -226,7 +226,7 @@ void test_Template(void) {
   be created, and it is not yet running). */
   xTimerStart(xExampleSoftwareTimer, 0);
 
-  if (AMPLaunchOnCore(1, prvCore1Entry) != 0) {
+  if (xPortAMPLaunchOnCore((BaseType_t)1, prvCore1Entry) != 0) {
     printf("AMPLaunchOnCore Failed.");
   }
 
@@ -237,9 +237,15 @@ void test_Template(void) {
 #endif
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+} 
 
 int main(void) {
   printf("Beginning Test...");
@@ -396,7 +402,7 @@ static void prvSDKMutexUseTask(void *pvParameters) {
 
 static void prvSDKSemaphoreUseTask(void *pvParameters) {
   while (ulCountOfSDKSemaphoreAcquires < TEST_ITERATIONS) {
-    uint64_t cputime = getCPUTime();
+    uint64_t cputime = uyPortGetCPUTime();
     if (xSemaphoreTake(xSDKSemaphore, portMAX_DELAY)) {
       ulCountOfSDKSemaphoreAcquires++;
       printf("Core %d - Thread '%s': SDK Sem acquired %d\n", get_core_num(),
@@ -406,7 +412,7 @@ static void prvSDKSemaphoreUseTask(void *pvParameters) {
       printf("Core %d - Thread '%s': SDK Sem wait timeout (ok) after %lld "
              "cputime\n",
              get_core_num(), pcTaskGetName(xTaskGetCurrentTaskHandle()),
-             getCPUTime() - cputime);
+             uyPortGetCPUTime() - cputime);
     }
   }
 
@@ -445,10 +451,10 @@ void vApplicationTickHook(void) {
     might be preferable to use a direct to task notification,
     which will be faster and use less RAM. */
     if (toggle) {
-      clearPin(LED_PIN);
+      vPortClearPin(LED_PIN);
       toggle = false;
     } else {
-      setPin(LED_PIN);
+      vPortSetPin(LED_PIN);
       toggle = true;
     }
 

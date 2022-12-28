@@ -135,7 +135,7 @@ void tearDown(void)
 } 
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr3_001();
 
@@ -150,14 +150,14 @@ int main(void) {
 static void prvTaskA(void *pvParameters) {
   // idle the task
   for (;;) {
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
 static void prvTaskB(void *pvParameters) {
   // idle the task
   for (;;) {
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
@@ -171,7 +171,7 @@ static void fr03_validateAllTasksHaveRun(void) {
       break;
     }
 
-    busyWaitMicroseconds(10000);
+    vPortBusyWaitMicroseconds((uint32_t)10000);
   }
 
   TEST_ASSERT_TRUE(((xTestPassed == pdTRUE) && (xTestFailed == pdFALSE)));
@@ -187,6 +187,6 @@ static void prvTaskC(void *pvParameters) {
 
   // idle the task
   for (;;) {
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }

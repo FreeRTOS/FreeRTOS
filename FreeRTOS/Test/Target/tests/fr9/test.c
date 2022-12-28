@@ -123,12 +123,18 @@ void setup_test_fr9_001(void) {
               mainTASK_C_PRIORITY, NULL);
 }
 
-void setUp(void) {} /* Is run before every test, put unit init calls here. */
-void tearDown(void) {
-} /* Is run after every test, put unit clean-up calls here. */
+/* Is run before every test, put unit init calls here. */
+void setUp(void)
+{
+}
+
+/* Is run after every test, put unit clean-up calls here. */
+void tearDown(void)
+{
+}
 
 int main(void) {
-  initTestEnvironment();
+  vPortInitTestEnvironment();
 
   setup_test_fr9_001();
 
@@ -143,16 +149,16 @@ int main(void) {
 static void prvTaskA(void *pvParameters) {
   taskENTER_CRITICAL();
   xTaskAHasEnteredCriticalSection = pdTRUE;
-  busyWaitMicroseconds(250000);
+  vPortBusyWaitMicroseconds((uint32_t)250000);
   xTaskNotify(taskB, 0, eNoAction);
-  busyWaitMicroseconds(10000000);
+  vPortBusyWaitMicroseconds((uint32_t)10000000);
   taskEXIT_CRITICAL();
   xTaskAHasExitedCriticalSection = pdTRUE;
 
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
@@ -161,54 +167,23 @@ static void prvTaskB(void *pvParameters) {
 
   taskENTER_CRITICAL();
   xTaskBHasEnteredCriticalSection = pdTRUE;
-  busyWaitMicroseconds(8000000);
+  vPortBusyWaitMicroseconds((uint32_t)8000000);
   taskEXIT_CRITICAL();
 
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 
 static void fr09_validateAllTasksHaveRun(void)
 {
-  char str[100];
-
-  //TEST_ASSERT_TRUE(allTasksHaveRun && !taskBHasEnteredCriticalSection);
-
-  sprintf(str, "TRACE: switchCount=%d, %s,%s,%s %s,%s,%s\n\0", ulTaskSwitchCount,
-    xTaskARan ? "T" : "F",
-    xTaskBRan ? "T" : "F",
-    xTaskCRan ? "T" : "F",
-    xTaskAHasEnteredCriticalSection ? "T" : "F",
-    xTaskAHasExitedCriticalSection ? "T" : "F",
-    xTaskBHasEnteredCriticalSection ? "T" : "F");
-  sendReport(str, 0);
-
-  if (xAllTasksHaveRun)
-  {
-    sendReport("allTasksHaveRun\n\0", 0);
-  }
-
-  if (xTaskBHasEnteredCriticalSection)
-  {
-    sendReport("taskBHasEnteredCriticalSection\n\0", 0);
-  }
-
-  if ((xAllTasksHaveRun == pdTRUE) && (xTaskBHasEnteredCriticalSection == pdFALSE))
-  {
-      setPin(LED_PIN);
-      sendReport(pcTestPassedString, xTestPassedStringLen);
-  }
-  else
-  {
-      sendReport(pcTestFailedString, xTestFailedStringLen);
-  }
+  TEST_ASSERT_TRUE((xAllTasksHaveRun == pdTRUE) && (xTaskBHasEnteredCriticalSection == pdFALSE));
 }
 
 static void prvTaskC(void *pvParameters) {
-  busyWaitMicroseconds(250000);
+  vPortBusyWaitMicroseconds((uint32_t)250000);
 
   UNITY_BEGIN();
 
@@ -219,7 +194,7 @@ static void prvTaskC(void *pvParameters) {
   // idle the task
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    busyWaitMicroseconds(100000);
+    vPortBusyWaitMicroseconds((uint32_t)100000);
   }
 }
 

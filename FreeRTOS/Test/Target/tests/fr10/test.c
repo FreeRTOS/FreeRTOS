@@ -28,7 +28,18 @@
 
 /**
  * @file test.c
- * @brief Implements FR10 test functions for SMP on target test.
+ * @brief Only one task shall be able to enter the section protected by vTaskSuspendAll/xTaskResumeAll.
+ * 
+ * Procedure:
+ *   - Task A calls vTaskSuspendAll
+ *   - Task A increases the counter to COUNTER_MAX
+ *   - Task A calls xTaskResumeAll
+ *   - Task B calls vTaskSuspendAll
+ *   - Task B increases the counter by 1
+ *   - Task B calls xTaskResumeAll
+ * Expected:
+ *   - counter should be COUNTER_MAX when Task A finished its loop
+ *   - counter should be COUNTER_MAX + 1 when Task B finished its increment
  */
 
 /* Kernel includes. */
@@ -49,34 +60,16 @@
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Task priority for task A.
- */
 #define mainTASK_A_PRIORITY              ( tskIDLE_PRIORITY + 2 )
 
-/**
- * @brief Task priority for task B.
- */
 #define mainTASK_B_PRIORITY              ( tskIDLE_PRIORITY + 1 )
 
-/**
- * @brief Maximum value for counter to increase to.
- */
 #define COUNTER_MAX                      ( 3000 )
 
-/**
- * @brief Idle period for prvTestRunnerTask to delay at the end.
- */
 #define mainSOFTWARE_TIMER_PERIOD_MS     pdMS_TO_TICKS( 10 )
 
-/**
- * @brief Timeout value for task A to wait for Task B.
- */
 #define WAIT_TASK_B_FINISH_TIMEOUT_MS    ( 3000 )
 
-/**
- * @brief Polling value for task A to wait for Task B.
- */
 #define WAIT_TASK_B_POLLING_MS           ( 100 )
 
 /*-----------------------------------------------------------*/
@@ -87,14 +80,8 @@
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief A counter for task A&B to increase.
- */
 static volatile BaseType_t xTaskCounter = 0;
 
-/**
- * @brief A flag to show if task B is finished.
- */
 static volatile BaseType_t xIsTaskBFinished = pdFALSE;
 
 /*-----------------------------------------------------------*/
@@ -164,13 +151,6 @@ static void prvTestRunnerTask( void * pvParameters )
 /**
  * @brief Test case FR10 to verify that only one task shall be able to enter the section
  * protected by vTaskSuspendAll/xTaskResumeAll. We have two tasks, A and B, running in parallel.
- * Test flow lists in order below:
- *   - Task A calls vTaskSuspendAll
- *   - Task A increases the counter to COUNTER_MAX
- *   - Task A calls xTaskResumeAll
- *   - Task B calls vTaskSuspendAll
- *   - Task B increases the counter by 1
- *   - Task B calls xTaskResumeAll
  */
 static void fr10_onlyOneTaskEnterSuspendAll( void )
 {
@@ -254,12 +234,11 @@ static void prvTaskB( void * pvParameters )
 
     vTaskSuspendAll();
 
-    /* Increase 1 to xTaskCounter and it should be COUNTER_MAX + 1 after increasing. */
     xTaskCounter++;
 
     xTaskResumeAll();
 
-    /* Set xIsTaskBFinished to pdTRUE to let task A know that task B is finished. */
+    /* Let task A know that task B is finished. */
     xIsTaskBFinished = pdTRUE;
 
     vTaskDelete( NULL );

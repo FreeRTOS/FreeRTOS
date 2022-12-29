@@ -551,7 +551,7 @@ static void packetDrillBridgeThread (void *pvParameters)
 
             }
 
-            resetPacketDrillTask();
+            //resetPacketDrillTask();
             
         #ifdef __AFL_HAVE_MANUAL_CONTROL
         }

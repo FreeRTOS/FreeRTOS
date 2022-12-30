@@ -29,7 +29,7 @@
 /**
  * @file test.c
  * @brief Only one task shall be able to enter the section protected by vTaskSuspendAll/xTaskResumeAll.
- * 
+ *
  * Procedure:
  *   - Task A calls vTaskSuspendAll
  *   - Task A increases the counter to COUNTER_MAX
@@ -45,15 +45,7 @@
 /* Kernel includes. */
 
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
-
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
@@ -65,8 +57,6 @@
 #define mainTASK_B_PRIORITY              ( tskIDLE_PRIORITY + 1 )
 
 #define COUNTER_MAX                      ( 3000 )
-
-#define mainSOFTWARE_TIMER_PERIOD_MS     pdMS_TO_TICKS( 10 )
 
 #define WAIT_TASK_B_FINISH_TIMEOUT_MS    ( 3000 )
 
@@ -80,71 +70,16 @@
 
 /*-----------------------------------------------------------*/
 
-static volatile BaseType_t xTaskCounter = 0;
-
-static volatile BaseType_t xIsTaskBFinished = pdFALSE;
-
-/*-----------------------------------------------------------*/
-
 /* Function declaration. */
-static void prvTestRunnerTask( void * pvParameters );
 static void fr10_onlyOneTaskEnterSuspendAll( void );
 static void prvTaskA( void );
 static void prvTaskB( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
-/* Is run before every test, put unit init calls here. */
-void setUp( void )
-{
-}
+static volatile BaseType_t xTaskCounter = 0;
 
-/*-----------------------------------------------------------*/
-
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown( void )
-{
-}
-
-/*-----------------------------------------------------------*/
-
-int main( void )
-{
-    vPortInitTestEnvironment();
-
-    /* prvTestRunnerTask run as Task A after setting Unity. */
-    xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
-                 mainTASK_A_PRIORITY, NULL );
-
-    vTaskStartScheduler();
-
-    /* should never reach here */
-    panic_unsupported();
-
-    return 0;
-}
-
-/*-----------------------------------------------------------*/
-
-/**
- * @brief A start entry for unity to start with.
- *
- * @param[in] pvParameters parameter for task entry, useless in this test.
- */
-static void prvTestRunnerTask( void * pvParameters )
-{
-    UNITY_BEGIN();
-
-    RUN_TEST( fr10_onlyOneTaskEnterSuspendAll );
-
-    UNITY_END();
-
-    /* idle the task */
-    for( ; ; )
-    {
-        vTaskDelay( mainSOFTWARE_TIMER_PERIOD_MS );
-    }
-}
+static volatile BaseType_t xIsTaskBFinished = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -154,12 +89,18 @@ static void prvTestRunnerTask( void * pvParameters )
  */
 static void fr10_onlyOneTaskEnterSuspendAll( void )
 {
+    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
+
+    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
+
     /* Create task B to run on another core. */
     xTaskCreate( prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
                  mainTASK_B_PRIORITY, NULL );
 
-    /* Run as Task A. */
+    /* Run current task as Task A. */
     prvTaskA();
+
+    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
 }
 
 /*-----------------------------------------------------------*/
@@ -179,7 +120,7 @@ static void prvTaskA( void )
     {
         /* Increase xTaskCounter COUNTER_MAX time. xTaskCounter is not COUNTER_MAX if task B enters vTaskSuspendAll. */
         xTaskCounter++;
-        vPortBusyWaitMicroseconds( (uint32_t) 1000 );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 1000 );
     }
 
     /* Record current counter value because we can't get error message from UNITY_ASSERT* functions in vTaskSuspendAll. */
@@ -199,7 +140,7 @@ static void prvTaskA( void )
 
     while( ( xIsTaskBFinished == pdFALSE ) && ( lRemainingWaitTimeMs > 0 ) )
     {
-        vPortBusyWaitMicroseconds( (uint32_t) (WAIT_TASK_B_POLLING_MS * 1000) );
+        vPortBusyWaitMicroseconds( ( uint32_t ) ( WAIT_TASK_B_POLLING_MS * 1000 ) );
         lRemainingWaitTimeMs -= WAIT_TASK_B_POLLING_MS;
     }
 
@@ -229,7 +170,7 @@ static void prvTaskB( void * pvParameters )
     /* Wait task A to start first. */
     while( xTaskCounter < 1 )
     {
-        vPortBusyWaitMicroseconds( (uint32_t) 1 );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 1 );
     }
 
     vTaskSuspendAll();
@@ -245,3 +186,15 @@ static void prvTaskB( void * pvParameters )
 }
 
 /*-----------------------------------------------------------*/
+
+/**
+ * @brief A start entry for test runner to run FR10.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr10_onlyOneTaskEnterSuspendAll );
+
+    UNITY_END();
+}

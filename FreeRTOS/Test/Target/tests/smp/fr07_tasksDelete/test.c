@@ -28,169 +28,170 @@
 
 /**
  * @file test.c
- * @brief Implements FR7 test functions for SMP on target testing.
+ * @brief When a n RTOS object is deleted, the associated resources shall be freed.
+ *
+ * Procedure:
+ *   - Create task A
+ *   - Task A delete itself
+ *   - Check if memory freed
+ *   - Create task B
+ *   - Delete task B in test runner task
+ *   - Check if memory freed
+ * Expected:
+ *   - Have same remaining memory before creating task and after deleting task
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
-
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
 
-/* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
+/*-----------------------------------------------------------*/
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
+#define mainTASK_A_PRIORITY             ( tskIDLE_PRIORITY + 2 )
 
-static void prvUnityStarter(void *pvParameters);
-static void prvTaskA(void *pvParameters);
-static void prvTaskB(void *pvParameters);
+#define mainTASK_B_PRIORITY             ( tskIDLE_PRIORITY + 2 )
 
-static void fr07_memoryFreedTaskRemoteDeleted();
-static void fr07_memoryFreedTaskSelfDeleted();
+#define mainSOFTWARE_TIMER_PERIOD_MS    pdMS_TO_TICKS( 10 )
 
-#if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
+/*-----------------------------------------------------------*/
+
+#if configNUMBER_OF_CORES <= 1
+    #error Require two cores be configured for FreeRTOS
 #endif
 
-TaskHandle_t taskA, taskB;
+#if configRUN_MULTIPLE_PRIORITIES != 0
+    #error configRUN_MULTIPLE_PRIORITIES shoud be 0 in this test case. Please check if testConfig.h is included.
+#endif
 
-void setup_test_fr7_001(void) {
-  xTaskCreate(prvUnityStarter, "unityStarter", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_C_PRIORITY, NULL);
-}
+#if configUSE_CORE_AFFINITY != 0
+    #error configUSE_CORE_AFFINITY shoud be 0 in this test case. Please check if testConfig.h is included.
+#endif
 
-/* Is run before every test, put unit init calls here. */
-void setUp(void)
-{
-}
+/*-----------------------------------------------------------*/
 
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown(void)
-{
-}
+/* Function declaration. */
+static void prvTaskA( void * pvParameters );
+static void prvTaskB( void * pvParameters );
+static void fr07_memoryFreedTaskSelfDeleted();
+static void fr07_memoryFreedTaskRemoteDeleted();
 
-int main(void) {
-  vPortInitTestEnvironment();
+/*-----------------------------------------------------------*/
 
-  setup_test_fr7_001();
-
-  vTaskStartScheduler();
-  // AMPLaunchOnCore(1, vTaskStartScheduler);
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0;
-}
+TaskHandle_t xTaskBHandler;
 
 static volatile BaseType_t xTaskAState = 0;
+
 static volatile BaseType_t xTaskBState = 0;
 
 static uint32_t ulOriginalFreeHeapSize;
 
-static void prvUnityStarter(void *pvParameters)
+/*-----------------------------------------------------------*/
+
+static void prvTaskA( void * pvParameters )
 {
-  UNITY_BEGIN();
-  
-  RUN_TEST( fr07_memoryFreedTaskSelfDeleted );
-  RUN_TEST( fr07_memoryFreedTaskRemoteDeleted );
+    xTaskAState++;
 
-  UNITY_END();
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
+    vTaskDelete( NULL );
 }
 
-static void createSelfDeleteTaskA()
+/*-----------------------------------------------------------*/
+
+static void prvTaskB( void * pvParameters )
 {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, &taskA);
-}
+    xTaskBState++;
 
-static void createRemoteDeleteTaskB()
-{
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, &taskB);
-}
-
-static void prvTaskA(void *pvParameters) {
-  xTaskAState++;
-
-  vTaskDelete( NULL );
-}
-
-static void prvTaskB(void *pvParameters) {
-  xTaskBState++;
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
-}
-
-static void fr07_memoryFreedTaskSelfDeleted() {
-  BaseType_t xAttempt;
-  uint32_t ulFreeHeapSize = 0;
-
-  ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
-
-  createSelfDeleteTaskA();
-
-  while (xTaskAState <= 0) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
-
-  for(xAttempt=1; xAttempt<100; xAttempt++)
-  {
-    /* Reserve for idle task to delete the entire task. */
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    ulFreeHeapSize = xPortGetFreeHeapSize();
-    if (ulFreeHeapSize == ulOriginalFreeHeapSize) {
-      break;
+    /* idle the task */
+    for( ; ; )
+    {
+        vTaskDelay( mainSOFTWARE_TIMER_PERIOD_MS );
     }
-  }
-  
-  TEST_ASSERT_TRUE(ulFreeHeapSize == ulOriginalFreeHeapSize);
 }
 
-static void fr07_memoryFreedTaskRemoteDeleted() {
-  int xAttempt;
-  uint32_t ulFreeHeapSize = 0;
+/*-----------------------------------------------------------*/
 
-  ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
+static void fr07_memoryFreedTaskSelfDeleted()
+{
+    uint32_t ulAttempt;
+    uint32_t ulFreeHeapSize = 0;
 
-  createRemoteDeleteTaskB();
+    ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
 
-  while (xTaskBState <= 0) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-  }
+    /* Task A does delete itself when it runs. */
+    xTaskCreate( prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_A_PRIORITY, NULL );
 
-  vTaskDelete(taskB);
-
-  for(xAttempt=1; xAttempt<100; xAttempt++)
-  {
-    /* Reserve for idle task to delete the entire task. */
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    ulFreeHeapSize = xPortGetFreeHeapSize();
-    if (ulFreeHeapSize == ulOriginalFreeHeapSize) {
-      break;
+    while( xTaskAState <= 0 )
+    {
+        vTaskDelay( mainSOFTWARE_TIMER_PERIOD_MS );
     }
-  }
-  
-  TEST_ASSERT_TRUE(ulFreeHeapSize == ulOriginalFreeHeapSize);
+
+    /* Need to wait for task A to delete itself and FreeRTOS kernel to recycle memory. */
+    for( ulAttempt = 1; ulAttempt < 100; ulAttempt++ )
+    {
+        /* Reserve for idle task to delete the entire task. */
+        vTaskDelay( mainSOFTWARE_TIMER_PERIOD_MS );
+        ulFreeHeapSize = xPortGetFreeHeapSize();
+
+        if( ulFreeHeapSize == ulOriginalFreeHeapSize )
+        {
+            break;
+        }
+    }
+
+    TEST_ASSERT_TRUE( ulFreeHeapSize == ulOriginalFreeHeapSize );
 }
+
+/*-----------------------------------------------------------*/
+
+static void fr07_memoryFreedTaskRemoteDeleted()
+{
+    uint32_t ulAttempt;
+    uint32_t ulFreeHeapSize = 0;
+
+    ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
+
+    xTaskCreate( prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_B_PRIORITY, &xTaskBHandler );
+
+    while( xTaskBState <= 0 )
+    {
+        vTaskDelay( mainSOFTWARE_TIMER_PERIOD_MS );
+    }
+
+    vTaskDelete( xTaskBHandler );
+
+    /* Need to wait for FreeRTOS kernel to recycle memory. */
+    for( ulAttempt = 1; ulAttempt < 100; ulAttempt++ )
+    {
+        /* Reserve for idle task to delete the entire task. */
+        vTaskDelay( mainSOFTWARE_TIMER_PERIOD_MS );
+        ulFreeHeapSize = xPortGetFreeHeapSize();
+
+        if( ulFreeHeapSize == ulOriginalFreeHeapSize )
+        {
+            break;
+        }
+    }
+
+    TEST_ASSERT_TRUE( ulFreeHeapSize == ulOriginalFreeHeapSize );
+}
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A start entry for test runner to run FR10.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr07_memoryFreedTaskSelfDeleted );
+    RUN_TEST( fr07_memoryFreedTaskRemoteDeleted );
+
+    UNITY_END();
+}
+
+/*-----------------------------------------------------------*/

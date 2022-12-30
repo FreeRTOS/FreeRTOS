@@ -66,14 +66,14 @@
 
 #if configNUMBER_OF_CORES <= 1
     #error Require two cores be configured for FreeRTOS
-#endif
+#endif /* if configNUMBER_OF_CORES <= 1 */
 
 /*-----------------------------------------------------------*/
 
 /* Function declaration. */
 static void fr10_onlyOneTaskEnterSuspendAll( void );
-static void prvTaskA( void );
-static void prvTaskB( void * pvParameters );
+static void vPrvTaskA( void );
+static void vPrvTaskB( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -94,11 +94,11 @@ static void fr10_onlyOneTaskEnterSuspendAll( void )
     vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
 
     /* Create task B to run on another core. */
-    xTaskCreate( prvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
+    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
                  mainTASK_B_PRIORITY, NULL );
 
     /* Run current task as Task A. */
-    prvTaskA();
+    vPrvTaskA();
 
     vTaskPrioritySet( NULL, uxOriginalTaskPriority );
 }
@@ -108,7 +108,7 @@ static void fr10_onlyOneTaskEnterSuspendAll( void )
 /**
  * @brief Task A entry function, called by prvTestRunnerTask directly.
  */
-static void prvTaskA( void )
+static void vPrvTaskA( void )
 {
     uint32_t ulIndex = 0;
     int32_t lRemainingWaitTimeMs = WAIT_TASK_B_FINISH_TIMEOUT_MS;
@@ -165,7 +165,7 @@ static void prvTaskA( void )
  *
  * @param[in] pvParameters parameter for task entry, useless in this test.
  */
-static void prvTaskB( void * pvParameters )
+static void vPrvTaskB( void * pvParameters )
 {
     /* Wait task A to start first. */
     while( xTaskCounter < 1 )

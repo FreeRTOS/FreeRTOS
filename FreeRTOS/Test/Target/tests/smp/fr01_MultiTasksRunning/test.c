@@ -28,118 +28,129 @@
 
 /**
  * @file test.c
- * @brief Implements FR1 test functions for SMP on target testing.
+ * @brief The user shall be able to schedule tasks across multiple identical processor cores
+ *        with one instance of FreeRTOS scheduler.
+ *
+ * Procedure:
+ *   - Create task A & B
+ *   - Task B keep in busy loop
+ *   - Task A check if task B is running
+ * Expected:
+ *   - Both task A & B can run at the same time
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
 
-/* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
+/*-----------------------------------------------------------*/
 
-static void vPrvTaskA(void *pvParameters);
-static void vPrvTaskB(void *pvParameters);
+#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+
+/*-----------------------------------------------------------*/
 
 #if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
-#endif
+    #error Require two cores be configured for FreeRTOS
+#endif /* if configNUMBER_OF_CORES != 2 */
 
-void setup_test_fr1_001(void) {
-  xTaskCreate(vPrvTaskA, "TaskA", configMINIMAL_STACK_SIZE * 2, NULL,
-              mainTASK_A_PRIORITY, NULL);
+/*-----------------------------------------------------------*/
 
-  xTaskCreate(vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, NULL);
-}
+/* Function declaration. */
+static void fr01_validateOtherTaskRuns( void );
+static void vPrvTaskA( void );
+static void vPrvTaskB( void * pvParameters );
 
-/* Is run before every test, put unit init calls here. */
-void setUp(void)
-{ 
-}
-
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown(void)
-{
-} 
-
-int main(void) {
-  vPortInitTestEnvironment();
-
-  setup_test_fr1_001();
-
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0;
-}
+/*-----------------------------------------------------------*/
 
 static BaseType_t xTaskBObservedRunning = pdFALSE;
 
-static void vPrvTaskB(void *pvParameters) {
-  /* busyloop for observation by vPrvTaskA. */
-  for (;;) {
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
+TaskHandle_t xTaskBHandler;
+
+/*-----------------------------------------------------------*/
+
+static void fr01_validateOtherTaskRuns( void )
+{
+    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
+
+    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
+
+    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_B_PRIORITY, &xTaskBHandler );
+
+    /* Run current task as Task A. */
+    vPrvTaskA();
+
+    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
 }
 
-static void fr01_validateOtherTaskRuns(void) {
-  int32_t lHandlerNum = -1;
-  TaskStatus_t taskStatus[16];
-  UBaseType_t xTaskStatusArraySize = 16;
-  unsigned long ulTotalRunTime;
-  UBaseType_t xIdx;
-  uint32_t ulAttempt = 1;
-  UBaseType_t xNumTasksRunning;
+/*-----------------------------------------------------------*/
 
-  while(xTaskBObservedRunning == pdFALSE)
-  {
-    xNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, xTaskStatusArraySize, &ulTotalRunTime);
+static void vPrvTaskA( void )
+{
+    int32_t lHandlerNum = -1;
+    TaskStatus_t xTaskStatus[ 16 ];
+    UBaseType_t xTaskStatusArraySize = 16;
+    uint32_t ulTotalRunTime;
+    UBaseType_t xIdx;
+    uint32_t ulAttempt = 1;
+    UBaseType_t xNumTasksRunning;
 
-    for(xIdx=0; xIdx < xNumTasksRunning; xIdx++)
+    while( xTaskBObservedRunning == pdFALSE )
     {
-      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskB") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
-      {
-        xTaskBObservedRunning = pdTRUE;
-      }
+        xNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &xTaskStatus, xTaskStatusArraySize, &ulTotalRunTime );
+
+        for( xIdx = 0; xIdx < xNumTasksRunning; xIdx++ )
+        {
+            if( ( strcmp( xTaskStatus[ xIdx ].pcTaskName, "TaskB" ) == 0 ) && ( xTaskStatus[ xIdx ].eCurrentState == eRunning ) )
+            {
+                /* Found that task B is run at the same time with task A. */
+                xTaskBObservedRunning = pdTRUE;
+                break;
+            }
+        }
+
+        vPortBusyWaitMicroseconds( ( uint32_t ) 10000 );
+
+        ulAttempt++;
+
+        if( ulAttempt > 100 )
+        {
+            break;
+        }
     }
 
-    vTaskDelay(pdMS_TO_TICKS(10));
+    TEST_ASSERT_TRUE( xTaskBObservedRunning == pdTRUE );
 
-    ulAttempt++;
-
-    if (ulAttempt > 100) {
-      break;
-    }
-  }
-
-  TEST_ASSERT_TRUE(xTaskBObservedRunning == pdTRUE);
+    vTaskDelete( xTaskBHandler );
 }
 
-static void vPrvTaskA(void *pvParameters) {
-  UNITY_BEGIN();
+/*-----------------------------------------------------------*/
 
-  RUN_TEST(fr01_validateOtherTaskRuns);
+static void vPrvTaskB( void * pvParameters )
+{
+    /* busyloop for observation by vPrvTaskA. */
+    for( ; ; )
+    {
+        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+    }
+}
 
-  UNITY_END();
+/*-----------------------------------------------------------*/
 
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
+/**
+ * @brief A start entry for test runner to run FR10.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr01_validateOtherTaskRuns );
+
+    UNITY_END();
 }

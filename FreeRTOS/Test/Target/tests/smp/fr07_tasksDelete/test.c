@@ -60,21 +60,21 @@
 
 #if configNUMBER_OF_CORES <= 1
     #error Require two cores be configured for FreeRTOS
-#endif
+#endif /* if configNUMBER_OF_CORES <= 1 */
 
 #if configRUN_MULTIPLE_PRIORITIES != 0
     #error configRUN_MULTIPLE_PRIORITIES shoud be 0 in this test case. Please check if testConfig.h is included.
-#endif
+#endif /* if configRUN_MULTIPLE_PRIORITIES != 0 */
 
 #if configUSE_CORE_AFFINITY != 0
     #error configUSE_CORE_AFFINITY shoud be 0 in this test case. Please check if testConfig.h is included.
-#endif
+#endif /* if configUSE_CORE_AFFINITY != 0 */
 
 /*-----------------------------------------------------------*/
 
 /* Function declaration. */
-static void prvTaskA( void * pvParameters );
-static void prvTaskB( void * pvParameters );
+static void vPrvTaskA( void * pvParameters );
+static void vPrvTaskB( void * pvParameters );
 static void fr07_memoryFreedTaskSelfDeleted();
 static void fr07_memoryFreedTaskRemoteDeleted();
 
@@ -90,7 +90,7 @@ static uint32_t ulOriginalFreeHeapSize;
 
 /*-----------------------------------------------------------*/
 
-static void prvTaskA( void * pvParameters )
+static void vPrvTaskA( void * pvParameters )
 {
     xTaskAState++;
 
@@ -99,7 +99,7 @@ static void prvTaskA( void * pvParameters )
 
 /*-----------------------------------------------------------*/
 
-static void prvTaskB( void * pvParameters )
+static void vPrvTaskB( void * pvParameters )
 {
     xTaskBState++;
 
@@ -120,7 +120,7 @@ static void fr07_memoryFreedTaskSelfDeleted()
     ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
 
     /* Task A does delete itself when it runs. */
-    xTaskCreate( prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+    xTaskCreate( vPrvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
                  mainTASK_A_PRIORITY, NULL );
 
     while( xTaskAState <= 0 )
@@ -153,7 +153,7 @@ static void fr07_memoryFreedTaskRemoteDeleted()
 
     ulOriginalFreeHeapSize = xPortGetFreeHeapSize();
 
-    xTaskCreate( prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
                  mainTASK_B_PRIORITY, &xTaskBHandler );
 
     while( xTaskBState <= 0 )

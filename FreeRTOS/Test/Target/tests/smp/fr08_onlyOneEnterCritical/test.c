@@ -28,142 +28,149 @@
 
 /**
  * @file test.c
- * @brief Implements FR8 test functions for SMP on target testing.
+ * @brief Only one task/ISR shall be able to enter critical section at a time.
+ *
+ * Procedure:
+ *   -
+ *   -
+ *   -
+ * Expected:
+ *   -
  */
-
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
-
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
+/*-----------------------------------------------------------*/
 
 /* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
+ * as ( configMAX_PRIORITIES - 1 ). */
+#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+/*-----------------------------------------------------------*/
 
-static void prvTaskA(void *pvParameters);
-static void prvTaskB(void *pvParameters);
+static void vPrvTaskA( void * pvParameters );
+static void vPrvTaskB( void * pvParameters );
+/*-----------------------------------------------------------*/
 
 #if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
-#endif
+    #error Require two cores be configured for FreeRTOS
+#endif /* if configNUMBER_OF_CORES != 2 */
+/*-----------------------------------------------------------*/
 
-void setup_test_fr8_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, NULL);
-
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, NULL);
-}
-
-/* Is run before every test, put unit init calls here. */
-void setUp(void)
-{
-}
-
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown(void)
-{
-}
-
-int main(void) {
-  vPortInitTestEnvironment();
-
-  setup_test_fr8_001();
-
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0;
-}
-
+static TaskHandle_t xTaskBHandler;
 static BaseType_t xTaskBState = 0;
 static BaseType_t xIsrAssertionComplete = pdFALSE;
 static BaseType_t xIsrObservedTaskBInsideCriticalSection = pdFALSE;
 static BaseType_t xInsideTaskBCriticalSection = pdFALSE;
+/*-----------------------------------------------------------*/
 
-static void softwareInterruptHandlerSimple(void) {
-  BaseType_t xIter;
-  UBaseType_t uxSavedInterruptStatus;
-
-  for(xIter = 1; xIter < 10; xIter++)
-  {
-    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-    if (xInsideTaskBCriticalSection)
-    {
-      xIsrObservedTaskBInsideCriticalSection = true;
-    }
-    vPortBusyWaitMicroseconds((uint32_t)10000);
-    taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
-  }
-
-  xIsrAssertionComplete = true;
-}
-
-static void prvTaskA(void *pvParameters) {
-  BaseType_t xHandlerNum = -1;
-
-  // wait for Task B to get to 6 itertions
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    if (xTaskBState > 5) {
-      break;
-    }
-  }
-
-  xHandlerNum = xPortRegisterSoftwareInterruptHandler(softwareInterruptHandlerSimple);
-  vPortTriggerSoftwareInterrupt(xHandlerNum);
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-  }
-}
-
-static void fr08_validateOnlyOneCriticalSectionRanAtATime(void)
+void fr08_validateOnlyOneCriticalSectionRanAtATime( void )
 {
-  TEST_ASSERT_TRUE(xIsrAssertionComplete && !xIsrObservedTaskBInsideCriticalSection);
-}
+    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
 
-static void prvTaskB(void *pvParameters) {
-  BaseType_t xIter = 1;
+    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
 
-  for (xIter = 1; xIter < 10; xIter++) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    while (xTaskBState == 6 && !xIsrAssertionComplete) {
-      vTaskDelay(pdMS_TO_TICKS(10));
+    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_B_PRIORITY, &xTaskBHandler );
+
+
+    vPrvTaskA( NULL );
+
+    while( !xIsrAssertionComplete )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
     }
-    taskENTER_CRITICAL();
-    xInsideTaskBCriticalSection = true;
-    vPortBusyWaitMicroseconds((uint32_t)10000);
-    xTaskBState++;
-    xInsideTaskBCriticalSection = false;
-    taskEXIT_CRITICAL();
-  }
 
-  while (!xIsrAssertionComplete) {
-      vTaskDelay(pdMS_TO_TICKS(10));
-  }
+    TEST_ASSERT_TRUE( xIsrAssertionComplete && !xIsrObservedTaskBInsideCriticalSection );
 
-  UNITY_BEGIN();
-
-  RUN_TEST(fr08_validateOnlyOneCriticalSectionRanAtATime);
-
-  UNITY_END();
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-  }
+    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
+    vTaskDelete( xTaskBHandler );
 }
+/*-----------------------------------------------------------*/
+
+static void softwareInterruptHandlerSimple( void )
+{
+    BaseType_t xIter;
+    UBaseType_t uxSavedInterruptStatus;
+
+    for( xIter = 1; xIter < 10; xIter++ )
+    {
+        uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+
+        if( xInsideTaskBCriticalSection )
+        {
+            xIsrObservedTaskBInsideCriticalSection = true;
+        }
+
+        vPortBusyWaitMicroseconds( ( uint32_t ) 10000 );
+        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
+    }
+
+    xIsrAssertionComplete = true;
+}
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskA( void * pvParameters )
+{
+    BaseType_t xHandlerNum = -1;
+
+    /* wait for Task B to get to 6 itertions */
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+
+        if( xTaskBState > 5 )
+        {
+            break;
+        }
+    }
+
+    xHandlerNum = xPortRegisterSoftwareInterruptHandler( softwareInterruptHandlerSimple );
+    vPortTriggerSoftwareInterrupt( xHandlerNum );
+}
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskB( void * pvParameters )
+{
+    BaseType_t xIter = 1;
+
+    for( xIter = 1; xIter < 10; xIter++ )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+
+        while( xTaskBState == 6 && !xIsrAssertionComplete )
+        {
+            vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        }
+
+        taskENTER_CRITICAL();
+        xInsideTaskBCriticalSection = true;
+        vPortBusyWaitMicroseconds( ( uint32_t ) 10000 );
+        xTaskBState++;
+        xInsideTaskBCriticalSection = false;
+        taskEXIT_CRITICAL();
+    }
+
+    /* idle the task */
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A start entry for test runner to run FR08.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr08_validateOnlyOneCriticalSectionRanAtATime );
+
+    UNITY_END();
+}
+/*-----------------------------------------------------------*/

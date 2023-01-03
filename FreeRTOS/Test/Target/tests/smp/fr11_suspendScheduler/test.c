@@ -28,122 +28,134 @@
 
 /**
  * @file test.c
- * @brief Implements FR11 test functions for SMP on target testing.
+ * @brief Context switch shall not happen when the scheduler is suspended.
+ *
+ * Procedure:
+ *   -
+ *   -
+ *   -
+ * Expected:
+ *   -
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
+/*-----------------------------------------------------------*/
 
 /* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
+ * as ( configMAX_PRIORITIES - 1 ). */
+#define mainTASK_A_PRIORITY      ( tskIDLE_PRIORITY + 2 )
+#define mainTASK_B_PRIORITY      ( tskIDLE_PRIORITY + 1 )
+/*-----------------------------------------------------------*/
 
-#define TASK_BLOCK_TIME_MS ( 3000 )
-#define TASK_BUSYLOOP_TIME_MS ( 100 )
+#define TASK_BLOCK_TIME_MS       ( 3000 )
+#define TASK_BUSYLOOP_TIME_MS    ( 100 )
+/*-----------------------------------------------------------*/
 
-static void prvTaskA(void *pvParameters);
-static void prvTaskB(void *pvParameters);
-
-TaskHandle_t taskA, taskB;
+static void vPrvTaskA( void * pvParameters );
+static void vPrvTaskB( void * pvParameters );
+/*-----------------------------------------------------------*/
 
 #if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
-#endif
+    #error Require two cores be configured for FreeRTOS
+#endif /* if configNUMBER_OF_CORES != 2 */
 
-void setup_test_fr11_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE * 2, NULL,
-              mainTASK_A_PRIORITY, &taskA);
+#if configRUN_MULTIPLE_PRIORITIES != 0
+    #error configRUN_MULTIPLE_PRIORITIES shoud be 0 in this test case. Please check if testConfig.h is included.
+#endif /* if configRUN_MULTIPLE_PRIORITIES != 0 */
 
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, &taskB);
-}
+#if configUSE_CORE_AFFINITY != 0
+    #error configUSE_CORE_AFFINITY shoud be 0 in this test case. Please check if testConfig.h is included.
+#endif /* if configUSE_CORE_AFFINITY != 0 */
+/*-----------------------------------------------------------*/
 
-/* Is run before every test, put unit init calls here. */
-void setUp(void)
-{
-}
-
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown(void)
-{
-}
-
-int main(void) {
-  vPortInitTestEnvironment();
-
-  setup_test_fr11_001();
-
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0; 
-}
-
+static TaskHandle_t xTaskBHandler;
+static uint32_t ulTaskAState = 0;
 static uint32_t ulTaskBState = 0;
 static uint32_t ulTempTaskBState = 0;
+/*-----------------------------------------------------------*/
 
-static void fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended(void) {
-  TEST_ASSERT_TRUE(ulTempTaskBState == 0);
+static void fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended( void )
+{
+    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
+
+    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
+
+    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_B_PRIORITY, &xTaskBHandler );
+
+    vPrvTaskA( NULL );
+
+    TEST_ASSERT_TRUE( ulTempTaskBState == 0 );
+
+    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
+    vTaskDelete( xTaskBHandler );
 }
+/*-----------------------------------------------------------*/
 
-static void prvTaskA(void *pvParameters) {
-  uint32_t ulAttempTime = 0;
+static void vPrvTaskA( void * pvParameters )
+{
+    uint32_t ulAttempTime = 0;
 
-  vTaskSuspendAll();
+    vTaskSuspendAll();
 
-  vTaskPrioritySet(taskB, mainTASK_A_PRIORITY+1);
+    ulTaskAState++;
 
-  while( ulTaskBState == 0 )
-  {
-    ulAttempTime++;
+    vTaskPrioritySet( xTaskBHandler, mainTASK_A_PRIORITY + 1 );
 
-    if( ulAttempTime > ( TASK_BLOCK_TIME_MS / TASK_BUSYLOOP_TIME_MS ) )
+    while( ulTaskBState == 0 )
     {
-      /* Break after polling 30 times. (total 3s) */
-      break;
+        ulAttempTime++;
+
+        if( ulAttempTime > ( TASK_BLOCK_TIME_MS / TASK_BUSYLOOP_TIME_MS ) )
+        {
+            /* Break after polling 30 times. (total 3s) */
+            break;
+        }
+
+        /* Wait 100ms. */
+        vPortBusyWaitMicroseconds( ( uint32_t ) ( TASK_BUSYLOOP_TIME_MS * 1000 ) );
     }
 
-    /* Wait 100ms. */
-    vPortBusyWaitMicroseconds( (uint32_t) (TASK_BUSYLOOP_TIME_MS * 1000) );
-  }
+    /* Cache uTaskBState before resuming all tasks. */
+    ulTempTaskBState = ulTaskBState;
 
-  /* Cache uTaskBState before resuming all tasks. */
-  ulTempTaskBState = ulTaskBState;
-
-  xTaskResumeAll();
-
-  UNITY_BEGIN();
-
-  RUN_TEST(fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended);
-
-  UNITY_END();
- 
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-  }
+    xTaskResumeAll();
 }
+/*-----------------------------------------------------------*/
 
-static void prvTaskB(void *pvParameters) {
-  ulTaskBState++;
+static void vPrvTaskB( void * pvParameters )
+{
+    while( ulTaskAState == 0 )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 1 ) );
+    }
 
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-  }
+    ulTaskBState++;
+
+    /* idle the task */
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+    }
 }
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A start entry for test runner to run FR11.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr11_validate_NoContextSwitchesOccurWhileSchedulerIsSuspended );
+
+    UNITY_END();
+}
+/*-----------------------------------------------------------*/

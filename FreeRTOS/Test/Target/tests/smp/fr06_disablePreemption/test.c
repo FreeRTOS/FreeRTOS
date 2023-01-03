@@ -28,192 +28,209 @@
 
 /**
  * @file test.c
- * @brief Implements FR6 test functions for SMP on target testing.
+ * @brief The scheduler shall not preempt a task for which preemption is disabled.
+ *
+ * Procedure:
+ *   -
+ *   -
+ *   -
+ * Expected:
+ *   -
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
+/*-----------------------------------------------------------*/
 
 /* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 2)
+ * as ( configMAX_PRIORITIES - 1 ). */
+#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+#define mainTASK_C_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+/*-----------------------------------------------------------*/
 
-static void prvTaskA(void *pvParameters);
-static void prvTaskB(void *pvParameters);
-static void prvTaskC(void *pvParameters);
+static void vPrvTaskA( void * pvParameters );
+static void vPrvTaskB( void * pvParameters );
+static void vPrvTaskC( void * pvParameters );
+static void fr06_validate_vTaskPreemptionDisable( void );
+/*-----------------------------------------------------------*/
 
 #if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
-#endif
+    #error Require two cores be configured for FreeRTOS
+#endif /* if configNUMBER_OF_CORES != 2 */
 
-BaseType_t xTestFailed = pdFALSE;
-BaseType_t xTestPassed = pdFALSE;
-BaseType_t xTaskAState = 0;
-BaseType_t xTaskBState = 0;
+#if configUSE_TASK_PREEMPTION_DISABLE != 1
+    #error configUSE_TASK_PREEMPTION_DISABLE shoud be 1 in this test case. Please check if testConfig.h is included.
+#endif /* if configUSE_CORE_AFFINITY != 0 */
 
-void test_fr6TASK_SWITCHED_IN(void) {
-  UBaseType_t uxIdx, uxNumTasksRunning;
-  TaskStatus_t taskStatus[16];
-  UBaseType_t uxTaskStatusArraySize = 16;
-  unsigned long ulTotalRunTime;
+#if traceTASK_SWITCHED_IN != test_fr6TASK_SWITCHED_IN
+    #error Need to include testConfig.h in FreeRTOSConfig.h
+#endif /* if traceTASK_SWITCHED_IN != test_fr6TASK_SWITCHED_IN */
+/*-----------------------------------------------------------*/
 
-  static uint32_t ulTaskSwitchCount = 0;
-  static BaseType_t xTaskARan = pdFALSE;
-  static BaseType_t xTaskBRan = pdFALSE;
-  static BaseType_t xTaskCRan = pdFALSE;
+static TaskHandle_t xTaskAHandler;
+static TaskHandle_t xTaskBHandler;
+static TaskHandle_t xTaskCHandler;
+static BaseType_t xTestFailed = pdFALSE;
+static BaseType_t xTestPassed = pdFALSE;
+static BaseType_t xTaskAState = 0;
+static BaseType_t xTaskBState = 0;
+/*-----------------------------------------------------------*/
 
-  if ((xTestPassed == pdFALSE) && (xTestFailed == pdFALSE))
-  {
-    BaseType_t xTaskARunning = pdFALSE;
-
-    uxNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, uxTaskStatusArraySize, &ulTotalRunTime);
-
-    for(uxIdx = 0; uxIdx < uxNumTasksRunning; uxIdx++)
-    {
-      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskA") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
-      {
-        xTaskARunning = pdTRUE;
-        xTaskARan = pdTRUE;
-      }
-      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskB") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
-      {
-        xTaskBRan = pdTRUE;
-      }
-      if ((strcmp(taskStatus[uxIdx].pcTaskName, "TaskC") == 0) && (taskStatus[uxIdx].eCurrentState == eRunning))
-      {
-        xTaskCRan = pdTRUE;
-      }
-    }
-
-    if ((xTaskARunning == pdTRUE)&& (xTaskBState > 0) && (xTaskCRan == pdTRUE))
-    {
-      if (!((xTaskARunning == pdTRUE) &&(xTaskBRan == pdTRUE)))
-      {
-        xTestFailed = pdTRUE;
-      }
-      else
-      {
-        xTestPassed = pdTRUE;
-      }
-    }
-
-    ulTaskSwitchCount++;
-    if (ulTaskSwitchCount > 2048)
-    {
-      //sendReport("2k task swiches.\n\0", 0);
-      xTestFailed = pdTRUE;
-    }
-  }
-}
-
-TaskHandle_t taskA;
-
-void setup_test_fr6_001(void) {
-  xTaskCreateAffinitySet(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, 0x2, &taskA);
-
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, NULL);
-
-  xTaskCreate(prvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_C_PRIORITY, NULL);
-}
-
-/* Is run before every test, put unit init calls here. */
-void setUp(void)
+void test_fr6TASK_SWITCHED_IN( void )
 {
-}
+    UBaseType_t uxIdx, uxNumTasksRunning;
+    TaskStatus_t taskStatus[ 16 ];
+    UBaseType_t uxTaskStatusArraySize = 16;
+    unsigned long ulTotalRunTime;
 
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown(void)
-{
-}
+    static uint32_t ulTaskSwitchCount = 0;
+    static BaseType_t xTaskARan = pdFALSE;
+    static BaseType_t xTaskBRan = pdFALSE;
+    static BaseType_t xTaskCRan = pdFALSE;
 
-int main(void) {
-  vPortInitTestEnvironment();
-
-  setup_test_fr6_001();
-
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0;
-}
-
-static void prvTaskA(void *pvParameters) {
-  // wait with preemption disabled
-  vTaskPreemptionDisable(taskA);
-  xTaskAState++;
-  vPortBusyWaitMicroseconds((uint32_t)2000000);
-  vTaskPreemptionEnable(taskA);
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-  }
-}
-
-static void prvTaskB(void *pvParameters) {
-  xTaskBState++;
-
-  vPortSerialLog("TaskB Entering busyWait...\n\0");
-  vPortBusyWaitMicroseconds((uint32_t)2000000);
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
-}
-
-static void fr06_validate_vTaskPreemptionDisable(void) {
-  int attempt;
-
-  for(attempt=1; attempt < 25; attempt++)
-  {
-    if (xTestPassed || xTestFailed)
+    if( ( xTestPassed == pdFALSE ) && ( xTestFailed == pdFALSE ) )
     {
-      break;
+        BaseType_t xTaskARunning = pdFALSE;
+
+        uxNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, uxTaskStatusArraySize, &ulTotalRunTime );
+
+        for( uxIdx = 0; uxIdx < uxNumTasksRunning; uxIdx++ )
+        {
+            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskA" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
+            {
+                xTaskARunning = pdTRUE;
+                xTaskARan = pdTRUE;
+            }
+
+            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskB" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
+            {
+                xTaskBRan = pdTRUE;
+            }
+
+            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskC" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
+            {
+                xTaskCRan = pdTRUE;
+            }
+        }
+
+        if( ( xTaskARunning == pdTRUE ) && ( xTaskBState > 0 ) && ( xTaskCRan == pdTRUE ) )
+        {
+            if( !( ( xTaskARunning == pdTRUE ) && ( xTaskBRan == pdTRUE ) ) )
+            {
+                xTestFailed = pdTRUE;
+            }
+            else
+            {
+                xTestPassed = pdTRUE;
+            }
+        }
+
+        ulTaskSwitchCount++;
+
+        if( ulTaskSwitchCount > 2048 )
+        {
+            /*sendReport("2k task swiches.\n\0", 0); */
+            xTestFailed = pdTRUE;
+        }
+    }
+}
+/*-----------------------------------------------------------*/
+
+static void fr06_validate_vTaskPreemptionDisable( void )
+{
+    xTaskCreateAffinitySet( vPrvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+                            mainTASK_A_PRIORITY, 0x2, &xTaskAHandler );
+
+    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_B_PRIORITY, &xTaskBHandler );
+
+    xTaskCreate( vPrvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_C_PRIORITY, &xTaskCHandler );
+
+    while( ( xTestPassed == pdFALSE ) && ( xTestFailed == pdFALSE ) )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
     }
 
-    vTaskDelay(pdMS_TO_TICKS(10));
-  }
+    TEST_ASSERT_TRUE( xTestPassed == pdTRUE );
+    TEST_ASSERT_TRUE( xTestFailed == pdFALSE );
 
-  TEST_ASSERT_TRUE(xTestPassed && !xTestFailed);
+    vTaskDelete( xTaskAHandler );
+    vTaskDelete( xTaskBHandler );
+    vTaskDelete( xTaskCHandler );
 }
+/*-----------------------------------------------------------*/
 
-static void prvTaskC(void *pvParameters) {
-  while (xTaskBState == 0) {
-    vPortBusyWaitMicroseconds((uint32_t)1);
-  }
-
-  vPortSerialLog("TaskC Past Guard\n\0");
-
-  UNITY_BEGIN();
-
-  RUN_TEST(fr06_validate_vTaskPreemptionDisable);
-
-  UNITY_END();
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
+static void vPrvTaskA( void * pvParameters )
+{
+    /* wait with preemption disabled */
+    vTaskPreemptionDisable( NULL );
+    xTaskAState++;
+    vPortBusyWaitMicroseconds( ( uint32_t ) 2000000 );
+    vTaskPreemptionEnable( NULL );
 }
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskB( void * pvParameters )
+{
+    xTaskBState++;
+
+    vPortSerialLog( "TaskB Entering busyWait...\n\0" );
+    vPortBusyWaitMicroseconds( ( uint32_t ) 2000000 );
+
+    /* idle the task */
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+    }
+}
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskC( void * pvParameters )
+{
+    int attempt;
+
+    while( xTaskBState == 0 )
+    {
+        vPortBusyWaitMicroseconds( ( uint32_t ) 1 );
+    }
+
+    for( attempt = 1; attempt < 25; attempt++ )
+    {
+        if( xTestPassed || xTestFailed )
+        {
+            break;
+        }
+
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+    }
+
+    /* idle the task */
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A start entry for test runner to run FR06.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr06_validate_vTaskPreemptionDisable );
+
+    UNITY_END();
+}
+/*-----------------------------------------------------------*/

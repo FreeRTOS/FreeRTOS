@@ -28,129 +28,136 @@
 
 /**
  * @file test.c
- * @brief Implements FR5 test functions for SMP on target testing.
+ * @brief The scheduler shall not schedule a task that is pinned to a specific core on any other core.
+ *
+ * Procedure:
+ *   -
+ *   -
+ *   -
+ * Expected:
+ *   -
  */
+
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
+/*-----------------------------------------------------------*/
 
 /* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
+ * as ( configMAX_PRIORITIES - 1 ). */
+#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+/*-----------------------------------------------------------*/
 
-static void prvTaskA(void *pvParameters);
-static void prvTaskB(void *pvParameters);
+static void vPrvTaskA( void * pvParameters );
+static void vPrvTaskB( void * pvParameters );
+static void fr05_validateTasksOnlyRunOnAssignedCores( void );
+/*-----------------------------------------------------------*/
 
 #if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
-#endif
+    #error Require two cores be configured for FreeRTOS
+#endif /* if configNUMBER_OF_CORES != 2 */
 
-TaskHandle_t taskA, taskB;
+#if configUSE_TASK_PREEMPTION_DISABLE != 1
+    #error configUSE_TASK_PREEMPTION_DISABLE shoud be 1 in this test case. Please check if testConfig.h is included.
+#endif /* if configUSE_CORE_AFFINITY != 0 */
+/*-----------------------------------------------------------*/
 
-void setup_test_fr5_001(void) {
-  xTaskCreateAffinitySet(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, 0x1, &taskA);
-
-  xTaskCreateAffinitySet(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, 0x2, &taskB);
-}
-
-/* Is run before every test, put unit init calls here. */
-void setUp(void)
-{
-}
-
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown(void)
-{
-}
-
-int main(void) {
-  vPortInitTestEnvironment();
-
-  setup_test_fr5_001();
-
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0;
-}
-
-static BaseType_t xTaskADone = pdFALSE;
+static TaskHandle_t xTaskBHandler;
+static BaseType_t xTaskBDone = pdFALSE;
 static BaseType_t xTaskAOnCorrectCore = pdTRUE;
 static BaseType_t xTaskBOnCorrectCore = pdTRUE;
+/*-----------------------------------------------------------*/
 
-static void prvTaskA(void *pvParameters) {
-  BaseType_t xCore;
-
-  uint32_t ulIter;
-
-  for(ulIter=1;ulIter < 25;ulIter++)
-  {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    xCore = portGET_CORE_ID();
-    if (xCore != 0)
-    {
-      xTaskAOnCorrectCore = pdFALSE;
-    }
-  }
-
-  xTaskADone = pdTRUE;
-
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
-}
-
-static void fr05_validateTasksOnlyRunOnAssignedCores(void) {
-  BaseType_t xCore;
-  uint32_t ulIter;
-
-  for(ulIter=1;ulIter < 25;ulIter++)
-  {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    xCore = portGET_CORE_ID();
-    if (xCore != 1)
-    {
-      xTaskBOnCorrectCore = pdFALSE;
-    }
-  }
-
-  while((xTaskADone == pdFALSE))
-  {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
-
-  TEST_ASSERT_TRUE((xTaskAOnCorrectCore == pdTRUE) && (xTaskBOnCorrectCore == pdTRUE));
-}
-
-static void prvTaskB(void *pvParameters)
+static void fr05_validateTasksOnlyRunOnAssignedCores( void )
 {
-  UNITY_BEGIN();
+    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
+    UBaseType_t uxOriginalTaskAffinity = vTaskCoreAffinityGet( NULL );
 
-  RUN_TEST(fr05_validateTasksOnlyRunOnAssignedCores);
+    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
+    vTaskCoreAffinitySet( NULL, 0x1 );
 
-  UNITY_END();
+    xTaskCreateAffinitySet( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+                            mainTASK_B_PRIORITY, 0x2, &xTaskBHandler );
 
-  // idle the task
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
+    taskYIELD();
+
+    vPrvTaskA( NULL );
+
+    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
+    vTaskCoreAffinitySet( NULL, uxOriginalTaskAffinity );
+
+    vTaskDelete( xTaskBHandler );
 }
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskA( void * pvParameters )
+{
+    BaseType_t xCore;
+
+    uint32_t ulIter;
+
+    for( ulIter = 1; ulIter < 25; ulIter++ )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        xCore = portGET_CORE_ID();
+
+        if( xCore != 0 )
+        {
+            xTaskAOnCorrectCore = pdFALSE;
+        }
+    }
+
+    while( ( xTaskBDone == pdFALSE ) )
+    {
+        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+    }
+
+    TEST_ASSERT_TRUE( xTaskAOnCorrectCore == pdTRUE );
+    TEST_ASSERT_TRUE( xTaskBOnCorrectCore == pdTRUE );
+}
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskB( void * pvParameters )
+{
+    BaseType_t xCore;
+    uint32_t ulIter;
+
+    for( ulIter = 1; ulIter < 25; ulIter++ )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        xCore = portGET_CORE_ID();
+
+        if( xCore != 1 )
+        {
+            xTaskBOnCorrectCore = pdFALSE;
+        }
+    }
+
+    xTaskBDone = pdTRUE;
+
+    /* idle the task */
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A start entry for test runner to run FR05.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr05_validateTasksOnlyRunOnAssignedCores );
+
+    UNITY_END();
+}
+/*-----------------------------------------------------------*/

@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(fr2_common INTERFACE)
 target_sources(fr2_common INTERFACE
+        ${CMAKE_CURRENT_LIST_DIR}/../common/testRunner.c
         test.c)
 target_include_directories(fr2_common INTERFACE
         ${CMAKE_CURRENT_LIST_DIR}

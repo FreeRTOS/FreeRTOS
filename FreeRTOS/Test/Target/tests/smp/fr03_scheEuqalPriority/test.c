@@ -28,165 +28,190 @@
 
 /**
  * @file test.c
- * @brief Implements FR3 test functions for SMP on target testing.
+ * @brief The scheduler shall schedule tasks of equal priority in a round robin fashion.
+ *
+ * Procedure:
+ *   -
+ *   -
+ *   -
+ * Expected:
+ *   -
  */
 
 /* Kernel includes. */
 
 #include "FreeRTOS.h" /* Must come first. */
-#include "queue.h"    /* RTOS queue related API prototypes. */
-#include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
-#include "timers.h"   /* Software timer related API prototypes. */
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "bsl.h"
 #include "unity.h" /* unit testing support functions */
+/*-----------------------------------------------------------*/
 
 /* Priorities at which the tasks are created.  The max priority can be specified
-as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
+ * as ( configMAX_PRIORITIES - 1 ). */
+#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define mainTASK_C_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+/*-----------------------------------------------------------*/
 
-static void prvTaskA(void *pvParameters);
-static void prvTaskB(void *pvParameters);
-static void prvTaskC(void *pvParameters);
+static void vPrvTaskA( void * pvParameters );
+static void vPrvTaskB( void * pvParameters );
+static void vPrvTaskC( void * pvParameters );
+static void vValidateResult( void );
+/*-----------------------------------------------------------*/
 
 #if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
-#endif
+    #error Require two cores be configured for FreeRTOS
+#endif /* if configNUMBER_OF_CORES != 2 */
+
+#if traceTASK_SWITCHED_IN != test_fr2TASK_SWITCHED_IN
+    #error Need to include testConfig.h in FreeRTOSConfig.h
+#endif /* if traceTASK_SWITCHED_IN != test_fr2TASK_SWITCHED_IN */
+/*-----------------------------------------------------------*/
 
 BaseType_t xTestFailed = pdFALSE;
 BaseType_t xTestPassed = pdFALSE;
+static TaskHandle_t xTaskAHandler;
+static TaskHandle_t xTaskBHandler;
+static TaskHandle_t xTaskCHandler;
+static BaseType_t xTaskARan = pdFALSE;
+static BaseType_t xTaskBRan = pdFALSE;
+static BaseType_t xTaskCRan = pdFALSE;
+/*-----------------------------------------------------------*/
 
-void test_fr3TASK_SWITCHED_IN(void) {
-  UBaseType_t xIdx, xNumTasksRunning;
-  TaskStatus_t taskStatus[16];
-  UBaseType_t xTaskStatusArraySize = 16;
-  unsigned long ulTotalRunTime;
-
-  static uint32_t ulTaskSwitchCount = 0;
-  static BaseType_t xTaskARan = pdFALSE;
-  static BaseType_t xTaskBRan = pdFALSE;
-  static BaseType_t xTaskCRan = pdFALSE;
-
-  if (((xTestPassed == pdFALSE) && (xTestFailed == pdFALSE)))
-  {
-    xNumTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, xTaskStatusArraySize, &ulTotalRunTime);
-
-    for(xIdx = 0; xIdx < xNumTasksRunning; xIdx++)
-    {
-      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskA") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
-      {
-        xTaskARan = pdTRUE;
-      }
-      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskB") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
-      {
-        xTaskBRan = pdTRUE;
-      }
-      if ((strcmp(taskStatus[xIdx].pcTaskName, "TaskC") == 0) && (taskStatus[xIdx].eCurrentState == eRunning))
-      {
-        xTaskCRan = pdTRUE;
-      }
-    }
-
-    if ((xTaskARan == pdTRUE) && (xTaskBRan == pdTRUE) && (xTaskCRan == pdTRUE))
-    {
-        xTestPassed = pdTRUE;
-    }
-     
-    ulTaskSwitchCount++;
-    if (ulTaskSwitchCount > 2048)
-    {
-      if ((xTaskARan == pdTRUE) && (xTaskBRan == pdTRUE) && (xTaskCRan == pdTRUE))
-      {
-        xTestPassed = pdTRUE;
-      } else {
-        xTestFailed = pdTRUE;
-      }
-    }
-  }
-}
-
-void setup_test_fr3_001(void) {
-  xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, NULL);
-
-  xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, NULL);
-
-  xTaskCreate(prvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_C_PRIORITY, NULL);
-}
-
-/* Is run before every test, put unit init calls here. */
-void setUp(void)
+void test_fr3TASK_SWITCHED_IN( void )
 {
-}
+    UBaseType_t xIdx, xNumTasksRunning;
+    TaskStatus_t taskStatus[ 16 ];
+    UBaseType_t xTaskStatusArraySize = 16;
+    unsigned long ulTotalRunTime;
 
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown(void)
-{
-} 
+    static uint32_t ulTaskSwitchCount = 0;
 
-int main(void) {
-  vPortInitTestEnvironment();
-
-  setup_test_fr3_001();
-
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
-
-  return 0; 
-}
-
-static void prvTaskA(void *pvParameters) {
-  // idle the task
-  for (;;) {
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
-}
-
-static void prvTaskB(void *pvParameters) {
-  // idle the task
-  for (;;) {
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
-}
-
-static void fr03_validateAllTasksHaveRun(void) {
-  BaseType_t xAttempt;
-
-  for(xAttempt=1; xAttempt<100; xAttempt++)
-  {
-    if ((xTestPassed == pdTRUE) || (xTestFailed == pdTRUE))
+    if( ( ( xTestPassed == pdFALSE ) && ( xTestFailed == pdFALSE ) ) )
     {
-      break;
+        xNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, xTaskStatusArraySize, &ulTotalRunTime );
+
+        for( xIdx = 0; xIdx < xNumTasksRunning; xIdx++ )
+        {
+            if( ( strcmp( taskStatus[ xIdx ].pcTaskName, "TaskA" ) == 0 ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
+            {
+                xTaskARan = pdTRUE;
+            }
+
+            if( ( strcmp( taskStatus[ xIdx ].pcTaskName, "TaskB" ) == 0 ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
+            {
+                xTaskBRan = pdTRUE;
+            }
+
+            if( ( strcmp( taskStatus[ xIdx ].pcTaskName, "TaskC" ) == 0 ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
+            {
+                xTaskCRan = pdTRUE;
+            }
+        }
+
+        if( ( xTaskARan == pdTRUE ) && ( xTaskBRan == pdTRUE ) && ( xTaskCRan == pdTRUE ) )
+        {
+            xTestPassed = pdTRUE;
+        }
+
+        ulTaskSwitchCount++;
+
+        if( ulTaskSwitchCount > 2048 )
+        {
+            if( ( xTaskARan == pdTRUE ) && ( xTaskBRan == pdTRUE ) && ( xTaskCRan == pdTRUE ) )
+            {
+                xTestPassed = pdTRUE;
+            }
+            else
+            {
+                xTestFailed = pdTRUE;
+            }
+        }
+    }
+}
+/*-----------------------------------------------------------*/
+
+static void vValidateResult( void )
+{
+    while( ( xTestPassed != pdTRUE ) && ( xTestFailed != pdTRUE ) )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
     }
 
-    vPortBusyWaitMicroseconds((uint32_t)10000);
-  }
+    /* xTestPassed and xTestFailed set by trace hook: test_fr2TASK_SWITCHED_IN */
 
-  TEST_ASSERT_TRUE(((xTestPassed == pdTRUE) && (xTestFailed == pdFALSE)));
+    TEST_ASSERT_FALSE( xTestFailed == pdTRUE );
+    TEST_ASSERT_TRUE( xTestPassed == pdTRUE );
 }
+/*-----------------------------------------------------------*/
 
-static void prvTaskC(void *pvParameters) {
+void fr03_validateAllTasksHaveRun( void )
+{
+    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
 
-  UNITY_BEGIN();
+    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
 
-  RUN_TEST(fr03_validateAllTasksHaveRun);
+    xTaskCreate( vPrvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_A_PRIORITY, &xTaskAHandler );
 
-  UNITY_END();
+    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_B_PRIORITY, &xTaskBHandler );
 
-  // idle the task
-  for (;;) {
-    vPortBusyWaitMicroseconds((uint32_t)100000);
-  }
+    xTaskCreate( vPrvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
+                 mainTASK_C_PRIORITY, &xTaskCHandler );
+
+    vValidateResult();
+
+    vTaskDelete( xTaskAHandler );
+    vTaskDelete( xTaskBHandler );
+    vTaskDelete( xTaskCHandler );
+
+    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
 }
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskA( void * pvParameters )
+{
+    /* idle the task */
+    for( ; ; )
+    {
+        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+    }
+}
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskB( void * pvParameters )
+{
+    /* idle the task */
+    for( ; ; )
+    {
+        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+    }
+}
+/*-----------------------------------------------------------*/
+
+static void vPrvTaskC( void * pvParameters )
+{
+    /* idle the task */
+    for( ; ; )
+    {
+        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A start entry for test runner to run FR03.
+ */
+void vTestRunner( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( fr03_validateAllTasksHaveRun );
+
+    UNITY_END();
+}
+/*-----------------------------------------------------------*/

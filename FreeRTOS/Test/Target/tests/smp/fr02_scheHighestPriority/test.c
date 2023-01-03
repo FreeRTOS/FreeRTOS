@@ -206,7 +206,7 @@ static void vPrvTaskC( void * pvParameters )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run FR10.
+ * @brief A start entry for test runner to run FR02.
  */
 void vTestRunner( void )
 {

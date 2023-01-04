@@ -57,7 +57,7 @@
 /* Priorities at which the tasks are created.  The max priority can be specified
  * as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 2 )
-#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
 #define mainTASK_C_PRIORITY    ( tskIDLE_PRIORITY + 1 )
 
 static void vPrvTaskA( void * pvParameters );
@@ -68,116 +68,65 @@ static void vPrvTaskC( void * pvParameters );
 #if configNUMBER_OF_CORES != 2
     #error Require two cores be configured for FreeRTOS
 #endif /* if configNUMBER_OF_CORES != 2 */
-
-#if traceTASK_SWITCHED_IN != test_fr9TASK_SWITCHED_IN
-    #error Need to include testConfig.h in FreeRTOSConfig.h
-#endif /* if traceTASK_SWITCHED_IN != test_fr2TASK_SWITCHED_IN */
 /*-----------------------------------------------------------*/
 
 static TaskHandle_t xTaskAHandler;
 static TaskHandle_t xTaskBHandler;
 static TaskHandle_t xTaskCHandler;
-static BaseType_t xTestFailed = pdFALSE;
-static BaseType_t xAllTasksHaveRun = pdFALSE;
-static BaseType_t xTaskAHasEnteredCriticalSection = pdFALSE;
-static BaseType_t xTaskAHasExitedCriticalSection = pdFALSE;
-static BaseType_t xTaskBHasEnteredCriticalSection = pdFALSE;
-
-static uint32_t ulTaskSwitchCount = 0;
-static BaseType_t xTaskARan = pdFALSE;
-static BaseType_t xTaskBRan = pdFALSE;
-static BaseType_t xTaskCRan = pdFALSE;
-TaskHandle_t taskA, taskB;
-/*-----------------------------------------------------------*/
-
-void test_fr9TASK_SWITCHED_IN( void )
-{
-    UBaseType_t uxIdx, uxNumTasksRunning;
-    TaskStatus_t taskStatus[ 16 ];
-    UBaseType_t uxTaskStatusArraySize = 16;
-    unsigned long ulTotalRunTime;
-
-    if( ( ( xAllTasksHaveRun == pdFALSE ) && ( xTestFailed == pdFALSE ) ) )
-    {
-        uxNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, uxTaskStatusArraySize, &ulTotalRunTime );
-
-        for( uxIdx = 0; uxIdx < uxNumTasksRunning; uxIdx++ )
-        {
-            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskA" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
-            {
-                xTaskARan = pdTRUE;
-            }
-
-            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskB" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
-            {
-                xTaskBRan = pdTRUE;
-            }
-
-            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskC" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
-            {
-                xTaskCRan = pdTRUE;
-            }
-        }
-
-        if( ( xTaskARan == pdTRUE ) && ( xTaskCRan == pdTRUE ) && ( xTaskBRan == pdTRUE ) )
-        {
-            xAllTasksHaveRun = pdTRUE;
-        }
-
-        ulTaskSwitchCount++;
-
-        if( ulTaskSwitchCount > 1500 )
-        {
-            xTestFailed = pdTRUE;
-        }
-    }
-}
+static BaseType_t xTaskACore = -1;
+static BaseType_t xTaskBCore = -1;
+static BaseType_t xTaskCOnCorrectCore = pdFALSE;
+volatile static BaseType_t xTaskAHasEnteredCriticalSection = pdFALSE;
+volatile static BaseType_t xTaskBIsEnteringCriticalSection = pdFALSE;
 /*-----------------------------------------------------------*/
 
 static void fr09_validateAllTasksHaveRun( void )
 {
-    xTaskCreateAffinitySet( vPrvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-                            mainTASK_A_PRIORITY, 0x2, &xTaskAHandler );
+    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
+
+    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
 
     xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
                  mainTASK_B_PRIORITY, &xTaskBHandler );
 
     xTaskCreate( vPrvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
                  mainTASK_C_PRIORITY, &xTaskCHandler );
+                 
+    taskYIELD();
 
-    while( !xAllTasksHaveRun )
-    {
-        vTaskDelay( pdMS_TO_TICKS( 100 ) );
-    }
+    /* Run current task as Task A. */
+    vPrvTaskA( NULL );
 
-    TEST_ASSERT_TRUE( xTaskBHasEnteredCriticalSection == pdFALSE );
+    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
 }
 /*-----------------------------------------------------------*/
 
 static void vPrvTaskA( void * pvParameters )
 {
+    xTaskACore = portGET_CORE_ID();
+
     taskENTER_CRITICAL();
     xTaskAHasEnteredCriticalSection = pdTRUE;
-    vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
-    xTaskNotify( xTaskBHandler, 0, eNoAction );
-    vPortBusyWaitMicroseconds( ( uint32_t ) 10000000 );
-    taskEXIT_CRITICAL();
-    xTaskAHasExitedCriticalSection = pdTRUE;
-
-    /* idle the task */
-    for( ; ; )
+    while( xTaskBIsEnteringCriticalSection == pdFALSE )
     {
-        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 1000 );
     }
+    vPortBusyWaitMicroseconds( ( uint32_t ) 10000 );
+    vTaskSuspend( xTaskBHandler );
+    taskEXIT_CRITICAL();
+    vPortBusyWaitMicroseconds( ( uint32_t ) 10000 );
+
+    TEST_ASSERT_TRUE( xTaskCOnCorrectCore == pdTRUE );
 }
 /*-----------------------------------------------------------*/
 
 static void vPrvTaskB( void * pvParameters )
 {
-    vTaskDelay( pdMS_TO_TICKS( 10 ) );
+    xTaskBCore = portGET_CORE_ID();
+    while( xTaskAHasEnteredCriticalSection == pdFALSE );
 
+    xTaskBIsEnteringCriticalSection = pdTRUE;
     taskENTER_CRITICAL();
-    xTaskBHasEnteredCriticalSection = pdTRUE;
     vPortBusyWaitMicroseconds( ( uint32_t ) 8000000 );
     taskEXIT_CRITICAL();
 
@@ -191,7 +140,7 @@ static void vPrvTaskB( void * pvParameters )
 
 static void vPrvTaskC( void * pvParameters )
 {
-    vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
+    xTaskCOnCorrectCore = portGET_CORE_ID() == xTaskBCore? pdTRUE:pdFALSE;
 
     /* idle the task */
     for( ; ; )

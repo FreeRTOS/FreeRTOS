@@ -34,8 +34,8 @@
  * Procedure:
  *   - Create tasks A, B, & C. With A having a priority of 2 and B & C having a priority of 1
  *   - Task A is pinned to the second core.
- *   - Task A enters a critical section, then busy waits for 250ms, then calls xTaskNotify
- *     to attempt to interrupt task B, and then busy waits for 10sec.
+ *   - Task A enters a critical section, then busy waits for 250ms, then calls vTaskSuspend
+ *     to attempt to unschedule task B, and then busy waits for 10sec.
  *   - Task B waits 10ms and then attempts to enter a critical section
  *   - Task C executes a busy wait for 250ms
  *   - traceTASK_SWITCHED_IN is defined in order to validate scheduler behavior.
@@ -159,7 +159,8 @@ static void vPrvTaskA( void * pvParameters )
     taskENTER_CRITICAL();
     xTaskAHasEnteredCriticalSection = pdTRUE;
     vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
-    xTaskNotify( xTaskBHandler, 0, eNoAction );
+    // xTaskNotify( xTaskBHandler, 0, eNoAction );
+    vTaskSuspend( xTaskBHandler );
     vPortBusyWaitMicroseconds( ( uint32_t ) 10000000 );
     taskEXIT_CRITICAL();
     xTaskAHasExitedCriticalSection = pdTRUE;

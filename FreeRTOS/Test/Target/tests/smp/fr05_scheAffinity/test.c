@@ -31,11 +31,12 @@
  * @brief The scheduler shall not schedule a task that is pinned to a specific core on any other core.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create two tasks A & B, each pinned to a specific and different core.
+ *   - Each task will iterate 25 times, with a 10ms yielding delay bectween each
+ *     test iteration. The test will confirm it is running on the core it was pinned
+ *     to.
  * Expected:
- *   -
+ *   - That both tasks will only run on the cores that they were pinned to.
  */
 
 /* Kernel includes. */

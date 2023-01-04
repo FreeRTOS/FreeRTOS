@@ -31,11 +31,11 @@
  * @brief The scheduler shall correctly schedule the highest priority ready tasks.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create tasks A, B, & C, with unique and ascending priorities respectively.
+ *   - All three tasks are alternating between a busy loop and a 10ms yielding delay.
+ *   - Use the traceTASK_SWITCHED_IN() hook to observe scheduler behavior.
  * Expected:
- *   -
+ *   - Validate that when A, the lowest priority task runs, the other two tasks have already run.
  */
 
 /* Kernel includes. */

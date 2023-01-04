@@ -31,11 +31,12 @@
  * @brief The scheduler shall schedule tasks of equal priority in a round robin fashion.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create tasks A, B, & C with equal priorities.
+ *   - All three tasks are running busyloops
  * Expected:
- *   -
+ *   - All three tasks get a chance to run. The test doesn't currently strictly 
+ *     validate the round-robin nature of the scheduler as other system tasks,
+ *     possibly target specicfic come and go complicating on-target validation.
  */
 
 /* Kernel includes. */

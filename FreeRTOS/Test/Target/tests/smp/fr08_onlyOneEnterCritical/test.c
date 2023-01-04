@@ -31,11 +31,15 @@
  * @brief Only one task/ISR shall be able to enter critical section at a time.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create tasks A & B, B having a higher priority.
+ *   - Task B holding a critical section for 10ms in a busy loop every 10ms yieldable delay.
+ *   - Task A registeering a software interrupt and triggering it with vPortTriggerSoftwareInterrupt
+ *   - The software interrupt triggered by task A itself then holding a critical section for 10ms
+ *     using a busy lop. It doing ding this 10 times and entering adn existing the critical section
+ *     each time.
  * Expected:
- *   -
+ *   - That the software interrupt critical section will never observe taskB also being
+ *     in the critical section.
  */
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */

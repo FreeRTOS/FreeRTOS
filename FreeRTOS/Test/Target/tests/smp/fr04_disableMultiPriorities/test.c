@@ -32,11 +32,13 @@
  *        lower priority task and a higher priority task simultaneously.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create tasks A & B with task B having a higher priority.
+ *   - disable configRUN_MULTIPLE_PRIORITIES along with configUSE_CORE_AFFINITY
+ *     in testConfig.h
+ *   - Configure task B to alternate between a busyloop and a 10ms yielding delay
  * Expected:
- *   -
+ *   - Have task A check 25 times, with 10ms delay between each attempt that
+ *     task B is not running.
  */
 
 /* Kernel includes. */

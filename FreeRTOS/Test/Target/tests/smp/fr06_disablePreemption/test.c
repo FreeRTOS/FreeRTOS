@@ -31,11 +31,17 @@
  * @brief The scheduler shall not preempt a task for which preemption is disabled.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create tasks A, B, & C, each with equal priority.
+ *   - Disable preemption for task A and busy loop for 2 seconds
+ *     with it still disabled.
+ *   - Task B will iterate between a busyloop and a yielding 10ms delay.
+ *   - The traceTASK_SWITCHED_IN function is bound in order to track
+ *     scheduler activity.
+ *   - Task C will, between every 10ms yielding delay check the status
+ *     as reported by the traceTASK_SWITCHED_IN function.
  * Expected:
- *   -
+ *   - That Task A will not be interrupted for the 2 seconds that it
+ *     has preemption disabled.
  */
 
 /* Kernel includes. */

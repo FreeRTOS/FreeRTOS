@@ -31,11 +31,15 @@
  * @brief Context switch shall not happen when the scheduler is suspended.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create tasks A & B, with A having a higher priority.
+ *   - Use a testConfgi with configRUN_MULTIPLE_PRIORITIES set to 0
+ *   - Task A calls vTaskSuspectAll, incresases a state vairable and
+ *     then increases the priority of task B.
+ *   - Task B is programmed to increase a state variable
  * Expected:
- *   -
+ *   - Validate that before task A re-enables the scheduler, task B
+ *     has not run by checking that it has not incremented its internal
+ *     state variable.
  */
 
 /* Kernel includes. */
@@ -107,7 +111,7 @@ static void vPrvTaskA( void * pvParameters )
 
     ulTaskAState++;
 
-    vTaskPrioritySet( xTaskBHandler, mainTASK_A_PRIORITY + 1 );
+    vTaskPrioritySet( xTaskBHandler, mainTASK_B_PRIORITY + 1 );
 
     while( ulTaskBState == 0 )
     {
@@ -134,7 +138,7 @@ static void vPrvTaskB( void * pvParameters )
 {
     while( ulTaskAState == 0 )
     {
-        vTaskDelay( pdMS_TO_TICKS( 1 ) );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 10000 );
     }
 
     ulTaskBState++;
@@ -142,7 +146,7 @@ static void vPrvTaskB( void * pvParameters )
     /* idle the task */
     for( ; ; )
     {
-        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 10000 );
     }
 }
 /*-----------------------------------------------------------*/

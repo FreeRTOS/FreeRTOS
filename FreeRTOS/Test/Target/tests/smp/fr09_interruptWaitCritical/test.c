@@ -32,11 +32,16 @@
  *        it shall relinquish the core instead of continuing to wait to enter critical section.
  *
  * Procedure:
- *   -
- *   -
- *   -
+ *   - Create tasks A, B, & C. With A having a priority of 2 and B & C having a priority of 1
+ *   - Task A is pinned to the second core.
+ *   - Task A enters a critical section, then busy waits for 250ms, then calls xTaskNotify
+ *     to attempt to interrupt task B, and then busy waits for 10sec.
+ *   - Task B waits 10ms and then attempts to enter a critical section
+ *   - Task C executes a busy wait for 250ms
+ *   - traceTASK_SWITCHED_IN is defined in order to validate scheduler behavior.
  * Expected:
- *   -
+ *   - The xTaskNotify will cause TaskB which was waiting to enter a critical section to
+ *     yield to taskC which has equal priority.
  */
 
 /* Kernel includes. */

@@ -116,8 +116,6 @@ PICO_INCLUDE_FLAGS=(
 
 declare -a RP2040_INCLUDE_FLAGS
 RP2040_INLCUDE_FLAGS=(
-    -I"$SMP_DEMO_DIR/FreeRTOS/Demo/CORTEX_M0+_RP2040/OnEitherCore"
-    -I"$SMP_DEMO_DIR/FreeRTOS/Demo/CORTEX_M0+_RP2040/build/generated/pico_base"
     -I"$VF_PROOF_BASE_DIR/portable/ThirdParty/GCC/RP2040/include"
     -I"$VF_PROOF_BASE_DIR/FreeRTOS/Source/portable/ThirdParty/GCC/RP2040"
 )

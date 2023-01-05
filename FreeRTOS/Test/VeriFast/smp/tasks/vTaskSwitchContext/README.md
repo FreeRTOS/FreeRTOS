@@ -168,12 +168,10 @@ FreeRTOS/FreeRTOS
     │   Contains config files for the proof. The proof assumes a setup for
     │   RP2040.
     │
-    ├── sdks/pico-sdk
-    │   Contains the Pico sdk referenced by the proof setup.
-    │   Some files are annotated with VeriFast contracts. Further, they contain
-    │   code VeriFast cannot parse and that we had to adapt. Hence, we currently
-    │   use a fork of the Pico sdk repository until the corresponding VeriFast
-    │   issues have been fixed.
+    ├── pico-sdk
+    │   Contains headers from the Pico sdk referenced by the proof setup.
+    │   Some files contain parts we had to rewrite so that VeriFast would parse
+    │   them.
     │
     ├── src
     │   Contains the source  files used by our proof.

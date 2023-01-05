@@ -76,7 +76,3 @@
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4
 	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git
-[submodule "FreeRTOS/Test/VeriFast/smp/tasks/vTaskSwitchContext/sdks/pico-sdk.git"]
-	path = FreeRTOS/Test/VeriFast/smp/tasks/vTaskSwitchContext/sdks/pico-sdk
-	url = https://github.com/Tobias-internship-AWS-2022/pico-sdk.git
-	branch = verifast

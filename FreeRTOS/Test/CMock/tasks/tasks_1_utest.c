@@ -1652,7 +1652,7 @@ void test_vTaskDelay_success_gt_0_yield_not_called( void )
 
 /* Test the scenario that a higher priority task is added to xPendingReadyList when
  * current task calls xTaskDelay. Scheduler yields for the higher priority task in
- * vTaskResumeAll function. */
+ * xTaskResumeAll function. */
 void test_vTaskDelay_success_gt_0_already_yielded( void )
 {
     TaskHandle_t task_handle;

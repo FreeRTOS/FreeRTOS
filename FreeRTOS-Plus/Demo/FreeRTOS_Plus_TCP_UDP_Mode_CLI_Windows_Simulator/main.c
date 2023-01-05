@@ -264,3 +264,84 @@ void vApplicationMallocFailedHook( void )
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
 /*-----------------------------------------------------------*/
 
+void vApplicationIPNetworkEventHook(eIPCallbackEvent_t eNetworkEvent)
+{
+        uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
+        char cBuffer[16];
+        static BaseType_t xTasksAlreadyCreated = pdFALSE;
+
+        /* If the network has just come up...*/
+        if (eNetworkEvent == eNetworkUp)
+        {
+            if (xTasksAlreadyCreated == pdFALSE)
+            {
+                /* See the comments above the definitions of these pre-processor
+                 * macros at the top of this file for a description of the individual
+                 * demo tasks. */
+#if ( mainCREATE_UDP_CLI_TASKS == 1 )
+                {
+                    vStartUDPCommandInterpreterTask(configMINIMAL_STACK_SIZE, mainUDP_CLI_PORT_NUMBER, mainUDP_CLI_TASK_PRIORITY);
+                }
+#endif
+#if ( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
+                {
+                    vStartSimpleUDPClientServerTasks(configMINIMAL_STACK_SIZE, mainSIMPLE_CLIENT_SERVER_PORT, mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY);
+                }
+#endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
+
+#if ( mainCREATE_UDP_ECHO_TASKS == 1 )
+                {
+                    vStartEchoClientTasks(mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY);
+                }
+#endif
+
+                xTasksAlreadyCreated = pdTRUE;
+            }
+            /* Print out the network configuration, which may have come from a DHCP
+             * server. */
+          
+            FreeRTOS_GetEndPointConfiguration(&ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints);
+            FreeRTOS_inet_ntoa(ulIPAddress, cBuffer);
+            FreeRTOS_printf(("\r\n\r\nIP Address: %s\r\n", cBuffer));
+
+            FreeRTOS_inet_ntoa(ulNetMask, cBuffer);
+            FreeRTOS_printf(("Subnet Mask: %s\r\n", cBuffer));
+
+            FreeRTOS_inet_ntoa(ulGatewayAddress, cBuffer);
+            FreeRTOS_printf(("Gateway Address: %s\r\n", cBuffer));
+
+            FreeRTOS_inet_ntoa(ulDNSServerAddress, cBuffer);
+            FreeRTOS_printf(("DNS Server Address: %s\r\n\r\n\r\n", cBuffer));
+        }
+}
+/*-----------------------------------------------------------*/
+
+/*
+ * Callback that provides the inputs necessary to generate a randomized TCP
+ * Initial Sequence Number per RFC 6528.  THIS IS ONLY A DUMMY IMPLEMENTATION
+ * THAT RETURNS A PSEUDO RANDOM NUMBER SO IS NOT INTENDED FOR USE IN PRODUCTION
+ * SYSTEMS.
+ */
+extern uint32_t ulApplicationGetNextSequenceNumber(uint32_t ulSourceAddress,
+    uint16_t usSourcePort,
+    uint32_t ulDestinationAddress,
+    uint16_t usDestinationPort)
+{
+    (void)ulSourceAddress;
+    (void)usSourcePort;
+    (void)ulDestinationAddress;
+    (void)usDestinationPort;
+
+    return uxRand();
+}
+
+/*
+ * Supply a random number to FreeRTOS+TCP stack.
+ * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
+ * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
+ */
+BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber)
+{
+    *(pulNumber) = uxRand();
+    return pdTRUE;
+}

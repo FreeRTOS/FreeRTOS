@@ -80,3 +80,7 @@
 	path = FreeRTOS/Test/VeriFast/smp/tasks/vTaskSwitchContext/demos/FreeRTOS-SMP-Demos
 	url = https://github.com/Tobias-internship-AWS-2022/FreeRTOS-SMP-Demos.git
 	branch = verifast
+[submodule "FreeRTOS/Test/VeriFast/smp/tasks/vTaskSwitchContext/sdks/pico-sdk.git"]
+	path = FreeRTOS/Test/VeriFast/smp/tasks/vTaskSwitchContext/sdks/pico-sdk
+	url = https://github.com/Tobias-internship-AWS-2022/pico-sdk.git
+	branch = verifast

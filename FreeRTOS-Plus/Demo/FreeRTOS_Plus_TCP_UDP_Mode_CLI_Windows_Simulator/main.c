@@ -297,11 +297,17 @@ void vApplicationIPNetworkEventHook(eIPCallbackEvent_t eNetworkEvent)
 
                 xTasksAlreadyCreated = pdTRUE;
             }
-            /* Print out the network configuration, which may have come from a DHCP
-             * server. */
-          
-            FreeRTOS_GetEndPointConfiguration(&ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints);
-            FreeRTOS_inet_ntoa(ulIPAddress, cBuffer);
+        /* Print out the network configuration, which may have come from a DHCP
+         * server. */
+
+        /* Using FREERTOS_PLUS_TCP_VERSION as the susbstitute of the 
+        downward compatibility*/
+
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+            FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
+#else
+            FreeRTOS_GetAddressConfiguration(&ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress);
+#endif
             FreeRTOS_printf(("\r\n\r\nIP Address: %s\r\n", cBuffer));
 
             FreeRTOS_inet_ntoa(ulNetMask, cBuffer);

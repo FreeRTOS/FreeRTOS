@@ -451,10 +451,8 @@ void vApplicationTickHook(void) {
     might be preferable to use a direct to task notification,
     which will be faster and use less RAM. */
     if (toggle) {
-      vPortClearPin(LED_PIN);
       toggle = false;
     } else {
-      vPortSetPin(LED_PIN);
       toggle = true;
     }
 

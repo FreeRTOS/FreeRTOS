@@ -1,5 +1,5 @@
-#ifndef _BOARD_SUPPORT_LIBRARY_H
-#define _BOARD_SUPPORT_LIBRARY_H
+#ifndef _PICO_BOARD_SUPPORT_LIBRARY_H
+#define _PICO_BOARD_SUPPORT_LIBRARY_H
 
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
@@ -18,8 +18,6 @@
            // time-sycned source but it will be relative to something
 
 
-#define LED_PIN ((int32_t)PICO_DEFAULT_LED_PIN)
-#define GPIO0_PIN (2)
 #define MAX_CORES (2)
 
 extern char pcTestPassedString[];
@@ -30,8 +28,6 @@ extern size_t xTestFailedStringLen;
 typedef void (* SoftwareInterruptHandler_t)(void);
 
 extern void vPortInitTestEnvironment(void);
-extern void vPortSetPin(int32_t lPinNum);
-extern void vPortClearPin(int32_t lPinNum);
 extern void vPortDelayMs(uint32_t ulMilliseconds);
 extern void vPortBusyWaitMicroseconds(uint32_t ulMicroseconds);
 extern uint64_t uyPortGetCPUTime(void);

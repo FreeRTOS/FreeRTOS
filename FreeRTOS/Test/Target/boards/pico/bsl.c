@@ -17,22 +17,9 @@ size_t xTestFailedStringLen = sizeof(pcTestFailedString) / sizeof(char);
 
 void vPortInitTestEnvironment(void) {
   /* Setup LED I/O */
-  gpio_init(LED_PIN);
-  gpio_set_dir(LED_PIN, GPIO_OUT);
-  gpio_set_irq_enabled(LED_PIN,
-    GPIO_IRQ_LEVEL_LOW |
-    GPIO_IRQ_LEVEL_HIGH |
-    GPIO_IRQ_EDGE_FALL |
-    GPIO_IRQ_EDGE_RISE,
-    false);
-
-  /* Setup Output on GPIO0 */
-  gpio_init(GPIO0_PIN);
-  // gpio_set_function(GPIO0_PIN, GPIO_FUNC_NULL);
-  gpio_set_dir(GPIO0_PIN, GPIO_OUT);
-  gpio_set_slew_rate(GPIO0_PIN, GPIO_SLEW_RATE_FAST);
-  gpio_set_drive_strength(GPIO0_PIN, GPIO_DRIVE_STRENGTH_2MA);
-  gpio_set_irq_enabled(GPIO0_PIN,
+  gpio_init(PICO_DEFAULT_LED_PIN);
+  gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+  gpio_set_irq_enabled(PICO_DEFAULT_LED_PIN,
     GPIO_IRQ_LEVEL_LOW |
     GPIO_IRQ_LEVEL_HIGH |
     GPIO_IRQ_EDGE_FALL |
@@ -43,11 +30,9 @@ void vPortInitTestEnvironment(void) {
   stdio_init_all();
   while (!stdio_usb_connected())
   {
-    vPortSetPin(LED_PIN);
-    vPortSetPin(GPIO0_PIN);
+    gpio_put(PICO_DEFAULT_LED_PIN, 1);
     sleep_ms(250);
-    vPortClearPin(LED_PIN);
-    vPortClearPin(GPIO0_PIN);
+    gpio_put(PICO_DEFAULT_LED_PIN, 0);
     sleep_ms(250);
   }
 
@@ -55,10 +40,6 @@ void vPortInitTestEnvironment(void) {
 }
 
 void vPortSerialLog(char *pcBuffer) { printf("%s", pcBuffer); stdio_flush(); }
-
-void vPortSetPin(int32_t lPinNum) { gpio_put((int)lPinNum, 1); }
-
-void vPortClearPin(int32_t lPinNum) { gpio_put((int)lPinNum, 0); }
 
 void vPortDelayMs(uint32_t ulMilliseconds) { sleep_ms(ulMilliseconds); }
 

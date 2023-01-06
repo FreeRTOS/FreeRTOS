@@ -86,4 +86,10 @@ void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState);
  */
 void vSmpTestTask( void *pvParameters );
 
+/**
+ * @brief Set the core ID returned by portGET_CORE_ID()
+ */
+void vSetCurrentCore( BaseType_t xCoreID );
+
+
 #endif /* SMP_UTEST_COMMON_H */

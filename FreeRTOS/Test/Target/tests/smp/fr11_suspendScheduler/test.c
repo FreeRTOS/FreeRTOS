@@ -32,7 +32,7 @@
  *
  * Procedure:
  *   - Create tasks A & B, with A having a higher priority.
- *   - Use a testConfgi with configRUN_MULTIPLE_PRIORITIES set to 0
+ *   - Use a testConfig with configRUN_MULTIPLE_PRIORITIES set to 0
  *   - Task A calls vTaskSuspectAll, incresases a state vairable and
  *     then increases the priority of task B.
  *   - Task B is programmed to increase a state variable

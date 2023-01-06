@@ -128,12 +128,19 @@ void test_fr6TASK_SWITCHED_IN(void) {
       }
     }
 
-    if ((xTaskARunning == pdTRUE) && (xTaskBState > 0) &&
-        (xTaskCRan == pdTRUE)) {
-      if (!((xTaskARunning == pdTRUE) && (xTaskBRan == pdTRUE))) {
-        xTestFailed = pdTRUE;
-      } else {
-        xTestPassed = pdTRUE;
+    if ((xTaskAState == 1) && (xTaskARunning == pdFALSE))
+    {
+      xTestFailed = true;
+    } else
+    {
+      if ((xTaskARunning == pdTRUE) && (xTaskBState > 0) &&
+          (xTaskCRan == pdTRUE))
+      {
+        if (!((xTaskARunning == pdTRUE) && (xTaskBRan == pdTRUE))) {
+          xTestFailed = pdTRUE;
+        } else {
+          xTestPassed = pdTRUE;
+        }
       }
     }
 
@@ -176,6 +183,7 @@ static void vPrvTaskA(void *pvParameters) {
   vTaskPrioritySet(NULL, mainTASK_A_PRIORITY - 1);
   xTaskAState++;
   vPortBusyWaitMicroseconds((uint32_t)2000000);
+  xTaskAState++;
   vTaskPreemptionEnable(NULL);
 }
 /*-----------------------------------------------------------*/

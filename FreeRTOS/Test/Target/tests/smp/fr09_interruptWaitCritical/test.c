@@ -56,8 +56,8 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
  * as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 2 )
-#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 3 )
+#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
 #define mainTASK_C_PRIORITY    ( tskIDLE_PRIORITY + 1 )
 
 static void vPrvTaskA( void * pvParameters );
@@ -87,7 +87,6 @@ static uint32_t ulTaskSwitchCount = 0;
 static BaseType_t xTaskARan = pdFALSE;
 static BaseType_t xTaskBRan = pdFALSE;
 static BaseType_t xTaskCRan = pdFALSE;
-TaskHandle_t taskA, taskB;
 /*-----------------------------------------------------------*/
 
 void test_fr9TASK_SWITCHED_IN( void )
@@ -159,7 +158,6 @@ static void vPrvTaskA( void * pvParameters )
     taskENTER_CRITICAL();
     xTaskAHasEnteredCriticalSection = pdTRUE;
     vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
-    // xTaskNotify( xTaskBHandler, 0, eNoAction );
     vTaskSuspend( xTaskBHandler );
     vPortBusyWaitMicroseconds( ( uint32_t ) 10000000 );
     taskEXIT_CRITICAL();
@@ -175,8 +173,6 @@ static void vPrvTaskA( void * pvParameters )
 
 static void vPrvTaskB( void * pvParameters )
 {
-    vTaskDelay( pdMS_TO_TICKS( 10 ) );
-
     taskENTER_CRITICAL();
     xTaskBHasEnteredCriticalSection = pdTRUE;
     vPortBusyWaitMicroseconds( ( uint32_t ) 8000000 );
@@ -192,12 +188,10 @@ static void vPrvTaskB( void * pvParameters )
 
 static void vPrvTaskC( void * pvParameters )
 {
-    vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
-
-    /* idle the task */
+    /* taskC busy loops */
     for( ; ; )
     {
-        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
     }
 }
 /*-----------------------------------------------------------*/

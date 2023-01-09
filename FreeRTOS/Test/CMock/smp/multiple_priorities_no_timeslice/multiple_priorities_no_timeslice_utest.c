@@ -3053,7 +3053,7 @@ void test_task_yield_run_wait_longest( void )
  * Priority – 1         Priority – 1        Priority – 1
  * State - Ready	    State - Running 	State - Running
  */
-void test_task_yield_run_equal_priority( void )
+void test_task_yield_run_equal_priority_new_task( void )
 {
     TaskHandle_t xTaskHandles[ ( configNUMBER_OF_CORES + 1 ) ] = { NULL };
     uint32_t i;

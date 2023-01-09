@@ -158,7 +158,7 @@
          * server is configured by the constants configECHO_SERVER_ADDR0 to
          * configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
         xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-        xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+        xEchoServerAddress.sin_addr.xIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
                                                                 configECHO_SERVER_ADDR1,
                                                                 configECHO_SERVER_ADDR2,
                                                                 configECHO_SERVER_ADDR3 );

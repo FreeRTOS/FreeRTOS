@@ -50,22 +50,22 @@
 
 /*-----------------------------------------------------------*/
 
-/* Delcare #defines used in this file here. */
+/* Declare #defines used in this file here. */
 
 /*-----------------------------------------------------------*/
 
-/* Delcare local functions used in this file here. */
+/* Declare local functions used in this file here. */
 
 /*-----------------------------------------------------------*/
 
-/* Delcare local variables used in this file here. */
+/* Declare local variables used in this file here. */
 
 /*-----------------------------------------------------------*/
 
 /* Runs before every test, put init calls here. */
 void setUp( void )
 {
-    /* Create FreRTOS resources required for the test. */
+    /* Create FreeRTOS resources required for the test. */
 }
 /*-----------------------------------------------------------*/
 

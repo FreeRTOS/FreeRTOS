@@ -49,7 +49,7 @@
 /*-----------------------------------------------------------*/
 
 static void prvTestRunnerTask( void * pvParameters );
-extern void runMultipleTasksRunningTest( void );
+extern void Test_MultipleTasksRunning( void );
 /*-----------------------------------------------------------*/
 
 /**
@@ -62,7 +62,11 @@ static void prvTestRunnerTask( void * pvParameters )
     ( void ) pvParameters;
 
     /* Execute test case provided in test.c */
-    runMultipleTasksRunningTest();
+    UNITY_BEGIN();
+
+    RUN_TEST( Test_MultipleTasksRunning );
+
+    UNITY_END();
 
     for( ; ; )
     {
@@ -129,6 +133,18 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
+/* Runs before every test, put init calls here. */
+void setUp( void )
+{
+}
+/*-----------------------------------------------------------*/
+
+/* Run after every test, put clean-up calls here. */
+void tearDown( void )
+{
+}
+/*-----------------------------------------------------------*/
+
 int main( void )
 {
     vPortInitTestEnvironment();
@@ -143,5 +159,4 @@ int main( void )
 
     return 0;
 }
-
 /*-----------------------------------------------------------*/

@@ -25,16 +25,14 @@
  */
 
 /**
- * @file test.c
+ * @file multiple_tasks_running.c
  * @brief The user shall be able to schedule tasks across multiple identical processor cores
  *        with one instance of FreeRTOS scheduler.
  *
  * Procedure:
- *   - Create task A & B
- *   - Task B keep in busy loop
- *   - Task A check if task B is running
+ *   - Create ( num of cores - 1 ) tasks and keep them in busy loop.
  * Expected:
- *   - Both task A & B can run at the same time
+ *   - All tasks are in running state.
  */
 
 /* Kernel includes. */
@@ -68,6 +66,11 @@ static void prvEverRunningTask( void * pvParameters );
  */
 TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
 
+/**
+ * @brief Original priority of main task.
+ */
+UBaseType_t uxOrigTaskPriority;
+
 /*-----------------------------------------------------------*/
 
 static void prvEverRunningTask( void * pvParameters )
@@ -83,8 +86,7 @@ static void prvEverRunningTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-/* Runs before every test, put init calls here. */
-void setUp( void )
+static void vCreateEverRunTasks( void )
 {
     int i;
     BaseType_t xTaskCreationResult;
@@ -104,52 +106,56 @@ void setUp( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Run after every test, put clean-up calls here. */
-void tearDown( void )
+static void vResetResources( void )
 {
     int i;
+
+    vTaskPrioritySet( NULL, uxOrigTaskPriority );
 
     /* Delete all the tasks. */
     for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
     {
-        vTaskDelete( xTaskHanldes[ i ] );
+        if( xTaskHanldes[ i ] )
+        {
+            vTaskDelete( xTaskHanldes[ i ] );
+        }
     }
 }
 /*-----------------------------------------------------------*/
 
 /* Function that implements the test case. This function must be called
  * from a FreeRTOS task. */
-void Test_Multiple_Tasks_Running( void )
+void Test_MultipleTasksRunning( void )
 {
     int i;
-    UBaseType_t uxOrigTaskPriority;
     eTaskState xTaskState;
 
-    /* Ensure that this is the highest priority task. */
-    uxOrigTaskPriority = uxTaskPriorityGet( NULL );
-    vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
-
-    /* Invoke the scheduler explicitly. */
-    taskYIELD();
-
-    /* Ensure that all the tasks are running. */
-    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    if( TEST_PROTECT() )
     {
-        xTaskState = eTaskGetState( xTaskHanldes[ i ] );
+        uxOrigTaskPriority = uxTaskPriorityGet( NULL );
 
-        TEST_ASSERT_EQUAL_MESSAGE( eRunning, xTaskState, "Task is not running." );
+        /* Ensure that this is the highest priority task. */
+        vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
+
+        vCreateEverRunTasks();
+
+        /* Invoke the scheduler explicitly. */
+        taskYIELD();
+
+        /* Ensure that all the tasks are running. */
+        for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+        {
+            xTaskState = eTaskGetState( xTaskHanldes[ i ] );
+
+            TEST_ASSERT_EQUAL_MESSAGE( eRunning, xTaskState, "Task is not running." );
+        }
+
+        vResetResources();
     }
-
-    vTaskPrioritySet( NULL, uxOrigTaskPriority );
-}
-/*-----------------------------------------------------------*/
-
-void runMultipleTasksRunningTest( void )
-{
-    UNITY_BEGIN();
-
-    RUN_TEST( Test_Multiple_Tasks_Running );
-
-    UNITY_END();
+    else
+    {
+        /* When TEST_ASSERT_* is triggered during test, program will jump here. */
+        vResetResources();
+    }
 }
 /*-----------------------------------------------------------*/

@@ -62,23 +62,9 @@
 
 /*-----------------------------------------------------------*/
 
-/* Runs before every test, put init calls here. */
-void setUp( void )
-{
-    /* Create FreeRTOS resources required for the test. */
-}
-/*-----------------------------------------------------------*/
-
-/* Run after every test, put clean-up calls here. */
-void tearDown( void )
-{
-    /* Delete all the FreeRTOS resources created in setUp. */
-}
-/*-----------------------------------------------------------*/
-
 /* Function that implements the test case. This function must be called
  * from a FreeRTOS task. */
-void Test_Function_Name( void )
+void Test_TestCaseName( void )
 {
     /* Peform any API call needed for the test. */
 

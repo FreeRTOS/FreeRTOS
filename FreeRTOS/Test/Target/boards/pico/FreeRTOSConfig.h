@@ -39,7 +39,7 @@
  *
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
-#include "testConfig.h"
+#include "test_config.h"
 
 /* Scheduler Related */
 #ifndef configUSE_PREEMPTION

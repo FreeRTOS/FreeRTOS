@@ -27,15 +27,12 @@
  */
 
 /**
- * @file testRunner.c
+ * @file main.c
  * @brief The implementation of main function to start test runner task.
  *
  * Procedure:
  *   - Initialize environment
- *   - Create test runner task
- *   - Start scheduler
- * Expected:
- *   - Run test case normally
+ *   - Run the test case
  */
 
 /* Kernel includes. */
@@ -52,20 +49,9 @@
 #include "pico/sem.h"
 #include "pico/stdlib.h"
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-
 /*-----------------------------------------------------------*/
 
-#define TASK_TESTRUNNER_PRIORITY    ( tskIDLE_PRIORITY + 2 )
-
-/*-----------------------------------------------------------*/
-
-static void prvTestRunnerTask( void * pvParameters );
-
-extern void test_multiple_tasks_running( void );
+extern void runMultipleTasksRunningTest( void );
 
 /*-----------------------------------------------------------*/
 
@@ -119,50 +105,11 @@ void vApplicationMallocFailedHook(void) {
 }
 /*-----------------------------------------------------------*/
 
-/**
- * @brief A start entry for unity to start with.
- *
- * @param[in] pvParameters parameter for task entry, useless in this test.
- */
-static void prvTestRunnerTask( void * pvParameters )
-{
-    ( void ) pvParameters;
-
-    UNITY_BEGIN();
-
-    RUN_TEST( test_multiple_tasks_running );
-
-    UNITY_END();
-
-    for( ; ; )
-    {
-        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
-    }
-}
-/*-----------------------------------------------------------*/
-
-/* Is run before every test, put unit init calls here. */
-void setUp( void )
-{
-}
-
-/*-----------------------------------------------------------*/
-
-/* Is run after every test, put unit clean-up calls here. */
-void tearDown( void )
-{
-}
-
-/*-----------------------------------------------------------*/
-
 int main( void )
 {
     vPortInitTestEnvironment();
 
-    xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
-                 TASK_TESTRUNNER_PRIORITY, NULL );
-
-    vTaskStartScheduler();
+    runMultipleTasksRunningTest();
 
     /* should never reach here */
     panic_unsupported();

@@ -18,5 +18,17 @@ add_library(unity STATIC
 target_include_directories(unity PUBLIC
         "${UNITY_DIR}/src/")
 
-# add_subdirectory(tests/smp/template)
-add_subdirectory( tests/smp/multiple_tasks_running )
+# Find all subdirectories in tests folder then add them by add_subdirectory
+file(GLOB_RECURSE SUBDIRS_TESTS_FILES tests/*)
+SET(test_dir_list "")
+
+foreach(file_name ${SUBDIRS_TESTS_FILES})
+    get_filename_component( dir_path ${file_name} PATH )
+    LIST( APPEND test_dir_list ${dir_path})
+endforeach()
+LIST(REMOVE_DUPLICATES test_dir_list)
+
+foreach(dir_name ${test_dir_list})
+    message( STATUS "add subdirectory " ${dir_name} )
+    add_subdirectory( ${dir_name} )
+endforeach()

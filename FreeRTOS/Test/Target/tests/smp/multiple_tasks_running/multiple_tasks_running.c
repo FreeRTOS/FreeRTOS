@@ -49,25 +49,24 @@
 
 /*-----------------------------------------------------------*/
 
-#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 2 )
-#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
-
-/*-----------------------------------------------------------*/
-
-#if configNUMBER_OF_CORES != 2
+#if configNUMBER_OF_CORES < 2
     #error Require two cores be configured for FreeRTOS
 #endif /* if configNUMBER_OF_CORES != 2 */
 
-#ifndef TEST_CONFIG_H
+#if configRUN_MULTIPLE_PRIORITIES != 1
     #error test_config.h must be included at the end of FreeRTOSConfig.h.
 #endif
-
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Function that implements a never blocking FreeRTOS task.
  */
 static void prvEverRunningTask( void * pvParameters );
+
+/**
+ * @brief Task entry function to start Unity.
+ */
+static void prvRunMultipleTasksRunningTest( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -78,8 +77,21 @@ TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
 
 /*-----------------------------------------------------------*/
 
+static void prvEverRunningTask( void * pvParameters )
+{
+    /* Silence warnings about unused parameters. */
+    ( void ) pvParameters;
+
+    for( ;; )
+    {
+        /* Always running, put asm here to avoid optimization by compiler. */
+        asm("");
+    }
+}
+/*-----------------------------------------------------------*/
+
 /* Runs before every test, put init calls here. */
-void vInitTestCase( void )
+void setUp( void )
 {
     int i;
     BaseType_t xTaskCreationResult;
@@ -100,7 +112,7 @@ void vInitTestCase( void )
 /*-----------------------------------------------------------*/
 
 /* Run after every test, put clean-up calls here. */
-void vEndTestCase( void )
+void tearDown( void )
 {
     int i;
 
@@ -114,13 +126,11 @@ void vEndTestCase( void )
 
 /* Function that implements the test case. This function must be called
  * from a FreeRTOS task. */
-void test_multiple_tasks_running( void )
+void Test_Multiple_Tasks_Running( void )
 {
     int i;
     UBaseType_t uxOrigTaskPriority;
     eTaskState xTaskState;
-
-    vInitTestCase();
 
     /* Ensure that this is the highest priority task. */
     uxOrigTaskPriority = uxTaskPriorityGet( NULL );
@@ -138,20 +148,35 @@ void test_multiple_tasks_running( void )
     }
 
     vTaskPrioritySet( NULL, uxOrigTaskPriority );
-
-    vEndTestCase();
 }
 /*-----------------------------------------------------------*/
 
-static void prvEverRunningTask( void * pvParameters )
+static void prvRunMultipleTasksRunningTest( void *pvParameters )
 {
-    /* Silence warnings about unused parameters. */
-    ( void ) pvParameters;
+    (void) pvParameters;
 
-    for( ;; )
+    UNITY_BEGIN();
+
+    RUN_TEST( Test_Multiple_Tasks_Running );
+
+    UNITY_END();
+
+    for( ; ; )
     {
-        /* Always running, put asm here to avoid optimization by compiler. */
-        asm("");
+        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
     }
+}
+/*-----------------------------------------------------------*/
+
+void runMultipleTasksRunningTest( void )
+{
+    xTaskCreate( prvRunMultipleTasksRunningTest,
+                "testRunner",
+                configMINIMAL_STACK_SIZE * 2,
+                NULL,
+                tskIDLE_PRIORITY + 1,
+                NULL );
+    
+    vTaskStartScheduler();
 }
 /*-----------------------------------------------------------*/

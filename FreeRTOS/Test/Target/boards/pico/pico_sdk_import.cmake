@@ -73,11 +73,6 @@ set(BOARD_INC_PATHS ${CMAKE_CURRENT_LIST_DIR} ${TARGET_INCLUDE_PATH})
 
 pico_sdk_init()
 
-macro(board_executable_modifiers EXECUTABLE_NAME)
-    pico_enable_stdio_usb(${EXECUTABLE_NAME} 1)
-    pico_add_extra_outputs(${EXECUTABLE_NAME})
-endmacro()
-
 # one of the following directories need be included, why is it not?
 # /home/ubuntu/pico/pico-sdk/src/host/pico_multicore/include
 # /home/ubuntu/pico/pico-sdk/src/rp2_common/pico_multicore/include
@@ -88,10 +83,7 @@ foreach (_variableName ${_variableNames})
     message(STATUS "${_variableName}=${${_variableName}}")
 endforeach()
 
-macro(board_library_variant VARIANT_NAME INCLUDE_DIR)
-    add_library(${VARIANT_NAME} STATIC "${BOARD_LIBRARY_DIR}/testRunner.c")
-    target_compile_definitions(${VARIANT_NAME} PUBLIC ${BOARD_DEFINES})
-    pico_enable_stdio_usb(${VARIANT_NAME} 1)
-    target_include_directories(${VARIANT_NAME} PUBLIC ${TARGET_INCLUDE_PATH} ${BOARD_INCLUDE_PATHS} ${PICO_INCLUDE_DIRS} ${FREERTOS_KERNEL_PATH}/include ${INCLUDE_DIR})
-    target_link_libraries(${VARIANT_NAME} PUBLIC pico_stdlib pico_multicore)
+macro(enable_board_functions EXECUTABLE_NAME)
+    pico_enable_stdio_usb(${EXECUTABLE_NAME} 1)
+    pico_add_extra_outputs(${EXECUTABLE_NAME})
 endmacro()

@@ -36,72 +36,98 @@
  */
 
 /* Kernel includes. */
-
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h" /* unit testing support functions */
-
-#define PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS (5000)
+#include "unity.h"    /* unit testing support functions */
 
 #include "pico/multicore.h"
-#include "pico/mutex.h"
-#include "pico/sem.h"
 #include "pico/stdlib.h"
 
 /*-----------------------------------------------------------*/
 
+#define TASK_TESTRUNNER_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+
+/*-----------------------------------------------------------*/
+
+static void prvTestRunnerTask( void * pvParameters );
 extern void runMultipleTasksRunningTest( void );
-
 /*-----------------------------------------------------------*/
 
-void vPortInitTestEnvironment(void) {
-  /* Setup LED I/O */
-  gpio_init(PICO_DEFAULT_LED_PIN);
-  gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-  gpio_set_irq_enabled(PICO_DEFAULT_LED_PIN,
-    GPIO_IRQ_LEVEL_LOW |
-    GPIO_IRQ_LEVEL_HIGH |
-    GPIO_IRQ_EDGE_FALL |
-    GPIO_IRQ_EDGE_RISE,
-    false);
+/**
+ * @brief A start entry for unity to start with.
+ *
+ * @param[in] pvParameters parameter for task entry, useless in this test.
+ */
+static void prvTestRunnerTask( void * pvParameters )
+{
+    ( void ) pvParameters;
 
-  /* Want to be able to printf */
-  stdio_init_all();
-  while (!stdio_usb_connected())
-  {
-    gpio_put(PICO_DEFAULT_LED_PIN, 1);
-    sleep_ms(250);
-    gpio_put(PICO_DEFAULT_LED_PIN, 0);
-    sleep_ms(250);
-  }
+    /* Execute test case provided in test.c */
+    runMultipleTasksRunningTest();
+
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
-  (void)pcTaskName;
-  (void)xTask;
+void vPortInitTestEnvironment( void )
+{
+    /* Setup LED I/O */
+    gpio_init( PICO_DEFAULT_LED_PIN );
+    gpio_set_dir( PICO_DEFAULT_LED_PIN, GPIO_OUT );
+    gpio_set_irq_enabled( PICO_DEFAULT_LED_PIN,
+                          GPIO_IRQ_LEVEL_LOW |
+                          GPIO_IRQ_LEVEL_HIGH |
+                          GPIO_IRQ_EDGE_FALL |
+                          GPIO_IRQ_EDGE_RISE,
+                          false );
 
-  printf("ERROR: Stack Overflow\n\0");
+    /* Want to be able to printf */
+    stdio_init_all();
 
-  /* Run time stack overflow checking is performed if
-  configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-  function is called if a stack overflow is detected.  pxCurrentTCB can be
-  inspected in the debugger if the task name passed into this function is
-  corrupt. */
-  for (;;)
-    ;
+    while( !stdio_usb_connected() )
+    {
+        gpio_put( PICO_DEFAULT_LED_PIN, 1 );
+        sleep_ms( 250 );
+        gpio_put( PICO_DEFAULT_LED_PIN, 0 );
+        sleep_ms( 250 );
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationTickHook(void) {
-  static uint32_t ulCount = 0;
-  ulCount++;
+void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                    char * pcTaskName )
+{
+    ( void ) pcTaskName;
+    ( void ) xTask;
+
+    printf( "ERROR: Stack Overflow\n\0" );
+
+    /* Run time stack overflow checking is performed if
+     * configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected.  pxCurrentTCB can be
+     * inspected in the debugger if the task name passed into this function is
+     * corrupt. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationMallocFailedHook(void) {
-  printf("ERROR: Malloc Failed\n\0");
+void vApplicationTickHook( void )
+{
+    static uint32_t ulCount = 0;
+
+    ulCount++;
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationMallocFailedHook( void )
+{
+    printf( "ERROR: Malloc Failed\n\0" );
 }
 /*-----------------------------------------------------------*/
 
@@ -109,7 +135,10 @@ int main( void )
 {
     vPortInitTestEnvironment();
 
-    runMultipleTasksRunningTest();
+    xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
+                 TASK_TESTRUNNER_PRIORITY, NULL );
+
+    vTaskStartScheduler();
 
     /* should never reach here */
     panic_unsupported();

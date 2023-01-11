@@ -49,8 +49,8 @@
 
 /*-----------------------------------------------------------*/
 
-#if configNUMBER_OF_CORES < 2
-    #error Require two cores be configured for FreeRTOS
+#if ( configNUMBER_OF_CORES < 2 )
+    #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
 
 #if configRUN_MULTIPLE_PRIORITIES != 1
@@ -62,11 +62,6 @@
  * @brief Function that implements a never blocking FreeRTOS task.
  */
 static void prvEverRunningTask( void * pvParameters );
-
-/**
- * @brief Task entry function to start Unity.
- */
-static void prvRunMultipleTasksRunningTest( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -82,10 +77,10 @@ static void prvEverRunningTask( void * pvParameters )
     /* Silence warnings about unused parameters. */
     ( void ) pvParameters;
 
-    for( ;; )
+    for( ; ; )
     {
         /* Always running, put asm here to avoid optimization by compiler. */
-        asm("");
+        asm ( "" );
     }
 }
 /*-----------------------------------------------------------*/
@@ -99,12 +94,12 @@ void setUp( void )
     /* Create configNUMBER_OF_CORES - 1 low priority tasks. */
     for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
     {
-        xTaskCreationResult =  xTaskCreate( prvEverRunningTask,
-                                            "EverRunning",
-                                            configMINIMAL_STACK_SIZE,
-                                            NULL,
-                                            configMAX_PRIORITIES - 2,
-                                            &( xTaskHanldes[ i ] ) );
+        xTaskCreationResult = xTaskCreate( prvEverRunningTask,
+                                           "EverRunning",
+                                           configMINIMAL_STACK_SIZE,
+                                           NULL,
+                                           configMAX_PRIORITIES - 2,
+                                           &( xTaskHanldes[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -151,32 +146,12 @@ void Test_Multiple_Tasks_Running( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvRunMultipleTasksRunningTest( void *pvParameters )
+void runMultipleTasksRunningTest( void )
 {
-    (void) pvParameters;
-
     UNITY_BEGIN();
 
     RUN_TEST( Test_Multiple_Tasks_Running );
 
     UNITY_END();
-
-    for( ; ; )
-    {
-        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
-    }
-}
-/*-----------------------------------------------------------*/
-
-void runMultipleTasksRunningTest( void )
-{
-    xTaskCreate( prvRunMultipleTasksRunningTest,
-                "testRunner",
-                configMINIMAL_STACK_SIZE * 2,
-                NULL,
-                tskIDLE_PRIORITY + 1,
-                NULL );
-    
-    vTaskStartScheduler();
 }
 /*-----------------------------------------------------------*/

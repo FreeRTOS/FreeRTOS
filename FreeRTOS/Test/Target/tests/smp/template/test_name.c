@@ -80,10 +80,8 @@ void tearDown( void )
 
 /* Function that implements the test case. This function must be called
  * from a FreeRTOS task. */
-TEST_CASE( Test_Name )
+void Test_Function_Name( void )
 {
-    UBaseType_t uxTaskPriority;
-
     /* Peform any API call needed for the test. */
 
     /* Verify the result. */

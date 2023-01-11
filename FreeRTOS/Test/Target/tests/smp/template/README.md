@@ -22,11 +22,7 @@
     ```c
     void prvTestRunnerTask( void * pvParameters )
     {
-        UNITY_BEGIN();
-
         /* Execute test case provided in test.c */
-        RUN_TEST( Test_Name );
-
-        UNITY_END();
+        vRunTestCaseName;
     }
     ```

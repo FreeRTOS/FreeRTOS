@@ -66,11 +66,6 @@ static void prvEverRunningTask( void * pvParameters );
  */
 TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
 
-/**
- * @brief Original priority of main task.
- */
-UBaseType_t uxOrigTaskPriority;
-
 /*-----------------------------------------------------------*/
 
 static void prvEverRunningTask( void * pvParameters )
@@ -86,7 +81,8 @@ static void prvEverRunningTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static void vCreateEverRunTasks( void )
+/* Runs before every test, put init calls here. */
+void setUp( void )
 {
     int i;
     BaseType_t xTaskCreationResult;
@@ -106,11 +102,10 @@ static void vCreateEverRunTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-static void vResetResources( void )
+/* Run after every test, put clean-up calls here. */
+void tearDown( void )
 {
     int i;
-
-    vTaskPrioritySet( NULL, uxOrigTaskPriority );
 
     /* Delete all the tasks. */
     for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
@@ -123,39 +118,38 @@ static void vResetResources( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Function that implements the test case. This function must be called
- * from a FreeRTOS task. */
 void Test_MultipleTasksRunning( void )
 {
     int i;
+    UBaseType_t uxOrigTaskPriority;
     eTaskState xTaskState;
 
-    if( TEST_PROTECT() )
+    uxOrigTaskPriority = uxTaskPriorityGet( NULL );
+
+    /* Ensure that this is the highest priority task. */
+    vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
+
+    /* Invoke the scheduler explicitly. */
+    taskYIELD();
+
+    /* Ensure that all the tasks are running. */
+    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
     {
-        uxOrigTaskPriority = uxTaskPriorityGet( NULL );
+        xTaskState = eTaskGetState( xTaskHanldes[ i ] );
 
-        /* Ensure that this is the highest priority task. */
-        vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
-
-        vCreateEverRunTasks();
-
-        /* Invoke the scheduler explicitly. */
-        taskYIELD();
-
-        /* Ensure that all the tasks are running. */
-        for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
-        {
-            xTaskState = eTaskGetState( xTaskHanldes[ i ] );
-
-            TEST_ASSERT_EQUAL_MESSAGE( eRunning, xTaskState, "Task is not running." );
-        }
-
-        vResetResources();
+        TEST_ASSERT_EQUAL_MESSAGE( eRunning, xTaskState, "Task is not running." );
     }
-    else
-    {
-        /* When TEST_ASSERT_* is triggered during test, program will jump here. */
-        vResetResources();
-    }
+}
+/*-----------------------------------------------------------*/
+
+/* Function that implements the test case. This function must be called
+ * from a FreeRTOS task. */
+void vRunMultipleTasksRunningTest( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( Test_MultipleTasksRunning );
+
+    UNITY_END();
 }
 /*-----------------------------------------------------------*/

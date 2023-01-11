@@ -62,12 +62,36 @@
 
 /*-----------------------------------------------------------*/
 
-/* Function that implements the test case. This function must be called
- * from a FreeRTOS task. */
+/* Runs before every test, put init calls here. */
+void setUp( void )
+{
+    /* Create FreeRTOS resources required for the test. */
+}
+/*-----------------------------------------------------------*/
+
+/* Run after every test, put clean-up calls here. */
+void tearDown( void )
+{
+    /* Delete all the FreeRTOS resources created in setUp. */
+}
+/*-----------------------------------------------------------*/
+
 void Test_TestCaseName( void )
 {
     /* Peform any API call needed for the test. */
 
     /* Verify the result. */
+}
+/*-----------------------------------------------------------*/
+
+/* Function that implements the test case. This function must be called
+ * from a FreeRTOS task. */
+void vRunTestCaseName( void )
+{
+    UNITY_BEGIN();
+
+    RUN_TEST( Test_TestCaseName );
+
+    UNITY_END();
 }
 /*-----------------------------------------------------------*/

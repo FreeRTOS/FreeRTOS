@@ -49,7 +49,7 @@
 /*-----------------------------------------------------------*/
 
 static void prvTestRunnerTask( void * pvParameters );
-extern void Test_MultipleTasksRunning( void );
+extern void vRunMultipleTasksRunningTest( void );
 /*-----------------------------------------------------------*/
 
 /**
@@ -62,11 +62,7 @@ static void prvTestRunnerTask( void * pvParameters )
     ( void ) pvParameters;
 
     /* Execute test case provided in test.c */
-    UNITY_BEGIN();
-
-    RUN_TEST( Test_MultipleTasksRunning );
-
-    UNITY_END();
+    vRunMultipleTasksRunningTest();
 
     for( ; ; )
     {
@@ -130,18 +126,6 @@ void vApplicationTickHook( void )
 void vApplicationMallocFailedHook( void )
 {
     printf( "ERROR: Malloc Failed\n\0" );
-}
-/*-----------------------------------------------------------*/
-
-/* Runs before every test, put init calls here. */
-void setUp( void )
-{
-}
-/*-----------------------------------------------------------*/
-
-/* Run after every test, put clean-up calls here. */
-void tearDown( void )
-{
 }
 /*-----------------------------------------------------------*/
 

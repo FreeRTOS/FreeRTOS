@@ -58,4 +58,7 @@ BaseType_t vFakePortCheckIfInISR( void );
 unsigned int vFakePortGetCoreID( void );
 void vFakePortYieldCore(int);
 
+UBaseType_t vFakePortEnterCriticalFromISR( void );
+void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState );
+
 #endif /* FAKE_PORT_H */

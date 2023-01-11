@@ -153,7 +153,4 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
 
-#define portENTER_CRITICAL_FROM_ISR()       ( 0 )
-#define portEXIT_CRITICAL_FROM_ISR( x )     do{ ( void )( x ); }while( 0 )
-
 #endif /* FREERTOS_CONFIG_H */

@@ -82,6 +82,8 @@ static BaseType_t xTaskLockCount[ configNUMBER_OF_CORES ] = { 0 };
 
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
+extern UBaseType_t vTaskEnterCriticalFromISR( void );
+extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 
 /* ==========================  CALLBACK FUNCTIONS  ========================== */
 
@@ -230,8 +232,8 @@ void vFakePortGetTaskLock( void )
     {
         if( i != xCurrentCoreId )
         {
-            TEST_ASSERT_MESSAGE( xIsrLockCount[ i ] == 0, "vFakePortGetISRLock xIsrLockCount[ i ] > 0" );
-            TEST_ASSERT_MESSAGE( xTaskLockCount[ i ] == 0, "vFakePortGetISRLock xTaskLockCount[ i ] > 0" );
+            TEST_ASSERT_MESSAGE( xIsrLockCount[ i ] == 0, "vFakePortGetTaskLock xIsrLockCount[ i ] > 0" );
+            TEST_ASSERT_MESSAGE( xTaskLockCount[ i ] == 0, "vFakePortGetTaskLock xTaskLockCount[ i ] > 0" );
         }
     }
 
@@ -250,6 +252,20 @@ void vFakePortReleaseTaskLock( void )
     }
 }
 
+UBaseType_t vFakePortEnterCriticalFromISR( void )
+{
+    UBaseType_t uxSavedInterruptState;
+    uxSavedInterruptState = vTaskEnterCriticalFromISR();
+    return uxSavedInterruptState;
+}
+
+void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState )
+{
+    vTaskExitCriticalFromISR( uxSavedInterruptState );
+    /* Simulate yield cores when leaving the critical section. */
+    vYieldCores();
+}
+
 /* ============================= Unity Fixtures ============================= */
 
 void commonSetUp( void )
@@ -261,6 +277,9 @@ void commonSetUp( void )
     vFakeAssert_Ignore();
     vFakePortAssertIfISR_Ignore();
     vFakePortEnableInterrupts_Ignore();
+
+    ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0 );
+    vFakePortClearInterruptMaskFromISR_Ignore();
 
     vFakePortGetTaskLock_Ignore();
     vFakePortGetISRLock_Ignore();

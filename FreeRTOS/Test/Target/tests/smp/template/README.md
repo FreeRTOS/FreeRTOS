@@ -23,7 +23,7 @@
     void prvTestRunnerTask( void * pvParameters )
     {
         ( void ) pvParameters;
-        
+
         /* Execute test case provided in test.c */
         Run_Test_Name();
     }

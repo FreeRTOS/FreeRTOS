@@ -69,7 +69,7 @@ void setUp( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Run after every test, put clean-up calls here. */
+/* Runs after every test, put clean-up calls here. */
 void tearDown( void )
 {
     /* Delete all the FreeRTOS resources created in setUp. */
@@ -84,7 +84,7 @@ void Test_TestCaseName( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Function that implements the test case. This function must be called
+/* Function that runs the test case. This function must be called
  * from a FreeRTOS task. */
 void vRunTestCaseName( void )
 {

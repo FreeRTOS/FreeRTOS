@@ -39,9 +39,7 @@
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include <string.h>
-
-#include "unity.h" /* unit testing support functions */
+#include "unity.h"    /* unit testing support functions */
 
 /*-----------------------------------------------------------*/
 
@@ -59,13 +57,36 @@
  */
 static void prvEverRunningTask( void * pvParameters );
 
+/**
+ * @brief Test case "Multiple Tasks Running".
+ */
+static void Test_MultipleTasksRunning( void );
+
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Handles of the tasks created in this test.
  */
-TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
+static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
 
+/*-----------------------------------------------------------*/
+
+static void Test_MultipleTasksRunning( void )
+{
+    int i;
+    eTaskState xTaskState;
+
+    /* Delay for other cores to run tasks. */
+    vTaskDelay( pdMS_TO_TICKS( 10 ) );
+
+    /* Ensure that all the tasks are running. */
+    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    {
+        xTaskState = eTaskGetState( xTaskHanldes[ i ] );
+
+        TEST_ASSERT_EQUAL_MESSAGE( eRunning, xTaskState, "Task is not running." );
+    }
+}
 /*-----------------------------------------------------------*/
 
 static void prvEverRunningTask( void * pvParameters )
@@ -76,7 +97,7 @@ static void prvEverRunningTask( void * pvParameters )
     for( ; ; )
     {
         /* Always running, put asm here to avoid optimization by compiler. */
-        asm ( "" );
+        __asm volatile ( "nop" );
     }
 }
 /*-----------------------------------------------------------*/
@@ -102,7 +123,7 @@ void setUp( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Run after every test, put clean-up calls here. */
+/* Runs after every test, put clean-up calls here. */
 void tearDown( void )
 {
     int i;
@@ -118,32 +139,6 @@ void tearDown( void )
 }
 /*-----------------------------------------------------------*/
 
-void Test_MultipleTasksRunning( void )
-{
-    int i;
-    UBaseType_t uxOrigTaskPriority;
-    eTaskState xTaskState;
-
-    uxOrigTaskPriority = uxTaskPriorityGet( NULL );
-
-    /* Ensure that this is the highest priority task. */
-    vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
-
-    /* Invoke the scheduler explicitly. */
-    taskYIELD();
-
-    /* Ensure that all the tasks are running. */
-    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
-    {
-        xTaskState = eTaskGetState( xTaskHanldes[ i ] );
-
-        TEST_ASSERT_EQUAL_MESSAGE( eRunning, xTaskState, "Task is not running." );
-    }
-}
-/*-----------------------------------------------------------*/
-
-/* Function that implements the test case. This function must be called
- * from a FreeRTOS task. */
 void vRunMultipleTasksRunningTest( void )
 {
     UNITY_BEGIN();

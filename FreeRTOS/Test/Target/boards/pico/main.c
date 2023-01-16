@@ -44,53 +44,17 @@
 
 /*-----------------------------------------------------------*/
 
-#define TASK_TESTRUNNER_PRIORITY    ( tskIDLE_PRIORITY + 1 )
-
+static void prvInitializeHardware( void );
+extern void vRunTest( void );
 /*-----------------------------------------------------------*/
 
-static void prvTestRunnerTask( void * pvParameters );
-extern void vRunMultipleTasksRunningTest( void );
-/*-----------------------------------------------------------*/
-
-/**
- * @brief A start entry for unity to start with.
- *
- * @param[in] pvParameters parameter for task entry, useless in this test.
- */
-static void prvTestRunnerTask( void * pvParameters )
+static void prvInitializeHardware( void )
 {
-    ( void ) pvParameters;
-
-    /* Execute test case provided in test.c */
-    vRunMultipleTasksRunningTest();
-
-    for( ; ; )
-    {
-        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
-    }
-}
-/*-----------------------------------------------------------*/
-
-void vPortInitTestEnvironment( void )
-{
-    /* Setup LED I/O */
-    gpio_init( PICO_DEFAULT_LED_PIN );
-    gpio_set_dir( PICO_DEFAULT_LED_PIN, GPIO_OUT );
-    gpio_set_irq_enabled( PICO_DEFAULT_LED_PIN,
-                          GPIO_IRQ_LEVEL_LOW |
-                          GPIO_IRQ_LEVEL_HIGH |
-                          GPIO_IRQ_EDGE_FALL |
-                          GPIO_IRQ_EDGE_RISE,
-                          false );
-
     /* Want to be able to printf */
     stdio_init_all();
 
     while( !stdio_usb_connected() )
     {
-        gpio_put( PICO_DEFAULT_LED_PIN, 1 );
-        sleep_ms( 250 );
-        gpio_put( PICO_DEFAULT_LED_PIN, 0 );
         sleep_ms( 250 );
     }
 }
@@ -117,24 +81,26 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
 
 void vApplicationTickHook( void )
 {
-    static uint32_t ulCount = 0;
-
-    ulCount++;
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
     printf( "ERROR: Malloc Failed\n\0" );
+
+    for( ; ; )
+    {
+        /* Always running, put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
+    }
 }
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-    vPortInitTestEnvironment();
+    prvInitializeHardware();
 
-    xTaskCreate( prvTestRunnerTask, "testRunner", configMINIMAL_STACK_SIZE * 2, NULL,
-                 TASK_TESTRUNNER_PRIORITY, NULL );
+    vRunTest();
 
     vTaskStartScheduler();
 

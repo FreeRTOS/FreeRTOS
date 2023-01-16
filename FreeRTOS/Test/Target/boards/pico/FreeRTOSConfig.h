@@ -41,161 +41,56 @@
 #include "test_config.h"
 
 /* Scheduler Related */
-#ifndef configUSE_PREEMPTION
-    #define configUSE_PREEMPTION    1
-#endif
-
-#ifndef configUSE_TICKLESS_IDLE
-    #define configUSE_TICKLESS_IDLE    0
-#endif
-
-#ifndef configUSE_IDLE_HOOK
-    #define configUSE_IDLE_HOOK    0
-#endif
-
-#ifndef configUSE_TICK_HOOK
-    #define configUSE_TICK_HOOK    1
-#endif
-
-#ifndef configTICK_RATE_HZ
-    #define configTICK_RATE_HZ    ( ( TickType_t ) 1000 )
-#endif
-
-#ifndef configMAX_PRIORITIES
-    #define configMAX_PRIORITIES    32
-#endif
-
-#ifndef configMINIMAL_STACK_SIZE
-    #define configMINIMAL_STACK_SIZE    ( configSTACK_DEPTH_TYPE ) 256
-#endif
-
-#ifndef configUSE_16_BIT_TICKS
-    #define configUSE_16_BIT_TICKS    0
-#endif
-
-#ifndef configIDLE_SHOULD_YIELD
-    #define configIDLE_SHOULD_YIELD    1
-#endif
+#define configUSE_TICKLESS_IDLE                    0
+#define configUSE_IDLE_HOOK                        0
+#define configUSE_TICK_HOOK                        1
+#define configTICK_RATE_HZ                         ( ( TickType_t ) 1000 )
+#define configMAX_PRIORITIES                       32
+#define configMINIMAL_STACK_SIZE                   ( configSTACK_DEPTH_TYPE ) 256
+#define configUSE_16_BIT_TICKS                     0
+#define configIDLE_SHOULD_YIELD                    1
 
 /* Synchronization Related */
-#ifndef configUSE_MUTEXES
-    #define configUSE_MUTEXES    1
-#endif
-
-#ifndef configUSE_RECURSIVE_MUTEXES
-    #define configUSE_RECURSIVE_MUTEXES    1
-#endif
-
-#ifndef configUSE_APPLICATION_TASK_TAG
-    #define configUSE_APPLICATION_TASK_TAG    0
-#endif
-
-#ifndef configUSE_COUNTING_SEMAPHORES
-    #define configUSE_COUNTING_SEMAPHORES    1
-#endif
-
-#ifndef configQUEUE_REGISTRY_SIZE
-    #define configQUEUE_REGISTRY_SIZE    8
-#endif
-
-#ifndef configUSE_QUEUE_SETS
-    #define configUSE_QUEUE_SETS    1
-#endif
-
-#ifndef configUSE_TIME_SLICING
-    #define configUSE_TIME_SLICING    1
-#endif
-
-#ifndef configUSE_NEWLIB_REENTRANT
-    #define configUSE_NEWLIB_REENTRANT    0
-#endif
-
-#ifndef configENABLE_BACKWARD_COMPATIBILITY
-    #define configENABLE_BACKWARD_COMPATIBILITY    0
-#endif
-
-#ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS
-    #define configNUM_THREAD_LOCAL_STORAGE_POINTERS    5
-#endif
+#define configUSE_MUTEXES                          1
+#define configUSE_RECURSIVE_MUTEXES                1
+#define configUSE_APPLICATION_TASK_TAG             0
+#define configUSE_COUNTING_SEMAPHORES              1
+#define configQUEUE_REGISTRY_SIZE                  8
+#define configUSE_QUEUE_SETS                       1
+#define configUSE_TIME_SLICING                     1
+#define configUSE_NEWLIB_REENTRANT                 0
+#define configENABLE_BACKWARD_COMPATIBILITY        0
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS    5
 
 /* System */
-#ifndef configSTACK_DEPTH_TYPE
-    #define configSTACK_DEPTH_TYPE    uint32_t
-#endif
-
-#ifndef configMESSAGE_BUFFER_LENGTH_TYPE
-    #define configMESSAGE_BUFFER_LENGTH_TYPE    size_t
-#endif
+#define configSTACK_DEPTH_TYPE                     uint32_t
+#define configMESSAGE_BUFFER_LENGTH_TYPE           size_t
 
 /* Memory allocation related definitions. */
-#ifndef configSUPPORT_STATIC_ALLOCATION
-    #define configSUPPORT_STATIC_ALLOCATION    0
-#endif
-
-#ifndef configSUPPORT_DYNAMIC_ALLOCATION
-    #define configSUPPORT_DYNAMIC_ALLOCATION    1
-#endif
-
-#ifndef configTOTAL_HEAP_SIZE
-    #define configTOTAL_HEAP_SIZE    ( 128 * 1024 )
-#endif
-
-#ifndef configAPPLICATION_ALLOCATED_HEAP
-    #define configAPPLICATION_ALLOCATED_HEAP    0
-#endif
+#define configSUPPORT_STATIC_ALLOCATION            0
+#define configSUPPORT_DYNAMIC_ALLOCATION           1
+#define configTOTAL_HEAP_SIZE                      ( 128 * 1024 )
+#define configAPPLICATION_ALLOCATED_HEAP           0
 
 /* Hook function related definitions. */
-#ifndef configCHECK_FOR_STACK_OVERFLOW
-    #define configCHECK_FOR_STACK_OVERFLOW    2
-#endif
-
-#ifndef configUSE_MALLOC_FAILED_HOOK
-    #define configUSE_MALLOC_FAILED_HOOK    1
-#endif
-
-#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK
-    #define configUSE_DAEMON_TASK_STARTUP_HOOK    0
-#endif
+#define configCHECK_FOR_STACK_OVERFLOW             2
+#define configUSE_MALLOC_FAILED_HOOK               1
+#define configUSE_DAEMON_TASK_STARTUP_HOOK         0
 
 /* Run time and task stats gathering related definitions. */
-#ifndef configGENERATE_RUN_TIME_STATS
-    #define configGENERATE_RUN_TIME_STATS    0
-#endif
-
-#ifndef configUSE_TRACE_FACILITY
-    #define configUSE_TRACE_FACILITY    1
-#endif
-
-#ifndef configUSE_STATS_FORMATTING_FUNCTIONS
-    #define configUSE_STATS_FORMATTING_FUNCTIONS    0
-#endif
+#define configGENERATE_RUN_TIME_STATS              0
+#define configUSE_TRACE_FACILITY                   1
+#define configUSE_STATS_FORMATTING_FUNCTIONS       0
 
 /* Co-routine related definitions. */
-#ifndef configUSE_CO_ROUTINES
-    #define configUSE_CO_ROUTINES    0
-#endif
-
-#ifndef configMAX_CO_ROUTINE_PRIORITIES
-    #define configMAX_CO_ROUTINE_PRIORITIES    1
-#endif
+#define configUSE_CO_ROUTINES                      0
+#define configMAX_CO_ROUTINE_PRIORITIES            1
 
 /* Software timer related definitions. */
-
-#ifndef configUSE_TIMERS
-    #define configUSE_TIMERS    1
-#endif
-
-#ifndef configTIMER_TASK_PRIORITY
-    #define configTIMER_TASK_PRIORITY    ( configMAX_PRIORITIES - 1 )
-#endif
-
-#ifndef configTIMER_QUEUE_LENGTH
-    #define configTIMER_QUEUE_LENGTH    10
-#endif
-
-#ifndef configTIMER_TASK_STACK_DEPTH
-    #define configTIMER_TASK_STACK_DEPTH    1024
-#endif
+#define configUSE_TIMERS                           1
+#define configTIMER_TASK_PRIORITY                  ( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH                   10
+#define configTIMER_TASK_STACK_DEPTH               1024
 
 /* Interrupt nesting behaviour configuration. */
 
@@ -206,111 +101,39 @@
  */
 
 /* SMP port only */
-#ifndef configNUMBER_OF_CORES
-    #define configNUMBER_OF_CORES    2
-#endif
-
-#ifndef configTICK_CORE
-    #define configTICK_CORE    1
-#endif
-
-#ifndef configRUN_MULTIPLE_PRIORITIES
-    #define configRUN_MULTIPLE_PRIORITIES    1
-#endif
-
-#ifndef configUSE_CORE_AFFINITY
-    #define configUSE_CORE_AFFINITY    1
-#endif
-
-#ifndef configUSE_MINIMAL_IDLE_HOOK
-    #define configUSE_MINIMAL_IDLE_HOOK    0
-#endif
-
-#ifndef configUSE_TASK_PREEMPTION_DISABLE
-    #define configUSE_TASK_PREEMPTION_DISABLE    0
-#endif
+#define configNUMBER_OF_CORES                2
+#define configTICK_CORE                      1
+#define configRUN_MULTIPLE_PRIORITIES        1
+#define configUSE_CORE_AFFINITY              1
+#define configUSE_MINIMAL_IDLE_HOOK          0
+#define configUSE_TASK_PREEMPTION_DISABLE    0
 
 /* RP2040 specific */
-#ifndef configSUPPORT_PICO_SYNC_INTEROP
-    #define configSUPPORT_PICO_SYNC_INTEROP    1
-#endif
-
-#ifndef configSUPPORT_PICO_TIME_INTEROP
-    #define configSUPPORT_PICO_TIME_INTEROP    1
-#endif
+#define configSUPPORT_PICO_SYNC_INTEROP      1
+#define configSUPPORT_PICO_TIME_INTEROP      1
 
 #include <assert.h>
 /* Define to trap errors during development. */
-#ifndef configASSERT
-    #define configASSERT( x )    assert( x )
-#endif
+#define configASSERT( x )    assert( x )
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
-#ifndef INCLUDE_vTaskPrioritySet
-    #define INCLUDE_vTaskPrioritySet    1
-#endif
-
-#ifndef INCLUDE_uxTaskPriorityGet
-    #define INCLUDE_uxTaskPriorityGet    1
-#endif
-
-#ifndef INCLUDE_vTaskDelete
-    #define INCLUDE_vTaskDelete    1
-#endif
-
-#ifndef INCLUDE_vTaskSuspend
-    #define INCLUDE_vTaskSuspend    1
-#endif
-
-#ifndef INCLUDE_vTaskDelayUntil
-    #define INCLUDE_vTaskDelayUntil    1
-#endif
-
-#ifndef INCLUDE_vTaskDelay
-    #define INCLUDE_vTaskDelay    1
-#endif
-
-#ifndef INCLUDE_xTaskGetSchedulerState
-    #define INCLUDE_xTaskGetSchedulerState    1
-#endif
-
-#ifndef INCLUDE_xTaskGetCurrentTaskHandle
-    #define INCLUDE_xTaskGetCurrentTaskHandle    1
-#endif
-
-#ifndef INCLUDE_uxTaskGetStackHighWaterMark
-    #define INCLUDE_uxTaskGetStackHighWaterMark    1
-#endif
-
-#ifndef INCLUDE_xTaskGetIdleTaskHandle
-    #define INCLUDE_xTaskGetIdleTaskHandle    1
-#endif
-
-#ifndef INCLUDE_eTaskGetState
-    #define INCLUDE_eTaskGetState    1
-#endif
-
-#ifndef INCLUDE_xTimerPendFunctionCall
-    #define INCLUDE_xTimerPendFunctionCall    1
-#endif
-
-#ifndef INCLUDE_xTaskAbortDelay
-    #define INCLUDE_xTaskAbortDelay    1
-#endif
-
-#ifndef INCLUDE_xTaskGetHandle
-    #define INCLUDE_xTaskGetHandle    1
-#endif
-
-#ifndef INCLUDE_xTaskResumeFromISR
-    #define INCLUDE_xTaskResumeFromISR    1
-#endif
-
-#ifndef INCLUDE_xQueueGetMutexHolder
-    #define INCLUDE_xQueueGetMutexHolder    1
-#endif
-
+#define INCLUDE_vTaskPrioritySet               1
+#define INCLUDE_uxTaskPriorityGet              1
+#define INCLUDE_vTaskDelete                    1
+#define INCLUDE_vTaskSuspend                   1
+#define INCLUDE_vTaskDelayUntil                1
+#define INCLUDE_vTaskDelay                     1
+#define INCLUDE_xTaskGetSchedulerState         1
+#define INCLUDE_xTaskGetCurrentTaskHandle      1
+#define INCLUDE_uxTaskGetStackHighWaterMark    1
+#define INCLUDE_xTaskGetIdleTaskHandle         1
+#define INCLUDE_eTaskGetState                  1
+#define INCLUDE_xTimerPendFunctionCall         1
+#define INCLUDE_xTaskAbortDelay                1
+#define INCLUDE_xTaskGetHandle                 1
+#define INCLUDE_xTaskResumeFromISR             1
+#define INCLUDE_xQueueGetMutexHolder           1
 /* A header file that defines trace macro can be included here. */
 
 #endif /* FREERTOS_CONFIG_H */

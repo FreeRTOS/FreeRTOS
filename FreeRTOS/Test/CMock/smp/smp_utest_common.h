@@ -86,4 +86,9 @@ void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState);
  */
 void vSmpTestTask( void *pvParameters );
 
+/**
+ * @brief Helper function to simulate calling xTaskIncrementTick in critical section.
+ */
+void xTaskIncrementTick_helper(void);
+
 #endif /* SMP_UTEST_COMMON_H */

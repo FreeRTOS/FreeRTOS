@@ -65,7 +65,7 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-#if ( defined( configNUM_CORES ) && ( configNUM_CORES == 1 ) )
+#if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
     extern volatile BaseType_t xYieldPendings[];
     #define xYieldPending   xYieldPendings[ 0 ]
 #else
@@ -74,7 +74,7 @@ extern volatile TickType_t xPendedTicks;
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-#if ( defined( configNUM_CORES ) && ( configNUM_CORES == 1 ) )
+#if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
     extern TaskHandle_t xIdleTaskHandles[];
     #define xIdleTaskHandle   xIdleTaskHandles[ 0 ]
 #else

@@ -1,0 +1,265 @@
+/*
+ * FreeRTOS V202012.00
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+/*! @file single_priority_no_timeslice_covg_utest */
+
+/* C runtime includes. */
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+
+/* Task includes */
+#include "FreeRTOS.h"
+#include "FreeRTOSConfig.h"
+#include "event_groups.h"
+#include "queue.h"
+
+/* Test includes. */
+#include "unity.h"
+#include "unity_memory.h"
+#include "../global_vars.h"
+#include "../smp_utest_common.h"
+
+/* Mock includes. */
+#include "mock_timers.h"
+#include "mock_fake_assert.h"
+#include "mock_fake_port.h"
+
+
+/* ===========================  EXTERN VARIABLES  =========================== */
+extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
+extern volatile UBaseType_t uxSchedulerSuspended;
+extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
+
+/* ==============================  Global VARIABLES ============================== */
+TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+#define taskTASK_YIELDING       ( TaskRunning_t ) ( -2 )
+
+/* ============================  Unity Fixtures  ============================ */
+/*! called before each testcase */
+void setUp( void )
+{
+    commonSetUp();
+}
+
+/*! called after each testcase */
+void tearDown( void )
+{
+    commonTearDown();
+}
+
+/*! called at the beginning of the whole suite */
+void suiteSetUp()
+{
+}
+
+/*! called at the end of the whole suite */
+int suiteTearDown( int numFailures )
+{
+    return numFailures;
+}
+
+/* ===========================  EXTERN FUNCTIONS  =========================== */
+extern void vTaskEnterCritical(void);
+
+/* ==============================  Helper functions for Test Cases  ============================== */
+void vSetTaskToRunning( int num_calls )
+{
+    /*
+        configASSERT( pxThisTCB->xTaskRunState != taskTASK_YIELDING );
+        Requires 2 check conditions when it is and isn't in the yielding state
+        Hence, just allow the program to loop through twice for complete coverage
+    */
+    if (num_calls > 2){
+        xTaskHandles[0] -> xTaskRunState =  eRunning;
+    }
+}
+
+BaseType_t returnFakeTrue(int num_calls){
+    
+    return 1;
+}
+
+BaseType_t UpdateuxSchedulerSuspended2(int num_calls){
+    if (num_calls > 1){
+        uxSchedulerSuspended = ( UBaseType_t ) 2;
+        pxCurrentTCBs[ configNUMBER_OF_CORES ] = 0;    
+    }
+    else if (num_calls == 0){
+        uxSchedulerSuspended = 0U;
+    }
+    return ( UBaseType_t ) 0;
+}
+
+/* ==============================  Test Cases  ============================== */
+
+//Asserts Line 705's configAssert to false by make it 2
+void test_task_yelding_state_configAsset_Sucess( void )
+{
+    vFakePortEnableInterrupts_Stub(&vSetTaskToRunning);
+
+    xTaskHandles[0] = NULL;
+
+    xTaskCreate(vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+
+    vTaskStartScheduler();
+
+    xTaskHandles[0]->xTaskRunState = taskTASK_YIELDING;
+    vTaskSuspendAll();
+
+}
+
+//Asserts Line 705's configAssert to false by make it 2
+void test_task_yelding_state_configAssetFail( void )
+{
+    vFakePortCheckIfInISR_Stub(&UpdateuxSchedulerSuspended2);
+    vFakePortEnableInterrupts_Stub(&vSetTaskToRunning);
+    //vFakePortReleaseTaskLock_Stub(&vSetTaskToRunning2);
+
+    xTaskHandles[0] = NULL;
+
+    xTaskCreate(vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+
+    vTaskStartScheduler();
+
+    xTaskHandles[0]->xTaskRunState = taskTASK_YIELDING;
+    vTaskSuspendAll();
+
+}
+
+/*
+    static void prvCheckForRunStateChange( void );
+        covers [portCHECK_IF_IN_ISR()] is false for Line 682 [task.c]
+*/
+void test_prv_Check_For_Run_State_Change_case_task_yelding_state( void )
+{
+    //Reset all the globals to gain the deafult null state
+    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+
+    vFakePortEnableInterrupts_Stub(&vSetTaskToRunning); 
+    xTaskHandles[0] =  NULL ;
+    
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    xTaskHandles[0] -> xTaskRunState =  taskTASK_YIELDING;
+
+    vTaskEnterCritical();
+}
+
+/*
+Coverage for 
+        static void prvCheckForRunStateChange( void );
+        covers the deafult state when the function is just called
+*/
+void test_prv_Check_For_Run_State_Change_case_1( void )
+{
+    //Reset all the globals to gain the deafult null state
+    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+
+    //Allow helper function 
+    vFakePortCheckIfInISR_Stub(&returnFakeTrue); 
+
+    uint32_t i;
+
+    /* Create tasks of equal priority for all available CPU cores */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    }
+    
+    vTaskStartScheduler();
+
+    /* Verify all tasks are in the running state */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        verifySmpTask( &xTaskHandles[i], eRunning, i );
+    }
+
+    /* Lower the priority of task T0 */
+    vTaskPrioritySet( xTaskHandles[0], 1 );
+    
+}
+
+/*
+Coverage for 
+    UBaseType_t vTaskCoreAffinityGet( const TaskHandle_t xTask )
+        with a created task handel for xTask
+*/
+void test_task_Core_Affinity_Get( void )
+{
+    //Reset all the globals to gain the deafult null state
+    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+
+    uint32_t i;
+
+    /* Create tasks of equal priority */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
+    }
+
+    vTaskStartScheduler();
+
+    /* Verify tasks are running */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        verifySmpTask( &xTaskHandles[i], eRunning, i );
+    }
+
+    /* task T0 */
+    vTaskCoreAffinityGet( xTaskHandles[0] );
+
+}
+/*
+Coverage for 
+    UBaseType_t vTaskCoreAffinityGet( const TaskHandle_t xTask )
+        with a NULL for xTask
+*/
+void test_task_Core_Affinity_Get_with_null_task( void )
+{
+    //Reset all the globals to gain the deafult null state
+    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+
+    uint32_t i;
+
+    /* Create tasks of equal priority */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
+    }
+
+    vTaskStartScheduler();
+
+    /* Verify tasks are running */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        verifySmpTask( &xTaskHandles[i], eRunning, i );
+    }
+    vTaskCoreAffinityGet( NULL );
+
+}
+
+
+
+
+

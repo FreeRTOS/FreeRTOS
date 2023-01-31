@@ -76,29 +76,6 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-/* ==============================  Helper function  ============================== */
-
-/* Helper function to simulate calling xTaskIncrementTick in critical section. */
-void xTaskIncrementTick_helper( void )
-{
-    BaseType_t xSwitchRequired;
-    UBaseType_t uxSavedInterruptState;
-
-    /* xTaskIncrementTick is called in ISR context. Use taskENTER/EXIT_CRITICAL_FROM_ISR
-     * here. */
-    uxSavedInterruptState = taskENTER_CRITICAL_FROM_ISR();
-
-    xSwitchRequired = xTaskIncrementTick();
-
-    /* Simulate context switch on the core which calls xTaskIncrementTick. */
-    if( xSwitchRequired == pdTRUE )
-    {
-        portYIELD_CORE( configTICK_CORE );
-    }
-
-    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptState );
-}
-
 /* ==============================  Test Cases  ============================== */
 
 /**
@@ -517,15 +494,14 @@ void test_priority_change_tasks_equal_priority( void )
  * 
  * Create a new task
  * 
- * Call xTaskIncrementTick() for each configured CPU core. The kernel will consider CPU 0
- * the core calling the API and therefore will not rotate tasks for that CPU.
+ * Call xTaskIncrementTick() for each configured CPU core.
  * 
  * Task (TN + 1) when configNUMBER_OF_CORES = 4
  * Tick    Core
- * 1       -1
+ * 1       0
  * 2       1
  * 3       2
- * 4       3 
+ * 4       3
  */
 void test_task_create_tasks_equal_priority( void )
 {
@@ -593,8 +569,7 @@ void test_task_create_tasks_equal_priority( void )
  * 
  * Create a new low priority task
  * 
- * Call xTaskIncrementTick() for each configured CPU core. The kernel will consider CPU 0
- * the core calling the API and therefore will not rotate tasks for that CPU.
+ * Call xTaskIncrementTick() for each configured CPU core.
  * 
  * Task (TN)                  Task (TN + 1)
  * Priority – 2               Priority – 1
@@ -861,12 +836,12 @@ void test_task_suspend_running_task( void )
  * 3       2
  * 4       3
  * 
- * Delay the task running on core 0, which is task 1.
+ * Block the task running on core 0, which is task 1.
  * 
  * Call xTaskIncrementTick() for each configured CPU core. The tasks will not
  * change state.
  *
- * After delay, verify task 1 can be scheduled on each core.
+ * After ( configNUMBER_OF_CORES + 1 ) ticks, verify task 1 can be scheduled on each core.
  */
 void test_task_block_running_task( void )
 {
@@ -926,9 +901,9 @@ void test_task_block_running_task( void )
         }
     }
 
-    /* After delay the task 1 will be added back to the ready list.
-     * Verfiy that the task 1 can be scheduled on each core after tick.
-     */
+    /* After ( configNUMBER_OF_CORES + 1 ) ticks, the task 1 will be added back to
+     * the ready list. Verfiy that the task 1 can be scheduled on each core when
+     * xTaskIncrementTick is called. */
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskIncrementTick_helper();
         verifySmpTask( &xTaskHandles[1], eRunning, i );
@@ -938,7 +913,7 @@ void test_task_block_running_task( void )
 /**
  * @brief AWS_IoT-FreeRTOS_SMP_TC-85
  * A high priority task will be created for each available CPU core. An
- * additional high priority task will be created with affinity for the larget
+ * additional high priority task will be created with affinity for the largest
  * numbered CPU core. This test will verify that as OS ticks are generated the
  * task with CPU affinity will either be in the ready state or running on the 
  * specified CPU core.

@@ -140,7 +140,7 @@ void test_timeslice_verification_tasks_equal_priority( void )
     {
         xTaskIncrementTick_helper();
 
-        /* Verify the last created task runs on each task by looping through the 0,1,2,3... cycle */
+        /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
@@ -531,7 +531,7 @@ void test_task_create_tasks_equal_priority( void )
     /* Create a new task of equal priority */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[configNUMBER_OF_CORES] );
 
-    /* Verify the last created task runs on each task by looping through the 0,1,2,3... cycle */
+    /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         
         xTaskIncrementTick_helper();
@@ -687,7 +687,7 @@ void test_task_delete_tasks_equal_priorities_delete_running_task( void )
         
         xTaskIncrementTick_helper();
 
-        /* Verify the last created task runs on each task by looping through the 0,1,2,3... cycle */
+        /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 
@@ -777,7 +777,7 @@ void test_task_suspend_running_task( void )
         
         xTaskIncrementTick_helper();
 
-        /* Verify the last created task runs on each task by looping through the 0,1,2,3... cycle */
+        /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 
@@ -884,7 +884,7 @@ void test_task_block_running_task( void )
         
         xTaskIncrementTick_helper();
 
-        /* Verify the last created task runs on each task by looping through the 0,1,2,3... cycle */
+        /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 
@@ -1087,7 +1087,7 @@ void test_task_affinity_set_affinity_running_task( void )
         
         xTaskIncrementTick_helper();
 
-        /* Verify the last created task runs on each task by looping through the 0,1,2,3... cycle */
+        /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 

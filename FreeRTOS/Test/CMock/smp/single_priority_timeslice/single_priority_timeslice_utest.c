@@ -76,6 +76,7 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
+
 /* ==============================  Test Cases  ============================== */
 
 /**
@@ -311,7 +312,7 @@ void test_timeslice_verification_different_priority_tasks( void )
  * Raise the priority of task TN + 1 and verify on each tick it executes on a
  * different CPU core
  * 
- * Task (TN + 1) when configNUMBER_OF_CORES = 4
+ * Task (0) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -357,11 +358,11 @@ void test_priority_change_tasks_different_priority_raise_to_equal( void )
     vTaskPrioritySet( xTaskHandles[configNUMBER_OF_CORES], 2 );
 
     /* After the first tick the ready task will be running on the first CPU core */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {        
         xTaskIncrementTick_helper();
 
-        /* Verify the last created task runs on each core or enters the ready state */
+        /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
@@ -496,7 +497,7 @@ void test_priority_change_tasks_equal_priority( void )
  * 
  * Call xTaskIncrementTick() for each configured CPU core.
  * 
- * Task (TN + 1) when configNUMBER_OF_CORES = 4
+ * Task (0) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -529,8 +530,10 @@ void test_task_create_tasks_equal_priority( void )
 
     /* Verify the last created task runs on each core or enters the ready state */
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        
         xTaskIncrementTick_helper();
+
+        /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
@@ -727,7 +730,7 @@ void test_task_delete_tasks_equal_priorities_delete_running_task( void )
  * 
  * Call xTaskIncrementTick() for each configured CPU core.
  * 
- * Task (TN + 1) when configNUMBER_OF_CORES = 4
+ * Task (1) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -796,6 +799,8 @@ void test_task_suspend_running_task( void )
     
         xTaskIncrementTick_helper();
 
+        /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
@@ -829,7 +834,7 @@ void test_task_suspend_running_task( void )
  * 
  * Call xTaskIncrementTick() for each configured CPU core.
  * 
- * Task (TN + 1) when configNUMBER_OF_CORES = 4
+ * Task (0) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -841,7 +846,7 @@ void test_task_suspend_running_task( void )
  * Call xTaskIncrementTick() for each configured CPU core. The tasks will not
  * change state.
  *
- * After ( configNUMBER_OF_CORES + 1 ) ticks, verify task 1 can be scheduled on each core.
+ * After blocking the task, verify task 1 can be scheduled on each core.
  */
 void test_task_block_running_task( void )
 {
@@ -906,6 +911,9 @@ void test_task_block_running_task( void )
      * xTaskIncrementTick is called. */
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskIncrementTick_helper();
+
+        /* Verify the the task 1 has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted */
         verifySmpTask( &xTaskHandles[1], eRunning, i );
     }
 }

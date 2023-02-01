@@ -349,6 +349,7 @@ void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState)
     TEST_ASSERT_EQUAL_INT_MESSAGE( eRunning, xTaskDetails.eCurrentState, "Idle Task Verification Failed: Incorrect eCurrentState" );
 }
 
+/* Helper function to simulate calling xTaskIncrementTick in critical section. */
 void xTaskIncrementTick_helper( void )
 {
     BaseType_t xSwitchRequired;

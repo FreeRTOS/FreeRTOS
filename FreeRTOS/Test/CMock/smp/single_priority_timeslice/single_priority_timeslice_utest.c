@@ -358,7 +358,8 @@ void test_priority_change_tasks_different_priority_raise_to_equal( void )
     vTaskPrioritySet( xTaskHandles[configNUMBER_OF_CORES], 2 );
 
     /* After the first tick the ready task will be running on the first CPU core */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {        
+    for (i = 0; i < configNUMBER_OF_CORES; i++)
+    {        
         xTaskIncrementTick_helper();
 
         /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
@@ -532,8 +533,10 @@ void test_task_create_tasks_equal_priority( void )
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskIncrementTick_helper();
 
-        /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
-         * the last state of -1 is omitted */
+        /* 
+         * Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted
+         */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
@@ -799,8 +802,10 @@ void test_task_suspend_running_task( void )
     
         xTaskIncrementTick_helper();
 
-        /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
-         * the last state of -1 is omitted */
+        /*
+         * Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted
+         */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
@@ -912,8 +917,10 @@ void test_task_block_running_task( void )
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskIncrementTick_helper();
 
-        /* Verify the the task 1 has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
-         * the last state of -1 is omitted */
+        /*
+         * Verify the the task 1 has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted
+         */
         verifySmpTask( &xTaskHandles[1], eRunning, i );
     }
 }

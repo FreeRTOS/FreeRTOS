@@ -312,7 +312,7 @@ void test_timeslice_verification_different_priority_tasks( void )
  * Raise the priority of task TN + 1 and verify on each tick it executes on a
  * different CPU core
  * 
- * Task (0) when configNUMBER_OF_CORES = 4
+ * Task (TN + 1) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -498,7 +498,7 @@ void test_priority_change_tasks_equal_priority( void )
  * 
  * Call xTaskIncrementTick() for each configured CPU core.
  * 
- * Task (0) when configNUMBER_OF_CORES = 4
+ * Task (TN + 1) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -733,7 +733,7 @@ void test_task_delete_tasks_equal_priorities_delete_running_task( void )
  * 
  * Call xTaskIncrementTick() for each configured CPU core.
  * 
- * Task (1) when configNUMBER_OF_CORES = 4
+ * Task (TN + 1) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1

@@ -86,6 +86,14 @@ int suiteTearDown( int numFailures )
 void vApplicationIdleHook( void )
 {
     printf( "idle hook called\r\n" );
+
+    /*
+        Do not exit on the first call as function
+            static TickType_t prvGetExpectedIdleTime( void )
+                is covered on the line after the funcnction
+                    vApplicationIdleHook
+                        is called
+    */
     if (idle_hook_call_count > 2 ){
         pthread_exit( NULL );
     }
@@ -163,12 +171,18 @@ void test_task_suspend_stopped_scheduler( void )
 
 
 /*
-#define configNUMBER_OF_CORES                            1
-#define configUSE_TICKLESS_IDLE                          1
-#define configUSE_IDLE_HOOK                              1
-#define configUSE_MINIMAL_IDLE_HOOK                      0 
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                            1
+    #define configUSE_TICKLESS_IDLE                          1
+    #define configUSE_IDLE_HOOK                              1
+    #define configUSE_MINIMAL_IDLE_HOOK                      0 
+
 Coverage for:
-    portTASK_FUNCTION( prvIdleTask );
+
+    static portTASK_FUNCTION( prvIdleTask, pvParameters )   &
+    static void prvCheckTasksWaitingTermination( void )     &
+    static TickType_t prvGetExpectedIdleTime( void )
+
     
     requires you to create a thread and kill it, for an idle task is eternal.
 */
@@ -198,39 +212,3 @@ void test_prvIddleTask_Expected_time( void )
         vTaskDelete(xTaskHandles[i]);
     }
 }
-
-
-// /*
-// Coverage for:
-//     portTASK_FUNCTION( prvIdleTask );
-
-//     requires you to create a thread and kill it, for an idle task is eternal.
-// */
-// void test_prvIddleTask_yield( void )
-// {
-//     vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
-//     idle_hook_call_count =0;
-
-//     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES + 1] = { NULL };
-//     uint32_t i, retVal ;
-//     pthread_t thread_id;
-
-//     /* Create configNUMBER_OF_CORES tasks of equal priority */
-//     for (i = 0; i < (configNUMBER_OF_CORES); i++) {
-//         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
-//     }
-
-//     // /* Create a single equal priority task */   
-//     // xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
-    
-//     vTaskStartScheduler();
-//     vTaskDelete(xTaskHandles[0]);
-
-//     /* API Call */
-//     pthread_create( &thread_id, NULL, &task_thread_function, NULL );
-//     pthread_join( thread_id, ( void ** ) &retVal );
-    
-//     for (i = 1; i < (configNUMBER_OF_CORES); i++) {
-//         vTaskDelete(xTaskHandles[i]);
-//     }
-// }

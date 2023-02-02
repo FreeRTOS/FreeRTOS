@@ -116,8 +116,6 @@ static void * task_thread_function( void * args )
 
 /* ==============================  Test Cases  ============================== */
 
-
-
 /*
 Coverage for:
     portTASK_FUNCTION( prvIdleTask );
@@ -138,7 +136,7 @@ void test_prvIddleTask_Expected_time( void )
     }
 
     // /* Create a single equal priority task */   
-    // xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
     
     vTaskStartScheduler();
     //Necessary to trigger another function with porttask()
@@ -155,25 +153,25 @@ void test_prvIddleTask_Expected_time( void )
 
 /*
 Coverage for:
-    portTASK_FUNCTION( prvIdleTask );
+    static portTASK_FUNCTION( prvMinimalIdleTask, pvParameters )
     
-    requires you to create a thread and kill it, for an idle task is eternal.
+    for the condition when a task that is sharing the idle priority is 
+    ready to run then the idle task is yielded before the end of the timeslice
+    
+    programmatically:
+        if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) = True
+
 */
 void test_prvIddleTask_Expected_time_more_task( void )
 {
-    //vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
-
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+1] = { NULL };
-    uint32_t i, retVal ;
+    uint32_t retVal ;
     pthread_t thread_id;
 
-    /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
-    }
-
-    // /* Create a single equal priority task */   
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    /*As configNUMBER_OF_CORES idle tasks are already created by FreeRTOS kernel 
+    * we only need to create one extra to have additonal equal priorty task
+    */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTaskHandles[configNUMBER_OF_CORES] );
     
     vTaskStartScheduler();
 
@@ -181,9 +179,9 @@ void test_prvIddleTask_Expected_time_more_task( void )
     pthread_create( &thread_id, NULL, &task_thread_function, NULL );
     pthread_join( thread_id, ( void ** ) &retVal );
     
-    for (i = 0; i <= (configNUMBER_OF_CORES); i++) {
-        vTaskDelete(xTaskHandles[i]);
-    }
+    //Only delete the task we created
+    vTaskDelete(xTaskHandles[configNUMBER_OF_CORES]);
+    
 }
 
 

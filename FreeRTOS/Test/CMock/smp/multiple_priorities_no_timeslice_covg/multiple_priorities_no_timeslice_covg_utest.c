@@ -363,3 +363,241 @@ void test_task_set_get_task_number_null_task( void )
     
     TEST_ASSERT_EQUAL( 0U , returntaskNumber);
 }
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define INCLUDE_uxTaskGetStackHighWaterMark             1
+
+Coverage for 
+    UBaseType_t uxTaskGetStackHighWaterMark( TaskHandle_t xTask )
+        By passing a valid created Task
+*/
+void test_task_get_stack_high_water_mark( void )
+{
+    TaskHandle_t xTaskHandles[1] = { NULL };
+
+    /* Create  tasks  */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    uxTaskGetStackHighWaterMark(xTaskHandles[0]);
+
+}
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define INCLUDE_uxTaskGetStackHighWaterMark             1
+
+Coverage for 
+        UBaseType_t uxTaskGetStackHighWaterMark( TaskHandle_t xTask )
+        By passing a NULL as a  Task
+*/
+void test_task_get_stack_high_water_mark_NULL_task( void )
+{
+    TaskHandle_t xTaskHandles[1] = { NULL };
+
+    /* Create  tasks  */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    //NULL task for code coverage
+    uxTaskGetStackHighWaterMark( NULL );
+
+}
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define INCLUDE_uxTaskGetStackHighWaterMark              1
+    #define configUSE_MUTEXES                                1
+Coverage for: 
+        TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
+*/
+void test_task_get_current_task_handle_cpu ( void )
+{
+    TaskHandle_t xTaskHandles[1] = { NULL };
+
+    /* Create  tasks  */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    xTaskGetCurrentTaskHandleCPU( vFakePortGetCoreID() );
+
+}
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define configUSE_TRACE_FACILITY                         1
+    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
+
+Coverage for: 
+        void vTaskList( char * pcWriteBuffer )
+        if( pxTaskStatusArray != NULL ) = False
+*/
+void test_v_task_list_case_no_task_created( void )
+{
+    static char	buff[ 800 ] = { 0 };
+ 
+    //Call the List
+    vTaskList(buff);
+
+}
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define configUSE_TRACE_FACILITY                         1
+    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
+
+Coverage for: 
+        void vTaskList( char * pcWriteBuffer )
+        case eDeleted
+*/
+void test_v_task_list_case_eDeleted( void )
+{
+    static char	buff[ 800 ] = { 0 };
+
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+1] = { NULL };
+
+    uint32_t i;
+
+    /* Create tasks of equal priority for all available CPU cores */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[i] );
+    }
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+
+    vTaskStartScheduler();
+ 
+    vTaskDelete(xTaskHandles[0]);
+
+    //Call the List
+    vTaskList(buff);
+
+    /* Delete all priority task responsibly*/
+    for (i = 1; i < configNUMBER_OF_CORES; i++) {
+        vTaskDelete(xTaskHandles[i]);
+    }
+
+}
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define configUSE_TRACE_FACILITY                         1
+    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
+
+Coverage for: 
+        void vTaskList( char * pcWriteBuffer )
+        case eSuspended
+*/
+void test_v_task_list_case_eSuspended( void )
+{
+    static char	buff[ 800 ] = { 0 };
+
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+1] = { NULL };
+
+    uint32_t i;
+
+    /* Create tasks of equal priority for all available CPU cores */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[i] );
+    }
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+
+    vTaskStartScheduler();
+ 
+    vTaskSuspend(xTaskHandles[1]);
+
+    //Call the List
+    vTaskList(buff);
+
+
+    /* Delete all priority task responsibly*/
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        vTaskDelete(xTaskHandles[i]);
+    }
+
+}
+
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define configUSE_TRACE_FACILITY                         1
+    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
+
+Coverage for: 
+        void vTaskList( char * pcWriteBuffer )
+        case eBlocked
+*/
+void test_v_task_list_case_eblocked( void )
+{
+    static char	buff[ 800 ] = { 0 };
+
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+    uint32_t i;
+
+    /* Create tasks of equal priority for all available CPU cores */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    }
+
+    vTaskStartScheduler();
+
+    /* Use vSetCurrentCore to setup the core ID returned by portGET_CORE_ID(). */
+    //vSetCurrentCore( 0 );
+
+    /* Delay the task running on core ID 0 for 1 ticks. The task will be put into pxDelayedTaskList and added back to ready list after 1 tick. */
+    vTaskDelay( 1 );
+
+    //Call the List
+    vTaskList(buff);
+
+     /* Delete all priority task responsibly*/
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        vTaskDelete(xTaskHandles[i]);
+    }
+}
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define configUSE_TRACE_FACILITY                         1
+    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
+
+Coverage for: 
+        void vTaskList( char * pcWriteBuffer )
+        and
+        static char * prvWriteNameToBuffer( char * pcBuffer,
+                                            const char * pcTaskName )
+*/
+void test_v_task_list( void )
+{
+    static char	buff[ 800 ] = { 0 };
+
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    uint32_t i;
+
+    /* Create tasks of equal priority for all available CPU cores */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    }
+
+    vTaskStartScheduler();
+
+    vTaskList(buff);
+
+    /* Delete all priority task responsibly*/
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        vTaskDelete(xTaskHandles[i]);
+    }
+}

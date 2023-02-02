@@ -23,9 +23,9 @@
  * https://github.com/FreeRTOS
  *
  */
-/*! @file smp_utest_common.c */
+/*! @file single_covg_utest_common.c */
 
-#include "smp_utest_common.h"
+#include "single_covg_utest_common.h"
 
 /* C runtime includes. */
 #include <stdlib.h>

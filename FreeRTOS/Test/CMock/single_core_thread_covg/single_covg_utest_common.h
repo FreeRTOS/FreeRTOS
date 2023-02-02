@@ -23,7 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
-/*! @file smp_utest_common.h */
+/*! @file single_covg_utest_common.h */
 
 #ifndef SMP_UTEST_COMMON_H
 #define SMP_UTEST_COMMON_H

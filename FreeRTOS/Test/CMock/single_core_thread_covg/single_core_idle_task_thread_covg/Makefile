@@ -16,11 +16,11 @@ PROJECT_DEPS_SRC    := list.c queue.c
 PROJECT_HEADER_DEPS :=  FreeRTOS.h
 
 # SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
-SUITE_UT_SRC        :=  single_priority_no_timeslice_utest.c
+SUITE_UT_SRC        :=  single_core_idle_task_thread_covg_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR
-SUITE_SUPPORT_SRC   := smp_utest_common.c
+SUITE_SUPPORT_SRC   := single_covg_utest_common.c
 
 # List the headers used by PROJECT_SRC that you would like to mock
 MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/timers.h

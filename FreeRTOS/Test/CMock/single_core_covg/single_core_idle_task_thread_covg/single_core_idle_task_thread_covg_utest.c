@@ -53,6 +53,11 @@
 
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 
+
+/* ===========================  GLOBAL VARIABLES  =========================== */
+
+uint32_t idle_hook_call_count = 0;
+
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
@@ -81,7 +86,11 @@ int suiteTearDown( int numFailures )
 void vApplicationIdleHook( void )
 {
     printf( "idle hook called\r\n" );
-    pthread_exit( NULL );
+    if (idle_hook_call_count > 2 ){
+        pthread_exit( NULL );
+    }
+
+    idle_hook_call_count++;
 }
 
 void vApplicationMinimalIdleHook( void )
@@ -154,6 +163,10 @@ void test_task_suspend_stopped_scheduler( void )
 
 
 /*
+#define configNUMBER_OF_CORES                            1
+#define configUSE_TICKLESS_IDLE                          1
+#define configUSE_IDLE_HOOK                              1
+#define configUSE_MINIMAL_IDLE_HOOK                      0 
 Coverage for:
     portTASK_FUNCTION( prvIdleTask );
     
@@ -162,6 +175,7 @@ Coverage for:
 void test_prvIddleTask_Expected_time( void )
 {
     vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
+    idle_hook_call_count = 0;
 
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
     uint32_t i, retVal ;
@@ -189,12 +203,13 @@ void test_prvIddleTask_Expected_time( void )
 // /*
 // Coverage for:
 //     portTASK_FUNCTION( prvIdleTask );
-    
+
 //     requires you to create a thread and kill it, for an idle task is eternal.
 // */
 // void test_prvIddleTask_yield( void )
 // {
 //     vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
+//     idle_hook_call_count =0;
 
 //     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES + 1] = { NULL };
 //     uint32_t i, retVal ;

@@ -52,7 +52,7 @@
 /* OS Configuration */
 #define configUSE_PREEMPTION                             1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION          0
-#define configUSE_IDLE_HOOK                              0
+#define configUSE_IDLE_HOOK                              1 
 #define configUSE_TICK_HOOK                              0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK               1
 #define configTICK_RATE_HZ                               ( 1000 )
@@ -80,6 +80,7 @@
 #define portCRITICAL_NESTING_IN_TCB                      1
 #define portSTACK_GROWTH                                 ( 1 )
 #define configUSE_MINIMAL_IDLE_HOOK                      0
+#define configUSE_TICKLESS_IDLE                          1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1

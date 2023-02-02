@@ -84,11 +84,11 @@ void vApplicationMinimalIdleHook( void )
     printf( "Minimal idle hook called\r\n" );
     pthread_exit( NULL );
 }
-void vApplicationIdleHook( void )
-{
-    printf( "idle hook called\r\n" );
-    pthread_exit( NULL );
-}
+// void vApplicationIdleHook( void )
+// {
+//     printf( "idle hook called\r\n" );
+//     pthread_exit( NULL );
+// }
 
 
 // static void vPortYieldWithinAPI_xQueuePeek_Stub( int cmock_num_calls )

@@ -2843,3 +2843,235 @@ void test_task_premption_change_affinity( void )
     /* The low priority task remains running on the last core */
     verifySmpTask( &xTaskHandles[0], eRunning, (configNUMBER_OF_CORES - 1) );
 }
+
+/**
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-87
+ * Tasks of equal priority waiting in the ready queue. The one waiting for the longest
+ * time should be selected to run.
+ *
+ * #define configRUN_MULTIPLE_PRIORITIES                    1
+ * #define configUSE_TIME_SLICING                           0
+ * #define configNUMBER_OF_CORES                            (N > 1)
+ * #define configUSE_CORE_AFFINITY 1
+ * #define configUSE_TASK_PREEMPTION_DISABLE 1
+ *
+ * This test can be run with FreeRTOS configured for any number of cores greater
+ * than 1.
+ *
+ * Tasks are created prior to starting the scheduler.
+ *
+ * Task (T0)	      Task (TN)         Task (TN + 1)
+ * Priority – 1       Priority – 1      Priority – 1
+ * State – Ready	  State – Ready     State – Ready
+ *
+ * After calling vTaskStartScheduler()
+ *
+ * Task (T0)	      Task (TN - 1)     Task (TN)         Task (TN + 1)
+ * Priority – 1       Priority – 1      Priority – 1      Priority – 1
+ * State - Running	  State - Running   State - Ready     State - Ready
+ *
+ * Task T1 yields on core 1
+ *
+ * Task (T0)	        Task (T1)	        Task (TN)         Task (TN + 1)
+ * Priority – 1         Priority – 1        Priority – 1      Priority – 1
+ * State - Running	    State - Ready 	    State - Running   State - Ready
+ *
+ * Task T0 yields on core 0
+ *
+ * Task (T0)	        Task (T1)	        Task (TN)         Task (TN + 1)
+ * Priority – 1         Priority – 1        Priority – 1      Priority – 1
+ * State - Ready        State - Ready 	    State - Running   State - Running
+ *
+ * Task TN yields on core 1
+ *
+ * Task (T0)	        Task (T1)	        Task (TN)         Task (TN + 1)
+ * Priority – 1         Priority – 1        Priority – 1      Priority – 1
+ * State - Ready	    State - Running 	State - Ready     State - Running
+ */
+void test_task_yield_run_wait_longest( void )
+{
+    TaskHandle_t xTaskHandles[ ( configNUMBER_OF_CORES + 2 ) ] = { NULL };
+    uint32_t i;
+
+    /* Create ( N + 2 ) tasks of priority 1. The ready list should have tasks
+     * in the following orders:
+     *      [ T0, T1, T2, ..., TN, TN + 1 ]
+     */
+    for( i = 0; i < ( configNUMBER_OF_CORES + 2 ); i++ )
+    {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
+    }
+
+    /* Start the scheduler. The tasks running status:
+     *      T0 : core 0
+     *      T1 : core 1
+     *      ...
+     *      TN : in ready list
+     *      TN + 1 : in ready list
+     */
+    vTaskStartScheduler();
+    for( i = 0; i < ( configNUMBER_OF_CORES + 2 ); i++ )
+    {
+        if( i < configNUMBER_OF_CORES )
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, i );
+        }
+        else
+        {
+            verifySmpTask( &xTaskHandles[i], eReady, -1 );
+        }
+    }
+
+    /* T1 yield itself on core 1. TN should be selected to run on core 1.
+     * The tasks running status:
+     *      T0 : core 0
+     *      T1 : in ready list
+     *      ...
+     *      TN : core 1
+     *      TN + 1 : in ready list
+     */
+    vSetCurrentCore( 1 );
+    taskYIELD();
+    for( i = 0; i < ( configNUMBER_OF_CORES + 2 ); i++ )
+    {
+        if( i == 1 )
+        {
+            verifySmpTask( &xTaskHandles[i], eReady, -1 );
+        }
+        else if( i == ( configNUMBER_OF_CORES + 1 ) )
+        {
+            verifySmpTask( &xTaskHandles[i], eReady, -1 );
+        }
+        else if( i == configNUMBER_OF_CORES )
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, 1 );
+        }
+        else
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, i );
+        }
+    }
+
+    /* T0 yield itself on core 0. TN + 1 should be selected to run on core 0.
+     * The tasks running status:
+     *      T0 : in ready list
+     *      T1 : in ready list
+     *      ...
+     *      TN : core 1
+     *      TN + 1 : core 0
+     */
+    vSetCurrentCore( 0 );
+    taskYIELD();
+    for( i = 0; i < ( configNUMBER_OF_CORES + 2 ); i++ )
+    {
+        if( ( i == 0 ) || ( i == 1 ) )
+        {
+            verifySmpTask( &xTaskHandles[i], eReady, -1 );
+        }
+        else if( i == configNUMBER_OF_CORES )
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, 1 );
+        }
+        else if( i == ( configNUMBER_OF_CORES + 1 ) )
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, 0 );
+        }
+        else
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, i );
+        }
+    }
+
+    /* TN yield itself on core 1. T1 should now runs on core 1 since it stop running first.
+     * The tasks running status:
+     *      T0 : in ready list
+     *      T1 : core 1
+     *      ...
+     *      TN : in ready list
+     *      TN + 1 : core 0
+     */
+    vSetCurrentCore( 1 );
+    taskYIELD();
+    for( i = 0; i < ( configNUMBER_OF_CORES + 2 ); i++ )
+    {
+        if( i == 0 )
+        {
+            verifySmpTask( &xTaskHandles[i], eReady, -1 );
+        }
+        else if( i == configNUMBER_OF_CORES )
+        {
+            verifySmpTask( &xTaskHandles[i], eReady, -1 );
+        }
+        else if( i == 1 )
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, 1 );
+        }
+        else if( i == ( configNUMBER_OF_CORES + 1 ) )
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, 0 );
+        }
+        else
+        {
+            verifySmpTask( &xTaskHandles[i], eRunning, i );
+        }
+    }
+}
+
+/**
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-88
+ * Tasks of equal priority waiting in the ready queue. The new task of equal priority
+ * should be selected to run when a running task yields itself.
+ *
+ * #define configRUN_MULTIPLE_PRIORITIES                    1
+ * #define configUSE_TIME_SLICING                           0
+ * #define configNUMBER_OF_CORES                            (N > 1)
+ *
+ * This test can be run with FreeRTOS configured for any number of cores greater
+ * than 1.
+ *
+ * Tasks are created prior to starting the scheduler.
+ *
+ * Task (T0)	      Task (TN-1)
+ * Priority – 1       Priority – 1
+ * State – Ready	  State – Ready
+ *
+ * After calling vTaskStartScheduler()
+ *
+ * Task (T0)	      Task (TN-1)
+ * Priority – 1       Priority – 1
+ * State – Running	  State – Running
+ *
+ * Create Task TN
+ *
+ * Task (T0)	        Task (TN-1)	        Task (TN)
+ * Priority – 1         Priority – 1        Priority – 1
+ * State - Running	    State - Running 	State - Ready
+ *
+ * Task T0 yields on core 0
+ *
+ * Task (T0)	        Task (TN-1)	        Task (TN)
+ * Priority – 1         Priority – 1        Priority – 1
+ * State - Ready	    State - Running 	State - Running
+ */
+void test_task_yield_run_equal_priority_new_task( void )
+{
+    TaskHandle_t xTaskHandles[ ( configNUMBER_OF_CORES + 1 ) ] = { NULL };
+    uint32_t i;
+
+    /* Create N tasks. */
+    for( i = 0; i < ( configNUMBER_OF_CORES ); i++ )
+    {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
+    }
+
+    vTaskStartScheduler();
+
+    /* Create N+1th tasks TN. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
+
+    /* Task T0 yields itself on core 0. */
+    taskYIELD();
+
+    /* The new task TN should runs on core 0. */
+    verifySmpTask( &xTaskHandles[i], eRunning, 0 );
+}

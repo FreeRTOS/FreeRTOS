@@ -89,6 +89,11 @@ void vSmpTestTask( void *pvParameters );
 /**
  * @brief Helper function to simulate calling xTaskIncrementTick in critical section.
  */
-void xTaskIncrementTick_helper(void);
+void xTaskIncrementTick_helper( void );
+
+/**
+ * @brief Set the core ID returned by portGET_CORE_ID()
+ */
+void vSetCurrentCore( BaseType_t xCoreID );
 
 #endif /* SMP_UTEST_COMMON_H */

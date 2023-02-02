@@ -17,7 +17,7 @@ PROJECT_HEADER_DEPS :=  FreeRTOS.h
 
 # SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
 # Add more files here +=
-SUITE_UT_SRC        :=  single_priority_no_timeslice_thread_utest.c
+SUITE_UT_SRC        :=  single_priority_timeslice_thread_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR

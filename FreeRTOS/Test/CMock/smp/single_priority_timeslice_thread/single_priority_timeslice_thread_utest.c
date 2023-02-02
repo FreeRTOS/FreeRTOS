@@ -81,15 +81,15 @@ int suiteTearDown( int numFailures )
 /* =============================  HELPER FUNCTIONS  ========================= */
 void vApplicationMinimalIdleHook( void )
 {
+    printf( "Minimal idle hook called\r\n" );
+    pthread_exit( NULL );
+}
+void vApplicationIdleHook( void )
+{
     printf( "idle hook called\r\n" );
     pthread_exit( NULL );
 }
 
-// void vApplicationMinimalIdleHook( void )
-// {
-//     printf( "minimal idle hook called\r\n" );
-//     pthread_exit( NULL );
-// }
 
 // static void vPortYieldWithinAPI_xQueuePeek_Stub( int cmock_num_calls )
 // {
@@ -153,5 +153,37 @@ void test_prvIddleTask_Expected_time( void )
     }
 }
 
+/*
+Coverage for:
+    portTASK_FUNCTION( prvIdleTask );
+    
+    requires you to create a thread and kill it, for an idle task is eternal.
+*/
+void test_prvIddleTask_Expected_time_more_task( void )
+{
+    //vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
+
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+1] = { NULL };
+    uint32_t i, retVal ;
+    pthread_t thread_id;
+
+    /* Create configNUMBER_OF_CORES tasks of equal priority */
+    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    }
+
+    // /* Create a single equal priority task */   
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    
+    vTaskStartScheduler();
+
+    /* API Call */
+    pthread_create( &thread_id, NULL, &task_thread_function, NULL );
+    pthread_join( thread_id, ( void ** ) &retVal );
+    
+    for (i = 0; i <= (configNUMBER_OF_CORES); i++) {
+        vTaskDelete(xTaskHandles[i]);
+    }
+}
 
 

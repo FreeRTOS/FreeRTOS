@@ -84,19 +84,6 @@ void vApplicationMinimalIdleHook( void )
     printf( "Minimal idle hook called\r\n" );
     pthread_exit( NULL );
 }
-// void vApplicationIdleHook( void )
-// {
-//     printf( "idle hook called\r\n" );
-//     pthread_exit( NULL );
-// }
-
-
-// static void vPortYieldWithinAPI_xQueuePeek_Stub( int cmock_num_calls )
-// {
-//     vFakePortExitCriticalSection();
-
-//     vFakePortEnterCriticalSection();
-// }
 
 /* =============================  STATIC FUNCTIONS  ========================= */
 
@@ -106,7 +93,6 @@ static void * task_thread_function( void * args )
 
     /* Setup */
     portTASK_FUNCTION( prvMinimalIdleTask, pvParameters );
-    //( void ) fool_static2;/* ignore unused variable warning */
     
     /* API Call */
     prvMinimalIdleTask( pvParameters );
@@ -118,14 +104,12 @@ static void * task_thread_function( void * args )
 
 /*
 Coverage for:
-    portTASK_FUNCTION( prvIdleTask );
+    static portTASK_FUNCTION( prvMinimalIdleTask, pvParameters )
     
     requires you to create a thread and kill it, for an idle task is eternal.
 */
 void test_prvIddleTask_Expected_time( void )
 {
-    //vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
-
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES + 1] = { NULL };
     uint32_t i, retVal ;
     pthread_t thread_id;
@@ -168,9 +152,8 @@ void test_prvIddleTask_Expected_time_more_task( void )
     uint32_t retVal ;
     pthread_t thread_id;
 
-    /*As configNUMBER_OF_CORES idle tasks are already created by FreeRTOS kernel 
-    * we only need to create one extra to have additonal equal priorty task
-    */
+    /* As configNUMBER_OF_CORES idle tasks are already created by FreeRTOS kernel 
+    *  we only need to create one extra to have additonal equal priorty task */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTaskHandles[configNUMBER_OF_CORES] );
     
     vTaskStartScheduler();

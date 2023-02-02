@@ -23,6 +23,36 @@ enp0s3:     ethernet interface
 virbr0:     virtual bridge         (to be created)
 virbr0-nic: veth virtual interface (to be created)
 ```
+Setting up the QEMU Demo
+* The demo can be run on 2 different systems, one with host running FreeRTOS system in qemu and another running the echo server.
+* The demo could also be run on the same system, using VM support, as in a Windows, MacOS, or Ubuntu host (running the echo server), with a VM running Ubuntu guest and qemu running FreeRTOS on them. 
+* Set the Local FreeRTOS MAC address to a unique value for the QEMU network. 
+    The Local Host IP address is the IP of the machine running the  FreeRTOS system in qemu.
+     The FreeRTOS IP address should be an unused local IP that does not conflict with a device on the QEMU network. The subnet mask, Gateway and DNS address should match that of the QEMU network .
+     The echo server’s address is the IP of the machine running the echo server .
+```
+        Linux Host(remote system/VM on server)
+ ┌───────────────────────────────────────────────┐
+ │      Host IP (eth0/ensp03)                    ├──────┐
+ │                                               │      │
+ │                                               │      │
+ │  ┌────────────────────────────┬──────────────┬┤      │
+ │  │Virtual Bridge Setup : vibr0│              ││      │
+ │  │FreeRTOS IPaddress          │   QEMU system││      │
+ │  ├───────┬───────────────┬────┘              ││      │
+ │  │       ├───────────────┤                   ││      │
+ │  │       │NIC : vibr0-nic│                   ││      │
+ │  ├───────┼───────────────┼───────────────────┼│      │
+ └──┴──────────────┼──▲──────────────────────────┘    ┌─┴───────┐
+                   │  │                               │same     │
+Echo Server Port   │  │                               │physical │
+                   │  │                               │network  │
+           ┌───────▼──┴──────┐                        └─┬───────┘
+           │ Echo server IP  │                          │
+           └─────────────────┴──────────────────────────┘
+
+    Windows/MAC/Linux Server
+```
 ### A few assumptions (your numbers could vary)
 ```
 Local Host IP address:          192.168.1.81

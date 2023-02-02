@@ -56,6 +56,7 @@ extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern volatile BaseType_t xSchedulerRunning;
+extern volatile TickType_t xTickCount;
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -553,9 +554,6 @@ void test_v_task_list_case_eblocked( void )
 
     vTaskStartScheduler();
 
-    /* Use vSetCurrentCore to setup the core ID returned by portGET_CORE_ID(). */
-    //vSetCurrentCore( 0 );
-
     /* Delay the task running on core ID 0 for 1 ticks. The task will be put into pxDelayedTaskList and added back to ready list after 1 tick. */
     vTaskDelay( 1 );
 
@@ -600,4 +598,33 @@ void test_v_task_list( void )
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         vTaskDelete(xTaskHandles[i]);
     }
+}
+
+
+
+
+/*
+The kernel will be configured as follows:
+    #define configNUMBER_OF_CORES                               (N > 1)
+    #define INCLUDE_xTaskDelayUntil                          1
+
+Coverage for: 
+        BaseType_t xTaskDelayUntil( TickType_t * const pxPreviousWakeTime,
+                                    const TickType_t xTimeIncrement )
+*/
+void test_task_delay_until_with_config_assert( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    uint32_t i;
+    TickType_t previousWakeTime = xTickCount - 3;
+
+    /* Create tasks of equal priority for all available CPU cores */
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    }
+
+    vTaskStartScheduler();
+
+    xTaskDelayUntil( &previousWakeTime , 4 );
+    
 }

@@ -312,7 +312,7 @@ void test_timeslice_verification_different_priority_tasks( void )
  * Raise the priority of task TN + 1 and verify on each tick it executes on a
  * different CPU core
  * 
- * Task (0) when configNUMBER_OF_CORES = 4
+ * Task (TN + 1) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -358,14 +358,13 @@ void test_priority_change_tasks_different_priority_raise_to_equal( void )
     vTaskPrioritySet( xTaskHandles[configNUMBER_OF_CORES], 2 );
 
     /* After the first tick the ready task will be running on the first CPU core */
-    for (i = 0; i < configNUMBER_OF_CORES ; ++i) 
-    {
+    for (i = 0; i < configNUMBER_OF_CORES; i++)
+    {        
         xTaskIncrementTick_helper();
-        /* 
-        Verify the the first task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
-        the last state of -1 is omitted
-        */
-        verifySmpTask( &xTaskHandles[0], eRunning, i );
+
+        /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted */
+        verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
 
@@ -497,15 +496,14 @@ void test_priority_change_tasks_equal_priority( void )
  * 
  * Create a new task
  * 
- * Call xTaskIncrementTick() for each configured CPU core. The kernel will consider CPU 0
- * the core calling the API and therefore will not rotate tasks for that CPU.
+ * Call xTaskIncrementTick() for each configured CPU core.
  * 
- * Task (0) when configNUMBER_OF_CORES = 4
+ * Task (TN + 1) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
  * 3       2
- * 4       3 
+ * 4       3
  */
 void test_task_create_tasks_equal_priority( void )
 {
@@ -533,14 +531,13 @@ void test_task_create_tasks_equal_priority( void )
 
     /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        
         xTaskIncrementTick_helper();
 
         /* 
-        Verify the the first task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
-        the last state of -1 is omitted
-        */
-        verifySmpTask( &xTaskHandles[0], eRunning, i );
+         * Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted
+         */
+        verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
 
@@ -578,8 +575,7 @@ void test_task_create_tasks_equal_priority( void )
  * 
  * Create a new low priority task
  * 
- * Call xTaskIncrementTick() for each configured CPU core. The kernel will consider CPU 0
- * the core calling the API and therefore will not rotate tasks for that CPU.
+ * Call xTaskIncrementTick() for each configured CPU core.
  * 
  * Task (TN)                  Task (TN + 1)
  * Priority – 2               Priority – 1
@@ -737,7 +733,7 @@ void test_task_delete_tasks_equal_priorities_delete_running_task( void )
  * 
  * Call xTaskIncrementTick() for each configured CPU core.
  * 
- * Task (1) when configNUMBER_OF_CORES = 4
+ * Task (TN + 1) when configNUMBER_OF_CORES = 4
  * Tick    Core
  * 1       0
  * 2       1
@@ -806,11 +802,11 @@ void test_task_suspend_running_task( void )
     
         xTaskIncrementTick_helper();
 
-        /* 
-        Verify the the 1th task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
-        the last state of -1 is omitted
-        */
-        verifySmpTask( &xTaskHandles[1], eRunning, i );
+        /*
+         * Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted
+         */
+        verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
     }
 }
 
@@ -915,17 +911,17 @@ void test_task_block_running_task( void )
         }
     }
 
-    /* After delay the task 1 will be added back to the ready list.
-     * Verfiy that the task 1 can be scheduled on each core after tick.
-     */
+    /* After ( configNUMBER_OF_CORES + 1 ) ticks, the task 1 will be added back to
+     * the ready list. Verfiy that the task 1 can be scheduled on each core when
+     * xTaskIncrementTick is called. */
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskIncrementTick_helper();
 
-        /* 
-        Verify the the first task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
-        the last state of -1 is omitted
-        */
-        verifySmpTask( &xTaskHandles[0], eRunning, i );
+        /*
+         * Verify the the task 1 has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+         * the last state of -1 is omitted
+         */
+        verifySmpTask( &xTaskHandles[1], eRunning, i );
     }
 }
 

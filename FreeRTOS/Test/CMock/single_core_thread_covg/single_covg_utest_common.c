@@ -63,7 +63,7 @@ extern TaskHandle_t xIdleTaskHandles[configNUMBER_OF_CORES];
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern List_t * volatile pxDelayedTaskList;
-extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
+//extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
 
 static BaseType_t xCoreYields[ configNUMBER_OF_CORES ] = { 0 };
 
@@ -82,8 +82,6 @@ static BaseType_t xTaskLockCount[ configNUMBER_OF_CORES ] = { 0 };
 
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-extern UBaseType_t vTaskEnterCriticalFromISR( void );
-extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 
 /* ==========================  CALLBACK FUNCTIONS  ========================== */
 
@@ -110,7 +108,7 @@ BaseType_t xPortStartScheduler( void )
 
     /* Initialize each core with a task */
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        vTaskSwitchContext(i);
+        vTaskSwitchContext();
     }
 
     return pdTRUE;
@@ -145,14 +143,14 @@ void vFakePortYieldCoreStubCallback( int xCoreID, int cmock_num_calls )
     } else {
         /* No task is in the critical section. We can yield this core. */
         xCurrentCoreId = xCoreID;
-        vTaskSwitchContext( xCurrentCoreId );
+        vTaskSwitchContext();
         xCurrentCoreId = xPreviousCoreId;
     }
 }
 
 void vFakePortYieldStubCallback( int cmock_num_calls )
 {
-    vTaskSwitchContext( xCurrentCoreId );
+    vTaskSwitchContext();
 }
 
 void vFakePortEnterCriticalSection( void )
@@ -189,7 +187,7 @@ static void vYieldCores( void )
         {
             xCurrentCoreId = i;
             xCoreYields[ i ] = pdFALSE;
-            vTaskSwitchContext( i );
+            vTaskSwitchContext();
         }
     }
     xCurrentCoreId = xPreviousCoreId;
@@ -232,8 +230,8 @@ void vFakePortGetTaskLock( void )
     {
         if( i != xCurrentCoreId )
         {
-            TEST_ASSERT_MESSAGE( xIsrLockCount[ i ] == 0, "vFakePortGetTaskLock xIsrLockCount[ i ] > 0" );
-            TEST_ASSERT_MESSAGE( xTaskLockCount[ i ] == 0, "vFakePortGetTaskLock xTaskLockCount[ i ] > 0" );
+            TEST_ASSERT_MESSAGE( xIsrLockCount[ i ] == 0, "vFakePortGetISRLock xIsrLockCount[ i ] > 0" );
+            TEST_ASSERT_MESSAGE( xTaskLockCount[ i ] == 0, "vFakePortGetISRLock xTaskLockCount[ i ] > 0" );
         }
     }
 
@@ -252,20 +250,6 @@ void vFakePortReleaseTaskLock( void )
     }
 }
 
-UBaseType_t vFakePortEnterCriticalFromISR( void )
-{
-    UBaseType_t uxSavedInterruptState;
-    uxSavedInterruptState = vTaskEnterCriticalFromISR();
-    return uxSavedInterruptState;
-}
-
-void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState )
-{
-    vTaskExitCriticalFromISR( uxSavedInterruptState );
-    /* Simulate yield cores when leaving the critical section. */
-    vYieldCores();
-}
-
 /* ============================= Unity Fixtures ============================= */
 
 void commonSetUp( void )
@@ -277,9 +261,6 @@ void commonSetUp( void )
     vFakeAssert_Ignore();
     vFakePortAssertIfISR_Ignore();
     vFakePortEnableInterrupts_Ignore();
-
-    ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0 );
-    vFakePortClearInterruptMaskFromISR_Ignore();
 
     vFakePortGetTaskLock_Ignore();
     vFakePortGetISRLock_Ignore();
@@ -296,7 +277,7 @@ void commonSetUp( void )
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
     memset( &xIdleTaskHandles, 0x00, (configNUMBER_OF_CORES * sizeof( TaskHandle_t )) );
-    memset( &pxCurrentTCBs, 0x00, (configNUMBER_OF_CORES * sizeof( TCB_t * )) );
+    //memset( &pxCurrentTCBs, 0x00, (configNUMBER_OF_CORES * sizeof( TCB_t * )) );
 
     uxDeletedTasksWaitingCleanUp = 0;
     uxCurrentNumberOfTasks = ( UBaseType_t ) 0U;
@@ -327,45 +308,3 @@ void vSmpTestTask( void *pvParameters )
 {
 }
 
-void verifySmpTask( TaskHandle_t * xTaskHandle, eTaskState eCurrentState, TaskRunning_t xTaskRunState)
-{
-    TaskStatus_t xTaskDetails;
-
-    vTaskGetInfo(*xTaskHandle, &xTaskDetails, pdTRUE, eInvalid );
-    TEST_ASSERT_EQUAL_INT_MESSAGE( xTaskRunState, xTaskDetails.xHandle->xTaskRunState, "Task Verification Failed: Incorrect xTaskRunState" );
-    TEST_ASSERT_EQUAL_INT_MESSAGE( eCurrentState, xTaskDetails.eCurrentState, "Task Verification Failed: Incorrect eCurrentState" );
-}
-
-void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState)
-{
-    TaskStatus_t xTaskDetails;
-    int ret;
-
-    vTaskGetInfo(xIdleTaskHandles[index], &xTaskDetails, pdTRUE, eInvalid );
-    ret = strncmp( xTaskDetails.xHandle->pcTaskName, "IDLE", 4 );
-    TEST_ASSERT_EQUAL_INT_MESSAGE( 0, ret, "Idle Task Verification Failed: Incorrect task name" );
-    TEST_ASSERT_EQUAL_INT_MESSAGE( pdTRUE, xTaskDetails.xHandle->uxTaskAttributes, "Idle Task Verification Failed: Incorrect xIsIdle" );
-    TEST_ASSERT_EQUAL_INT_MESSAGE( xTaskRunState, xTaskDetails.xHandle->xTaskRunState, "Idle Task Verification Failed: Incorrect xTaskRunState" );
-    TEST_ASSERT_EQUAL_INT_MESSAGE( eRunning, xTaskDetails.eCurrentState, "Idle Task Verification Failed: Incorrect eCurrentState" );
-}
-
-/* Helper function to simulate calling xTaskIncrementTick in critical section. */
-void xTaskIncrementTick_helper( void )
-{
-    BaseType_t xSwitchRequired;
-    UBaseType_t uxSavedInterruptState;
-
-    /* xTaskIncrementTick is called in ISR context. Use taskENTER/EXIT_CRITICAL_FROM_ISR
-     * here. */
-    uxSavedInterruptState = taskENTER_CRITICAL_FROM_ISR();
-
-    xSwitchRequired = xTaskIncrementTick();
-
-    /* Simulate context switch on the core which calls xTaskIncrementTick. */
-    if( xSwitchRequired == pdTRUE )
-    {
-        portYIELD_CORE( configTICK_CORE );
-    }
-
-    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptState );
-}

@@ -12,6 +12,8 @@ SUITES	+=	multiple_priorities_no_timeslice
 SUITES	+=	single_priority_no_timeslice_covg
 SUITES	+=	multiple_priorities_no_timeslice_covg
 
+SUITES	+=	single_priority_no_timeslice_thread
+
 # PROJECT and SUITE variables are determined based on path like so:
 #   $(UT_ROOT_DIR)/$(PROJECT)/$(SUITE)
 PROJECT :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))

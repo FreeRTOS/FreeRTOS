@@ -15,7 +15,7 @@ UNITS       +=  stream_buffer
 UNITS       +=  message_buffer
 UNITS       +=  event_groups
 UNITS       +=  smp
-UNITS       +=  single_core_thread_covg
+#UNITS       +=  single_core_thread_covg
 
 .PHONY: makefile.in
 

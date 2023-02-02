@@ -43,9 +43,9 @@
 
 /* SMP test specific configuration */
 #define configRUN_MULTIPLE_PRIORITIES                    0
-#define configNUMBER_OF_CORES                            1
+#define configNUMBER_OF_CORES                            16
 #define configUSE_CORE_AFFINITY                          0
-#define configUSE_TIME_SLICING                           0
+#define configUSE_TIME_SLICING                           1
 #define configUSE_TASK_PREEMPTION_DISABLE                0
 #define configTICK_CORE                                  0
 
@@ -79,7 +79,7 @@
 #define portREMOVE_STATIC_QUALIFIER                      1
 #define portCRITICAL_NESTING_IN_TCB                      1
 #define portSTACK_GROWTH                                 ( 1 )
-#define configUSE_MINIMAL_IDLE_HOOK                      0
+#define configUSE_MINIMAL_IDLE_HOOK                      1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1
@@ -152,5 +152,8 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
     extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+//#define portENTER_CRITICAL_FROM_ISR()       ( 0 )
+//#define portEXIT_CRITICAL_FROM_ISR( x )     do{ ( void )( x ); }while( 0 )
 
 #endif /* FREERTOS_CONFIG_H */

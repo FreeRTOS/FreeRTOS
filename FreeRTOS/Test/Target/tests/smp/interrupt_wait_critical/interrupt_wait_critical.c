@@ -37,7 +37,7 @@
  *   - T1 ~ T(n-1) keep in busy loop.
  *   - TestRunner suspends Task T0.
  * Expected:
- *   - T0 is suspended and it never enters critical section. 
+ *   - T0 is suspended and it never enters critical section.
  *   - Task T1 ~ T(n-1) are running.
  */
 
@@ -130,11 +130,11 @@ static void Test_InterruptWaitCritical( void )
         __asm volatile ( "nop" );
     }
 
-    vTaskSuspend( xTaskHanldes[0] );
+    vTaskSuspend( xTaskHanldes[ 0 ] );
 
     taskEXIT_CRITICAL();
 
-    /* When testRunner exits CS, context switch continues. 
+    /* When testRunner exits CS, context switch continues.
      * Busy loop here for task T1~T(n-1) to run */
     for( i = 0; i < 0xFFFF; i++ )
     {
@@ -147,12 +147,12 @@ static void Test_InterruptWaitCritical( void )
     {
         xTaskState = eTaskGetState( xTaskHanldes[ i ] );
 
-        if( i == 0 && xTaskState == eRunning )
+        if( ( i == 0 ) && ( xTaskState == eRunning ) )
         {
             xIsTestPass = 0x10;
             break;
         }
-        else if( i!=0 && xTaskState != eRunning )
+        else if( ( i != 0 ) && ( xTaskState != eRunning ) )
         {
             xIsTestPass = 0x20 | i;
             break;
@@ -214,11 +214,11 @@ void setUp( void )
     BaseType_t xTaskCreationResult;
 
     xTaskCreationResult = xTaskCreate( prvEnterCriticalTask,
-                                        "EnterCS",
-                                        configMINIMAL_STACK_SIZE,
-                                        NULL,
-                                        configMAX_PRIORITIES - 2,
-                                        &( xTaskHanldes[ 0 ] ) );
+                                       "EnterCS",
+                                       configMINIMAL_STACK_SIZE,
+                                       NULL,
+                                       configMAX_PRIORITIES - 2,
+                                       &( xTaskHanldes[ 0 ] ) );
 
     TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
 

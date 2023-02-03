@@ -41,34 +41,34 @@
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h" /* unit testing support functions */
+#include "unity.h"    /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
 /**
  * @brief As time of loop for task to increase counter.
  */
-#define TASK_INCREASE_COUNTER_TIMES ( 10000 )
+#define TASK_INCREASE_COUNTER_TIMES    ( 10000 )
 
 /**
  * @brief Timeout value to stop test.
  */
-#define TEST_TIMEOUT_MS ( 10000 )
+#define TEST_TIMEOUT_MS                ( 10000 )
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Test case "Only One Task Enter Critical".
  */
-void Test_OnlyOneTaskEnterCritical(void);
+void Test_OnlyOneTaskEnterCritical( void );
 
 /**
  * @brief Task function to increase counter then keep delaying.
  */
-static void vPrvTaskIncCounter(void *pvParameters);
+static void vPrvTaskIncCounter( void * pvParameters );
 
 /**
  * @brief Function to increase counter in critical section.
  */
-static void vLoopIncCounter(void);
+static void vLoopIncCounter( void );
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -91,12 +91,13 @@ static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
 static BaseType_t xTaskCounter = 0;
 /*-----------------------------------------------------------*/
 
-void Test_OnlyOneTaskEnterCritical(void) {
+void Test_OnlyOneTaskEnterCritical( void )
+{
     TickType_t xStartTick = xTaskGetTickCount();
 
     /* Yield for other cores to run tasks. */
     taskYIELD();
-    
+
     /* We need at least two tasks increasing the counter at the same time when configNUMBER_OF_CORES is 2 */
     vLoopIncCounter();
 
@@ -105,7 +106,7 @@ void Test_OnlyOneTaskEnterCritical(void) {
     {
         vTaskDelay( pdMS_TO_TICKS( 10 ) );
 
-        if( ( xTaskGetTickCount() - xStartTick )/portTICK_PERIOD_MS >= TEST_TIMEOUT_MS )
+        if( ( xTaskGetTickCount() - xStartTick ) / portTICK_PERIOD_MS >= TEST_TIMEOUT_MS )
         {
             break;
         }
@@ -115,7 +116,7 @@ void Test_OnlyOneTaskEnterCritical(void) {
 }
 /*-----------------------------------------------------------*/
 
-static void vLoopIncCounter(void)
+static void vLoopIncCounter( void )
 {
     BaseType_t xTempTaskCounter = xTaskCounter;
     BaseType_t xIsTestPass = pdTRUE;
@@ -139,8 +140,9 @@ static void vLoopIncCounter(void)
     TEST_ASSERT_TRUE( xIsTestPass );
 }
 
-static void vPrvTaskIncCounter(void * pvParameters) {
-    (void) pvParameters;
+static void vPrvTaskIncCounter( void * pvParameters )
+{
+    ( void ) pvParameters;
 
     vLoopIncCounter();
 
@@ -188,11 +190,12 @@ void tearDown( void )
 }
 /*-----------------------------------------------------------*/
 
-void vRunOnlyOneTaskEnterCriticalTest(void) {
-  UNITY_BEGIN();
+void vRunOnlyOneTaskEnterCriticalTest( void )
+{
+    UNITY_BEGIN();
 
-  RUN_TEST( Test_OnlyOneTaskEnterCritical );
+    RUN_TEST( Test_OnlyOneTaskEnterCritical );
 
-  UNITY_END();
+    UNITY_END();
 }
 /*-----------------------------------------------------------*/

@@ -28,142 +28,170 @@
  */
 
 /**
- * @file test.c
+ * @file only_one_task_enter_critical.c
  * @brief Only one task/ISR shall be able to enter critical section at a time.
  *
  * Procedure:
- *   - Create tasks A & B, B having a higher priority.
- *   - Task B holding a critical section for 10ms in a busy loop every 10ms
- * yieldable delay.
- *   - Task A registering a software interrupt and triggering it with
- * vPortTriggerSoftwareInterrupt
- *   - The software interrupt triggered by task A itself then holding a critical
- * section for 10ms using a busy loop. It doing ding this 10 times and entering
- * and existing the critical section each time. Expected:
- *   - That the software interrupt critical section will never observe taskB
- * also being in the critical section.
+ *   - Create ( num of cores - 1 ) tasks.
+ *   - All tasks (including test runner) increase the counter for TASK_INCREASE_COUNTER_TIMES times.
+ * Expected:
+ *   - All tasks have correct value of counter after increasing.
  */
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "bsl.h"
 #include "unity.h" /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
-/* Priorities at which the tasks are created.  The max priority can be specified
- * as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
-/*-----------------------------------------------------------*/
+/**
+ * @brief As time of loop for task to increase counter.
+ */
+#define TASK_INCREASE_COUNTER_TIMES ( 10000 )
 
-static void vPrvTaskA(void *pvParameters);
-static void vPrvTaskB(void *pvParameters);
-/*-----------------------------------------------------------*/
-
-#if configNUMBER_OF_CORES != 2
-#error Require two cores be configured for FreeRTOS
-#endif /* if configNUMBER_OF_CORES != 2 */
-/*-----------------------------------------------------------*/
-
-static TaskHandle_t xTaskBHandler;
-static BaseType_t xTaskBState = 0;
-static BaseType_t xIsrAssertionComplete = pdFALSE;
-static BaseType_t xIsrObservedTaskBInsideCriticalSection = pdFALSE;
-static BaseType_t xInsideTaskBCriticalSection = pdFALSE;
-/*-----------------------------------------------------------*/
-
-void fr08_validateOnlyOneCriticalSectionRanAtATime(void) {
-  UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet(NULL);
-
-  vTaskPrioritySet(NULL, mainTASK_A_PRIORITY);
-
-  xTaskCreate(vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_B_PRIORITY, &xTaskBHandler);
-
-  vPrvTaskA(NULL);
-
-  while (!xIsrAssertionComplete) {
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
-
-  TEST_ASSERT_TRUE(xIsrAssertionComplete &&
-                   !xIsrObservedTaskBInsideCriticalSection);
-
-  vTaskPrioritySet(NULL, uxOriginalTaskPriority);
-  vTaskDelete(xTaskBHandler);
-}
-/*-----------------------------------------------------------*/
-
-static void softwareInterruptHandlerSimple(void) {
-  BaseType_t xIter;
-  UBaseType_t uxSavedInterruptStatus;
-
-  for (xIter = 1; xIter < 10; xIter++) {
-    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-
-    if (xInsideTaskBCriticalSection) {
-      xIsrObservedTaskBInsideCriticalSection = true;
-    }
-
-    vPortBusyWaitMicroseconds((uint32_t)10000);
-    taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
-  }
-
-  xIsrAssertionComplete = true;
-}
-/*-----------------------------------------------------------*/
-
-static void vPrvTaskA(void *pvParameters) {
-  BaseType_t xHandlerNum = -1;
-
-  /* wait for Task B to get to 6 iterations */
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-
-    if (xTaskBState > 5) {
-      break;
-    }
-  }
-
-  xHandlerNum =
-      xPortRegisterSoftwareInterruptHandler(softwareInterruptHandlerSimple);
-  vPortTriggerSoftwareInterrupt(xHandlerNum);
-}
-/*-----------------------------------------------------------*/
-
-static void vPrvTaskB(void *pvParameters) {
-  BaseType_t xIter = 1;
-
-  for (xIter = 1; xIter < 15; xIter++) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-
-    while (xTaskBState == 6) {
-      vTaskDelay(pdMS_TO_TICKS(10));
-    }
-
-    taskENTER_CRITICAL();
-    xInsideTaskBCriticalSection = true;
-    vPortBusyWaitMicroseconds((uint32_t)10000);
-    xTaskBState++;
-    xInsideTaskBCriticalSection = false;
-    taskEXIT_CRITICAL();
-  }
-
-  /* idle the task */
-  for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-  }
-}
+/**
+ * @brief Timeout value to stop test.
+ */
+#define TEST_TIMEOUT_MS ( 10000 )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run FR08.
+ * @brief Test case "Only One Task Enter Critical".
  */
-void vTestRunner(void) {
+void Test_OnlyOneTaskEnterCritical(void);
+
+/**
+ * @brief Task function to increase counter then keep delaying.
+ */
+static void vPrvTaskIncCounter(void *pvParameters);
+
+/**
+ * @brief Function to increase counter in critical section.
+ */
+static void vLoopIncCounter(void);
+/*-----------------------------------------------------------*/
+
+#if ( configNUMBER_OF_CORES < 2 )
+    #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
+#endif /* if configNUMBER_OF_CORES != 2 */
+
+#if configRUN_MULTIPLE_PRIORITIES != 1
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Handles of the tasks created in this test.
+ */
+static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
+
+/**
+ * @brief Counter for all tasks to increase.
+ */
+static BaseType_t xTaskCounter = 0;
+/*-----------------------------------------------------------*/
+
+void Test_OnlyOneTaskEnterCritical(void) {
+    TickType_t xStartTick = xTaskGetTickCount();
+
+    /* Yield for other cores to run tasks. */
+    taskYIELD();
+    
+    /* We need at least two tasks increasing the counter at the same time when configNUMBER_OF_CORES is 2 */
+    vLoopIncCounter();
+
+    /* Wait other tasks. */
+    while( xTaskCounter < configNUMBER_OF_CORES * TASK_INCREASE_COUNTER_TIMES )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+
+        if( ( xTaskGetTickCount() - xStartTick )/portTICK_PERIOD_MS >= TEST_TIMEOUT_MS )
+        {
+            break;
+        }
+    }
+
+    TEST_ASSERT_EQUAL_INT( xTaskCounter, configNUMBER_OF_CORES * TASK_INCREASE_COUNTER_TIMES );
+}
+/*-----------------------------------------------------------*/
+
+static void vLoopIncCounter(void)
+{
+    BaseType_t xTempTaskCounter = xTaskCounter;
+    BaseType_t xIsTestPass = pdTRUE;
+    int i;
+
+    taskENTER_CRITICAL();
+
+    for( i = 0; i < TASK_INCREASE_COUNTER_TIMES; i++ )
+    {
+        xTaskCounter++;
+        xTempTaskCounter++;
+
+        if( xTaskCounter != xTempTaskCounter )
+        {
+            xIsTestPass = pdFALSE;
+        }
+    }
+
+    taskEXIT_CRITICAL();
+
+    TEST_ASSERT_TRUE( xIsTestPass );
+}
+
+static void vPrvTaskIncCounter(void * pvParameters) {
+    (void) pvParameters;
+
+    vLoopIncCounter();
+
+    while( pdTRUE )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/* Runs before every test, put init calls here. */
+void setUp( void )
+{
+    int i;
+    BaseType_t xTaskCreationResult;
+
+    /* Create configNUMBER_OF_CORES - 1 low priority tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    {
+        xTaskCreationResult = xTaskCreate( vPrvTaskIncCounter,
+                                           "IncCounter",
+                                           configMINIMAL_STACK_SIZE,
+                                           NULL,
+                                           configMAX_PRIORITIES - 1,
+                                           &( xTaskHanldes[ i ] ) );
+
+        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/* Runs after every test, put clean-up calls here. */
+void tearDown( void )
+{
+    int i;
+
+    /* Delete all the tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    {
+        if( xTaskHanldes[ i ] )
+        {
+            vTaskDelete( xTaskHanldes[ i ] );
+        }
+    }
+}
+/*-----------------------------------------------------------*/
+
+void vRunOnlyOneTaskEnterCriticalTest(void) {
   UNITY_BEGIN();
 
-  RUN_TEST(fr08_validateOnlyOneCriticalSectionRanAtATime);
+  RUN_TEST( Test_OnlyOneTaskEnterCritical );
 
   UNITY_END();
 }

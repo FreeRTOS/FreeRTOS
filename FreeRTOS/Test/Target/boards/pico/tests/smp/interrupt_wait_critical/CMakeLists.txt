@@ -1,29 +1,29 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(example C CXX ASM)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(TEST_INCLUDE_PATHS ${CMAKE_CURRENT_LIST_DIR}/../../../../../tests/smp/interrupt_wait_critical)
+set(TEST_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../../../../tests/smp/interrupt_wait_critical)
 
-add_library(fr9_common INTERFACE)
-target_sources(fr9_common INTERFACE
-        ${CMAKE_CURRENT_LIST_DIR}/../common/testRunner.c
-        test.c)
-target_include_directories(fr9_common INTERFACE
-        ${CMAKE_CURRENT_LIST_DIR}
-        ${BSL_PATHS}
+add_library(interrupt_wait_critical INTERFACE)
+target_sources(interrupt_wait_critical INTERFACE
+        ${BOARD_LIBRARY_DIR}/main.c
+        ${CMAKE_CURRENT_LIST_DIR}/interrupt_wait_critical_test_runner.c
+        ${TEST_SOURCE_DIR}/interrupt_wait_critical.c)
+
+target_include_directories(interrupt_wait_critical INTERFACE
+        ${CMAKE_CURRENT_LIST_DIR}/../../..
+        ${TEST_INCLUDE_PATHS}
         )
-bsl_library_variant(bsl_fr9 ${CMAKE_CURRENT_LIST_DIR} "-DUSE_BSL_DEFAULT_HOOKS")
-target_link_libraries(fr9_common INTERFACE
+
+target_link_libraries(interrupt_wait_critical INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4
-        ${BSL_LINK_LIBRARIES} bsl_fr9)
+        ${BOARD_LINK_LIBRARIES})
 
-add_executable(test_fr9)
-bsl_executable_modifiers(test_fr9)
-target_link_libraries(test_fr9 fr9_common)
-target_include_directories(test_fr9 PUBLIC
-        ${BSL_INCLUDE_PATHS})
-target_compile_definitions(test_fr9 PRIVATE
-        ${BSL_DEFINES}
+add_executable(test_interrupt_wait_critical)
+enable_board_functions(test_interrupt_wait_critical)
+target_link_libraries(test_interrupt_wait_critical interrupt_wait_critical)
+target_include_directories(test_interrupt_wait_critical PUBLIC
+        ${BOARD_INCLUDE_PATHS})
+target_compile_definitions(test_interrupt_wait_critical PRIVATE
+        ${BOARD_DEFINES}
 )
-add_test(test_fr9 fr9)

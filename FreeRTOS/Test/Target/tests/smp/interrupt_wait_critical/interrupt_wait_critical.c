@@ -1,8 +1,6 @@
 /*
- * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * FreeRTOS V202212.00
  * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
- *
- * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -27,183 +25,239 @@
  */
 
 /**
- * @file test.c
+ * @file interrupt_wait_critical.c
  * @brief If a task is interrupted while it is waiting to enter a critical section,
  *        it shall relinquish the core instead of continuing to wait to enter critical section.
  *
  * Procedure:
- *   - Create tasks A, B, & C. With A having a priority of 2 and B & C having a priority of 1
- *   - Task A is pinned to the second core.
- *   - Task A enters a critical section, then busy waits for 250ms, then calls vTaskSuspend
- *     to attempt to unschedule task B, and then busy waits for 10sec.
- *   - Task B waits 10ms and then attempts to enter a critical section
- *   - Task C executes a busy wait for 250ms
- *   - traceTASK_SWITCHED_IN is defined in order to validate scheduler behavior.
+ *   - Create ( num of cores ) tasks, T0 ~ T(n-1).
+ *   - Priority testRunner > T0 > T1~T(n-1)
+ *   - TestRunner task enter critical section.
+ *   - T0 tries to enter critical section.
+ *   - T1 ~ T(n-1) keep in busy loop.
+ *   - TestRunner suspends Task T0.
  * Expected:
- *   - The xTaskNotify will cause TaskB which was waiting to enter a critical section to
- *     yield to taskC which has equal priority.
+ *   - T0 is suspended and it never enters critical section. 
+ *   - Task T1 ~ T(n-1) are running.
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include <string.h>
-
-#include "bsl.h"
-#include "unity.h" /* unit testing support functions */
+#include "unity.h"    /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
-/* Priorities at which the tasks are created.  The max priority can be specified
- * as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 3 )
-#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
-#define mainTASK_C_PRIORITY    ( tskIDLE_PRIORITY + 1 )
-
-static void vPrvTaskA( void * pvParameters );
-static void vPrvTaskB( void * pvParameters );
-static void vPrvTaskC( void * pvParameters );
-/*-----------------------------------------------------------*/
-
-#if configNUMBER_OF_CORES != 2
-    #error Require two cores be configured for FreeRTOS
+#if ( configNUMBER_OF_CORES < 2 )
+    #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
 
-#if traceTASK_SWITCHED_IN != test_fr9TASK_SWITCHED_IN
-    #error Need to include testConfig.h in FreeRTOSConfig.h
-#endif /* if traceTASK_SWITCHED_IN != test_fr2TASK_SWITCHED_IN */
-/*-----------------------------------------------------------*/
-
-static TaskHandle_t xTaskAHandler;
-static TaskHandle_t xTaskBHandler;
-static TaskHandle_t xTaskCHandler;
-static BaseType_t xTestFailed = pdFALSE;
-static BaseType_t xAllTasksHaveRun = pdFALSE;
-static BaseType_t xTaskAHasEnteredCriticalSection = pdFALSE;
-static BaseType_t xTaskAHasExitedCriticalSection = pdFALSE;
-static BaseType_t xTaskBHasEnteredCriticalSection = pdFALSE;
-
-static uint32_t ulTaskSwitchCount = 0;
-static BaseType_t xTaskARan = pdFALSE;
-static BaseType_t xTaskBRan = pdFALSE;
-static BaseType_t xTaskCRan = pdFALSE;
-/*-----------------------------------------------------------*/
-
-void test_fr9TASK_SWITCHED_IN( void )
-{
-    UBaseType_t uxIdx, uxNumTasksRunning;
-    TaskStatus_t taskStatus[ 16 ];
-    UBaseType_t uxTaskStatusArraySize = 16;
-    unsigned long ulTotalRunTime;
-
-    if( ( ( xAllTasksHaveRun == pdFALSE ) && ( xTestFailed == pdFALSE ) ) )
-    {
-        uxNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, uxTaskStatusArraySize, &ulTotalRunTime );
-
-        for( uxIdx = 0; uxIdx < uxNumTasksRunning; uxIdx++ )
-        {
-            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskA" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
-            {
-                xTaskARan = pdTRUE;
-            }
-
-            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskB" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
-            {
-                xTaskBRan = pdTRUE;
-            }
-
-            if( ( strcmp( taskStatus[ uxIdx ].pcTaskName, "TaskC" ) == 0 ) && ( taskStatus[ uxIdx ].eCurrentState == eRunning ) )
-            {
-                xTaskCRan = pdTRUE;
-            }
-        }
-
-        if( ( xTaskARan == pdTRUE ) && ( xTaskCRan == pdTRUE ) && ( xTaskBRan == pdTRUE ) )
-        {
-            xAllTasksHaveRun = pdTRUE;
-        }
-
-        ulTaskSwitchCount++;
-
-        if( ulTaskSwitchCount > 1500 )
-        {
-            xTestFailed = pdTRUE;
-        }
-    }
-}
-/*-----------------------------------------------------------*/
-
-static void fr09_validateAllTasksHaveRun( void )
-{
-    xTaskCreateAffinitySet( vPrvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-                            mainTASK_A_PRIORITY, 0x2, &xTaskAHandler );
-
-    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-                 mainTASK_B_PRIORITY, &xTaskBHandler );
-
-    xTaskCreate( vPrvTaskC, "TaskC", configMINIMAL_STACK_SIZE, NULL,
-                 mainTASK_C_PRIORITY, &xTaskCHandler );
-
-    while( !xAllTasksHaveRun )
-    {
-        vTaskDelay( pdMS_TO_TICKS( 100 ) );
-    }
-
-    TEST_ASSERT_TRUE( xTaskBHasEnteredCriticalSection == pdFALSE );
-}
-/*-----------------------------------------------------------*/
-
-static void vPrvTaskA( void * pvParameters )
-{
-    taskENTER_CRITICAL();
-    xTaskAHasEnteredCriticalSection = pdTRUE;
-    vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
-    vTaskSuspend( xTaskBHandler );
-    vPortBusyWaitMicroseconds( ( uint32_t ) 10000000 );
-    taskEXIT_CRITICAL();
-    xTaskAHasExitedCriticalSection = pdTRUE;
-
-    /* idle the task */
-    for( ; ; )
-    {
-        vTaskDelay( pdMS_TO_TICKS( 10 ) );
-    }
-}
-/*-----------------------------------------------------------*/
-
-static void vPrvTaskB( void * pvParameters )
-{
-    taskENTER_CRITICAL();
-    xTaskBHasEnteredCriticalSection = pdTRUE;
-    vPortBusyWaitMicroseconds( ( uint32_t ) 8000000 );
-    taskEXIT_CRITICAL();
-
-    /* idle the task */
-    for( ; ; )
-    {
-        vTaskDelay( pdMS_TO_TICKS( 10 ) );
-    }
-}
-/*-----------------------------------------------------------*/
-
-static void vPrvTaskC( void * pvParameters )
-{
-    /* taskC busy loops */
-    for( ; ; )
-    {
-        vPortBusyWaitMicroseconds( ( uint32_t ) 250000 );
-    }
-}
+#if configRUN_MULTIPLE_PRIORITIES != 1
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run FR09.
+ * @brief Task function that tries to enter critical section.
  */
-void vTestRunner( void )
+static void prvEnterCriticalTask( void * pvParameters );
+
+/**
+ * @brief Function that implements a never blocking FreeRTOS task.
+ */
+static void prvEverRunningTask( void * pvParameters );
+
+/**
+ * @brief Test case "Interrupt Wait Critical".
+ */
+static void Test_InterruptWaitCritical( void );
+
+/*-----------------------------------------------------------*/
+
+typedef enum CriticalStatus
+{
+    CS_WAIT = 0,
+    CS_ENTERING,
+    CS_ENTERED,
+    CS_EXIT,
+} CriticalSectionStatus_t;
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Handles of the tasks created in this test.
+ */
+static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
+
+/**
+ * @brief A flag to know if testRunner entered critical section.
+ */
+static BaseType_t volatile xIsTestRunnerEnteredCritical = pdFALSE;
+
+/**
+ * @brief A status to know if T0.
+ *        - CS_WAIT:     Waiting for testRunner to enter critical section.
+ *        - CS_ENTERING: Entering critical section.
+ *        - CS_ENTERED:  Entered critical section.
+ *        - CS_EXIT:     Exited critical section.
+ */
+static CriticalSectionStatus_t volatile xT0CsStatus = CS_WAIT;
+
+/*-----------------------------------------------------------*/
+
+static void Test_InterruptWaitCritical( void )
+{
+    int i;
+    eTaskState xTaskState;
+    BaseType_t xIsTestPass = pdTRUE;
+
+    /* Yield for other cores to run tasks. */
+    taskYIELD();
+
+    taskENTER_CRITICAL();
+
+    xIsTestRunnerEnteredCritical = pdTRUE;
+
+    /* Busy loop to wait T0 to run. */
+    while( xT0CsStatus < CS_ENTERING )
+    {
+        /* Put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
+    }
+
+    for( i = 0; i < 0xFFFF; i++ )
+    {
+        /* Put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
+    }
+
+    vTaskSuspend( xTaskHanldes[0] );
+
+    taskEXIT_CRITICAL();
+
+    /* When testRunner exits CS, context switch continues. 
+     * Busy loop here for task T1~T(n-1) to run */
+    for( i = 0; i < 0xFFFF; i++ )
+    {
+        /* Put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
+    }
+
+    /* Ensure that T1~T(n-1) are running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskState = eTaskGetState( xTaskHanldes[ i ] );
+
+        if( i == 0 && xTaskState == eRunning )
+        {
+            xIsTestPass = 0x10;
+            break;
+        }
+        else if( i!=0 && xTaskState != eRunning )
+        {
+            xIsTestPass = 0x20 | i;
+            break;
+        }
+    }
+
+    if( xT0CsStatus >= CS_ENTERED )
+    {
+        xIsTestPass |= 0x40;
+    }
+
+    TEST_ASSERT_EQUAL_INT( xIsTestPass, pdTRUE );
+}
+/*-----------------------------------------------------------*/
+
+static void prvEnterCriticalTask( void * pvParameters )
+{
+    /* Silence warnings about unused parameters. */
+    ( void ) pvParameters;
+
+    while( xIsTestRunnerEnteredCritical == pdFALSE )
+    {
+        /* Busy loop here intil testRunner enters critical section. */
+        __asm volatile ( "nop" );
+    }
+
+    xT0CsStatus = CS_ENTERING;
+
+    taskENTER_CRITICAL();
+    xT0CsStatus = CS_ENTERED;
+    taskEXIT_CRITICAL();
+
+    xT0CsStatus = CS_EXIT;
+
+    for( ; ; )
+    {
+        /* Always running, put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
+    }
+}
+/*-----------------------------------------------------------*/
+
+static void prvEverRunningTask( void * pvParameters )
+{
+    /* Silence warnings about unused parameters. */
+    ( void ) pvParameters;
+
+    for( ; ; )
+    {
+        /* Always running, put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
+    }
+}
+
+/* Runs before every test, put init calls here. */
+void setUp( void )
+{
+    int i;
+    BaseType_t xTaskCreationResult;
+
+    xTaskCreationResult = xTaskCreate( prvEnterCriticalTask,
+                                        "EnterCS",
+                                        configMINIMAL_STACK_SIZE,
+                                        NULL,
+                                        configMAX_PRIORITIES - 2,
+                                        &( xTaskHanldes[ 0 ] ) );
+
+    TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
+
+    /* Create configNUMBER_OF_CORES - 1 low priority tasks. */
+    for( i = 1; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskCreationResult = xTaskCreate( prvEverRunningTask,
+                                           "EverRunning",
+                                           configMINIMAL_STACK_SIZE,
+                                           NULL,
+                                           configMAX_PRIORITIES - 3,
+                                           &( xTaskHanldes[ i ] ) );
+
+        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/* Runs after every test, put clean-up calls here. */
+void tearDown( void )
+{
+    int i;
+
+    /* Delete all the tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        if( xTaskHanldes[ i ] )
+        {
+            vTaskDelete( xTaskHanldes[ i ] );
+        }
+    }
+}
+/*-----------------------------------------------------------*/
+
+void vRunInterruptWaitCriticalTest( void )
 {
     UNITY_BEGIN();
 
-    RUN_TEST( fr09_validateAllTasksHaveRun );
+    RUN_TEST( Test_InterruptWaitCritical );
 
     UNITY_END();
 }

@@ -100,17 +100,11 @@
  #define configMAX_API_CALL_INTERRUPT_PRIORITY   [dependent on processor and application]
  */
 
-/* SMP port only */
-#define configNUMBER_OF_CORES                2
-#define configTICK_CORE                      1
-#define configRUN_MULTIPLE_PRIORITIES        1
-#define configUSE_CORE_AFFINITY              1
-#define configUSE_MINIMAL_IDLE_HOOK          0
-#define configUSE_TASK_PREEMPTION_DISABLE    0
+#define configTICK_CORE                    1
 
 /* RP2040 specific */
-#define configSUPPORT_PICO_SYNC_INTEROP      1
-#define configSUPPORT_PICO_TIME_INTEROP      1
+#define configSUPPORT_PICO_SYNC_INTEROP    1
+#define configSUPPORT_PICO_TIME_INTEROP    1
 
 #include <assert.h>
 /* Define to trap errors during development. */

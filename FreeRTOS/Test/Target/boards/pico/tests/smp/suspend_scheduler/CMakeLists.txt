@@ -4,26 +4,30 @@ project(example C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(fr11_common INTERFACE)
-target_sources(fr11_common INTERFACE
-        ${CMAKE_CURRENT_LIST_DIR}/../common/testRunner.c
-        test.c)
-target_include_directories(fr11_common INTERFACE
-        ${CMAKE_CURRENT_LIST_DIR}
-        ${BSL_PATHS}
+set(TEST_INCLUDE_PATHS ${CMAKE_CURRENT_LIST_DIR}/../../../../../tests/smp/suspend_scheduler)
+set(TEST_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../../../../tests/smp/suspend_scheduler)
+
+add_library(suspend_scheduler INTERFACE)
+target_sources(suspend_scheduler INTERFACE
+        ${BOARD_LIBRARY_DIR}/main.c
+        ${CMAKE_CURRENT_LIST_DIR}/suspend_scheduler_test_runner.c
+        ${TEST_SOURCE_DIR}/suspend_scheduler.c)
+
+target_include_directories(suspend_scheduler INTERFACE
+        ${CMAKE_CURRENT_LIST_DIR}/../../..
+        ${TEST_INCLUDE_PATHS}
         )
-bsl_library_variant(bsl_fr11 ${CMAKE_CURRENT_LIST_DIR} "-DUSE_BSL_DEFAULT_HOOKS")
-target_link_libraries(fr11_common INTERFACE
+
+target_link_libraries(suspend_scheduler INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4
-        ${BSL_LINK_LIBRARIES} bsl_fr11)
+        ${BOARD_LINK_LIBRARIES})
 
-add_executable(test_fr11)
-bsl_executable_modifiers(test_fr11)
-target_link_libraries(test_fr11 fr11_common)
-target_include_directories(test_fr11 PUBLIC
-        ${BSL_INCLUDE_PATHS})
-target_compile_definitions(test_fr11 PRIVATE
-        ${BSL_DEFINES}
+add_executable(test_suspend_scheduler)
+enable_board_functions(test_suspend_scheduler)
+target_link_libraries(test_suspend_scheduler suspend_scheduler)
+target_include_directories(test_suspend_scheduler PUBLIC
+        ${BOARD_INCLUDE_PATHS})
+target_compile_definitions(test_suspend_scheduler PRIVATE
+        ${BOARD_DEFINES}
 )
-add_test(test_fr11 fr11)

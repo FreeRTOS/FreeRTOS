@@ -128,6 +128,17 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
+/*-----------------------------------------------------------*/
+#if ( ipconfigMULTI_INTERFACE == 1 ) && ( ipconfigCOMPATIBLE_WITH_SINGLE == 0 )
+    /* In case multiple interfaces are used, define them statically. */
+
+    /* With WinPCap there is only 1 physical interface. */
+    static NetworkInterface_t xInterfaces[1];
+
+    /* It will have several end-points. */
+    static NetworkEndPoint_t xEndPoints[4];
+
+#endif /* ipconfigMULTI_INTERFACE */
 
 /*-----------------------------------------------------------*/
 
@@ -151,8 +162,30 @@ int main( void )
      * vApplicationIPNetworkEventHook() below).  The address values passed in here
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
-    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
-    FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
+
+    /* Initialise the network interface.*/
+
+#if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 )
+    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+    FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
+    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+#else
+                /* Initialise the interface descriptor for WinPCap. */
+    pxWinPcap_FillInterfaceDescriptor(0, &(xInterfaces[0]));
+
+                /* === End-point 0 === */
+    FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    #if ( ipconfigUSE_DHCP != 0 )
+    {
+        /* End-point 0 wants to use DHCPv4. */
+        xEndPoints[0].bits.bWantDHCP = pdTRUE; // pdFALSE; // pdTRUE;
+    }
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */
+                
+    FreeRTOS_IPStart();
+#endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
+
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );

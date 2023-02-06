@@ -129,7 +129,6 @@ const uint32_t ulLongTime_ms = 250UL;
 	for use.  The address values passed in here are used if ipconfigUSE_DHCP is
 	set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
 	contacted. */
-	FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 
 	/* Initialise the logging. */
 	uint32_t ulLoggingIPAddress;

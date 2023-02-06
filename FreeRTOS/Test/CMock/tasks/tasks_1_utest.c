@@ -1026,13 +1026,27 @@ void test_xTaskResumeAll_success_2_tasks_running( void )
     BaseType_t ret;
     TaskHandle_t taskHandle;
 
+    /* Start the scheduler. */
+    xSchedulerRunning = pdTRUE;
+
+    /* Create one running task. */
+    create_task_priority = 3;
+    taskHandle = create_task();
+    pxCurrentTCB = taskHandle;
+    vListInsertEnd_Ignore();
+    vTaskSuspendAll();
+    TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
+
+    /* Create another higher priority task when scheduler is suspended. This task
+     * will be put into the xPendingReadyList and added to ready list when scheduler
+     * is resumed. */
+    create_task_priority = 4;
     taskHandle = create_task();
     ptcb = ( TCB_t * ) taskHandle;
-    vListInsertEnd_Ignore();
-    create_task();
-    vTaskSuspendAll();
+
     TEST_ASSERT_EQUAL( 2, uxCurrentNumberOfTasks );
 
+    /* Resume the scheduler. */
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdFALSE );
     listGET_OWNER_OF_HEAD_ENTRY_ExpectAnyArgsAndReturn( ptcb );
     listREMOVE_ITEM_Expect( &( ptcb->xEventListItem ) );
@@ -1041,6 +1055,8 @@ void test_xTaskResumeAll_success_2_tasks_running( void )
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     ret = xTaskResumeAll();
+
+    /* The higher priority task should preempt current running task. */
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 0, uxSchedulerSuspended );
     TEST_ASSERT_TRUE( xYieldPending );
@@ -1069,7 +1085,7 @@ void test_xTaskResumeAll_success_2_tasks_running_xpendedticks_gt_zero( void )
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     /* xTaskIncrementTick */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ],
-                                             0 );
+                                             2 );
     ret = xTaskResumeAll();
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 0, uxSchedulerSuspended );
@@ -1130,6 +1146,44 @@ void test_xTaskResumeAll_success_2_tasks_running_no_yield( void )
     TaskHandle_t task_handle2;
 
     create_task_priority = 2;
+    task_handle = create_task();
+
+    block_task( task_handle );
+
+    create_task_priority = 3;
+    task_handle2 = create_task();
+
+    ptcb = ( TCB_t * ) task_handle;
+    TEST_ASSERT_EQUAL_PTR( task_handle2, pxCurrentTCB );
+
+    start_scheduler();
+    vTaskSuspendAll();
+
+    TEST_ASSERT_EQUAL( 3, uxCurrentNumberOfTasks );
+
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAnyArgsAndReturn( ptcb );
+    listREMOVE_ITEM_Expect( &( ptcb->xEventListItem ) );
+    listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_ExpectAnyArgs();
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    ret = xTaskResumeAll();
+    TEST_ASSERT_FALSE( ret );
+    TEST_ASSERT_EQUAL( 0, uxSchedulerSuspended );
+    TEST_ASSERT_FALSE( xYieldPending );
+}
+
+/* Test the scenario that adding a task to ready list from xPendingReadyList in xTaskResumeAll
+ * doesn't preempt current running task of equal priority. */
+void test_xTaskResumeAll_success_2_tasks_eq_prio_running_no_yield( void )
+{
+    BaseType_t ret;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    create_task_priority = 3;
     task_handle = create_task();
 
     block_task( task_handle );
@@ -1222,6 +1276,43 @@ void test_vTaskPrioritySet_success_gt_curr_prio_curr_tcb( void )
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
+/* Test the scenario that setting a priority of a task in the ready list equal to
+ * current task doesn't preempt current running task. */
+void test_vTaskPrioritySet_success_eq_curr_prio_curr_tcb( void )
+{
+    TaskHandle_t taskHandle;
+    TaskHandle_t taskHandle2;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    create_task_priority = 4;
+    taskHandle2 = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, taskHandle2 );
+
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0 );
+    listSET_LIST_ITEM_VALUE_Expect( &( ptcb->xEventListItem ), ( configMAX_PRIORITIES - create_task_priority ) );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 3 ],
+                                             &( ptcb->xStateListItem ),
+                                             pdTRUE );
+    uxListRemove_ExpectAndReturn( &( ptcb->xStateListItem ), 0 );
+    /* port Reset ready priority */
+    /* add task to ready list */
+    listINSERT_END_Expect( &( pxReadyTasksLists[ 4 ] ),
+                           &( ptcb->xStateListItem ) );
+
+    TEST_ASSERT_EQUAL( 3, ptcb->uxBasePriority );
+    TEST_ASSERT_EQUAL( 3, ptcb->uxPriority );
+
+    /* Set priority of taskHandle to the same as taskHandle2. */
+    vTaskPrioritySet( taskHandle, 4 );
+    TEST_ASSERT_EQUAL( 4, ptcb->uxBasePriority );
+    TEST_ASSERT_EQUAL( 4, ptcb->uxPriority );
+
+    /* portYIELD_WITHIN_API() should not be called. */
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
+}
 
 void test_vTaskPrioritySet_success_gt_max_prio( void )
 {
@@ -1548,6 +1639,51 @@ void test_vTaskDelay_success_gt_0_yield_not_called( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    /* back to xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+
+    /* API Call */
+    vTaskDelay( delay );
+    /* Validations */
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
+}
+
+/* Test the scenario that a higher priority task is added to xPendingReadyList when
+ * current task calls xTaskDelay. Scheduler yields for the higher priority task in
+ * xTaskResumeAll function. */
+void test_vTaskDelay_success_gt_0_already_yielded( void )
+{
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    /* Create one task. This is the current running task. */
+    create_task_priority = 3;
+    task_handle = create_task();
+
+    /* Create a higher priority task to be added to xPendingReadyList. */
+    create_task_priority = 4;
+    task_handle2 = create_task();
+
+    pxCurrentTCB = task_handle;
+    ptcb = ( TCB_t * ) task_handle;
+    TickType_t delay = 34;
+    /* Expectations */
+    /* prvAddCurrentTaskToDelayedList */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
+                                    xTickCount + delay );
+    vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
+
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( &xPendingReadyList, task_handle2 );
+    listREMOVE_ITEM_Expect( &( task_handle2->xEventListItem ) );
+    listREMOVE_ITEM_Expect( &( task_handle2->xStateListItem ) );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ task_handle2->uxPriority ],
+                           &task_handle2->xStateListItem );
     /* back to xTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* prvResetNextTaskUnblockTime */
@@ -1927,6 +2063,54 @@ void test_xTaskDelayUntil_success_lt_tickCount2( void )
     TEST_ASSERT_TRUE( ret_xtask_delay );
 }
 
+/* Test the scenario that a higher priority task is added to xPendingReadyList when
+ * current task calls xTaskDelayUntil. Scheduler yields for the higher priority task
+ * in vTaskResumeAll function. */
+void test_xTaskDelayUntil_success_yield_already( void )
+{
+    BaseType_t ret_xtask_delay;
+    TickType_t previousWakeTime = xTickCount - 3; /* 500 - 3 = 497 */
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+    TickType_t xTimeIncrement = UINT32_MAX;
+
+    /* Setup */
+    create_task_priority = 3;
+    task_handle = create_task();
+
+    /* Create another higher priority task to be added in xPendingReadyList. */
+    create_task_priority = 4;
+    task_handle2 = create_task();
+
+    ptcb = ( TCB_t * ) task_handle;
+    pxCurrentTCB = ( TCB_t * ) task_handle;
+
+    /* Expectations */
+    /* xTaskResumeAll */
+    /* prvResetNextTaskUnblockTime */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
+    listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
+                                    ( ( previousWakeTime - 1 ) ) );
+    vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
+
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( &xPendingReadyList, task_handle2 );
+    listREMOVE_ITEM_Expect( &( task_handle2->xEventListItem ) );
+    listREMOVE_ITEM_Expect( &( task_handle2->xStateListItem ) );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ task_handle2->uxPriority ],
+                           &task_handle2->xStateListItem );
+    /* back to xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* API Call */
+    ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
+    /* Validations */
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
+    TEST_ASSERT_TRUE( ret_xtask_delay );
+}
 
 /* ----------------------- testing INCLUDE_vTaskSuspend ----------------------*/
 void test_vTaskSuspend_success( void )
@@ -2154,14 +2338,17 @@ void test_vTaskResume_success_task_event_list_orphan( void )
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
+/* Test the scenario that current running task will be preempted if a higher priority
+ * task is resumed. */
 void test_vTaskResume_success_yield( void )
 {
     TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
 
-    create_task_priority = 3;
+    create_task_priority = 4;
     task_handle = create_task();
     create_task_priority = 3;
-    create_task();
+    task_handle2 = create_task();
     ptcb = task_handle;
     /* Expectations */
     /* prvTaskIsTaskSuspended */
@@ -2174,43 +2361,95 @@ void test_vTaskResume_success_yield( void )
     listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
                                              &ptcb->xEventListItem,
                                              pdTRUE );
+
+    /* Current running task should be task_handle2 now. */
+    pxCurrentTCB = task_handle2;
+
     /* back */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
     /* prvAddTaskToReadyList*/
-    listINSERT_END_Expect( &pxReadyTasksLists[ create_task_priority ],
+    listINSERT_END_Expect( &pxReadyTasksLists[ 4 ],
                            &ptcb->xStateListItem );
     /* API Call */
     vTaskResume( task_handle ); /* not current tcb */
+
     /* Validations */
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
+}
+
+
+/* Test the scenario that current running task will not be preempted if a equal
+ * priority task is resumed. */
+void test_vTaskResume_success_eq_curr_prio_not_yield( void )
+{
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    create_task_priority = 3;
+    task_handle = create_task();
+    create_task_priority = 3;
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+
+    /* Current running task should be task_handle2 now. */
+    pxCurrentTCB = task_handle2;
+
+    /* back */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    /* prvAddTaskToReadyList*/
+    listINSERT_END_Expect( &pxReadyTasksLists[ 3 ],
+                           &ptcb->xStateListItem );
+    /* API Call */
+    vTaskResume( task_handle ); /* not current tcb */
+
+    /* Resuming a task with equal priority. */
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_xTaskResumeFromISR_success( void )
 {
     TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
     BaseType_t ret_task_resume;
 
     create_task_priority = 3;
     task_handle = create_task();
+
+    /* Create another higher priority task to be resumed. */
+    create_task_priority = 4;
+    task_handle2 = create_task();
+
     ptcb = task_handle;
+    pxCurrentTCB = task_handle;
     /* Expectations */
     /* prvTaskIsTaskSuspended */
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
-                                             &ptcb->xStateListItem,
+                                             &task_handle2->xStateListItem,
                                              pdTRUE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
-                                             &ptcb->xEventListItem,
+                                             &task_handle2->xEventListItem,
                                              pdFALSE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
-                                             &ptcb->xEventListItem,
+                                             &task_handle2->xEventListItem,
                                              pdTRUE );
     /* back */
-    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    uxListRemove_ExpectAndReturn( &task_handle2->xStateListItem, pdTRUE );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ create_task_priority ],
-                           &ptcb->xStateListItem );
+                           &task_handle2->xStateListItem );
     /* API Call */
-    ret_task_resume = xTaskResumeFromISR( task_handle );
+    ret_task_resume = xTaskResumeFromISR( task_handle2 );
 
     /* Validations */
     TEST_ASSERT_EQUAL( pdTRUE, ret_task_resume );
@@ -2284,6 +2523,49 @@ void test_xTaskResumeFromISR_success_curr_prio_lt_suspended_task( void )
     create_task_priority = 3;
     task_handle = create_task();
     create_task_priority = 4;
+    create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+    /* back */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ create_task_priority ],
+                           &ptcb->xStateListItem );
+    /* API Call */
+    ret_task_resume = xTaskResumeFromISR( task_handle );
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( pdFALSE, ret_task_resume );
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
+}
+
+/* Test the scenario that resuming a suspended task from ISR doesn't preempt current
+ * running task or equal priority. */
+void test_xTaskResumeFromISR_success_curr_prio_eq_suspended_task( void )
+{
+    TaskHandle_t task_handle;
+    BaseType_t ret_task_resume;
+
+    uxSchedulerSuspended = pdFALSE;
+
+    /* Create a task to be added to the xPendingReadyList. */
+    create_task_priority = 3;
+    task_handle = create_task();
+
+    /* Create a running task with the same priority. */
+    create_task_priority = 3;
     create_task();
     ptcb = task_handle;
     /* Expectations */

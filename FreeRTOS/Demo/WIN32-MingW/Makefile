@@ -12,8 +12,8 @@ else
 endif
 
 # Linker - Note this expects you are using MinGW version of GCC
-LD :=  gcc
-LDFLAGS := -Xlinker -Map=$(BUILD_DIR)/rtosdemo.map 
+LD :=  ${CC}
+LDFLAGS := -Xlinker -Map=$(BUILD_DIR)/rtosdemo.map
 
 # Executable Targets
 EXE := $(BUILD_DIR)/RTOSDemo.exe

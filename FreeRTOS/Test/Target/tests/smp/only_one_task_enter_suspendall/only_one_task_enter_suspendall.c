@@ -46,18 +46,18 @@
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h" /* unit testing support functions */
+#include "unity.h"    /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
 /**
  * @brief As time of loop for task to increase counter.
  */
-#define TASK_INCREASE_COUNTER_TIMES                      ( 10000 )
+#define TASK_INCREASE_COUNTER_TIMES    ( 10000 )
 
 /**
  * @brief Timeout value to stop test.
  */
-#define TEST_TIMEOUT_MS ( 10000 )
+#define TEST_TIMEOUT_MS                ( 10000 )
 
 /*-----------------------------------------------------------*/
 
@@ -75,12 +75,12 @@ static void Test_OnlyOneTaskEnterSuspendAll( void );
 /**
  * @brief Task function to increase counter then keep delaying.
  */
-static void vPrvTaskIncCounter(void *pvParameters);
+static void vPrvTaskIncCounter( void * pvParameters );
 
 /**
  * @brief Function to increase counter in critical section.
  */
-static void vLoopIncCounter(void);
+static void vLoopIncCounter( void );
 
 /*-----------------------------------------------------------*/
 
@@ -119,7 +119,7 @@ static void Test_OnlyOneTaskEnterSuspendAll( void )
     {
         vTaskDelay( pdMS_TO_TICKS( 10 ) );
 
-        if( ( xTaskGetTickCount() - xStartTick )/portTICK_PERIOD_MS >= TEST_TIMEOUT_MS )
+        if( ( xTaskGetTickCount() - xStartTick ) / portTICK_PERIOD_MS >= TEST_TIMEOUT_MS )
         {
             break;
         }
@@ -130,7 +130,7 @@ static void Test_OnlyOneTaskEnterSuspendAll( void )
 
 /*-----------------------------------------------------------*/
 
-static void vLoopIncCounter(void)
+static void vLoopIncCounter( void )
 {
     BaseType_t xTempTaskCounter = xTaskCounter;
     BaseType_t xIsTestPass = pdTRUE;
@@ -155,8 +155,9 @@ static void vLoopIncCounter(void)
 }
 /*-----------------------------------------------------------*/
 
-static void vPrvTaskIncCounter(void * pvParameters) {
-    (void) pvParameters;
+static void vPrvTaskIncCounter( void * pvParameters )
+{
+    ( void ) pvParameters;
 
     vLoopIncCounter();
 

@@ -4,22 +4,23 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
@@ -27,40 +28,36 @@
  */
 
 /**
- * @file test.c
+ * @file only_one_task_enter_suspendall.c
  * @brief Only one task shall be able to enter the section protected by vTaskSuspendAll/xTaskResumeAll.
  *
  * Procedure:
- *   - Task A calls vTaskSuspendAll
- *   - Task A increases the counter to COUNTER_MAX
- *   - Task A calls xTaskResumeAll
- *   - Task B calls vTaskSuspendAll
- *   - Task B increases the counter by 1
- *   - Task B calls xTaskResumeAll
+ *   - Create ( num of cores - 1 ) tasks.
+ *   - All tasks (including test runner) increase the counter for TASK_INCREASE_COUNTER_TIMES times.
+ *     - Call vTaskSuspendAll.
+ *     - Increase the counter for TASK_INCREASE_COUNTER_TIMES times.
+ *     - Call xTaskResumeAll.
  * Expected:
- *   - counter should be COUNTER_MAX when Task A finished its loop
- *   - counter should be COUNTER_MAX + 1 when Task B finished its increment
+ *   - Counter should be increased by COUNTER_MAX for a task in its loop.
+ *   - Counter should be ( num of cores * COUNTER_MAX ) in the end.
  */
 
 /* Kernel includes. */
-
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "bsl.h"
 #include "unity.h" /* unit testing support functions */
-
 /*-----------------------------------------------------------*/
 
-#define mainTASK_A_PRIORITY              ( tskIDLE_PRIORITY + 2 )
+/**
+ * @brief As time of loop for task to increase counter.
+ */
+#define TASK_INCREASE_COUNTER_TIMES                      ( 10000 )
 
-#define mainTASK_B_PRIORITY              ( tskIDLE_PRIORITY + 1 )
-
-#define COUNTER_MAX                      ( 3000 )
-
-#define WAIT_TASK_B_FINISH_TIMEOUT_MS    ( 3000 )
-
-#define WAIT_TASK_B_POLLING_MS           ( 100 )
+/**
+ * @brief Timeout value to stop test.
+ */
+#define TEST_TIMEOUT_MS ( 10000 )
 
 /*-----------------------------------------------------------*/
 
@@ -70,131 +67,151 @@
 
 /*-----------------------------------------------------------*/
 
-/* Function declaration. */
-static void fr10_onlyOneTaskEnterSuspendAll( void );
-static void vPrvTaskA( void );
-static void vPrvTaskB( void * pvParameters );
+/**
+ * @brief Test case "Only One Task Enter SuspendAll".
+ */
+static void Test_OnlyOneTaskEnterSuspendAll( void );
+
+/**
+ * @brief Task function to increase counter then keep delaying.
+ */
+static void vPrvTaskIncCounter(void *pvParameters);
+
+/**
+ * @brief Function to increase counter in critical section.
+ */
+static void vLoopIncCounter(void);
 
 /*-----------------------------------------------------------*/
 
-static volatile BaseType_t xTaskCounter = 0;
+#if ( configNUMBER_OF_CORES < 2 )
+    #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
+#endif /* if configNUMBER_OF_CORES != 2 */
 
-static volatile BaseType_t xIsTaskBFinished = pdFALSE;
-
+#if configRUN_MULTIPLE_PRIORITIES != 1
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Test case FR10 to verify that only one task shall be able to enter the section
- * protected by vTaskSuspendAll/xTaskResumeAll. We have two tasks, A and B, running in parallel.
+ * @brief Handles of the tasks created in this test.
  */
-static void fr10_onlyOneTaskEnterSuspendAll( void )
+static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
+
+/**
+ * @brief Counter for all tasks to increase.
+ */
+static BaseType_t xTaskCounter = 0;
+/*-----------------------------------------------------------*/
+
+static void Test_OnlyOneTaskEnterSuspendAll( void )
 {
-    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
+    TickType_t xStartTick = xTaskGetTickCount();
 
-    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
+    /* Yield for other cores to run tasks. */
+    taskYIELD();
 
-    /* Create task B to run on another core. */
-    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE * 2, NULL,
-                 mainTASK_B_PRIORITY, NULL );
+    /* We need at least two tasks increasing the counter at the same time when configNUMBER_OF_CORES is 2 */
+    vLoopIncCounter();
 
-    /* Run current task as Task A. */
-    vPrvTaskA();
+    /* Wait other tasks. */
+    while( xTaskCounter < configNUMBER_OF_CORES * TASK_INCREASE_COUNTER_TIMES )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
 
-    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
+        if( ( xTaskGetTickCount() - xStartTick )/portTICK_PERIOD_MS >= TEST_TIMEOUT_MS )
+        {
+            break;
+        }
+    }
+
+    TEST_ASSERT_EQUAL_INT( xTaskCounter, configNUMBER_OF_CORES * TASK_INCREASE_COUNTER_TIMES );
 }
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Task A entry function, called by prvTestRunnerTask directly.
- */
-static void vPrvTaskA( void )
+static void vLoopIncCounter(void)
 {
-    uint32_t ulIndex = 0;
-    int32_t lRemainingWaitTimeMs = WAIT_TASK_B_FINISH_TIMEOUT_MS;
-    BaseType_t xTempCounter = 0;
+    BaseType_t xTempTaskCounter = xTaskCounter;
+    BaseType_t xIsTestPass = pdTRUE;
+    int i;
 
     vTaskSuspendAll();
 
-    for( ulIndex = 0; ulIndex < COUNTER_MAX; ulIndex++ )
+    for( i = 0; i < TASK_INCREASE_COUNTER_TIMES; i++ )
     {
-        /* Increase xTaskCounter COUNTER_MAX time. xTaskCounter is not COUNTER_MAX if task B enters vTaskSuspendAll. */
         xTaskCounter++;
-        vPortBusyWaitMicroseconds( ( uint32_t ) 1000 );
-    }
+        xTempTaskCounter++;
 
-    /* Record current counter value because we can't get error message from UNITY_ASSERT* functions in vTaskSuspendAll. */
-    xTempCounter = xTaskCounter;
+        if( xTaskCounter != xTempTaskCounter )
+        {
+            xIsTestPass = pdFALSE;
+        }
+    }
 
     xTaskResumeAll();
 
-    /* If task B increases before task A calling xTaskResumeAll, xTempCounter might NOT be COUNTER_MAX.
-     * This checks below scenario:
-     *   - Task A read xTaskCounter(N) value to register.
-     *   - Task A increases xTaskCounter value by 1(N+1).
-     *   - Task A stores xTaskCounter value(N+1) back to memory.
-     *   - Task B read xTaskCounter value(N+1) to register.
-     *   - Task B increases xTaskCounter value by 1(N+2).
-     *   - Task B stores xTaskCounter value(N+2) back to memory. */
-    TEST_ASSERT_EQUAL_INT( xTempCounter, COUNTER_MAX );
-
-    while( ( xIsTaskBFinished == pdFALSE ) && ( lRemainingWaitTimeMs > 0 ) )
-    {
-        vPortBusyWaitMicroseconds( ( uint32_t ) ( WAIT_TASK_B_POLLING_MS * 1000 ) );
-        lRemainingWaitTimeMs -= WAIT_TASK_B_POLLING_MS;
-    }
-
-    /* Make sure Task B is finished normally. */
-    TEST_ASSERT_TRUE( xIsTaskBFinished == pdTRUE );
-
-    /* If task B increases before task A calling xTaskResumeAll, xTempCounter might NOT be COUNTER_MAX + 1.
-     * This checks below scenario:
-     *   - Task A read xTaskCounter value(N) to register.
-     *   - Task A increases xTaskCounter value by 1(N+1).
-     *   - Task B read xTaskCounter value(N) to register.
-     *   - Task B increases xTaskCounter value by 1(N+1).
-     *   - Task A stores xTaskCounter value(N+1) back to memory.
-     *   - Task B stores xTaskCounter value(N+1) back to memory. */
-    TEST_ASSERT_EQUAL_INT( xTaskCounter, COUNTER_MAX + 1 );
+    TEST_ASSERT_TRUE( xIsTestPass );
 }
-
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Task B entry function, created by xTaskCreate.
- *
- * @param[in] pvParameters parameter for task entry, useless in this test.
- */
-static void vPrvTaskB( void * pvParameters )
-{
-    /* Wait task A to start first. */
-    while( xTaskCounter < 1 )
+static void vPrvTaskIncCounter(void * pvParameters) {
+    (void) pvParameters;
+
+    vLoopIncCounter();
+
+    while( pdTRUE )
     {
-        vPortBusyWaitMicroseconds( ( uint32_t ) 1 );
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
     }
-
-    vTaskSuspendAll();
-
-    xTaskCounter++;
-
-    xTaskResumeAll();
-
-    /* Let task A know that task B is finished. */
-    xIsTaskBFinished = pdTRUE;
-
-    vTaskDelete( NULL );
 }
+/*-----------------------------------------------------------*/
 
+/* Runs before every test, put init calls here. */
+void setUp( void )
+{
+    int i;
+    BaseType_t xTaskCreationResult;
+
+    /* Create configNUMBER_OF_CORES - 1 low priority tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    {
+        xTaskCreationResult = xTaskCreate( vPrvTaskIncCounter,
+                                           "IncCounter",
+                                           configMINIMAL_STACK_SIZE,
+                                           NULL,
+                                           configMAX_PRIORITIES - 1,
+                                           &( xTaskHanldes[ i ] ) );
+
+        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/* Runs after every test, put clean-up calls here. */
+void tearDown( void )
+{
+    int i;
+
+    /* Delete all the tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    {
+        if( xTaskHanldes[ i ] )
+        {
+            vTaskDelete( xTaskHanldes[ i ] );
+        }
+    }
+}
 /*-----------------------------------------------------------*/
 
 /**
  * @brief A start entry for test runner to run FR10.
  */
-void vTestRunner( void )
+void vRunOnlyOneTaskEnterSuspendAll( void )
 {
     UNITY_BEGIN();
 
-    RUN_TEST( fr10_onlyOneTaskEnterSuspendAll );
+    RUN_TEST( Test_OnlyOneTaskEnterSuspendAll );
 
     UNITY_END();
 }

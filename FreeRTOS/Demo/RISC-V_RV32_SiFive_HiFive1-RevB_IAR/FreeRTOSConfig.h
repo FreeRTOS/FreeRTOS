@@ -94,7 +94,7 @@
 
 /* Normal assert() semantics without relying on the provision of an assert.h
  * header file. */
-#define configASSERT( x )                   if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+#define configASSERT( x )                   if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 
 /* Map to the platform write function. */
 extern void vSendString( const char * const pcString );

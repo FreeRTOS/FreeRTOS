@@ -27,118 +27,180 @@
  */
 
 /**
- * @file test.c
+ * @file disable_multiple_priorities.c
  * @brief The user shall be able to configure the scheduler to not run a
  *        lower priority task and a higher priority task simultaneously.
  *
  * Procedure:
- *   - disable configRUN_MULTIPLE_PRIORITIES along with configUSE_CORE_AFFINITY
- *     in testConfig.h
- *   - Create tasks A & B with task B having a higher priority.
- *   - Configure task B to alternate between a busyloop and a 10ms yielding delay
+ *   - Create ( num of cores ) tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
+ *   - All tasks keep looping in below steps:
+ *     - Check if only task itself run.
+ *     - Delay 100ms for other tasks to run.
  * Expected:
- *   - Have task A check 25 times, with 10ms delay between each attempt that
- *     task B is not running.
+ *   - Only one task runs at the same time for 5 seconds.
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include <string.h>
-
-#include "bsl.h"
-#include "unity.h" /* unit testing support functions */
+#include "unity.h"    /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
-/* Priorities at which the tasks are created.  The max priority can be specified
- * as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY    ( tskIDLE_PRIORITY + 1 )
-#define mainTASK_B_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+/**
+ * @brief Timeout value to stop test.
+ */
+#define TEST_TIMEOUT_MS    ( 5000 )
 /*-----------------------------------------------------------*/
 
-static void vPrvTaskA( void * pvParameters );
-static void vPrvTaskB( void * pvParameters );
-static void fr04_validateTasksDoNotRunAtSameTime( void );
-/*-----------------------------------------------------------*/
-
-#if configNUMBER_OF_CORES != 2
-    #error Require two cores be configured for FreeRTOS
+#if ( configNUMBER_OF_CORES < 2 )
+    #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
 
-#if configRUN_MULTIPLE_PRIORITIES != 0
-    #error configRUN_MULTIPLE_PRIORITIES shoud be 0 in this test case. Please check if testConfig.h is included.
+#if ( configRUN_MULTIPLE_PRIORITIES != 0 )
+    #error Need to include testConfig.h in FreeRTOSConfig.h
 #endif /* if configRUN_MULTIPLE_PRIORITIES != 0 */
 
-#if configUSE_CORE_AFFINITY != 0
-    #error configUSE_CORE_AFFINITY shoud be 0 in this test case. Please check if testConfig.h is included.
+#if ( configUSE_CORE_AFFINITY != 0 )
+    #error Need to include testConfig.h in FreeRTOSConfig.h
 #endif /* if configUSE_CORE_AFFINITY != 0 */
 /*-----------------------------------------------------------*/
 
-static BaseType_t xTaskBObservedRunning = pdFALSE;
-static TaskHandle_t xTaskBHandler;
+/**
+ * @brief Test case "Disable Multiple Priorities".
+ */
+void Test_DisableMultiplePriorities( void );
+
+/**
+ * @brief Function that checks if itself is the only task runs.
+ */
+static void vPrvCheckRunningTask( void * pvParameters );
+
+/**
+ * @brief Function that returns which index does the xCurrntTaskHandle match.
+ *        0 for T0, 1 for T1, -1 for not match.
+ */
+static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
 /*-----------------------------------------------------------*/
 
-static void fr04_validateTasksDoNotRunAtSameTime( void )
+/**
+ * @brief Handles of the tasks created in this test.
+ */
+static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
+
+/**
+ * @brief Flas to indicate if task T0~Tn-1 run or not.
+ */
+static BaseType_t xHasTaskRun[ configNUMBER_OF_CORES ] = { pdFALSE };
+/*-----------------------------------------------------------*/
+
+static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
 {
-    UBaseType_t uxOriginalTaskPriority = uxTaskPriorityGet( NULL );
+    int i = 0;
+    int lMatchIdx = -1;
 
-    vTaskPrioritySet( NULL, mainTASK_A_PRIORITY );
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        if( xCurrntTaskHandle == xTaskHanldes[ i ] )
+        {
+            lMatchIdx = i;
+            break;
+        }
+    }
 
-    xTaskCreate( vPrvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
-                 mainTASK_B_PRIORITY, &xTaskBHandler );
-
-    /* Run current task as Task A. */
-    vPrvTaskA( NULL );
-
-    vTaskPrioritySet( NULL, uxOriginalTaskPriority );
-
-    vTaskDelete( xTaskBHandler );
+    return lMatchIdx;
 }
-/*-----------------------------------------------------------*/
 
-static void vPrvTaskA( void * pvParameters )
+static void vPrvCheckRunningTask( void * pvParameters )
 {
+    UBaseType_t xIdx, xNumTasksRunning;
     TaskStatus_t taskStatus[ 16 ];
     UBaseType_t xTaskStatusArraySize = 16;
     unsigned long ulTotalRunTime;
-    BaseType_t xIdx;
-    BaseType_t xAttempt = 1;
-    BaseType_t xNumTasksRunning;
+    int lCurrentTaskIdx = -1;
 
-    while( !xTaskBObservedRunning )
+    ( void ) pvParameters;
+
+    lCurrentTaskIdx = lFindTaskIdx( xTaskGetCurrentTaskHandle() );
+    TEST_ASSERT_TRUE( lCurrentTaskIdx >= 0 && lCurrentTaskIdx < configNUMBER_OF_CORES );
+    xHasTaskRun[ lCurrentTaskIdx ] = pdTRUE;
+
+    for( ; ; )
     {
         xNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, xTaskStatusArraySize, &ulTotalRunTime );
 
         for( xIdx = 0; xIdx < xNumTasksRunning; xIdx++ )
         {
-            if( ( strcmp( taskStatus[ xIdx ].pcTaskName, "TaskB" ) == 0 ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
+            int lTaskIdx = lFindTaskIdx( taskStatus[ xIdx ].xHandle );
+
+            if( ( lTaskIdx >= 0 ) && ( lCurrentTaskIdx < configNUMBER_OF_CORES ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
             {
-                xTaskBObservedRunning = true;
+                /* It's one of T0~Tn-1, and only current task should be run. */
+                TEST_ASSERT_EQUAL_INT( lTaskIdx, lCurrentTaskIdx );
             }
         }
 
-        vTaskDelay( pdMS_TO_TICKS( 10 ) );
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
+    }
+}
+/*-----------------------------------------------------------*/
 
-        xAttempt++;
+void Test_DisableMultiplePriorities( void )
+{
+    TickType_t xStartTick = xTaskGetTickCount();
+    int i = 0;
 
-        if( xAttempt > 25 )
+    /* Wait other tasks. */
+    for( ; ; )
+    {
+        vTaskDelay( pdMS_TO_TICKS( 100 ) );
+
+        if( ( xTaskGetTickCount() - xStartTick ) / portTICK_PERIOD_MS >= TEST_TIMEOUT_MS )
         {
             break;
         }
     }
 
-    TEST_ASSERT_TRUE( !xTaskBObservedRunning );
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        TEST_ASSERT_TRUE( xHasTaskRun[ i ] == pdTRUE );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void vPrvTaskB( void * pvParameters )
+/* Runs before every test, put init calls here. */
+void setUp( void )
 {
-    /* idle the task */
-    for( ; ; )
+    int i;
+    BaseType_t xTaskCreationResult;
+
+    /* Create configNUMBER_OF_CORES - 1 low priority tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        vTaskDelay( pdMS_TO_TICKS( 10 ) );
-        vPortBusyWaitMicroseconds( ( uint32_t ) 100000 );
+        xTaskCreationResult = xTaskCreate( vPrvCheckRunningTask,
+                                           "CheckRunning",
+                                           configMINIMAL_STACK_SIZE * 2,
+                                           NULL,
+                                           configMAX_PRIORITIES - 1 - i,
+                                           &( xTaskHanldes[ i ] ) );
+
+        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
+    }
+}
+/*-----------------------------------------------------------*/
+
+/* Runs after every test, put clean-up calls here. */
+void tearDown( void )
+{
+    int i;
+
+    /* Delete all the tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        if( xTaskHanldes[ i ] )
+        {
+            vTaskDelete( xTaskHanldes[ i ] );
+        }
     }
 }
 /*-----------------------------------------------------------*/
@@ -146,11 +208,11 @@ static void vPrvTaskB( void * pvParameters )
 /**
  * @brief A start entry for test runner to run FR04.
  */
-void vTestRunner( void )
+void vRunDisableMultiplePrioritiesTest( void )
 {
     UNITY_BEGIN();
 
-    RUN_TEST( fr04_validateTasksDoNotRunAtSameTime );
+    RUN_TEST( Test_DisableMultiplePriorities );
 
     UNITY_END();
 }

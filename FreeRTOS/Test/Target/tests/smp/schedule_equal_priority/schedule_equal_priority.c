@@ -27,7 +27,7 @@
  */
 
 /**
- * @file test.c
+ * @file schedule_equal_priority.c
  * @brief The scheduler shall schedule tasks of equal priority in a round robin fashion.
  *
  * Procedure:

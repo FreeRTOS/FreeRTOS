@@ -2690,6 +2690,7 @@ terraterm
 testcase
 testcases
 testloop
+testrunner
 testrunnerafqp
 testrunnerfull
 testshadowname

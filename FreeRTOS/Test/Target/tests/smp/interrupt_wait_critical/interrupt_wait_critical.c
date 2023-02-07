@@ -175,7 +175,7 @@ static void prvEnterCriticalTask( void * pvParameters )
 
     while( xIsTestRunnerEnteredCritical == pdFALSE )
     {
-        /* Busy loop here intil testRunner enters critical section. */
+        /* Busy loop here until testRunner enters critical section. */
         __asm volatile ( "nop" );
     }
 

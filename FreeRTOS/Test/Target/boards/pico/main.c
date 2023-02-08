@@ -53,10 +53,10 @@ static void prvInitializeHardware( void )
     /* Want to be able to printf */
     stdio_init_all();
 
-    while( !stdio_usb_connected() )
-    {
-        sleep_ms( 250 );
-    }
+    // while( !stdio_usb_connected() )
+    // {
+    //     sleep_ms( 250 );
+    // }
 }
 /*-----------------------------------------------------------*/
 

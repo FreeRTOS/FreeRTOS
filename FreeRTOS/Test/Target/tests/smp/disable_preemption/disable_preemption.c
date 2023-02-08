@@ -55,7 +55,7 @@
 /**
  * @brief Loop value for T0 with preemption disabled.
  */
-#define TEST_T0_BUSY_TIME    ( 0xFFFFFFF0 )
+#define TEST_T0_BUSY_TIME    ( 0xFFFF )
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -136,7 +136,7 @@ void test_TASK_SWITCHED_IN(void) {
             if( xIsTaskT0PreemptDisabled == pdTRUE && taskStatus[uxIdx].eCurrentState != eRunning )
             {
                 /* Once T0 disables preemption, it shouldn't be switched out. */
-                // TEST_ASSERT_TRUE( taskStatus[uxIdx].eCurrentState == eRunning );
+                TEST_ASSERT_TRUE( taskStatus[uxIdx].eCurrentState == eRunning );
             }
         }
     }
@@ -162,7 +162,7 @@ static void prvDisablePreemptionTask( void * pvParameters )
     uint32_t i=0;
 
     /* wait with preemption disabled */
-    // vTaskPreemptionDisable(NULL);
+    vTaskPreemptionDisable(NULL);
     xIsTaskT0PreemptDisabled = pdTRUE;
 
     vTaskPrioritySet(NULL, configMAX_PRIORITIES - 3);
@@ -175,7 +175,7 @@ static void prvDisablePreemptionTask( void * pvParameters )
         __asm volatile ( "nop" );
     }
     xIsTaskT0PreemptDisabled = pdFALSE;
-    // vTaskPreemptionEnable(NULL);
+    vTaskPreemptionEnable(NULL);
 
     xIsTaskT0Finished = pdTRUE;
     printf("xIsTaskT0Finished\n");
@@ -213,12 +213,11 @@ void setUp( void )
     int i;
     BaseType_t xTaskCreationResult;
 
-    xTaskCreationResult = xTaskCreateAffinitySet( prvDisablePreemptionTask,
+    xTaskCreationResult = xTaskCreate( prvDisablePreemptionTask,
                                         "DisablePreemption",
                                         configMINIMAL_STACK_SIZE * 2,
                                         NULL,
                                         configMAX_PRIORITIES - 2,
-                                        0x2,
                                         &( xTaskHanldes[ 0 ] ) );
 
     TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );

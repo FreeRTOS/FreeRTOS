@@ -4,26 +4,30 @@ project(example C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(fr5_common INTERFACE)
-target_sources(fr5_common INTERFACE
-        ${CMAKE_CURRENT_LIST_DIR}/../common/testRunner.c
-        test.c)
-target_include_directories(fr5_common INTERFACE
-        ${CMAKE_CURRENT_LIST_DIR}
-        ${BSL_PATHS}
+set(TEST_INCLUDE_PATHS ${CMAKE_CURRENT_LIST_DIR}/../../../../../tests/smp/schedule_affinity)
+set(TEST_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../../../../tests/smp/schedule_affinity)
+
+add_library(schedule_affinity INTERFACE)
+target_sources(schedule_affinity INTERFACE
+        ${BOARD_LIBRARY_DIR}/main.c
+        ${CMAKE_CURRENT_LIST_DIR}/schedule_affinity_test_runner.c
+        ${TEST_SOURCE_DIR}/schedule_affinity.c)
+
+target_include_directories(schedule_affinity INTERFACE
+        ${CMAKE_CURRENT_LIST_DIR}/../../..
+        ${TEST_INCLUDE_PATHS}
         )
-bsl_library_variant(bsl_fr5 ${CMAKE_CURRENT_LIST_DIR} "-DUSE_BSL_DEFAULT_HOOKS")
-target_link_libraries(fr5_common INTERFACE
+
+target_link_libraries(schedule_affinity INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4
-        ${BSL_LINK_LIBRARIES} bsl_fr5)
+        ${BOARD_LINK_LIBRARIES})
 
-add_executable(test_fr5)
-bsl_executable_modifiers(test_fr5)
-target_link_libraries(test_fr5 fr5_common)
-target_include_directories(test_fr5 PUBLIC
-        ${BSL_INCLUDE_PATHS})
-target_compile_definitions(test_fr5 PRIVATE
-        ${BSL_DEFINES}
+add_executable(test_schedule_affinity)
+enable_board_functions(test_schedule_affinity)
+target_link_libraries(test_schedule_affinity schedule_affinity)
+target_include_directories(test_schedule_affinity PUBLIC
+        ${BOARD_INCLUDE_PATHS})
+target_compile_definitions(test_schedule_affinity PRIVATE
+        ${BOARD_DEFINES}
 )
-add_test(test_fr5 fr5)

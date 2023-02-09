@@ -80,6 +80,7 @@
 #define portCRITICAL_NESTING_IN_TCB                      1
 #define portSTACK_GROWTH                                 ( 1 )
 #define configUSE_MINIMAL_IDLE_HOOK                      0
+#define configUSE_TICKLESS_IDLE                          1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1

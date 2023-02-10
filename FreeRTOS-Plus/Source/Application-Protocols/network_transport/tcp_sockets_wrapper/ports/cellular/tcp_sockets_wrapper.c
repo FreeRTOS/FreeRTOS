@@ -349,6 +349,10 @@ static BaseType_t prvNetworkRecvCellular( const cellularSocketWrapper_t * pCellu
     {
         retRecvLength = ( BaseType_t ) recvLength;
     }
+    else if( socketStatus == CELLULAR_SOCKET_CLOSED )
+    {
+        retRecvLength = TCP_SOCKETS_ERRNO_ECLOSED;
+    }
     else
     {
         LogError( ( "prvNetworkRecv failed %d", socketStatus ) );

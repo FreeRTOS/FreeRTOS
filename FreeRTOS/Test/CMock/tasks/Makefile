@@ -10,13 +10,13 @@ PROJECT          :=   tasks
 #
 # Test/CMock/tasks
 PROJECT_DIR      :=   $(abspath .)
-PROJ_DIR         :=   $(abspath .)
 
 # List the dependency files you wish to mock
 MOCK_FILES_FP    :=   $(KERNEL_DIR)/include/timers.h
 MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/list.h
 MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/portable.h
 MOCK_FILES_FP    +=   $(PROJECT_DIR)/list_macros.h
+MOCK_FILES_FP    +=   $(PROJECT_DIR)/../config/fake_assert.h
 
 UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY\
                     -UlistIS_CONTAINED_WITHIN -UlistGET_LIST_ITEM_VALUE        \
@@ -66,10 +66,13 @@ DISCRIMINATOR    :=   $(subst _utest,,$(subst .c,,$(subst $(PROJECT)_,,$(PROJ_SR
 
 # tasks/1/mocks   tasks/2/mocks
 MOCK_DIRS        :=   $(addsuffix /mocks,$(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR)))
+
 # queue/1/cpp   queue/2/cpp
 CPP_DIRS         :=   $(addsuffix /cpp,$(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR)))
+
 # tasks/1/include   tasks/2/include
 INCLUDE_DIRS     :=   $(addsuffix /include,$(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR)))
+
 #list/1   list/2 ....
 CONFIG_DIRS      := $(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR))
 
@@ -112,6 +115,7 @@ $(CPP_FILES) : | directories
         sed -i '/#ifndef FREERTOS_CONFIG_H/d' $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def
         sed -i '/#define FREERTOS_CONFIG_H/d' $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def
         sed -i '/#endif/d' $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def
+        sed -i '/#include/d' $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def
         for h_file in $(MOCK_FILES_FP) ; do                                    \
               unifdef -f $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def $$h_file \
                 > $(SCRATCH_DIR)/$*/cpp/$$(basename $$h_file) ;                \

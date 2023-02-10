@@ -35,9 +35,11 @@
 #include "mock_list_macros.h"
 #include "mock_timers.h"
 #include "mock_portable.h"
+#include "mock_fake_assert.h"
 
 /* Test includes. */
 #include "unity.h"
+#include "CException.h"
 #include "global_vars.h"
 
 /* C runtime includes. */
@@ -81,6 +83,11 @@ extern volatile TickType_t xNextTaskUnblockTime;
 #endif
 extern volatile UBaseType_t uxSchedulerSuspended;
 
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E                       0xAA101
+
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;
@@ -114,6 +121,16 @@ static bool port_allocate_secure_context_called = false;
 static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
 
+
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
+static int assertionFailed = 0;
+
+/**
+ * @brief Flag which denotes if test need to abort on assertion.
+ */
+static BaseType_t shouldAbortOnAssertion = pdFALSE;
 
 /* ===========================  Static Functions  =========================== */
 static void start_scheduler()
@@ -412,6 +429,22 @@ void vFakePortReleaseISRLock( void )
     HOOK_DIAG();
 }
 
+static void vFakeAssertStub( bool x,
+                             char * file,
+                             int line,
+                             int cmock_num_calls )
+{
+    if( !x )
+    {
+        assertionFailed++;
+
+        if( shouldAbortOnAssertion == pdTRUE )
+        {
+            Throw( configASSERT_E );
+        }
+    }
+}
+
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
@@ -450,8 +483,9 @@ void setUp( void )
     /*ulTotalRunTime = 0UL; */
     is_first_task = true;
     created_tasks = 0;
-
     py_operation = dummy_operation;
+
+    vFakeAssert_StubWithCallback( vFakeAssertStub );
 }
 
 /*! called after each testcase */

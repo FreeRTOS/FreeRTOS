@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,6 +24,7 @@
  *
  */
 
+
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -37,16 +38,25 @@
 *
 * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
 * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.  See
-* http://www.freertos.org/a00110.html
+* https://www.FreeRTOS.org/a00110.html
 *----------------------------------------------------------*/
 
+/* SMP test specific configuration */
+#define configRUN_MULTIPLE_PRIORITIES                    0
+#define configNUMBER_OF_CORES                            16
+#define configUSE_CORE_AFFINITY                          0
+#define configUSE_TIME_SLICING                           1
+#define configUSE_TASK_PREEMPTION_DISABLE                0
+#define configTICK_CORE                                  0
+
+/* OS Configuration */
 #define configUSE_PREEMPTION                             1
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION          1
-#define configUSE_IDLE_HOOK                              1
-#define configUSE_TICK_HOOK                              1
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION          0
+#define configUSE_IDLE_HOOK                              0
+#define configUSE_TICK_HOOK                              0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK               1
-#define configTICK_RATE_HZ                               ( 1000 )                  /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
-#define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
+#define configTICK_RATE_HZ                               ( 1000 )
+#define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 )
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 12 )
 #define configUSE_TRACE_FACILITY                         1
@@ -63,9 +73,13 @@
 #define configUSE_QUEUE_SETS                             1
 #define configUSE_TASK_NOTIFICATIONS                     1
 #define configTASK_NOTIFICATION_ARRAY_ENTRIES            5
-#define configSUPPORT_STATIC_ALLOCATION                  1
-#define configINITIAL_TICK_COUNT                         ( ( TickType_t ) 0 ) /* For test. */
-#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    1                    /* As there are a lot of tasks running. */
+#define configSUPPORT_STATIC_ALLOCATION                  0
+#define configINITIAL_TICK_COUNT                         ( ( TickType_t ) 0 )
+#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    1
+#define portREMOVE_STATIC_QUALIFIER                      1
+#define portCRITICAL_NESTING_IN_TCB                      1
+#define portSTACK_GROWTH                                 ( 1 )
+#define configUSE_MINIMAL_IDLE_HOOK                      1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1
@@ -78,9 +92,11 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS    1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
+#define configGENERATE_RUN_TIME_STATS    0
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define portUSING_MPU_WRAPPERS                    0
+#define portHAS_STACK_OVERFLOW_CHECKING           0
+#define configENABLE_MPU                          0
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES                     0
@@ -112,6 +128,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xSemaphoreGetMutexHolder          1
 #define INCLUDE_xTimerPendFunctionCall            1
 #define INCLUDE_xTaskAbortDelay                   1
+#define INCLUDE_xTaskGetCurrentTaskHandle         1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
@@ -133,5 +150,8 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
     extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+//#define portENTER_CRITICAL_FROM_ISR()       ( 0 )
+//#define portEXIT_CRITICAL_FROM_ISR( x )     do{ ( void )( x ); }while( 0 )
 
 #endif /* FREERTOS_CONFIG_H */

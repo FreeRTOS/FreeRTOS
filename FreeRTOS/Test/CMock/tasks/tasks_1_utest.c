@@ -32,13 +32,16 @@
 #include "fake_port.h"
 #include "task.h"
 
+/* Mock includes. */
 #include "mock_list.h"
 #include "mock_list_macros.h"
 #include "mock_timers.h"
 #include "mock_portable.h"
+#include "mock_fake_assert.h"
 
 /* Test includes. */
 #include "unity.h"
+#include "CException.h"
 #include "global_vars.h"
 
 /* C runtime includes. */
@@ -116,6 +119,11 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 #define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
 #define TCB_ARRAY                       10 /* simulate up to 10 tasks: add more if needed */
 
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E                       0xAA101
+
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
@@ -149,6 +157,15 @@ static bool port_allocate_secure_context_called = false;
 static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
 
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
+static int assertionFailed = 0;
+
+/**
+ * @brief Flag which denotes if test need to abort on assertion.
+ */
+static BaseType_t shouldAbortOnAssertion = pdFALSE;
 
 /* ============================  HOOK FUNCTIONS  ============================ */
 static void dummy_operation()
@@ -348,10 +365,27 @@ void vFakePortReleaseISRLock( void )
     HOOK_DIAG();
 }
 
+static void vFakeAssertStub( bool x,
+                             char * file,
+                             int line,
+                             int cmock_num_calls )
+{
+    if( !x )
+    {
+        assertionFailed++;
+
+        if( shouldAbortOnAssertion == pdTRUE )
+        {
+            Throw( configASSERT_E );
+        }
+    }
+}
+
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
 {
+    vFakeAssert_StubWithCallback( vFakeAssertStub );
     RESET_ALL_HOOKS();
     pxCurrentTCB = NULL;
     memset( &tcb, 0x00, sizeof( TCB_t ) * TCB_ARRAY );
@@ -2589,11 +2623,11 @@ void test_xTaskIncrementTick_success_tickCount_overlow( void )
     overflow = pxOverflowDelayedTaskList;
     xTickCount = UINT32_MAX; /* overflowed */
     create_task();
-
     /* Expectations */
-    /* prvResetNextTaskUnblockTime */
+    /* taskSWITCH_DELAYED_LISTS */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* back */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ],
                                              2 );
     /* API Call */
@@ -2644,6 +2678,8 @@ void test_xTaskIncrementTick_success_switch( void )
     xTickCount = UINT32_MAX;
 
     /* Expectations */
+    /* taskSWITCH_DELAYED_LISTS(); */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ],
                                              3 );
@@ -3043,6 +3079,7 @@ void test_vTaskSwitchContext( void )
     pxCurrentTCB->pxTopOfStack = pxCurrentTCB->pxStack + 4; \
 
     /* Expectations */
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
 
     /* API Call */
     vTaskSwitchContext();
@@ -3077,6 +3114,7 @@ void test_vTaskSwitchContext_detect_overflow( void )
     uxSchedulerSuspended = pdFALSE;
     pxCurrentTCB->pxTopOfStack = pxCurrentTCB->pxStack;
     /* Expectations */
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
 
     /* API Call */
     vTaskSwitchContext();
@@ -4242,8 +4280,11 @@ void test_xTaskGenericNotify_success_null_pull( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotify( ptcb,
                                           uxIndexToNotify,
@@ -4274,6 +4315,8 @@ void test_xTaskGenericNotify_success_eIncrement( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4306,6 +4349,8 @@ void test_xTaskGenericNotify_success_eSetValueWithOverwrite( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4338,6 +4383,8 @@ void test_xTaskGenericNotify_success_eSetValueWithoutOverwrite( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4428,6 +4475,8 @@ void test_xTaskGenericNotify_success_default( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4490,7 +4539,10 @@ void test_xTaskGenericNotify_success_null_pull_ISR( void )
     ptcb = task_to_notify;
     vTaskSuspendAll();
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &ptcb->xEventListItem );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -4522,10 +4574,14 @@ void test_xTaskGenericNotify_success_eIncrement_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
+
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -4557,6 +4613,8 @@ void test_xTaskGenericNotify_success_eSetValueWithOverwrite_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -4592,6 +4650,8 @@ void test_xTaskGenericNotify_success_eSetValueWithoutOverwrite_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -4699,6 +4759,8 @@ void test_xTaskGenericNotify_success_default_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -4742,6 +4804,8 @@ void test_xTaskGenericNotify_success_default_ISR_task_woken_null( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -4922,11 +4986,16 @@ void test_vTaskGenericNotifyGiveFromISR_success( void )
     /* Setup */
     task_to_notify = create_task();
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    ptcb = task_to_notify;
     /* Expectations */
+    /* configASSERT stateement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /*uxListRemove_ExpectAndReturn( &task_to_notify->xStateListItem, pdTRUE ); */
     listREMOVE_ITEM_Expect( &( task_to_notify->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
+
     /* API Call */
     vTaskGenericNotifyGiveFromISR( task_to_notify,
                                    uxIndexToNotify,
@@ -4948,8 +5017,12 @@ void test_vTaskGenericNotifyGiveFromISR_success_scheduler_suspended( void )
     /* Setup */
     task_to_notify = create_task();
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    ptcb = task_to_notify;
     vTaskSuspendAll();
     /* Expectations */
+    /* configASSERT statement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
 
     /* API Call */
@@ -4982,7 +5055,11 @@ void test_vTaskGenericNotifyGiveFromISR_success_yield_pending( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     vTaskSuspendAll();
+
     /* Expectations */
+    /* configASSERT statement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
 
     /* API Call */
@@ -5015,6 +5092,9 @@ void test_vTaskGenericNotifyGiveFromISR_success_null_higherpriority_task( void )
     ptcb = task_to_notify;
     vTaskSuspendAll();
     /* Expectations */
+    /* configASSERT statement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
 
     /* API Call */

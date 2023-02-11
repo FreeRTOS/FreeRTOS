@@ -64,6 +64,7 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern List_t * volatile pxDelayedTaskList;
 extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
+extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 
 static BaseType_t xCoreYields[ configNUMBER_OF_CORES ] = { 0 };
 
@@ -297,6 +298,7 @@ void commonSetUp( void )
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
     memset( &xIdleTaskHandles, 0x00, (configNUMBER_OF_CORES * sizeof( TaskHandle_t )) );
     memset( &pxCurrentTCBs, 0x00, (configNUMBER_OF_CORES * sizeof( TCB_t * )) );
+    memset( ( void * )&xYieldPendings, 0x00, ( configNUMBER_OF_CORES * sizeof( BaseType_t ) ) );
 
     uxDeletedTasksWaitingCleanUp = 0;
     uxCurrentNumberOfTasks = ( UBaseType_t ) 0U;

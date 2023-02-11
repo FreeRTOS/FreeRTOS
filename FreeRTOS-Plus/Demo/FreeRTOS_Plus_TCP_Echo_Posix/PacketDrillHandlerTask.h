@@ -41,13 +41,22 @@ void vStartPacketDrillHandlerTask( uint16_t usTaskStackSize, UBaseType_t uxTaskP
 int resetPacketDrillTask();
 
 
+struct SocketPackage {
+    int domain;
+    int type;
+    int protocol;
+};
+
 struct AcceptPackage {
     int sockfd;
 };
 
 struct BindPackage {
     int sockfd;
-    struct sockaddr addr;
+    union {
+        struct sockaddr_in addr;
+        struct sockaddr_in6 addr6;
+    };
     socklen_t addrlen;
 };
 
@@ -61,17 +70,38 @@ struct WritePackage {
     size_t count;
 };
 
+struct SendToPackage {
+    int sockfd;
+    int flags;
+    union {
+        struct sockaddr_in addr;
+        struct sockaddr_in6 addr6;
+    };
+    socklen_t addrlen;
+};
+
 struct ReadPackage {
     int sockfd;
     size_t count;
+};
+
+struct RecvFromPackage {
+    int sockfd;
+    size_t count;
+    int flags;
 };
 
 struct ClosePackage {
     int sockfd;
 };
 
+
+
 struct AcceptResponsePackage {
-    struct sockaddr addr;
+    union {
+        struct sockaddr_in addr;
+        struct sockaddr_in6 addr6;
+    };
     socklen_t addrlen;
 };
 
@@ -89,13 +119,16 @@ struct SyscallPackage {
     size_t bufferedCount;
     void *buffer;
     union {
+        struct SocketPackage socketPackage;
         struct BindPackage bindPackage;
         struct ListenPackage listenPackage;
         struct AcceptPackage acceptPackage;
         struct BindPackage connectPackage;
         struct WritePackage writePackage;
-        struct ReadPackage readPackage;
+        struct SendToPackage sendToPackage;
         struct ClosePackage closePackage;
+        struct ReadPackage readPackage;
+        struct RecvFromPackage recvFromPackage;
     };
 };
 

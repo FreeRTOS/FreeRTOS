@@ -542,14 +542,16 @@ static void packetDrillBridgeThread (void *pvParameters)
             }
 
             if (numRead == -1) {
-            FreeRTOS_debug_printf(("Error reading from socket with errno %d...\n", errno));
+                FreeRTOS_debug_printf(("Error reading from socket with errno %d...\n", errno));
 
             }
 
             if (close(cfd) == -1) {
-            FreeRTOS_debug_printf(("Error closing socket...\n"));
+                FreeRTOS_debug_printf(("Error closing socket...\n"));
 
             }
+
+            vTaskDelay(20/portTICK_PERIOD_MS);
 
             //resetPacketDrillTask();
             

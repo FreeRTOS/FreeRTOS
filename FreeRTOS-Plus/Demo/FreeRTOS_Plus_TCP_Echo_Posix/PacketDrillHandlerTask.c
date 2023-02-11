@@ -92,6 +92,7 @@ extern struct event * pvSendEvent;
 Socket_t socketArray[MAX_SOCKET_ARRAY] = {NULL, NULL, NULL};
 int socketCounter = 3;
 
+uint8_t remoteIPBytes[4] = {125, 0, 75, 20};
 uint8_t destinationMacBytes[6] = {0x46, 0xE7, 0xD7, 0xAA, 0x9B, 0x5F};
 
 #define echoECHO_PORT				  ( 7 )
@@ -109,6 +110,8 @@ void vStartPacketDrillHandlerTask( uint16_t usTaskStackSize, UBaseType_t uxTaskP
 }
 
 static void handlePacketDrillCommand(void *pvParameters) {
+
+    uint32_t remoteIPAddr = FreeRTOS_inet_addr_quick(remoteIPBytes[0], remoteIPBytes[1], remoteIPBytes[2], remoteIPBytes[3]);
 
     for (;;) {
 
@@ -137,7 +140,12 @@ static void handlePacketDrillCommand(void *pvParameters) {
                     xWinProps.lRxWinSize = configECHO_SERVER_RX_WINDOW_SIZE;
                 #endif /* ipconfigUSE_TCP_WIN */
 
-                Socket_t xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
+                struct SocketPackage socketPackage = syscallPackage.socketPackage;
+
+                BaseType_t type = socketPackage.type == 2 ? FREERTOS_SOCK_DGRAM : FREERTOS_SOCK_STREAM;
+                BaseType_t protocol = socketPackage.protocol == 17 ? FREERTOS_IPPROTO_UDP : FREERTOS_IPPROTO_TCP;
+
+                Socket_t xSocket = FreeRTOS_socket( FREERTOS_AF_INET, type, protocol );
 
                 if ( xSocket == FREERTOS_INVALID_SOCKET ) {
                     response = 0;
@@ -192,6 +200,15 @@ static void handlePacketDrillCommand(void *pvParameters) {
                     FreeRTOS_debug_printf(("Error listening on socket with response: %d\n", listenResult));
                 }
 
+                if (xIsIPInARPCache(remoteIPAddr) == pdFALSE) {
+                    FreeRTOS_debug_printf(("Remote IP address not in ARP cache...Adding now...\n"));
+                    MACAddress_t destinationMacAddress;
+                    memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
+                    vARPRefreshCacheEntry( &destinationMacAddress, remoteIPAddr );
+                } else {
+                    FreeRTOS_debug_printf(("Remote IP address found in ARP cache...\n"));
+                }
+
                 sendResultToThread(listenResult);
 
             } else if (strcmp(syscallPackage.syscallId, "socket_accept") == 0) {
@@ -201,7 +218,7 @@ static void handlePacketDrillCommand(void *pvParameters) {
                 struct freertos_sockaddr xClient;
                 socklen_t xSize = sizeof( xClient );
 
-                FreeRTOS_setsockopt( socketArray[acceptPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xReceiveTimeOut ) );
+                FreeRTOS_setsockopt( socketArray[acceptPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xConnectTimeOut ) );
 
                 //TODO: Return the client socket to packetdrill
                 Socket_t xConnectedSocket = FreeRTOS_accept( socketArray[acceptPackage.sockfd], &xClient, &xSize );
@@ -234,7 +251,7 @@ static void handlePacketDrillCommand(void *pvParameters) {
                 addr.sin_addr = getUnixSinAddr(xClient.sin_addr);
 
                 struct AcceptResponsePackage acceptResponse;
-                acceptResponse.addr = *((struct sockaddr *)(&addr));
+                acceptResponse.addr = addr;
                 acceptResponse.addrlen = sizeof(struct sockaddr_in);
 
                 struct SyscallResponsePackage syscallResponse;
@@ -253,14 +270,14 @@ static void handlePacketDrillCommand(void *pvParameters) {
                 uint32_t destinationIPAddress = getFreeRTOSSinAddr(sock_addr->sin_addr);
                 xEchoServerAddress.sin_addr = destinationIPAddress;
 
-            if (xIsIPInARPCache(xEchoServerAddress.sin_addr) == pdFALSE) {
-                FreeRTOS_debug_printf(("Connect IP address not in ARP cache...Adding now...\n"));
-                MACAddress_t destinationMacAddress;
-                memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
-                vARPRefreshCacheEntry( &destinationMacAddress, destinationIPAddress );
-            } else {
-                FreeRTOS_debug_printf(("Connect IP address found in ARP cache...\n"));
-            }
+                if (xIsIPInARPCache(xEchoServerAddress.sin_addr) == pdFALSE) {
+                    FreeRTOS_debug_printf(("Connect IP address not in ARP cache...Adding now...\n"));
+                    MACAddress_t destinationMacAddress;
+                    memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
+                    vARPRefreshCacheEntry( &destinationMacAddress, destinationIPAddress );
+                } else {
+                    FreeRTOS_debug_printf(("Connect IP address found in ARP cache...\n"));
+                }
 
                 FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xReceiveTimeOut ) );
 
@@ -289,6 +306,35 @@ static void handlePacketDrillCommand(void *pvParameters) {
                 }
 
                 sendResultToThread(writeResult);
+            } else if (strcmp(syscallPackage.syscallId, "socket_sendto") == 0) {
+
+                struct SendToPackage sendtoPackage = syscallPackage.sendToPackage;
+
+                struct freertos_sockaddr destinationAddress;
+
+                struct sockaddr_in *sock_addr = (struct sockaddr_in *) &sendtoPackage.addr;
+                destinationAddress.sin_port = sock_addr->sin_port;
+                uint32_t destinationIPAddress = getFreeRTOSSinAddr(sock_addr->sin_addr);
+                destinationAddress.sin_addr = destinationIPAddress;
+
+                if (xIsIPInARPCache(destinationAddress.sin_addr) == pdFALSE) {
+                    FreeRTOS_debug_printf(("Sendto IP address not in ARP cache...Adding now...\n"));
+                    MACAddress_t destinationMacAddress;
+                    memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
+                    vARPRefreshCacheEntry( &destinationMacAddress, destinationIPAddress );
+                } else {
+                    FreeRTOS_debug_printf(("Sendto IP address found in ARP cache...\n"));
+                }
+
+                int writeResult = FreeRTOS_sendto(socketArray[sendtoPackage.sockfd],
+                                        syscallPackage.buffer, syscallPackage.bufferedCount, 0, 
+                                        &destinationAddress, sizeof(destinationAddress));
+
+                if (writeResult < 0) {
+                    FreeRTOS_debug_printf(("Error writing to socket with response: %d\n", writeResult));
+                }
+
+                sendResultToThread(writeResult);
             } else if (strcmp(syscallPackage.syscallId, "socket_read") == 0) {
 
                 struct ReadPackage readPackage = syscallPackage.readPackage;
@@ -304,7 +350,49 @@ static void handlePacketDrillCommand(void *pvParameters) {
                     FreeRTOS_debug_printf(("Error reading from socket with result: %d\n", result));
                 }
 
+            
+                vPortFree(readBuffer);
+
                 sendResultToThread(result);
+
+            } else if (strcmp(syscallPackage.syscallId, "socket_recvfrom") == 0) {
+
+                struct RecvFromPackage recvFromPackage = syscallPackage.recvFromPackage;
+
+                char *readBuffer = pvPortMalloc(recvFromPackage.count);
+
+                struct freertos_sockaddr xClient;
+                socklen_t xSize = sizeof( xClient );
+
+                FreeRTOS_setsockopt( socketArray[recvFromPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xConnectTimeOut ) );
+
+                int result = FreeRTOS_recvfrom( socketArray[recvFromPackage.sockfd],
+                                            (void *) readBuffer,
+                                            recvFromPackage.count,
+                                            0, &xClient, &xSize);
+
+                FreeRTOS_setsockopt( socketArray[recvFromPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
+
+                if (result < 0 ) {
+                    FreeRTOS_debug_printf(("Error reading from socket with result: %d\n", result));
+                    sendResultToThread(result);
+                    continue;
+                }
+
+                struct sockaddr_in addr;
+                addr.sin_family = AF_INET;
+                addr.sin_port = xClient.sin_port;
+                addr.sin_addr = getUnixSinAddr(xClient.sin_addr);
+
+                struct AcceptResponsePackage acceptResponse;
+                acceptResponse.addr = addr;
+                acceptResponse.addrlen = sizeof(struct sockaddr_in);
+
+                struct SyscallResponsePackage syscallResponse;
+                syscallResponse.result = result;
+                syscallResponse.acceptResponse = acceptResponse;
+
+                sendSyscallResponseToThread(syscallResponse);
 
             } else if (strcmp(syscallPackage.syscallId, "socket_close") == 0){
 
@@ -329,7 +417,7 @@ static void handlePacketDrillCommand(void *pvParameters) {
             sendResultToThread(response);
         }
 
-        }
+    }
 
     
 

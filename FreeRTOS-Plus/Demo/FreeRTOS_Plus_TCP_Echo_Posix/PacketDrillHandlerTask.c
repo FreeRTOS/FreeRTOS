@@ -445,14 +445,16 @@ static void sendResultToThread(int result) {
 
 int resetPacketDrillTask() {
     int sizeSocketArray = socketCounter - 3;
-    if (sizeSocketArray > 0) {
-        memset(socketArray + (3*sizeof(Socket_t)), 0, sizeSocketArray * sizeof(Socket_t));
-
+    if (socketCounter > 3) {
+        
         /* We want to close all the socket we opened during this session */
-        for (int counter = 0; counter < sizeSocketArray; counter++) {
-            Socket_t socket = socketArray[counter + 3];
+        for (int counter = 3; counter < socketCounter; counter++) {
+            Socket_t socket = socketArray[counter];
             FreeRTOS_closesocket(socket);
         }
+
+        memset(socketArray, 0, socketCounter * sizeof(Socket_t));
+
     }
 
     socketCounter = 3;

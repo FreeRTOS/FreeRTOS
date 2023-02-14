@@ -310,6 +310,11 @@ extern UBaseType_t uxRand();
 
 #define portINLINE                                            __inline
 
+/* Disable DHCP hook functionality. */
+#define ipconfigUSE_DHCP_HOOK                                 ( 0 )
+
+#define FREERTOS_PLUS_TCP_VERSION                             ( 10 )
+
 #include <stdint.h>
 
 /* Set ipconfigBUFFER_PADDING on 64-bit platforms */

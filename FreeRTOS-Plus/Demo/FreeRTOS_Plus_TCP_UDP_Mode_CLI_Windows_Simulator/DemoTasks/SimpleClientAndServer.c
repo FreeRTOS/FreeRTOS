@@ -250,7 +250,7 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 			the do while loop is used to ensure a buffer is obtained. */
 			do
 			{
-			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
+			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
 
 			/* A buffer was successfully obtained.  Create the string that is
 			sent to the server.  First the string is filled with zeros as this will

@@ -54,7 +54,7 @@ vRegTest1Implementation:
     li x12, 0xc
     li x13, 0xd
     li x14, 0xe
-    li x15, 0xf
+#ifndef __riscv_32e
     li x16, 0x10
     li x17, 0x11
     li x18, 0x12
@@ -70,73 +70,77 @@ vRegTest1Implementation:
     li x28, 0x1c
     li x29, 0x1d
     li x30, 0x1e
+    li x31, 0x1f
+#endif
 
 reg1_loop:
 
     /* Check each register still contains the expected known value.
-     * vRegTest1Implementation uses x31 as the temporary, vRegTest2Implementation
+     * vRegTest1Implementation uses x15 as the temporary, vRegTest2Implementation
      * uses x5 as the temporary. */
-    li x31, 0x5
-    bne x31, x5, reg1_error_loop
-    li x31, 0x6
-    bne x31, x6, reg1_error_loop
-    li x31, 0x7
-    bne x31, x7, reg1_error_loop
-    li x31, 0x8
-    bne x31, x8, reg1_error_loop
-    li x31, 0x9
-    bne x31, x9, reg1_error_loop
-    li x31, 0xa
-    bne x31, x10, reg1_error_loop
-    li x31, 0xb
-    bne x31, x11, reg1_error_loop
-    li x31, 0xc
-    bne x31, x12, reg1_error_loop
-    li x31, 0xd
-    bne x31, x13, reg1_error_loop
-    li x31, 0xe
-    bne x31, x14, reg1_error_loop
-    li x31, 0xf
-    bne x31, x15, reg1_error_loop
-    li x31, 0x10
-    bne x31, x16, reg1_error_loop
-    li x31, 0x11
-    bne x31, x17, reg1_error_loop
-    li x31, 0x12
-    bne x31, x18, reg1_error_loop
-    li x31, 0x13
-    bne x31, x19, reg1_error_loop
-    li x31, 0x14
-    bne x31, x20, reg1_error_loop
-    li x31, 0x15
-    bne x31, x21, reg1_error_loop
-    li x31, 0x16
-    bne x31, x22, reg1_error_loop
-    li x31, 0x17
-    bne x31, x23, reg1_error_loop
-    li x31, 0x18
-    bne x31, x24, reg1_error_loop
-    li x31, 0x19
-    bne x31, x25, reg1_error_loop
-    li x31, 0x1a
-    bne x31, x26, reg1_error_loop
-    li x31, 0x1b
-    bne x31, x27, reg1_error_loop
-    li x31, 0x1c
-    bne x31, x28, reg1_error_loop
-    li x31, 0x1d
-    bne x31, x29, reg1_error_loop
-    li x31, 0x1e
-    bne x31, x30, reg1_error_loop
+    li x15, 0x5
+    bne x15, x5, reg1_error_loop
+    li x15, 0x6
+    bne x15, x6, reg1_error_loop
+    li x15, 0x7
+    bne x15, x7, reg1_error_loop
+    li x15, 0x8
+    bne x15, x8, reg1_error_loop
+    li x15, 0x9
+    bne x15, x9, reg1_error_loop
+    li x15, 0xa
+    bne x15, x10, reg1_error_loop
+    li x15, 0xb
+    bne x15, x11, reg1_error_loop
+    li x15, 0xc
+    bne x15, x12, reg1_error_loop
+    li x15, 0xd
+    bne x15, x13, reg1_error_loop
+    li x15, 0xe
+    bne x15, x14, reg1_error_loop
+#ifndef __riscv_32e
+    li x15, 0x10
+    bne x15, x16, reg1_error_loop
+    li x15, 0x11
+    bne x15, x17, reg1_error_loop
+    li x15, 0x12
+    bne x15, x18, reg1_error_loop
+    li x15, 0x13
+    bne x15, x19, reg1_error_loop
+    li x15, 0x14
+    bne x15, x20, reg1_error_loop
+    li x15, 0x15
+    bne x15, x21, reg1_error_loop
+    li x15, 0x16
+    bne x15, x22, reg1_error_loop
+    li x15, 0x17
+    bne x15, x23, reg1_error_loop
+    li x15, 0x18
+    bne x15, x24, reg1_error_loop
+    li x15, 0x19
+    bne x15, x25, reg1_error_loop
+    li x15, 0x1a
+    bne x15, x26, reg1_error_loop
+    li x15, 0x1b
+    bne x15, x27, reg1_error_loop
+    li x15, 0x1c
+    bne x15, x28, reg1_error_loop
+    li x15, 0x1d
+    bne x15, x29, reg1_error_loop
+    li x15, 0x1e
+    bne x15, x30, reg1_error_loop
+    li x15, 0x1f
+    bne x15, x31, reg1_error_loop
+#endif
 
     /* Everything passed, increment the loop counter. */
-    lw x31, pulRegTest1LoopCounter
-    lw x30, 0(x31)
-    addi x30, x30, 1
-    sw x30, 0(x31)
+    lw x15, pulRegTest1LoopCounter
+    lw x14, 0(x15)
+    addi x14, x14, 1
+    sw x14, 0(x15)
 
     /* Restore clobbered register reading for next loop. */
-    li x30, 0x1e
+    li x14, 0xe
 
     /* Yield to increase code coverage. */
     ecall
@@ -145,9 +149,7 @@ reg1_loop:
     jal reg1_loop
 
 reg1_error_loop:
-    /* Jump here if a register contains an uxpected value.  This stops the loop
-     * counter being incremented so the check task knows an error was found. */
-    ebreak
+    /* Busy loop which holds the task. */
     jal reg1_error_loop
 
 /*-----------------------------------------------------------*/
@@ -166,6 +168,7 @@ vRegTest2Implementation:
     li x13, 0xd1
     li x14, 0xe1
     li x15, 0xf1
+#ifndef __riscv_32e
     li x16, 0x20
     li x17, 0x21
     li x18, 0x22
@@ -182,12 +185,13 @@ vRegTest2Implementation:
     li x29, 0x2d
     li x30, 0x2e
     li x31, 0x2f
+#endif
 
 Reg2_loop:
 
     /* Check each register still contains the expected known value.
      * vRegTest2Implementation uses x5 as the temporary, vRegTest1Implementation
-     * uses x31 as the temporary. */
+     * uses x15 as the temporary. */
     li x5, 0x61
     bne x5, x6, reg2_error_loop
     li x5, 0x71
@@ -208,6 +212,7 @@ Reg2_loop:
     bne x5, x14, reg2_error_loop
     li x5, 0xf1
     bne x5, x15, reg2_error_loop
+#ifndef __riscv_32e
     li x5, 0x20
     bne x5, x16, reg2_error_loop
     li x5, 0x21
@@ -240,6 +245,7 @@ Reg2_loop:
     bne x5, x30, reg2_error_loop
     li x5, 0x2f
     bne x5, x31, reg2_error_loop
+#endif
 
     /* Everything passed, increment the loop counter. */
     lw x5, pulRegTest2LoopCounter
@@ -254,9 +260,7 @@ Reg2_loop:
     jal Reg2_loop
 
 reg2_error_loop:
-    /* Jump here if a register contains an uxpected value.  This stops the loop
-     * counter being incremented so the check task knows an error was found. */
-    ebreak
+    /* Busy loop which holds the task. */
     jal reg2_error_loop
 
 /*-----------------------------------------------------------*/

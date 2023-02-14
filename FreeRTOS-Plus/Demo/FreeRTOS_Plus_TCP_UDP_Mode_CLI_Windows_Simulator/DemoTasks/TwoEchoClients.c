@@ -295,7 +295,7 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 			delay is used, the actual delay will be capped to
 			ipconfigMAX_SEND_BLOCK_TIME_TICKS, hence the test to ensure a buffer
 			was actually obtained. */
-			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY );
+			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY, ipTYPE_IPv4 );
 
 			if( pucUDPPayloadBuffer != NULL )
 			{

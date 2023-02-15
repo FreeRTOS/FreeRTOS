@@ -166,11 +166,8 @@ int main( void )
 
     /* Initialise the network interface.*/
 
-#if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 )
-    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
     FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
-    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
-#else
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
                 /* Initialise the interface descriptor for WinPCap. */
     pxWinPcap_FillInterfaceDescriptor(0, &(xInterfaces[0]));
 
@@ -181,10 +178,16 @@ int main( void )
         /* End-point 0 wants to use DHCPv4. */
         xEndPoints[0].bits.bWantDHCP = pdTRUE; // pdFALSE; // pdTRUE;
     }
-    #endif /* ( ipconfigUSE_DHCP != 0 ) */
-                
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */ 
+
+    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
+
     FreeRTOS_IPStart();
-#endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
+#else
+        /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
 
     /* Start the RTOS scheduler. */
@@ -390,3 +393,13 @@ BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
     *( pulNumber ) = uxRand();
     return pdTRUE;
 }
+
+#if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) )
+eDHCPCallbackAnswer_t xApplicationDHCPHook(eDHCPCallbackPhase_t eDHCPPhase,
+    uint32_t ulIPAddress)
+{
+    /* Provide a stub for this function. */
+    return eDHCPContinue;
+}
+
+#endif

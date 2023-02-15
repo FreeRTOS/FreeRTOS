@@ -263,7 +263,11 @@ const size_t xStringLength = strlen( pcStringToSend ) + 15;
 			the do while loop is used to ensure a buffer is obtained. */
 			do
 			{
-			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
+			#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
+           #else
+            } while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
+           #endif
 
 			/* A buffer was successfully obtained.  Create the string that is
 			sent to the server.  First the string is filled with zeros as this will
@@ -335,12 +339,10 @@ Socket_t xListeningSocket;
 	after the network is up, so the IP address is valid here. */
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
 	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
-    xBindAddress.sin_addr.xIP_IPv4 = ulIPAddress;
 #else
     FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
-    xBindAddress.sin_addr = ulIPAddress;
 #endif
-	
+	xBindAddress.sin_addr = ulIPAddress;
 	xBindAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );
 

@@ -159,13 +159,9 @@ void main_tcp_echo_client_tasks( void )
      * but a DHCP server cannot be contacted. */
     memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
 
-    /* Initialise the network interface.*/
-
-#if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 )
-    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+   /* Initialise the network interface.*/
     FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
-    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
-#else
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
                 /* Initialise the interface descriptor for WinPCap. */
     pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
 
@@ -177,9 +173,14 @@ void main_tcp_echo_client_tasks( void )
         xEndPoints[0].bits.bWantDHCP = pdTRUE; // pdFALSE; // pdTRUE;
     }
     #endif /* ( ipconfigUSE_DHCP != 0 ) */
-                
+
+    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
+
     FreeRTOS_IPStart();
-#endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
+#else
+    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
 
     /* Start the RTOS scheduler. */

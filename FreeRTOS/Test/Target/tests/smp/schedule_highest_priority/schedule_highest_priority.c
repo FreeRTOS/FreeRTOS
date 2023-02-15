@@ -53,10 +53,6 @@
 #if ( configNUMBER_OF_CORES < 2 )
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
-
-#if traceTASK_SWITCHED_IN != test_TASK_SWITCHED_IN
-    #error Need to include testConfig.h in FreeRTOSConfig.h
-#endif /* if traceTASK_SWITCHED_IN != test_TASK_SWITCHED_IN */
 /*-----------------------------------------------------------*/
 
 /**
@@ -68,6 +64,12 @@ void Test_ScheduleHighestPirority( void );
  * @brief Function that implements a never blocking FreeRTOS task.
  */
 static void vPrvEverRunningTask( void * pvParameters );
+
+/**
+ * @brief Function that returns which index does the xCurrntTaskHandle match.
+ *        0 for T0, 1 for T1, -1 for not match.
+ */
+static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
 /*-----------------------------------------------------------*/
 
 /**
@@ -81,48 +83,52 @@ static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
 static BaseType_t xIsTestFinished = pdFALSE;
 /*-----------------------------------------------------------*/
 
-void test_TASK_SWITCHED_IN( void )
+static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
 {
-    UBaseType_t xIdx, xNumTasksRunning;
-    TaskStatus_t taskStatus[ 16 ];
-    UBaseType_t xTaskStatusArraySize = 16;
-    unsigned long ulTotalRunTime;
-    int i = 0, lNextRunTask = 0;
+    int i = 0;
+    int lMatchIdx = -1;
 
-    xNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, xTaskStatusArraySize, &ulTotalRunTime );
-
-    for( xIdx = 0; xIdx < xNumTasksRunning; xIdx++ )
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        for( i = 0; i < configNUMBER_OF_CORES; i++ )
+        if( xCurrntTaskHandle == xTaskHanldes[ i ] )
         {
-            if( ( taskStatus[ xIdx ].xHandle == xTaskHanldes[ i ] ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
-            {
-                if( i == lNextRunTask )
-                {
-                    lNextRunTask++;
-                    break;
-                }
-                else if( i > lNextRunTask )
-                {
-                    TEST_ASSERT_TRUE( i > lNextRunTask );
-                    xIsTestFinished = pdTRUE;
-                    break;
-                }
-            }
+            lMatchIdx = i;
+            break;
         }
     }
 
-    if( lNextRunTask >= configNUMBER_OF_CORES )
-    {
-        xIsTestFinished = pdTRUE;
-    }
+    return lMatchIdx;
 }
 /*-----------------------------------------------------------*/
 
 static void vPrvEverRunningTask( void * pvParameters )
 {
+    int i = 0;
+    int lCurrentTaskIdx = lFindTaskIdx( xTaskGetCurrentTaskHandle() );
+    eTaskState taskState;
+    
     /* Silence warnings about unused parameters. */
     ( void ) pvParameters;
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        if( !xTaskHanldes[ i ] )
+        {
+            break;
+        }
+
+        taskState = eTaskGetState( xTaskHanldes[ i ] );
+
+        if( i <= lCurrentTaskIdx )
+        {
+            TEST_ASSERT_EQUAL_INT( eRunning, taskState );
+        }
+    }
+
+    if( lCurrentTaskIdx == configNUMBER_OF_CORES - 1 )
+    {
+        xIsTestFinished = pdTRUE;
+    }
 
     for( ; ; )
     {
@@ -162,7 +168,7 @@ void setUp( void )
     {
         xTaskCreationResult = xTaskCreate( vPrvEverRunningTask,
                                            "EverRun",
-                                           configMINIMAL_STACK_SIZE,
+                                           configMINIMAL_STACK_SIZE * 2,
                                            NULL,
                                            configMAX_PRIORITIES - 1 - i,
                                            &( xTaskHanldes[ i ] ) );

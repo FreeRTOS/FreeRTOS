@@ -533,7 +533,7 @@ uint32_t ulAddress;
 	{
 		case 0 :
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-			FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+			FreeRTOS_GetEndPointConfiguration( &ulAddress, NULL, NULL, NULL, pxNetworkEndPoints );
 #else
 			FreeRTOS_GetAddressConfiguration( &ulAddress, NULL, NULL, NULL );
 #endif
@@ -544,7 +544,7 @@ uint32_t ulAddress;
 
 		case 1 :
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-			FreeRTOS_GetEndPointConfiguration( NULL, &ulIPAddress, NULL, NULL, pxNetworkEndPoints );
+			FreeRTOS_GetEndPointConfiguration( NULL, &ulAddress, NULL, NULL, pxNetworkEndPoints );
 #else
 			FreeRTOS_GetAddressConfiguration( NULL, &ulAddress, NULL, NULL );
 #endif
@@ -555,7 +555,7 @@ uint32_t ulAddress;
 
 		case 2 :
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-			FreeRTOS_GetEndPointConfiguration( NULL, NULL, &ulIPAddress, NULL, pxNetworkEndPoints );
+			FreeRTOS_GetEndPointConfiguration( NULL, NULL, &ulAddress, NULL, pxNetworkEndPoints );
 #else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, &ulAddress, NULL );
 #endif
@@ -566,7 +566,7 @@ uint32_t ulAddress;
 
 		case 3 :
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-			FreeRTOS_GetEndPointConfiguration( NULL, NULL, NULL, &ulIPAddress, pxNetworkEndPoints );
+			FreeRTOS_GetEndPointConfiguration( NULL, NULL, NULL, &ulAddress, pxNetworkEndPoints );
 #else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, NULL, &ulAddress );
 #endif

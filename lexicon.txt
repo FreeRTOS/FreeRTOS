@@ -178,6 +178,7 @@ burtcmodeem
 busfault
 buttonisr
 bvic
+bWantDHCP 
 bytesreceived
 bytessent
 bytestorecv
@@ -2611,6 +2612,7 @@ stylesheet
 suback
 sublicense
 subsquent
+susbstitute
 succeds
 suicidaltasks
 summarise
@@ -3375,6 +3377,7 @@ xeb
 xechoserveraddress
 xemaclite
 xend
+xEndPoints
 xerrorcount
 xerrordetected
 xerrorline

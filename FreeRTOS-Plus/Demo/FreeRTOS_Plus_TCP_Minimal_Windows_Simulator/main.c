@@ -258,10 +258,6 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 
         /* Print out the network configuration, which may have come from a DHCP
          * server. */
-
-        /* Using FREERTOS_PLUS_TCP_VERSION as the susbstitute of the 
-        downward compatibility*/
-
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
         FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
 #else

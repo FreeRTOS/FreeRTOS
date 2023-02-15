@@ -113,7 +113,13 @@ const TickType_t x150ms = 150UL / portTICK_PERIOD_MS;
 	socket on the same IP address.  Setup the freertos_sockaddr structure with
 	this nodes IP address, and the port number being sent to.  The strange
 	casting is to try and remove compiler warnings on 32 bit machines. */
-	xDestinationAddress.sin_addr = ulIPAddress;
+    
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+	xDestinationAddress.sin_addr.xIP_IPv4 = ulIPAddress;
+#else
+    xDestinationAddress.sin_addr = ulIPAddress;
+#endif
+    
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
 
@@ -226,7 +232,11 @@ const size_t xStringLength = strlen( pcStringToSend ) + 15;
 	socket on the same IP address.  Setup the freertos_sockaddr structure with
 	this nodes IP address, and the port number being sent to.  The strange
 	casting is to try and remove compiler warnings on 32 bit machines. */
-	xDestinationAddress.sin_addr = ulIPAddress;
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+	xDestinationAddress.sin_addr.xIP_IPv4 = ulIPAddress;
+#else
+    xDestinationAddress.sin_addr = ulIPAddress;
+#endif
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
 
@@ -324,11 +334,13 @@ Socket_t xListeningSocket;
 	compiler warnings on 32 bit machines.  Note that this task is only created
 	after the network is up, so the IP address is valid here. */
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-    FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+    xBindAddress.sin_addr.xIP_IPv4 = ulIPAddress;
 #else
-	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
+    FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
+    xBindAddress.sin_addr = ulIPAddress;
 #endif
-	xBindAddress.sin_addr = ulIPAddress;
+	
 	xBindAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );
 

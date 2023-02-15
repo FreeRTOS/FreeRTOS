@@ -178,7 +178,7 @@ burtcmodeem
 busfault
 buttonisr
 bvic
-bWantDHCP
+bwantdhcp
 bytesreceived
 bytessent
 bytestorecv
@@ -3377,7 +3377,7 @@ xeb
 xechoserveraddress
 xemaclite
 xend
-xEndPoints
+xendpoints
 xerrorcount
 xerrordetected
 xerrorline

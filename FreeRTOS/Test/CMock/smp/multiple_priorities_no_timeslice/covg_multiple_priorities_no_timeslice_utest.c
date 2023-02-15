@@ -1225,3 +1225,37 @@ void test_coverage_vTaskGetInfo_skip_get_free_stack_space( void )
 
     vTaskGetInfo( xTaskHandles[0], &pxTaskStatus, xFreeStackSpace, taskState);
 }
+
+/*
+Coverage for
+    void vTaskResume( TaskHandle_t xTaskToResume )
+
+    Call with a NULL task
+*/
+void test_coverage_vTaskResume_null_task( void )
+{
+    vTaskResume( NULL );
+}
+
+/*
+Coverage for
+    void vTaskResume( TaskHandle_t xTaskToResume )
+
+    Call with a task that has not been suspended
+*/
+
+void test_coverage_vTaskResume_task_not_suspended( void )
+{
+    UBaseType_t xidx;
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskResume( xTaskHandles[0] );
+}

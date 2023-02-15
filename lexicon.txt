@@ -178,7 +178,7 @@ burtcmodeem
 busfault
 buttonisr
 bvic
-bWantDHCP 
+bWantDHCP
 bytesreceived
 bytessent
 bytestorecv

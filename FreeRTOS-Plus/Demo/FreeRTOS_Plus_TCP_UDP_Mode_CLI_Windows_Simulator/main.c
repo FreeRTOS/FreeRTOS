@@ -108,6 +108,17 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
 /* Used by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+/* In case multiple interfaces are used, define them statically. */
+
+/* there is only 1 physical interface. */
+static NetworkInterface_t xInterfaces[1];
+
+/* It will have several end-points. */
+static NetworkEndPoint_t xEndPoints[4];
+
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+
 /******************************************************************************
  *
  * See the following web page for information on using this demo.
@@ -129,6 +140,28 @@ const uint32_t ulLongTime_ms = 250UL;
 	for use.  The address values passed in here are used if ipconfigUSE_DHCP is
 	set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
 	contacted. */
+
+    /* Initialise the network interface.*/    
+    FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
+
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+#else
+    /* Initialise the interface descriptor for WinPCap. */
+    pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
+
+    /* === End-point 0 === */
+    FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    #if ( ipconfigUSE_DHCP != 0 )
+    {
+        /* End-point 0 wants to use DHCPv4. */
+        xEndPoints[0].bits.bWantDHCP = pdTRUE;
+    }
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */ 
+    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);    
+    FreeRTOS_IPStart();
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
 	/* Initialise the logging. */
 	uint32_t ulLoggingIPAddress;

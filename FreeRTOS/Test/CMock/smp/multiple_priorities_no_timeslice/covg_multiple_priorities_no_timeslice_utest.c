@@ -840,3 +840,388 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_with_invalid_runn
         xTaskIncrementTick_helper();
     }
 }
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eNoAction.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eNoAction( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx;
+    uint32_t *prevValue = NULL;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eNoAction, prevValue);
+}
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eNoAction and a prevValue from index 0.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eNoAction_prevValue( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t prevValue;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eNoAction, &prevValue);
+}
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eSetBits and a prevValue from index 0.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eSetBits_prevValue( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t prevValue;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eSetBits, &prevValue);
+}
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eIncrement and a prevValue from index 0.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eIncrement_prevValue( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t prevValue;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eIncrement, &prevValue);
+}
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eSetValueWithOverwrite and a prevValue from index 0.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eSetValueWithOverwrite_prevValue( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t prevValue;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eSetValueWithOverwrite, &prevValue);
+}
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eSetValueWithoutOverwrite and a prevValue from index 0.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eSetValueWithoutOverwrite_prevValue( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t prevValue;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eSetValueWithoutOverwrite, &prevValue);
+}
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eSetValueWithoutOverwrite and a prevValue from index 0.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eSetValueWithoutOverwrite_branch2_prevValue( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t *prevValue = NULL;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskHandles[0]->ucNotifyState[ xidx ] = /*taskNOTIFICATION_RECEIVED*/ ( ( uint8_t ) 2 );
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eSetValueWithoutOverwrite, prevValue);
+}
+
+/*
+Coverage for
+    BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify,
+        UBaseType_t uxIndexToNotify,
+        uint32_t ulValue,
+        eNotifyAction eAction,
+        uint32_t * pulPreviousNotificationValue )
+
+    Call w/ eAction = eNoAction and an internal taskWAITING_NOTIFICATION.
+*/
+
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eNoAction_taskWAITING_NOTIFICATION( void )
+{
+   TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t *prevValue = NULL;
+    uint32_t ulValue = 0;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskHandles[0]->ucNotifyState[ xidx ] = /*taskWAITING_NOTIFICATION*/ ( ( uint8_t ) 1 );
+    xTaskGenericNotify( xTaskHandles[0], xidx, ulValue, eNoAction, prevValue);
+}
+
+/*
+Coverage for
+    void vTaskGetInfo( TaskHandle_t xTask,
+                       TaskStatus_t * pxTaskStatus,
+                       BaseType_t xGetFreeStackSpace,
+                       eTaskState eState )
+
+    Call vTaskGetInfo with xTask as NULL, so that implicitly uses the current task.
+*/
+
+void test_coverage_vTaskGetInfo_implicit_task( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    TaskStatus_t pxTaskStatus;
+    UBaseType_t xidx;
+    BaseType_t xFreeStackSpace = pdTRUE;
+    eTaskState taskState = eReady;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskGetInfo( NULL, &pxTaskStatus, xFreeStackSpace, taskState);
+}
+
+/*
+Coverage for
+    void vTaskGetInfo( TaskHandle_t xTask,
+                       TaskStatus_t * pxTaskStatus,
+                       BaseType_t xGetFreeStackSpace,
+                       eTaskState eState )
+
+    Call vTaskGetInfo with an explicit task.
+*/
+
+void test_coverage_vTaskGetInfo_explicit_task( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    TaskStatus_t pxTaskStatus;
+    UBaseType_t xidx;
+    BaseType_t xFreeStackSpace = pdTRUE;
+    eTaskState taskState = eReady;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskGetInfo( xTaskHandles[0], &pxTaskStatus, xFreeStackSpace, taskState);
+}
+
+/*
+Coverage for
+    void vTaskGetInfo( TaskHandle_t xTask,
+                       TaskStatus_t * pxTaskStatus,
+                       BaseType_t xGetFreeStackSpace,
+                       eTaskState eState )
+
+    Call vTaskGetInfo on a suspended task with a non-NULL xEventListItem such that it reports
+    that it is blocked.
+*/
+
+void test_coverage_vTaskGetInfo_blocked_task( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    TaskStatus_t pxTaskStatus;
+    UBaseType_t xidx;
+    BaseType_t xFreeStackSpace = pdTRUE;
+    eTaskState taskState = eSuspended;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskHandles[0]->xEventListItem.pxContainer = (struct xLIST *) 1;
+    vTaskGetInfo( xTaskHandles[0], &pxTaskStatus, xFreeStackSpace, taskState);
+
+    printf("DEBUG: taskState: %d\n", (int)taskState);
+}
+
+
+/*
+Coverage for
+    void vTaskGetInfo( TaskHandle_t xTask,
+                       TaskStatus_t * pxTaskStatus,
+                       BaseType_t xGetFreeStackSpace,
+                       eTaskState eState )
+
+    Call vTaskGetInfo with xTaskRunState >= configNUMBER_OF_CORES.
+*/
+
+void test_coverage_vTaskGetInfo_oob_xTaskRunState( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    TaskStatus_t pxTaskStatus;
+    UBaseType_t xidx;
+    BaseType_t xFreeStackSpace = pdTRUE;
+    eTaskState taskState = eReady;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    xTaskHandles[0]->xTaskRunState = configNUMBER_OF_CORES;
+    vTaskGetInfo( xTaskHandles[0], &pxTaskStatus, xFreeStackSpace, taskState);
+}
+
+/*
+Coverage for
+    void vTaskGetInfo( TaskHandle_t xTask,
+                       TaskStatus_t * pxTaskStatus,
+                       BaseType_t xGetFreeStackSpace,
+                       eTaskState eState )
+
+    Call vTaskGetInfo xGetFreeStackSpace set to pdFALSE.
+*/
+
+void test_coverage_vTaskGetInfo_skip_get_free_stack_space( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    TaskStatus_t pxTaskStatus;
+    UBaseType_t xidx;
+    BaseType_t xFreeStackSpace = pdFALSE;
+    eTaskState taskState = eReady;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskGetInfo( xTaskHandles[0], &pxTaskStatus, xFreeStackSpace, taskState);
+}

@@ -29,7 +29,7 @@
  * @brief The scheduler shall schedule tasks of equal priority in a round robin fashion.
  *
  * Procedure:
- *   - Create ( num of cores ) tasks ( T0~Tn-1 ). Priority T0 = T1 = ... = Tn-2 = Tn-1.
+ *   - Create ( num of cores + 1 ) tasks ( T0~Tn ). Priority T0 = T1 = ... = Tn-1 = Tn.
  *   - All three tasks are running busyloops
  * Expected:
  *   - All three tasks get a chance to run. The test doesn't currently strictly
@@ -54,10 +54,6 @@
 #if ( configNUMBER_OF_CORES < 2 )
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
-
-#if traceTASK_SWITCHED_IN != test_TASK_SWITCHED_IN
-    #error Need to include testConfig.h in FreeRTOSConfig.h
-#endif /* if traceTASK_SWITCHED_IN != test_TASK_SWITCHED_IN */
 /*-----------------------------------------------------------*/
 
 /**
@@ -69,43 +65,36 @@ void Test_ScheduleHighestPirority( void );
  * @brief Function that implements a never blocking FreeRTOS task.
  */
 static void vPrvEverRunningTask( void * pvParameters );
+
+/**
+ * @brief Function that returns which index does the xCurrntTaskHandle match.
+ *        0 for T0, 1 for T1, -1 for not match.
+ */
+static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
+
+/**
+ * @brief Check if all tasks have run or not.
+ */
+static BaseType_t xAreAllTasksRun( void );
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Handles of the tasks created in this test.
  */
-static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
+static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES + 1 ];
 
 /**
- * @brief A flag to indicate if test case is finished.
+ * @brief Handles of the tasks created in this test.
  */
-static BaseType_t xIsTestFinished = pdFALSE;
+static BaseType_t xTaskRun[ configNUMBER_OF_CORES + 1 ] = { pdFALSE };
 /*-----------------------------------------------------------*/
 
-void test_TASK_SWITCHED_IN( void )
+static BaseType_t xAreAllTasksRun( void )
 {
-    UBaseType_t xIdx, xNumTasksRunning;
-    TaskStatus_t taskStatus[ 16 ];
-    UBaseType_t xTaskStatusArraySize = 16;
-    unsigned long ulTotalRunTime;
-    int i = 0;
-    static BaseType_t xTaskRun[ configNUMBER_OF_CORES ] = { pdFALSE };
+    int i;
     BaseType_t xIsAllTasksRun = pdTRUE;
 
-    xNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, xTaskStatusArraySize, &ulTotalRunTime );
-
-    for( xIdx = 0; xIdx < xNumTasksRunning; xIdx++ )
-    {
-        for( i = 0; i < configNUMBER_OF_CORES; i++ )
-        {
-            if( ( taskStatus[ xIdx ].xHandle == xTaskHanldes[ i ] ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
-            {
-                xTaskRun[ i ] = pdTRUE;
-            }
-        }
-    }
-
-    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    for( i = 0; i < configNUMBER_OF_CORES + 1; i++ )
     {
         if( xTaskRun[ i ] != pdTRUE )
         {
@@ -113,17 +102,36 @@ void test_TASK_SWITCHED_IN( void )
         }
     }
 
-    if( xIsAllTasksRun == pdTRUE )
+    return xIsAllTasksRun;
+}
+/*-----------------------------------------------------------*/
+
+static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
+{
+    int i = 0;
+    int lMatchIdx = -1;
+
+    for( i = 0; i < configNUMBER_OF_CORES + 1; i++ )
     {
-        xIsTestFinished = pdTRUE;
+        if( xCurrntTaskHandle == xTaskHanldes[ i ] )
+        {
+            lMatchIdx = i;
+            break;
+        }
     }
+
+    return lMatchIdx;
 }
 /*-----------------------------------------------------------*/
 
 static void vPrvEverRunningTask( void * pvParameters )
 {
+    int lCurrentTaskIdx = lFindTaskIdx( xTaskGetCurrentTaskHandle() );
+
     /* Silence warnings about unused parameters. */
     ( void ) pvParameters;
+
+    xTaskRun[ lCurrentTaskIdx ] = pdTRUE;
 
     for( ; ; )
     {
@@ -136,9 +144,10 @@ static void vPrvEverRunningTask( void * pvParameters )
 void Test_ScheduleEqualPriority( void )
 {
     TickType_t xStartTick = xTaskGetTickCount();
+    BaseType_t xAllTasksRun;
 
     /* Wait other tasks. */
-    while( xIsTestFinished == pdFALSE )
+    while( (xAllTasksRun = xAreAllTasksRun()) == pdFALSE )
     {
         vTaskDelay( pdMS_TO_TICKS( 10 ) );
 
@@ -148,7 +157,7 @@ void Test_ScheduleEqualPriority( void )
         }
     }
 
-    TEST_ASSERT_TRUE( xIsTestFinished == pdTRUE );
+    TEST_ASSERT_TRUE( xAllTasksRun );
 }
 /*-----------------------------------------------------------*/
 
@@ -158,8 +167,8 @@ void setUp( void )
     int i;
     BaseType_t xTaskCreationResult;
 
-    /* Create configNUMBER_OF_CORES - 1 low priority tasks. */
-    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    /* Create configNUMBER_OF_CORES + 1 low priority tasks. */
+    for( i = 0; i < configNUMBER_OF_CORES + 1; i++ )
     {
         xTaskCreationResult = xTaskCreate( vPrvEverRunningTask,
                                            "EverRun",
@@ -179,7 +188,7 @@ void tearDown( void )
     int i;
 
     /* Delete all the tasks. */
-    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    for( i = 0; i < configNUMBER_OF_CORES + 1; i++ )
     {
         if( xTaskHanldes[ i ] )
         {

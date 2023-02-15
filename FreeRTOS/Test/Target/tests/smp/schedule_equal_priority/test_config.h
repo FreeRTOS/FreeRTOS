@@ -37,7 +37,4 @@
 #define configUSE_TIME_SLICING               1
 #define configUSE_PREEMPTION                 1
 
-extern void test_TASK_SWITCHED_IN( void );
-#define traceTASK_SWITCHED_IN()    test_TASK_SWITCHED_IN()
-
 #endif /* ifndef TEST_CONFIG_H */

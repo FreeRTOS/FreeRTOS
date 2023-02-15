@@ -118,7 +118,7 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
-#if ( ipconfigMULTI_INTERFACE == 1 ) && ( ipconfigCOMPATIBLE_WITH_SINGLE == 0 )
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
 /* In case multiple interfaces are used, define them statically. */
 
 /* there is only 1 physical interface. */
@@ -127,7 +127,7 @@ static NetworkInterface_t xInterfaces[1];
 /* It will have several end-points. */
 static NetworkEndPoint_t xEndPoints[4];
 
-#endif /* ipconfigMULTI_INTERFACE */
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
 
 /*-----------------------------------------------------------*/

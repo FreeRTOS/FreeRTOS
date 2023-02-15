@@ -300,7 +300,8 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY, ipTYPE_IPv4 );
           #else
             pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY );
-
+          #endif
+            
 			if( pucUDPPayloadBuffer != NULL )
 			{
 				/* A buffer was successfully obtained.  Create the string that is

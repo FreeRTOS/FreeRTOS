@@ -1259,3 +1259,49 @@ void test_coverage_vTaskResume_task_not_suspended( void )
 
     vTaskResume( xTaskHandles[0] );
 }
+
+/*
+Coverage for
+    BaseType_t xTaskResumeFromISR( TaskHandle_t xTaskToResume )
+
+*/
+void test_coverage_xTaskResumeFromISR ( void )
+{
+    UBaseType_t xidx;
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    xTaskResumeFromISR( xTaskHandles[0] );
+}
+
+/*
+Coverage for
+    BaseType_t xTaskResumeFromISR( TaskHandle_t xTaskToResume )
+
+*/
+void test_coverage_xTaskResumeFromISR_suspended_suspendall ( void )
+{
+    UBaseType_t xidx;
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskSuspend( xTaskHandles[0] );
+
+    vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    xTaskResumeFromISR( xTaskHandles[0] );
+}

@@ -152,7 +152,6 @@ void main_tcp_echo_client_tasks( void )
      * vApplicationIPNetworkEventHook() below).  The address values passed in here
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
-    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
 
     /* Initialise the network interface.*/    
     FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
@@ -172,7 +171,8 @@ void main_tcp_echo_client_tasks( void )
         xEndPoints[0].bits.bWantDHCP = pdTRUE;
     }
     #endif /* ( ipconfigUSE_DHCP != 0 ) */
-                
+    
+    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);           
     FreeRTOS_IPStart();
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 

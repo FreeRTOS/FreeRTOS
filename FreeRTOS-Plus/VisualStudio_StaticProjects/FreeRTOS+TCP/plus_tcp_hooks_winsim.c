@@ -188,7 +188,7 @@ void vPlatformInitIpStack( void )
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) 
     
     /* Initialise the interface descriptor for WinPCap. */
-    pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
+    pxWinPcap_FillInterfaceDescriptor(0, &(xInterfaces[0]));
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress);

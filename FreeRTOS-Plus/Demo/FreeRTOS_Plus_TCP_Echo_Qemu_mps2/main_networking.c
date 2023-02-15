@@ -161,9 +161,6 @@ void main_tcp_echo_client_tasks( void )
     /* Initialise the network interface.*/
     FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
-#else
                 /* Initialise the interface descriptor for WinPCap. */
     pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
 
@@ -179,6 +176,9 @@ void main_tcp_echo_client_tasks( void )
     memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
                 
     FreeRTOS_IPStart();
+#else
+    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
 

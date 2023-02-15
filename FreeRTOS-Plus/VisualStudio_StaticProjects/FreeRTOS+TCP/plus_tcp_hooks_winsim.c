@@ -191,7 +191,7 @@ void vPlatformInitIpStack( void )
     pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
 
     /* === End-point 0 === */
-    FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress);
     #if ( ipconfigUSE_DHCP != 0 )
     {
         /* End-point 0 wants to use DHCPv4. */
@@ -199,10 +199,10 @@ void vPlatformInitIpStack( void )
     }
     #endif /* ( ipconfigUSE_DHCP != 0 ) */ 
     memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);    
-    FreeRTOS_IPStart();
+    xResult = FreeRTOS_IPStart();
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-    xReturn = FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress );
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
     configASSERT( xResult == pdTRUE );
 }

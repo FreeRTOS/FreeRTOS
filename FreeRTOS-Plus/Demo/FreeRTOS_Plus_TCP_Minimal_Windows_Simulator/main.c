@@ -162,7 +162,6 @@ int main( void )
      * vApplicationIPNetworkEventHook() below).  The address values passed in here
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
-    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
 
     /* Initialise the network interface.*/
 
@@ -181,7 +180,9 @@ if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
         /* End-point 0 wants to use DHCPv4. */
         xEndPoints[0].bits.bWantDHCP = pdTRUE; // pdFALSE; // pdTRUE;
     }
-    #endif /* ( ipconfigUSE_DHCP != 0 ) */
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */ 
+    
+    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
                 
     FreeRTOS_IPStart();
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */

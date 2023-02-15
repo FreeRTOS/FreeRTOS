@@ -631,11 +631,6 @@ void test_task_delay_until_with_config_assert( void )
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                           (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-    #define configUSE_TASK_PREEMPTION_DISABLE               1
-
 Coverage for
     static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
     covers the case where the task being created is not the first or only task.
@@ -653,11 +648,6 @@ void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_susp
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                           (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-    #define configUSE_TASK_PREEMPTION_DISABLE               1
-
 Coverage for
     static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
     covers the case where there coreID is out of bounds when looking for a TCB
@@ -715,10 +705,6 @@ void test_coverage_prvAddNewTaskToReadyList_create_more_tasks_than_there_are_cor
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                           (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-
 Coverage for
     void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
     covers the case where vTaskCoreAffinitySet is called with NULL being passed to xTask
@@ -743,10 +729,6 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_implied( voi
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                           (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-
 Coverage for
     void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
     covers the case where vTaskCoreAffinitySet is called with NULL being passed to xTask 
@@ -764,10 +746,6 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_explicit( vo
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                           (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-
 Coverage for
     void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
     covers the case where the affinity mask no longer includes the current core, triggering a yield
@@ -795,10 +773,6 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_running(
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                           (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-
 Coverage for
     void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
     Changes the affinity of a suspended task such that it must yield on the core
@@ -839,10 +813,6 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspende
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                           (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-
 Coverage for
     void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
     Given #define taskTASK_IS_RUNNING( pxTCB )     ( ( pxTCB->xTaskRunState >= 0 ) && ( pxTCB->xTaskRunState < configNUMBER_OF_CORES ) )

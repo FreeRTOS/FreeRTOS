@@ -169,7 +169,7 @@ void main_tcp_echo_client_tasks( void )
     #if ( ipconfigUSE_DHCP != 0 )
     {
         /* End-point 0 wants to use DHCPv4. */
-        xEndPoints[0].bits.bWantDHCP = pdTRUE; // pdFALSE; // pdTRUE;
+        xEndPoints[0].bits.bWantDHCP = pdTRUE;
     }
     #endif /* ( ipconfigUSE_DHCP != 0 ) */
     

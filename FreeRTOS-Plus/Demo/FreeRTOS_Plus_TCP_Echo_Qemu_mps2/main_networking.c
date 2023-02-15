@@ -123,7 +123,7 @@ const uint8_t ucMACAddress[ 6 ] =
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
-#if ( ipconfigMULTI_INTERFACE == 1 ) && ( ipconfigCOMPATIBLE_WITH_SINGLE == 0 )
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
 /* In case multiple interfaces are used, define them statically. */
 
 /* there is only 1 physical interface. */
@@ -132,7 +132,7 @@ static NetworkInterface_t xInterfaces[1];
 /* It will have several end-points. */
 static NetworkEndPoint_t xEndPoints[4];
 
-#endif /* ipconfigMULTI_INTERFACE */
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
 
 /*-----------------------------------------------------------*/
@@ -161,7 +161,7 @@ void main_tcp_echo_client_tasks( void )
 
     /* Initialise the network interface.*/
 
-#if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 )
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
     FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
     FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
@@ -179,7 +179,7 @@ void main_tcp_echo_client_tasks( void )
     #endif /* ( ipconfigUSE_DHCP != 0 ) */
                 
     FreeRTOS_IPStart();
-#endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
 
     /* Start the RTOS scheduler. */

@@ -217,3 +217,15 @@ BaseType_t xPlatformIsNetworkUp( void )
 }
 
 /*-----------------------------------------------------------*/
+
+#if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) )
+
+eDHCPCallbackAnswer_t xApplicationDHCPHook(eDHCPCallbackPhase_t eDHCPPhase,
+    uint32_t ulIPAddress)
+{
+    /* Provide a stub for this function. */
+    return eDHCPContinue;
+}
+
+#endif
+/*-----------------------------------------------------------*/

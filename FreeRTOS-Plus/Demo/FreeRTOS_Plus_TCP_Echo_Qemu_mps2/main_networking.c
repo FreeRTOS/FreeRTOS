@@ -64,6 +64,7 @@
  * FreeRTOSConfig.h.
  *
  */
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1
 
 /*-----------------------------------------------------------*/
 
@@ -163,7 +164,7 @@ void main_tcp_echo_client_tasks( void )
 
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
     /* Initialise the interface descriptor for WinPCap. */
-    pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    pxMPS2_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );

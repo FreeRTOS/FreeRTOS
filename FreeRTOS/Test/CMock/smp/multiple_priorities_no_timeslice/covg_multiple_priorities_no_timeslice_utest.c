@@ -665,19 +665,6 @@ Notes:
     is found.
 */
 
-void show_task_status( void )
-{
-    UBaseType_t uxIdx;
-
-    for(uxIdx=0; uxIdx < configNUMBER_OF_CORES; uxIdx++)
-    {
-        if (pxCurrentTCBs[uxIdx] != NULL)
-        {
-            printf("    [%d]: 0x%lX\n", (int)uxIdx, pxCurrentTCBs[uxIdx]->uxTaskAttributes);
-        }
-    }
-}
-
 void test_coverage_prvAddNewTaskToReadyList_create_more_tasks_than_there_are_cores( void )
 {
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+3] = { NULL };
@@ -687,21 +674,12 @@ void test_coverage_prvAddNewTaskToReadyList_create_more_tasks_than_there_are_cor
     for(uxTaskNum=0; uxTaskNum <= configNUMBER_OF_CORES+1; uxTaskNum++)
     {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[uxTaskNum]);
-        printf("uxCurrentNumberOfTasks: %d, uxTaskNum=%d\n", (int)uxCurrentNumberOfTasks, (int)uxTaskNum);
-        show_task_status();
         vTaskPreemptionDisable( xTaskHandles[uxTaskNum] );
     }
 
-    //TEST_ASSERT_EQUAL( configNUMBER_OF_CORES, uxCurrentNumberOfTasks );
-    printf("ALL TASKS RUNNING:\n");
-    printf("uxCurrentNumberOfTasks: %d, uxTaskNum=%d\n", (int)uxCurrentNumberOfTasks, (int)configNUMBER_OF_CORES+2);
-    show_task_status();
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[configNUMBER_OF_CORES+2]);
-    printf("xTaskHandles[%d]: 0x%lX\n", (int)configNUMBER_OF_CORES+2, xTaskHandles[configNUMBER_OF_CORES+2]->uxTaskAttributes);
 
     vTaskStartScheduler();
-
-    show_task_status();
 }
 
 /*

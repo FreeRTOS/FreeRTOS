@@ -110,33 +110,38 @@ static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
 
     return lMatchIdx;
 }
+/*-----------------------------------------------------------*/
 
 static void vPrvCheckRunningTask( void * pvParameters )
 {
-    UBaseType_t xIdx, xNumTasksRunning;
-    TaskStatus_t taskStatus[ 16 ];
-    UBaseType_t xTaskStatusArraySize = 16;
-    unsigned long ulTotalRunTime;
-    int lCurrentTaskIdx = -1;
-
+    int i = 0;
+    int lCurrentTaskIdx = lFindTaskIdx( xTaskGetCurrentTaskHandle() );
+    eTaskState taskState;
+    
+    /* Silence warnings about unused parameters. */
     ( void ) pvParameters;
-
-    lCurrentTaskIdx = lFindTaskIdx( xTaskGetCurrentTaskHandle() );
+    
     TEST_ASSERT_TRUE( lCurrentTaskIdx >= 0 && lCurrentTaskIdx < configNUMBER_OF_CORES );
     xHasTaskRun[ lCurrentTaskIdx ] = pdTRUE;
 
-    for( ; ; )
+    for( ;; )
     {
-        xNumTasksRunning = uxTaskGetSystemState( ( TaskStatus_t * const ) &taskStatus, xTaskStatusArraySize, &ulTotalRunTime );
-
-        for( xIdx = 0; xIdx < xNumTasksRunning; xIdx++ )
+        for( i = 0; i < configNUMBER_OF_CORES; i++ )
         {
-            int lTaskIdx = lFindTaskIdx( taskStatus[ xIdx ].xHandle );
-
-            if( ( lTaskIdx >= 0 ) && ( lCurrentTaskIdx < configNUMBER_OF_CORES ) && ( taskStatus[ xIdx ].eCurrentState == eRunning ) )
+            if( !xTaskHanldes[ i ] )
             {
-                /* It's one of T0~Tn-1, and only current task should be run. */
-                TEST_ASSERT_EQUAL_INT( lTaskIdx, lCurrentTaskIdx );
+                break;
+            }
+
+            taskState = eTaskGetState( xTaskHanldes[ i ] );
+
+            if( i == lCurrentTaskIdx )
+            {
+                TEST_ASSERT_EQUAL_INT( eRunning, taskState );
+            }
+            else
+            {
+                TEST_ASSERT_NOT_EQUAL_INT( eRunning, taskState );
             }
         }
 

@@ -129,14 +129,15 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 /*-----------------------------------------------------------*/
+
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
     /* In case multiple interfaces are used, define them statically. */
 
     /* With WinPCap there is only 1 physical interface. */
-    static NetworkInterface_t xInterfaces[1];
+    static NetworkInterface_t xInterfaces[ 1 ];
 
     /* It will have several end-points. */
-    static NetworkEndPoint_t xEndPoints[4];
+    static NetworkEndPoint_t xEndPoints[ 4 ];
 
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
@@ -164,30 +165,28 @@ int main( void )
      * but a DHCP server cannot be	contacted. */
 
     /* Initialise the network interface.*/
+    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
-    FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-                /* Initialise the interface descriptor for WinPCap. */
-    pxWinPcap_FillInterfaceDescriptor(0, &(xInterfaces[0]));
+    /* Initialise the interface descriptor for WinPCap. */
+    pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
-                /* === End-point 0 === */
-    FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    /* === End-point 0 === */
+    FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #if ( ipconfigUSE_DHCP != 0 )
     {
         /* End-point 0 wants to use DHCPv4. */
-        xEndPoints[0].bits.bWantDHCP = pdTRUE; // pdFALSE; // pdTRUE;
+        xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
     }
-    #endif /* ( ipconfigUSE_DHCP != 0 ) */ 
-    
-    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);
-                
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */
+
+    memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
+
     FreeRTOS_IPStart();
 #else
-        /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
-
+    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+    FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
-
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );
@@ -261,14 +260,14 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
         /* Print out the network configuration, which may have come from a DHCP
          * server. */
 
-        /* Using FREERTOS_PLUS_TCP_VERSION as the susbstitute of the 
-        downward compatibility*/
+        /* Using FREERTOS_PLUS_TCP_VERSION as the substitute of the
+         * downward compatibility*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+    #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
         FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
-#else
-        FreeRTOS_GetAddressConfiguration(&ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress);
-#endif
+    #else
+        FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
+    #endif
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
         FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
 
@@ -366,6 +365,7 @@ static void prvMiscInitialisation( void )
     }
 
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
+/*-----------------------------------------------------------*/
 
 /*
  * Callback that provides the inputs necessary to generate a randomized TCP
@@ -385,6 +385,7 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 
     return uxRand();
 }
+/*-----------------------------------------------------------*/
 
 /*
  * Supply a random number to FreeRTOS+TCP stack.
@@ -396,13 +397,16 @@ BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
     *( pulNumber ) = uxRand();
     return pdTRUE;
 }
+/*-----------------------------------------------------------*/
 
 #if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) )
-eDHCPCallbackAnswer_t xApplicationDHCPHook(eDHCPCallbackPhase_t eDHCPPhase,
-    uint32_t ulIPAddress)
+
+eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
+                                            uint32_t ulIPAddress )
 {
     /* Provide a stub for this function. */
     return eDHCPContinue;
 }
 
 #endif
+/*-----------------------------------------------------------*/

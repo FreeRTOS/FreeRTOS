@@ -44,24 +44,24 @@
 #include "user_settings.h"
 
 /* UDP command server task parameters. */
-#define mainUDP_CLI_TASK_PRIORITY					( tskIDLE_PRIORITY )
-#define mainUDP_CLI_PORT_NUMBER						( 5001UL )
-#define mainUDP_CLI_TASK_STACK_SIZE					( configMINIMAL_STACK_SIZE )
+#define mainUDP_CLI_TASK_PRIORITY                   ( tskIDLE_PRIORITY )
+#define mainUDP_CLI_PORT_NUMBER                     ( 5001UL )
+#define mainUDP_CLI_TASK_STACK_SIZE                 ( configMINIMAL_STACK_SIZE )
 
 /* Simple UDP client and server task parameters. */
-#define mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY		( tskIDLE_PRIORITY )
-#define mainSIMPLE_CLIENT_SERVER_PORT				( 5005UL )
-#define mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE	( configMINIMAL_STACK_SIZE )
+#define mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY      ( tskIDLE_PRIORITY )
+#define mainSIMPLE_CLIENT_SERVER_PORT               ( 5005UL )
+#define mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE )
 
 /* Echo client task parameters. */
-#define mainECHO_CLIENT_TASK_STACK_SIZE 			( configMINIMAL_STACK_SIZE * 2 )
-#define mainECHO_CLIENT_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainECHO_CLIENT_TASK_STACK_SIZE             ( configMINIMAL_STACK_SIZE * 2 )
+#define mainECHO_CLIENT_TASK_PRIORITY               ( tskIDLE_PRIORITY + 1 )
 
-/* Set the following constants to 1 or 0 to define which tasks to include and 
+/* Set the following constants to 1 or 0 to define which tasks to include and
 exclude. */
-#define mainCREATE_UDP_CLI_TASKS					1
-#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS	0
-#define mainCREATE_UDP_ECHO_TASKS					1
+#define mainCREATE_UDP_CLI_TASKS                    1
+#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS   0
+#define mainCREATE_UDP_ECHO_TASKS                   1
 
 /*-----------------------------------------------------------*/
 
@@ -109,13 +109,14 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
 static UBaseType_t ulNextRand;
 
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-/* In case multiple interfaces are used, define them statically. */
 
-/* there is only 1 physical interface. */
-static NetworkInterface_t xInterfaces[1];
+    /* In case multiple interfaces are used, define them statically. */
 
-/* It will have several end-points. */
-static NetworkEndPoint_t xEndPoints[4];
+    /* There is only 1 physical interface. */
+    static NetworkInterface_t xInterfaces[ 1 ];
+
+    /* It will have several end-points. */
+    static NetworkEndPoint_t xEndPoints[ 4 ];
 
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
@@ -131,64 +132,64 @@ int main( void )
 {
 const uint32_t ulLongTime_ms = 250UL;
 
-	/* Create a mutex that is used to guard against the console being accessed 
-	by more than one task simultaniously. */
-	xConsoleMutex = xSemaphoreCreateMutex();
+    /* Create a mutex that is used to guard against the console being accessed
+     * by more than one task simultaneously. */
+    xConsoleMutex = xSemaphoreCreateMutex();
 
-	/* Initialise the network interface.  Tasks that use the network are
-	created in the network event hook when the network is connected and ready
-	for use.  The address values passed in here are used if ipconfigUSE_DHCP is
-	set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
-	contacted. */
+    /* Initialise the network interface.  Tasks that use the network are
+     * created in the network event hook when the network is connected and ready
+     * for use.  The address values passed in here are used if ipconfigUSE_DHCP is
+     * set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
+     * contacted. */
 
-    /* Initialise the network interface.*/    
-    FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
+    /* Initialise the network interface.*/
+    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
     /* Initialise the interface descriptor for WinPCap. */
-    pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
+    pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
     /* === End-point 0 === */
-    FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #if ( ipconfigUSE_DHCP != 0 )
     {
         /* End-point 0 wants to use DHCPv4. */
-        xEndPoints[0].bits.bWantDHCP = pdTRUE;
+        xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
     }
-    #endif /* ( ipconfigUSE_DHCP != 0 ) */ 
-    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);    
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */
+    memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
     FreeRTOS_IPStart();
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
-	/* Initialise the logging. */
-	uint32_t ulLoggingIPAddress;
+    /* Initialise the logging. */
+    uint32_t ulLoggingIPAddress;
 
     ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-		                                           configECHO_SERVER_ADDR1,
-		                                           configECHO_SERVER_ADDR2,
-		                                           configECHO_SERVER_ADDR3 );
+                                                   configECHO_SERVER_ADDR1,
+                                                   configECHO_SERVER_ADDR2,
+                                                   configECHO_SERVER_ADDR3 );
     vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
 
 
-	/* Register commands with the FreeRTOS+CLI command interpreter. */
-	vRegisterCLICommands();
+    /* Register commands with the FreeRTOS+CLI command interpreter. */
+    vRegisterCLICommands();
 
-	/* Start the RTOS scheduler. */
-	vTaskStartScheduler();
+    /* Start the RTOS scheduler. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the idle and/or
-	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details (this is standard text that is not not
-	really applicable to the Win32 simulator port). */
-	for( ;; )
-	{
-		Sleep( ulLongTime_ms );
-	}
+    /* If all is well, the scheduler will now be running, and the following
+     * line will never be reached.  If the following line does execute, then
+     * there was insufficient FreeRTOS heap memory available for the idle and/or
+     * timer tasks to be created.  See the memory management section on the
+     * FreeRTOS web site for more details (this is standard text that is not not
+     * really applicable to the Win32 simulator port). */
+    for( ;; )
+    {
+        Sleep( ulLongTime_ms );
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -196,10 +197,10 @@ void vApplicationIdleHook( void )
 {
 const unsigned long ulMSToSleep = 5;
 
-	/* This function is called on each cycle of the idle task if
-	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
-	load. */
-	Sleep( ulMSToSleep );
+    /* This function is called on each cycle of the idle task if
+     * configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
+     * load. */
+    Sleep( ulMSToSleep );
 }
 /*-----------------------------------------------------------*/
 
@@ -212,46 +213,46 @@ static const uint8_t *pcInvalidData = ( uint8_t * ) "Ping reply received with in
 static uint8_t cMessage[ 50 ];
 
 
-	switch( eStatus )
-	{
-		case eSuccess	:
-			FreeRTOS_debug_printf( ( ( char * ) pcSuccess ) );
-			break;
+    switch( eStatus )
+    {
+        case eSuccess:
+            FreeRTOS_debug_printf( ( ( char * ) pcSuccess ) );
+            break;
 
-		case eInvalidChecksum :
-			FreeRTOS_debug_printf( ( ( char * ) pcInvalidChecksum ) );
-			break;
+        case eInvalidChecksum:
+            FreeRTOS_debug_printf( ( ( char * ) pcInvalidChecksum ) );
+            break;
 
-		case eInvalidData :
-			FreeRTOS_debug_printf( ( ( char * ) pcInvalidData ) );
-			break;
+        case eInvalidData:
+            FreeRTOS_debug_printf( ( ( char * ) pcInvalidData ) );
+            break;
 
-		default :
-			/* It is not possible to get here as all enums have their own
-			case. */
-			break;
-	}
+        default :
+            /* It is not possible to get here as all enums have their own
+             * case. */
+            break;
+    }
 
-	sprintf( ( char * ) cMessage, "identifier %d\r\n", ( int ) usIdentifier );
-	FreeRTOS_debug_printf( ( ( char * ) cMessage ) );
+    sprintf( ( char * ) cMessage, "identifier %d\r\n", ( int ) usIdentifier );
+    FreeRTOS_debug_printf( ( ( char * ) cMessage ) );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the 
-	size of the heap available to pvPortMalloc() is defined by 
-	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize() 
-	API function can be used to query the size of free heap space that remains 
-	(although it does not provide information on how the remaining heap might 
-	be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* vApplicationMallocFailedHook() will only be called if
+     * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+     * function that will get called if a call to pvPortMalloc() fails.
+     * pvPortMalloc() is called internally by the kernel whenever a task, queue,
+     * timer or semaphore is created.  It is also called by various parts of the
+     * demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the
+     * size of the heap available to pvPortMalloc() is defined by
+     * configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+     * API function can be used to query the size of free heap space that remains
+     * (although it does not provide information on how the remaining heap might
+     * be fragmented). */
+    taskDISABLE_INTERRUPTS();
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -296,61 +297,63 @@ void vApplicationMallocFailedHook( void )
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
 /*-----------------------------------------------------------*/
 
-void vApplicationIPNetworkEventHook(eIPCallbackEvent_t eNetworkEvent)
+void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
-        uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
-        char cBuffer[16];
-        static BaseType_t xTasksAlreadyCreated = pdFALSE;
+    uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
+    char cBuffer[ 16 ];
+    static BaseType_t xTasksAlreadyCreated = pdFALSE;
 
-        /* If the network has just come up...*/
-        if (eNetworkEvent == eNetworkUp)
+    /* If the network has just come up...*/
+    if( eNetworkEvent == eNetworkUp )
+    {
+        if( xTasksAlreadyCreated == pdFALSE )
         {
-            if (xTasksAlreadyCreated == pdFALSE)
+            /* See the comments above the definitions of these pre-processor
+             * macros at the top of this file for a description of the individual
+             * demo tasks. */
+            #if ( mainCREATE_UDP_CLI_TASKS == 1 )
             {
-                /* See the comments above the definitions of these pre-processor
-                 * macros at the top of this file for a description of the individual
-                 * demo tasks. */
-#if ( mainCREATE_UDP_CLI_TASKS == 1 )
-                {
-                    vStartUDPCommandInterpreterTask(configMINIMAL_STACK_SIZE, mainUDP_CLI_PORT_NUMBER, mainUDP_CLI_TASK_PRIORITY);
-                }
-#endif
-#if ( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
-                {
-                    vStartSimpleUDPClientServerTasks(configMINIMAL_STACK_SIZE, mainSIMPLE_CLIENT_SERVER_PORT, mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY);
-                }
-#endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
-
-#if ( mainCREATE_UDP_ECHO_TASKS == 1 )
-                {
-                    vStartEchoClientTasks(mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY);
-                }
-#endif
-
-                xTasksAlreadyCreated = pdTRUE;
+                vStartUDPCommandInterpreterTask( configMINIMAL_STACK_SIZE, mainUDP_CLI_PORT_NUMBER, mainUDP_CLI_TASK_PRIORITY );
             }
+            #endif
+
+            #if ( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
+            {
+                vStartSimpleUDPClientServerTasks( configMINIMAL_STACK_SIZE, mainSIMPLE_CLIENT_SERVER_PORT, mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY );
+            }
+            #endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
+
+            #if ( mainCREATE_UDP_ECHO_TASKS == 1 )
+            {
+                vStartEchoClientTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
+            }
+            #endif
+
+            xTasksAlreadyCreated = pdTRUE;
+        }
         /* Print out the network configuration, which may have come from a DHCP
          * server. */
 
-        /* Using FREERTOS_PLUS_TCP_VERSION as the susbstitute of the 
-        downward compatibility*/
+        /* Using FREERTOS_PLUS_TCP_VERSION as the substitute of the
+         * downward compatibility*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-            FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
-#else
-            FreeRTOS_GetAddressConfiguration(&ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress);
-#endif
-            FreeRTOS_printf(("\r\n\r\nIP Address: %s\r\n", cBuffer));
+    #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+        FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
+    #else
+        FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
+    #endif
 
-            FreeRTOS_inet_ntoa(ulNetMask, cBuffer);
-            FreeRTOS_printf(("Subnet Mask: %s\r\n", cBuffer));
+        FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
 
-            FreeRTOS_inet_ntoa(ulGatewayAddress, cBuffer);
-            FreeRTOS_printf(("Gateway Address: %s\r\n", cBuffer));
+        FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
+        FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );
 
-            FreeRTOS_inet_ntoa(ulDNSServerAddress, cBuffer);
-            FreeRTOS_printf(("DNS Server Address: %s\r\n\r\n\r\n", cBuffer));
-        }
+        FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
+        FreeRTOS_printf( ( "Gateway Address: %s\r\n", cBuffer ) );
+
+        FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
+        FreeRTOS_printf( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) );
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -360,26 +363,28 @@ void vApplicationIPNetworkEventHook(eIPCallbackEvent_t eNetworkEvent)
  * THAT RETURNS A PSEUDO RANDOM NUMBER SO IS NOT INTENDED FOR USE IN PRODUCTION
  * SYSTEMS.
  */
-extern uint32_t ulApplicationGetNextSequenceNumber(uint32_t ulSourceAddress,
-    uint16_t usSourcePort,
-    uint32_t ulDestinationAddress,
-    uint16_t usDestinationPort)
+extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
+                                                    uint16_t usSourcePort,
+                                                    uint32_t ulDestinationAddress,
+                                                    uint16_t usDestinationPort )
 {
-    (void)ulSourceAddress;
-    (void)usSourcePort;
-    (void)ulDestinationAddress;
-    (void)usDestinationPort;
+    ( void ) ulSourceAddress;
+    ( void ) usSourcePort;
+    ( void ) ulDestinationAddress;
+    ( void ) usDestinationPort;
 
     return uxRand();
 }
+/*-----------------------------------------------------------*/
 
 /*
  * Supply a random number to FreeRTOS+TCP stack.
  * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
  * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
  */
-BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber)
+BaseType_t xApplicationGetRandomNumber( uint32_t* pulNumber )
 {
-    *(pulNumber) = uxRand();
+    *( pulNumber ) = uxRand();
     return pdTRUE;
 }
+/*-----------------------------------------------------------*/

@@ -119,13 +119,14 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 static UBaseType_t ulNextRand;
 
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-/* In case multiple interfaces are used, define them statically. */
 
-/* there is only 1 physical interface. */
-static NetworkInterface_t xInterfaces[1];
+    /* In case multiple interfaces are used, define them statically. */
 
-/* It will have several end-points. */
-static NetworkEndPoint_t xEndPoints[4];
+    /* There is only 1 physical interface. */
+    static NetworkInterface_t xInterfaces[ 1 ];
+
+    /* It will have several end-points. */
+    static NetworkEndPoint_t xEndPoints[ 4 ];
 
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
@@ -153,27 +154,27 @@ void main_tcp_echo_client_tasks( void )
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
 
-    /* Initialise the network interface.*/    
-    FreeRTOS_debug_printf(("FreeRTOS_IPInit\r\n"));
+    /* Initialise the network interface.*/
+    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
     /* Initialise the interface descriptor for WinPCap. */
-    pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
+    pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
     /* === End-point 0 === */
-    FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[0]), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints [ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #if ( ipconfigUSE_DHCP != 0 )
     {
         /* End-point 0 wants to use DHCPv4. */
-        xEndPoints[0].bits.bWantDHCP = pdTRUE;
+        xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
     }
     #endif /* ( ipconfigUSE_DHCP != 0 ) */
-    
-    memcpy(ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof ucMACAddress);           
+
+    memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
     FreeRTOS_IPStart();
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-    FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress);
+    FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
     /* Start the RTOS scheduler. */

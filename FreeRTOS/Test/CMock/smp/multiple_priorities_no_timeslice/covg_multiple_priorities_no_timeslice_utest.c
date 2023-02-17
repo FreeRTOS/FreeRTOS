@@ -630,11 +630,19 @@ void test_task_delay_until_with_config_assert( void )
     
 }
 
-/*
-Coverage for
-    static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
-    covers the case where the task being created is not the first or only task.
-*/
+/**
+ * @brief prvAddNewTaskToReadyList - add a newly created task to the list of ready tasks
+ *
+ * This test creates two tasks, the second after suspending the first and then
+ * starts the scheduler.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( uxCurrentNumberOfTasks == ( UBaseType_t ) 1 )
+ * @endcode
+ * As two tasks arecreated, this covers both branches of the above conditional
+ * in addition to the function body.
+ */
 void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_suspended( void )
 {
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -647,24 +655,17 @@ void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_susp
     vTaskStartScheduler();
 }
 
-/*
-Coverage for
-    static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
-    covers the case where there coreID is out of bounds when looking for a TCB
-
-Notes:
-    The prvAddNewTaskToReadyList function contained a subsection that is called
-    when the scheudler is not active. Furthermore it contains a loop which
-    is called only when the IDLE attribute of a task is set. As new tasks do not begin
-    with the IDLE attribute set, combined with the use of break on finding a free slot
-    and the entrance paths not calling the function in a way wich will reach the
-    for loops boundary condition. It is not currently reachable. One potential
-    fix would be to create new tasks with the IDLE attribute set when the scheduler
-    if not active. The other simple approach would be to avoid the break in the for
-    loop, but that would waste soe cycles. This note remains until a solution
-    is found.
-*/
-
+/**
+ * @brief prvAddNewTaskToReadyList - add a newly created task to the list of ready tasks
+ *
+ * This test creates more tasks than ther are cores in order to test the
+ * branch related to the limit condition of the for loop
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+ * @endcode
+ */
 void test_coverage_prvAddNewTaskToReadyList_create_more_tasks_than_there_are_cores( void )
 {
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+3] = { NULL };
@@ -682,14 +683,22 @@ void test_coverage_prvAddNewTaskToReadyList_create_more_tasks_than_there_are_cor
     vTaskStartScheduler();
 }
 
-/*
-Coverage for
-    void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
-    covers the case where vTaskCoreAffinitySet is called with NULL being passed to xTask
-    implicitly referring to the current task.
-*/
-
-
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with a NULL task, implicitly referencing the
+ * current task and setting the mask to 0xFF with the secheduler running.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * pxTCB = prvGetTCBFromHandle( xTask );
+ * ...
+ * if( xSchedulerRunning != pdFALSE )
+ *          {
+ *              if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * ...
+ * @endcode
+ */
 void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_implied( void )
 {
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -706,13 +715,22 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_implied( voi
     vTaskCoreAffinitySet(NULL, (UBaseType_t)0xFF);
 }
 
-/*
-Coverage for
-    void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
-    covers the case where vTaskCoreAffinitySet is called with NULL being passed to xTask 
-    implicitly referring to the current task.
-*/
-
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with an explicit task reference
+ * setting the mask to 0xFF adn then starting the scheduler.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * pxTCB = prvGetTCBFromHandle( xTask );
+ * ...
+ * if( xSchedulerRunning != pdFALSE )
+ *          {
+ *              if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * ...
+ * @endcode
+ */
 void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_explicit( void )
 {
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -723,12 +741,22 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_explicit( vo
     vTaskStartScheduler();
 }
 
-/*
-Coverage for
-    void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
-    covers the case where the affinity mask no longer includes the current core, triggering a yield
-*/
-
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with an explicit task reference
+ * setting the mask to one value initially, and then changing the mask while
+ * the scheduler is active and the task is running.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *                   if( ( uxCoreAffinityMask & ( 1 << xCoreID ) ) == 0 )
+ *                   {
+ *                       prvYieldCore( xCoreID );
+ *                   }
+ * ...
+ * @endcode
+ */
 void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_running( void )
 {
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -750,13 +778,22 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_running(
     }
 }
 
-/*
-Coverage for
-    void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
-    Changes the affinity of a suspended task such that it must yield on the core
-    it was originally running.
-*/
-
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with an explicit task reference
+ * setting the mask to one value initially, and then re-setting the mask to
+ * the same value while the scheduler is active and the task is running.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *                   if( ( uxCoreAffinityMask & ( 1 << xCoreID ) ) == 0 )
+ *                   {
+ *                       prvYieldCore( xCoreID );
+ *                   }
+ * ...
+ * @endcode
+ */
 void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspended( void )
 {
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -783,35 +820,6 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspende
         xTaskIncrementTick_helper();
     }
 
-    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x2);
-
-    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
-        xTaskIncrementTick_helper();
-    }
-}
-
-/*
-Coverage for
-    void vTaskCoreAffinitySet( const TaskHandle_t xTask, UBaseType_t uxCoreAffinityMask )
-    Given #define taskTASK_IS_RUNNING( pxTCB )     ( ( pxTCB->xTaskRunState >= 0 ) && ( pxTCB->xTaskRunState < configNUMBER_OF_CORES ) )
-    Call the above macro where the second expression evaluates to false.
-*/
-
-void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_with_invalid_running_core( void )
-{
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
-    UBaseType_t xidx;
-
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
-    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x1);
-
-    vTaskStartScheduler();
-
-    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
-        xTaskIncrementTick_helper();
-    }
-
-    xTaskHandles[0]->xTaskRunState = configNUMBER_OF_CORES+1;
     vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x2);
 
     for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {

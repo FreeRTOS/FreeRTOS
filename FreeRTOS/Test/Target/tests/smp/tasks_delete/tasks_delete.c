@@ -27,7 +27,7 @@
  */
 
 /**
- * @file test.c
+ * @file tasks_delete.c
  * @brief When a n RTOS object is deleted, the associated resources shall be freed.
  *
  * Procedure:

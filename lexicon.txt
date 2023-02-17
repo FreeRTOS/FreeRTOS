@@ -2140,6 +2140,7 @@ puxstackbuffer
 pv
 pvalue
 pvargs
+pvargument
 pvbuffer
 pvcontext
 pvctx
@@ -2180,6 +2181,7 @@ pxdptr
 pxecdsacontext
 pxecparams
 pxecparamsptr
+pxendpoint
 pxexpiredtimer
 pxfilesize
 pxftpclient
@@ -2189,6 +2191,7 @@ pxhigherprioritytaskwoken
 pxincomingpacket
 pxincomingpublishcallback
 pxindex
+pxinterface
 pxisrfunction
 pxknownmessage
 pxlist
@@ -2196,6 +2199,7 @@ pxmbedpkcontext
 pxmbedtlspkctx
 pxmetrics
 pxmqttcontext
+pxmyinterface
 pxnetif
 pxnetworkbuffer
 pxnetworkcontext
@@ -2298,6 +2302,7 @@ readme
 readonly
 readtotaltimeoutconstant
 readtotaltimeoutmultiplier
+realtek
 reblocked
 receiveloop
 receivetimeout
@@ -2601,6 +2606,7 @@ stm
 stor
 str
 strcasecmp
+strcasestr
 strin
 stringification
 strintrx
@@ -3374,6 +3380,7 @@ xdoremove
 xe
 xeb
 xechoserveraddress
+xemacindex
 xemaclite
 xend
 xendpoints

@@ -21,8 +21,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  */
 
 #include <stdlib.h>
@@ -40,7 +40,6 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_IP_Private.h"
 #include "NetworkBufferManagement.h"
-#include "FreeRTOS_Routing.h"
 
 /* Thread-safe circular buffers are being used to pass data to and from the PCAP
  * access functions. */

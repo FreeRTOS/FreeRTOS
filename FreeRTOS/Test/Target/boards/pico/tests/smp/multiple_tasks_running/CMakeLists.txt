@@ -10,7 +10,7 @@ set(TEST_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../../../../tests/smp/multiple_
 add_library(multiple_tasks_running INTERFACE)
 target_sources(multiple_tasks_running INTERFACE
         ${BOARD_LIBRARY_DIR}/main.c
-        ${CMAKE_CURRENT_LIST_DIR}/multiple_task_running_test_runner.c
+        ${CMAKE_CURRENT_LIST_DIR}/multiple_tasks_running_test_runner.c
         ${TEST_SOURCE_DIR}/multiple_tasks_running.c)
 
 target_include_directories(multiple_tasks_running INTERFACE

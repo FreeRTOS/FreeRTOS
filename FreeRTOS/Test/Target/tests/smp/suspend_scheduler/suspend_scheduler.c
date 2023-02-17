@@ -29,16 +29,15 @@
  * @brief Context switch shall not happen when the scheduler is suspended.
  *
  * Procedure:
- *   - configRUN_MULTIPLE_PRIORITIES & configUSE_CORE_AFFINITY should be set to 0.
  *   - Create ( num of cores ) tasks (T0~Tn-1).
  *   - Task T0 has higher priority then T1~Tn-1. Priority T0 > T1~Tn-1.
  *   - Task T0 calls vTaskSuspendAll.
- *   - Task T0 raises priority of task T1. Priority T1 > T0 > T2~Tn-1.
+ *   - Task T0 raises priority of task T1. Priority T1~Tn-1 > T0.
  *   - Task T0 calls xTaskResumeAll.
  *   - Task T1 Runs.
  * Expected:
- *   - T1 shouldn't run before T0 calls xTaskResumeAll.
- *   - T1 should run after T0 calls xTaskResumeAll immediately.
+ *   - T1~Tn-1 shouldn't run before T0 calls xTaskResumeAll.
+ *   - T1~Tn-1 should run after T0 calls xTaskResumeAll immediately.
  */
 
 /* Kernel includes. */
@@ -51,7 +50,7 @@
 /**
  * @brief Time for T0 to poll T1. This value must be smaller than TEST_TIMEOUT_MS.
  */
-#define TEST_T0_POLLING_TIME    ( 0xFFFFFFF0 )
+#define TEST_T0_POLLING_TIME    ( 0x0FFFFFF0 )
 
 /**
  * @brief Timeout value to stop test.
@@ -79,13 +78,13 @@ static void vPrvTaskSetFlag( void * pvParameters );
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
 
-#if configRUN_MULTIPLE_PRIORITIES != 0
+#if configRUN_MULTIPLE_PRIORITIES != 1
     #error test_config.h must be included at the end of FreeRTOSConfig.h.
-#endif /* if configRUN_MULTIPLE_PRIORITIES != 0 */
+#endif /* if configRUN_MULTIPLE_PRIORITIES != 1 */
 
-#if configUSE_CORE_AFFINITY != 0
+#if configUSE_CORE_AFFINITY != 1
     #error test_config.h must be included at the end of FreeRTOSConfig.h.
-#endif /* if configUSE_CORE_AFFINITY != 0 */
+#endif /* if configUSE_CORE_AFFINITY != 1 */
 /*-----------------------------------------------------------*/
 
 /**
@@ -102,6 +101,11 @@ static BaseType_t xHasOtherTaskRun = pdFALSE;
  * @brief A flag to indicate if T0 run.
  */
 static BaseType_t xHasTaskT0Run = pdFALSE;
+
+/**
+ * @brief A flag to indicate if scheduler suspended by task T0.
+ */
+static BaseType_t xIsScheduleSuspended = pdFALSE;
 /*-----------------------------------------------------------*/
 
 static void Test_SuspendScheduler( void )
@@ -135,8 +139,13 @@ static void vPrvTaskSuspendScheduler( void * pvParameters )
 
     vTaskSuspendAll();
 
-    /* Raise T1's task priority to higher than T0. */
-    vTaskPrioritySet( xTaskHanldes[ 1 ], tskIDLE_PRIORITY + 3 );
+    xIsScheduleSuspended = pdTRUE;
+
+    /* Raise T1~Tn-1's task priority to higher than T0. */
+    for( i = 1; i < configNUMBER_OF_CORES; i++ )
+    {
+        vTaskPrioritySet( xTaskHanldes[ i ], tskIDLE_PRIORITY + 3 );
+    }
 
     for( i = 0; i < TEST_T0_POLLING_TIME; i++ )
     {
@@ -163,6 +172,12 @@ static void vPrvTaskSetFlag( void * pvParameters )
 {
     ( void ) pvParameters;
 
+    while( !xIsScheduleSuspended )
+    {
+        /* Always running, put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
+    }
+
     xHasOtherTaskRun = pdTRUE;
 
     for( ; ; )
@@ -179,7 +194,7 @@ void setUp( void )
     BaseType_t xTaskCreationResult;
 
     xTaskCreationResult = xTaskCreate( vPrvTaskSuspendScheduler,
-                                       "SetFlag",
+                                       "SuspendScheduler",
                                        configMINIMAL_STACK_SIZE,
                                        NULL,
                                        tskIDLE_PRIORITY + 2,

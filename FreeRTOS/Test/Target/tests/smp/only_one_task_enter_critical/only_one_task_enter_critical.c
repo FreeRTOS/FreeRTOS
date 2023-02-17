@@ -115,11 +115,13 @@ void Test_OnlyOneTaskEnterCritical( void )
 
 static void vLoopIncCounter( void )
 {
-    BaseType_t xTempTaskCounter = xTaskCounter;
+    BaseType_t xTempTaskCounter = 0;
     BaseType_t xIsTestPass = pdTRUE;
     int i;
 
     taskENTER_CRITICAL();
+
+    xTempTaskCounter = xTaskCounter;
 
     for( i = 0; i < TASK_INCREASE_COUNTER_TIMES; i++ )
     {

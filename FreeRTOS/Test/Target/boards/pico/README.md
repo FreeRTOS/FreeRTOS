@@ -53,8 +53,9 @@ Test cases includes:
 ## The SMP On Target Test Application
 
 The SMP On Target Test is used to verify kernel behavior with SMP(FreeRTOS symmetric multiprocessing)
-enabled. Each test case verifies different scenarios on SMP. To avoid impacting between different test cases,
-it uses individual images for each test case. Which means it has serveral images for every test case.
+enabled. Each test case verifies different scenarios on SMP. And the configurations for FreeRTOS are changed
+based on test cases, which means it needs several images to test.
+To simplify the framework and to debug easily, the test framework uses individual images for each test case.
 Each test case has its own [test_runners](./tests/smp/). The SMP On Target Test uses only one tile to run the
 test and keep the other tile in idle.
 

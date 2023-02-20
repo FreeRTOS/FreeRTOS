@@ -25,7 +25,7 @@
  */
 
 /**
- * @file main.c
+ * @file multiple_tasks_running_test_runner.c
  * @brief The implementation of main function to start test runner task.
  *
  * Procedure:

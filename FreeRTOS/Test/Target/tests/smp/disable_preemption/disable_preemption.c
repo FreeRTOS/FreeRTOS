@@ -42,13 +42,13 @@
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h" /* unit testing support functions */
+#include "unity.h"    /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Timeout value to stop test.
  */
-#define TEST_TIMEOUT_MS    ( 10000 )
+#define TEST_TIMEOUT_MS         ( 10000 )
 
 /**
  * @brief Loop value for T0 with preemption disabled.
@@ -66,9 +66,9 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Test case "Disable DisablePreemption".
+ * @brief Test case "Disable Preemption".
  */
-void Test_DisablePreemption(void);
+void Test_DisablePreemption( void );
 
 /**
  * @brief Function that implements a never blocking FreeRTOS task.
@@ -87,12 +87,12 @@ static void prvDisablePreemptionTask( void * pvParameters );
 static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES + 1 ];
 
 /**
- * @brief Flas to indicate if task T0 run or not.
+ * @brief Flag to indicate if task T0 disables preemption or not.
  */
 static BaseType_t xIsTaskT0PreemptDisabled = { pdFALSE };
 
 /**
- * @brief Flas to indicate if task T0 run or not.
+ * @brief Flag to indicate if task T0 finish or not.
  */
 static BaseType_t xIsTaskT0Finished = { pdFALSE };
 /*-----------------------------------------------------------*/
@@ -107,10 +107,10 @@ static void prvEverRunningTask( void * pvParameters )
     for( ; ; )
     {
         /* Check xIsTaskT0PreemptDisabled before getting task's state to make sure task disabled preemption.
-           Check it again after getting state to make sure the preemption is still disabled. */
-        if( xTaskHanldes[0] && xIsTaskT0PreemptDisabled == pdTRUE )
+         * Check it again after getting state to make sure the preemption is still disabled. */
+        if( xTaskHanldes[ 0 ] && ( xIsTaskT0PreemptDisabled == pdTRUE ) )
         {
-            xTaskState = eTaskGetState( xTaskHanldes[0] );
+            xTaskState = eTaskGetState( xTaskHanldes[ 0 ] );
 
             if( xIsTaskT0PreemptDisabled == pdTRUE )
             {
@@ -129,26 +129,27 @@ static void prvDisablePreemptionTask( void * pvParameters )
     TickType_t xT0StartTick = xTaskGetTickCount();
 
     /* wait with preemption disabled */
-    vTaskPreemptionDisable(NULL);
+    vTaskPreemptionDisable( NULL );
     xIsTaskT0PreemptDisabled = pdTRUE;
 
-    vTaskPrioritySet(NULL, configMAX_PRIORITIES - 3);
-    
+    vTaskPrioritySet( NULL, configMAX_PRIORITIES - 3 );
+
     for( ; ; )
     {
         if( ( xTaskGetTickCount() - xT0StartTick ) / portTICK_PERIOD_MS >= TEST_T0_BUSY_TIME_MS )
         {
             break;
         }
-        
+
         /* Always running, put asm here to avoid optimization by compiler. */
         __asm volatile ( "nop" );
     }
+
     xIsTaskT0PreemptDisabled = pdFALSE;
     xIsTaskT0Finished = pdTRUE;
 
     /* After enabling preemption, T0 will never has chance to run anymore. */
-    vTaskPreemptionEnable(NULL);
+    vTaskPreemptionEnable( NULL );
 
     for( ; ; )
     {
@@ -157,7 +158,8 @@ static void prvDisablePreemptionTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-void Test_DisablePreemption(void) {
+void Test_DisablePreemption( void )
+{
     TickType_t xStartTick = xTaskGetTickCount();
 
     /* Wait other tasks. */
@@ -182,11 +184,11 @@ void setUp( void )
     BaseType_t xTaskCreationResult;
 
     xTaskCreationResult = xTaskCreate( prvDisablePreemptionTask,
-                                        "DP",
-                                        configMINIMAL_STACK_SIZE * 2,
-                                        NULL,
-                                        configMAX_PRIORITIES - 2,
-                                        &( xTaskHanldes[ 0 ] ) );
+                                       "DP",
+                                       configMINIMAL_STACK_SIZE * 2,
+                                       NULL,
+                                       configMAX_PRIORITIES - 2,
+                                       &( xTaskHanldes[ 0 ] ) );
 
     TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
 
@@ -225,11 +227,12 @@ void tearDown( void )
 /**
  * @brief A start entry for test runner to run FR06.
  */
-void vRunDisablePreemptionTest(void) {
-  UNITY_BEGIN();
+void vRunDisablePreemptionTest( void )
+{
+    UNITY_BEGIN();
 
-  RUN_TEST(Test_DisablePreemption);
+    RUN_TEST( Test_DisablePreemption );
 
-  UNITY_END();
+    UNITY_END();
 }
 /*-----------------------------------------------------------*/

@@ -2690,6 +2690,7 @@ terraterm
 testcase
 testcases
 testloop
+testrunner
 testrunnerafqp
 testrunnerfull
 testshadowname
@@ -2726,6 +2727,7 @@ tmrmedium
 tmrtc
 tmrtesthigh
 tmrtimer
+tn
 todo
 tokenpresent
 toolchain

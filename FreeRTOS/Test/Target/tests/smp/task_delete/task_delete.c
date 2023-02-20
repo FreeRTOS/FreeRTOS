@@ -45,7 +45,7 @@
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h" /* unit testing support functions */
+#include "unity.h"    /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
 /**
@@ -135,7 +135,7 @@ BaseType_t Test_TaskSelfDelete( void )
             break;
         }
     }
-    
+
     /* Wait tasks to delete itself. */
     while( ulOriginalFreeHeapSize > xPortGetFreeHeapSize() )
     {
@@ -184,7 +184,7 @@ BaseType_t Test_TaskRemoteDelete( void )
         }
     }
 
-    /* Delay a while for thest tasks to run. */
+    /* Delay a while for tasks just created to run. */
     vTaskDelay( pdMS_TO_TICKS( 10 ) );
 
     /* Delete tasks remotely. */

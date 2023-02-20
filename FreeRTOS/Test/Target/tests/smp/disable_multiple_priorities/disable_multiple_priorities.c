@@ -1,8 +1,6 @@
 /*
- * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * FreeRTOS V202212.00
  * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
- *
- * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -77,10 +75,10 @@ void Test_DisableMultiplePriorities( void );
 static void vPrvCheckRunningTask( void * pvParameters );
 
 /**
- * @brief Function that returns which index does the xCurrntTaskHandle match.
+ * @brief Function that returns which index does the xCurrentTaskHandle match.
  *        0 for T0, 1 for T1, -1 for not match.
  */
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle );
 /*-----------------------------------------------------------*/
 
 /**
@@ -89,19 +87,19 @@ static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
 static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
 
 /**
- * @brief Flas to indicate if task T0~Tn-1 run or not.
+ * @brief Flags to indicate if task T0~Tn-1 run or not.
  */
 static BaseType_t xHasTaskRun[ configNUMBER_OF_CORES ] = { pdFALSE };
 /*-----------------------------------------------------------*/
 
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle )
 {
     int i = 0;
     int lMatchIdx = -1;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        if( xCurrntTaskHandle == xTaskHanldes[ i ] )
+        if( xCurrentTaskHandle == xTaskHanldes[ i ] )
         {
             lMatchIdx = i;
             break;
@@ -117,14 +115,14 @@ static void vPrvCheckRunningTask( void * pvParameters )
     int i = 0;
     int lCurrentTaskIdx = lFindTaskIdx( xTaskGetCurrentTaskHandle() );
     eTaskState taskState;
-    
+
     /* Silence warnings about unused parameters. */
     ( void ) pvParameters;
-    
+
     TEST_ASSERT_TRUE( lCurrentTaskIdx >= 0 && lCurrentTaskIdx < configNUMBER_OF_CORES );
     xHasTaskRun[ lCurrentTaskIdx ] = pdTRUE;
 
-    for( ;; )
+    for( ; ; )
     {
         for( i = 0; i < configNUMBER_OF_CORES; i++ )
         {

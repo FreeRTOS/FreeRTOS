@@ -1,8 +1,6 @@
 /*
- * FreeRTOS Kernel <DEVELOPMENT BRANCH>
+ * FreeRTOS V202212.00
  * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
- *
- * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -106,7 +104,7 @@ static void vPrvEverRunningTask( void * pvParameters )
     int i = 0;
     int lCurrentTaskIdx = lFindTaskIdx( xTaskGetCurrentTaskHandle() );
     eTaskState taskState;
-    
+
     /* Silence warnings about unused parameters. */
     ( void ) pvParameters;
 

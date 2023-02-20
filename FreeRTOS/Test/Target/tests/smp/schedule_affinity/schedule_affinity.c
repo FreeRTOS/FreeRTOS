@@ -31,7 +31,7 @@
  * Procedure:
  *   - Create ( num of cores ) tasks ( T0~Tn-1 ).
  *   - Pin T0 to core 0, T1 to core 1, and so on.
- *   - Each task will iterate 25 times, with a 10ms yielding delay bectween each
+ *   - Each task will iterate 25 times, with a 10ms yielding delay between each
  *     test iteration. The test will confirm it is running on the core it was pinned
  *     to.
  * Expected:
@@ -71,10 +71,10 @@ void Test_ScheduleAffinity( void );
 static void vPrvTaskCheckPinCore( void * pvParameters );
 
 /**
- * @brief Function that returns which index does the xCurrntTaskHandle match.
+ * @brief Function that returns which index does the xCurrentTaskHandle match.
  *        0 for T0, 1 for T1, -1 for not match.
  */
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle );
 /*-----------------------------------------------------------*/
 
 /**
@@ -83,19 +83,19 @@ static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
 static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
 
 /**
- * @brief Flas to indicate if task T0~Tn-1 finish or not.
+ * @brief Flags to indicate if task T0~Tn-1 finish or not.
  */
 static BaseType_t xHasTaskFinished[ configNUMBER_OF_CORES ] = { pdFALSE };
 /*-----------------------------------------------------------*/
 
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle )
 {
     int i = 0;
     int lMatchIdx = -1;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        if( xCurrntTaskHandle == xTaskHanldes[ i ] )
+        if( xCurrentTaskHandle == xTaskHanldes[ i ] )
         {
             lMatchIdx = i;
             break;

@@ -2726,6 +2726,7 @@ tmrmedium
 tmrtc
 tmrtesthigh
 tmrtimer
+tn
 todo
 tokenpresent
 toolchain
@@ -3354,6 +3355,7 @@ xcreatortasktcbbuffer
 xcsrbufferlength
 xcsrlength
 xcurbyte
+xcurrenttaskhandle
 xdatalength
 xdatamessagebuffers
 xdb

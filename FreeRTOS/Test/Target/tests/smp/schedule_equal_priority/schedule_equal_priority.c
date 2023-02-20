@@ -30,11 +30,11 @@
  *
  * Procedure:
  *   - Create ( num of cores + 1 ) tasks ( T0~Tn ). Priority T0 = T1 = ... = Tn-1 = Tn.
- *   - All three tasks are running busyloops
+ *   - All three tasks are running in busy loop
  * Expected:
  *   - All three tasks get a chance to run. The test doesn't currently strictly
  *     validate the round-robin nature of the scheduler as other system tasks,
- *     possibly target specicfic come and go complicating on-target validation.
+ *     possibly target specific come and go complicating on-target validation.
  */
 
 /* Kernel includes. */
@@ -54,6 +54,10 @@
 #if ( configNUMBER_OF_CORES < 2 )
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
+
+#if ( configUSE_TIME_SLICING != 1 )
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif /* if configUSE_TIME_SLICING != 1 */
 /*-----------------------------------------------------------*/
 
 /**
@@ -67,10 +71,10 @@ void Test_ScheduleHighestPirority( void );
 static void vPrvEverRunningTask( void * pvParameters );
 
 /**
- * @brief Function that returns which index does the xCurrntTaskHandle match.
+ * @brief Function that returns which index does the xCurrentTaskHandle match.
  *        0 for T0, 1 for T1, -1 for not match.
  */
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle );
 
 /**
  * @brief Check if all tasks have run or not.
@@ -106,14 +110,14 @@ static BaseType_t xAreAllTasksRun( void )
 }
 /*-----------------------------------------------------------*/
 
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle )
 {
     int i = 0;
     int lMatchIdx = -1;
 
     for( i = 0; i < configNUMBER_OF_CORES + 1; i++ )
     {
-        if( xCurrntTaskHandle == xTaskHanldes[ i ] )
+        if( xCurrentTaskHandle == xTaskHanldes[ i ] )
         {
             lMatchIdx = i;
             break;
@@ -147,7 +151,7 @@ void Test_ScheduleEqualPriority( void )
     BaseType_t xAllTasksRun;
 
     /* Wait other tasks. */
-    while( (xAllTasksRun = xAreAllTasksRun()) == pdFALSE )
+    while( ( xAllTasksRun = xAreAllTasksRun() ) == pdFALSE )
     {
         vTaskDelay( pdMS_TO_TICKS( 10 ) );
 

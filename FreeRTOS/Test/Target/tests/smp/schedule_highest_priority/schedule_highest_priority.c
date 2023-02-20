@@ -64,10 +64,10 @@ void Test_ScheduleHighestPirority( void );
 static void vPrvEverRunningTask( void * pvParameters );
 
 /**
- * @brief Function that returns which index does the xCurrntTaskHandle match.
+ * @brief Function that returns which index does the xCurrentTaskHandle match.
  *        0 for T0, 1 for T1, -1 for not match.
  */
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle );
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle );
 /*-----------------------------------------------------------*/
 
 /**
@@ -81,14 +81,14 @@ static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
 static BaseType_t xIsTestFinished = pdFALSE;
 /*-----------------------------------------------------------*/
 
-static int lFindTaskIdx( TaskHandle_t xCurrntTaskHandle )
+static int lFindTaskIdx( TaskHandle_t xCurrentTaskHandle )
 {
     int i = 0;
     int lMatchIdx = -1;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        if( xCurrntTaskHandle == xTaskHanldes[ i ] )
+        if( xCurrentTaskHandle == xTaskHanldes[ i ] )
         {
             lMatchIdx = i;
             break;

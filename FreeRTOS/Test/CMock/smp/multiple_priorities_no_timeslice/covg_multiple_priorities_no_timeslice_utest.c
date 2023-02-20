@@ -52,6 +52,7 @@
 
 
 /* ===========================  EXTERN VARIABLES  =========================== */
+extern volatile UBaseType_t uxCurrentNumberOfTasks;
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
@@ -627,4 +628,230 @@ void test_task_delay_until_with_config_assert( void )
 
     xTaskDelayUntil( &previousWakeTime , 4 );
     
+}
+
+/**
+ * @brief prvAddNewTaskToReadyList - add a newly created task to the list of ready tasks
+ *
+ * This test creates two tasks, the second after suspending the first and then
+ * starts the scheduler.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( uxCurrentNumberOfTasks == ( UBaseType_t ) 1 )
+ * @endcode
+ * As two tasks arecreated, this covers both branches of the above conditional
+ * in addition to the function body.
+ */
+void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_suspended( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+    vTaskSuspend(xTaskHandles[0]);
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[1] );
+
+    vTaskStartScheduler();
+}
+
+#if 0
+/**
+ * @brief prvAddNewTaskToReadyList - add a new idle task to the list of ready tasks
+ *
+ * This test creates more tasks than ther are cores in order to test the
+ * branch related to the limit condition of the for loop.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+ * @endcode
+ * for loop condition ( xCoreID < configNUMBER_OF_CORES ) is false.
+ */
+void test_coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    /* Initialize the idle priority ready list and set top ready priority to idle priority. */
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    uxCurrentNumberOfTasks = 0;
+    xSchedulerRunning = pdFALSE;
+
+    /* Create idle tasks and add it into the ready list. Create one more idle priority level
+     * in the loop. */
+    for( i = 0; i < ( configNUMBER_OF_CORES + 1U ); i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        xTaskTCBs[ i ].uxTaskAttributes = -1;
+        if( i < configNUMBER_OF_CORES )
+        {
+            /* Create idle tasks with equal number of cores. */
+            pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+            xTaskTCBs[ i ].xTaskRunState = i;
+            xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+            listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+            uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+        }
+        else
+        {
+            /* Create one more idle task to be added to ready list. */
+            xTaskTCBs[ i ].xTaskRunState = -1;  /* Set run state to taskTASK_NOT_RUNNING. */
+        }
+    }
+
+    /* API calls. */
+    prvAddNewTaskToReadyList( &xTaskTCBs[ configNUMBER_OF_CORES ] );
+
+    /* Validateions. The run state of this task is still taskNOT_RUNNING ( -1 ). */
+    configASSERT( xTaskTCBs[ configNUMBER_OF_CORES + 1U ].xTaskRunState == -1 );
+}
+#endif
+
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with a NULL task, implicitly referencing the
+ * current task and setting the mask to 0xFF with the secheduler running.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * pxTCB = prvGetTCBFromHandle( xTask );
+ * ...
+ * if( xSchedulerRunning != pdFALSE )
+ *          {
+ *              if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * ...
+ * @endcode
+ */
+void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_implied( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskCoreAffinitySet(NULL, (UBaseType_t)0xFF);
+}
+
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with an explicit task reference
+ * setting the mask to 0xFF adn then starting the scheduler.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * pxTCB = prvGetTCBFromHandle( xTask );
+ * ...
+ * if( xSchedulerRunning != pdFALSE )
+ *          {
+ *              if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * ...
+ * @endcode
+ */
+void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_explicit( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0xFF);
+
+    vTaskStartScheduler();
+}
+
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with an explicit task reference
+ * setting the mask to one value initially, and then changing the mask while
+ * the scheduler is active and the task is running.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *                   if( ( uxCoreAffinityMask & ( 1 << xCoreID ) ) == 0 )
+ *                   {
+ *                       prvYieldCore( xCoreID );
+ *                   }
+ * ...
+ * @endcode
+ */
+void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_running( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x1);
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x2);
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+}
+
+/**
+ * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.
+ *
+ * This test calles vTaskCoreAffinitySet with an explicit task reference
+ * setting the mask to one value initially, and then re-setting the mask to
+ * the same value while the scheduler is active and the task is running.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *                   if( ( uxCoreAffinityMask & ( 1 << xCoreID ) ) == 0 )
+ *                   {
+ *                       prvYieldCore( xCoreID );
+ *                   }
+ * ...
+ * @endcode
+ */
+void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspended( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x1);
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskSuspend(xTaskHandles[0]);
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x2);
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x2);
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
 }

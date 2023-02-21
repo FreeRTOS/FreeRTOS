@@ -35,6 +35,7 @@
 /* C runtime includes. */
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 /* Test includes. */
 #include "unity.h"
@@ -45,6 +46,9 @@
 /* Mock includes. */
 #include "mock_fake_assert.h"
 #include "mock_portable.h"
+#include "mock_list_macros.h"
+#include "mock_list.h"
+#include "mock_timers.h"
 
 /* =================================  MACROS  =============================== */
 
@@ -52,6 +56,12 @@
  * @brief CException code for when a configASSERT should be intercepted.
  */
 #define configASSERT_E                       0xAA101
+
+/**
+ * @brief simulate up to 10 tasks: add more if needed
+ * */
+#define TCB_ARRAY                       10
+
 /**
  * @brief Expect a configASSERT from the function called.
  *  Break out of the called function when this occurs.
@@ -111,6 +121,37 @@ static bool vTaskDeletePre_called = false;
 static bool vApplicationIdleHook_called = false;
 static bool vApplicationTickHook_called = false;
 
+static uint32_t created_tasks = 0;
+static TCB_t tcb[ TCB_ARRAY ];
+static uint32_t create_task_priority = 3;
+static StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
+static bool is_first_task = true;
+
+/* ==========================  EXTERN VARIABLES  ============================ */
+extern volatile BaseType_t xSchedulerRunning;
+extern volatile TickType_t xTickCount;
+extern volatile TickType_t xNextTaskUnblockTime;
+extern TCB_t * volatile pxCurrentTCB;
+extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+
+extern List_t xSuspendedTaskList;
+extern List_t xPendingReadyList;
+extern List_t xDelayedTaskList1;
+extern List_t xDelayedTaskList2;
+extern List_t xTasksWaitingTermination;
+extern List_t * volatile pxOverflowDelayedTaskList;
+
+extern volatile UBaseType_t uxSchedulerSuspended;
+
+extern volatile UBaseType_t uxCurrentNumberOfTasks;
+
+#if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
+    extern TaskHandle_t xIdleTaskHandles[];
+    #define xIdleTaskHandle   xIdleTaskHandles[ 0 ]
+#else
+    extern TaskHandle_t xIdleTaskHandle;
+#endif
+
 /* ==========================  CALLBACK FUNCTIONS  ========================== */
 static void vFakeAssertStub( bool x,
                              char * file,
@@ -133,6 +174,101 @@ static void validate_and_clear_assertions( void )
 {
     TEST_ASSERT_EQUAL( 1, assertionFailed );
     assertionFailed = 0;
+}
+
+static TaskHandle_t create_task()
+{
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { __FUNCTION__ };
+    const uint32_t usStackDepth = 300;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = create_task_priority;
+    TaskHandle_t taskHandle;
+    BaseType_t ret;
+
+    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ created_tasks ] );
+
+    vListInitialiseItem_Expect( &( tcb[ created_tasks ].xStateListItem ) );
+    vListInitialiseItem_Expect( &( tcb[ created_tasks ].xEventListItem ) );
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( stack );
+    if( is_first_task )
+    {
+        for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+        {
+            vListInitialise_ExpectAnyArgs();
+        }
+
+        /* Delayed Task List 1 */
+        vListInitialise_ExpectAnyArgs();
+        /* Delayed Task List 2 */
+        vListInitialise_ExpectAnyArgs();
+        /* Pending Ready List */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskDelete */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskSuspend */
+        vListInitialise_ExpectAnyArgs();
+        is_first_task = false;
+    }
+
+    listINSERT_END_ExpectAnyArgs();
+
+    ret = xTaskCreate( pxTaskCode,
+                       pcName,
+                       usStackDepth,
+                       pvParameters,
+                       uxPriority,
+                       &taskHandle );
+    TEST_ASSERT_EQUAL( pdPASS, ret );
+    ASSERT_SETUP_TCB_CALLED();
+    created_tasks++;
+    return taskHandle;
+}
+
+static void start_scheduler()
+{
+    vListInitialiseItem_ExpectAnyArgs();
+    vListInitialiseItem_ExpectAnyArgs();
+    /* set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* set owner */
+
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( uxIdleTaskStack );
+
+    if( is_first_task )
+    {
+        is_first_task = false;
+
+        for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+        {
+            vListInitialise_ExpectAnyArgs();
+        }
+
+        /* Delayed Task List 1 */
+        vListInitialise_ExpectAnyArgs();
+        /* Delayed Task List 2 */
+        vListInitialise_ExpectAnyArgs();
+        /* Pending Ready List */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskDelete */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskSuspend */
+        vListInitialise_ExpectAnyArgs();
+    }
+
+    listINSERT_END_ExpectAnyArgs();
+
+    xTimerCreateTimerTask_ExpectAndReturn( pdPASS );
+    xPortStartScheduler_ExpectAndReturn( pdTRUE );
+    getIddleTaskMemoryValid = true;
+    vTaskStartScheduler();
+    ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
+    TEST_ASSERT_TRUE( xSchedulerRunning );
+    TEST_ASSERT_EQUAL( configINITIAL_TICK_COUNT, xTickCount );
+    TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
 }
 
 
@@ -313,6 +449,17 @@ void setUp( void )
 {
     assertionFailed = 0;
     shouldAbortOnAssertion = pdTRUE;
+    created_tasks = 0;
+    is_first_task = true;
+    pxCurrentTCB = NULL;
+    memset( &pxReadyTasksLists, 0x00, configMAX_PRIORITIES * sizeof( List_t ) );
+    memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
+    memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
+    memset( &xSuspendedTaskList, 0x00, sizeof( List_t ) );
+    memset( &xPendingReadyList, 0x00, sizeof( List_t ) );
+    memset( &xTasksWaitingTermination, 0x00, sizeof( List_t ) );
+    uxCurrentNumberOfTasks = 0;
+    uxSchedulerSuspended = pdFALSE;
     vFakeAssert_StubWithCallback( vFakeAssertStub );
 }
 
@@ -363,8 +510,6 @@ void test_xTaskGetHandle_assert_large_handle_name( void )
  */
 void test_xTaskResumeAll_assert_scheduler_not_started( void )
 {
-    vTaskSuspendAll();
-
     EXPECT_ASSERT_BREAK( ( void ) xTaskResumeAll( ) );
 
     validate_and_clear_assertions();
@@ -391,5 +536,602 @@ void test_vTaskGenericNotifyGiveFromISR_assert_uxIndexToNotify_out_of_bound( voi
                                                         configTASK_NOTIFICATION_ARRAY_ENTRIES + 1,
                                                         &pxHigherPriorityTaskWoken) );
 
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if the scheduler is running,
+ *        the current TCB is the TCB to delete and the scheduler is not
+ *        suspended
+ */
+void test_vTaskDelete_assert_schedulerSuspended( void )
+{
+    TCB_t * ptcb = create_task();
+
+    start_scheduler();
+
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
+    vListInsertEnd_ExpectAnyArgs();
+
+    vTaskSuspendAll();
+
+    EXPECT_ASSERT_BREAK( vTaskDelete( ptcb ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if pxPreviousWakeTime is equal
+ *        to NULL
+ */
+void test_vTaskDelayUntil_assert_pxPreviousWakeTime_NULL( void )
+{
+    EXPECT_ASSERT_BREAK( xTaskDelayUntil( NULL, 23) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if xTimeIncrement is less than
+ *        or equal to zero
+ */
+void test_vTaskDelayUntil_assert_xTimeIncrement_lte_zero( void )
+{
+    TickType_t xPreviousWakeTime;
+
+    EXPECT_ASSERT_BREAK( xTaskDelayUntil( &xPreviousWakeTime, 0 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if uxSchedulerSuspended is not
+ *        equal to 1
+ */
+void test_vTaskDelayUntil_assert_uxSchedulerSuspended_neq_1( void )
+{
+    TickType_t xPreviousWakeTime;
+
+    vTaskSuspendAll();
+
+    EXPECT_ASSERT_BREAK( xTaskDelayUntil( &xPreviousWakeTime, 6 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if uxSchedulerSuspended is not
+ *        equal to 1
+ */
+void test_vTaskDelay_assert_uxScheduelrSuspended_neq_1( void )
+{
+    vTaskSuspendAll();
+
+    EXPECT_ASSERT_BREAK( vTaskDelay( 23 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if uxSchedulerSuspended is not
+ *        equal to 1
+ */
+void test_eTaskGetState_assert_TCB_ne_NULL ( void )
+{
+    EXPECT_ASSERT_BREAK( eTaskGetState( NULL ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if uxSchedulerSuspended is not
+ *        equal to 1
+ */
+void test_vTaskSuspend_assert_scheduler_suspended_neq_zero ( void )
+{
+    TCB_t * ptcb = create_task();
+
+    uxSchedulerSuspended = 1;
+    uxListRemove_ExpectAnyArgsAndReturn ( 1 );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
+    vListInsertEnd_ExpectAnyArgs();
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+
+    EXPECT_ASSERT_BREAK( vTaskSuspend(ptcb) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if we pass NULL as a parameter
+ *        to vTaskResume
+ */
+void test_vTaskResume_assert_null_xTaskToResume_handle( void )
+{
+    EXPECT_ASSERT_BREAK( vTaskResume( NULL ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if we pass NULL as a parameter
+ *        to xTaskResumeFromISR
+ */
+void test_xTaskResumeFromISR_assert_null_xTaskToResume_handle( void )
+{
+    EXPECT_ASSERT_BREAK( xTaskResumeFromISR( NULL ) );
+
+    validate_and_clear_assertions();
+}
+
+
+/*!
+ * @brief This test ensures that the code asserts when vTaskStartScheduler
+ *        is creating a new idle task or timer task and
+ *        it returns errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY
+ */
+void test_vTaskStartScheduler_assert_could_not_allocate_memory( void )
+{
+    vListInitialiseItem_ExpectAnyArgs();
+    vListInitialiseItem_ExpectAnyArgs();
+    /* set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* set owner */
+
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( uxIdleTaskStack );
+
+    if( is_first_task )
+    {
+        is_first_task = false;
+
+        for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+        {
+            vListInitialise_ExpectAnyArgs();
+        }
+
+        /* Delayed Task List 1 */
+        vListInitialise_ExpectAnyArgs();
+        /* Delayed Task List 2 */
+        vListInitialise_ExpectAnyArgs();
+        /* Pending Ready List */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskDelete */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskSuspend */
+        vListInitialise_ExpectAnyArgs();
+    }
+
+    listINSERT_END_ExpectAnyArgs();
+
+    xTimerCreateTimerTask_ExpectAndReturn( errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY );
+    EXPECT_ASSERT_BREAK(vTaskStartScheduler());
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when we pass NULL as a task
+ *        handle to pcTaskGetName
+ */
+void test_pcTaskGetName_assert_xTaskToQuery_is_null( void )
+{
+    EXPECT_ASSERT_BREAK( pcTaskGetName(NULL));
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the idle task
+ *         could not be created (handle = NULL) and then
+ *         we call xTaskGetIdleTaskHandle
+ */
+void test_xTaskGetIdleTaskHandle_assert_xIdleTaskHandles_0_is_null( void )
+{
+    xIdleTaskHandles[ 0 ] = NULL; /* idle task is not created */
+
+    EXPECT_ASSERT_BREAK( xTaskGetIdleTaskHandle() );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when xTaskCatchUpTicks is
+ *        called and the scheduler is suspended
+ */
+void test_xTaskCatchUpTicks_assert_scheduler_suspended( void )
+{
+    uxSchedulerSuspended = 1;
+    EXPECT_ASSERT_BREAK( xTaskCatchUpTicks( 23 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when we call xTaskAbortDelay
+ *        with xTask equals to NULL
+ */
+void test_xTaskAbortDelay_assert_xTask_null( void )
+{
+    EXPECT_ASSERT_BREAK( xTaskAbortDelay( NULL ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when vTaskPlaceOnEventList is
+ *        called with pxEventList equals to NULL
+ */
+void test_vTaskPlaceOnEventList_assert_pxEventList_null( void )
+{
+    EXPECT_ASSERT_BREAK( vTaskPlaceOnEventList( NULL, 2 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when we call
+ *        vTaskPlaceOnEventList wtih pxEventList equals to NULL
+ */
+void test_vTaskPlaceOnUnorderedEventList_assert_pxEventList_null( void )
+{
+    EXPECT_ASSERT_BREAK( vTaskPlaceOnUnorderedEventList( NULL, 2, 3) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when
+ *        vTaskPlaceOnUnorderedEventList is called while the scheduler is
+ *        not suspended
+ */
+void test_vTaskPlaceOnUnorderedEventList_assert_scheduler_suspended_eq_zero( void )
+{
+    List_t xEventList;
+
+    EXPECT_ASSERT_BREAK( vTaskPlaceOnUnorderedEventList (&xEventList, 2, 3) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when
+ * vTaskPlaceOnEventListRestricted is called with pxEventList is equal to NULL
+ */
+void test_vTaskPlaceOnEventListRestricted_assert_pxEventList_eq_NULL( void )
+{
+    EXPECT_ASSERT_BREAK( vTaskPlaceOnEventListRestricted (NULL, 2, 3) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the list head entry for
+ *        xEventList is NULL
+ */
+void test_xTaskRemoveFromEventList_assert_event_list_head_entry_null (void )
+{
+    List_t xEventList;
+
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAnyArgsAndReturn(NULL);
+
+    EXPECT_ASSERT_BREAK( xTaskRemoveFromEventList (&xEventList) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when
+ * vTaskRemoveFromUnorderedEventList and the schedueler is not suspended
+ */
+void test_vTaskRemoveFromUnorderedEventList_assert_scheduler_running ( void )
+{
+    ListItem_t xEventListItem;
+
+    uxSchedulerSuspended = pdFALSE;
+
+    EXPECT_ASSERT_BREAK( vTaskRemoveFromUnorderedEventList(&xEventListItem, 2) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when pxUnblockedTCB is null
+ */
+void test_vTaskRemoveFromUnorderedEventList_assert_ ( void )
+{
+    ListItem_t xEventListItem;
+
+    uxSchedulerSuspended = pdTRUE;
+
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    listGET_LIST_ITEM_OWNER_ExpectAnyArgsAndReturn( NULL );
+
+    EXPECT_ASSERT_BREAK( vTaskRemoveFromUnorderedEventList(&xEventListItem, 2) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when vTaskSettimeOutState is
+ *        called with a timeout of zero
+ */
+void test_vTaskSetTimeOutState_assert_timeout_zsero( void )
+{
+    EXPECT_ASSERT_BREAK( vTaskSetTimeOutState( 0 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when pxTimeout is NULL
+ */
+void test_xTaskCheckForTimeOut_assert_pxTimeOut_null( void )
+{
+    TickType_t pxTicksToWait;
+
+    EXPECT_ASSERT_BREAK( xTaskCheckForTimeOut( NULL, &pxTicksToWait ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when pxTicksToWait is NULL
+ */
+void test_xTaskCheckForTimeOut_assert_pxTicksToWait_null( void )
+{
+    TimeOut_t xTimeOut;
+
+    EXPECT_ASSERT_BREAK( xTaskCheckForTimeOut( &xTimeOut, NULL ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the passed tcb is not
+ *        equal to the current tcb
+ */
+void test_xTaskPriorityDisinherit_assert_tcp_neq_current_tcb(void)
+{
+    create_task();
+    TCB_t * ptcb2 = create_task();
+
+    EXPECT_ASSERT_BREAK( xTaskPriorityDisinherit( ptcb2 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when xTaskPriorityDisinherit
+ *        is called with no help mutexes
+ */
+void test_xTaskPriorityDisinherit_assert_no_mutexes_are_held(void)
+{
+    TCB_t * ptcb = create_task();
+
+    EXPECT_ASSERT_BREAK( xTaskPriorityDisinherit( ptcb ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the tcb belinging to the
+ *        handle is null, or just the handle itself is null
+ */
+void test_vTaskSetThreadLocalStoragePointer_assert_task_handle_null( void )
+{
+    EXPECT_ASSERT_BREAK( vTaskSetThreadLocalStoragePointer(NULL, 1, NULL) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when a value that is not
+ *        defined is assigned to TCB_t -> uxStaticallyAllocated
+ */
+void test_prvCheckTasksWaitingTermination_assert_out_of_bound_ucStaticallyAllocated( void )
+
+{
+    create_task();
+    TCB_t * ptcb = create_task();
+
+    ptcb->ucStaticallyAllocated  = 3; /* out of range value */
+
+    uxListRemove_ExpectAnyArgsAndReturn(pdTRUE);
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn(NULL);
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn(pdTRUE);
+
+    EXPECT_ASSERT_BREAK(vTaskDelete( ptcb ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when no mutexes are help byt
+ * the tcb
+ */
+void test_vTaskPriorityDisinheritAfterTimeout_assert_no_held_mutexes( void )
+{
+    TCB_t * ptcb = create_task();
+
+    EXPECT_ASSERT_BREAK( vTaskPriorityDisinheritAfterTimeout( ptcb, 3 ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when tcb is the current tcb
+ */
+void test_vTaskPriorityDisinheritAfterTimeout_assert_tcb_eq_currentTCB( void )
+{
+    TCB_t * ptcb = create_task();
+
+    pvTaskIncrementMutexHeldCount();
+
+    EXPECT_ASSERT_BREAK( vTaskPriorityDisinheritAfterTimeout( ptcb, 5 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when uxIndexToWait is greater
+ *        than of equal to configTASK_NOTIFICATION_ARRAY_ENTRIES
+ */
+void test_ulTaskGenericNotifyTake_assert_index_gte_config_array_entries( void )
+{
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES + 2;
+
+    EXPECT_ASSERT_BREAK( ulTaskGenericNotifyTake( uxIndex, 23, 22 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when uxIndexToWait is greater
+ *        than of equal to configTASK_NOTIFICATION_ARRAY_ENTRIES
+ */
+void test_xTaskGenericNotifyWait_assert_index_gte_config_array_entries( void )
+{
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES + 2;
+
+    EXPECT_ASSERT_BREAK( xTaskGenericNotifyWait( uxIndex, 23, 22, NULL, 23 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when uxIndexToNotify is
+ * greater than of equal to configTASK_NOTIFICATION_ARRAY_ENTRIES
+ */
+void test_xTaskGenericNotify_assert_index_gte_config_array_entries( void )
+{
+    TCB_t * ptcb = create_task();
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES + 2;
+
+    EXPECT_ASSERT_BREAK( xTaskGenericNotify( ptcb, uxIndex, 23,
+                                             eSetBits, NULL) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the task to notify is
+ *        null
+ */
+void test_xTaskGenericNotify_assert_null_task_to_notify( void )
+{
+
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES - 1;
+
+    EXPECT_ASSERT_BREAK( xTaskGenericNotify( NULL, uxIndex,
+                                             23, eSetBits, NULL ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the default action is
+ *        reached which we should never get there
+ */
+void test_xTaskGenericNotify_assert_default_action_tickcount_ne_zero( void )
+{
+
+    TCB_t * ptcb = create_task();
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES - 1;
+
+    xTickCount = 3;
+    EXPECT_ASSERT_BREAK( xTaskGenericNotify( ptcb, uxIndex, 3,
+                                             eSetValueWithoutOverwrite  + 1,
+                                             NULL ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the task state is
+ *        taskWAITING_NOTIFICATION and the task is on an event list
+ */
+void test_xTaskGenericNotify_assert( void )
+{
+    TCB_t * ptcb = create_task();
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES - 1;
+
+    ptcb->ucNotifyState[ uxIndex ] = 1; /* taskWAITING_NOTIFICATION */
+    xTickCount = 0;
+
+    listREMOVE_ITEM_ExpectAnyArgs();
+    listINSERT_END_ExpectAnyArgs();
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn((void*)1);
+    EXPECT_ASSERT_BREAK( xTaskGenericNotify (ptcb, uxIndex, 3,
+                                             eSetValueWithoutOverwrite  + 1,
+                                             NULL ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when uxIndexToNotify is
+ *        greater than of equal to configTASK_NOTIFICATION_ARRAY_ENTRIES
+ */
+void test_xTaskGenericNotifyFromISR_assert_index_gte_config_array_entries( void )
+{
+    TCB_t * ptcb = create_task();
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES + 2;
+
+    EXPECT_ASSERT_BREAK( xTaskGenericNotifyFromISR( ptcb, uxIndex, 23,
+                                             eSetBits, NULL, NULL) );
+    validate_and_clear_assertions();
+}
+/*!
+ * @brief This test ensures that the code asserts when the task to notify is
+ *        null
+ */
+void test_xTaskGenericNotifyFromISR_assert_null_task_to_notify( void )
+{
+
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES - 1;
+
+    EXPECT_ASSERT_BREAK( xTaskGenericNotifyFromISR( NULL, uxIndex,
+                                             23, eSetBits, NULL, NULL ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the default action is
+ *        reached which we should never get there
+ */
+void test_xTaskGenericNotifyFromISR_assert_default_action_should_not_get( void )
+{
+
+    TCB_t * ptcb = create_task();
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES - 1;
+
+    xTickCount = 3;
+    EXPECT_ASSERT_BREAK( xTaskGenericNotifyFromISR( ptcb, uxIndex, 3,
+                                             eSetValueWithoutOverwrite  + 1,
+                                             NULL, NULL ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the task state is
+ *        taskWAITING_NOTIFICATION and the task is on an event list
+ */
+void test_xTaskGenericNotifyFromISR_assert( void )
+{
+    UBaseType_t uxIndex = configTASK_NOTIFICATION_ARRAY_ENTRIES - 1;
+    TCB_t * ptcb = create_task();
+
+    ptcb->ucNotifyState[ uxIndex ] = 1; /* taskWAITING_NOTIFICATION */
+    xTickCount = 0;
+
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn((void*)1);
+    EXPECT_ASSERT_BREAK( xTaskGenericNotifyFromISR (ptcb, uxIndex, 3,
+                                             eSetValueWithoutOverwrite  + 1,
+                                             NULL, NULL ) );
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts when the index passed is
+ *        greater than or equal to configTASK_NOTIFICATION_ARRAY_ENTRIES
+ */
+void test_xTaskGenericNotifyStateClear_assert_index_gte_array_entries( void )
+{
+
+    EXPECT_ASSERT_BREAK(  xTaskGenericNotifyStateClear(NULL,
+                                   configTASK_NOTIFICATION_ARRAY_ENTRIES + 2) );
     validate_and_clear_assertions();
 }

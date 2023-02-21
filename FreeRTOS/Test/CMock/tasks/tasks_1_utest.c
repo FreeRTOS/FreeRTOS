@@ -394,10 +394,6 @@ void setUp( void )
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
 
-    /*
-     * pxDelayedTaskList = NULL;
-     * pxOverflowDelayedTaskList = NULL;
-     */
     memset( &xPendingReadyList, 0x00, sizeof( List_t ) );
 
     memset( &xTasksWaitingTermination, 0x00, sizeof( List_t ) );
@@ -2582,6 +2578,7 @@ void test_pcTaskGetName_success_null_handle( void )
     ret_task_name = pcTaskGetName( NULL );
     TEST_ASSERT_EQUAL_STRING( "create_task", ret_task_name );
 }
+
 void test_xTaskCatchUpTicks( void )
 {
     BaseType_t ret_taskCatchUpTicks;
@@ -2589,11 +2586,18 @@ void test_xTaskCatchUpTicks( void )
 
     task_handle = create_task();
     ptcb = task_handle;
-    uxSchedulerSuspended = pdTRUE;
+    uxSchedulerSuspended = pdFALSE;
+
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn(pdTRUE);
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn(pdTRUE);
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn(0);
+
     /* API Call */
-    ret_taskCatchUpTicks = xTaskCatchUpTicks( 500 );
+    ret_taskCatchUpTicks = xTaskCatchUpTicks( 1 );
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret_taskCatchUpTicks );
+    //TEST_ASSERT_EQUAL( pdTRUE, ret_taskCatchUpTicks );
+    uxSchedulerSuspended = pdTRUE;
 }
 
 void test_xTaskIncrementTick_success_sched_suspended_no_switch( void )
@@ -3155,6 +3159,8 @@ void test_vTaskPlaceOnUnorderedEventList( void )
     task_handle = create_task();
     ptcb = task_handle;
     xNextTaskUnblockTime = 600;
+
+    uxSchedulerSuspended = pdTRUE;
 
     /* Expectations */
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xEventListItem, 32 | 0x80000000UL );

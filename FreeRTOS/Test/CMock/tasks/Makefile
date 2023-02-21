@@ -6,10 +6,11 @@
 
 include ../makefile.in
 
-PROJECT          :=   tasks
+PROJECT          :=     tasks
+# SUITES lists the suites contained in subdirectories of this directory
 #
 # Test/CMock/tasks
-PROJECT_DIR      :=   $(abspath .)
+PROJECT_DIR      :=     $(abspath .)
 
 # List the dependency files you wish to mock
 MOCK_FILES_FP    :=   $(KERNEL_DIR)/include/timers.h
@@ -24,7 +25,7 @@ UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY\
                     -UlistLIST_ITEM_CONTAINER -UlistCURRENT_LIST_LENGTH
 
 # List special compilation flags for this module
-CFLAGS           += -Wno-unused-function
+CFLAGS           +=     -Wno-unused-function
 
 # List special preprocessing flags for this module
 CPPFLAGS         +=
@@ -37,7 +38,7 @@ LDFLAGS          +=
 
 # Try not to edit beyond this line
 
-COVERAGE_OPTS    :=   -fprofile-arcs -ftest-coverage -fprofile-generate
+COVERAGE_OPTS    :=     -fprofile-arcs -ftest-coverage -fprofile-generate
 
 # build/generated/queue
 SCRATCH_DIR      :=   $(GENERATED_DIR)/$(PROJECT)
@@ -87,8 +88,7 @@ PROJ_OBJ_LIST  := $(EXEC_LIST)
 
 .PHONY: all Makefile directories
 
-.SECONDARY:
-all : directories $(EXEC_LIST)
+all : directories $(EXEC_LIST) run
 
 # Build the executables 1 per configuration
 $(EXEC_PATH) : $(MOCK_OBJS)                                                    \
@@ -180,6 +180,21 @@ directories :
         -mkdir   -p  $(BIN_DIR)
         -mkdir   -p  $(LIB_DIR)
 
-EXEC_PREFIX     :=  $(PROJECT)
+EXEC_PREFIX     :=  $(PROJECT)/
 
 include ../coverage.mk
+
+
+# Indent with spaces
+.RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
+# Do not move this line below the include
+MAKEFILE_ABSPATH     := $(abspath $(lastword $(MAKEFILE_LIST)))
+
+SUITES	+=	 tasks_freertos
+# run each suite and leave gcda / gcov files in place
+run:
+    $(foreach suite,$(SUITES),make -C $(suite) run;)
+
+#bin: $(EXEC_LIST)
+
+#include ../subdir.mk

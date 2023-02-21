@@ -153,9 +153,29 @@ static StreamBuffer_t * xRecvBuffer = NULL;
 /* Logs the number of WinPCAP send failures, for viewing in the debugger only. */
 static volatile uint32_t ulWinPCAPSendFailures = 0;
 
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+/*
+ * A pointer to the network interface is needed later when receiving packets.
+ */
+    static NetworkInterface_t * pxMyInterface;
+
+    static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface );
+    static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
+                                                   NetworkBufferDescriptor_t * const pxNetworkBuffer,
+                                                   BaseType_t bReleaseAfterSend );
+    static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface );
+
+    NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                        NetworkInterface_t * pxInterface );
+#endif
+
 /*-----------------------------------------------------------*/
 
-BaseType_t xNetworkInterfaceInitialise( void )
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+    static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
+#else
+    BaseType_t xNetworkInterfaceInitialise( void )
+#endif
 {
     BaseType_t xReturn = pdFALSE;
     pcap_if_t * pxAllNetworkInterfaces;
@@ -260,8 +280,14 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                    BaseType_t bReleaseAfterSend )
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+    static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
+                                                    NetworkBufferDescriptor_t * const pxNetworkBuffer,
+                                                    BaseType_t bReleaseAfterSend );
+#else
+    BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer,
+                                        BaseType_t bReleaseAfterSend )
+#endif
 {
     size_t xSpace;
 
@@ -303,7 +329,7 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkB
 
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
 
-    static BaseType_t xGetPhyLinkStatus( NetworkInterface_t * pxInterface )
+    static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface )
     {
         BaseType_t xResult = pdFALSE;
 

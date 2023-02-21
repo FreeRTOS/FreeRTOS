@@ -855,3 +855,28 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspende
         xTaskIncrementTick_helper();
     }
 }
+
+/**
+ * @brief vTaskExitCriticalFromISR - have a task exit a critical section from the ISR context
+ *
+ * <b>Coverage</b>
+ * @code{c}
+*       if( xSchedulerRunning != pdFALSE )
+*        {
+*        ...
+*            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
+*
+*            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
+*            {
+*                portDECREMENT_CRITICAL_NESTING_COUNT();
+*
+*                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+* ...
+* @endcode
+*
+* Cover the case where the critical nesting count is equal to 1.
+*/
+void test_coverage_vTaskExitCriticalFromISR_( void )
+{
+
+}

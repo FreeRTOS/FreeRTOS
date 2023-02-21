@@ -668,7 +668,7 @@ void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_susp
  * @endcode
  * for loop condition ( xCoreID < configNUMBER_OF_CORES ) is false.
  */
-void test_coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
+void coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
 {
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { 0 };
     uint32_t i;

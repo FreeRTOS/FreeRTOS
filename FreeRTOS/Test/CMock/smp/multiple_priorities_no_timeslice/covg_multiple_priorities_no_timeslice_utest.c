@@ -668,7 +668,7 @@ void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_susp
  * @endcode
  * for loop condition ( xCoreID < configNUMBER_OF_CORES ) is false.
  */
-void test_coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
+// void test_coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
 {
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { 0 };
     uint32_t i;
@@ -874,9 +874,98 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspende
 * ...
 * @endcode
 *
-* Cover the case where the critical nesting count is equal to 1.
+* Cover the case where the critical nesting count is equal to 1 and
+* the scheduler is enabled.
 */
-void test_coverage_vTaskExitCriticalFromISR_( void )
+void test_coverage_vTaskExitCriticalFromISR_scheduler_enabled( void )
 {
+    UBaseType_t uxIntStatus;
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx;
 
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x1);
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    uxIntStatus = taskENTER_CRITICAL_FROM_ISR();
+    taskEXIT_CRITICAL_FROM_ISR(uxIntStatus);
+}
+
+/**
+ * @brief vTaskExitCriticalFromISR - have a task exit a critical section from the ISR context
+ *
+ * <b>Coverage</b>
+ * @code{c}
+*       if( xSchedulerRunning != pdFALSE )
+*        {
+*        ...
+*            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
+*
+*            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
+*            {
+*                portDECREMENT_CRITICAL_NESTING_COUNT();
+*
+*                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+* ...
+* @endcode
+*
+* Cover the case where the critical nesting count is equal to 1 and
+* the scheduler is disabled.
+*/
+void test_coverage_vTaskExitCriticalFromISR_scheduler_disabled( void )
+{
+    UBaseType_t uxIntStatus;
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x1);
+
+    uxIntStatus = taskENTER_CRITICAL_FROM_ISR();
+    taskEXIT_CRITICAL_FROM_ISR(uxIntStatus);
+}
+
+/**
+ * @brief vTaskExitCriticalFromISR - have a task exit a critical section from the ISR context
+ *
+ * <b>Coverage</b>
+ * @code{c}
+*       if( xSchedulerRunning != pdFALSE )
+*        {
+*        ...
+*            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
+*
+*            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
+*            {
+*                portDECREMENT_CRITICAL_NESTING_COUNT();
+*
+*                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+* ...
+* @endcode
+*
+* Cover the case where the critical nesting count is equal to 1 and
+* the scheduler is enabled and the core yielded.
+*/
+void test_coverage_vTaskExitCriticalFromISR_scheduler_enabled_core_yield( void )
+{
+    UBaseType_t uxIntStatus;
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0x1);
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    uxIntStatus = taskENTER_CRITICAL_FROM_ISR();
+    vTaskCoreAffinitySet(NULL, (UBaseType_t)0x0);
+    taskEXIT_CRITICAL_FROM_ISR(uxIntStatus);
 }

@@ -861,22 +861,22 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspende
  *
  * <b>Coverage</b>
  * @code{c}
-*       if( xSchedulerRunning != pdFALSE )
-*        {
-*        ...
-*            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
-*
-*            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
-*            {
-*                portDECREMENT_CRITICAL_NESTING_COUNT();
-*
-*                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
-* ...
-* @endcode
-*
-* Cover the case where the critical nesting count is equal to 1 and
-* the scheduler is enabled.
-*/
+ *       if( xSchedulerRunning != pdFALSE )
+ *        {
+ *        ...
+ *            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
+ *
+ *            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
+ *            {
+ *                portDECREMENT_CRITICAL_NESTING_COUNT();
+ *
+ *                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+ * ...
+ * @endcode
+ *
+ * Cover the case where the critical nesting count is equal to 1 and
+ * the scheduler is enabled.
+ */
 void test_coverage_vTaskExitCriticalFromISR_scheduler_enabled( void )
 {
     UBaseType_t uxIntStatus;
@@ -901,22 +901,22 @@ void test_coverage_vTaskExitCriticalFromISR_scheduler_enabled( void )
  *
  * <b>Coverage</b>
  * @code{c}
-*       if( xSchedulerRunning != pdFALSE )
-*        {
-*        ...
-*            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
-*
-*            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
-*            {
-*                portDECREMENT_CRITICAL_NESTING_COUNT();
-*
-*                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
-* ...
-* @endcode
-*
-* Cover the case where the critical nesting count is equal to 1 and
-* the scheduler is disabled.
-*/
+ *       if( xSchedulerRunning != pdFALSE )
+ *        {
+ *        ...
+ *            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
+ *
+ *            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
+ *            {
+ *                portDECREMENT_CRITICAL_NESTING_COUNT();
+ *
+ *                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+ * ...
+ * @endcode
+ *
+ * Cover the case where the critical nesting count is equal to 1 and
+ * the scheduler is disabled.
+ */
 void test_coverage_vTaskExitCriticalFromISR_scheduler_disabled( void )
 {
     UBaseType_t uxIntStatus;
@@ -934,22 +934,15 @@ void test_coverage_vTaskExitCriticalFromISR_scheduler_disabled( void )
  *
  * <b>Coverage</b>
  * @code{c}
-*       if( xSchedulerRunning != pdFALSE )
-*        {
-*        ...
-*            configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
-*
-*            if( portGET_CRITICAL_NESTING_COUNT() > 0U )
-*            {
-*                portDECREMENT_CRITICAL_NESTING_COUNT();
-*
-*                if( portGET_CRITICAL_NESTING_COUNT() == 0U )
-* ...
-* @endcode
-*
-* Cover the case where the critical nesting count is equal to 1 and
-* the scheduler is enabled and the core yielded.
-*/
+ *                   if( xYieldCurrentTask != pdFALSE )
+ *                   {
+ *                       portYIELD();
+ *                   }
+ * @endcode
+ *
+ * Cover the case where the critical nesting count is equal to 1 and
+ * the scheduler is enabled and the core yielded.
+ */
 void test_coverage_vTaskExitCriticalFromISR_scheduler_enabled_core_yield( void )
 {
     UBaseType_t uxIntStatus;

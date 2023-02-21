@@ -285,7 +285,7 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
     static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
                                                     NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                                    BaseType_t bReleaseAfterSend );
+                                                    BaseType_t bReleaseAfterSend )
 #else
     BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer,
                                         BaseType_t bReleaseAfterSend )

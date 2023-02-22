@@ -40,7 +40,6 @@
 #include "task.h"     /* RTOS task related API prototypes. */
 
 #include "unity.h"    /* unit testing support functions */
-
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -61,14 +60,12 @@ static void prvEverRunningTask( void * pvParameters );
  * @brief Test case "Multiple Tasks Running".
  */
 static void Test_MultipleTasksRunning( void );
-
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Handles of the tasks created in this test.
  */
 static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
-
 /*-----------------------------------------------------------*/
 
 static void Test_MultipleTasksRunning( void )
@@ -131,7 +128,7 @@ void tearDown( void )
     /* Delete all the tasks. */
     for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
     {
-        if( xTaskHanldes[ i ] )
+        if( xTaskHanldes[ i ] != NULL )
         {
             vTaskDelete( xTaskHanldes[ i ] );
         }

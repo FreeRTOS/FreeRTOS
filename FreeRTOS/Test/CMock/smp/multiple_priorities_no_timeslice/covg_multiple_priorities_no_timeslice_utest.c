@@ -962,3 +962,55 @@ void test_coverage_vTaskExitCriticalFromISR_scheduler_enabled_core_yield( void )
     vTaskCoreAffinitySet(NULL, (UBaseType_t)0x0);
     taskEXIT_CRITICAL_FROM_ISR(uxIntStatus);
 }
+
+/**
+ * @brief xTaskPriorityDisinherit - disinherit priority, potentially restoring the original priority used before escalation due to mutex usage
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( pxTCB->uxPriority != pxTCB->uxBasePriority )
+ *     {
+ *     ...
+ *          if( pxTCB->uxMutexesHeld == ( UBaseType_t ) 0 )
+ * @endcode
+ *
+ * Cover the case where priority has changed due to inheritance
+ * because of a shared mutex.
+ *
+ */
+void test_coverage_xTaskPriorityDisinherit_current_is_same( void )
+{
+    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    UBaseType_t xidx;
+
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 0, &xTaskHandles[0]);
+
+    vTaskStartScheduler();
+
+    for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
+        xTaskIncrementTick_helper();
+    }
+
+    vTaskPrioritySet( NULL, 1 );
+    xTaskPriorityInherit( xTaskHandles[0] );
+
+    xTaskPriorityDisinherit( xTaskHandles[0] );
+}
+
+/**
+ * @brief xTaskPriorityDisinherit - disinherit priority, potentially restoring the original priority used before escalation due to mutex usage
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *       if( pxMutexHolder != NULL )
+ *       {
+ *     ...
+ * @endcode
+ *
+ * Cover the case where a NULL task is specified.
+ *
+ */
+void test_coverage_xTaskPriorityDisinherit_null_task( void )
+{
+    xTaskPriorityDisinherit( NULL );
+}

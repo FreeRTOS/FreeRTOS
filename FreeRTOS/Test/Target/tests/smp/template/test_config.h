@@ -30,4 +30,28 @@
 /* This file must be included at the end of the FreeRTOSConfig.h. It contains
  * any FreeRTOS specific configurations that the test requires. */
 
-#endif
+#ifdef configRUN_MULTIPLE_PRIORITIES
+    #undef configRUN_MULTIPLE_PRIORITIES
+#endif /* ifdef configRUN_MULTIPLE_PRIORITIES */
+
+#ifdef configUSE_CORE_AFFINITY
+    #undef configUSE_CORE_AFFINITY
+#endif /* ifdef configUSE_CORE_AFFINITY */
+
+#ifdef configUSE_MINIMAL_IDLE_HOOK
+    #undef configUSE_MINIMAL_IDLE_HOOK
+#endif /* ifdef configUSE_MINIMAL_IDLE_HOOK */
+
+#ifdef configUSE_TASK_PREEMPTION_DISABLE
+    #undef configUSE_TASK_PREEMPTION_DISABLE
+#endif /* ifdef configUSE_TASK_PREEMPTION_DISABLE */
+
+#ifdef configUSE_TIME_SLICING
+    #undef configUSE_TIME_SLICING
+#endif /* ifdef configUSE_TIME_SLICING */
+
+#ifdef configUSE_PREEMPTION
+    #undef configUSE_PREEMPTION
+#endif /* ifdef configUSE_PREEMPTION */
+
+#endif /* ifndef TEST_CONFIG_H */

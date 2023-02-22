@@ -168,6 +168,18 @@ void port_release_task_lock_cb( int  num_calls)
 }
 
 /* ==============================  Test Cases  ============================== */
+
+/** 
+ * @brief This test ensures that the code asserts when the TCB's xTaskRunState
+ *        is not equal to taskTASK_YIELDING ( -2 )
+ * 
+ * <b>Coverage</b> 
+ * @code{c} 
+ * rvCheckForRunStateChange( pxTCB ); 
+ * 
+ * configASSERT( pxThisTCB->xTaskRunState == taskTASK_YIELDING );
+ * @endcode 
+*/
 void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield (void )
 {
     xSchedulerRunning = pdTRUE;

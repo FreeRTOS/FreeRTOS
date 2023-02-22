@@ -11,7 +11,7 @@ PROJECT_SRC         :=  tasks.c
 
 # PROJECT_DEPS_SRC list the .c file that are dependencies of PROJECT_SRC files
 # Files in PROJECT_DEPS_SRC are excluded from coverage measurements
-#PROJECT_DEPS_SRC    :=  list.c queue.c
+#PROJECT_DEPS_SRC    :=
 
 # PROJECT_HEADER_DEPS: headers that should be excluded from coverage measurements.
 PROJECT_HEADER_DEPS :=  FreeRTOS.h
@@ -21,7 +21,7 @@ SUITE_UT_SRC        :=  config_assert_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR
-#SUITE_SUPPORT_SRC   :=  smp_utest_common.c
+#SUITE_SUPPORT_SRC   :=
 
 
 # List the headers used by PROJECT_SRC that you would like to mock

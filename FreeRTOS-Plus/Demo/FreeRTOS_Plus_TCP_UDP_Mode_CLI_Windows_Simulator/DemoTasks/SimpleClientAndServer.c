@@ -94,7 +94,11 @@ const portTickType x150ms = 150UL / portTICK_RATE_MS;
 	so the IP address can be obtained immediately.  store the IP address being
 	used in ulIPAddress.  This is done so the socket can send to a different
 	port on the same IP address. */
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+#else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
+#endif
 
 	/* This test sends to itself, so data sent from here is received by a server
 	socket on the same IP address.  Setup the freertos_sockaddr structure with
@@ -210,8 +214,11 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 	so the IP address can be obtained immediately.  store the IP address being
 	used in ulIPAddress.  This is done so the socket can send to a different
 	port on the same IP address. */
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+#else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
-
+#endif
 	/* This test sends to itself, so data sent from here is received by a server
 	socket on the same IP address.  Setup the freertos_sockaddr structure with
 	this nodes IP address, and the port number being sent to.  The strange
@@ -243,7 +250,11 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 			the do while loop is used to ensure a buffer is obtained. */
 			do
 			{
+			#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
+			#else
 			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
+			#endif
 
 			/* A buffer was successfully obtained.  Create the string that is
 			sent to the server.  First the string is filled with zeros as this will
@@ -313,7 +324,11 @@ Socket_t xListeningSocket;
 	the address being bound to.  The strange casting is to try and remove
 	compiler warnings on 32 bit machines.  Note that this task is only created
 	after the network is up, so the IP address is valid here. */
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+#else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
+#endif
 	xBindAddress.sin_addr = ulIPAddress;
 	xBindAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );

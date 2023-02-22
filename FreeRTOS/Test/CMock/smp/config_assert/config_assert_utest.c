@@ -224,17 +224,23 @@ void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield (void )
  * @endcode 
  *
  * configUSE_PREEMPTION == 1
+ * configNUMBER_OF_CORES > 1
+ * configUSE_CORE_AFFINITY == 1
  */
 void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
 {
     UBaseType_t uxCoreAffinityMask = 8;
     TCB_t currentTCB;
 
+    memset( &currentTCB, 0x00, sizeof ( TCB_t ) );
+
     pxCurrentTCBs[ 0 ]                    =  &currentTCB;
     pxCurrentTCBs[ 0 ]->uxCoreAffinityMask = 1;
     pxCurrentTCBs[ 0 ]->uxCriticalNesting = 0;
+    pxCurrentTCBs[ 0 ]->xTaskRunState = -1; /* taskTASK_NOT_RUNNING */
 
     vFakePortEnterCriticalSection_Expect();
+    //vFakePortCheckIfInISR_ExpectAndReturn( pdFALSE );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK(vTaskCoreAffinitySet( pxCurrentTCBs[ 0 ],

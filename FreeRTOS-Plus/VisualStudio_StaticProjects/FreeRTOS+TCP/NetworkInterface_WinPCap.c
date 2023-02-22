@@ -163,12 +163,12 @@ static volatile uint32_t ulWinPCAPSendFailures = 0;
 
     static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface );
     static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
-                                                   NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                                   BaseType_t bReleaseAfterSend );
+                                                       NetworkBufferDescriptor_t * const pxNetworkBuffer,
+                                                       BaseType_t bReleaseAfterSend );
     static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface );
 
     NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                        NetworkInterface_t * pxInterface );
+                                                            NetworkInterface_t * pxInterface );
 #endif
 
 /*-----------------------------------------------------------*/
@@ -284,8 +284,8 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 
 #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
     static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
-                                                    NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                                    BaseType_t bReleaseAfterSend )
+                                                       NetworkBufferDescriptor_t * const pxNetworkBuffer,
+                                                       BaseType_t bReleaseAfterSend )
 #else
     BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer,
                                         BaseType_t bReleaseAfterSend )
@@ -352,9 +352,9 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
     {
         static char pcName[ 17 ];
 
-    /* This function pxWinPcap_FillInterfaceDescriptor() adds a network-interface.
-    * Make sure that the object pointed to by 'pxInterface'
-    * is declared static or global, and that it will remain to exist. */
+        /* This function pxWinPcap_FillInterfaceDescriptor() adds a network-interface.
+         * Make sure that the object pointed to by 'pxInterface'
+         * is declared static or global, and that it will continue to exist. */
 
         pxMyInterface = pxInterface;
 
@@ -373,6 +373,7 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
     }
 #endif
 /*-----------------------------------------------------------*/
+
 static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
 {
     pcap_if_t * pxAllNetworkInterfaces = NULL, * xInterface;
@@ -396,7 +397,7 @@ static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
         {
             /* Print out the list of network interfaces.  The first in the list
              * is interface '1', not interface '0'. */
-            for(xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next)
+            for( xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next )
             {
                 /* The descriptions of the devices can be full of spaces, clean them
                  * a little.  printf() can only be used here because the network is not
@@ -491,7 +492,7 @@ static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces 
     /* Walk the list of devices until the selected device is located. */
     pxInterface = pxAllNetworkInterfaces;
 
-    for(x = 0L; x < ( xConfigNetworkInterfaceToUse - 1L ); x++)
+    for( x = 0L; x < ( xConfigNetworkInterfaceToUse - 1L ); x++ )
     {
         pxInterface = pxInterface->next;
     }
@@ -668,6 +669,7 @@ DWORD WINAPI prvWinPcapSendThread( void * pvParam )
 /*-----------------------------------------------------------*/
 
 #if defined  ( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+
     static BaseType_t xPacketBouncedBack( const uint8_t * pucBuffer )
     {
         static BaseType_t xHasWarned = pdFALSE;
@@ -678,10 +680,10 @@ DWORD WINAPI prvWinPcapSendThread( void * pvParam )
         pxEtherHeader = ( EthernetHeader_t * ) pucBuffer;
 
         /* Sometimes, packets are bounced back by the driver and we need not process them. Check
-        * whether this packet is one such packet. */
+         * whether this packet is one such packet. */
         for( pxEndPoint = FreeRTOS_FirstEndPoint( NULL );
-            pxEndPoint != NULL;
-            pxEndPoint = FreeRTOS_NextEndPoint( NULL, pxEndPoint ) )
+             pxEndPoint != NULL;
+             pxEndPoint = FreeRTOS_NextEndPoint( NULL, pxEndPoint ) )
         {
             if( memcmp( pxEndPoint->xMACAddress.ucBytes, pxEtherHeader->xSourceAddress.ucBytes, ipMAC_ADDRESS_LENGTH_BYTES ) == 0 )
             {
@@ -689,12 +691,12 @@ DWORD WINAPI prvWinPcapSendThread( void * pvParam )
                 {
                     xHasWarned = pdTRUE;
                     FreeRTOS_printf( ( "Bounced back by WinPCAP interface: %02x:%02x:%02x:%02x:%02x:%02x\n",
-                                    pxEndPoint->xMACAddress.ucBytes[ 0 ],
-                                    pxEndPoint->xMACAddress.ucBytes[ 1 ],
-                                    pxEndPoint->xMACAddress.ucBytes[ 2 ],
-                                    pxEndPoint->xMACAddress.ucBytes[ 3 ],
-                                    pxEndPoint->xMACAddress.ucBytes[ 4 ],
-                                    pxEndPoint->xMACAddress.ucBytes[ 5 ] ) );
+                                        pxEndPoint->xMACAddress.ucBytes[ 0 ],
+                                        pxEndPoint->xMACAddress.ucBytes[ 1 ],
+                                        pxEndPoint->xMACAddress.ucBytes[ 2 ],
+                                        pxEndPoint->xMACAddress.ucBytes[ 3 ],
+                                        pxEndPoint->xMACAddress.ucBytes[ 4 ],
+                                        pxEndPoint->xMACAddress.ucBytes[ 5 ] ) );
                 }
 
                 xResult = pdTRUE;
@@ -704,7 +706,9 @@ DWORD WINAPI prvWinPcapSendThread( void * pvParam )
 
         return xResult;
     }
+
 #else
+
     static BaseType_t xPacketBouncedBack( const uint8_t * pucBuffer )
     {
         EthernetHeader_t * pxEtherHeader;
@@ -725,6 +729,7 @@ DWORD WINAPI prvWinPcapSendThread( void * pvParam )
 
         return xResult;
     }
+
 #endif
 /*-----------------------------------------------------------*/
 
@@ -798,11 +803,10 @@ static void prvInterruptSimulatorTask( void * pvParameters )
                         if( pxNetworkBuffer != NULL )
                         {
                             xRxEvent.pvData = ( void * ) pxNetworkBuffer;
-#if defined ( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+                        #if defined ( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
                             pxNetworkBuffer->pxInterface = pxMyInterface;
                             pxNetworkBuffer->pxEndPoint = FreeRTOS_MatchingEndpoint( pxMyInterface, pxNetworkBuffer->pucEthernetBuffer );
 
-                            /*if( pxNetworkBuffer->pxEndPoint == NULL ) */
                             {
                                 char pcDescription[ 129 ] = "unknown";
                                 const EthernetHeader_t * pxEthernetHeader = ( ( const EthernetHeader_t * ) pxNetworkBuffer->pucEthernetBuffer );
@@ -907,12 +911,9 @@ static void prvInterruptSimulatorTask( void * pvParameters )
                                                            pxNetworkBuffer->pxEndPoint,
                                                            ucType == ipTYPE_IPv6 ? 6 : 4 ) );
                                     }
-
-                                    /* pxNetworkBuffer->pxEndPoint = FreeRTOS_FirstEndPoint( pxMyInterface ); / *temporary change for single end point * / */
                                 }
                             }
-
-#endif
+                        #endif
 
                             /* Data was received and stored.  Send a message to
                              * the IP task to let it know. */
@@ -986,6 +987,7 @@ static const char * prvRemoveSpaces( char * pcBuffer,
 
     return pcBuffer;
 }
+/*-----------------------------------------------------------*/
 
 #define BUFFER_SIZE               ( ipTOTAL_ETHERNET_FRAME_SIZE + ipBUFFER_PADDING )
 #define BUFFER_SIZE_ROUNDED_UP    ( ( BUFFER_SIZE + 7 ) & ~0x07UL )
@@ -1007,7 +1009,7 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
     }
     else
     {
-        for(uxIndex = 0; uxIndex < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; uxIndex++)
+        for( uxIndex = 0; uxIndex < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; uxIndex++ )
         {
             size_t uxOffset = uxIndex * BUFFER_SIZE_ROUNDED_UP;
             NetworkBufferDescriptor_t ** ppDescriptor;
@@ -1024,3 +1026,4 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
         }
     }
 }
+/*-----------------------------------------------------------*/

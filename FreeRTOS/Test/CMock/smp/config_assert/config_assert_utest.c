@@ -175,11 +175,11 @@ void port_release_task_lock_cb( int  num_calls)
  * 
  * <b>Coverage</b> 
  * @code{c} 
- * rvCheckForRunStateChange( pxTCB ); 
+ * prvCheckForRunStateChange( pxTCB ); 
  * 
  * configASSERT( pxThisTCB->xTaskRunState == taskTASK_YIELDING );
  * @endcode 
-*/
+ */
 void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield (void )
 {
     xSchedulerRunning = pdTRUE;
@@ -199,7 +199,7 @@ void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield (void )
     vFakePortGetCoreID_ExpectAndReturn( 0);
     vFakePortGetCoreID_ExpectAndReturn( 0);
     vFakePortAssertIfISR_Expect();
-    vFakePortCheckIfInISR_ExpectAndReturn(pdFALSE);
+    vFakePortCheckIfInISR_ExpectAndReturn( pdFALSE );
     vFakePortGetCoreID_ExpectAndReturn( 0);
     vFakePortGetCoreID_ExpectAndReturn( 0);
     vFakePortGetCoreID_ExpectAndReturn( 0);
@@ -210,4 +210,35 @@ void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield (void )
 
     validate_and_clear_assertions();
 
+}
+
+/** 
+ * @brief This test ensures that the code asserts when the TCB's critical
+ *        nesting count is less than or equal to zero
+ * 
+ * <b>Coverage</b> 
+ * @code{c} 
+ * prvYieldForTask( pxTCB ); 
+ * 
+ * configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
+ * @endcode 
+ *
+ * configUSE_PREEMPTION == 1
+ */
+void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
+{
+    UBaseType_t uxCoreAffinityMask = 8;
+    TCB_t currentTCB;
+
+    pxCurrentTCBs[ 0 ]                    =  &currentTCB;
+    pxCurrentTCBs[ 0 ]->uxCoreAffinityMask = 1;
+    pxCurrentTCBs[ 0 ]->uxCriticalNesting = 0;
+
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+
+    EXPECT_ASSERT_BREAK(vTaskCoreAffinitySet( pxCurrentTCBs[ 0 ],
+                                              uxCoreAffinityMask ) );
+
+    validate_and_clear_assertions();
 }

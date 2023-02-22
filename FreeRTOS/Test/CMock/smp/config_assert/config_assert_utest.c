@@ -240,7 +240,6 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
     pxCurrentTCBs[ 0 ]->xTaskRunState = -1; /* taskTASK_NOT_RUNNING */
 
     vFakePortEnterCriticalSection_Expect();
-    //vFakePortCheckIfInISR_ExpectAndReturn( pdFALSE );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK(vTaskCoreAffinitySet( pxCurrentTCBs[ 0 ],

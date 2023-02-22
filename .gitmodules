@@ -1,6 +1,3 @@
-[submodule "FreeRTOS/Source"]
-	path = FreeRTOS/Source
-	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
 [submodule "FreeRTOS/Test/CMock/CMock"]
 	path = FreeRTOS/Test/CMock/CMock
 	url = https://github.com/ThrowTheSwitch/CMock.git
@@ -76,3 +73,7 @@
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4
 	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git
+[submodule "FreeRTOS/Source"]
+	path = FreeRTOS/Source
+	url = https://github.com/chinglee-iot/FreeRTOS-Kernel
+	branch = smp-dev-integrate-xmos-ai-port

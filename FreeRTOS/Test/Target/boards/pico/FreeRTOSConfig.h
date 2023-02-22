@@ -38,7 +38,6 @@
 *
 * See http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
-#include "test_config.h"
 
 /* Scheduler Related */
 #define configUSE_TICKLESS_IDLE                    0
@@ -135,5 +134,7 @@
 #define INCLUDE_xTaskResumeFromISR             1
 #define INCLUDE_xQueueGetMutexHolder           1
 /* A header file that defines trace macro can be included here. */
+
+#include "test_config.h"
 
 #endif /* FREERTOS_CONFIG_H */

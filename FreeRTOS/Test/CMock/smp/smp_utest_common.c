@@ -156,7 +156,7 @@ void vFakePortYieldStubCallback( int cmock_num_calls )
     vTaskSwitchContext( xCurrentCoreId );
 }
 
-void vFakePortEnterCriticalSection( void )
+void vFakePortEnterCriticalSectionCallback( int cmock_num_calls )
 {
     vTaskEnterCritical();
 }
@@ -169,7 +169,7 @@ void vFakePortEnterCriticalSection( void )
  * core i : Core ID requested to yield in critical section in accesending order.
  * ....
  * core xCurrentCoreId : Core ID equals to xCurrentCoreId and is requested to yield in critical section. */
-void vFakePortExitCriticalSection( void )
+void vFakePortExitCriticalSectionCallback( int cmock_num_calls )
 {
     vTaskExitCritical();
 }
@@ -196,7 +196,7 @@ static void vYieldCores( void )
     xCurrentCoreId = xPreviousCoreId;
 }
 
-unsigned int vFakePortGetCoreID( void )
+unsigned int vFakePortGetCoreIDCallback( int cmock_num_calls )
 {
     return ( unsigned int )xCurrentCoreId;
 }
@@ -253,14 +253,14 @@ void vFakePortReleaseTaskLock( void )
     }
 }
 
-UBaseType_t vFakePortEnterCriticalFromISR( void )
+UBaseType_t vFakePortEnterCriticalFromISRCallback( int cmock_num_calls )
 {
     UBaseType_t uxSavedInterruptState;
     uxSavedInterruptState = vTaskEnterCriticalFromISR();
     return uxSavedInterruptState;
 }
 
-void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState )
+void vFakePortExitCriticalFromISRCallback( UBaseType_t uxSavedInterruptState, int cmock_num_calls )
 {
     vTaskExitCriticalFromISR( uxSavedInterruptState );
     /* Simulate yield cores when leaving the critical section. */
@@ -271,9 +271,16 @@ void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState )
 
 void commonSetUp( void )
 {
-
     vFakePortYieldCore_StubWithCallback( vFakePortYieldCoreStubCallback) ;
     vFakePortYield_StubWithCallback( vFakePortYieldStubCallback );
+
+    vFakePortEnterCriticalSection_StubWithCallback( vFakePortEnterCriticalSectionCallback );
+    vFakePortExitCriticalSection_StubWithCallback( vFakePortExitCriticalSectionCallback );
+
+    vFakePortEnterCriticalFromISR_StubWithCallback( vFakePortEnterCriticalFromISRCallback );
+    vFakePortExitCriticalFromISR_StubWithCallback( vFakePortExitCriticalFromISRCallback );
+
+    vFakePortGetCoreID_StubWithCallback( vFakePortGetCoreIDCallback );
 
     vFakeAssert_Ignore();
     vFakePortAssertIfISR_Ignore();

@@ -96,146 +96,223 @@ extern void vTaskEnterCritical(void);
 
 /* ==============================  Test Cases  ============================== */
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-    #define configUSE_TASK_PREEMPTION_DISABLE               1
-
-Coverage for 
-        static void vTaskPreemptionEnable( void );
-        covers the deafult state when the function is just called
-*/
-void test_task_preemption_enable( void )
+/**
+ * @brief vTaskPreemptionEnable - Enable preemption of a task when scheduler is not running.
+ *
+ * The xPreemptionDisable of the task will be set to pdFALSE.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( xSchedulerRunning != pdFALSE )
+ * {
+ *     if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ *     {
+ *         xCoreID = ( BaseType_t ) pxTCB->xTaskRunState;
+ *         prvYieldCore( xCoreID );
+ *     }
+ * }
+ * @endcode
+ * ( xSchedulerRunning != pdFALSE ) is false.
+ */
+void test_coverage_vTaskPreemptionEnable_scheduler_not_running( void )
 {
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
-    uint32_t i;
+    TCB_t xTaskTCB = { NULL };
 
-    /* Create tasks of equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
-    }
+    /* Setup variables. */
+    xTaskTCB.xPreemptionDisable = pdTRUE;
 
-    vTaskStartScheduler();
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
 
-    /* Verify tasks are running */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        verifySmpTask( &xTaskHandles[i], eRunning, i );
-    }
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
 
-    /* task T0 */
-    vTaskPreemptionEnable( xTaskHandles[0] );
+    /* API call. */
+    vTaskPreemptionEnable( &xTaskTCB );
 
+    /* Validation. */
+    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
 }
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-    #define configUSE_TASK_PREEMPTION_DISABLE               1
-
-Coverage for 
-        static void vTaskPreemptionEnable( void );
-        covers the deafult state when xSchedulerRunning is set to False
-*/
-void test_task_preemption_enable_branch_xSchedulerRunning_False( void )
+/**
+ * @brief vTaskPreemptionEnable - Enable preemption of a task when scheduler is running.
+ *
+ * The xPreemptionDisable of the task will be set to pdFALSE.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( xSchedulerRunning != pdFALSE )
+ * {
+ *     if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ *     {
+ *         xCoreID = ( BaseType_t ) pxTCB->xTaskRunState;
+ *         prvYieldCore( xCoreID );
+ *     }
+ * }
+ * @endcode
+ * ( xSchedulerRunning != pdFALSE ) is true.
+ * ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) is false.
+ */
+void test_coverage_vTaskPreemptionEnable_scheduler_running( void )
 {
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
-    uint32_t i;
+    TCB_t xTaskTCB = { NULL };
 
-    /* Create tasks of equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
-    }
+    /* Setup variable. */
+    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.xTaskRunState = -1; /* taskTASK_NOT_RUNNING. */
 
-    //Tasks are created and a task is passed but scheduler is never ran
-    vTaskPreemptionEnable( xTaskHandles[0] );
+    xSchedulerRunning = pdTRUE;
+    
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
 
-} 
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-    #define configUSE_TASK_PREEMPTION_DISABLE               1
+    /* API call. */
+    vTaskPreemptionEnable( &xTaskTCB );
 
-Coverage for 
-        static void vTaskPreemptionEnable( void );
-        covers the deafult state when NULL task is passed
-*/
-void test_task_preemption_enable_branch_NULL_task( void )
+    /* Validation. */
+    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
+}
+
+/**
+ * @brief vTaskPreemptionEnable - Enable preemption of a task with NULL handle.
+ *
+ * The xPreemptionDisable of the task on core 0 will be set to pdFALSE.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * pxTCB = prvGetTCBFromHandle( xTask );
+ * @endcode
+ * prvGetTCBFromHandle( xTask ) parameter xTask is NULL.
+ */
+void test_coverage_vTaskPreemptionEnable_null_handle( void )
 {
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
-    uint32_t i;
+    TCB_t xTaskTCB = { NULL };
+    UBaseType_t uxInterruptMask = 0x12345678;
 
-    /* Create tasks of equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
-    }
+    xTaskTCB.xPreemptionDisable  = pdTRUE;
+    xTaskTCB.xTaskRunState = -1; /* taskTASK_NOT_RUNNING. */
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
 
-    vTaskStartScheduler();
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
+    ulFakePortSetInterruptMask_StopIgnore();
+    vFakePortClearInterruptMask_StubWithCallback( NULL );
+    vFakePortGetCoreID_StubWithCallback( NULL );
 
-    /* task T0 */
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    ulFakePortSetInterruptMask_ExpectAndReturn( uxInterruptMask );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( uxInterruptMask );
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
     vTaskPreemptionEnable( NULL );
 
-} 
+    /* Expection. */
+    TEST_ASSERT( pxCurrentTCBs[ 0 ]->xPreemptionDisable == pdFALSE );
+}
 
-
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-    #define configUSE_TASK_PREEMPTION_DISABLE               1
-
-Coverage for 
-        static void vTaskPreemptionEnable( void );
-        covers the deafult state when passed task's xTaskRunState task is greater than number of cores
-*/
-void test_task_preemption_enable_branch_Rand_task( void )
+/**
+ * @brief vTaskPreemptionEnable - Enable preemption of a task which is not running.
+ *
+ * The xPreemptionDisable of the task will be set to pdFALSE. The xTaskRunState is
+ * set to greater than ( configNUMBER_OF_CORES - 1 ).
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( xSchedulerRunning != pdFALSE )
+ * {
+ *     if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ *     {
+ *         xCoreID = ( BaseType_t ) pxTCB->xTaskRunState;
+ *         prvYieldCore( xCoreID );
+ *     }
+ * }
+ * @endcode
+ * ( xSchedulerRunning != pdFALSE ) is true.
+ * ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) is false.
+ */
+void test_coverage_vTaskPreemptionEnable_task_not_running_gt_cores( void )
 {
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
-    uint32_t i;
+    TCB_t xTaskTCB = { NULL };
 
-    /* Create tasks of equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
-    }
+    /* Setup variables. */
+    xTaskTCB.xPreemptionDisable  = pdTRUE;
+    xTaskTCB.xTaskRunState = configNUMBER_OF_CORES;
 
-    vTaskStartScheduler();
+    xSchedulerRunning = pdTRUE;
 
-    /* task T0 */
-    xTaskHandles[0]->xTaskRunState = configNUMBER_OF_CORES+1;
-    vTaskPreemptionEnable( xTaskHandles[0] );
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
 
-} 
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-    #define configUSE_TASK_PREEMPTION_DISABLE               1
+    /* API call. */
+    vTaskPreemptionEnable( &xTaskTCB );
 
-Coverage for 
-        static void vTaskPreemptionEnable( void );
-        covers the deafult state when passed task's xTaskRunState task is negative
-*/
-void test_task_preemption_enable_branch_negative_task( void )
+    /* Validation. */
+    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
+}
+
+/**
+ * @brief vTaskPreemptionEnable - Enable preemption of a task which is running.
+ *
+ * The xPreemptionDisable of the task will be set to pdFALSE.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( xSchedulerRunning != pdFALSE )
+ * {
+ *     if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ *     {
+ *         xCoreID = ( BaseType_t ) pxTCB->xTaskRunState;
+ *         prvYieldCore( xCoreID );
+ *     }
+ * }
+ * @endcode
+ * ( xSchedulerRunning != pdFALSE ) is true.
+ * ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) is true.
+ */
+void test_coverage_vTaskPreemptionEnable_task_running( void )
 {
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
-    uint32_t i;
+    TCB_t xTaskTCB = { NULL };
 
-    /* Create tasks of equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
-    }
+    /* Setup variables. */
+    xTaskTCB.xPreemptionDisable  = pdTRUE;
+    xTaskTCB.xTaskRunState = 0;
 
-    vTaskStartScheduler();
+    xSchedulerRunning = pdTRUE;
 
-    /* task T0 */
-    xTaskHandles[0]->xTaskRunState = -1;
-    vTaskPreemptionEnable( xTaskHandles[0] );
+    /* Clear callback in commonSetUp. */
+    vFakePortCheckIfInISR_StopIgnore();
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
+    vFakePortGetCoreID_StubWithCallback( NULL );
 
-} 
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortCheckIfInISR_ExpectAndReturn( 1 ); /* Expection in prvYieldCore. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );    /* Expection in prvYieldCore. */
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
+    vTaskPreemptionEnable( &xTaskTCB );
+
+    /* Validation. */
+    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
+}
 
 /*
 The kernel will be configured as follows:

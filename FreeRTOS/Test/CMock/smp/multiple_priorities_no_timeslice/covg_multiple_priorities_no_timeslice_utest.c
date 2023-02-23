@@ -48,9 +48,6 @@
 #include "mock_fake_assert.h"
 #include "mock_fake_port.h"
 
-#define taskTASK_YIELDING       ( TaskRunning_t ) ( -2 )
-
-
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern volatile UBaseType_t uxCurrentNumberOfTasks;
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
@@ -58,6 +55,11 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xTickCount;
+extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+extern volatile UBaseType_t uxTopReadyPriority;
+
+/* ===========================  EXTERN FUNCTIONS  =========================== */
+extern void prvAddNewTaskToReadyList( TCB_t * pxNewTCB );
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -655,12 +657,12 @@ void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_susp
     vTaskStartScheduler();
 }
 
-#if 0
 /**
  * @brief prvAddNewTaskToReadyList - add a new idle task to the list of ready tasks
  *
- * This test creates more tasks than ther are cores in order to test the
- * branch related to the limit condition of the for loop.
+ * This test covers the prvAddNewTaskToReadyList for SMP, which is surrounded by
+ * ( configNUMBER_OF_CORES > 1 ). More tasks than cores are created to test the for
+ * loop condition when the scheduler is not running.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -668,7 +670,7 @@ void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_susp
  * @endcode
  * for loop condition ( xCoreID < configNUMBER_OF_CORES ) is false.
  */
-void coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
+void test_coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
 {
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { 0 };
     uint32_t i;
@@ -700,17 +702,16 @@ void coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( void )
         else
         {
             /* Create one more idle task to be added to ready list. */
-            xTaskTCBs[ i ].xTaskRunState = -1;  /* Set run state to taskTASK_NOT_RUNNING. */
+            xTaskTCBs[ i ].xTaskRunState = taskTASK_NOT_RUNNING;
         }
     }
 
     /* API calls. */
     prvAddNewTaskToReadyList( &xTaskTCBs[ configNUMBER_OF_CORES ] );
 
-    /* Validateions. The run state of this task is still taskNOT_RUNNING ( -1 ). */
-    configASSERT( xTaskTCBs[ configNUMBER_OF_CORES + 1U ].xTaskRunState == -1 );
+    /* Validations. The run state of this task is still taskTASK_NOT_RUNNING. */
+    configASSERT( xTaskTCBs[ configNUMBER_OF_CORES + 1U ].xTaskRunState == taskTASK_NOT_RUNNING );
 }
-#endif
 
 /**
  * @brief vTaskCoreAffinitySet - limit a task to a set of cores via a bitmask.

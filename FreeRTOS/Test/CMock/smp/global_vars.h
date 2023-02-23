@@ -30,6 +30,12 @@
 
 #include <stdbool.h>
 
+/* Indicates that the task is not actively running on any core. */
+#define taskTASK_NOT_RUNNING    ( TaskRunning_t ) ( -1 )
+
+/* Indicates that the task is actively running but scheduled to yield. */
+#define taskTASK_YIELDING       ( TaskRunning_t ) ( -2 )
+
 typedef BaseType_t TaskRunning_t;
 
 typedef struct tskTaskControlBlock       /* The old naming convention is used to prevent breaking kernel aware debuggers. */

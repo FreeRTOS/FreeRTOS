@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2023 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -99,8 +99,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @note If you would like to setup an MQTT broker for running this demo,
  * please see `mqtt_broker_setup.txt`.
  */ 
-#define democonfigMQTT_BROKER_ENDPOINT "a3rfn6tgdpv9oo-ats.iot.us-east-1.amazonaws.com"
-
+// #define democonfigMQTT_BROKER_ENDPOINT
 
  
 
@@ -134,27 +133,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
  */
-#define democonfigROOT_CA_PEM \
-"-----BEGIN CERTIFICATE-----\n" \
-"MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF\n" \
-"ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6\n" \
-"b24gUm9vdCBDQSAxMB4XDTE1MDUyNjAwMDAwMFoXDTM4MDExNzAwMDAwMFowOTEL\n" \
-"MAkGA1UEBhMCVVMxDzANBgNVBAoTBkFtYXpvbjEZMBcGA1UEAxMQQW1hem9uIFJv\n" \
-"b3QgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALJ4gHHKeNXj\n" \
-"ca9HgFB0fW7Y14h29Jlo91ghYPl0hAEvrAIthtOgQ3pOsqTQNroBvo3bSMgHFzZM\n" \
-"9O6II8c+6zf1tRn4SWiw3te5djgdYZ6k/oI2peVKVuRF4fn9tBb6dNqcmzU5L/qw\n" \
-"IFAGbHrQgLKm+a/sRxmPUDgH3KKHOVj4utWp+UhnMJbulHheb4mjUcAwhmahRWa6\n" \
-"VOujw5H5SNz/0egwLX0tdHA114gk957EWW67c4cX8jJGKLhD+rcdqsq08p8kDi1L\n" \
-"93FcXmn/6pUCyziKrlA4b9v7LWIbxcceVOF34GfID5yHI9Y/QCB/IIDEgEw+OyQm\n" \
-"jgSubJrIqg0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMC\n" \
-"AYYwHQYDVR0OBBYEFIQYzIU07LwMlJQuCFmcx7IQTgoIMA0GCSqGSIb3DQEBCwUA\n" \
-"A4IBAQCY8jdaQZChGsV2USggNiMOruYou6r4lK5IpDB/G/wkjUu0yKGX9rbxenDI\n" \
-"U5PMCCjjmCXPI6T53iHTfIUJrU6adTrCC2qJeHZERxhlbI1Bjjt/msv0tadQ1wUs\n" \
-"N+gDS63pYaACbvXy8MWy7Vu33PqUXHeeE6V/Uq2V8viTO96LXFvKWlJbYK8U90vv\n" \
-"o/ufQJVtMVT8QtPHRh8jrdkPSHCa2XV4cdFyQzR1bldZwgJcJmApzyMZFo6IQ6XU\n" \
-"5MsI+yMRQ+hDKXJioaldXgjUkK642M4UwtBV8ob2xJNDd2ZhwLnoQdeXeGADbkpy\n" \
-"rqXRfboQnoZsG4q5WTP468SQvvG5\n" \
-"-----END CERTIFICATE-----" 
+// #define democonfigROOT_CA_PEM
+ 
 
 /**
  * @brief Client certificate.
@@ -170,27 +150,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
  */
-#define democonfigCLIENT_CERTIFICATE_PEM \
-"-----BEGIN CERTIFICATE-----\n" \
-"MIIDWjCCAkKgAwIBAgIVAP5iJdCE2apiDOCxJHxBTlTI+xBgMA0GCSqGSIb3DQEB\n" \
-"CwUAME0xSzBJBgNVBAsMQkFtYXpvbiBXZWIgU2VydmljZXMgTz1BbWF6b24uY29t\n" \
-"IEluYy4gTD1TZWF0dGxlIFNUPVdhc2hpbmd0b24gQz1VUzAeFw0yMjEyMjkwMDQ0\n" \
-"MTRaFw00OTEyMzEyMzU5NTlaMB4xHDAaBgNVBAMME0FXUyBJb1QgQ2VydGlmaWNh\n" \
-"dGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDhVD6LvyKJjEn+muov\n" \
-"KMftsMVIA6rPFf1xg2zlLSfMUr0JgLyXAZ5vn3y8ssAMoUAvLJ9fz5LiveaSBOJr\n" \
-"SYs0qOi876flUEJ+czQq00Fo1JDbzZ827zghQvvVhVIJ1L9k3g73h2AodhZBvzs5\n" \
-"ZMKGFAFJl64pCBD35Ksb0qvG45n9K4DZqQw0W+4TAizX82oCSjtx/AMpRV1FPc2U\n" \
-"taQt8TBlsB4Rp0nEYGgcny7jQSCwLj4SDxvOv+CcYS7uAK3Z/LqC6u9QVnKZTIqA\n" \
-"oOLXEW5Lvww9uHWCtYroFGQ5R5W2UULKN4W8aREno6zgfJuOse5za1EqU6dL7JwS\n" \
-"ShWdAgMBAAGjYDBeMB8GA1UdIwQYMBaAFLiqkXT4E73LxVdiC8yWLI41VBBnMB0G\n" \
-"A1UdDgQWBBS/4Dd7GOSeOwMYVgV5tr2y7NZjRDAMBgNVHRMBAf8EAjAAMA4GA1Ud\n" \
-"DwEB/wQEAwIHgDANBgkqhkiG9w0BAQsFAAOCAQEABh4KOr4E+OYI3jXTMYTk7eKV\n" \
-"UPk4NZkd6/MpIvw/QV+P/i/t4s51VIAz2569EFF+M8C61vKcJkklHY/gV39WC/1r\n" \
-"JAiV7vQEARyXiCMH7NhjFcZIJmR0fC9TllgjwbWYRdnNHo6cz1OCcdePVq9DZR3J\n" \
-"P3x1PBB0ec/QpaQlV/dH6cCMEmBnSNBoaPyn2pNkSiDZRm0Q3+HS+42nkmlpY36o\n" \
-"biCJPzrdR/TYNTvBhxFrnBE6eUA7llsYBgCy7T7Qxl5py2Nlbylzf0FrsJuXEHxE\n" \
-"ZQvj5GMfHZPWSqREVPIq4r65jxIDW5q6bdJZmLFmKesdy2AtjQPfDqYX/hizAQ==\n" \
-"-----END CERTIFICATE-----"
+// #define democonfigCLIENT_CERTIFICATE_PEM
  
  /**
  * @brief Client Private Key.
@@ -214,34 +174,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "...base64 data...\n"\
  * "-----END RSA PRIVATE KEY-----\n"
  */
-#define democonfigCLIENT_PRIVATE_KEY_PEM \
-"-----BEGIN RSA PRIVATE KEY-----\n" \
-"MIIEowIBAAKCAQEA4VQ+i78iiYxJ/prqLyjH7bDFSAOqzxX9cYNs5S0nzFK9CYC8\n" \
-"lwGeb598vLLADKFALyyfX8+S4r3mkgTia0mLNKjovO+n5VBCfnM0KtNBaNSQ282f\n" \
-"Nu84IUL71YVSCdS/ZN4O94dgKHYWQb87OWTChhQBSZeuKQgQ9+SrG9KrxuOZ/SuA\n" \
-"2akMNFvuEwIs1/NqAko7cfwDKUVdRT3NlLWkLfEwZbAeEadJxGBoHJ8u40EgsC4+\n" \
-"Eg8bzr/gnGEu7gCt2fy6gurvUFZymUyKgKDi1xFuS78MPbh1grWK6BRkOUeVtlFC\n" \
-"yjeFvGkRJ6Os4HybjrHuc2tRKlOnS+ycEkoVnQIDAQABAoIBAHBMYheXnIjcqAwB\n" \
-"/PCf7HQjg07OtRQcK4GlNGJLTOhh2+Cejl7b6bBL1gjdNSWWP7zDCnLfqp7iccUY\n" \
-"NheuQXhvLf7rmcuJYnpOxBML0i+CsOc65TyloF3DWmsh1K8dnn2QxfjLOTsxDwqZ\n" \
-"WdTSyLe1xKZ+t8evQ3WoOzbUmdO2r5kBiQvhbponybpq0F20wywWv952eu+dolX7\n" \
-"B0uXz/a7F4GSCJAunc0m2tU/gRuVEOFzlSq4IzbX36ewTk30JBP9f6RwEpDBi5bC\n" \
-"dgVyu/H6jXEXcMw4Wp9ixi9PhohjaNEcxhLErsEz0W8mng4FMeLPlLucGJduBZ0y\n" \
-"uliUHWkCgYEA9MsIq80nDTUDTKxzzE80t4qxvlfQvaqqCRTH1A6yRG7VaglEjJIq\n" \
-"R9pMynO2cwPr5GVJej9RSObe4vqmaBGhrFUifros+ipVDIoMdByatDE5vN8ltO6U\n" \
-"P0VuMm+n1wtEkUz7Av4XpmFo20WZl8VhuxZKM10woWZ2PsbEJJYquXcCgYEA66UX\n" \
-"w8dfybQJfBc/nb5k3lI1r11eOOP6IsxUUxr0gFD+eZ+MFCdBlLwgQCdEs1IT6UUb\n" \
-"C4mGlUrkz8ymZf+jUgdDE1dgpd6yH7hkDp3EfXWu0Ls8ss+YSK0RIG3YXsfCdIkl\n" \
-"aPslTM3eMG+XM48MZKndwb1bbnq/ocYhlrNcLosCgYEAqHymtzk5S8nVP4zjFxjd\n" \
-"PAdmV5CxyBoTdrSq5bZH1PpEQfunBuoD1/jVKfOC/J8SWd2tOUsjc34Uoz3KE48v\n" \
-"LCJc38Tc+ELyzvKlp7WYdbX7+5fLqEEeIH51XpmjeEv1Id1OV7z0Ijyho2rAUMo2\n" \
-"fkLVR404z55qfMLqdhQ1y/kCgYAivLKVJMXlGQow5ch1+4QpFdteH5htMIZGLPLd\n" \
-"UWLrq4Tn7vIaYnMTduwWKPPCr33J7GsBN2PEjEbQry10acvsoq9roXzY1sxRSsBN\n" \
-"O0qk5/0+PevDvECJriGRM0ArMK1kunbuU996w/pWD40th4/fIv9SuRRKZAPt2CRJ\n" \
-"b+VN4wKBgHDgpOGMdgDUh98rkOND2e6ZGtb3wQSzpNOIUCXBgZucF8kSXi/1ZClY\n" \
-"MezZNJ+sl+GEWdDWIIrgsaD7Q/b1Pz4cvHsIoX2Kn8ENhd61NxF2bsqKwxSYuTnE\n" \
-"0I8Yda8ZHpQsS/bxiHGdINqz/Xj33xOv/H7YiHq956nLByOCLRUo\n" \
-"-----END RSA PRIVATE KEY-----"
+// #define democonfigCLIENT_PRIVATE_KEY_PEM
 
 /**
  * @brief An option to disable Server Name Indication.

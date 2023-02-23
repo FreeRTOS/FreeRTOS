@@ -46,9 +46,13 @@
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
 
-#if configRUN_MULTIPLE_PRIORITIES != 1
+#if ( configRUN_MULTIPLE_PRIORITIES != 1 )
     #error test_config.h must be included at the end of FreeRTOSConfig.h.
-#endif
+#endif /* if ( configRUN_MULTIPLE_PRIORITIES != 1 ) */
+
+#if ( configMAX_PRIORITIES <= 2 )
+    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectly.
+#endif /* if ( configMAX_PRIORITIES <= 2 ) */
 /*-----------------------------------------------------------*/
 
 /**
@@ -77,7 +81,7 @@ static void Test_MultipleTasksRunning( void )
     vTaskDelay( pdMS_TO_TICKS( 10 ) );
 
     /* Ensure that all the tasks are running. */
-    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    for( i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++ )
     {
         xTaskState = eTaskGetState( xTaskHanldes[ i ] );
 
@@ -106,7 +110,7 @@ void setUp( void )
     BaseType_t xTaskCreationResult;
 
     /* Create configNUMBER_OF_CORES - 1 low priority tasks. */
-    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    for( i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++ )
     {
         xTaskCreationResult = xTaskCreate( prvEverRunningTask,
                                            "EverRunning",
@@ -126,7 +130,7 @@ void tearDown( void )
     int i;
 
     /* Delete all the tasks. */
-    for( i = 0; i < configNUMBER_OF_CORES - 1; i++ )
+    for( i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++ )
     {
         if( xTaskHanldes[ i ] != NULL )
         {

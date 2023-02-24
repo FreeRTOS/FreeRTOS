@@ -46,6 +46,10 @@
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_Routing.h"
 
+#if ( ipconfigUSE_NTP_DEMO != 0 )
+#include "NTPDemo.h"
+#endif
+
 #if ( ipconfigMULTI_INTERFACE == 1 )
     #include "FreeRTOS_ND.h"
 #endif
@@ -53,9 +57,14 @@
 #include "logging.h"
 
 #include "plus_tcp_demo_cli.h"
+#include "TCPEchoClient_SingleTasks.h"
 
 #ifndef ARRAY_SIZE
     #define ARRAY_SIZE( x )    ( int ) ( sizeof( x ) / sizeof( x )[ 0 ] )
+#endif
+
+#ifdef ipconfigCOMPATIBLE_WITH_SINGLE
+#undef ipconfigCOMPATIBLE_WITH_SINGLE
 #endif
 
 /* Simple UDP client and server task parameters. */
@@ -98,7 +107,7 @@
  * received on that connection.
  */
 #define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     0
-#define mainCREATE_TCP_ECHO_TASKS_SINGLE              0
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1 /* 1 */
 #define mainCREATE_TCP_ECHO_SERVER_TASK               0
 /*-----------------------------------------------------------*/
 
@@ -121,6 +130,9 @@ static void prvSRand( UBaseType_t ulSeed );
  * random number generator.
  */
 static void prvMiscInitialisation( void );
+static void dns_test(const char* pcHostName);
+
+void showAddressInfo(struct freertos_addrinfo* pxAddrInfo);
 
 /* The default IP and MAC address used by the demo.  The address configuration
  * defined here will be used if ipconfigUSE_DHCP is 0, or if ipconfigUSE_DHCP is
@@ -150,7 +162,27 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
+#define USES_IPV6_ENDPOINT    1  /* 0 */
+
+/* A mask of end-points that are up. */
+#if ( USES_IPV6_ENDPOINT != 0 )
+#define mainNETWORK_UP_COUNT    3U
+#else
+#define mainNETWORK_UP_COUNT    1U
+#endif
+
+static uint32_t uxNetworkisUp = 0U;
+
+
+/* A semaphore to become idle. */
+SemaphoreHandle_t xServerSemaphore;
+
 /*-----------------------------------------------------------*/
+
+BaseType_t xHandleTestingCommand(char* pcCommand,
+    size_t uxLength);
+void xHandleTesting(void);
+void showEndPoint(NetworkEndPoint_t* pxEndPoint);
 
 #if ( ipconfigMULTI_INTERFACE == 1 ) && ( ipconfigCOMPATIBLE_WITH_SINGLE == 0 )
     /* In case multiple interfaces are used, define them statically. */
@@ -159,11 +191,11 @@ static UBaseType_t ulNextRand;
     static NetworkInterface_t xInterfaces[ 1 ];
 
 /* It will have several end-points. */
-    static NetworkEndPoint_t xEndPoints[ 3 ];
+    static NetworkEndPoint_t xEndPoints[ 4 ];
 
 /* A function from NetInterface.c to initialise the interface descriptor
  * of type 'NetworkInterface_t'. */
-    NetworkInterface_t * xWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+    NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
                                                            NetworkInterface_t * pxInterface );
 #endif /* ipconfigMULTI_INTERFACE */
 
@@ -180,6 +212,10 @@ int main( void )
      * the random number generator. */
     prvMiscInitialisation();
 
+#if USE_LOG_EVENT
+    iEventLogInit();
+#endif
+
     /* Initialise the network interface.
      *
      ***NOTE*** Tasks that use the network are created in the network event hook
@@ -194,8 +230,9 @@ int main( void )
         FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #else
         /* Initialise the interface descriptor for WinPCap. */
-        xWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
-
+        pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+        
+        /* === End-point 0 === */
         FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
         #if ( ipconfigUSE_DHCP != 0 )
             {
@@ -203,64 +240,101 @@ int main( void )
                 xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
             }
         #endif /* ( ipconfigUSE_DHCP != 0 ) */
-
-        {
-            /* For testing Raspberry PI. */
-            const uint8_t ucIPAddress2[ 4 ] = { 10, 0, 1, 6 };
-            const uint8_t ucNetMask2[ 4 ] = { 255, 0, 0, 0 };
-            const uint8_t ucGatewayAddress2[ 4 ] = { 0, 0, 0, 0 };
-            const uint8_t ucDNSServerAddress2[ 4 ] = { 0, 0, 0, 0 };
-            FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 1 ] ), ucIPAddress2, ucNetMask2, ucGatewayAddress2, ucDNSServerAddress2, ucMACAddress );
-        }
-
-        #if ( ipconfigUSE_DHCP != 0 )
-            {
-                /* End-point 1 does not want to use DHCPv4. */
-                xEndPoints[ 1 ].bits.bWantDHCP = pdFALSE;
-            }
-        #endif /* ( ipconfigUSE_DHCP != 0 ) */
+    /* Give an invalid and a valid DNS IP-address. */
+/*          xEndPoints[0].ipv4_defaults.ulDNSServerAddresses[0] = FreeRTOS_inet_addr_quick( 118, 98, 44, 10 ); */
+/*          xEndPoints[0].ipv4_defaults.ulDNSServerAddresses[1] = FreeRTOS_inet_addr_quick( 118, 98, 44, 100 ); */
 
         /*
          * End-point-1  // public
-         *     Network: 2001:470:ec54::/64
-         *     IPv6   : 2001:470:ec54::4514:89d5:4589:8b79/128
-         *     Gateway: fe80::9355:69c7:585a:afe7  // obtained from Router Advertisement
+         *     Network: 2001:470:ed44::/64
+         *     IPv6   : 2001:470:ed44::4514:89d5:4589:8b79/128
+         *     Gateway: fe80::ba27:ebff:fe5a:d751  // obtained from Router Advertisement
          */
-        #if ( ipconfigUSE_IPv6 != 0 )
+        #if ( ipconfigUSE_IPv6 != 0 && USES_IPV6_ENDPOINT != 0 )
             {
                 IPv6_Address_t xIPAddress;
                 IPv6_Address_t xPrefix;
                 IPv6_Address_t xGateWay;
-                IPv6_Address_t xDNSServer;
+        IPv6_Address_t xDNSServer1, xDNSServer2;
 
-                FreeRTOS_inet_pton6( "2001:470:ec54::", xPrefix.ucBytes );
-                FreeRTOS_inet_pton6( "2001:4860:4860::8888", xDNSServer.ucBytes );
+        FreeRTOS_inet_pton6("2001:470:ed44::", xPrefix.ucBytes);
 
-                FreeRTOS_CreateIPv6Address( &xIPAddress, &xPrefix, 64, pdTRUE );
-                FreeRTOS_inet_pton6( "fe80::9355:69c7:585a:afe7", xGateWay.ucBytes );
+        FreeRTOS_CreateIPv6Address(&xIPAddress, &xPrefix, 64, pdTRUE);
+        FreeRTOS_inet_pton6("fe80::ba27:ebff:fe5a:d751", xGateWay.ucBytes);
 
-                FreeRTOS_FillEndPoint_IPv6( &( xInterfaces[ 0 ] ),
-                                            &( xEndPoints[ 2 ] ),
-                                            &( xIPAddress ),
-                                            &( xPrefix ),
-                                            64uL,            /* Prefix length. */
-                                            &( xGateWay ),
-                                            &( xDNSServer ), /* pxDNSServerAddress: Not used yet. */
-                                            ucMACAddress );
+        FreeRTOS_FillEndPoint_IPv6(&(xInterfaces[0]),
+            &(xEndPoints[1]),
+            &(xIPAddress),
+            &(xPrefix),
+            64uL, /* Prefix length. */
+            &(xGateWay),
+            NULL, /* pxDNSServerAddress: Not used yet. */
+            ucMACAddress);
+        FreeRTOS_inet_pton6("2001:4860:4860::8888", xEndPoints[1].ipv6_settings.xDNSServerAddresses[0].ucBytes);
+        FreeRTOS_inet_pton6("fe80::1", xEndPoints[1].ipv6_settings.xDNSServerAddresses[1].ucBytes);
+        FreeRTOS_inet_pton6("2001:4860:4860::8888", xEndPoints[1].ipv6_defaults.xDNSServerAddresses[0].ucBytes);
+        FreeRTOS_inet_pton6("fe80::1", xEndPoints[1].ipv6_defaults.xDNSServerAddresses[1].ucBytes);
+
                 #if ( ipconfigUSE_RA != 0 )
                     {
                         /* End-point 1 wants to use Router Advertisement / SLAAC. */
-                        xEndPoints[ 2 ].bits.bWantRA = pdTRUE;
+            xEndPoints[1].bits.bWantRA = pdTRUE;
                     }
                 #endif /* #if( ipconfigUSE_RA != 0 ) */
                 #if ( ipconfigUSE_DHCPv6 != 0 )
                     {
                         /* End-point 1 wants to use DHCPv6. */
-                        xEndPoints[ 2 ].bits.bWantDHCP = pdTRUE;
+            xEndPoints[1].bits.bWantDHCP = pdTRUE;
                     }
                 #endif /* ( ipconfigUSE_DHCPv6 != 0 ) */
             }
         #endif /* ( ipconfigUSE_IPv6 != 0 ) */
+#if ( ipconfigUSE_IPv6 != 0 && USES_IPV6_ENDPOINT != 0 )
+    {
+        /*
+         * End-point-3  // private
+         *     Network: fe80::/10 (link-local)
+         *     IPv6   : fe80::d80e:95cc:3154:b76a/128
+         *     Gateway: -
+         */
+        {
+            IPv6_Address_t xIPAddress;
+            IPv6_Address_t xPrefix;
+
+            FreeRTOS_inet_pton6("fe80::", xPrefix.ucBytes);
+            FreeRTOS_inet_pton6("fe80::7009", xIPAddress.ucBytes);
+
+            FreeRTOS_FillEndPoint_IPv6(
+                &(xInterfaces[0]),
+                &(xEndPoints[2]),
+                &(xIPAddress),
+                &(xPrefix),
+                10U,  /* Prefix length. */
+                NULL, /* No gateway */
+                NULL, /* pxDNSServerAddress: Not used yet. */
+                ucMACAddress);
+        }
+    }
+#endif /* if ( ipconfigUSE_IPv6 != 0 ) */
+    /* === End-point 0 === */
+#if ( ( mainNETWORK_UP_COUNT >= 4U ) || ( USES_IPV6_ENDPOINT == 0 && mainNETWORK_UP_COUNT >= 2U ) )
+    {
+        /*172.25.201.204 */
+        /*netmask 255.255.240.0 */
+        const uint8_t ucMACAddress2[6] = { 0x00, 0x22, 0x22, 0x22, 0x22, 82 };
+        const uint8_t ucIPAddress2[4] = { 192, 168, 2, 210 };
+        const uint8_t ucNetMask2[4] = { 255, 255, 255, 0 };
+        const uint8_t ucGatewayAddress2[4] = { 0, 0, 0, 0 };
+        FreeRTOS_FillEndPoint(&(xInterfaces[0]), &(xEndPoints[3]), ucIPAddress2, ucNetMask2, ucGatewayAddress2, ucDNSServerAddress, ucMACAddress2);
+#if ( ipconfigUSE_DHCP != 0 )
+        {
+            /* End-point 0 wants to use DHCPv4. */
+            xEndPoints[3].bits.bWantDHCP = pdTRUE;
+        }
+#endif /* ( ipconfigUSE_DHCP != 0 ) */
+    }
+#endif /* ( mainNETWORK_UP_COUNT >= 3U ) */
+
         FreeRTOS_IPStart();
     #endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
     xTaskCreate( prvServerWorkTask, "SvrWork", mainTCP_SERVER_STACK_SIZE, NULL, mainTCP_SERVER_TASK_PRIORITY, NULL );
@@ -333,16 +407,21 @@ void vAssertCalled( const char * pcFile,
 #endif
 /* *INDENT-ON* */
 {
-    char cBuffer[ 16 ];
     static BaseType_t xTasksAlreadyCreated = pdFALSE;
 
     /* If the network has just come up...*/
-    if( eNetworkEvent == eNetworkUp )
+    if (eNetworkEvent == eNetworkUp)
     {
         /* Create the tasks that use the IP stack if they have not already been
          * created. */
-        if( xTasksAlreadyCreated == pdFALSE )
+        uxNetworkisUp++;
+
+        if ((xTasksAlreadyCreated == pdFALSE) && (uxNetworkisUp == mainNETWORK_UP_COUNT))
         {
+#if USE_LOG_EVENT
+            iEventLogClear();
+#endif
+
             /* See the comments above the definitions of these pre-processor
              * macros at the top of this file for a description of the individual
              * demo tasks. */
@@ -365,6 +444,14 @@ void vAssertCalled( const char * pcFile,
             #endif
 
             xTasksAlreadyCreated = pdTRUE;
+        }
+
+        FreeRTOS_printf(("uxNetworkisUp = %u\n", (unsigned)uxNetworkisUp));
+
+        if (pxEndPoint->bits.bIPv6 == 0U)
+        {
+            *ipLOCAL_IP_ADDRESS_POINTER = pxEndPoint->ipv4_settings.ulIPAddress;
+            FreeRTOS_printf(("IPv4 address = %xip\n", FreeRTOS_ntohl(pxEndPoint->ipv4_settings.ulIPAddress)));
         }
 
         #if ( ipconfigMULTI_INTERFACE == 0 )
@@ -419,7 +506,16 @@ UBaseType_t uxRand( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvSRand( UBaseType_t ulSeed )
+uint32_t uxRand32(void)
+{
+    /* uxRand only returns 15 random bits. Call it 3 times. */
+    uint32_t ul[3] = { uxRand(), uxRand(), uxRand() };
+    uint32_t uxReturn = ul[0] | (ul[1] << 15) | (ul[2] << 30);
+
+    return uxReturn;
+}
+
+static void prvSRand(UBaseType_t ulSeed)
 {
     /* Utility function to seed the pseudo random number generator. */
     ulNextRand = ulSeed;
@@ -455,30 +551,119 @@ static void prvMiscInitialisation( void )
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
+#if ( ipconfigUSE_MDNS != 0 ) || ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-    BaseType_t xApplicationDNSQueryHook( const char * pcName )
+#if ( ipconfigMULTI_INTERFACE != 0 ) && ( ipconfigUSE_IPv6 != 0 ) && ( TESTING_PATCH == 0 )
+static BaseType_t setEndPoint(NetworkEndPoint_t* pxEndPoint)
+{
+    NetworkEndPoint_t* px;
+    BaseType_t xDone = pdFALSE;
+    BaseType_t bDNS_IPv6 = (pxEndPoint->usDNSType == dnsTYPE_AAAA_HOST) ? 1 : 0;
+
+    FreeRTOS_printf(("Wanted v%c got v%c\n", bDNS_IPv6 ? '6' : '4', pxEndPoint->bits.bIPv6 ? '6' : '4'));
+
+    if ((pxEndPoint->usDNSType == dnsTYPE_ANY_HOST) ||
+        ((pxEndPoint->usDNSType == dnsTYPE_AAAA_HOST) == (pxEndPoint->bits.bIPv6 != 0U)))
+    {
+        xDone = pdTRUE;
+    }
+    else
+    {
+        for (px = FreeRTOS_FirstEndPoint(pxEndPoint->pxNetworkInterface);
+            px != NULL;
+            px = FreeRTOS_NextEndPoint(pxEndPoint->pxNetworkInterface, px))
+        {
+            BaseType_t bIPv6 = ENDPOINT_IS_IPv6(px);
+
+            if (bIPv6 == bDNS_IPv6)
+            {
+                if (bIPv6 != 0)
+                {
+                    memcpy(pxEndPoint->ipv6_settings.xIPAddress.ucBytes, px->ipv6_settings.xIPAddress.ucBytes, ipSIZE_OF_IPv6_ADDRESS);
+                }
+                else
+                {
+                    pxEndPoint->ipv4_settings.ulIPAddress = px->ipv4_settings.ulIPAddress;
+                }
+
+                pxEndPoint->bits.bIPv6 = bDNS_IPv6;
+                xDone = pdTRUE;
+                break;
+            }
+        }
+    }
+
+    if (pxEndPoint->bits.bIPv6 != 0)
+    {
+        FreeRTOS_printf(("%s address %pip\n", xDone ? "Success" : "Failed", pxEndPoint->ipv6_settings.xIPAddress.ucBytes));
+    }
+    else
+    {
+        FreeRTOS_printf(("%s address %xip\n", xDone ? "Success" : "Failed", (unsigned)FreeRTOS_ntohl(pxEndPoint->ipv4_settings.ulIPAddress)));
+    }
+
+    return xDone;
+}
+#endif /* ( ipconfigMULTI_INTERFACE != 0 ) */
+
+/*-----------------------------------------------------------*/
+
+#if ( ipconfigMULTI_INTERFACE != 0 )
+BaseType_t xApplicationDNSQueryHook(NetworkEndPoint_t* pxEndPoint,
+    const char* pcName)
+#else
+BaseType_t xApplicationDNSQueryHook(const char* pcName)
+#endif
     {
         BaseType_t xReturn;
 
         /* Determine if a name lookup is for this node.  Two names are given
          * to this node: that returned by pcApplicationHostnameHook() and that set
          * by mainDEVICE_NICK_NAME. */
-        if( _stricmp( pcName, pcApplicationHostnameHook() ) == 0 )
+    const char* serviceName = (strstr(pcName, ".local") != NULL) ? "mDNS" : "LLMNR";
+
+    if (strncasecmp(pcName, "bong", 4) == 0)
         {
-            xReturn = pdPASS;
+#if ( ipconfigUSE_IPv6 != 0 )
+        int ip6Preferred = (pcName[4] == '6') ? pdTRUE : pdFALSE;
+        /*
+        #define dnsTYPE_A_HOST            0x0001U // DNS type A host.
+        #define dnsTYPE_AAAA_HOST         0x001CU // DNS type AAAA host.
+        */
+        xReturn = (pxEndPoint->usDNSType == dnsTYPE_AAAA_HOST) == (ip6Preferred == pdTRUE);
+#else
+        xReturn = pdTRUE;
+#endif
         }
-        else if( _stricmp( pcName, mainDEVICE_NICK_NAME ) == 0 )
+    else if ((strcasecmp(pcName, pcApplicationHostnameHook()) == 0) ||
+        (strcasecmp(pcName, "winsim.local") == 0) ||
+        (strcasecmp(pcName, "winsim") == 0) ||
+        (strcasecmp(pcName, mainDEVICE_NICK_NAME) == 0))
         {
-            xReturn = pdPASS;
+        xReturn = pdTRUE;
         }
         else
         {
             xReturn = pdFAIL;
         }
 
+#if ( ipconfigMULTI_INTERFACE != 0 ) && ( ipconfigUSE_IPv6 != 0 ) && ( TESTING_PATCH == 0 )
+    if (xReturn == pdTRUE)
+    {
+        xReturn = setEndPoint(pxEndPoint);
+    }
+#endif
+    {
+#if ( ipconfigMULTI_INTERFACE != 0 ) && ( ipconfigUSE_IPv6 != 0 )
+        FreeRTOS_printf(("%s query '%s' = %d IPv%c\n", serviceName, pcName, (int)xReturn, pxEndPoint->bits.bIPv6 ? '6' : '4'));
+#else
+        FreeRTOS_printf(("%s query '%s' = %d IPv4 only\n", serviceName, pcName, (int)xReturn));
+#endif
+    }
+
         return xReturn;
     }
+/*-----------------------------------------------------------*/
 
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
 /*-----------------------------------------------------------*/
@@ -499,7 +684,7 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
     ( void ) ulDestinationAddress;
     ( void ) usDestinationPort;
 
-    return uxRand();
+    return uxRand32();
 }
 /*-----------------------------------------------------------*/
 
@@ -517,49 +702,177 @@ BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
 
 const char * pcCommandList[] =
 {
-    "http4 google.de /index.html",
-    "http6 google.nl /index.html",
-    "ping4 10.0.1.10",
-    "ping4 192.168.2.1",
-    "dnsq4 amazon.com",
-    "ping6 google.de",
-    "ntp6a 2.europe.pool.ntp.org",
+    /*    "arpqc 2404:6800:4003:c0f::5e",    // a public IP-address */
+    /*    "arpqc fe80::ba27:ebff:fe5a:d751", // a gateway */
+    /*    "arpqc 192.168.2.1", */
+    /*    "arpqc 172.217.194.100", */
+    /*    "dnsq4 google.de", */
+    /*    "dnsq6 google.nl", */
+
+    /*    "arpqc 192.168.2.1", */
+    /*    "arpqc 192.168.2.10", */
+    /*    "arpqc 172.217.194.100", */
+    /*    "arpqc 2404:6800:4003:c0f::5e", */
+        "ifconfig",
+        /*      "udp 192.168.2.255@2402 Hello", */
+        /*      "udp 192.168.2.255@2402 Hello", */
+        /*      "udp 192.168.2.255@2402 Hello", */
+        /*      "udp 192.168.2.255@2402 Hello", */
+            /*          "http 192.168.2.11 /index.html 33001", */
+            /*       "http 2404:6800:4003:c05::5e /index.html 80", */
+            /*       "ping6 2606:4700:f1::1", */
+            /*       "ping6 2606:4700:f1::1", */
+            /*       "dnsq4  google.de", */
+            /*       "dnsq6  google.nl", */
+            /*       "dnsq4  google.es", */
+        /*      "dnsq6  google.co.uk", */
+        /*         "udp 192.168.2.11@7 Hello world 1\r\n", */
+        /*         "udp fe80::715e:482e:4a3e:d081@7 Hello world 1\r\n", */
+        /*      "dnsq4  google.de", */
+        /*      "dnsq6  google.nl", */
+        /*      "dnsq4  google.es", */
+        /*      "dnsq6  google.co.uk", */
+
+        /*       "ntp6a 2.europe.pool.ntp.org", */
+        /* //      "ping4c 74.125.24.94", */
+        /*       "ping4c 192.168.2.1", */
+        /*       "ping4c 192.168.2.10", */
+        /*      "ping6c 2404:6800:4003:c11::5e", */
+        /*      "ping6c 2404:6800:4003:c11::5e", */
+
+        /*    "ping4 raspberrypi.local", */
+        /*    "ping6 2404:6800:4003:c0f::5e", */
+
+        /*    "http4 google.de /index.html", */
+        /*    "http6 google.nl /index.html", */
+        /*    "ping4 10.0.1.10", */
+        /*    "ping4 192.168.2.1", */
+        /*    "dnsq4 amazon.com", */
+        /*    "ping6 google.de", */
+        /*    "ntp6a 2.europe.pool.ntp.org", */
 };
 
 static void prvServerWorkTask( void * pvArgument )
 {
     BaseType_t xCommandIndex = 0;
+    Socket_t xSocket;
 
     ( void ) pvArgument;
     FreeRTOS_printf( ( "prvServerWorkTask started\n" ) );
 
+    xServerSemaphore = xSemaphoreCreateBinary();
+    configASSERT(xServerSemaphore != NULL);
+
+   // pcap_prepare();
+
+    /* Wait for all end-points to come up.
+     * They're counted with 'uxNetworkisUp'. */
     do
     {
-        vTaskDelay( pdMS_TO_TICKS( 100U ) );
+        vTaskDelay(pdMS_TO_TICKS(100U));
+    } while (uxNetworkisUp != mainNETWORK_UP_COUNT);
+
+    xDNS_IP_Preference = xPreferenceIPv6;
+
+    {
+        xSocket = FreeRTOS_socket(FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP);
+        struct freertos_sockaddr xAddress;
+
+        (void)memset(&(xAddress), 0, sizeof(xAddress));
+        xAddress.sin_family = FREERTOS_AF_INET6;
+        xAddress.sin_port = FreeRTOS_htons(5000U);
+
+        BaseType_t xReturn = FreeRTOS_bind(xSocket, &xAddress, (socklen_t)sizeof(xAddress));
+        FreeRTOS_printf(("Open socket %d bind = %d\n", xSocketValid(xSocket), xReturn));
+        TickType_t xTimeoutTime = pdMS_TO_TICKS(10U);
+        FreeRTOS_setsockopt(xSocket, 0, FREERTOS_SO_RCVTIMEO, &xTimeoutTime, sizeof(TickType_t));
     }
-    while( FreeRTOS_IsNetworkUp() == pdFALSE );
 
     for( ; ; )
     {
         char pcCommand[ 129 ];
-        TickType_t uxTickCount = pdMS_TO_TICKS( 2000U );
+        TickType_t uxTickCount = pdMS_TO_TICKS( 200U );
 
-        while( uxTickCount > 0U )
+        if (xCommandIndex < ARRAY_SIZE(pcCommandList))
+        {
+            while (uxTickCount != 0)
         {
             xHandleTesting();
-            vTaskDelay( 1U );
+                xSemaphoreTake(xServerSemaphore, pdMS_TO_TICKS(10));
             uxTickCount--;
         }
 
-        if( xCommandIndex < ARRAY_SIZE( pcCommandList ) )
-        {
-            snprintf( pcCommand, sizeof( pcCommand ), "%s", pcCommandList[ xCommandIndex ] );
-            FreeRTOS_printf( ( "\n" ) );
-            FreeRTOS_printf( ( "/*==================== %s (%d/%d) ====================*/\n",
-                               pcCommand, xCommandIndex + 1, ARRAY_SIZE( pcCommandList ) ) );
-            FreeRTOS_printf( ( "\n" ) );
-            xHandleTestingCommand( pcCommand, sizeof( pcCommand ) );
+            /*          vTaskDelay( pdMS_TO_TICKS( 1000U ) ); */
+            FreeRTOS_printf(("\n"));
+
+            snprintf(pcCommand, sizeof(pcCommand), "%s", pcCommandList[xCommandIndex]);
+            FreeRTOS_printf(("\n"));
+            FreeRTOS_printf(("/*==================== %s (%d/%d) ====================*/\n",
+                pcCommand, xCommandIndex + 1, ARRAY_SIZE(pcCommandList)));
+            FreeRTOS_printf(("\n"));
+            xHandleTestingCommand(pcCommand, sizeof(pcCommand));
             xCommandIndex++;
+        }
+        else if (xCommandIndex == ARRAY_SIZE(pcCommandList))
+        {
+            FreeRTOS_printf(("Server task now ready.\n"));
+
+            
+#if ( ipconfigUSE_NTP_DEMO != 0 )
+           // if (xNTPTaskIsRunning() != pdFALSE)
+        {
+                /* Ask once more for the current time. */
+             //   vStartNTPTask(0U, 0U);
+            }
+#endif
+
+            /*vTaskDelete( NULL ); */
+            xCommandIndex++;
+        }
+
+        {
+            char pcBuffer[1500];
+            struct freertos_sockaddr xSourceAddress;
+            socklen_t xLength = sizeof(socklen_t);
+            int32_t rc = FreeRTOS_recvfrom(xSocket, pcBuffer, sizeof(pcBuffer), 0, &xSourceAddress, &xLength);
+
+            if (rc > 0)
+            {
+                if (xSourceAddress.sin_family == FREERTOS_AF_INET6)
+                {
+                    FreeRTOS_printf(("Recv UDP %d bytes from %pip port %u\n", rc, xSourceAddress.sin_address.xIP_IPv6.ucBytes, FreeRTOS_ntohs(xSourceAddress.sin_port)));
+                }
+                else
+                {
+                    FreeRTOS_printf(("Recv UDP %d bytes from %xip port %u\n", rc, FreeRTOS_ntohl(xSourceAddress.sin_address.ulIP_IPv4), FreeRTOS_ntohs(xSourceAddress.sin_port)));
+                }
+
+                if (rc == 14)
+                {
+                    static BaseType_t xDone = 0;
+
+                    if (xDone == 3)
+                    {
+                        BaseType_t xIPv6 = (xSourceAddress.sin_family == FREERTOS_AF_INET6) ? pdTRUE : pdFALSE;
+                        FreeRTOS_printf(("%d: Clear %s table\n", xDone, xIPv6 ? "ND" : "ARP"));
+
+                        if (xIPv6 == pdTRUE)
+                        {
+                            FreeRTOS_ClearND();
+                        }
+                        else
+                        {
+                            FreeRTOS_ClearARP(NULL);
+                        }
+
+                        xDone = 0;
+                    }
+                    else
+                    {
+                        xDone++;
+                    }
+                }
+            }
         }
     }
 }
@@ -624,12 +937,163 @@ static void prvServerWorkTask( void * pvArgument )
 
 BaseType_t xApplicationMemoryPermissions( uint32_t aAddress )
 {
+    (void)aAddress;
+    /* Return 1 for readable, 2 for writable, 3 for both. */
     return 0x03;
 }
 /*-----------------------------------------------------------*/
 
-void vOutputChar( const char cChar,
-                  const TickType_t xTicksToWait )
+void vOutputChar(const char cChar,
+    const TickType_t xTicksToWait)
 {
+    (void)cChar;
+    (void)xTicksToWait;
 }
 /*-----------------------------------------------------------*/
+
+#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+/*void vApplicationPingReplyHook(ePingReplyStatus_t eStatus, */
+/*    uint16_t usIdentifier) */
+/*{ */
+/*    ( void ) eStatus; */
+/*    FreeRTOS_printf( ( "vApplicationPingReplyHook called for %04x\n", usIdentifier ) ); */
+/*} */
+#endif
+
+#if ( ipconfigUSE_DHCP_HOOK != 0 )
+eDHCPCallbackAnswer_t xApplicationDHCPHook(eDHCPCallbackPhase_t eDHCPPhase,
+    uint32_t ulIPAddress)
+{
+    (void)eDHCPPhase;
+    (void)ulIPAddress;
+    return eDHCPContinue;
+}
+#endif
+
+void handle_user_test(char* pcBuffer)
+{
+}
+
+void show_single_addressinfo(const char* pcFormat,
+    const struct freertos_addrinfo* pxAddress)
+{
+    char cBuffer[40];
+    const uint8_t* pucAddress;
+
+#if ( ipconfigUSE_IPv6 != 0 )
+    if (pxAddress->ai_family == FREERTOS_AF_INET6)
+    {
+        struct freertos_sockaddr* sockaddr6 = ((struct freertos_sockaddr*)pxAddress->ai_addr);
+
+        pucAddress = (const uint8_t*)&(sockaddr6->sin_addr6);
+    }
+    else
+#endif /* ( ipconfigUSE_IPv6 != 0 ) */
+    {
+        pucAddress = (const uint8_t*)&(pxAddress->ai_addr->sin_addr);
+    }
+
+    (void)FreeRTOS_inet_ntop(pxAddress->ai_family, (const void*)pucAddress, cBuffer, sizeof(cBuffer));
+
+    if (pcFormat != NULL)
+    {
+        FreeRTOS_printf((pcFormat, cBuffer));
+    }
+    else
+{
+        FreeRTOS_printf(("Address: %s\n", cBuffer));
+    }
+}
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief For testing purposes: print a list of DNS replies.
+ * @param[in] pxAddress: The first reply received ( or NULL )
+ */
+void show_addressinfo(const struct freertos_addrinfo* pxAddress)
+{
+    const struct freertos_addrinfo* ptr = pxAddress;
+    BaseType_t xIndex = 0;
+
+    while (ptr != NULL)
+    {
+        show_single_addressinfo("Found Address: %s\n", ptr);
+
+        ptr = ptr->ai_next;
+    }
+
+    /* In case the function 'FreeRTOS_printf()` is not implemented. */
+    (void)xIndex;
+}
+static BaseType_t xDNSResult = -2;
+static void vDNSEvent(const char* pcName,
+    void* pvSearchID,
+    struct freertos_addrinfo* pxAddrInfo)
+{
+    FreeRTOS_printf(("vDNSEvent: called with %p\n", pxAddrInfo));
+    showAddressInfo(pxAddrInfo);
+
+    if (pxAddrInfo != NULL)
+    {
+        xDNSResult = 0;
+    }
+}
+
+static void dns_test(const char* pcHostName)
+{
+    uint32_t ulID = uxRand32();
+    BaseType_t rc;
+    TickType_t uxTimeout = pdMS_TO_TICKS(2000U);
+
+    FreeRTOS_dnsclear();
+
+    struct freertos_addrinfo xHints;
+    struct freertos_addrinfo* pxResult = NULL;
+
+    memset(&xHints, 0, sizeof xHints);
+    xHints.ai_family = FREERTOS_AF_INET6;
+
+    rc = FreeRTOS_getaddrinfo(pcHostName, NULL, &xHints, &pxResult);
+
+    FreeRTOS_printf(("Lookup '%s': %d\n", pcHostName, rc));
+
+    FreeRTOS_dnsclear();
+    xDNSResult = -2;
+    rc = FreeRTOS_getaddrinfo_a(pcHostName,
+        NULL,
+        &xHints,
+        &pxResult, /* An allocated struct, containing the results. */
+        vDNSEvent,
+        (void*)ulID,
+        pdMS_TO_TICKS(1000U));
+    vTaskDelay(pdMS_TO_TICKS(1000U));
+    rc = xDNSResult;
+    FreeRTOS_printf(("Lookup '%s': %d\n", pcHostName, rc));
+    /*      FreeRTOS_gethostbyname( pcHostName ); */
+}
+
+void showAddressInfo(struct freertos_addrinfo* pxAddrInfo)
+{
+    if (pxAddrInfo == NULL)
+    {
+        FreeRTOS_printf(("No DNS results\n"));
+    }
+    else
+    {
+        struct freertos_addrinfo* pxIter = pxAddrInfo;
+
+        while (pxIter != NULL)
+        {
+            if (pxIter->ai_family == FREERTOS_AF_INET6)
+            {
+                FreeRTOS_printf(("DNS result '%s': %pip\n", pxIter->ai_canonname, pxIter->ai_addr->sin_address.xIP_IPv6.ucBytes));
+            }
+            else
+            {
+                FreeRTOS_printf(("DNS result '%s': %xip\n", pxIter->ai_canonname, pxIter->ai_addr->sin_address.ulIP_IPv4));
+            }
+
+            pxIter = pxIter->ai_next;
+        }
+    }
+}

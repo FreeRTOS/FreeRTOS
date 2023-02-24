@@ -69,7 +69,7 @@ configMAX_PRIORITIES - 1. */
 #define configTIMER_QUEUE_LENGTH				20
 #define configTIMER_TASK_STACK_DEPTH			( configMINIMAL_STACK_SIZE * 2 )
 
-#define configMAX_PRIORITIES					( 7 )
+#define configMAX_PRIORITIES					( 8 )
 
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
@@ -154,7 +154,7 @@ used with multiple project configurations.  If it is
 #endif
 
 /* networking definitions */
-#define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 1 )
+#define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 3 )
 #define ipconfigUSE_NETWORK_EVENT_HOOK 1
 //#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000)
 #define configNETWORK_INTERFACE_TO_USE 5L

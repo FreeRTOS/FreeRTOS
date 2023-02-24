@@ -182,8 +182,8 @@ void vApplicationIdleHook( void )
     allocated by the kernel to any task that has since deleted itself. */
 
 
-    usleep(15000);
-    traceOnEnter();
+    // usleep(15000);
+    // traceOnEnter();
 }
 /*-----------------------------------------------------------*/
 
@@ -264,6 +264,8 @@ volatile uint32_t ulLineNumber = ulLine;
     http://www.freertos.org/a00110.html#configASSERT for more information. */
 
 	printf( "vAssertCalled( %s, %u )\n", pcFileName, ulLine );
+
+    raise(SIGSEGV);
 
     taskENTER_CRITICAL();
     {

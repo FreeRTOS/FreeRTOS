@@ -423,6 +423,7 @@ BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
 #define SOCKET_NAME "/tmp/mysocket1"
 #define BUF_SIZE 20
 
+/* While tasks shouldn't return, we believe returning on error before the PD loop would inform us of any errors */
 static void packetDrillBridgeThread (void *pvParameters)
 {
    /*  sigset_t set;
@@ -478,8 +479,8 @@ static void packetDrillBridgeThread (void *pvParameters)
             taskEXIT_CRITICAL();
 
             if (cfd == -1) {
-                FreeRTOS_debug_printf(("Error accepting connection...\n"));
-                return;
+                FreeRTOS_debug_printf(("Error accepting connection with errno ...\n"));
+                continue;
             }
             FreeRTOS_debug_printf(("Accepted socket fd = %d\n", cfd));
 
@@ -551,7 +552,7 @@ static void packetDrillBridgeThread (void *pvParameters)
 
             }
 
-            vTaskDelay(20/portTICK_PERIOD_MS);
+            vTaskDelay(10/portTICK_PERIOD_MS);
 
             //resetPacketDrillTask();
             

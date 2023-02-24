@@ -115,13 +115,20 @@ static void handlePacketDrillCommand(void *pvParameters) {
 
     for (;;) {
 
+            if (uxStreamBufferGetSize( xSendBuffer ) < sizeof( struct SyscallPackage )) {
+                vTaskDelay( configWINDOWS_MAC_INTERRUPT_SIMULATOR_DELAY );
+                continue;
+            }
+
             struct SyscallPackage syscallPackage;
 
-            BaseType_t receiveResponse = xQueueReceive(packetDrillQueue, &syscallPackage, portMAX_DELAY);
+            uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) &syscallPackage, sizeof( struct SyscallPackage ), pdFALSE );
 
-            if (receiveResponse != pdPASS) {
-                FreeRTOS_debug_printf(("Error receiving syscall package from PD thread...\n"));
-            }
+            // BaseType_t receiveResponse = xQueueReceive(packetDrillQueue, &syscallPackage, portMAX_DELAY);
+
+            // if (receiveResponse != pdPASS) {
+            //     FreeRTOS_debug_printf(("Error receiving syscall package from PD thread...\n"));
+            // }
 
             FreeRTOS_debug_printf(("Packetdrill command received: %s\n", syscallPackage.syscallId));
 
@@ -426,11 +433,26 @@ static void handlePacketDrillCommand(void *pvParameters) {
 
 static void sendSyscallResponseToThread(struct SyscallResponsePackage syscallResponse) {
 
-    BaseType_t  sendResponse = xQueueSend(packetDrillResponseQueue, &syscallResponse, (TickType_t)0);
+    // BaseType_t  sendResponse = xQueueSend(packetDrillResponseQueue, &syscallResponse, (TickType_t)0);
 
-    if (sendResponse != pdPASS) {
-        FreeRTOS_debug_printf(("Error sending syscall response to PD thread...\n"));
+    // if (sendResponse != pdPASS) {
+    //     FreeRTOS_debug_printf(("Error sending syscall response to PD thread...\n"));
+    // }
+
+    size_t xSpace;
+    xSpace = uxStreamBufferGetSpace( xRecvBuffer );
+
+    if (xSpace < sizeof(struct SyscallResponsePackage)) {
+        FreeRTOS_debug_printf(("Not enough buffer space to send syscall result...\n"));
+        return;
     }
+
+    uxStreamBufferAdd( xRecvBuffer,
+                       0,
+                       ( const uint8_t * ) &syscallResponse,
+                       sizeof(struct SyscallResponsePackage) );
+
+    event_signal( pvSendEvent );
     
 }
 

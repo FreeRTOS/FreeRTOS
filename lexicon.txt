@@ -1392,6 +1392,7 @@ mqttexampleping
 mqttexampletopic
 mqttgetcurrenttimefunc
 mqttkeepalivetimeout
+mqttrecvfailed
 mqttserverrefused
 mqttsubscribeinfo
 mqttsuccess

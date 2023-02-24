@@ -243,6 +243,8 @@ extern UBaseType_t uxRand();
  * through the FreeRTOS_gethostbyname() API function. */
 #define ipconfigUSE_DNS                                1
 
+#define ipconfigUSE_MDNS                 1
+
 /* If ipconfigREPLY_TO_INCOMING_PINGS is set to 1 then the IP stack will
  * generate replies to incoming ICMP echo (ping) requests. */
 #define ipconfigREPLY_TO_INCOMING_PINGS                1
@@ -313,7 +315,8 @@ extern UBaseType_t uxRand();
 #define ipconfigUSE_NTP_DEMO                1
 #define ipconfigDNS_USE_CALLBACKS           1
 #define ipconfigSUPPORT_SIGNALS             1
-#define ipconfigUSE_IPv6                    0 /* 1 */
+#define ipconfigUSE_IPv6                    1 /* 1 */
+#define ipconfigUSE_IPv6                    1 /* 1 */
 #define ipconfigUSE_RA                      0 /* 1 */
 #define ipconfigSUPPORT_OUTGOING_PINGS      1
 

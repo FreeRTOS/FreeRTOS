@@ -82,7 +82,6 @@
     </ClCompile>
     <ClCompile Include="..\common\NTP\NTPDemo.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="..\common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="$(UTILITIES_SOURCE_DIR)\tcp_dump_packets.c" />
     <ClCompile Include="$(UTILITIES_SOURCE_DIR)\plus_tcp_demo_cli.c" />
     <ClCompile Include="$(UTILITIES_SOURCE_DIR)\date_and_time.c" />
@@ -142,6 +141,62 @@
     <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DNS_Cache.c">
       <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_BitConfig.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4_Sockets.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4_Utils.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Sockets.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Utils.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPV4.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPV6.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPV4.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPV6.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPV4.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPV6.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPV4.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPV6.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Tiny_TCP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv4.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv6.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPEchoClient_SingleTasks.c" />
+    <ClCompile Include="Logging_WinSim.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\timers.h">
@@ -264,5 +319,33 @@
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />
     <ClInclude Include="$(FREERTOS_SOURCE_DIR)\portable\MSVC-MingW\portmacro.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IP_Common.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Private.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Sockets.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Utils.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Private.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Sockets.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Utils.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPEchoClient_SingleTasks.h" />
   </ItemGroup>
 </Project>

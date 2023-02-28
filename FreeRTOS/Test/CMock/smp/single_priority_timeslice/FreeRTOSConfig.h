@@ -29,6 +29,7 @@
 #define FREERTOS_CONFIG_H
 
 #include "fake_assert.h"
+#include "fake_infiniteloop.h"
 
 /*-----------------------------------------------------------
 * Application specific definitions.
@@ -150,5 +151,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
     extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+#define INFINITE_LOOP                       vFakeInfiniteLoop
 
 #endif /* FREERTOS_CONFIG_H */

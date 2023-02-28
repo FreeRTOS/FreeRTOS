@@ -38,6 +38,7 @@
 #include "mock_timers.h"
 #include "mock_portable.h"
 #include "mock_fake_assert.h"
+#include "mock_fake_infiniteloop.h"
 
 /* Test includes. */
 #include "unity.h"
@@ -178,7 +179,7 @@ void vFakePortAssertIfISR( void )
     HOOK_DIAG();
 }
 
-void port_allocate_secure_context( BaseType_t stackSize )
+void vFakePortAllocateSecureContext( BaseType_t stackSize )
 {
     HOOK_DIAG();
     port_allocate_secure_context_called = true;
@@ -3490,8 +3491,30 @@ void test_vTaskMissedYield( void )
     TEST_ASSERT_TRUE( xYieldPending );
 }
 
-/* TODO: find a way to fix the iddle task UnitTest as it is an infitine loop */
-void ignore_test_prvIddleTask_yield( void )
+/**
+ * @brief prvIdleTask - yield
+ *
+ * Test prvIdleTask yield for other idle level priority task.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( ( configUSE_PREEMPTION == 1 ) && ( configIDLE_SHOULD_YIELD == 1 ) )
+ * {
+ *     ...
+ *     if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES )
+ *     {
+ *         taskYIELD();
+ *     }
+ *     else
+ *     {
+ *         mtCOVERAGE_TEST_MARKER();
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is true.
+ */
+void test_prvIdleTask_yield( void )
 {
     int i = 8;
     void * args = &i;
@@ -3499,25 +3522,92 @@ void ignore_test_prvIddleTask_yield( void )
     create_task_priority = 3;
     create_task();
 
-    /* Setup */
+    /* Setup. */
     uxDeletedTasksWaitingCleanUp = 0;
     portTASK_FUNCTION( prvIdleTask, args );
     ( void ) fool_static2;
-    /* Expectations */
+
+    /* Expectations. */
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+
+    /* List function in prvIdleTask. */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 2 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    /* prvGetExpectedIdleTime */
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    /* API Call */
+
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
+
+    /* API Call. */
     prvIdleTask( args );
-    /* Validations */
+
+    /* Validations. */
     ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_CALLED();
     ASSERT_PORT_YIELD_CALLED();
     ASSERT_APPLICATION_IDLE_HOOK_CALLED();
 }
+
+/**
+ * @brief prvIdleTask - tickless expected idle time
+ *
+ * Test prvIdleTask expected idle time condition.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_TICKLESS_IDLE != 0 )
+ * {
+ *     TickType_t xExpectedIdleTime;
+ *     ...
+ *     xExpectedIdleTime = prvGetExpectedIdleTime();
+ *
+ *     if( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP )
+ *     {
+ *         vTaskSuspendAll();
+ *         {
+ * #endif
+ * @endcode
+ * ( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP ) is true.
+ */
+void test_prvIdleTask_tickless_expected_idle_time( void )
+{
+    int i = 8;
+    void * args = &i;
+
+    create_task_priority = 0;
+    create_task();
+
+    /* Setup. */
+    uxTopReadyPriority = 0;
+    xTickCount = 0;
+    xNextTaskUnblockTime = configEXPECTED_IDLE_TIME_BEFORE_SLEEP + 1;
+    uxDeletedTasksWaitingCleanUp = 0;
+    portTASK_FUNCTION( prvIdleTask, args );
+    ( void ) fool_static2;
+
+    /* Expectations. */
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+
+    /* List function in prvIdleTask. */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 1 );
+
+    /* List functions in prvGetExpectedIdleTime. */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 1 );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 1 );
+
+    /* List functions in xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
+
+    /* API Call. */
+    prvIdleTask( args );
+
+    /* Validations. */
+    ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_CALLED();
+    ASSERT_APPLICATION_IDLE_HOOK_CALLED();
+}
+
 /* implement */
 /*configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING( xExpectedIdleTime ); */
 

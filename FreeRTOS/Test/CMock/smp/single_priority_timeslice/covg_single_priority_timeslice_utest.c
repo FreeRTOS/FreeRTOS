@@ -23,14 +23,13 @@
  * https://github.com/FreeRTOS
  *
  */
-/*! @file single_priority_no_timeslice_utest.c */
+/*! @file covg_single_priority_timeslice_utest.c */
 
 /* C runtime includes. */
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include <pthread.h>
 
 /* Tasl includes */
 #include "FreeRTOS.h"
@@ -48,11 +47,17 @@
 #include "mock_timers.h"
 #include "mock_fake_assert.h"
 #include "mock_fake_port.h"
-
+#include "mock_fake_infiniteloop.h"
 
 /* ===========================  EXTERN VARIABLES  =========================== */
-
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
+extern volatile TCB_t * pxCurrentTCBs[ configNUMBER_OF_CORES ];
+extern UBaseType_t uxTopReadyPriority;
+extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+
+/* ===========================  EXTERN FUNCTIONS  =========================== */
+extern void prvIdleTask( void );
+extern void prvMinimalIdleTask( void );
 
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
@@ -81,90 +86,226 @@ int suiteTearDown( int numFailures )
 /* =============================  HELPER FUNCTIONS  ========================= */
 void vApplicationMinimalIdleHook( void )
 {
-    printf( "Minimal idle hook called\r\n" );
-    pthread_exit( NULL );
-}
-
-/* =============================  STATIC FUNCTIONS  ========================= */
-
-static void * task_thread_function( void * args )
-{
-    void * pvParameters = NULL;
-
-    /* Setup */
-    portTASK_FUNCTION( prvMinimalIdleTask, pvParameters );
-    
-    /* API Call */
-    prvMinimalIdleTask( pvParameters );
-
-    return NULL;
 }
 
 /* ==============================  Test Cases  ============================== */
 
-/*
-Coverage for:
-    static portTASK_FUNCTION( prvMinimalIdleTask, pvParameters )
-    
-    requires you to create a thread and kill it, for an idle task is eternal.
-*/
-void test_prvIddleTask_Expected_time( void )
+/* @brief prvIdleTask - no other idle priority task
+ *
+ * This test calls the prvMinimalIdleTask to cover the condition that no other idle
+ * priority task in the ready list. The task is still the running task on core 0.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES )
+ * {
+ *     taskYIELD();
+ * }
+ * else
+ * {
+ *     mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is false.
+ */
+void test_coverage_prvIdleTask_no_other_idle_priority_task( void )
 {
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES + 1] = { NULL };
-    uint32_t i, retVal ;
-    pthread_t thread_id;
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { 0 };
+    uint32_t i;
 
-    /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    /* Setup the variables and structure. */
+    /* Initialize the idle priority ready list and set top ready priority to idle priority. */
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
     }
 
-    // /* Create a single equal priority task */   
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
-    
-    vTaskStartScheduler();
-    //Necessary to trigger another function with porttask()
-    vTaskDelete(xTaskHandles[0]);
+    /* Expectations. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
 
-    /* API Call */
-    pthread_create( &thread_id, NULL, &task_thread_function, NULL );
-    pthread_join( thread_id, ( void ** ) &retVal );
-    
-    for (i = 1; i < (configNUMBER_OF_CORES); i++) {
-        vTaskDelete(xTaskHandles[i]);
-    }
+    /* API calls. Runs the idle task function on core 0. */
+    prvIdleTask();
+
+    /* Validations. xTaskTCBs[ 0 ] still runs on core 0. */
+    configASSERT( pxCurrentTCBs[ 0 ] == &xTaskTCBs[ 0 ] );
 }
 
-/*
-Coverage for:
-    static portTASK_FUNCTION( prvMinimalIdleTask, pvParameters )
-    
-    for the condition when a task that is sharing the idle priority is 
-    ready to run then the idle task is yielded before the end of the timeslice
-    
-    programmatically:
-        if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) = True
-
-*/
-void test_prvIddleTask_Expected_time_more_task( void )
+/* @brief prvIdleTask - yield for idle priority task
+ *
+ * This test calls the prvMinimalIdleTask to cover the condition that there are more
+ * idle priority level tasks than configNUMBER_OF_CORES. Yield is called in prvMinimalIdleTask.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES )
+ * {
+ *     taskYIELD();
+ * }
+ * else
+ * {
+ *     mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is true.
+ */
+void test_coverage_prvIdleTask_yield_for_idle_priority_task( void )
 {
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+1] = { NULL };
-    uint32_t retVal ;
-    pthread_t thread_id;
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { 0 };
+    uint32_t i;
 
-    /* As configNUMBER_OF_CORES idle tasks are already created by FreeRTOS kernel 
-    *  we only need to create one extra to have additonal equal priorty task */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTaskHandles[configNUMBER_OF_CORES] );
-    
-    vTaskStartScheduler();
+    /* Setup the variables and structure. */
+    /* Initialize the idle priority ready list and set top ready priority to idle priority. */
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    uxTopReadyPriority = tskIDLE_PRIORITY;
 
-    /* API Call */
-    pthread_create( &thread_id, NULL, &task_thread_function, NULL );
-    pthread_join( thread_id, ( void ** ) &retVal );
-    
-    //Only delete the task we created
-    vTaskDelete(xTaskHandles[configNUMBER_OF_CORES]);
-    
+    /* Create idle tasks and add it into the ready list. Create one more idle priority level
+     * in the loop. */
+    for( i = 0; i < ( configNUMBER_OF_CORES + 1U ); i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        if( i < configNUMBER_OF_CORES )
+        {
+            pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+            xTaskTCBs[ i ].xTaskRunState = i;
+        }
+        else
+        {
+            xTaskTCBs[ i ].xTaskRunState = -1;  /* Set run state to taskTASK_NOT_RUNNING. */
+        }
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+    }
+
+    /* Expectations. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
+
+    /* API calls. Runs the idle task function on core 0. */
+    prvIdleTask();
+
+    /* Validations. xTaskTCBs[ i ] runs on core 0. */
+    configASSERT( pxCurrentTCBs[ 0 ] == &xTaskTCBs[ i ] );
 }
 
+/* @brief prvMinimalIdleTask - no other idle priority task
+ *
+ * This test calls the prvMinimalIdleTask to cover the condition that no other idle
+ * priority task in the ready list. The task is still the running task on core 0.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES )
+ * {
+ *     taskYIELD();
+ * }
+ * else
+ * {
+ *     mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is false.
+ */
+void test_coverage_prvMinimalIdleTask_no_other_idle_priority_task( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { 0 };
+    uint32_t i;
 
+    /* Setup the variables and structure. */
+    /* Initialize the idle priority ready list and set top ready priority to idle priority. */
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+    }
+
+    /* Expectations. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
+
+    /* API calls. Runs the idle task function on core 0. */
+    prvMinimalIdleTask();
+
+    /* Validations. xTaskTCBs[ 0 ] still runs on core 0. */
+    configASSERT( pxCurrentTCBs[ 0 ] == &xTaskTCBs[ 0 ] );
+}
+
+/* @brief prvMinimalIdleTask - yield for idle priority task
+ *
+ * This test calls the prvMinimalIdleTask to cover the condition that there are more
+ * idle priority level tasks than configNUMBER_OF_CORES. Yield is called in prvMinimalIdleTask.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES )
+ * {
+ *     taskYIELD();
+ * }
+ * else
+ * {
+ *     mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is true.
+ */
+void test_coverage_prvMinimalIdleTask_yield_for_idle_priority_task( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    /* Initialize the idle priority ready list and set top ready priority to idle priority. */
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Create idle tasks and add it into the ready list. Create one more idle priority level
+     * in the loop. */
+    for( i = 0; i < ( configNUMBER_OF_CORES + 1U ); i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        if( i < configNUMBER_OF_CORES )
+        {
+            pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+            xTaskTCBs[ i ].xTaskRunState = i;
+        }
+        else
+        {
+            xTaskTCBs[ i ].xTaskRunState = -1;  /* Set run state to taskTASK_NOT_RUNNING. */
+        }
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+    }
+
+    /* Expectations. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
+
+    /* API calls. Runs the idle task function on core 0. */
+    prvMinimalIdleTask();
+
+    /* Validations. xTaskTCBs[ i ] runs on core 0. */
+    configASSERT( pxCurrentTCBs[ 0 ] == &xTaskTCBs[ i ] );
+}

@@ -18,6 +18,7 @@ MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/list.h
 MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/portable.h
 MOCK_FILES_FP    +=   $(PROJECT_DIR)/list_macros.h
 MOCK_FILES_FP    +=   $(PROJECT_DIR)/../config/fake_assert.h
+MOCK_FILES_FP    +=   $(PROJECT_DIR)/../config/fake_infiniteloop.h
 
 UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY\
                     -UlistIS_CONTAINED_WITHIN -UlistGET_LIST_ITEM_VALUE        \

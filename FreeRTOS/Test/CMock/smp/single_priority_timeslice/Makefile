@@ -26,6 +26,7 @@ SUITE_SUPPORT_SRC   := smp_utest_common.c
 MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/timers.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_assert.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_port.h
+MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_infiniteloop.h
 
 # List any addiitonal flags needed by the preprocessor
 CPPFLAGS            +=

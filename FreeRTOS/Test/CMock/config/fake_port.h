@@ -61,4 +61,6 @@ void vFakePortYieldCore(int);
 UBaseType_t vFakePortEnterCriticalFromISR( void );
 void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState );
 
+void vFakePortAllocateSecureContext( BaseType_t stackSize );
+
 #endif /* FAKE_PORT_H */

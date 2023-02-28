@@ -57,9 +57,11 @@ extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xTickCount;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern volatile UBaseType_t uxTopReadyPriority;
+extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 extern void prvAddNewTaskToReadyList( TCB_t * pxNewTCB );
+extern void prvYieldForTask( TCB_t * pxTCB );
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -931,5 +933,143 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspende
 
     for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
         xTaskIncrementTick_helper();
+    }
+}
+
+/**
+ * @brief prvYieldForTask - running task with xTaskRunState equals to configNUMBER_OF_CORES.
+ *
+ * Yield for a task of equal priority. No other task should be requested to yield.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( ( taskTASK_IS_RUNNING( pxCurrentTCBs[ xCoreID ] ) != pdFALSE ) && ( xYieldPendings[ xCoreID ] == pdFALSE ) )
+ * {
+ *     if( xCurrentCoreTaskPriority <= xLowestPriorityToPreempt )
+ *     {
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxCurrentTCBs[ xCoreID ] ) != pdFALSE ) is false.
+ */
+void test_coverage_prvYieldForTask_task_is_running_eq( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1U ] = { NULL };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = 1;
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xYieldPendings[ i ] = pdFALSE;
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+    }
+    /* Set one of the running xTaskRunState equals to configNUMBER_OF_CORES. */
+    xTaskTCBs[ 0 ].xTaskRunState = configNUMBER_OF_CORES;
+
+    /* Create one more task with equal priority. */
+    xTaskTCBs[ configNUMBER_OF_CORES ].uxPriority = 1;
+
+    /* API call. */
+    prvYieldForTask( &xTaskTCBs[ configNUMBER_OF_CORES ] );
+
+    /* Validation. */
+    /* Core 0 will not be requested to yield. */
+    TEST_ASSERT( xTaskTCBs[ 0 ].xTaskRunState != taskTASK_YIELDING );
+    /* No core will be requested to yield. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        TEST_ASSERT( xYieldPendings[ i ] != pdTRUE );
+    }
+}
+
+/**
+ * @brief prvYieldForTask - running task with xTaskRunState is taskTASK_YIELDING.
+ *
+ * Yield for a task of equal priority. No other task should be requested to yield.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( ( taskTASK_IS_RUNNING( pxCurrentTCBs[ xCoreID ] ) != pdFALSE ) && ( xYieldPendings[ xCoreID ] == pdFALSE ) )
+ * {
+ *     if( xCurrentCoreTaskPriority <= xLowestPriorityToPreempt )
+ *     {
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxCurrentTCBs[ xCoreID ] ) != pdFALSE ) is false.
+ */
+void test_coverage_prvYieldForTask_task_yielding( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1U ] = { NULL };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = 1;
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xYieldPendings[ i ] = pdFALSE;
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+    }
+    /* Set xTaskRunState of the running task to taskTASK_YIELDING. */
+    xTaskTCBs[ 0 ].xTaskRunState = taskTASK_YIELDING;
+
+    /* Create one more task with equal priority. */
+    xTaskTCBs[ configNUMBER_OF_CORES ].uxPriority = 1;
+
+    /* API call. */
+    prvYieldForTask( &xTaskTCBs[ configNUMBER_OF_CORES ] );
+
+    /* Validation. */
+    /* Core 0 remains of state taskTASK_YIELDING. */
+    TEST_ASSERT( xTaskTCBs[ 0 ].xTaskRunState == taskTASK_YIELDING );
+    /* No core will be requested to yield. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        TEST_ASSERT( xYieldPendings[ i ] != pdTRUE );
+    }
+}
+
+/**
+ * @brief prvYieldForTask - running task with yield pending.
+ *
+ * Yield for a task of equal priority. No other task should be requested to yield.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( ( taskTASK_IS_RUNNING( pxCurrentTCBs[ xCoreID ] ) != pdFALSE ) && ( xYieldPendings[ xCoreID ] == pdFALSE ) )
+ * {
+ *     if( xCurrentCoreTaskPriority <= xLowestPriorityToPreempt )
+ *     {
+ * @endcode
+ * ( xYieldPendings[ xCoreID ] == pdFALSE ) is false.
+ */
+void test_coverage_prvYieldForTask_task_yield_pending( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1U ] = { NULL };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = 1;
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xYieldPendings[ i ] = pdFALSE;
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+    }
+    /* Set one of the running core with yield pending. */
+    xYieldPendings[ 0 ] = pdTRUE;
+
+    /* Create one more task with equal priority. */
+    xTaskTCBs[ configNUMBER_OF_CORES ].uxPriority = 1;
+
+    /* API call. */
+    prvYieldForTask( &xTaskTCBs[ configNUMBER_OF_CORES ] );
+
+    /* Validation. */
+    /* Core 0 remains yield pending. */
+    TEST_ASSERT( xYieldPendings[ 0 ] == pdTRUE );
+    /* Other core will not be requested to yield. */
+    for( i = 1; i < configNUMBER_OF_CORES; i++ )
+    {
+        TEST_ASSERT( xYieldPendings[ i ] != pdTRUE );
     }
 }

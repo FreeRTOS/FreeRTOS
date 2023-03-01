@@ -58,6 +58,11 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xTickCount;
+extern List_t xSuspendedTaskList;
+extern List_t xPendingReadyList;
+extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+extern volatile UBaseType_t uxTopReadyPriority;
+extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -680,4 +685,108 @@ void test_coverage_xTaskPriorityDisinherit_current_is_same( void )
 void test_coverage_xTaskPriorityDisinherit_null_task( void )
 {
     xTaskPriorityDisinherit( NULL );
+}
+
+/**
+ * @brief xTaskResumeAll - resume all suspended tasks
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *  if( xSchedulerRunning != pdFALSE )
+ *  ...
+ *          if( uxCurrentNumberOfTasks > ( UBaseType_t ) 0U )
+ * @endcode
+ *
+ *
+* Cover the case where the scheduler is running and there is at least one task.
+ */
+void test_coverage_xTaskResumeAll_common_case( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1U ] = { NULL };
+    uint32_t i;
+    BaseType_t xAlreadyYielded;
+    UBaseType_t uxPriority;
+
+    for(
+        uxPriority = ( UBaseType_t ) 0U;
+        uxPriority < ( UBaseType_t ) configMAX_PRIORITIES;
+        uxPriority++)
+    {
+        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );
+    }
+    vListInitialise( &xSuspendedTaskList );
+    vListInitialise( &xPendingReadyList );
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = 1;
+        xTaskTCBs[ i ].xTaskRunState = i;
+        vListInitialiseItem( &( xTaskTCBs[i].xStateListItem ) );
+        listSET_LIST_ITEM_OWNER( &( xTaskTCBs[i].xStateListItem ), &xTaskTCBs[i] );
+        xYieldPendings[ i ] = pdTRUE;
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+    }
+
+    xTaskTCBs[ configNUMBER_OF_CORES ].uxPriority = 2;
+    vListInitialiseItem( &( xTaskTCBs[configNUMBER_OF_CORES].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[configNUMBER_OF_CORES].xStateListItem ), &xTaskTCBs[i] );
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCBs[ i ].xStateListItem );
+    uxTopReadyPriority = 1;
+
+    uxSchedulerSuspended = pdFALSE;
+
+    xAlreadyYielded = xTaskResumeAll();
+
+    TEST_ASSERT_EQUAL(pdFALSE, xAlreadyYielded);
+}
+
+/**
+ * @brief xTaskResumeAll - resume all suspended tasks
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *  while( listLIST_IS_EMPTY( &xPendingReadyList ) == pdFALSE )
+ *  {
+ *      pxTCB = listGET_OWNER_OF_HEAD_ENTRY( ( &xPendingReadyList ) );
+ *  ...
+ * @endcode
+ *
+ *
+ * Cover the case where the scheduler is running and there are one or more
+ * tasks in the pending ready list state.
+ */
+void test_coverage_xTaskResumeAll_pending_ready_list( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1U ] = { NULL };
+    uint32_t i;
+    BaseType_t xAlreadyYielded;
+    UBaseType_t uxPriority;
+
+    for(
+        uxPriority = ( UBaseType_t ) 0U;
+        uxPriority < ( UBaseType_t ) configMAX_PRIORITIES;
+        uxPriority++)
+    {
+        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );
+    }
+    vListInitialise( &xSuspendedTaskList );
+    vListInitialise( &xPendingReadyList );
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = 1;
+        xTaskTCBs[ i ].xTaskRunState = -1;
+        vListInitialiseItem( &( xTaskTCBs[i].xStateListItem ) );
+        listSET_LIST_ITEM_OWNER( &( xTaskTCBs[i].xStateListItem ), &xTaskTCBs[i] );
+        listINSERT_END( &xPendingReadyList, &xTaskTCBs[ i ].xStateListItem );
+        xYieldPendings[ i ] = pdFALSE;
+        //pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+    }
+    uxTopReadyPriority = 1;
+
+    uxSchedulerSuspended = pdFALSE;
+
+    xAlreadyYielded = xTaskResumeAll();
+
+    TEST_ASSERT_EQUAL(pdFALSE, xAlreadyYielded);
 }

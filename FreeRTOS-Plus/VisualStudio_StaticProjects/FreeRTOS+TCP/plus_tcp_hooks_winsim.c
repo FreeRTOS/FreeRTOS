@@ -37,6 +37,20 @@
 
 /*-----------------------------------------------------------*/
 
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+
+    /* In case multiple interfaces are used, define them statically. */
+
+    /* there is only 1 physical interface. */
+    static NetworkInterface_t xInterfaces[ 1 ];
+
+    /* It will have several end-points. */
+    static NetworkEndPoint_t xEndPoints[ 4 ];
+
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+
+/*-----------------------------------------------------------*/
+
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) || ( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
     const char * pcApplicationHostnameHook( void )
@@ -122,7 +136,12 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
     {
         /* Print out the network configuration, which may have come from a DHCP
          * server. */
+    #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+        FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
+    #else
         FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
+    #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
         FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
 
@@ -165,7 +184,28 @@ void vPlatformInitIpStack( void )
     ucIPAddress[ 2 ] = ( ( uxRandomNumber >> 16 ) & 0xFF );
     ucIPAddress[ 3 ] = ( ( uxRandomNumber >> 24 ) & 0xFF );
 
+    /* Initialise the network interface.*/
+    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
+
+#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+    /* Initialise the interface descriptor for WinPCap. */
+    pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+
+    /* === End-point 0 === */
+    FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress );
+    #if ( ipconfigUSE_DHCP != 0 )
+    {
+        /* End-point 0 wants to use DHCPv4. */
+        xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
+    }
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */
+    memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
+    xResult = FreeRTOS_IPStart();
+#else
+    /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
     xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress );
+#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+
     configASSERT( xResult == pdTRUE );
 }
 
@@ -176,4 +216,16 @@ BaseType_t xPlatformIsNetworkUp( void )
     return FreeRTOS_IsNetworkUp();
 }
 
+/*-----------------------------------------------------------*/
+
+#if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) )
+
+eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
+                                            uint32_t ulIPAddress )
+{
+    /* Provide a stub for this function. */
+    return eDHCPContinue;
+}
+
+#endif
 /*-----------------------------------------------------------*/

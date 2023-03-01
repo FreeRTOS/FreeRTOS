@@ -141,27 +141,20 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 
 void vPlatformInitIpStack( void )
 {
-    UBaseType_t uxRandomNumber;
     BaseType_t xResult;
     uint8_t ucIPAddress[ 4 ];
-    uint8_t ucNetMask[ 4 ] = { 255, 255, 0, 0 };
+    uint8_t ucNetMask[ 4 ] = { configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 };
     uint8_t ucMACAddress[ 6 ];
     uint8_t ucDNSServerAddress[ 4 ];
     uint8_t ucGatewayAddress[ 4 ];
 
-    /* Generate a random number */
-    uxRandomNumber = uxRand();
+    ucMACAddress[ 0 ] = configMAC_ADDR0;
+    ucMACAddress[ 1 ] = configMAC_ADDR1;
+    ucMACAddress[ 2 ] = configMAC_ADDR2;
+    ucMACAddress[ 3 ] = configMAC_ADDR3;
+    ucMACAddress[ 4 ] = configMAC_ADDR4;
+    ucMACAddress[ 5 ] = configMAC_ADDR5;
 
-    /* Generate a random MAC address in the reserved range */
-    ucMACAddress[ 0 ] = 0x00;
-    ucMACAddress[ 1 ] = 0x11;
-    ucMACAddress[ 2 ] = ( uxRandomNumber & 0xFF );
-    ucMACAddress[ 3 ] = ( ( uxRandomNumber >> 8 ) & 0xFF );
-    ucMACAddress[ 4 ] = ( ( uxRandomNumber >> 16 ) & 0xFF );
-    ucMACAddress[ 5 ] = ( ( uxRandomNumber >> 24 ) & 0xFF );
-
-
-    /* Assign a link-local address in the 169.254.0.0/16 range */
     ucIPAddress[ 0 ] = configIP_ADDR0;
     ucIPAddress[ 1 ] = configIP_ADDR1;
     ucIPAddress[ 2 ] = configIP_ADDR2;
@@ -178,6 +171,7 @@ void vPlatformInitIpStack( void )
     ucGatewayAddress[ 3 ] = configGATEWAY_ADDR3;
 
     xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+
     configASSERT( xResult == pdTRUE );
 }
 

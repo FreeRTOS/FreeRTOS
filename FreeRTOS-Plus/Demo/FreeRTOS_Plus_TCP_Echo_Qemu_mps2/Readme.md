@@ -28,15 +28,18 @@ virbr0-nic: veth virtual interface (to be created)
 To setup the system for running the QEMU demo, please check these steps.
 ```
 1. Setting up the client-server system
-    a. Option-1 : The demo can be run on 2 different systems, one with the client running FreeRTOS system in qemu and another running the echo server.
-    b. Option-2 : The demo could also be run on 1 system, with the QEMU client running on Ubuntu Virtual Machine (VM) and the host OS (Windows/MAC/Linux) running the server.
+    a. Option-1 : The demo can be run on 2 different systems, one with the client running FreeRTOS system in qemu 
+        and another running the echo server.
+    b. Option-2 : The demo could also be run on 1 system, with the QEMU client running on Ubuntu Virtual Machine (VM) and the 
+        host OS (Windows/MAC/Linux) running the server.
 
 2. Setting up MAC and IP Address
-    a. Local FreeRTOS MAC address : Set a unique MAC address for the QEMU client
+    a. Local FreeRTOS MAC address( configMAC_ADDR0~3 ) : Set a unique MAC address for the QEMU client 
     b. Local Host IP address : IP of the system running the Qemu client
-    c. The Local FreeRTOS IP address should be an unused local IP on the QEMU network.
-    d. The subnet mask, Gateway and DNS address should match that of the QEMU client network.
-    e. Echo server address : IP of the system running the echo server .
+    c. The Local FreeRTOS IP address( configIP_ADDR0~3 ) should be an unused local IP on the QEMU network.
+    d. The subnet mask( configNET_MASK0~3 ), Gateway( configGATEWAY_ADDR0~3 ) and DNS address( configDNS_SERVER_ADDR0~3 ) 
+        should match that of the QEMU client network.
+    e. Echo server address( configECHO_SERVER_ADDR0~3 ) : IP of the system running the echo server .
 ```
 A block diagram to show the QEMU demo setup process :
 

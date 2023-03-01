@@ -297,7 +297,7 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 			was actually obtained. */
 
 		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY, ipTYPE_IPv4 );
+			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_ByIPType( xBufferLength, portMAX_DELAY, ipTYPE_IPv4 );
 		#else
 			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY );
 		#endif

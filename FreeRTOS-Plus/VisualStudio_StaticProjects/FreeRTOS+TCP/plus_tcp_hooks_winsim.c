@@ -145,8 +145,9 @@ void vPlatformInitIpStack( void )
     BaseType_t xResult;
     uint8_t ucIPAddress[ 4 ];
     uint8_t ucNetMask[ 4 ] = { 255, 255, 0, 0 };
-    uint8_t ucNullAddress[ 4 ] = { 0, 0, 0, 0 };
     uint8_t ucMACAddress[ 6 ];
+    uint8_t ucDNSServerAddress[ 4 ];
+    uint8_t ucGatewayAddress[ 4 ];
 
     /* Generate a random number */
     uxRandomNumber = uxRand();
@@ -159,13 +160,24 @@ void vPlatformInitIpStack( void )
     ucMACAddress[ 4 ] = ( ( uxRandomNumber >> 16 ) & 0xFF );
     ucMACAddress[ 5 ] = ( ( uxRandomNumber >> 24 ) & 0xFF );
 
-    /* Assign a link-local address in the 169.254.0.0/16 range */
-    ucIPAddress[ 0 ] = 169U;
-    ucIPAddress[ 1 ] = 254U;
-    ucIPAddress[ 2 ] = ( ( uxRandomNumber >> 16 ) & 0xFF );
-    ucIPAddress[ 3 ] = ( ( uxRandomNumber >> 24 ) & 0xFF );
 
-    xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress );
+    /* Assign a link-local address in the 169.254.0.0/16 range */
+    ucIPAddress[ 0 ] = configIP_ADDR0;
+    ucIPAddress[ 1 ] = configIP_ADDR1;
+    ucIPAddress[ 2 ] = configIP_ADDR2;
+    ucIPAddress[ 3 ] = configIP_ADDR3;
+
+    ucDNSServerAddress[ 0 ] = configDNS_SERVER_ADDR0;
+    ucDNSServerAddress[ 1 ] = configDNS_SERVER_ADDR1;
+    ucDNSServerAddress[ 2 ] = configDNS_SERVER_ADDR2;
+    ucDNSServerAddress[ 3 ] = configDNS_SERVER_ADDR3;
+
+    ucGatewayAddress[ 0 ] = configGATEWAY_ADDR0;
+    ucGatewayAddress[ 1 ] = configGATEWAY_ADDR1;
+    ucGatewayAddress[ 2 ] = configGATEWAY_ADDR2;
+    ucGatewayAddress[ 3 ] = configGATEWAY_ADDR3;
+
+    xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     configASSERT( xResult == pdTRUE );
 }
 

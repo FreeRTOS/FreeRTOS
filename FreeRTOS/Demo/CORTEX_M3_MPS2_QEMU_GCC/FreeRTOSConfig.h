@@ -44,6 +44,10 @@ extern void vAssertCalled( void );
 #define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled()
 #define configQUEUE_REGISTRY_SIZE                        20
 
+#ifdef PICOLIBC_TLS
+#define configUSE_PICOLIBC_TLS                           1
+#endif
+
 #define configUSE_PREEMPTION                             1
 #define configUSE_TIME_SLICING                           0
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION          0

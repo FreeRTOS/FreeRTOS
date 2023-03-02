@@ -274,7 +274,7 @@ int main( void )
 
                 #if ( ipconfigUSE_RA != 0 )
                     {
-                        /* End-point 1 wants to use Router Advertisement / SLAAC. */
+                        /* End-point 1 wants to use Router Advertisement */
                         xEndPoints[ 1 ].bits.bWantRA = pdTRUE;
                     }
                 #endif /* #if( ipconfigUSE_RA != 0 ) */

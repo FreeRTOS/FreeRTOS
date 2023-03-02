@@ -1617,7 +1617,7 @@ pchead
 pchelpstring
 pchexoutput
 pchost
-pcHostname
+pchostname
 pcinputstr
 pcjobdocument
 pcjobid

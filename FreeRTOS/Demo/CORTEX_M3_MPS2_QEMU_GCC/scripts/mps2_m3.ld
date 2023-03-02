@@ -74,6 +74,27 @@ SECTIONS
         . = ALIGN(4);
     } >FLASH
 
+    .tdata : {
+        *(.tdata .tdata.*)
+    } >FLASH
+
+    .tbss (NOLOAD) : {
+        *(.tbss .tbss.* .gnu.linkonce.tb.*)
+        *(.tcommon)
+        PROVIDE( __tbss_end = . );
+        PROVIDE( __tls_end = . );
+    } >FLASH
+    PROVIDE( __tdata_source = LOADADDR(.tdata) );
+    PROVIDE( __tdata_source_end = LOADADDR(.tdata) + SIZEOF(.tdata) );
+    PROVIDE( __tdata_size = SIZEOF(.tdata) );
+    PROVIDE( __tbss_offset = ADDR(.tbss) - ADDR(.tdata) );
+    PROVIDE( __tbss_start = ADDR(.tbss) );
+    PROVIDE( __tbss_size = SIZEOF(.tbss) );
+    PROVIDE( __tls_size = __tls_end - ADDR(.tdata) );
+    PROVIDE( __tls_align = MAX(ALIGNOF(.tdata), ALIGNOF(.tbss)) );
+    PROVIDE( __arm32_tls_tcb_offset = MAX(8, __tls_align) );
+    PROVIDE( __arm64_tls_tcb_offset = MAX(16, __tls_align) );
+
     .interrupts_ram :
     {
         . = ALIGN(4);

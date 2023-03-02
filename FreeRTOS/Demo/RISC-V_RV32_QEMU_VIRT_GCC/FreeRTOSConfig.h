@@ -121,4 +121,8 @@ machine on which the test is developed). */
 #define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 4 )
 #define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 5 )
 
+#ifdef PICOLIBC_TLS
+#define configUSE_PICOLIBC_TLS                  1
+#endif
+
 #endif /* FREERTOS_CONFIG_H */

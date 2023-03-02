@@ -54,7 +54,7 @@
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 80 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_MUTEXES				1

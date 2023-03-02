@@ -251,7 +251,7 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 			do
 			{
 			#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
+			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_ByIPType( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
 			#else
 			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
 			#endif

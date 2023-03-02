@@ -654,7 +654,10 @@ void test_task_create_tasks_lower_priority( void )
  * Delete the last created task
  * 
  * Call xTaskIncrementTick() for each configured CPU core. The tasks will not change state.
- * 
+ *
+ * Task (TN)
+ * Priority – 2
+ * State - Running (Core N)
  */
 void test_task_delete_tasks_equal_priorities_delete_running_task( void )
 {
@@ -743,6 +746,10 @@ void test_task_delete_tasks_equal_priorities_delete_running_task( void )
  * Suspend the last created task
  * 
  * Call xTaskIncrementTick() for each configured CPU core. The tasks will not change state.
+ *
+ * Task (TN)
+ * Priority – 2
+ * State - Running (Core N)
  * 
  * Resume the suspended task. The tasks will now rotate to each CPU on each tick.
  */
@@ -850,6 +857,10 @@ void test_task_suspend_running_task( void )
  * 
  * Call xTaskIncrementTick() for each configured CPU core. The tasks will not
  * change state.
+ *
+ * Task (TN)
+ * Priority – 2
+ * State - Running (Core N)
  *
  * After blocking the task, verify task 1 can be scheduled on each core.
  */

@@ -316,66 +316,84 @@ void test_coverage_vTaskPreemptionEnable_task_running( void )
     TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
 }
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
-
-Coverage for 
-    UBaseType_t vTaskCoreAffinityGet( const TaskHandle_t xTask )
-        with a created task handel for xTask
-*/
-void test_task_Core_Affinity_Get( void )
+/**
+ * @brief vTaskCoreAffinityGet - Get the affinity mask of a task.
+ *
+ * Verify the affinity mask returned with a task handle.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * taskENTER_CRITICAL();
+ * {
+ *     pxTCB = prvGetTCBFromHandle( xTask );
+ *     uxCoreAffinityMask = pxTCB->uxCoreAffinityMask;
+ * }
+ * taskEXIT_CRITICAL();
+ * @endcode
+ * prvGetTCBFromHandle( xTask ) xTask is not NULL.
+ */
+void test_coverage_vTaskCoreAffinityGet( void )
 {
-    //Reset all the globals to gain the deafult null state
-    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+    TCB_t xTaskTCB = { NULL };
+    UBaseType_t uxCoreAffinityMask;
 
-    uint32_t i;
+    /* Setup variables. */
+    xTaskTCB.uxCoreAffinityMask = 0x5555;   /* The value to be verified later. */
 
-    /* Create tasks of equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
-    }
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
 
-    vTaskStartScheduler();
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
 
-    /* Verify tasks are running */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        verifySmpTask( &xTaskHandles[i], eRunning, i );
-    }
+    /* API call. */
+    uxCoreAffinityMask = vTaskCoreAffinityGet( &xTaskTCB );
 
-    /* task T0 */
-    vTaskCoreAffinityGet( xTaskHandles[0] );
-
+    /* Validation. */
+    TEST_ASSERT( uxCoreAffinityMask == 0x5555 );
 }
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                         1
 
-Coverage for 
-    UBaseType_t vTaskCoreAffinityGet( const TaskHandle_t xTask )
-        with a NULL for xTask
-*/
-void test_task_Core_Affinity_Get_with_null_task( void )
+/**
+ * @brief vTaskCoreAffinityGet - Get the affinity mask of current task.
+ *
+ * Verify the affinity mask returned with NULL task handle. Current task affinity
+ * mask should be returned.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * taskENTER_CRITICAL();
+ * {
+ *     pxTCB = prvGetTCBFromHandle( xTask );
+ *     uxCoreAffinityMask = pxTCB->uxCoreAffinityMask;
+ * }
+ * taskEXIT_CRITICAL();
+ * @endcode
+ * prvGetTCBFromHandle( xTask ) xTask is NULL.
+ */
+void test_coverage_vTaskCoreAffinityGet_null_handle( void )
 {
-    //Reset all the globals to gain the deafult null state
-    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+    TCB_t xTaskTCB = { NULL };
+    UBaseType_t uxCoreAffinityMask;
 
-    uint32_t i;
+    /* Setup variables. */
+    xTaskTCB.uxCoreAffinityMask = 0x5555;   /* The value to be verified later. */
+    pxCurrentTCBs[0] = &xTaskTCB;
 
-    /* Create tasks of equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
-    }
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
 
-    vTaskStartScheduler();
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
 
-    /* Verify tasks are running */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        verifySmpTask( &xTaskHandles[i], eRunning, i );
-    }
-    vTaskCoreAffinityGet( NULL );
+    /* API call. */
+    uxCoreAffinityMask = vTaskCoreAffinityGet( NULL );
+
+    /* Validation. */
+    TEST_ASSERT( uxCoreAffinityMask == 0x5555 );
 }
 
 /*

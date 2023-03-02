@@ -50,8 +50,6 @@ extern unsigned long _heap_bottom;
 extern unsigned long _heap_top;
 extern unsigned long g_ulBase;
 
-static void * heap_end = 0;
-
 /**
  * @brief initializes the UART emulated hardware
  */
@@ -60,6 +58,34 @@ void uart_init()
     UART0_ADDR->BAUDDIV = 16;
     UART0_ADDR->CTRL = UART_CTRL_TX_EN;
 }
+
+#ifdef __PICOLIBC__
+
+#include <stdio.h>
+
+/**
+ * @brief  Write byte to the UART channel to be displayed on the command line
+ *         with qemu
+ * @param [in] c     byte to send
+ * @param [in] file  ignored
+ * @returns the character written (cast to unsigned so it is not an error value)
+ */
+
+int
+_uart_putc(char c, FILE *file)
+{
+    (void) file;
+    UART_DR( UART0_ADDR ) = c;
+    return (unsigned char) c;
+}
+
+static FILE __stdio = FDEV_SETUP_STREAM(_uart_putc, NULL, NULL, _FDEV_SETUP_WRITE);
+
+FILE *const stdout = &__stdio;
+
+#else
+
+static void * heap_end = 0;
 
 /**
  * @brief not used anywhere in the code
@@ -131,6 +157,8 @@ void * _sbrk( int incr )
 
     return prev_heap_end;
 }
+
+#endif
 
 #ifdef __cplusplus
     }

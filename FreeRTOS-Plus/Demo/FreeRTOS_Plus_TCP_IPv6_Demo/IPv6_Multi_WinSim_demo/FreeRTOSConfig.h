@@ -43,13 +43,13 @@
 * the demo) are contained in FreeRTOSIPConfig.h.
 *----------------------------------------------------------*/
 
-#define NETCAT_PORT_NR               5555
-#define AMAZON_GO_SERVER             9000
-#define XILINX_ZYNQ                  7
+#define NETCAT_PORT_NR                             5555
+#define AMAZON_GO_SERVER                           9000
+#define XILINX_ZYNQ                                7
 
-//#define configECHO_SERVER_ADDR_STRING          "fe80::be20:7974:c816:2b9e"
-#define configECHO_SERVER_ADDR_STRING          "192.168.1.4"
-#define configECHO_SERVER_PORT                 AMAZON_GO_SERVER
+/*#define configECHO_SERVER_ADDR_STRING          "fe80::be20:7974:c816:2b9e" */
+#define configECHO_SERVER_ADDR_STRING              "192.168.1.4"
+#define configECHO_SERVER_PORT                     AMAZON_GO_SERVER
 
 
 #define configENABLE_BACKWARD_COMPATIBILITY        1

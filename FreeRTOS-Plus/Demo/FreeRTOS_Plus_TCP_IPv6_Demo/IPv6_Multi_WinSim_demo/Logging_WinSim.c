@@ -258,8 +258,9 @@ static void prvCreatePrintSocket( void * pvParameter1,
 static TickType_t ulTicksToMS( TickType_t uxTicks )
 {
     uint64_t ullCount = uxTicks;
-    ullCount = ullCount * (1000U / configTICK_RATE_HZ);
-    return ( uint32_t )ullCount;
+
+    ullCount = ullCount * ( 1000U / configTICK_RATE_HZ );
+    return ( uint32_t ) ullCount;
 }
 
 void vLoggingPrintf( const char * pcFormat,
@@ -369,24 +370,24 @@ void vLoggingPrintf( const char * pcFormat,
         if( xUDPLoggingUsed != pdFALSE )
         {
             #if 0  /* _HT_ Logging doesn't need UDP logging for WinSim. */
-            if( ( xPrintSocket == FREERTOS_INVALID_SOCKET ) && ( FreeRTOS_IsNetworkUp() != pdFALSE ) )
-            {
-                /* Create and bind the socket to which print messages are sent.  The
-                 * xTimerPendFunctionCall() function is used even though this is
-                 * not an interrupt because this function is called from the IP task
-                 * and the	IP task cannot itself wait for a socket to bind.  The
-                 * parameters to prvCreatePrintSocket() are not required so set to
-                 * NULL or 0. */
-                xTimerPendFunctionCall( prvCreatePrintSocket, NULL, 0, dlDONT_BLOCK );
-            }
+                if( ( xPrintSocket == FREERTOS_INVALID_SOCKET ) && ( FreeRTOS_IsNetworkUp() != pdFALSE ) )
+                {
+                    /* Create and bind the socket to which print messages are sent.  The
+                     * xTimerPendFunctionCall() function is used even though this is
+                     * not an interrupt because this function is called from the IP task
+                     * and the	IP task cannot itself wait for a socket to bind.  The
+                     * parameters to prvCreatePrintSocket() are not required so set to
+                     * NULL or 0. */
+                    xTimerPendFunctionCall( prvCreatePrintSocket, NULL, 0, dlDONT_BLOCK );
+                }
 
-            if( xPrintSocket != FREERTOS_INVALID_SOCKET )
-            {
-                FreeRTOS_sendto( xPrintSocket, cOutputString, xLength, 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
+                if( xPrintSocket != FREERTOS_INVALID_SOCKET )
+                {
+                    FreeRTOS_sendto( xPrintSocket, cOutputString, xLength, 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
 
-                /* Just because the UDP data logger I'm using is dumb. */
-                FreeRTOS_sendto( xPrintSocket, "\r", sizeof( char ), 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
-            }
+                    /* Just because the UDP data logger I'm using is dumb. */
+                    FreeRTOS_sendto( xPrintSocket, "\r", sizeof( char ), 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
+                }
             #endif /* 0 */
         }
 

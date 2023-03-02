@@ -144,8 +144,10 @@ SECTIONS
         PROVIDE ( end = . );
         PROVIDE ( _end = . );
         _heap_bottom = .;
+        __heap_start = .;
         . = . + _Min_Heap_Size;
         _heap_top = .;
+        __heap_end = .;
         . = . + _Min_Stack_Size;
         . = ALIGN(8);
        } >RAM

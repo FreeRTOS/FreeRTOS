@@ -66,7 +66,10 @@ endif
 
 DEFINES :=  -DQEMU_SOC_MPS2 -DHEAP3
 
-LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs --specs=rdimon.specs -lc -lrdimon
+LDFLAGS = -T ./scripts/mps2_m3.ld
+ifneq ($(PICOLIBC), 1)
+LDFLAGS += -specs=nano.specs --specs=rdimon.specs -lc -lrdimon
+endif
 LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
 LDFLAGS += -Wl,--gc-sections
 
@@ -74,6 +77,9 @@ CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-error=implicit-function-dec
 CFLAGS += -Wno-builtin-declaration-mismatch -Werror
 CFLAGS += -Wall -Wextra
 CFLAGS += -ffunction-sections -fdata-sections
+ifeq ($(PICOLIBC), 1)
+CFLAGS += -specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
+endif
 
 ifeq ($(DEBUG), 1)
     CFLAGS += -ggdb3 -Og

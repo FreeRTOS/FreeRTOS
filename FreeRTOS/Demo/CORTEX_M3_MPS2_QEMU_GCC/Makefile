@@ -68,10 +68,12 @@ DEFINES :=  -DQEMU_SOC_MPS2 -DHEAP3
 
 LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs --specs=rdimon.specs -lc -lrdimon
 LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
+LDFLAGS += -Wl,--gc-sections
 
 CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-error=implicit-function-declaration
 CFLAGS += -Wno-builtin-declaration-mismatch -Werror
 CFLAGS += -Wall -Wextra
+CFLAGS += -ffunction-sections -fdata-sections
 
 ifeq ($(DEBUG), 1)
     CFLAGS += -ggdb3 -Og
@@ -88,7 +90,7 @@ CFLAGS += $(INCLUDE_DIRS)
 .PHONY: clean
 
 $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
-	$(CC) -ffunction-sections -fdata-sections $(CFLAGS) $(LDFLAGS) $+ -o $(@)
+	$(CC) $(CFLAGS) $(LDFLAGS) $+ -o $(@)
 
 %.d: %.c
 	@set -e; rm -f $@; \

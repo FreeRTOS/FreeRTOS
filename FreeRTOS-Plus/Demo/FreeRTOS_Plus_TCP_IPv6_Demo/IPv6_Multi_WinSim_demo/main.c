@@ -240,12 +240,9 @@ int main( void )
                 xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
             }
         #endif /* ( ipconfigUSE_DHCP != 0 ) */
-        /* Give an invalid and a valid DNS IP-address. */
-/*          xEndPoints[0].ipv4_defaults.ulDNSServerAddresses[0] = FreeRTOS_inet_addr_quick( 118, 98, 44, 10 ); */
-/*          xEndPoints[0].ipv4_defaults.ulDNSServerAddresses[1] = FreeRTOS_inet_addr_quick( 118, 98, 44, 100 ); */
 
         /*
-         * End-point-1  // public
+         *     End-point-1 : public
          *     Network: 2001:470:ed44::/64
          *     IPv6   : 2001:470:ed44::4514:89d5:4589:8b79/128
          *     Gateway: fe80::ba27:ebff:fe5a:d751  // obtained from Router Advertisement
@@ -292,7 +289,7 @@ int main( void )
         #if ( ipconfigUSE_IPv6 != 0 && USES_IPV6_ENDPOINT != 0 )
             {
                 /*
-                 * End-point-3  // private
+                 *     End-point-3 : private
                  *     Network: fe80::/10 (link-local)
                  *     IPv6   : fe80::d80e:95cc:3154:b76a/128
                  *     Gateway: -
@@ -719,38 +716,38 @@ const char * pcCommandList[] =
     /*      "udp 192.168.2.255@2402 Hello", */
     /*      "udp 192.168.2.255@2402 Hello", */
     /*      "udp 192.168.2.255@2402 Hello", */
-    /*          "http 192.168.2.11 /index.html 33001", */
-    /*       "http 2404:6800:4003:c05::5e /index.html 80", */
-    /*       "ping6 2606:4700:f1::1", */
-    /*       "ping6 2606:4700:f1::1", */
-    /*       "dnsq4  google.de", */
-    /*       "dnsq6  google.nl", */
-    /*       "dnsq4  google.es", */
+    /*      "http 192.168.2.11 /index.html 33001", */
+    /*      "http 2404:6800:4003:c05::5e /index.html 80", */
+    /*      "ping6 2606:4700:f1::1", */
+    /*      "ping6 2606:4700:f1::1", */
+    /*      "dnsq4  google.de", */
+    /*      "dnsq6  google.nl", */
+    /*      "dnsq4  google.es", */
     /*      "dnsq6  google.co.uk", */
-    /*         "udp 192.168.2.11@7 Hello world 1\r\n", */
-    /*         "udp fe80::715e:482e:4a3e:d081@7 Hello world 1\r\n", */
+    /*      "udp 192.168.2.11@7 Hello world 1\r\n", */
+    /*      "udp fe80::715e:482e:4a3e:d081@7 Hello world 1\r\n", */
     /*      "dnsq4  google.de", */
     /*      "dnsq6  google.nl", */
     /*      "dnsq4  google.es", */
     /*      "dnsq6  google.co.uk", */
 
-    /*       "ntp6a 2.europe.pool.ntp.org", */
-    /* //      "ping4c 74.125.24.94", */
-    /*       "ping4c 192.168.2.1", */
-    /*       "ping4c 192.168.2.10", */
+    /*      "ntp6a 2.europe.pool.ntp.org", */
+    /*      "ping4c 74.125.24.94", */
+    /*      "ping4c 192.168.2.1", */
+    /*      "ping4c 192.168.2.10", */
     /*      "ping6c 2404:6800:4003:c11::5e", */
     /*      "ping6c 2404:6800:4003:c11::5e", */
 
-    /*    "ping4 raspberrypi.local", */
-    /*    "ping6 2404:6800:4003:c0f::5e", */
+    /*      "ping4 raspberrypi.local", */
+    /*      "ping6 2404:6800:4003:c0f::5e", */
 
-    /*    "http4 google.de /index.html", */
-    /*    "http6 google.nl /index.html", */
-    /*    "ping4 10.0.1.10", */
-    /*    "ping4 192.168.2.1", */
-    /*    "dnsq4 amazon.com", */
-    /*    "ping6 google.de", */
-    /*    "ntp6a 2.europe.pool.ntp.org", */
+    /*      "http4 google.de /index.html", */
+    /*      "http6 google.nl /index.html", */
+    /*      "ping4 10.0.1.10", */
+    /*      "ping4 192.168.2.1", */
+    /*      "dnsq4 amazon.com", */
+    /*      "ping6 google.de", */
+    /*      "ntp6a 2.europe.pool.ntp.org", */
 };
 
 static void prvServerWorkTask( void * pvArgument )

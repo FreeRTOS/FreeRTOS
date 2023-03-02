@@ -29,13 +29,13 @@
 #define NET_IF_H
 
 /*
- * Send uip_len bytes from uip_buf to the network interface selected by the 
- * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h). 
+ * Send uip_len bytes from uip_buf to the network interface selected by the
+ * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h).
  */
 void vNetifTx( void );
 
 /*
- * Receive bytes from the network interface selected by the 
+ * Receive bytes from the network interface selected by the
  * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h).  The
  * bytes are placed in uip_buf.  The number of bytes copied into uip_buf is
  * returned.
@@ -43,9 +43,9 @@ void vNetifTx( void );
 UBaseType_t uxNetifRx( void );
 
 /*
- * Prepare a packet capture session.  This will print out all the network 
- * interfaces available, and the one actually used is set by the 
- * configNETWORK_INTERFACE_TO_USE constant that is defined in 
+ * Prepare a packet capture session.  This will print out all the network
+ * interfaces available, and the one actually used is set by the
+ * configNETWORK_INTERFACE_TO_USE constant that is defined in
  * FreeRTOSConfig.h. */
 BaseType_t xNetifInit( void );
 

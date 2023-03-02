@@ -315,9 +315,9 @@ extern UBaseType_t uxRand();
 #define ipconfigUSE_NTP_DEMO                1
 #define ipconfigDNS_USE_CALLBACKS           1
 #define ipconfigSUPPORT_SIGNALS             1
-#define ipconfigUSE_IPv6                    1 /* 1 */
-#define ipconfigUSE_IPv6                    1 /* 1 */
-#define ipconfigUSE_RA                      0 /* 1 */
+#define ipconfigUSE_IPv6                    1
+#define ipconfigUSE_IPv6                    1
+#define ipconfigUSE_RA                      0
 #define ipconfigSUPPORT_OUTGOING_PINGS      1
 
 #endif /* FREERTOS_IP_CONFIG_H */

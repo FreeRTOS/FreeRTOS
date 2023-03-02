@@ -47,8 +47,12 @@
 #define AMAZON_GO_SERVER                           9000
 #define XILINX_ZYNQ                                7
 
-/*#define configECHO_SERVER_ADDR_STRING          "fe80::be20:7974:c816:2b9e" */
-#define configECHO_SERVER_ADDR_STRING              "192.168.1.4"
+/* Used for IPv6 validation */
+#define configECHO_SERVER_ADDR_STRING          "fe80::be20:7974:c816:2b9e"
+
+/* Used for IPv4 validation */
+/* #define configECHO_SERVER_ADDR_STRING              "192.168.1.4" */
+
 #define configECHO_SERVER_PORT                     AMAZON_GO_SERVER
 
 

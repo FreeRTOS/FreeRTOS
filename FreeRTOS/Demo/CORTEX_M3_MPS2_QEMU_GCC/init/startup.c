@@ -135,6 +135,7 @@ void Default_Handler2( void )
         " ldr r1, [r0, #24]                                         \n"
         " ldr r2, handler2_address_const                            \n"
         " bx r2                                                     \n"
+        " nop                                                       \n"
         " handler2_address_const: .word prvGetRegistersFromStack    \n"
     );
 }
@@ -167,7 +168,7 @@ void Default_Handler6( void )
     }
 }
 
-const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
+const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) , used ) ) =
 {
     ( uint32_t * ) &_estack,
     ( uint32_t * ) &Reset_Handler,       /* Reset                -15 */

@@ -309,7 +309,7 @@ FREERTOS_IGNORED_FILES = [
 
 FREERTOS_HEADER = [
     '/*\n',
-    ' * FreeRTOS V202212.00\n',
+    ' * FreeRTOS V202212.01\n',
     ' * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.\n',
     ' *\n',
     ' * Permission is hereby granted, free of charge, to any person obtaining a copy of\n',

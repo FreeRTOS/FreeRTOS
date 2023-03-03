@@ -818,6 +818,7 @@ void test_coverage_xTaskPriorityDisinherit_exactly_one_mutex_priority_delta( voi
 {
     TCB_t xTaskTCBs[ 2U ] = { NULL };
     UBaseType_t uxPriority;
+    BaseType_t xReturn;
 
     for(
         uxPriority = ( UBaseType_t ) 0U;
@@ -839,6 +840,8 @@ void test_coverage_xTaskPriorityDisinherit_exactly_one_mutex_priority_delta( voi
 
     xTaskTCBs[ 1 ].uxPriority = 2;
     xTaskTCBs[ 1 ].xTaskRunState = 1;
+    vListInitialiseItem( &( xTaskTCBs[1].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[1].xStateListItem ), &xTaskTCBs[1] );
     xYieldPendings[ 1 ] = pdFALSE;
     pxCurrentTCBs[ 1 ] = &xTaskTCBs[ 1 ];
 
@@ -857,6 +860,208 @@ void test_coverage_xTaskPriorityDisinherit_exactly_one_mutex_priority_delta( voi
     xTaskTCBs[0].uxPriority = xTaskTCBs[1].uxPriority;
     taskRECORD_READY_PRIORITY( xTaskTCBs[0].uxPriority );
     listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[0].uxPriority ] ), &( xTaskTCBs[0].xStateListItem ) );
+    listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] ), &( xTaskTCBs[1].xStateListItem ) );
+    xTaskTCBs[1].uxMutexesHeld++;
 
-    xTaskPriorityDisinherit( &xTaskTCBs[1] );
+    xReturn = xTaskPriorityDisinherit( &xTaskTCBs[1] );
+    TEST_ASSERT_EQUAL(pdTRUE, xReturn);
+}
+
+/**
+ * @brief xTaskPriorityDisinherit - restore the priority held before inheriting priority due to mutex usage
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *          if( pxTCB->uxMutexesHeld == ( UBaseType_t ) 0 )
+ *          {
+ *              ...
+ * @endcode
+ *
+ *
+ * Cover the case where the current priority is not the base priority and
+ * the mutex count is 2
+ */
+void test_coverage_xTaskPriorityDisinherit_exactly_priority_delta_mutex_count_two( void )
+{
+    TCB_t xTaskTCBs[ 2U ] = { NULL };
+    UBaseType_t uxPriority;
+    BaseType_t xReturn;
+
+    for(
+        uxPriority = ( UBaseType_t ) 0U;
+        uxPriority < ( UBaseType_t ) configMAX_PRIORITIES;
+        uxPriority++)
+    {
+        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );
+    }
+    vListInitialise( &xSuspendedTaskList );
+    vListInitialise( &xPendingReadyList );
+
+    xTaskTCBs[ 0 ].uxPriority = 1;
+    xTaskTCBs[ 0 ].xTaskRunState = -1;
+    vListInitialiseItem( &( xTaskTCBs[0].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[0].xStateListItem ), &xTaskTCBs[0] );
+    listINSERT_END( &xPendingReadyList, &xTaskTCBs[ 0 ].xStateListItem );
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
+
+    xTaskTCBs[ 1 ].uxPriority = 2;
+    xTaskTCBs[ 1 ].xTaskRunState = 1;
+    vListInitialiseItem( &( xTaskTCBs[1].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[1].xStateListItem ), &xTaskTCBs[1] );
+    xYieldPendings[ 1 ] = pdFALSE;
+    pxCurrentTCBs[ 1 ] = &xTaskTCBs[ 1 ];
+
+    uxTopReadyPriority = 1;
+    uxSchedulerSuspended = pdFALSE;
+
+    /* task 0 priority is lower than task 1. mutex holder state accounting for new priority */
+    listSET_LIST_ITEM_VALUE( &( xTaskTCBs[0].xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) xTaskTCBs[1].uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+    /* task 1 is in the ready state */
+    if( uxListRemove( &( xTaskTCBs[0].xStateListItem ) ) == ( UBaseType_t ) 0 )
+    {
+        ( uxTopReadyPriority ) &= ~( 1UL << ( xTaskTCBs[0].uxPriority ) );
+    }
+
+    xTaskTCBs[0].uxPriority = xTaskTCBs[1].uxPriority;
+    taskRECORD_READY_PRIORITY( xTaskTCBs[0].uxPriority );
+    listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[0].uxPriority ] ), &( xTaskTCBs[0].xStateListItem ) );
+    listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] ), &( xTaskTCBs[1].xStateListItem ) );
+    xTaskTCBs[1].uxMutexesHeld = 2;
+
+    xReturn = xTaskPriorityDisinherit( &xTaskTCBs[1] );
+    TEST_ASSERT_EQUAL(pdFALSE, xReturn);
+}
+
+/**
+ * @brief xTaskPriorityDisinheritAfterTimeoout - restore the priority held before inheriting priority due to mutex usage
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *    if( pxTCB->uxPriority != pxTCB->uxBasePriority )
+ *    {
+ *      ...
+ * @endcode
+ *
+ *
+ * Cover the case where the current priority is not the base priority and
+ * exactly one mutex is being held.
+ */
+void test_coverage_xTaskPriorityDisinheritAfterTimeout_exactly_one_mutex_priority_equal( void )
+{
+    TCB_t xTaskTCBs[ 2U ] = { NULL };
+    UBaseType_t uxPriority;
+
+    for(
+        uxPriority = ( UBaseType_t ) 0U;
+        uxPriority < ( UBaseType_t ) configMAX_PRIORITIES;
+        uxPriority++)
+    {
+        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );
+    }
+    vListInitialise( &xSuspendedTaskList );
+    vListInitialise( &xPendingReadyList );
+
+    xTaskTCBs[ 0 ].uxPriority = 1;
+    xTaskTCBs[ 0 ].xTaskRunState = -1;
+    vListInitialiseItem( &( xTaskTCBs[0].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[0].xStateListItem ), &xTaskTCBs[0] );
+    listINSERT_END( &xPendingReadyList, &xTaskTCBs[ 0 ].xStateListItem );
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
+
+    xTaskTCBs[ 1 ].uxPriority = 2;
+    xTaskTCBs[ 1 ].xTaskRunState = 1;
+    vListInitialiseItem( &( xTaskTCBs[1].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[1].xStateListItem ), &xTaskTCBs[1] );
+    xYieldPendings[ 1 ] = pdFALSE;
+    pxCurrentTCBs[ 1 ] = &xTaskTCBs[ 1 ];
+
+    uxTopReadyPriority = 1;
+    uxSchedulerSuspended = pdFALSE;
+
+    /* task 0 priority is lower than task 1. mutex holder state accounting for new priority */
+    listSET_LIST_ITEM_VALUE( &( xTaskTCBs[0].xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) xTaskTCBs[1].uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+    /* task 1 is in the ready state */
+    if( uxListRemove( &( xTaskTCBs[0].xStateListItem ) ) == ( UBaseType_t ) 0 )
+    {
+        ( uxTopReadyPriority ) &= ~( 1UL << ( xTaskTCBs[0].uxPriority ) );
+    }
+
+    xTaskTCBs[0].uxPriority = xTaskTCBs[1].uxPriority;
+    taskRECORD_READY_PRIORITY( xTaskTCBs[0].uxPriority );
+    listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[0].uxPriority ] ), &( xTaskTCBs[0].xStateListItem ) );
+    listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] ), &( xTaskTCBs[1].xStateListItem ) );
+    xTaskTCBs[1].uxMutexesHeld++;
+
+    printf("TRACE: xTaskTCBs[1].uxBasePriority: %lu\n", xTaskTCBs[1].uxBasePriority);
+    vTaskPriorityDisinheritAfterTimeout( &xTaskTCBs[1], (UBaseType_t)0 );
+}
+
+/**
+ * @brief xTaskPriorityDisinheritAfterTimeout - restore the priority held before inheriting priority due to mutex usage
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *    if( pxTCB->uxPriority != pxTCB->uxBasePriority )
+ *    {
+ *      ...
+ * @endcode
+ *
+ *
+ * Cover the case where the current priority is not the base priority and
+ * exactly one mutex is being held.
+ */
+void test_coverage_xTaskPriorityDisinheritAfterTimeout_exactly_one_mutex_priority_delta( void )
+{
+    TCB_t xTaskTCBs[ 2U ] = { NULL };
+    UBaseType_t uxPriority;
+
+    for(
+        uxPriority = ( UBaseType_t ) 0U;
+        uxPriority < ( UBaseType_t ) configMAX_PRIORITIES;
+        uxPriority++)
+    {
+        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );
+    }
+    vListInitialise( &xSuspendedTaskList );
+    vListInitialise( &xPendingReadyList );
+
+    xTaskTCBs[ 0 ].uxPriority = 1;
+    xTaskTCBs[ 0 ].xTaskRunState = -1;
+    vListInitialiseItem( &( xTaskTCBs[0].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[0].xStateListItem ), &xTaskTCBs[0] );
+    listINSERT_END( &xPendingReadyList, &xTaskTCBs[ 0 ].xStateListItem );
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
+
+    xTaskTCBs[ 1 ].uxPriority = 2;
+    xTaskTCBs[ 1 ].xTaskRunState = 1;
+    vListInitialiseItem( &( xTaskTCBs[1].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[1].xStateListItem ), &xTaskTCBs[1] );
+    xYieldPendings[ 1 ] = pdFALSE;
+    pxCurrentTCBs[ 1 ] = &xTaskTCBs[ 1 ];
+
+    uxTopReadyPriority = 1;
+    uxSchedulerSuspended = pdFALSE;
+
+    /* task 0 priority is lower than task 1. mutex holder state accounting for new priority */
+    listSET_LIST_ITEM_VALUE( &( xTaskTCBs[0].xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) xTaskTCBs[1].uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+    /* task 1 is in the ready state */
+    if( uxListRemove( &( xTaskTCBs[0].xStateListItem ) ) == ( UBaseType_t ) 0 )
+    {
+        ( uxTopReadyPriority ) &= ~( 1UL << ( xTaskTCBs[0].uxPriority ) );
+    }
+
+    xTaskTCBs[0].uxPriority = xTaskTCBs[1].uxPriority;
+    taskRECORD_READY_PRIORITY( xTaskTCBs[0].uxPriority );
+    listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[0].uxPriority ] ), &( xTaskTCBs[0].xStateListItem ) );
+    listINSERT_END( &( pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] ), &( xTaskTCBs[1].xStateListItem ) );
+    xTaskTCBs[1].uxMutexesHeld++;
+
+    printf("TRACE: xTaskTCBs[1].uxBasePriority: %lu\n", xTaskTCBs[1].uxBasePriority);
+    vTaskPriorityDisinheritAfterTimeout( &xTaskTCBs[1], (UBaseType_t)1 );
 }

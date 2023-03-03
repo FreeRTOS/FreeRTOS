@@ -1,5 +1,9 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS 202212.00 and FreeRTOS 202212.01 released March 2023
+	+ Fix FreeRTOS-Plus demos to use the configured IP addresses in absence of a DHCP server or
+          while using static IP configuration.
+
 Changes between FreeRTOS 202112.00 and FreeRTOS 202212.00 released December 2022
 
 	+ Released LTS 2.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11,

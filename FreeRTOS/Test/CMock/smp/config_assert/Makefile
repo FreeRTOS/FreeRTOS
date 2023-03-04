@@ -26,6 +26,7 @@ SUITE_UT_SRC        :=  config_assert_utest.c
 
 # List the headers used by PROJECT_SRC that you would like to mock
 MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/list.h
+MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/smp/config_assert/list_macros.h
 MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/queue.h
 MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/timers.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_assert.h
@@ -34,7 +35,7 @@ MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/portmacro.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/smp/config_assert/local_portable.h
 
 # List any addiitonal flags needed by the preprocessor
-CPPFLAGS            +=
+CPPFLAGS            += -include list_macros.h
 
 # List any addiitonal flags needed by the compiler
 CFLAGS              +=

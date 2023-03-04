@@ -1,10 +1,37 @@
+# FreeRTOS+TCP IPv6 Demo
+
 The FreeRTOS+TCP IPv6/multiple-interface source code and example projects are
 currently provided in the FreeRTOS+TCP repository's "feature/ipv6_multi_beta"
 branch. These demos only require the FreeRTOS+TCP IPv6/multiple Interface
 source code and the FreeRTOS-Kernel.
 
+## Setting up the workspace:
+
+Clone the submodules used in the FreeRTOS repo:
+
+`git submodule update --init --recursive`
+
+Make sure the FreeRTOS+TCP submodule is pointing to the [`dev/IPv6_integration`](https://github.com/FreeRTOS/FreeRTOS-Plus-TCP/tree/dev/IPv6_integration) branch
+by checking:
+
+``` sh
+cd FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP
+git status
+```
+
+If not checkout to `dev/IPv6_integration`:
+
+`git checkout dev/IPv6_integration`
+
+Update submodules:
+
+``` sh
+git submodule update --init --recursive
+git submodule update --checkout
+```
+
 The FreeRTOS+TCP Multiple Interface Visual Studio project file is in the following
-directory: demos\IPv6_Multi_WinSim_demo
+directory: `FreeRTOS-Plus\Demo\FreeRTOS_Plus_TCP_IPv6_Demo\IPv6_Multi_WinSim_dem`
 
 In FreeRTOS_Plus_TCP_IPv6_Multi.props, you will find a couple of macros that indicate
 the location of source files:
@@ -65,3 +92,21 @@ hard-coded in main.c
 
 The keywords can have some single-letter suffices: 4 or 6 ( for IPv4/6 ), “a” to do
 an asynchronous DNS lookup, and “c” to clear all caches before starting the task.
+
+
+## Using the UDP Echo Client
+
+The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
+setting the `mainCREATE_UDP_ECHO_SERVER_TASK` macro to 1 in the main file.
+
+The UDP Echo Client creates a task and sends messages to the IP address and port
+defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address) 
+and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
+get echo of the messages back. There should be a UDP echo server running in the 
+given IP and port.
+
+<sample echo server>
+
+The UDP Echo Client demo also demonstrates the UDP zero copy for both IPv4 and IPv6
+(based on the IP type), it can be enabled by setting `USE_ZERO_COPY` macro of the
+UDPEchoClient_SingleTasks.c file to 1.

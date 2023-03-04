@@ -217,6 +217,7 @@ $(DEMO_COMMON_SOURCE_DIR)\logging\include;
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="TCPEchoClient_SingleTasks.c" />
+    <ClCompile Include="UDPEchoClient_SingleTasks.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\event_groups.h" />
@@ -271,6 +272,7 @@ $(DEMO_COMMON_SOURCE_DIR)\logging\include;
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />
     <ClInclude Include="TCPEchoClient_SingleTasks.h" />
+    <ClInclude Include="UDPEchoClient_SingleTasks.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

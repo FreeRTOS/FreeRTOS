@@ -57,6 +57,7 @@
 
 #include "plus_tcp_demo_cli.h"
 #include "TCPEchoClient_SingleTasks.h"
+#include "UDPEchoClient_SingleTasks.h"
 
 #ifndef ARRAY_SIZE
     #define ARRAY_SIZE( x )    ( int ) ( sizeof( x ) / sizeof( x )[ 0 ] )
@@ -104,10 +105,16 @@
  * mainCREATE_TCP_ECHO_SERVER_TASK:  When set to 1 a task is created that accepts
  * connections on the standard echo port (port 7), then echos back any data
  * received on that connection.
+ * 
+ * mainCREATE_UDP_ECHO_SERVER_TASK:  When set to 1 a task is created that sends data
+ * to the address configECHO_SERVER_ADDR_STRING (IPv4/Ipv6) where it is 
+ * expected to echo back the data, which, the created tasks receives.
+ * 
  */
 #define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     0
-#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1 /* 1 */
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE              0 /* 1 */
 #define mainCREATE_TCP_ECHO_SERVER_TASK               0
+#define mainCREATE_UDP_ECHO_SERVER_TASK               1
 /*-----------------------------------------------------------*/
 
 /* Define a task that is used to start and monitor several tests. */
@@ -436,6 +443,12 @@ void vAssertCalled( const char * pcFile,
             #if ( mainCREATE_TCP_ECHO_SERVER_TASK == 1 )
                 {
                     vStartSimpleTCPServerTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
+                }
+            #endif
+
+            #if ( mainCREATE_UDP_ECHO_SERVER_TASK == 1 )
+                {
+                    vStartUDPEchoClientTasks_SingleTasks(mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY);
                 }
             #endif
 

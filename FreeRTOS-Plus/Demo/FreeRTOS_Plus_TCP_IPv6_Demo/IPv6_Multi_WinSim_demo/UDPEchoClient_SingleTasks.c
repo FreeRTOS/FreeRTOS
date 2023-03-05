@@ -246,8 +246,6 @@ static void prvUDPEchoClientTask(void* pvParameters)
                 &xRxAddress,
                 &xAddressLength);
 
-            //configASSERT((pucReceivedUDPPayload != NULL));
-
             if (pucReceivedUDPPayload != NULL) {
                 memcpy((void*)(cRxString), pucReceivedUDPPayload, TX_RX_STR_SIZE);
 

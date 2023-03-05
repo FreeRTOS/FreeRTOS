@@ -105,7 +105,63 @@ and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect 
 get echo of the messages back. There should be a UDP echo server running in the 
 given IP and port.
 
-<sample echo server>
+
+#### Sample UDP echo server in Go: 
+
+``` go
+
+// Filename: echo_server.go 
+// Run: go run echo_server.go <ip_address>:<port>
+// Example IPv4:  go run echo_server.go 192.168.1.2:9000
+// Example IPv6:  go run echo_server.go [fe80::1b99:a6bd:a344:b09d]:9000
+
+package main
+
+import (
+	"fmt"
+	"net"
+	"os"
+)
+
+func main() {
+
+	if len(os.Args) == 1 {
+		fmt.Println("Please provide host:port")
+		os.Exit(1)
+	}
+
+	// Resolve the string address to a UDP address
+	udpAddr, err := net.ResolveUDPAddr("udp", os.Args[1])
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	// Start listening for UDP packages on the given address
+	conn, err := net.ListenUDP("udp", udpAddr)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	// Read from UDP listener 
+	for {
+		var buf [1024]byte
+		_, addr, err := conn.ReadFromUDP(buf[0:])
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Print(string(buf[0:]))
+
+		// Write back the message over UDP
+		conn.WriteToUDP([]byte(buf[0:]), addr)
+	}
+}
+```
 
 The UDP Echo Client demo also demonstrates the UDP zero copy for both IPv4 and IPv6
 (based on the IP type), it can be enabled by setting `USE_ZERO_COPY` macro of the

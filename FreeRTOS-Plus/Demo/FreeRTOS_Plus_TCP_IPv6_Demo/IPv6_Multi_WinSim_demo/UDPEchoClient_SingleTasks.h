@@ -32,6 +32,5 @@
   * is made from the same task that listens for the echo reply.
   */
 void vStartUDPEchoClientTasks_SingleTasks(uint16_t usTaskStackSize, UBaseType_t uxTaskPriority);
-BaseType_t xAreSingleTaskTCPEchoClientsStillRunning(void);
 
 #endif /* SINGLE_TASK_UDP_ECHO_CLIENTS_H */

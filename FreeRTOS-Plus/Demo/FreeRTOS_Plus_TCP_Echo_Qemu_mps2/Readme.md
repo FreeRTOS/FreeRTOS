@@ -313,8 +313,8 @@ make
 
 7. Run:
 ```shell
-sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3
-          -kernel ./build/RTOSDemo.axf \
+sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
+          -kernel ./build/freertos_tcp_mps2_demo.axf \
           -netdev tap,id=mynet0,ifname=virbr0-nic,script=no \
           -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 \
           -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump\
@@ -339,8 +339,8 @@ make DEBUG=1
 
 2. Start QEMU in the paused state waiting for GDB connection:
 ```shell
-sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -s -S
-          -kernel ./build/RTOSDemo.axf \
+sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -s -S \
+          -kernel ./build/freertos_tcp_mps2_demo.axf \
           -netdev tap,id=mynet0,ifname=virbr0-nic,script=no \
           -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 \
           -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump\
@@ -350,7 +350,7 @@ sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -s -S
 
 3. Run GDB:
 ```shell
-$ arm-none-eabi-gdb -q ./build/RTOSDemo.axf
+$ arm-none-eabi-gdb -q ./build/freertos_tcp_mps2_demo.axf
 
 (gdb) target remote :1234
 (gdb) break main

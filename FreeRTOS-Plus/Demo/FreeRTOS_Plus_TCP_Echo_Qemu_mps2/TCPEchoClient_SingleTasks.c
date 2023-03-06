@@ -108,6 +108,9 @@
     {
         BaseType_t x;
 
+        /*set Ethernet interrupt priority to configMAC_INTERRUPT_PRIORITY*/
+        NVIC_SetPriority( ETHERNET_IRQn , configMAC_INTERRUPT_PRIORITY );
+
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
         {

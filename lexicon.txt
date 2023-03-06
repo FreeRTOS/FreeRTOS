@@ -58,6 +58,7 @@ aren't
 args
 armv
 arp
+arpqc
 arraynotifed
 asc
 ascii
@@ -625,6 +626,7 @@ ebdont
 eblocked
 ebset
 ebwait
+ebff
 ec
 ecc
 ecdh
@@ -720,6 +722,7 @@ esentdata
 esentstart
 eserver
 esp
+estatus
 etaskgetstate
 etaskstateget
 eth
@@ -1103,6 +1106,7 @@ isrtriggeredtask
 isset
 itemlength
 itesm
+itimezone
 itm
 itmc
 itteratio
@@ -1432,6 +1436,7 @@ netbios
 netif
 netifmax
 netiftx
+netinterface
 netmask
 netstat
 networkcontext
@@ -1441,6 +1446,7 @@ ni
 nic
 nirq
 nist
+nl
 nmemb
 nmi
 nnnn
@@ -1464,6 +1470,7 @@ nsec
 nspe
 nt
 ntp
+ntpclient
 ntpdemo
 nts
 ntt
@@ -1505,6 +1512,7 @@ optimiser
 optimising
 optionalquery
 org
+originatetimestamp
 os
 osc
 oszillation
@@ -1609,6 +1617,7 @@ pchead
 pchelpstring
 pchexoutput
 pchost
+pchostname
 pcinputstr
 pcjobdocument
 pcjobid
@@ -1657,6 +1666,7 @@ pcrootdir
 pcrxbuffer
 pcrxedchar
 pcserver
+pcservername
 pcshadowname
 pcsource
 pcstartheaderloc
@@ -2159,6 +2169,7 @@ pwd
 pwm
 pwpr
 pwr
+pxaddress
 pxaddresslen
 pxattrs
 pxbuffer
@@ -2177,6 +2188,7 @@ pxcontext
 pxctx
 pxcurrenttcb
 pxdeserializedinfo
+pxdnsserveraddress
 pxdptr
 pxecdsacontext
 pxecparams
@@ -2231,6 +2243,8 @@ pxreportdescriptor
 pxrequestheaders
 pxrequestinfo
 pxresponse
+pxresult
+pxresults
 pxreturninfo
 pxrng
 pxrngcontext
@@ -2285,6 +2299,7 @@ randomisation
 randomise
 randomised
 randomiser
+raspberrypi
 ratpriorities
 rb
 rbar
@@ -2307,6 +2322,7 @@ reblocked
 receiveloop
 receivetimeout
 receivetimeoutms
+receivetimestamp
 recmucontrolling
 recmutex
 recognisable
@@ -2317,6 +2333,7 @@ recorderdata
 recv
 recvfrom
 recvtimeout
+referenceid
 referencetimestamp
 reflash
 reg
@@ -2542,6 +2559,7 @@ sntperrorauthfailure
 sntpservernotauthenticated
 sntpsuccess
 sntptask
+sntptimestamp
 soc
 sockaddr
 socketauto
@@ -2812,6 +2830,7 @@ ucisstopneededintimerzerocallback
 ucline
 uclisten
 ucminallowablevalue
+ucname
 ucnextbuffertoprocess
 ucnormallyemptyreceivedvalues
 ucnormallyfullreceivedvalues
@@ -2843,6 +2862,7 @@ uihashlen
 uint
 uintptr
 uip
+uk
 ul
 uladditionaloffset
 ulamount
@@ -3015,6 +3035,7 @@ userguide
 usermode
 usernamesize
 usfrequencyhz
+usidentifier
 usindex
 usjobidlength
 usmaxjitter
@@ -3052,6 +3073,7 @@ uxbytesleft
 uxbytesreceived
 uxbytessent
 uxcreatortaskstackbuffer
+uxcurrentseconds
 uxerrorhasoccurred
 uxeventgroupgetnumber
 uxeventqueuelength
@@ -3068,6 +3090,7 @@ uxlistremove
 uxloopcount
 uxmaxcount
 uxmessageswaiting
+uxnetworkisup
 uxnewpriority
 uxnumbertocreate
 uxpacketsreceived
@@ -3115,6 +3138,7 @@ vapplicationidlehook
 vapplicationipnetworkeventhook
 vapplicationirqhandler
 vapplicationmallocfailedhook
+vapplicationpingreplyhook
 vapplicationsetupinterrupts
 vapplicationsetuptimerinterrupt
 vapplicationstackoverflowhook
@@ -3235,6 +3259,7 @@ vstartdefenderdemo
 vstartfleetprovisioningdemo
 vstartjobsdemo
 vstartmathtasks
+vstartntptask
 vstartotademo
 vstartshadowdemo
 vstartsimplehttpdemo
@@ -3307,6 +3332,7 @@ xa
 xactionlength
 xaddress
 xaddresslength
+xafterlinebreak
 xapplicationdhcpuserhook
 xaredynamicprioritytasksstillrunning
 xareflopregistertestsstillrunning
@@ -3318,6 +3344,7 @@ xarestreambuffertasksstillrunning
 xaretasknotificationarraytasksstillrunning
 xarraysize
 xasymmetricalgorithm
+xasynchronous
 xautoreload
 xautoreloadtimers
 xb
@@ -3431,6 +3458,7 @@ xhelpcommand
 xhigherprioritytaskwoken
 xhighprioritymutextask
 xhighprioritytaskwoken
+xhints
 xhostlen
 xhow
 xilinx
@@ -3440,7 +3468,9 @@ xinputstrlen
 xinsideinterrupt
 xinterface
 xinterruptcontroller
+xipaddressfound
 xiptracevalues
+xipversion
 xirqrequest
 xisinsideisr
 xisrautoreloadtimer
@@ -3463,6 +3493,7 @@ xlen
 xlength
 xlentosend
 xlimitedincrementhandle
+xlogging
 xlogtofile
 xlogtostdout
 xlogtoudp
@@ -3503,6 +3534,7 @@ xnextwaketime
 xnotifyarraytaskfromisr
 xntppacket
 xntptaskhandle
+xntptaskisrunning
 xnumberofleds
 xnumberofsuccessfulallocations
 xnumberofsuccessfulfrees
@@ -3764,6 +3796,7 @@ xtracerunning
 xtransfercompletedelay
 xtransfersocket
 xtransmitted
+xtrue
 xtrueobject
 xts
 xttcps

@@ -45,6 +45,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "CMSIS/CMSDK_CM3.h"
+#include "CMSIS/core_cm3.h"
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"

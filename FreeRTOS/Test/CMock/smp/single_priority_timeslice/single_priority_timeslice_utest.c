@@ -182,7 +182,7 @@ void test_timeslice_verification_idle_core( void )
     TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
     uint32_t i;
 
-    /* Create configNUMBER_OF_CORES tasks of equal priority */
+    /* Create ( configNUMBER_OF_CORES - 1 ) tasks of equal priority */
     for (i = 0; i < (configNUMBER_OF_CORES - 1); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
@@ -190,7 +190,7 @@ void test_timeslice_verification_idle_core( void )
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state prior to incrementing a tick */
-    for (i = 0; i < configNUMBER_OF_CORES -1 ; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ) ; i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 
@@ -245,7 +245,7 @@ void test_timeslice_verification_different_priority_tasks( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of high priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
     
@@ -289,7 +289,7 @@ void test_timeslice_verification_different_priority_tasks( void )
  * #define configUSE_CORE_AFFINITY                          1
  * #define configNUMBER_OF_CORES                            (N > 1)
  * 
- * This test can be run with FreeRTOS configured for any number of cores greater than 1 .
+ * This test can be run with FreeRTOS configured for any number of cores greater than 1.
  * 
  * Tasks are created prior to starting the scheduler.
  * 
@@ -325,7 +325,7 @@ void test_priority_change_tasks_different_priority_raise_to_equal( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of high priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
@@ -418,7 +418,7 @@ void test_priority_change_tasks_equal_priority( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
     
@@ -485,13 +485,13 @@ void test_priority_change_tasks_equal_priority( void )
  * After calling vTaskStartScheduler()
  * 
  * Task (TN)
- * Priority – 2
+ * Priority – 1
  * State - Running (Core N)
  * 
  * Call xTaskIncrementTick() for each configured CPU core. The tasks will not change state.
  * 
  * Task (TN)
- * Priority – 2
+ * Priority – 1
  * State - Running (Core N)
  * 
  * Create a new task
@@ -511,7 +511,7 @@ void test_task_create_tasks_equal_priority( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
 
@@ -587,7 +587,7 @@ void test_task_create_tasks_lower_priority( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
@@ -657,7 +657,7 @@ void test_task_create_tasks_lower_priority( void )
  *
  * Task (TN)
  * Priority – 2
- * State - Running (Core N)
+ * State - Running
  */
 void test_task_delete_tasks_equal_priorities_delete_running_task( void )
 {
@@ -665,7 +665,7 @@ void test_task_delete_tasks_equal_priorities_delete_running_task( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
@@ -759,7 +759,7 @@ void test_task_suspend_running_task( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
@@ -809,8 +809,7 @@ void test_task_suspend_running_task( void )
     
         xTaskIncrementTick_helper();
 
-        /*
-         * Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
+        /* Verify the the last task has a increasing xTaskRunState as it will follow the cycle of 0,1,2,3...
          * the last state of -1 is omitted
          */
         verifySmpTask( &xTaskHandles[configNUMBER_OF_CORES], eRunning, i );
@@ -860,7 +859,7 @@ void test_task_suspend_running_task( void )
  *
  * Task (TN)
  * Priority – 2
- * State - Running (Core N)
+ * State - Running
  *
  * After blocking the task, verify task 1 can be scheduled on each core.
  */
@@ -870,7 +869,7 @@ void test_task_block_running_task( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
@@ -981,7 +980,7 @@ void test_task_affinity_verification( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
         
@@ -1070,7 +1069,7 @@ void test_task_affinity_set_affinity_running_task( void )
     uint32_t i;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority */
-    for (i = 0; i < (configNUMBER_OF_CORES); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
@@ -1099,7 +1098,7 @@ void test_task_affinity_set_affinity_running_task( void )
     }
 
     /* Set CPU core affinity on the last task for the last CPU core */
-    vTaskCoreAffinitySet(xTaskHandles[configNUMBER_OF_CORES], 1 << ((configNUMBER_OF_CORES - 1)) );
+    vTaskCoreAffinitySet(xTaskHandles[configNUMBER_OF_CORES], 1 << (configNUMBER_OF_CORES - 1) );
 
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
         

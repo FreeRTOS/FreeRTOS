@@ -510,25 +510,114 @@ void test_task_get_stack_high_water_mark_NULL_task( void )
 
 }
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define INCLUDE_uxTaskGetStackHighWaterMark              1
-    #define configUSE_MUTEXES                                1
-Coverage for: 
-        TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
-*/
-void test_task_get_current_task_handle_cpu ( void )
+/**
+ * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with valid core ID.
+ *
+ * This test verifis the task handle returned with a valid core ID.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
+ * {
+ *     TaskHandle_t xReturn = NULL;
+ *
+ *     if( taskVALID_CORE_ID( xCoreID ) != pdFALSE )
+ *     {
+ *         xReturn = pxCurrentTCBs[ xCoreID ];
+ *     }
+ *
+ *     return xReturn;
+ * }
+ * @endcode
+ * ( taskVALID_CORE_ID( xCoreID ) != pdFALSE ) is true.
+ */
+void test_coverage_xTaskGetCurrentTaskHandleCPU_valid_core_id( void )
 {
-    TaskHandle_t xTaskHandles[1] = { NULL };
+    TCB_t xTaskTCB = { 0 };
+    TaskHandle_t xTaskHandle;
 
-    /* Create  tasks  */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+    /* Setup the variables and structure. */
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
 
-    vTaskStartScheduler();
+    /* API calls. */
+    xTaskHandle = xTaskGetCurrentTaskHandleCPU( 0 );
 
-    xTaskGetCurrentTaskHandleCPU( vFakePortGetCoreID() );
+    /* Validation. */
+    TEST_ASSERT( xTaskHandle == &xTaskTCB );
+}
 
+/**
+ * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with invalid core ID.
+ *
+ * This test verifis the task handle returned with an invalid core ID.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
+ * {
+ *     TaskHandle_t xReturn = NULL;
+ *
+ *     if( taskVALID_CORE_ID( xCoreID ) != pdFALSE )
+ *     {
+ *         xReturn = pxCurrentTCBs[ xCoreID ];
+ *     }
+ *
+ *     return xReturn;
+ * }
+ * @endcode
+ * ( taskVALID_CORE_ID( xCoreID ) != pdFALSE ) is false.
+ * xCoreID is greater than or equal to configNUMBER_OF_CORES.
+ */
+void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_ge( void )
+{
+    TCB_t xTaskTCB = { 0 };
+    TaskHandle_t xTaskHandle;
+
+    /* Setup the variables and structure. */
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+
+    /* API calls. */
+    xTaskHandle = xTaskGetCurrentTaskHandleCPU( configNUMBER_OF_CORES );
+
+    /* Validation. */
+    TEST_ASSERT( xTaskHandle == NULL );
+}
+
+/**
+ * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with invalid core ID.
+ *
+ * This test verifis the task handle returned with an invalid core ID.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
+ * {
+ *     TaskHandle_t xReturn = NULL;
+ *
+ *     if( taskVALID_CORE_ID( xCoreID ) != pdFALSE )
+ *     {
+ *         xReturn = pxCurrentTCBs[ xCoreID ];
+ *     }
+ *
+ *     return xReturn;
+ * }
+ * @endcode
+ * ( taskVALID_CORE_ID( xCoreID ) != pdFALSE ) is false.
+ * xCoreID is less than 0.
+ */
+void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_lt( void )
+{
+    TCB_t xTaskTCB = { 0 };
+    TaskHandle_t xTaskHandle;
+
+    /* Setup the variables and structure. */
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+
+    /* API calls. */
+    xTaskHandle = xTaskGetCurrentTaskHandleCPU( -1 );
+
+    /* Validation. */
+    TEST_ASSERT( xTaskHandle == NULL );
 }
 
 /*

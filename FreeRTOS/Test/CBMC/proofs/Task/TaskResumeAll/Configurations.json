@@ -53,7 +53,7 @@
   "CBMCFLAGS":
   [
     "--unwind 1",
-    "--unwindset prvInitialiseTaskLists.0:8,xTaskResumeAll.0:2,vListInsert.0:5,xTaskIncrementTick.0:4"
+    "--unwindset prvInitialiseTaskLists.0:8,xTaskResumeAll.4:2,vListInsert.0:5,xTaskIncrementTick.5:4"
 
   ],
   "OBJS":

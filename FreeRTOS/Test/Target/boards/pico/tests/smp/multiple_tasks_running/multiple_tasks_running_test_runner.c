@@ -26,26 +26,30 @@
 
 /**
  * @file multiple_tasks_running_test_runner.c
- * @brief The implementation of main function to start test runner task.
- *
- * Procedure:
- *   - Initialize environment
- *   - Run the test case
+ * @brief The implementation of test runner task which runs the test.
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h"    /* unit testing support functions */
+/* Unity includes. */
+#include "unity.h"
 
+/* Pico includes. */
 #include "pico/multicore.h"
 #include "pico/stdlib.h"
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief The task that runs the test.
+ */
 static void prvTestRunnerTask( void * pvParameters );
 
+/**
+ * @brief The test case to run.
+ */
 extern void vRunMultipleTasksRunningTest( void );
 /*-----------------------------------------------------------*/
 
@@ -69,3 +73,4 @@ void vRunTest( void )
                  configMAX_PRIORITIES - 1,
                  NULL );
 }
+/*-----------------------------------------------------------*/

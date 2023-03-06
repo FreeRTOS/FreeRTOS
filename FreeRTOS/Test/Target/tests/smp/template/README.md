@@ -12,14 +12,14 @@
 
 1. Create a target specific directory in the `FreeRTOS/Test/Target/boards` directory.
 1. Create required build files.
-    - FreeRTOSConfig.h includes `test_config.h`
-    - FreeRTOSConfig.h excludes below configurations, which is defined in `test_config.h`.
-        - configRUN_MULTIPLE_PRIORITIES
-        - configUSE_CORE_AFFINITY
-        - configUSE_MINIMAL_IDLE_HOOK
-        - configUSE_TASK_PREEMPTION_DISABLE
-        - configUSE_TIME_SLICING
-        - configUSE_PREEMPTION
+    - Include `test_config.h` in `FreeRTOSConfig.h` at the end.
+    - Ensure that the following configurations are not defined in `FreeRTOSConfig.h` as those are defined in `test_config.h`:
+        - `configRUN_MULTIPLE_PRIORITIES`
+        - `configUSE_CORE_AFFINITY`
+        - `configUSE_MINIMAL_IDLE_HOOK`
+        - `configUSE_TASK_PREEMPTION_DISABLE`
+        - `configUSE_TIME_SLICING`
+        - `configUSE_PREEMPTION`
 
 # How to add a test to a target
 

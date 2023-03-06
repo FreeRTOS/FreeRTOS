@@ -29,28 +29,37 @@
  * @brief The implementation of main function to start test runner task.
  *
  * Procedure:
- *   - Initialize environment
- *   - Run the test case
+ *   - Initialize environment.
+ *   - Run the test case.
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h"    /* unit testing support functions */
+/* Unity includes. */
+#include "unity.h"
 
+/* Pico includes. */
 #include "pico/multicore.h"
 #include "pico/stdlib.h"
 
 /*-----------------------------------------------------------*/
 
+/**
+ * Initialize required peripherals.
+ */
 static void prvInitializeHardware( void );
+
+/**
+ * @brief Run test.
+ */
 extern void vRunTest( void );
 /*-----------------------------------------------------------*/
 
 static void prvInitializeHardware( void )
 {
-    /* Want to be able to printf */
+    /* Needed for printf. */
     stdio_init_all();
 
     while( !stdio_usb_connected() )
@@ -69,12 +78,14 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
     printf( "ERROR: Stack Overflow\n\0" );
 
     /* Run time stack overflow checking is performed if
-     * configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
      * function is called if a stack overflow is detected.  pxCurrentTCB can be
      * inspected in the debugger if the task name passed into this function is
      * corrupt. */
     for( ; ; )
     {
+        /* Always running, put asm here to avoid optimization by compiler. */
+        __asm volatile ( "nop" );
     }
 }
 /*-----------------------------------------------------------*/
@@ -104,7 +115,7 @@ int main( void )
 
     vTaskStartScheduler();
 
-    /* should never reach here */
+    /* Should never reach here. */
     panic_unsupported();
 
     return 0;

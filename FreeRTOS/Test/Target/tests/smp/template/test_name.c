@@ -78,7 +78,7 @@ void tearDown( void )
 
 void Test_TestCaseName( void )
 {
-    /* Peform any API call needed for the test. */
+    /* Perform any API call needed for the test. */
 
     /* Verify the result. */
 }

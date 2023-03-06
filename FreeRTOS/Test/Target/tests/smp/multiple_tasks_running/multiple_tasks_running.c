@@ -39,19 +39,24 @@
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
 
-#include "unity.h"    /* unit testing support functions */
+/* Unity includes. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
+
+#ifndef TEST_CONFIG_H
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif
 
 #if ( configNUMBER_OF_CORES < 2 )
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
 #endif /* if configNUMBER_OF_CORES != 2 */
 
 #if ( configRUN_MULTIPLE_PRIORITIES != 1 )
-    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+    #error configRUN_MULTIPLE_PRIORITIES must be set to 1 for this test.
 #endif /* if ( configRUN_MULTIPLE_PRIORITIES != 1 ) */
 
 #if ( configMAX_PRIORITIES <= 2 )
-    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectly.
+    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectedly.
 #endif /* if ( configMAX_PRIORITIES <= 2 ) */
 /*-----------------------------------------------------------*/
 
@@ -69,7 +74,7 @@ static void Test_MultipleTasksRunning( void );
 /**
  * @brief Handles of the tasks created in this test.
  */
-static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES - 1 ];
+static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES - 1 ];
 /*-----------------------------------------------------------*/
 
 static void Test_MultipleTasksRunning( void )
@@ -83,7 +88,7 @@ static void Test_MultipleTasksRunning( void )
     /* Ensure that all the tasks are running. */
     for( i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++ )
     {
-        xTaskState = eTaskGetState( xTaskHanldes[ i ] );
+        xTaskState = eTaskGetState( xTaskHandles[ i ] );
 
         TEST_ASSERT_EQUAL_MESSAGE( eRunning, xTaskState, "Task is not running." );
     }
@@ -117,7 +122,7 @@ void setUp( void )
                                            configMINIMAL_STACK_SIZE,
                                            NULL,
                                            configMAX_PRIORITIES - 2,
-                                           &( xTaskHanldes[ i ] ) );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -132,9 +137,9 @@ void tearDown( void )
     /* Delete all the tasks. */
     for( i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++ )
     {
-        if( xTaskHanldes[ i ] != NULL )
+        if( xTaskHandles[ i ] != NULL )
         {
-            vTaskDelete( xTaskHanldes[ i ] );
+            vTaskDelete( xTaskHandles[ i ] );
         }
     }
 }

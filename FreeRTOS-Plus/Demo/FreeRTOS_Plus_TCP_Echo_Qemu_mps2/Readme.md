@@ -299,7 +299,7 @@ echo $ECHO_SERVER_IP_ADDRESS
 make
 ```
 
-7. Run:
+8. Run:
 ```shell
 sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
           -kernel ./build/freertos_tcp_mps2_demo.axf \
@@ -310,7 +310,7 @@ sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
           -monitor null -semihosting -semihosting-config enable=on,target=native
 ```
 
-8. You should see that following output on the terminal of the Echo Server (which
+9. You should see that following output on the terminal of the Echo Server (which
 is running `sudo nc -l 7` or `netcat -l 7` depending on your OS):
 ```
 0FGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=> ?

@@ -254,7 +254,7 @@ const size_t xStringLength = strlen( pcStringToSend ) + 15;
 			do
 			{
 			#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_ByIPType( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
+			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_Multi( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
 			#else
 			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
 			#endif

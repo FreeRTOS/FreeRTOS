@@ -396,73 +396,121 @@ void test_coverage_vTaskCoreAffinityGet_null_handle( void )
     TEST_ASSERT( uxCoreAffinityMask == 0x5555 );
 }
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_TRACE_FACILITY                         1
-
-Coverage for 
-    UBaseType_t uxTaskGetTaskNumber( TaskHandle_t xTask )
-    and
-    void vTaskSetTaskNumber( TaskHandle_t xTask,
-                             const UBaseType_t uxHandle )
-    
-    Sets a non-null task's number as taskNumber and then fetches it
-*/
-void test_task_set_get_task_number_not_null_task( void )
+/**
+ * @brief uxTaskGetTaskNumber - get the task number of a task handle.
+ *
+ * Verify the task number returned by uxTaskGetTaskNumber.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( xTask != NULL )
+ *     {
+ *         pxTCB = xTask;
+ *         uxReturn = pxTCB->uxTaskNumber;
+ *     }
+ *     else
+ *     {
+ *         uxReturn = 0U;
+ *     }
+ * @endcode
+ * ( xTask != NULL ) is true.
+ */
+void test_coverage_uxTaskGetTaskNumber_task_handle( void )
 {
-    TaskHandle_t xTaskHandles[3] = { NULL };
-    uint32_t i;
-    UBaseType_t taskNumber = 1;
-    UBaseType_t returntaskNumber;
+    TCB_t xTaskTCB = { 0 };
+    UBaseType_t uxTaskNumber = 0U;
 
+    /* Setup the variables and structure. */
+    xTaskTCB.uxTaskNumber = 0x5a5a;         /* Value to be verified later. */
 
-    /* Create  tasks of equal priority */
-    for (i = 0; i < (2); i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
-    }
+    /* API call. */
+    uxTaskNumber = uxTaskGetTaskNumber( &xTaskTCB );
 
-    /* Create a single equal priority task */   
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
-
-    vTaskStartScheduler();
-
-    vTaskSetTaskNumber(xTaskHandles[0], taskNumber);
-    
-    /* Set CPU core affinity on the last task for the last CPU core */
-    returntaskNumber = uxTaskGetTaskNumber(xTaskHandles[0]);
-    
-    TEST_ASSERT_EQUAL( returntaskNumber,  taskNumber);
-    
+    /* Validation. */
+    TEST_ASSERT_EQUAL( uxTaskNumber, 0x5a5a );
 }
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_TRACE_FACILITY                         1
 
-Coverage for 
-    UBaseType_t uxTaskGetTaskNumber( TaskHandle_t xTask )
-    and
-    void vTaskSetTaskNumber( TaskHandle_t xTask,
-                             const UBaseType_t uxHandle )
-    
-    
-    Sets a null task's number as taskNumber and then fetches it 
-*/
-void test_task_set_get_task_number_null_task( void )
+/**
+ * @brief uxTaskGetTaskNumber - get the task number of a NULL task handle.
+ *
+ * Verify the task number returned by uxTaskGetTaskNumber.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( xTask != NULL )
+ *     {
+ *         pxTCB = xTask;
+ *         uxReturn = pxTCB->uxTaskNumber;
+ *     }
+ *     else
+ *     {
+ *         uxReturn = 0U;
+ *     }
+ * @endcode
+ * ( xTask != NULL ) is false.
+ */
+void test_coverage_uxTaskGetTaskNumber_null_task_handle( void )
 {
-    TaskHandle_t xTaskHandles[3] = { NULL };
-    UBaseType_t taskNumber = 1;
-    UBaseType_t returntaskNumber;
+    UBaseType_t uxTaskNumber = 0x5a5a;
 
-    vTaskStartScheduler();
-    
-    vTaskSetTaskNumber(xTaskHandles[0], taskNumber);
-    
-    /* Set CPU core affinity on the last task for the last CPU core */
-    returntaskNumber = uxTaskGetTaskNumber(xTaskHandles[0]);
-    
-    TEST_ASSERT_EQUAL( 0U , returntaskNumber);
+    /* API call. */
+    uxTaskNumber = uxTaskGetTaskNumber( NULL );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( uxTaskNumber, 0U );
+}
+
+/**
+ * @brief vTaskSetTaskNumber - set the task number of a task handle.
+ *
+ * Verify the task number set by vTaskSetTaskNumber.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( xTask != NULL )
+ * {
+ *     pxTCB = xTask;
+ *     pxTCB->uxTaskNumber = uxHandle;
+ * }
+ * @endcode
+ * ( xTask != NULL ) is true.
+ */
+void test_coverage_vTaskSetTaskNumber_task_handle( void )
+{
+    TCB_t xTaskTCB = { 0 };
+
+    /* Setup the variables and structure. */
+    xTaskTCB.uxTaskNumber = 0;
+
+    /* API call. */
+    vTaskSetTaskNumber( &xTaskTCB, 0x5a5a );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( xTaskTCB.uxTaskNumber, 0x5a5a );
+}
+
+/**
+ * @brief vTaskSetTaskNumber - set the task number of a task handle.
+ *
+ * The test show its result in the coverage report.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( xTask != NULL )
+ * {
+ *     pxTCB = xTask;
+ *     pxTCB->uxTaskNumber = uxHandle;
+ * }
+ * @endcode
+ * ( xTask != NULL ) is false.
+ */
+void test_coverage_vTaskSetTaskNumber_null_task_handle( void )
+{
+    /* API call. */
+    vTaskSetTaskNumber( NULL, 0x5a5a );
+
+    /* Validation. */
+    /* Nothing will be changed. This test shows its result in the coverage report. */
 }
 
 /*

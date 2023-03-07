@@ -39,7 +39,7 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_IP_Private.h"
 #include "NetworkBufferManagement.h"
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     #include "FreeRTOS_Routing.h"
 #endif
 
@@ -153,7 +153,7 @@ static StreamBuffer_t * xRecvBuffer = NULL;
 /* Logs the number of WinPCAP send failures, for viewing in the debugger only. */
 static volatile uint32_t ulWinPCAPSendFailures = 0;
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 /*
  * A pointer to the network interface is needed later when receiving packets.
  */
@@ -173,7 +173,7 @@ static volatile uint32_t ulWinPCAPSendFailures = 0;
 
 /*-----------------------------------------------------------*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
 #else
     BaseType_t xNetworkInterfaceInitialise( void )
@@ -282,7 +282,7 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 
 /*-----------------------------------------------------------*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
                                                        NetworkBufferDescriptor_t * const pxNetworkBuffer,
                                                        BaseType_t bReleaseAfterSend )
@@ -329,7 +329,7 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 }
 /*-----------------------------------------------------------*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 
     static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface )
     {
@@ -668,7 +668,7 @@ DWORD WINAPI prvWinPcapSendThread( void * pvParam )
 }
 /*-----------------------------------------------------------*/
 
-#if defined  ( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined  ( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 
     static BaseType_t xPacketBouncedBack( const uint8_t * pucBuffer )
     {
@@ -803,7 +803,7 @@ static void prvInterruptSimulatorTask( void * pvParameters )
                         if( pxNetworkBuffer != NULL )
                         {
                             xRxEvent.pvData = ( void * ) pxNetworkBuffer;
-                        #if defined ( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+                        #if defined ( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
                             pxNetworkBuffer->pxInterface = pxMyInterface;
                             pxNetworkBuffer->pxEndPoint = FreeRTOS_MatchingEndpoint( pxMyInterface, pxNetworkBuffer->pucEthernetBuffer );
 

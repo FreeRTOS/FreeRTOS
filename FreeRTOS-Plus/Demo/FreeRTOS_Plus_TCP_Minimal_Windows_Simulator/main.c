@@ -130,7 +130,7 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 static UBaseType_t ulNextRand;
 /*-----------------------------------------------------------*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* In case multiple interfaces are used, define them statically. */
 
     /* With WinPCap there is only 1 physical interface. */
@@ -139,7 +139,7 @@ static UBaseType_t ulNextRand;
     /* It will have several end-points. */
     static NetworkEndPoint_t xEndPoints[ 4 ];
 
-#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 /*-----------------------------------------------------------*/
 
@@ -167,7 +167,7 @@ int main( void )
     /* Initialise the network interface.*/
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* Initialise the interface descriptor for WinPCap. */
     pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
@@ -186,7 +186,7 @@ int main( void )
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
     FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
-#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );
@@ -260,10 +260,10 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
         /* Print out the network configuration, which may have come from a DHCP
          * server. */
 
-        /* Using FREERTOS_PLUS_TCP_VERSION as the substitute of the
+        /* Using ipconfigIPv4_BACKWARD_COMPATIBLE as the substitute of the
          * downward compatibility*/
 
-    #if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
     #else
         FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );

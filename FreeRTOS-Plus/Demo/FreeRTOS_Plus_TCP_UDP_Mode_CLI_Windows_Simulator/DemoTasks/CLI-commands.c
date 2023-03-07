@@ -532,7 +532,7 @@ uint32_t ulAddress;
 	switch( xIndex )
 	{
 		case 0 :
-		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 			FreeRTOS_GetEndPointConfiguration( &ulAddress, NULL, NULL, NULL, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( &ulAddress, NULL, NULL, NULL );
@@ -543,7 +543,7 @@ uint32_t ulAddress;
 			break;
 
 		case 1 :
-		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 			FreeRTOS_GetEndPointConfiguration( NULL, &ulAddress, NULL, NULL, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( NULL, &ulAddress, NULL, NULL );
@@ -554,7 +554,7 @@ uint32_t ulAddress;
 			break;
 
 		case 2 :
-		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 			FreeRTOS_GetEndPointConfiguration( NULL, NULL, &ulAddress, NULL, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, &ulAddress, NULL );
@@ -565,7 +565,7 @@ uint32_t ulAddress;
 			break;
 
 		case 3 :
-		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 			FreeRTOS_GetEndPointConfiguration( NULL, NULL, NULL, &ulAddress, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, NULL, &ulAddress );

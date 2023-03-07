@@ -62,6 +62,10 @@ extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 extern void prvAddNewTaskToReadyList( TCB_t * pxNewTCB );
 extern void prvYieldForTask( TCB_t * pxTCB );
+extern void vTaskEnterCritical( void );
+extern UBaseType_t vTaskEnterCriticalFromISR( void );
+extern void vTaskExitCritical( void );
+extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -1227,4 +1231,270 @@ void test_coverage_prvYieldForTask_task_yield_pending( void )
     {
         TEST_ASSERT( xYieldPendings[ i ] != pdTRUE );
     }
+}
+
+/**
+ * @brief vTaskEnterCritical - task is already in the critical section.
+ *
+ * Task is already in the critical section. The critical nesting count will be increased.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+ * {
+ *     portGET_TASK_LOCK();
+ *     portGET_ISR_LOCK();
+ * }
+ * @endcode
+ * ( portGET_CRITICAL_NESTING_COUNT() == 0U ) is false.
+ */
+void test_coverage_vTaskEnterCritical_task_in_critical_already( void )
+{
+    TCB_t xTaskTCB = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCB.uxCriticalNesting = 1;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xSchedulerRunning = pdTRUE;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortDisableInterrupts_StopIgnore();
+    vFakePortGetCoreID_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortDisableInterrupts_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Get both locks. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Increment the critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Check first time enter critical section. */
+
+    /* API call. */
+    vTaskEnterCritical();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 2 );
+}
+
+/**
+ * @brief vTaskEnterCriticalFromISR - ISR is already in critical section.
+ *
+ * ISR is already in the critical section. The critical nesting count will be increased.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+ * {
+ *     portGET_ISR_LOCK();
+ * }
+ * @endcode
+ * ( portGET_CRITICAL_NESTING_COUNT() == 0U ) is false.
+ */
+void test_coverage_vTaskEnterCriticalFromISR_isr_in_critical_already( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    UBaseType_t uxSavedInterruptStatus;
+
+    /* Setup the variables and structure. */
+    xTaskTCB.uxCriticalNesting = 1;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xSchedulerRunning = pdTRUE;
+
+    /* Clear callback in commonSetUp. */
+    ulFakePortSetInterruptMaskFromISR_StopIgnore();
+    vFakePortGetCoreID_StubWithCallback( NULL );
+
+    /* Expectations. */
+    ulFakePortSetInterruptMaskFromISR_ExpectAndReturn( 0x5a5a );    /* The value to be verified. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Get ISR locks. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Increment the critical nesting count. */
+
+    /* API call. */
+    uxSavedInterruptStatus = vTaskEnterCriticalFromISR();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 2 );
+    TEST_ASSERT_EQUAL( uxSavedInterruptStatus, 0x5a5a );
+}
+
+/**
+ * @brief vTaskExitCritical - Task enters the critical section for more than 1 time.
+ *
+ * Verify the critical nesting count will be decreased in this API.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxCurrentTCB->uxCriticalNesting == 0U )
+ * {
+ *     portENABLE_INTERRUPTS();
+ * }
+ * else
+ * {
+ *     mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( pxCurrentTCB->uxCriticalNesting == 0U ) is false.
+ */
+void test_coverage_vTaskExitCritical_task_enter_critical_mt_1( void )
+{
+    TCB_t xTaskTCB = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCB.uxCriticalNesting = 2;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xSchedulerRunning = pdTRUE;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* configASSERT. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Check critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Decrease the critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Check exit critical section. */
+
+    /* API call. */
+    vTaskExitCritical();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 1 );
+}
+
+/**
+ * @brief vTaskExitCritical - Task is not in the critical section.
+ *
+ * Cover the situation that task is not in the critical section when vTaskExitCritical
+ * is called. Critical nesting count won't be updated.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxCurrentTCB->uxCriticalNesting > 0U )
+ * {
+ *     ( pxCurrentTCB->uxCriticalNesting )--;
+ *     ...
+ * }
+ * @endcode
+ * ( pxCurrentTCB->uxCriticalNesting > 0U ) is false.
+ */
+void test_coverage_vTaskExitCritical_task_not_in_critical( void )
+{
+    TCB_t xTaskTCB = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCB.uxCriticalNesting = 0;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xSchedulerRunning = pdTRUE;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* configASSERT. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Check critical nesting count. */
+
+    /* API call. */
+    vTaskExitCritical();
+
+    /* Validation. */
+    /* Critical section count won't be updated. This test shows it's result in the
+     * coverage report. */
+}
+
+/**
+ * @brief vTaskExitCriticalFromISR - ISR enters critical section more than 1 time.
+ *
+ * Cover the situation that ISR enters critical section more that 1 time when vTaskExitCriticalFromISR
+ * is called. Critical nesting count will be decreased.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( portGET_CRITICAL_NESTING_COUNT() > 0U )
+ *     {
+ *         portDECREMENT_CRITICAL_NESTING_COUNT();
+ *
+ *         if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+ *         {
+ *             xYieldCurrentTask = xYieldPendings[ portGET_CORE_ID() ];
+ *
+ *             portRELEASE_ISR_LOCK();
+ *             portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+ *
+ *             if( xYieldCurrentTask != pdFALSE )
+ *             {
+ *                 portYIELD();
+ *             }
+ *         }
+ *         else
+ *         {
+ *             mtCOVERAGE_TEST_MARKER();
+ *         }
+ *     }
+ * @endcode
+ * ( portGET_CRITICAL_NESTING_COUNT() > 0U ) is ture.
+ * ( portGET_CRITICAL_NESTING_COUNT() == 0U ) is false.
+ */
+void test_coverage_vTaskExitCriticalFromISR_isr_enter_critical_mt_1( void )
+{
+    TCB_t xTaskTCB = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCB.uxCriticalNesting = 2;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xSchedulerRunning = pdTRUE;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* configASSERT. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Check critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Decrement critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Check critical nesting count. */
+
+    /* API call. */
+    /* The mask value has not effect since ISR enters critical section more than 1 time. */
+    vTaskExitCriticalFromISR( 0x5a5a );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 1 );
+}
+
+/**
+ * @brief vTaskExitCriticalFromISR - ISR is not in the critical section.
+ *
+ * Cover the situation that ISR is not in the critical section when vTaskExitCriticalFromISR
+ * is called. Critical nesting count won't be updated.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( portGET_CRITICAL_NESTING_COUNT() > 0U )
+ *     {
+ *         portDECREMENT_CRITICAL_NESTING_COUNT();
+ *
+ *         ...
+ *     }
+ * @endcode
+ * ( portGET_CRITICAL_NESTING_COUNT() > 0U ) is false.
+ */
+void test_coverage_vTaskExitCriticalFromISR_isr_not_in_critical( void )
+{
+    TCB_t xTaskTCB = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCB.uxCriticalNesting = 0;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xSchedulerRunning = pdTRUE;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* configASSERT. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );        /* Check critical nesting count. */
+
+    /* API call. */
+    /* The mask value has not effect since ISR is not in critlcal section. */
+    vTaskExitCriticalFromISR( 0x5a5a );
+
+    /* Validation. */
+    /* Critical section count won't be changed. This test shows it's result in the
+     * coverage report. */
 }

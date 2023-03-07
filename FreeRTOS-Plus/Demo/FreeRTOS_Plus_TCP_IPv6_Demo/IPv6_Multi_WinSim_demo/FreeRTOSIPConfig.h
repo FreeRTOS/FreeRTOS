@@ -310,7 +310,6 @@ extern UBaseType_t uxRand();
 #define portINLINE                          __inline
 
 #define ipconfigMULTI_INTERFACE             1
-#define ipconfigCOMPATIBLE_WITH_SINGLE      0
 #define ipconfigUSE_NTP_DEMO                1
 #define ipconfigDNS_USE_CALLBACKS           1
 #define ipconfigSUPPORT_SIGNALS             1

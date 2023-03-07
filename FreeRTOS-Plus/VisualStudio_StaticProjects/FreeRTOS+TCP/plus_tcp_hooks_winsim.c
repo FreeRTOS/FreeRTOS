@@ -160,29 +160,34 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 
 void vPlatformInitIpStack( void )
 {
-    UBaseType_t uxRandomNumber;
     BaseType_t xResult;
     uint8_t ucIPAddress[ 4 ];
-    uint8_t ucNetMask[ 4 ] = { 255, 255, 0, 0 };
-    uint8_t ucNullAddress[ 4 ] = { 0, 0, 0, 0 };
+    uint8_t ucNetMask[ 4 ] = { configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 };
     uint8_t ucMACAddress[ 6 ];
+    uint8_t ucDNSServerAddress[ 4 ];
+    uint8_t ucGatewayAddress[ 4 ];
 
-    /* Generate a random number */
-    uxRandomNumber = uxRand();
+    ucMACAddress[ 0 ] = configMAC_ADDR0;
+    ucMACAddress[ 1 ] = configMAC_ADDR1;
+    ucMACAddress[ 2 ] = configMAC_ADDR2;
+    ucMACAddress[ 3 ] = configMAC_ADDR3;
+    ucMACAddress[ 4 ] = configMAC_ADDR4;
+    ucMACAddress[ 5 ] = configMAC_ADDR5;
 
-    /* Generate a random MAC address in the reserved range */
-    ucMACAddress[ 0 ] = 0x00;
-    ucMACAddress[ 1 ] = 0x11;
-    ucMACAddress[ 2 ] = ( uxRandomNumber & 0xFF );
-    ucMACAddress[ 3 ] = ( ( uxRandomNumber >> 8 ) & 0xFF );
-    ucMACAddress[ 4 ] = ( ( uxRandomNumber >> 16 ) & 0xFF );
-    ucMACAddress[ 5 ] = ( ( uxRandomNumber >> 24 ) & 0xFF );
+    ucIPAddress[ 0 ] = configIP_ADDR0;
+    ucIPAddress[ 1 ] = configIP_ADDR1;
+    ucIPAddress[ 2 ] = configIP_ADDR2;
+    ucIPAddress[ 3 ] = configIP_ADDR3;
 
-    /* Assign a link-local address in the 169.254.0.0/16 range */
-    ucIPAddress[ 0 ] = 169U;
-    ucIPAddress[ 1 ] = 254U;
-    ucIPAddress[ 2 ] = ( ( uxRandomNumber >> 16 ) & 0xFF );
-    ucIPAddress[ 3 ] = ( ( uxRandomNumber >> 24 ) & 0xFF );
+    ucDNSServerAddress[ 0 ] = configDNS_SERVER_ADDR0;
+    ucDNSServerAddress[ 1 ] = configDNS_SERVER_ADDR1;
+    ucDNSServerAddress[ 2 ] = configDNS_SERVER_ADDR2;
+    ucDNSServerAddress[ 3 ] = configDNS_SERVER_ADDR3;
+
+    ucGatewayAddress[ 0 ] = configGATEWAY_ADDR0;
+    ucGatewayAddress[ 1 ] = configGATEWAY_ADDR1;
+    ucGatewayAddress[ 2 ] = configGATEWAY_ADDR2;
+    ucGatewayAddress[ 3 ] = configGATEWAY_ADDR3;
 
     /* Initialise the network interface.*/
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
@@ -192,7 +197,7 @@ void vPlatformInitIpStack( void )
     pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
     /* === End-point 0 === */
-    FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress );
+    FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #if ( ipconfigUSE_DHCP != 0 )
     {
         /* End-point 0 wants to use DHCPv4. */
@@ -203,7 +208,7 @@ void vPlatformInitIpStack( void )
     xResult = FreeRTOS_IPStart();
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-    xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucNullAddress, ucNullAddress, ucMACAddress );
+    xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 #endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
 
     configASSERT( xResult == pdTRUE );

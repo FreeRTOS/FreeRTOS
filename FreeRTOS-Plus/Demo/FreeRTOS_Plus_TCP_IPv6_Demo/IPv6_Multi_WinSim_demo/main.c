@@ -338,7 +338,7 @@ int main( void )
             }
         #endif /* ( mainNETWORK_UP_COUNT >= 3U ) */
 
-        FreeRTOS_IPStart();
+        FreeRTOS_IPInit_Multi();
     #endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
     xTaskCreate( prvServerWorkTask, "SvrWork", mainTCP_SERVER_STACK_SIZE, NULL, mainTCP_SERVER_TASK_PRIORITY, NULL );
 

@@ -49,9 +49,7 @@
     #include "NTPDemo.h"
 #endif
 
-#if ( ipconfigMULTI_INTERFACE == 1 )
-    #include "FreeRTOS_ND.h"
-#endif
+#include "FreeRTOS_ND.h"
 
 #include "logging.h"
 
@@ -61,10 +59,6 @@
 
 #ifndef ARRAY_SIZE
     #define ARRAY_SIZE( x )    ( int ) ( sizeof( x ) / sizeof( x )[ 0 ] )
-#endif
-
-#ifdef ipconfigCOMPATIBLE_WITH_SINGLE
-    #undef ipconfigCOMPATIBLE_WITH_SINGLE
 #endif
 
 /* Simple UDP client and server task parameters. */
@@ -105,11 +99,11 @@
  * mainCREATE_TCP_ECHO_SERVER_TASK:  When set to 1 a task is created that accepts
  * connections on the standard echo port (port 7), then echos back any data
  * received on that connection.
- * 
+ *
  * mainCREATE_UDP_ECHO_SERVER_TASK:  When set to 1 a task is created that sends data
- * to the address configECHO_SERVER_ADDR_STRING (IPv4/Ipv6) where it is 
+ * to the address configECHO_SERVER_ADDR_STRING (IPv4/Ipv6) where it is
  * expected to echo back the data, which, the created tasks receives.
- * 
+ *
  */
 #define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     0
 #define mainCREATE_TCP_ECHO_TASKS_SINGLE              1 /* 1 */
@@ -190,20 +184,17 @@ BaseType_t xHandleTestingCommand( char * pcCommand,
 void xHandleTesting( void );
 void showEndPoint( NetworkEndPoint_t * pxEndPoint );
 
-#if ( ipconfigMULTI_INTERFACE == 1 ) && ( ipconfigCOMPATIBLE_WITH_SINGLE == 0 )
-    /* In case multiple interfaces are used, define them statically. */
 
 /* With WinPCap there is only 1 physical interface. */
-    static NetworkInterface_t xInterfaces[ 1 ];
+static NetworkInterface_t xInterfaces[ 1 ];
 
 /* It will have several end-points. */
-    static NetworkEndPoint_t xEndPoints[ 4 ];
+static NetworkEndPoint_t xEndPoints[ 4 ];
 
 /* A function from NetInterface.c to initialise the interface descriptor
  * of type 'NetworkInterface_t'. */
-    NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                            NetworkInterface_t * pxInterface );
-#endif /* ipconfigMULTI_INTERFACE */
+NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                        NetworkInterface_t * pxInterface );
 
 int main( void )
 {
@@ -230,116 +221,111 @@ int main( void )
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
 
-    #if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 )
-        /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-        FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
-        FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
-    #else
-        /* Initialise the interface descriptor for WinPCap. */
-        pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    /* Initialise the interface descriptor for WinPCap. */
+    pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
-        /* === End-point 0 === */
-        FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
-        #if ( ipconfigUSE_DHCP != 0 )
-            {
-                /* End-point 0 wants to use DHCPv4. */
-                xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
-            }
-        #endif /* ( ipconfigUSE_DHCP != 0 ) */
+    /* === End-point 0 === */
+    FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    #if ( ipconfigUSE_DHCP != 0 )
+        {
+            /* End-point 0 wants to use DHCPv4. */
+            xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
+        }
+    #endif /* ( ipconfigUSE_DHCP != 0 ) */
 
-        /*
-         *     End-point-1 : public
-         *     Network: 2001:470:ed44::/64
-         *     IPv6   : 2001:470:ed44::4514:89d5:4589:8b79/128
-         *     Gateway: fe80::ba27:ebff:fe5a:d751  // obtained from Router Advertisement
-         */
-        #if ( ipconfigUSE_IPv6 != 0 && USES_IPV6_ENDPOINT != 0 )
+    /*
+     *     End-point-1 : public
+     *     Network: 2001:470:ed44::/64
+     *     IPv6   : 2001:470:ed44::4514:89d5:4589:8b79/128
+     *     Gateway: fe80::ba27:ebff:fe5a:d751  // obtained from Router Advertisement
+     */
+    #if ( ipconfigUSE_IPv6 != 0 && USES_IPV6_ENDPOINT != 0 )
+        {
+            IPv6_Address_t xIPAddress;
+            IPv6_Address_t xPrefix;
+            IPv6_Address_t xGateWay;
+            IPv6_Address_t xDNSServer1, xDNSServer2;
+
+            FreeRTOS_inet_pton6( "2001:470:ed44::", xPrefix.ucBytes );
+
+            FreeRTOS_CreateIPv6Address( &xIPAddress, &xPrefix, 64, pdTRUE );
+            FreeRTOS_inet_pton6( "fe80::ba27:ebff:fe5a:d751", xGateWay.ucBytes );
+
+            FreeRTOS_FillEndPoint_IPv6( &( xInterfaces[ 0 ] ),
+                                        &( xEndPoints[ 1 ] ),
+                                        &( xIPAddress ),
+                                        &( xPrefix ),
+                                        64uL, /* Prefix length. */
+                                        &( xGateWay ),
+                                        NULL, /* pxDNSServerAddress: Not used yet. */
+                                        ucMACAddress );
+            FreeRTOS_inet_pton6( "2001:4860:4860::8888", xEndPoints[ 1 ].ipv6_settings.xDNSServerAddresses[ 0 ].ucBytes );
+            FreeRTOS_inet_pton6( "fe80::1", xEndPoints[ 1 ].ipv6_settings.xDNSServerAddresses[ 1 ].ucBytes );
+            FreeRTOS_inet_pton6( "2001:4860:4860::8888", xEndPoints[ 1 ].ipv6_defaults.xDNSServerAddresses[ 0 ].ucBytes );
+            FreeRTOS_inet_pton6( "fe80::1", xEndPoints[ 1 ].ipv6_defaults.xDNSServerAddresses[ 1 ].ucBytes );
+
+            #if ( ipconfigUSE_RA != 0 )
+                {
+                    /* End-point 1 wants to use Router Advertisement */
+                    xEndPoints[ 1 ].bits.bWantRA = pdTRUE;
+                }
+            #endif /* #if( ipconfigUSE_RA != 0 ) */
+            #if ( ipconfigUSE_DHCPv6 != 0 )
+                {
+                    /* End-point 1 wants to use DHCPv6. */
+                    xEndPoints[ 1 ].bits.bWantDHCP = pdTRUE;
+                }
+            #endif /* ( ipconfigUSE_DHCPv6 != 0 ) */
+        }
+    #endif /* ( ipconfigUSE_IPv6 != 0 ) */
+    #if ( ipconfigUSE_IPv6 != 0 && USES_IPV6_ENDPOINT != 0 )
+        {
+            /*
+             *     End-point-3 : private
+             *     Network: fe80::/10 (link-local)
+             *     IPv6   : fe80::d80e:95cc:3154:b76a/128
+             *     Gateway: -
+             */
             {
                 IPv6_Address_t xIPAddress;
                 IPv6_Address_t xPrefix;
-                IPv6_Address_t xGateWay;
-                IPv6_Address_t xDNSServer1, xDNSServer2;
 
-                FreeRTOS_inet_pton6( "2001:470:ed44::", xPrefix.ucBytes );
+                FreeRTOS_inet_pton6( "fe80::", xPrefix.ucBytes );
+                FreeRTOS_inet_pton6( "fe80::7009", xIPAddress.ucBytes );
 
-                FreeRTOS_CreateIPv6Address( &xIPAddress, &xPrefix, 64, pdTRUE );
-                FreeRTOS_inet_pton6( "fe80::ba27:ebff:fe5a:d751", xGateWay.ucBytes );
-
-                FreeRTOS_FillEndPoint_IPv6( &( xInterfaces[ 0 ] ),
-                                            &( xEndPoints[ 1 ] ),
-                                            &( xIPAddress ),
-                                            &( xPrefix ),
-                                            64uL, /* Prefix length. */
-                                            &( xGateWay ),
-                                            NULL, /* pxDNSServerAddress: Not used yet. */
-                                            ucMACAddress );
-                FreeRTOS_inet_pton6( "2001:4860:4860::8888", xEndPoints[ 1 ].ipv6_settings.xDNSServerAddresses[ 0 ].ucBytes );
-                FreeRTOS_inet_pton6( "fe80::1", xEndPoints[ 1 ].ipv6_settings.xDNSServerAddresses[ 1 ].ucBytes );
-                FreeRTOS_inet_pton6( "2001:4860:4860::8888", xEndPoints[ 1 ].ipv6_defaults.xDNSServerAddresses[ 0 ].ucBytes );
-                FreeRTOS_inet_pton6( "fe80::1", xEndPoints[ 1 ].ipv6_defaults.xDNSServerAddresses[ 1 ].ucBytes );
-
-                #if ( ipconfigUSE_RA != 0 )
-                    {
-                        /* End-point 1 wants to use Router Advertisement */
-                        xEndPoints[ 1 ].bits.bWantRA = pdTRUE;
-                    }
-                #endif /* #if( ipconfigUSE_RA != 0 ) */
-                #if ( ipconfigUSE_DHCPv6 != 0 )
-                    {
-                        /* End-point 1 wants to use DHCPv6. */
-                        xEndPoints[ 1 ].bits.bWantDHCP = pdTRUE;
-                    }
-                #endif /* ( ipconfigUSE_DHCPv6 != 0 ) */
+                FreeRTOS_FillEndPoint_IPv6(
+                    &( xInterfaces[ 0 ] ),
+                    &( xEndPoints[ 2 ] ),
+                    &( xIPAddress ),
+                    &( xPrefix ),
+                    10U,  /* Prefix length. */
+                    NULL, /* No gateway */
+                    NULL, /* pxDNSServerAddress: Not used yet. */
+                    ucMACAddress );
             }
-        #endif /* ( ipconfigUSE_IPv6 != 0 ) */
-        #if ( ipconfigUSE_IPv6 != 0 && USES_IPV6_ENDPOINT != 0 )
-            {
-                /*
-                 *     End-point-3 : private
-                 *     Network: fe80::/10 (link-local)
-                 *     IPv6   : fe80::d80e:95cc:3154:b76a/128
-                 *     Gateway: -
-                 */
+        }
+    #endif /* if ( ipconfigUSE_IPv6 != 0 ) */
+    /* === End-point 0 === */
+    #if ( ( mainNETWORK_UP_COUNT >= 4U ) || ( USES_IPV6_ENDPOINT == 0 && mainNETWORK_UP_COUNT >= 2U ) )
+        {
+            /*172.25.201.204 */
+            /*netmask 255.255.240.0 */
+            const uint8_t ucMACAddress2[ 6 ] = { 0x00, 0x22, 0x22, 0x22, 0x22, 82 };
+            const uint8_t ucIPAddress2[ 4 ] = { 192, 168, 2, 210 };
+            const uint8_t ucNetMask2[ 4 ] = { 255, 255, 255, 0 };
+            const uint8_t ucGatewayAddress2[ 4 ] = { 0, 0, 0, 0 };
+            FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 3 ] ), ucIPAddress2, ucNetMask2, ucGatewayAddress2, ucDNSServerAddress, ucMACAddress2 );
+            #if ( ipconfigUSE_DHCP != 0 )
                 {
-                    IPv6_Address_t xIPAddress;
-                    IPv6_Address_t xPrefix;
-
-                    FreeRTOS_inet_pton6( "fe80::", xPrefix.ucBytes );
-                    FreeRTOS_inet_pton6( "fe80::7009", xIPAddress.ucBytes );
-
-                    FreeRTOS_FillEndPoint_IPv6(
-                        &( xInterfaces[ 0 ] ),
-                        &( xEndPoints[ 2 ] ),
-                        &( xIPAddress ),
-                        &( xPrefix ),
-                        10U,  /* Prefix length. */
-                        NULL, /* No gateway */
-                        NULL, /* pxDNSServerAddress: Not used yet. */
-                        ucMACAddress );
+                    /* End-point 0 wants to use DHCPv4. */
+                    xEndPoints[ 3 ].bits.bWantDHCP = pdTRUE;
                 }
-            }
-        #endif /* if ( ipconfigUSE_IPv6 != 0 ) */
-        /* === End-point 0 === */
-        #if ( ( mainNETWORK_UP_COUNT >= 4U ) || ( USES_IPV6_ENDPOINT == 0 && mainNETWORK_UP_COUNT >= 2U ) )
-            {
-                /*172.25.201.204 */
-                /*netmask 255.255.240.0 */
-                const uint8_t ucMACAddress2[ 6 ] = { 0x00, 0x22, 0x22, 0x22, 0x22, 82 };
-                const uint8_t ucIPAddress2[ 4 ] = { 192, 168, 2, 210 };
-                const uint8_t ucNetMask2[ 4 ] = { 255, 255, 255, 0 };
-                const uint8_t ucGatewayAddress2[ 4 ] = { 0, 0, 0, 0 };
-                FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 3 ] ), ucIPAddress2, ucNetMask2, ucGatewayAddress2, ucDNSServerAddress, ucMACAddress2 );
-                #if ( ipconfigUSE_DHCP != 0 )
-                    {
-                        /* End-point 0 wants to use DHCPv4. */
-                        xEndPoints[ 3 ].bits.bWantDHCP = pdTRUE;
-                    }
-                #endif /* ( ipconfigUSE_DHCP != 0 ) */
-            }
-        #endif /* ( mainNETWORK_UP_COUNT >= 3U ) */
+            #endif /* ( ipconfigUSE_DHCP != 0 ) */
+        }
+    #endif /* ( mainNETWORK_UP_COUNT >= 3U ) */
 
-        FreeRTOS_IPStart();
-    #endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
+    FreeRTOS_IPInit_Multi();
+
     xTaskCreate( prvServerWorkTask, "SvrWork", mainTCP_SERVER_STACK_SIZE, NULL, mainTCP_SERVER_TASK_PRIORITY, NULL );
 
     /* Start the RTOS scheduler. */
@@ -400,14 +386,9 @@ void vAssertCalled( const char * pcFile,
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
 /* *INDENT-OFF* */
-#if ( ipconfigMULTI_INTERFACE != 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE != 0 )
-    /* The multi version: each end-point comes up individually. */
-    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent,
+
+void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
                                          NetworkEndPoint_t * pxEndPoint )
-#else
-    /* The single version, the interface comes up as a whole. */
-    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
-#endif
 /* *INDENT-ON* */
 {
     static BaseType_t xTasksAlreadyCreated = pdFALSE;
@@ -448,7 +429,7 @@ void vAssertCalled( const char * pcFile,
 
             #if ( mainCREATE_UDP_ECHO_SERVER_TASK == 1 )
                 {
-                    vStartUDPEchoClientTasks_SingleTasks(mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY);
+                    vStartUDPEchoClientTasks_SingleTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
                 }
             #endif
 
@@ -463,32 +444,9 @@ void vAssertCalled( const char * pcFile,
             FreeRTOS_printf( ( "IPv4 address = %xip\n", FreeRTOS_ntohl( pxEndPoint->ipv4_settings.ulIPAddress ) ) );
         }
 
-        #if ( ipconfigMULTI_INTERFACE == 0 )
-            {
-                uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
-
-                /* Print out the network configuration, which may have come from a DHCP
-                 * server. */
-                FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
-                FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-                FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
-
-                FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
-                FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );
-
-                FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
-                FreeRTOS_printf( ( "Gateway Address: %s\r\n", cBuffer ) );
-
-                FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
-                FreeRTOS_printf( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) );
-            }
-        #else /* if ( ipconfigMULTI_INTERFACE == 0 ) */
-            {
-                /* Print out the network configuration, which may have come from a DHCP
-                 * server. */
-                showEndPoint( pxEndPoint );
-            }
-        #endif /* ipconfigMULTI_INTERFACE */
+        /* Print out the network configuration, which may have come from a DHCP
+         * server. */
+        showEndPoint( pxEndPoint );
     }
 }
 /*-----------------------------------------------------------*/
@@ -562,7 +520,7 @@ static void prvMiscInitialisation( void )
 
 #if ( ipconfigUSE_MDNS != 0 ) || ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-    #if ( ipconfigMULTI_INTERFACE != 0 ) && ( ipconfigUSE_IPv6 != 0 ) && ( TESTING_PATCH == 0 )
+    #if ( ipconfigUSE_IPv6 != 0 ) && ( TESTING_PATCH == 0 )
         static BaseType_t setEndPoint( NetworkEndPoint_t * pxEndPoint )
         {
             NetworkEndPoint_t * px;
@@ -613,16 +571,12 @@ static void prvMiscInitialisation( void )
 
             return xDone;
         }
-    #endif /* ( ipconfigMULTI_INTERFACE != 0 ) */
+    #endif /* if ( ipconfigUSE_IPv6 != 0 ) && ( TESTING_PATCH == 0 ) */
 
 /*-----------------------------------------------------------*/
 
-    #if ( ipconfigMULTI_INTERFACE != 0 )
-        BaseType_t xApplicationDNSQueryHook( NetworkEndPoint_t * pxEndPoint,
-                                             const char * pcName )
-    #else
-        BaseType_t xApplicationDNSQueryHook( const char * pcName )
-    #endif
+    BaseType_t xApplicationDNSQueryHook_Multi( NetworkEndPoint_t * pxEndPoint,
+                                               const char * pcName )
     {
         BaseType_t xReturn;
 
@@ -657,14 +611,14 @@ static void prvMiscInitialisation( void )
             xReturn = pdFAIL;
         }
 
-        #if ( ipconfigMULTI_INTERFACE != 0 ) && ( ipconfigUSE_IPv6 != 0 ) && ( TESTING_PATCH == 0 )
+        #if ( ipconfigUSE_IPv6 != 0 ) && ( TESTING_PATCH == 0 )
             if( xReturn == pdTRUE )
             {
                 xReturn = setEndPoint( pxEndPoint );
             }
         #endif
         {
-            #if ( ipconfigMULTI_INTERFACE != 0 ) && ( ipconfigUSE_IPv6 != 0 )
+            #if ( ipconfigUSE_IPv6 != 0 )
                 FreeRTOS_printf( ( "%s query '%s' = %d IPv%c\n", serviceName, pcName, ( int ) xReturn, pxEndPoint->bits.bIPv6 ? '6' : '4' ) );
             #else
                 FreeRTOS_printf( ( "%s query '%s' = %d IPv4 only\n", serviceName, pcName, ( int ) xReturn ) );

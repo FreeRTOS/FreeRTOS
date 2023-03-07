@@ -178,7 +178,7 @@ static void prvUDPEchoClientTask(void* pvParameters)
             /*
             * First obtain a buffer of adequate length from the TCP/IP stack into which
             * the string will be written. */
-            uint8_t* pucBuffer = FreeRTOS_GetUDPPayloadBuffer_ByIPType(TX_RX_STR_SIZE, portMAX_DELAY, ucIPType);
+            uint8_t* pucBuffer = FreeRTOS_GetUDPPayloadBuffer_Multi(TX_RX_STR_SIZE, portMAX_DELAY, ucIPType);
             configASSERT(pucBuffer != NULL);
             memcpy(pucBuffer, &cTxString, strlen((const char*)cTxString) + 1);
 

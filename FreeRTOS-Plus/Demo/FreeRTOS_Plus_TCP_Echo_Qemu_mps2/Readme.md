@@ -73,9 +73,9 @@ Launch Echo Server on the host machine.
 ### Host OS is Windows
 * Install [Npcap/Nmap](https://nmap.org/download.html#windows).
 * Start an Echo Server on port 7:
-```shell
-ncat -l 7
-```
+    ```shell
+    ncat -l 7
+    ```
 
 ### Host OS is Mac
 * Install `netcat`:
@@ -83,9 +83,9 @@ ncat -l 7
    brew install netcat
    ```
 * Start an Echo Server on port 7:
-```shell
-nc -l -p 7
-```
+    ```shell
+    nc -l -p 7
+    ```
 
 ## Enable Networking in QEMU
 The Echo Client in this demo runs in QEMU inside the VM. We need to enable

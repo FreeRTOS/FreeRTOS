@@ -177,7 +177,7 @@ void main_tcp_echo_client_tasks( void )
 
     memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
 
-    FreeRTOS_IPStart();
+    FreeRTOS_IPInit_Multi();
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
     FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );

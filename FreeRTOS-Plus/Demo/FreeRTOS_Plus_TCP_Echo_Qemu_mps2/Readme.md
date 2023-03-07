@@ -6,8 +6,8 @@ Echo Client runs on the MPS2 Cortex-M3 AN385 platform emulated using QEMU.
 ## Requirements
 1. GNU Arm Embedded Toolchain download [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
 3. `qemu-arm-system` download [here](https://www.qemu.org/download).
-2. Make.
-4. Linux OS (tested on Ubuntu 18.04).
+2. Make (Version 4.3)
+4. Linux OS (tested on Ubuntu 22.04).
 
 ## How to download
 Navigate to a directory of your choice and run the following command -
@@ -32,7 +32,7 @@ There are two options to run these components-
     Machine 1                  Machine 2
 ```
 
-1. Utilize Virtual Machine (VM) to run Echo Client and Echo Server on the same
+2. Utilize Virtual Machine (VM) to run Echo Client and Echo Server on the same
 physical machine. Echo Client runs in a Virtual Machine (VM) and Echo Server
 runs on the host machine.
 ```
@@ -57,7 +57,7 @@ runs on the host machine.
                      Machine
 ```
 
-The remaining document assumes option 1.
+The remaining document assumes option 2.
 
 ## Launch Echo Server
 Launch Echo Server on a machine. If you are using a Linux machine, you can
@@ -316,7 +316,7 @@ make
 sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
           -kernel ./build/freertos_tcp_mps2_demo.axf \
           -netdev tap,id=mynet0,ifname=virbr0-nic,script=no \
-          -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 \
+          -net nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0 \
           -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump\
           -display gtk -m 16M  -nographic -serial stdio \
           -monitor null -semihosting -semihosting-config enable=on,target=native
@@ -342,7 +342,7 @@ make DEBUG=1
 sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -s -S \
           -kernel ./build/freertos_tcp_mps2_demo.axf \
           -netdev tap,id=mynet0,ifname=virbr0-nic,script=no \
-          -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 \
+          -net nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0 \
           -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump\
           -display gtk -m 16M  -nographic -serial stdio \
           -monitor null -semihosting -semihosting-config enable=on,target=native

@@ -396,9 +396,9 @@ void vAssertCalled( const char * pcFile,
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
 /* *INDENT-OFF* */
-#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* The multi version: each end-point comes up individually. */
-    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent,
+    void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
                                          NetworkEndPoint_t * pxEndPoint )
 #else
     /* The single version, the interface comes up as a whole. */
@@ -614,7 +614,7 @@ static void prvMiscInitialisation( void )
 /*-----------------------------------------------------------*/
 
     #if ( ipconfigMULTI_INTERFACE != 0 )
-        BaseType_t xApplicationDNSQueryHook( NetworkEndPoint_t * pxEndPoint,
+        BaseType_t xApplicationDNSQueryHook_Multi( NetworkEndPoint_t * pxEndPoint,
                                              const char * pcName )
     #else
         BaseType_t xApplicationDNSQueryHook( const char * pcName )

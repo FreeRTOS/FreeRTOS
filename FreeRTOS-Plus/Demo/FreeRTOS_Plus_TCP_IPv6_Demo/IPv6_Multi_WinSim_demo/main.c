@@ -63,10 +63,6 @@
     #define ARRAY_SIZE( x )    ( int ) ( sizeof( x ) / sizeof( x )[ 0 ] )
 #endif
 
-#ifdef ipconfigCOMPATIBLE_WITH_SINGLE
-    #undef ipconfigCOMPATIBLE_WITH_SINGLE
-#endif
-
 /* Simple UDP client and server task parameters. */
 #define mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY    ( tskIDLE_PRIORITY )
 #define mainSIMPLE_UDP_CLIENT_SERVER_PORT             ( 5005UL )
@@ -190,7 +186,7 @@ BaseType_t xHandleTestingCommand( char * pcCommand,
 void xHandleTesting( void );
 void showEndPoint( NetworkEndPoint_t * pxEndPoint );
 
-#if ( ipconfigMULTI_INTERFACE == 1 ) && ( ipconfigCOMPATIBLE_WITH_SINGLE == 0 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* In case multiple interfaces are used, define them statically. */
 
 /* With WinPCap there is only 1 physical interface. */
@@ -203,7 +199,7 @@ void showEndPoint( NetworkEndPoint_t * pxEndPoint );
  * of type 'NetworkInterface_t'. */
     NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
                                                             NetworkInterface_t * pxInterface );
-#endif /* ipconfigMULTI_INTERFACE */
+#endif
 
 int main( void )
 {
@@ -230,7 +226,7 @@ int main( void )
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
 
-    #if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
         /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
         FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
         FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
@@ -339,7 +335,7 @@ int main( void )
         #endif /* ( mainNETWORK_UP_COUNT >= 3U ) */
 
         FreeRTOS_IPInit_Multi();
-    #endif /* if ( ipconfigMULTI_INTERFACE == 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE == 1 ) */
+    #endif
     xTaskCreate( prvServerWorkTask, "SvrWork", mainTCP_SERVER_STACK_SIZE, NULL, mainTCP_SERVER_TASK_PRIORITY, NULL );
 
     /* Start the RTOS scheduler. */
@@ -400,7 +396,7 @@ void vAssertCalled( const char * pcFile,
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
 /* *INDENT-OFF* */
-#if ( ipconfigMULTI_INTERFACE != 0 ) || ( ipconfigCOMPATIBLE_WITH_SINGLE != 0 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
     /* The multi version: each end-point comes up individually. */
     void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent,
                                          NetworkEndPoint_t * pxEndPoint )

@@ -45,6 +45,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "CMSIS/CMSDK_CM3.h"
+#include "CMSIS/core_cm3.h"
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
@@ -107,6 +109,9 @@
                                                UBaseType_t uxTaskPriority )
     {
         BaseType_t x;
+
+        /* Set Ethernet interrupt priority to configMAC_INTERRUPT_PRIORITY. */
+        NVIC_SetPriority( ETHERNET_IRQn , configMAC_INTERRUPT_PRIORITY );
 
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )

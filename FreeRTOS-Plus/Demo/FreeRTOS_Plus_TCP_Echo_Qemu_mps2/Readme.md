@@ -60,21 +60,30 @@ runs in the Virtual Machine (VM) and Echo Server runs on the host machine.
 
 ## Launch Echo Server
 Launch Echo Server on the host machine.
-If you are using a Linux machine, you can use the following command to start an Echo Server on port 7:
-```shell
-sudo nc -l 7
-```
+### Host OS is Linux
+* Install `netcat`:
+   ```
+   sudo apt install netcat
+   ```
+* Start an Echo Server on port 7:
+   ```shell
+   sudo nc -l 7
+   ```
 
-If you are using a Windows machine, you can install [Npcap/Nmap](https://nmap.org/download.html#windows) and use the following command to start
-an Echo Server on port 7:
+### Host OS is Windows
+* Install [Npcap/Nmap](https://nmap.org/download.html#windows).
+* Start an Echo Server on port 7:
 ```shell
 ncat -l 7
 ```
 
-If you are using a MAC machine, you can use the following command to start
-an Echo Server on port 7:
+### Host OS is Mac
+* Install `netcat`:
+   ```shell
+   brew install netcat
+   ```
+* Start an Echo Server on port 7:
 ```shell
-brew install netcat
 nc -l -p 7
 ```
 

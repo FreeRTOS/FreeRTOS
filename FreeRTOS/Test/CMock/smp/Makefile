@@ -9,6 +9,8 @@ SUITES	+=	single_priority_no_timeslice
 SUITES	+=	single_priority_timeslice
 SUITES	+=	multiple_priorities_no_timeslice
 SUITES	+=	config_assert
+SUITES	+=	multiple_priorities_preemption_disable
+
 # PROJECT and SUITE variables are determined based on path like so:
 #   $(UT_ROOT_DIR)/$(PROJECT)/$(SUITE)
 PROJECT :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))

@@ -174,6 +174,7 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
+/* ===============================  Callbacks  ============================== */
 void port_release_task_lock_cb( int  num_calls)
 {
     pxCurrentTCBs[ 0 ]->xTaskRunState = -1; /* taskTASK_YIELDING */

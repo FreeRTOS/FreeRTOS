@@ -1715,6 +1715,7 @@ phostname
 php
 phy
 pic
+pico
 pidr
 pingreq
 pingresp

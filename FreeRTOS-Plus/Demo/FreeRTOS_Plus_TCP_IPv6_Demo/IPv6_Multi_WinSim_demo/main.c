@@ -80,15 +80,6 @@
 /* Set the following constants to 1 or 0 to define which tasks to include and
  * exclude:
  *
- * mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS:  When set to 1 two UDP client tasks
- * and two UDP server tasks are created.  The clients talk to the servers.  One set
- * of tasks use the standard sockets interface, and the other the zero copy sockets
- * interface.  These tasks are self checking and will trigger a configASSERT() if
- * they detect a difference in the data that is received from that which was sent.
- * As these tasks use UDP, and can therefore loose packets, they will cause
- * configASSERT() to be called when they are run in a less than perfect networking
- * environment.
- *
  * mainCREATE_TCP_ECHO_TASKS_SINGLE:  When set to 1 a set of tasks are created that
  * send TCP echo requests to the standard echo port (port 7), then wait for and
  * verify the echo reply, from within the same task (Tx and Rx are performed in the
@@ -105,7 +96,6 @@
  * expected to echo back the data, which, the created tasks receives.
  *
  */
-#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     0
 #define mainCREATE_TCP_ECHO_TASKS_SINGLE              1 /* 1 */
 #define mainCREATE_TCP_ECHO_SERVER_TASK               0
 #define mainCREATE_UDP_ECHO_SERVER_TASK               0
@@ -409,11 +399,6 @@ void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
             /* See the comments above the definitions of these pre-processor
              * macros at the top of this file for a description of the individual
              * demo tasks. */
-            #if ( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
-                {
-                    vStartSimpleUDPClientServerTasks( configMINIMAL_STACK_SIZE, mainSIMPLE_UDP_CLIENT_SERVER_PORT, mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY );
-                }
-            #endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
 
             #if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 )
                 {

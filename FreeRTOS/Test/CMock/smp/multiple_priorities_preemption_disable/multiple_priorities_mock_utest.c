@@ -409,3 +409,38 @@ void test_eTaskGetState_task_not_running ( void )
     TEST_ASSERT_EQUAL( eReady, xRet );
 }
 
+/** 
+ * @brief This test ensures that when we call vTaskPreemtionDisable with a null
+ *        handle, the pxCurrentTCBs of the running core is used
+ * 
+ * <b>Coverage</b> 
+ * @code{c} 
+ * vTaskPreemptionEnable( xTask ); 
+ *
+ * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ *
+ * @endcode 
+ *
+ * configNMBER_OF_CORES > 1
+ * INCLUDE_eTaskGetState = 1
+ * configUSE_TRACE_FACILITY = 1
+ * INCLUDE_xTaskAbortDelay = 1
+ * INCLUDE_xTaskGetCurrentTaskHandle = 1
+ * configUSE_MUTEXES = 1
+ */
+void test_vTaskPreemptionDisable_null_handle( void )
+{
+    TCB_t xTask = { 0 };
+
+    pxCurrentTCBs[0] = &xTask;
+
+    vFakePortEnterCriticalSection_Expect();
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn ( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+    vFakePortExitCriticalSection_Expect();
+
+    vTaskPreemptionDisable( NULL );
+
+    TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[0]->xPreemptionDisable );
+}

@@ -417,7 +417,7 @@ void test_eTaskGetState_task_not_running ( void )
  * @code{c} 
  * vTaskPreemptionEnable( xTask ); 
  *
- * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * pxTCB = prvGetTCBFromHandle( xTask );
  *
  * @endcode 
  *
@@ -443,4 +443,42 @@ void test_vTaskPreemptionDisable_null_handle( void )
     vTaskPreemptionDisable( NULL );
 
     TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[0]->xPreemptionDisable );
+}
+
+
+/** 
+ * @brief This test ensures that when we call vTaskSuspendAll and we task of the
+ *        current core has a critical nesting count of 1 only the scheduler is
+ *        suspended
+ * 
+ * <b>Coverage</b> 
+ * @code{c} 
+ * vTaskSuspendAll(); 
+ *
+ * if( portGET_CRITICAL_NESTING_COUNT() == 0U )
+ *
+ * @endcode 
+ *
+ * configNMBER_OF_CORES > 1
+ */
+void test_vTaskSuspendAll_critical_nesting_ne_zero( void )
+{
+    TCB_t xTask = { 0 };
+
+    xTask.uxCriticalNesting = 1;
+    pxCurrentTCBs[0] = &xTask;
+    xSchedulerRunning = pdTRUE;
+    uxSchedulerSuspended = 0U;
+
+    vFakePortAssertIfISR_Expect();
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetTaskLock_Expect();
+    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    vTaskSuspendAll();
+
+    TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
 }

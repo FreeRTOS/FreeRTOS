@@ -118,6 +118,7 @@ extern TCB_t * volatile pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+extern UBaseType_t uxTaskNumber;
 
 /* ==========================  STATIC FUNCTIONS  ========================== */
 static void vFakeAssertStub( bool x,
@@ -177,7 +178,7 @@ int suiteTearDown( int numFailures )
  * 
  * <b>Coverage</b> 
  * @code{c} 
- * prvYieldCore(); 
+ * prvYieldCore( xCoreID ); 
  *
  * if( ( portCHECK_IF_IN_ISR() == pdTRUE ) && ( xCoreID == portGET_CORE_ID() ) )
  *
@@ -225,7 +226,7 @@ void test_prvYieldCore_core_id_ne_current_coreid( void )
  * 
  * <b>Coverage</b> 
  * @code{c} 
- * prvYieldCore(); 
+ * prvYieldCore( xCoreID ); 
  *
  * if( pxCurrentTCBs[ xCoreID ]->xTaskRunState != taskTASK_YIELDING )
  *
@@ -263,5 +264,114 @@ void test_prvYieldCore_runstate_eq_yielding( void )
     TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[2] );
     TEST_ASSERT_EQUAL( -2, pxCurrentTCBs[1]->xTaskRunState ); /* yielding */
     TEST_ASSERT_EQUAL( 1, task.xTaskRunState ); /* nothing has changed */
+}
+
+/** 
+ * @brief This test ensures that if xTask Delete is caled and the scheuler is
+ *        not running, the core is not yielded, but it is removed from the
+ *        stateList, the eventList and inserted in the taskwaitingtermination
+ *        list, the uxdeletedtaskwaiting for cleanup is increased and the
+ *        uxtasknumber is increased
+ * 
+ * <b>Coverage</b> 
+ * @code{c} 
+ * vTaskDelete( xTaskToDelete); 
+ *
+ *   if( ( xSchedulerRunning != pdFALSE ) &&
+ *               ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) )
+ *
+ * @endcode 
+ *
+ * configNMBER_OF_CORES > 1
+ * INCLUDE_vTaskDelete = 1
+ */
+void test_vTaskDelete_scheduler_not_running( void )
+{
+    TCB_t task;
+    TaskHandle_t xTaskToDelete;
+
+    task.xTaskRunState = 1;   /* running on core 1 */
+    xTaskToDelete = &task;
+    pxCurrentTCBs[0] = &task;
+
+    xSchedulerRunning = pdFALSE;
+
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTaskNumber = 1;
+
+    /* Test Expectations */
+    vFakePortEnterCriticalSection_Expect();
+    uxListRemove_ExpectAnyArgsAndReturn ( 0 );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
+
+    /* if task != taskTaskNOT_RUNNING */
+    vListInsertEnd_ExpectAnyArgs();
+    vPortCurrentTaskDying_ExpectAnyArgs();
+
+    vFakePortExitCriticalSection_Expect();
+
+
+    /* API Call */
+    vTaskDelete( xTaskToDelete );
+
+    /* Test Verifications */
+    TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
+    TEST_ASSERT_EQUAL (2, uxTaskNumber );
+}
+
+/** 
+ * @brief This test ensures that if xTask Delete is caled and the scheuler is
+ *        running while the task runstate is more that the configNUMBER_OF_CORES,
+ *        the core is not yielded, but it is removed from the
+ *        stateList, the eventList and inserted in the taskwaitingtermination
+ *        list, the uxdeletedtaskwaiting for cleanup is not changed
+ *        uxtasknumber is increased
+ * 
+ * <b>Coverage</b> 
+ * @code{c} 
+ * vTaskDelete( xTaskToDelete); 
+ *
+ *   if( ( xSchedulerRunning != pdFALSE ) &&
+ *               ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) )
+ *
+ * @endcode 
+ *
+ * configNMBER_OF_CORES > 1
+ * INCLUDE_vTaskDelete = 1
+ */
+void test_vTaskDelete_( void )
+{
+    TCB_t  task;
+    
+    TaskHandle_t xTaskToDelete;
+
+    task.xTaskRunState = configNUMBER_OF_CORES + 2;   /* running on core 1 */
+    xTaskToDelete = &task;
+    pxCurrentTCBs[0] = &task;
+
+    xSchedulerRunning = pdTRUE;
+
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTaskNumber = 1;
+
+    /* Test Expectations */
+    vFakePortEnterCriticalSection_Expect();
+    uxListRemove_ExpectAnyArgsAndReturn ( 0 );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
+
+    /* if task != taskTaskNOT_RUNNING */
+    vListInsertEnd_ExpectAnyArgs();
+    vPortCurrentTaskDying_ExpectAnyArgs();
+
+    //listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vFakePortExitCriticalSection_Expect();
+
+
+    /* API Call */
+    vTaskDelete( xTaskToDelete );
+
+    /* Test Verifications */
+    TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
+    TEST_ASSERT_EQUAL (2, uxTaskNumber );
 }
 

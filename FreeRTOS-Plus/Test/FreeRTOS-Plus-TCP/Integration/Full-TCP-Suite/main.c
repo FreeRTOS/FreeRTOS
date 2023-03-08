@@ -160,7 +160,12 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
+                                                   struct xNetworkEndPoint * pxEndPoint )
+#else
+    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#endif
 {
     static BaseType_t xTasksAlreadyCreated = pdFALSE;
 

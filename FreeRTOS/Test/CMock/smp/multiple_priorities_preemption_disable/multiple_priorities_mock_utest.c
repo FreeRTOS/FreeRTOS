@@ -372,3 +372,40 @@ void test_vTaskDelete_task_not_running( void )
     TEST_ASSERT_EQUAL (2, uxTaskNumber );
 }
 
+/** 
+ * @brief This test ensures that when we call eTaskGetState with a task that is
+ *        not running eRady is returned
+ * 
+ * <b>Coverage</b> 
+ * @code{c} 
+ * eTaskGetSate( xTask ); 
+ *
+ * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ *
+ * @endcode 
+ *
+ * configNMBER_OF_CORES > 1
+ * INCLUDE_eTaskGetState = 1
+ * configUSE_TRACE_FACILITY = 1
+ * INCLUDE_xTaskAbortDelay = 1
+ */
+void test_eTaskGetState_ ( void )
+{
+    TCB_t task = { 0 };
+    TaskHandle_t xTask = &task;
+    task.xTaskRunState = configNUMBER_OF_CORES + 2;
+    List_t list = { 0 };
+    eTaskState  xRet;
+
+    /* Test Expectations */
+    vFakePortEnterCriticalSection_Expect();
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn(&list);
+    vFakePortExitCriticalSection_Expect();
+
+    /* API Call */
+    xRet = eTaskGetState(xTask);
+
+    /* Test Verifications */
+    TEST_ASSERT_EQUAL( eReady, xRet );
+}
+

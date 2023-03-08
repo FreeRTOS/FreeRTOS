@@ -38,8 +38,8 @@
 #include "../global_vars.h"
 #include "task.h"
 
-// #include "fake_port.h"
-// #include "portmacro.h"
+/* #include "fake_port.h" */
+#include "portmacro.h"
 
 /* Test includes. */
 #include "unity.h"
@@ -48,7 +48,7 @@
 
 
 /* Local includes. */
-//#include "../smp_utest_common.h"
+/*#include "../smp_utest_common.h" */
 
 /* Mock includes. */
 #include "mock_timers.h"
@@ -64,12 +64,13 @@
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                       0xAA101
+#define configASSERT_E    0xAA101
+#define EXIT_LOOP         0xAA102
 
 /**
  * @brief simulate up to 10 tasks: add more if needed
  * */
-#define TCB_ARRAY                       10
+#define TCB_ARRAY         10
 
 /**
  * @brief Expect a configASSERT from the function called.
@@ -95,6 +96,7 @@
 
 
 /* ============================  GLOBAL VARIABLES =========================== */
+
 /**
  * @brief Global counter for the number of assertions in code.
  */
@@ -119,6 +121,8 @@ extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern UBaseType_t uxTaskNumber;
+extern volatile TickType_t xTickCount;
+extern volatile TickType_t xNextTaskUnblockTime;
 
 /* ==========================  STATIC FUNCTIONS  ========================== */
 static void vFakeAssertStub( bool x,
@@ -150,6 +154,7 @@ void vPortFree( void * pv )
 /*! called before each testcase */
 void setUp( void )
 {
+    uxDeletedTasksWaitingCleanUp;
     vFakeAssert_StubWithCallback( vFakeAssertStub );
 }
 
@@ -171,18 +176,18 @@ int suiteTearDown( int numFailures )
 
 /* ==============================  Test Cases  ============================== */
 
-/** 
+/**
  * @brief This test ensures that the  first condition is true while the second
  *        condition is false in the if statement, so we will be performing the
  *        action with portYIELD_CORE, and the task is put in the yielding state
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * prvYieldCore( xCoreID ); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvYieldCore( xCoreID );
  *
  * if( ( portCHECK_IF_IN_ISR() == pdTRUE ) && ( xCoreID == portGET_CORE_ID() ) )
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  * configUSE_TASK_PREEMPTION_DISABLE = 1
@@ -191,23 +196,23 @@ void test_prvYieldCore_core_id_ne_current_coreid( void )
 {
     TCB_t task;
     TCB_t task2;
-    TaskHandle_t  xTaskHandle;
+    TaskHandle_t xTaskHandle;
 
     task.xTaskRunState = 1;   /* running on core 1 */
     task2.xTaskRunState = -2; /* running on core 2 taskTASK_YIELDING  */
     xTaskHandle = &task;
-    pxCurrentTCBs[0] = &task;
-    pxCurrentTCBs[1] = &task;
-    pxCurrentTCBs[2] = &task2;
-    xSchedulerRunning  = pdTRUE;
+    pxCurrentTCBs[ 0 ] = &task;
+    pxCurrentTCBs[ 1 ] = &task;
+    pxCurrentTCBs[ 2 ] = &task2;
+    xSchedulerRunning = pdTRUE;
 
     /* Test Expectations */
     vFakePortEnterCriticalSection_Expect();
     /* Entering prvYieldCore */
     vFakePortCheckIfInISR_ExpectAndReturn( pdTRUE );
-    vFakePortGetCoreID_ExpectAndReturn ( 2 );
-    vFakePortGetCoreID_ExpectAndReturn ( 2 );
-    vFakePortYieldCore_Expect(1);
+    vFakePortGetCoreID_ExpectAndReturn( 2 );
+    vFakePortGetCoreID_ExpectAndReturn( 2 );
+    vFakePortYieldCore_Expect( 1 );
     /* Leaving prvYieldCore */
     vFakePortExitCriticalSection_Expect();
 
@@ -215,22 +220,22 @@ void test_prvYieldCore_core_id_ne_current_coreid( void )
     vTaskPreemptionEnable( xTaskHandle );
 
     /* Test Assertions */
-    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[2] );
-    TEST_ASSERT_EQUAL( -2, pxCurrentTCBs[1]->xTaskRunState );/* yielding state */
-    TEST_ASSERT_EQUAL( -2, task.xTaskRunState );             /* yielding state */
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 2 ] );
+    TEST_ASSERT_EQUAL( -2, pxCurrentTCBs[ 1 ]->xTaskRunState ); /* yielding state */
+    TEST_ASSERT_EQUAL( -2, task.xTaskRunState );                /* yielding state */
 }
 
-/** 
+/**
  * @brief This test ensures that when the task is already in the yielding state,
  *        nothing is done
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * prvYieldCore( xCoreID ); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvYieldCore( xCoreID );
  *
  * if( pxCurrentTCBs[ xCoreID ]->xTaskRunState != taskTASK_YIELDING )
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  * configUSE_TASK_PREEMPTION_DISABLE = 1
@@ -244,16 +249,16 @@ void test_prvYieldCore_runstate_eq_yielding( void )
     task.xTaskRunState = 1;   /* running on core 1 */
     task2.xTaskRunState = -2; /* running on core 2 taskTASK_YIELDING  */
     xTaskHandle = &task;
-    pxCurrentTCBs[0] = &task;
-    pxCurrentTCBs[1] = &task2;
-    pxCurrentTCBs[2] = &task2;
-    xSchedulerRunning  = pdTRUE;
+    pxCurrentTCBs[ 0 ] = &task;
+    pxCurrentTCBs[ 1 ] = &task2;
+    pxCurrentTCBs[ 2 ] = &task2;
+    xSchedulerRunning = pdTRUE;
 
     /* Test Expectations */
     vFakePortEnterCriticalSection_Expect();
     /* Entering prvYieldCore */
     vFakePortCheckIfInISR_ExpectAndReturn( pdTRUE );
-    vFakePortGetCoreID_ExpectAndReturn ( 2 );
+    vFakePortGetCoreID_ExpectAndReturn( 2 );
     /* Leaving prvYieldCore */
     vFakePortExitCriticalSection_Expect();
 
@@ -261,26 +266,26 @@ void test_prvYieldCore_runstate_eq_yielding( void )
     vTaskPreemptionEnable( xTaskHandle );
 
     /* Test Assertions */
-    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[2] );
-    TEST_ASSERT_EQUAL( -2, pxCurrentTCBs[1]->xTaskRunState ); /* yielding */
-    TEST_ASSERT_EQUAL( 1, task.xTaskRunState ); /* nothing has changed */
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 2 ] );
+    TEST_ASSERT_EQUAL( -2, pxCurrentTCBs[ 1 ]->xTaskRunState ); /* yielding */
+    TEST_ASSERT_EQUAL( 1, task.xTaskRunState );                 /* nothing has changed */
 }
 
-/** 
+/**
  * @brief This test ensures that if xTask Delete is caled and the scheuler is
  *        not running, the core is not yielded, but it is removed from the
  *        stateList, the eventList and inserted in the taskwaitingtermination
  *        list, the uxdeletedtaskwaiting for cleanup is increased and the
  *        uxtasknumber is increased
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskDelete( xTaskToDelete); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskDelete( xTaskToDelete);
  *
  *   if( ( xSchedulerRunning != pdFALSE ) &&
  *               ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) )
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  * INCLUDE_vTaskDelete = 1
@@ -290,9 +295,9 @@ void test_vTaskDelete_scheduler_not_running( void )
     TCB_t task;
     TaskHandle_t xTaskToDelete;
 
-    task.xTaskRunState = 1;   /* running on core 1 */
+    task.xTaskRunState = 1; /* running on core 1 */
     xTaskToDelete = &task;
-    pxCurrentTCBs[0] = &task;
+    pxCurrentTCBs[ 0 ] = &task;
 
     xSchedulerRunning = pdFALSE;
 
@@ -301,7 +306,7 @@ void test_vTaskDelete_scheduler_not_running( void )
 
     /* Test Expectations */
     vFakePortEnterCriticalSection_Expect();
-    uxListRemove_ExpectAnyArgsAndReturn ( 0 );
+    uxListRemove_ExpectAnyArgsAndReturn( 0 );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
 
     /* if task != taskTaskNOT_RUNNING */
@@ -316,37 +321,37 @@ void test_vTaskDelete_scheduler_not_running( void )
 
     /* Test Verifications */
     TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
-    TEST_ASSERT_EQUAL (2, uxTaskNumber );
+    TEST_ASSERT_EQUAL( 2, uxTaskNumber );
 }
 
-/** 
+/**
  * @brief This test ensures that if xTask Delete is caled and the scheuler is
  *        running while the task runstate is more that the configNUMBER_OF_CORES,
  *        the core is not yielded, but it is removed from the
  *        stateList, the eventList and inserted in the taskwaitingtermination
  *        list, the uxdeletedtaskwaiting for cleanup is not changed
  *        uxtasknumber is increased
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskDelete( xTaskToDelete); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskDelete( xTaskToDelete);
  *
  *   if( ( xSchedulerRunning != pdFALSE ) &&
  *               ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) )
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  * INCLUDE_vTaskDelete = 1
  */
 void test_vTaskDelete_task_not_running( void )
 {
-    TCB_t  task;
+    TCB_t task;
     TaskHandle_t xTaskToDelete;
 
-    task.xTaskRunState = configNUMBER_OF_CORES + 2;   /* running on core 1 */
+    task.xTaskRunState = configNUMBER_OF_CORES + 2; /* running on core 1 */
     xTaskToDelete = &task;
-    pxCurrentTCBs[0] = &task;
+    pxCurrentTCBs[ 0 ] = &task;
 
     xSchedulerRunning = pdTRUE;
 
@@ -355,7 +360,7 @@ void test_vTaskDelete_task_not_running( void )
 
     /* Test Expectations */
     vFakePortEnterCriticalSection_Expect();
-    uxListRemove_ExpectAnyArgsAndReturn ( 0 );
+    uxListRemove_ExpectAnyArgsAndReturn( 0 );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
 
     /* if task != taskTaskNOT_RUNNING */
@@ -369,57 +374,58 @@ void test_vTaskDelete_task_not_running( void )
 
     /* Test Verifications */
     TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
-    TEST_ASSERT_EQUAL (2, uxTaskNumber );
+    TEST_ASSERT_EQUAL( 2, uxTaskNumber );
 }
 
-/** 
+/**
  * @brief This test ensures that when we call eTaskGetState with a task that is
  *        not running eRady is returned
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * eTaskGetSate( xTask ); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * eTaskGetSate( xTask );
  *
  * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  * INCLUDE_eTaskGetState = 1
  * configUSE_TRACE_FACILITY = 1
  * INCLUDE_xTaskAbortDelay = 1
  */
-void test_eTaskGetState_task_not_running ( void )
+void test_eTaskGetState_task_not_running( void )
 {
     TCB_t task = { 0 };
     TaskHandle_t xTask = &task;
+
     task.xTaskRunState = configNUMBER_OF_CORES + 2;
     List_t list = { 0 };
-    eTaskState  xRet;
+    eTaskState xRet;
 
     /* Test Expectations */
     vFakePortEnterCriticalSection_Expect();
-    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn(&list);
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( &list );
     vFakePortExitCriticalSection_Expect();
 
     /* API Call */
-    xRet = eTaskGetState(xTask);
+    xRet = eTaskGetState( xTask );
 
     /* Test Verifications */
     TEST_ASSERT_EQUAL( eReady, xRet );
 }
 
-/** 
+/**
  * @brief This test ensures that when we call vTaskPreemtionDisable with a null
  *        handle, the pxCurrentTCBs of the running core is used
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskPreemptionEnable( xTask ); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskPreemptionEnable( xTask );
  *
  * pxTCB = prvGetTCBFromHandle( xTask );
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  * INCLUDE_eTaskGetState = 1
@@ -432,32 +438,35 @@ void test_vTaskPreemptionDisable_null_handle( void )
 {
     TCB_t xTask = { 0 };
 
-    pxCurrentTCBs[0] = &xTask;
+    pxCurrentTCBs[ 0 ] = &xTask;
 
+    /* Test Expectations */
     vFakePortEnterCriticalSection_Expect();
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn ( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
+    /* API Call */
     vTaskPreemptionDisable( NULL );
 
-    TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[0]->xPreemptionDisable );
+    /* Test Verifications */
+    TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[ 0 ]->xPreemptionDisable );
 }
 
 
-/** 
+/**
  * @brief This test ensures that when we call vTaskSuspendAll and we task of the
  *        current core has a critical nesting count of 1 only the scheduler is
  *        suspended
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskSuspendAll(); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskSuspendAll();
  *
  * if( portGET_CRITICAL_NESTING_COUNT() == 0U )
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  */
@@ -466,10 +475,11 @@ void test_vTaskSuspendAll_critical_nesting_ne_zero( void )
     TCB_t xTask = { 0 };
 
     xTask.uxCriticalNesting = 1;
-    pxCurrentTCBs[0] = &xTask;
+    pxCurrentTCBs[ 0 ] = &xTask;
     xSchedulerRunning = pdTRUE;
     uxSchedulerSuspended = 0U;
 
+    /* Test Expectations */
     vFakePortAssertIfISR_Expect();
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
@@ -478,7 +488,337 @@ void test_vTaskSuspendAll_critical_nesting_ne_zero( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
 
+    /* API Call */
     vTaskSuspendAll();
 
+    /* Test Verifications */
     TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
+}
+
+static int break_loop_at = 1;
+
+UBaseType_t list_length_cb( List_t * list,
+                            int num_calls )
+{
+    if( num_calls < break_loop_at )
+    {
+        return configNUMBER_OF_CORES - 1;
+    }
+    else
+    {
+        Throw( EXIT_LOOP );
+    }
+
+    return 0;
+}
+
+/**
+ * @brief This test ensures that when we call
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvGetExpectedIdleTime();
+ *
+ * if( uxTopReadyPriority > tskIDLE_PRIORITY )
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * configUSE_TICKLESS_IDLE != 0
+ * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
+ */
+void test_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
+{
+    CEXCEPTION_T e = CEXCEPTION_NONE;
+    TCB_t xTCB = { 0 };
+
+    break_loop_at = 1;
+
+    pxCurrentTCBs[ 0 ] = &xTCB;
+
+    xTCB.uxPriority = tskIDLE_PRIORITY + 1;
+
+    /* Test Setup */
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Test Expectations */
+    vFakePortYield_Expect();
+
+    listCURRENT_LIST_LENGTH_Stub( list_length_cb );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    /* API Call */
+    portTASK_FUNCTION( prvIdleTask, args );
+
+    Try
+    {
+        prvIdleTask( NULL );
+    }
+    Catch( e )
+    {
+        if( e == EXIT_LOOP )
+        {
+            TEST_PASS();
+        }
+        else
+        {
+            TEST_FAIL();
+        }
+    }
+    /* Test Verifications */
+
+    /* this function (vPortSuppressTicksAndSleep_Expect) not being called is the aim of this test, it proves that the
+     * task  did not go to sleep, technically nothing happens */
+}
+
+/**
+ * @brief This test ensures that when we call
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvGetExpectedIdleTime();
+ *
+ * if( uxTopReadyPriority > tskIDLE_PRIORITY )
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * configUSE_TICKLESS_IDLE != 0
+ * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
+ */
+void test_prvGetExpectedIdleTime_ready_list_gt_one( void )
+{
+    CEXCEPTION_T e = CEXCEPTION_NONE;
+    TCB_t xTCB = { 0 };
+
+    break_loop_at = 2;
+    pxCurrentTCBs[ 0 ] = &xTCB;
+    xTCB.uxPriority = tskIDLE_PRIORITY;
+
+    /* Test Setup */
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Test Expectations */
+    vFakePortYield_Expect();
+
+    listCURRENT_LIST_LENGTH_Stub( list_length_cb );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    /* API Call */
+    portTASK_FUNCTION( prvIdleTask, args );
+
+    Try
+    {
+        prvIdleTask( NULL );
+    }
+    Catch( e )
+    {
+        if( e == EXIT_LOOP )
+        {
+            TEST_PASS();
+        }
+        else
+        {
+            TEST_FAIL();
+        }
+    }
+    /* Test Verifications */
+
+    /* this function (vPortSuppressTicksAndSleep_Expect) not being called is the aim of this test, it proves that the
+     * task  did not go to sleep, technically nothing happens */
+}
+
+UBaseType_t list_length_cb2( List_t * list,
+                             int num_calls )
+{
+    if( ( num_calls == 1 ) || ( num_calls == 2 ) )
+    {
+        return 1;
+    }
+
+    if( num_calls < break_loop_at )
+    {
+        return configNUMBER_OF_CORES - 1;
+    }
+    else
+    {
+        Throw( EXIT_LOOP );
+    }
+
+    return 0;
+}
+
+/**
+ * @brief This test ensures that when we call
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvGetExpectedIdleTime();
+ *
+ * if( uxTopReadyPriority > tskIDLE_PRIORITY )
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * configUSE_TICKLESS_IDLE != 0
+ * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
+ */
+void test_prvGetExpectedIdleTime_ready_list_eq_1( void )
+{
+    CEXCEPTION_T e = CEXCEPTION_NONE;
+    TCB_t xTCB = { 0 };
+
+    xTickCount = 230;
+    xNextTaskUnblockTime = 240; /* expectedidletime = xNextTaskUnblockTime - xTickCount */
+    break_loop_at = 3;
+    pxCurrentTCBs[ 0 ] = &xTCB;
+    xTCB.uxPriority = tskIDLE_PRIORITY;
+
+    /* Test Setup */
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Test Expectations */
+    vFakePortYield_Expect();
+
+    listCURRENT_LIST_LENGTH_Stub( list_length_cb2 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    /* vTaskSuspendAll */
+    vFakePortAssertIfISR_Expect();
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetTaskLock_Expect();
+    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect();
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    /* Test Verifications */
+
+    /* this function being called is the aim of this test, it proves that the
+     * task went to sleep the specified amount of time. */
+    vPortSuppressTicksAndSleep_Expect( xNextTaskUnblockTime - xTickCount );
+
+
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortReleaseTaskLock_Expect();
+    vFakePortExitCriticalSection_Expect();
+
+    /* API Call */
+    portTASK_FUNCTION( prvIdleTask, args );
+
+    Try
+    {
+        prvIdleTask( NULL );
+    }
+    Catch( e )
+    {
+        if( e == EXIT_LOOP )
+        {
+            TEST_PASS();
+        }
+        else
+        {
+            TEST_FAIL();
+        }
+    }
+    /* Test Verifications */
+    /* the verification of the test is above in the expectations */
+}
+
+UBaseType_t list_length_cb3( List_t * list,
+                             int num_calls )
+{
+    if( num_calls == 1 )
+    {
+        return 1;
+    }
+
+    if( num_calls < break_loop_at )
+    {
+        return configNUMBER_OF_CORES - 1;
+    }
+    else
+    {
+        Throw( EXIT_LOOP );
+    }
+
+    return 0;
+}
+
+/**
+ * @brief This test ensures that when we call
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvGetExpectedIdleTime();
+ *
+ * if( uxTopReadyPriority > tskIDLE_PRIORITY )
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * configUSE_TICKLESS_IDLE != 0
+ * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
+ */
+void test_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idle( void )
+{
+    CEXCEPTION_T e = CEXCEPTION_NONE;
+    TCB_t xTCB = { 0 };
+
+    break_loop_at = 2;
+    pxCurrentTCBs[ 0 ] = &xTCB;
+    xTCB.uxPriority = tskIDLE_PRIORITY;
+
+    /* Test Setup */
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTopReadyPriority = tskIDLE_PRIORITY + 1;
+
+    /* Test Expectations */
+    vFakePortYield_Expect();
+
+    listCURRENT_LIST_LENGTH_Stub( list_length_cb3 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+
+    /* API Call */
+    portTASK_FUNCTION( prvIdleTask, args );
+
+    Try
+    {
+        prvIdleTask( NULL );
+    }
+    Catch( e )
+    {
+        if( e == EXIT_LOOP )
+        {
+            TEST_PASS();
+        }
+        else
+        {
+            TEST_FAIL();
+        }
+    }
+    /* Test Verifications */
+
+    /* this function (vPortSuppressTicksAndSleep_Expect) not being called is the aim of this test, it proves that the
+     * task  did not go to sleep, technically nothing happens */
 }

@@ -48,6 +48,8 @@
 #define configUSE_TIME_SLICING                           0
 #define configUSE_TASK_PREEMPTION_DISABLE                1
 #define configTICK_CORE                                  0
+#define configUSE_TICKLESS_IDLE                          1
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP            2
 
 /* OS Configuration */
 #define configUSE_PREEMPTION                             1
@@ -92,8 +94,8 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS    0
-#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define configGENERATE_RUN_TIME_STATS             0
+#define portGET_RUN_TIME_COUNTER_VALUE()    ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           0
 #define configENABLE_MPU                          0

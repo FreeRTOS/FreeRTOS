@@ -38,17 +38,10 @@
 #include "../global_vars.h"
 #include "task.h"
 
-// #include "fake_port.h"
-// #include "portmacro.h"
-
 /* Test includes. */
 #include "unity.h"
 #include "unity_memory.h"
 #include "CException.h"
-
-
-/* Local includes. */
-//#include "../smp_utest_common.h"
 
 /* Mock includes. */
 #include "mock_timers.h"
@@ -64,12 +57,12 @@
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                       0xAA101
+#define configASSERT_E    0xAA101
 
 /**
  * @brief simulate up to 10 tasks: add more if needed
  * */
-#define TCB_ARRAY                       10
+#define TCB_ARRAY         10
 
 /**
  * @brief Expect a configASSERT from the function called.
@@ -95,6 +88,7 @@
 
 
 /* ============================  GLOBAL VARIABLES =========================== */
+
 /**
  * @brief Global counter for the number of assertions in code.
  */
@@ -175,66 +169,65 @@ int suiteTearDown( int numFailures )
 }
 
 /* ===============================  Callbacks  ============================== */
-void port_release_task_lock_cb( int  num_calls)
+void port_release_task_lock_cb( int num_calls )
 {
     pxCurrentTCBs[ 0 ]->xTaskRunState = -1; /* taskTASK_YIELDING */
 }
 
 /* ==============================  Test Cases  ============================== */
 
-/** 
+/**
  * @brief This test ensures that the code asserts when the TCB's xTaskRunState
  *        is not equal to taskTASK_YIELDING ( -2 )
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * prvCheckForRunStateChange( pxTCB ); 
- * 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvCheckForRunStateChange( pxTCB );
+ *
  * configASSERT( pxThisTCB->xTaskRunState == taskTASK_YIELDING );
- * @endcode 
+ * @endcode
  */
-void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield (void )
+void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield( void )
 {
     xSchedulerRunning = pdTRUE;
     uxSchedulerSuspended = 0U;
 
     TCB_t currentTCB;
 
-    pxCurrentTCBs[ 0 ]                    =  &currentTCB;
+    pxCurrentTCBs[ 0 ] = &currentTCB;
     pxCurrentTCBs[ 0 ]->uxCriticalNesting = 0;
-    pxCurrentTCBs[ 0 ]->xTaskRunState     = -2; /* taskTASK_YIELDING */
+    pxCurrentTCBs[ 0 ]->xTaskRunState = -2; /* taskTASK_YIELDING */
 
-    vFakePortReleaseTaskLock_AddCallback(port_release_task_lock_cb);
+    vFakePortReleaseTaskLock_AddCallback( port_release_task_lock_cb );
     vFakePortDisableInterrupts_ExpectAndReturn( pdTRUE );
-    vFakePortGetCoreID_ExpectAndReturn( 0);
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0);
-    vFakePortGetCoreID_ExpectAndReturn( 0);
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortAssertIfISR_Expect();
     vFakePortCheckIfInISR_ExpectAndReturn( pdFALSE );
-    vFakePortGetCoreID_ExpectAndReturn( 0);
-    vFakePortGetCoreID_ExpectAndReturn( 0);
-    vFakePortGetCoreID_ExpectAndReturn( 0);
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortReleaseISRLock_Expect();
     vFakePortReleaseTaskLock_Expect();
 
     EXPECT_ASSERT_BREAK( vTaskEnterCritical() );
 
     validate_and_clear_assertions();
-
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts when the TCB's critical
  *        nesting count is less than or equal to zero
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * prvYieldForTask( pxTCB ); 
- * 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvYieldForTask( pxTCB );
+ *
  * configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
- * @endcode 
+ * @endcode
  *
  * configUSE_PREEMPTION == 1
  * configNUMBER_OF_CORES > 1
@@ -245,7 +238,7 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
     UBaseType_t uxCoreAffinityMask = 8;
     TCB_t currentTCB;
 
-    memset( &currentTCB, 0x00, sizeof ( TCB_t ) );
+    memset( &currentTCB, 0x00, sizeof( TCB_t ) );
 
     pxCurrentTCBs[ 0 ] = &currentTCB;
     pxCurrentTCBs[ 0 ]->uxCoreAffinityMask = 1;
@@ -256,22 +249,22 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK( vTaskCoreAffinitySet( pxCurrentTCBs[ 0 ],
-                                              uxCoreAffinityMask ) );
+                                               uxCoreAffinityMask ) );
 
     validate_and_clear_assertions();
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts when xYieldPending of the
  *        current core is false and the task is runing
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * prvYieldForTask( pxTCB ); 
- * 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvYieldForTask( pxTCB );
+ *
  * configASSERT( ( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE ) ||
  *               ( taskTASK_IS_RUNNING( pxCurrentTCBs[ portGET_CORE_ID() ] ) == pdFALSE ) );
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  * configRUN_MULTIPLE_PRIORITIES = 0
@@ -284,31 +277,31 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     ListItem_t xEventListItem;
     TickType_t xItemValue = 0;
 
-    for (int i = 0; i < configNUMBER_OF_CORES; ++i )
+    for( int i = 0; i < configNUMBER_OF_CORES; ++i )
     {
-        pxCurrentTCBs[i] = &unblockedTCB[i];
-        unblockedTCB[i].xTaskRunState = -1; /* taskTASK_YIELDING  */
+        pxCurrentTCBs[ i ] = &unblockedTCB[ i ];
+        unblockedTCB[ i ].xTaskRunState = -1; /* taskTASK_YIELDING  */
     }
 
-    unblockedTCB[0].uxCriticalNesting = 1;
-    unblockedTCB[0].xTaskRunState = 0;
-    unblockedTCB[0].uxTaskAttributes = 2;
-    unblockedTCB[0].uxPriority = 1;
+    unblockedTCB[ 0 ].uxCriticalNesting = 1;
+    unblockedTCB[ 0 ].xTaskRunState = 0;
+    unblockedTCB[ 0 ].uxTaskAttributes = 2;
+    unblockedTCB[ 0 ].uxPriority = 1;
 
-    unblockedTCB[1].uxTaskAttributes = 2;
-    unblockedTCB[1].uxPriority = 0;
-    unblockedTCB[1].xTaskRunState = 1;
+    unblockedTCB[ 1 ].uxTaskAttributes = 2;
+    unblockedTCB[ 1 ].uxPriority = 0;
+    unblockedTCB[ 1 ].xTaskRunState = 1;
 
-    unblockedTCB[2].xTaskRunState = -1;
+    unblockedTCB[ 2 ].xTaskRunState = -1;
 
-    unblockedTCB[3].xTaskRunState = configNUMBER_OF_CORES + 2;
+    unblockedTCB[ 3 ].xTaskRunState = configNUMBER_OF_CORES + 2;
 
     uxSchedulerSuspended = 3;
 
-    xYieldPendings[1] = pdFALSE;
+    xYieldPendings[ 1 ] = pdFALSE;
 
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
-    listGET_LIST_ITEM_OWNER_ExpectAnyArgsAndReturn( &unblockedTCB[0] );
+    listGET_LIST_ITEM_OWNER_ExpectAnyArgsAndReturn( &unblockedTCB[ 0 ] );
     listREMOVE_ITEM_ExpectAnyArgs();
     listREMOVE_ITEM_ExpectAnyArgs();
     /* in prvAddTaskToReadyList */
@@ -332,50 +325,51 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     validate_and_clear_assertions();
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts when we are trying to select
  *        the highest priority task on a specific core while the scheuler is not
  *        running
- *        
- * <b>Coverage</b> 
- * @code{c} 
- * prvSelectHighestPriorityTask( xCoreID ); 
- * 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvSelectHighestPriorityTask( xCoreID );
+ *
  * configASSERT( xSchedulerRunning == pdTRUE );
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  */
 void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
 {
     TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
-    unblockedTCB[0].uxCriticalNesting = 0;
 
-    pxCurrentTCBs[0] = &unblockedTCB[0];
+    unblockedTCB[ 0 ].uxCriticalNesting = 0;
 
-    xSchedulerRunning  = pdFALSE; /* causes the assert */
+    pxCurrentTCBs[ 0 ] = &unblockedTCB[ 0 ];
+
+    xSchedulerRunning = pdFALSE; /* causes the assert */
     uxSchedulerSuspended = pdFALSE;
 
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn(0);
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
     validate_and_clear_assertions();
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts when the coreID is not equal
  *        to the runstate of the task
  *
- * <b>Coverage</b> 
- * @code{c} 
- * prvSelectHighestPriorityTask( xCoreID ); 
- * 
+ * <b>Coverage</b>
+ * @code{c}
+ * prvSelectHighestPriorityTask( xCoreID );
+ *
  * configASSERT( ( pxTCB->xTaskRunState == xCoreID ) || ( pxTCB->xTaskRunState == taskTASK_YIELDING ) );
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  */
@@ -383,17 +377,17 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
 {
     TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
 
-    unblockedTCB[0].uxCriticalNesting = 0;
-    unblockedTCB[0].xTaskRunState = 2; /* causes the assert coreID != runstate */
+    unblockedTCB[ 0 ].uxCriticalNesting = 0;
+    unblockedTCB[ 0 ].xTaskRunState = 2; /* causes the assert coreID != runstate */
 
-    pxCurrentTCBs[0] = &unblockedTCB[0];
+    pxCurrentTCBs[ 0 ] = &unblockedTCB[ 0 ];
 
-    xSchedulerRunning  = pdTRUE;
+    xSchedulerRunning = pdTRUE;
     uxSchedulerSuspended = pdFALSE;
 
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn(0);
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdFALSE );
@@ -404,28 +398,28 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
     validate_and_clear_assertions();
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts if the scheduler is not
  *        suspended
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskDelete( xTaskToDelete ); 
- * 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskDelete( xTaskToDelete );
+ *
  * configASSERT( uxSchedulerSuspended == 0 );
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
- * INCLUDE_vTaskDelete 
+ * INCLUDE_vTaskDelete
  */
-void test_vTaskDelete_assert_scheduler_suspended_eq_1 ( void )
+void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
 {
     TaskHandle_t xTaskToDelete = NULL;
-    TCB_t * pxTCB = malloc( sizeof ( TCB_t ) );
+    TCB_t * pxTCB = malloc( sizeof( TCB_t ) );
 
     pxTCB->pxStack = malloc( 200 );
     pxTCB->xTaskRunState = 1; /* task running on core 1 */
-    xTaskToDelete = (TaskHandle_t) pxTCB;
+    xTaskToDelete = ( TaskHandle_t ) pxTCB;
 
     uxSchedulerSuspended = 1; /* asserts the code */
     xSchedulerRunning = pdTRUE;
@@ -445,26 +439,27 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1 ( void )
     free( pxTCB );
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts when a task is suspended while
  *        the scheduler is suspended
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskDelete( xTaskToDelete ); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskDelete( xTaskToDelete );
  *
  * configASSERT( uxSchedulerSuspended == 0 );
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
- * INCLUDE_vTaskSuspend 
+ * INCLUDE_vTaskSuspend
  */
 void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
 {
     TaskHandle_t xTaskToSuspend;
-    TCB_t * pxTCB = malloc( sizeof ( TCB_t ) );
-    xTaskToSuspend = (TaskHandle_t) pxTCB;
+    TCB_t * pxTCB = malloc( sizeof( TCB_t ) );
+
+    xTaskToSuspend = ( TaskHandle_t ) pxTCB;
     xSchedulerRunning = pdTRUE;
     pxTCB->xTaskRunState = 1;
     uxSchedulerSuspended = 1; /* asserts the code */
@@ -483,18 +478,18 @@ void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
     free( pxTCB );
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts when we try to switch
  *        context with a cuurent task that is holding a
  *        critical section
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskSwitchContext( xCoreID ); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskSwitchContext( xCoreID );
  *
  * configASSERT( portGET_CRITICAL_NESTING_COUNT() == 0 );
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  */
@@ -504,7 +499,7 @@ void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
 
     currentTCB.uxCriticalNesting = 1; /* causes the assert */
 
-    pxCurrentTCBs[1] = &currentTCB;
+    pxCurrentTCBs[ 1 ] = &currentTCB;
 
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
@@ -515,17 +510,17 @@ void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
     validate_and_clear_assertions();
 }
 
-/** 
+/**
  * @brief This test ensures that the code asserts when we try to exit a critical
  *        section while the current tasks critical count is zero
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskExitCritical(); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskExitCritical();
  *
  * configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  */
@@ -535,7 +530,7 @@ void test_vTaskExitCritical_assert_critical_nesting_eq_zero( void )
 
     xSchedulerRunning = pdTRUE;
     currentTCB.uxCriticalNesting = 0; /* causes the assert */
-    pxCurrentTCBs[1] = &currentTCB;
+    pxCurrentTCBs[ 1 ] = &currentTCB;
 
     vFakePortGetCoreID_ExpectAndReturn( 1 );
 
@@ -545,17 +540,17 @@ void test_vTaskExitCritical_assert_critical_nesting_eq_zero( void )
 }
 
 
-/** 
+/**
  * @brief This test ensures that the code asserts when we try to exit a critical
  *        section while the current tasks critical count is zero
- * 
- * <b>Coverage</b> 
- * @code{c} 
- * vTaskExitCriticalFromISR(); 
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * vTaskExitCriticalFromISR();
  *
  * configASSERT( portGET_CRITICAL_NESTING_COUNT() > 0U );
  *
- * @endcode 
+ * @endcode
  *
  * configNMBER_OF_CORES > 1
  */
@@ -565,7 +560,7 @@ void test_vTaskExitCriticalFromISR_assertcritical_nesting_eq_zero( void )
 
     xSchedulerRunning = pdTRUE;
     currentTCB.uxCriticalNesting = 0; /* causes the assert */
-    pxCurrentTCBs[1] = &currentTCB;
+    pxCurrentTCBs[ 1 ] = &currentTCB;
 
     vFakePortGetCoreID_ExpectAndReturn( 1 );
 

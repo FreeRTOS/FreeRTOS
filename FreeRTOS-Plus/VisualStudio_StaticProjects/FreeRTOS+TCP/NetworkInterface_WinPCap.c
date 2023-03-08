@@ -75,6 +75,11 @@ DWORD WINAPI prvWinPcapRecvThread( void * pvParam );
 DWORD WINAPI prvWinPcapSendThread( void * pvParam );
 
 /*
+ * A pointer to the network interface is needed later when receiving packets.
+ */
+static NetworkInterface_t * pxMyInterface;
+
+/*
  * Print out a numbered list of network interfaces that are available on the
  * host computer.
  */
@@ -153,13 +158,7 @@ static StreamBuffer_t * xRecvBuffer = NULL;
 /* Logs the number of WinPCAP send failures, for viewing in the debugger only. */
 static volatile uint32_t ulWinPCAPSendFailures = 0;
 
-#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-/*
- * A pointer to the network interface is needed later when receiving packets.
- */
-    static NetworkInterface_t * pxMyInterface;
-
-    extern NetworkEndPoint_t * pxGetEndpoint( BaseType_t xIPType );
+/*-----------------------------------------------------------*/
 
     static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface );
     static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
@@ -169,18 +168,15 @@ static volatile uint32_t ulWinPCAPSendFailures = 0;
 
     NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
                                                             NetworkInterface_t * pxInterface );
-#endif
 
 /*-----------------------------------------------------------*/
 
-#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
-#else
-    BaseType_t xNetworkInterfaceInitialise( void )
-#endif
 {
     BaseType_t xReturn = pdFALSE;
     pcap_if_t * pxAllNetworkInterfaces;
+
+    ( void ) pxInterface;
 
     /* Query the computer the simulation is being executed on to find the
      * network interfaces it has installed. */
@@ -227,7 +223,6 @@ static void prvCreateThreadSafeBuffers( void )
         xRecvBuffer->LENGTH = xRECV_BUFFER_SIZE + 1;
     }
 }
-
 /*-----------------------------------------------------------*/
 
 static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
@@ -282,16 +277,13 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 
 /*-----------------------------------------------------------*/
 
-#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
                                                        NetworkBufferDescriptor_t * const pxNetworkBuffer,
                                                        BaseType_t bReleaseAfterSend )
-#else
-    BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                        BaseType_t bReleaseAfterSend )
-#endif
 {
     size_t xSpace;
+
+    ( void ) pxInterface;
 
     iptraceNETWORK_INTERFACE_TRANSMIT();
     configASSERT( xIsCallingFromIPTask() == pdTRUE );
@@ -329,8 +321,6 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 }
 /*-----------------------------------------------------------*/
 
-#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-
     static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface )
     {
         BaseType_t xResult = pdFALSE;
@@ -344,7 +334,21 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 
         return xResult;
     }
+/*-----------------------------------------------------------*/
 
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+
+
+/* Do not call the following function directly. It is there for downward compatibility.
+ * The function FreeRTOS_IPInit() will call it to initialice the interface and end-point
+ * objects.  See the description in FreeRTOS_Routing.h. */
+    NetworkInterface_t * pxFillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                    NetworkInterface_t * pxInterface )
+    {
+        pxWinPcap_FillInterfaceDescriptor( xEMACIndex, pxInterface );
+    }
+
+#endif
     /*-----------------------------------------------------------*/
 
     NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
@@ -371,7 +375,6 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 
         return pxInterface;
     }
-#endif
 /*-----------------------------------------------------------*/
 
 static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )

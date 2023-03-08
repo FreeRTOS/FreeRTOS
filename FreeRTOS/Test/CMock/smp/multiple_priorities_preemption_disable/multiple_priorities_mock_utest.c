@@ -342,7 +342,6 @@ void test_vTaskDelete_scheduler_not_running( void )
 void test_vTaskDelete_( void )
 {
     TCB_t  task;
-    
     TaskHandle_t xTaskToDelete;
 
     task.xTaskRunState = configNUMBER_OF_CORES + 2;   /* running on core 1 */
@@ -363,9 +362,7 @@ void test_vTaskDelete_( void )
     vListInsertEnd_ExpectAnyArgs();
     vPortCurrentTaskDying_ExpectAnyArgs();
 
-    //listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     vFakePortExitCriticalSection_Expect();
-
 
     /* API Call */
     vTaskDelete( xTaskToDelete );

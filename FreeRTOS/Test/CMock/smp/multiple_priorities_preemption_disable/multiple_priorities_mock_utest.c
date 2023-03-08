@@ -389,7 +389,7 @@ void test_vTaskDelete_task_not_running( void )
  * configUSE_TRACE_FACILITY = 1
  * INCLUDE_xTaskAbortDelay = 1
  */
-void test_eTaskGetState_ ( void )
+void test_eTaskGetState_task_not_running ( void )
 {
     TCB_t task = { 0 };
     TaskHandle_t xTask = &task;

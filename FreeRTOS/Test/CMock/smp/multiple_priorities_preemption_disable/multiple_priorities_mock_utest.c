@@ -339,7 +339,7 @@ void test_vTaskDelete_scheduler_not_running( void )
  * configNMBER_OF_CORES > 1
  * INCLUDE_vTaskDelete = 1
  */
-void test_vTaskDelete_( void )
+void test_vTaskDelete_task_not_running( void )
 {
     TCB_t  task;
     TaskHandle_t xTaskToDelete;

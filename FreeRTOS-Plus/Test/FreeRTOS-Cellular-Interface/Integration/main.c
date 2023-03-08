@@ -109,7 +109,12 @@ int main( void )
 
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
+                                                   struct xNetworkEndPoint * pxEndPoint )
+#else
+    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#endif
 {
     ( void ) eNetworkEvent;
 }

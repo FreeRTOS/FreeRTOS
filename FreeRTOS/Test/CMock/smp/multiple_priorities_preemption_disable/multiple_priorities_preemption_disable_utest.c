@@ -907,12 +907,12 @@ void test_prvCreateIdleTasks_name_too_long( void )
  * INCLUDE_xTaskGetSchedulerState = 1
  * configUSE_TIMERS = 1
  */
-void test_xTaskGetSchedulerState_scheduler_not_running( void )
+void test_xTaskGetSchedulerState_scheduler_not_running_and_suspended( void )
 {
     BaseType_t xRet;
 
     xSchedulerRunning = pdTRUE;
-    uxSchedulerSuspended = pdFALSE;
+    uxSchedulerSuspended = pdTRUE;
 
     vFakePortEnterCriticalSection_Expect();
     vFakePortExitCriticalSection_Expect();
@@ -920,4 +920,83 @@ void test_xTaskGetSchedulerState_scheduler_not_running( void )
     xRet = xTaskGetSchedulerState();
 
     TEST_ASSERT_EQUAL( taskSCHEDULER_SUSPENDED, xRet );
+}
+
+/**
+ * @brief This test ensures that if the notify is zero and the ticks to wait are
+ *        greater than zero, the task is yielded
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *
+ * vTaskYieldWithinAPI();
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * configUSE_TASK_NOTIFICATIONS = 1
+ */
+void test_ulTaskGenericNotifyTake( void )
+{
+    uint32_t ulRet;
+    TCB_t xTask = { 0 };
+    const UBaseType_t uxIndexToWait = 1;
+
+    xTask.ulNotifiedValue[ uxIndexToWait ] = 0UL;
+
+    pxCurrentTCBs[ 0 ] = &xTask;
+
+    vFakePortEnterCriticalSection_Expect();
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    vListInsert_ExpectAnyArgs();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+
+    vFakePortYield_Expect();
+    vFakePortExitCriticalSection_Expect();
+
+    vFakePortEnterCriticalSection_Expect();
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    vFakePortExitCriticalSection_Expect();
+
+
+    ulRet = ulTaskGenericNotifyTake( uxIndexToWait, 1, 2 );
+
+    TEST_ASSERT_EQUAL( 0, /*taskNOT_WAITING_NOTIFICATION*/ /* taskWAITING_NOTIFICATION */
+                       xTask.ucNotifyState[ uxIndexToWait ] );
+    TEST_ASSERT_EQUAL( 0UL, ulRet );
 }

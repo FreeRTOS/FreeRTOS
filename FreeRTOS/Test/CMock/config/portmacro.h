@@ -157,8 +157,6 @@ typedef unsigned long    UBaseType_t;
 #define portGET_CORE_ID()                vFakePortGetCoreID()
 #define portYIELD_CORE( x )              vFakePortYieldCore( x )
 
-#define portSUPPRESS_TICKS_AND_SLEEP    vPortSuppressTicksAndSleep
-
 #define portENTER_CRITICAL_FROM_ISR     vFakePortEnterCriticalFromISR
 #define portEXIT_CRITICAL_FROM_ISR      vFakePortExitCriticalFromISR
 

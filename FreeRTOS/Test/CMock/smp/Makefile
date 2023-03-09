@@ -10,6 +10,7 @@ SUITES	+=	single_priority_timeslice
 SUITES	+=	multiple_priorities_no_timeslice
 SUITES	+=	config_assert
 SUITES	+=	multiple_priorities_preemption_disable
+SUITES	+=	multiple_priorities_long_idle_name
 
 # PROJECT and SUITE variables are determined based on path like so:
 #   $(UT_ROOT_DIR)/$(PROJECT)/$(SUITE)

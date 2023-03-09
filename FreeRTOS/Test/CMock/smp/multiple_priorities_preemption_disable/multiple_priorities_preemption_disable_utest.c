@@ -107,6 +107,12 @@ static int assertionFailed = 1;
  */
 static BaseType_t shouldAbortOnAssertion;
 
+/**
+ * @brief Flag which tell the callbacks at which iteration to break the loop of
+ *        the idle task
+ */
+static int break_loop_at = 1;
+
 
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern void vTaskEnterCritical( void );
@@ -123,6 +129,7 @@ extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
+extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
 
 /* ==========================  STATIC FUNCTIONS  ========================== */
 static void vFakeAssertStub( bool x,
@@ -495,7 +502,6 @@ void test_vTaskSuspendAll_critical_nesting_ne_zero( void )
     TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
 }
 
-static int break_loop_at = 1;
 
 UBaseType_t list_length_cb( List_t * list,
                             int num_calls )
@@ -513,7 +519,9 @@ UBaseType_t list_length_cb( List_t * list,
 }
 
 /**
- * @brief This test ensures that when we call
+ * @brief This test ensures that when we call prvGetExpectedIdleTime and the top
+ *        ready priority is greater than the idle task, we return zero,
+ *        as a suggestion to sleep
  *
  * <b>Coverage</b>
  * @code{c}
@@ -576,13 +584,15 @@ void test_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
 }
 
 /**
- * @brief This test ensures that when we call
+ * @brief This test ensures that when we call prvGetExpectedIdleTime, and the
+ *        ready tasks lists contains more than one element,
+ *        then we return zero as a suggestion to sleep
  *
  * <b>Coverage</b>
  * @code{c}
  * prvGetExpectedIdleTime();
  *
- * if( uxTopReadyPriority > tskIDLE_PRIORITY )
+ * else if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > 1 )
  *
  * @endcode
  *
@@ -657,13 +667,16 @@ UBaseType_t list_length_cb2( List_t * list,
 }
 
 /**
- * @brief This test ensures that when we call
+ * @brief This test ensures that when we call prvIdleTask and the ready tasks
+ *        lists contains 1 elemets and  the top ready priority is less or equal
+ *        to the idle priority, then we let the suggested time to sleep is
+ *        returned
  *
  * <b>Coverage</b>
  * @code{c}
  * prvGetExpectedIdleTime();
  *
- * if( uxTopReadyPriority > tskIDLE_PRIORITY )
+ * else if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > 1 )
  *
  * @endcode
  *
@@ -762,7 +775,10 @@ UBaseType_t list_length_cb3( List_t * list,
 }
 
 /**
- * @brief This test ensures that when we call
+ * @brief This test ensures that when we call prvGetExpectedIdleTime and the top
+ *        ready priority is equal than the idle priority,  and the current task
+ *        priority is less than or equal the idle priority nothing happens a
+ *        zero is returned
  *
  * <b>Coverage</b>
  * @code{c}
@@ -783,10 +799,10 @@ void test_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idl
 
     break_loop_at = 2;
     pxCurrentTCBs[ 0 ] = &xTCB;
-    xTCB.uxPriority = tskIDLE_PRIORITY;
 
     /* Test Setup */
     uxDeletedTasksWaitingCleanUp = 0;
+    xTCB.uxPriority = tskIDLE_PRIORITY;
     uxTopReadyPriority = tskIDLE_PRIORITY + 1;
 
     /* Test Expectations */
@@ -819,6 +835,58 @@ void test_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idl
     }
     /* Test Verifications */
 
-    /* this function (vPortSuppressTicksAndSleep_Expect) not being called is the aim of this test, it proves that the
+    /* this function (vPortSuppressTicksAndSleep_Expect) not being called is
+     * the aim of this test, it proves that the
      * task  did not go to sleep, technically nothing happens */
+}
+
+/**
+ * @brief This test ensures that when we call prvCreateIdleTasks with and idle
+ *        name that is just as long as configMAX_TASK_NAME_LEN
+ *        no core id number is added at the end
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvCreateIdleTasks();
+ *
+ * if( x < configMAX_TASK_NAME_LEN )
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ */
+void test_prvCreateIdleTasks_name_too_long( void )
+{
+    BaseType_t prvCreateIdleTasks( void );
+
+    TCB_t * xIdleTask;
+    TCB_t xTask = { 0 };
+    int i;
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        pxCurrentTCBs[ i ] = &xTask;
+    }
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        /* prvInitialiseNewTask */
+        vListInitialiseItem_ExpectAnyArgs();
+        vListInitialiseItem_ExpectAnyArgs();
+        listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+        pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
+
+        vFakePortEnterCriticalSection_Expect();
+        listINSERT_END_ExpectAnyArgs();
+        portSetupTCB_CB_ExpectAnyArgs();
+        vFakePortGetCoreID_ExpectAndReturn( 0 );
+        vFakePortExitCriticalSection_Expect();
+    }
+
+    /* API Call */
+    prvCreateIdleTasks();
+
+    /* Test Verifications */
+    xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
+    TEST_ASSERT_EQUAL_STRING( configIDLE_TASK_NAME, xIdleTask->pcTaskName );
 }

@@ -198,6 +198,7 @@
     <ClCompile Include="TCPEchoClient_SingleTasks.c" />
     <ClCompile Include="Logging_WinSim.c" />
     <ClCompile Include="UDPEchoClient_SingleTasks.c" />
+    <ClCompile Include="..\..\FreeRTOS_Plus_TCP_Minimal_Windows_Simulator\DemoTasks\SimpleTCPEchoServer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\timers.h">

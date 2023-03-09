@@ -210,7 +210,12 @@ static LONG CALLBACK prvExceptionHandler( _In_ PEXCEPTION_POINTERS ExceptionInfo
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-    BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        BaseType_t xApplicationDNSQueryHook_Multi( struct xNetworkEndPoint * pxEndPoint,
+                                                            const char * pcName );
+    #else
+        BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
 

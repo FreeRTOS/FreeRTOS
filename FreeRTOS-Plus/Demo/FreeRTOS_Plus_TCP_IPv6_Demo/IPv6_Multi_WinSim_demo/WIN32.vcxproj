@@ -175,6 +175,7 @@ $(DEMO_COMMON_SOURCE_DIR)\logging\include;
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Tiny_TCP.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv4.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv6.c" />
+    <ClCompile Include="..\..\FreeRTOS_Plus_TCP_Minimal_Windows_Simulator\DemoTasks\SimpleTCPEchoServer.c" />
     <ClCompile Include="Logging_WinSim.c" />
     <ClCompile Include="printf-stdarg.c" />
     <ClCompile Include="$(FREERTOS_SOURCE_DIR)\event_groups.c" />

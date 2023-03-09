@@ -240,7 +240,7 @@ The following diagram shows the setup:
 ## Build and Run
 Do the following steps in the VM where you cloned the code:
 
-1. Set `configIP_ADDR0`-`configIP_ADDR3` in `FreeRTOSIPConfig.h` to the value
+1. Set `configIP_ADDR0`-`configIP_ADDR3` in `FreeRTOSConfig.h` to the value
 of `QEMU_IP_ADDRESS`:
 ```shell
 echo $QEMU_IP_ADDRESS
@@ -252,7 +252,7 @@ echo $QEMU_IP_ADDRESS
 #define configIP_ADDR3          80
 ```
 
-2. Set `configNET_MASK0`-`configNET_MASK3` in `FreeRTOSIPConfig.h` to the value
+2. Set `configNET_MASK0`-`configNET_MASK3` in `FreeRTOSConfig.h` to the value
 of `VM_NETMASK`:
 ```shell
 echo $VM_NETMASK
@@ -264,7 +264,7 @@ echo $VM_NETMASK
 #define configNET_MASK3         0
 ```
 
-3. Set `configGATEWAY_ADDR0`-`configGATEWAY_ADDR3` in `FreeRTOSIPConfig.h` to
+3. Set `configGATEWAY_ADDR0`-`configGATEWAY_ADDR3` in `FreeRTOSConfig.h` to
 the value of `VM_DEFAULT_GATEWAY`:
 ```shell
 echo $VM_DEFAULT_GATEWAY
@@ -276,7 +276,7 @@ echo $VM_DEFAULT_GATEWAY
 #define configGATEWAY_ADDR3     254
 ```
 
-4. Set `configDNS_SERVER_ADDR0`-`configDNS_SERVER_ADDR3` in `FreeRTOSIPConfig.h`
+4. Set `configDNS_SERVER_ADDR0`-`configDNS_SERVER_ADDR3` in `FreeRTOSConfig.h`
 to the value of `VM_DNS_SERVER`:
 ```shell
 echo $VM_DNS_SERVER
@@ -288,7 +288,7 @@ echo $VM_DNS_SERVER
 #define configDNS_SERVER_ADDR3  254
 ```
 
-5. Set `configMAC_ADDR0`-`configMAC_ADDR5` in `FreeRTOSIPConfig.h` to the value
+5. Set `configMAC_ADDR0`-`configMAC_ADDR5` in `FreeRTOSConfig.h` to the value
 of `QEMU_MAC_ADDRESS`:
 ```shell
 echo $QEMU_MAC_ADDRESS
@@ -302,7 +302,7 @@ echo $QEMU_MAC_ADDRESS
 #define configMAC_ADDR5         0xAD
 ```
 
-6. Set `configECHO_SERVER_ADDR0`-`configECHO_SERVER_ADDR3` in `FreeRTOSIPConfig.h`
+6. Set `configECHO_SERVER_ADDR0`-`configECHO_SERVER_ADDR3` in `FreeRTOSConfig.h`
 to the value of `ECHO_SERVER_IP_ADDRESS`:
 ```shell
 echo $ECHO_SERVER_IP_ADDRESS

@@ -890,3 +890,34 @@ void test_prvCreateIdleTasks_name_too_long( void )
     xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
     TEST_ASSERT_EQUAL_STRING( configIDLE_TASK_NAME, xIdleTask->pcTaskName );
 }
+
+/**
+ * @brief This test ensures that if the scheduler is not running, and the
+ *        scheduler is suspended, taskSCHEDULER_SUSPENDED is returned
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *
+ * taskENTER_CRITICAL();
+ * taskEXIT_CRITICAL();
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * INCLUDE_xTaskGetSchedulerState = 1
+ * configUSE_TIMERS = 1
+ */
+void test_xTaskGetSchedulerState_scheduler_not_running( void )
+{
+    BaseType_t xRet;
+
+    xSchedulerRunning = pdTRUE;
+    uxSchedulerSuspended = pdFALSE;
+
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
+    xRet = xTaskGetSchedulerState();
+
+    TEST_ASSERT_EQUAL( taskSCHEDULER_SUSPENDED, xRet );
+}

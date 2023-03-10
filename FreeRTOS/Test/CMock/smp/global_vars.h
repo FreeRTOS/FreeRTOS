@@ -41,6 +41,12 @@
 /* Indicates that the task is actively running but scheduled to yield. */
 #define taskTASK_YIELDING       ( TaskRunning_t ) ( -2 )
 
+#if (configUSE_16_BIT_TICKS == 1)
+    #define taskEVENT_LIST_ITEM_VALUE_IN_USE 0x8000U
+#else
+    #define taskEVENT_LIST_ITEM_VALUE_IN_USE 0x80000000UL
+#endif
+
 typedef BaseType_t TaskRunning_t;
 
 typedef struct tskTaskControlBlock       /* The old naming convention is used to prevent breaking kernel aware debuggers. */

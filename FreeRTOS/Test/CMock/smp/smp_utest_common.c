@@ -201,9 +201,11 @@ unsigned int vFakePortGetCoreIDCallback( int cmock_num_calls )
     return ( unsigned int )xCurrentCoreId;
 }
 
-void vFakePortGetISRLock( void )
+void vFakePortGetISRLockCallback( int cmock_num_calls )
 {
     int i;
+    
+    ( void ) cmock_num_calls;
 
     /* Ensure that no other core is in the critical section. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
@@ -218,15 +220,19 @@ void vFakePortGetISRLock( void )
     xIsrLockCount[ xCurrentCoreId ]++;
 }
 
-void vFakePortReleaseISRLock( void )
+void vFakePortReleaseISRLockCallback( int cmock_num_calls )
 {
+    ( void ) cmock_num_calls;
+
     TEST_ASSERT_MESSAGE( xIsrLockCount[ xCurrentCoreId ] > 0, "xIsrLockCount[ xCurrentCoreId ] <= 0" );
     xIsrLockCount[ xCurrentCoreId ]--;
 }
 
-void vFakePortGetTaskLock( void )
+void vFakePortGetTaskLockCallback( int cmock_num_calls )
 {
     int i;
+
+    ( void ) cmock_num_calls;
 
     /* Ensure that no other core is in the critical section. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
@@ -241,8 +247,10 @@ void vFakePortGetTaskLock( void )
     xTaskLockCount[ xCurrentCoreId ]++;
 }
 
-void vFakePortReleaseTaskLock( void )
+void vFakePortReleaseTaskLockCallback( int cmock_num_calls )
 {
+    ( void ) cmock_num_calls;
+
     TEST_ASSERT_MESSAGE( xTaskLockCount[ xCurrentCoreId ] > 0, "xTaskLockCount[ xCurrentCoreId ] <= 0" );
     xTaskLockCount[ xCurrentCoreId ]--;
 
@@ -282,6 +290,11 @@ void commonSetUp( void )
 
     vFakePortGetCoreID_StubWithCallback( vFakePortGetCoreIDCallback );
 
+    vFakePortGetISRLock_StubWithCallback( vFakePortGetISRLockCallback );
+    vFakePortGetTaskLock_StubWithCallback( vFakePortGetTaskLockCallback );
+    vFakePortReleaseISRLock_StubWithCallback( vFakePortReleaseISRLockCallback );
+    vFakePortReleaseTaskLock_StubWithCallback( vFakePortReleaseTaskLockCallback );
+
     vFakeAssert_Ignore();
     vFakePortAssertIfISR_Ignore();
     vFakePortEnableInterrupts_Ignore();
@@ -289,8 +302,6 @@ void commonSetUp( void )
     ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0 );
     vFakePortClearInterruptMaskFromISR_Ignore();
 
-    vFakePortGetTaskLock_Ignore();
-    vFakePortGetISRLock_Ignore();
     vFakePortDisableInterrupts_IgnoreAndReturn(1);
     vFakePortRestoreInterrupts_Ignore();
     xTimerCreateTimerTask_IgnoreAndReturn(1);

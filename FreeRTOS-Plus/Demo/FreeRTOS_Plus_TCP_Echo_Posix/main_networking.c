@@ -471,6 +471,23 @@ ssize_t readBlocking(int fd, struct SyscallPackage *syscallPackage, size_t sysca
     return numRead;
 }
 
+char *getSocketName() {
+    char *socket_name;
+
+    const char *interface_name = getenv("TAP_INTERFACE_NAME");
+
+    if (interface_name != NULL) {
+        
+        int len = strlen(interface_name) + strlen("/tmp/socket-") + 1;
+        socket_name = malloc(len * sizeof(char));
+        snprintf(socket_name, len, "/tmp/socket-%s", interface_name);
+    } else {
+        socket_name = strdup("/tmp/socket-default");
+    }
+
+    return socket_name;
+}
+
 /*
  * Supply a random number to FreeRTOS+TCP stack.
  * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
@@ -483,7 +500,6 @@ BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
 }
 
 #define BACKLOG 5
-#define SOCKET_NAME "/tmp/mysocket1"
 #define BUF_SIZE 20
 
 /* While tasks shouldn't return, we believe returning on error before the PD loop would inform us of any errors */
@@ -499,28 +515,31 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
     struct sockaddr_un addr;
 
-    unlink(SOCKET_NAME);
+    char *socket_name = getSocketName();
+
+    unlink(socket_name);
 
     int sfd = socket(AF_UNIX, SOCK_STREAM, 0);
 
     if (sfd == -1) {
         FreeRTOS_debug_printf(("Error creating socket...\n"));
-        return;
+        return NULL;
     }
 
     // Zero out the address, and set family and path.
     memset(&addr, 0, sizeof(struct sockaddr_un));
     addr.sun_family = AF_UNIX;
-    strcpy(addr.sun_path, SOCKET_NAME);
+    strcpy(addr.sun_path, socket_name);
+    free(socket_name);
 
     if (bind(sfd, (struct sockaddr *) &addr, sizeof(struct sockaddr_un)) == -1) {
         FreeRTOS_debug_printf(("Error binding socket to port...\n"));
-        return;
+        return NULL;
     }
 
     if (listen(sfd, BACKLOG) ==-1) {
         FreeRTOS_debug_printf(("Error listening on socket...\n"));
-        return;
+        return NULL;
     }
 
     for (;;) {
@@ -658,7 +677,7 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
     // TODO: How do I close this socket when the program is terminated.
     close(sfd);
-    unlink(SOCKET_NAME);
+    unlink(socket_name);
 }
 
 /*  IntToString converts the int x to a decimal numeral, which is written to s.

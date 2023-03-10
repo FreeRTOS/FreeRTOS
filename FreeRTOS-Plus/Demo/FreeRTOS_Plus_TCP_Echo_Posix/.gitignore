@@ -8,3 +8,5 @@
 /afl-fuzz-output*
 /cov*/
 /nohup.out
+testing-*.pkt
+Trace.dump

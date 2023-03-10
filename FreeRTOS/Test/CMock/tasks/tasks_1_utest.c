@@ -168,6 +168,9 @@ static int assertionFailed = 0;
  */
 static BaseType_t shouldAbortOnAssertion = pdFALSE;
 
+/* ============================  EXTERN FUNCTIONS  ========================== */
+extern void prvCheckTasksWaitingTermination( void );
+
 /* ============================  HOOK FUNCTIONS  ============================ */
 static void dummy_operation()
 {
@@ -1000,6 +1003,70 @@ void test_vTaskDelete_sucess_not_current_task_no_yield( void )
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
+/**
+ * @brief prvCheckTasksWaitingTermination - no waiting task.
+ *
+ * No task is waiting to be deleted. This test show it's result in the coverage
+ * report.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U ) is false.
+ */
+void test_prvCheckTasksWaitingTermination_no_waiting_task( void )
+{
+    /* Setup the variables and structure. */
+    uxDeletedTasksWaitingCleanUp = 0;
+
+    /* API Call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+    /* No task is waiting to be cleand up. Nothing will be updated in this API. This
+     * test case shows its result in the coverage report. */
+}
+
+/**
+ * @brief prvCheckTasksWaitingTermination - delete waiting task.
+ *
+ * A task is waiting to be deleted. The number of tasks and number of tasks waiting to
+ * be deleted are verified in this test case.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U ) is true.
+ */
+void test_prvCheckTasksWaitingTermination_delete_waiting_task( void )
+{
+    ptcb = ( TCB_t * ) create_task();
+
+    /* Setup the variables and structure. */
+    uxDeletedTasksWaitingCleanUp = 1;
+    uxCurrentNumberOfTasks = 1;
+
+    /* Expectations. */
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAnyArgsAndReturn( ptcb );
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
+    vPortFree_Expect( stack );
+    vPortFree_Expect( ptcb );
+
+    /* API Call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( uxDeletedTasksWaitingCleanUp, 0 );
+    TEST_ASSERT_EQUAL( uxCurrentNumberOfTasks, 0 );
+}
 
 void test_vTaskStartScheduler_success( void )
 {

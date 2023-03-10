@@ -61,6 +61,7 @@ extern volatile TickType_t xTickCount;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
+extern List_t xTasksWaitingTermination;
 extern List_t xSuspendedTaskList;
 extern List_t xPendingReadyList;
 extern BaseType_t xPendedTicks;
@@ -74,6 +75,7 @@ extern void vTaskEnterCritical( void );
 extern UBaseType_t vTaskEnterCriticalFromISR( void );
 extern void vTaskExitCritical( void );
 extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
+extern void prvCheckTasksWaitingTermination( void );
 extern void prvDeleteTCB( TCB_t * pxTCB );
 
 /* ==============================  Global VARIABLES ============================== */
@@ -103,10 +105,14 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-/* ===========================  EXTERN FUNCTIONS  =========================== */
-extern void vTaskEnterCritical(void);
-
 /* ==============================  Helper functions for Test Cases  ============================== */
+static void prvPortEnterCriticalSectionCb( int cmock_num_calls )
+{
+    ( void ) cmock_num_calls;
+
+    /* This simulate the multiple idle tasks tries to clean the deleleted TCB. */
+    uxDeletedTasksWaitingCleanUp = 0;
+}
 
 static void prvInitialiseTestStack( TCB_t * pxTCB,
                                     const uint32_t ulStackDepth )
@@ -1539,6 +1545,168 @@ void test_coverage_vTaskExitCriticalFromISR_isr_not_in_critical( void )
     /* Validation. */
     /* Critical section count won't be changed. This test shows it's result in the
      * coverage report. */
+}
+
+/**
+ * @brief prvCheckTasksWaitingTermination - multiple idle tasks clean the deleted task.
+ *
+ * This test case cover the branch that the waiting termination tasks are already been
+ * deleted by other idle tasks.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * taskENTER_CRITICAL();
+ * {
+ *     ...
+ *     if( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+ *     {
+ *         pxTCB = listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
+ * @endcode
+ * ( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U ) is false.
+ */
+void test_coverage_prvCheckTasksWaitingTermination_multiple_idle_tasks( void )
+{
+    /* Setup the variables and structure. */
+    uxDeletedTasksWaitingCleanUp = 1;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortEnterCriticalSection_StubWithCallback( prvPortEnterCriticalSectionCb );
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+    /* No task is waiting to be cleand up. Nothing will be updated in this API. This
+     * test case shows its result in the coverage report. */
+}
+
+/**
+ * @brief prvCheckTasksWaitingTermination - delete not running task.
+ *
+ * A not running task is deleted. The number of tasks and number of tasks waiting to
+ * be deleted are verified in this test case.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxTCB->xTaskRunState == taskTASK_NOT_RUNNING )
+ * {
+ *     ( void ) uxListRemove( &( pxTCB->xStateListItem ) );
+ *     --uxCurrentNumberOfTasks;
+ *     --uxDeletedTasksWaitingCleanUp;
+ * }
+ * else
+ * {
+ *     ...
+ *     taskEXIT_CRITICAL();
+ *     break;
+ * }
+ * @endcode
+ * ( pxTCB->xTaskRunState == taskTASK_NOT_RUNNING ) is true.
+ */
+void test_coverage_prvCheckTasksWaitingTermination_delete_not_running_task( void )
+{
+    TCB_t *pxTaskTCB = NULL;
+
+    /* Setup the variables and structure. */
+    UnityMalloc_StartTest();
+    uxDeletedTasksWaitingCleanUp = 1;
+    uxCurrentNumberOfTasks = 1;
+    vListInitialise( &xTasksWaitingTermination );
+
+    pxTaskTCB = pvPortMalloc( sizeof( TCB_t ) );
+    pxTaskTCB->pxStack = pvPortMalloc( configMINIMAL_STACK_SIZE );
+    pxTaskTCB->xTaskRunState = taskTASK_NOT_RUNNING ;
+    pxTaskTCB->xStateListItem.pvOwner = pxTaskTCB;
+    pxTaskTCB->xStateListItem.pxContainer = &xTasksWaitingTermination;
+    listINSERT_END( &xTasksWaitingTermination, &pxTaskTCB->xStateListItem );
+
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( uxCurrentNumberOfTasks, 0 );
+    TEST_ASSERT_EQUAL( uxDeletedTasksWaitingCleanUp, 0 );
+    /* Validate the memory allocate count. */
+    UnityMalloc_EndTest();
+}
+
+/**
+ * @brief prvCheckTasksWaitingTermination - delete running task.
+ *
+ * A task to be deleted is still running. Nothing will be updated in this test case.
+ * The test shows it's result in the coverage report.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxTCB->xTaskRunState == taskTASK_NOT_RUNNING )
+ * {
+ *     ( void ) uxListRemove( &( pxTCB->xStateListItem ) );
+ *     --uxCurrentNumberOfTasks;
+ *     --uxDeletedTasksWaitingCleanUp;
+ * }
+ * else
+ * {
+ *     ...
+ *     taskEXIT_CRITICAL();
+ *     break;
+ * }
+ * @endcode
+ * ( pxTCB->xTaskRunState == taskTASK_NOT_RUNNING ) is false.
+ */
+void test_coverage_prvCheckTasksWaitingTermination_delete_running_task( void )
+{
+    TCB_t *pxTaskTCB = NULL;
+
+    /* Setup the variables and structure. */
+    UnityMalloc_StartTest();
+    uxDeletedTasksWaitingCleanUp = 1;
+    uxCurrentNumberOfTasks = 1;
+    vListInitialise( &xTasksWaitingTermination );
+
+    pxTaskTCB = pvPortMalloc( sizeof( TCB_t ) );
+    pxTaskTCB->pxStack = pvPortMalloc( configMINIMAL_STACK_SIZE );
+    pxTaskTCB->xTaskRunState = 0 ;
+    pxTaskTCB->xStateListItem.pvOwner = pxTaskTCB;
+    pxTaskTCB->xStateListItem.pxContainer = &xTasksWaitingTermination;
+    listINSERT_END( &xTasksWaitingTermination, &pxTaskTCB->xStateListItem );
+
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+    /* If the task is not of taskTASK_NOT_RUNNING state, nothing will be updated.
+     * This test shows it's result in coverage report. Verify that the number of
+     * deleted task is not changed. */
+    TEST_ASSERT_EQUAL( uxDeletedTasksWaitingCleanUp, 1 );
+    TEST_ASSERT_EQUAL( uxCurrentNumberOfTasks, 1 );
+
+    /* Free the resource allocated in this test. Since running task can't be deleted,
+     * there won't have double free assertion. */
+    vPortFree( pxTaskTCB );
+    vPortFree( pxTaskTCB->pxStack );
+    /* Validate the memory allocate count. */
+    UnityMalloc_EndTest();
 }
 
 /**

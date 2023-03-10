@@ -1537,6 +1537,85 @@ void test_coverage_vTaskExitCriticalFromISR_isr_not_in_critical( void )
 }
 
 /**
+ * @brief vTaskResume - resume a suspended task.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxTCB != NULL )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( pxTCB != NULL ) is false.
+ */
+void test_coverage_vTaskResume_null_task( void )
+{
+    vTaskResume(NULL);
+
+    /* In this case no state is changed and so no assertion can be made to
+     * validate the operation. */
+}
+
+/**
+ * @brief xTaskGenericNotify - function to notify a task.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( ucOriginalNotifyState == taskWAITING_NOTIFICATION )
+ * {
+ *     ...
+ * @endcode
+ *
+ * Cover the case where the ucOriginalNotifyState is taskWAITING_NOTIFICATION.
+ */
+void test_coverage_xTaskGenericNotify_with_eAction_equalto_eNoAction_taskWAITING_NOTIFICATION( void )
+{
+    TCB_t xTaskTCBs[ 2U ] = { NULL };
+    UBaseType_t xidx = 0;
+    uint32_t prevValue;
+    BaseType_t xReturn;
+    UBaseType_t uxPriority, uxCoreID;
+
+    for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+    {
+        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );
+    }
+
+    vListInitialise( &xPendingReadyList );
+
+    xTaskTCBs[ 0 ].uxPriority = 1;
+    xTaskTCBs[ 0 ].xTaskRunState = 0;
+    vListInitialiseItem( &( xTaskTCBs[0].xStateListItem ) );
+    listSET_LIST_ITEM_OWNER( &( xTaskTCBs[0].xStateListItem ), &xTaskTCBs[0] );
+    listINSERT_END( &xPendingReadyList, &xTaskTCBs[ 0 ].xStateListItem );
+
+    /* Default core ID is 0. The can be changed with vSetCurrentCore. */
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
+
+    xTaskTCBs[ 1 ].uxPriority = 1;
+    xTaskTCBs[ 1 ].xTaskRunState = -1;
+
+    for( uxCoreID = 0; uxCoreID < configNUMBER_OF_CORES; uxCoreID++ )
+    {
+        if (pxCurrentTCBs[ uxCoreID ] == NULL)
+        {
+            pxCurrentTCBs[ uxCoreID ] = &xTaskTCBs[ 1 ];
+        }
+    }
+
+    uxTopReadyPriority = 1;
+    uxSchedulerSuspended = pdTRUE;
+    xTaskTCBs[0].ucNotifyState[ xidx ] = taskNOT_WAITING_NOTIFICATION;
+    xTaskTCBs[0].ulNotifiedValue[ xidx ] = 0xa5a5;      /* Value to be verified later. */
+
+    xReturn = xTaskGenericNotify( &xTaskTCBs[0], xidx, 0x0, eNoAction, &prevValue);
+
+    TEST_ASSERT_EQUAL_UINT32( 0xa5a5, prevValue );
+    TEST_ASSERT( xReturn == pdPASS );
+}
+
+/**
  * @brief vTaskGetInfo - populate TaskStatus_t and eTaskState
  *
  * <b>Coverage</b>

@@ -30,6 +30,11 @@
 
 #include <stdbool.h>
 
+/* Values that can be assigned to the ucNotifyState member of the TCB. */
+#define taskNOT_WAITING_NOTIFICATION              ( ( uint8_t ) 0 ) /* Must be zero as it is the initialised value. */
+#define taskWAITING_NOTIFICATION                  ( ( uint8_t ) 1 )
+#define taskNOTIFICATION_RECEIVED                 ( ( uint8_t ) 2 )
+
 /* Indicates that the task is not actively running on any core. */
 #define taskTASK_NOT_RUNNING    ( TaskRunning_t ) ( -1 )
 

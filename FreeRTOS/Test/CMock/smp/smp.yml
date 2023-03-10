@@ -10,6 +10,7 @@
     - :array
     - :callback
     - :return_thru_ptr
+    - :cexception
   :callback_include_count: true # include a count arg when calling the callback
   :callback_after_arg_check: false # check arguments before calling the callback
   :treat_as:
@@ -28,3 +29,4 @@
   :strippables:
     - PRIVILEGED_FUNCTION
     - portDONT_DISCARD
+

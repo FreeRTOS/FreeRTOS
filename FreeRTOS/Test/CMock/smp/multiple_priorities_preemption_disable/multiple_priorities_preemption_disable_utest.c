@@ -107,13 +107,6 @@ static int assertionFailed = 1;
  */
 static BaseType_t shouldAbortOnAssertion;
 
-/**
- * @brief Flag which tell the callbacks at which iteration to break the loop of
- *        the idle task
- */
-static int break_loop_at = 1;
-
-
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
@@ -131,7 +124,11 @@ extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
 extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
 
-/* ==========================  STATIC FUNCTIONS  ========================== */
+/* ===========================  STATIC FUNCTIONS  =========================== */
+void vApplicationMinimalIdleHook( void )
+{
+}
+
 static void vFakeAssertStub( bool x,
                              char * file,
                              int line,
@@ -502,22 +499,6 @@ void test_vTaskSuspendAll_critical_nesting_ne_zero( void )
     TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
 }
 
-
-UBaseType_t list_length_cb( List_t * list,
-                            int num_calls )
-{
-    if( num_calls < break_loop_at )
-    {
-        return configNUMBER_OF_CORES - 1;
-    }
-    else
-    {
-        Throw( EXIT_LOOP );
-    }
-
-    return 0;
-}
-
 /**
  * @brief This test ensures that when we call prvGetExpectedIdleTime and the top
  *        ready priority is greater than the idle task, we return zero,
@@ -540,8 +521,6 @@ void test_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
 
-    break_loop_at = 1;
-
     pxCurrentTCBs[ 0 ] = &xTCB;
 
     xTCB.uxPriority = tskIDLE_PRIORITY + 1;
@@ -553,11 +532,18 @@ void test_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
     /* Test Expectations */
     vFakePortYield_Expect();
 
-    listCURRENT_LIST_LENGTH_Stub( list_length_cb );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( configNUMBER_OF_CORES - 1 );
+
 
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
+
+
+    listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
+                                            EXIT_LOOP );
+
 
     /* API Call */
     portTASK_FUNCTION( prvIdleTask, args );
@@ -605,7 +591,6 @@ void test_prvGetExpectedIdleTime_ready_list_gt_one( void )
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
 
-    break_loop_at = 2;
     pxCurrentTCBs[ 0 ] = &xTCB;
     xTCB.uxPriority = tskIDLE_PRIORITY;
 
@@ -616,11 +601,16 @@ void test_prvGetExpectedIdleTime_ready_list_gt_one( void )
     /* Test Expectations */
     vFakePortYield_Expect();
 
-    listCURRENT_LIST_LENGTH_Stub( list_length_cb );
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( configNUMBER_OF_CORES - 1 );
 
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( configNUMBER_OF_CORES - 1 );
+
+    listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
+                                            EXIT_LOOP );
 
     /* API Call */
     portTASK_FUNCTION( prvIdleTask, args );
@@ -644,26 +634,6 @@ void test_prvGetExpectedIdleTime_ready_list_gt_one( void )
 
     /* this function (vPortSuppressTicksAndSleep_Expect) not being called is the aim of this test, it proves that the
      * task  did not go to sleep, technically nothing happens */
-}
-
-UBaseType_t list_length_cb2( List_t * list,
-                             int num_calls )
-{
-    if( ( num_calls == 1 ) || ( num_calls == 2 ) )
-    {
-        return 1;
-    }
-
-    if( num_calls < break_loop_at )
-    {
-        return configNUMBER_OF_CORES - 1;
-    }
-    else
-    {
-        Throw( EXIT_LOOP );
-    }
-
-    return 0;
 }
 
 /**
@@ -691,7 +661,6 @@ void test_prvGetExpectedIdleTime_ready_list_eq_1( void )
 
     xTickCount = 230;
     xNextTaskUnblockTime = 240; /* expectedidletime = xNextTaskUnblockTime - xTickCount */
-    break_loop_at = 3;
     pxCurrentTCBs[ 0 ] = &xTCB;
     xTCB.uxPriority = tskIDLE_PRIORITY;
 
@@ -701,12 +670,13 @@ void test_prvGetExpectedIdleTime_ready_list_eq_1( void )
 
     /* Test Expectations */
     vFakePortYield_Expect();
-
-    listCURRENT_LIST_LENGTH_Stub( list_length_cb2 );
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
 
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Expect();
@@ -716,9 +686,12 @@ void test_prvGetExpectedIdleTime_ready_list_eq_1( void )
     vFakePortReleaseISRLock_Expect();
     vFakePortClearInterruptMask_Expect( 0 );
 
+
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
 
     /* Test Verifications */
 
@@ -726,11 +699,14 @@ void test_prvGetExpectedIdleTime_ready_list_eq_1( void )
      * task went to sleep the specified amount of time. */
     vPortSuppressTicksAndSleep_Expect( xNextTaskUnblockTime - xTickCount );
 
-
     vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortReleaseTaskLock_Expect();
     vFakePortExitCriticalSection_Expect();
+
+    listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
+                                            EXIT_LOOP );
+
 
     /* API Call */
     portTASK_FUNCTION( prvIdleTask, args );
@@ -754,24 +730,101 @@ void test_prvGetExpectedIdleTime_ready_list_eq_1( void )
     /* the verification of the test is above in the expectations */
 }
 
-UBaseType_t list_length_cb3( List_t * list,
-                             int num_calls )
+void port_assert_if_isr_cb( int num_callbacks )
 {
-    if( num_calls == 1 )
-    {
-        return 1;
-    }
+    xTickCount = 239;
+}
 
-    if( num_calls < break_loop_at )
-    {
-        return configNUMBER_OF_CORES - 1;
-    }
-    else
-    {
-        Throw( EXIT_LOOP );
-    }
+/**
+ * @brief This test ensures that when we call prvIdleTask and the ready tasks
+ *        lists contains 1 elemets and  the top ready priority is less or equal
+ *        to the idle priority, then we let the suggested time to sleep is
+ *        returned
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvGetExpectedIdleTime();
+ *
+ * else if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > 1 )
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * configUSE_TICKLESS_IDLE != 0
+ * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
+ */
+void test_prvGetExpectedIdleTime_ready_list_eq_2( void )
+{
+    CEXCEPTION_T e = CEXCEPTION_NONE;
+    TCB_t xTCB = { 0 };
 
-    return 0;
+    xTickCount = 238;
+    xNextTaskUnblockTime = 240; /* expectedidletime = xNextTaskUnblockTime - xTickCount */
+    pxCurrentTCBs[ 0 ] = &xTCB;
+    xTCB.uxPriority = tskIDLE_PRIORITY;
+
+    /* Test Setup */
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Test Expectations */
+    vFakePortYield_Expect();
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( configNUMBER_OF_CORES + 1 );
+    vFakePortYield_Expect();
+
+    /* pxCurrentTCB */
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+
+    /* vTaskSuspendAll */
+    vFakePortAssertIfISR_Stub( port_assert_if_isr_cb );
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetTaskLock_Expect();
+    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect();
+    vFakePortClearInterruptMask_Expect( 0 );
+
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortReleaseTaskLock_Expect();
+    vFakePortExitCriticalSection_Expect();
+
+    listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
+                                            EXIT_LOOP );
+
+    /* API Call */
+    portTASK_FUNCTION( prvIdleTask, args );
+
+    Try
+    {
+        prvIdleTask( NULL );
+    }
+    Catch( e )
+    {
+        if( e == EXIT_LOOP )
+        {
+            TEST_PASS();
+        }
+        else
+        {
+            TEST_FAIL();
+        }
+    }
+    /* Test Verifications */
+
+    /* this function (vPortSuppressTicksAndSleep_Expect) not being called is
+     * the aim of this test, it proves that the
+     * task  did not go to sleep, technically nothing happens */
 }
 
 /**
@@ -797,7 +850,6 @@ void test_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idl
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
 
-    break_loop_at = 2;
     pxCurrentTCBs[ 0 ] = &xTCB;
 
     /* Test Setup */
@@ -808,11 +860,15 @@ void test_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idl
     /* Test Expectations */
     vFakePortYield_Expect();
 
-    listCURRENT_LIST_LENGTH_Stub( list_length_cb3 );
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
 
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
+    listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
+                                            EXIT_LOOP );
 
 
     /* API Call */

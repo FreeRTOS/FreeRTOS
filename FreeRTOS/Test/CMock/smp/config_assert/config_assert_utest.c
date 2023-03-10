@@ -112,6 +112,8 @@ extern TCB_t * volatile pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+extern volatile TickType_t xTickCount;
+extern volatile TickType_t xNextTaskUnblockTime;
 
 /* ==========================  STATIC FUNCTIONS  ========================== */
 static void vFakeAssertStub( bool x,
@@ -303,6 +305,7 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
     listGET_LIST_ITEM_OWNER_ExpectAnyArgsAndReturn( &unblockedTCB[ 0 ] );
     listREMOVE_ITEM_ExpectAnyArgs();
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     listREMOVE_ITEM_ExpectAnyArgs();
     /* in prvAddTaskToReadyList */
     listINSERT_END_ExpectAnyArgs();
@@ -539,7 +542,6 @@ void test_vTaskExitCritical_assert_critical_nesting_eq_zero( void )
     validate_and_clear_assertions();
 }
 
-
 /**
  * @brief This test ensures that the code asserts when we try to exit a critical
  *        section while the current tasks critical count is zero
@@ -566,5 +568,60 @@ void test_vTaskExitCriticalFromISR_assertcritical_nesting_eq_zero( void )
 
     EXPECT_ASSERT_BREAK( vTaskExitCriticalFromISR( 1 ) );
 
+    validate_and_clear_assertions();
+}
+
+/**
+ * @brief This test ensures that the code asserts  when the next unblock time is
+ *        less than the xTickCount
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvIdleTask();
+ *
+ * configASSERT( xNextTaskUnblockTime >= xTickCount );
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ * configUSE_TICKLESS_IDLE != 0
+ */
+void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
+{
+    TCB_t xTCB = { 0 };
+
+    xTickCount = 250;
+    xNextTaskUnblockTime = 240; /* expectedidletime = xNextTaskUnblockTime - xTickCount */
+    pxCurrentTCBs[ 0 ] = &xTCB;
+    xTCB.uxPriority = tskIDLE_PRIORITY;
+
+    /* Test Setup */
+    uxDeletedTasksWaitingCleanUp = 0;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+
+    /* Test Expectations */
+    vFakePortYield_Expect();
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+
+    /* vTaskSuspendAll */
+    vFakePortAssertIfISR_Expect();
+    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetTaskLock_Expect();
+    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect();
+    vFakePortClearInterruptMask_Expect( 0 );
+
+    /* API Call */
+    portTASK_FUNCTION( prvIdleTask, args );
+    EXPECT_ASSERT_BREAK( prvIdleTask( NULL ) );
+
+    /* Test Verifications */
     validate_and_clear_assertions();
 }

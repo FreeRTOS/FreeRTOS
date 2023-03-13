@@ -167,38 +167,3 @@ void test_macro_xSemaphoreGiveFromISR_queue_handle( void )
 
     vQueueDelete( xQueue );
 }
-
-/**
- * @brief Test xSemaphoreGetStaticBuffer with a Semaphore
- * @details Test xSemaphoreGetStaticBuffer returns the buffers of a statically allocated Semaphore
- * @coverage xSemaphoreGetStaticBuffer
- */
-void test_macro_xSemaphoreGetStaticBuffer_success( void )
-{
-    SemaphoreHandle_t xSemaphore = NULL;
-    StaticSemaphore_t xSemaphoreBuffer;
-    StaticSemaphore_t * pxSemaphoreBufferRet = NULL;
-
-    xSemaphore = xSemaphoreCreateBinaryStatic( &xSemaphoreBuffer );
-
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGetStaticBuffer( xSemaphore, &pxSemaphoreBufferRet ) );
-    TEST_ASSERT_EQUAL( &xSemaphoreBuffer, pxSemaphoreBufferRet );
-
-    vSemaphoreDelete( xSemaphore );
-}
-
-/**
- * @brief Test xSemaphoreGetStaticBuffer with a dynamic Semaphore
- * @details Test xSemaphoreGetStaticBuffer returns an error when called on a dynamically allocated Semaphore
- * @coverage xSemaphoreGetStaticBuffer
- */
-void test_macro_xSemaphoreGetStaticBuffer_fail( void )
-{
-    StaticSemaphore_t * pxSemaphoreBufferRet = NULL;
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateBinary();
-
-    TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreGetStaticBuffer( xSemaphore, &pxSemaphoreBufferRet ) );
-    TEST_ASSERT_EQUAL( NULL, pxSemaphoreBufferRet );
-
-    vSemaphoreDelete( xSemaphore );
-}

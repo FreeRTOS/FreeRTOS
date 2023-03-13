@@ -5502,7 +5502,7 @@ void test_xTaskGetStaticBuffers_success( void )
     TEST_ASSERT_EQUAL( &puxStackBuffer, puxStackBufferRet );
     TEST_ASSERT_EQUAL( pxTaskBuffer, pxTaskBufferRet );
 
-    free ( pxTaskBuffer );
+    free( pxTaskBuffer );
 }
 
 /**

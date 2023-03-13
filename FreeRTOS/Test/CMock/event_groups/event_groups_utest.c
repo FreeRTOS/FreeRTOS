@@ -805,7 +805,7 @@ void test_xEventGroupGetStaticBuffer_Success( void )
     vListInitialise_ReturnThruPtr_pxList( pxListTemp );
 
     /* Set-up */
-    StaticEventGroup_t *pxEventGroupBufferRet = NULL;
+    StaticEventGroup_t * pxEventGroupBufferRet = NULL;
     StaticEventGroup_t xCreatedEventGroup = { 0 };
     xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
 
@@ -832,7 +832,7 @@ void test_xEventGroupGetStaticBuffer_Fail( void )
     xTaskResumeAll_IgnoreAndReturn( 1 );
 
     /* Set-up */
-    StaticEventGroup_t *pxEventGroupBufferRet = NULL;
+    StaticEventGroup_t * pxEventGroupBufferRet = NULL;
     xEventGroupHandle = xEventGroupCreate();
 
     TEST_ASSERT_EQUAL( pdFALSE, xEventGroupGetStaticBuffer( xEventGroupHandle, &pxEventGroupBufferRet ) );

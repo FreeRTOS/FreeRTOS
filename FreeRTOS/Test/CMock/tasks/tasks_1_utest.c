@@ -5440,3 +5440,85 @@ void test_ulTaskGenericNotifyValueClear_success_null_handle()
     TEST_ASSERT_EQUAL( 2, task_to_notify->ulNotifiedValue[ uxIndexToClear ] );
 }
 /* ---------- end testing configUSE_TASK_NOTIFICATIONS --------------- */
+
+/* ---------------------- testing xTaskGetStaticBuffers ----------------------*/
+
+/**
+ * @brief Test xTaskGetStaticBuffers with a static task
+ * @details Test xTaskGetStaticBuffers returns the buffers of a statically allocated task
+ * @coverage xTaskGetStaticBuffers
+ */
+void test_xTaskGetStaticBuffers_success( void )
+{
+    StackType_t puxStackBuffer[ 300 ];
+    StaticTask_t * pxTaskBuffer = malloc( sizeof( TCB_t ) );
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { __FUNCTION__ };
+    const uint32_t ulStackDepth = 300;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = 3;
+    TaskHandle_t ret;
+    StackType_t * puxStackBufferRet = NULL;
+    StaticTask_t * pxTaskBufferRet = NULL;
+
+    memset( puxStackBuffer, 0xa5U, ulStackDepth * sizeof( StackType_t ) );
+
+    vListInitialiseItem_ExpectAnyArgs();
+    vListInitialiseItem_ExpectAnyArgs();
+
+    /* set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* set owner */
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( puxStackBuffer );
+
+    for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+    {
+        vListInitialise_ExpectAnyArgs();
+    }
+
+    /* Delayed Task List 1 */
+    vListInitialise_ExpectAnyArgs();
+    /* Delayed Task List 2 */
+    vListInitialise_ExpectAnyArgs();
+    /* Pending Ready List */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskDelete */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskSuspend */
+    vListInitialise_ExpectAnyArgs();
+
+    listINSERT_END_ExpectAnyArgs();
+
+    ret = xTaskCreateStatic( pxTaskCode,
+                             pcName,
+                             ulStackDepth,
+                             pvParameters,
+                             uxPriority,
+                             puxStackBuffer,
+                             pxTaskBuffer );
+
+
+    TEST_ASSERT_EQUAL( pdTRUE, xTaskGetStaticBuffers( ret, &puxStackBufferRet, &pxTaskBufferRet ) );
+    TEST_ASSERT_EQUAL( &puxStackBuffer, puxStackBufferRet );
+    TEST_ASSERT_EQUAL( pxTaskBuffer, pxTaskBufferRet );
+
+    free ( pxTaskBuffer );
+}
+
+/**
+ * @brief Test xTaskGetStaticBuffers with a dynamic task
+ * @details Test xTaskGetStaticBuffers returns an error when called on a dynamically allocated task
+ * @coverage xTaskGetStaticBuffers
+ */
+void test_xTaskGetStaticBuffers_fail( void )
+{
+    StackType_t * puxStackBufferRet = NULL;
+    StaticTask_t * pxTaskBufferRet = NULL;
+    TaskHandle_t taskHandle = create_task();
+
+    TEST_ASSERT_EQUAL( pdFALSE, xTaskGetStaticBuffers( taskHandle, &puxStackBufferRet, &pxTaskBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, puxStackBufferRet );
+    TEST_ASSERT_EQUAL( NULL, pxTaskBufferRet );
+}
+
+/* -------------------- end testing xTaskGetStaticBuffers --------------------*/

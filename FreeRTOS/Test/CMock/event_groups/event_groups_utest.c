@@ -791,3 +791,52 @@ void test_xEventGroupSetBitsFromISR_Success( void )
     /* API to Test */
     ( void ) xEventGroupSetBitsFromISR( NULL, BIT_0, &xHigherPriorityTaskWoken );
 }
+
+/*!
+ * @brief validate xEventGroupGetStaticBuffer on a statically created event group
+ * @details Test xEventGroupGetStaticBuffer returns the buffer of a statically created event group
+ * @coverage xEventGroupGetStaticBuffer
+ */
+void test_xEventGroupGetStaticBuffer_Success( void )
+{
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    /* Set-up */
+    StaticEventGroup_t *pxEventGroupBufferRet = NULL;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xEventGroupGetStaticBuffer( xEventGroupHandle, &pxEventGroupBufferRet ) );
+    TEST_ASSERT_EQUAL( &xCreatedEventGroup, pxEventGroupBufferRet );
+}
+
+/*!
+ * @brief validate xEventGroupGetStaticBuffer on a dynamically created event group
+ * @details Test xEventGroupGetStaticBuffer returns an error when called on a dynamically created event group
+ * @coverage xEventGroupGetStaticBuffer
+ */
+void test_xEventGroupGetStaticBuffer_Fail( void )
+{
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+    /* Expectation of Function: vEventGroupDelete */
+    vTaskSuspendAll_Ignore();
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
+    vTaskRemoveFromUnorderedEventList_Ignore();
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+
+    /* Set-up */
+    StaticEventGroup_t *pxEventGroupBufferRet = NULL;
+    xEventGroupHandle = xEventGroupCreate();
+
+    TEST_ASSERT_EQUAL( pdFALSE, xEventGroupGetStaticBuffer( xEventGroupHandle, &pxEventGroupBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, pxEventGroupBufferRet );
+
+    vEventGroupDelete( xEventGroupHandle );
+}

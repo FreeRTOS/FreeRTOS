@@ -1784,3 +1784,31 @@ void test_timer_function_success_wrap_timer( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 1, *retVal );
 }
+
+void test_xEventGroupGetStaticBuffer_Success( void )
+{
+    TimerHandle_t ret_timer_create;
+    UBaseType_t pvTimerID;
+    StaticTimer_t pxTimerBuffer[ sizeof( StaticTimer_t ) ];
+    StaticTimer_t * pxTimerBufferRet = NULL;
+
+    /* Setup */
+    /* Expectations */
+    /* prvInitialiseNewTimer */
+    /* prvCheckForValidListAndQueue */
+    vListInitialise_ExpectAnyArgs();
+    vListInitialise_ExpectAnyArgs();
+    xQueueGenericCreateStatic_ExpectAnyArgsAndReturn( NULL );
+    /* Back prvInitialiseNewTimer */
+    vListInitialiseItem_ExpectAnyArgs();
+    /* API Call */
+    ret_timer_create = xTimerCreateStatic( "ut_timer_task",
+                                           pdMS_TO_TICKS( 1000 ),
+                                           pdTRUE,
+                                           ( void * ) &pvTimerID,
+                                           xCallback_Test,
+                                           pxTimerBuffer );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xTimerGetStaticBuffer( ret_timer_create, &pxTimerBufferRet ) );
+    TEST_ASSERT_EQUAL( pxTimerBuffer, pxTimerBufferRet );
+}

@@ -326,3 +326,43 @@ void test_vQueueWaitForMessageRestricted_locked( void )
 
     vQueueDelete( xQueue );
 }
+
+/**
+ * @brief xQueueGetStaticBuffers with a statically allocated queue.
+ * @details Test xQueueGetStaticBuffers returns the buffers of a statically allocated queue
+ * @coverage xQueueGetStaticBuffers
+ */
+void test_macro_xQueueGetStaticBuffers_static( void )
+{
+    uint32_t queueStorage[ 5 ];
+    StaticQueue_t queueBuffer;
+    uint8_t * pucQueueStorageRet = NULL;
+    StaticQueue_t * pxStaticQueueRet = NULL;
+
+    QueueHandle_t xQueue = xQueueCreateStatic( 5, sizeof( uint32_t ), ( void * ) queueStorage, &queueBuffer );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueGetStaticBuffers( xQueue, &pucQueueStorageRet, &pxStaticQueueRet ) );
+    TEST_ASSERT_EQUAL( queueStorage, ( uint32_t * ) pucQueueStorageRet );
+    TEST_ASSERT_EQUAL( &queueBuffer, pxStaticQueueRet );
+
+    vQueueDelete( xQueue );
+}
+
+/**
+ * @brief xQueueGetStaticBuffers with a dynamically allocated queue.
+ * @details Test xQueueGetStaticBuffers returns an error when called on a dynamically allocated queue.
+ * @coverage xQueueGetStaticBuffers
+ */
+void test_macro_xQueueGetStaticBuffers_dynamic( void )
+{
+    uint8_t * pucQueueStorageRet = NULL;
+    StaticQueue_t * pxStaticQueueRet = NULL;
+
+    QueueHandle_t xQueue = xQueueCreate( 5, sizeof( uint32_t ) );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xQueueGetStaticBuffers( xQueue, &pucQueueStorageRet, &pxStaticQueueRet ) );
+    TEST_ASSERT_EQUAL( NULL, pucQueueStorageRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticQueueRet );
+
+    vQueueDelete( xQueue );
+}

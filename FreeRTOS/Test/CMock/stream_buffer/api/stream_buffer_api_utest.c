@@ -1455,3 +1455,44 @@ void test_xStreamBufferSend_WrapOver( void )
 
     vStreamBufferDelete( xStreamBuffer );
 }
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers on a statically created stream buffer
+ * @details Test xStreamBufferGetStaticBuffers returns the buffers of a statically created stream buffer
+ */
+void test_xStreamBufferGetStaticBuffers_Success( void )
+{
+    StaticStreamBuffer_t streamBufferStruct;
+
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+    TEST_ASSERT_EQUAL( streamBufferArray, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( &streamBufferStruct, pxStaticStreamBufferRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers on a dynamically created stream buffer
+ * @details Test xStreamBufferGetStaticBuffers returns an error when called on a dynamically created stream buffer
+ */
+void test_xStreamBufferGetStaticBuffers_Fail( void )
+{
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_EQUAL( NULL, xStreamBuffer );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticStreamBufferRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}

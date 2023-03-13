@@ -798,3 +798,42 @@ void test_xMessageBufferReceiveFromISR_success( void )
 
     vStreamBufferDelete( xMessageBuffer );
 }
+
+/**
+ * @brief validate xMessageBufferGetStaticBuffers on a statically created message buffer
+ * @details Test xMessageBufferGetStaticBuffers returns the buffers of a statically created message buffer
+ */
+void test_xMessageBufferGetStaticBuffers_Success( void )
+{
+    StaticMessageBuffer_t messageBufferStruct;
+    /* The size of message buffer array should be one greater than the required size of message buffer. */
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+    uint8_t * pucMessageBufferStorageAreaRet = NULL;
+    StaticMessageBuffer_t * pxStaticMessageBuffer = NULL;
+
+    xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, &messageBufferStruct );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xMessageBufferGetStaticBuffers( xMessageBuffer, &pucMessageBufferStorageAreaRet, &pxStaticMessageBuffer ) );
+    TEST_ASSERT_EQUAL( messageBufferArray, pucMessageBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( &messageBufferStruct, pxStaticMessageBuffer );
+
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief validate xMessageBufferGetStaticBuffers on a dynamically created message buffer
+ * @details Test xMessageBufferGetStaticBuffers returns an error when called on a dynamically created message buffer
+ */
+void test_xMessageBufferGetStaticBuffers_Fail( void )
+{
+    uint8_t * pucMessageBufferStorageAreaRet = NULL;
+    StaticMessageBuffer_t * pxStaticMessageBuffer = NULL;
+
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xMessageBufferGetStaticBuffers( xMessageBuffer, &pucMessageBufferStorageAreaRet, &pxStaticMessageBuffer ) );
+    TEST_ASSERT_EQUAL( NULL, pucMessageBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticMessageBuffer );
+
+    vMessageBufferDelete( xMessageBuffer );
+}

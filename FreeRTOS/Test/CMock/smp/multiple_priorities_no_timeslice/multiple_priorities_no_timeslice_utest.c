@@ -86,9 +86,9 @@ int suiteTearDown( int numFailures )
 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater than 1 .
  * 
@@ -131,9 +131,9 @@ void test_priority_verification_tasks_equal_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -180,9 +180,9 @@ void test_priority_verification_tasks_different_priorities( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1 .
@@ -244,9 +244,9 @@ void test_priority_change_tasks_equal_priority_lower( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -314,9 +314,9 @@ void test_priority_change_tasks_equal_priority_raise( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -390,9 +390,9 @@ void test_priority_change_tasks_different_priority_raise_to_equal( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -467,9 +467,9 @@ void test_priority_change_tasks_different_priority_raise_to_higher( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -544,9 +544,9 @@ void test_priority_change_tasks_different_priority_lower_to_equal( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -620,9 +620,9 @@ void test_priority_change_tasks_different_priority_lower_to_lowest( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores 
  * greater than 1.
@@ -691,9 +691,9 @@ void test_task_delete_tasks_different_priorities_delete_low( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores 
  * greater than 1.
@@ -732,7 +732,7 @@ void test_task_delete_tasks_different_priorities_delete_high( void )
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state */
-    for (i = 1; i < configNUMBER_OF_CORES; i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 
@@ -746,7 +746,7 @@ void test_task_delete_tasks_different_priorities_delete_high( void )
     TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
     verifySmpTask( &xTaskHandles[0], eDeleted, -1 );
 
-    /* Verify core 0 is now idle */
+    /* Verify core 0 is now running an idle task */
     verifyIdleTask(0, 0);
 
     /* Verify other cores remain in the running state */
@@ -764,9 +764,9 @@ void test_task_delete_tasks_different_priorities_delete_high( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores 
  * greater than 1.
@@ -844,9 +844,9 @@ void test_task_delete_select_high_priority_task( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -876,7 +876,7 @@ void test_task_create_tasks_equal_priority( void )
     uint32_t i;
 
     /* Create tasks at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
 
@@ -906,9 +906,9 @@ void test_task_create_tasks_equal_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -938,14 +938,14 @@ void test_task_create_tasks_lower_priority( void )
     uint32_t i;
 
     /* Create all tasks at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 
@@ -968,9 +968,9 @@ void test_task_create_tasks_lower_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1000,14 +1000,14 @@ void test_task_create_tasks_higher_priority( void )
     uint32_t i;
 
     /* Create all tasks at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
 
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 
@@ -1018,7 +1018,7 @@ void test_task_create_tasks_higher_priority( void )
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
 
     /* Verify all tasks are in the ready state */
-    for (i = 0; i < ( configNUMBER_OF_CORES ); i++) {
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 }
@@ -1031,9 +1031,9 @@ void test_task_create_tasks_higher_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1093,9 +1093,9 @@ void test_task_create_all_cores_equal_priority_equal( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1156,9 +1156,9 @@ void test_task_create_all_cores_equal_priority_lower( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1222,9 +1222,9 @@ void test_task_create_all_cores_equal_priority_higher( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1245,7 +1245,7 @@ void test_task_create_all_cores_equal_priority_higher( void )
  * 
  * Task (T1)                  Task (TN)                  New Task
  * Priority – 2               Priority – 1               Priority – 2
- * State - Running (Core 0)   State - Running (Core N)   State - Running (Last Core)
+ * State - Running (Core 0)   State - Ready              State - Running (Last Core)
  */
 void test_task_create_all_cores_different_priority_high( void )
 {
@@ -1290,9 +1290,9 @@ void test_task_create_all_cores_different_priority_high( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1355,9 +1355,9 @@ void test_task_create_all_cores_different_priority_low( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1435,9 +1435,9 @@ void test_task_suspend_all_cores_equal_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores 
  * greater than 1.
@@ -1511,9 +1511,9 @@ void test_task_suspend_select_high_priority_task( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1593,9 +1593,9 @@ void test_task_suspend_all_cores_different_priority_suspend_high( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1662,7 +1662,7 @@ void test_task_suspend_all_cores_different_priority_suspend_low( void )
         /* Verify T0 remains running on core 0 */
         verifySmpTask( &xTaskHandles[0], eRunning, 0 );
 
-        /* Verify task T[i] is in the deleted state */
+        /* Verify task T[i] is in the running state */
         verifySmpTask( &xTaskHandles[i], eRunning, (configNUMBER_OF_CORES - i) );
     }
 }
@@ -1675,9 +1675,9 @@ void test_task_suspend_all_cores_different_priority_suspend_low( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1691,7 +1691,7 @@ void test_task_suspend_all_cores_different_priority_suspend_low( void )
  * After calling vTaskStartScheduler()
  * 
  * Task (TN)
- * Priority – N
+ * Priority – 1
  * State - Running (Core N)
  * 
  * Block task (T1)
@@ -1701,10 +1701,10 @@ void test_task_suspend_all_cores_different_priority_suspend_low( void )
  * State - Blocked      State - Running (Core N)
  * 
  * Unblock task (T1)
- * 
- * Task (TN)
- * Priority – N
- * State - Running (Core N)
+ *
+ * Task (T1)	                   Task (TN)
+ * Priority – 1                    Priority – 1
+ * State - Running ( Core 0 )      State - Running (Core N)
  */
 void test_task_blocked_all_cores_equal_priority( void )
 {
@@ -1755,9 +1755,9 @@ void test_task_blocked_all_cores_equal_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1780,7 +1780,7 @@ void test_task_blocked_all_cores_equal_priority( void )
  * Priority – 2        Priority – 1
  * State - Blocked     State - Running (Core N)
  * 
- * Resume task (T1)
+ * Unblock task (T1)
  * 
  * Task (T1)	             Task (TN)
  * Priority – 2              Priority – 1
@@ -1839,9 +1839,9 @@ void test_task_blocked_all_cores_different_priority_block_high( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores
  * greater than 1.
@@ -1866,9 +1866,9 @@ void test_task_blocked_all_cores_different_priority_block_high( void )
  * 
  * Unblocked tasks (T1)
  * 
- * Task (T1)	             Task (TN)
- * Priority – 2              Priority – 1
- * State - Running (Core 0)	 State - Running (Core N)
+ * Task (T1)	             Task (TN)                 Task (TN + 1)
+ * Priority – 2              Priority – 1              Priority – 1
+ * State - Running (Core 0)	 State - Running (Core N)  State - Ready
  */
 void test_task_block_all_cores_high_priority_block( void )
 {
@@ -1928,9 +1928,9 @@ void test_task_block_all_cores_high_priority_block( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores 
  * greater than 1.
@@ -2007,9 +2007,9 @@ void test_task_blocked_select_high_priority_task( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2120,9 +2120,9 @@ void test_task_affinity_verification_same_cores( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2203,9 +2203,9 @@ void test_task_affinity_suspend_same_core_affinity( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2274,9 +2274,9 @@ void test_task_affinity_out_of_range( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2349,9 +2349,9 @@ void test_task_affinity_resume_suspended_task( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2379,10 +2379,10 @@ void test_task_affinity_resume_suspended_task( void )
  * 
  * Remove core affinity on the new task
  * 
- * Task (T0)	             Task (TN)                 Task (TN + 1)
- * Priority – 2              Priority – 1              Priority – 2
- * Affinity – None           Affinity – None           Affinity – None
- * State – Running (Core 0)  State – Running (Core N)  State – Running (Last Core)
+ * Task (T0)                 Task (TN - 1)             Task (TN)                 Task (TN + 1)
+ * Priority – 2              Priority – 1              Priority – 1              Priority – 2
+ * Affinity – None           Affinity – None           Affinity – None           Affinity – None
+ * State – Running (Core 0)  State – Running           State – Ready             State – Running (Last Core)
  */
 void test_task_affinity_modify_affinity( void )
 {
@@ -2427,9 +2427,9 @@ void test_task_affinity_modify_affinity( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2506,9 +2506,9 @@ void test_task_affinity_modify_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2521,23 +2521,23 @@ void test_task_affinity_modify_priority( void )
  * 
  * After calling vTaskStartScheduler()
  * 
- * Task (T0)	     Task (TN)         Task (TN + 1)
- * Priority – 1      Priority – 2      Priority – 3
- * State - Running	 State - Running   State - Suspended
+ * Task (T0)	              Task (TN)         Task (TN + 1)
+ * Priority – 1               Priority – 2      Priority – 3
+ * State - Running (core N)   State - Running   State - Suspended
  * 
  * Disable preemption on task T0
  * 
- * Task (T0)	        Task (TN)         Task (TN + 1)
- * Priority – 1         Priority – 2      Priority – 3
+ * Task (T0)	              Task (TN)         Task (TN + 1)
+ * Priority – 1               Priority – 2      Priority – 3
  * Preemption Disabled
- * State - Running	    State - Running   State - Suspended
+ * State - Running (core N)	  State - Running   State - Suspended
  * 
  * Resume task TN + 1
  * 
- * Task (T0)	        Task (TN)         Task (TN + 1)
- * Priority – 1         Priority – 2      Priority – 3
+ * Task (T0)	              Task (TN)         Task (TN + 1)
+ * Priority – 1               Priority – 2      Priority – 3
  * Preemption Disabled
- * State - Running	    State - Running   State - Running
+ * State - Running (core N)	  State - Ready     State - Running
  */
 void test_task_premption_verification( void )
 {
@@ -2578,7 +2578,7 @@ void test_task_premption_verification( void )
     vTaskResume( xTaskHandles[i] );
 
     /* The highest priority task will run on the first available CPU core */
-    verifySmpTask( &xTaskHandles[i], eRunning, (configNUMBER_OF_CORES -2) );
+    verifySmpTask( &xTaskHandles[i], eRunning, (configNUMBER_OF_CORES - 2) );
 
     /* The low priority task remains running on the last core */
     verifySmpTask( &xTaskHandles[0], eRunning, (configNUMBER_OF_CORES - 1) );
@@ -2594,9 +2594,9 @@ void test_task_premption_verification( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2609,23 +2609,23 @@ void test_task_premption_verification( void )
  * 
  * After calling vTaskStartScheduler()
  * 
- * Task (T0)	     Task (TN)
- * Priority – 1      Priority – 2
- * State - Running	 State - Running
+ * Task (T0)	             Task (TN)
+ * Priority – 1              Priority – 2
+ * State - Running (core N)	 State - Running
  * 
  * Disable preemption on task T0
  * 
- * Task (T0)	        Task (TN)
- * Priority – 1         Priority – 2
+ * Task (T0)	                Task (TN)
+ * Priority – 1                 Priority – 2
  * Preemption Disabled
- * State - Running	    State - Running
+ * State - Running (core N)	    State - Running
  * 
  * Create new task at priority 3
  * 
- * Task (T0)	        Task (TN)         Task (TN + 1)
- * Priority – 1         Priority – 2      Priority – 3
+ * Task (T0)	                Task (TN)         Task (TN + 1)
+ * Priority – 1                 Priority – 2      Priority – 3
  * Preemption Disabled
- * State - Running	    State - Running   State - Running
+ * State - Running (core N)	    State - Ready     State - Running
  */
 void test_task_premption_new_task( void )
 {
@@ -2675,9 +2675,9 @@ void test_task_premption_new_task( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2690,23 +2690,23 @@ void test_task_premption_new_task( void )
  * 
  * After calling vTaskStartScheduler()
  * 
- * Task (T0)	     Task (TN)         Task (TN + 1)
- * Priority – 1      Priority – 2      Priority – 1
- * State - Running	 State - Running   State - Ready
+ * Task (T0)	            Task (TN)         Task (TN + 1)
+ * Priority – 1             Priority – 2      Priority – 1
+ * State - Running (core N) State - Running   State - Ready
  * 
  * Disable preemption on task T0
  * 
- * Task (T0)	        Task (TN)         Task (TN + 1)
- * Priority – 1         Priority – 2      Priority – 3
+ * Task (T0)	            Task (TN)         Task (TN + 1)
+ * Priority – 1             Priority – 2      Priority – 3
  * Preemption Disabled
- * State - Running	    State - Running   State - Ready
+ * State - Running (core N) State - Running   State - Ready
  * 
  * Raise the priority on task TN + 1
  * 
- * Task (T0)	        Task (TN)         Task (TN + 1)
- * Priority – 1         Priority – 2      Priority – 3
+ * Task (T0)	            Task (TN)         Task (TN + 1)
+ * Priority – 1             Priority – 2      Priority – 3
  * Preemption Disabled
- * State - Running	    State - Running   State - Running
+ * State - Running (core N) State - Ready     State - Running
  */
 void test_task_premption_change_priority( void )
 {
@@ -2762,9 +2762,9 @@ void test_task_premption_change_priority( void )
  * 
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
- * #define configNUMBER_OF_CORES                            (N > 1)
  * #define configUSE_CORE_AFFINITY                          1
  * #define configUSE_TASK_PREEMPTION_DISABLE                1
+ * #define configNUMBER_OF_CORES                            (N > 1)
  * 
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -2777,30 +2777,30 @@ void test_task_premption_change_priority( void )
  * 
  * After calling vTaskStartScheduler()
  * 
- * Task (T0)	     Task (TN)
- * Priority – 1      Priority – 2
- * State - Running	 State - Running
+ * Task (T0)	               Task (TN)
+ * Priority – 1                Priority – 2
+ * State - Running (core N)    State - Running
  * 
  * Disable preemption on task T0
  * 
- * Task (T0)	        Task (TN)
- * Priority – 1         Priority – 2
+ * Task (T0)	               Task (TN)
+ * Priority – 1                Priority – 2
  * Preemption Disabled
- * State - Running	    State - Running
+ * State - Running (core N)    State - Running
  * 
  * Create new task at priority 3 with affinity for the same CPU core as task T0
  * 
- * Task (T0)	        Task (TN)         Task (TN + 1)
- * Priority – 1         Priority – 2      Priority – 3
- * Preemption Disabled                    Affinity mask set
- * State - Running	    State - Running   State - Ready
+ * Task (T0)	                Task (TN)         Task (TN + 1)
+ * Priority – 1                 Priority – 2      Priority – 3
+ * Preemption Disabled                            Affinity mask set
+ * State - Running (core N)	    State - Running   State - Ready
  * 
  * Clear the affinity mask for Task TN + 1
  * 
- * Task (T0)	        Task (TN)         Task (TN + 1)
- * Priority – 1         Priority – 2      Priority – 3
+ * Task (T0)	                Task (TN)         Task (TN + 1)
+ * Priority – 1                 Priority – 2      Priority – 3
  * Preemption Disabled                    
- * State - Running	    State - Running   State - Running
+ * State - Running (core N)	    State - Ready   State - Running
  */
 void test_task_premption_change_affinity( void )
 {
@@ -2851,9 +2851,9 @@ void test_task_premption_change_affinity( void )
  *
  * #define configRUN_MULTIPLE_PRIORITIES                    1
  * #define configUSE_TIME_SLICING                           0
+ * #define configUSE_CORE_AFFINITY                          1
+ * #define configUSE_TASK_PREEMPTION_DISABLE                1
  * #define configNUMBER_OF_CORES                            (N > 1)
- * #define configUSE_CORE_AFFINITY 1
- * #define configUSE_TASK_PREEMPTION_DISABLE 1
  *
  * This test can be run with FreeRTOS configured for any number of cores greater
  * than 1.
@@ -3031,25 +3031,25 @@ void test_task_yield_run_wait_longest( void )
  *
  * Tasks are created prior to starting the scheduler.
  *
- * Task (T0)	      Task (TN-1)
+ * Task (T1)	      Task (TN)
  * Priority – 1       Priority – 1
  * State – Ready	  State – Ready
  *
  * After calling vTaskStartScheduler()
  *
- * Task (T0)	      Task (TN-1)
+ * Task (T1)	      Task (TN)
  * Priority – 1       Priority – 1
  * State – Running	  State – Running
  *
- * Create Task TN
+ * Create Task TN + 1
  *
- * Task (T0)	        Task (TN-1)	        Task (TN)
+ * Task (T1)	        Task (TN)	        Task (TN + 1)
  * Priority – 1         Priority – 1        Priority – 1
  * State - Running	    State - Running 	State - Ready
  *
  * Task T0 yields on core 0
  *
- * Task (T0)	        Task (TN-1)	        Task (TN)
+ * Task (T1)	        Task (TN)	        Task (TN + 1)
  * Priority – 1         Priority – 1        Priority – 1
  * State - Ready	    State - Running 	State - Running
  */
@@ -3066,12 +3066,12 @@ void test_task_yield_run_equal_priority_new_task( void )
 
     vTaskStartScheduler();
 
-    /* Create N+1th tasks TN. */
+    /* Create task TN+1. */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
 
-    /* Task T0 yields itself on core 0. */
+    /* Task T1 yields itself on core 0. */
     taskYIELD();
 
-    /* The new task TN should runs on core 0. */
+    /* The new task TN+1 should runs on core 0. */
     verifySmpTask( &xTaskHandles[i], eRunning, 0 );
 }

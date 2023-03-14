@@ -48,8 +48,9 @@
 #include "mock_fake_assert.h"
 #include "mock_fake_port.h"
 
-#define tskSTATICALLY_ALLOCATED_STACK_ONLY        ( ( uint8_t ) 1 )
-#define tskSTACK_FILL_BYTE (0xa5U)
+#define tskSTATICALLY_ALLOCATED_STACK_ONLY      ( ( uint8_t ) 1 )
+#define tskSTACK_FILL_BYTE                      ( 0xa5U )
+#define TEST_VTASKLIST_BUFFER_SIZE              ( 800 )     /* Size for task list. */
 
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern volatile UBaseType_t uxCurrentNumberOfTasks;
@@ -732,177 +733,374 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_lt( void )
     TEST_ASSERT( xTaskHandle == NULL );
 }
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_TRACE_FACILITY                         1
-    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
-
-Coverage for: 
-        void vTaskList( char * pcWriteBuffer )
-        if( pxTaskStatusArray != NULL ) = False
-*/
-void test_v_task_list_case_no_task_created( void )
+/**
+ * @brief vTaskList - No task is created.
+ *
+ * This API is called before any task is created.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxTaskStatusArray != NULL )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( pxTaskStatusArray != NULL ) is false.
+ */
+void test_coverage_vTaskList_no_task_created( void )
 {
-    static char	buff[ 800 ] = { 0 };
+    char pcWriteBuffer[ TEST_VTASKLIST_BUFFER_SIZE ] = "Test"; /* Validate the string is overwritten in the API call. */
+
+    /* Setup the variables and structure. */
+    uxCurrentNumberOfTasks = 0;         /* No task is created. */
+    UnityMalloc_StartTest();
+
+    /* API calls. */
+    vTaskList( pcWriteBuffer );
+
+    /* Validation. */
+    /* Verify the malloc allocate count. */
+    UnityMalloc_EndTest();
+    /* No task is created. A string with zero legnth is returned. */
+    TEST_ASSERT_EQUAL( 0x00, pcWriteBuffer[ 0 ] );
+}
+
+/**
+ * @brief vTaskList - Task with state eRunning.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * switch( pxTaskStatusArray[ x ].eCurrentState )
+ * {
+ *     ...
+ *     case eRunning:
+ *         cStatus = tskRUNNING_CHAR;
+ *         break;
+ *     ...
+ * }
+ * @endcode
+ * ( pxTaskStatusArray[ x ].eCurrentState ) is eRunning.
+ */
+void test_coverage_vTaskList_task_eRunning( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    char pcExpectedResult[ TEST_VTASKLIST_BUFFER_SIZE ] = { 0 };
+    char pcWriteBuffer[ TEST_VTASKLIST_BUFFER_SIZE ] = "Test"; /* Validate the string is overwritten in the API call. */
+    int xStringCompareResult;
+    char pcGeneratedTaskName[ configMAX_TASK_NAME_LEN ];
+    uint32_t i;
  
-    //Call the List
-    vTaskList(buff);
+    /* Setup the variables and structure. */
+    xSchedulerRunning = pdTRUE;
+    vListInitialise( &pxReadyTasksLists[ tskIDLE_PRIORITY ] );
 
-}
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_TRACE_FACILITY                         1
-    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
+    /* Create one task with state eDeleted. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.pcTaskName[ 0 ] = '\0';
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.uxTaskAttributes = -1;
+    xTaskTCB.xTaskRunState = 0;
+    xTaskTCB.uxTaskNumber = 0;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+    listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCB.xStateListItem );
+    prvInitialiseTestStack( &xTaskTCB, configMINIMAL_STACK_SIZE );
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    
+    /* API calls. */
+    vTaskList( pcWriteBuffer );
+    
+    /* Clean up malloc for stack. */
+    vPortFreeStack( xTaskTCB.pxStack );
 
-Coverage for: 
-        void vTaskList( char * pcWriteBuffer )
-        case eDeleted
-*/
-void test_v_task_list_case_eDeleted( void )
-{
-    static char	buff[ 800 ] = { 0 };
+    /* Validation. */
+    /* Verify the malloc allocate count. */
+    UnityMalloc_EndTest();
 
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+1] = { NULL };
-
-    uint32_t i;
-
-    /* Create tasks of equal priority for all available CPU cores */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[i] );
+    /* Verify the returned string. */
+    for( i = 0; i < ( configMAX_TASK_NAME_LEN - 1 ); i++ )
+    {
+        pcGeneratedTaskName[ i ] = ' ';
     }
+    pcGeneratedTaskName[ i ] = '\0';
 
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskRUNNING_CHAR,
+        ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
+        ( unsigned int ) xTaskTCB.uxTaskNumber );
+    xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
+    TEST_ASSERT_EQUAL( 0, xStringCompareResult );
+}
 
-    vTaskStartScheduler();
+/**
+ * @brief vTaskList - Task with state eReady.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * switch( pxTaskStatusArray[ x ].eCurrentState )
+ * {
+ *     ...
+ *     case eReady:
+ *         cStatus = tskREADY_CHAR;
+ *         break;
+ *     ...
+ * }
+ * @endcode
+ * ( pxTaskStatusArray[ x ].eCurrentState ) is eReady.
+ */
+void test_coverage_vTaskList_task_eReady( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    char pcExpectedResult[ TEST_VTASKLIST_BUFFER_SIZE ] = { 0 };
+    char pcWriteBuffer[ TEST_VTASKLIST_BUFFER_SIZE ] = "Test"; /* Validate the string is overwritten in the API call. */
+    int xStringCompareResult;
+    char pcGeneratedTaskName[ configMAX_TASK_NAME_LEN ];
+    uint32_t i;
  
-    vTaskDelete(xTaskHandles[0]);
+    /* Setup the variables and structure. */
+    xSchedulerRunning = pdTRUE;
+    vListInitialise( &pxReadyTasksLists[ tskIDLE_PRIORITY ] );
 
-    //Call the List
-    vTaskList(buff);
+    /* Create one task with state eDeleted. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.pcTaskName[ 0 ] = '\0';
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.uxTaskAttributes = -1;
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxTaskNumber = 0;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+    listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCB.xStateListItem );
+    prvInitialiseTestStack( &xTaskTCB, configMINIMAL_STACK_SIZE );
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    
+    /* API calls. */
+    vTaskList( pcWriteBuffer );
+    
+    /* Clean up malloc for stack. */
+    vPortFreeStack( xTaskTCB.pxStack );
 
-    /* Delete all priority task responsibly*/
-    for (i = 1; i < configNUMBER_OF_CORES; i++) {
-        vTaskDelete(xTaskHandles[i]);
+    /* Validation. */
+    /* Verify the malloc allocate count. */
+    UnityMalloc_EndTest();
+
+    /* Verify the returned string. */
+    for( i = 0; i < ( configMAX_TASK_NAME_LEN - 1 ); i++ )
+    {
+        pcGeneratedTaskName[ i ] = ' ';
     }
+    pcGeneratedTaskName[ i ] = '\0';
 
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskREADY_CHAR,
+        ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
+        ( unsigned int ) xTaskTCB.uxTaskNumber );
+    xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
+    TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_TRACE_FACILITY                         1
-    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
-
-Coverage for: 
-        void vTaskList( char * pcWriteBuffer )
-        case eSuspended
-*/
-void test_v_task_list_case_eSuspended( void )
+/**
+ * @brief vTaskList - Task with state eBlocked.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * switch( pxTaskStatusArray[ x ].eCurrentState )
+ * {
+ *     ...
+ *     case eBlocked:
+ *         cStatus = tskBLOCKED_CHAR;
+ *         break;
+ *     ...
+ * }
+ * @endcode
+ * ( pxTaskStatusArray[ x ].eCurrentState ) is eBlocked.
+ */
+void test_coverage_vTaskList_task_eBlocked( void )
 {
-    static char	buff[ 800 ] = { 0 };
-
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES+1] = { NULL };
-
+    TCB_t xTaskTCB = { NULL };
+    char pcExpectedResult[ TEST_VTASKLIST_BUFFER_SIZE ] = { 0 };
+    char pcWriteBuffer[ TEST_VTASKLIST_BUFFER_SIZE ] = "Test"; /* Validate the string is overwritten in the API call. */
+    int xStringCompareResult;
+    char pcGeneratedTaskName[ configMAX_TASK_NAME_LEN ];
     uint32_t i;
-
-    /* Create tasks of equal priority for all available CPU cores */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[i] );
-    }
-
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
-
-    vTaskStartScheduler();
  
-    vTaskSuspend(xTaskHandles[1]);
+    /* Setup the variables and structure. */
+    xSchedulerRunning = pdTRUE;
+    vListInitialise( &xDelayedTaskList1 );
+    pxDelayedTaskList = &xDelayedTaskList1;
 
-    //Call the List
-    vTaskList(buff);
+    /* Create one task with state eDeleted. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.pcTaskName[ 0 ] = '\0';
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.uxTaskAttributes = -1;
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxTaskNumber = 0;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.xStateListItem.pxContainer = pxDelayedTaskList;
+    listINSERT_END( pxDelayedTaskList, &xTaskTCB.xStateListItem );
+    prvInitialiseTestStack( &xTaskTCB, configMINIMAL_STACK_SIZE );
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    
+    /* API calls. */
+    vTaskList( pcWriteBuffer );
+    
+    /* Clean up malloc for stack. */
+    vPortFreeStack( xTaskTCB.pxStack );
 
+    /* Validation. */
+    /* Verify the malloc allocate count. */
+    UnityMalloc_EndTest();
 
-    /* Delete all priority task responsibly*/
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        vTaskDelete(xTaskHandles[i]);
+    /* Verify the returned string. */
+    for( i = 0; i < ( configMAX_TASK_NAME_LEN - 1 ); i++ )
+    {
+        pcGeneratedTaskName[ i ] = ' ';
     }
+    pcGeneratedTaskName[ i ] = '\0';
 
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskBLOCKED_CHAR,
+        ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
+        ( unsigned int ) xTaskTCB.uxTaskNumber );
+    xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
+    TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
 
-
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_TRACE_FACILITY                         1
-    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
-
-Coverage for: 
-        void vTaskList( char * pcWriteBuffer )
-        case eBlocked
-*/
-void test_v_task_list_case_eblocked( void )
+/**
+ * @brief vTaskList - Task with state eSuspended.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * switch( pxTaskStatusArray[ x ].eCurrentState )
+ * {
+ *     ...
+ *     case eSuspended:
+ *         cStatus = tskSUSPENDED_CHAR;
+ *         break;
+ *     ...
+ * }
+ * @endcode
+ * ( pxTaskStatusArray[ x ].eCurrentState ) is eSuspended.
+ */
+void test_coverage_vTaskList_task_eSuspended( void )
 {
-    static char	buff[ 800 ] = { 0 };
-
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
-
+    TCB_t xTaskTCB = { NULL };
+    char pcExpectedResult[ TEST_VTASKLIST_BUFFER_SIZE ] = { 0 };
+    char pcWriteBuffer[ TEST_VTASKLIST_BUFFER_SIZE ] = "Test"; /* Validate the string is overwritten in the API call. */
+    int xStringCompareResult;
+    char pcGeneratedTaskName[ configMAX_TASK_NAME_LEN ];
     uint32_t i;
+ 
+    /* Setup the variables and structure. */
+    xSchedulerRunning = pdTRUE;
+    vListInitialise( &xSuspendedTaskList );
 
-    /* Create tasks of equal priority for all available CPU cores */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    /* Create one task with state eDeleted. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.pcTaskName[ 0 ] = '\0';
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.uxTaskAttributes = -1;
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxTaskNumber = 0;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.xStateListItem.pxContainer = &xSuspendedTaskList;
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCB.xStateListItem );
+    prvInitialiseTestStack( &xTaskTCB, configMINIMAL_STACK_SIZE );
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    
+    /* API calls. */
+    vTaskList( pcWriteBuffer );
+    
+    /* Clean up malloc for stack. */
+    vPortFreeStack( xTaskTCB.pxStack );
+
+    /* Validation. */
+    /* Verify the malloc allocate count. */
+    UnityMalloc_EndTest();
+
+    /* Verify the returned string. */
+    for( i = 0; i < ( configMAX_TASK_NAME_LEN - 1 ); i++ )
+    {
+        pcGeneratedTaskName[ i ] = ' ';
     }
+    pcGeneratedTaskName[ i ] = '\0';
 
-    vTaskStartScheduler();
-
-    /* Delay the task running on core ID 0 for 1 ticks. The task will be put into pxDelayedTaskList and added back to ready list after 1 tick. */
-    vTaskDelay( 1 );
-
-    //Call the List
-    vTaskList(buff);
-
-     /* Delete all priority task responsibly*/
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        vTaskDelete(xTaskHandles[i]);
-    }
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskSUSPENDED_CHAR,
+        ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
+        ( unsigned int ) xTaskTCB.uxTaskNumber );
+    xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
+    TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_TRACE_FACILITY                         1
-    #define configUSE_STATS_FORMATTING_FUNCTIONS             1
-
-Coverage for: 
-        void vTaskList( char * pcWriteBuffer )
-        and
-        static char * prvWriteNameToBuffer( char * pcBuffer,
-                                            const char * pcTaskName )
-*/
-void test_v_task_list( void )
+/**
+ * @brief vTaskList - Task with state eDeleted.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * switch( pxTaskStatusArray[ x ].eCurrentState )
+ * {
+ *     ...
+ *     case eDeleted:
+ *         cStatus = tskDELETED_CHAR;
+ *         break;
+ *     ...
+ * }
+ * @endcode
+ * ( pxTaskStatusArray[ x ].eCurrentState ) is eDeleted.
+ */
+void test_coverage_vTaskList_task_eDeleted( void )
 {
-    static char	buff[ 800 ] = { 0 };
-
-    TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
+    TCB_t xTaskTCB = { NULL };
+    char pcExpectedResult[ TEST_VTASKLIST_BUFFER_SIZE ] = { 0 };
+    char pcWriteBuffer[ TEST_VTASKLIST_BUFFER_SIZE ] = "Test"; /* Validate the string is overwritten in the API call. */
+    int xStringCompareResult;
+    char pcGeneratedTaskName[ configMAX_TASK_NAME_LEN ];
     uint32_t i;
+ 
+    /* Setup the variables and structure. */
+    xSchedulerRunning = pdTRUE;
+    vListInitialise( &pxReadyTasksLists[ tskIDLE_PRIORITY ] );
+    vListInitialise( &xTasksWaitingTermination );
 
-    /* Create tasks of equal priority for all available CPU cores */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
+    /* Create one task with state eDeleted. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.pcTaskName[ 0 ] = '\0';
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.uxTaskAttributes = -1;
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxTaskNumber = 0;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.xStateListItem.pxContainer = &xTasksWaitingTermination;
+    listINSERT_END( &xTasksWaitingTermination, &xTaskTCB.xStateListItem );
+    prvInitialiseTestStack( &xTaskTCB, configMINIMAL_STACK_SIZE );
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    
+    /* API calls. */
+    vTaskList( pcWriteBuffer );
+    
+    /* Clean up malloc for stack. */
+    vPortFreeStack( xTaskTCB.pxStack );
+
+    /* Validation. */
+    /* Verify the malloc allocate count. */
+    UnityMalloc_EndTest();
+
+    /* Verify the returned string. */
+    for( i = 0; i < ( configMAX_TASK_NAME_LEN - 1 ); i++ )
+    {
+        pcGeneratedTaskName[ i ] = ' ';
     }
+    pcGeneratedTaskName[ i ] = '\0';
 
-    vTaskStartScheduler();
-
-    vTaskList(buff);
-
-    /* Delete all priority task responsibly*/
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        vTaskDelete(xTaskHandles[i]);
-    }
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskDELETED_CHAR,
+        ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
+        ( unsigned int ) xTaskTCB.uxTaskNumber );
+    xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
+    TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
-
-
-
 
 /*
 The kernel will be configured as follows:

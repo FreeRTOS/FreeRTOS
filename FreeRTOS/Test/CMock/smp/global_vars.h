@@ -30,6 +30,15 @@
 
 #include <stdbool.h>
 
+/*
+ * Macros used by vListTask to indicate which state a task is in.
+ */
+#define tskRUNNING_CHAR      ( 'X' )
+#define tskBLOCKED_CHAR      ( 'B' )
+#define tskREADY_CHAR        ( 'R' )
+#define tskDELETED_CHAR      ( 'D' )
+#define tskSUSPENDED_CHAR    ( 'S' )
+
 /* Values that can be assigned to the ucNotifyState member of the TCB. */
 #define taskNOT_WAITING_NOTIFICATION              ( ( uint8_t ) 0 ) /* Must be zero as it is the initialised value. */
 #define taskWAITING_NOTIFICATION                  ( ( uint8_t ) 1 )

@@ -2045,6 +2045,105 @@ void test_coverage_vTaskExitCriticalFromISR_isr_not_in_critical( void )
 }
 
 /**
+ * @brief  pvTaskGetThreadLocalStoragePointer - xIndex is zero.
+ *
+ * Cover the situation that xIndex is zero and less than configNUM_THREAD_LOCAL_STORAGE_POINTERS when pvTaskGetThreadLocalStoragePointer
+ * is called. 
+ * 
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( ( xIndex >= 0 ) &&
+            ( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS ) )
+        {
+            pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+            pvReturn = pxTCB->pvThreadLocalStoragePointers[ xIndex ];
+        }
+ * @endcode
+ * ( ( xIndex >= 0 ) && ( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS ) ) is true.
+ */
+void test_coverage_pvTaskGetThreadLocalStoragePointer_xIndex_is_zero( void )
+{
+    
+    uint32_t i = 454545;
+    void * pValue = &i;
+    void * ret_pValue;
+    TCB_t tcb;
+    TaskHandle_t task_handle = &tcb;
+
+     /* Setup */
+    /* API Call */
+    vTaskSetThreadLocalStoragePointer( task_handle,
+                                       0,
+                                       pValue );
+    ret_pValue = pvTaskGetThreadLocalStoragePointer( task_handle, 0 );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR( pValue, ret_pValue );
+}
+/**
+ * @brief  pvTaskGetThreadLocalStoragePointer - taskhandle is NULL.
+ *
+ * Cover the situation that xIndex is zero and handle is NULL when pvTaskGetThreadLocalStoragePointer
+ * is called. 
+ * 
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( ( xIndex >= 0 ) &&
+            ( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS ) )
+        {
+            pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+            pvReturn = pxTCB->pvThreadLocalStoragePointers[ xIndex ];
+        }
+ * @endcode
+ * ( ( xIndex >= 0 ) && ( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS ) ) is true.
+ */
+void test_coverage_pvTaskGetThreadLocalStoragePointer_null_handle( void )
+{
+    
+    uint32_t i = 454545;
+    void * pValue = &i;
+    void * ret_pValue;
+    
+     /* Setup */
+
+    /* API Call */
+    vTaskSetThreadLocalStoragePointer( NULL,
+                                       0,
+                                       pValue );
+    ret_pValue = pvTaskGetThreadLocalStoragePointer( NULL, 0 );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR( pValue, ret_pValue );
+}
+/**
+ * @brief  pvTaskGetThreadLocalStoragePointer - xIndex is greater than configNUM_THREAD_LOCAL_STORAGE_POINTERS .
+ *
+ * Cover the situation that xIndex is greater than configNUM_THREAD_LOCAL_STORAGE_POINTERS when pvTaskGetThreadLocalStoragePointer
+ * is called. 
+ * 
+ * <b>Coverage</b>
+ * @code{c}
+ *     if( ( xIndex >= 0 ) &&
+            ( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS ) )
+        {
+            pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+            pvReturn = pxTCB->pvThreadLocalStoragePointers[ xIndex ];
+        }
+        else
+        {
+            pvReturn = NULL;
+        }
+ * @endcode
+ * ( ( xIndex >= 0 ) && ( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS ) ) is false.
+ */
+void test_coverage_pvTaskGetThreadLocalStoragePointer_fail( void )
+{
+    void * ret_pValue;
+
+    ret_pValue = pvTaskGetThreadLocalStoragePointer( NULL,
+                                                     configNUM_THREAD_LOCAL_STORAGE_POINTERS + 2 );
+    TEST_ASSERT_NULL( ret_pValue );
+}
+
+/**
  * @brief xTaskGenericNotifyFromISR - Notify a equal or lower priority task.
  *
  * Notify a equal or lower priority task from ISR. Higher priority task is not woken.

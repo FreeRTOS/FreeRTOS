@@ -412,9 +412,9 @@ void test_priority_change_tasks_different_priority_raise( void )
  * After calling vTaskPrioritySet() and lowering the
  * priority of all low priority tasks.
  * 
- * Task (T1)	              Task (TN)
- * Priority – 1               Priority – 1
- * State - Running (Core 0)	  State - Running (Core N)
+ * Task (T1)	                  Task (T2)                      Task (TN)
+ * Priority – 1                   Priority – 1                   Priority – 1
+ * State - Running (Core N - 1)	  State - Running (Core 0)       State - Running (Core N - 2)
  */
 void test_priority_change_tasks_different_priority_lower( void )
 {
@@ -450,8 +450,10 @@ void test_priority_change_tasks_different_priority_lower( void )
     vTaskGetInfo( xTaskHandles[0], &xTaskDetails, pdTRUE, eInvalid );
     TEST_ASSERT_EQUAL( 1, xTaskDetails.xHandle->uxPriority );
 
-    /* Verify the task remains running. When priority dropped in prvSelectHighestPriorityTask.
-     * All the idle core will yield for context switch. The ready queue is a FIFO. Task 0 will be choosed
+    /* Verify the task remains running. */
+    /* When priority dropped in prvSelectHighestPriorityTask, all the idle cores
+     * will yield for context switch. The ready queue is a FIFO. Core 0 will choose
+     * The first task in the ready queue which is task 1. Task 0 will be selected
      * by the last core which calls context switch.
      * Core 0 choose xTaskHandles[1]
      * Core 1 choose xTaskHandles[2]
@@ -506,14 +508,14 @@ void test_task_create_tasks_equal_priority( void )
     uint32_t i;
 
     /* Create all tasks at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
 
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 
@@ -566,14 +568,14 @@ void test_task_create_tasks_lower_priority( void )
     uint32_t i;
 
     /* Create all tasks at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 
@@ -617,7 +619,7 @@ void test_task_create_tasks_lower_priority( void )
  * 
  * Task N - 1        New Task
  * Priority – 1      Priority – 2
- * State - Ready	 State - Running (Core N)
+ * State - Ready	 State - Running (First available core)
  * 
  */
 void test_task_create_tasks_higher_priority( void )
@@ -626,7 +628,7 @@ void test_task_create_tasks_higher_priority( void )
     uint32_t i, xCoreToRunTask;
 
     /* Create all tasks at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
@@ -641,7 +643,7 @@ void test_task_create_tasks_higher_priority( void )
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state */
-    for (i = 0; i < configNUMBER_OF_CORES - 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++) {
         verifySmpTask( &xTaskHandles[i], eRunning, i );
     }
 
@@ -657,7 +659,7 @@ void test_task_create_tasks_higher_priority( void )
      * 2. Check xYieldPendings for this core -> This core yields.
      * core N-1 won't yield since it is already running the idle task.
      * The core yields in the following order.
-     * core 1 choose The new task xTaskHandles[n]
+     * core 1 choose The new task xTaskHandles[N-1]
      * core 2 choose xIdleTaskHandles[1]
      * .....
      * core N - 2 choose xIdleTaskHandles[N-3]
@@ -852,8 +854,8 @@ void test_task_create_all_cores_equal_priority_lower( void )
  * Create a new task of higher priority
  * 
  * Task (TN)	              New Task
- * Priority – 2               Priority – 1
- * State - Running (Core N)	  State - Ready
+ * Priority – 1               Priority – 2
+ * State - Ready	          State - Running ( First available core )
  */
 void test_task_create_all_cores_equal_priority_higher( void )
 {
@@ -865,11 +867,6 @@ void test_task_create_all_cores_equal_priority_higher( void )
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
 
-    /* After start scheduler, core choose task status:
-     * Core 0 xTaskHandles[0]
-     * ...
-     * Core N-1 * Core 0 xTaskHandles[N-1]
-     */
     vTaskStartScheduler();
 
     /* Verify all tasks are in the running state */
@@ -947,7 +944,7 @@ void test_task_create_all_cores_equal_priority_higher( void )
  * 
  * Task (T1)	              Task (TN)	     New Task
  * Priority – 2               Priority – 1   Priority – 2
- * State - Running (Core 0)	  State - Ready  State - Running (Core 1)
+ * State - Running (Core 0)	  State - Ready  State - Running (Last available core)
  */ 
 void test_task_create_all_cores_different_priority_high( void )
 {
@@ -1533,9 +1530,9 @@ void test_task_suspend_all_cores_equal_priority( void )
  * 
  * Resume task (T1)
  * 
- * Task (T1)	             Task (TN)
- * Priority – 2              Priority – 1
- * State - Running (Core 0)	 State - Ready
+ * Task (T1)	                             Task (TN)
+ * Priority – 2                              Priority – 1
+ * State - Running (First available core)	 State - Ready
  */
 void test_task_suspend_all_cores_different_priority_suspend_high( void )
 {
@@ -1571,9 +1568,10 @@ void test_task_suspend_all_cores_different_priority_suspend_high( void )
     }
 
     /* The task running status when xTaskHandles[0] suspend ifself on Core 0.
-     * 1. Core 0 will yield itself and select highest priority task
-     * 2. In select highest priority task, the highest priority is dropped. All the other cores
-     * running the idle are requested to yield. The implementation assume the yield in accesending order.
+     * 1. Core 0 will yield itself and call prvSelectHighestPriorityTask
+     * 2. In prvSelectHighestPriorityTask, the top running priority is dropped.
+     * All the other cores running the idle are requested to yield. The mock implementation
+     * assume that cores yield in accesending order.
      * Core 0 will choose xTaskHandles[1]
      * Core 1 will choose xTaskHandles[2]
      * ...
@@ -1847,13 +1845,13 @@ void test_task_suspend_all_cores_high_priority_suspend( void )
  * Suspend tasks (T1)
  * 
  * Task (T1)	       Task (TN + 1)
- * Priority – 2        Priority – 1
+ * Priority – 1        Priority – 1
  * State - Suspended   State - Running (Core 0)
  * 
  * Resume tasks (T1)
  * 
- * Task (T1)	   Task (TN)
- * Priority – 2    Priority – 1
+ * Task (T1)	   Task (TN + 1)
+ * Priority – 1    Priority – 1
  * State - Ready   State - Running (Core 0)
  */
 void test_task_suspend_all_cores_equal_priority_suspend_running ( void )
@@ -1862,7 +1860,7 @@ void test_task_suspend_all_cores_equal_priority_suspend_running ( void )
     uint32_t i;
 
     /* Create a task for each CPU core at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES + 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
 
@@ -2001,9 +1999,9 @@ void test_task_blocked_all_cores_equal_priority( void )
  * 
  * Unblock task (T1)
  * 
- * Task (T1)	             Task (TN)
- * Priority – 2              Priority – 1
- * State - Running (Core 0)	 State - Ready
+ * Task (T1)	                             Task (TN)
+ * Priority – 2                              Priority – 1
+ * State - Running (First available core)	 State - Ready
  */
 void test_task_blocked_all_cores_different_priority_block_high( void )
 {
@@ -2045,7 +2043,7 @@ void test_task_blocked_all_cores_different_priority_block_high( void )
     /* Unblock task T0 */
     xTaskAbortDelay( xTaskHandles[0] );
 
-/* Verify the high priority task is running */
+    /* Verify the high priority task is running */
     xCoreToRunTask = 1;
     if( xCoreToRunTask == ( configNUMBER_OF_CORES - 1 ) )
     {
@@ -2197,13 +2195,13 @@ void test_task_block_all_cores_high_priority_block( void )
  * Block tasks (T1)
  * 
  * Task (T1)	       Task (TN + 1)
- * Priority – 2        Priority – 1
+ * Priority – 1        Priority – 1
  * State - Blocked     State - Running (Core 0)
  * 
  * Unblock tasks (T1)
  * 
  * Task (T1)	   Task (TN)
- * Priority – 2    Priority – 1
+ * Priority – 1    Priority – 1
  * State - Ready   State - Running (Core 0)
  */
 void test_task_block_all_cores_equal_priority_block_running ( void )
@@ -2212,7 +2210,7 @@ void test_task_block_all_cores_equal_priority_block_running ( void )
     uint32_t i;
 
     /* Create a task for each CPU core at equal priority */
-    for (i = 0; i < configNUMBER_OF_CORES + 1; i++) {
+    for (i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++) {
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[i] );
     }
 

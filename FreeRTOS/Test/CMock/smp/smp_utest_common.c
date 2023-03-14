@@ -362,7 +362,11 @@ void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState)
     int ret;
 
     vTaskGetInfo(xIdleTaskHandles[index], &xTaskDetails, pdTRUE, eInvalid );
-    ret = strncmp( xTaskDetails.xHandle->pcTaskName, "IDLE", 4 );
+    #ifdef configIDLE_TASK_NAME
+        ret = strncmp( xTaskDetails.xHandle->pcTaskName, configIDLE_TASK_NAME, strlen( configIDLE_TASK_NAME ) );
+    #else
+        ret = strncmp( xTaskDetails.xHandle->pcTaskName, "IDLE", 4 );
+    #endif
     TEST_ASSERT_EQUAL_INT_MESSAGE( 0, ret, "Idle Task Verification Failed: Incorrect task name" );
     TEST_ASSERT_EQUAL_INT_MESSAGE( pdTRUE, xTaskDetails.xHandle->uxTaskAttributes, "Idle Task Verification Failed: Incorrect xIsIdle" );
     TEST_ASSERT_EQUAL_INT_MESSAGE( xTaskRunState, xTaskDetails.xHandle->xTaskRunState, "Idle Task Verification Failed: Incorrect xTaskRunState" );

@@ -1068,7 +1068,7 @@ void test_task_affinity_set_affinity_running_task( void )
         xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
     }
 
-    /* Create a single equal priority task */   
+    /* Create a single equal priority task */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
 
     vTaskStartScheduler();
@@ -1085,7 +1085,7 @@ void test_task_affinity_set_affinity_running_task( void )
     int32_t core = 1;
 
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        
+
         xTaskIncrementTick_helper();
 
         /* Verify the last created task runs on each core by looping through the 0,1,2,3... cycle */
@@ -1096,7 +1096,7 @@ void test_task_affinity_set_affinity_running_task( void )
     vTaskCoreAffinitySet(xTaskHandles[configNUMBER_OF_CORES], 1 << ((configNUMBER_OF_CORES - 1)) );
 
     for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        
+
         xTaskIncrementTick_helper();
 
         /* Verify the task is either in the ready state or running on the last CPU core */

@@ -962,6 +962,8 @@ void test_vTaskPriorityDisinheritAfterTimeout_assert_tcb_eq_currentTCB( void )
 {
     TCB_t * ptcb = create_task();
 
+    pxCurrentTCB = ptcb;
+
     pvTaskIncrementMutexHeldCount();
 
     EXPECT_ASSERT_BREAK( vTaskPriorityDisinheritAfterTimeout( ptcb, 5 ) );

@@ -155,22 +155,22 @@ typedef unsigned long    UBaseType_t;
 #define  portASSERT_IF_IN_ISR()          vFakePortAssertIfISR();
 
 #define portGET_CORE_ID()                vFakePortGetCoreID()
-#define portYIELD_CORE( x )              vFakePortYieldCore(x)
+#define portYIELD_CORE( x )              vFakePortYieldCore( x )
 
-#define portENTER_CRITICAL_FROM_ISR         vFakePortEnterCriticalFromISR
-#define portEXIT_CRITICAL_FROM_ISR          vFakePortExitCriticalFromISR
+#define portENTER_CRITICAL_FROM_ISR     vFakePortEnterCriticalFromISR
+#define portEXIT_CRITICAL_FROM_ISR      vFakePortExitCriticalFromISR
 
 #if ( configNUMBER_OF_CORES > 1 )
     #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParameters )
     #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
 #else
     #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
-        volatile int fool_static = 0;                          \
-        void vFunction( void * ( pvParameters ) )
+    volatile int fool_static = 0;                              \
+    void vFunction( void * ( pvParameters ) )
 
     #define portTASK_FUNCTION( vFunction, pvParameters ) \
-        volatile int fool_static2 = 0;                   \
-        void vFunction( void * ( pvParameters ) )
+    volatile int fool_static2 = 0;                       \
+    void vFunction( void * ( pvParameters ) )
 #endif
 
 #if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 )
@@ -183,12 +183,12 @@ typedef unsigned long    UBaseType_t;
     }
 
     #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
-        ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+    ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
     #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
-        ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+    ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
     #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) \
-        uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
-#endif
+    uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+#endif /* if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 ) */
 
 /*-----------------------------------------------------------*/
 

@@ -29,7 +29,6 @@
 #define FREERTOS_CONFIG_H
 
 #include "fake_assert.h"
-#include "fake_infiniteloop.h"
 
 /*-----------------------------------------------------------
 * Application specific definitions.
@@ -43,12 +42,14 @@
 *----------------------------------------------------------*/
 
 /* SMP test specific configuration */
-#define configRUN_MULTIPLE_PRIORITIES                    0
+#define configRUN_MULTIPLE_PRIORITIES                    1
 #define configNUMBER_OF_CORES                            16
 #define configUSE_CORE_AFFINITY                          1
-#define configUSE_TIME_SLICING                           1
-#define configUSE_TASK_PREEMPTION_DISABLE                0
+#define configUSE_TIME_SLICING                           0
+#define configUSE_TASK_PREEMPTION_DISABLE                1
 #define configTICK_CORE                                  0
+#define configUSE_TICKLESS_IDLE                          1
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP            2
 
 /* OS Configuration */
 #define configUSE_PREEMPTION                             1
@@ -60,7 +61,6 @@
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 )
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 12 )
-#define configIDLE_TASK_NAME                             "idle short"
 #define configUSE_TRACE_FACILITY                         1
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
@@ -88,14 +88,15 @@
 #define configTIMER_TASK_PRIORITY                        ( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH                         20
 #define configTIMER_TASK_STACK_DEPTH                     ( configMINIMAL_STACK_SIZE * 2 )
+#define configIDLE_TASK_NAME                             "IDLE longXX"
 
 #define configMAX_PRIORITIES                             ( 7 )
 
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS    0
-#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define configGENERATE_RUN_TIME_STATS             0
+#define portGET_RUN_TIME_COUNTER_VALUE()    ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           0
 #define configENABLE_MPU                          0
@@ -153,6 +154,6 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
 
-#define INFINITE_LOOP                       vFakeInfiniteLoop
+#define portSUPPRESS_TICKS_AND_SLEEP    vPortSuppressTicksAndSleep
 
 #endif /* FREERTOS_CONFIG_H */

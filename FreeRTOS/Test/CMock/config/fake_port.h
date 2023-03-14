@@ -31,7 +31,7 @@ void vFakePortYield( void );
 void vFakePortYieldFromISR( void );
 void vFakePortYieldWithinAPI( void );
 
-void vFakePortRestoreInterrupts ( UBaseType_t );
+void vFakePortRestoreInterrupts( UBaseType_t );
 uint32_t vFakePortDisableInterrupts( void );
 void vFakePortEnableInterrupts( void );
 void vFakePortClearInterruptMaskFromISR( UBaseType_t uxNewMaskValue );
@@ -45,18 +45,21 @@ void vFakePortEnterCriticalSection( void );
 void vFakePortExitCriticalSection( void );
 void vPortCurrentTaskDying( void * pxTaskToDelete,
                             volatile BaseType_t * pxPendYield );
+
+void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+
 void portSetupTCB_CB( void * tcb );
 
 void vFakePortGetISRLock( void );
 void vFakePortReleaseISRLock( void );
 void vFakePortGetTaskLock( void );
-void vFakePortReleaseTaskLock (void );
+void vFakePortReleaseTaskLock( void );
 
 void vFakePortAssertIfISR();
 BaseType_t vFakePortCheckIfInISR( void );
 
 unsigned int vFakePortGetCoreID( void );
-void vFakePortYieldCore(int);
+void vFakePortYieldCore( int );
 
 UBaseType_t vFakePortEnterCriticalFromISR( void );
 void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState );

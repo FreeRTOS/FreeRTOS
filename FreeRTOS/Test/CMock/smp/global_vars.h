@@ -30,6 +30,9 @@
 
 #include <stdbool.h>
 
+/* Indicates that the task is an Idle task. */
+#define taskATTRIBUTE_IS_IDLE    ( UBaseType_t ) ( 1UL << 0UL )
+
 /*
  * Macros used by vListTask to indicate which state a task is in.
  */

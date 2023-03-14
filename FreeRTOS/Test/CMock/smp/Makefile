@@ -8,6 +8,7 @@ include ../makefile.in
 SUITES	+=	single_priority_no_timeslice
 SUITES	+=	single_priority_timeslice
 SUITES	+=	multiple_priorities_no_timeslice
+SUITES	+=	multiple_priorities_no_timeslice_mock
 SUITES	+=	multiple_priorities_timeslice
 SUITES	+=	config_assert
 SUITES	+=	multiple_priorities_preemption_disable

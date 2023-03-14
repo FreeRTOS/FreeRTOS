@@ -67,7 +67,9 @@ extern List_t xSuspendedTaskList;
 extern List_t xPendingReadyList;
 extern BaseType_t xPendedTicks;
 extern List_t xDelayedTaskList1;
+extern List_t xDelayedTaskList2;
 extern List_t * pxDelayedTaskList;
+extern List_t * pxOverflowDelayedTaskList;
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 extern void prvAddNewTaskToReadyList( TCB_t * pxNewTCB );
@@ -92,13 +94,17 @@ void setUp( void )
 
     for( uxPriority = (UBaseType_t)0U; uxPriority < (UBaseType_t)configMAX_PRIORITIES; uxPriority++ )
     {
-        vListInitialise(&(pxReadyTasksLists[uxPriority]));
+        vListInitialise( &( pxReadyTasksLists[uxPriority] ) );
     }
 
-    vListInitialise(&xSuspendedTaskList);
-    vListInitialise(&xPendingReadyList);
-    vListInitialise(&xDelayedTaskList1);
+    vListInitialise( &xSuspendedTaskList );
+    vListInitialise( &xPendingReadyList );
+    vListInitialise( &xDelayedTaskList1 );
+    vListInitialise( &xDelayedTaskList2 );
+    vListInitialise( &xTasksWaitingTermination );
+
     pxDelayedTaskList = &xDelayedTaskList1;
+    pxOverflowDelayedTaskList = &xDelayedTaskList2;
 }
 
 /*! called after each testcase */
@@ -792,7 +798,6 @@ void test_coverage_vTaskList_task_eRunning( void )
  
     /* Setup the variables and structure. */
     xSchedulerRunning = pdTRUE;
-    vListInitialise( &pxReadyTasksLists[ tskIDLE_PRIORITY ] );
 
     /* Create one task with state eDeleted. */
     xTaskTCB.uxPriority = tskIDLE_PRIORITY;
@@ -859,7 +864,6 @@ void test_coverage_vTaskList_task_eReady( void )
  
     /* Setup the variables and structure. */
     xSchedulerRunning = pdTRUE;
-    vListInitialise( &pxReadyTasksLists[ tskIDLE_PRIORITY ] );
 
     /* Create one task with state eDeleted. */
     xTaskTCB.uxPriority = tskIDLE_PRIORITY;
@@ -926,8 +930,6 @@ void test_coverage_vTaskList_task_eBlocked( void )
  
     /* Setup the variables and structure. */
     xSchedulerRunning = pdTRUE;
-    vListInitialise( &xDelayedTaskList1 );
-    pxDelayedTaskList = &xDelayedTaskList1;
 
     /* Create one task with state eDeleted. */
     xTaskTCB.uxPriority = tskIDLE_PRIORITY;
@@ -994,7 +996,6 @@ void test_coverage_vTaskList_task_eSuspended( void )
  
     /* Setup the variables and structure. */
     xSchedulerRunning = pdTRUE;
-    vListInitialise( &xSuspendedTaskList );
 
     /* Create one task with state eDeleted. */
     xTaskTCB.uxPriority = tskIDLE_PRIORITY;
@@ -1061,8 +1062,6 @@ void test_coverage_vTaskList_task_eDeleted( void )
  
     /* Setup the variables and structure. */
     xSchedulerRunning = pdTRUE;
-    vListInitialise( &pxReadyTasksLists[ tskIDLE_PRIORITY ] );
-    vListInitialise( &xTasksWaitingTermination );
 
     /* Create one task with state eDeleted. */
     xTaskTCB.uxPriority = tskIDLE_PRIORITY;
@@ -1825,7 +1824,6 @@ void test_coverage_prvCheckTasksWaitingTermination_delete_not_running_task( void
     UnityMalloc_StartTest();
     uxDeletedTasksWaitingCleanUp = 1;
     uxCurrentNumberOfTasks = 1;
-    vListInitialise( &xTasksWaitingTermination );
 
     pxTaskTCB = pvPortMalloc( sizeof( TCB_t ) );
     pxTaskTCB->pxStack = pvPortMalloc( configMINIMAL_STACK_SIZE );
@@ -1883,7 +1881,6 @@ void test_coverage_prvCheckTasksWaitingTermination_delete_running_task( void )
     UnityMalloc_StartTest();
     uxDeletedTasksWaitingCleanUp = 1;
     uxCurrentNumberOfTasks = 1;
-    vListInitialise( &xTasksWaitingTermination );
 
     pxTaskTCB = pvPortMalloc( sizeof( TCB_t ) );
     pxTaskTCB->pxStack = pvPortMalloc( configMINIMAL_STACK_SIZE );

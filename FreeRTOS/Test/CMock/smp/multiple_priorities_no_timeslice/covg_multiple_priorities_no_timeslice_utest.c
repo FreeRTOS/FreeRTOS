@@ -498,7 +498,7 @@ void test_coverage_uxTaskGetTaskNumber_task_handle( void )
     uxTaskNumber = uxTaskGetTaskNumber( &xTaskTCB );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( uxTaskNumber, 0x5a5a );
+    TEST_ASSERT_EQUAL( 0x5a5a, uxTaskNumber );
 }
 
 /**
@@ -528,7 +528,7 @@ void test_coverage_uxTaskGetTaskNumber_null_task_handle( void )
     uxTaskNumber = uxTaskGetTaskNumber( NULL );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( uxTaskNumber, 0U );
+    TEST_ASSERT_EQUAL( 0U, uxTaskNumber );
 }
 
 /**
@@ -557,7 +557,7 @@ void test_coverage_vTaskSetTaskNumber_task_handle( void )
     vTaskSetTaskNumber( &xTaskTCB, 0x5a5a );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( xTaskTCB.uxTaskNumber, 0x5a5a );
+    TEST_ASSERT_EQUAL( 0x5a5a, xTaskTCB.uxTaskNumber );
 }
 
 /**
@@ -1527,7 +1527,7 @@ void test_coverage_vTaskEnterCritical_task_in_critical_already( void )
     vTaskEnterCritical();
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 2 );
+    TEST_ASSERT_EQUAL( 2, xTaskTCB.uxCriticalNesting );
 }
 
 /**
@@ -1567,8 +1567,8 @@ void test_coverage_vTaskEnterCriticalFromISR_isr_in_critical_already( void )
     uxSavedInterruptStatus = vTaskEnterCriticalFromISR();
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 2 );
-    TEST_ASSERT_EQUAL( uxSavedInterruptStatus, 0x5a5a );
+    TEST_ASSERT_EQUAL( 2, xTaskTCB.uxCriticalNesting );
+    TEST_ASSERT_EQUAL( 0X5a5a, uxSavedInterruptStatus );
 }
 
 /**
@@ -1611,7 +1611,7 @@ void test_coverage_vTaskExitCritical_task_enter_critical_mt_1( void )
     vTaskExitCritical();
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 1 );
+    TEST_ASSERT_EQUAL( 1, xTaskTCB.uxCriticalNesting );
 }
 
 /**
@@ -1710,7 +1710,7 @@ void test_coverage_vTaskExitCriticalFromISR_isr_enter_critical_mt_1( void )
     vTaskExitCriticalFromISR( 0x5a5a );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( xTaskTCB.uxCriticalNesting, 1 );
+    TEST_ASSERT_EQUAL( 1, xTaskTCB.uxCriticalNesting );
 }
 
 /**
@@ -1753,6 +1753,620 @@ void test_coverage_vTaskExitCriticalFromISR_isr_not_in_critical( void )
     /* Validation. */
     /* Critical section count won't be changed. This test shows it's result in the
      * coverage report. */
+}
+
+/**
+ * @brief xTaskGenericNotifyFromISR - Notify a equal or lower priority task.
+ *
+ * Notify a equal or lower priority task from ISR. Higher priority task is not woken.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_PREEMPTION == 1 )
+ * {
+ *     prvYieldForTask( pxTCB );
+ *
+ *     if( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE )
+ *     {
+ *         if( pxHigherPriorityTaskWoken != NULL )
+ *         {
+ *             *pxHigherPriorityTaskWoken = pdTRUE;
+ *         }
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE ) is false.
+ */
+void test_coverage_xTaskGenericNotifyFromISR_priority_le( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
+    uint32_t ulPreviousNotificationValue;
+    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xReturn;
+    BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
+    List_t xEventList = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    uxSchedulerSuspended = pdFALSE;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    vListInitialise( &xEventList );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    vListInitialise( &xSuspendedTaskList );
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        xTaskTCBs[ i ].uxTaskAttributes = 0;
+
+        /* Create idle tasks with equal number of cores. */
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+        uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    }
+
+    /* Create one more task to be removed from event list. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.xStateListItem.pxContainer = &xSuspendedTaskList;
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCB.xStateListItem );
+    xTaskTCB.xEventListItem.pxContainer = &xEventList;
+    xTaskTCB.xEventListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xEventList, &xTaskTCB.xEventListItem );
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] = 0x5a5a; /* Value to be verified in this test. */
+    xTaskTCB.ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+    vFakePortEnterCriticalFromISR_StubWithCallback( NULL );
+    vFakePortExitCriticalFromISR_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vFakePortEnterCriticalFromISR_ExpectAndReturn( xSavedInterruptMask );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );    /* Get portGET_CRITICAL_NESTING_COUNT. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );    /* Get prvYieldCore. */
+    vFakePortExitCriticalFromISR_Expect( xSavedInterruptMask );
+
+    /* API call. */
+    xReturn = xTaskGenericNotifyFromISR( &xTaskTCB,
+                                         uxIndexToNotify,
+                                         0,       /* Value is not used with eNoAction. */
+                                         eNoAction,
+                                         &ulPreviousNotificationValue,
+                                         &xHigherPriorityTaskWoken );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdTRUE, xReturn );
+    TEST_ASSERT_EQUAL( 0x5a5a, ulPreviousNotificationValue );
+    TEST_ASSERT_NOT_EQUAL( pdTRUE, xHigherPriorityTaskWoken );
+}
+
+/**
+ * @brief xTaskGenericNotifyFromISR - Notify a higher priority task.
+ *
+ * Notify a higher priority task from ISR. Higher priority task is woken.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_PREEMPTION == 1 )
+ * {
+ *     prvYieldForTask( pxTCB );
+ *
+ *     if( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE )
+ *     {
+ *         if( pxHigherPriorityTaskWoken != NULL )
+ *         {
+ *             *pxHigherPriorityTaskWoken = pdTRUE;
+ *         }
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE ) is true.
+ * ( pxHigherPriorityTaskWoken != NULL ) is true.
+ */
+void test_coverage_xTaskGenericNotifyFromISR_priority_gt( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
+    uint32_t ulPreviousNotificationValue;
+    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xReturn;
+    BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
+    List_t xEventList = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    uxSchedulerSuspended = pdFALSE;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    vListInitialise( &xEventList );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    vListInitialise( &xSuspendedTaskList );
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        if( i == 0 )
+        {
+            /* Core 0 is running an idle task in order to be requested to yield. */
+            xTaskTCBs[ i ].uxTaskAttributes = taskATTRIBUTE_IS_IDLE;
+        }
+        else
+        {
+            /* Others are running a normal task. */
+            xTaskTCBs[ i ].uxTaskAttributes = 0;
+        }
+
+        /* Create idle tasks with equal number of cores. */
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+        uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    }
+
+    /* Create one more task to be removed from event list. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.xStateListItem.pxContainer = &xSuspendedTaskList;
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCB.xStateListItem );
+    xTaskTCB.xEventListItem.pxContainer = &xEventList;
+    xTaskTCB.xEventListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xEventList, &xTaskTCB.xEventListItem );
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] = 0x5a5a; /* Value to be verified in this test. */
+    xTaskTCB.ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+    vFakePortEnterCriticalFromISR_StubWithCallback( NULL );
+    vFakePortExitCriticalFromISR_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vFakePortEnterCriticalFromISR_ExpectAndReturn( xSavedInterruptMask );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortExitCriticalFromISR_Expect( xSavedInterruptMask );
+
+    /* API call. */
+    xReturn = xTaskGenericNotifyFromISR( &xTaskTCB,
+                                         uxIndexToNotify,
+                                         0,       /* Value is not used with eNoAction. */
+                                         eNoAction,
+                                         &ulPreviousNotificationValue,
+                                         &xHigherPriorityTaskWoken );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdTRUE, xReturn );
+    TEST_ASSERT_EQUAL( 0x5a5a, ulPreviousNotificationValue );
+    TEST_ASSERT_EQUAL( pdTRUE, xHigherPriorityTaskWoken );
+}
+
+/**
+ * @brief xTaskGenericNotifyFromISR - Notify a higher priority task with NULL param.
+ *
+ * Notify a higher priority task from ISR. Higher priority task is woken. Input param
+ * pxHigherPriorityTaskWoken is NULL.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_PREEMPTION == 1 )
+ * {
+ *     prvYieldForTask( pxTCB );
+ *
+ *     if( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE )
+ *     {
+ *         if( pxHigherPriorityTaskWoken != NULL )
+ *         {
+ *             *pxHigherPriorityTaskWoken = pdTRUE;
+ *         }
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE ) is true.
+ * ( pxHigherPriorityTaskWoken != NULL ) is false.
+ */
+void test_coverage_xTaskGenericNotifyFromISR_priority_gt_null_param( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
+    uint32_t ulPreviousNotificationValue;
+    BaseType_t xReturn;
+    BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
+    List_t xEventList = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    uxSchedulerSuspended = pdFALSE;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    vListInitialise( &xEventList );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    vListInitialise( &xSuspendedTaskList );
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        if( i == 0 )
+        {
+            /* Core 0 is running an idle task in order to be requested to yield. */
+            xTaskTCBs[ i ].uxTaskAttributes = taskATTRIBUTE_IS_IDLE;
+        }
+        else
+        {
+            /* Others are running a normal task. */
+            xTaskTCBs[ i ].uxTaskAttributes = 0;
+        }
+
+        /* Create idle tasks with equal number of cores. */
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+        uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    }
+
+    /* Create one more task to be removed from event list. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.xStateListItem.pxContainer = &xSuspendedTaskList;
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCB.xStateListItem );
+    xTaskTCB.xEventListItem.pxContainer = &xEventList;
+    xTaskTCB.xEventListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xEventList, &xTaskTCB.xEventListItem );
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] = 0x5a5a; /* Value to be verified in this test. */
+    xTaskTCB.ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+    vFakePortEnterCriticalFromISR_StubWithCallback( NULL );
+    vFakePortExitCriticalFromISR_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vFakePortEnterCriticalFromISR_ExpectAndReturn( xSavedInterruptMask );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortExitCriticalFromISR_Expect( xSavedInterruptMask );
+
+    /* API call. */
+    xReturn = xTaskGenericNotifyFromISR( &xTaskTCB,
+                                         uxIndexToNotify,
+                                         0,       /* Value is not used with eNoAction. */
+                                         eNoAction,
+                                         &ulPreviousNotificationValue,
+                                         NULL );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdTRUE, xReturn );
+    TEST_ASSERT_EQUAL( 0x5a5a, ulPreviousNotificationValue );
+    TEST_ASSERT_EQUAL( pdTRUE, xYieldPendings[ 0 ] );
+}
+
+/**
+ * @brief vTaskGenericNotifyGiveFromISR - Notify a equal or lower priority task.
+ *
+ * Notify a equal or lower priority task from ISR. Higher priority task is not woken.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_PREEMPTION == 1 )
+ * {
+ *     prvYieldForTask( pxTCB );
+ *
+ *     if( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE )
+ *     {
+ *         if( pxHigherPriorityTaskWoken != NULL )
+ *         {
+ *             *pxHigherPriorityTaskWoken = pdTRUE;
+ *         }
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE ) is false.
+ */
+void test_coverage_vTaskGenericNotifyGiveFromISR_priority_le( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
+    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
+    List_t xEventList = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    uxSchedulerSuspended = pdFALSE;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    vListInitialise( &xEventList );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    vListInitialise( &xSuspendedTaskList );
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        xTaskTCBs[ i ].uxTaskAttributes = 0;
+
+        /* Create idle tasks with equal number of cores. */
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+        uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    }
+
+    /* Create one more task to be removed from event list. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.xStateListItem.pxContainer = &xSuspendedTaskList;
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCB.xStateListItem );
+    xTaskTCB.xEventListItem.pxContainer = &xEventList;
+    xTaskTCB.xEventListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xEventList, &xTaskTCB.xEventListItem );
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] = 0x5a5a; /* Value to be verified in this test. */
+    xTaskTCB.ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+    vFakePortEnterCriticalFromISR_StubWithCallback( NULL );
+    vFakePortExitCriticalFromISR_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vFakePortEnterCriticalFromISR_ExpectAndReturn( xSavedInterruptMask );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );    /* Get portGET_CRITICAL_NESTING_COUNT. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );    /* Get prvYieldCore. */
+    vFakePortExitCriticalFromISR_Expect( xSavedInterruptMask );
+
+    /* API call. */
+    vTaskGenericNotifyGiveFromISR( &xTaskTCB,
+                                   uxIndexToNotify,
+                                   &xHigherPriorityTaskWoken );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( 0x5a5a + 1U, xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] );
+    TEST_ASSERT_NOT_EQUAL( pdTRUE, xHigherPriorityTaskWoken );
+}
+
+/**
+ * @brief vTaskGenericNotifyGiveFromISR - Notify a higher priority task.
+ *
+ * Notify a higher priority task from ISR. Higher priority task is woken.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_PREEMPTION == 1 )
+ * {
+ *     prvYieldForTask( pxTCB );
+ *
+ *     if( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE )
+ *     {
+ *         if( pxHigherPriorityTaskWoken != NULL )
+ *         {
+ *             *pxHigherPriorityTaskWoken = pdTRUE;
+ *         }
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE ) is true.
+ * ( pxHigherPriorityTaskWoken != NULL ) is true.
+ */
+void test_coverage_vTaskGenericNotifyGiveFromISR_priority_gt( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
+    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
+    List_t xEventList = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    uxSchedulerSuspended = pdFALSE;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    vListInitialise( &xEventList );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    vListInitialise( &xSuspendedTaskList );
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        if( i == 0 )
+        {
+            /* Core 0 is running an idle task in order to be requested to yield. */
+            xTaskTCBs[ i ].uxTaskAttributes = taskATTRIBUTE_IS_IDLE;
+        }
+        else
+        {
+            /* Others are running a normal task. */
+            xTaskTCBs[ i ].uxTaskAttributes = 0;
+        }
+
+        /* Create idle tasks with equal number of cores. */
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+        uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    }
+
+    /* Create one more task to be removed from event list. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.xStateListItem.pxContainer = &xSuspendedTaskList;
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCB.xStateListItem );
+    xTaskTCB.xEventListItem.pxContainer = &xEventList;
+    xTaskTCB.xEventListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xEventList, &xTaskTCB.xEventListItem );
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] = 0x5a5a; /* Value to be verified in this test. */
+    xTaskTCB.ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+    vFakePortEnterCriticalFromISR_StubWithCallback( NULL );
+    vFakePortExitCriticalFromISR_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vFakePortEnterCriticalFromISR_ExpectAndReturn( xSavedInterruptMask );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortExitCriticalFromISR_Expect( xSavedInterruptMask );
+
+    /* API call. */
+    vTaskGenericNotifyGiveFromISR( &xTaskTCB,
+                                   uxIndexToNotify,
+                                   &xHigherPriorityTaskWoken );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( 0x5a5a + 1U, xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] );
+    TEST_ASSERT_EQUAL( pdTRUE, xHigherPriorityTaskWoken );
+}
+
+/**
+ * @brief vTaskGenericNotifyGiveFromISR - Notify a higher priority task with NULL param.
+ *
+ * Notify a higher priority task from ISR. Higher priority task is woken. Input param
+ * pxHigherPriorityTaskWoken is NULL.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_PREEMPTION == 1 )
+ * {
+ *     prvYieldForTask( pxTCB );
+ *
+ *     if( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE )
+ *     {
+ *         if( pxHigherPriorityTaskWoken != NULL )
+ *         {
+ *             *pxHigherPriorityTaskWoken = pdTRUE;
+ *         }
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( xYieldPendings[ portGET_CORE_ID() ] == pdTRUE ) is true.
+ * ( pxHigherPriorityTaskWoken != NULL ) is false.
+ */
+void test_coverage_vTaskGenericNotifyGiveFromISR_priority_gt_null_param( void )
+{
+    TCB_t xTaskTCB = { NULL };
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
+    BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
+    List_t xEventList = { 0 };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    uxSchedulerSuspended = pdFALSE;
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    vListInitialise( &xEventList );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    vListInitialise( &xSuspendedTaskList );
+
+    /* Create idle tasks and add it into the ready list. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskTCBs[ i ].uxPriority = tskIDLE_PRIORITY;
+        xTaskTCBs[ i ].xStateListItem.pvOwner = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+        if( i == 0 )
+        {
+            /* Core 0 is running an idle task in order to be requested to yield. */
+            xTaskTCBs[ i ].uxTaskAttributes = taskATTRIBUTE_IS_IDLE;
+        }
+        else
+        {
+            /* Others are running a normal task. */
+            xTaskTCBs[ i ].uxTaskAttributes = 0;
+        }
+
+        /* Create idle tasks with equal number of cores. */
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+        xTaskTCBs[ i ].xTaskRunState = i;
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+        uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+    }
+
+    /* Create one more task to be removed from event list. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.xStateListItem.pxContainer = &xSuspendedTaskList;
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xSuspendedTaskList, &xTaskTCB.xStateListItem );
+    xTaskTCB.xEventListItem.pxContainer = &xEventList;
+    xTaskTCB.xEventListItem.pvOwner = &xTaskTCB;
+    listINSERT_END( &xEventList, &xTaskTCB.xEventListItem );
+    xTaskTCB.xTaskRunState = taskTASK_NOT_RUNNING;
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << configNUMBER_OF_CORES ) - 1U );
+    xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] = 0x5a5a; /* Value to be verified in this test. */
+    xTaskTCB.ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+
+    /* Clear callback in commonSetUp. */
+    vFakePortGetCoreID_StubWithCallback( NULL );
+    vFakePortEnterCriticalFromISR_StubWithCallback( NULL );
+    vFakePortExitCriticalFromISR_StubWithCallback( NULL );
+
+    /* Expectations. */
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vFakePortEnterCriticalFromISR_ExpectAndReturn( xSavedInterruptMask );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortExitCriticalFromISR_Expect( xSavedInterruptMask );
+
+    /* API call. */
+    vTaskGenericNotifyGiveFromISR( &xTaskTCB,
+                                   uxIndexToNotify,
+                                   NULL );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( 0x5a5a + 1U, xTaskTCB.ulNotifiedValue[ uxIndexToNotify ] );
+    TEST_ASSERT_EQUAL( pdTRUE, xYieldPendings[ 0 ] );
 }
 
 /**
@@ -2534,7 +3148,8 @@ void test_coverage_vTaskGetInfo_get_free_stack_space( void )
     TEST_ASSERT_EQUAL( ( configMINIMAL_STACK_SIZE - 1 ) , pxTaskStatus.usStackHighWaterMark );
 }
 
-/** @brief xTaskPriorityInherit - inherit the priority of the mutex holder
+/** 
+ * @brief xTaskPriorityInherit - inherit the priority of the mutex holder
  *
  * <b>Coverage</b>
  * @code{c}
@@ -2604,7 +3219,8 @@ void test_coverage_xTaskPriorityInherit_task_uxpriority_lesser(void)
     TEST_ASSERT_EQUAL( xTaskTCBs[1].xStateListItem.pvContainer, &pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] );
 }
 
-/** @brief xTaskPriorityInherit - inherit the priority of the mutex holder
+/** 
+ * @brief xTaskPriorityInherit - inherit the priority of the mutex holder
  *
  * <b>Coverage</b>
  * @code{c}
@@ -2674,7 +3290,8 @@ void test_coverage_xTaskPriorityInherit_task_uxpriority_greater(void)
     TEST_ASSERT_EQUAL( xTaskTCBs[1].xStateListItem.pvContainer, &pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] );
 }
 
-/** @brief xTaskPriorityDisinherit - restore priority after inheriting the priority of the mutex holder
+/** 
+ * @brief xTaskPriorityDisinherit - restore priority after inheriting the priority of the mutex holder
  *
  * <b>Coverage</b>
  * @code{c}
@@ -2743,7 +3360,8 @@ void test_coverage_xTaskPriorityDisinherit_task_uxpriority_lesser(void)
     TEST_ASSERT_EQUAL( xTaskTCBs[1].xStateListItem.pvContainer, &pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] );
 }
 
-/** @brief xTaskPriorityDisinherit - restore priority after inheriting the priority of the mutex holder
+/** 
+ * @brief xTaskPriorityDisinherit - restore priority after inheriting the priority of the mutex holder
  *
  * <b>Coverage</b>
  * @code{c}
@@ -2812,7 +3430,8 @@ void test_coverage_xTaskPriorityDisinherit_task_uxpriority_greater(void)
     TEST_ASSERT_EQUAL( xTaskTCBs[1].xStateListItem.pvContainer, &pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] );
 }
 
-/** @brief xTaskPriorityDisinheritAfterTimeout - restore priority after inheriting the priority of the mutex holder
+/** 
+ * @brief xTaskPriorityDisinheritAfterTimeout - restore priority after inheriting the priority of the mutex holder
  *
  * <b>Coverage</b>
  * @code{c}
@@ -2878,7 +3497,8 @@ void test_coverage_xTaskPriorityDisinheritAfterTimeout_task_uxpriority_lesser(vo
     TEST_ASSERT_EQUAL( xTaskTCBs[1].xStateListItem.pvContainer, &pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] );
 }
 
-/** @brief xTaskPriorityDisinheritAfterTimeout - restore priority after inheriting the priority of the mutex holder
+/** 
+ * @brief xTaskPriorityDisinheritAfterTimeout - restore priority after inheriting the priority of the mutex holder
  *
  * <b>Coverage</b>
  * @code{c}

@@ -2098,18 +2098,21 @@ void test_coverage_pvTaskGetThreadLocalStoragePointer_xIndex_is_zero( void )
  */
 void test_coverage_pvTaskGetThreadLocalStoragePointer_null_handle( void )
 {
-    
+    TCB_t xTaskTCB = { NULL };
     uint32_t i = 454545;
     void * pValue = &i;
     void * ret_pValue;
     
-     /* Setup */
+    /* Setup */
+    /* Create a task as current running task on core 0. */
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
 
     /* API Call */
     vTaskSetThreadLocalStoragePointer( NULL,
                                        0,
                                        pValue );
     ret_pValue = pvTaskGetThreadLocalStoragePointer( NULL, 0 );
+
     /* Validations */
     TEST_ASSERT_EQUAL_PTR( pValue, ret_pValue );
 }
@@ -2172,7 +2175,7 @@ void test_coverage_xTaskGenericNotifyFromISR_priority_le( void )
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
     UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
     uint32_t ulPreviousNotificationValue;
-    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     BaseType_t xReturn;
     BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
     List_t xEventList = { 0 };
@@ -2271,7 +2274,7 @@ void test_coverage_xTaskGenericNotifyFromISR_priority_gt( void )
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
     UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
     uint32_t ulPreviousNotificationValue;
-    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     BaseType_t xReturn;
     BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
     List_t xEventList = { 0 };
@@ -2487,7 +2490,7 @@ void test_coverage_vTaskGenericNotifyGiveFromISR_priority_le( void )
     TCB_t xTaskTCB = { NULL };
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
     UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
-    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
     List_t xEventList = { 0 };
     uint32_t i;
@@ -2580,7 +2583,7 @@ void test_coverage_vTaskGenericNotifyGiveFromISR_priority_gt( void )
     TCB_t xTaskTCB = { NULL };
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
     UBaseType_t uxIndexToNotify = 0;    /* Use index 0 in this test. */
-    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     BaseType_t xSavedInterruptMask = 0x1234;   /* Interrupt mask to be verified. */
     List_t xEventList = { 0 };
     uint32_t i;

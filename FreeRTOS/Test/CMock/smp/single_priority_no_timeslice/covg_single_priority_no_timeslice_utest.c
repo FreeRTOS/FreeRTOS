@@ -58,6 +58,7 @@ extern List_t xSuspendedTaskList;
 extern List_t xPendingReadyList;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
+extern TickType_t xPendedTicks;
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
@@ -221,130 +222,119 @@ void test_prv_Check_For_Run_State_Change_case_1( void )
 The kernel will be configured as follows:
     #define configNUMBER_OF_CORES                               (N > 1)
     #define configUSE_CORE_AFFINITY                          1
-    #define configUSE_TICKLESS_IDLE                          1 
-
-Coverage for: 
-            void vTaskStepTick( TickType_t xTicksToJump )
-            Where
-            configASSERT( ( xTickCount + xTicksToJump ) <= xNextTaskUnblockTime ) = False
-            and  
-                if( ( xTickCount + xTicksToJump ) == xNextTaskUnblockTime ) = False
+Coverage for 
+    static TickType_t prvGetExpectedIdleTime( void )      
 */
-void test_task_step_tick_xNextTaskUnblockTime_greater( void )
+/*
+Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
+                                                const UBaseType_t uxArraySize,
+                                                configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
+*/
+void test_task_get_system_state( void )
 {
-    TaskHandle_t xTaskHandles[1] = { NULL };
+    TaskStatus_t *tsk_status_array;
+    TaskHandle_t created_handles[3];
+    tsk_status_array = calloc(MAX_TASKS, sizeof(TaskStatus_t));
 
-    /* Create  tasks  */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+    for(int i = 0; i < 3; i++){
+        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[i] );
+    }
 
-    vTaskStartScheduler();
-    xNextTaskUnblockTime = 10U;
-    xTickCount = 1U;
-    vTaskStepTick((TickType_t)10U);
+    //Get System states
+    int no_of_tasks = uxTaskGetSystemState(tsk_status_array, MAX_TASKS, NULL);
+    TEST_ASSERT((no_of_tasks > 0) && (no_of_tasks <= MAX_TASKS));
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                          1
-    #define configUSE_TICKLESS_IDLE                          1 
-
-Coverage for:
-            void vTaskStepTick( TickType_t xTicksToJump )
-            Where
-                if( ( xTickCount + xTicksToJump ) == xNextTaskUnblockTime )
-                                                                            is True
-            with 
-                configASSERT( xTicksToJump != ( TickType_t ) 0 ) = False;
+Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
+                                                const UBaseType_t uxArraySize,
+                                                configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
 */
-void test_task_step_tick_xNextTaskUnblockTime_equal_non_zero_xTicksToJump ( void )
+void test_task_get_system_state_custom_time( void )
 {
-    TaskHandle_t xTaskHandles[1] = { NULL };
+    TaskStatus_t *tsk_status_array;
+    TaskHandle_t created_handles[3];
+    uint32_t ulTotalRunTime = (uint32_t) 200;// Custom time value
+    tsk_status_array = calloc(MAX_TASKS, sizeof(TaskStatus_t));
 
-    /* Create  tasks  */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+    for(int i = 0; i < 3; i++){
+        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[i] );
+    }
 
-    xNextTaskUnblockTime = 10U;
-    xTickCount = 10U;
-    uxSchedulerSuspended = 1U;
-    vTaskStepTick((TickType_t)0);
+    //Get System states
+    int no_of_tasks = uxTaskGetSystemState(tsk_status_array, MAX_TASKS, &ulTotalRunTime);
+    TEST_ASSERT((no_of_tasks > 0) && (no_of_tasks <= MAX_TASKS));
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                          1
-    #define configUSE_TICKLESS_IDLE                          1 
-
-Coverage for: 
-            void vTaskStepTick( TickType_t xTicksToJump )
-            Where 
-                if( ( xTickCount + xTicksToJump ) == xNextTaskUnblockTime )
-                                                                            is True
-            with suspended Scheduler
+Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
+                                                const UBaseType_t uxArraySize,
+                                                configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
 */
-void test_task_step_tick_xNextTaskUnblockTime_equal_suspended_scheduler ( void )
+void test_task_get_system_state_unavilable_task_space( void )
 {
-    TaskHandle_t xTaskHandles[1] = { NULL };
+    TaskStatus_t *tsk_status_array;
+    TaskHandle_t created_handles[3];
+    tsk_status_array = calloc(MAX_TASKS, sizeof(TaskStatus_t));
 
-    /* Create  tasks  */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+    for(int i = 0; i < 3; i++){
+        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[i] );
+    }
 
-    xNextTaskUnblockTime = 10U;
-    xTickCount = 0U;
-    uxSchedulerSuspended = 1U;
-    vTaskStepTick((TickType_t)10U);
+    //Get System states
+    int no_of_tasks = uxTaskGetSystemState(tsk_status_array, MAX_TASKS-1, NULL);
+    TEST_ASSERT((no_of_tasks == 0) && (no_of_tasks <= MAX_TASKS));
 }
 
-
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                          1
-    #define configUSE_TICKLESS_IDLE                          1 
-
-Coverage for: 
-            void vTaskStepTick( TickType_t xTicksToJump )
-            Where 
-                if( ( xTickCount + xTicksToJump ) == xNextTaskUnblockTime )
-                                                                            is True
-*/
-void test_task_step_tick_xNextTaskUnblockTime_equal( void )
+/**
+ * @brief vTaskStepTick - step ticks to next task unblock time.
+ *
+ * Step ticks to next task unblock time to increase xPendedTicks. Verify that xTickCount
+ * and xPendedTicks are increased accordingly.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( ( xTickCount + xTicksToJump ) == xNextTaskUnblockTime )
+ * {
+ *     ...
+ *     taskENTER_CRITICAL();
+ *     {
+ *         xPendedTicks++;
+ *     }
+ *     taskEXIT_CRITICAL();
+ *     xTicksToJump--;
+ * }
+ * @endcode
+ * ( ( xTickCount + xTicksToJump ) == xNextTaskUnblockTime ) is true.
+ */
+void test_coverage_vTaskStepTick_eq_task_unblock_time( void )
 {
-    TaskHandle_t xTaskHandles[1] = { NULL };
+    TickType_t xTicksToJump;
 
-    /* Create  tasks  */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+    /* Setup the variables and structure. */
+    xPendedTicks = 0;
+    xTickCount = 10;
+    xTicksToJump = 10;
+    uxSchedulerSuspended = pdTRUE;
 
-    vTaskStartScheduler();
+    xNextTaskUnblockTime = 20;
 
-    xNextTaskUnblockTime = 10U;
-    xTickCount = 0U;
-    vTaskStepTick((TickType_t)10U);
-}
+    /* Clear callback in commonSetUp. */
+    vFakePortEnterCriticalSection_StubWithCallback( NULL );
+    vFakePortExitCriticalSection_StubWithCallback( NULL );
 
-/*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                          1
-    #define configUSE_TICKLESS_IDLE                          1 
-    
-Coverage for: 
-            void vTaskStepTick( TickType_t xTicksToJump )
-            Where 
-                if( ( xTickCount + xTicksToJump ) == xNextTaskUnblockTime )
-                                                                            is False
-*/
-void test_task_step_tick_xNextTaskUnblockTime_not_equal( void )
-{
-    TaskHandle_t xTaskHandles[1] = { NULL };
+    /* Expectations. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
 
-    /* Create  tasks  */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[0] );
+    /* API call. */
+    vTaskStepTick( xTicksToJump );
 
-    vTaskStartScheduler();
-    xTickCount = 0U;
-    vTaskStepTick((TickType_t)10U);
+    /* Validations. */
+    /* xTickCount is set to one tick before xNextUnblockTime. */
+    TEST_ASSERT_EQUAL( 19, xTickCount );
+    /* xPendedTicks is increased. */
+    TEST_ASSERT_EQUAL( 1, xPendedTicks );
 }
 
 /**

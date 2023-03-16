@@ -1151,6 +1151,12 @@ void test_coverage_prvAddNewTaskToReadyList_create_two_tasks_with_the_first_susp
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[1] );
 
     vTaskStartScheduler();
+
+    vPortFree( xTaskHandles[0]->pxStack);
+    vPortFree( xTaskHandles[0]);
+
+    vPortFree( xTaskHandles[1]->pxStack);
+    vPortFree( xTaskHandles[1]);
 }
 
 /**
@@ -1238,6 +1244,9 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_implied( voi
     }
 
     vTaskCoreAffinitySet(NULL, (UBaseType_t)0xFF);
+
+    vPortFree( xTaskHandles[0]->pxStack );
+    vPortFree( xTaskHandles[0] );
 }
 
 /**
@@ -1264,6 +1273,9 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_set_task_explicit( vo
     vTaskCoreAffinitySet(xTaskHandles[0], (UBaseType_t)0xFF);
 
     vTaskStartScheduler();
+
+    vPortFree( xTaskHandles[0]->pxStack );
+    vPortFree( xTaskHandles[0] );
 }
 
 /**
@@ -1301,6 +1313,9 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_running(
     for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
         xTaskIncrementTick_helper();
     }
+
+    vPortFree( xTaskHandles[0]->pxStack );
+    vPortFree( xTaskHandles[0] );
 }
 
 /**
@@ -1350,6 +1365,9 @@ void test_coverage_vTaskCoreAffinitySet_task_core_affinity_change_while_suspende
     for (xidx = 0; xidx < configNUMBER_OF_CORES ; xidx++) {
         xTaskIncrementTick_helper();
     }
+
+    vPortFree( xTaskHandles[0]->pxStack );
+    vPortFree( xTaskHandles[0] );
 }
 
 /**

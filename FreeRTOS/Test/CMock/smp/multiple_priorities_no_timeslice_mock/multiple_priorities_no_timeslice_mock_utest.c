@@ -54,29 +54,28 @@
 
 
 
-
 /* ===========================  EXTERN VARIABLES  =========================== */
 
 extern void vTaskEnterCritical( void );
-extern void vTaskExitCritical( void ); 
+extern void vTaskExitCritical( void );
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern volatile UBaseType_t xSchedulerRunning;
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
-extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
+extern volatile TCB_t * pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern volatile BaseType_t xYieldForTask;
 extern volatile BaseType_t xYieldRequired;
 
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
-void setUp(void)
+void setUp( void )
 {
-    // commonSetUp();
+    /* commonSetUp(); */
 }
 
 /*! called after each testcase */
-void tearDown(void)
+void tearDown( void )
 {
-    // commonTearDown();
+    /* commonTearDown(); */
 }
 
 /*! called at the beginning of the whole suite */
@@ -85,7 +84,7 @@ void suiteSetUp()
 }
 
 /*! called at the end of the whole suite */
-int suiteTearDown(int numFailures)
+int suiteTearDown( int numFailures )
 {
     return numFailures;
 }
@@ -95,15 +94,15 @@ int suiteTearDown(int numFailures)
 /**
  * @brief vTaskSuspend - suspends the running task
  *
- * This test is used to suspend a running task when task is actively 
+ * This test is used to suspend a running task when task is actively
  * running and not scheduled to yield.
  *
  * <b>Coverage</b>
  * @code{c}
  * if( xSchedulerRunning != pdFALSE )
- * {        
+ * {
  *      if( xTaskRunningOnCore == portGET_CORE_ID() )
- *      {      
+ *      {
  *          configASSERT( uxSchedulerSuspended == 0 );
  *          vTaskYieldWithinAPI();
  *      }
@@ -112,45 +111,43 @@ int suiteTearDown(int numFailures)
  *          prvYieldCore( xTaskRunningOnCore );
  *      }
  * }
- * else 
- * {        
+ * else
+ * {
  *      mtCOVERAGE_TEST_MARKER();
  * }
  * @endcode
  * ( xSchedulerRunning != pdFALSE ) is false.
  */
 
-void test_vTaskSuspend_scheduler_running_false(void)
+void test_vTaskSuspend_scheduler_running_false( void )
 {
-   
     TCB_t xTaskTCBs[ 1 ] = { NULL };
 
     /* Setup the variables and structure. */
     xTaskTCBs[ 0 ].uxPriority = 1;
-    xYieldPendings[ 0 ]= pdFALSE;
-    pxCurrentTCBs[ 0 ] = &xTaskTCBs[0];
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
     pxCurrentTCBs[ 0 ]->xTaskRunState = 1;
     xSchedulerRunning = pdFALSE;
 
     vFakePortEnterCriticalSection_Expect();
-    uxListRemove_ExpectAnyArgsAndReturn(pdTRUE);
-    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn(NULL);
+    uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
-  
+
     /* API call. */
-    vTaskSuspend(&xTaskTCBs[0]);
+    vTaskSuspend( &xTaskTCBs[ 0 ] );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ]);
-    TEST_ASSERT_EQUAL( 1, pxCurrentTCBs[ 0 ]->xTaskRunState);
-
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ] );
+    TEST_ASSERT_EQUAL( 1, pxCurrentTCBs[ 0 ]->xTaskRunState );
 }
 
 /**
  * @brief vTaskSuspend - suspends the task
  *
- * This test is used to ensure that one of the macro's conditions 
+ * This test is used to ensure that one of the macro's conditions
  * where TaskRunState is greater than zero is set to false.
  *
  * <b>Coverage</b>
@@ -160,36 +157,35 @@ void test_vTaskSuspend_scheduler_running_false(void)
  * ( taskTASK_IS_RUNNING( pxTCB ) ) is false.
  */
 
-void test_vTaskSuspend_running_state_below_range(void)
-{   
+void test_vTaskSuspend_running_state_below_range( void )
+{
     TCB_t xTaskTCBs[ 1 ] = { NULL };
- 
+
     /* Setup the variables and structure. */
     xTaskTCBs[ 0 ].uxPriority = 1;
-    xYieldPendings[ 0 ]= pdFALSE;
-    pxCurrentTCBs[ 0 ] = &xTaskTCBs[0];
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
     pxCurrentTCBs[ 0 ]->xTaskRunState = -1;
     xSchedulerRunning = pdFALSE;
 
     vFakePortEnterCriticalSection_Expect();
-    uxListRemove_ExpectAnyArgsAndReturn(pdTRUE);
-    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn(NULL);
+    uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
-    
+
     /* API call. */
-    vTaskSuspend(&xTaskTCBs[0]);
+    vTaskSuspend( &xTaskTCBs[ 0 ] );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ]);
-    TEST_ASSERT_EQUAL( -1, pxCurrentTCBs[ 0 ]->xTaskRunState);
-
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ] );
+    TEST_ASSERT_EQUAL( -1, pxCurrentTCBs[ 0 ]->xTaskRunState );
 }
 
 /**
  * @brief vTaskSuspend - suspends the task
  *
- * This test is used to cover the case where the other macro condition where 
+ * This test is used to cover the case where the other macro condition where
  * TaskRunState is less than configNUMBER_OF_CORES is set to false.
  *
  * <b>Coverage</b>
@@ -199,67 +195,65 @@ void test_vTaskSuspend_running_state_below_range(void)
  * ( taskTASK_IS_RUNNING( pxTCB ) ) is false.
  */
 
-void test_vTaskSuspend_running_state_above_range(void)
-{   
+void test_vTaskSuspend_running_state_above_range( void )
+{
     TCB_t xTaskTCBs[ 1 ] = { NULL };
- 
+
     /* Setup the variables and structure. */
     xTaskTCBs[ 0 ].uxPriority = 1;
-    xYieldPendings[ 0 ]= pdFALSE;
-    pxCurrentTCBs[ 0 ] = &xTaskTCBs[0];
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
     pxCurrentTCBs[ 0 ]->xTaskRunState = configNUMBER_OF_CORES + 1;
 
     vFakePortEnterCriticalSection_Expect();
-    uxListRemove_ExpectAnyArgsAndReturn(pdTRUE);
-    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn(NULL);
+    uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
-    
+
     /* API call. */
-    vTaskSuspend(&xTaskTCBs[0]);
+    vTaskSuspend( &xTaskTCBs[ 0 ] );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ]);
-    TEST_ASSERT_EQUAL( 17, pxCurrentTCBs[ 0 ]->xTaskRunState);
-
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ] );
+    TEST_ASSERT_EQUAL( 17, pxCurrentTCBs[ 0 ]->xTaskRunState );
 }
 
 /**
  * @brief vTaskPrioritySet - sets the priority
  *
  * This test is to change the priorities of non
- * running tasks  
- * 
+ * running tasks
+ *
  * <b>Coverage</b>
  * @code{c}
  * else if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
  * @endcode
  * ( taskTASK_IS_RUNNING( pxTCB ) ) is false.
  */
-void test_vTaskPrioritySet_non_running_state(void)
-{   
+void test_vTaskPrioritySet_non_running_state( void )
+{
     TCB_t xTaskTCBs[ 1 ] = { NULL };
- 
+
     /* Setup the variables and structure. */
     xTaskTCBs[ 0 ].uxPriority = 4;
     xTaskTCBs[ 0 ].uxBasePriority = 4;
-    xTaskTCBs[ 0 ].xTaskRunState = configNUMBER_OF_CORES+1 ;
-    
-    vFakeAssert_Ignore(); 
-    vFakePortCheckIfInISR_StopIgnore();   
+    xTaskTCBs[ 0 ].xTaskRunState = configNUMBER_OF_CORES + 1;
+
+    vFakeAssert_Ignore();
+    vFakePortCheckIfInISR_StopIgnore();
     vFakePortEnterCriticalSection_Ignore();
     vFakePortYieldCore_CMockIgnore();
-    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn((TickType_t)0x80000000UL);
-    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn(pdFALSE);
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( ( TickType_t ) 0x80000000UL );
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     vFakePortExitCriticalSection_Ignore();
-    
+
     /* API call. */
-    vTaskPrioritySet(&xTaskTCBs[0],2);
+    vTaskPrioritySet( &xTaskTCBs[ 0 ], 2 );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( 17, xTaskTCBs[ 0 ].xTaskRunState);
-    TEST_ASSERT_EQUAL(2, xTaskTCBs[ 0 ].uxPriority);
-
+    TEST_ASSERT_EQUAL( 17, xTaskTCBs[ 0 ].xTaskRunState );
+    TEST_ASSERT_EQUAL( 2, xTaskTCBs[ 0 ].uxPriority );
 }
 
 /**
@@ -275,32 +269,31 @@ void test_vTaskPrioritySet_non_running_state(void)
  * ( pxTCB->xPreemptionDisable == pdFALSE ) is false.
  */
 
-void test_vTaskPrioritySet_running_state(void)
-{   
+void test_vTaskPrioritySet_running_state( void )
+{
     TCB_t xTaskTCBs[ 1 ] = { NULL };
-    
+
     /* Setup the variables and structure. */
     xTaskTCBs[ 0 ].uxPriority = 4;
     xTaskTCBs[ 0 ].uxBasePriority = 4;
-    xTaskTCBs[ 0 ].xPreemptionDisable = pdTRUE;  
-    xTaskTCBs[ 0 ].xTaskRunState = 1 ;
+    xTaskTCBs[ 0 ].xPreemptionDisable = pdTRUE;
+    xTaskTCBs[ 0 ].xTaskRunState = 1;
 
     BaseType_t xYieldRequired = pdFALSE;
     BaseType_t xYieldForTask = pdFALSE;
-    
-    vFakeAssert_Ignore(); 
-    vFakePortCheckIfInISR_StopIgnore();   
+
+    vFakeAssert_Ignore();
+    vFakePortCheckIfInISR_StopIgnore();
     vFakePortEnterCriticalSection_Ignore();
     vFakePortYieldCore_CMockIgnore();
-    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn((TickType_t)0x80000000UL);
-    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn(pdFALSE);
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( ( TickType_t ) 0x80000000UL );
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     vFakePortExitCriticalSection_Ignore();
-  
+
     /* API call. */
-    vTaskPrioritySet(&xTaskTCBs[0],2);
+    vTaskPrioritySet( &xTaskTCBs[ 0 ], 2 );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL(pdFALSE,xYieldRequired );
-    TEST_ASSERT_EQUAL(pdFALSE,xYieldForTask );
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldRequired );
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldForTask );
 }
-

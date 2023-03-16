@@ -104,6 +104,7 @@ static BaseType_t shouldAbortOnAssertion;
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
 extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
+extern void prvCheckForRunStateChange( void );
 
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern volatile BaseType_t xSchedulerRunning;
@@ -626,6 +627,37 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
     validate_and_clear_assertions();
 }
 
+/**
+ * @brief prvCheckForRunStateChange - first time check assertion fail.
+ *
+ * This function should be called when uxPrevCriticalNesting + uxPrevSchedulerSuspended = 0.
+ * Cover the assertion that uxPrevCriticalNesting + uxPrevSchedulerSuspended is not 0.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( ( uxPrevCriticalNesting + uxPrevSchedulerSuspended ) == 1U );
+ * @endcode
+ */
+void test_prvCheckForRunStateChange_assert_first_time_check_fail( void )
+{
+    TCB_t xTaskTCB = { NULL };
+
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.uxCriticalNesting = 1;
+    xTaskTCB.xTaskRunState = taskTASK_YIELDING;
+    uxSchedulerSuspended = 1;
+
+    /* Expection. */
+    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+
+    /* API Call. */
+    EXPECT_ASSERT_BREAK( prvCheckForRunStateChange() );
+
+    /* Test Verifications */
+    validate_and_clear_assertions();
+}
 
 /**
  * @brief vTaskStepTick - assert if scheduer suspended.
@@ -646,6 +678,42 @@ void test_vTaskStepTick_assert_scheduler_not_suspended( void )
 
     /* API Call */
     EXPECT_ASSERT_BREAK( vTaskStepTick( xTicksToJump ) );
+
+    /* Test Verifications */
+    validate_and_clear_assertions();
+}
+
+/**
+ * @brief prvCheckForRunStateChange - task state not changed.
+ *
+ * When the task is able to run after calling portENABLE_INTERRUPTS. The task state
+ * is supposed to be changed to run state. This test cover the assertion of this scenario.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( pxThisTCB->xTaskRunState != taskTASK_YIELDING );
+ * @endcode
+ */
+void test_prvCheckForRunStateChange_assert_task_state_not_changed( void )
+{
+    TCB_t xTaskTCB = { NULL };
+
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.uxCriticalNesting = 0;
+    xTaskTCB.xTaskRunState = taskTASK_YIELDING;
+    uxSchedulerSuspended = 1;
+
+    /* Expection. */
+    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect();
+    vFakePortReleaseTaskLock_Expect();
+    vFakePortEnableInterrupts_Expect();
+
+    /* API Call. */
+    EXPECT_ASSERT_BREAK( prvCheckForRunStateChange() );
 
     /* Test Verifications */
     validate_and_clear_assertions();

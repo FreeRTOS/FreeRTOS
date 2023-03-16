@@ -50,6 +50,9 @@
 
 #define MAX_TASKS                                    3
 
+/* ===========================  EXTERN FUNCTIONS  =========================== */
+extern void prvCheckForRunStateChange( void );
+
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern volatile UBaseType_t uxSchedulerSuspended;
@@ -58,10 +61,9 @@ extern List_t xSuspendedTaskList;
 extern List_t xPendingReadyList;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
+extern volatile TickType_t xNextTaskUnblockTime;
+extern volatile TickType_t xTickCount;
 extern TickType_t xPendedTicks;
-
-/* ==============================  Global VARIABLES ============================== */
-TaskHandle_t xTaskHandles[configNUMBER_OF_CORES] = { NULL };
 
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
@@ -87,12 +89,6 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-/* ===========================  EXTERN FUNCTIONS  =========================== */
-extern void vTaskEnterCritical(void);
-extern volatile TickType_t xNextTaskUnblockTime;
-extern volatile TickType_t xTickCount;
-extern volatile UBaseType_t uxSchedulerSuspended;
-
 /* ==============================  Helper functions for Test Cases  ============================== */
 void created_task(void* arg)
 {
@@ -101,121 +97,150 @@ void created_task(void* arg)
     }
 }
 
-void vSetTaskToRunning( int num_calls )
+static void prvPortEnableInterruptsCb( int cmock_num_calls )
 {
-    /*
-        configASSERT( pxThisTCB->xTaskRunState != taskTASK_YIELDING );
-        Requires 2 check conditions when it is and isn't in the yielding state
-        Hence, just allow the program to loop through twice for complete coverage
-    */
-    if (num_calls > 2){
-        xTaskHandles[0] -> xTaskRunState =  eRunning;
-    }
-}
+    ( void ) cmock_num_calls;
 
-BaseType_t returnFakeTrue(int num_calls){
-    
-    return 1;
-}
-
-BaseType_t UpdateuxSchedulerSuspended2(int num_calls){
-    if (num_calls > 1){
-        uxSchedulerSuspended = ( UBaseType_t ) 2;
-        pxCurrentTCBs[ configNUMBER_OF_CORES ] = 0;    
-    }
-    else if (num_calls == 0){
-        uxSchedulerSuspended = 0U;
-    }
-    return ( UBaseType_t ) 0;
+    pxCurrentTCBs[ 0 ]->xTaskRunState = 0;
 }
 
 /* ==============================  Test Cases  ============================== */
 
-//Asserts Line 705's configAssert to false by make it 2
-void test_task_yelding_state_configAsset_Sucess( void )
+
+/**
+ * @brief prvCheckForRunStateChange - function called in ISR.
+ *
+ * This function is called in ISR. Nothing will be udpated. This test shows its result
+ * in the coverage report.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( portCHECK_IF_IN_ISR() == pdFALSE )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( portCHECK_IF_IN_ISR() == pdFALSE ) is false.
+ */
+void test_coverage_prvCheckForRunStateChange_in_isr( void )
 {
-    vFakePortEnableInterrupts_Stub(&vSetTaskToRunning);
+    /* Clear callback in commonSetUp. */
+    vFakePortCheckIfInISR_StopIgnore();
 
-    xTaskHandles[0] = NULL;
+    /* Expection. */
+    vFakePortCheckIfInISR_ExpectAndReturn( 1 );
 
-    xTaskCreate(vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    /* API Call. */
+    prvCheckForRunStateChange();
 
-    vTaskStartScheduler();
-
-    xTaskHandles[0]->xTaskRunState = taskTASK_YIELDING;
-    vTaskSuspendAll();
-
+    /* Nothing will be udpated if this API is called in ISR. This test shows its result
+     * in the coverage report. */
 }
 
-//Asserts Line 705's configAssert to false by make it 2
-void test_task_yelding_state_configAssetFail( void )
+/**
+ * @brief prvCheckForRunStateChange - first time enter critical section.
+ *
+ * Check for run state when entering the critical section for the first time. Verify
+ * that the task is of running state when exiting this function.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( uxPrevCriticalNesting == 0U )
+ * {
+ *     configASSERT( uxPrevSchedulerSuspended != ( UBaseType_t ) pdFALSE );
+ *     portRELEASE_ISR_LOCK();
+ * }
+ * @endcode
+ * ( uxPrevCriticalNesting == 0U ) is false.
+ */
+void test_coverage_prvCheckForRunStateChange_first_time_critical_section( void )
 {
-    vFakePortCheckIfInISR_Stub(&UpdateuxSchedulerSuspended2);
-    vFakePortEnableInterrupts_Stub(&vSetTaskToRunning);
-    //vFakePortReleaseTaskLock_Stub(&vSetTaskToRunning2);
+    TCB_t xTaskTCB = { NULL };
 
-    xTaskHandles[0] = NULL;
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.uxCriticalNesting = 1;
+    xTaskTCB.xTaskRunState = taskTASK_YIELDING;
+    uxSchedulerSuspended = 0;
 
-    xTaskCreate(vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0]);
+    /* Clear callback in commonSetUp. */
+    vFakePortCheckIfInISR_StopIgnore();
+    vFakePortEnableInterrupts_StopIgnore();
+    vFakePortGetISRLock_StubWithCallback( NULL );
+    vFakePortGetTaskLock_StubWithCallback( NULL );
+    vFakePortReleaseISRLock_StubWithCallback( NULL );
+    vFakePortReleaseTaskLock_StubWithCallback( NULL );
 
-    vTaskStartScheduler();
+    /* Expection. */
+    vFakePortEnableInterrupts_StubWithCallback( prvPortEnableInterruptsCb );
 
-    xTaskHandles[0]->xTaskRunState = taskTASK_YIELDING;
-    vTaskSuspendAll();
+    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
+    vFakePortReleaseISRLock_Expect();
+    vFakePortReleaseTaskLock_Expect();
+    vFakePortGetTaskLock_Expect();
+    vFakePortGetISRLock_Expect();
 
+    /* API Call. */
+    prvCheckForRunStateChange();
+
+    /* Validation. */
+    /* Critical nesting count is set correctly. */
+    TEST_ASSERT_EQUAL( 1, xTaskTCB.uxCriticalNesting );
+    /* Task is of running state now. */
+    TEST_ASSERT_EQUAL( 0, xTaskTCB.xTaskRunState );
 }
 
-/*
-    static void prvCheckForRunStateChange( void );
-        covers [portCHECK_IF_IN_ISR()] is false for Line 682 [task.c]
-*/
-void test_prv_Check_For_Run_State_Change_case_task_yelding_state( void )
+/**
+ * @brief prvCheckForRunStateChange - first time suspend scheduler.
+ *
+ * Check for run state when suspending the scheduler for the first time. Verify
+ * that the task is of running state when exiting this function.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( uxPrevCriticalNesting == 0U )
+ * {
+ *     configASSERT( uxPrevSchedulerSuspended != ( UBaseType_t ) pdFALSE );
+ *     portRELEASE_ISR_LOCK();
+ * }
+ * @endcode
+ * ( uxPrevCriticalNesting == 0U ) is true.
+ */
+void test_coverage_prvCheckForRunStateChange_first_time_suspend_scheduler( void )
 {
-    //Reset all the globals to gain the deafult null state
-    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+    TCB_t xTaskTCB = { NULL };
 
-    vFakePortEnableInterrupts_Stub(&vSetTaskToRunning); 
-    xTaskHandles[0] =  NULL ;
-    
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[0] );
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    xTaskTCB.uxCriticalNesting = 0;
+    xTaskTCB.xTaskRunState = taskTASK_YIELDING;
+    uxSchedulerSuspended = 1;
 
-    vTaskStartScheduler();
+    /* Clear callback in commonSetUp. */
+    vFakePortCheckIfInISR_StopIgnore();
+    vFakePortEnableInterrupts_StopIgnore();
+    vFakePortGetISRLock_StubWithCallback( NULL );
+    vFakePortGetTaskLock_StubWithCallback( NULL );
+    vFakePortReleaseISRLock_StubWithCallback( NULL );
+    vFakePortReleaseTaskLock_StubWithCallback( NULL );
 
-    xTaskHandles[0] -> xTaskRunState =  taskTASK_YIELDING;
+    /* Expection. */
+    vFakePortEnableInterrupts_StubWithCallback( prvPortEnableInterruptsCb );
 
-    vTaskEnterCritical();
-}
+    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
+    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect();
+    vFakePortReleaseTaskLock_Expect();
+    vFakePortGetTaskLock_Expect();
+    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect();
 
-/*
-Coverage for 
-        static void prvCheckForRunStateChange( void );
-        covers the deafult state when the function is just called
-*/
-void test_prv_Check_For_Run_State_Change_case_1( void )
-{
-    //Reset all the globals to gain the deafult null state
-    memset(xTaskHandles, 0, sizeof(TaskHandle_t) * configNUMBER_OF_CORES );
+    /* API Call. */
+    prvCheckForRunStateChange();
 
-    //Allow helper function 
-    vFakePortCheckIfInISR_Stub(&returnFakeTrue); 
-
-    uint32_t i;
-
-    /* Create tasks of equal priority for all available CPU cores */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[i] );
-    }
-    
-    vTaskStartScheduler();
-
-    /* Verify all tasks are in the running state */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        verifySmpTask( &xTaskHandles[i], eRunning, i );
-    }
-
-    /* Lower the priority of task T0 */
-    vTaskPrioritySet( xTaskHandles[0], 1 );
-    
+    /* Validation. */
+    /* Critical nesting count is set correctly. */
+    TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
+    /* Task is of running state now. */
+    TEST_ASSERT_EQUAL( 0, xTaskTCB.xTaskRunState );
 }
 
 /*

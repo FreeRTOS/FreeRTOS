@@ -96,4 +96,20 @@ void xTaskIncrementTick_helper( void );
  */
 void vSetCurrentCore( BaseType_t xCoreID );
 
+/**
+ * @brief Helper function to create static test task.
+ */
+#if ( configUSE_CORE_AFFINITY == 1 )
+    void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
+                                UBaseType_t uxCoreAffinityMask,
+                                UBaseType_t uxPriority,
+                                BaseType_t xTaskRunState,
+                                BaseType_t xTaskIsIdle );
+#else
+    void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
+                                UBaseType_t uxPriority,
+                                BaseType_t xTaskRunState,
+                                BaseType_t xTaskIsIdle );
+#endif
+
 #endif /* SMP_UTEST_COMMON_H */

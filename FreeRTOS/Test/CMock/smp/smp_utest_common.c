@@ -394,6 +394,48 @@ void xTaskIncrementTick_helper( void )
     taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptState );
 }
 
+#if ( configUSE_CORE_AFFINITY == 1 )
+    void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
+                                UBaseType_t uxCoreAffinityMask,
+                                UBaseType_t uxPriority,
+                                BaseType_t xTaskRunState,
+                                BaseType_t xTaskIsIdle )
+#else
+    void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
+                                UBaseType_t uxPriority,
+                                BaseType_t xTaskRunState,
+                                BaseType_t xTaskIsIdle )
+#endif
+{
+    TCB_t * pxTaskTCB = ( TCB_t * )xTaskHandle;
+
+    pxTaskTCB->xStateListItem.pvOwner = pxTaskTCB;
+    #if ( configUSE_CORE_AFFINITY == 1 )
+        pxTaskTCB->uxCoreAffinityMask = uxCoreAffinityMask;
+    #endif
+    pxTaskTCB->uxPriority = uxPriority;
+
+    /* Also assign pxCurrentTCBs to the created task. */
+    if( ( xTaskRunState >= 0 ) && ( xTaskRunState < configNUMBER_OF_CORES ) )
+    {
+         pxCurrentTCBs[ xTaskRunState ] = pxTaskTCB;
+    }
+    pxTaskTCB->xTaskRunState = xTaskRunState;
+
+    /* Set idle task attribute. */
+    if( xTaskIsIdle == pdTRUE )
+    {
+        pxTaskTCB->uxTaskAttributes = taskATTRIBUTE_IS_IDLE;
+    }
+    else
+    {
+        pxTaskTCB->uxTaskAttributes = 0;
+    }
+
+    /* Increase the uxCurrentNumberOfTasks. */
+    uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
+}
+
 void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
                                     StackType_t **ppxIdleTaskStackBuffer,
                                     uint32_t *pulIdleTaskStackSize )

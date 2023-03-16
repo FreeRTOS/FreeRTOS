@@ -4045,3 +4045,88 @@ void test_coverage_xTaskPriorityDisinheritAfterTimeout_task_uxpriority_greater(v
     /* The task in pending ready list should be added back to ready list. */
     TEST_ASSERT_EQUAL( xTaskTCBs[1].xStateListItem.pvContainer, &pxReadyTasksLists[ xTaskTCBs[1].uxPriority ] );
 }
+
+/**
+ * @brief uxTaskGetSystemState - array size is less than current task number.
+ *
+ * Verify that 0 task is returned.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( uxArraySize >= uxCurrentNumberOfTasks )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( uxArraySize >= uxCurrentNumberOfTasks ) is false.
+ */
+void test_coverage_uxTaskGetSystemState_array_size_lt_current_num_tasks( void )
+{
+    TaskStatus_t pxTaskStatusArray[ 1 ];
+    UBaseType_t uxTask;
+
+    /* Setup variables. */
+    uxCurrentNumberOfTasks = 2;
+    xSchedulerRunning = pdFALSE;
+
+    /* API call. */
+    uxTask = uxTaskGetSystemState( pxTaskStatusArray, 1, NULL );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( 0, uxTask );
+}
+
+/**
+ * @brief uxTaskGetSystemState - pulTotalRunTime is not null.
+ *
+ * Cover pulTotalRunTime is null. Task status returned is also verified in this test.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pulTotalRunTime != NULL )
+ * {
+ *     *pulTotalRunTime = 0;
+ * }
+ * @endcode
+ * ( pulTotalRunTime != NULL ) is true.
+ */
+void test_coverage_uxTaskGetSystemState_valid_run_time_param( void )
+{
+    TaskStatus_t pxTaskStatusArray[ 1 ];
+    TCB_t xTaskTCB = { NULL };
+    UBaseType_t uxTask;
+    int xTaskNameCompareResult;
+    configRUN_TIME_COUNTER_TYPE ulTotalRunTime;
+
+    /* Setup variables. */
+    UnityMalloc_StartTest();
+    /* Create a task as current running task on core 0. */
+    xTaskTCB.uxPriority = tskIDLE_PRIORITY;
+    xTaskTCB.xTaskRunState = 0;
+    xTaskTCB.xStateListItem.pvOwner = &xTaskTCB;
+    strncpy( xTaskTCB.pcTaskName, "Test", configMAX_TASK_NAME_LEN );
+    xTaskTCB.uxCoreAffinityMask = ( ( 1U << ( configNUMBER_OF_CORES ) ) - 1U );
+    pxCurrentTCBs[ 0 ] = &xTaskTCB;
+    prvInitialiseTestStack( &xTaskTCB, configMINIMAL_STACK_SIZE );
+    listINSERT_END( &pxReadyTasksLists[ xTaskTCB.uxPriority ], &xTaskTCB.xStateListItem );
+    uxCurrentNumberOfTasks = 1;
+    xSchedulerRunning = pdFALSE;
+
+    /* API call. */
+    uxTask = uxTaskGetSystemState( pxTaskStatusArray, 1, &ulTotalRunTime );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( 1, uxTask );
+    TEST_ASSERT_EQUAL( 0, ulTotalRunTime );
+    TEST_ASSERT_EQUAL( &xTaskTCB, pxTaskStatusArray[ 0 ].xHandle );
+    TEST_ASSERT_EQUAL( eRunning, pxTaskStatusArray[ 0 ].eCurrentState );
+    TEST_ASSERT_EQUAL( tskIDLE_PRIORITY, pxTaskStatusArray[ 0 ].uxCurrentPriority );
+    TEST_ASSERT_EQUAL( xTaskTCB.pxStack, pxTaskStatusArray[ 0 ].pxStackBase );
+    TEST_ASSERT_EQUAL( ( ( 1U << ( configNUMBER_OF_CORES ) ) - 1U ), pxTaskStatusArray[ 0 ].uxCoreAffinityMask );
+    xTaskNameCompareResult = strncmp( "Test", pxTaskStatusArray[ 0 ].pcTaskName, configMAX_TASK_NAME_LEN );
+    TEST_ASSERT_EQUAL( 0, xTaskNameCompareResult );
+
+    /* Verify the malloc count. */
+    vPortFreeStack( xTaskTCB.pxStack );
+    UnityMalloc_EndTest();
+}

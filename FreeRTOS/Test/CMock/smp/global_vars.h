@@ -31,32 +31,32 @@
 #include <stdbool.h>
 
 /* Indicates that the task is an Idle task. */
-#define taskATTRIBUTE_IS_IDLE    ( UBaseType_t ) ( 1UL << 0UL )
+#define taskATTRIBUTE_IS_IDLE                   ( UBaseType_t ) ( 1UL << 0UL )
 
 /*
  * Macros used by vListTask to indicate which state a task is in.
  */
-#define tskRUNNING_CHAR      ( 'X' )
-#define tskBLOCKED_CHAR      ( 'B' )
-#define tskREADY_CHAR        ( 'R' )
-#define tskDELETED_CHAR      ( 'D' )
-#define tskSUSPENDED_CHAR    ( 'S' )
+#define tskRUNNING_CHAR                         ( 'X' )
+#define tskBLOCKED_CHAR                         ( 'B' )
+#define tskREADY_CHAR                           ( 'R' )
+#define tskDELETED_CHAR                         ( 'D' )
+#define tskSUSPENDED_CHAR                       ( 'S' )
 
 /* Values that can be assigned to the ucNotifyState member of the TCB. */
-#define taskNOT_WAITING_NOTIFICATION              ( ( uint8_t ) 0 ) /* Must be zero as it is the initialised value. */
-#define taskWAITING_NOTIFICATION                  ( ( uint8_t ) 1 )
-#define taskNOTIFICATION_RECEIVED                 ( ( uint8_t ) 2 )
+#define taskNOT_WAITING_NOTIFICATION            ( ( uint8_t ) 0 )   /* Must be zero as it is the initialised value. */
+#define taskWAITING_NOTIFICATION                ( ( uint8_t ) 1 )
+#define taskNOTIFICATION_RECEIVED               ( ( uint8_t ) 2 )
 
 /* Indicates that the task is not actively running on any core. */
-#define taskTASK_NOT_RUNNING    ( TaskRunning_t ) ( -1 )
+#define taskTASK_NOT_RUNNING                    ( TaskRunning_t ) ( -1 )
 
 /* Indicates that the task is actively running but scheduled to yield. */
-#define taskTASK_YIELDING       ( TaskRunning_t ) ( -2 )
+#define taskTASK_YIELDING                       ( TaskRunning_t ) ( -2 )
 
-#if (configUSE_16_BIT_TICKS == 1)
-    #define taskEVENT_LIST_ITEM_VALUE_IN_USE 0x8000U
+#if ( configUSE_16_BIT_TICKS == 1 )
+    #define taskEVENT_LIST_ITEM_VALUE_IN_USE    0x8000U
 #else
-    #define taskEVENT_LIST_ITEM_VALUE_IN_USE 0x80000000UL
+    #define taskEVENT_LIST_ITEM_VALUE_IN_USE    0x80000000UL
 #endif
 
 typedef BaseType_t TaskRunning_t;

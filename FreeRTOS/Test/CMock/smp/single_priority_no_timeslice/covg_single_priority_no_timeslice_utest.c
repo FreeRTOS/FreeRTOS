@@ -48,7 +48,7 @@
 #include "mock_fake_assert.h"
 #include "mock_fake_port.h"
 
-#define MAX_TASKS                                    3
+#define MAX_TASKS    3
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 extern void prvCheckForRunStateChange( void );
@@ -56,7 +56,7 @@ extern void prvCheckForRunStateChange( void );
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern volatile UBaseType_t uxSchedulerSuspended;
-extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
+extern volatile TCB_t * pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern List_t xSuspendedTaskList;
 extern List_t xPendingReadyList;
 extern volatile UBaseType_t uxTopReadyPriority;
@@ -90,10 +90,11 @@ int suiteTearDown( int numFailures )
 }
 
 /* ==============================  Helper functions for Test Cases  ============================== */
-void created_task(void* arg)
+void created_task( void * arg )
 {
-    while(1){
-        vTaskDelay(100);
+    while( 1 )
+    {
+        vTaskDelay( 100 );
     }
 }
 
@@ -244,71 +245,78 @@ void test_coverage_prvCheckForRunStateChange_first_time_suspend_scheduler( void 
 }
 
 /*
-The kernel will be configured as follows:
-    #define configNUMBER_OF_CORES                               (N > 1)
-    #define configUSE_CORE_AFFINITY                          1
-Coverage for 
-    static TickType_t prvGetExpectedIdleTime( void )      
-*/
+ * The kernel will be configured as follows:
+ #define configNUMBER_OF_CORES                               (N > 1)
+ #define configUSE_CORE_AFFINITY                          1
+ * Coverage for
+ *  static TickType_t prvGetExpectedIdleTime( void )
+ */
+
 /*
-Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
-                                                const UBaseType_t uxArraySize,
-                                                configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
-*/
+ * Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
+ *                                              const UBaseType_t uxArraySize,
+ *                                              configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
+ */
 void test_task_get_system_state( void )
 {
-    TaskStatus_t *tsk_status_array;
-    TaskHandle_t created_handles[3];
-    tsk_status_array = calloc(MAX_TASKS, sizeof(TaskStatus_t));
+    TaskStatus_t * tsk_status_array;
+    TaskHandle_t created_handles[ 3 ];
 
-    for(int i = 0; i < 3; i++){
-        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[i] );
+    tsk_status_array = calloc( MAX_TASKS, sizeof( TaskStatus_t ) );
+
+    for( int i = 0; i < 3; i++ )
+    {
+        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[ i ] );
     }
 
-    //Get System states
-    int no_of_tasks = uxTaskGetSystemState(tsk_status_array, MAX_TASKS, NULL);
-    TEST_ASSERT((no_of_tasks > 0) && (no_of_tasks <= MAX_TASKS));
+    /*Get System states */
+    int no_of_tasks = uxTaskGetSystemState( tsk_status_array, MAX_TASKS, NULL );
+    TEST_ASSERT( ( no_of_tasks > 0 ) && ( no_of_tasks <= MAX_TASKS ) );
 }
 
 /*
-Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
-                                                const UBaseType_t uxArraySize,
-                                                configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
-*/
+ * Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
+ *                                              const UBaseType_t uxArraySize,
+ *                                              configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
+ */
 void test_task_get_system_state_custom_time( void )
 {
-    TaskStatus_t *tsk_status_array;
-    TaskHandle_t created_handles[3];
-    uint32_t ulTotalRunTime = (uint32_t) 200;// Custom time value
-    tsk_status_array = calloc(MAX_TASKS, sizeof(TaskStatus_t));
+    TaskStatus_t * tsk_status_array;
+    TaskHandle_t created_handles[ 3 ];
+    uint32_t ulTotalRunTime = ( uint32_t ) 200; /* Custom time value */
 
-    for(int i = 0; i < 3; i++){
-        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[i] );
+    tsk_status_array = calloc( MAX_TASKS, sizeof( TaskStatus_t ) );
+
+    for( int i = 0; i < 3; i++ )
+    {
+        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[ i ] );
     }
 
-    //Get System states
-    int no_of_tasks = uxTaskGetSystemState(tsk_status_array, MAX_TASKS, &ulTotalRunTime);
-    TEST_ASSERT((no_of_tasks > 0) && (no_of_tasks <= MAX_TASKS));
+    /*Get System states */
+    int no_of_tasks = uxTaskGetSystemState( tsk_status_array, MAX_TASKS, &ulTotalRunTime );
+    TEST_ASSERT( ( no_of_tasks > 0 ) && ( no_of_tasks <= MAX_TASKS ) );
 }
 
 /*
-Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
-                                                const UBaseType_t uxArraySize,
-                                                configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
-*/
+ * Coverage for: UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
+ *                                              const UBaseType_t uxArraySize,
+ *                                              configRUN_TIME_COUNTER_TYPE * const pulTotalRunTime )
+ */
 void test_task_get_system_state_unavilable_task_space( void )
 {
-    TaskStatus_t *tsk_status_array;
-    TaskHandle_t created_handles[3];
-    tsk_status_array = calloc(MAX_TASKS, sizeof(TaskStatus_t));
+    TaskStatus_t * tsk_status_array;
+    TaskHandle_t created_handles[ 3 ];
 
-    for(int i = 0; i < 3; i++){
-        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[i] );
+    tsk_status_array = calloc( MAX_TASKS, sizeof( TaskStatus_t ) );
+
+    for( int i = 0; i < 3; i++ )
+    {
+        xTaskCreate( created_task, "Created Task", configMINIMAL_STACK_SIZE, NULL, 1, &created_handles[ i ] );
     }
 
-    //Get System states
-    int no_of_tasks = uxTaskGetSystemState(tsk_status_array, MAX_TASKS-1, NULL);
-    TEST_ASSERT((no_of_tasks == 0) && (no_of_tasks <= MAX_TASKS));
+    /*Get System states */
+    int no_of_tasks = uxTaskGetSystemState( tsk_status_array, MAX_TASKS - 1, NULL );
+    TEST_ASSERT( ( no_of_tasks == 0 ) && ( no_of_tasks <= MAX_TASKS ) );
 }
 
 /**
@@ -374,7 +382,7 @@ void test_coverage_vTaskStepTick_eq_task_unblock_time( void )
  * #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_PREEMPTION == 1 ) )
  * {
  *     prvYieldForTask( pxTCB );
- * 
+ *
  *     if( xYieldPendings[ portGET_CORE_ID() ] != pdFALSE )
  *     {
  *         xYieldRequired = pdTRUE;
@@ -393,6 +401,7 @@ void test_coverage_xTaskResumeFromISR_resume_higher_priority_suspended_task( voi
     /* Setup the variables and structure. */
     vListInitialise( &xSuspendedTaskList );
     vListInitialise( &xPendingReadyList );
+
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
         xTaskTCBs[ i ].uxPriority = 1;
@@ -400,6 +409,7 @@ void test_coverage_xTaskResumeFromISR_resume_higher_priority_suspended_task( voi
         xYieldPendings[ i ] = pdFALSE;
         pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
     }
+
     /* A suspended task is created to be resumed from ISR. The task has higher priority
      * than uxTopReadyPriority and the scheduler is suspended. The task will be added
      * to xPendingReadyList after resumed from ISR. */
@@ -431,7 +441,7 @@ void test_coverage_xTaskResumeFromISR_resume_higher_priority_suspended_task( voi
  * #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_PREEMPTION == 1 ) )
  * {
  *     prvYieldForTask( pxTCB );
- * 
+ *
  *     if( xYieldPendings[ portGET_CORE_ID() ] != pdFALSE )
  *     {
  *         xYieldRequired = pdTRUE;
@@ -450,6 +460,7 @@ void test_coverage_xTaskResumeFromISR_resume_lower_priority_suspended_task( void
     /* Setup the variables and structure. */
     vListInitialise( &xSuspendedTaskList );
     vListInitialise( &xPendingReadyList );
+
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
         xTaskTCBs[ i ].uxPriority = 2;
@@ -457,6 +468,7 @@ void test_coverage_xTaskResumeFromISR_resume_lower_priority_suspended_task( void
         xYieldPendings[ i ] = pdFALSE;
         pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
     }
+
     /* A suspended task is created to be resumed from ISR. The task has lower priority
      * than uxTopReadyPriority and the scheduler is suspended. The task will be added
      * to xPendingReadyList after resumed from ISR. */

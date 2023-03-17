@@ -47,7 +47,7 @@ static SemaphoreHandle_t xSemaphoreHandleStatic;
  *
  * NumCalls is checked in the test assert.
  */
-static void vTaskYieldWithinAPI_Callback(int NumCalls)
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
 {
     ( void ) NumCalls;
 

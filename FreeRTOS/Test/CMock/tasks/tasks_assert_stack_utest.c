@@ -51,7 +51,8 @@
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                       0xAA101
+#define configASSERT_E    0xAA101
+
 /**
  * @brief Expect a configASSERT from the function called.
  *  Break out of the called function when this occurs.
@@ -75,6 +76,7 @@
     } while( 0 )
 
 /* ============================  GLOBAL VARIABLES =========================== */
+
 /**
  * @brief Global counter for the number of assertions in code.
  */
@@ -287,7 +289,7 @@ unsigned int vFakePortGetCoreID( void )
     return 0;
 }
 
-void vFakePortReleaseTaskLock (void )
+void vFakePortReleaseTaskLock( void )
 {
     HOOK_DIAG();
 }
@@ -337,6 +339,7 @@ int suiteTearDown( int numFailures )
 }
 
 /* ========================  TEST CASES ===================================== */
+
 /*!
  * @brief This test ensures that the code asserts when the alignment of the
  *        stack is not similar to the basetype alignment
@@ -344,17 +347,17 @@ int suiteTearDown( int numFailures )
 void test_xTaskCreateStatic_assert_stack_alignment( void )
 {
     TaskFunction_t xTFunc = NULL;
-    StaticTask_t xTaskBuffer[200];
+    StaticTask_t xTaskBuffer[ 200 ];
     StackType_t * xStackBuffer;
 
-    char xStackBuffer_unaligned[200];
+    char xStackBuffer_unaligned[ 200 ];
 
-    xStackBuffer = (StackType_t *) &xStackBuffer_unaligned[1];
+    xStackBuffer = ( StackType_t * ) &xStackBuffer_unaligned[ 1 ];
 
-    printf("normal  %p\n", xStackBuffer_unaligned );
-    printf("added 2 %p\n", &xStackBuffer_unaligned[1] );
+    printf( "normal  %p\n", xStackBuffer_unaligned );
+    printf( "added 2 %p\n", &xStackBuffer_unaligned[ 1 ] );
 
-    printf("added 1 %p\n", xStackBuffer);
+    printf( "added 1 %p\n", xStackBuffer );
 
     EXPECT_ASSERT_BREAK( xTaskCreateStatic( xTFunc,
                                             NULL,
@@ -366,4 +369,3 @@ void test_xTaskCreateStatic_assert_stack_alignment( void )
 
     validate_and_clear_assertions();
 }
-

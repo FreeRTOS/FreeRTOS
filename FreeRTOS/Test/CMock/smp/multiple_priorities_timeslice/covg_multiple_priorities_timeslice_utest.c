@@ -159,6 +159,7 @@ void test_coverage_xTaskIncrementTick_no_eq_priority_task( void )
     xReturn = xTaskIncrementTick();
 
     /* Validations. */
+
     /* Core 0 is running a higher priority task. No other task of equal priority is
      * waiting to run. Switching is not required in this test. */
     TEST_ASSERT_EQUAL( pdFALSE, xReturn );
@@ -236,6 +237,7 @@ void test_coverage_xTaskIncrementTick_no_eq_priority_task_yield_pending( void )
     xReturn = xTaskIncrementTick();
 
     /* Validations. */
+
     /* Core 0 is running a higher priority task. No other task of equal priority is
      * waiting to run. However, core 0 has yield pending. Switching is required for
      * core 0. */
@@ -310,6 +312,7 @@ void test_coverage_xTaskIncrementTick_preemption_disabled_task( void )
     xReturn = xTaskIncrementTick();
 
     /* Validations. */
+
     /* Equal priority task is waiting to run. Preemption is disabled for task running
      * on core 0. Switching is not required in this test. */
     TEST_ASSERT_EQUAL( pdFALSE, xReturn );
@@ -394,6 +397,7 @@ void test_coverage_xTaskIncrementTick_ready_higher_priority_delayed_task( void )
     /* Validations. */
     /* Core 0 is running a idle priority task. Switching is required in this test. */
     TEST_ASSERT_EQUAL( pdTRUE, xReturn );
+
     /* The implementation will select the last core to yield for the higher priority
      * task. Verify that the task running on the last core has state taskTASK_YIELDING. */
     TEST_ASSERT_EQUAL( taskTASK_YIELDING, xTaskTCBs[ configNUMBER_OF_CORES - 1 ].xTaskRunState );

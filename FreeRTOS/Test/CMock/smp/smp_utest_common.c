@@ -59,11 +59,11 @@ extern volatile TickType_t xPendedTicks;
 extern volatile BaseType_t xNumOfOverflows;
 extern volatile TickType_t xNextTaskUnblockTime;
 extern UBaseType_t uxTaskNumber;
-extern TaskHandle_t xIdleTaskHandles[configNUMBER_OF_CORES];
+extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern List_t * volatile pxDelayedTaskList;
-extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
+extern volatile TCB_t * pxCurrentTCBs[ configNUMBER_OF_CORES ];
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 
 static BaseType_t xCoreYields[ configNUMBER_OF_CORES ] = { 0 };
@@ -99,8 +99,8 @@ void vPortFree( void * pv )
 }
 
 StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
-                                             TaskFunction_t pxCode,
-                                             void * pvParameters )
+                                     TaskFunction_t pxCode,
+                                     void * pvParameters )
 {
     return pxTopOfStack;
 }
@@ -110,8 +110,9 @@ BaseType_t xPortStartScheduler( void )
     uint8_t i;
 
     /* Initialize each core with a task */
-    for (i = 0; i < configNUMBER_OF_CORES; i++) {
-        vTaskSwitchContext(i);
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        vTaskSwitchContext( i );
     }
 
     return pdTRUE;
@@ -119,10 +120,10 @@ BaseType_t xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-    return;
 }
 
-void vFakePortYieldCoreStubCallback( int xCoreID, int cmock_num_calls )
+void vFakePortYieldCoreStubCallback( int xCoreID,
+                                     int cmock_num_calls )
 {
     BaseType_t xCoreInCritical = pdFALSE;
     BaseType_t xPreviousCoreId = xCurrentCoreId;
@@ -143,7 +144,9 @@ void vFakePortYieldCoreStubCallback( int xCoreID, int cmock_num_calls )
         /* If a is in the critical section, pend the core yield until the
          * task spinlock is released. */
         xCoreYields[ xCoreID ] = pdTRUE;
-    } else {
+    }
+    else
+    {
         /* No task is in the critical section. We can yield this core. */
         xCurrentCoreId = xCoreID;
         vTaskSwitchContext( xCurrentCoreId );
@@ -193,18 +196,19 @@ static void vYieldCores( void )
             vTaskSwitchContext( i );
         }
     }
+
     xCurrentCoreId = xPreviousCoreId;
 }
 
 unsigned int vFakePortGetCoreIDCallback( int cmock_num_calls )
 {
-    return ( unsigned int )xCurrentCoreId;
+    return ( unsigned int ) xCurrentCoreId;
 }
 
 void vFakePortGetISRLockCallback( int cmock_num_calls )
 {
     int i;
-    
+
     ( void ) cmock_num_calls;
 
     /* Ensure that no other core is in the critical section. */
@@ -264,11 +268,13 @@ void vFakePortReleaseTaskLockCallback( int cmock_num_calls )
 UBaseType_t vFakePortEnterCriticalFromISRCallback( int cmock_num_calls )
 {
     UBaseType_t uxSavedInterruptState;
+
     uxSavedInterruptState = vTaskEnterCriticalFromISR();
     return uxSavedInterruptState;
 }
 
-void vFakePortExitCriticalFromISRCallback( UBaseType_t uxSavedInterruptState, int cmock_num_calls )
+void vFakePortExitCriticalFromISRCallback( UBaseType_t uxSavedInterruptState,
+                                           int cmock_num_calls )
 {
     vTaskExitCriticalFromISR( uxSavedInterruptState );
     /* Simulate yield cores when leaving the critical section. */
@@ -279,7 +285,7 @@ void vFakePortExitCriticalFromISRCallback( UBaseType_t uxSavedInterruptState, in
 
 void commonSetUp( void )
 {
-    vFakePortYieldCore_StubWithCallback( vFakePortYieldCoreStubCallback) ;
+    vFakePortYieldCore_StubWithCallback( vFakePortYieldCoreStubCallback );
     vFakePortYield_StubWithCallback( vFakePortYieldStubCallback );
 
     vFakePortEnterCriticalSection_StubWithCallback( vFakePortEnterCriticalSectionCallback );
@@ -302,21 +308,21 @@ void commonSetUp( void )
     ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0 );
     vFakePortClearInterruptMaskFromISR_Ignore();
 
-    vFakePortDisableInterrupts_IgnoreAndReturn(1);
+    vFakePortDisableInterrupts_IgnoreAndReturn( 1 );
     vFakePortRestoreInterrupts_Ignore();
-    xTimerCreateTimerTask_IgnoreAndReturn(1);
-    vFakePortCheckIfInISR_IgnoreAndReturn(0);
+    xTimerCreateTimerTask_IgnoreAndReturn( 1 );
+    vFakePortCheckIfInISR_IgnoreAndReturn( 0 );
     vPortCurrentTaskDying_Ignore();
     portSetupTCB_CB_Ignore();
-    ulFakePortSetInterruptMask_IgnoreAndReturn(0);
+    ulFakePortSetInterruptMask_IgnoreAndReturn( 0 );
     vFakePortClearInterruptMask_Ignore();
 
     memset( &pxReadyTasksLists, 0x00, configMAX_PRIORITIES * sizeof( List_t ) );
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
-    memset( &xIdleTaskHandles, 0x00, (configNUMBER_OF_CORES * sizeof( TaskHandle_t )) );
-    memset( &pxCurrentTCBs, 0x00, (configNUMBER_OF_CORES * sizeof( TCB_t * )) );
-    memset( ( void * )&xYieldPendings, 0x00, ( configNUMBER_OF_CORES * sizeof( BaseType_t ) ) );
+    memset( &xIdleTaskHandles, 0x00, ( configNUMBER_OF_CORES * sizeof( TaskHandle_t ) ) );
+    memset( &pxCurrentTCBs, 0x00, ( configNUMBER_OF_CORES * sizeof( TCB_t * ) ) );
+    memset( ( void * ) &xYieldPendings, 0x00, ( configNUMBER_OF_CORES * sizeof( BaseType_t ) ) );
 
     uxDeletedTasksWaitingCleanUp = 0;
     uxCurrentNumberOfTasks = ( UBaseType_t ) 0U;
@@ -338,30 +344,32 @@ void commonSetUp( void )
 
 void commonTearDown( void )
 {
-
 }
 
 /* ==========================  Helper functions =========================== */
 
-void vSmpTestTask( void *pvParameters )
+void vSmpTestTask( void * pvParameters )
 {
 }
 
-void verifySmpTask( TaskHandle_t * xTaskHandle, eTaskState eCurrentState, TaskRunning_t xTaskRunState)
+void verifySmpTask( TaskHandle_t * xTaskHandle,
+                    eTaskState eCurrentState,
+                    TaskRunning_t xTaskRunState )
 {
     TaskStatus_t xTaskDetails;
 
-    vTaskGetInfo(*xTaskHandle, &xTaskDetails, pdTRUE, eInvalid );
+    vTaskGetInfo( *xTaskHandle, &xTaskDetails, pdTRUE, eInvalid );
     TEST_ASSERT_EQUAL_INT_MESSAGE( xTaskRunState, xTaskDetails.xHandle->xTaskRunState, "Task Verification Failed: Incorrect xTaskRunState" );
     TEST_ASSERT_EQUAL_INT_MESSAGE( eCurrentState, xTaskDetails.eCurrentState, "Task Verification Failed: Incorrect eCurrentState" );
 }
 
-void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState)
+void verifyIdleTask( BaseType_t index,
+                     TaskRunning_t xTaskRunState )
 {
     TaskStatus_t xTaskDetails;
     int ret;
 
-    vTaskGetInfo(xIdleTaskHandles[index], &xTaskDetails, pdTRUE, eInvalid );
+    vTaskGetInfo( xIdleTaskHandles[ index ], &xTaskDetails, pdTRUE, eInvalid );
     #ifdef configIDLE_TASK_NAME
         ret = strncmp( xTaskDetails.xHandle->pcTaskName, configIDLE_TASK_NAME, strlen( configIDLE_TASK_NAME ) );
     #else
@@ -394,32 +402,22 @@ void xTaskIncrementTick_helper( void )
     taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptState );
 }
 
-#if ( configUSE_CORE_AFFINITY == 1 )
-    void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
-                                UBaseType_t uxCoreAffinityMask,
-                                UBaseType_t uxPriority,
-                                BaseType_t xTaskRunState,
-                                BaseType_t xTaskIsIdle )
-#else
-    void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
-                                UBaseType_t uxPriority,
-                                BaseType_t xTaskRunState,
-                                BaseType_t xTaskIsIdle )
-#endif
+void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
+                            UBaseType_t uxPriority,
+                            BaseType_t xTaskRunState,
+                            BaseType_t xTaskIsIdle )
 {
-    TCB_t * pxTaskTCB = ( TCB_t * )xTaskHandle;
+    TCB_t * pxTaskTCB = ( TCB_t * ) xTaskHandle;
 
     pxTaskTCB->xStateListItem.pvOwner = pxTaskTCB;
-    #if ( configUSE_CORE_AFFINITY == 1 )
-        pxTaskTCB->uxCoreAffinityMask = uxCoreAffinityMask;
-    #endif
     pxTaskTCB->uxPriority = uxPriority;
 
     /* Also assign pxCurrentTCBs to the created task. */
     if( ( xTaskRunState >= 0 ) && ( xTaskRunState < configNUMBER_OF_CORES ) )
     {
-         pxCurrentTCBs[ xTaskRunState ] = pxTaskTCB;
+        pxCurrentTCBs[ xTaskRunState ] = pxTaskTCB;
     }
+
     pxTaskTCB->xTaskRunState = xTaskRunState;
 
     /* Set idle task attribute. */
@@ -436,25 +434,39 @@ void xTaskIncrementTick_helper( void )
     uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
 }
 
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
-                                    StackType_t **ppxIdleTaskStackBuffer,
-                                    uint32_t *pulIdleTaskStackSize )
+#if ( configUSE_CORE_AFFINITY == 1 )
+    void vCreateStaticTestTaskAffinity( TaskHandle_t xTaskHandle,
+                                        UBaseType_t uxCoreAffinityMask,
+                                        UBaseType_t uxPriority,
+                                        BaseType_t xTaskRunState,
+                                        BaseType_t xTaskIsIdle )
+    {
+        TCB_t * pxTaskTCB = ( TCB_t * ) xTaskHandle;
+
+        vCreateStaticTestTask( xTaskHandle, uxPriority, xTaskRunState, xTaskIsIdle );
+        pxTaskTCB->uxCoreAffinityMask = uxCoreAffinityMask;
+    }
+#endif /* if ( configUSE_CORE_AFFINITY == 1 ) */
+
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    StackType_t ** ppxIdleTaskStackBuffer,
+                                    uint32_t * pulIdleTaskStackSize )
 {
 /* If the buffers to be provided to the Idle task are declared inside this
-function then they must be declared static -- otherwise they will be allocated on
-the stack and so not exists after this function exits. */
-static StaticTask_t xIdleTaskTCB;
-static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+ * function then they must be declared static -- otherwise they will be allocated on
+ * the stack and so not exists after this function exits. */
+    static StaticTask_t xIdleTaskTCB;
+    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
     /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
-    state will be stored. */
+     * state will be stored. */
     *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
     /* Pass out the array that will be used as the Idle task's stack. */
     *ppxIdleTaskStackBuffer = uxIdleTaskStack;
 
     /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
-    Note that, as the array is necessarily of type StackType_t,
-    configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+     * Note that, as the array is necessarily of type StackType_t,
+     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
     *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }

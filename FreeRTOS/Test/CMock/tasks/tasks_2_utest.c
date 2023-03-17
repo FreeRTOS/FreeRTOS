@@ -68,7 +68,7 @@ extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
 #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
     extern volatile BaseType_t xYieldPendings[];
-    #define xYieldPending   xYieldPendings[ 0 ]
+    #define xYieldPending    xYieldPendings[ 0 ]
 #else
     extern volatile BaseType_t xYieldPending;
 #endif
@@ -77,7 +77,7 @@ extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
 #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
     extern TaskHandle_t xIdleTaskHandles[];
-    #define xIdleTaskHandle   xIdleTaskHandles[ 0 ]
+    #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
 #else
     extern TaskHandle_t xIdleTaskHandle;
 #endif
@@ -86,7 +86,7 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                       0xAA101
+#define configASSERT_E    0xAA101
 
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
@@ -409,7 +409,7 @@ unsigned int vFakePortGetCoreID( void )
     return 0;
 }
 
-void vFakePortReleaseTaskLock (void )
+void vFakePortReleaseTaskLock( void )
 {
     HOOK_DIAG();
 }

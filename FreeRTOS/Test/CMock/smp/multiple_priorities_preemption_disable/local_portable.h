@@ -12,4 +12,4 @@ StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
 StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
                                      TaskFunction_t pxCode,
                                      void * pvParameters );
-#endif
+#endif /* ifndef LOCAL_PORTABLE_H */

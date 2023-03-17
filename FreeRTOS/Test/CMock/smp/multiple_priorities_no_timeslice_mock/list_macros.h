@@ -71,4 +71,4 @@ void listINSERT_END( List_t * pxList,
 #undef listREMOVE_ITEM
 void listREMOVE_ITEM( ListItem_t * listItem );
 
-#endif /* ifndef LIST_MACRO_H */    
+#endif /* ifndef LIST_MACRO_H */

@@ -1383,7 +1383,7 @@ typedef struct xSTATIC_TCB
 {
     void * pxDummy1;
     #if ( portUSING_MPU_WRAPPERS == 1 )
-        //xMPU_SETTINGS xDummy2;
+        /*xMPU_SETTINGS xDummy2; */
     #endif
     #if ( configUSE_CORE_AFFINITY == 1 ) && ( configNUMBER_OF_CORES > 1 )
         UBaseType_t uxDummy26;

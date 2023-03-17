@@ -93,8 +93,8 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS    0
-#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define configGENERATE_RUN_TIME_STATS             0
+#define portGET_RUN_TIME_COUNTER_VALUE()    ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           0
 #define configENABLE_MPU                          0

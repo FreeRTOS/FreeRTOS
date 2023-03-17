@@ -71,7 +71,7 @@ extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
 #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
     extern volatile BaseType_t xYieldPendings[];
-    #define xYieldPending   xYieldPendings[ 0 ]
+    #define xYieldPending    xYieldPendings[ 0 ]
 #else
     extern volatile BaseType_t xYieldPending;
 #endif
@@ -80,7 +80,7 @@ extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
 #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
     extern TaskHandle_t xIdleTaskHandles[];
-    #define xIdleTaskHandle   xIdleTaskHandles[ 0 ]
+    #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
 #else
     extern TaskHandle_t xIdleTaskHandle;
 #endif
@@ -123,7 +123,7 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                       0xAA101
+#define configASSERT_E                  0xAA101
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;
@@ -349,7 +349,7 @@ unsigned int vFakePortGetCoreID( void )
     return 0;
 }
 
-void vFakePortReleaseTaskLock (void )
+void vFakePortReleaseTaskLock( void )
 {
     HOOK_DIAG();
 }
@@ -1027,6 +1027,7 @@ void test_prvCheckTasksWaitingTermination_no_waiting_task( void )
     prvCheckTasksWaitingTermination();
 
     /* Validation. */
+
     /* No task is waiting to be cleand up. Nothing will be updated in this API. This
      * test case shows its result in the coverage report. */
 }
@@ -2656,15 +2657,15 @@ void test_xTaskCatchUpTicks( void )
     ptcb = task_handle;
     uxSchedulerSuspended = pdFALSE;
 
-    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn(pdTRUE);
-    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn(pdTRUE);
-    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn(0);
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
 
     /* API Call */
     ret_taskCatchUpTicks = xTaskCatchUpTicks( 1 );
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret_taskCatchUpTicks );
-    //TEST_ASSERT_EQUAL( pdTRUE, ret_taskCatchUpTicks );
+    /*TEST_ASSERT_EQUAL( pdTRUE, ret_taskCatchUpTicks ); */
     uxSchedulerSuspended = pdTRUE;
 }
 
@@ -2910,6 +2911,7 @@ void test_xTaskIncrementTick_success_unblock_higher_prio_task( void )
     task_handle = create_task();
     create_task_priority = 1;
     task_handle2 = create_task();
+
     /* task_handle 2 will be added to pxDelayedTaskList later. To wakup a higher priority
      * task, uxPriority is set higher than current task, which is 2. */
     task_handle2->uxPriority = 3;

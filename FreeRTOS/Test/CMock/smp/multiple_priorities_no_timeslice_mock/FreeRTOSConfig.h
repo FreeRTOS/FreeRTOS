@@ -48,6 +48,8 @@
 #define configUSE_TIME_SLICING                           0
 #define configUSE_TASK_PREEMPTION_DISABLE                1
 #define configTICK_CORE                                  0
+#define configUSE_TICKLESS_IDLE                          1
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP            2
 
 /* OS Configuration */
 #define configUSE_PREEMPTION                             1
@@ -79,13 +81,15 @@
 #define portREMOVE_STATIC_QUALIFIER                      1
 #define portCRITICAL_NESTING_IN_TCB                      1
 #define portSTACK_GROWTH                                 ( 1 )
-#define configUSE_MINIMAL_IDLE_HOOK                      0
+#define configUSE_MINIMAL_IDLE_HOOK                      1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1
 #define configTIMER_TASK_PRIORITY                        ( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH                         20
 #define configTIMER_TASK_STACK_DEPTH                     ( configMINIMAL_STACK_SIZE * 2 )
+extern const char * pcIdleTaskName;
+#define configIDLE_TASK_NAME                             pcIdleTaskName
 
 #define configMAX_PRIORITIES                             ( 7 )
 
@@ -150,5 +154,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
     extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+#define portSUPPRESS_TICKS_AND_SLEEP    vPortSuppressTicksAndSleep
 
 #endif /* FREERTOS_CONFIG_H */

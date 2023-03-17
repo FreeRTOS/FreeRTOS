@@ -23,32 +23,27 @@
  * https://github.com/FreeRTOS
  *
  */
-/*! @file config_assert_utest.c */
+/*! @file covg_multiple_priorities_no_timeslice_utest.c */
 
 /* C runtime includes. */
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdio.h>
 
 /* Tasks includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
-#include "../global_vars.h"
-#include "task.h"
-
-/* #include "fake_port.h" */
-#include "portmacro.h"
+#include "event_groups.h"
+#include "queue.h"
 
 /* Test includes. */
 #include "unity.h"
 #include "unity_memory.h"
 #include "CException.h"
-
-
-/* Local includes. */
-/*#include "../smp_utest_common.h" */
+#include "../global_vars.h"
+#include "../smp_utest_common.h"
+#include <assert.h>
 
 /* Mock includes. */
 #include "mock_timers.h"
@@ -58,7 +53,6 @@
 #include "mock_fake_port.h"
 #include "mock_local_portable.h"
 
-
 /* =================================  MACROS  =============================== */
 
 /**
@@ -66,11 +60,6 @@
  */
 #define configASSERT_E    0xAA101
 #define EXIT_LOOP         0xAA102
-
-/**
- * @brief simulate up to 10 tasks: add more if needed
- * */
-#define TCB_ARRAY         10
 
 /**
  * @brief Expect a configASSERT from the function called.
@@ -94,8 +83,12 @@
         }                                           \
     } while( 0 )
 
-
 /* ============================  GLOBAL VARIABLES =========================== */
+
+/**
+ * @brief Global idle task name pointer.
+ */
+const char * pcIdleTaskName = "IDLE";
 
 /**
  * @brief Global counter for the number of assertions in code.
@@ -108,23 +101,28 @@ static int assertionFailed = 1;
 static BaseType_t shouldAbortOnAssertion;
 
 /* ===========================  EXTERN VARIABLES  =========================== */
-extern void vTaskEnterCritical( void );
-extern void vTaskExitCritical( void );
-extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
-extern volatile BaseType_t xSchedulerRunning;
-extern volatile UBaseType_t uxSchedulerSuspended;
-extern TCB_t * volatile pxCurrentTCBs[ configNUMBER_OF_CORES ];
+extern volatile UBaseType_t xSchedulerRunning;
 extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
+extern volatile TCB_t * pxCurrentTCBs[ configNUMBER_OF_CORES ];
+extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
+extern volatile BaseType_t xYieldForTask;
+extern volatile BaseType_t xYieldRequired;
+extern volatile UBaseType_t uxCurrentNumberOfTasks;
+extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
-extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
 
-/* ===========================  STATIC FUNCTIONS  =========================== */
+/* ===========================  EXTERN FUNCTIONS  =========================== */
+
+extern BaseType_t prvCreateIdleTasks( void );
+
+/* ==========================  STATIC FUNCTIONS  ========================== */
+
 void vApplicationMinimalIdleHook( void )
 {
 }
@@ -145,26 +143,22 @@ static void vFakeAssertStub( bool x,
     }
 }
 
-void * pvPortMalloc( size_t xSize )
-{
-    return unity_malloc( xSize );
-}
-
-void vPortFree( void * pv )
-{
-    return unity_free( pv );
-}
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
 {
-    uxDeletedTasksWaitingCleanUp;
+    /* Reset the idle task name to default value. */
+    pcIdleTaskName = "IDLE";
+
     vFakeAssert_StubWithCallback( vFakeAssertStub );
+
+    UnityMalloc_StartTest();
 }
 
 /*! called after each testcase */
 void tearDown( void )
 {
+    UnityMalloc_EndTest();
 }
 
 /*! called at the beginning of the whole suite */
@@ -178,7 +172,225 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
+
+/* ==========================  HELPER FUNCTIONS  ========================== */
+
+void * pvPortMalloc( size_t xSize )
+{
+    return unity_malloc( xSize );
+}
+
+void vPortFree( void * pv )
+{
+    return unity_free( pv );
+}
+
 /* ==============================  Test Cases  ============================== */
+
+/**
+ * @brief vTaskSuspend - suspends the running task
+ *
+ * This test is used to suspend a running task when task is actively
+ * running and not scheduled to yield.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( xSchedulerRunning != pdFALSE )
+ * {
+ *      if( xTaskRunningOnCore == portGET_CORE_ID() )
+ *      {
+ *          configASSERT( uxSchedulerSuspended == 0 );
+ *          vTaskYieldWithinAPI();
+ *      }
+ *      else
+ *      {
+ *          prvYieldCore( xTaskRunningOnCore );
+ *      }
+ * }
+ * else
+ * {
+ *      mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( xSchedulerRunning != pdFALSE ) is false.
+ */
+void test_coverage_vTaskSuspend_scheduler_running_false( void )
+{
+    TCB_t xTaskTCBs[ 1 ] = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCBs[ 0 ].uxPriority = 1;
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
+    pxCurrentTCBs[ 0 ]->xTaskRunState = 1;
+    xSchedulerRunning = pdFALSE;
+
+    vFakePortEnterCriticalSection_Expect();
+    uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
+    vListInsertEnd_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
+    vTaskSuspend( &xTaskTCBs[ 0 ] );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ] );
+    TEST_ASSERT_EQUAL( 1, pxCurrentTCBs[ 0 ]->xTaskRunState );
+}
+
+/**
+ * @brief vTaskSuspend - suspends the task
+ *
+ * This test is used to ensure that one of the macro's conditions
+ * where TaskRunState is greater than zero is set to false.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxTCB ) ) is false.
+ */
+
+void test_coverage_vTaskSuspend_running_state_below_range( void )
+{
+    TCB_t xTaskTCBs[ 1 ] = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCBs[ 0 ].uxPriority = 1;
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
+    pxCurrentTCBs[ 0 ]->xTaskRunState = -1;
+    xSchedulerRunning = pdFALSE;
+
+    vFakePortEnterCriticalSection_Expect();
+    uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
+    vListInsertEnd_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
+    vTaskSuspend( &xTaskTCBs[ 0 ] );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ] );
+    TEST_ASSERT_EQUAL( -1, pxCurrentTCBs[ 0 ]->xTaskRunState );
+}
+
+/**
+ * @brief vTaskSuspend - suspends the task
+ *
+ * This test is used to cover the case where the other macro condition where
+ * TaskRunState is less than configNUMBER_OF_CORES is set to false.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxTCB ) ) is false.
+ */
+
+void test_coverage_vTaskSuspend_running_state_above_range( void )
+{
+    TCB_t xTaskTCBs[ 1 ] = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCBs[ 0 ].uxPriority = 1;
+    xYieldPendings[ 0 ] = pdFALSE;
+    pxCurrentTCBs[ 0 ] = &xTaskTCBs[ 0 ];
+    pxCurrentTCBs[ 0 ]->xTaskRunState = configNUMBER_OF_CORES + 1;
+
+    vFakePortEnterCriticalSection_Expect();
+    uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
+    vListInsertEnd_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* API call. */
+    vTaskSuspend( &xTaskTCBs[ 0 ] );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ] );
+    TEST_ASSERT_EQUAL( 17, pxCurrentTCBs[ 0 ]->xTaskRunState );
+}
+
+/**
+ * @brief vTaskPrioritySet - sets the priority
+ *
+ * This test is to change the priorities of non
+ * running tasks
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * else if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxTCB ) ) is false.
+ */
+void test_coverage_vTaskPrioritySet_non_running_state( void )
+{
+    TCB_t xTaskTCBs[ 1 ] = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCBs[ 0 ].uxPriority = 4;
+    xTaskTCBs[ 0 ].uxBasePriority = 4;
+    xTaskTCBs[ 0 ].xTaskRunState = configNUMBER_OF_CORES + 1;
+
+    vFakeAssert_Ignore();
+    vFakePortCheckIfInISR_StopIgnore();
+    vFakePortEnterCriticalSection_Ignore();
+    vFakePortYieldCore_CMockIgnore();
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( ( TickType_t ) 0x80000000UL );
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
+    vFakePortExitCriticalSection_Ignore();
+
+    /* API call. */
+    vTaskPrioritySet( &xTaskTCBs[ 0 ], 2 );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( 17, xTaskTCBs[ 0 ].xTaskRunState );
+    TEST_ASSERT_EQUAL( 2, xTaskTCBs[ 0 ].uxPriority );
+}
+
+/**
+ * @brief vTaskPrioritySet - sets the priority
+ *
+ * This test verifies that the current task is not
+ * preempted by any other task of higher priority.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxTCB->xPreemptionDisable == pdFALSE )
+ * @endcode
+ * ( pxTCB->xPreemptionDisable == pdFALSE ) is false.
+ */
+void test_coverage_vTaskPrioritySet_running_state( void )
+{
+    TCB_t xTaskTCBs[ 1 ] = { NULL };
+
+    /* Setup the variables and structure. */
+    xTaskTCBs[ 0 ].uxPriority = 4;
+    xTaskTCBs[ 0 ].uxBasePriority = 4;
+    xTaskTCBs[ 0 ].xPreemptionDisable = pdTRUE;
+    xTaskTCBs[ 0 ].xTaskRunState = 1;
+
+    BaseType_t xYieldRequired = pdFALSE;
+    BaseType_t xYieldForTask = pdFALSE;
+
+    vFakeAssert_Ignore();
+    vFakePortCheckIfInISR_StopIgnore();
+    vFakePortEnterCriticalSection_Ignore();
+    vFakePortYieldCore_CMockIgnore();
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( ( TickType_t ) 0x80000000UL );
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
+    vFakePortExitCriticalSection_Ignore();
+
+    /* API call. */
+    vTaskPrioritySet( &xTaskTCBs[ 0 ], 2 );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldRequired );
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldForTask );
+}
 
 /**
  * @brief prvYieldCore - xCoreID is not equal to current core id.
@@ -342,7 +554,7 @@ void test_coverage_vTaskDelete_scheduler_not_running( void )
  * configNMBER_OF_CORES > 1
  * INCLUDE_vTaskDelete = 1
  */
-void test_vTaskDelete_task_not_running( void )
+void test_coverage_vTaskDelete_task_not_running( void )
 {
     TCB_t task;
     TaskHandle_t xTaskToDelete;
@@ -392,7 +604,7 @@ void test_vTaskDelete_task_not_running( void )
  * configUSE_TRACE_FACILITY = 1
  * INCLUDE_xTaskAbortDelay = 1
  */
-void test_eTaskGetState_task_not_running( void )
+void test_coverage_eTaskGetState_task_not_running( void )
 {
     TCB_t task = { 0 };
     TaskHandle_t xTask = &task;
@@ -432,7 +644,7 @@ void test_eTaskGetState_task_not_running( void )
  * INCLUDE_xTaskGetCurrentTaskHandle = 1
  * configUSE_MUTEXES = 1
  */
-void test_vTaskPreemptionDisable_null_handle( void )
+void test_coverage_vTaskPreemptionDisable_null_handle( void )
 {
     TCB_t xTask = { 0 };
 
@@ -452,7 +664,6 @@ void test_vTaskPreemptionDisable_null_handle( void )
     TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[ 0 ]->xPreemptionDisable );
 }
 
-
 /**
  * @brief This test ensures that when we call vTaskSuspendAll and we task of the
  *        current core has a critical nesting count of 1 only the scheduler is
@@ -468,7 +679,7 @@ void test_vTaskPreemptionDisable_null_handle( void )
  *
  * configNMBER_OF_CORES > 1
  */
-void test_vTaskSuspendAll_critical_nesting_ne_zero( void )
+void test_coverage_vTaskSuspendAll_critical_nesting_ne_zero( void )
 {
     TCB_t xTask = { 0 };
 
@@ -510,7 +721,7 @@ void test_vTaskSuspendAll_critical_nesting_ne_zero( void )
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
-void test_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
+void test_coverage_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
 {
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
@@ -580,7 +791,7 @@ void test_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
-void test_prvGetExpectedIdleTime_ready_list_gt_one( void )
+void test_coverage_prvGetExpectedIdleTime_ready_list_gt_one( void )
 {
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
@@ -648,7 +859,7 @@ void test_prvGetExpectedIdleTime_ready_list_gt_one( void )
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
-void test_prvGetExpectedIdleTime_ready_list_eq_1( void )
+void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
 {
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
@@ -747,7 +958,7 @@ void port_assert_if_isr_cb( int num_callbacks )
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
-void test_prvGetExpectedIdleTime_ready_list_eq_2( void )
+void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
 {
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
@@ -839,7 +1050,7 @@ void test_prvGetExpectedIdleTime_ready_list_eq_2( void )
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
-void test_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idle( void )
+void test_coverage_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idle( void )
 {
     CEXCEPTION_T e = CEXCEPTION_NONE;
     TCB_t xTCB = { 0 };
@@ -905,13 +1116,15 @@ void test_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_prio_lt_idl
  *
  * configNMBER_OF_CORES > 1
  */
-void test_prvCreateIdleTasks_name_too_long( void )
+void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
 {
     BaseType_t prvCreateIdleTasks( void );
 
     TCB_t * xIdleTask;
     TCB_t xTask = { 0 };
     int i;
+
+    pcIdleTaskName = "IDLE longXX";
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -939,7 +1152,80 @@ void test_prvCreateIdleTasks_name_too_long( void )
     /* Test Verifications */
     xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
     TEST_ASSERT_EQUAL_STRING( configIDLE_TASK_NAME, xIdleTask->pcTaskName );
+
+    /* Clean up idle task. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        vPortFreeStack( xIdleTaskHandles[ i ]->pxStack );
+        vPortFree( xIdleTaskHandles[ i ] );
+        xIdleTaskHandles[ i ] = NULL;
+    }
 }
+
+/**
+ * @brief This test ensures that when we call prvCreateIdleTasks with and idle
+ *        name that is longer than  configMAX_TASK_NAME_LEN the name is
+ *        truncated to configMAX_TASK_NAME_LEN
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * prvCreateIdleTasks();
+ *
+ * if( x < configMAX_TASK_NAME_LEN )
+ *
+ * @endcode
+ *
+ * configNMBER_OF_CORES > 1
+ */
+void test_coverage_prvCreateIdleTasks_name_too_long( void )
+{
+    BaseType_t prvCreateIdleTasks( void );
+
+    TCB_t xTask = { 0 };
+    TCB_t * xIdleTask;
+    int i;
+
+    pcIdleTaskName = "IDLE long name";
+
+    uxCurrentNumberOfTasks = 2;
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        pxCurrentTCBs[ i ] = &xTask;
+    }
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        /* prvInitialiseNewTask */
+        vListInitialiseItem_ExpectAnyArgs();
+        vListInitialiseItem_ExpectAnyArgs();
+        listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+        pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
+        vFakePortEnterCriticalSection_Expect();
+        listINSERT_END_ExpectAnyArgs();
+        portSetupTCB_CB_ExpectAnyArgs();
+        vFakePortGetCoreID_ExpectAndReturn( 0 );
+        vFakePortExitCriticalSection_Expect();
+    }
+
+    prvCreateIdleTasks();
+
+    xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
+
+    /* Test Verifications */
+    TEST_ASSERT_EQUAL_STRING_LEN( configIDLE_TASK_NAME,
+                                  xIdleTask->pcTaskName,
+                                  configMAX_TASK_NAME_LEN - 1 );
+
+    /* Clean up idle task. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        vPortFreeStack( xIdleTaskHandles[ i ]->pxStack );
+        vPortFree( xIdleTaskHandles[ i ] );
+        xIdleTaskHandles[ i ] = NULL;
+    }
+}
+
 
 /**
  * @brief This test ensures that if the scheduler is not running, and the
@@ -958,7 +1244,7 @@ void test_prvCreateIdleTasks_name_too_long( void )
  * INCLUDE_xTaskGetSchedulerState = 1
  * configUSE_TIMERS = 1
  */
-void test_xTaskGetSchedulerState_scheduler_not_running_and_suspended( void )
+void test_coverage_xTaskGetSchedulerState_scheduler_not_running_and_suspended( void )
 {
     BaseType_t xRet;
 
@@ -987,7 +1273,7 @@ void test_xTaskGetSchedulerState_scheduler_not_running_and_suspended( void )
  * configNMBER_OF_CORES > 1
  * configUSE_TASK_NOTIFICATIONS = 1
  */
-void test_ulTaskGenericNotifyTake( void )
+void test_coverage_ulTaskGenericNotifyTake( void )
 {
     uint32_t ulRet;
     TCB_t xTask = { 0 };
@@ -1068,7 +1354,7 @@ void test_ulTaskGenericNotifyTake( void )
  * configUSE_TASK_NOTIFICATIONS = 1
  */
 /* configUSE_TASK_NOTIFICATIONS  */
-void test_xTaskGenericNotifyWait( void )
+void test_coverage_xTaskGenericNotifyWait( void )
 {
     UBaseType_t uxIndexToWait = 1;
     uint32_t ulBitsToClearOnEntry = pdTRUE;

@@ -39,13 +39,25 @@
 * See https://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
-#define configASSERT_DEFINED                             1
-extern void vAssertCalled( void );
-#define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled()
+#define configASSERT_DEFINED    1
+
+extern void vAssertCalled( const char * pcFileName,
+                           int line );
+
+#define __NAME_ARG__    ( __builtin_strrchr( __BASE_FILE__, '/' ) ? __builtin_strrchr( __BASE_FILE__, '/' ) + 1 : __BASE_FILE__ )
+
+#define configASSERT( x )                            \
+    do {                                             \
+        if( ( x ) == 0 ) {                           \
+            vAssertCalled( __NAME_ARG__, __LINE__ ); \
+        }                                            \
+    } while( 0 )
+
+
 #define configQUEUE_REGISTRY_SIZE                        20
 
 #ifdef PICOLIBC_TLS
-#define configUSE_PICOLIBC_TLS                           1
+    #define configUSE_PICOLIBC_TLS                       1
 #endif
 
 #define configUSE_PREEMPTION                             1

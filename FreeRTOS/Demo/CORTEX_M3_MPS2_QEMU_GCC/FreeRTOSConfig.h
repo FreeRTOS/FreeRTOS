@@ -53,15 +53,16 @@ extern void vAssertCalled( const char * pcFileName,
         }                                            \
     } while( 0 )
 
-
-#define configQUEUE_REGISTRY_SIZE                        20
-
-#ifdef PICOLIBC_TLS
+#ifdef __PICOLIBC__
     #define configUSE_PICOLIBC_TLS                       1
-#endif
+#endif /* __PICOLIBC__ */
+
+#ifdef __NEWLIB__
+    #define configUSE_NEWLIB_REENTRANT                   1
+#endif /* __NEWLIB__ */
 
 #define configUSE_PREEMPTION                             1
-#define configUSE_TIME_SLICING                           0
+#define configUSE_TIME_SLICING                           1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION          0
 
 #define configUSE_IDLE_HOOK                              1
@@ -82,8 +83,10 @@ extern void vAssertCalled( const char * pcFileName,
 #define configUSE_COUNTING_SEMAPHORES                    1
 #define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configSUPPORT_STATIC_ALLOCATION                  1
-#define  configNUM_TX_DESCRIPTORS                        15
+#define configNUM_TX_DESCRIPTORS                         15
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    2
+#define configQUEUE_REGISTRY_SIZE                        20
+#define configUSE_QUEUE_SETS                             1
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */

@@ -798,3 +798,110 @@ void test_xMessageBufferReceiveFromISR_success( void )
 
     vStreamBufferDelete( xMessageBuffer );
 }
+
+/**
+ * @brief validate xMessageBufferGetStaticBuffers with a null xMessageBuffer argument
+ * @details Test that xMessageBufferGetStaticBuffers asserts when a null MessageBufferHandle_t is given.
+ */
+void test_xMessageBufferGetStaticBuffers_null_xMessageBuffer( void )
+{
+    uint8_t * pucMessageBufferStorageAreaRet = NULL;
+    StaticMessageBuffer_t * pxStaticMessageBuffer = NULL;
+
+    EXPECT_ASSERT_BREAK( xMessageBufferGetStaticBuffers( NULL, &pucMessageBufferStorageAreaRet, &pxStaticMessageBuffer ) );
+
+    validate_and_clear_assertions();
+
+    /* Check that pucMessageBufferStorageAreaRet and pxStaticMessageBuffer have not been modified */
+    TEST_ASSERT_EQUAL( NULL, pucMessageBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticMessageBuffer );
+}
+
+/**
+ * @brief validate xMessageBufferGetStaticBuffers with a null ppxStaticMessageBuffer argument
+ * @details Test that xMessageBufferGetStaticBuffers asserts when a null ppxStaticMessageBuffer is given.
+ */
+void test_xMessageBufferGetStaticBuffers_null_ppxStaticMessageBuffer( void )
+{
+    MessageBufferHandle_t xMessageBuffer = NULL;
+    StaticMessageBuffer_t messageBufferStruct;
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+
+    uint8_t * pucMessageBufferStorageAreaRet = NULL;
+
+    xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, &messageBufferStruct );
+
+    EXPECT_ASSERT_BREAK( xMessageBufferGetStaticBuffers( xMessageBuffer, &pucMessageBufferStorageAreaRet, NULL ) );
+
+    validate_and_clear_assertions();
+
+    /* Check that pucMessageBufferStorageAreaRet has not been modified */
+    TEST_ASSERT_EQUAL( NULL, pucMessageBufferStorageAreaRet );
+
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief validate xMessageBufferGetStaticBuffers with a null ppucMessageBufferStorageArea argument
+ * @details Test that xMessageBufferGetStaticBuffers asserts when a null ppucMessageBufferStorageArea is given.
+ */
+void test_xMessageBufferGetStaticBuffers_null_ppucMessageBufferStorageArea( void )
+{
+    MessageBufferHandle_t xMessageBuffer = NULL;
+    StaticMessageBuffer_t messageBufferStruct;
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+
+    StaticMessageBuffer_t * pxStaticMessageBuffer = NULL;
+
+    xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, &messageBufferStruct );
+
+    EXPECT_ASSERT_BREAK( xMessageBufferGetStaticBuffers( xMessageBuffer, NULL, &pxStaticMessageBuffer ) );
+
+    validate_and_clear_assertions();
+
+    /* Check that pxStaticMessageBuffer has not been modified */
+    TEST_ASSERT_EQUAL( NULL, pxStaticMessageBuffer );
+
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief validate xMessageBufferGetStaticBuffers on a statically created message buffer
+ * @details Test xMessageBufferGetStaticBuffers returns the buffers of a statically created message buffer
+ */
+void test_xMessageBufferGetStaticBuffers_static( void )
+{
+    MessageBufferHandle_t xMessageBuffer = NULL;
+    StaticMessageBuffer_t messageBufferStruct;
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+
+    uint8_t * pucMessageBufferStorageAreaRet = NULL;
+    StaticMessageBuffer_t * pxStaticMessageBuffer = NULL;
+
+    xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, &messageBufferStruct );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xMessageBufferGetStaticBuffers( xMessageBuffer, &pucMessageBufferStorageAreaRet, &pxStaticMessageBuffer ) );
+    TEST_ASSERT_EQUAL( messageBufferArray, pucMessageBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( &messageBufferStruct, pxStaticMessageBuffer );
+
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief validate xMessageBufferGetStaticBuffers on a dynamically created message buffer
+ * @details Test xMessageBufferGetStaticBuffers returns an error when called on a dynamically created message buffer
+ */
+void test_xMessageBufferGetStaticBuffers_dynamic( void )
+{
+    MessageBufferHandle_t xMessageBuffer = NULL;
+    uint8_t * pucMessageBufferStorageAreaRet = NULL;
+    StaticMessageBuffer_t * pxStaticMessageBuffer = NULL;
+
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xMessageBufferGetStaticBuffers( xMessageBuffer, &pucMessageBufferStorageAreaRet, &pxStaticMessageBuffer ) );
+    TEST_ASSERT_EQUAL( NULL, pucMessageBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticMessageBuffer );
+
+    vMessageBufferDelete( xMessageBuffer );
+}

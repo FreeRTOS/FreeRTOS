@@ -1455,3 +1455,115 @@ void test_xStreamBufferSend_WrapOver( void )
 
     vStreamBufferDelete( xStreamBuffer );
 }
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers with a null xStreamBuffer argument
+ * @details Test that xStreamBufferGetStaticBuffers asserts when a null StreamBufferHandle_t is given.
+ */
+void test_xStreamBufferGetStaticBuffers_null_xStreamBuffer( void )
+{
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    EXPECT_ASSERT_BREAK( xStreamBufferGetStaticBuffers( NULL, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+
+    validate_and_clear_assertions();
+
+    /* Assert that pucStreamBufferStorageAreaRet and pxStaticStreamBufferRet were not modified */
+    TEST_ASSERT_EQUAL( NULL, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticStreamBufferRet );
+}
+
+/**
+ * @brief Test xStreamBufferGetStaticBuffers with a null ppxStaticStreamBuffer argument
+ * @details Test that xStreamBufferGetStaticBuffers asserts when a null ppxStaticStreamBuffer is given.
+ */
+void test_xStreamBufferGetStaticBuffers_null_ppxStaticStreamBuffer( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    StaticStreamBuffer_t streamBufferStruct;
+
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
+
+    EXPECT_ASSERT_BREAK( xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, NULL ) );
+
+    validate_and_clear_assertions();
+
+    /* Assert that pucStreamBufferStorageAreaRet was not modified */
+    TEST_ASSERT_EQUAL( NULL, pucStreamBufferStorageAreaRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief Test xStreamBufferGetStaticBuffers with a null ppucStreamBufferStorageArea argument
+ * @details Test that xStreamBufferGetStaticBuffers asserts when a null ppucStreamBufferStorageArea is given.
+ */
+void test_xStreamBufferGetStaticBuffers_null_ppucStreamBufferStorageArea( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    StaticStreamBuffer_t streamBufferStruct;
+
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
+
+    EXPECT_ASSERT_BREAK( xStreamBufferGetStaticBuffers( xStreamBuffer, NULL, &pxStaticStreamBufferRet ) );
+
+    validate_and_clear_assertions();
+
+    /* Assert that pxStaticStreamBufferRet was not modified */
+    TEST_ASSERT_EQUAL( NULL, pxStaticStreamBufferRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers on a statically created stream buffer
+ * @details Test xStreamBufferGetStaticBuffers returns the buffers of a statically created stream buffer
+ */
+void test_xStreamBufferGetStaticBuffers_static( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    StaticStreamBuffer_t streamBufferStruct;
+
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+    TEST_ASSERT_EQUAL( streamBufferArray, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( &streamBufferStruct, pxStaticStreamBufferRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers on a dynamically created stream buffer
+ * @details Test xStreamBufferGetStaticBuffers returns an error when called on a dynamically created stream buffer
+ */
+void test_xStreamBufferGetStaticBuffers_dynamic( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_EQUAL( NULL, xStreamBuffer );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticStreamBufferRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}

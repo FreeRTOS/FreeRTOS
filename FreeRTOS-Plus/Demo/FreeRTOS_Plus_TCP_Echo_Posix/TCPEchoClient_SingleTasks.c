@@ -102,7 +102,7 @@
                 cRxBuffers[ echoNUM_ECHO_CLIENTS ][ echoBUFFER_SIZES ];
 
     static StaticTask_t echoServerTaskBuffer;
-    static StackType_t echoServerTaskStack[ PTHREAD_STACK_MIN ];
+    static StackType_t echoServerTaskStack[ PTHREAD_STACK_MIN * 2 ];
 
 /*-----------------------------------------------------------*/
 

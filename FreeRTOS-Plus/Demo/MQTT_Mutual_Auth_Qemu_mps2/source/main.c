@@ -55,6 +55,9 @@ int main ()
 
     vTaskStartScheduler();
 
+    // The code should never reach here.
+    configASSERT( 0 );
+
     for ( ;; ) {}
 
     return 0;
@@ -111,7 +114,7 @@ void vAssertCalled( void )
     volatile unsigned long looping = 0;
     taskENTER_CRITICAL();
     {
-        /* Use the debugger to set ul to a non-zero value in order to step out
+        /* Use the debugger to set looping to a non-zero value in order to step out
                 of this function to determine why it was called. */
         while( looping == 0LU )
         {

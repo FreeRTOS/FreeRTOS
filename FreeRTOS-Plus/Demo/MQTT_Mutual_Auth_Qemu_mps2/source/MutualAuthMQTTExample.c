@@ -634,7 +634,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         #else
             pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
         #endif
-        pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
+        pxNetworkCredentials->pAlpnProtos[ 0 ] = pcAlpnProtocols[ 0 ];
     #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
 
     pxNetworkCredentials->disableSni = democonfigDISABLE_SNI;

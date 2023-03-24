@@ -934,7 +934,7 @@ void show_single_addressinfo( const char * pcFormat,
         {
             struct freertos_sockaddr * sockaddr6 = ( ( struct freertos_sockaddr * ) pxAddress->ai_addr );
 
-            pucAddress = ( const uint8_t * ) &( sockaddr6->sin_addr6 );
+            pucAddress = ( const uint8_t * ) &( sockaddr6->sin_address.xIP_IPv6 );
         }
         else
     #endif /* ( ipconfigUSE_IPv6 != 0 ) */

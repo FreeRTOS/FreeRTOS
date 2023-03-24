@@ -590,7 +590,7 @@ static void prvNTPTask( void * pvParameters )
                 prvNTPPacketInit();
                 uxSendTime = xTaskGetTickCount();
                 #if ( ipconfigUSE_IPv6 != 0 )
-                    if( memcmp( xIPAddressFound.sin_address.xIP_IPv6.ucBytes, in6addr_any.ucBytes, ipSIZE_OF_IPv6_ADDRESS ) != 0 )
+                    if( memcmp( xIPAddressFound.sin_address.xIP_IPv6.ucBytes, FreeRTOS_in6addr_any.ucBytes, ipSIZE_OF_IPv6_ADDRESS ) != 0 )
                     {
                         FreeRTOS_printf( ( "Sending UDP message to %pip:%u\n",
                                            xIPAddressFound.sin_address.xIP_IPv6.ucBytes,

@@ -218,7 +218,7 @@ void vStartNTPTask( uint16_t usTaskStackSize,
                 BaseType_t xReceiveTimeOut = pdMS_TO_TICKS( 5000 );
             #endif
 
-            xAddress.sin_addr = 0ul;
+            xAddress.sin_address.ulIP_IPv4 = 0ul;
             xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
 
             FreeRTOS_bind( xUDPSocket, &xAddress, sizeof( xAddress ) );
@@ -259,7 +259,7 @@ void vStartNTPTask( uint16_t usTaskStackSize,
                 uint32_t ulIPAddress;
 
                 /* The DNS lookup has a result, or it has reached the time-out. */
-                ulIPAddress = pxAddress->ai_addr->sin_addr;
+                ulIPAddress = pxAddress->ai_addr->sin_address.ulIP_IPv4;
                 FreeRTOS_inet_ntoa( ulIPAddress, pcBuf );
                 FreeRTOS_printf( ( "vDNS_callback: IP address of %s found: %s\n", pcName, pcBuf ) );
 
@@ -605,7 +605,7 @@ static void prvNTPTask( void * pvParameters )
                     else
                 #endif /* ( ipconfigUSE_IPv6 != 0 ) */
                 {
-                    xAddress.sin_addr = ulIPAddressFound;
+                    xAddress.sin_address.ulIP_IPv4 = ulIPAddressFound;
                     xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
 
                     FreeRTOS_printf( ( "Sending UDP message to %lxip:%u\n",

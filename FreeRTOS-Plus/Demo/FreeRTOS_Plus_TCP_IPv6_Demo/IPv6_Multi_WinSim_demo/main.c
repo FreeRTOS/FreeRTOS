@@ -939,7 +939,7 @@ void show_single_addressinfo( const char * pcFormat,
         else
     #endif /* ( ipconfigUSE_IPv6 != 0 ) */
     {
-        pucAddress = ( const uint8_t * ) &( pxAddress->ai_addr->sin_addr );
+        pucAddress = ( const uint8_t * ) &( pxAddress->ai_addr->sin_address.ulIP_IPv4 );
     }
 
     ( void ) FreeRTOS_inet_ntop( pxAddress->ai_family, ( const void * ) pucAddress, cBuffer, sizeof( cBuffer ) );

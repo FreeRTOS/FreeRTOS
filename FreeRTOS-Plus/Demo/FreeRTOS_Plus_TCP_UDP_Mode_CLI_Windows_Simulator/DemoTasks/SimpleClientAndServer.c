@@ -221,14 +221,20 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 	port on the same IP address. */
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+	/* This test sends to itself, so data sent from here is received by a server
+	socket on the same IP address.  Setup the freertos_sockaddr structure with
+	this nodes IP address, and the port number being sent to.  The strange
+	casting is to try and remove compiler warnings on 32 bit machines. */
+	xDestinationAddress.sin_address.ulIP_IPv4 = ulIPAddress;
 #else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
-#endif
 	/* This test sends to itself, so data sent from here is received by a server
 	socket on the same IP address.  Setup the freertos_sockaddr structure with
 	this nodes IP address, and the port number being sent to.  The strange
 	casting is to try and remove compiler warnings on 32 bit machines. */
 	xDestinationAddress.sin_addr = ulIPAddress;
+#endif
+
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
 

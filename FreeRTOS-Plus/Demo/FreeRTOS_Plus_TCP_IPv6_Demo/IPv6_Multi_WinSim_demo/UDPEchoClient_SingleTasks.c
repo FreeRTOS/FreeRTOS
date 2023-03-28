@@ -140,7 +140,7 @@ static void prvUDPEchoClientTask(void* pvParameters)
         }
         else
         {
-            rc = FreeRTOS_inet_pton(FREERTOS_AF_INET4, configECHO_SERVER_ADDR_STRING, (void*)xEchoServerAddress.sin_address.xIP_IPv6.ucBytes);
+            rc = FreeRTOS_inet_pton(FREERTOS_AF_INET4, configECHO_SERVER_ADDR_STRING, (void*) &(xEchoServerAddress.sin_address.ulIP_IPv4));
             configASSERT(rc == pdPASS);
             xFamily = FREERTOS_AF_INET4;
             ucIPType = ipTYPE_IPv4;

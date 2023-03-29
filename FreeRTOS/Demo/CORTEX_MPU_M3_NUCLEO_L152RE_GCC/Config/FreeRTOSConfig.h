@@ -153,6 +153,9 @@ header file. */
 /* Ensure that system calls can only be made from kernel code. */
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY		1
 
+/* Do not allow critical sections from unprivileged tasks. */
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS	0
+
 #ifdef __cplusplus
 }
 #endif

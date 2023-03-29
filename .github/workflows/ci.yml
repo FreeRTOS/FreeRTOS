@@ -82,7 +82,7 @@ jobs:
           # List of directories containing libraries whose doxygen output will be generated.
           libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols,FreeRTOS-Plus/Source/Utilities
           generate_zip: true
-          doxygen_link: "https://sourceforge.net/projects/doxygen/files/rel-1.9.2/doxygen-1.9.2.linux.bin.tar.gz"
+          doxygen_link: "https://sourceforge.net/projects/doxygen/files/rel-1.9.6/doxygen-1.9.6.linux.bin.tar.gz"
           doxygen_dependencies: libclang-9-dev libclang-cpp9 graphviz
       - name: Upload doxygen artifact if main branch
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )

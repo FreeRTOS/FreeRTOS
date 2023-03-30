@@ -536,7 +536,7 @@ uint32_t ulAddress;
 			FreeRTOS_GetEndPointConfiguration( &ulAddress, NULL, NULL, NULL, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( &ulAddress, NULL, NULL, NULL );
-		#endif
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 			sprintf( ( char * ) pcWriteBuffer, "\r\nIP address " );
 			xReturn = pdTRUE;
 			xIndex++;
@@ -547,7 +547,7 @@ uint32_t ulAddress;
 			FreeRTOS_GetEndPointConfiguration( NULL, &ulAddress, NULL, NULL, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( NULL, &ulAddress, NULL, NULL );
-		#endif
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 			sprintf( ( char * ) pcWriteBuffer, "\r\nNet mask " );
 			xReturn = pdTRUE;
 			xIndex++;
@@ -558,7 +558,7 @@ uint32_t ulAddress;
 			FreeRTOS_GetEndPointConfiguration( NULL, NULL, &ulAddress, NULL, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, &ulAddress, NULL );
-		#endif
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 			sprintf( ( char * ) pcWriteBuffer, "\r\nGateway address " );
 			xReturn = pdTRUE;
 			xIndex++;
@@ -569,7 +569,7 @@ uint32_t ulAddress;
 			FreeRTOS_GetEndPointConfiguration( NULL, NULL, NULL, &ulAddress, pxNetworkEndPoints );
 		#else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, NULL, &ulAddress );
-		#endif
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 			sprintf( ( char * ) pcWriteBuffer, "\r\nDNS server address " );
 			xReturn = pdTRUE;
 			xIndex++;

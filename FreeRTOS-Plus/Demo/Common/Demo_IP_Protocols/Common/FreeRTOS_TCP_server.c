@@ -93,11 +93,11 @@ SocketSet_t xSocketSet;
 					{
 						#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 						{
-							xAddress.sin_address.ulIP_IPv4 = FreeRTOS_GetIPAddress(); // Single NIC, currently not used
+							xAddress.sin_address.ulIP_IPv4 = FreeRTOS_GetIPAddress(); /* Single NIC, currently not used */
 						}
 						#else
 						{
-							xAddress.sin_addr = FreeRTOS_GetIPAddress(); // Single NIC, currently not used
+							xAddress.sin_addr = FreeRTOS_GetIPAddress(); /* Single NIC, currently not used */
 						} 
 						#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 						

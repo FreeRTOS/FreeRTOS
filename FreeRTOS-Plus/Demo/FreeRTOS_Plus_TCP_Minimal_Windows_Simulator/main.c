@@ -139,7 +139,7 @@ static UBaseType_t ulNextRand;
     /* It will have several end-points. */
     static NetworkEndPoint_t xEndPoints[ 4 ];
 
-#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 /*-----------------------------------------------------------*/
 
@@ -186,7 +186,7 @@ int main( void )
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
     FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
-#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );
@@ -225,7 +225,7 @@ void vApplicationIdleHook( void )
                                                    struct xNetworkEndPoint * pxEndPoint )
 #else
     void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
-#endif
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 {
     uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
     char cBuffer[ 16 ];
@@ -272,7 +272,7 @@ void vApplicationIdleHook( void )
         FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
     #else
         FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
-    #endif
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
         FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
 
@@ -351,7 +351,7 @@ static void prvMiscInitialisation( void )
                                                             const char * pcName )
     #else
         BaseType_t xApplicationDNSQueryHook( const char * pcName )
-    #endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
 

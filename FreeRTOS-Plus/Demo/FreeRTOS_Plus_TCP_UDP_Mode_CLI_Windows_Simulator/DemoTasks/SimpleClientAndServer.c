@@ -108,7 +108,7 @@ const portTickType x150ms = 150UL / portTICK_RATE_MS;
 	this nodes IP address, and the port number being sent to.  The strange
 	casting is to try and remove compiler warnings on 32 bit machines. */
 	xDestinationAddress.sin_addr = ulIPAddress;
-#endif
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 	
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
@@ -233,7 +233,7 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 	this nodes IP address, and the port number being sent to.  The strange
 	casting is to try and remove compiler warnings on 32 bit machines. */
 	xDestinationAddress.sin_addr = ulIPAddress;
-#endif
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
@@ -265,7 +265,7 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_Multi( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
 			#else
 			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
-			#endif
+			#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 			/* A buffer was successfully obtained.  Create the string that is
 			sent to the server.  First the string is filled with zeros as this will
@@ -341,7 +341,7 @@ Socket_t xListeningSocket;
 #else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
 	xBindAddress.sin_addr = ulIPAddress;
-#endif
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 	
 	xBindAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );

@@ -51,10 +51,10 @@ static void prvCheckTask( void * pvParameters );
 /*
  * Functions implemented in assembly.
  */
-extern void vRegTest1Asm( void ) __attribute__( ( naked ) );
-extern void vRegTest2Asm( void ) __attribute__( ( naked ) );
-extern void vRegTest3Asm( void ) __attribute__( ( naked ) );
-extern void vRegTest4Asm( void ) __attribute__( ( naked ) );
+extern void vRegTest1Asm( void );
+extern void vRegTest2Asm( void );
+extern void vRegTest3Asm( void );
+extern void vRegTest4Asm( void );
 /*-----------------------------------------------------------*/
 
 /*

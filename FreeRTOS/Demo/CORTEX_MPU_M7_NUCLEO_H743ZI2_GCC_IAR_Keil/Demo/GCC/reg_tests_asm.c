@@ -129,7 +129,7 @@ void vRegTest1Asm( void ) /* __attribute__( ( naked ) ) */
     " /* Verify that FPU registers contain correct values. */   \n"
     "    vmov.f32 s0, #1.5                                      \n" /* s0 = 1.5. */
     "    vcmp.f32 s1, s0                                        \n" /* Compare s0 and s1. */
-    "    vmrs     APSR_nzcv, FPSCR                              \n" /* Copy floating point flags (FPCSR flags) to ASPR flags - needed for next bne to work. */
+    "    vmrs     APSR_nzcv, FPSCR                              \n" /* Copy floating point flags (FPSCR flags) to ASPR flags - needed for next bne to work. */
     "    bne      reg1_error_loop                               \n"
     "    vmov.f32 s0, #2.5                                      \n"
     "    vcmp.f32 s2, s0                                        \n"

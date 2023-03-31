@@ -131,7 +131,7 @@ reg1_loop
     ;/* Verify that FPU registers contain correct values. */
     vmov.f32 s0, #1.5           ;/* s0 = 1.5. */
     vcmp.f32 s1, s0             ;/* Compare s0 and s1. */
-    vmrs     APSR_nzcv, FPSCR   ;/* Copy floating point flags (FPCSR flags) to ASPR flags - needed for next bne.w to work. */
+    vmrs     APSR_nzcv, FPSCR   ;/* Copy floating point flags (FPSCR flags) to ASPR flags - needed for next bne.w to work. */
     bne.w      reg1_error_loop
     vmov.f32 s0, #2.5
     vcmp.f32 s2, s0

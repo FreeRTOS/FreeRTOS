@@ -814,12 +814,12 @@ fopen
 forcestall
 fosc
 fp
-fpcsr
 fpe
 fpga
 fpidiv
 fprintf
 fpu
+fpscr
 fr
 framming
 france

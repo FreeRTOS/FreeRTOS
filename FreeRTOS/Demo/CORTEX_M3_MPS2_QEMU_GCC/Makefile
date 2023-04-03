@@ -66,19 +66,34 @@ endif
 
 DEFINES :=  -DQEMU_SOC_MPS2 -DHEAP3
 
-LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs --specs=rdimon.specs -lc -lrdimon
-LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
+LDFLAGS = -T ./scripts/mps2_m3.ld
 
-CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-error=implicit-function-declaration
+ifeq ($(PICOLIBC), 1)
+    LDFLAGS += -lc
+    CFLAGS += -specs=picolibc.specs --oslib=semihost -DPICOLIBC_INTEGER_PRINTF_SCANF -DPICOLIBC_TLS --include picolibc.h
+else
+    LDFLAGS += -lc -lrdimon
+    CFLAGS +=  -specs=nano.specs --specs=rdimon.specs --include newlib.h
+endif
+
+LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
+LDFLAGS += -Wl,--gc-sections
+
+CFLAGS += -nostartfiles
+CFLAGS += -mthumb
+CFLAGS += -mcpu=cortex-m3
+CFLAGS += -Wno-error=implicit-function-declaration
 CFLAGS += -Wno-builtin-declaration-mismatch -Werror
 CFLAGS += -Wall -Wextra
+CFLAGS += -ffunction-sections -fdata-sections
 
 ifeq ($(DEBUG), 1)
     CFLAGS += -ggdb3 -Og
 else
     CFLAGS += -O3
 endif
-    CFLAGS += -fstrict-aliasing -Wstrict-aliasing -Wno-error=address-of-packed-member
+
+CFLAGS += -fstrict-aliasing -Wstrict-aliasing -Wno-error=address-of-packed-member
 
 OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
@@ -88,7 +103,7 @@ CFLAGS += $(INCLUDE_DIRS)
 .PHONY: clean
 
 $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
-	$(CC) -ffunction-sections -fdata-sections $(CFLAGS) $(LDFLAGS) $+ -o $(@)
+	$(CC) $(CFLAGS) $(LDFLAGS) $+ -o $(@)
 
 %.d: %.c
 	@set -e; rm -f $@; \
@@ -105,4 +120,3 @@ ${BUILD_DIR}/%.o : %.c Makefile
 
 clean:
 	-rm -rf build
-

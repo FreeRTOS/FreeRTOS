@@ -282,18 +282,6 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\Demo\GCC\reg_tests_asm.c</PathWithFileName>
-      <FilenameWithoutPath>reg_tests_asm.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>2</GroupNumber>
-      <FileNumber>7</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
       <PathWithFileName>..\..\Demo\reg_tests.c</PathWithFileName>
       <FilenameWithoutPath>reg_tests.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -301,13 +289,25 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>8</FileNumber>
+      <FileNumber>7</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Demo\reg_tests.h</PathWithFileName>
       <FilenameWithoutPath>reg_tests.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>2</GroupNumber>
+      <FileNumber>8</FileNumber>
+      <FileType>2</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\Demo\RVDS\reg_tests_asm.s</PathWithFileName>
+      <FilenameWithoutPath>reg_tests_asm.s</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -398,20 +398,20 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\Source\portable\GCC\ARM_CM4_MPU\port.c</PathWithFileName>
-      <FilenameWithoutPath>port.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\Source\portable\Common\mpu_wrappers.c</PathWithFileName>
+      <FilenameWithoutPath>mpu_wrappers.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>3</GroupNumber>
       <FileNumber>16</FileNumber>
-      <FileType>5</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\Source\portable\GCC\ARM_CM4_MPU\portmacro.h</PathWithFileName>
-      <FilenameWithoutPath>portmacro.h</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\Source\portable\MemMang\heap_4.c</PathWithFileName>
+      <FilenameWithoutPath>heap_4.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -422,20 +422,20 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\Source\portable\Common\mpu_wrappers.c</PathWithFileName>
-      <FilenameWithoutPath>mpu_wrappers.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\Source\portable\RVDS\ARM_CM4_MPU\port.c</PathWithFileName>
+      <FilenameWithoutPath>port.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>3</GroupNumber>
       <FileNumber>18</FileNumber>
-      <FileType>1</FileType>
+      <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\Source\portable\MemMang\heap_4.c</PathWithFileName>
-      <FilenameWithoutPath>heap_4.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\Source\portable\RVDS\ARM_CM4_MPU\portmacro.h</PathWithFileName>
+      <FilenameWithoutPath>portmacro.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

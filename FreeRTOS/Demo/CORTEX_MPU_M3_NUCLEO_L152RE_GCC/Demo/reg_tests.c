@@ -112,14 +112,6 @@ TaskParameters_t xRegTest1TaskParameters =
     .xRegions        =    {
                             { 0, 0, 0 },
                             { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
                             { 0, 0, 0 }
                         }
 };
@@ -132,14 +124,6 @@ TaskParameters_t xRegTest2TaskParameters =
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTest2TaskStack,
     .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 }
@@ -156,14 +140,6 @@ TaskParameters_t xRegTest3TaskParameters =
     .xRegions        =    {
                             { 0, 0, 0 },
                             { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
                             { 0, 0, 0 }
                         }
 };
@@ -176,14 +152,6 @@ TaskParameters_t xRegTest4TaskParameters =
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTest4TaskStack,
     .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 }
@@ -199,14 +167,6 @@ TaskParameters_t xCheckTaskParameters =
     .uxPriority      = ( CHECK_TASK_PRIORITY | portPRIVILEGE_BIT ),
     .puxStackBuffer  = xCheckTaskStack,
     .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 }
@@ -352,21 +312,17 @@ static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
         ulLastRegTest4Value = ulRegTest4LoopCounter;
 
 
-        /* Toggle the green LED to give an indication of the system status.
+        /* Toggle the Green LED to give an indication of the system status.
          * If the LED toggles every NO_ERROR_CHECK_TASK_PERIOD milliseconds
          * then everything is ok. A faster toggle indicates an error. */
-        HAL_GPIO_TogglePin( LD1_GPIO_Port, LD1_Pin );
+        HAL_GPIO_TogglePin( LD2_GPIO_Port, LD2_Pin );
 
         if( ulErrorFound != pdFALSE )
         {
             /* An error has been detected in one of the tasks - flash the LED
              * at a higher frequency to give visible feedback that something has
-             * gone wrong (it might just be that the loop back connector required
-             * by the comtest tasks has not been fitted). */
+             * gone wrong. */
             xDelayPeriod = ERROR_CHECK_TASK_PERIOD;
-
-            /* Turn on Red LED to indicate error. */
-            HAL_GPIO_WritePin( LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET );
 
             /* Increment error detection count. */
             ulCheckTaskLoops++;

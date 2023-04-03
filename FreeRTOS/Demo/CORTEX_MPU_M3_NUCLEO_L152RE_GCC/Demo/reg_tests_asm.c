@@ -102,8 +102,8 @@ void vRegTest1Asm( void ) /* __attribute__( ( naked ) ) */
     "                                                           \n"
     "    /* Yield to increase test coverage. */                 \n"
     "    movs r0, #0x01                                         \n"
-    "    ldr  r1, =0xe000ed04                                   \n" /* NVIC_ICSR */
-    "    lsls r0, #28                                           \n" /* Shift to PendSV bit */
+    "    ldr  r1, =0xe000ed04                                   \n" /* NVIC_ICSR. */
+    "    lsls r0, #28                                           \n" /* Shift to PendSV bit. */
     "    str  r0, [r1]                                          \n"
     "    dsb                                                    \n"
     "    pop  { r0, r1 }                                        \n"
@@ -257,8 +257,8 @@ void vRegTest3Asm( void ) /* __attribute__( ( naked ) ) */
     "                                                           \n"
     "    /* Yield to increase test coverage. */                 \n"
     "    movs r0, #0x01                                         \n"
-    "    ldr  r1, =0xe000ed04                                   \n" /* NVIC_ICSR */
-    "    lsls r0, #28                                           \n" /* Shift to PendSV bit */
+    "    ldr  r1, =0xe000ed04                                   \n" /* NVIC_ICSR. */
+    "    lsls r0, #28                                           \n" /* Shift to PendSV bit. */
     "    str  r0, [r1]                                          \n"
     "    dsb                                                    \n"
     "    pop  { r0, r1 }                                        \n"

@@ -65,6 +65,7 @@ ascii
 asf
 asm
 asn
+aspr
 ast
 async
 atmega
@@ -821,6 +822,7 @@ fpga
 fpidiv
 fprintf
 fpu
+fpscr
 fr
 framming
 france
@@ -1239,6 +1241,7 @@ lsb
 lserialputstring
 lsize
 lsl
+lsls
 lsr
 lstringlength
 ltd
@@ -3155,6 +3158,7 @@ vbuttonisrhandler
 vcellularconnecttask
 vcellulardemotask
 vclearemactxbuffer
+vcmp
 vconfiguretimerforruntimestats
 vcore
 vcreatesuicidaltask
@@ -3208,6 +3212,7 @@ vmaindeleteme
 vmainpoststopprocessing
 vmemchecktask
 vmov
+vmrs
 vodafone
 votademotask
 vpartestinitialise

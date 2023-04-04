@@ -106,7 +106,7 @@ BaseType_t FreeRTOS_CLIGenericRegisterCommand( const CLI_Command_Definition_t * 
 static CLI_Definition_List_Item_t *pxLastCommandInList = &xRegisteredCommands;
 BaseType_t xReturn = pdFAIL;
 
-	/* Check the command parameter is NULL */
+	/* Check the parameter is not NULL. */
 	configASSERT( pxCommandToRegister );
 
     if ( pxNewListItem == NULL )
@@ -122,12 +122,12 @@ BaseType_t xReturn = pdFAIL;
 		{
             /* Reference the command being registered from the newly created
 			list item. */
-		    pxNewListItem->pxCommandLineDefinition = pxCommandToRegister;
+			pxNewListItem->pxCommandLineDefinition = pxCommandToRegister;
 		    
-		    /* The new list item will get added to the end of the list, so
-		    pxNext has nowhere to point. */
-		    pxNewListItem->pxNext = NULL;
-            
+			/* The new list item will get added to the end of the list, so
+			pxNext has nowhere to point. */
+			pxNewListItem->pxNext = NULL;
+
 			/* Add the newly created list item to the end of the already existing
 			list. */
 			pxLastCommandInList->pxNext = pxNewListItem;

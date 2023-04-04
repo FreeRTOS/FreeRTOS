@@ -50,6 +50,14 @@ typedef struct xCOMMAND_LINE_INPUT
 	int8_t cExpectedNumberOfParameters;			/* Commands expect a fixed number of parameters, which may be zero. */
 } CLI_Command_Definition_t;
 
+/* The structure that defines a command line list entry. */
+typedef struct xCOMMAND_INPUT_LIST
+{
+	const CLI_Command_Definition_t *pxCommandLineDefinition;
+	struct xCOMMAND_INPUT_LIST *pxNext;
+} CLI_Definition_List_Item_t;
+
+
 /* For backward compatibility. */
 #define xCommandLineInput CLI_Command_Definition_t
 
@@ -59,7 +67,17 @@ typedef struct xCOMMAND_LINE_INPUT
  * handled by the command interpreter.  Once a command has been registered it
  * can be executed from the command line.
  */
-BaseType_t FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister );
+BaseType_t FreeRTOS_CLIGenericRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister, CLI_Definition_List_Item_t * pxNewListItem );
+
+#if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+    #define FreeRTOS_CLIRegisterCommand( pxCommandToRegister )                  \
+        FreeRTOS_CLIGenericRegisterCommand( pxCommandToRegister, NULL )
+#endif
+
+#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+    #define FreeRTOS_CLIRegisterCommandStatic( pxCommandToRegister, pxNewListItem ) \
+        FreeRTOS_CLIGenericRegisterCommand( pxCommandToRegister, pxNewListItem )
+#endif
 
 /*
  * Runs the command interpreter for the command string "pcCommandInput".  Any

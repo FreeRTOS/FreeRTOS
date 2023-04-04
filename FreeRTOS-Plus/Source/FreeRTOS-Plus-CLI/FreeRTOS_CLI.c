@@ -29,8 +29,8 @@
 #include <stdint.h>
 
 /* FreeRTOS includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+#include "../../../FreeRTOS/Source/include/FreeRTOS.h"
+#include "../../../FreeRTOS/Source/include/task.h"
 
 /* Utils includes. */
 #include "FreeRTOS_CLI.h"
@@ -45,11 +45,11 @@ one of the application files:
 	#define configAPPLICATION_PROVIDES_cOutputBuffer 0
 #endif
 
-typedef struct xCOMMAND_INPUT_LIST
-{
-	const CLI_Command_Definition_t *pxCommandLineDefinition;
-	struct xCOMMAND_INPUT_LIST *pxNext;
-} CLI_Definition_List_Item_t;
+/* If static memory allocation is used, then pvPortMalloc may not be defined.
+Simply return NULL, as if the malloc had failed */
+#ifndef pvPortMalloc
+	#define pvPortMalloc( x ) NULL
+#endif
 
 /*
  * The callback function that is executed when "help" is entered.  This is the
@@ -101,31 +101,33 @@ buffer needs to be placed at a fixed address (rather than by the linker). */
 
 /*-----------------------------------------------------------*/
 
-BaseType_t FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister )
+BaseType_t FreeRTOS_CLIGenericRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister, CLI_Definition_List_Item_t * pxNewListItem )
 {
 static CLI_Definition_List_Item_t *pxLastCommandInList = &xRegisteredCommands;
-CLI_Definition_List_Item_t *pxNewListItem;
 BaseType_t xReturn = pdFAIL;
 
-	/* Check the parameter is not NULL. */
+	/* Check the command parameter is NULL */
 	configASSERT( pxCommandToRegister );
 
-	/* Create a new list item that will reference the command being registered. */
-	pxNewListItem = ( CLI_Definition_List_Item_t * ) pvPortMalloc( sizeof( CLI_Definition_List_Item_t ) );
-	configASSERT( pxNewListItem );
-
+    if ( pxNewListItem == NULL )
+    {
+	    /* Create a new list item that will reference the command being registered. */
+	    pxNewListItem = ( CLI_Definition_List_Item_t * ) pvPortMalloc( sizeof( CLI_Definition_List_Item_t ) );
+	    configASSERT( pxNewListItem );
+    }
+    
 	if( pxNewListItem != NULL )
 	{
 		taskENTER_CRITICAL();
 		{
-			/* Reference the command being registered from the newly created
+            /* Reference the command being registered from the newly created
 			list item. */
-			pxNewListItem->pxCommandLineDefinition = pxCommandToRegister;
-
-			/* The new list item will get added to the end of the list, so
-			pxNext has nowhere to point. */
-			pxNewListItem->pxNext = NULL;
-
+		    pxNewListItem->pxCommandLineDefinition = pxCommandToRegister;
+		    
+		    /* The new list item will get added to the end of the list, so
+		    pxNext has nowhere to point. */
+		    pxNewListItem->pxNext = NULL;
+            
 			/* Add the newly created list item to the end of the already existing
 			list. */
 			pxLastCommandInList->pxNext = pxNewListItem;

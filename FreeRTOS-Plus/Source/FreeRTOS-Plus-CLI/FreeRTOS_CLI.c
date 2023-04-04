@@ -120,10 +120,10 @@ BaseType_t xReturn = pdFAIL;
 	{
 		taskENTER_CRITICAL();
 		{
-            /* Reference the command being registered from the newly created
+			/* Reference the command being registered from the newly created
 			list item. */
 			pxNewListItem->pxCommandLineDefinition = pxCommandToRegister;
-		    
+
 			/* The new list item will get added to the end of the list, so
 			pxNext has nowhere to point. */
 			pxNewListItem->pxNext = NULL;

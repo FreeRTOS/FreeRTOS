@@ -1,0 +1,17 @@
+{      
+    "version": "0.2.0",
+    "configurations": [      
+        {
+            "type": "gdb",
+            "request": "attach",
+            "name": "(gdb) Attach",
+            "gdbpath": "avr-gdb",
+            "executable": "rtosdemo.elf",
+            "target": ":1234",
+            "remote": true,
+            "printCalls": true,
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText"
+        }
+    ] 
+}

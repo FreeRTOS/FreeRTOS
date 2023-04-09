@@ -1,0 +1,37 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "make",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "Compile project"
+		},
+		{
+			"label": "Write flash",
+			"type": "shell",
+			"command": "make program",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "Compile project"
+		},
+		{
+			"label": "Start qemu without debug",
+			"type": "shell",
+			"command": "make simulator",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "Start qemu simulation without gdb server"
+		},
+		{
+			"label": "Start qemu with gdbserver",
+			"type": "shell",
+			"command": "make gdbserver",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "Starts gdbserver. Start it beffore attaching debugger"
+		}
+	]
+}

@@ -17,3 +17,9 @@ the WinAVR tools then the AVR_ATMega323_WinAVR directory contains the
 relevant makefile.  The makefile includes files from the Demo/ATMega323 
 and the Demo/Common directories.  If this is the only port you are 
 interested in then all the other directories can be ignored.
+
+Community Supported Demos
+Not all demos are maintained by the FreeRTOS team in the FreeRTOS/FreeRTOS repo.
+Community Supported Demos can be found here:
+https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos
+

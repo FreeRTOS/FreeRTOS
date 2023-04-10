@@ -29,6 +29,7 @@
 #define FREERTOS_CONFIG_H
 
 #include "fake_assert.h"
+#include "fake_infiniteloop.h"
 
 /*-----------------------------------------------------------
 * Application specific definitions.
@@ -59,6 +60,7 @@
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 )
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 12 )
+#define configIDLE_TASK_NAME                             "idle short"
 #define configUSE_TRACE_FACILITY                         1
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
@@ -79,7 +81,7 @@
 #define portREMOVE_STATIC_QUALIFIER                      1
 #define portCRITICAL_NESTING_IN_TCB                      1
 #define portSTACK_GROWTH                                 ( 1 )
-#define configUSE_MINIMAL_IDLE_HOOK                      0
+#define configUSE_MINIMAL_IDLE_HOOK                      1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1
@@ -92,8 +94,8 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS    0
-#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define configGENERATE_RUN_TIME_STATS             0
+#define portGET_RUN_TIME_COUNTER_VALUE()    ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           0
 #define configENABLE_MPU                          0
@@ -145,12 +147,12 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
         }                                             \
     } while( 0 )
 
-#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
-
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
     extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+#define INFINITE_LOOP    vFakeInfiniteLoop
 
 #endif /* FREERTOS_CONFIG_H */

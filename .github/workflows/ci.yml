@@ -26,11 +26,11 @@ jobs:
           git-secrets --scan
 
   formatting:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Install Uncrustify
-        run: sudo apt-get install uncrustify=0.69.0+dfsg1-1build1
+        run: sudo apt-get install uncrustify
       - name: Run Uncrustify
         run: |
           uncrustify --version

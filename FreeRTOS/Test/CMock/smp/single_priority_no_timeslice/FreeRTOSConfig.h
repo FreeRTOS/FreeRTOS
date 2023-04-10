@@ -80,6 +80,7 @@
 #define portCRITICAL_NESTING_IN_TCB                      1
 #define portSTACK_GROWTH                                 ( 1 )
 #define configUSE_MINIMAL_IDLE_HOOK                      0
+#define configUSE_TICKLESS_IDLE                          1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1
@@ -92,8 +93,8 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS    0
-#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define configGENERATE_RUN_TIME_STATS             0
+#define portGET_RUN_TIME_COUNTER_VALUE()    ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           0
 #define configENABLE_MPU                          0
@@ -144,8 +145,6 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
             vFakeAssert( false, __FILE__, __LINE__ ); \
         }                                             \
     } while( 0 )
-
-#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
 
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )

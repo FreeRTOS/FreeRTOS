@@ -73,18 +73,20 @@ void commonTearDown( void );
 /**
  * @brief Verify task current and run states
  */
-void verifySmpTask( TaskHandle_t * xTaskHandle, eTaskState eCurrentState, 
-                        TaskRunning_t xTaskRunState);
+void verifySmpTask( TaskHandle_t * xTaskHandle,
+                    eTaskState eCurrentState,
+                    TaskRunning_t xTaskRunState );
 
 /**
  * @brief Verify the Idle task is executing on a specific core
  */
-void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState);
+void verifyIdleTask( BaseType_t index,
+                     TaskRunning_t xTaskRunState );
 
 /**
  * @brief Dummy task for test execution
  */
-void vSmpTestTask( void *pvParameters );
+void vSmpTestTask( void * pvParameters );
 
 /**
  * @brief Helper function to simulate calling xTaskIncrementTick in critical section.
@@ -95,5 +97,22 @@ void xTaskIncrementTick_helper( void );
  * @brief Set the core ID returned by portGET_CORE_ID()
  */
 void vSetCurrentCore( BaseType_t xCoreID );
+
+/**
+ * @brief Helper function to create static test task.
+ */
+void vCreateStaticTestTask( TaskHandle_t xTaskHandle,
+                            UBaseType_t uxPriority,
+                            BaseType_t xTaskRunState,
+                            BaseType_t xTaskIsIdle );
+
+#if ( configUSE_CORE_AFFINITY == 1 )
+    void vCreateStaticTestTaskAffinity( TaskHandle_t xTaskHandle,
+                                        UBaseType_t uxCoreAffinityMask,
+                                        UBaseType_t uxPriority,
+                                        BaseType_t xTaskRunState,
+                                        BaseType_t xTaskIsIdle );
+#endif
+
 
 #endif /* SMP_UTEST_COMMON_H */

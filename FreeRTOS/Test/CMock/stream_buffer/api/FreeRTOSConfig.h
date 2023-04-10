@@ -128,8 +128,6 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
         }                                             \
     } while( 0 )
 
-#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
-
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
     extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );

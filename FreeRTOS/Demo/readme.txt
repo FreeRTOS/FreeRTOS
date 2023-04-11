@@ -23,3 +23,4 @@ Not all demos are maintained by the FreeRTOS team in the FreeRTOS/FreeRTOS repo.
 Community Supported Demos can be found here:
 https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos
 
+If you would like to contribute by adding a demo, please see this guide to get to know the prerequisites and to get information on how to structure the directories: https://github.com/FreeRTOS/FreeRTOS/blob/main/FreeRTOS/Demo/ThirdParty/Template/README.md

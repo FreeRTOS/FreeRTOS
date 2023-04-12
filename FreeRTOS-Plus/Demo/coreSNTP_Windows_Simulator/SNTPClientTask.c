@@ -733,7 +733,16 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
     struct freertos_sockaddr destinationAddress;
     int32_t bytesSent;
 
-    destinationAddress.sin_addr = FreeRTOS_htonl( serverAddr );
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    {
+        destinationAddress.sin_address.ulIP_IPv4 = FreeRTOS_htonl( serverAddr );
+    }
+    #else
+    {
+        destinationAddress.sin_addr = FreeRTOS_htonl( serverAddr );
+    }
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
     destinationAddress.sin_port = FreeRTOS_htons( serverPort );
 
     /* Send the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
@@ -787,15 +796,29 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 
     /* If data is received from the network, discard the data if  received from a different source than
      * the server. */
-    if( ( bytesReceived > 0 ) && ( ( FreeRTOS_ntohl( sourceAddress.sin_addr ) != serverAddr ) ||
-                                   ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        if( ( bytesReceived > 0 ) && ( ( FreeRTOS_ntohl( sourceAddress.sin_address.ulIP_IPv4 ) != serverAddr ) ||
+                                    ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
+    #else
+        if( ( bytesReceived > 0 ) && ( ( FreeRTOS_ntohl( sourceAddress.sin_addr ) != serverAddr ) ||
+                                    ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         bytesReceived = 0;
 
         #if defined( LIBRARY_LOG_LEVEL ) && ( LIBRARY_LOG_LEVEL != LOG_NONE )
             /* Convert the IP address of the sender's address to string for logging. */
             char stringAddr[ 16 ];
-            FreeRTOS_inet_ntoa( sourceAddress.sin_addr, stringAddr );
+
+            #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+            {
+                FreeRTOS_inet_ntoa( sourceAddress.sin_address.ulIP_IPv4, stringAddr );
+            }
+            #else
+            {
+                FreeRTOS_inet_ntoa( sourceAddress.sin_addr, stringAddr );
+            }
+            #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
             /* Log about reception of packet from unexpected sender. */
             LogWarn( ( "Received UDP packet from unexpected source: Addr=%s Port=%u",

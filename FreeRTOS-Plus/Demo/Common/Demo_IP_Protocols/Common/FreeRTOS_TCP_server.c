@@ -91,7 +91,16 @@ SocketSet_t xSocketSet;
 
 					if( xSocket != FREERTOS_INVALID_SOCKET )
 					{
-						xAddress.sin_addr = FreeRTOS_GetIPAddress(); // Single NIC, currently not used
+						#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+						{
+							xAddress.sin_address.ulIP_IPv4 = FreeRTOS_GetIPAddress(); /* Single NIC, currently not used */
+						}
+						#else
+						{
+							xAddress.sin_addr = FreeRTOS_GetIPAddress(); /* Single NIC, currently not used */
+						} 
+						#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+						
 						xAddress.sin_port = FreeRTOS_htons( xPortNumber );
 
 						FreeRTOS_bind( xSocket, &xAddress, sizeof( xAddress ) );
@@ -209,7 +218,15 @@ const char *pcType = "Unknown";
 	{
 	struct freertos_sockaddr xRemoteAddress;
 		FreeRTOS_GetRemoteAddress( pxClient->xSocket, &xRemoteAddress );
-		FreeRTOS_printf( ( "TPC-server: new %s client %xip\n", pcType, (unsigned)FreeRTOS_ntohl( xRemoteAddress.sin_addr ) ) );
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+		{
+			FreeRTOS_printf( ( "TPC-server: new %s client %xip\n", pcType, (unsigned)FreeRTOS_ntohl( xRemoteAddress.sin_address.ulIP_IPv4 ) ) );
+		}
+		#else
+		{	
+			FreeRTOS_printf( ( "TPC-server: new %s client %xip\n", pcType, (unsigned)FreeRTOS_ntohl( xRemoteAddress.sin_addr ) ) );
+		} 
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 	}
 
 	/* Remove compiler warnings in case FreeRTOS_printf() is not used. */

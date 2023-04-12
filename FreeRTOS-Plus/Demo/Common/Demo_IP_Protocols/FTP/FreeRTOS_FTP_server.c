@@ -585,8 +585,18 @@ BaseType_t xResult = 0;
 				FreeRTOS_GetLocalAddress( pxClient->xTransferSocket, &xLocalAddress );
 				FreeRTOS_GetRemoteAddress( pxClient->xSocket, &xRemoteAddress );
 
-				ulIP = FreeRTOS_ntohl( xLocalAddress.sin_addr );
-				pxClient->ulClientIP = FreeRTOS_ntohl( xRemoteAddress.sin_addr );
+				#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+				{
+					ulIP = FreeRTOS_ntohl( xLocalAddress.sin_address.ulIP_IPv4  );
+					pxClient->ulClientIP = FreeRTOS_ntohl( xRemoteAddress.sin_address.ulIP_IPv4  );
+				}
+				#else
+				{
+					ulIP = FreeRTOS_ntohl( xLocalAddress.sin_addr );
+					pxClient->ulClientIP = FreeRTOS_ntohl( xRemoteAddress.sin_addr );
+				}
+				#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+				
 				ulPort = FreeRTOS_ntohs( xLocalAddress.sin_port );
 
 				pxClient->usClientPort = FreeRTOS_ntohs( xRemoteAddress.sin_port );
@@ -852,7 +862,17 @@ BaseType_t xResult;
 	#if( ipconfigFTP_TX_BUFSIZE > 0 )
 		WinProperties_t xWinProps;
 	#endif
-		xAddress.sin_addr = FreeRTOS_GetIPAddress( );	/* Single NIC, currently not used */
+
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+		{
+			xAddress.sin_address.ulIP_IPv4  = FreeRTOS_GetIPAddress( );	/* Single NIC, currently not used */
+		}
+		#else
+		{
+			xAddress.sin_addr = FreeRTOS_GetIPAddress( );	/* Single NIC, currently not used */
+		}
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+		
 		xAddress.sin_port = FreeRTOS_htons( 0 );		/* Bind to any available port number */
 
 		BaseType_t xBindResult;
@@ -929,9 +949,19 @@ BaseType_t xResult;
 	}
 	else
 	{
-	struct freertos_sockaddr xAddress;
+		struct freertos_sockaddr xAddress;
 
-		xAddress.sin_addr = FreeRTOS_htonl( pxClient->ulClientIP );
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+		{
+			xAddress.sin_address.ulIP_IPv4 = FreeRTOS_htonl( pxClient->ulClientIP );
+		}
+		#else
+		{
+			xAddress.sin_addr = FreeRTOS_htonl( pxClient->ulClientIP );
+		}
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+		
 		xAddress.sin_port = FreeRTOS_htons( pxClient->usClientPort );
 		/* Start an active connection for this data socket */
 		xResult = FreeRTOS_connect( pxClient->xTransferSocket, &xAddress, sizeof( xAddress ) );

@@ -3184,3 +3184,121 @@ void test_task_yield_run_equal_priority_new_task( void )
     /* The new task TN+1 should runs on core 0. */
     verifySmpTask( &xTaskHandles[ i ], eRunning, 0 );
 }
+
+void test_task_priority_inherit_disinherit( void )
+{
+    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+
+    /* Create 1 high priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[ 0 ] );
+
+    /* Create N - 1 Medium priority task. */
+    for( i = 1; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[ i ] );
+    }
+
+    /* Create 1 low priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[ i ] );
+
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+
+    /* Assuming the low priority is helding a mutex. */
+    xTaskHandles[ configNUMBER_OF_CORES ]->uxMutexesHeld = 1;
+
+    /* Low priority task inherit current core task priority, which is the high priority task. */
+    taskENTER_CRITICAL();
+    {
+        xTaskPriorityInherit( xTaskHandles[ configNUMBER_OF_CORES ] );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify that the low priority task is running on last core. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, ( configNUMBER_OF_CORES - 1 ) );
+
+    /* Disinherit low priority task after timeout to it's original priority. */
+    taskENTER_CRITICAL();
+    {
+        xTaskPriorityDisinherit( xTaskHandles[ configNUMBER_OF_CORES ] );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify that the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+}
+
+void test_task_priority_inherit_disinherit_timeout( void )
+{
+    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+
+    /* Create 1 high priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[ 0 ] );
+
+    /* Create N - 1 Medium priority task. */
+    for( i = 1; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[ i ] );
+    }
+
+    /* Create 1 low priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[ i ] );
+
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+
+    /* Assuming the low priority is helding a mutex. */
+    xTaskHandles[ configNUMBER_OF_CORES ]->uxMutexesHeld = 1;
+
+    /* Low priority task inherit current core task priority, which is the high priority task. */
+    taskENTER_CRITICAL();
+    {
+        xTaskPriorityInherit( xTaskHandles[ configNUMBER_OF_CORES ] );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify that the low priority task is running on last core. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, ( configNUMBER_OF_CORES - 1 ) );
+
+    /* Disinherit low priority task after timeout to it's original priority. */
+    taskENTER_CRITICAL();
+    {
+        vTaskPriorityDisinheritAfterTimeout( xTaskHandles[ configNUMBER_OF_CORES ], 1 );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify that the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+}

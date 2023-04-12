@@ -108,12 +108,21 @@ const TickType_t x150ms = 150UL / portTICK_PERIOD_MS;
 	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
 #else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
-#endif
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 	/* This test sends to itself, so data sent from here is received by a server
 	socket on the same IP address.  Setup the freertos_sockaddr structure with
 	this nodes IP address, and the port number being sent to.  The strange
-	casting is to try and remove compiler warnings on 32 bit machines. */
-	xDestinationAddress.sin_addr = ulIPAddress;
+		casting is to try and remove compiler warnings on 32 bit machines. */
+	#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	{
+		xDestinationAddress.sin_address.ulIP_IPv4 = ulIPAddress;
+	}
+	#else
+	{
+		xDestinationAddress.sin_addr = ulIPAddress;
+	}
+	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+	
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
 
@@ -219,14 +228,20 @@ const size_t xStringLength = strlen( pcStringToSend ) + 15;
 	port on the same IP address. */
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+	/* This test sends to itself, so data sent from here is received by a server
+	socket on the same IP address.  Setup the freertos_sockaddr structure with
+	this nodes IP address, and the port number being sent to.  The strange
+	casting is to try and remove compiler warnings on 32 bit machines. */
+	xDestinationAddress.sin_address.ulIP_IPv4 = ulIPAddress;
 #else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
-#endif
 	/* This test sends to itself, so data sent from here is received by a server
 	socket on the same IP address.  Setup the freertos_sockaddr structure with
 	this nodes IP address, and the port number being sent to.  The strange
 	casting is to try and remove compiler warnings on 32 bit machines. */
 	xDestinationAddress.sin_addr = ulIPAddress;
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
 
@@ -257,7 +272,7 @@ const size_t xStringLength = strlen( pcStringToSend ) + 15;
 			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_Multi( xStringLength, portMAX_DELAY, ipTYPE_IPv4 ) ) == NULL );
 			#else
 			} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xStringLength, portMAX_DELAY ) ) == NULL );
-			#endif
+			#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 			/* A buffer was successfully obtained.  Create the string that is
 			sent to the server.  First the string is filled with zeros as this will
@@ -329,10 +344,12 @@ Socket_t xListeningSocket;
 	after the network is up, so the IP address is valid here. */
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 	FreeRTOS_GetEndPointConfiguration( &ulIPAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+	xBindAddress.sin_address.ulIP_IPv4 = ulIPAddress;
 #else
 	FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
-#endif
 	xBindAddress.sin_addr = ulIPAddress;
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+	
 	xBindAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );
 

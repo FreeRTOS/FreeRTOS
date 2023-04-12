@@ -515,10 +515,23 @@ static BaseType_t prvNonSecureConnectHelper( Socket_t xSocketLocal,
 
     /* Echo requests are sent to the echo server.  The echo server is
     * listening to tcptestECHO_PORT on this computer's IP address. */
-    pxHostAddress->sin_addr = FreeRTOS_inet_addr_quick( tcptestECHO_SERVER_ADDR0,
-                                                        tcptestECHO_SERVER_ADDR1,
-                                                        tcptestECHO_SERVER_ADDR2,
-                                                        tcptestECHO_SERVER_ADDR3 );
+
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    {
+        pxHostAddress->sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( tcptestECHO_SERVER_ADDR0,
+                                                            tcptestECHO_SERVER_ADDR1,
+                                                            tcptestECHO_SERVER_ADDR2,
+                                                            tcptestECHO_SERVER_ADDR3 );
+    }
+    #else
+    {
+        pxHostAddress->sin_addr = FreeRTOS_inet_addr_quick( tcptestECHO_SERVER_ADDR0,
+                                                            tcptestECHO_SERVER_ADDR1,
+                                                            tcptestECHO_SERVER_ADDR2,
+                                                            tcptestECHO_SERVER_ADDR3 );
+    }
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
     pxHostAddress->sin_port = FreeRTOS_htons( tcptestECHO_PORT );
     pxHostAddress->sin_len = sizeof( struct freertos_sockaddr );
     pxHostAddress->sin_family = FREERTOS_AF_INET;
@@ -1815,7 +1828,17 @@ static void prvFreeRTOS_connect_InvalidParams( void )
     /* Echo requests are sent to the echo server.  The echo server is
     * listening to tcptestECHO_PORT on this computer's IP address. */
     xEchoServerAddress.sin_port = FreeRTOS_htons( tcptestECHO_PORT );
-    xEchoServerAddress.sin_addr = ulEchoServerIP;
+
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    {
+        xEchoServerAddress.sin_address.ulIP_IPv4 = ulEchoServerIP;
+    }
+    #else
+    {
+        xEchoServerAddress.sin_addr = ulEchoServerIP;
+    }
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+    
 
     /* Invalid socket. */
     xResult = FreeRTOS_connect( FREERTOS_INVALID_SOCKET,
@@ -1833,7 +1856,16 @@ static void prvFreeRTOS_connect_InvalidParams( void )
     xSocket = prvTcpSocketHelper( &xSocketOpen );
     TEST_ASSERT_NOT_EQUAL_MESSAGE( FREERTOS_INVALID_SOCKET, xSocket, "Socket creation failed" );
 
-    xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( 0, 0, 0, 0 );
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    {
+        xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( 0, 0, 0, 0 );
+    }
+    #else
+    {
+        xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( 0, 0, 0, 0 );
+    }
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+    
     xResult = FreeRTOS_connect( xSocket,
                                &xEchoServerAddress,
                                sizeof( xEchoServerAddress ) );
@@ -1850,7 +1882,17 @@ static void prvFreeRTOS_connect_InvalidParams( void )
     TEST_ASSERT_NOT_EQUAL_MESSAGE( FREERTOS_INVALID_SOCKET, xSocket, "Socket creation failed" );
 
     xEchoServerAddress.sin_port = FreeRTOS_htons( 0 );
-    xEchoServerAddress.sin_addr = ulEchoServerIP;
+
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    {
+        xEchoServerAddress.sin_address.ulIP_IPv4 = ulEchoServerIP;
+    }
+    #else
+    {
+        xEchoServerAddress.sin_addr = ulEchoServerIP;
+    }
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+    
     xResult = FreeRTOS_connect( xSocket,
                                &xEchoServerAddress,
                                sizeof( xEchoServerAddress ) );

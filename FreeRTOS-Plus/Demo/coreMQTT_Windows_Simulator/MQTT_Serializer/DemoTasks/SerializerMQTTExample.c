@@ -604,7 +604,16 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
         if( ulBrokerIPAddress != 0 )
         {
             xBrokerAddress.sin_port = FreeRTOS_htons( democonfigMQTT_BROKER_PORT );
-            xBrokerAddress.sin_addr = ulBrokerIPAddress;
+
+            #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+            {
+                xBrokerAddress.sin_address.ulIP_IPv4 = ulBrokerIPAddress;
+            }
+            #else
+            {
+                xBrokerAddress.sin_addr = ulBrokerIPAddress;
+            }
+            #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
             if( FreeRTOS_connect( xMQTTSocket, &xBrokerAddress, sizeof( xBrokerAddress ) ) == 0 )
             {

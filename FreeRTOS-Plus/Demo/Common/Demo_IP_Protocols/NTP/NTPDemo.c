@@ -149,7 +149,16 @@ void vStartNTPTask( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority )
 			BaseType_t xReceiveTimeOut = pdMS_TO_TICKS( 5000 );
 		#endif
 
-			xAddress.sin_addr = 0ul;
+			#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+			{
+				xAddress.sin_address.ulIP_IPv4 = 0ul;
+			}
+			#else
+			{
+				xAddress.sin_addr = 0ul;
+			}
+			#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
 			xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
 
 			FreeRTOS_bind( xUDPSocket, &xAddress, sizeof( xAddress ) );
@@ -386,10 +395,21 @@ struct freertos_sockaddr xAddress;
 			char pcBuf[16];
 
 				prvNTPPacketInit( );
-				xAddress.sin_addr = ulIPAddressFound;
-				xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
 
-				FreeRTOS_inet_ntoa( xAddress.sin_addr, pcBuf );
+				#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+				{
+					xAddress.sin_address.ulIP_IPv4 = ulIPAddressFound;
+					xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
+					FreeRTOS_inet_ntoa( xAddress.sin_address.ulIP_IPv4, pcBuf );
+				}
+				#else
+				{
+					xAddress.sin_addr = ulIPAddressFound;
+					xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
+					FreeRTOS_inet_ntoa( xAddress.sin_addr, pcBuf );
+				}
+				#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+				
 				FreeRTOS_printf( ( "Sending UDP message to %s:%u\n",
 					pcBuf,
 					FreeRTOS_ntohs( xAddress.sin_port ) ) );

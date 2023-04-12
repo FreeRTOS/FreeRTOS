@@ -215,7 +215,7 @@
             }
         #else  /* ifdef configECHO_SERVER_ADDR_STRING */
             {
-                xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
+                xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
             }
         #endif /* ifdef configECHO_SERVER_ADDR_STRING */
 

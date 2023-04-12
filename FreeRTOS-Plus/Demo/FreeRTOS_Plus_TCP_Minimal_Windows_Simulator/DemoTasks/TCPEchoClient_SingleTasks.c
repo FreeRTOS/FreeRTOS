@@ -153,7 +153,16 @@ TickType_t xTimeOnEntering;
 	server is configured by the constants configECHO_SERVER_ADDR0 to
 	configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 	xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
+
+	#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	{
+		xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
+	}
+	#else
+	{
+		xEchoServerAddress.sin_addr = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
+	}
+	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 	for( ;; )
 	{

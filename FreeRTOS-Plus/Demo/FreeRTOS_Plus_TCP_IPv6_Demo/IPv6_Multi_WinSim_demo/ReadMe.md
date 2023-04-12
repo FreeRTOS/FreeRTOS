@@ -97,7 +97,7 @@ an asynchronous DNS lookup, and “c” to clear all caches before starting the 
 ## Using the UDP Echo Client
 
 The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
-setting the `mainCREATE_UDP_ECHO_SERVER_TASK` macro to 1 in the main file.
+setting the `mainCREATE_UDP_ECHO_TASKS_SINGLE` macro to 1 in the main file.
 
 The UDP Echo Client creates a task and sends messages to the IP address and port
 defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address) 

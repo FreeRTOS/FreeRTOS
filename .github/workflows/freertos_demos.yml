@@ -71,6 +71,15 @@ jobs:
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: make -j
 
+      - name: Run and monitor Posic_GCC Demo
+        if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: ./build/posix_demo
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "OK: No errors - tick count 10000"
+
   MSP430-GCC:
     name: GNU MSP430 Toolchain
     runs-on: ubuntu-latest

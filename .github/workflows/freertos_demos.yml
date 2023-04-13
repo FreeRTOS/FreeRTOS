@@ -82,6 +82,7 @@ jobs:
           timeout-seconds: 300
           success-line: "OK: No errors - tick count 10000"
 
+
   MSP430-GCC:
     name: GNU MSP430 Toolchain
     runs-on: ubuntu-latest

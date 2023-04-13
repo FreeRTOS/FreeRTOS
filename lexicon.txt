@@ -2171,6 +2171,7 @@ pxcertificatebufferlength
 pxcertificatecontext
 pxcertificateidbufferlength
 pxclass
+pxclidefinitionlistitembuffer
 pxclient
 pxcommand
 pxcommandcontext

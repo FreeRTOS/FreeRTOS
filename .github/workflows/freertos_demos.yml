@@ -1,5 +1,7 @@
 name: FreeRTOS Demos
-on: pull_request
+on:
+  push:
+  pull_request:
 
 jobs:
   WIN32-MSVC:

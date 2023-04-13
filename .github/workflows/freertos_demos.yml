@@ -78,7 +78,7 @@ jobs:
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
           exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
-          log-dir: demo_run_logs
+          log-dir: FreeRTOS/Demo/Posix_GCC/build/demo_run_logs
           timeout-seconds: 300
           success-line: "OK: No errors - tick count 10000"
 

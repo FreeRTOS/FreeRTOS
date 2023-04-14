@@ -2328,7 +2328,7 @@ void test_task_block_all_cores_equal_priority_block_running( void )
 }
 
 /**
- * @brief AWS_IoT-FreeRTOS_SMP_TC-<TBD>
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-108
  * Task can inherit or disinherit other higher priority task. This test verify that
  * lower priority task will be selected to run when it inherit a higher priorirty task.
  * The lower priority will be switched out when it disinherits higher priority task.
@@ -2429,7 +2429,7 @@ void test_task_priority_inherit_disinherit( void )
 }
 
 /**
- * @brief AWS_IoT-FreeRTOS_SMP_TC-<TBD>
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-109
  * Task can inherit or disinherit other higher priority task. This test verify that
  * lower priority task will be selected to run when it inherit a higher priorirty task.
  * The lower priority will be switched out when it is disinherited by higher priority
@@ -2460,7 +2460,7 @@ void test_task_priority_inherit_disinherit( void )
  * Priority – 3       Priority – 2      Priority – 2    Priority – 3
  * State – Running    State – Ready     State – Ready   State – Running
  *
- * Task TN+1 is disinherited by Task T1 due to timeout
+ * Task TN+1 is disinherited by task T1 due to timeout
  *
  * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
  * Priority – 3       Priority – 2      Priority – 2    Priority – 1

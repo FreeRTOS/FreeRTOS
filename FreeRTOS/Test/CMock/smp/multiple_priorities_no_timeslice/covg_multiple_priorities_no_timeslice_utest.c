@@ -3900,6 +3900,103 @@ void test_coverage_xTaskPriorityInherit_task_uxpriority_greater( void )
 }
 
 /**
+ * @brief xTaskPriorityInherit - task is already running.
+ * A running task inherit a high priority task. Verify that the priority is raised.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *  ...
+ * if( taskTASK_IS_RUNNING( pxMutexHolderTCB ) != pdTRUE )
+ * {
+ *     prvYieldForTask( pxMutexHolderTCB );
+ * }
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxMutexHolderTCB ) != pdTRUE ) is false.
+ */
+void test_coverage_xTaskPriorityInherit_task_is_running( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    /* Create high priority task on core 1 ~ N-1. */
+    for( i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++ )
+    {
+        vCreateStaticTestTask( &xTaskTCBs[ i ],
+                               2,
+                               i,
+                               pdFALSE );
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 2 ];
+        listINSERT_END( &pxReadyTasksLists[ 2 ], &xTaskTCBs[ i ].xStateListItem );
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+    }
+
+    /* Create a low priority task on last core. */
+    vCreateStaticTestTask( &xTaskTCBs[ i ],
+                           1,
+                           i,
+                           pdFALSE );
+    xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 1 ];
+    listINSERT_END( &pxReadyTasksLists[ 1 ], &xTaskTCBs[ i ].xStateListItem );
+    pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+
+   /* API call. */
+    xTaskPriorityInherit( &xTaskTCBs[ ( configNUMBER_OF_CORES - 1 ) ] );
+
+    /* Validation. */
+    /* Verify the priority of the task is raised. */
+    TEST_ASSERT_EQUAL( 2, xTaskTCBs[ ( configNUMBER_OF_CORES - 1 ) ].uxPriority );
+}
+
+/**
+ * @brief xTaskPriorityInherit - task is of invalid running state.
+ * A running task inherit a high priority task. Verify that the priority is raised.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ *  ...
+ * if( taskTASK_IS_RUNNING( pxMutexHolderTCB ) != pdTRUE )
+ * {
+ *     prvYieldForTask( pxMutexHolderTCB );
+ * }
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxMutexHolderTCB ) != pdTRUE ) is true.
+ */
+void test_coverage_xTaskPriorityInherit_task_invalid_state( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    /* Create high priority task on core 1 ~ N-1. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        vCreateStaticTestTask( &xTaskTCBs[ i ],
+                               2,
+                               i,
+                               pdFALSE );
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 2 ];
+        listINSERT_END( &pxReadyTasksLists[ 2 ], &xTaskTCBs[ i ].xStateListItem );
+        pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
+    }
+
+    /* Create a low priority task on last core. */
+    vCreateStaticTestTask( &xTaskTCBs[ i ],
+                           1,
+                           configNUMBER_OF_CORES,
+                           pdFALSE );
+    xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 1 ];
+    listINSERT_END( &pxReadyTasksLists[ 1 ], &xTaskTCBs[ i ].xStateListItem );
+
+   /* API call. */
+    xTaskPriorityInherit( &xTaskTCBs[ configNUMBER_OF_CORES ] );
+
+    /* Validation. */
+    /* The task in pending ready list should not in any event list now. */
+    TEST_ASSERT_EQUAL( 2, xTaskTCBs[ configNUMBER_OF_CORES ].uxPriority );
+}
+
+/**
  * @brief xTaskPriorityDisinherit - restore priority after inheriting the priority of the mutex holder
  *
  * <b>Coverage</b>
@@ -4040,6 +4137,56 @@ void test_coverage_xTaskPriorityDisinherit_task_uxpriority_greater( void )
 }
 
 /**
+ * @brief xTaskPriorityDisinherit - task is of invalid running state.
+ * The task disinherits a high priority task. Verify that the priority of the disinherited
+ * task is dropped to base priority.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * ...
+ * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * {
+ *     prvYieldCore( pxTCB->xTaskRunState );
+ * }
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) is false.
+ */
+void test_coverage_xTaskPriorityDisinherit_task_invalid_state( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+
+    /* Setup the variables and structure. */
+    /* Create high priority task on core 1 ~ N-1. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        vCreateStaticTestTask( &xTaskTCBs[ i ],
+                               2,
+                               i,
+                               pdFALSE );
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 2 ];
+        listINSERT_END( &pxReadyTasksLists[ 2 ], &xTaskTCBs[ i ].xStateListItem );
+    }
+
+    /* Create a low priority task on last core. */
+    vCreateStaticTestTask( &xTaskTCBs[ i ],
+                           2,
+                           configNUMBER_OF_CORES,
+                           pdFALSE );
+    xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 2 ];
+    listINSERT_END( &pxReadyTasksLists[ 2 ], &xTaskTCBs[ i ].xStateListItem );
+    xTaskTCBs[ i ].uxMutexesHeld = 1;
+    xTaskTCBs[ i ].uxBasePriority = 1;
+
+    /* API call. */
+    xTaskPriorityDisinherit( &xTaskTCBs[ configNUMBER_OF_CORES ] );
+
+    /* Validation. */
+    /* The priority of the task is dropped to base priority. */
+    TEST_ASSERT_EQUAL( xTaskTCBs[ i ].uxBasePriority, xTaskTCBs[ configNUMBER_OF_CORES ].uxPriority );
+}
+
+/**
  * @brief xTaskPriorityDisinheritAfterTimeout - restore priority after inheriting the priority of the mutex holder
  *
  * <b>Coverage</b>
@@ -4171,6 +4318,57 @@ void test_coverage_xTaskPriorityDisinheritAfterTimeout_task_uxpriority_greater( 
     TEST_ASSERT_EQUAL( xTaskTCBs[ 1 ].xEventListItem.pvContainer, NULL );
     /* The task in pending ready list should be added back to ready list. */
     TEST_ASSERT_EQUAL( xTaskTCBs[ 1 ].xStateListItem.pvContainer, &pxReadyTasksLists[ xTaskTCBs[ 1 ].uxPriority ] );
+}
+
+/**
+ * @brief vTaskPriorityDisinheritAfterTimeout - task is of invalid running state.
+ * The task disinherit a high priority task due to high priority task timeout. Verify
+ * that the priority of the disinherited task is dropped to uxHighestPriorityWaitingTask.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * ...
+ * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+ * {
+ *     prvYieldCore( pxTCB->xTaskRunState );
+ * }
+ * @endcode
+ * ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) is false.
+ */
+void test_coverage_vTaskPriorityDisinheritAfterTimeout_task_invalid_state( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+    UBaseType_t uxHighestPriorityWaitingTask = 2;
+
+    /* Setup the variables and structure. */
+    /* Create high priority task on core 1 ~ N-1. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        vCreateStaticTestTask( &xTaskTCBs[ i ],
+                               3,
+                               i,
+                               pdFALSE );
+        xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 3 ];
+        listINSERT_END( &pxReadyTasksLists[ 3 ], &xTaskTCBs[ i ].xStateListItem );
+    }
+
+    /* Create a low priority task on last core. */
+    vCreateStaticTestTask( &xTaskTCBs[ i ],
+                           1,
+                           configNUMBER_OF_CORES,
+                           pdFALSE );
+    xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 1 ];
+    listINSERT_END( &pxReadyTasksLists[ 1 ], &xTaskTCBs[ i ].xStateListItem );
+    xTaskTCBs[ i ].uxMutexesHeld = 1;
+    xTaskTCBs[ i ].uxBasePriority = 1;
+
+   /* API call. */
+    vTaskPriorityDisinheritAfterTimeout( &xTaskTCBs[ configNUMBER_OF_CORES ], uxHighestPriorityWaitingTask );
+
+    /* Validation. */
+    /* The priority of the task is dropped to uxHighestPriorityWaitingTask. */
+    TEST_ASSERT_EQUAL( uxHighestPriorityWaitingTask, xTaskTCBs[ configNUMBER_OF_CORES ].uxPriority );
 }
 
 /**

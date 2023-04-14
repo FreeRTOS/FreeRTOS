@@ -80,7 +80,7 @@ jobs:
           exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
           log-dir: FreeRTOS/Demo/Posix_GCC/build/demo_run_logs
           timeout-seconds: 300
-          success-line: "OK: No errors"
+          success-line: "OK: No errors "
 
 
   MSP430-GCC:

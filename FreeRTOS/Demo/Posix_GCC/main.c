@@ -72,8 +72,8 @@
     #include <trcRecorder.h>
 #endif
 
-#define    BLINKY_DEMO    0
-#define    FULL_DEMO      1
+#define    BLINKY_DEMO    1
+#define    FULL_DEMO      0
 
 #ifdef BUILD_DIR
     #define BUILD         BUILD_DIR

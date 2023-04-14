@@ -1,13 +1,13 @@
 /*
 ** ###################################################################
 **     Version:             rev. 1.1, 2019-05-16
-**     Build:               b210318
+**     Build:               b220725
 **
 **     Abstract:
 **         Chip specific module features.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2021 NXP
+**     Copyright 2016-2022 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -61,6 +61,8 @@
 #define FSL_FEATURE_SOC_LPADC_COUNT (1)
 /* @brief MAILBOX availability on the SoC. */
 #define FSL_FEATURE_SOC_MAILBOX_COUNT (1)
+/* @brief MPU availability on the SoC. */
+#define FSL_FEATURE_SOC_MPU_COUNT (1)
 /* @brief MRT availability on the SoC. */
 #define FSL_FEATURE_SOC_MRT_COUNT (1)
 /* @brief OSTIMER availability on the SoC. */
@@ -138,6 +140,20 @@
 #define FSL_FEATURE_LPADC_HAS_CFG_CALOFS (0)
 /* @brief Has offset trim (register OFSTRIM). */
 #define FSL_FEATURE_LPADC_HAS_OFSTRIM (1)
+/* @brief Has Trigger status register. */
+#define FSL_FEATURE_LPADC_HAS_TSTAT (1)
+/* @brief Has power select (bitfield CFG[PWRSEL]). */
+#define FSL_FEATURE_LPADC_HAS_CFG_PWRSEL (1)
+/* @brief Has alternate channel B scale (bitfield CMDLn[ALTB_CSCALE]). */
+#define FSL_FEATURE_LPADC_HAS_CMDL_ALTB_CSCALE (0)
+/* @brief Has alternate channel B select enable (bitfield CMDLn[ALTBEN]). */
+#define FSL_FEATURE_LPADC_HAS_CMDL_ALTBEN (0)
+/* @brief Has alternate channel input (bitfield CMDLn[ALTB_ADCH]). */
+#define FSL_FEATURE_LPADC_HAS_CMDL_ALTB_ADCH (0)
+/* @brief Has offset calibration mode (bitfield CTRL[CALOFSMODE]). */
+#define FSL_FEATURE_LPADC_HAS_CTRL_CALOFSMODE (0)
+/* @brief Conversion averaged bitfiled width. */
+#define FSL_FEATURE_LPADC_CONVERSIONS_AVERAGED_BITFIELD_WIDTH (3)
 /* @brief Has internal temperature sensor. */
 #define FSL_FEATURE_LPADC_HAS_INTERNAL_TEMP_SENSOR (1)
 /* @brief Temperature sensor parameter A (slope). */
@@ -148,6 +164,15 @@
 #define FSL_FEATURE_LPADC_TEMP_PARAMETER_ALPHA (11.5f)
 /* @brief the buffer size of temperature sensor. */
 #define FSL_FEATURE_LPADC_TEMP_SENS_BUFFER_SIZE (4U)
+
+/* ANALOGCTRL module features */
+
+/* @brief Has PLL_USB_OUT_BIT_FIELD bitfile in XO32M_CTRL reigster. */
+#define FSL_FEATURE_ANACTRL_HAS_NO_ENABLE_PLL_USB_OUT_BIT_FIELD (1)
+/* @brief Has XO32M_ADC_CLK_MODE bitfile in DUMMY_CTRL reigster. */
+#define FSL_FEATURE_ANACTRL_HAS_XO32M_ADC_CLK_MODE_BIF_FIELD (0)
+/* @brief Has auxiliary bias(register AUX_BIAS). */
+#define FSL_FEATURE_ANACTRL_HAS_AUX_BIAS_REG (1)
 
 /* CASPER module features */
 
@@ -160,7 +185,18 @@
 
 /* CTIMER module features */
 
-/* No feature definitions */
+/* @brief CTIMER has no capture channel. */
+#define FSL_FEATURE_CTIMER_HAS_NO_INPUT_CAPTURE (0)
+/* @brief CTIMER has no capture 2 interrupt. */
+#define FSL_FEATURE_CTIMER_HAS_NO_IR_CR2INT (0)
+/* @brief CTIMER capture 3 interrupt. */
+#define FSL_FEATURE_CTIMER_HAS_IR_CR3INT (1)
+/* @brief Has CTIMER CCR_CAP2 (register bits CCR[CAP2RE][CAP2FE][CAP2I]. */
+#define FSL_FEATURE_CTIMER_HAS_NO_CCR_CAP2 (0)
+/* @brief Has CTIMER CCR_CAP3 (register bits CCR[CAP3RE][CAP3FE][CAP3I]). */
+#define FSL_FEATURE_CTIMER_HAS_CCR_CAP3 (1)
+/* @brief CTIMER Has register MSR */
+#define FSL_FEATURE_CTIMER_HAS_MSR (1)
 
 /* DMA module features */
 
@@ -241,6 +277,11 @@
 #define FSL_FEATURE_FLEXCOMM8_SPI_INDEX  (8)
 /* @brief I2S has DMIC interconnection */
 #define FSL_FEATURE_FLEXCOMM_INSTANCE_I2S_HAS_DMIC_INTERCONNECTIONn(x) (0)
+
+/* GINT module features */
+
+/* @brief The count of th port which are supported in GINT. */
+#define FSL_FEATURE_GINT_PORT_COUNT (2)
 
 /* HASHCRYPT module features */
 
@@ -334,6 +375,11 @@
 /* @brief Number of connected outputs */
 #define FSL_FEATURE_SECPINT_NUMBER_OF_CONNECTED_OUTPUTS (2)
 
+/* SPI module features */
+
+/* @brief SSEL pin count. */
+#define FSL_FEATURE_SPI_SSEL_COUNT (4)
+
 /* SYSCON module features */
 
 /* @brief Flash page size in bytes */
@@ -341,7 +387,7 @@
 /* @brief Flash sector size in bytes */
 #define FSL_FEATURE_SYSCON_FLASH_SECTOR_SIZE_BYTES (32768)
 /* @brief Flash size in bytes */
-#define FSL_FEATURE_SYSCON_FLASH_SIZE_BYTES (622592)
+#define FSL_FEATURE_SYSCON_FLASH_SIZE_BYTES (645120)
 /* @brief Has Power Down mode */
 #define FSL_FEATURE_SYSCON_HAS_POWERDOWN_MODE (1)
 /* @brief CCM_ANALOG availability on the SoC.  */

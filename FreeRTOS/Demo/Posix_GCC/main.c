@@ -72,8 +72,8 @@
     #include <trcRecorder.h>
 #endif
 
-#define    BLINKY_DEMO    1
-#define    FULL_DEMO      0
+#define    BLINKY_DEMO    0
+#define    FULL_DEMO      1
 
 #ifdef BUILD_DIR
     #define BUILD         BUILD_DIR
@@ -85,7 +85,7 @@
 #ifdef USER_DEMO
     #define     mainSELECTED_APPLICATION    USER_DEMO
 #else /* Default Setting */
-    #define    mainSELECTED_APPLICATION     FULL_DEMO
+    #define    mainSELECTED_APPLICATION     BLINKY_DEMO
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */

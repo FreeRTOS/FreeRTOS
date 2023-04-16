@@ -1,12 +1,36 @@
+/*
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
 #include "FreeRTOS.h"
 #include "task.h"
-#include "croutine.h"
 
 #include "PollQ.h"
 #include "integer.h"
 #include "serial.h"
 #include "comtest.h"
-#include "crflash.h"
 #include "partest.h"
 #include "regtest.h"
 
@@ -36,9 +60,6 @@ again. */
 the demo application is not unexpectedly resetting. */
 #define mainRESET_COUNT_ADDRESS     ( 0x1400 )
 
-/* The number of coroutines to create. */
-#define mainNUM_FLASH_COROUTINES    ( 3 )
-
 /*
  * The task function for the "Check" task.
  */
@@ -65,13 +86,10 @@ void main_minimal( void )
     vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
     vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
     vStartRegTestTasks();
-    
+
     /* Create the tasks defined within this file. */
     xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-    /* Create the co-routines that flash the LED's. */
-    vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
-    
     /* In this port, to use preemptive scheduler define configUSE_PREEMPTION
     as 1 in portmacro.h.  To use the cooperative scheduler define
     configUSE_PREEMPTION as 0. */
@@ -83,7 +101,7 @@ void init_minimal( void )
     /* Configure UART pins: PB0 Rx, PB1 Tx */
     PORTB.DIR &= ~PIN1_bm;
     PORTB.DIR |= PIN0_bm;
-    
+
     vParTestInitialise();
 }
 
@@ -104,7 +122,7 @@ static volatile unsigned long ulDummyVariable = 3UL;
         integer tasks get some exercise.  The result here is not important -
         see the demo application documentation for more info. */
         ulDummyVariable *= 3;
-        
+
         prvCheckOtherTasksAreStillRunning();
     }
 }
@@ -133,7 +151,7 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
     {
         xErrorHasOccurred = pdTRUE;
     }
-    
+
     if( xErrorHasOccurred == pdFALSE )
     {
         /* Toggle the LED if everything is okay so we know if an error occurs even if not
@@ -153,5 +171,4 @@ static unsigned char __eeprom ucResetCount @ mainRESET_COUNT_ADDRESS;
 
 void vApplicationIdleHook( void )
 {
-    vCoRoutineSchedule();
 }

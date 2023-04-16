@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -123,38 +123,30 @@ typedef unsigned long    UBaseType_t;
 /*-----------------------------------------------------------*/
 
 #define portSAVE_CONTEXT()
-#define portYIELD()                      vFakePortYield()
-#define portYIELD_WITHIN_API()           vFakePortYieldWithinAPI()
-#define portYIELD_FROM_ISR()             vFakePortYieldFromISR()
+#define portYIELD()                            vFakePortYield()
+#define portYIELD_WITHIN_API()                 vFakePortYieldWithinAPI()
+#define portYIELD_FROM_ISR()                   vFakePortYieldFromISR()
 
 /* Critical section handling. */
-#define portDISABLE_INTERRUPTS()         vFakePortDisableInterrupts()
-#define portENABLE_INTERRUPTS()          vFakePortEnableInterrupts()
+#define portDISABLE_INTERRUPTS()               vFakePortDisableInterrupts()
+#define portENABLE_INTERRUPTS()                vFakePortEnableInterrupts()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x ) \
     vFakePortClearInterruptMaskFromISR( x )
 #define portSET_INTERRUPT_MASK_FROM_ISR() \
     ulFakePortSetInterruptMaskFromISR()
-#define portSET_INTERRUPT_MASK()         ulFakePortSetInterruptMask()
-#define portCLEAR_INTERRUPT_MASK( x )    vFakePortClearInterruptMask( x )
+#define portSET_INTERRUPT_MASK()               ulFakePortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK( x )          vFakePortClearInterruptMask( x )
 #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() \
     vFakePortAssertIfInterruptPriorityInvalid()
-#define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
-#define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
+#define portENTER_CRITICAL()                   vFakePortEnterCriticalSection()
+#define portEXIT_CRITICAL()                    vFakePortExitCriticalSection()
 
 #define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) \
     vPortCurrentTaskDying( ( pvTaskToDelete ), ( pxPendYield ) )
-#define portSETUP_TCB( pxTCB )           portSetupTCB_CB( pxTCB );
-#define  portASSERT_IF_IN_ISR()          vFakePortAssertIfISR();
+#define portSETUP_TCB( pxTCB )                 portSetupTCB_CB( pxTCB );
+#define  portASSERT_IF_IN_ISR()                vFakePortAssertIfISR();
 
-
-static uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
-{
-    uint8_t ucReturn;
-
-    ucReturn = __builtin_clz( ulBitmap );
-    return ucReturn;
-}
-
+#define ucPortCountLeadingZeros( ulBitmap )    ( ( uint8_t ) __builtin_clz( ulBitmap ) )
 
 #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
     ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )

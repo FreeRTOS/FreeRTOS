@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -76,7 +76,7 @@ unsigned long ulBaudRateCount;
 
 		/* Use SMCLK. */
 		UCA1CTL1 = UCSSEL0 | UCSSEL1;
-		
+
 		/* Setup baud rate low byte. */
 		UCA1BR0 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
@@ -89,12 +89,12 @@ unsigned long ulBaudRateCount;
 
 		/* Enable interrupts. */
 		UCA1IE |= UCRXIE;
-		
+
 		/* Take out of reset. */
 		UCA1CTL1 &= ~UCSWRST;
 	}
 	portEXIT_CRITICAL();
-	
+
 	/* Note the comments at the top of this file about this not being a generic
 	UART driver. */
 	return NULL;
@@ -149,7 +149,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		cChar = UCA1RXBUF;
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}
-	
+
 	/* If there is a Tx interrupt pending and the tx interrupts are enabled. */
 	if( ( UCA1IFG & UCTXIFG ) != 0 )
 	{
@@ -169,14 +169,14 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	}
 
 	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
-	
+
 	/* If writing to a queue caused a task to unblock, and the unblocked task
 	has a priority equal to or above the task that this interrupt interrupted,
 	then lHigherPriorityTaskWoken will have been set to pdTRUE internally within
 	xQueuesendFromISR(), and portEND_SWITCHING_ISR() will ensure that this
 	interrupt returns directly to the higher priority unblocked task.
-	
-	THIS MUST BE THE LAST THING DONE IN THE ISR. */	
+
+	THIS MUST BE THE LAST THING DONE IN THE ISR. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -291,20 +291,6 @@ static bool prvPublishDeviceMetricsReport( size_t xReportLength );
 static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
                                          size_t xDefenderResponseLength );
 
-/**
- * @brief The task used to demonstrate the Defender API.
- *
- * This task collects metrics from the device using the functions in
- * metrics_collector.h and uses them to build a defender report using functions
- * in report_builder.h. Metrics include the number for bytes written and read
- * over the network, open TCP and UDP ports, and open TCP sockets. The
- * generated report is then published to the AWS IoT Device Defender service.
- *
- * @param[in] pvParameters Parameters as passed at the time of task creation.
- * Not used in this example.
- */
-static void prvDefenderDemoTask( void * pvParameters );
-
 /*-----------------------------------------------------------*/
 
 static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
@@ -468,7 +454,9 @@ static bool prvCollectDeviceMetrics( void )
 {
     bool xStatus = false;
     eMetricsCollectorStatus eStatus;
-    size_t xNumOpenTcpPorts = 0UL, xNumOpenUdpPorts = 0UL, xNumEstablishedConnections = 0UL, i;
+    size_t uxNumOpenTcpPorts = 0UL;
+    size_t uxNumOpenUdpPorts = 0UL;
+    size_t uxNumEstablishedConnections = 0UL;
     UBaseType_t uxTasksWritten = { 0 };
     UBaseType_t uxNumTasksRunning;
     TaskStatus_t pxTaskStatus = { 0 };
@@ -487,8 +475,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         eStatus = eGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
-                                                    democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
-                                                    &( xNumOpenTcpPorts ) );
+                                    democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
+                                    &( uxNumOpenTcpPorts ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -501,8 +489,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         eStatus = eGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
-                                                    democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
-                                                    &( xNumOpenUdpPorts ) );
+                                    democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
+                                    &( uxNumOpenUdpPorts ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -515,8 +503,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         eStatus = eGetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
-                                                              democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
-                                                              &( xNumEstablishedConnections ) );
+                                              democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
+                                              &( uxNumEstablishedConnections ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -546,8 +534,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         /* Get the current task's status information. The usStackHighWaterMark
-        * field of the task status will be included in the report as a "number"
-        * custom metric. */
+         * field of the task status will be included in the report as a "number"
+         * custom metric. */
         vTaskGetInfo(
             /* Query this task. */
             NULL,
@@ -556,6 +544,7 @@ static bool prvCollectDeviceMetrics( void )
             pdTRUE,
             /* Don't include the task state in the TaskStatus_t structure. */
             0 );
+
         /* Get the task status information for all running tasks. The task IDs
          * of each task is then extracted to include in the report as a "list of
          * numbers" custom metric */
@@ -578,11 +567,11 @@ static bool prvCollectDeviceMetrics( void )
         xStatus = true;
         xDeviceMetrics.pxNetworkStats = &( xNetworkStats );
         xDeviceMetrics.pusOpenTcpPortsArray = &( pusOpenTcpPorts[ 0 ] );
-        xDeviceMetrics.xOpenTcpPortsArrayLength = xNumOpenTcpPorts;
+        xDeviceMetrics.xOpenTcpPortsArrayLength = uxNumOpenTcpPorts;
         xDeviceMetrics.pusOpenUdpPortsArray = &( pusOpenUdpPorts[ 0 ] );
-        xDeviceMetrics.xOpenUdpPortsArrayLength = xNumOpenUdpPorts;
+        xDeviceMetrics.xOpenUdpPortsArrayLength = uxNumOpenUdpPorts;
         xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
-        xDeviceMetrics.xEstablishedConnectionsArrayLength = xNumEstablishedConnections;
+        xDeviceMetrics.xEstablishedConnectionsArrayLength = uxNumEstablishedConnections;
         xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
         xDeviceMetrics.pxTaskStatusArray = pxTaskStatusArray;
         xDeviceMetrics.xTaskStatusArrayLength = uxTasksWritten;
@@ -699,30 +688,12 @@ static bool prvPublishDeviceMetricsReport( size_t xReportLength )
 }
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Create the task that demonstrates the Device Defender library API via
- * a mutually authenticated MQTT connection with the AWS IoT broker.
- */
-void vStartDefenderDemo( void )
-{
-    /* This example uses a single application task, which shows that how to use
-     * Device Defender library to generate and validate AWS IoT Device Defender
-     * MQTT topics, and use the coreMQTT library to communicate with the AWS
-     * IoT Device Defender service. */
-    xTaskCreate( prvDefenderDemoTask,      /* Function that implements the task. */
-                 "DemoTask",               /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
-}
-/*-----------------------------------------------------------*/
-
 void prvDefenderDemoTask( void * pvParameters )
 {
     bool xStatus = false;
     BaseType_t xExitStatus = EXIT_FAILURE;
-    uint32_t ulReportLength = 0UL, i;
+    size_t uxReportLength = 0UL;
+    size_t uxIdx;
     bool xMqttSessionEstablished = false;
     UBaseType_t uxDemoRunCount = 0UL;
 
@@ -740,6 +711,18 @@ void prvDefenderDemoTask( void * pvParameters )
      * DEFENDER_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /* Set a report ID to be used.
          *
          * !!!NOTE!!!
@@ -842,7 +825,7 @@ void prvDefenderDemoTask( void * pvParameters )
         if( xStatus == true )
         {
             LogInfo( ( "Generating Device Defender report..." ) );
-            xStatus = prvGenerateDeviceMetricsReport( &( ulReportLength ) );
+            xStatus = prvGenerateDeviceMetricsReport( &( uxReportLength ) );
 
             /* Free the allocated array in xDeviceMetrics struct which is not
              * used anymore after prvGenerateDeviceMetricsReport(). This code is
@@ -867,7 +850,7 @@ void prvDefenderDemoTask( void * pvParameters )
         if( xStatus == true )
         {
             LogInfo( ( "Publishing Device Defender report..." ) );
-            xStatus = prvPublishDeviceMetricsReport( ulReportLength );
+            xStatus = prvPublishDeviceMetricsReport( uxReportLength );
 
             if( xStatus != true )
             {
@@ -882,7 +865,7 @@ void prvDefenderDemoTask( void * pvParameters )
          * the accepted or rejected topics, it updates xReportStatus. */
         if( xStatus == true )
         {
-            for( i = 0; i < DEFENDER_RESPONSE_WAIT_SECONDS; i++ )
+            for( uxIdx = 0; uxIdx < DEFENDER_RESPONSE_WAIT_SECONDS; uxIdx++ )
             {
                 ( void ) xProcessLoop( &xMqttContext, 1000 );
 
@@ -959,6 +942,8 @@ void prvDefenderDemoTask( void * pvParameters )
     {
         LogError( ( "Demo failed." ) );
     }
+
+    LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
 
     /* Delete this task. */
     LogInfo( ( "Deleting Defender Demo task." ) );

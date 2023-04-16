@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -92,24 +92,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * that always returns zero.
  */
 #define MQTT_RECV_POLLING_TIMEOUT_MS    0U
-
-/**
- * @brief The maximum duration between non-empty network transmissions while
- * sending an MQTT packet via the #MQTT_ProcessLoop or #MQTT_ReceiveLoop
- * API functions.
- *
- * When sending an MQTT packet, the transport send function may be called multiple
- * times until the required number of bytes are sent.
- * This timeout represents the maximum time wait for any data
- * transmission over the network through the transport send function.
- *
- * @note For this demo, the timeout value is configured to zero as the demo uses a
- * dummy timer function (of #MQTTGetCurrentTimeFunc_t) that always returns zero.
- * It is REQUIRED to set the the timeout to zero when using a dummy timer function
- * that always returns zero.
- *
- */
-#define MQTT_SEND_RETRY_TIMEOUT_MS      0U
 
 /*********************** coreMQTT Agent Configurations **********************/
 /**

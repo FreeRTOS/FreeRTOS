@@ -51,6 +51,25 @@ SECTIONS
 		_erodata = .;
 	} >rom AT>rom
 
+	.tdata : {
+		*(.tdata .tdata.*)
+	} >rom AT>rom
+
+	.tbss (NOLOAD) : {
+		*(.tbss .tbss.* .gnu.linkonce.tb.*)
+		*(.tcommon)
+		PROVIDE( __tbss_end = . );
+		PROVIDE( __tls_end = . );
+	} >rom AT>rom
+	PROVIDE( __tdata_source = LOADADDR(.tdata) );
+	PROVIDE( __tdata_source_end = LOADADDR(.tdata) + SIZEOF(.tdata) );
+	PROVIDE( __tdata_size = SIZEOF(.tdata) );
+	PROVIDE( __tbss_offset = ADDR(.tbss) - ADDR(.tdata) );
+	PROVIDE( __tbss_start = ADDR(.tbss) );
+	PROVIDE( __tbss_size = SIZEOF(.tbss) );
+	PROVIDE( __tls_size = __tls_end - ADDR(.tdata) );
+	PROVIDE( __tls_align = MAX(ALIGNOF(.tdata), ALIGNOF(.tbss)) );
+
 	.data.align :
 	{
 		. = ALIGN(4);

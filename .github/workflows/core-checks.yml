@@ -4,8 +4,8 @@ on: [pull_request]
 
 jobs:
   core-checker:
-    name: FreeRTOS Core Checks
-    runs-on: ubuntu-latest
+    name: Check File Headers
+    runs-on: ubuntu-20.04
     steps:
       # Install python 3
       - name: Tool Setup
@@ -44,42 +44,3 @@ jobs:
           export PYTHONPATH=tools/.github/scripts:${PYTHONPATH}
           .github/scripts/core_checker.py --json ${HOME}/files_modified.json ${HOME}/files_added.json ${HOME}/files_renamed.json
           exit $?
-  build-checker:
-    name: FreeRTOS Posix Build Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone This Repo
-        uses: actions/checkout@v2
-        with:
-            path: ./workspace
-            submodules: 'recursive'
-            fetch-depth: 1
-      - name: Posix Build Checker
-        run: |
-            bash workspace/.github/scripts/posix_build_checker.sh workspace
-      - name: Install lib pcap dev
-        run: |
-          sudo apt-get install libpcap-dev
-      - name: Posix Network Build Checker
-        run: |
-            bash workspace/.github/scripts/posix_network_build_checker.sh workspace
-  arm-gcc-build-checker:
-    name: FreeRTOS ARM GCC Build Check
-    runs-on: ubuntu-latest
-    env:
-      ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
-    steps:
-      - name: Install ARM GCC
-        run: wget -qO- "${{ env.ARM_GCC_TOOLCHAIN_URL }}" | sudo tar --strip-components=1 -xj -C /usr/local
-      - name: Clone This Repo
-        uses: actions/checkout@v2
-        with:
-            path: ./workspace
-            submodules: 'recursive'
-            fetch-depth: 1
-      - name: Qemu MPS2 build Cortex M3
-        run: cd workspace/FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC && make && make clean && make FULL_DEMO=1
-      - name: Qemu MPS2 MPU build Cortex M3
-        run: cd workspace/FreeRTOS/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC && make
-      - name: Qemu MPS2 IAR build Cortex M3
-        run: cd workspace/FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC/build/gcc && sed -i '/configUSE_STATS_FORMATTING_FUNCTIONS/c\#define configUSE_STATS_FORMATTING_FUNCTIONS 0' ../../FreeRTOSConfig.h && make

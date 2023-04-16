@@ -22,6 +22,7 @@ SUITE_UT_SRC        +=  counting_semaphore_utest.c
 SUITE_UT_SRC        +=  semaphore_common_utest.c
 SUITE_UT_SRC        +=  mutex_utest.c
 SUITE_UT_SRC        +=  recursive_mutex_utest.c
+SUITE_UT_SRC        +=  semaphore_get_static_buffer_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -72,7 +72,7 @@
 #include "backoff_algorithm.h"
 
 /* mbedTLS transport interface header.*/
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /* OTA Library include. */
 #include "ota.h"
@@ -632,7 +632,7 @@ static void prvOTAAgentTask( void * pvParam );
  *
  * @param[in] pvParam Any parameters to be passed to OTA Demo task.
  */
-static void vOtaDemoTask( void * pvParam );
+void vOtaDemoTask( void * pvParam );
 
 /**
  * @brief The function which implements the flow for OTA demo.
@@ -1437,6 +1437,7 @@ static MQTTStatus_t prvMQTTInit( void )
     xTransport.pNetworkContext = &xNetworkContextMqtt;
     xTransport.send = TLS_FreeRTOS_send;
     xTransport.recv = TLS_FreeRTOS_recv;
+    xTransport.writev = NULL;
 
     /* Initialize MQTT library. */
     xReturn = MQTTAgent_Init( &xGlobalMqttAgentContext,
@@ -2057,7 +2058,7 @@ static BaseType_t prvRunOTADemo( void )
  * the OTA agent. If not, it is simply ignored.
  *
  */
-static void vOtaDemoTask( void * pvParam )
+void vOtaDemoTask( void * pvParam )
 {
     /* Return error status. */
     BaseType_t xReturnStatus = pdPASS;
@@ -2079,6 +2080,16 @@ static void vOtaDemoTask( void * pvParam )
     {
         LogError( ( "Failed to initialize buffer semaphore." ) );
         xReturnStatus = pdFAIL;
+    }
+
+    /* Wait for Networking */
+    if( xPlatformIsNetworkUp() == pdFALSE )
+    {
+        LogInfo( ( "Waiting for the network link up event..." ) );
+        while( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+        }
     }
 
     /****************************** Init MQTT ******************************/
@@ -2130,23 +2141,4 @@ static void vOtaDemoTask( void * pvParam )
         /* Cleanup semaphore created for buffer operations. */
         vSemaphoreDelete( xBufferSemaphore );
     }
-}
-
-/*
- * @brief Create the task that demonstrates the Ota demo.
- */
-void vStartOtaDemo( void )
-{
-    /*
-     * vOtaDemoTask() connects to the MQTT broker, creates the
-     * MQTT Agent task and calls the Ota demo loop prvRunOTADemo()
-     * which creates the OTA Agent task.
-     */
-
-    xTaskCreate( vOtaDemoTask,             /* Function that implements the task. */
-                 "OTA Demo Task",          /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Optional - task parameter - not used in this case. */
-                 tskIDLE_PRIORITY + 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Optional - used to pass out a handle to the created task. */
 }

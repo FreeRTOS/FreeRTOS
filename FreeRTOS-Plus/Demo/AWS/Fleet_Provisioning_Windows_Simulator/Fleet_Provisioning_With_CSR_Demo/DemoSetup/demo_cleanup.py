@@ -3,13 +3,14 @@
 import os
 import boto3
 import botocore
+import argparse
 
-KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
-CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
+KEY_OUT_NAME = f"{os.getcwd()}\\corePKCS11_Claim_Key.dat"
+CERT_OUT_NAME = f"{os.getcwd()}\\corePKCS11_Claim_Certificate.dat"
 
-THING_PRIVATE_KEY_NAME = "corePKCS11_Key.dat"
-THING_PUBLIC_KEY_NAME = "corePKCS11_PubKey.dat"
-THING_CERT_NAME = "corePKCS11_Certificate.dat"
+THING_PRIVATE_KEY_NAME = f"{os.getcwd()}\\corePKCS11_Key.dat"
+THING_PUBLIC_KEY_NAME = f"{os.getcwd()}\\corePKCS11_PubKey.dat"
+THING_CERT_NAME = f"{os.getcwd()}\\corePKCS11_Certificate.dat"
 
 RESOURCE_STACK_NAME = "FPDemoStack"
 
@@ -125,37 +126,45 @@ def delete_resources():
 
 # Delete the files created by the demo and reset demo_config.h
 def reset_files():
+    script_file_dir_abs_path = os.path.abspath(os.path.dirname(__file__))
     # Remove Claim credentials
-    if os.path.exists(f"../{KEY_OUT_NAME}"):
-        os.remove(f"../{KEY_OUT_NAME}")
-    if os.path.exists(f"../{CERT_OUT_NAME}"):
-        os.remove(f"../{CERT_OUT_NAME}")
+    if os.path.exists(f"{KEY_OUT_NAME}"):
+        os.remove(f"{KEY_OUT_NAME}")
+    if os.path.exists(f"{CERT_OUT_NAME}"):
+        os.remove(f"{CERT_OUT_NAME}")
 
     # Remove demo-generated Thing credentials
-    if os.path.exists(f"../{THING_PRIVATE_KEY_NAME}"):
-        os.remove(f"../{THING_PRIVATE_KEY_NAME}")
-    if os.path.exists(f"../{THING_PUBLIC_KEY_NAME}"):
-        os.remove(f"../{THING_PUBLIC_KEY_NAME}")
-    if os.path.exists(f"../{THING_CERT_NAME}"):
-        os.remove(f"../{THING_CERT_NAME}")
+    if os.path.exists(f"{THING_PRIVATE_KEY_NAME}"):
+        os.remove(f"{THING_PRIVATE_KEY_NAME}")
+    if os.path.exists(f"{THING_PUBLIC_KEY_NAME}"):
+        os.remove(f"{THING_PUBLIC_KEY_NAME}")
+    if os.path.exists(f"{THING_CERT_NAME}"):
+        os.remove(f"{THING_CERT_NAME}")
 
     # Reset demo_config.h
-    template_file = open("demo_config_empty.templ", 'r')
+    template_file = open(f"{script_file_dir_abs_path}/demo_config_empty.templ", 'r')
     file_text = template_file.read()
 
-    header_file = open("../demo_config.h", "w")
+    header_file = open(f"{script_file_dir_abs_path}/../demo_config.h", "w")
     header_file.write(file_text)
     header_file.close()
     template_file.close()
     print("Credentials removed and demo_config.h reset.")
 
+# Get arguments
+def get_args():
+    parser = argparse.ArgumentParser(description="Fleet Provisioning Demo setup script.")
+    parser.add_argument("--force", action="store_true", help="Used to skip the user prompt before executing.")
+    args = parser.parse_args()
+    return args
 
 # Parse arguments and execute appropriate functions
 def main():
     # Check arguments and go appropriately
+    args = get_args();
     print("\nThis script will delete ALL Things, credentials, and resources which were created by demo_setup.py and the Fleet Provisioning demo.")
     print("It may take several minutes for all of the resources to be deleted.")
-    if input("Are you sure you want to do this? (y/n) ") == "y":
+    if args.force or input("Are you sure you want to do this? (y/n) ") == "y":
         print()
         reset_files()
         delete_resources()

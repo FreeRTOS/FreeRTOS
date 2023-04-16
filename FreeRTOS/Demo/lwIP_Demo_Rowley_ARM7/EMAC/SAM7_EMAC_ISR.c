@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -77,7 +77,7 @@ extern void vClearEMACTxBuffer( void );
 	/* Clear the interrupt. */
 	AT91C_BASE_AIC->AIC_EOICR = 0;
 
-	/* If a task was woken by either a frame being received then we may need to 
+	/* If a task was woken by either a frame being received then we may need to
 	switch to another task.  If the unblocked task was of higher priority then
 	the interrupted task it will then execute immediately that the ISR
 	completes. */

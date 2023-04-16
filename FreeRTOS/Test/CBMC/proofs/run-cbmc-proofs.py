@@ -301,6 +301,13 @@ def main():
     if not args.no_standalone:
         run_build(args.parallel_jobs)
 
+    out_sym = pathlib.Path("/tmp")/"litani"/"runs"/"latest"
+    out_dir = out_sym.resolve()
+
+    local_copy = pathlib.Path("output")/"latest"
+    local_copy.parent.mkdir(exist_ok=True)
+    local_copy.symlink_to(out_dir)
+
 
 if __name__ == "__main__":
     main()

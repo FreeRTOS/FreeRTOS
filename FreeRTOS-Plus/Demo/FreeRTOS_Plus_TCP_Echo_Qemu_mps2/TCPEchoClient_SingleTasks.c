@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -45,6 +45,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "CMSIS/CMSDK_CM3.h"
+#include "CMSIS/core_cm3.h"
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
@@ -107,6 +109,9 @@
                                                UBaseType_t uxTaskPriority )
     {
         BaseType_t x;
+
+        /* Set Ethernet interrupt priority to configMAC_INTERRUPT_PRIORITY. */
+        NVIC_SetPriority( ETHERNET_IRQn , configMAC_INTERRUPT_PRIORITY );
 
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )

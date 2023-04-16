@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -59,7 +59,7 @@ void vHTTPServerTask( void *pvParameters )
 		in the WIZnet hardware, so simply resets all the buffers for each
 		connection - and only processes one connection at a time. */
 		if( lTCPSoftReset() )
-		{	  
+		{
 			/* Create the socket that is going to accept incoming connections. */
 			if( lTCPCreateSocket() )
 			{
@@ -72,9 +72,9 @@ void vHTTPServerTask( void *pvParameters )
 			}
 		}
 
-		/* If we get here then the connection completed or failed.  Wait a 
+		/* If we get here then the connection completed or failed.  Wait a
 		while then try or start again. */
-		vTaskDelay( tcpCONNECTION_DELAY );		
+		vTaskDelay( tcpCONNECTION_DELAY );
 	}
 }
 

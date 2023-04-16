@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -87,9 +87,6 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	0
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES			 0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
@@ -151,7 +148,7 @@ standard names. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0UL ) { portDISABLE_INTERRUPTS(); for( ;; ); }
+#define configASSERT( x ) if( ! ( x ) ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 
 /* LED not used at present, so just increment a variable to keep a count of the
 number of times the LED would otherwise have been toggled. */
@@ -168,6 +165,11 @@ solely for the purpose of ensuring parameters are passed into tasks correctly. *
 #define configREG_TEST_TASK_1_PARAMETER	( ( void * ) 0x11112222 )
 #define configREG_TEST_TASK_3_PARAMETER	( ( void * ) 0x12345678 )
 #define configREG_TEST_TASK_4_PARAMETER	( ( void * ) 0x87654321 )
+
+/* Ensure that all system calls are coming from the kernel
+Additionally allow unprivileged tasks to have critical sections. */
+#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY 1
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS 1
 
 #ifdef __cplusplus
 }

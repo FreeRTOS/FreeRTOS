@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -446,6 +446,8 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
     /* Create a topic name for this task to publish to. */
     snprintf( pcTopicBuffer, mqttexampleSTRING_BUFFER_LENGTH, "/filter/%s", taskName );
 
+    LogInfo( ( "Task: %s: ---------STARTING DEMO---------\r\n", taskName ) );
+
     /* Subscribe to the same topic to which this task will publish.  That will
      * result in each published message being published from the server back to
      * the target. */
@@ -512,8 +514,9 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
         configASSERT( ulNotification == ulValueToNotify );
 
         /* Log statement to indicate successful reception of publish. */
-        LogInfo( ( "Demo completed successfully.\r\n" ) );
-        LogInfo( ( "Short delay before next publish... \r\n\r\n" ) );
+        LogInfo( ( "Task: %s: Demo completed successfully.\r\n", taskName ) );
+        LogInfo( ( "Task: %s: -------DEMO FINISHED-------\r\n", taskName ) );
+        LogInfo( ( "Task: %s: Short delay before next iteration... \r\n\r\n", taskName ) );
 
         /* Add a little randomness into the delay so the tasks don't remain
          * in lockstep. */

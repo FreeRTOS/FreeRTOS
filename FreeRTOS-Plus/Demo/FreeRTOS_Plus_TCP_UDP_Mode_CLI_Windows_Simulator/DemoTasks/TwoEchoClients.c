@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -27,7 +27,7 @@
 
 /******************************************************************************
  *
- * See the following web page for essential TwoEchoClient.c usage and 
+ * See the following web page for essential TwoEchoClient.c usage and
  * configuration details:
  * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml
  *
@@ -46,6 +46,9 @@
 /* FreeRTOS+UDP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+
+/* Demo Includes */
+#include "user_settings.h"
 
 /* Small delay used between attempts to obtain a zero copy buffer. */
 #define echoTINY_DELAY	( ( portTickType ) 2 )
@@ -191,7 +194,7 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 			not actually used (at the time of writing this comment, anyway) by
 			FreeRTOS_recvfrom(), but is set appropriately in case future
 			versions do use it. */
-			
+
 			memset( ( void * ) cRxString, 0x00, sizeof( cRxString ) );
 			lReturned = FreeRTOS_recvfrom(	xSocket,				/* The socket being received from. */
 								cRxString,				/* The buffer into which the received data will be written. */
@@ -292,7 +295,12 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 			delay is used, the actual delay will be capped to
 			ipconfigMAX_SEND_BLOCK_TIME_TICKS, hence the test to ensure a buffer
 			was actually obtained. */
+
+		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_ByIPType( xBufferLength, portMAX_DELAY, ipTYPE_IPv4 );
+		#else
 			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY );
+		#endif
 
 			if( pucUDPPayloadBuffer != NULL )
 			{

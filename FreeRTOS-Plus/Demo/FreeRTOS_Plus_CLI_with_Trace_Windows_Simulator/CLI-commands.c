@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -24,12 +24,19 @@
  *
  */
 
+/* Standard Includes */
+#include <stdio.h>
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
 /* FreeRTOS+CLI includes. */
 #include "FreeRTOS_CLI.h"
+
+/* FreeRTOS+Trace includes.*/
+#include "trcDefines.h"
+#include "trcRecorder.h"
 
 /*
  * Writes trace data to a disk file when the trace recording is stopped.

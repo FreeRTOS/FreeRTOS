@@ -308,32 +308,32 @@ static void PrintOutputxX(uint32_t flags_used,
 {
 #if PRINTF_ADVANCED_ENABLE
     uint8_t dschar = 0;
-    if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
+    if (0U == (flags_used & (uint32_t)kPRINTF_Minus))
     {
+        if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
+        {
+            vlen += 2U;
+        }
+        cb(buf, count, ' ', (int)field_width - (int)vlen);
         if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
         {
             cb(buf, count, '0', 1);
             cb(buf, count, (use_caps ? 'X' : 'x'), 1);
             dschar = 1U;
         }
-        cb(buf, count, '0', (int)field_width - (int)vlen);
-        vlen = field_width;
     }
     else
     {
-        if (0U == (flags_used & (uint32_t)kPRINTF_Minus))
+        if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
         {
-            if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
-            {
-                vlen += 2U;
-            }
-            cb(buf, count, ' ', (int)field_width - (int)vlen);
             if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
             {
                 cb(buf, count, '0', 1);
                 cb(buf, count, (use_caps ? 'X' : 'x'), 1);
-                dschar = 1U;
+               dschar = 1U;
             }
+            cb(buf, count, '0', (int)field_width - (int)vlen);
+            vlen = field_width;
         }
     }
 

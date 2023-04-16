@@ -915,36 +915,36 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
 
 #if PRINTF_ADVANCED_ENABLE
                     dschar = false;
-                    if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
+                    if (0U == (flags_used & (uint32_t)kPRINTF_Minus))
                     {
                         if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
                         {
+                            vlen += 2;
+                        }
+                        DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                        if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
+                        {
                             (void)func_ptr('0');
-                            (void)func_ptr((use_caps ? 'X' : 'x'));
+                            (void)func_ptr(use_caps ? 'X' : 'x');
                             count += 2;
-                            /*vlen += 2;*/
+
                             dschar = true;
                         }
-                        DbgConsole_PrintfPaddingCharacter('0', vlen, (int32_t)field_width, &count, func_ptr);
-                        vlen = (int32_t)field_width;
                     }
                     else
                     {
-                        if (0U == (flags_used & (uint32_t)kPRINTF_Pound))
+                        if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
                         {
                             if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
                             {
-                                vlen += 2;
-                            }
-                            DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
-                            if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
-                            {
                                 (void)func_ptr('0');
-                                (void)func_ptr(use_caps ? 'X' : 'x');
+                                (void)func_ptr((use_caps ? 'X' : 'x'));
                                 count += 2;
-
+                                /*vlen += 2;*/
                                 dschar = true;
                             }
+                            DbgConsole_PrintfPaddingCharacter('0', vlen, (int32_t)field_width, &count, func_ptr);
+                            vlen = (int32_t)field_width;
                         }
                     }
 

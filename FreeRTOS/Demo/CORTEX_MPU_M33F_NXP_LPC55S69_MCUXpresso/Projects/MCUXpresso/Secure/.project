@@ -122,6 +122,16 @@
 			<locationURI>PROJECT_LOC/main_s.c</locationURI>
 		</link>
 		<link>
+			<name>User/nsc_printf.c</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/nsc_printf.c</locationURI>
+		</link>
+		<link>
+			<name>User/nsc_printf.h</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/nsc_printf.h</locationURI>
+		</link>
+		<link>
 			<name>User/tzm_config.c</name>
 			<type>1</type>
 			<locationURI>PROJECT_LOC/tzm_config.c</locationURI>

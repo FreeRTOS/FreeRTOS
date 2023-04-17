@@ -120,7 +120,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGTARM</Key>
-          <Name>(6010=70,43,547,639,0)(6018=1091,145,1280,478,0)(6019=1091,137,1280,457,0)(6008=-1,-1,-1,-1,0)(6009=-1,-1,-1,-1,0)(6014=1022,0,1280,731,0)(6015=1278,242,1536,864,1)(6003=954,41,1536,577,1)(6000=-1,-1,-1,-1,0)</Name>
+          <Name>(6010=70,43,547,639,0)(6018=1091,145,1280,478,0)(6019=1091,137,1280,457,0)(6008=-1,-1,-1,-1,0)(6009=-1,-1,-1,-1,0)(6014=1022,0,1280,731,0)(6015=1278,242,1536,864,1)(6003=1966,270,2548,806,1)(6000=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -135,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DbgFMv8M</Key>
-          <Name>-I -S -L"cpu0" -O4102 -C0 -MC".\VHT\VHT_MPS2_Cortex-M33.exe" -MF"..\VHT_MPS2_Cortex-M33-config.txt" -PF -MA</Name>
+          <Name>-I -S -L"cpu0" -O528390 -C0 -MC".\VHT\VHT_MPS2_Cortex-M33.exe" -MF"..\VHT_MPS2_Cortex-M33-config.txt" -PF -MA</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -383,7 +383,7 @@
 
   <Group>
     <GroupName>Demos</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -439,7 +439,7 @@
 
   <Group>
     <GroupName>User</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -467,7 +467,7 @@
 
   <Group>
     <GroupName>::Device</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>

@@ -135,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DbgFMv8M</Key>
-          <Name>-I -S -L"cpu0" -O4102 -C0 -MC".\VHT\VHT_MPS2_Cortex-M33.exe" -MF"..\VHT_MPS2_Cortex-M33-config.tx" -PF -MA</Name>
+          <Name>-I -S -L"cpu0" -O528390 -C0 -MC".\VHT\VHT_MPS2_Cortex-M33.exe" -MF"..\VHT_MPS2_Cortex-M33-config.txt" -PF -MA</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -371,7 +371,7 @@
 
   <Group>
     <GroupName>::Device</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>

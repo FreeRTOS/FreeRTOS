@@ -333,14 +333,25 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.650465968.1580633237" name="/" resourcePath="reg_tests">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1643158192" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1303225074" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.248036726"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.806639634" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1827685058"/>
+							<tool id="com.crt.advproject.gas.exe.debug.2004350830" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.355931849"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.141362876" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.767850316"/>
+							<tool id="com.crt.advproject.link.exe.debug.558086384" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1425769789"/>
+							<tool id="com.crt.advproject.tool.debug.debug.404468304" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1632770985"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="Config"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="NSCFunctions"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="NXP_Code"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="SecureContext"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="SecureHeap"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="SecureInit"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="User"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Config"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="NSCFunctions"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="NXP_Code"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="SecureContext"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="SecureHeap"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="SecureInit"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="User"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="reg_tests"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -398,6 +409,10 @@
 &lt;/infoList&gt;&#13;
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/FreeRTOSDemo_s"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

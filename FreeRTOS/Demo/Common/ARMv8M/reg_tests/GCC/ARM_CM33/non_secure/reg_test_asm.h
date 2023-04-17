@@ -32,10 +32,10 @@
  *
  * These are called from the FreeRTOS tasks on the non-secure side.
  */
-void vRegTest1Asm_NonSecure( void ) __attribute__(( naked ));
-void vRegTest2Asm_NonSecure( void ) __attribute__(( naked ));
-void vRegTest3Asm_NonSecure( void ) __attribute__(( naked ));
-void vRegTest4Asm_NonSecure( void ) __attribute__(( naked ));
+void vRegTest1Asm_NonSecure( void ) __attribute__( ( naked ) );
+void vRegTest2Asm_NonSecure( void ) __attribute__( ( naked ) );
+void vRegTest3Asm_NonSecure( void ) __attribute__( ( naked ) );
+void vRegTest4Asm_NonSecure( void ) __attribute__( ( naked ) );
 
 /**
  * @brief Function that implements reg tests in assembly.

@@ -28,7 +28,7 @@
 #define SECURE_REG_TEST_ASM_H
 
 /* Callback function pointer definition. */
-typedef void ( *RegTestCallback_t )( void );
+typedef void ( * RegTestCallback_t )( void );
 
 /**
  * @brief Function that implements reg tests for the secure side.

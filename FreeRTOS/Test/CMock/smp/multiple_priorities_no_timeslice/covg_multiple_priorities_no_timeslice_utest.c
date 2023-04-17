@@ -81,6 +81,7 @@ extern void vTaskExitCritical( void );
 extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 extern void prvCheckTasksWaitingTermination( void );
 extern void prvDeleteTCB( TCB_t * pxTCB );
+extern TCB_t * prvSearchForNameWithinSingleList( List_t * pxList, const char pcNameToQuery[] );
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ] = { NULL };
@@ -4454,4 +4455,159 @@ void test_coverage_uxTaskGetSystemState_valid_run_time_param( void )
     /* Verify the malloc count. */
     vPortFreeStack( xTaskTCB.pxStack );
     UnityMalloc_EndTest();
+}
+
+/**
+ * @brief prvSearchForNameWithinSingleList - search empty list
+ *
+ * Verify NULL pointer should be returned when list is empty.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( listCURRENT_LIST_LENGTH( pxList ) > ( UBaseType_t ) 0 )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( pxList ) > ( UBaseType_t ) 0 ) is false.
+ */
+void test_coverage_prvSearchForNameWithinSingleList_empty_list( void )
+{
+    List_t xList;
+    TCB_t xTaskTCB;
+    TCB_t *pReturnedTCB;
+
+    /* Setup variables. */
+    memset( &xList, 0, sizeof( List_t ) );
+    memset( &xTaskTCB, 0, sizeof( TCB_t ) );
+
+    vListInitialise( &xList );
+
+    /* API call. */
+    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TAKS_NOT_EXIST" );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( NULL, pReturnedTCB );
+}
+
+/**
+ * @brief prvSearchForNameWithinSingleList - task found in the list
+ *
+ * Verify that task should be found in the list.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxReturn != NULL )
+ * {
+ *     break;
+ * }
+ * @endcode
+ * ( pxReturn != NULL ) is true.
+ */
+void test_coverage_prvSearchForNameWithinSingleList_task_found( void )
+{
+    List_t xList;
+    TCB_t xTaskTCB;
+    TCB_t *pReturnedTCB;
+
+    /* Setup variables. */
+    memset( &xList, 0, sizeof( List_t ) );
+    memset( &xTaskTCB, 0, sizeof( TCB_t ) );
+    strncpy( xTaskTCB.pcTaskName, "TASK_EXIST", configMAX_TASK_NAME_LEN );
+
+    vListInitialise( &xList );
+
+    vCreateStaticTestTask( &xTaskTCB,
+                           1,
+                           -1,
+                           pdFALSE );
+
+    listINSERT_END( &xList, &xTaskTCB.xStateListItem );
+
+    /* API call. */
+    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TASK_EXIST" );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( &xTaskTCB, pReturnedTCB );
+}
+
+/**
+ * @brief prvSearchForNameWithinSingleList - task not found in the list
+ *
+ * Verify that NULL pointer should be returned when task with different name in the list.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( cNextChar != pcNameToQuery[ x ] )
+ * {
+ *     xBreakLoop = pdTRUE;
+ * }
+ * @endcode
+ * ( cNextChar != pcNameToQuery[ x ] ) is true.
+ */
+void test_coverage_prvSearchForNameWithinSingleList_task_not_found( void )
+{
+    List_t xList;
+    TCB_t xTaskTCB;
+    TCB_t *pReturnedTCB;
+
+    /* Setup variables. */
+    memset( &xList, 0, sizeof( List_t ) );
+    memset( &xTaskTCB, 0, sizeof( TCB_t ) );
+
+    vListInitialise( &xList );
+
+    vCreateStaticTestTask( &xTaskTCB,
+                           1,
+                           -1,
+                           pdFALSE );
+    strncpy( xTaskTCB.pcTaskName, "TASK_EXIST", configMAX_TASK_NAME_LEN );
+
+    listINSERT_END( &xList, &xTaskTCB.xStateListItem );
+
+    /* API call. */
+    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TAKS_NOT_EXIST" );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( NULL, pReturnedTCB );
+}
+
+/**
+ * @brief prvSearchForNameWithinSingleList - task name too long
+ *
+ * Verify that NULL pointer should be returned when task with name longer than configMAX_TASK_NAME_LEN.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
+ * {
+ * }
+ * @endcode
+ * ( x < ( UBaseType_t ) configMAX_TASK_NAME_LEN ) is false.
+ */
+void test_coverage_prvSearchForNameWithinSingleList_long_task_name( void )
+{
+    List_t xList;
+    TCB_t xTaskTCB;
+    TCB_t *pReturnedTCB;
+
+    /* Setup variables. */
+    memset( &xList, 0, sizeof( List_t ) );
+    memset( &xTaskTCB, 0, sizeof( TCB_t ) );
+    memcpy( xTaskTCB.pcTaskName, "TASK_EXIST12", configMAX_TASK_NAME_LEN );
+
+    vListInitialise( &xList );
+
+    vCreateStaticTestTask( &xTaskTCB,
+                           1,
+                           -1,
+                           pdFALSE );
+
+    listINSERT_END( &xList, &xTaskTCB.xStateListItem );
+
+    /* API call. */
+    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TASK_EXIST12" );
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( NULL, pReturnedTCB );
 }

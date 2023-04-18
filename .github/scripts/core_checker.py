@@ -261,6 +261,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*CMSIS.*',
     r'.*/Nordic_Code/*',
     r'.*/ST_Code/*',
+    r'.*/NXP_Code/*',
     r'.*/makefile',
     r'.*/Makefile',
     r'.*/printf-stdarg\.c.*',

@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-mfloat-abi=soft -Wno-documentation -Wno-reserved-id-macro</MiscControls>
-              <Define>DEBUG_PORT = UART1</Define>
+              <Define>DEBUG_PORT = UART0</Define>
               <Undefine></Undefine>
               <IncludePath>..\Config;..\..\Keil;..\..\..\..\Common\ARMv8M\tz_demo;..\..\..\..\..\Source\portable\GCC\ARM_CM23\secure;..\..\..\Nuvoton_Code\StdDriver\inc;..\..\..\Nuvoton_Code\CMSIS\Include;..\..\..\Nuvoton_Code\Device\Nuvoton\M2351\Include</IncludePath>
             </VariousControls>

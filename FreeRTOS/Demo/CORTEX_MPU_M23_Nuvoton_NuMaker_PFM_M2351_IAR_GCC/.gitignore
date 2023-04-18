@@ -1,6 +1,9 @@
 # Auto generated files.
 *.uvgui*
+settings/
 Nu_Link_Driver.ini
+*.ewt
+*.dep
 
 # Build artifacts.
 Objects/

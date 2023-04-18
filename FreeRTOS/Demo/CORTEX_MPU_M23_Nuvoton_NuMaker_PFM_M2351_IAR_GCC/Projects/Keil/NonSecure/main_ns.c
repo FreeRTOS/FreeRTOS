@@ -98,10 +98,10 @@ int main( void )
 	DEBUG_PORT->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 
 	/* Print banner. */
-	printf( "\n" );
-	printf( "+---------------------------------------------+\n" );
-	printf( "|           Nonsecure is running ...          |\n" );
-	printf( "+---------------------------------------------+\n" );
+	printf( "\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
+	printf( "|           Nonsecure is running ...          |\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
 
 	/* Create tasks. */
 	prvCreateTasks();

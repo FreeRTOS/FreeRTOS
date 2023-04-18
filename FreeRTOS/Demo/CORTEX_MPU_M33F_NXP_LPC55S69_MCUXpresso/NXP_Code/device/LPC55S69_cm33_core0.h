@@ -11,13 +11,13 @@
 **
 **     Reference manual:    LPC55S6x/LPC55S2x/LPC552x User manual(UM11126) Rev.1.3  16 May 2019
 **     Version:             rev. 1.1, 2019-05-16
-**     Build:               b210603
+**     Build:               b220718
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for LPC55S69_cm33_core0
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2021 NXP
+**     Copyright 2016-2022 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -1364,7 +1364,7 @@ typedef struct {
 
 
 /* ADC - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral ADC0 base address */
   #define ADC0_BASE                                (0x500A0000u)
   /** Peripheral ADC0 base address */
@@ -3764,256 +3764,256 @@ typedef struct {
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_MASK (0x1U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_SHIFT (0U)
 /*! SYS_IRQ - Watchdog Timer, Brown Out Detectors and Flash Controller interrupts
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_MASK (0x2U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_SHIFT (1U)
 /*! SDMA0_IRQ - System DMA 0 (non-secure) interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_MASK (0x4U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_SHIFT (2U)
 /*! GPIO_GLOBALINT0_IRQ - GPIO Group 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_MASK (0x8U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_SHIFT (3U)
 /*! GPIO_GLOBALINT1_IRQ - GPIO Group 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_MASK (0x10U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_SHIFT (4U)
 /*! GPIO_INT0_IRQ0 - Pin interrupt 0 or pattern match engine slice 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_MASK (0x20U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_SHIFT (5U)
 /*! GPIO_INT0_IRQ1 - Pin interrupt 1 or pattern match engine slice 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_MASK (0x40U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_SHIFT (6U)
 /*! GPIO_INT0_IRQ2 - Pin interrupt 2 or pattern match engine slice 2 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_MASK (0x80U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_SHIFT (7U)
 /*! GPIO_INT0_IRQ3 - Pin interrupt 3 or pattern match engine slice 3 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_MASK (0x100U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_SHIFT (8U)
 /*! UTICK_IRQ - Micro Tick Timer interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_MASK (0x200U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_SHIFT (9U)
 /*! MRT_IRQ - Multi-Rate Timer interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_MASK (0x400U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_SHIFT (10U)
 /*! CTIMER0_IRQ - Standard counter/timer 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_MASK (0x800U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_SHIFT (11U)
 /*! CTIMER1_IRQ - Standard counter/timer 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_MASK (0x1000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_SHIFT (12U)
 /*! SCT_IRQ - SCTimer/PWM interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_MASK (0x2000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_SHIFT (13U)
 /*! CTIMER3_IRQ - Standard counter/timer 3 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_MASK (0x4000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_SHIFT (14U)
 /*! FLEXCOMM0_IRQ - Flexcomm 0 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_MASK (0x8000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_SHIFT (15U)
 /*! FLEXCOMM1_IRQ - Flexcomm 1 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_MASK (0x10000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_SHIFT (16U)
 /*! FLEXCOMM2_IRQ - Flexcomm 2 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_MASK (0x20000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_SHIFT (17U)
 /*! FLEXCOMM3_IRQ - Flexcomm 3 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_MASK (0x40000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_SHIFT (18U)
 /*! FLEXCOMM4_IRQ - Flexcomm 4 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_MASK (0x80000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_SHIFT (19U)
 /*! FLEXCOMM5_IRQ - Flexcomm 5 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_MASK (0x100000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_SHIFT (20U)
 /*! FLEXCOMM6_IRQ - Flexcomm 6 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_MASK (0x200000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_SHIFT (21U)
 /*! FLEXCOMM7_IRQ - Flexcomm 7 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_MASK (0x400000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_SHIFT (22U)
 /*! ADC_IRQ - General Purpose ADC interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_MASK (0x800000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_SHIFT (23U)
 /*! RESERVED0 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_MASK (0x1000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_SHIFT (24U)
 /*! ACMP_IRQ - Analog Comparator interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_MASK (0x2000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_SHIFT (25U)
 /*! RESERVED1 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_MASK (0x4000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_SHIFT (26U)
 /*! RESERVED2 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_MASK (0x8000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_SHIFT (27U)
 /*! USB0_NEEDCLK - USB Full Speed Controller Clock request interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_MASK (0x10000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_SHIFT (28U)
 /*! USB0_IRQ - USB Full Speed Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_MASK (0x20000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_SHIFT (29U)
 /*! RTC_IRQ - RTC_LITE0_ALARM_IRQ, RTC_LITE0_WAKEUP_IRQ
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_MASK (0x40000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_SHIFT (30U)
 /*! RESERVED3 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_MASK (0x80000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_SHIFT (31U)
 /*! MAILBOX_IRQ - Mailbox interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_MASK)
 /*! @} */
@@ -4024,224 +4024,224 @@ typedef struct {
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_MASK (0x1U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_SHIFT (0U)
 /*! GPIO_INT0_IRQ4 - Pin interrupt 4 or pattern match engine slice 4 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_MASK (0x2U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_SHIFT (1U)
 /*! GPIO_INT0_IRQ5 - Pin interrupt 5 or pattern match engine slice 5 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_MASK (0x4U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_SHIFT (2U)
 /*! GPIO_INT0_IRQ6 - Pin interrupt 6 or pattern match engine slice 6 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_MASK (0x8U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_SHIFT (3U)
 /*! GPIO_INT0_IRQ7 - Pin interrupt 7 or pattern match engine slice 7 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_MASK (0x10U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_SHIFT (4U)
 /*! CTIMER2_IRQ - Standard counter/timer 2 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_MASK (0x20U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_SHIFT (5U)
 /*! CTIMER4_IRQ - Standard counter/timer 4 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_MASK (0x40U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_SHIFT (6U)
 /*! OS_EVENT_TIMER_IRQ - OS Event Timer and OS Event Timer Wakeup interrupts
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_MASK (0x80U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_SHIFT (7U)
 /*! RESERVED0 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_MASK (0x100U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_SHIFT (8U)
 /*! RESERVED1 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_MASK (0x200U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_SHIFT (9U)
 /*! RESERVED2 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_MASK (0x400U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_SHIFT (10U)
 /*! SDIO_IRQ - SDIO Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_MASK (0x800U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_SHIFT (11U)
 /*! RESERVED3 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_MASK (0x1000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_SHIFT (12U)
 /*! RESERVED4 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_MASK (0x2000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_SHIFT (13U)
 /*! RESERVED5 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_MASK (0x4000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_SHIFT (14U)
 /*! USB1_PHY_IRQ - USB High Speed PHY Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_MASK (0x8000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_SHIFT (15U)
 /*! USB1_IRQ - USB High Speed Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_MASK (0x10000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_SHIFT (16U)
 /*! USB1_NEEDCLK - USB High Speed Controller Clock request interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_MASK (0x20000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_SHIFT (17U)
 /*! SEC_HYPERVISOR_CALL_IRQ - Secure fault Hyper Visor call interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_MASK (0x40000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_SHIFT (18U)
 /*! SEC_GPIO_INT0_IRQ0 - Secure Pin interrupt 0 or pattern match engine slice 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_MASK (0x80000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_SHIFT (19U)
 /*! SEC_GPIO_INT0_IRQ1 - Secure Pin interrupt 1 or pattern match engine slice 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_MASK (0x100000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_SHIFT (20U)
 /*! PLU_IRQ - Programmable Look-Up Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_MASK (0x200000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_SHIFT (21U)
 /*! SEC_VIO_IRQ - Security Violation interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_MASK (0x400000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_SHIFT (22U)
 /*! SHA_IRQ - HASH-AES interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_MASK (0x800000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_SHIFT (23U)
 /*! CASPER_IRQ - CASPER interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_MASK (0x1000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_SHIFT (24U)
 /*! PUFKEY_IRQ - PUF interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_MASK (0x2000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_SHIFT (25U)
 /*! PQ_IRQ - Power Quad interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_MASK (0x4000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_SHIFT (26U)
 /*! SDMA1_IRQ - System DMA 1 (Secure) interrupt
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_MASK (0x8000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_SHIFT (27U)
 /*! LSPI_HS_IRQ - High Speed SPI interrupt
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_MASK)
 /*! @} */
@@ -4649,7 +4649,7 @@ typedef struct {
 #define AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_SECURE_CHECKING_SHIFT (2U)
 /*! ENABLE_SECURE_CHECKING - Enable secure check for AHB matrix.
  *  0b10..Disable check.
- *  0b01..Restricted mode.
+ *  0b01..Enabled (restricted mode)
  */
 #define AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_SECURE_CHECKING(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_SECURE_CHECKING_SHIFT)) & AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_SECURE_CHECKING_MASK)
 
@@ -4657,7 +4657,7 @@ typedef struct {
 #define AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_S_PRIV_CHECK_SHIFT (4U)
 /*! ENABLE_S_PRIV_CHECK - Enable secure privilege check for AHB matrix.
  *  0b10..Disable check.
- *  0b01..Restricted mode.
+ *  0b01..Enabled (restricted mode)
  */
 #define AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_S_PRIV_CHECK(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_S_PRIV_CHECK_SHIFT)) & AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_S_PRIV_CHECK_MASK)
 
@@ -4665,7 +4665,7 @@ typedef struct {
 #define AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_NS_PRIV_CHECK_SHIFT (6U)
 /*! ENABLE_NS_PRIV_CHECK - Enable non-secure privilege check for AHB matrix.
  *  0b10..Disable check.
- *  0b01..Restricted mode.
+ *  0b01..Enabled (restricted mode)
  */
 #define AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_NS_PRIV_CHECK(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_NS_PRIV_CHECK_SHIFT)) & AHB_SECURE_CTRL_MISC_CTRL_REG_ENABLE_NS_PRIV_CHECK_MASK)
 
@@ -4709,7 +4709,7 @@ typedef struct {
 
 
 /* AHB_SECURE_CTRL - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral AHB_SECURE_CTRL base address */
   #define AHB_SECURE_CTRL_BASE                     (0x500AC000u)
   /** Peripheral AHB_SECURE_CTRL base address */
@@ -4753,24 +4753,29 @@ typedef struct {
 
 /** ANACTRL - Register Layout Typedef */
 typedef struct {
-       uint8_t RESERVED_0[4];
+  __IO uint32_t ANALOG_CTRL_CFG;                   /**< Various Analog blocks configuration (like FRO 192MHz trimmings source ...), offset: 0x0 */
   __I  uint32_t ANALOG_CTRL_STATUS;                /**< Analog Macroblock Identity registers, Flash Status registers, offset: 0x4 */
-       uint8_t RESERVED_1[4];
+       uint8_t RESERVED_0[4];
   __IO uint32_t FREQ_ME_CTRL;                      /**< Frequency Measure function control register, offset: 0xC */
   __IO uint32_t FRO192M_CTRL;                      /**< 192MHz Free Running OScillator (FRO) Control register, offset: 0x10 */
   __I  uint32_t FRO192M_STATUS;                    /**< 192MHz Free Running OScillator (FRO) Status register, offset: 0x14 */
-       uint8_t RESERVED_2[8];
+  __IO uint32_t ADC_CTRL;                          /**< General Purpose ADC VBAT Divider branch control, offset: 0x18 */
+       uint8_t RESERVED_1[4];
   __IO uint32_t XO32M_CTRL;                        /**< High speed Crystal Oscillator Control register, offset: 0x20 */
   __I  uint32_t XO32M_STATUS;                      /**< High speed Crystal Oscillator Status register, offset: 0x24 */
-       uint8_t RESERVED_3[8];
+       uint8_t RESERVED_2[8];
   __IO uint32_t BOD_DCDC_INT_CTRL;                 /**< Brown Out Detectors (BoDs) & DCDC interrupts generation control register, offset: 0x30 */
   __I  uint32_t BOD_DCDC_INT_STATUS;               /**< BoDs & DCDC interrupts status register, offset: 0x34 */
-       uint8_t RESERVED_4[8];
+       uint8_t RESERVED_3[8];
   __IO uint32_t RINGO0_CTRL;                       /**< First Ring Oscillator module control register., offset: 0x40 */
   __IO uint32_t RINGO1_CTRL;                       /**< Second Ring Oscillator module control register., offset: 0x44 */
   __IO uint32_t RINGO2_CTRL;                       /**< Third Ring Oscillator module control register., offset: 0x48 */
-       uint8_t RESERVED_5[180];
+       uint8_t RESERVED_4[100];
+  __IO uint32_t LDO_XO32M;                         /**< High Speed Crystal Oscillator (12 MHz - 32 MHz) Voltage Source Supply Control register, offset: 0xB0 */
+  __IO uint32_t AUX_BIAS;                          /**< AUX_BIAS, offset: 0xB4 */
+       uint8_t RESERVED_5[72];
   __IO uint32_t USBHS_PHY_CTRL;                    /**< USB High Speed Phy Control, offset: 0x100 */
+  __IO uint32_t USBHS_PHY_TRIM;                    /**< USB High Speed Phy Trim values, offset: 0x104 */
 } ANACTRL_Type;
 
 /* ----------------------------------------------------------------------------
@@ -4781,6 +4786,18 @@ typedef struct {
  * @addtogroup ANACTRL_Register_Masks ANACTRL Register Masks
  * @{
  */
+
+/*! @name ANALOG_CTRL_CFG - Various Analog blocks configuration (like FRO 192MHz trimmings source ...) */
+/*! @{ */
+
+#define ANACTRL_ANALOG_CTRL_CFG_FRO192M_TRIM_SRC_MASK (0x1U)
+#define ANACTRL_ANALOG_CTRL_CFG_FRO192M_TRIM_SRC_SHIFT (0U)
+/*! FRO192M_TRIM_SRC - FRO192M trimming and 'Enable' source.
+ *  0b0..FRO192M trimming and 'Enable' comes from eFUSE.
+ *  0b1..FRO192M trimming and 'Enable' comes from FRO192M_CTRL registers.
+ */
+#define ANACTRL_ANALOG_CTRL_CFG_FRO192M_TRIM_SRC(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_ANALOG_CTRL_CFG_FRO192M_TRIM_SRC_SHIFT)) & ANACTRL_ANALOG_CTRL_CFG_FRO192M_TRIM_SRC_MASK)
+/*! @} */
 
 /*! @name ANALOG_CTRL_STATUS - Analog Macroblock Identity registers, Flash Status registers */
 /*! @{ */
@@ -4866,6 +4883,12 @@ typedef struct {
  *  0b1..96 MHz clock is enabled.
  */
 #define ANACTRL_FRO192M_CTRL_ENA_96MHZCLK(x)     (((uint32_t)(((uint32_t)(x)) << ANACTRL_FRO192M_CTRL_ENA_96MHZCLK_SHIFT)) & ANACTRL_FRO192M_CTRL_ENA_96MHZCLK_MASK)
+
+#define ANACTRL_FRO192M_CTRL_WRTRIM_MASK         (0x80000000U)
+#define ANACTRL_FRO192M_CTRL_WRTRIM_SHIFT        (31U)
+/*! WRTRIM - This must be written to 1 to modify the BIAS_TRIM and TEMP_TRIM fields.
+ */
+#define ANACTRL_FRO192M_CTRL_WRTRIM(x)           (((uint32_t)(((uint32_t)(x)) << ANACTRL_FRO192M_CTRL_WRTRIM_SHIFT)) & ANACTRL_FRO192M_CTRL_WRTRIM_MASK)
 /*! @} */
 
 /*! @name FRO192M_STATUS - 192MHz Free Running OScillator (FRO) Status register */
@@ -4889,8 +4912,38 @@ typedef struct {
 #define ANACTRL_FRO192M_STATUS_ATB_VCTRL(x)      (((uint32_t)(((uint32_t)(x)) << ANACTRL_FRO192M_STATUS_ATB_VCTRL_SHIFT)) & ANACTRL_FRO192M_STATUS_ATB_VCTRL_MASK)
 /*! @} */
 
+/*! @name ADC_CTRL - General Purpose ADC VBAT Divider branch control */
+/*! @{ */
+
+#define ANACTRL_ADC_CTRL_VBATDIVENABLE_MASK      (0x1U)
+#define ANACTRL_ADC_CTRL_VBATDIVENABLE_SHIFT     (0U)
+/*! VBATDIVENABLE - Switch On/Off VBAT divider branch.
+ *  0b0..VBAT divider branch is disabled.
+ *  0b1..VBAT divider branch is enabled.
+ */
+#define ANACTRL_ADC_CTRL_VBATDIVENABLE(x)        (((uint32_t)(((uint32_t)(x)) << ANACTRL_ADC_CTRL_VBATDIVENABLE_SHIFT)) & ANACTRL_ADC_CTRL_VBATDIVENABLE_MASK)
+/*! @} */
+
 /*! @name XO32M_CTRL - High speed Crystal Oscillator Control register */
 /*! @{ */
+
+#define ANACTRL_XO32M_CTRL_SLAVE_MASK            (0x10U)
+#define ANACTRL_XO32M_CTRL_SLAVE_SHIFT           (4U)
+/*! SLAVE - Xo in slave mode.
+ */
+#define ANACTRL_XO32M_CTRL_SLAVE(x)              (((uint32_t)(((uint32_t)(x)) << ANACTRL_XO32M_CTRL_SLAVE_SHIFT)) & ANACTRL_XO32M_CTRL_SLAVE_MASK)
+
+#define ANACTRL_XO32M_CTRL_OSC_CAP_IN_MASK       (0x7F00U)
+#define ANACTRL_XO32M_CTRL_OSC_CAP_IN_SHIFT      (8U)
+/*! OSC_CAP_IN - Tune capa banks of High speed Crystal Oscillator input pin
+ */
+#define ANACTRL_XO32M_CTRL_OSC_CAP_IN(x)         (((uint32_t)(((uint32_t)(x)) << ANACTRL_XO32M_CTRL_OSC_CAP_IN_SHIFT)) & ANACTRL_XO32M_CTRL_OSC_CAP_IN_MASK)
+
+#define ANACTRL_XO32M_CTRL_OSC_CAP_OUT_MASK      (0x3F8000U)
+#define ANACTRL_XO32M_CTRL_OSC_CAP_OUT_SHIFT     (15U)
+/*! OSC_CAP_OUT - Tune capa banks of High speed Crystal Oscillator output pin
+ */
+#define ANACTRL_XO32M_CTRL_OSC_CAP_OUT(x)        (((uint32_t)(((uint32_t)(x)) << ANACTRL_XO32M_CTRL_OSC_CAP_OUT_SHIFT)) & ANACTRL_XO32M_CTRL_OSC_CAP_OUT_MASK)
 
 #define ANACTRL_XO32M_CTRL_ACBUF_PASS_ENABLE_MASK (0x400000U)
 #define ANACTRL_XO32M_CTRL_ACBUF_PASS_ENABLE_SHIFT (22U)
@@ -4910,7 +4963,7 @@ typedef struct {
 
 #define ANACTRL_XO32M_CTRL_ENABLE_SYSTEM_CLK_OUT_MASK (0x1000000U)
 #define ANACTRL_XO32M_CTRL_ENABLE_SYSTEM_CLK_OUT_SHIFT (24U)
-/*! ENABLE_SYSTEM_CLK_OUT - Enable XO 32 MHz output to CPU system.
+/*! ENABLE_SYSTEM_CLK_OUT - Enable High speed Crystal oscillator output to CPU system.
  *  0b0..High speed Crystal oscillator output to CPU system is disabled.
  *  0b1..High speed Crystal oscillator output to CPU system is enabled.
  */
@@ -5344,6 +5397,100 @@ typedef struct {
 #define ANACTRL_RINGO2_CTRL_DIV_UPDATE_REQ(x)    (((uint32_t)(((uint32_t)(x)) << ANACTRL_RINGO2_CTRL_DIV_UPDATE_REQ_SHIFT)) & ANACTRL_RINGO2_CTRL_DIV_UPDATE_REQ_MASK)
 /*! @} */
 
+/*! @name LDO_XO32M - High Speed Crystal Oscillator (12 MHz - 32 MHz) Voltage Source Supply Control register */
+/*! @{ */
+
+#define ANACTRL_LDO_XO32M_BYPASS_MASK            (0x2U)
+#define ANACTRL_LDO_XO32M_BYPASS_SHIFT           (1U)
+/*! BYPASS - Activate LDO bypass.
+ *  0b0..Disable bypass mode (for normal operations).
+ *  0b1..Activate LDO bypass.
+ */
+#define ANACTRL_LDO_XO32M_BYPASS(x)              (((uint32_t)(((uint32_t)(x)) << ANACTRL_LDO_XO32M_BYPASS_SHIFT)) & ANACTRL_LDO_XO32M_BYPASS_MASK)
+
+#define ANACTRL_LDO_XO32M_HIGHZ_MASK             (0x4U)
+#define ANACTRL_LDO_XO32M_HIGHZ_SHIFT            (2U)
+/*! HIGHZ - .
+ *  0b0..Output in High normal state.
+ *  0b1..Output in High Impedance state.
+ */
+#define ANACTRL_LDO_XO32M_HIGHZ(x)               (((uint32_t)(((uint32_t)(x)) << ANACTRL_LDO_XO32M_HIGHZ_SHIFT)) & ANACTRL_LDO_XO32M_HIGHZ_MASK)
+
+#define ANACTRL_LDO_XO32M_VOUT_MASK              (0x38U)
+#define ANACTRL_LDO_XO32M_VOUT_SHIFT             (3U)
+/*! VOUT - Sets the LDO output level.
+ *  0b000..0.750 V.
+ *  0b001..0.775 V.
+ *  0b010..0.800 V.
+ *  0b011..0.825 V.
+ *  0b100..0.850 V.
+ *  0b101..0.875 V.
+ *  0b110..0.900 V.
+ *  0b111..0.925 V.
+ */
+#define ANACTRL_LDO_XO32M_VOUT(x)                (((uint32_t)(((uint32_t)(x)) << ANACTRL_LDO_XO32M_VOUT_SHIFT)) & ANACTRL_LDO_XO32M_VOUT_MASK)
+
+#define ANACTRL_LDO_XO32M_IBIAS_MASK             (0xC0U)
+#define ANACTRL_LDO_XO32M_IBIAS_SHIFT            (6U)
+/*! IBIAS - Adjust the biasing current.
+ */
+#define ANACTRL_LDO_XO32M_IBIAS(x)               (((uint32_t)(((uint32_t)(x)) << ANACTRL_LDO_XO32M_IBIAS_SHIFT)) & ANACTRL_LDO_XO32M_IBIAS_MASK)
+
+#define ANACTRL_LDO_XO32M_STABMODE_MASK          (0x300U)
+#define ANACTRL_LDO_XO32M_STABMODE_SHIFT         (8U)
+/*! STABMODE - Stability configuration.
+ */
+#define ANACTRL_LDO_XO32M_STABMODE(x)            (((uint32_t)(((uint32_t)(x)) << ANACTRL_LDO_XO32M_STABMODE_SHIFT)) & ANACTRL_LDO_XO32M_STABMODE_MASK)
+/*! @} */
+
+/*! @name AUX_BIAS - AUX_BIAS */
+/*! @{ */
+
+#define ANACTRL_AUX_BIAS_VREF1VENABLE_MASK       (0x2U)
+#define ANACTRL_AUX_BIAS_VREF1VENABLE_SHIFT      (1U)
+/*! VREF1VENABLE - Control output of 1V reference voltage.
+ *  0b0..Output of 1V reference voltage buffer is bypassed.
+ *  0b1..Output of 1V reference voltage is enabled.
+ */
+#define ANACTRL_AUX_BIAS_VREF1VENABLE(x)         (((uint32_t)(((uint32_t)(x)) << ANACTRL_AUX_BIAS_VREF1VENABLE_SHIFT)) & ANACTRL_AUX_BIAS_VREF1VENABLE_MASK)
+
+#define ANACTRL_AUX_BIAS_ITRIM_MASK              (0x7CU)
+#define ANACTRL_AUX_BIAS_ITRIM_SHIFT             (2U)
+/*! ITRIM - current trimming control word.
+ */
+#define ANACTRL_AUX_BIAS_ITRIM(x)                (((uint32_t)(((uint32_t)(x)) << ANACTRL_AUX_BIAS_ITRIM_SHIFT)) & ANACTRL_AUX_BIAS_ITRIM_MASK)
+
+#define ANACTRL_AUX_BIAS_PTATITRIM_MASK          (0xF80U)
+#define ANACTRL_AUX_BIAS_PTATITRIM_SHIFT         (7U)
+/*! PTATITRIM - current trimming control word for ptat current.
+ */
+#define ANACTRL_AUX_BIAS_PTATITRIM(x)            (((uint32_t)(((uint32_t)(x)) << ANACTRL_AUX_BIAS_PTATITRIM_SHIFT)) & ANACTRL_AUX_BIAS_PTATITRIM_MASK)
+
+#define ANACTRL_AUX_BIAS_VREF1VTRIM_MASK         (0x1F000U)
+#define ANACTRL_AUX_BIAS_VREF1VTRIM_SHIFT        (12U)
+/*! VREF1VTRIM - voltage trimming control word.
+ */
+#define ANACTRL_AUX_BIAS_VREF1VTRIM(x)           (((uint32_t)(((uint32_t)(x)) << ANACTRL_AUX_BIAS_VREF1VTRIM_SHIFT)) & ANACTRL_AUX_BIAS_VREF1VTRIM_MASK)
+
+#define ANACTRL_AUX_BIAS_VREF1VCURVETRIM_MASK    (0xE0000U)
+#define ANACTRL_AUX_BIAS_VREF1VCURVETRIM_SHIFT   (17U)
+/*! VREF1VCURVETRIM - Control bit to configure trimming state of mirror.
+ */
+#define ANACTRL_AUX_BIAS_VREF1VCURVETRIM(x)      (((uint32_t)(((uint32_t)(x)) << ANACTRL_AUX_BIAS_VREF1VCURVETRIM_SHIFT)) & ANACTRL_AUX_BIAS_VREF1VCURVETRIM_MASK)
+
+#define ANACTRL_AUX_BIAS_ITRIMCTRL0_MASK         (0x100000U)
+#define ANACTRL_AUX_BIAS_ITRIMCTRL0_SHIFT        (20U)
+/*! ITRIMCTRL0 - Control bit to configure trimming state of mirror.
+ */
+#define ANACTRL_AUX_BIAS_ITRIMCTRL0(x)           (((uint32_t)(((uint32_t)(x)) << ANACTRL_AUX_BIAS_ITRIMCTRL0_SHIFT)) & ANACTRL_AUX_BIAS_ITRIMCTRL0_MASK)
+
+#define ANACTRL_AUX_BIAS_ITRIMCTRL1_MASK         (0x200000U)
+#define ANACTRL_AUX_BIAS_ITRIMCTRL1_SHIFT        (21U)
+/*! ITRIMCTRL1 - Control bit to configure trimming state of mirror.
+ */
+#define ANACTRL_AUX_BIAS_ITRIMCTRL1(x)           (((uint32_t)(((uint32_t)(x)) << ANACTRL_AUX_BIAS_ITRIMCTRL1_SHIFT)) & ANACTRL_AUX_BIAS_ITRIMCTRL1_MASK)
+/*! @} */
+
 /*! @name USBHS_PHY_CTRL - USB High Speed Phy Control */
 /*! @{ */
 
@@ -5360,6 +5507,52 @@ typedef struct {
 #define ANACTRL_USBHS_PHY_CTRL_usb_id_ext(x)     (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_CTRL_usb_id_ext_SHIFT)) & ANACTRL_USBHS_PHY_CTRL_usb_id_ext_MASK)
 /*! @} */
 
+/*! @name USBHS_PHY_TRIM - USB High Speed Phy Trim values */
+/*! @{ */
+
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb_reg_env_tail_adj_vd_MASK (0x3U)
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb_reg_env_tail_adj_vd_SHIFT (0U)
+/*! trim_usb_reg_env_tail_adj_vd - Adjusts time constant of HS RX squelch (envelope) comparator.
+ */
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb_reg_env_tail_adj_vd(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_TRIM_trim_usb_reg_env_tail_adj_vd_SHIFT)) & ANACTRL_USBHS_PHY_TRIM_trim_usb_reg_env_tail_adj_vd_MASK)
+
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_d_cal_MASK (0x3CU)
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_d_cal_SHIFT (2U)
+/*! trim_usbphy_tx_d_cal - .
+ */
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_d_cal(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_d_cal_SHIFT)) & ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_d_cal_MASK)
+
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dp_MASK (0x7C0U)
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dp_SHIFT (6U)
+/*! trim_usbphy_tx_cal45dp - .
+ */
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dp(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dp_SHIFT)) & ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dp_MASK)
+
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dm_MASK (0xF800U)
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dm_SHIFT (11U)
+/*! trim_usbphy_tx_cal45dm - .
+ */
+#define ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dm(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dm_SHIFT)) & ANACTRL_USBHS_PHY_TRIM_trim_usbphy_tx_cal45dm_MASK)
+
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_tst_MASK (0x30000U)
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_tst_SHIFT (16U)
+/*! trim_usb2_refbias_tst - .
+ */
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_tst(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_tst_SHIFT)) & ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_tst_MASK)
+
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_vbgadj_MASK (0x1C0000U)
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_vbgadj_SHIFT (18U)
+/*! trim_usb2_refbias_vbgadj - .
+ */
+#define ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_vbgadj(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_vbgadj_SHIFT)) & ANACTRL_USBHS_PHY_TRIM_trim_usb2_refbias_vbgadj_MASK)
+
+#define ANACTRL_USBHS_PHY_TRIM_trim_pll_ctrl0_div_sel_MASK (0xE00000U)
+#define ANACTRL_USBHS_PHY_TRIM_trim_pll_ctrl0_div_sel_SHIFT (21U)
+/*! trim_pll_ctrl0_div_sel - .
+ */
+#define ANACTRL_USBHS_PHY_TRIM_trim_pll_ctrl0_div_sel(x) (((uint32_t)(((uint32_t)(x)) << ANACTRL_USBHS_PHY_TRIM_trim_pll_ctrl0_div_sel_SHIFT)) & ANACTRL_USBHS_PHY_TRIM_trim_pll_ctrl0_div_sel_MASK)
+/*! @} */
+
 
 /*!
  * @}
@@ -5367,7 +5560,7 @@ typedef struct {
 
 
 /* ANACTRL - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral ANACTRL base address */
   #define ANACTRL_BASE                             (0x50013000u)
   /** Peripheral ANACTRL base address */
@@ -5454,7 +5647,7 @@ typedef struct {
  */
 #define CASPER_CTRL0_ABBPAIR(x)                  (((uint32_t)(((uint32_t)(x)) << CASPER_CTRL0_ABBPAIR_SHIFT)) & CASPER_CTRL0_ABBPAIR_MASK)
 
-#define CASPER_CTRL0_ABOFF_MASK                  (0x4U)
+#define CASPER_CTRL0_ABOFF_MASK                  (0x1FFCU)
 #define CASPER_CTRL0_ABOFF_SHIFT                 (2U)
 /*! ABOFF - Word or DWord Offset of AB values, with B at [2]=0 and A at [2]=1 as far as the code
  *    sees (normally will be an interleaved bank so only sequential to AHB). Word offset only allowed
@@ -5745,7 +5938,7 @@ typedef struct {
 
 
 /* CASPER - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral CASPER base address */
   #define CASPER_BASE                              (0x500A5000u)
   /** Peripheral CASPER base address */
@@ -5883,7 +6076,7 @@ typedef struct {
 
 
 /* CRC - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral CRC_ENGINE base address */
   #define CRC_ENGINE_BASE                          (0x50095000u)
   /** Peripheral CRC_ENGINE base address */
@@ -6456,7 +6649,7 @@ typedef struct {
 
 
 /* CTIMER - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral CTIMER0 base address */
   #define CTIMER0_BASE                             (0x50008000u)
   /** Peripheral CTIMER0 base address */
@@ -6533,6 +6726,11 @@ typedef struct {
 #endif
 /** Interrupt vectors for the CTIMER peripheral type */
 #define CTIMER_IRQS                              { CTIMER0_IRQn, CTIMER1_IRQn, CTIMER2_IRQn, CTIMER3_IRQn, CTIMER4_IRQn }
+/* Backward compatibility for bitfield SHADOW */
+#define CTIMER_MSR_MATCH_SHADOW_MASK   CTIMER_MSR_SHADOW_MASK
+#define CTIMER_MSR_MATCH_SHADOW_SHIFT   CTIMER_MSR_SHADOW_SHIFT
+#define CTIMER_MSR_MATCH_SHADOW   CTIMER_MSR_SHADOW
+
 
 /*!
  * @}
@@ -6645,7 +6843,7 @@ typedef struct {
 
 
 /* DBGMAILBOX - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral DBGMAILBOX base address */
   #define DBGMAILBOX_BASE                          (0x5009C000u)
   /** Peripheral DBGMAILBOX base address */
@@ -7194,7 +7392,7 @@ typedef struct {
 
 
 /* DMA - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral DMA0 base address */
   #define DMA0_BASE                                (0x50082000u)
   /** Peripheral DMA0 base address */
@@ -7548,7 +7746,7 @@ typedef struct {
 
 
 /* FLASH - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral FLASH base address */
   #define FLASH_BASE                               (0x50034000u)
   /** Peripheral FLASH base address */
@@ -7592,45 +7790,45 @@ typedef struct {
 
 /** FLASH_CFPA - Register Layout Typedef */
 typedef struct {
-  __IO uint32_t HEADER;                            /**< ., offset: 0x0 */
-  __IO uint32_t VERSION;                           /**< ., offset: 0x4 */
+  __IO uint32_t HEADER;                            /**< , offset: 0x0 */
+  __IO uint32_t VERSION;                           /**< , offset: 0x4 */
   __IO uint32_t S_FW_VERSION;                      /**< Secure firmware version (Monotonic counter), offset: 0x8 */
   __IO uint32_t NS_FW_VERSION;                     /**< Non-Secure firmware version (Monotonic counter), offset: 0xC */
   __IO uint32_t IMAGE_KEY_REVOKE;                  /**< Image key revocation ID (Monotonic counter), offset: 0x10 */
        uint8_t RESERVED_0[4];
-  __IO uint32_t ROTKH_REVOKE;                      /**< ., offset: 0x18 */
-  __IO uint32_t VENDOR_USAGE;                      /**< ., offset: 0x1C */
+  __IO uint32_t ROTKH_REVOKE;                      /**< , offset: 0x18 */
+  __IO uint32_t VENDOR_USAGE;                      /**< , offset: 0x1C */
   __IO uint32_t DCFG_CC_SOCU_PIN;                  /**< With TZ-M, the part can be sold by level 1 customers (secure code developer) to level-2 customers who develops non-secure code only. - In this scenario, or easy of development, Level-I customer releases the part to always allow non-secure debug. - To allow level-2 customers to further seal the part DCFG_CC_SOCU_NS is used. - ROM will use this word to further restrict the debug access., offset: 0x20 */
   __IO uint32_t DCFG_CC_SOCU_DFLT;                 /**< With TZ-M, the part can be sold by level 1 customers (secure code developer) to level-2 customers who develops non-secure code only. - In this scenario, or easy of development, Level-I customer releases the part to always allow non-secure debug. - To allow level-2 customers to further seal the part DCFG_CC_SOCU_NS is used. - ROM will use this word to further restrict the debug access., offset: 0x24 */
   __IO uint32_t ENABLE_FA_MODE;                    /**< Enable FA mode. SET_FA_MODE Command should write 0xC33CA55A to this word to indicate boot ROM to enter FA mode., offset: 0x28 */
   __IO uint32_t CMPA_PROG_IN_PROGRESS;             /**< CMPA Page programming on going. This field shall be set to 0x5CC55AA5 in the active CFPA page each time CMPA page programming is going on. It shall always be set to 0x00000000 in the CFPA scratch area., offset: 0x2C */
   union {                                          /* offset: 0x30 */
-    __IO uint32_t PRINCE_REGION0_IV_CODE[14];        /**< ., array offset: 0x30, array step: 0x4 */
+    __IO uint32_t PRINCE_REGION0_IV_CODE[14];        /**< , array offset: 0x30, array step: 0x4 */
     struct {                                         /* offset: 0x30 */
-      __IO uint32_t PRINCE_REGION0_IV_HEADER0;         /**< ., offset: 0x30 */
-      __IO uint32_t PRINCE_REGION0_IV_HEADER1;         /**< ., offset: 0x34 */
-      __IO uint32_t PRINCE_REGION0_IV_BODY[12];        /**< ., array offset: 0x38, array step: 0x4 */
+      __IO uint32_t PRINCE_REGION0_IV_HEADER0;         /**< , offset: 0x30 */
+      __IO uint32_t PRINCE_REGION0_IV_HEADER1;         /**< , offset: 0x34 */
+      __IO uint32_t PRINCE_REGION0_IV_BODY[12];        /**< , array offset: 0x38, array step: 0x4 */
     } PRINCE_REGION0_IV_CODE_CORE;
   };
   union {                                          /* offset: 0x68 */
-    __IO uint32_t PRINCE_REGION1_IV_CODE[14];        /**< ., array offset: 0x68, array step: 0x4 */
+    __IO uint32_t PRINCE_REGION1_IV_CODE[14];        /**< , array offset: 0x68, array step: 0x4 */
     struct {                                         /* offset: 0x68 */
-      __IO uint32_t PRINCE_REGION1_IV_HEADER0;         /**< ., offset: 0x68 */
-      __IO uint32_t PRINCE_REGION1_IV_HEADER1;         /**< ., offset: 0x6C */
-      __IO uint32_t PRINCE_REGION1_IV_BODY[12];        /**< ., array offset: 0x70, array step: 0x4 */
+      __IO uint32_t PRINCE_REGION1_IV_HEADER0;         /**< , offset: 0x68 */
+      __IO uint32_t PRINCE_REGION1_IV_HEADER1;         /**< , offset: 0x6C */
+      __IO uint32_t PRINCE_REGION1_IV_BODY[12];        /**< , array offset: 0x70, array step: 0x4 */
     } PRINCE_REGION1_IV_CODE_CORE;
   };
   union {                                          /* offset: 0xA0 */
-    __IO uint32_t PRINCE_REGION2_IV_CODE[14];        /**< ., array offset: 0xA0, array step: 0x4 */
+    __IO uint32_t PRINCE_REGION2_IV_CODE[14];        /**< , array offset: 0xA0, array step: 0x4 */
     struct {                                         /* offset: 0xA0 */
-      __IO uint32_t PRINCE_REGION2_IV_HEADER0;         /**< ., offset: 0xA0 */
-      __IO uint32_t PRINCE_REGION2_IV_HEADER1;         /**< ., offset: 0xA4 */
-      __IO uint32_t PRINCE_REGION2_IV_BODY[12];        /**< ., array offset: 0xA8, array step: 0x4 */
+      __IO uint32_t PRINCE_REGION2_IV_HEADER0;         /**< , offset: 0xA0 */
+      __IO uint32_t PRINCE_REGION2_IV_HEADER1;         /**< , offset: 0xA4 */
+      __IO uint32_t PRINCE_REGION2_IV_BODY[12];        /**< , array offset: 0xA8, array step: 0x4 */
     } PRINCE_REGION2_IV_CODE_CORE;
   };
        uint8_t RESERVED_1[40];
   __IO uint32_t CUSTOMER_DEFINED[56];              /**< Customer Defined (Programable through ROM API), array offset: 0x100, array step: 0x4 */
-  __IO uint32_t SHA256_DIGEST[8];                  /**< SHA256_DIGEST0 for DIGEST[31:0] SHA256_DIGEST1 for DIGEST[63:32] SHA256_DIGEST2 for DIGEST[95:64] SHA256_DIGEST3 for DIGEST[127:96] SHA256_DIGEST4 for DIGEST[159:128] SHA256_DIGEST5 for DIGEST[191:160] SHA256_DIGEST6 for DIGEST[223:192] SHA256_DIGEST7 for DIGEST[255:224], array offset: 0x1E0, array step: 0x4 */
+  __IO uint32_t SHA256_DIGEST[8];                  /**< SHA256_DIGEST0 for DIGEST[31:0]..SHA256_DIGEST7 for DIGEST[255:224], array offset: 0x1E0, array step: 0x4 */
 } FLASH_CFPA_Type;
 
 /* ----------------------------------------------------------------------------
@@ -7642,23 +7840,19 @@ typedef struct {
  * @{
  */
 
-/*! @name HEADER - . */
+/*! @name HEADER -  */
 /*! @{ */
 
 #define FLASH_CFPA_HEADER_FIELD_MASK             (0xFFFFFFFFU)
 #define FLASH_CFPA_HEADER_FIELD_SHIFT            (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_HEADER_FIELD(x)               (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_HEADER_FIELD_SHIFT)) & FLASH_CFPA_HEADER_FIELD_MASK)
 /*! @} */
 
-/*! @name VERSION - . */
+/*! @name VERSION -  */
 /*! @{ */
 
 #define FLASH_CFPA_VERSION_FIELD_MASK            (0xFFFFFFFFU)
 #define FLASH_CFPA_VERSION_FIELD_SHIFT           (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_VERSION_FIELD(x)              (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_VERSION_FIELD_SHIFT)) & FLASH_CFPA_VERSION_FIELD_MASK)
 /*! @} */
 
@@ -7667,8 +7861,6 @@ typedef struct {
 
 #define FLASH_CFPA_S_FW_VERSION_FIELD_MASK       (0xFFFFFFFFU)
 #define FLASH_CFPA_S_FW_VERSION_FIELD_SHIFT      (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_S_FW_VERSION_FIELD(x)         (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_S_FW_VERSION_FIELD_SHIFT)) & FLASH_CFPA_S_FW_VERSION_FIELD_MASK)
 /*! @} */
 
@@ -7677,8 +7869,6 @@ typedef struct {
 
 #define FLASH_CFPA_NS_FW_VERSION_FIELD_MASK      (0xFFFFFFFFU)
 #define FLASH_CFPA_NS_FW_VERSION_FIELD_SHIFT     (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_NS_FW_VERSION_FIELD(x)        (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_NS_FW_VERSION_FIELD_SHIFT)) & FLASH_CFPA_NS_FW_VERSION_FIELD_MASK)
 /*! @} */
 
@@ -7687,12 +7877,10 @@ typedef struct {
 
 #define FLASH_CFPA_IMAGE_KEY_REVOKE_FIELD_MASK   (0xFFFFFFFFU)
 #define FLASH_CFPA_IMAGE_KEY_REVOKE_FIELD_SHIFT  (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_IMAGE_KEY_REVOKE_FIELD(x)     (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_IMAGE_KEY_REVOKE_FIELD_SHIFT)) & FLASH_CFPA_IMAGE_KEY_REVOKE_FIELD_MASK)
 /*! @} */
 
-/*! @name ROTKH_REVOKE - . */
+/*! @name ROTKH_REVOKE -  */
 /*! @{ */
 
 #define FLASH_CFPA_ROTKH_REVOKE_RoTK0_EN_MASK    (0x3U)
@@ -7720,7 +7908,7 @@ typedef struct {
 #define FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN(x)      (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN_SHIFT)) & FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN_MASK)
 /*! @} */
 
-/*! @name VENDOR_USAGE - . */
+/*! @name VENDOR_USAGE -  */
 /*! @{ */
 
 #define FLASH_CFPA_VENDOR_USAGE_DBG_VENDOR_USAGE_MASK (0xFFFFU)
@@ -7927,8 +8115,6 @@ typedef struct {
 
 #define FLASH_CFPA_ENABLE_FA_MODE_FIELD_MASK     (0xFFFFFFFFU)
 #define FLASH_CFPA_ENABLE_FA_MODE_FIELD_SHIFT    (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_ENABLE_FA_MODE_FIELD(x)       (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_ENABLE_FA_MODE_FIELD_SHIFT)) & FLASH_CFPA_ENABLE_FA_MODE_FIELD_MASK)
 /*! @} */
 
@@ -7937,179 +8123,141 @@ typedef struct {
 
 #define FLASH_CFPA_CMPA_PROG_IN_PROGRESS_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_CMPA_PROG_IN_PROGRESS_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_CMPA_PROG_IN_PROGRESS_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_CMPA_PROG_IN_PROGRESS_FIELD_SHIFT)) & FLASH_CFPA_CMPA_PROG_IN_PROGRESS_FIELD_MASK)
 /*! @} */
 
-/*! @name PRINCE_REGION0_IV_CODE - . */
+/*! @name PRINCE_REGION0_IV_CODE -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION0_IV_CODE_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION0_IV_CODE_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION0_IV_CODE_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION0_IV_CODE_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION0_IV_CODE_FIELD_MASK)
 /*! @} */
 
 /* The count of FLASH_CFPA_PRINCE_REGION0_IV_CODE */
 #define FLASH_CFPA_PRINCE_REGION0_IV_CODE_COUNT  (14U)
 
-/*! @name PRINCE_REGION0_IV_HEADER0 - . */
+/*! @name PRINCE_REGION0_IV_HEADER0 -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER0_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER0_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER0_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION0_IV_HEADER0_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION0_IV_HEADER0_FIELD_MASK)
 /*! @} */
 
-/*! @name PRINCE_REGION0_IV_HEADER1 - . */
+/*! @name PRINCE_REGION0_IV_HEADER1 -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_TYPE_MASK (0x3U)
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_TYPE_SHIFT (0U)
-/*! TYPE - .
- */
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_TYPE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_TYPE_SHIFT)) & FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_TYPE_MASK)
 
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_INDEX_MASK (0xF00U)
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_INDEX_SHIFT (8U)
-/*! INDEX - .
- */
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_INDEX(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_INDEX_SHIFT)) & FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_INDEX_MASK)
 
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_SIZE_MASK (0x3F000000U)
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_SIZE_SHIFT (24U)
-/*! SIZE - .
- */
 #define FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_SIZE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_SIZE_SHIFT)) & FLASH_CFPA_PRINCE_REGION0_IV_HEADER1_SIZE_MASK)
 /*! @} */
 
-/*! @name PRINCE_REGION0_IV_BODY - . */
+/*! @name PRINCE_REGION0_IV_BODY -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION0_IV_BODY_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION0_IV_BODY_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION0_IV_BODY_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION0_IV_BODY_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION0_IV_BODY_FIELD_MASK)
 /*! @} */
 
 /* The count of FLASH_CFPA_PRINCE_REGION0_IV_BODY */
 #define FLASH_CFPA_PRINCE_REGION0_IV_BODY_COUNT  (12U)
 
-/*! @name PRINCE_REGION1_IV_CODE - . */
+/*! @name PRINCE_REGION1_IV_CODE -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION1_IV_CODE_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION1_IV_CODE_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION1_IV_CODE_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION1_IV_CODE_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION1_IV_CODE_FIELD_MASK)
 /*! @} */
 
 /* The count of FLASH_CFPA_PRINCE_REGION1_IV_CODE */
 #define FLASH_CFPA_PRINCE_REGION1_IV_CODE_COUNT  (14U)
 
-/*! @name PRINCE_REGION1_IV_HEADER0 - . */
+/*! @name PRINCE_REGION1_IV_HEADER0 -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER0_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER0_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER0_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION1_IV_HEADER0_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION1_IV_HEADER0_FIELD_MASK)
 /*! @} */
 
-/*! @name PRINCE_REGION1_IV_HEADER1 - . */
+/*! @name PRINCE_REGION1_IV_HEADER1 -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_TYPE_MASK (0x3U)
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_TYPE_SHIFT (0U)
-/*! TYPE - .
- */
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_TYPE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_TYPE_SHIFT)) & FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_TYPE_MASK)
 
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_INDEX_MASK (0xF00U)
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_INDEX_SHIFT (8U)
-/*! INDEX - .
- */
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_INDEX(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_INDEX_SHIFT)) & FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_INDEX_MASK)
 
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_SIZE_MASK (0x3F000000U)
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_SIZE_SHIFT (24U)
-/*! SIZE - .
- */
 #define FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_SIZE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_SIZE_SHIFT)) & FLASH_CFPA_PRINCE_REGION1_IV_HEADER1_SIZE_MASK)
 /*! @} */
 
-/*! @name PRINCE_REGION1_IV_BODY - . */
+/*! @name PRINCE_REGION1_IV_BODY -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION1_IV_BODY_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION1_IV_BODY_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION1_IV_BODY_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION1_IV_BODY_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION1_IV_BODY_FIELD_MASK)
 /*! @} */
 
 /* The count of FLASH_CFPA_PRINCE_REGION1_IV_BODY */
 #define FLASH_CFPA_PRINCE_REGION1_IV_BODY_COUNT  (12U)
 
-/*! @name PRINCE_REGION2_IV_CODE - . */
+/*! @name PRINCE_REGION2_IV_CODE -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION2_IV_CODE_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION2_IV_CODE_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION2_IV_CODE_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION2_IV_CODE_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION2_IV_CODE_FIELD_MASK)
 /*! @} */
 
 /* The count of FLASH_CFPA_PRINCE_REGION2_IV_CODE */
 #define FLASH_CFPA_PRINCE_REGION2_IV_CODE_COUNT  (14U)
 
-/*! @name PRINCE_REGION2_IV_HEADER0 - . */
+/*! @name PRINCE_REGION2_IV_HEADER0 -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER0_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER0_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER0_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION2_IV_HEADER0_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION2_IV_HEADER0_FIELD_MASK)
 /*! @} */
 
-/*! @name PRINCE_REGION2_IV_HEADER1 - . */
+/*! @name PRINCE_REGION2_IV_HEADER1 -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_TYPE_MASK (0x3U)
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_TYPE_SHIFT (0U)
-/*! TYPE - .
- */
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_TYPE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_TYPE_SHIFT)) & FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_TYPE_MASK)
 
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_INDEX_MASK (0xF00U)
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_INDEX_SHIFT (8U)
-/*! INDEX - .
- */
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_INDEX(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_INDEX_SHIFT)) & FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_INDEX_MASK)
 
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_SIZE_MASK (0x3F000000U)
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_SIZE_SHIFT (24U)
-/*! SIZE - .
- */
 #define FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_SIZE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_SIZE_SHIFT)) & FLASH_CFPA_PRINCE_REGION2_IV_HEADER1_SIZE_MASK)
 /*! @} */
 
-/*! @name PRINCE_REGION2_IV_BODY - . */
+/*! @name PRINCE_REGION2_IV_BODY -  */
 /*! @{ */
 
 #define FLASH_CFPA_PRINCE_REGION2_IV_BODY_FIELD_MASK (0xFFFFFFFFU)
 #define FLASH_CFPA_PRINCE_REGION2_IV_BODY_FIELD_SHIFT (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_PRINCE_REGION2_IV_BODY_FIELD(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_PRINCE_REGION2_IV_BODY_FIELD_SHIFT)) & FLASH_CFPA_PRINCE_REGION2_IV_BODY_FIELD_MASK)
 /*! @} */
 
@@ -8121,21 +8269,17 @@ typedef struct {
 
 #define FLASH_CFPA_CUSTOMER_DEFINED_FIELD_MASK   (0xFFFFFFFFU)
 #define FLASH_CFPA_CUSTOMER_DEFINED_FIELD_SHIFT  (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_CUSTOMER_DEFINED_FIELD(x)     (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_CUSTOMER_DEFINED_FIELD_SHIFT)) & FLASH_CFPA_CUSTOMER_DEFINED_FIELD_MASK)
 /*! @} */
 
 /* The count of FLASH_CFPA_CUSTOMER_DEFINED */
 #define FLASH_CFPA_CUSTOMER_DEFINED_COUNT        (56U)
 
-/*! @name SHA256_DIGEST - SHA256_DIGEST0 for DIGEST[31:0] SHA256_DIGEST1 for DIGEST[63:32] SHA256_DIGEST2 for DIGEST[95:64] SHA256_DIGEST3 for DIGEST[127:96] SHA256_DIGEST4 for DIGEST[159:128] SHA256_DIGEST5 for DIGEST[191:160] SHA256_DIGEST6 for DIGEST[223:192] SHA256_DIGEST7 for DIGEST[255:224] */
+/*! @name SHA256_DIGEST - SHA256_DIGEST0 for DIGEST[31:0]..SHA256_DIGEST7 for DIGEST[255:224] */
 /*! @{ */
 
 #define FLASH_CFPA_SHA256_DIGEST_FIELD_MASK      (0xFFFFFFFFU)
 #define FLASH_CFPA_SHA256_DIGEST_FIELD_SHIFT     (0U)
-/*! FIELD - .
- */
 #define FLASH_CFPA_SHA256_DIGEST_FIELD(x)        (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_SHA256_DIGEST_FIELD_SHIFT)) & FLASH_CFPA_SHA256_DIGEST_FIELD_MASK)
 /*! @} */
 
@@ -8149,7 +8293,7 @@ typedef struct {
 
 
 /* FLASH_CFPA - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral FLASH_CFPA0 base address */
   #define FLASH_CFPA0_BASE                         (0x1009E000u)
   /** Peripheral FLASH_CFPA0 base address */
@@ -8217,25 +8361,25 @@ typedef struct {
 
 /** FLASH_CMPA - Register Layout Typedef */
 typedef struct {
-  __IO uint32_t BOOT_CFG;                          /**< ., offset: 0x0 */
-  __IO uint32_t SPI_FLASH_CFG;                     /**< ., offset: 0x4 */
-  __IO uint32_t USB_ID;                            /**< ., offset: 0x8 */
-  __IO uint32_t SDIO_CFG;                          /**< ., offset: 0xC */
-  __IO uint32_t CC_SOCU_PIN;                       /**< ., offset: 0x10 */
-  __IO uint32_t CC_SOCU_DFLT;                      /**< ., offset: 0x14 */
-  __IO uint32_t VENDOR_USAGE;                      /**< ., offset: 0x18 */
-  __IO uint32_t SECURE_BOOT_CFG;                   /**< ., offset: 0x1C */
-  __IO uint32_t PRINCE_BASE_ADDR;                  /**< ., offset: 0x20 */
+  __IO uint32_t BOOT_CFG;                          /**< , offset: 0x0 */
+  __IO uint32_t SPI_FLASH_CFG;                     /**< , offset: 0x4 */
+  __IO uint32_t USB_ID;                            /**< , offset: 0x8 */
+  __IO uint32_t SDIO_CFG;                          /**< , offset: 0xC */
+  __IO uint32_t CC_SOCU_PIN;                       /**< , offset: 0x10 */
+  __IO uint32_t CC_SOCU_DFLT;                      /**< , offset: 0x14 */
+  __IO uint32_t VENDOR_USAGE;                      /**< , offset: 0x18 */
+  __IO uint32_t SECURE_BOOT_CFG;                   /**< Secure boot configuration flags., offset: 0x1C */
+  __IO uint32_t PRINCE_BASE_ADDR;                  /**< , offset: 0x20 */
   __IO uint32_t PRINCE_SR_0;                       /**< Region 0, sub-region enable, offset: 0x24 */
   __IO uint32_t PRINCE_SR_1;                       /**< Region 1, sub-region enable, offset: 0x28 */
   __IO uint32_t PRINCE_SR_2;                       /**< Region 2, sub-region enable, offset: 0x2C */
   __IO uint32_t XTAL_32KHZ_CAPABANK_TRIM;          /**< Xtal 32kHz capabank triming., offset: 0x30 */
   __IO uint32_t XTAL_16MHZ_CAPABANK_TRIM;          /**< Xtal 16MHz capabank triming., offset: 0x34 */
        uint8_t RESERVED_0[24];
-  __IO uint32_t ROTKH[8];                          /**< ROTKH0 for Root of Trust Keys Table hash[255:224] ROTKH1 for Root of Trust Keys Table hash[223:192] ROTKH2 for Root of Trust Keys Table hash[191:160] ROTKH3 for Root of Trust Keys Table hash[159:128] ROTKH4 for Root of Trust Keys Table hash[127:96] ROTKH5 for Root of Trust Keys Table hash[95:64] ROTKH6 for Root of Trust Keys Table hash[63:32] ROTKH7 for Root of Trust Keys Table hash[31:0], array offset: 0x50, array step: 0x4 */
+  __IO uint32_t ROTKH[8];                          /**< ROTKH0 for Root of Trust Keys Table hash[255:224]..ROTKH7 for Root of Trust Keys Table hash[31:0], array offset: 0x50, array step: 0x4 */
        uint8_t RESERVED_1[144];
   __IO uint32_t CUSTOMER_DEFINED[56];              /**< Customer Defined (Programable through ROM API), array offset: 0x100, array step: 0x4 */
-  __IO uint32_t SHA256_DIGEST[8];                  /**< SHA256_DIGEST0 for DIGEST[31:0] SHA256_DIGEST1 for DIGEST[63:32] SHA256_DIGEST2 for DIGEST[95:64] SHA256_DIGEST3 for DIGEST[127:96] SHA256_DIGEST4 for DIGEST[159:128] SHA256_DIGEST5 for DIGEST[191:160] SHA256_DIGEST6 for DIGEST[223:192] SHA256_DIGEST7 for DIGEST[255:224], array offset: 0x1E0, array step: 0x4 */
+  __IO uint32_t SHA256_DIGEST[8];                  /**< SHA256_DIGEST0 for DIGEST[31:0]..SHA256_DIGEST7 for DIGEST[255:224], array offset: 0x1E0, array step: 0x4 */
 } FLASH_CMPA_Type;
 
 /* ----------------------------------------------------------------------------
@@ -8247,16 +8391,17 @@ typedef struct {
  * @{
  */
 
-/*! @name BOOT_CFG - . */
+/*! @name BOOT_CFG -  */
 /*! @{ */
 
 #define FLASH_CMPA_BOOT_CFG_DEFAULT_ISP_MODE_MASK (0x70U)
 #define FLASH_CMPA_BOOT_CFG_DEFAULT_ISP_MODE_SHIFT (4U)
 /*! DEFAULT_ISP_MODE - Default ISP mode:
  *  0b000..Auto ISP
- *  0b001..USB_HID_MSC
- *  0b010..SPI Slave ISP
- *  0b011..I2C Slave ISP
+ *  0b001..USB_HID_ISP
+ *  0b010..UART ISP
+ *  0b011..SPI Slave ISP
+ *  0b100..I2C Slave ISP
  *  0b111..Disable ISP fall through
  */
 #define FLASH_CMPA_BOOT_CFG_DEFAULT_ISP_MODE(x)  (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_BOOT_CFG_DEFAULT_ISP_MODE_SHIFT)) & FLASH_CMPA_BOOT_CFG_DEFAULT_ISP_MODE_MASK)
@@ -8279,7 +8424,7 @@ typedef struct {
 #define FLASH_CMPA_BOOT_CFG_BOOT_FAILURE_PIN(x)  (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_BOOT_CFG_BOOT_FAILURE_PIN_SHIFT)) & FLASH_CMPA_BOOT_CFG_BOOT_FAILURE_PIN_MASK)
 /*! @} */
 
-/*! @name SPI_FLASH_CFG - . */
+/*! @name SPI_FLASH_CFG -  */
 /*! @{ */
 
 #define FLASH_CMPA_SPI_FLASH_CFG_SPI_RECOVERY_BOOT_EN_MASK (0x1FU)
@@ -8289,33 +8434,27 @@ typedef struct {
 #define FLASH_CMPA_SPI_FLASH_CFG_SPI_RECOVERY_BOOT_EN(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SPI_FLASH_CFG_SPI_RECOVERY_BOOT_EN_SHIFT)) & FLASH_CMPA_SPI_FLASH_CFG_SPI_RECOVERY_BOOT_EN_MASK)
 /*! @} */
 
-/*! @name USB_ID - . */
+/*! @name USB_ID -  */
 /*! @{ */
 
 #define FLASH_CMPA_USB_ID_USB_VENDOR_ID_MASK     (0xFFFFU)
 #define FLASH_CMPA_USB_ID_USB_VENDOR_ID_SHIFT    (0U)
-/*! USB_VENDOR_ID - .
- */
 #define FLASH_CMPA_USB_ID_USB_VENDOR_ID(x)       (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_USB_ID_USB_VENDOR_ID_SHIFT)) & FLASH_CMPA_USB_ID_USB_VENDOR_ID_MASK)
 
 #define FLASH_CMPA_USB_ID_USB_PRODUCT_ID_MASK    (0xFFFF0000U)
 #define FLASH_CMPA_USB_ID_USB_PRODUCT_ID_SHIFT   (16U)
-/*! USB_PRODUCT_ID - .
- */
 #define FLASH_CMPA_USB_ID_USB_PRODUCT_ID(x)      (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_USB_ID_USB_PRODUCT_ID_SHIFT)) & FLASH_CMPA_USB_ID_USB_PRODUCT_ID_MASK)
 /*! @} */
 
-/*! @name SDIO_CFG - . */
+/*! @name SDIO_CFG -  */
 /*! @{ */
 
 #define FLASH_CMPA_SDIO_CFG_FIELD_MASK           (0xFFFFFFFFU)
 #define FLASH_CMPA_SDIO_CFG_FIELD_SHIFT          (0U)
-/*! FIELD - .
- */
 #define FLASH_CMPA_SDIO_CFG_FIELD(x)             (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SDIO_CFG_FIELD_SHIFT)) & FLASH_CMPA_SDIO_CFG_FIELD_MASK)
 /*! @} */
 
-/*! @name CC_SOCU_PIN - . */
+/*! @name CC_SOCU_PIN -  */
 /*! @{ */
 
 #define FLASH_CMPA_CC_SOCU_PIN_NIDEN_MASK        (0x1U)
@@ -8411,7 +8550,7 @@ typedef struct {
 #define FLASH_CMPA_CC_SOCU_PIN_INVERSE_VALUE(x)  (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_CC_SOCU_PIN_INVERSE_VALUE_SHIFT)) & FLASH_CMPA_CC_SOCU_PIN_INVERSE_VALUE_MASK)
 /*! @} */
 
-/*! @name CC_SOCU_DFLT - . */
+/*! @name CC_SOCU_DFLT -  */
 /*! @{ */
 
 #define FLASH_CMPA_CC_SOCU_DFLT_NIDEN_MASK       (0x1U)
@@ -8501,7 +8640,7 @@ typedef struct {
 #define FLASH_CMPA_CC_SOCU_DFLT_INVERSE_VALUE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_CC_SOCU_DFLT_INVERSE_VALUE_SHIFT)) & FLASH_CMPA_CC_SOCU_DFLT_INVERSE_VALUE_MASK)
 /*! @} */
 
-/*! @name VENDOR_USAGE - . */
+/*! @name VENDOR_USAGE -  */
 /*! @{ */
 
 #define FLASH_CMPA_VENDOR_USAGE_VENDOR_USAGE_MASK (0xFFFF0000U)
@@ -8511,49 +8650,76 @@ typedef struct {
 #define FLASH_CMPA_VENDOR_USAGE_VENDOR_USAGE(x)  (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_VENDOR_USAGE_VENDOR_USAGE_SHIFT)) & FLASH_CMPA_VENDOR_USAGE_VENDOR_USAGE_MASK)
 /*! @} */
 
-/*! @name SECURE_BOOT_CFG - . */
+/*! @name SECURE_BOOT_CFG - Secure boot configuration flags. */
 /*! @{ */
 
 #define FLASH_CMPA_SECURE_BOOT_CFG_RSA4K_MASK    (0x3U)
 #define FLASH_CMPA_SECURE_BOOT_CFG_RSA4K_SHIFT   (0U)
-/*! RSA4K - Use RSA4096 keys only. 00- RSA2048 keys 01, 10, 11 - RSA4096 keys
+/*! RSA4K - Use RSA4096 keys only.
+ *  0b00..Allow RSA2048 and higher
+ *  0b01..RSA4096 only
+ *  0b10..RSA4096 only
+ *  0b11..RSA4096 only
  */
 #define FLASH_CMPA_SECURE_BOOT_CFG_RSA4K(x)      (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_RSA4K_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_RSA4K_MASK)
 
-#define FLASH_CMPA_SECURE_BOOT_CFG_DICE_ENC_NXP_CFG_MASK (0xCU)
-#define FLASH_CMPA_SECURE_BOOT_CFG_DICE_ENC_NXP_CFG_SHIFT (2U)
-/*! DICE_ENC_NXP_CFG - Include NXP area in DICE computation. 00 - not included 01, 10, 11 - included
+#define FLASH_CMPA_SECURE_BOOT_CFG_DICE_INC_NXP_CFG_MASK (0xCU)
+#define FLASH_CMPA_SECURE_BOOT_CFG_DICE_INC_NXP_CFG_SHIFT (2U)
+/*! DICE_INC_NXP_CFG - Include NXP area in DICE computation.
+ *  0b00..not included
+ *  0b01..included
+ *  0b10..included
+ *  0b11..included
  */
-#define FLASH_CMPA_SECURE_BOOT_CFG_DICE_ENC_NXP_CFG(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_DICE_ENC_NXP_CFG_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_DICE_ENC_NXP_CFG_MASK)
+#define FLASH_CMPA_SECURE_BOOT_CFG_DICE_INC_NXP_CFG(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_DICE_INC_NXP_CFG_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_DICE_INC_NXP_CFG_MASK)
 
 #define FLASH_CMPA_SECURE_BOOT_CFG_DICE_CUST_CFG_MASK (0x30U)
 #define FLASH_CMPA_SECURE_BOOT_CFG_DICE_CUST_CFG_SHIFT (4U)
-/*! DICE_CUST_CFG - Include Customer factory area (including keys) in DICE computation. 00 - not included 01, 10, 11 - included
+/*! DICE_CUST_CFG - Include Customer factory area (including keys) in DICE computation.
+ *  0b00..not included
+ *  0b01..included
+ *  0b10..included
+ *  0b11..included
  */
 #define FLASH_CMPA_SECURE_BOOT_CFG_DICE_CUST_CFG(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_DICE_CUST_CFG_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_DICE_CUST_CFG_MASK)
 
 #define FLASH_CMPA_SECURE_BOOT_CFG_SKIP_DICE_MASK (0xC0U)
 #define FLASH_CMPA_SECURE_BOOT_CFG_SKIP_DICE_SHIFT (6U)
-/*! SKIP_DICE - Skip DICE computation. 00 - Enable DICE 01,10,11 - Disable DICE
+/*! SKIP_DICE - Skip DICE computation
+ *  0b00..Enable DICE
+ *  0b01..Disable DICE
+ *  0b10..Disable DICE
+ *  0b11..Disable DICE
  */
 #define FLASH_CMPA_SECURE_BOOT_CFG_SKIP_DICE(x)  (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_SKIP_DICE_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_SKIP_DICE_MASK)
 
 #define FLASH_CMPA_SECURE_BOOT_CFG_TZM_IMAGE_TYPE_MASK (0x300U)
 #define FLASH_CMPA_SECURE_BOOT_CFG_TZM_IMAGE_TYPE_SHIFT (8U)
-/*! TZM_IMAGE_TYPE - TrustZone-M mode. 00 - TZM mode in image header. 01 - Disable TZ-M. Boots to
- *    NonSecure. 10 - TZ-M enable boots to secure mode. 11 - Preset TZM checker from image header.
+/*! TZM_IMAGE_TYPE - TrustZone-M mode
+ *  0b00..TZ-M image mode is taken from application image header
+ *  0b01..TZ-M disabled image, boots to non-secure mode
+ *  0b10..TZ-M enabled image, boots to secure mode
+ *  0b11..TZ-M enabled image with TZ-M preset, boot to secure mode TZ-M pre-configured by data from application image header
  */
 #define FLASH_CMPA_SECURE_BOOT_CFG_TZM_IMAGE_TYPE(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_TZM_IMAGE_TYPE_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_TZM_IMAGE_TYPE_MASK)
 
 #define FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_SET_KEY_MASK (0xC00U)
 #define FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_SET_KEY_SHIFT (10U)
-/*! BLOCK_SET_KEY - Block PUF key code generation. 00 - Enable Key code generation 01, 10, 11 - Disable key code generation
+/*! BLOCK_SET_KEY - Block PUF key code generation
+ *  0b00..Allow PUF Key Code generation
+ *  0b01..Disable PUF Key Code generation
+ *  0b10..Disable PUF Key Code generation
+ *  0b11..Disable PUF Key Code generation
  */
 #define FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_SET_KEY(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_SET_KEY_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_SET_KEY_MASK)
 
 #define FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_ENROLL_MASK (0x3000U)
 #define FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_ENROLL_SHIFT (12U)
-/*! BLOCK_ENROLL - Block PUF enrollement. 00 - Enable enrollment mode 01, 10, 11 - Disable further enrollmnet
+/*! BLOCK_ENROLL - Block PUF enrollement
+ *  0b00..Allow PUF enroll operation
+ *  0b01..Disable PUF enroll operation
+ *  0b10..Disable PUF enroll operation
+ *  0b11..Disable PUF enroll operation
  */
 #define FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_ENROLL(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_ENROLL_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_BLOCK_ENROLL_MASK)
 
@@ -8565,69 +8731,83 @@ typedef struct {
 
 #define FLASH_CMPA_SECURE_BOOT_CFG_SEC_BOOT_EN_MASK (0xC0000000U)
 #define FLASH_CMPA_SECURE_BOOT_CFG_SEC_BOOT_EN_SHIFT (30U)
-/*! SEC_BOOT_EN - Secure boot enable. 00 - Plain image (internal flash with or without CRC) 01, 10,
- *    11 - Boot signed images. (internal flash, RSA signed)
+/*! SEC_BOOT_EN - Secure boot enable
+ *  0b00..Plain image (internal flash with or without CRC)
+ *  0b01..Boot signed images. (internal flash, RSA signed)
+ *  0b10..Boot signed images. (internal flash, RSA signed)
+ *  0b11..Boot signed images. (internal flash, RSA signed)
  */
 #define FLASH_CMPA_SECURE_BOOT_CFG_SEC_BOOT_EN(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SECURE_BOOT_CFG_SEC_BOOT_EN_SHIFT)) & FLASH_CMPA_SECURE_BOOT_CFG_SEC_BOOT_EN_MASK)
 /*! @} */
 
-/*! @name PRINCE_BASE_ADDR - . */
+/*! @name PRINCE_BASE_ADDR -  */
 /*! @{ */
 
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR0_PRG_MASK (0xFU)
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR0_PRG_SHIFT (0U)
-/*! ADDR0_PRG - Programmable portion of the base address of region 0.
+/*! ADDR0_PRG - Programmable portion of the base address of region 0
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR0_PRG(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_ADDR0_PRG_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_ADDR0_PRG_MASK)
 
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR1_PRG_MASK (0xF0U)
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR1_PRG_SHIFT (4U)
-/*! ADDR1_PRG - Programmable portion of the base address of region 1.
+/*! ADDR1_PRG - Programmable portion of the base address of region 1
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR1_PRG(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_ADDR1_PRG_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_ADDR1_PRG_MASK)
 
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR2_PRG_MASK (0xF00U)
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR2_PRG_SHIFT (8U)
-/*! ADDR2_PRG - Programmable portion of the base address of region 2.
+/*! ADDR2_PRG - Programmable portion of the base address of region 2
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_ADDR2_PRG(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_ADDR2_PRG_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_ADDR2_PRG_MASK)
 
-#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG0_MASK (0x30000U)
-#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG0_SHIFT (16U)
-/*! LOCK_REG0 - Lock PRINCE region0 settings. 00 - Region is not locked. 01, 10, 11 - Region is locked.
+#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG0_MASK (0xC0000U)
+#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG0_SHIFT (18U)
+/*! LOCK_REG0 - Lock PRINCE region0 settings
+ *  0b00..Region is not locked
+ *  0b01..Region is locked
+ *  0b10..Region is locked
+ *  0b11..Region is locked
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG0(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG0_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG0_MASK)
 
-#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG1_MASK (0xC0000U)
-#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG1_SHIFT (18U)
-/*! LOCK_REG1 - Lock PRINCE region1 settings. 00 - Region is not locked. 01, 10, 11 - Region is locked.
+#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG1_MASK (0x300000U)
+#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG1_SHIFT (20U)
+/*! LOCK_REG1 - Lock PRINCE region1 settings
+ *  0b00..Region is not locked
+ *  0b01..Region is locked
+ *  0b10..Region is locked
+ *  0b11..Region is locked
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG1(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG1_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG1_MASK)
 
-#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG2_MASK (0x300000U)
-#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG2_SHIFT (20U)
-/*! LOCK_REG2 - Lock PRINCE region2 settings. 00 - Region is not locked. 01, 10, 11 - Region is locked.
- */
-#define FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG2(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG2_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_LOCK_REG2_MASK)
-
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG0_ERASE_CHECK_EN_MASK (0x3000000U)
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG0_ERASE_CHECK_EN_SHIFT (24U)
-/*! REG0_ERASE_CHECK_EN - For PRINCE region0 enable checking whether all encrypted pages are erased
- *    together. 00 - Check is disabled. 01, 10, 11 - Check is enabled.
+/*! REG0_ERASE_CHECK_EN - For PRINCE region0 enable checking whether all encrypted pages are erased together
+ *  0b00..Region is disabled
+ *  0b01..Region is enabled
+ *  0b10..Region is enabled
+ *  0b11..Region is enabled
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG0_ERASE_CHECK_EN(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_REG0_ERASE_CHECK_EN_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_REG0_ERASE_CHECK_EN_MASK)
 
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG1_ERASE_CHECK_EN_MASK (0xC000000U)
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG1_ERASE_CHECK_EN_SHIFT (26U)
-/*! REG1_ERASE_CHECK_EN - For PRINCE region1 enable checking whether all encrypted pages are erased
- *    together. 00 - Check is disabled. 01, 10, 11 - Check is enabled.
+/*! REG1_ERASE_CHECK_EN - For PRINCE region1 enable checking whether all encrypted pages are erased together
+ *  0b00..Region is disabled
+ *  0b01..Region is enabled
+ *  0b10..Region is enabled
+ *  0b11..Region is enabled
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG1_ERASE_CHECK_EN(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_REG1_ERASE_CHECK_EN_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_REG1_ERASE_CHECK_EN_MASK)
 
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG2_ERASE_CHECK_EN_MASK (0x30000000U)
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG2_ERASE_CHECK_EN_SHIFT (28U)
-/*! REG2_ERASE_CHECK_EN - For PRINCE region2 enable checking whether all encrypted pages are erased
- *    together. 00 - Check is disabled. 01, 10, 11 - Check is enabled.
+/*! REG2_ERASE_CHECK_EN - For PRINCE region2 enable checking whether all encrypted pages are erased together
+ *  0b00..Region is disabled
+ *  0b01..Region is enabled
+ *  0b10..Region is enabled
+ *  0b11..Region is enabled
  */
 #define FLASH_CMPA_PRINCE_BASE_ADDR_REG2_ERASE_CHECK_EN(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_BASE_ADDR_REG2_ERASE_CHECK_EN_SHIFT)) & FLASH_CMPA_PRINCE_BASE_ADDR_REG2_ERASE_CHECK_EN_MASK)
 /*! @} */
@@ -8637,8 +8817,6 @@ typedef struct {
 
 #define FLASH_CMPA_PRINCE_SR_0_FIELD_MASK        (0xFFFFFFFFU)
 #define FLASH_CMPA_PRINCE_SR_0_FIELD_SHIFT       (0U)
-/*! FIELD - .
- */
 #define FLASH_CMPA_PRINCE_SR_0_FIELD(x)          (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_SR_0_FIELD_SHIFT)) & FLASH_CMPA_PRINCE_SR_0_FIELD_MASK)
 /*! @} */
 
@@ -8647,8 +8825,6 @@ typedef struct {
 
 #define FLASH_CMPA_PRINCE_SR_1_FIELD_MASK        (0xFFFFFFFFU)
 #define FLASH_CMPA_PRINCE_SR_1_FIELD_SHIFT       (0U)
-/*! FIELD - .
- */
 #define FLASH_CMPA_PRINCE_SR_1_FIELD(x)          (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_SR_1_FIELD_SHIFT)) & FLASH_CMPA_PRINCE_SR_1_FIELD_MASK)
 /*! @} */
 
@@ -8657,8 +8833,6 @@ typedef struct {
 
 #define FLASH_CMPA_PRINCE_SR_2_FIELD_MASK        (0xFFFFFFFFU)
 #define FLASH_CMPA_PRINCE_SR_2_FIELD_SHIFT       (0U)
-/*! FIELD - .
- */
 #define FLASH_CMPA_PRINCE_SR_2_FIELD(x)          (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_PRINCE_SR_2_FIELD_SHIFT)) & FLASH_CMPA_PRINCE_SR_2_FIELD_MASK)
 /*! @} */
 
@@ -8667,7 +8841,9 @@ typedef struct {
 
 #define FLASH_CMPA_XTAL_32KHZ_CAPABANK_TRIM_TRIM_VALID_MASK (0x1U)
 #define FLASH_CMPA_XTAL_32KHZ_CAPABANK_TRIM_TRIM_VALID_SHIFT (0U)
-/*! TRIM_VALID - 0 : Capa Bank trimmings not valid. Default trimmings value are used. 1 : Capa Bank trimmings valid.
+/*! TRIM_VALID - XTAL 32kHz capa bank trimmings
+ *  0b0..Capa Bank trimmings not valid. Default trimmings value are used
+ *  0b1..Capa Bank trimmings valid
  */
 #define FLASH_CMPA_XTAL_32KHZ_CAPABANK_TRIM_TRIM_VALID(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_XTAL_32KHZ_CAPABANK_TRIM_TRIM_VALID_SHIFT)) & FLASH_CMPA_XTAL_32KHZ_CAPABANK_TRIM_TRIM_VALID_MASK)
 
@@ -8695,7 +8871,9 @@ typedef struct {
 
 #define FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_TRIM_VALID_MASK (0x1U)
 #define FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_TRIM_VALID_SHIFT (0U)
-/*! TRIM_VALID - 0 : Capa Bank trimmings not valid. Default trimmings value are used. 1 : Capa Bank trimmings valid.
+/*! TRIM_VALID - XTAL 16MHz capa bank trimmings
+ *  0b0..Capa Bank trimmings not valid. Default trimmings value are used
+ *  0b1..Capa Bank trimmings valid
  */
 #define FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_TRIM_VALID(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_TRIM_VALID_SHIFT)) & FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_TRIM_VALID_MASK)
 
@@ -8718,13 +8896,11 @@ typedef struct {
 #define FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_PCB_XOUT_PARA_CAP_PF_X100(x) (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_PCB_XOUT_PARA_CAP_PF_X100_SHIFT)) & FLASH_CMPA_XTAL_16MHZ_CAPABANK_TRIM_PCB_XOUT_PARA_CAP_PF_X100_MASK)
 /*! @} */
 
-/*! @name ROTKH - ROTKH0 for Root of Trust Keys Table hash[255:224] ROTKH1 for Root of Trust Keys Table hash[223:192] ROTKH2 for Root of Trust Keys Table hash[191:160] ROTKH3 for Root of Trust Keys Table hash[159:128] ROTKH4 for Root of Trust Keys Table hash[127:96] ROTKH5 for Root of Trust Keys Table hash[95:64] ROTKH6 for Root of Trust Keys Table hash[63:32] ROTKH7 for Root of Trust Keys Table hash[31:0] */
+/*! @name ROTKH - ROTKH0 for Root of Trust Keys Table hash[255:224]..ROTKH7 for Root of Trust Keys Table hash[31:0] */
 /*! @{ */
 
 #define FLASH_CMPA_ROTKH_FIELD_MASK              (0xFFFFFFFFU)
 #define FLASH_CMPA_ROTKH_FIELD_SHIFT             (0U)
-/*! FIELD - .
- */
 #define FLASH_CMPA_ROTKH_FIELD(x)                (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_ROTKH_FIELD_SHIFT)) & FLASH_CMPA_ROTKH_FIELD_MASK)
 /*! @} */
 
@@ -8736,21 +8912,17 @@ typedef struct {
 
 #define FLASH_CMPA_CUSTOMER_DEFINED_FIELD_MASK   (0xFFFFFFFFU)
 #define FLASH_CMPA_CUSTOMER_DEFINED_FIELD_SHIFT  (0U)
-/*! FIELD - .
- */
 #define FLASH_CMPA_CUSTOMER_DEFINED_FIELD(x)     (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_CUSTOMER_DEFINED_FIELD_SHIFT)) & FLASH_CMPA_CUSTOMER_DEFINED_FIELD_MASK)
 /*! @} */
 
 /* The count of FLASH_CMPA_CUSTOMER_DEFINED */
 #define FLASH_CMPA_CUSTOMER_DEFINED_COUNT        (56U)
 
-/*! @name SHA256_DIGEST - SHA256_DIGEST0 for DIGEST[31:0] SHA256_DIGEST1 for DIGEST[63:32] SHA256_DIGEST2 for DIGEST[95:64] SHA256_DIGEST3 for DIGEST[127:96] SHA256_DIGEST4 for DIGEST[159:128] SHA256_DIGEST5 for DIGEST[191:160] SHA256_DIGEST6 for DIGEST[223:192] SHA256_DIGEST7 for DIGEST[255:224] */
+/*! @name SHA256_DIGEST - SHA256_DIGEST0 for DIGEST[31:0]..SHA256_DIGEST7 for DIGEST[255:224] */
 /*! @{ */
 
 #define FLASH_CMPA_SHA256_DIGEST_FIELD_MASK      (0xFFFFFFFFU)
 #define FLASH_CMPA_SHA256_DIGEST_FIELD_SHIFT     (0U)
-/*! FIELD - .
- */
 #define FLASH_CMPA_SHA256_DIGEST_FIELD(x)        (((uint32_t)(((uint32_t)(x)) << FLASH_CMPA_SHA256_DIGEST_FIELD_SHIFT)) & FLASH_CMPA_SHA256_DIGEST_FIELD_MASK)
 /*! @} */
 
@@ -8764,7 +8936,7 @@ typedef struct {
 
 
 /* FLASH_CMPA - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral FLASH_CMPA base address */
   #define FLASH_CMPA_BASE                          (0x1009E400u)
   /** Peripheral FLASH_CMPA base address */
@@ -9260,7 +9432,7 @@ typedef struct {
 
 
 /* FLASH_KEY_STORE - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral FLASH_KEY_STORE base address */
   #define FLASH_KEY_STORE_BASE                     (0x1009E600u)
   /** Peripheral FLASH_KEY_STORE base address */
@@ -9417,7 +9589,7 @@ typedef struct {
 
 
 /* FLEXCOMM - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral FLEXCOMM0 base address */
   #define FLEXCOMM0_BASE                           (0x50086000u)
   /** Peripheral FLEXCOMM0 base address */
@@ -9641,7 +9813,7 @@ typedef struct {
 
 
 /* GINT - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral GINT0 base address */
   #define GINT0_BASE                               (0x50002000u)
   /** Peripheral GINT0 base address */
@@ -9925,7 +10097,7 @@ typedef struct {
 
 
 /* GPIO - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral GPIO base address */
   #define GPIO_BASE                                (0x5008C000u)
   /** Peripheral GPIO base address */
@@ -10439,7 +10611,7 @@ typedef struct {
 
 
 /* HASHCRYPT - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral HASHCRYPT base address */
   #define HASHCRYPT_BASE                           (0x500A4000u)
   /** Peripheral HASHCRYPT base address */
@@ -11325,7 +11497,7 @@ typedef struct {
 
 
 /* I2C - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral I2C0 base address */
   #define I2C0_BASE                                (0x50086000u)
   /** Peripheral I2C0 base address */
@@ -11478,7 +11650,8 @@ typedef struct {
        uint8_t RESERVED_6[8];
   __I  uint32_t FIFORDNOPOP;                       /**< FIFO data read with no FIFO pop., offset: 0xE40 */
   __I  uint32_t FIFORD48HNOPOP;                    /**< FIFO data read for upper data bits with no FIFO pop. May only be used if the I2S is configured for 2x 24-bit data and not using DMA., offset: 0xE44 */
-       uint8_t RESERVED_7[436];
+  __I  uint32_t FIFOSIZE;                          /**< FIFO size register, offset: 0xE48 */
+       uint8_t RESERVED_7[432];
   __I  uint32_t ID;                                /**< I2S Module identification, offset: 0xFFC */
 } I2S_Type;
 
@@ -12088,6 +12261,16 @@ typedef struct {
 #define I2S_FIFORD48HNOPOP_RXDATA(x)             (((uint32_t)(((uint32_t)(x)) << I2S_FIFORD48HNOPOP_RXDATA_SHIFT)) & I2S_FIFORD48HNOPOP_RXDATA_MASK)
 /*! @} */
 
+/*! @name FIFOSIZE - FIFO size register */
+/*! @{ */
+
+#define I2S_FIFOSIZE_FIFOSIZE_MASK               (0x1FU)
+#define I2S_FIFOSIZE_FIFOSIZE_SHIFT              (0U)
+/*! FIFOSIZE - Provides the size of the FIFO for software. The size of the SPI FIFO is 8 entries.
+ */
+#define I2S_FIFOSIZE_FIFOSIZE(x)                 (((uint32_t)(((uint32_t)(x)) << I2S_FIFOSIZE_FIFOSIZE_SHIFT)) & I2S_FIFOSIZE_FIFOSIZE_MASK)
+/*! @} */
+
 /*! @name ID - I2S Module identification */
 /*! @{ */
 
@@ -12123,7 +12306,7 @@ typedef struct {
 
 
 /* I2S - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral I2S0 base address */
   #define I2S0_BASE                                (0x50086000u)
   /** Peripheral I2S0 base address */
@@ -12536,9 +12719,15 @@ typedef struct {
 
 #define INPUTMUX_FREQMEAS_REF_CLKIN_MASK         (0x1FU)
 #define INPUTMUX_FREQMEAS_REF_CLKIN_SHIFT        (0U)
-/*! CLKIN - Clock source number (decimal value) for frequency measure function target clock: 0 =
- *    CLK_IN 1 = FRO 12 MHz oscillator 2 = Watchdog oscillator 3 = 32 kHz RTC oscillator 4 = Main clock
- *    (see Section 4.5.23) 5 = PIO0_4 6 = PIO0_20 7 = PIO0_24 8 = PIO1_4
+/*! CLKIN - Clock source number (decimal value) for frequency measure function reference clock:
+ *  0b00000..External main crystal oscilator (Clock_in).
+ *  0b00001..FRO 12MHz clock.
+ *  0b00010..FRO 96MHz clock.
+ *  0b00011..Watchdog oscillator / FRO1MHz clock.
+ *  0b00100..32 kHz oscillator (32k_clk) clock.
+ *  0b00101..main clock (main_clock).
+ *  0b00110..FREQME_GPIO_CLK_A.
+ *  0b00111..FREQME_GPIO_CLK_B.
  */
 #define INPUTMUX_FREQMEAS_REF_CLKIN(x)           (((uint32_t)(((uint32_t)(x)) << INPUTMUX_FREQMEAS_REF_CLKIN_SHIFT)) & INPUTMUX_FREQMEAS_REF_CLKIN_MASK)
 /*! @} */
@@ -12548,9 +12737,15 @@ typedef struct {
 
 #define INPUTMUX_FREQMEAS_TARGET_CLKIN_MASK      (0x1FU)
 #define INPUTMUX_FREQMEAS_TARGET_CLKIN_SHIFT     (0U)
-/*! CLKIN - Clock source number (decimal value) for frequency measure function target clock: 0 =
- *    CLK_IN 1 = FRO 12 MHz oscillator 2 = Watchdog oscillator 3 = 32 kHz RTC oscillator 4 = Main clock
- *    (see Section 4.5.23) 5 = PIO0_4 6 = PIO0_20 7 = PIO0_24 8 = PIO1_4
+/*! CLKIN - Clock source number (decimal value) for frequency measure function target clock:
+ *  0b00000..External main crystal oscilator (Clock_in).
+ *  0b00001..FRO 12MHz clock.
+ *  0b00010..FRO 96MHz clock.
+ *  0b00011..Watchdog oscillator / FRO1MHz clock.
+ *  0b00100..32 kHz oscillator (32k_clk) clock.
+ *  0b00101..main clock (main_clock).
+ *  0b00110..FREQME_GPIO_CLK_A.
+ *  0b00111..FREQME_GPIO_CLK_B.
  */
 #define INPUTMUX_FREQMEAS_TARGET_CLKIN(x)        (((uint32_t)(((uint32_t)(x)) << INPUTMUX_FREQMEAS_TARGET_CLKIN_SHIFT)) & INPUTMUX_FREQMEAS_TARGET_CLKIN_MASK)
 /*! @} */
@@ -12820,7 +13015,7 @@ typedef struct {
 
 
 /* INPUTMUX - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral INPUTMUX base address */
   #define INPUTMUX_BASE                            (0x50006000u)
   /** Peripheral INPUTMUX base address */
@@ -12998,7 +13193,7 @@ typedef struct {
 
 
 /* IOCON - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral IOCON base address */
   #define IOCON_BASE                               (0x50001000u)
   /** Peripheral IOCON base address */
@@ -13117,7 +13312,7 @@ typedef struct {
 
 
 /* MAILBOX - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral MAILBOX base address */
   #define MAILBOX_BASE                             (0x5008B000u)
   /** Peripheral MAILBOX base address */
@@ -13364,7 +13559,7 @@ typedef struct {
 
 
 /* MRT - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral MRT0 base address */
   #define MRT0_BASE                                (0x5000D000u)
   /** Peripheral MRT0 base address */
@@ -13530,7 +13725,7 @@ typedef struct {
 
 
 /* OSTIMER - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral OSTIMER base address */
   #define OSTIMER_BASE                             (0x5002D000u)
   /** Peripheral OSTIMER base address */
@@ -14111,7 +14306,7 @@ typedef struct {
 
 
 /* PINT - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral PINT base address */
   #define PINT_BASE                                (0x50004000u)
   /** Peripheral PINT base address */
@@ -14359,7 +14554,7 @@ typedef struct {
 
 
 /* PLU - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral PLU base address */
   #define PLU_BASE                                 (0x5003D000u)
   /** Peripheral PLU base address */
@@ -14403,27 +14598,41 @@ typedef struct {
 
 /** PMC - Register Layout Typedef */
 typedef struct {
-       uint8_t RESERVED_0[8];
+       uint8_t RESERVED_0[4];
+  __I  uint32_t STATUS;                            /**< Power Management Controller FSM (Finite State Machines) status, offset: 0x4 */
   __IO uint32_t RESETCTRL;                         /**< Reset Control [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0x8 */
-       uint8_t RESERVED_1[36];
+       uint8_t RESERVED_1[4];
+  __IO uint32_t DCDC0;                             /**< DCDC (first) control register [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0x10 */
+  __IO uint32_t DCDC1;                             /**< DCDC (second) control register [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0x14 */
+       uint8_t RESERVED_2[4];
+  __IO uint32_t LDOPMU;                            /**< Power Management Unit (PMU) and Always-On domains LDO control [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0x1C */
+       uint8_t RESERVED_3[16];
   __IO uint32_t BODVBAT;                           /**< VBAT Brown Out Dectector (BoD) control register [Reset by: PoR, Pin Reset, Software Reset], offset: 0x30 */
-       uint8_t RESERVED_2[28];
+       uint8_t RESERVED_4[12];
+  __IO uint32_t REFFASTWKUP;                       /**< Analog References fast wake-up Control register [Reset by: PoR], offset: 0x40 */
+       uint8_t RESERVED_5[8];
+  __IO uint32_t XTAL32K;                           /**< 32 KHz Crystal oscillator (XTAL) control register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x4C */
   __IO uint32_t COMP;                              /**< Analog Comparator control register [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0x50 */
-       uint8_t RESERVED_3[20];
-  __IO uint32_t WAKEIOCAUSE;                       /**< Allows to identify the Wake-up I/O source from Deep Power Down mode, offset: 0x68 */
-       uint8_t RESERVED_4[8];
-  __IO uint32_t STATUSCLK;                         /**< FRO and XTAL status register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x74 */
-       uint8_t RESERVED_5[12];
-  __IO uint32_t AOREG1;                            /**< General purpose always on domain data storage [Reset by: PoR, Brown Out Detectors Reset], offset: 0x84 */
        uint8_t RESERVED_6[16];
+  __IO uint32_t WAKEUPIOCTRL;                      /**< Deep Power Down wake-up source [Reset by: PoR, Pin Reset, Software Reset], offset: 0x64 */
+  __IO uint32_t WAKEIOCAUSE;                       /**< Allows to identify the Wake-up I/O source from Deep Power Down mode, offset: 0x68 */
+       uint8_t RESERVED_7[8];
+  __IO uint32_t STATUSCLK;                         /**< FRO and XTAL status register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x74 */
+       uint8_t RESERVED_8[12];
+  __IO uint32_t AOREG1;                            /**< General purpose always on domain data storage [Reset by: PoR, Brown Out Detectors Reset], offset: 0x84 */
+       uint8_t RESERVED_9[8];
+  __IO uint32_t MISCCTRL;                          /**< Dummy Control bus to PMU [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0x90 */
+       uint8_t RESERVED_10[4];
   __IO uint32_t RTCOSC32K;                         /**< RTC 1 KHZ and 1 Hz clocks source control register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x98 */
-  __IO uint32_t OSTIMERr;                          /**< OS Timer control register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x9C */
-       uint8_t RESERVED_7[24];
+  __IO uint32_t OSTIMERr;                          /**< OS Timer control register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x9C, 'r' suffix has been added to avoid a clash with peripheral base pointer macro 'OSTIMER' */
+       uint8_t RESERVED_11[24];
   __IO uint32_t PDRUNCFG0;                         /**< Controls the power to various analog blocks [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0xB8 */
-       uint8_t RESERVED_8[4];
+       uint8_t RESERVED_12[4];
   __O  uint32_t PDRUNCFGSET0;                      /**< Controls the power to various analog blocks [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0xC0 */
-       uint8_t RESERVED_9[4];
+       uint8_t RESERVED_13[4];
   __O  uint32_t PDRUNCFGCLR0;                      /**< Controls the power to various analog blocks [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0xC8 */
+       uint8_t RESERVED_14[8];
+  __IO uint32_t SRAMCTRL;                          /**< All SRAMs common control signals [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Software Reset], offset: 0xD4 */
 } PMC_Type;
 
 /* ----------------------------------------------------------------------------
@@ -14434,6 +14643,20 @@ typedef struct {
  * @addtogroup PMC_Register_Masks PMC Register Masks
  * @{
  */
+
+/*! @name STATUS - Power Management Controller FSM (Finite State Machines) status */
+/*! @{ */
+
+#define PMC_STATUS_BOOTMODE_MASK                 (0xC0000U)
+#define PMC_STATUS_BOOTMODE_SHIFT                (18U)
+/*! BOOTMODE - Latest IC Boot cause:.
+ *  0b00..Latest IC boot was a Full power cycle boot sequence (PoR, Pin Reset, Brown Out Detectors Reset, Software Reset).
+ *  0b01..Latest IC boot was from DEEP SLEEP low power mode.
+ *  0b10..Latest IC boot was from POWER DOWN low power mode.
+ *  0b11..Latest IC boot was from DEEP POWER DOWN low power mode.
+ */
+#define PMC_STATUS_BOOTMODE(x)                   (((uint32_t)(((uint32_t)(x)) << PMC_STATUS_BOOTMODE_SHIFT)) & PMC_STATUS_BOOTMODE_MASK)
+/*! @} */
 
 /*! @name RESETCTRL - Reset Control [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset] */
 /*! @{ */
@@ -14454,6 +14677,14 @@ typedef struct {
  */
 #define PMC_RESETCTRL_BODVBATRESETENABLE(x)      (((uint32_t)(((uint32_t)(x)) << PMC_RESETCTRL_BODVBATRESETENABLE_SHIFT)) & PMC_RESETCTRL_BODVBATRESETENABLE_MASK)
 
+#define PMC_RESETCTRL_BODCORERESETENABLE_MASK    (0x4U)
+#define PMC_RESETCTRL_BODCORERESETENABLE_SHIFT   (2U)
+/*! BODCORERESETENABLE - BOD CORE reset enable.
+ *  0b0..BOD CORE reset is disable.
+ *  0b1..BOD CORE reset is enable.
+ */
+#define PMC_RESETCTRL_BODCORERESETENABLE(x)      (((uint32_t)(((uint32_t)(x)) << PMC_RESETCTRL_BODCORERESETENABLE_SHIFT)) & PMC_RESETCTRL_BODCORERESETENABLE_MASK)
+
 #define PMC_RESETCTRL_SWRRESETENABLE_MASK        (0x8U)
 #define PMC_RESETCTRL_SWRRESETENABLE_SHIFT       (3U)
 /*! SWRRESETENABLE - Software reset enable.
@@ -14461,6 +14692,239 @@ typedef struct {
  *  0b1..Software reset is enable.
  */
 #define PMC_RESETCTRL_SWRRESETENABLE(x)          (((uint32_t)(((uint32_t)(x)) << PMC_RESETCTRL_SWRRESETENABLE_SHIFT)) & PMC_RESETCTRL_SWRRESETENABLE_MASK)
+/*! @} */
+
+/*! @name DCDC0 - DCDC (first) control register [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset] */
+/*! @{ */
+
+#define PMC_DCDC0_RC_MASK                        (0x3FU)
+#define PMC_DCDC0_RC_SHIFT                       (0U)
+/*! RC - Constant On-Time calibration.
+ */
+#define PMC_DCDC0_RC(x)                          (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_RC_SHIFT)) & PMC_DCDC0_RC_MASK)
+
+#define PMC_DCDC0_ICOMP_MASK                     (0xC0U)
+#define PMC_DCDC0_ICOMP_SHIFT                    (6U)
+/*! ICOMP - Select the type of ZCD comparator.
+ */
+#define PMC_DCDC0_ICOMP(x)                       (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_ICOMP_SHIFT)) & PMC_DCDC0_ICOMP_MASK)
+
+#define PMC_DCDC0_ISEL_MASK                      (0x300U)
+#define PMC_DCDC0_ISEL_SHIFT                     (8U)
+/*! ISEL - Alter Internal biasing currents.
+ */
+#define PMC_DCDC0_ISEL(x)                        (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_ISEL_SHIFT)) & PMC_DCDC0_ISEL_MASK)
+
+#define PMC_DCDC0_ICENABLE_MASK                  (0x400U)
+#define PMC_DCDC0_ICENABLE_SHIFT                 (10U)
+/*! ICENABLE - Selection of auto scaling of COT period with variations in VDD.
+ */
+#define PMC_DCDC0_ICENABLE(x)                    (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_ICENABLE_SHIFT)) & PMC_DCDC0_ICENABLE_MASK)
+
+#define PMC_DCDC0_TMOS_MASK                      (0xF800U)
+#define PMC_DCDC0_TMOS_SHIFT                     (11U)
+/*! TMOS - One-shot generator reference current trimming signal.
+ */
+#define PMC_DCDC0_TMOS(x)                        (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_TMOS_SHIFT)) & PMC_DCDC0_TMOS_MASK)
+
+#define PMC_DCDC0_DISABLEISENSE_MASK             (0x10000U)
+#define PMC_DCDC0_DISABLEISENSE_SHIFT            (16U)
+/*! DISABLEISENSE - Disable Current sensing.
+ */
+#define PMC_DCDC0_DISABLEISENSE(x)               (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_DISABLEISENSE_SHIFT)) & PMC_DCDC0_DISABLEISENSE_MASK)
+
+#define PMC_DCDC0_VOUT_MASK                      (0x1E0000U)
+#define PMC_DCDC0_VOUT_SHIFT                     (17U)
+/*! VOUT - Set output regulation voltage.
+ *  0b0000..0.95 V.
+ *  0b0001..0.975 V.
+ *  0b0010..1 V.
+ *  0b0011..1.025 V.
+ *  0b0100..1.05 V.
+ *  0b0101..1.075 V.
+ *  0b0110..1.1 V.
+ *  0b0111..1.125 V.
+ *  0b1000..1.15 V.
+ *  0b1001..1.175 V.
+ *  0b1010..1.2 V.
+ */
+#define PMC_DCDC0_VOUT(x)                        (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_VOUT_SHIFT)) & PMC_DCDC0_VOUT_MASK)
+
+#define PMC_DCDC0_SLICINGENABLE_MASK             (0x200000U)
+#define PMC_DCDC0_SLICINGENABLE_SHIFT            (21U)
+/*! SLICINGENABLE - Enable staggered switching of power switches.
+ */
+#define PMC_DCDC0_SLICINGENABLE(x)               (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_SLICINGENABLE_SHIFT)) & PMC_DCDC0_SLICINGENABLE_MASK)
+
+#define PMC_DCDC0_INDUCTORCLAMPENABLE_MASK       (0x400000U)
+#define PMC_DCDC0_INDUCTORCLAMPENABLE_SHIFT      (22U)
+/*! INDUCTORCLAMPENABLE - Enable shorting of Inductor during PFM idle time.
+ */
+#define PMC_DCDC0_INDUCTORCLAMPENABLE(x)         (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_INDUCTORCLAMPENABLE_SHIFT)) & PMC_DCDC0_INDUCTORCLAMPENABLE_MASK)
+
+#define PMC_DCDC0_VOUT_PWD_MASK                  (0x7800000U)
+#define PMC_DCDC0_VOUT_PWD_SHIFT                 (23U)
+/*! VOUT_PWD - Set output regulation voltage during Deep Sleep.
+ */
+#define PMC_DCDC0_VOUT_PWD(x)                    (((uint32_t)(((uint32_t)(x)) << PMC_DCDC0_VOUT_PWD_SHIFT)) & PMC_DCDC0_VOUT_PWD_MASK)
+/*! @} */
+
+/*! @name DCDC1 - DCDC (second) control register [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset] */
+/*! @{ */
+
+#define PMC_DCDC1_RTRIMOFFET_MASK                (0xFU)
+#define PMC_DCDC1_RTRIMOFFET_SHIFT               (0U)
+/*! RTRIMOFFET - Adjust the offset voltage of BJT based comparator.
+ */
+#define PMC_DCDC1_RTRIMOFFET(x)                  (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_RTRIMOFFET_SHIFT)) & PMC_DCDC1_RTRIMOFFET_MASK)
+
+#define PMC_DCDC1_RSENSETRIM_MASK                (0xF0U)
+#define PMC_DCDC1_RSENSETRIM_SHIFT               (4U)
+/*! RSENSETRIM - Adjust Max inductor peak current limiting.
+ */
+#define PMC_DCDC1_RSENSETRIM(x)                  (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_RSENSETRIM_SHIFT)) & PMC_DCDC1_RSENSETRIM_MASK)
+
+#define PMC_DCDC1_DTESTENABLE_MASK               (0x100U)
+#define PMC_DCDC1_DTESTENABLE_SHIFT              (8U)
+/*! DTESTENABLE - Enable Digital test signals.
+ */
+#define PMC_DCDC1_DTESTENABLE(x)                 (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_DTESTENABLE_SHIFT)) & PMC_DCDC1_DTESTENABLE_MASK)
+
+#define PMC_DCDC1_SETCURVE_MASK                  (0x600U)
+#define PMC_DCDC1_SETCURVE_SHIFT                 (9U)
+/*! SETCURVE - Bandgap calibration parameter.
+ */
+#define PMC_DCDC1_SETCURVE(x)                    (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_SETCURVE_SHIFT)) & PMC_DCDC1_SETCURVE_MASK)
+
+#define PMC_DCDC1_SETDC_MASK                     (0x7800U)
+#define PMC_DCDC1_SETDC_SHIFT                    (11U)
+/*! SETDC - Bandgap calibration parameter.
+ */
+#define PMC_DCDC1_SETDC(x)                       (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_SETDC_SHIFT)) & PMC_DCDC1_SETDC_MASK)
+
+#define PMC_DCDC1_DTESTSEL_MASK                  (0x38000U)
+#define PMC_DCDC1_DTESTSEL_SHIFT                 (15U)
+/*! DTESTSEL - Select the output signal for test.
+ */
+#define PMC_DCDC1_DTESTSEL(x)                    (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_DTESTSEL_SHIFT)) & PMC_DCDC1_DTESTSEL_MASK)
+
+#define PMC_DCDC1_ISCALEENABLE_MASK              (0x40000U)
+#define PMC_DCDC1_ISCALEENABLE_SHIFT             (18U)
+/*! ISCALEENABLE - Modify COT behavior.
+ */
+#define PMC_DCDC1_ISCALEENABLE(x)                (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_ISCALEENABLE_SHIFT)) & PMC_DCDC1_ISCALEENABLE_MASK)
+
+#define PMC_DCDC1_FORCEBYPASS_MASK               (0x80000U)
+#define PMC_DCDC1_FORCEBYPASS_SHIFT              (19U)
+/*! FORCEBYPASS - Force bypass mode.
+ */
+#define PMC_DCDC1_FORCEBYPASS(x)                 (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_FORCEBYPASS_SHIFT)) & PMC_DCDC1_FORCEBYPASS_MASK)
+
+#define PMC_DCDC1_TRIMAUTOCOT_MASK               (0xF00000U)
+#define PMC_DCDC1_TRIMAUTOCOT_SHIFT              (20U)
+/*! TRIMAUTOCOT - Change the scaling ratio of the feedforward compensation.
+ */
+#define PMC_DCDC1_TRIMAUTOCOT(x)                 (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_TRIMAUTOCOT_SHIFT)) & PMC_DCDC1_TRIMAUTOCOT_MASK)
+
+#define PMC_DCDC1_FORCEFULLCYCLE_MASK            (0x1000000U)
+#define PMC_DCDC1_FORCEFULLCYCLE_SHIFT           (24U)
+/*! FORCEFULLCYCLE - Force full PFM PMOS and NMOS cycle.
+ */
+#define PMC_DCDC1_FORCEFULLCYCLE(x)              (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_FORCEFULLCYCLE_SHIFT)) & PMC_DCDC1_FORCEFULLCYCLE_MASK)
+
+#define PMC_DCDC1_LCENABLE_MASK                  (0x2000000U)
+#define PMC_DCDC1_LCENABLE_SHIFT                 (25U)
+/*! LCENABLE - Change the range of the peak detector of current inside the inductor.
+ */
+#define PMC_DCDC1_LCENABLE(x)                    (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_LCENABLE_SHIFT)) & PMC_DCDC1_LCENABLE_MASK)
+
+#define PMC_DCDC1_TOFF_MASK                      (0x7C000000U)
+#define PMC_DCDC1_TOFF_SHIFT                     (26U)
+/*! TOFF - Constant Off-Time calibration input.
+ */
+#define PMC_DCDC1_TOFF(x)                        (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_TOFF_SHIFT)) & PMC_DCDC1_TOFF_MASK)
+
+#define PMC_DCDC1_TOFFENABLE_MASK                (0x80000000U)
+#define PMC_DCDC1_TOFFENABLE_SHIFT               (31U)
+/*! TOFFENABLE - Enable Constant Off-Time feature.
+ */
+#define PMC_DCDC1_TOFFENABLE(x)                  (((uint32_t)(((uint32_t)(x)) << PMC_DCDC1_TOFFENABLE_SHIFT)) & PMC_DCDC1_TOFFENABLE_MASK)
+/*! @} */
+
+/*! @name LDOPMU - Power Management Unit (PMU) and Always-On domains LDO control [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset] */
+/*! @{ */
+
+#define PMC_LDOPMU_VADJ_MASK                     (0x1FU)
+#define PMC_LDOPMU_VADJ_SHIFT                    (0U)
+/*! VADJ - Sets the Always-On domain LDO output level.
+ *  0b00000..1.22 V.
+ *  0b00001..0.7 V.
+ *  0b00010..0.725 V.
+ *  0b00011..0.75 V.
+ *  0b00100..0.775 V.
+ *  0b00101..0.8 V.
+ *  0b00110..0.825 V.
+ *  0b00111..0.85 V.
+ *  0b01000..0.875 V.
+ *  0b01001..0.9 V.
+ *  0b01010..0.96 V.
+ *  0b01011..0.97 V.
+ *  0b01100..0.98 V.
+ *  0b01101..0.99 V.
+ *  0b01110..1 V.
+ *  0b01111..1.01 V.
+ *  0b10000..1.02 V.
+ *  0b10001..1.03 V.
+ *  0b10010..1.04 V.
+ *  0b10011..1.05 V.
+ *  0b10100..1.06 V.
+ *  0b10101..1.07 V.
+ *  0b10110..1.08 V.
+ *  0b10111..1.09 V.
+ *  0b11000..1.1 V.
+ *  0b11001..1.11 V.
+ *  0b11010..1.12 V.
+ *  0b11011..1.13 V.
+ *  0b11100..1.14 V.
+ *  0b11101..1.15 V.
+ *  0b11110..1.16 V.
+ *  0b11111..1.22 V.
+ */
+#define PMC_LDOPMU_VADJ(x)                       (((uint32_t)(((uint32_t)(x)) << PMC_LDOPMU_VADJ_SHIFT)) & PMC_LDOPMU_VADJ_MASK)
+
+#define PMC_LDOPMU_VADJ_PWD_MASK                 (0x3E0U)
+#define PMC_LDOPMU_VADJ_PWD_SHIFT                (5U)
+/*! VADJ_PWD - Sets the Always-On domain LDO output level in all power down modes.
+ */
+#define PMC_LDOPMU_VADJ_PWD(x)                   (((uint32_t)(((uint32_t)(x)) << PMC_LDOPMU_VADJ_PWD_SHIFT)) & PMC_LDOPMU_VADJ_PWD_MASK)
+
+#define PMC_LDOPMU_VADJ_BOOST_MASK               (0x7C00U)
+#define PMC_LDOPMU_VADJ_BOOST_SHIFT              (10U)
+/*! VADJ_BOOST - Sets the Always-On domain LDO Boost output level.
+ */
+#define PMC_LDOPMU_VADJ_BOOST(x)                 (((uint32_t)(((uint32_t)(x)) << PMC_LDOPMU_VADJ_BOOST_SHIFT)) & PMC_LDOPMU_VADJ_BOOST_MASK)
+
+#define PMC_LDOPMU_VADJ_BOOST_PWD_MASK           (0xF8000U)
+#define PMC_LDOPMU_VADJ_BOOST_PWD_SHIFT          (15U)
+/*! VADJ_BOOST_PWD - Sets the Always-On domain LDO Boost output level in all power down modes.
+ */
+#define PMC_LDOPMU_VADJ_BOOST_PWD(x)             (((uint32_t)(((uint32_t)(x)) << PMC_LDOPMU_VADJ_BOOST_PWD_SHIFT)) & PMC_LDOPMU_VADJ_BOOST_PWD_MASK)
+
+#define PMC_LDOPMU_BOOST_ENA_MASK                (0x1000000U)
+#define PMC_LDOPMU_BOOST_ENA_SHIFT               (24U)
+/*! BOOST_ENA - Control the LDO AO boost mode in ACTIVE mode.
+ *  0b0..LDO AO Boost Mode is disable.
+ *  0b1..LDO AO Boost Mode is enable.
+ */
+#define PMC_LDOPMU_BOOST_ENA(x)                  (((uint32_t)(((uint32_t)(x)) << PMC_LDOPMU_BOOST_ENA_SHIFT)) & PMC_LDOPMU_BOOST_ENA_MASK)
+
+#define PMC_LDOPMU_BOOST_ENA_PWD_MASK            (0x2000000U)
+#define PMC_LDOPMU_BOOST_ENA_PWD_SHIFT           (25U)
+/*! BOOST_ENA_PWD - Control the LDO AO boost mode in the different low power modes (DEEP SLEEP, POWERDOWN, and DEEP POWER DOWN).
+ *  0b0..LDO AO Boost Mode is disable.
+ *  0b1..LDO AO Boost Mode is enable.
+ */
+#define PMC_LDOPMU_BOOST_ENA_PWD(x)              (((uint32_t)(((uint32_t)(x)) << PMC_LDOPMU_BOOST_ENA_PWD_SHIFT)) & PMC_LDOPMU_BOOST_ENA_PWD_MASK)
 /*! @} */
 
 /*! @name BODVBAT - VBAT Brown Out Dectector (BoD) control register [Reset by: PoR, Pin Reset, Software Reset] */
@@ -14513,6 +14977,94 @@ typedef struct {
  *  0b11..100 mV.
  */
 #define PMC_BODVBAT_HYST(x)                      (((uint32_t)(((uint32_t)(x)) << PMC_BODVBAT_HYST_SHIFT)) & PMC_BODVBAT_HYST_MASK)
+/*! @} */
+
+/*! @name REFFASTWKUP - Analog References fast wake-up Control register [Reset by: PoR] */
+/*! @{ */
+
+#define PMC_REFFASTWKUP_LPWKUP_MASK              (0x1U)
+#define PMC_REFFASTWKUP_LPWKUP_SHIFT             (0U)
+/*! LPWKUP - Analog References fast wake-up in case of wake-up from a low power mode (DEEP SLEEP, POWER DOWN and DEEP POWER DOWN): .
+ *  0b0..Analog References fast wake-up feature is disabled in case of wake-up from any Low power mode.
+ *  0b1..Analog References fast wake-up feature is enabled in case of wake-up from any Low power mode.
+ */
+#define PMC_REFFASTWKUP_LPWKUP(x)                (((uint32_t)(((uint32_t)(x)) << PMC_REFFASTWKUP_LPWKUP_SHIFT)) & PMC_REFFASTWKUP_LPWKUP_MASK)
+
+#define PMC_REFFASTWKUP_HWWKUP_MASK              (0x2U)
+#define PMC_REFFASTWKUP_HWWKUP_SHIFT             (1U)
+/*! HWWKUP - Analog References fast wake-up in case of Hardware Pin reset: .
+ *  0b0..Analog References fast wake-up feature is disabled in case of Hardware Pin reset.
+ *  0b1..Analog References fast wake-up feature is enabled in case of Hardware Pin reset.
+ */
+#define PMC_REFFASTWKUP_HWWKUP(x)                (((uint32_t)(((uint32_t)(x)) << PMC_REFFASTWKUP_HWWKUP_SHIFT)) & PMC_REFFASTWKUP_HWWKUP_MASK)
+/*! @} */
+
+/*! @name XTAL32K - 32 KHz Crystal oscillator (XTAL) control register [Reset by: PoR, Brown Out Detectors Reset] */
+/*! @{ */
+
+#define PMC_XTAL32K_IREF_MASK                    (0x6U)
+#define PMC_XTAL32K_IREF_SHIFT                   (1U)
+/*! IREF - reference output current selection inputs.
+ */
+#define PMC_XTAL32K_IREF(x)                      (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_IREF_SHIFT)) & PMC_XTAL32K_IREF_MASK)
+
+#define PMC_XTAL32K_TEST_MASK                    (0x8U)
+#define PMC_XTAL32K_TEST_SHIFT                   (3U)
+/*! TEST - Oscillator Test Mode.
+ */
+#define PMC_XTAL32K_TEST(x)                      (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_TEST_SHIFT)) & PMC_XTAL32K_TEST_MASK)
+
+#define PMC_XTAL32K_IBIAS_MASK                   (0x30U)
+#define PMC_XTAL32K_IBIAS_SHIFT                  (4U)
+/*! IBIAS - bias current selection inputs.
+ */
+#define PMC_XTAL32K_IBIAS(x)                     (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_IBIAS_SHIFT)) & PMC_XTAL32K_IBIAS_MASK)
+
+#define PMC_XTAL32K_AMPL_MASK                    (0xC0U)
+#define PMC_XTAL32K_AMPL_SHIFT                   (6U)
+/*! AMPL - oscillator amplitude selection inputs.
+ */
+#define PMC_XTAL32K_AMPL(x)                      (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_AMPL_SHIFT)) & PMC_XTAL32K_AMPL_MASK)
+
+#define PMC_XTAL32K_CAPBANKIN_MASK               (0x7F00U)
+#define PMC_XTAL32K_CAPBANKIN_SHIFT              (8U)
+/*! CAPBANKIN - Capa bank setting input.
+ */
+#define PMC_XTAL32K_CAPBANKIN(x)                 (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_CAPBANKIN_SHIFT)) & PMC_XTAL32K_CAPBANKIN_MASK)
+
+#define PMC_XTAL32K_CAPBANKOUT_MASK              (0x3F8000U)
+#define PMC_XTAL32K_CAPBANKOUT_SHIFT             (15U)
+/*! CAPBANKOUT - Capa bank setting output.
+ */
+#define PMC_XTAL32K_CAPBANKOUT(x)                (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_CAPBANKOUT_SHIFT)) & PMC_XTAL32K_CAPBANKOUT_MASK)
+
+#define PMC_XTAL32K_CAPTESTSTARTSRCSEL_MASK      (0x400000U)
+#define PMC_XTAL32K_CAPTESTSTARTSRCSEL_SHIFT     (22U)
+/*! CAPTESTSTARTSRCSEL - Source selection for xo32k_captest_start_ao_set.
+ *  0b0..Sourced from CAPTESTSTART.
+ *  0b1..Sourced from calibration.
+ */
+#define PMC_XTAL32K_CAPTESTSTARTSRCSEL(x)        (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_CAPTESTSTARTSRCSEL_SHIFT)) & PMC_XTAL32K_CAPTESTSTARTSRCSEL_MASK)
+
+#define PMC_XTAL32K_CAPTESTSTART_MASK            (0x800000U)
+#define PMC_XTAL32K_CAPTESTSTART_SHIFT           (23U)
+/*! CAPTESTSTART - Start test.
+ */
+#define PMC_XTAL32K_CAPTESTSTART(x)              (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_CAPTESTSTART_SHIFT)) & PMC_XTAL32K_CAPTESTSTART_MASK)
+
+#define PMC_XTAL32K_CAPTESTENABLE_MASK           (0x1000000U)
+#define PMC_XTAL32K_CAPTESTENABLE_SHIFT          (24U)
+/*! CAPTESTENABLE - Enable signal for cap test.
+ */
+#define PMC_XTAL32K_CAPTESTENABLE(x)             (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_CAPTESTENABLE_SHIFT)) & PMC_XTAL32K_CAPTESTENABLE_MASK)
+
+#define PMC_XTAL32K_CAPTESTOSCINSEL_MASK         (0x2000000U)
+#define PMC_XTAL32K_CAPTESTOSCINSEL_SHIFT        (25U)
+/*! CAPTESTOSCINSEL - Select the input for test.
+ *  0b0..Oscillator output pin (osc_out).
+ *  0b1..Oscillator input pin (osc_in).
+ */
+#define PMC_XTAL32K_CAPTESTOSCINSEL(x)           (((uint32_t)(((uint32_t)(x)) << PMC_XTAL32K_CAPTESTOSCINSEL_SHIFT)) & PMC_XTAL32K_CAPTESTOSCINSEL_MASK)
 /*! @} */
 
 /*! @name COMP - Analog Comparator control register [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset] */
@@ -14574,15 +15126,119 @@ typedef struct {
 
 #define PMC_COMP_FILTERCGF_SAMPLEMODE_MASK       (0x30000U)
 #define PMC_COMP_FILTERCGF_SAMPLEMODE_SHIFT      (16U)
-/*! FILTERCGF_SAMPLEMODE - Filter Sample mode.
+/*! FILTERCGF_SAMPLEMODE - Control the filtering of the Analog Comparator output.
+ *  0b00..Bypass mode.
+ *  0b01..Filter 1 clock period.
+ *  0b10..Filter 2 clock period.
+ *  0b11..Filter 3 clock period.
  */
 #define PMC_COMP_FILTERCGF_SAMPLEMODE(x)         (((uint32_t)(((uint32_t)(x)) << PMC_COMP_FILTERCGF_SAMPLEMODE_SHIFT)) & PMC_COMP_FILTERCGF_SAMPLEMODE_MASK)
 
 #define PMC_COMP_FILTERCGF_CLKDIV_MASK           (0x1C0000U)
 #define PMC_COMP_FILTERCGF_CLKDIV_SHIFT          (18U)
-/*! FILTERCGF_CLKDIV - Filter Clock div .
+/*! FILTERCGF_CLKDIV - Filter Clock divider.
+ *  0b000..Filter clock period duration equals 1 Analog Comparator clock period.
+ *  0b001..Filter clock period duration equals 2 Analog Comparator clock period.
+ *  0b010..Filter clock period duration equals 4 Analog Comparator clock period.
+ *  0b011..Filter clock period duration equals 8 Analog Comparator clock period.
+ *  0b100..Filter clock period duration equals 16 Analog Comparator clock period.
+ *  0b101..Filter clock period duration equals 32 Analog Comparator clock period.
+ *  0b110..Filter clock period duration equals 64 Analog Comparator clock period.
+ *  0b111..Filter clock period duration equals 128 Analog Comparator clock period.
  */
 #define PMC_COMP_FILTERCGF_CLKDIV(x)             (((uint32_t)(((uint32_t)(x)) << PMC_COMP_FILTERCGF_CLKDIV_SHIFT)) & PMC_COMP_FILTERCGF_CLKDIV_MASK)
+/*! @} */
+
+/*! @name WAKEUPIOCTRL - Deep Power Down wake-up source [Reset by: PoR, Pin Reset, Software Reset] */
+/*! @{ */
+
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP0_MASK  (0x1U)
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP0_SHIFT (0U)
+/*! RISINGEDGEWAKEUP0 - Enable / disable detection of rising edge events on Wake Up 0 pin in Deep Power Down modes:.
+ *  0b0..Rising edge detection is disable.
+ *  0b1..Rising edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP0(x)    (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP0_SHIFT)) & PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP0_MASK)
+
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP0_MASK (0x2U)
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP0_SHIFT (1U)
+/*! FALLINGEDGEWAKEUP0 - Enable / disable detection of falling edge events on Wake Up 0 pin in Deep Power Down modes:.
+ *  0b0..Falling edge detection is disable.
+ *  0b1..Falling edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP0(x)   (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP0_SHIFT)) & PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP0_MASK)
+
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP1_MASK  (0x4U)
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP1_SHIFT (2U)
+/*! RISINGEDGEWAKEUP1 - Enable / disable detection of rising edge events on Wake Up 1 pin in Deep Power Down modes:.
+ *  0b0..Rising edge detection is disable.
+ *  0b1..Rising edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP1(x)    (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP1_SHIFT)) & PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP1_MASK)
+
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP1_MASK (0x8U)
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP1_SHIFT (3U)
+/*! FALLINGEDGEWAKEUP1 - Enable / disable detection of falling edge events on Wake Up 1 pin in Deep Power Down modes:.
+ *  0b0..Falling edge detection is disable.
+ *  0b1..Falling edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP1(x)   (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP1_SHIFT)) & PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP1_MASK)
+
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP2_MASK  (0x10U)
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP2_SHIFT (4U)
+/*! RISINGEDGEWAKEUP2 - Enable / disable detection of rising edge events on Wake Up 2 pin in Deep Power Down modes:.
+ *  0b0..Rising edge detection is disable.
+ *  0b1..Rising edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP2(x)    (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP2_SHIFT)) & PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP2_MASK)
+
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP2_MASK (0x20U)
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP2_SHIFT (5U)
+/*! FALLINGEDGEWAKEUP2 - Enable / disable detection of falling edge events on Wake Up 2 pin in Deep Power Down modes:.
+ *  0b0..Falling edge detection is disable.
+ *  0b1..Falling edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP2(x)   (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP2_SHIFT)) & PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP2_MASK)
+
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP3_MASK  (0x40U)
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP3_SHIFT (6U)
+/*! RISINGEDGEWAKEUP3 - Enable / disable detection of rising edge events on Wake Up 3 pin in Deep Power Down modes:.
+ *  0b0..Rising edge detection is disable.
+ *  0b1..Rising edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP3(x)    (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP3_SHIFT)) & PMC_WAKEUPIOCTRL_RISINGEDGEWAKEUP3_MASK)
+
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP3_MASK (0x80U)
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP3_SHIFT (7U)
+/*! FALLINGEDGEWAKEUP3 - Enable / disable detection of falling edge events on Wake Up 3 pin in Deep Power Down modes:.
+ *  0b0..Falling edge detection is disable.
+ *  0b1..Falling edge detection is enable.
+ */
+#define PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP3(x)   (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP3_SHIFT)) & PMC_WAKEUPIOCTRL_FALLINGEDGEWAKEUP3_MASK)
+
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP0_MASK        (0x100U)
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP0_SHIFT       (8U)
+/*! MODEWAKEUP0 - Configure wake up I/O 0 in Deep Power Down mode
+ */
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP0(x)          (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_MODEWAKEUP0_SHIFT)) & PMC_WAKEUPIOCTRL_MODEWAKEUP0_MASK)
+
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP1_MASK        (0x200U)
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP1_SHIFT       (9U)
+/*! MODEWAKEUP1 - Configure wake up I/O 1 in Deep Power Down mode
+ */
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP1(x)          (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_MODEWAKEUP1_SHIFT)) & PMC_WAKEUPIOCTRL_MODEWAKEUP1_MASK)
+
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP2_MASK        (0x400U)
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP2_SHIFT       (10U)
+/*! MODEWAKEUP2 - Configure wake up I/O 2 in Deep Power Down mode
+ */
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP2(x)          (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_MODEWAKEUP2_SHIFT)) & PMC_WAKEUPIOCTRL_MODEWAKEUP2_MASK)
+
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP3_MASK        (0x800U)
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP3_SHIFT       (11U)
+/*! MODEWAKEUP3 - Configure wake up I/O 3 in Deep Power Down mode
+ */
+#define PMC_WAKEUPIOCTRL_MODEWAKEUP3(x)          (((uint32_t)(((uint32_t)(x)) << PMC_WAKEUPIOCTRL_MODEWAKEUP3_SHIFT)) & PMC_WAKEUPIOCTRL_MODEWAKEUP3_MASK)
 /*! @} */
 
 /*! @name WAKEIOCAUSE - Allows to identify the Wake-up I/O source from Deep Power Down mode */
@@ -14633,8 +15289,8 @@ typedef struct {
 #define PMC_STATUSCLK_XTAL32KOSCFAILURE_MASK     (0x4U)
 #define PMC_STATUSCLK_XTAL32KOSCFAILURE_SHIFT    (2U)
 /*! XTAL32KOSCFAILURE - XTAL32 KHZ oscillator oscillation failure detection indicator.
- *  0b0..No oscillation failure has been detetced since the last time this bit has been cleared..
- *  0b1..At least one oscillation failure has been detetced since the last time this bit has been cleared..
+ *  0b0..No oscillation failure has been detetced since the last time this bit has been cleared.
+ *  0b1..At least one oscillation failure has been detetced since the last time this bit has been cleared.
  */
 #define PMC_STATUSCLK_XTAL32KOSCFAILURE(x)       (((uint32_t)(((uint32_t)(x)) << PMC_STATUSCLK_XTAL32KOSCFAILURE_SHIFT)) & PMC_STATUSCLK_XTAL32KOSCFAILURE_MASK)
 /*! @} */
@@ -14701,6 +15357,84 @@ typedef struct {
 /*! BOOTERRORCOUNTER - ROM Boot Fatal Error Counter.
  */
 #define PMC_AOREG1_BOOTERRORCOUNTER(x)           (((uint32_t)(((uint32_t)(x)) << PMC_AOREG1_BOOTERRORCOUNTER_SHIFT)) & PMC_AOREG1_BOOTERRORCOUNTER_MASK)
+/*! @} */
+
+/*! @name MISCCTRL - Dummy Control bus to PMU [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset] */
+/*! @{ */
+
+#define PMC_MISCCTRL_LDODEEPSLEEPREF_MASK        (0x1U)
+#define PMC_MISCCTRL_LDODEEPSLEEPREF_SHIFT       (0U)
+/*! LDODEEPSLEEPREF - Select LDO Deep Sleep reference source.
+ *  0b0..LDO DEEP Sleep uses Flash buffer biasing as reference.
+ *  0b1..LDO DEEP Sleep uses Band Gap 0.8V as reference.
+ */
+#define PMC_MISCCTRL_LDODEEPSLEEPREF(x)          (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_LDODEEPSLEEPREF_SHIFT)) & PMC_MISCCTRL_LDODEEPSLEEPREF_MASK)
+
+#define PMC_MISCCTRL_LDOMEMHIGHZMODE_MASK        (0x2U)
+#define PMC_MISCCTRL_LDOMEMHIGHZMODE_SHIFT       (1U)
+/*! LDOMEMHIGHZMODE - Control the activation of LDO MEM High Z mode.
+ *  0b0..LDO MEM High Z mode is disabled.
+ *  0b1..LDO MEM High Z mode is enabled.
+ */
+#define PMC_MISCCTRL_LDOMEMHIGHZMODE(x)          (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_LDOMEMHIGHZMODE_SHIFT)) & PMC_MISCCTRL_LDOMEMHIGHZMODE_MASK)
+
+#define PMC_MISCCTRL_LOWPWR_FLASH_BUF_MASK       (0x4U)
+#define PMC_MISCCTRL_LOWPWR_FLASH_BUF_SHIFT      (2U)
+#define PMC_MISCCTRL_LOWPWR_FLASH_BUF(x)         (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_LOWPWR_FLASH_BUF_SHIFT)) & PMC_MISCCTRL_LOWPWR_FLASH_BUF_MASK)
+
+#define PMC_MISCCTRL_MISCCTRL_3_8_MASK           (0xF8U)
+#define PMC_MISCCTRL_MISCCTRL_3_8_SHIFT          (3U)
+/*! MISCCTRL_3_8 - Reserved.
+ */
+#define PMC_MISCCTRL_MISCCTRL_3_8(x)             (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_MISCCTRL_3_8_SHIFT)) & PMC_MISCCTRL_MISCCTRL_3_8_MASK)
+
+#define PMC_MISCCTRL_MODEWAKEUP0_MASK            (0x100U)
+#define PMC_MISCCTRL_MODEWAKEUP0_SHIFT           (8U)
+/*! MODEWAKEUP0 - Configure wake up I/O 0 in Deep Power Down mode
+ */
+#define PMC_MISCCTRL_MODEWAKEUP0(x)              (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_MODEWAKEUP0_SHIFT)) & PMC_MISCCTRL_MODEWAKEUP0_MASK)
+
+#define PMC_MISCCTRL_MODEWAKEUP1_MASK            (0x200U)
+#define PMC_MISCCTRL_MODEWAKEUP1_SHIFT           (9U)
+/*! MODEWAKEUP1 - Configure wake up I/O 1 in Deep Power Down mode
+ */
+#define PMC_MISCCTRL_MODEWAKEUP1(x)              (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_MODEWAKEUP1_SHIFT)) & PMC_MISCCTRL_MODEWAKEUP1_MASK)
+
+#define PMC_MISCCTRL_MODEWAKEUP2_MASK            (0x400U)
+#define PMC_MISCCTRL_MODEWAKEUP2_SHIFT           (10U)
+/*! MODEWAKEUP2 - Configure wake up I/O 2 in Deep Power Down mode
+ */
+#define PMC_MISCCTRL_MODEWAKEUP2(x)              (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_MODEWAKEUP2_SHIFT)) & PMC_MISCCTRL_MODEWAKEUP2_MASK)
+
+#define PMC_MISCCTRL_MODEWAKEUP3_MASK            (0x800U)
+#define PMC_MISCCTRL_MODEWAKEUP3_SHIFT           (11U)
+/*! MODEWAKEUP3 - Configure wake up I/O 3 in Deep Power Down mode
+ */
+#define PMC_MISCCTRL_MODEWAKEUP3(x)              (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_MODEWAKEUP3_SHIFT)) & PMC_MISCCTRL_MODEWAKEUP3_MASK)
+
+#define PMC_MISCCTRL_DISABLE_BLEED_MASK          (0x1000U)
+#define PMC_MISCCTRL_DISABLE_BLEED_SHIFT         (12U)
+/*! DISABLE_BLEED - Controls LDO MEM bleed current. This field is expected to be controlled by the
+ *    Low Power Software only in DEEP SLEEP low power mode.
+ *  0b0..LDO_MEM bleed current is enabled.
+ *  0b1..LDO_MEM bleed current is disabled. Should be set before entering in Deep Sleep low power mode and cleared
+ *       after wake up from Deep SLeep low power mode.
+ */
+#define PMC_MISCCTRL_DISABLE_BLEED(x)            (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_DISABLE_BLEED_SHIFT)) & PMC_MISCCTRL_DISABLE_BLEED_MASK)
+
+#define PMC_MISCCTRL_MISCCTRL_13_14_MASK         (0x6000U)
+#define PMC_MISCCTRL_MISCCTRL_13_14_SHIFT        (13U)
+/*! MISCCTRL_13_14 - Reserved.
+ */
+#define PMC_MISCCTRL_MISCCTRL_13_14(x)           (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_MISCCTRL_13_14_SHIFT)) & PMC_MISCCTRL_MISCCTRL_13_14_MASK)
+
+#define PMC_MISCCTRL_WAKUPIO_RST_MASK            (0x8000U)
+#define PMC_MISCCTRL_WAKUPIO_RST_SHIFT           (15U)
+/*! WAKUPIO_RST - WAKEUP IO event detector reset control.
+ *  0b1..Wakeup IO is reset.
+ *  0b0..Wakeup IO is not reset.
+ */
+#define PMC_MISCCTRL_WAKUPIO_RST(x)              (((uint32_t)(((uint32_t)(x)) << PMC_MISCCTRL_WAKUPIO_RST_SHIFT)) & PMC_MISCCTRL_WAKUPIO_RST_MASK)
 /*! @} */
 
 /*! @name RTCOSC32K - RTC 1 KHZ and 1 Hz clocks source control register [Reset by: PoR, Brown Out Detectors Reset] */
@@ -14802,9 +15536,9 @@ typedef struct {
 
 #define PMC_PDRUNCFG0_PDEN_XTAL32M_MASK          (0x100U)
 #define PMC_PDRUNCFG0_PDEN_XTAL32M_SHIFT         (8U)
-/*! PDEN_XTAL32M - Controls power to crystal 32 MHz.
- *  0b0..Crystal 32MHz is powered.
- *  0b1..Crystal 32MHz is powered down.
+/*! PDEN_XTAL32M - Controls power to high speed crystal.
+ *  0b0..High speed crystal is powered.
+ *  0b1..High speed crystal is powered down.
  */
 #define PMC_PDRUNCFG0_PDEN_XTAL32M(x)            (((uint32_t)(((uint32_t)(x)) << PMC_PDRUNCFG0_PDEN_XTAL32M_SHIFT)) & PMC_PDRUNCFG0_PDEN_XTAL32M_MASK)
 
@@ -14866,9 +15600,9 @@ typedef struct {
 
 #define PMC_PDRUNCFG0_PDEN_LDOXO32M_MASK         (0x100000U)
 #define PMC_PDRUNCFG0_PDEN_LDOXO32M_SHIFT        (20U)
-/*! PDEN_LDOXO32M - Controls power to crystal 32 MHz LDO.
- *  0b0..crystal 32 MHz LDO is powered.
- *  0b1..crystal 32 MHz LDO is powered down.
+/*! PDEN_LDOXO32M - Controls power to high speed crystal LDO.
+ *  0b0..High speed crystal LDO is powered.
+ *  0b1..High speed crystal LDO is powered down.
  */
 #define PMC_PDRUNCFG0_PDEN_LDOXO32M(x)           (((uint32_t)(((uint32_t)(x)) << PMC_PDRUNCFG0_PDEN_LDOXO32M_SHIFT)) & PMC_PDRUNCFG0_PDEN_LDOXO32M_MASK)
 
@@ -14909,6 +15643,38 @@ typedef struct {
 #define PMC_PDRUNCFGCLR0_PDRUNCFGCLR0(x)         (((uint32_t)(((uint32_t)(x)) << PMC_PDRUNCFGCLR0_PDRUNCFGCLR0_SHIFT)) & PMC_PDRUNCFGCLR0_PDRUNCFGCLR0_MASK)
 /*! @} */
 
+/*! @name SRAMCTRL - All SRAMs common control signals [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Software Reset] */
+/*! @{ */
+
+#define PMC_SRAMCTRL_SMB_MASK                    (0x3U)
+#define PMC_SRAMCTRL_SMB_SHIFT                   (0U)
+/*! SMB - Source Biasing voltage.
+ *  0b00..Low leakage.
+ *  0b01..Medium leakage.
+ *  0b10..Highest leakage.
+ *  0b11..Disable.
+ */
+#define PMC_SRAMCTRL_SMB(x)                      (((uint32_t)(((uint32_t)(x)) << PMC_SRAMCTRL_SMB_SHIFT)) & PMC_SRAMCTRL_SMB_MASK)
+
+#define PMC_SRAMCTRL_RM_MASK                     (0x1CU)
+#define PMC_SRAMCTRL_RM_SHIFT                    (2U)
+/*! RM - Read Margin control settings.
+ */
+#define PMC_SRAMCTRL_RM(x)                       (((uint32_t)(((uint32_t)(x)) << PMC_SRAMCTRL_RM_SHIFT)) & PMC_SRAMCTRL_RM_MASK)
+
+#define PMC_SRAMCTRL_WM_MASK                     (0xE0U)
+#define PMC_SRAMCTRL_WM_SHIFT                    (5U)
+/*! WM - Write Margin control settings.
+ */
+#define PMC_SRAMCTRL_WM(x)                       (((uint32_t)(((uint32_t)(x)) << PMC_SRAMCTRL_WM_SHIFT)) & PMC_SRAMCTRL_WM_MASK)
+
+#define PMC_SRAMCTRL_WRME_MASK                   (0x100U)
+#define PMC_SRAMCTRL_WRME_SHIFT                  (8U)
+/*! WRME - Write read margin enable.
+ */
+#define PMC_SRAMCTRL_WRME(x)                     (((uint32_t)(((uint32_t)(x)) << PMC_SRAMCTRL_WRME_SHIFT)) & PMC_SRAMCTRL_WRME_MASK)
+/*! @} */
+
 
 /*!
  * @}
@@ -14916,7 +15682,7 @@ typedef struct {
 
 
 /* PMC - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral PMC base address */
   #define PMC_BASE                                 (0x50020000u)
   /** Peripheral PMC base address */
@@ -15393,7 +16159,7 @@ typedef struct {
 
 
 /* POWERQUAD - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral POWERQUAD base address */
   #define POWERQUAD_BASE                           (0x500A6000u)
   /** Peripheral POWERQUAD base address */
@@ -15677,7 +16443,7 @@ typedef struct {
 
 
 /* PRINCE - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral PRINCE base address */
   #define PRINCE_BASE                              (0x50035000u)
   /** Peripheral PRINCE base address */
@@ -16447,7 +17213,7 @@ typedef struct {
 
 
 /* PUF - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral PUF base address */
   #define PUF_BASE                                 (0x5003B000u)
   /** Peripheral PUF base address */
@@ -16637,7 +17403,7 @@ typedef struct {
 
 
 /* RNG - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral RNG base address */
   #define RNG_BASE                                 (0x5003A000u)
   /** Peripheral RNG base address */
@@ -16869,7 +17635,7 @@ typedef struct {
 
 
 /* RTC - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral RTC base address */
   #define RTC_BASE                                 (0x5002C000u)
   /** Peripheral RTC base address */
@@ -18547,7 +19313,7 @@ typedef struct {
 
 
 /* SCT - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral SCT0 base address */
   #define SCT0_BASE                                (0x50085000u)
   /** Peripheral SCT0 base address */
@@ -19732,7 +20498,7 @@ typedef struct {
 
 
 /* SDIF - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral SDIF base address */
   #define SDIF_BASE                                (0x5009B000u)
   /** Peripheral SDIF base address */
@@ -19801,7 +20567,9 @@ typedef struct {
   __I  uint32_t FIFORD;                            /**< FIFO read data., offset: 0xE30 */
        uint8_t RESERVED_6[12];
   __I  uint32_t FIFORDNOPOP;                       /**< FIFO data read with no FIFO pop., offset: 0xE40 */
-       uint8_t RESERVED_7[440];
+       uint8_t RESERVED_7[4];
+  __I  uint32_t FIFOSIZE;                          /**< FIFO size register, offset: 0xE48 */
+       uint8_t RESERVED_8[432];
   __I  uint32_t ID;                                /**< Peripheral identification register., offset: 0xFFC */
 } SPI_Type;
 
@@ -20549,6 +21317,16 @@ typedef struct {
 #define SPI_FIFORDNOPOP_SOT(x)                   (((uint32_t)(((uint32_t)(x)) << SPI_FIFORDNOPOP_SOT_SHIFT)) & SPI_FIFORDNOPOP_SOT_MASK)
 /*! @} */
 
+/*! @name FIFOSIZE - FIFO size register */
+/*! @{ */
+
+#define SPI_FIFOSIZE_FIFOSIZE_MASK               (0x1FU)
+#define SPI_FIFOSIZE_FIFOSIZE_SHIFT              (0U)
+/*! FIFOSIZE - Provides the size of the FIFO for software. The size of the SPI FIFO is 8 entries.
+ */
+#define SPI_FIFOSIZE_FIFOSIZE(x)                 (((uint32_t)(((uint32_t)(x)) << SPI_FIFOSIZE_FIFOSIZE_SHIFT)) & SPI_FIFOSIZE_FIFOSIZE_MASK)
+/*! @} */
+
 /*! @name ID - Peripheral identification register. */
 /*! @{ */
 
@@ -20584,7 +21362,7 @@ typedef struct {
 
 
 /* SPI - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral SPI0 base address */
   #define SPI0_BASE                                (0x50086000u)
   /** Peripheral SPI0 base address */
@@ -20858,7 +21636,7 @@ typedef struct {
   __IO uint32_t USB1NEEDCLKCTRL;                   /**< USB1 need clock control, offset: 0x424 */
   __I  uint32_t USB1NEEDCLKSTAT;                   /**< USB1 need clock status, offset: 0x428 */
        uint8_t RESERVED_28[52];
-  __O  uint32_t SDIOCLKCTRL;                       /**< SDIO CCLKIN phase and delay control, offset: 0x460 */
+  __IO uint32_t SDIOCLKCTRL;                       /**< SDIO CCLKIN phase and delay control, offset: 0x460 */
        uint8_t RESERVED_29[252];
   __IO uint32_t PLL1CTRL;                          /**< PLL1 550m control, offset: 0x560 */
   __I  uint32_t PLL1STAT;                          /**< PLL1 550m status, offset: 0x564 */
@@ -20872,29 +21650,31 @@ typedef struct {
   __IO uint32_t PLL0PDEC;                          /**< PLL0 550m P divider, offset: 0x58C */
   __IO uint32_t PLL0SSCG0;                         /**< PLL0 Spread Spectrum Wrapper control register 0, offset: 0x590 */
   __IO uint32_t PLL0SSCG1;                         /**< PLL0 Spread Spectrum Wrapper control register 1, offset: 0x594 */
-       uint8_t RESERVED_31[616];
+       uint8_t RESERVED_31[364];
+  __IO uint32_t FUNCRETENTIONCTRL;                 /**< Functional retention control register, offset: 0x704 */
+       uint8_t RESERVED_32[248];
   __IO uint32_t CPUCTRL;                           /**< CPU Control for multiple processors, offset: 0x800 */
   __IO uint32_t CPBOOT;                            /**< Coprocessor Boot Address, offset: 0x804 */
-       uint8_t RESERVED_32[4];
+       uint8_t RESERVED_33[4];
   __I  uint32_t CPSTAT;                            /**< CPU Status, offset: 0x80C */
-       uint8_t RESERVED_33[520];
+       uint8_t RESERVED_34[520];
   __IO uint32_t CLOCK_CTRL;                        /**< Various system clock controls : Flash clock (48 MHz) control, clocks to Frequency Measures, offset: 0xA18 */
-       uint8_t RESERVED_34[244];
+       uint8_t RESERVED_35[244];
   __IO uint32_t COMP_INT_CTRL;                     /**< Comparator Interrupt control, offset: 0xB10 */
   __I  uint32_t COMP_INT_STATUS;                   /**< Comparator Interrupt status, offset: 0xB14 */
-       uint8_t RESERVED_35[748];
+       uint8_t RESERVED_36[748];
   __IO uint32_t AUTOCLKGATEOVERRIDE;               /**< Control automatic clock gating, offset: 0xE04 */
   __IO uint32_t GPIOPSYNC;                         /**< Enable bypass of the first stage of synchonization inside GPIO_INT module, offset: 0xE08 */
-       uint8_t RESERVED_36[404];
+       uint8_t RESERVED_37[404];
   __IO uint32_t DEBUG_LOCK_EN;                     /**< Control write access to security registers., offset: 0xFA0 */
   __IO uint32_t DEBUG_FEATURES;                    /**< Cortex M33 (CPU0) and micro Cortex M33 (CPU1) debug features control., offset: 0xFA4 */
   __IO uint32_t DEBUG_FEATURES_DP;                 /**< Cortex M33 (CPU0) and micro Cortex M33 (CPU1) debug features control DUPLICATE register., offset: 0xFA8 */
-       uint8_t RESERVED_37[16];
+       uint8_t RESERVED_38[16];
   __O  uint32_t KEY_BLOCK;                         /**< block quiddikey/PUF all index., offset: 0xFBC */
   __IO uint32_t DEBUG_AUTH_BEACON;                 /**< Debug authentication BEACON register, offset: 0xFC0 */
-       uint8_t RESERVED_38[16];
+       uint8_t RESERVED_39[16];
   __IO uint32_t CPUCFG;                            /**< CPUs configuration register, offset: 0xFD4 */
-       uint8_t RESERVED_39[32];
+       uint8_t RESERVED_40[32];
   __I  uint32_t DEVICE_ID0;                        /**< Device ID, offset: 0xFF8 */
   __I  uint32_t DIEID;                             /**< Chip revision ID and Number, offset: 0xFFC */
 } SYSCON_Type;
@@ -23976,6 +24756,30 @@ typedef struct {
 #define SYSCON_PLL0SSCG1_SEL_EXT(x)              (((uint32_t)(((uint32_t)(x)) << SYSCON_PLL0SSCG1_SEL_EXT_SHIFT)) & SYSCON_PLL0SSCG1_SEL_EXT_MASK)
 /*! @} */
 
+/*! @name FUNCRETENTIONCTRL - Functional retention control register */
+/*! @{ */
+
+#define SYSCON_FUNCRETENTIONCTRL_FUNCRETENA_MASK (0x1U)
+#define SYSCON_FUNCRETENTIONCTRL_FUNCRETENA_SHIFT (0U)
+/*! FUNCRETENA - functional retention in power down only.
+ *  0b1..enable functional retention.
+ *  0b0..disable functional retention.
+ */
+#define SYSCON_FUNCRETENTIONCTRL_FUNCRETENA(x)   (((uint32_t)(((uint32_t)(x)) << SYSCON_FUNCRETENTIONCTRL_FUNCRETENA_SHIFT)) & SYSCON_FUNCRETENTIONCTRL_FUNCRETENA_MASK)
+
+#define SYSCON_FUNCRETENTIONCTRL_RET_START_MASK  (0x3FFEU)
+#define SYSCON_FUNCRETENTIONCTRL_RET_START_SHIFT (1U)
+/*! RET_START - Start address divided by 4 inside SRAMX bank.
+ */
+#define SYSCON_FUNCRETENTIONCTRL_RET_START(x)    (((uint32_t)(((uint32_t)(x)) << SYSCON_FUNCRETENTIONCTRL_RET_START_SHIFT)) & SYSCON_FUNCRETENTIONCTRL_RET_START_MASK)
+
+#define SYSCON_FUNCRETENTIONCTRL_RET_LENTH_MASK  (0xFFC000U)
+#define SYSCON_FUNCRETENTIONCTRL_RET_LENTH_SHIFT (14U)
+/*! RET_LENTH - lenth of Scan chains to save.
+ */
+#define SYSCON_FUNCRETENTIONCTRL_RET_LENTH(x)    (((uint32_t)(((uint32_t)(x)) << SYSCON_FUNCRETENTIONCTRL_RET_LENTH_SHIFT)) & SYSCON_FUNCRETENTIONCTRL_RET_LENTH_MASK)
+/*! @} */
+
 /*! @name CPUCTRL - CPU Control for multiple processors */
 /*! @{ */
 
@@ -24508,7 +25312,7 @@ typedef struct {
 
 
 /* SYSCON - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral SYSCON base address */
   #define SYSCON_BASE                              (0x50000000u)
   /** Peripheral SYSCON base address */
@@ -24753,7 +25557,7 @@ typedef struct {
 
 
 /* SYSCTL - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral SYSCTL base address */
   #define SYSCTL_BASE                              (0x50023000u)
   /** Peripheral SYSCTL base address */
@@ -24821,7 +25625,9 @@ typedef struct {
   __I  uint32_t FIFORD;                            /**< FIFO read data., offset: 0xE30 */
        uint8_t RESERVED_5[12];
   __I  uint32_t FIFORDNOPOP;                       /**< FIFO data read with no FIFO pop., offset: 0xE40 */
-       uint8_t RESERVED_6[440];
+       uint8_t RESERVED_6[4];
+  __I  uint32_t FIFOSIZE;                          /**< FIFO size register, offset: 0xE48 */
+       uint8_t RESERVED_7[432];
   __I  uint32_t ID;                                /**< Peripheral identification register., offset: 0xFFC */
 } USART_Type;
 
@@ -25738,6 +26544,16 @@ typedef struct {
 #define USART_FIFORDNOPOP_RXNOISE(x)             (((uint32_t)(((uint32_t)(x)) << USART_FIFORDNOPOP_RXNOISE_SHIFT)) & USART_FIFORDNOPOP_RXNOISE_MASK)
 /*! @} */
 
+/*! @name FIFOSIZE - FIFO size register */
+/*! @{ */
+
+#define USART_FIFOSIZE_FIFOSIZE_MASK             (0x1FU)
+#define USART_FIFOSIZE_FIFOSIZE_SHIFT            (0U)
+/*! FIFOSIZE - Provides the size of the FIFO for software. The size of the SPI FIFO is 8 entries.
+ */
+#define USART_FIFOSIZE_FIFOSIZE(x)               (((uint32_t)(((uint32_t)(x)) << USART_FIFOSIZE_FIFOSIZE_SHIFT)) & USART_FIFOSIZE_FIFOSIZE_MASK)
+/*! @} */
+
 /*! @name ID - Peripheral identification register. */
 /*! @{ */
 
@@ -25773,7 +26589,7 @@ typedef struct {
 
 
 /* USART - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral USART0 base address */
   #define USART0_BASE                              (0x50086000u)
   /** Peripheral USART0 base address */
@@ -26398,7 +27214,7 @@ typedef struct {
 
 
 /* USB - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral USB0 base address */
   #define USB0_BASE                                (0x50084000u)
   /** Peripheral USB0 base address */
@@ -27111,7 +27927,7 @@ typedef struct {
 
 
 /* USBFSH - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral USBFSH base address */
   #define USBFSH_BASE                              (0x500A2000u)
   /** Peripheral USBFSH base address */
@@ -27296,7 +28112,13 @@ typedef struct {
 
 #define USBHSD_DEVCMDSTAT_PHY_TEST_MODE_MASK     (0xE0000000U)
 #define USBHSD_DEVCMDSTAT_PHY_TEST_MODE_SHIFT    (29U)
-/*! PHY_TEST_MODE - This field is written by firmware to put the PHY into a test mode as defined by the USB2.0 specification
+/*! PHY_TEST_MODE - This field is written by firmware to put the PHY into a test mode as defined by the USB2.0 specification.
+ *  0b000..Test mode disabled.
+ *  0b001..Test_J.
+ *  0b010..Test_K.
+ *  0b011..Test_SE0_NAK.
+ *  0b100..Test_Packet.
+ *  0b101..Test_Force_Enable.
  */
 #define USBHSD_DEVCMDSTAT_PHY_TEST_MODE(x)       (((uint32_t)(((uint32_t)(x)) << USBHSD_DEVCMDSTAT_PHY_TEST_MODE_SHIFT)) & USBHSD_DEVCMDSTAT_PHY_TEST_MODE_MASK)
 /*! @} */
@@ -27561,7 +28383,7 @@ typedef struct {
 
 
 /* USBHSD - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral USBHSD base address */
   #define USBHSD_BASE                              (0x50094000u)
   /** Peripheral USBHSD base address */
@@ -28092,7 +28914,7 @@ typedef struct {
 
 
 /* USBHSH - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral USBHSH base address */
   #define USBHSH_BASE                              (0x500A3000u)
   /** Peripheral USBHSH base address */
@@ -28167,7 +28989,7 @@ typedef struct {
   __IO uint32_t USB1_VBUS_DETECT_CLR;              /**< USB PHY VBUS Detect Control Register, offset: 0xC8 */
   __IO uint32_t USB1_VBUS_DETECT_TOG;              /**< USB PHY VBUS Detect Control Register, offset: 0xCC */
        uint8_t RESERVED_2[48];
-  __IO uint32_t ANACTRLr;                          /**< USB PHY Analog Control Register, offset: 0x100 */
+  __IO uint32_t ANACTRLr;                          /**< USB PHY Analog Control Register, offset: 0x100, 'r' suffix has been added to avoid a clash with peripheral base pointer macro 'ANACTRL' */
   __IO uint32_t ANACTRL_SET;                       /**< USB PHY Analog Control Register, offset: 0x104 */
   __IO uint32_t ANACTRL_CLR;                       /**< USB PHY Analog Control Register, offset: 0x108 */
   __IO uint32_t ANACTRL_TOG;                       /**< USB PHY Analog Control Register, offset: 0x10C */
@@ -29909,7 +30731,7 @@ typedef struct {
 
 
 /* USBPHY - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral USBPHY base address */
   #define USBPHY_BASE                              (0x50038000u)
   /** Peripheral USBPHY base address */
@@ -30113,7 +30935,7 @@ typedef struct {
 
 
 /* UTICK - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral UTICK0 base address */
   #define UTICK0_BASE                              (0x5000E000u)
   /** Peripheral UTICK0 base address */
@@ -30280,7 +31102,7 @@ typedef struct {
 
 
 /* WWDT - Peripheral instance base addresses */
-#if (__ARM_FEATURE_CMSE & 0x2)
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral WWDT base address */
   #define WWDT_BASE                                (0x5000C000u)
   /** Peripheral WWDT base address */

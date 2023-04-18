@@ -449,16 +449,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\Common\ARMv8M\tz_demo\nsc_functions.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>User</GroupName>
-          <Files>
-            <File>
-              <FileName>main_s.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\main_s.c</FilePath>
-            </File>
             <File>
               <FileName>secure_reg_test_asm.c</FileName>
               <FileType>1</FileType>
@@ -468,6 +458,16 @@
               <FileName>secure_reg_test_asm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Common\ARMv8M\reg_tests\GCC\ARM_CM33\secure\secure_reg_test_asm.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User</GroupName>
+          <Files>
+            <File>
+              <FileName>main_s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main_s.c</FilePath>
             </File>
           </Files>
         </Group>

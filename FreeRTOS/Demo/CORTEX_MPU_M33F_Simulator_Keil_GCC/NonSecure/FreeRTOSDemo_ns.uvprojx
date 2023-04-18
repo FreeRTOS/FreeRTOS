@@ -499,16 +499,6 @@
               <FileType>5</FileType>
               <FilePath>..\..\Common\ARMv8M\reg_tests\GCC\ARM_CM33\non_secure\reg_test_asm.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>User</GroupName>
-          <Files>
-            <File>
-              <FileName>main_ns.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\main_ns.c</FilePath>
-            </File>
             <File>
               <FileName>reg_tests.c</FileName>
               <FileType>1</FileType>
@@ -518,6 +508,16 @@
               <FileName>reg_tests.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\reg_tests.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User</GroupName>
+          <Files>
+            <File>
+              <FileName>main_ns.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main_ns.c</FilePath>
             </File>
           </Files>
         </Group>

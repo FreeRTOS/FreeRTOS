@@ -46,5 +46,21 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
     }
 }
 #endif /* defined(__REDLIB__) */
+#else  /* (defined(__CC_ARM) || (defined(__ICCARM__)) || (defined(__ARMCC_VERSION)) */
+
+#if (defined(__DSC__) && defined(__CW__))
+
+void __msl_assertion_failed(char const *failedExpr, char const *file, char const *func, int line)
+{
+    PRINTF("\r\nASSERT ERROR\r\n");
+    PRINTF("  File      : %s\r\n", file);
+    PRINTF("  Function  : %s\r\n", func); /*compiler not support func name yet*/
+    PRINTF("  Line      : %u\r\n", (uint32_t)line);
+    PRINTF("  failedExpr: %s\r\n", failedExpr);
+    asm(DEBUGHLT);
+}
+
+#endif /* (defined(__DSC__) && defined (__CW__)) */
+
 #endif /* (defined(__CC_ARM) || (defined(__ICCARM__)) || (defined(__ARMCC_VERSION)) */
 #endif /* NDEBUG */

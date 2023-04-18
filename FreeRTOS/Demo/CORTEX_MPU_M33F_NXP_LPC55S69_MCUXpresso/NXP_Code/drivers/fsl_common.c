@@ -21,13 +21,14 @@ typedef struct _mem_align_control_block
 #define FSL_COMPONENT_ID "platform.drivers.common"
 #endif
 
+#if !((defined(__DSC__) && defined(__CW__)))
 void *SDK_Malloc(size_t size, size_t alignbytes)
 {
     mem_align_cb_t *p_cb = NULL;
     uint32_t alignedsize;
 
     /* Check overflow. */
-    alignedsize = SDK_SIZEALIGN(size, alignbytes);
+    alignedsize = (uint32_t)(unsigned int)SDK_SIZEALIGN(size, alignbytes);
     if (alignedsize < size)
     {
         return NULL;
@@ -38,15 +39,15 @@ void *SDK_Malloc(size_t size, size_t alignbytes)
         return NULL;
     }
 
-    alignedsize += alignbytes + sizeof(mem_align_cb_t);
+    alignedsize += alignbytes + (uint32_t)sizeof(mem_align_cb_t);
 
     union
     {
         void *pointer_value;
-        uint32_t unsigned_value;
+        uintptr_t unsigned_value;
     } p_align_addr, p_addr;
 
-    p_addr.pointer_value = malloc(alignedsize);
+    p_addr.pointer_value = malloc((size_t)alignedsize);
 
     if (p_addr.pointer_value == NULL)
     {
@@ -67,7 +68,7 @@ void SDK_Free(void *ptr)
     union
     {
         void *pointer_value;
-        uint32_t unsigned_value;
+        uintptr_t unsigned_value;
     } p_free;
     p_free.pointer_value = ptr;
     mem_align_cb_t *p_cb = (mem_align_cb_t *)(p_free.unsigned_value - 4U);
@@ -81,3 +82,4 @@ void SDK_Free(void *ptr)
 
     free(p_free.pointer_value);
 }
+#endif

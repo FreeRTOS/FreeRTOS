@@ -35,6 +35,7 @@
 /* Demo includes. */
 #include "tz_demo.h"
 #include "mpu_demo.h"
+#include "reg_tests.h"
 
 /* Externs needed by the MPU setup code. These are defined in Scatter-Loading
  * description file (FreeRTOSDemo_ns.sct). */
@@ -126,6 +127,8 @@ static void prvCreateTasks( void )
 	/* Create tasks for the TZ Demo. */
 	vStartTZDemo();
 
+	/* Create tasks for register tests. */
+	vStartRegTests();
 }
 /*-----------------------------------------------------------*/
 

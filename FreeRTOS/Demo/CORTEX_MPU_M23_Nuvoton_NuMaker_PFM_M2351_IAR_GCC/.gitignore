@@ -1,0 +1,7 @@
+# Auto generated files.
+*.uvgui*
+Nu_Link_Driver.ini
+
+# Build artifacts.
+Objects/
+Listings/

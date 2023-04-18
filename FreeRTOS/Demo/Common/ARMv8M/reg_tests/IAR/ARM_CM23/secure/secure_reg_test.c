@@ -38,7 +38,7 @@
 extern void vRegTestAsm_SecureImpl( void );
 
 /* typedef for non-secure callback function. */
-typedef __cmse_nonsecure_call void ( *NonSecureRegTestCallback_t ) ( void );
+typedef __cmse_nonsecure_call void ( * NonSecureRegTestCallback_t ) ( void );
 /*-----------------------------------------------------------*/
 
 secureportNON_SECURE_CALLABLE void vRegTestAsm_Secure( void )

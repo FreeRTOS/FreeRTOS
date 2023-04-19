@@ -321,7 +321,7 @@ void test_priority_change_tasks_equal_priority_raise( void )
 }
 
 /**
- * @brief AWS_IoT-FreeRTOS_SMP_TC-<TBD>
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-111
  * A task of priority higher than idle is created. The test verify that when the priority
  * of the task is raised, running idle task won't be altered.
  *
@@ -342,28 +342,28 @@ void test_priority_change_tasks_equal_priority_raise( void )
  *
  * Task (T1)                Idle task (1)               Idle task (N)
  * Priority – 1             Priority – idle             Priority – idle
- * State - Running (Core 0) State - Running (Core 1)    State - ready
+ * State - Running (Core 1) State - Running (Core 2)    State - ready
  *
  * After calling vTaskPrioritySet() and raising the priority of task T1
  *
  * Task (T1)                Idle task (1)              Idle task (N)
- * Priority – 1             Priority – idle            Priority – idle
+ * Priority – 2             Priority – idle            Priority – idle
  * State - Running (Core 0) State - Running (Core 1)   State - ready
  */
-void test_priority_change_tasks_priority_raise( void )
+void test_priority_change_task_high_priority_raise( void )
 {
-    TaskHandle_t xTaskHandle = { NULL };
+    TaskHandle_t xTaskHandles[ 1 ] = { NULL };
     uint32_t i;
     TaskStatus_t xTaskDetails;
 
     /* Create a task to run. */
-    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandle );
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[ 0 ] );
 
     /* Start scheduler. */
     vTaskStartScheduler();
 
     /* Verify the task is running. */
-    verifySmpTask( &xTaskHandle, eRunning, 0 );
+    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
     for( i = 1; i < configNUMBER_OF_CORES; i++ )
     {
         /* Verify the idle task is running on all other CPU cores */
@@ -371,14 +371,14 @@ void test_priority_change_tasks_priority_raise( void )
     }
 
     /* Raise the priority of the running task. */
-    vTaskPrioritySet( xTaskHandle, 2 );
+    vTaskPrioritySet( xTaskHandles[ 0 ], 2 );
 
     /* Verify the priority has been changed */
-    vTaskGetInfo( xTaskHandle, &xTaskDetails, pdTRUE, eInvalid );
+    vTaskGetInfo( xTaskHandles[ 0 ], &xTaskDetails, pdTRUE, eInvalid );
     TEST_ASSERT_EQUAL( 2, xTaskDetails.xHandle->uxPriority );
 
     /* Verify the task is still in the running state */
-    verifySmpTask( &xTaskHandle, eRunning, 0 );
+    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
 
     for( i = 1; i < configNUMBER_OF_CORES; i++ )
     {

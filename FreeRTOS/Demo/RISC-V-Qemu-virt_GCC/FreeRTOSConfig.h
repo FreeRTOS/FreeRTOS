@@ -72,6 +72,9 @@ void vAssertCalled( void );
 #define configASSERT_DEFINED                   1
 #define configASSERT( x )                      do { if ( !(x) ) vAssertCalled(); } while(0)
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 			0
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1

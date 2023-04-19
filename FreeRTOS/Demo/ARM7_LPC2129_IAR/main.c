@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -144,7 +144,7 @@ void main( void )
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartDynamicPriorityTasks();
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-
+		
 	/* Start the check task - which is defined in this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
@@ -190,7 +190,7 @@ static void prvSetupHardware( void )
 
 	/* Setup the peripheral bus to be the same as the PLL output. */
 	APBDIV = mainBUS_CLK_FULL;
-
+	
 	/* Configure the RS2332 pins.  All other pins remain at their default of 0. */
 	PINSEL0 |= mainTX_ENABLE;
 	PINSEL0 |= mainRX_ENABLE;
@@ -219,7 +219,7 @@ TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 	{
 		/* Delay until it is time to execute again. */
 		vTaskDelay( xDelayPeriod );
-
+	
 		/* Check all the standard demo application tasks are executing without
 		error. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
@@ -227,7 +227,7 @@ TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 			/* An error has been detected in one of the tasks - flash faster. */
 			xDelayPeriod = mainERROR_FLASH_PERIOD;
 		}
-
+		
 		vParTestToggleLED( mainCHECK_TASK_LED );
 	}
 }

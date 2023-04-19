@@ -20,7 +20,7 @@
 # * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # *
 # * https://www.FreeRTOS.org
-# * https://github.com/FreeRTOS
+# * https://aws.amazon.com/freertos
 # *
 # * 1 tab == 4 spaces!
 # */
@@ -66,7 +66,7 @@ a.out : $(OBJ) makefile
 	$(CC) $(OBJ) $(CFLAGS)
 
 $(OBJ) : %.o : %.c makefile
-	$(CC) -c $(CFLAGS) $< -o $@
-
+	$(CC) -c $(CFLAGS) $< -o $@	
+	
 clean :
 	${RM} ${OBJ} a.out

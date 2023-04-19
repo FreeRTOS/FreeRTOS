@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -60,9 +60,9 @@ unsigned long ulLED = partstFIRST_IO;
 		}
 		else
 		{
-			IOCLR1 = ulLED;
+			IOCLR1 = ulLED;			
 		}
-	}
+	}	
 }
 /*-----------------------------------------------------------*/
 
@@ -84,8 +84,8 @@ unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 		}
 		else
 		{
-			IOSET1 = ulLED;
+			IOSET1 = ulLED;			
 		}
-	}
+	}	
 }
 

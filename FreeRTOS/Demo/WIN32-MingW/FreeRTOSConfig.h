@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -78,6 +78,10 @@ void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initi
 #define configGENERATE_RUN_TIME_STATS			1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
+
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES 					0
+#define configMAX_CO_ROUTINE_PRIORITIES			( 2 )
 
 /* This demo can use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human

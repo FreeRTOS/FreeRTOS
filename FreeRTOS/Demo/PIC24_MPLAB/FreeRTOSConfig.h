@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -36,7 +36,7 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
  *
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
@@ -55,6 +55,10 @@
 #define configIDLE_SHOULD_YIELD			1
 #define configCHECK_FOR_STACK_OVERFLOW  2
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 		1
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
@@ -65,6 +69,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+
 
 #define configKERNEL_INTERRUPT_PRIORITY	0x01
 

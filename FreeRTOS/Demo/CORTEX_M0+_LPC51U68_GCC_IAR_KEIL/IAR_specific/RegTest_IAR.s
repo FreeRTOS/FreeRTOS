@@ -20,11 +20,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
-/*
+/* 
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register maintains its expected value for the lifetime of the
  * task.  Each task uses a different set of values.  The reg test tasks execute
@@ -32,7 +32,7 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  */
-
+ 
 	RSEG    CODE:CODE(2)
 	thumb
 

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -66,8 +66,8 @@ void vSetupTimerTest( unsigned short usFrequencyHz )
 /* Timer 3 is going to interrupt at usFrequencyHz Hz. */
 const uint32_t ulPreload = ( unsigned short ) ( ( configPERIPHERAL_CLOCK_HZ / ( unsigned long ) usFrequencyHz ) - 1 );
 
-	/* Timer 3 is used to generate interrupts above the kernel and max syscall
-	interrupt priorities. No system library calls are used here as they are not
+	/* Timer 3 is used to generate interrupts above the kernel and max syscall 
+	interrupt priorities. No system library calls are used here as they are not 
 	guaranteed to be re-entrant. */
 	portMMCR_TMR3_CONTROL = 1ul;
 	portMMCR_TMR3_PRELOAD = ulPreload;

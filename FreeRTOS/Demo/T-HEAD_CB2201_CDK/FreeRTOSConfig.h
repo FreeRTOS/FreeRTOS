@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -50,6 +50,7 @@
 #define configUSE_TRACE_FACILITY    0
 #define configUSE_16_BIT_TICKS      0
 #define configIDLE_SHOULD_YIELD     1
+#define configUSE_CO_ROUTINES       0
 #define configUSE_MUTEXES           1
 #define configCHECK_FOR_STACK_OVERFLOW  1
 #define configUSE_RECURSIVE_MUTEXES     0
@@ -71,6 +72,7 @@
 /*#define configGENERATE_RUN_TIME_STATS 1*/
 
 #define configMAX_PRIORITIES        ( 200 )
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

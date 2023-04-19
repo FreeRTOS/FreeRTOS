@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -87,6 +87,9 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	0
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES			 		0
+#define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS						1

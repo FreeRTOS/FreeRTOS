@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -37,11 +37,11 @@ unsigned char __low_level_init(void)
 {
 unsigned char resetflag = RESF;
 unsigned char psval = 0;
-unsigned portBASE_TYPE i = 0;
+unsigned portBASE_TYPE i = 0;        
 
 	/* Setup provided by NEC. */
 
-	portDISABLE_INTERRUPTS();         /* disable global interrupts */
+	portDISABLE_INTERRUPTS();         /* disable global interrupts */                      
 
 	PRCMD = 0x00;                     /* On-chip debug mode */
 	OCDM = 0x00;

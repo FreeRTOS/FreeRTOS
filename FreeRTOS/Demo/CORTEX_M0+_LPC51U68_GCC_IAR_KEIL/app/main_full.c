@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -209,7 +209,7 @@ unsigned long ulErrorFound = pdFALSE;
 #endif /* mainNO_TASK_NO_CHECK */
 
 #if ( mainNO_TASK_NO_CHECK == 0 )
-
+	
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */
 	if( xAreBlockTimeTestTasksStillRunning() != pdPASS )

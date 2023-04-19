@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -73,7 +73,7 @@ unsigned char ucBit = ( unsigned char ) 1;
 			}
 
 			PDCWrite( PDC_LED, ucOutputValue );
-		}
+		}	
 	}
 	xTaskResumeAll();
 }

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -49,7 +49,7 @@
  * This project has only been tested in the QEMU emulation of the HiFive board
  * from SiFive.
  *
- * NOTE - Requires QEMU 1908xx or higher.  Start QEMU using the following command
+ * NOTE - Requires QEMU 1908xx or higher.  Start QEMU using the following command 
  * line:
  *
  * [your_path_1]\qemu-system-riscv32 -kernel [your_path_2]\FreeRTOS\Demo\RISC-V-Qemu-sifive_e-FreedomStudio\Debug\RTOSDemo.elf -S -s -machine sifive_e

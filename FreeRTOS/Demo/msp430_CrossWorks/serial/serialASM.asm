@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -56,7 +56,7 @@ _vUARTTx_Wrapper
 /*-----------------------------------------------------------*/
 
 
-
+      		
 
 	/* Place the UART ISRs in the correct vectors. */
 
@@ -68,11 +68,11 @@ _vUARTTx_Wrapper
 	DW		_vUARTRx_Wrapper
 
 	ORG		UART1TX_VECTOR
-	DW		_vUARTTx_Wrapper
-
+	DW		_vUARTTx_Wrapper		
+		
 
 #endif /* configINTERRUPT_EXAMPLE_METHOD */
 
 	END
-
-
+	
+		

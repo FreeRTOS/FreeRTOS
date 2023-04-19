@@ -10,7 +10,8 @@
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -20,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -39,12 +40,12 @@
 /*
  * Timer instance  |  Value
  * ----------------|---------
- *     TCB0        |    0
- *     TCB1        |    1
- *     TCB2        |    2
- *     TCB3        |    3
+ *     TCB0        |    0  
+ *     TCB1        |    1  
+ *     TCB2        |    2  
+ *     TCB3        |    3  
  *     TCB4        |    4
- *     RTC         |    5
+ *     RTC         |    5  
  */
 
 #define configUSE_TIMER_INSTANCE 0
@@ -90,6 +91,10 @@ For other frequency values, update clock_config.h with your own settings */
 #define configGENERATE_RUN_TIME_STATS 0
 #define configUSE_TRACE_FACILITY 0
 #define configUSE_STATS_FORMATTING_FUNCTIONS 0
+
+/* Co-routine related definitions. */
+#define configUSE_CO_ROUTINES 1
+#define configMAX_CO_ROUTINE_PRIORITIES 2
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS 1

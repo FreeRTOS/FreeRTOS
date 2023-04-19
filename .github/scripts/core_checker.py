@@ -190,7 +190,6 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.resources',
     '.rom',
     '.rprj',
-    '.s',
     '.s79',
     '.s82',
     '.s90',
@@ -276,14 +275,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/ThirdParty/.*',
     r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*',
     r'FreeRTOS\-Plus/Source/FreeRTOS-Plus-Trace/.*',
-    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator/Trace_Recorder_Configuration/.*',
-    r'FreeRTOS/Demo/lwIP_AVR32_UC3/.*',
-    r'FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC/.*',
-    r'FreeRTOS/Demo/CORTEX_LM3S102_GCC/makedefs',
-    r'FreeRTOS/Demo/AVR32_UC3/FreeRTOSConfig.h',
-    r'FreeRTOS/Demo/RX700_RX72N_EnvisionKit_GCC_e2studio/src/smc_gen/.*',
-    r'FreeRTOS/Demo/RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX/src/smc_gen/.*',
-    r'FreeRTOS/Demo/RX700_RX72N_EnvisionKit_Renesas_e2studio_CS\+/src/smc_gen/.*'
+    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator/Trace_Recorder_Configuration/.*'
 ]
 
 FREERTOS_IGNORED_FILES = [
@@ -305,7 +297,6 @@ FREERTOS_IGNORED_FILES = [
     'interrupt_vector.s',
     'reg_test.S',
     'gdbinit',
-
 ]
 
 FREERTOS_HEADER = [

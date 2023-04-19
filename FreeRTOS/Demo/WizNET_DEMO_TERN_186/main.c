@@ -20,13 +20,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
 /*
- * Creates all the demo application tasks then starts the scheduler.  In
- * addition to the standard demo application tasks main() creates the
+ * Creates all the demo application tasks then starts the scheduler.  In 
+ * addition to the standard demo application tasks main() creates the 
  * HTTPServer task, and a "Check" task.  The Check task periodically inspects
  * all the other tasks in the system to see if any errors have been reported.
  * The error status is then displayed on the served WEB page.
@@ -64,7 +64,7 @@
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
 /* Used to indicate the error status.  A value of 0 means that an error has not
-been detected in any task.  A non zero value indicates which group of demo
+been detected in any task.  A non zero value indicates which group of demo 
 tasks has reported an error.  See prvCheckTask() for bit definitions. */
 unsigned short usCheckStatus = 0;
 
@@ -90,7 +90,7 @@ void main(void)
     /* Start the HTTP server task. */
 	xTaskCreate( vHTTPTask, "WizNet", configMINIMAL_STACK_SIZE, NULL, mainHTTP_TASK_PRIORITY, NULL );
 
-	/* Start the demo/test application tasks.  See the demo application
+	/* Start the demo/test application tasks.  See the demo application 
 	section of the FreeRTOS.org WEB site for more information. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -106,7 +106,7 @@ void main(void)
 	tasks in the system to ensure there are no more or fewer than expected
 	compared to the number that were executing when the task started. */
    	vCreateSuicidalTasks( mainSUICIDE_TASKS_PRIORITY );
-
+        
 	/* Finally start the scheduler. */
     vTaskStartScheduler();
 
@@ -131,7 +131,7 @@ static void prvCheckTask( void *pvParameters )
     {
 		/* Block until it is time to check again. */
     	vTaskDelay( mainCHECK_DELAY );
-
+        
 		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 		{
 			usCheckStatus |= 0x01;

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -358,7 +358,7 @@ void vConfigureTimerForRunTimeStats( void )
 __interrupt void v4RunTimeStatsTimerOverflow( void )
 {
 	TA1CTL &= ~TAIFG;
-
+	
 	/* 16-bit overflow, so add 17th bit. */
 	ulRunTimeCounterOverflows += 0x10000;
 	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );

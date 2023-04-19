@@ -20,11 +20,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
-/* Layout of pins connected to GPIO on Xilinx FPGA evaluation board
+/* Layout of pins connected to GPIO on Xilinx FPGA evaluation board 
 */
 
 #include <machine/sfradr.h>
@@ -36,7 +36,7 @@ typedef struct DemoBoardGpioPins
 {
 	/* Leds on board */
 	unsigned leds:8;
-
+	
 	/* 7 segment display */
 	unsigned digit:7;
 

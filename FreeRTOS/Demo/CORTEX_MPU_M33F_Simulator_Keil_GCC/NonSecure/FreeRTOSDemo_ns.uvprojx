@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\Config;..\..\Common\ARMv8M\tz_demo;..\..\Common\ARMv8M\mpu_demo;..\..\..\Source\include;..\..\..\Source\portable\GCC\ARM_CM33\secure;..\..\..\Source\portable\GCC\ARM_CM33\non_secure</IncludePath>
+              <IncludePath>..\Config;..\..\Common\ARMv8M\tz_demo;..\..\Common\ARMv8M\mpu_demo;..\..\..\Source\include;..\..\..\Source\portable\GCC\ARM_CM33\secure;..\..\..\Source\portable\GCC\ARM_CM33\non_secure;..\..\Common\ARMv8M\reg_tests\GCC\ARM_CM33\non_secure;..\..\Common\ARMv8M\reg_tests\GCC\ARM_CM33\secure</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -489,6 +489,26 @@
               <FileType>1</FileType>
               <FilePath>..\..\Common\ARMv8M\tz_demo\tz_demo.c</FilePath>
             </File>
+            <File>
+              <FileName>reg_test_asm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\ARMv8M\reg_tests\GCC\ARM_CM33\non_secure\reg_test_asm.c</FilePath>
+            </File>
+            <File>
+              <FileName>reg_test_asm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Common\ARMv8M\reg_tests\GCC\ARM_CM33\non_secure\reg_test_asm.h</FilePath>
+            </File>
+            <File>
+              <FileName>reg_tests.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\reg_tests.c</FilePath>
+            </File>
+            <File>
+              <FileName>reg_tests.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\reg_tests.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -568,7 +588,7 @@
           <targetInfo name="FVP Simulation Model"/>
         </targetInfos>
       </file>
-      <file attr="config" category="sourceC" name="Device\ARM\ARMCM33\Source\system_ARMCM33.c" version="1.0.0">
+      <file attr="config" category="sourceC" name="Device\ARM\ARMCM33\Source\system_ARMCM33.c" version="1.0.1">
         <instance index="0">RTE\Device\ARMCM33_DSP_FP_TZ\system_ARMCM33.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.1.0" condition="ARMCM33 CMSIS" isDefaultVariant="1"/>
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>

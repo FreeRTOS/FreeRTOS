@@ -260,6 +260,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*mbedtls_config\.h.*',
     r'.*CMSIS.*',
     r'.*/Nordic_Code/*',
+    r'.*/Nuvoton_Code/*',
     r'.*/ST_Code/*',
     r'.*/NXP_Code/*',
     r'.*/makefile',

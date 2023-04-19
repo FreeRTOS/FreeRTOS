@@ -35,6 +35,7 @@
 /* Demo includes. */
 #include "tz_demo.h"
 #include "mpu_demo.h"
+#include "reg_tests.h"
 
 /* Externs needed by the MPU setup code. These are defined in Scatter-Loading
  * description file (FreeRTOSDemo_ns.sct). */
@@ -97,10 +98,10 @@ int main( void )
 	DEBUG_PORT->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 
 	/* Print banner. */
-	printf( "\n" );
-	printf( "+---------------------------------------------+\n" );
-	printf( "|           Nonsecure is running ...          |\n" );
-	printf( "+---------------------------------------------+\n" );
+	printf( "\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
+	printf( "|           Nonsecure is running ...          |\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
 
 	/* Create tasks. */
 	prvCreateTasks();
@@ -126,6 +127,8 @@ static void prvCreateTasks( void )
 	/* Create tasks for the TZ Demo. */
 	vStartTZDemo();
 
+	/* Create tasks for register tests. */
+	vStartRegTests();
 }
 /*-----------------------------------------------------------*/
 

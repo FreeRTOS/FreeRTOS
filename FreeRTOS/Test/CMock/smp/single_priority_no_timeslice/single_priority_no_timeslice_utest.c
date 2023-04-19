@@ -2370,6 +2370,7 @@ void test_task_priority_inherit_disinherit( void )
 {
     TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
     uint32_t i;
+    TaskStatus_t xTaskDetails;
 
     /* Create 1 high priority task. */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[ 0 ] );
@@ -2405,6 +2406,10 @@ void test_task_priority_inherit_disinherit( void )
     }
     taskEXIT_CRITICAL();
 
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 3, xTaskDetails.xHandle->uxPriority );
+
     /* Verify that the low priority task is running on last core. */
     verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, ( configNUMBER_OF_CORES - 1 ) );
 
@@ -2414,6 +2419,10 @@ void test_task_priority_inherit_disinherit( void )
         xTaskPriorityDisinherit( xTaskHandles[ configNUMBER_OF_CORES ] );
     }
     taskEXIT_CRITICAL();
+
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 1, xTaskDetails.xHandle->uxPriority );
 
     /* Verify the mutex held count is decreased. */
     TEST_ASSERT_EQUAL( 0U, xTaskHandles[ configNUMBER_OF_CORES ]->uxMutexesHeld );
@@ -2470,6 +2479,7 @@ void test_task_priority_inherit_disinherit_timeout( void )
 {
     TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
     uint32_t i;
+    TaskStatus_t xTaskDetails;
 
     /* Create 1 high priority task. */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[ 0 ] );
@@ -2505,6 +2515,10 @@ void test_task_priority_inherit_disinherit_timeout( void )
     }
     taskEXIT_CRITICAL();
 
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 3, xTaskDetails.xHandle->uxPriority );
+
     /* Verify that the low priority task is running on last core. */
     verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, ( configNUMBER_OF_CORES - 1 ) );
 
@@ -2514,6 +2528,10 @@ void test_task_priority_inherit_disinherit_timeout( void )
         vTaskPriorityDisinheritAfterTimeout( xTaskHandles[ configNUMBER_OF_CORES ], 1 );
     }
     taskEXIT_CRITICAL();
+
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 1, xTaskDetails.xHandle->uxPriority );
 
     /* Verify the high priority task is running. */
     verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );

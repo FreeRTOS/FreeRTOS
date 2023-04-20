@@ -86,8 +86,6 @@ jobs:
             exit 1
           fi
         continue-on-error: true
-        if: always()
-        continue-on-error: true
         result: ${{ job.status }}
         
       - name: Build Posix_GCC Blinky Demo

@@ -85,8 +85,9 @@ jobs:
             echo -e "\nFAILURE - SUCCESS string not found in output."
             exit 1
           fi
-        result: ${{ job.status }}
         continue-on-error: true
+        failure-on-action-output: |
+          string not found
         
       - name: Build Posix_GCC Blinky Demo
         shell: bash

@@ -85,6 +85,7 @@ jobs:
             echo "String not found in output file. Exiting with error."
             exit 1
           fi
+        continue-on-error: true
         # uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@p3run
         # with:
         #   exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo

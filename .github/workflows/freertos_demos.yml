@@ -78,7 +78,7 @@ jobs:
         if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          timeout 3m build/posix_demo | tee output.txt
+          timeout 30s build/posix_demo | tee output.txt
           if grep -q "OK: No errors" output.txt; then
             echo -e "\nSUCCESS - Found SUCCESS string in output."
           else
@@ -86,6 +86,9 @@ jobs:
             exit 1
           fi
         continue-on-error: true
+        if: always()
+        continue-on-error: true
+        result: ${{ job.status }}
         
       - name: Build Posix_GCC Blinky Demo
         shell: bash

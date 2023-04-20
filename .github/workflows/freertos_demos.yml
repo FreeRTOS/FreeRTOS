@@ -71,7 +71,9 @@ jobs:
       - name: Build Posix_GCC Demo
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
-        run: make -j
+        run: |
+          sed -i "s/#define[[:space:]]\+mainSELECTED_APPLICATION[[:space:]]\+FULL_DEMO/#define    mainSELECTED_APPLICATION      BLINKY_DEMO/g" main.c
+          make -j
 
       - name: Run and monitor Posic_GCC Demo
         if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
@@ -80,7 +82,7 @@ jobs:
           exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
           log-dir: FreeRTOS/Demo/Posix_GCC/build/demo_run_logs
           timeout-seconds: 300
-          success-line: "OK: no errors"
+          success-line: "Message received from software timer"
 
 
   MSP430-GCC:

@@ -86,9 +86,7 @@ jobs:
             exit 1
           fi
         continue-on-error: true
-        failure-on-action-output: |
-          string not found
-        
+                
       - name: Build Posix_GCC Blinky Demo
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC

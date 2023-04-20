@@ -51,6 +51,9 @@
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\atomic.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\croutine.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\deprecated_definitions.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -80,6 +83,9 @@
       <Filter>Kernel</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\FreeRTOS\Source\event_groups.c">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\croutine.c">
       <Filter>Kernel</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c" />

@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\atomic.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\croutine.h" />
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\deprecated_definitions.h" />
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\event_groups.h" />
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\FreeRTOS.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="FreeRTOSConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\croutine.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\event_groups.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\list.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c" />

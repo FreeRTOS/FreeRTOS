@@ -28,6 +28,7 @@ INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/Fi
 
 # FreeRTOS Kernel source files
 SOURCE_FILES :=
+SOURCE_FILES += ${FREERTOS_DIR}/Source/croutine.c
 SOURCE_FILES += ${FREERTOS_DIR}/Source/event_groups.c
 SOURCE_FILES += ${FREERTOS_DIR}/Source/list.c
 SOURCE_FILES += ${FREERTOS_DIR}/Source/queue.c

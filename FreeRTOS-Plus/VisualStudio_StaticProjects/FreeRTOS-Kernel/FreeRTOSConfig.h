@@ -78,6 +78,9 @@
 /* Event group related definitions. */
 #define configUSE_EVENT_GROUPS                     1
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES                      0
+
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet                   1

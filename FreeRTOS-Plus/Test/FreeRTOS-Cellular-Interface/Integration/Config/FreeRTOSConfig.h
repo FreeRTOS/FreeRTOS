@@ -79,6 +79,10 @@
 /* Run time stats gathering configuration options. */
 #define configGENERATE_RUN_TIME_STATS              0
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES                      0
+#define configMAX_CO_ROUTINE_PRIORITIES          ( 2 )
+
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet                   1

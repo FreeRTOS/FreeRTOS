@@ -78,6 +78,10 @@ void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initi
 #define configGENERATE_RUN_TIME_STATS			1
 
 /* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES                             0
+#define configMAX_CO_ROUTINE_PRIORITIES                 ( 2 )
+
+/* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES 					0
 #define configMAX_CO_ROUTINE_PRIORITIES			( 2 )
 

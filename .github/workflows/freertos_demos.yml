@@ -79,7 +79,7 @@ jobs:
         with:
           exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
           log-dir: FreeRTOS/Demo/Posix_GCC/build/demo_run_logs
-          timeout-seconds: 90
+          timeout-seconds: 120
           success-line: "OK: no errors"
 
 

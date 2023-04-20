@@ -97,7 +97,7 @@
     if( xQueueIsQueueFullFromISR( xNormallyEmptyQueue ) != pdTRUE )                                                                       \
     {                                                                                                                                     \
         UBaseType_t uxSavedInterruptStatus;                                                                                               \
-        uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();                                                                       \
+        uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();                                                                           \
         {                                                                                                                                 \
             uxValueForNormallyEmptyQueue++;                                                                                               \
             if( xQueueSendFromISR( xNormallyEmptyQueue, ( void * ) &uxValueForNormallyEmptyQueue, &xHigherPriorityTaskWoken ) != pdPASS ) \
@@ -105,7 +105,7 @@
                 uxValueForNormallyEmptyQueue--;                                                                                           \
             }                                                                                                                             \
         }                                                                                                                                 \
-        portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );                                                                      \
+        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );                                                                             \
     }                                                                                                                                     \
 
 
@@ -115,7 +115,7 @@
     if( xQueueIsQueueFullFromISR( xNormallyFullQueue ) != pdTRUE )                                                                      \
     {                                                                                                                                   \
         UBaseType_t uxSavedInterruptStatus;                                                                                             \
-        uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();                                                                     \
+        uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();                                                                         \
         {                                                                                                                               \
             uxValueForNormallyFullQueue++;                                                                                              \
             if( xQueueSendFromISR( xNormallyFullQueue, ( void * ) &uxValueForNormallyFullQueue, &xHigherPriorityTaskWoken ) != pdPASS ) \
@@ -123,7 +123,7 @@
                 uxValueForNormallyFullQueue--;                                                                                          \
             }                                                                                                                           \
         }                                                                                                                               \
-        portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );                                                                    \
+        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );                                                                           \
     }                                                                                                                                   \
 
 

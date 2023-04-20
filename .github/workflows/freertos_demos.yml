@@ -106,9 +106,9 @@ jobs:
         run: |
           timeout 30s build/posix_demo | tee output.txt
           if grep -q "Message received from software timer" output.txt; then
-            echo "Found string in output file."
+            echo "\nSUCCESS - Found string in output file."
           else
-            echo "String not found in output file. Exiting with error."
+            echo "\nFAILURE - String not found in output file. Exiting with error."
             exit 1
           fi
         # uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@p3run

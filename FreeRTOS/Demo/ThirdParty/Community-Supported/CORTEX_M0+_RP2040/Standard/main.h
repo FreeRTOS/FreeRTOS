@@ -44,7 +44,7 @@
 #define mainENABLE_SEMAPHORE 1
 #define mainENABLE_TASK_NOTIFY 1
 
-#if configNUM_CORES != 2 || configRUN_MULTIPLE_PRIORITIES == 0
+#if ( configNUMBER_OF_CORES != 2 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 )
 
 /* These tests assume that a higher priority task will block a lower priority tax from running */
 #define mainENABLE_BLOCK_TIME 1
@@ -56,7 +56,7 @@
 #define mainENABLE_TIMER_DEMO 1
 #endif
 
-#if configNUM_CORES != 2
+#if ( configNUM_CORES != 2 )
 /* This test just expects two tasks not to run concurrently */
 #define mainENABLE_DYNAMIC_PRIORITY 1
 #endif

@@ -117,7 +117,7 @@ int main( void )
     rtos_name = "FreeRTOS";
 #endif
 
-#if ( portSUPPORT_SMP == 1 ) && ( configNUM_CORES == 2 )
+#if ( portSUPPORT_SMP == 1 ) && ( configNUMBER_OF_CORES == 2 )
     printf("%s on both cores:\n", rtos_name);
     vLaunch();
 #endif

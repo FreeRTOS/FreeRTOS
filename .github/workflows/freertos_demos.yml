@@ -80,9 +80,9 @@ jobs:
         run: |
           timeout 5m build/posix_demo | tee output.txt
           if grep -q "OK: No errors" output.txt; then
-            echo "Found string in output file."
+            echo "\nSUCCESS - Found string in output file."
           else
-            echo "String not found in output file. Exiting with error."
+            echo "\nFAILURE - String not found in output file. Exiting with error."
             exit 1
           fi
         continue-on-error: true

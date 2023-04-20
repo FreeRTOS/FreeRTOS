@@ -349,7 +349,7 @@ static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface )
 
 
 /* Do not call the following function directly. It is there for downward compatibility.
- * The function FreeRTOS_IPInit() will call it to initialice the interface and end-point
+ * The function FreeRTOS_IPInit() will call it to initialise the interface and end-point
  * objects.  See the description in FreeRTOS_Routing.h. */
     NetworkInterface_t * pxFillInterfaceDescriptor( BaseType_t xEMACIndex,
                                                     NetworkInterface_t * pxInterface )

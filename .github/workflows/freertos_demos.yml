@@ -77,6 +77,7 @@ jobs:
 
       - name: Run and monitor Posic_GCC Demo
         if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
+        working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
           pwd
           build/posix_demo > output.txt

@@ -79,8 +79,8 @@ jobs:
         with:
           exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
           log-dir: FreeRTOS/Demo/Posix_GCC/build/demo_run_logs
-          timeout-seconds: 60
-          success-line: "Message received from software timer"
+          timeout-seconds: 90
+          success-line: "OK: no errors"
 
 
   MSP430-GCC:

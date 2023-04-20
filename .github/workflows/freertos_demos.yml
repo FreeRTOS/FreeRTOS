@@ -78,7 +78,7 @@ jobs:
       - name: Run and monitor Posic_GCC Demo
         if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
         run: |
-          ./build/posix_demo > output.txt
+          build/posix_demo > output.txt
           if grep -q "OK: No errors" output.txt; then
             echo "Found string in output file."
           else

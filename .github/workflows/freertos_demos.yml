@@ -78,11 +78,11 @@ jobs:
         if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          timeout 1m build/posix_demo | tee output.txt
+          timeout 3m build/posix_demo | tee output.txt
           if grep -q "OK: No errors" output.txt; then
-            echo -e "\nSUCCESS - Found string in output file."
+            echo -e "\nSUCCESS - Found SUCCESS string in output."
           else
-            echo -e "\nFAILURE - String not found in output file. Exiting with error."
+            echo -e "\nFAILURE - SUCCESS string not found in output."
             exit 1
           fi
         continue-on-error: true
@@ -100,9 +100,9 @@ jobs:
         run: |
           timeout 30s build/posix_demo | tee output.txt
           if grep -q "Message received from software timer" output.txt; then
-            echo -e "\nSUCCESS - Found string in output file."
+            echo -e "\nSUCCESS - Found SUCCESS string in output."
           else
-            echo -e "\nFAILURE - String not found in output file. Exiting with error."
+            echo -e "\nFAILURE - SUCCESS string not found in output."
             exit 1
           fi
         

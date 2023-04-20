@@ -238,7 +238,7 @@ void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield( void )
  */
 void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
 {
-    UBaseType_t uxCoreAffinityMask = 8;
+    UBaseType_t uxCoreAffinityMask;
     TCB_t currentTCB;
 
     memset( &currentTCB, 0x00, sizeof( TCB_t ) );
@@ -247,6 +247,9 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
     pxCurrentTCBs[ 0 ]->uxCoreAffinityMask = 1;
     pxCurrentTCBs[ 0 ]->uxCriticalNesting = 0;
     pxCurrentTCBs[ 0 ]->xTaskRunState = -1; /* taskTASK_NOT_RUNNING */
+
+    /* Set the new mask to the last core. */
+    uxCoreAffinityMask = ( 1 << ( configNUMBER_OF_CORES - 1 ) );
 
     vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );

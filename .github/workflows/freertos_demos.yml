@@ -68,7 +68,31 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install build-essential
 
-      - name: Build Posix_GCC Demo
+      - name: Build Posix_GCC Full Demo
+        shell: bash
+        working-directory: FreeRTOS/Demo/Posix_GCC
+        run: |
+          make -j
+
+      - name: Run and monitor Posic_GCC Demo
+        if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
+        working-directory: FreeRTOS/Demo/Posix_GCC
+        run: |
+          timeout 5m build/posix_demo | tee output.txt
+          if grep -q "OK: No errors" output.txt; then
+            echo "Found string in output file."
+          else
+            echo "String not found in output file. Exiting with error."
+            exit 1
+          fi
+        # uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@p3run
+        # with:
+        #   exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
+        #   log-dir: FreeRTOS/Demo/Posix_GCC/build/demo_run_logs
+        #   timeout-seconds: 60
+        #   success-line: "Message received from software timer"
+
+      - name: Build Posix_GCC Blinky Demo
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
@@ -80,7 +104,7 @@ jobs:
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
           timeout 30s build/posix_demo | tee output.txt
-          if grep -q "OK: No errors" output.txt; then
+          if grep -q "Message received from software timer" output.txt; then
             echo "Found string in output file."
           else
             echo "String not found in output file. Exiting with error."

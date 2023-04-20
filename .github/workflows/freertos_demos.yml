@@ -78,6 +78,7 @@ jobs:
         if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
+          set -e
           timeout 30s build/posix_demo | tee output.txt
           if grep -q "OK: No errors" output.txt; then
             echo -e "\nSUCCESS - Found SUCCESS string in output."

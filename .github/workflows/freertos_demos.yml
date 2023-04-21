@@ -88,7 +88,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const output = fs.readFileSync('output.txt', 'utf8');
+            const output = fs.readFileSync('FreeRTOS/Demo/Posix_GCC/output.txt', 'utf8');
             if (!output.includes('OK: No errors')) {
               return { state: 'failure', description: 'String not found' };
             } else {

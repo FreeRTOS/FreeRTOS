@@ -235,12 +235,18 @@ BaseType_t xPlatformIsNetworkUp( void )
 
 #if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) )
 
-eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
-                                            uint32_t ulIPAddress )
-{
-    /* Provide a stub for this function. */
-    return eDHCPContinue;
-}
+    #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+        eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
+                                                    uint32_t ulIPAddress )
+    #else /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+        eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
+                                                          struct xNetworkEndPoint * pxEndPoint,
+                                                          IP_Address_t * pxIPAddress )
+    #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+    {
+        /* Provide a stub for this function. */
+        return eDHCPContinue;
+    }
 
 #endif
 /*-----------------------------------------------------------*/

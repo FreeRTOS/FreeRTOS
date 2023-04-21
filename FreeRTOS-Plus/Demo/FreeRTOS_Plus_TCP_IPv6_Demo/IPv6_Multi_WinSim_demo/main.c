@@ -910,17 +910,13 @@ void vOutputChar( const char cChar,
 #endif
 
 #if ( ipconfigUSE_DHCP_HOOK != 0 )
-    #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
-        eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
-                                                    uint32_t ulIPAddress )
-    #else /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
-        eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
-                                                          struct xNetworkEndPoint * pxEndPoint,
-                                                          IP_Address_t * pxIPAddress )
-    #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+    eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
+                                                      struct xNetworkEndPoint * pxEndPoint,
+                                                      IP_Address_t * pxIPAddress )
     {
         ( void ) eDHCPPhase;
-        ( void ) ulIPAddress;
+        ( void ) pxEndPoint
+        ( void ) pxIPAddress;
         return eDHCPContinue;
     }
 #endif

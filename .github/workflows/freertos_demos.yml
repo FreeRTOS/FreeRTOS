@@ -79,12 +79,18 @@ jobs:
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
           timeout 3m build/posix_demo | tee output.txt
-          if grep -q "OK: No errors" output.txt; then
-            echo -e "\nSUCCESS - Found SUCCESS string in output."
-          else
-            echo -e "\nFAILURE - SUCCESS string not found in output."
-            exit 1
-          fi
+
+      - name: Check output of Full Demo
+        uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor/check_output.sh@p3run
+        with:
+          output-file: FreeRTOS/Demo/Posix_GCC/output.txt
+          expected-string: "OK: No errors"
+          # if grep -q "OK: No errors" output.txt; then
+          #   echo -e "\nSUCCESS - Found SUCCESS string in output."
+          # else
+          #   echo -e "\nFAILURE - SUCCESS string not found in output."
+          #   exit 1
+          # fi
 
       - name: Build Posix_GCC Blinky Demo
         shell: bash

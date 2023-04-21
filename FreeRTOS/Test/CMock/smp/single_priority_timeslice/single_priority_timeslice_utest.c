@@ -143,12 +143,19 @@ void test_timeslice_verification_tasks_equal_priority( void )
 
     /* Generate a tick for each configNUMBER_OF_CORES. This will cause each
      * task to be either moved to the ready state or the running state */
-    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    for( i = 0; i <= configNUMBER_OF_CORES; i++ )
     {
         xTaskIncrementTick_helper();
 
         /* Verify the last created task runs on each core or enters the ready state */
-        verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, i );
+        if( i < configNUMBER_OF_CORES )
+        {
+            verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, i );
+        }
+        else
+        {
+            verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+        }
     }
 }
 
@@ -431,7 +438,7 @@ void test_priority_change_tasks_different_priority_raise_to_equal( void )
  * Priority – 2               Priority – 1
  * State - Running (Core N)   State - Ready
  */
-void test_priority_change_tasks_equal_priority( void )
+void test_priority_change_tasks_equal_priority_lower_ready_task( void )
 {
     TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
     uint32_t i;

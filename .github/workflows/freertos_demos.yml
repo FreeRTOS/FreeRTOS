@@ -104,7 +104,7 @@ jobs:
             echo -e "\nFAILURE - SUCCESS string not found in output."
             exit 1
           fi
-        
+
   MSP430-GCC:
     name: GNU MSP430 Toolchain
     runs-on: ubuntu-latest

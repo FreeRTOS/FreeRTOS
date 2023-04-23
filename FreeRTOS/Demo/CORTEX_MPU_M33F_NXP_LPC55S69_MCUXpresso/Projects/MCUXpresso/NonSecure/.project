@@ -90,7 +90,7 @@
 		<link>
 			<name>User/res_tests.c</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/res_tests.c</locationURI>
+			<locationURI>PROJECT_LOC/reg_tests.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>

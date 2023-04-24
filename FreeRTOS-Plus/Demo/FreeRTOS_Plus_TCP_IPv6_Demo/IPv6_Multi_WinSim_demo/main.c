@@ -915,7 +915,7 @@ void vOutputChar( const char cChar,
                                                       IP_Address_t * pxIPAddress )
     {
         ( void ) eDHCPPhase;
-        ( void ) pxEndPoint
+        ( void ) pxEndPoint;
         ( void ) pxIPAddress;
         return eDHCPContinue;
     }

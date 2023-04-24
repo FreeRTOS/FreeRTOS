@@ -2,6 +2,7 @@
 *.uvgui*
 settings/
 Nu_Link_Driver.ini
+EventRecorderStub.scvd
 *.ewt
 *.dep
 

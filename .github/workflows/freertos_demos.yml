@@ -69,6 +69,7 @@ jobs:
           sudo apt-get -y install build-essential
 
       - name: Build Posix_GCC Full Demo
+        id: build-posix-gcc-demo
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |

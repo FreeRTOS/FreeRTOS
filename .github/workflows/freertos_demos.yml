@@ -87,6 +87,7 @@ jobs:
           fi
 
       - name: Build Posix_GCC Blinky Demo
+        if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |

@@ -66,7 +66,7 @@ http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simula
 
 ## Selecting the Examples to Run
 
-### The Using the UDP Echo Client
+### The UDP Echo Client example
 
 The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
 setting the `mainCREATE_UDP_ECHO_TASKS_SINGLE` macro to 1 in the main file.

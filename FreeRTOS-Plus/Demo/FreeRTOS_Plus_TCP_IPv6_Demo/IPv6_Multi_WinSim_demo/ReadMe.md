@@ -61,7 +61,9 @@ Note that, as delivered, configUSE_DHCP is set to 0, so a static IP address is u
 ## Prerequisites
 
 The demo is inline with the [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator)
-The following URL can be followed for the initial setup :
+
+The initial setup instructions are provided on the following URL, see the 
+"Hardware Setup" and "Software Setup" :
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
 
 ## Selecting the Examples to Run

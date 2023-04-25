@@ -43,7 +43,7 @@
  * https://www.FreeRTOS.org/a00110.html
  *----------------------------------------------------------*/
 
-extern uint32_t SystemCoreClock;
+#include "clock_config.h"
 
 /* Cortex M33 port configuration. */
 #define configENABLE_MPU								1
@@ -59,7 +59,7 @@ extern uint32_t SystemCoreClock;
 #define configUSE_16_BIT_TICKS							0 /* Only for 8 and 16-bit hardware. */
 
 /* Constants that describe the hardware and memory usage. */
-#define configCPU_CLOCK_HZ								SystemCoreClock
+#define configCPU_CLOCK_HZ								BOARD_BOOTCLOCKFROHF96M_CORE_CLOCK
 #define configMINIMAL_STACK_SIZE						( ( uint16_t ) 128 )
 #define configMINIMAL_SECURE_STACK_SIZE					( 1024 )
 #define configMAX_TASK_NAME_LEN							( 12 )

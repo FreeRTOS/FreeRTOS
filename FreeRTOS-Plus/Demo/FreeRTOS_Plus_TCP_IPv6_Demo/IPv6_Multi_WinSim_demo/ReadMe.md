@@ -49,8 +49,8 @@ source tree.
 ## Introduction
 
 The IPv6_Multi_WinSim Visual studio demo showcases the Multiple Interfaces (or
-rather the multiple endpoints) functionality of the FreeRTOS+TCP library devIPv6
-branch. The Windows Simulator environment doesn't actually have multiple
+rather the multiple endpoints) functionality of the FreeRTOS+TCP library.
+The Windows Simulator environment doesn't actually have multiple
 interfaces which can be used by FreeRTOS and thus, this demo shows
 the use of different endpoints which will be resolved by the OS having multiple
 interfaces. It shows that the library will use different endpoints (IP-addresses)

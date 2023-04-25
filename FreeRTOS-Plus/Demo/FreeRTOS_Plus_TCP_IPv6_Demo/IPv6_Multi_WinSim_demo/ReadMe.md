@@ -60,14 +60,13 @@ Note that, as delivered, configUSE_DHCP is set to 0, so a static IP address is u
 
 ## Prerequisites
 
-The demo is inline with the [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator][https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator]
+The demo is inline with the [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator)
 The following URL can be followed for the initial setup :
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
 
 ## Selecting the Examples to Run
 
-1. The UDP client example is at the end of the page.
-### Using the UDP Echo Client
+### The Using the UDP Echo Client
 
 The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
 setting the `mainCREATE_UDP_ECHO_TASKS_SINGLE` macro to 1 in the main file.
@@ -78,13 +77,13 @@ and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect 
 get echo of the messages back. There should be a UDP echo server running in the 
 given IP and port. {Sample UDP echo server is provided at the end of the ReadMe}
 
-2. The TCP client example is described on the following URL:
+### The TCP client example is described on the following URL:
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
 
-3. The TCP server example is described on the following URL:
+### The TCP server example is described on the following URL:
 https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
 
-4. The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
+### The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
 
 - ARP address resolution for IPv4 addresses on the LAN
 - Neighbour Discovery for IPv6 addresses on the LAN

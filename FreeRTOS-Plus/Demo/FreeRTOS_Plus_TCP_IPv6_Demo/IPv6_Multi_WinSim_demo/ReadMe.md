@@ -5,7 +5,7 @@ currently provided in the FreeRTOS+TCP repository's "feature/ipv6_multi_beta"
 branch. These demos only require the FreeRTOS+TCP IPv6/multiple Interface
 source code and the FreeRTOS-Kernel.
 
-## Setting up the workspace:
+## Setting up the workspace
 
 Clone the submodules used in the FreeRTOS repo:
 
@@ -46,21 +46,45 @@ the location of source files:
 You can changes these directory to let the proyejct work with a different
 source tree.
 
-The Multiple Interface Visual studio demo showcases the Multiple Interfaces (or
-rather the multiple endpoints) functionality of the FreeRTOS+TCP
-IPv6/multi-interface library. The Windows Simulator environment doesn't actually
-have multiple interfaces which can be used by FreeRTOS and thus, this demo shows
+## Introduction
+
+The IPv6_Multi_WinSim Visual studio demo showcases the Multiple Interfaces (or
+rather the multiple endpoints) functionality of the FreeRTOS+TCP library devIPv6
+branch. The Windows Simulator environment doesn't actually have multiple
+interfaces which can be used by FreeRTOS and thus, this demo shows
 the use of different endpoints which will be resolved by the OS having multiple
 interfaces. It shows that the library will use different endpoints (IP-addresses)
 to connect to IP-addresses on different subnets (or using different netmasks).
-The instructions for the full Windows demo are still relevant though as they
-describe how to set up the WinPCap development environment, how to set the IP
-address, and other such items. Note that, as delivered, configUSE_DHCP is set to 0,
-so a static IP address is used. The instructions are provided on the following URL,
-see the "Hardware Setup" section:
+
+Note that, as delivered, configUSE_DHCP is set to 0, so a static IP address is used. 
+
+## Prerequisites
+
+The demo is inline with the [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator][https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator]
+The following URL can be followed for the initial setup :
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
 
-The IPv6_Multi_WinSim_demo demo performs some basic network activities:
+## Selecting the Examples to Run
+
+1. The UDP client example is at the end of the page.
+### Using the UDP Echo Client
+
+The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
+setting the `mainCREATE_UDP_ECHO_TASKS_SINGLE` macro to 1 in the main file.
+
+The UDP Echo Client creates a task and sends messages to the IP address and port
+defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address) 
+and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
+get echo of the messages back. There should be a UDP echo server running in the 
+given IP and port. {Sample UDP echo server is provided at the end of the ReadMe}
+
+2. The TCP client example is described on the following URL:
+http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
+
+3. The TCP server example is described on the following URL:
+https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
+
+4. The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
 
 - ARP address resolution for IPv4 addresses on the LAN
 - Neighbour Discovery for IPv6 addresses on the LAN
@@ -92,19 +116,6 @@ hard-coded in main.c
 
 The keywords can have some single-letter suffices: 4 or 6 ( for IPv4/6 ), “a” to do
 an asynchronous DNS lookup, and “c” to clear all caches before starting the task.
-
-
-## Using the UDP Echo Client
-
-The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
-setting the `mainCREATE_UDP_ECHO_TASKS_SINGLE` macro to 1 in the main file.
-
-The UDP Echo Client creates a task and sends messages to the IP address and port
-defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address) 
-and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
-get echo of the messages back. There should be a UDP echo server running in the 
-given IP and port.
-
 
 #### Sample UDP echo server in Go: 
 

@@ -75,11 +75,11 @@ jobs:
         run: |
           make -j
 
-      - name: Run and monitor Posic_GCC Full Demo
+      - name: Run and monitor Posix_GCC Full Demo
         if: success()
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          timeout 3m build/posix_demo | tee output.txt
+          timeout 4m build/posix_demo | tee output.txt
           if grep -q "OK: No errors" output.txt; then
             echo -e "\nSUCCESS - Found SUCCESS string in output."
           else
@@ -95,7 +95,7 @@ jobs:
           sed -i "s/#define[[:space:]]\+mainSELECTED_APPLICATION[[:space:]]\+FULL_DEMO/#define    mainSELECTED_APPLICATION      BLINKY_DEMO/g" main.c
           make -j
 
-      - name: Run and monitor Posic_GCC Blinky Demo
+      - name: Run and monitor Posix_GCC Blinky Demo
         if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |

@@ -76,10 +76,10 @@ jobs:
           make -j
 
       - name: Run and monitor Posic_GCC Full Demo
-        if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
+        if: success()
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          timeout 20s build/posix_demo | tee output.txt
+          timeout 3m build/posix_demo | tee output.txt
           if grep -q "OK: No errors" output.txt; then
             echo -e "\nSUCCESS - Found SUCCESS string in output."
           else

@@ -56,7 +56,7 @@ the use of different endpoints which will be resolved by the OS having multiple
 interfaces. It shows that the library will use different endpoints (IP-addresses)
 to connect to IP-addresses on different subnets (or using different netmasks).
 
-Note that, as delivered, configUSE_DHCP is set to 0, so a static IP address is used. 
+Note that, as delivered, configUSE_DHCPv6 is set to 0, so a static IP address is used. 
 
 ## Prerequisites
 
@@ -66,7 +66,17 @@ The initial setup instructions are provided on the following URL, see the
 "Hardware Setup" and "Software Setup" :
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
 
+Additionally in FreeRTOSConfig.h, we also need to set configECHO_SERVER_ADDR_STRING as an IPv6 Server
+IP address for IPv6 validation, it can be updated to IPv4 address for IPv4 validaitons.
+configECHO_SERVER_PORT also needs to be setup for the Server port number.
+
 ## Selecting the Examples to Run
+
+### The TCP client example is described on the following URL:
+http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
+
+### The TCP server example is described on the following URL:
+https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
 
 ### The UDP Echo Client example
 
@@ -78,12 +88,6 @@ defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address)
 and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
 get echo of the messages back. There should be a UDP echo server running in the 
 given IP and port. {Sample UDP echo server is provided at the end of the ReadMe}
-
-### The TCP client example is described on the following URL:
-http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
-
-### The TCP server example is described on the following URL:
-https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
 
 ### The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
 

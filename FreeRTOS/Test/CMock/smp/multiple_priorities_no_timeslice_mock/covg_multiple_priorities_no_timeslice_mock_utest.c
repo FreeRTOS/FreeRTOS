@@ -311,7 +311,7 @@ void test_coverage_vTaskSuspend_running_state_above_range( void )
 
     /* Validation. */
     TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 0 ] );
-    TEST_ASSERT_EQUAL( 17, pxCurrentTCBs[ 0 ]->xTaskRunState );
+    TEST_ASSERT_EQUAL( configNUMBER_OF_CORES + 1, pxCurrentTCBs[ 0 ]->xTaskRunState );
 }
 
 /**
@@ -347,7 +347,7 @@ void test_coverage_vTaskPrioritySet_non_running_state( void )
     vTaskPrioritySet( &xTaskTCBs[ 0 ], 2 );
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( 17, xTaskTCBs[ 0 ].xTaskRunState );
+    TEST_ASSERT_EQUAL( configNUMBER_OF_CORES + 1, xTaskTCBs[ 0 ].xTaskRunState );
     TEST_ASSERT_EQUAL( 2, xTaskTCBs[ 0 ].uxPriority );
 }
 

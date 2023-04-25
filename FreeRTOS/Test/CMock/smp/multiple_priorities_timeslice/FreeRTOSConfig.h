@@ -73,7 +73,7 @@
 #define configUSE_QUEUE_SETS                             1
 #define configUSE_TASK_NOTIFICATIONS                     1
 #define configTASK_NOTIFICATION_ARRAY_ENTRIES            5
-#define configSUPPORT_STATIC_ALLOCATION                  1
+#define configSUPPORT_STATIC_ALLOCATION                  0
 #define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configINITIAL_TICK_COUNT                         ( ( TickType_t ) 0 )
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    1

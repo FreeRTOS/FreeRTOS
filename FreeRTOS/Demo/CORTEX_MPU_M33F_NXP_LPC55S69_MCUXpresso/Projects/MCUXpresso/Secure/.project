@@ -124,27 +124,17 @@
 		<link>
 			<name>User/main_s.c</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/main_s.c</locationURI>
+			<locationURI>DEMO_ROOT/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/User/Secure/main_s.c</locationURI>
 		</link>
 		<link>
 			<name>User/nsc_printf.c</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/nsc_printf.c</locationURI>
+			<locationURI>DEMO_ROOT/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/NSC_Functions/nsc_printf.c</locationURI>
 		</link>
 		<link>
 			<name>User/nsc_printf.h</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/nsc_printf.h</locationURI>
-		</link>
-		<link>
-			<name>User/tzm_config.c</name>
-			<type>1</type>
-			<locationURI>PROJECT_LOC/tzm_config.c</locationURI>
-		</link>
-		<link>
-			<name>User/tzm_config.h</name>
-			<type>1</type>
-			<locationURI>PROJECT_LOC/tzm_config.h</locationURI>
+			<locationURI>DEMO_ROOT/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/NSC_Functions/nsc_printf.h</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>
@@ -173,6 +163,15 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-GCC</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1682451336783</id>
+			<name>NXP_Code/startup</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-startup_LPC55S69_cm33_core0.s</arguments>
 			</matcher>
 		</filter>
 		<filter>

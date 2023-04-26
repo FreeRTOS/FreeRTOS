@@ -91,11 +91,9 @@ source tree.
 [Optional] Running IPv4 demo [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator)
 The instructions are provided on the following URL, see the "Hardware Setup" and "Software Setup" :
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
-This will give more hands on experience of running Echo server and cleint.
+This will give more hands on experience of running Echo server and client.
 
-Note that, as delivered, configUSE_DHCPv6 is set to 0, so a static IP address is used.
-
-For this demo, in the FreeRTOSConfig.h, we need to set :
+For this demo, FreeRTOS configuration file *FreeRTOSConfig.h* header file needs to be updated as shown below :
 
 *Client Configuration* :
 1. `configIP_ADDR0/3`         : Setup with client IP address, when DHCP is disabled.
@@ -107,6 +105,8 @@ For this demo, in the FreeRTOSConfig.h, we need to set :
 1. `configECHO_SERVER_ADDR_STRING` as an IPv6 Server IP address for IPv6
     validation, it can be updated to IPv4 address for IPv4 validaitons.
 2. `configECHO_SERVER_PORT` Needs to be setup for the Server port number.
+
+Note that, as delivered, configUSE_DHCPv6 is set to 0, so a static IP address is used.
 
 ## Selecting the Examples to Run
 

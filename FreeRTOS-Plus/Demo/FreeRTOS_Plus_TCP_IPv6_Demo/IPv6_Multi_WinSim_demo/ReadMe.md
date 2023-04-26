@@ -1,9 +1,12 @@
 # FreeRTOS+TCP IPv6 Demo
 
-The FreeRTOS+TCP IPv6/multiple-interface source code and example projects are
-currently provided in the FreeRTOS+TCP repository's "feature/ipv6_multi_beta"
-branch. These demos only require the FreeRTOS+TCP IPv6/multiple Interface
-source code and the FreeRTOS-Kernel.
+The IPv6 FreeRTOS+TCP Visual Studio project file is in the following directory:
+FreeRTOS\FreeRTOS-Plus\Demo\FreeRTOS_Plus_TCP_IPv6_Demo
+It contains a FreeRTOS windows simulator demo project for validating IPv6 protocol.
+The FreeRTOS+TCP source code is currently provided in the FreeRTOS+TCP repository's.
+"dev/IPv6_integration" branch.
+
+
 
 ## Setting up the workspace
 
@@ -78,6 +81,7 @@ http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
 ### The TCP server example is described on the following URL:
 https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
 
+
 ### The UDP Echo Client example
 
 The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
@@ -88,6 +92,39 @@ defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address)
 and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
 get echo of the messages back. There should be a UDP echo server running in the 
 given IP and port. {Sample UDP echo server is provided at the end of the ReadMe}
+
+#### Setup Description of Echo Client and Echo Server:
+
+The demo requires 2 components -
+
+1. Echo Client - The demo in this repository.
+2. Echo Server - An external echo server.
+
+With multiple interfaces it is possible to use of more than one network interface.
+Now the FreeRTOS application can be connected to a LAN and a Wi-Fi station and
+can uses multiple IP addresses. These addresses can be configured either statically
+or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in case of IPv6.
+
+  ┌─────────────────────────────┐
+  │        Echo Client          │
+  │    With Multipe EndPoint    │                           ┌───────────────────────────┐
+  │                             │                           │       Echo Server         │
+  │    ┌───────────────────┐    │sendto()         recvfrom()│                           │
+  │    │ IPv4 EndPoint     │    ├──────────────────────────►|  ┌─────────────────────┐  │
+  │    │                   │    │                           │  │                     │  │
+  │    └───────────────────┘    │                           │  │  IPv6 Server IP     │  │
+  │                             │                           │  │   Server Port       │  │
+  │    ┌───────────────────┐    │recvfrom()         sendto()│  │                     │  │
+  │    │   IPv6 Public     │    │◄──────────────────────────┤  └─────────────────────┘  │
+  │    │     EndPoint      │    │                           │                           │
+  │    └───────────────────┘    │                           │                           │
+  │                             │                           └───────────────────────────┘
+  │    ┌───────────────────┐    │
+  │    │   IPv6 Private    │    │
+  │    │     EndPoint      │    │
+  │    └───────────────────┘    │
+  │                             │
+  └─────────────────────────────┘
 
 ### The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
 

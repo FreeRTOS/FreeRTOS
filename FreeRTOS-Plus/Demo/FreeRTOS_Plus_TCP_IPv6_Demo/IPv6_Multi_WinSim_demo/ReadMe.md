@@ -69,9 +69,10 @@ The initial setup instructions are provided on the following URL, see the
 "Hardware Setup" and "Software Setup" :
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
 
-Additionally in FreeRTOSConfig.h, we also need to set configECHO_SERVER_ADDR_STRING as an IPv6 Server
-IP address for IPv6 validation, it can be updated to IPv4 address for IPv4 validaitons.
-configECHO_SERVER_PORT also needs to be setup for the Server port number.
+Additionally in FreeRTOSConfig.h, we also need to set :
+1. `configECHO_SERVER_ADDR_STRING` as an IPv6 Server IP address for IPv6
+    validation, it can be updated to IPv4 address for IPv4 validaitons.
+2. `configECHO_SERVER_PORT` Needs to be setup for the Server port number.
 
 ## Selecting the Examples to Run
 
@@ -92,6 +93,11 @@ defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address)
 and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
 get echo of the messages back. There should be a UDP echo server running in the 
 given IP and port. {Sample UDP echo server is provided at the end of the ReadMe}
+
+These RTOS tasks are self checking and will trigger a configASSERT() failure if they
+detect a difference in the data that is received from that which was sent. As these
+RTOS tasks use UDP, which can legitimately loose packets, they can cause configASSERT()
+failures when they are executed in a less than perfect networking environment.
 
 #### Setup Description of Echo Client and Echo Server:
 

@@ -1,11 +1,48 @@
-# FreeRTOS+TCP IPv6 Demo
+# FreeRTOS+TCP IPv6 Multi-Endpoint Demo
 
-The IPv6 FreeRTOS+TCP Visual Studio project file is in the following directory:
-FreeRTOS\FreeRTOS-Plus\Demo\FreeRTOS_Plus_TCP_IPv6_Demo\IPv6_Multi_WinSim_demo.
-It contains a FreeRTOS windows simulator demo project for validating IPv6 protocol.
-The FreeRTOS+TCP source code is currently provided in the FreeRTOS+TCP repository's.
-"dev/IPv6_integration" branch.
+The demo contains a FreeRTOS windows simulator demo project for validating
+IPv6 protocol. The FreeRTOS+TCP source code is currently provided in the
+FreeRTOS+TCP repository's "dev/IPv6_integration" branch.
 
+The IPv6_Multi_WinSim Visual studio demo showcases the Multiple Interfaces (or
+rather the multiple endpoints) functionality of the FreeRTOS+TCP library.
+The Windows Simulator environment doesn't actually have multiple
+interfaces which can be used by FreeRTOS and thus, this demo shows
+the use of different endpoints which will be resolved by the OS having multiple
+interfaces. It shows that the library will use different endpoints (IP-addresses)
+to connect to IP-addresses on different subnets (or using different netmasks).
+
+The demo requires 2 components -
+
+1. Echo Client - The demo in this repository.
+2. Echo Server - An external echo server.
+
+With multiple interfaces it is possible to use of more than one network interface.
+Now the FreeRTOS application can be connected to a LAN and a Wi-Fi station and
+can uses multiple IP addresses. These addresses can be configured either statically
+or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in case of IPv6.
+                                             ▼
+┌─────────────────────────────┐
+│        ECHO CLIENT          │
+│    With Multiple Endpoints  │
+│                             │                             ┌───────────────────────────┐
+│                             │                             │       ECHO SERVER         │
+│    ┌───────────────────┐    │sendto()           recvfrom()│                           │
+│    │   IPv4 EndPoint   │    ├─────────────────────────────►  ┌─────────────────────┐  │
+│    │                   │    │                             │  │                     │  │
+│    └───────────────────┘    │                             │  │    IPv6 Server IP   │  │
+│                             │                             │  │      Server Port    │  │
+│    ┌───────────────────┐    │recvfrom()           sendto()│  │                     │  │
+│    │    IPv6 Public    │    │◄────────────────────────────┤  └─────────────────────┘  │
+│    │     EndPoint      │    │                             │                           │
+│    └───────────────────┘    │                             │                           │
+│                             │                             └───────────────────────────┘
+│    ┌───────────────────┐    │
+│    │   IPv6 Private    │    │
+│    │      Endpoint     │    │
+│    └───────────────────┘    │
+│                             │
+└─────────────────────────────┘
 
 
 ## Setting up the workspace
@@ -46,42 +83,58 @@ the location of source files:
 - PLUS_TCP_INCLUDE_DIR>  The FreeRTOS+TCP header files
 - UTILITIES_SOURCE_DIR   The location of the tcp_utilities directory
 
-You can changes these directory to let the proyejct work with a different
+You can changes these directory to let the project work with a different
 source tree.
-
-## Introduction
-
-The IPv6_Multi_WinSim Visual studio demo showcases the Multiple Interfaces (or
-rather the multiple endpoints) functionality of the FreeRTOS+TCP library.
-The Windows Simulator environment doesn't actually have multiple
-interfaces which can be used by FreeRTOS and thus, this demo shows
-the use of different endpoints which will be resolved by the OS having multiple
-interfaces. It shows that the library will use different endpoints (IP-addresses)
-to connect to IP-addresses on different subnets (or using different netmasks).
-
-Note that, as delivered, configUSE_DHCPv6 is set to 0, so a static IP address is used. 
 
 ## Prerequisites
 
-The demo is inline with the [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator)
-
-The initial setup instructions are provided on the following URL, see the 
-"Hardware Setup" and "Software Setup" :
+[Optional] Running IPv4 demo [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator)
+The instructions are provided on the following URL, see the "Hardware Setup" and "Software Setup" :
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
+This will give more hands on experience of running Echo server and cleint.
 
-Additionally in FreeRTOSConfig.h, we also need to set :
+Note that, as delivered, configUSE_DHCPv6 is set to 0, so a static IP address is used.
+
+For this demo, in the FreeRTOSConfig.h, we need to set :
+
+*Client Configuration* :
+1. `configIP_ADDR0/3`         : Setup with client IP address, when DHCP is disabled.
+2. `configNET_MASK0/3`        : Setup with the appropriate network mask.
+3. `configGATEWAY_ADDR0/3 `   : Setup with Default Gateway address of Client IP.
+4. `configDNS_SERVER_ADDR0/3` : Setup wit DNS Server address of Client IP.
+
+*Server Configuration :*
 1. `configECHO_SERVER_ADDR_STRING` as an IPv6 Server IP address for IPv6
     validation, it can be updated to IPv4 address for IPv4 validaitons.
 2. `configECHO_SERVER_PORT` Needs to be setup for the Server port number.
 
 ## Selecting the Examples to Run
 
-### The TCP client example is described on the following URL:
-http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
+### The TCP client example:
 
-### The TCP server example is described on the following URL:
-https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
+This example can be enabled by setting the `mainCREATE_TCP_ECHO_TASKS_SINGLE`
+macro to 1 at the top of the project's main.c source file.
 
+The example creates two RTOS tasks that send TCP echo requests to an external
+echo server using the echo port set in FreeRTOSConfig.h, then wait to receive
+the echo reply within the same RTOS task.
+
+For IPv6 validations an IPv6 address of the echo server must be configured by
+updating the `configECHO_SERVER_ADDR_STRING` and `configECHO_SERVER_PORT` must
+be set in FreeRTOSConfig.h.
+The echo server must be enabled and not blocked by a firewall.
+
+### The TCP server example:
+This example can be enabled by setting the `mainCREATE_SIMPLE_TCP_ECHO_SERVER`
+macro to 1 at the top of the project's main.c source file.
+
+The example creates two RTOS tasks that send TCP echo requests to an external
+echo server using the echo port set in FreeRTOSConfig.h, then wait to receive
+the echo reply within the same RTOS task.
+
+The IP address of the echo server must be configured by updating the
+`configECHO_SERVER_ADDR_STRING` and `configECHO_SERVER_PORT` must be set in
+FreeRTOSConfig.h, and the echo server must be enabled and not blocked by a firewall.
 
 ### The UDP Echo Client example
 
@@ -92,46 +145,14 @@ The UDP Echo Client creates a task and sends messages to the IP address and port
 defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address) 
 and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
 get echo of the messages back. There should be a UDP echo server running in the 
-given IP and port. {Sample UDP echo server is provided at the end of the ReadMe}
+given IP and port.
 
 These RTOS tasks are self checking and will trigger a configASSERT() failure if they
 detect a difference in the data that is received from that which was sent. As these
 RTOS tasks use UDP, which can legitimately loose packets, they can cause configASSERT()
 failures when they are executed in a less than perfect networking environment.
 
-#### Setup Description of Echo Client and Echo Server:
-
-The demo requires 2 components -
-
-1. Echo Client - The demo in this repository.
-2. Echo Server - An external echo server.
-
-With multiple interfaces it is possible to use of more than one network interface.
-Now the FreeRTOS application can be connected to a LAN and a Wi-Fi station and
-can uses multiple IP addresses. These addresses can be configured either statically
-or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in case of IPv6.
-
-  ┌─────────────────────────────┐
-  │        Echo Client          │
-  │    With Multipe EndPoint    │                           ┌───────────────────────────┐
-  │                             │                           │       Echo Server         │
-  │    ┌───────────────────┐    │sendto()         recvfrom()│                           │
-  │    │ IPv4 EndPoint     │    ├──────────────────────────►|  ┌─────────────────────┐  │
-  │    │                   │    │                           │  │                     │  │
-  │    └───────────────────┘    │                           │  │  IPv6 Server IP     │  │
-  │                             │                           │  │   Server Port       │  │
-  │    ┌───────────────────┐    │recvfrom()         sendto()│  │                     │  │
-  │    │   IPv6 Public     │    │◄──────────────────────────┤  └─────────────────────┘  │
-  │    │     EndPoint      │    │                           │                           │
-  │    └───────────────────┘    │                           │                           │
-  │                             │                           └───────────────────────────┘
-  │    ┌───────────────────┐    │
-  │    │   IPv6 Private    │    │
-  │    │     EndPoint      │    │
-  │    └───────────────────┘    │
-  │                             │
-  └─────────────────────────────┘
-
+#### *Note* Sample TCP and UDP echo server can be found at the end of the ReadMe.
 ### The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
 
 - ARP address resolution for IPv4 addresses on the LAN
@@ -166,6 +187,9 @@ The keywords can have some single-letter suffices: 4 or 6 ( for IPv4/6 ), “a�
 an asynchronous DNS lookup, and “c” to clear all caches before starting the task.
 
 #### Sample UDP echo server in Go: 
+
+##### Prerequisites
+	Install go
 
 ``` go
 
@@ -225,3 +249,6 @@ func main() {
 The UDP Echo Client demo also demonstrates the UDP zero copy for both IPv4 and IPv6
 (based on the IP type), it can be enabled by setting `USE_ZERO_COPY` macro of the
 UDPEchoClient_SingleTasks.c file to 1.
+
+#### Sample TCP echo server in Go:
+	[TCP Echo Server] (https://github.com/aws/amazon-freertos/tree/main/tools/echo_server)

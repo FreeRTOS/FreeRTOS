@@ -680,8 +680,8 @@ void test_priority_change_tasks_equal_priority_lower_ready_task( void )
  */
 void test_priority_change_tasks_equal_priority_lower_running_task( void )
 {
-    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES  ] = { NULL };
-    uint32_t i,j;
+    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ] = { NULL };
+    uint32_t i, j;
 
     /* Create configNUMBER_OF_CORES tasks of equal priority. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )

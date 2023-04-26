@@ -125,19 +125,19 @@ typedef unsigned long    UBaseType_t;
 /*-----------------------------------------------------------*/
 
 #define portSAVE_CONTEXT()
-#define portYIELD()                            vFakePortYield()
-#define portYIELD_WITHIN_API()                 vFakePortYieldWithinAPI()
-#define portYIELD_FROM_ISR()                   vFakePortYieldFromISR()
+#define portYIELD()                      vFakePortYield()
+#define portYIELD_WITHIN_API()           vFakePortYieldWithinAPI()
+#define portYIELD_FROM_ISR()             vFakePortYieldFromISR()
 
 /* Critical section handling. */
-#define portDISABLE_INTERRUPTS()               vFakePortDisableInterrupts()
-#define portENABLE_INTERRUPTS()                vFakePortEnableInterrupts()
+#define portDISABLE_INTERRUPTS()         vFakePortDisableInterrupts()
+#define portENABLE_INTERRUPTS()          vFakePortEnableInterrupts()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x ) \
     vFakePortClearInterruptMaskFromISR( x )
 #define portSET_INTERRUPT_MASK_FROM_ISR() \
     ulFakePortSetInterruptMaskFromISR()
-#define portSET_INTERRUPT_MASK()               ulFakePortSetInterruptMask()
-#define portCLEAR_INTERRUPT_MASK( x )          vFakePortClearInterruptMask( x )
+#define portSET_INTERRUPT_MASK()         ulFakePortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK( x )    vFakePortClearInterruptMask( x )
 #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() \
     vFakePortAssertIfInterruptPriorityInvalid()
 #define portENTER_CRITICAL()             vFakePortEnterCriticalSection()

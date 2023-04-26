@@ -1,7 +1,7 @@
 # FreeRTOS+TCP IPv6 Demo
 
 The IPv6 FreeRTOS+TCP Visual Studio project file is in the following directory:
-FreeRTOS\FreeRTOS-Plus\Demo\FreeRTOS_Plus_TCP_IPv6_Demo
+FreeRTOS\FreeRTOS-Plus\Demo\FreeRTOS_Plus_TCP_IPv6_Demo\IPv6_Multi_WinSim_demo.
 It contains a FreeRTOS windows simulator demo project for validating IPv6 protocol.
 The FreeRTOS+TCP source code is currently provided in the FreeRTOS+TCP repository's.
 "dev/IPv6_integration" branch.

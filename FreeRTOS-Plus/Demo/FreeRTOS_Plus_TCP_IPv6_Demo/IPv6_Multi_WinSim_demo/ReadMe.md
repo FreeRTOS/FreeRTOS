@@ -89,8 +89,7 @@ source tree.
 ## Prerequisites
 
 [Optional] Running IPv4 demo [FreeRTOS_Plus_TCP_Minimal_Windows_Simulator](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator)
-The instructions are provided on the following URL, see the "Hardware Setup" and "Software Setup" :
-http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html.
+The instructions are provided on the following URL, see the ["Hardware Setup" and "Software Setup"](http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html).
 This will give more hands on experience of running Echo server and client.
 
 For this demo, FreeRTOS configuration file *FreeRTOSConfig.h* header file needs to be updated as shown below :

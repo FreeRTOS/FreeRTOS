@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,9 +20,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
+
+/* Standard Includes */
+#include <stdio.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -30,6 +33,10 @@
 
 /* FreeRTOS+CLI includes. */
 #include "FreeRTOS_CLI.h"
+
+/* FreeRTOS+Trace includes.*/
+#include "trcDefines.h"
+#include "trcRecorder.h"
 
 /*
  * Writes trace data to a disk file when the trace recording is stopped.
@@ -335,7 +342,9 @@ BaseType_t lParameterStringLength;
 		/* Start or restart the trace. */
 		vTraceStop();
 		vTraceClear();
-		uiTraceStart();
+
+        vTraceEnable( TRC_START );
+        traceSTART();
 
 		sprintf( pcWriteBuffer, "Trace recording (re)started.\r\n" );
 	}

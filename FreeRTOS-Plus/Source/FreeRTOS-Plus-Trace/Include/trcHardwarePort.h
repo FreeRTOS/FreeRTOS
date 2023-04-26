@@ -1,51 +1,17 @@
-/*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.4.0
- * Percepio AB, www.percepio.com
+/*
+ * Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
  *
- * trcHardwarePort.h
+ * SPDX-License-Identifier: Apache-2.0
  *
  * The hardware abstraction layer for the trace recorder.
- *
- * Terms of Use
- * This file is part of the trace recorder library (RECORDER), which is the 
- * intellectual property of Percepio AB (PERCEPIO) and provided under a
- * license as follows.
- * The RECORDER may be used free of charge for the purpose of recording data
- * intended for analysis in PERCEPIO products. It may not be used or modified
- * for other purposes without explicit permission from PERCEPIO.
- * You may distribute the RECORDER in its original source code form, assuming
- * this text (terms of use, disclaimer, copyright notice) is unchanged. You are
- * allowed to distribute the RECORDER with minor modifications intended for
- * configuration or porting of the RECORDER, e.g., to allow using it on a 
- * specific processor, processor family or with a specific communication
- * interface. Any such modifications should be documented directly below
- * this comment block.
- *
- * Disclaimer
- * The RECORDER is being delivered to you AS IS and PERCEPIO makes no warranty
- * as to its use or performance. PERCEPIO does not and cannot warrant the 
- * performance or results you may obtain by using the RECORDER or documentation.
- * PERCEPIO make no warranties, express or implied, as to noninfringement of
- * third party rights, merchantability, or fitness for any particular purpose.
- * In no event will PERCEPIO, its technology partners, or distributors be liable
- * to you for any consequential, incidental or special damages, including any
- * lost profits or lost savings, even if a representative of PERCEPIO has been
- * advised of the possibility of such damages, or for any claim by any third
- * party. Some jurisdictions do not allow the exclusion or limitation of
- * incidental, consequential or special damages, or the exclusion of implied
- * warranties or limitations on how long an implied warranty may last, so the
- * above limitations may not apply to you.
- *
- * Tabs are used for indent in this file (1 tab = 4 spaces)
- *
- * Copyright Percepio AB, 2018.
- * www.percepio.com
- ******************************************************************************/
+ */
 
 #ifndef TRC_HARDWARE_PORT_H
 #define TRC_HARDWARE_PORT_H
 
-#include "trcPortDefines.h"
+#include <trcDefines.h>
 
 
 #if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_NOT_SET)
@@ -104,7 +70,7 @@
  * around. If using TRC_FREE_RUNNING_32BIT_INCR/DECR, this should be 0. 
  *
  * TRC_HWTC_FREQ_HZ: The clock rate of the TRC_HWTC_COUNT counter in Hz. If using 
- * TRC_OS_TIMER_INCR/DECR, this is should be TRC_HWTC_PERIOD * TRACE_TICK_RATE_HZ.
+ * TRC_OS_TIMER_INCR/DECR, this is should be TRC_HWTC_PERIOD * TRC_TICK_RATE_HZ.
  * If using a free-running timer, this is often TRACE_CPU_CLOCK_HZ (if running at
  * the core clock rate). If using TRC_CUSTOM_TIMER_INCR/DECR, this should match
  * the clock rate of your custom timer (i.e., TRC_HWTC_COUNT). If the default value
@@ -126,16 +92,40 @@
 #endif
 
 #if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Win32)
-	/* This can be used as a template for any free-running 32-bit counter */
-	#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
-	#define TRC_HWTC_COUNT (ulGetRunTimeCounterValue())
-	#define TRC_HWTC_PERIOD 0
-	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ 100000
-	
-	#define TRC_IRQ_PRIORITY_ORDER 1
+/* This can be used as a template for any free-running 32-bit counter */
+void vTraceTimerReset(void);
+uint32_t uiTraceTimerGetFrequency(void);
+uint32_t uiTraceTimerGetValue(void);
 
-	#define TRC_PORT_SPECIFIC_INIT()
+#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
+#define TRC_HWTC_COUNT ((TraceUnsignedBaseType_t)uiTraceTimerGetValue())
+#define TRC_HWTC_PERIOD 0
+#define TRC_HWTC_DIVISOR 1
+#define TRC_HWTC_FREQ_HZ ((TraceUnsignedBaseType_t)uiTraceTimerGetFrequency())
+
+#define TRC_IRQ_PRIORITY_ORDER 1
+
+#define TRC_PORT_SPECIFIC_INIT() vTraceTimerReset()
+
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Win64)
+/* This can be used as a template for any free-running 32-bit counter */
+void vTraceTimerReset(void);
+uint32_t uiTraceTimerGetFrequency(void);
+uint32_t uiTraceTimerGetValue(void);
+
+#define TRC_BASE_TYPE int64_t
+
+#define TRC_UNSIGNED_BASE_TYPE uint64_t
+
+#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
+#define TRC_HWTC_COUNT ((TraceUnsignedBaseType_t)uiTraceTimerGetValue())
+#define TRC_HWTC_PERIOD 0
+#define TRC_HWTC_DIVISOR 1
+#define TRC_HWTC_FREQ_HZ ((TraceUnsignedBaseType_t)uiTraceTimerGetFrequency())
+
+#define TRC_IRQ_PRIORITY_ORDER 1
+
+#define TRC_PORT_SPECIFIC_INIT() vTraceTimerReset()
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_HWIndependent)
 	/* Timestamping by OS tick only (typically 1 ms resolution) */
@@ -143,7 +133,7 @@
 	#define TRC_HWTC_COUNT 0
 	#define TRC_HWTC_PERIOD 1
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ TRACE_TICK_RATE_HZ
+	#define TRC_HWTC_FREQ_HZ TRC_TICK_RATE_HZ
 
 	/* Set the meaning of IRQ priorities in ISR tracing - see above */
 	#define TRC_IRQ_PRIORITY_ORDER NOT_SET
@@ -153,6 +143,10 @@
 	#ifndef __CORTEX_M
 	#error "Can't find the CMSIS API. Please include your processor's header file in trcConfig.h" 	
 	#endif
+	
+	#define TRACE_ALLOC_CRITICAL_SECTION() uint32_t __irq_status;
+	#define TRACE_ENTER_CRITICAL_SECTION() {__irq_status = __get_PRIMASK(); __set_PRIMASK(1);} /* PRIMASK disables ALL interrupts - allows for tracing in any ISR */
+	#define TRACE_EXIT_CRITICAL_SECTION() {__set_PRIMASK(__irq_status);}
 
 	/**************************************************************************
 	* For Cortex-M3, M4 and M7, the DWT cycle counter is used for timestamping.
@@ -166,7 +160,7 @@
 
 	#if ((__CORTEX_M >= 0x03) && (! defined TRC_CFG_ARM_CM_USE_SYSTICK))
 		
-		void prvTraceInitCortexM(void);
+		void xTraceHardwarePortInitCortexM(void);
 
 		#define TRC_REG_DEMCR (*(volatile uint32_t*)0xE000EDFC)
 		#define TRC_REG_DWT_CTRL (*(volatile uint32_t*)0xE0001000)
@@ -191,7 +185,7 @@
 		/* Bit mask for EXCEVTENA_ bit in DWT_CTRL. Set to 1 to enable DWT_CYCCNT */
 		#define TRC_DWT_CTRL_CYCCNTENA (1)
 
-		#define TRC_PORT_SPECIFIC_INIT() prvTraceInitCortexM()
+		#define TRC_PORT_SPECIFIC_INIT() xTraceHardwarePortInitCortexM()
 
 		#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
 		#define TRC_HWTC_COUNT TRC_REG_DWT_CYCCNT
@@ -212,8 +206,11 @@
 	#endif
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Renesas_RX600)
+	#define TRACE_ALLOC_CRITICAL_SECTION() TraceBaseType_t __x_irq_status;
+	#define TRACE_ENTER_CRITICAL_SECTION() { __x_irq_status = TRC_KERNEL_PORT_SET_INTERRUPT_MASK(); }
+	#define TRACE_EXIT_CRITICAL_SECTION() { TRC_KERNEL_PORT_CLEAR_INTERRUPT_MASK(__x_irq_status); }
 
-	#include "iodefine.h"
+	#include <iodefine.h>
 
 	#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)	
 		
@@ -230,16 +227,20 @@
 	
 	#define TRC_HWTC_PERIOD (CMT0.CMCOR + 1)
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 1 
 	
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_MICROCHIP_PIC24_PIC32)
-
+	
+	#define TRACE_ALLOC_CRITICAL_SECTION() TraceBaseType_t __x_irq_status;
+	#define TRACE_ENTER_CRITICAL_SECTION() { __x_irq_status = TRC_KERNEL_PORT_SET_INTERRUPT_MASK(); }
+	#define TRACE_EXIT_CRITICAL_SECTION() { TRC_KERNEL_PORT_CLEAR_INTERRUPT_MASK(__x_irq_status); }
+	
 	#define TRC_HWTC_TYPE TRC_OS_TIMER_INCR
 	#define TRC_HWTC_COUNT (TMR1)
 	#define TRC_HWTC_PERIOD (PR1 + 1)
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 1
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_TEXAS_INSTRUMENTS_TMS570_RM48)
@@ -252,7 +253,7 @@
 	#define TRC_HWTC_COUNT (TRC_RTIFRC0 - (TRC_RTICOMP0 - TRC_RTIUDCP0))
 	#define TRC_HWTC_PERIOD (TRC_RTIUDCP0)
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Atmel_AT91SAM7)
@@ -263,7 +264,7 @@
 	#define TRC_HWTC_COUNT ((uint32_t)(AT91C_BASE_PITC->PITC_PIIR & 0xFFFFF))
 	#define TRC_HWTC_PERIOD ((uint32_t)(AT91C_BASE_PITC->PITC_PIMR + 1))
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 1
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Atmel_UC3A0)
@@ -276,7 +277,7 @@
 	#define TRC_HWTC_COUNT ((uint32_t)sysreg_read(AVR32_COUNT))
 	#define TRC_HWTC_PERIOD ((uint32_t)(sysreg_read(AVR32_COMPARE) + 1))
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 1
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_NXP_LPC210X)
@@ -289,7 +290,7 @@
 	#define TRC_HWTC_COUNT *((uint32_t *)0xE0004008 )
 	#define TRC_HWTC_PERIOD *((uint32_t *)0xE0004018 )
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_TEXAS_INSTRUMENTS_MSP430)
@@ -300,7 +301,7 @@
 	#define TRC_HWTC_COUNT (TA0R)
 	#define TRC_HWTC_PERIOD (((uint16_t)TACCR0)+1)
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 1
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XILINX_PPC405)
@@ -309,9 +310,9 @@
 	
 	#define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
 	#define TRC_HWTC_COUNT mfspr(0x3db)
-	#define TRC_HWTC_PERIOD (TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ)
+	#define TRC_HWTC_PERIOD (TRACE_CPU_CLOCK_HZ / TRC_TICK_RATE_HZ)
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XILINX_PPC440)
@@ -322,9 +323,9 @@
 
 	#define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
 	#define TRC_HWTC_COUNT mfspr(0x016)
-	#define TRC_HWTC_PERIOD (TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ)
+	#define TRC_HWTC_PERIOD (TRACE_CPU_CLOCK_HZ / TRC_TICK_RATE_HZ)
 	#define TRC_HWTC_DIVISOR 1
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XILINX_MICROBLAZE)
@@ -335,24 +336,33 @@
 	 * It uses the AXI Timer 0 - the tick interrupt source.
 	 * If an AXI Timer 0 peripheral is available on your hardware platform, no modifications are required.
 	 */
-	#include "xtmrctr_l.h"
+	#include <xtmrctr_l.h>
 	
 	#define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
 	#define TRC_HWTC_COUNT XTmrCtr_GetTimerCounterReg( XPAR_TMRCTR_0_BASEADDR, 0 )
- 	#define TRC_HWTC_PERIOD (XTmrCtr_mGetLoadReg( XPAR_TMRCTR_0_BASEADDR, 0) + 1)
+ 	#define TRC_HWTC_PERIOD (XTmrCtr_GetLoadReg( XPAR_TMRCTR_0_BASEADDR, 0) + 1)
 	#define TRC_HWTC_DIVISOR 16
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XILINX_ZyncUltraScaleR5)
 
-	#include "xttcps_hw.h"
+	extern int cortex_a9_r5_enter_critical(void);
+	extern void cortex_a9_r5_exit_critical(int irq_already_masked_at_enter);
+
+	#define TRACE_ALLOC_CRITICAL_SECTION() uint32_t __irq_mask_status;
+
+	#define TRACE_ENTER_CRITICAL_SECTION() { __irq_mask_status = cortex_a9_r5_enter_critical(); }
+
+	#define TRACE_EXIT_CRITICAL_SECTION() { cortex_a9_r5_exit_critical(__irq_mask_status); }
+
+	#include <xttcps_hw.h>
 
 	#define TRC_HWTC_TYPE  TRC_OS_TIMER_INCR
 	#define TRC_HWTC_COUNT  (*(volatile uint32_t *)(configTIMER_BASEADDR + XTTCPS_COUNT_VALUE_OFFSET))
 	#define TRC_HWTC_PERIOD  (*(volatile uint32_t *)(configTIMER_BASEADDR + XTTCPS_INTERVAL_VAL_OFFSET))
 	#define TRC_HWTC_DIVISOR  16
-	#define TRC_HWTC_FREQ_HZ  (TRC_HWTC_PERIOD * TRACE_TICK_RATE_HZ)
+	#define TRC_HWTC_FREQ_HZ  (TRC_HWTC_PERIOD * TRC_TICK_RATE_HZ)
 	#define TRC_IRQ_PRIORITY_ORDER  0
 
 	#ifdef __GNUC__
@@ -374,6 +384,11 @@
 
 	#include <system.h>
 	#include <altera_avalon_timer_regs.h>
+	#include <sys/alt_irq.h>
+	
+	#define TRACE_ALLOC_CRITICAL_SECTION() alt_irq_context __irq_status;
+	#define TRACE_ENTER_CRITICAL_SECTION(){__irq_status = alt_irq_disable_all();}
+	#define TRACE_EXIT_CRITICAL_SECTION() {alt_irq_enable_all(__irq_status);}
 
 	#define NOT_SET 1
 
@@ -400,7 +415,7 @@
 	#define TRC_HWTC_COUNT altera_nios2_GetTimerSnapReg()
 	#define TRC_HWTC_PERIOD (configCPU_CLOCK_HZ / configTICK_RATE_HZ )
 	#define TRC_HWTC_DIVISOR 16
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0  
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_CORTEX_A9)
@@ -421,6 +436,15 @@
 	* but should work with all Cortex-A and R processors assuming that
 	* TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS is set accordingly.	
 	**************************************************************************/
+
+	extern int cortex_a9_r5_enter_critical(void);
+	extern void cortex_a9_r5_exit_critical(int irq_already_masked_at_enter);
+
+	#define TRACE_ALLOC_CRITICAL_SECTION() uint32_t __irq_mask_status;
+
+	#define TRACE_ENTER_CRITICAL_SECTION() { __irq_mask_status = cortex_a9_r5_enter_critical(); }
+
+	#define TRACE_EXIT_CRITICAL_SECTION() { cortex_a9_r5_exit_critical(__irq_mask_status); }
 	
 	/* INPUT YOUR PERIPHERAL BASE ADDRESS HERE (0xF8F00000 for Xilinx Zynq 7000)*/
 	#define TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS	0
@@ -450,7 +474,7 @@
     *****************************************************************************************/	
 	#define TRC_HWTC_DIVISOR 1
 	
-	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_HWTC_FREQ_HZ (TRC_TICK_RATE_HZ * TRC_HWTC_PERIOD)
     #define TRC_IRQ_PRIORITY_ORDER 0
 
 	#ifdef __GNUC__
@@ -466,10 +490,132 @@
 		#error "Only GCC Supported!"
 	#endif
 
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_CYCLONE_V_HPS)
+	#include "alt_clock_manager.h"
+
+	extern int cortex_a9_r5_enter_critical(void);
+	extern void cortex_a9_r5_exit_critical(int irq_already_masked_at_enter);
+
+	#define TRACE_ALLOC_CRITICAL_SECTION() uint32_t __irq_mask_status;
+	#define TRACE_ENTER_CRITICAL_SECTION() { __irq_mask_status = cortex_a9_r5_enter_critical(); }
+	#define TRACE_EXIT_CRITICAL_SECTION() { cortex_a9_r5_exit_critical(__irq_mask_status); }
+
+	#define TRC_HWTC_TYPE							TRC_FREE_RUNNING_32BIT_INCR
+	#define TRC_HWTC_COUNT							*((uint32_t *)0xFFFEC200)
+	#define TRC_HWTC_PERIOD							0
+	#define TRC_HWTC_DIVISOR 						1
+	#define TRC_HWTC_FREQ_HZ						(({		\
+		uint32_t __freq;									\
+		alt_clk_freq_get( ALT_CLK_MPU_PERIPH, &__freq );	\
+		__freq;												\
+	}))
+	#define TRC_IRQ_PRIORITY_ORDER 					0
+
+	#ifdef __GNUC__
+	/* For Arm Cortex-A and Cortex-R in general. */
+	static inline uint32_t prvGetCPSR(void)
+	{
+		unsigned long ret;
+		/* GCC-style assembly for getting the CPSR/APSR register, where the system execution mode is found. */
+		__asm__ __volatile__(" mrs  %0, cpsr" : "=r" (ret) : /* no inputs */  );
+		return ret;
+	}
+	#else
+		#error "Only GCC Supported!"
+	#endif
+
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ZEPHYR)
+	#define TRACE_ALLOC_CRITICAL_SECTION() int key;
+	#define TRACE_ENTER_CRITICAL_SECTION() { key = irq_lock(); }
+	#define TRACE_EXIT_CRITICAL_SECTION() { irq_unlock(key); }
+	
+	#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
+	#define TRC_HWTC_COUNT k_cycle_get_32()
+	#define TRC_HWTC_PERIOD (CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC / CONFIG_SYS_CLOCK_TICKS_PER_SEC)
+	#define TRC_HWTC_DIVISOR 4
+	#define TRC_HWTC_FREQ_HZ CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC
+	#define TRC_IRQ_PRIORITY_ORDER 0 // Lower IRQ priority values are more significant
+
+	#define TRC_PORT_SPECIFIC_INIT()
+
+#elif ((TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XTensa_LX6) || (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XTensa_LX7))
+	/**
+	 * @note	When running with SMP FreeRTOS we cannot use the CCOUNT register for timestamping,
+	 * 			instead we use the external 40MHz timer for synchronized timestamping between the cores.
+	 */
+	#if CONFIG_FREERTOS_UNICORE == 1
+		#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
+		#define TRC_HWTC_COUNT ({ unsigned int __ccount; 			\
+			__asm__ __volatile__("rsr.ccount %0" : "=a"(__ccount)); \
+			__ccount; })
+#ifdef CONFIG_IDF_TARGET_ESP32
+		#define TRC_HWTC_FREQ_HZ (CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ * 1000000)
+#elif defined(CONFIG_IDF_TARGET_ESP32S2)
+		#define TRC_HWTC_FREQ_HZ (CONFIG_ESP32S2_DEFAULT_CPU_FREQ_MHZ * 1000000)
+#else
+		#error "Invalid IDF target, check your sdkconfig."
+#endif
+		#define TRC_HWTC_PERIOD 0
+		#define TRC_HWTC_DIVISOR 4
+		#define TRC_IRQ_PRIORITY_ORDER 0
+	#else
+		/**
+		 * @brief 	Fetch core agnostic timestamp using the external 40MHz timer. This is used by tracerecorder
+		 * 			when running with both cores.
+		 *
+		 * @return 	Ticks since the timer started
+		 */
+		uint32_t prvGetSMPTimestamp();
+
+		#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
+		#define TRC_HWTC_COUNT prvGetSMPTimestamp()
+		#define TRC_HWTC_FREQ_HZ 40000000
+		#define TRC_HWTC_PERIOD 0
+		#define TRC_HWTC_DIVISOR 4
+		#define TRC_IRQ_PRIORITY_ORDER 0
+	#endif
+
+	#if !defined(TRC_HWTC_FREQ_HZ)
+		#error "The XTensa LX6/LX7 trace hardware clock frequency is not defined."
+	#endif
+
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_RISCV_RV32I)
+	#define TRACE_ALLOC_CRITICAL_SECTION() unsigned int __irq_status;
+	#define TRACE_ENTER_CRITICAL_SECTION() __asm__ __volatile__("csrr %0, mstatus	\n\t"	\
+																"csrci mstatus, 8	\n\t"	\
+																"andi %0, %0, 8		\n\t"	\
+																: "=r"(__irq_status))
+    #define TRACE_EXIT_CRITICAL_SECTION() __asm__ __volatile__("csrr a1, mstatus	\n\t"	\
+    															"or %0, %0, a1		\n\t"	\
+																"csrs mstatus, %0	\n\t"	\
+																:							\
+																: "r" (__irq_status)		\
+																: "a1")
+	#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
+	#define TRC_HWTC_COUNT ({ unsigned int __count;			\
+		__asm__ __volatile__("rdcycle %0" : "=r"(__count));	\
+		__count; })
+	#define TRC_HWTC_PERIOD 0
+	#define TRC_HWTC_DIVISOR 1
+	#define TRC_HWTC_FREQ_HZ 16000000
+	#define TRC_IRQ_PRIORITY_ORDER 0
+
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XMOS_XCOREAI)
+	#define TRC_PORT_SPECIFIC_INIT()
+	#define TRC_HWTC_TYPE TRC_FREE_RUNNING_32BIT_INCR
+	#define TRC_HWTC_COUNT xscope_gettime()
+	#define TRC_HWTC_PERIOD (configCPU_CLOCK_HZ / configTICK_RATE_HZ )
+	#define TRC_HWTC_DIVISOR 4
+	#define TRC_HWTC_FREQ_HZ 100000000
+	#define TRC_IRQ_PRIORITY_ORDER 0
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_POWERPC_Z4)
 
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
+	
+	#define TRACE_ALLOC_CRITICAL_SECTION() TraceBaseType_t __x_irq_status;
+	#define TRACE_ENTER_CRITICAL_SECTION() { __x_irq_status = TRC_KERNEL_PORT_SET_INTERRUPT_MASK(); }
+	#define TRACE_EXIT_CRITICAL_SECTION() { TRC_KERNEL_PORT_CLEAR_INTERRUPT_MASK(__x_irq_status); }
 
     #define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
     //#define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
@@ -553,6 +699,16 @@
 	#error "TRC_HWTC_FREQ_HZ not defined!"
 	#endif
 	
+#endif
+
+#ifndef TRACE_ALLOC_CRITICAL_SECTION
+#define TRACE_ALLOC_CRITICAL_SECTION() TRC_KERNEL_PORT_ALLOC_CRITICAL_SECTION()
+#endif
+#ifndef TRACE_ENTER_CRITICAL_SECTION
+	#define TRACE_ENTER_CRITICAL_SECTION() TRC_KERNEL_PORT_ENTER_CRITICAL_SECTION()
+#endif
+#ifndef TRACE_EXIT_CRITICAL_SECTION
+#define TRACE_EXIT_CRITICAL_SECTION() TRC_KERNEL_PORT_EXIT_CRITICAL_SECTION()
 #endif
 
 #endif /*TRC_SNAPSHOT_HARDWARE_PORT_H*/

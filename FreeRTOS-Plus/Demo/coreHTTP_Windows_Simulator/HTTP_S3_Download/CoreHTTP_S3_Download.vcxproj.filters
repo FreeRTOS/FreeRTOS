@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{c96f1e50-b6b4-488e-a231-23387e3531df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreJSON">
+      <UniqueIdentifier>{11a3eaf1-43a2-4660-a6d4-4584c7c8af8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreJSON\include">
+      <UniqueIdentifier>{efdf2bf5-9de7-4744-87aa-5748b17df563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm">
+      <UniqueIdentifier>{a442e1bd-e141-45a4-860d-a8eccab1b8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm\include">
+      <UniqueIdentifier>{40e32cc4-f465-4092-a98a-75305c342a30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files">
+      <UniqueIdentifier>{a4797e8c-1b0e-4386-8bab-5890fee0bb3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{f72e157d-4851-4386-b77e-74c4e83520d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{e22b9d41-754f-4178-b932-4d1a98c38947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\AWS IoT SigV4">
+      <UniqueIdentifier>{b8a4111e-a0ab-4c55-9967-94eb714009ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\AWS IoT SigV4\include">
+      <UniqueIdentifier>{87eafd3c-08ee-4e5d-90c3-8d096f337cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{828295b8-4afa-4805-aa8e-d591994bcb95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport">
+      <UniqueIdentifier>{d9741358-e039-49c1-86e0-2f5334341c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include">
+      <UniqueIdentifier>{a759cdae-5abe-4a9b-a7c6-6cec2d469f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{949df243-7d07-44e1-8ce4-1a4be3ca84d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{403ad0d9-0279-4f81-a14c-e3d9d4d1b5af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp">
+      <UniqueIdentifier>{a8eba8dd-9a44-4f49-bba8-496c4f331583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{7f50cafc-290c-481a-968f-a80b87cd8f83}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\coreJSON\source\core_json.c">
+      <Filter>Additional Libraries\coreJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AWS\sigv4\source\sigv4.c">
+      <Filter>Additional Libraries\AWS IoT SigV4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AWS\sigv4\source\sigv4_quicksort.c">
+      <Filter>Additional Libraries\AWS IoT SigV4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\http_demo_utils.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\S3DownloadHTTPExample.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\coreJSON\source\include\core_json.h">
+      <Filter>Additional Libraries\coreJSON\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Additional Libraries\Backoff Algorithm\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\http_demo_utils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4.h">
+      <Filter>Additional Libraries\AWS IoT SigV4\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_config_defaults.h">
+      <Filter>Additional Libraries\AWS IoT SigV4\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_internal.h">
+      <Filter>Additional Libraries\AWS IoT SigV4\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_quicksort.h">
+      <Filter>Additional Libraries\AWS IoT SigV4\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

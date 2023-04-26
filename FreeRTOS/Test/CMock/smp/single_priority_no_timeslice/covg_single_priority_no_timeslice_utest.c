@@ -213,22 +213,18 @@ void test_coverage_prvCheckForRunStateChange_first_time_suspend_scheduler( void 
     pxCurrentTCBs[ 0 ] = &xTaskTCB;
     xTaskTCB.uxCriticalNesting = 0;
     xTaskTCB.xTaskRunState = taskTASK_YIELDING;
-    uxSchedulerSuspended = 1;
+    uxSchedulerSuspended = 0;
 
     /* Clear callback in commonSetUp. */
     vFakePortCheckIfInISR_StopIgnore();
     vFakePortEnableInterrupts_StopIgnore();
-    vFakePortGetISRLock_StubWithCallback( NULL );
     vFakePortGetTaskLock_StubWithCallback( NULL );
-    vFakePortReleaseISRLock_StubWithCallback( NULL );
     vFakePortReleaseTaskLock_StubWithCallback( NULL );
 
     /* Expection. */
     vFakePortEnableInterrupts_StubWithCallback( prvPortEnableInterruptsCb );
 
     vFakePortCheckIfInISR_ExpectAndReturn( 0 );
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
     vFakePortReleaseTaskLock_Expect();
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
@@ -239,7 +235,7 @@ void test_coverage_prvCheckForRunStateChange_first_time_suspend_scheduler( void 
 
     /* Validation. */
     /* Critical nesting count is set correctly. */
-    TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
+    TEST_ASSERT_EQUAL( 0, uxSchedulerSuspended );
     /* Task is of running state now. */
     TEST_ASSERT_EQUAL( 0, xTaskTCB.xTaskRunState );
 }
@@ -356,7 +352,7 @@ void test_coverage_vTaskStepTick_eq_task_unblock_time( void )
     vFakePortEnterCriticalSection_StubWithCallback( NULL );
     vFakePortExitCriticalSection_StubWithCallback( NULL );
 
-    /* Expectations. */
+    /* Expections. */
     vFakePortEnterCriticalSection_Expect();
     vFakePortExitCriticalSection_Expect();
 

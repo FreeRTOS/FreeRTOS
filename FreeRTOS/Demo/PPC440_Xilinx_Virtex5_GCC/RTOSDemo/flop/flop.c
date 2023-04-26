@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -28,12 +28,12 @@
  * Creates eight tasks, each of which loops continuously performing a
  * floating point calculation.
  *
- * All the tasks run at the idle priority and never block or yield.  This causes 
- * all eight tasks to time slice with the idle task.  Running at the idle priority 
+ * All the tasks run at the idle priority and never block or yield.  This causes
+ * all eight tasks to time slice with the idle task.  Running at the idle priority
  * means that these tasks will get pre-empted any time another task is ready to run
- * or a time slice occurs.  More often than not the pre-emption will occur mid 
- * calculation, creating a good test of the schedulers context switch mechanism - a 
- * calculation producing an unexpected result could be a symptom of a corruption in 
+ * or a time slice occurs.  More often than not the pre-emption will occur mid
+ * calculation, creating a good test of the schedulers context switch mechanism - a
+ * calculation producing an unexpected result could be a symptom of a corruption in
  * the context of a task.
  *
  * This file demonstrates the use of the task tag and traceTASK_SWITCHED_IN and
@@ -54,18 +54,18 @@
 #define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
 #define mathNUMBER_OF_TASKS  ( 8 )
 
-/* Four tasks, each of which performs a different floating point calculation.  
+/* Four tasks, each of which performs a different floating point calculation.
 Each of the four is created twice. */
 static portTASK_FUNCTION_PROTO( vCompetingMathTask1, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask2, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask3, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 
-/* These variables are used to check that all the tasks are still running.  If a 
+/* These variables are used to check that all the tasks are still running.  If a
 task gets a calculation wrong it will stop incrementing its check variable. */
 static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 
-/* Buffers into which the flop registers will be saved.  There is a buffer for 
+/* Buffers into which the flop registers will be saved.  There is a buffer for
 each task created within this file.  Zeroing out this array is the normal and
 safe option as this will cause the task to start with all zeros in its flop
 context. */
@@ -78,11 +78,11 @@ void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
 TaskHandle_t xTaskJustCreated;
 portBASE_TYPE x, y;
 
-	/* Place known values into the buffers into which the flop registers are 
+	/* Place known values into the buffers into which the flop registers are
 	to be saved.  This is for debug purposes only, it is not normally
 	required.  The last position in each array is left at zero as the status
-	register will be loaded from there. 
-	
+	register will be loaded from there.
+
 	It is intended that these values can be viewed being loaded into the
 	flop registers when a task is started - however the Insight debugger
 	does not seem to want to show the flop register values. */
@@ -95,11 +95,11 @@ portBASE_TYPE x, y;
 	}
 
 	/* Create the first task - passing it the address of the check variable
-	that it is going to increment.  This check variable is used as an 
+	that it is going to increment.  This check variable is used as an
 	indication that the task is still running. */
 	xTaskCreate( vCompetingMathTask1, "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, &xTaskJustCreated );
 
-	/* The task	tag value is a value that can be associated with a task, but 
+	/* The task	tag value is a value that can be associated with a task, but
 	is not used by the scheduler itself.  Its use is down to the application so
 	it makes a convenient place in this case to store the pointer to the buffer
 	into which the flop context of the task will be stored.  The first created
@@ -143,7 +143,7 @@ short sError = pdFALSE;
 
 	fAnswer = ( ff1 + ff2 ) * ff3;
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
@@ -160,7 +160,7 @@ short sError = pdFALSE;
 			taskYIELD();
 		#endif
 
-		/* If the calculation does not match the expected constant, stop the 
+		/* If the calculation does not match the expected constant, stop the
 		increment of the check variable. */
 		if( fabs( ff4 - fAnswer ) > 0.001F )
 		{
@@ -169,7 +169,7 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know this task is still running okay. */
 			( *pusTaskCheckVariable )++;
 		}
@@ -196,7 +196,7 @@ short sError = pdFALSE;
 	fAnswer = ( ff1 / ff2 ) * ff3;
 
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
@@ -212,8 +212,8 @@ short sError = pdFALSE;
 		#if configUSE_PREEMPTION == 0
 			taskYIELD();
 		#endif
-		
-		/* If the calculation does not match the expected constant, stop the 
+
+		/* If the calculation does not match the expected constant, stop the
 		increment of the check variable. */
 		if( fabs( ff4 - fAnswer ) > 0.001F )
 		{
@@ -222,7 +222,7 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know
 			this task is still running okay. */
 			( *pusTaskCheckVariable )++;
@@ -243,14 +243,14 @@ const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
-	/* Keep filling an array, keeping a running total of the values placed in the 
-	array.  Then run through the array adding up all the values.  If the two totals 
+	/* Keep filling an array, keeping a running total of the values placed in the
+	array.  Then run through the array adding up all the values.  If the two totals
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
@@ -260,7 +260,7 @@ short sError = pdFALSE;
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
 			pfArray[ xPosition ] = ( portFLOAT ) xPosition + 5.5F;
-			fTotal1 += ( portFLOAT ) xPosition + 5.5F;	
+			fTotal1 += ( portFLOAT ) xPosition + 5.5F;
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -284,7 +284,7 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know	this task is still running okay. */
 			( *pusTaskCheckVariable )++;
 		}
@@ -300,14 +300,14 @@ const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
-	/* Keep filling an array, keeping a running total of the values placed in the 
-	array.  Then run through the array adding up all the values.  If the two totals 
+	/* Keep filling an array, keeping a running total of the values placed in the
+	array.  Then run through the array adding up all the values.  If the two totals
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
@@ -317,7 +317,7 @@ short sError = pdFALSE;
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
 			pfArray[ xPosition ] = ( portFLOAT ) xPosition * 12.123F;
-			fTotal1 += ( portFLOAT ) xPosition * 12.123F;	
+			fTotal1 += ( portFLOAT ) xPosition * 12.123F;
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -341,23 +341,23 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know	this task is still running okay. */
 			( *pusTaskCheckVariable )++;
 		}
 	}
-}				 
+}
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
 portBASE_TYPE xAreMathsTaskStillRunning( void )
 {
-/* Keep a history of the check variables so we know if they have been incremented 
+/* Keep a history of the check variables so we know if they have been incremented
 since the last call. */
 static unsigned short usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 portBASE_TYPE xReturn = pdTRUE, xTask;
 
-	/* Check the maths tasks are still running by ensuring their check variables 
+	/* Check the maths tasks are still running by ensuring their check variables
 	are still incrementing. */
 	for( xTask = 0; xTask < mathNUMBER_OF_TASKS; xTask++ )
 	{

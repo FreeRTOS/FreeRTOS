@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -532,28 +532,44 @@ uint32_t ulAddress;
 	switch( xIndex )
 	{
 		case 0 :
+		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+			FreeRTOS_GetEndPointConfiguration( &ulAddress, NULL, NULL, NULL, pxNetworkEndPoints );
+		#else
 			FreeRTOS_GetAddressConfiguration( &ulAddress, NULL, NULL, NULL );
+		#endif
 			sprintf( ( char * ) pcWriteBuffer, "\r\nIP address " );
 			xReturn = pdTRUE;
 			xIndex++;
 			break;
 
 		case 1 :
+		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+			FreeRTOS_GetEndPointConfiguration( NULL, &ulAddress, NULL, NULL, pxNetworkEndPoints );
+		#else
 			FreeRTOS_GetAddressConfiguration( NULL, &ulAddress, NULL, NULL );
+		#endif
 			sprintf( ( char * ) pcWriteBuffer, "\r\nNet mask " );
 			xReturn = pdTRUE;
 			xIndex++;
 			break;
 
 		case 2 :
+		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+			FreeRTOS_GetEndPointConfiguration( NULL, NULL, &ulAddress, NULL, pxNetworkEndPoints );
+		#else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, &ulAddress, NULL );
+		#endif
 			sprintf( ( char * ) pcWriteBuffer, "\r\nGateway address " );
 			xReturn = pdTRUE;
 			xIndex++;
 			break;
 
 		case 3 :
+		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+			FreeRTOS_GetEndPointConfiguration( NULL, NULL, NULL, &ulAddress, pxNetworkEndPoints );
+		#else
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, NULL, &ulAddress );
+		#endif
 			sprintf( ( char * ) pcWriteBuffer, "\r\nDNS server address " );
 			xReturn = pdTRUE;
 			xIndex++;

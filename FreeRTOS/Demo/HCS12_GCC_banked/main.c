@@ -1,6 +1,6 @@
 
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -31,21 +31,21 @@
  * main() creates all the demo application tasks, then starts the scheduler.
  * The WEB	documentation provides more details of the demo application tasks.
  *
- * main.c also creates a task called "Check".  This only executes every three 
- * seconds but has the highest priority so is guaranteed to get processor time.  
+ * main.c also creates a task called "Check".  This only executes every three
+ * seconds but has the highest priority so is guaranteed to get processor time.
  * Its main function is to check that all the other tasks are still operational.
- * Each task (other than the "flash" tasks) maintains a unique count that is 
- * incremented each time the task successfully completes its function.  Should 
- * any error occur within such a task the count is permanently halted.  The 
+ * Each task (other than the "flash" tasks) maintains a unique count that is
+ * incremented each time the task successfully completes its function.  Should
+ * any error occur within such a task the count is permanently halted.  The
  * check task inspects the count of each task to ensure it has changed since
- * the last time the check task executed.  If all the count variables have 
+ * the last time the check task executed.  If all the count variables have
  * changed all the tasks are still executing error free, and the check task
- * toggles the onboard LED.  Should any task contain an error at any time 
+ * toggles the onboard LED.  Should any task contain an error at any time
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
- * This file also includes the functionality implemented within the 
+ * This file also includes the functionality implemented within the
  * standard demo application file integer.c.  This is done to demonstrate the
- * use of an idle hook.  See the documentation within integer.c for the 
+ * use of an idle hook.  See the documentation within integer.c for the
  * rationale of the integer task functionality.
  * */
 
@@ -85,7 +85,7 @@ portBASE_TYPE xArePollingQueuesStillRunning( void );
 
 /* LED that is toggled by the check task.  The check task periodically checks
 that all the other tasks are operating without error.  If no errors are found
-the LED is toggled with mainCHECK_PERIOD frequency.  If an error is found 
+the LED is toggled with mainCHECK_PERIOD frequency.  If an error is found
 then the toggle rate increases to mainERROR_CHECK_PERIOD. */
 #define mainCHECK_TASK_LED			( 7 )
 #define mainCHECK_PERIOD			( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
@@ -158,17 +158,17 @@ int ATTR_BANK0 main ( void )
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	
+
 	/* Start the locally defined tasks.  There is also a task implemented as
 	the idle hook. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-	
+
 	/* Must be the last demo created. */
 	vCreateSuicidalTasks( mainDEATH_PRIORITY );
 
 	/* All the tasks have been created - start the scheduler. */
 	vTaskStartScheduler();
-	
+
 	/* Should not reach here! */
 	for( ;; );
 	return 0;
@@ -186,11 +186,11 @@ TickType_t xLastWakeTime;
 
 	for( ;; )
 	{
-		/* Delay until it is time to execute again.  The delay period is 
+		/* Delay until it is time to execute again.  The delay period is
 		shorter following an error. */
 		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
 
-		/* Check all the demo application tasks are executing without 
+		/* Check all the demo application tasks are executing without
 		error. If an error is found the delay period is shortened - this
 		has the effect of increasing the flash rate of the 'check' task
 		LED. */
@@ -229,11 +229,11 @@ portBASE_TYPE xAllTasksPassed = pdPASS;
 	{
 		xAllTasksPassed = pdFALSE;
 	}
-	
+
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		xAllTasksPassed = pdFALSE;
-	}	
+	}
 
     if( xIsCreateTaskStillRunning() != pdTRUE )
     {
@@ -245,7 +245,7 @@ portBASE_TYPE xAllTasksPassed = pdPASS;
 	{
 		xAllTasksPassed = pdFAIL;
 	}
-	
+
 	return xAllTasksPassed;
 }
 /*-----------------------------------------------------------*/
@@ -279,7 +279,7 @@ volatile long lValue;
 	{
 		taskYIELD();
 	}
-	#endif		
+	#endif
 }
 /*-----------------------------------------------------------*/
 

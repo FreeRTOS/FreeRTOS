@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -37,6 +37,7 @@
 /* Test includes. */
 #include "unity.h"
 #include "unity_memory.h"
+#include "CException.h"
 
 /* Mock includes. */
 #include "mock_task.h"
@@ -48,10 +49,37 @@
 
 
 /* ===========================  DEFINES CONSTANTS  ========================== */
-#define BIT_0            ( 1 << 0 )
-#define BIT_2            ( 1 << 2 )
-#define BIT_4            ( 1 << 4 )
-#define ALL_SYNC_BITS    ( BIT_0 | BIT_2 | BIT_4 )
+#define BIT_0             ( 1 << 0 )
+#define BIT_2             ( 1 << 2 )
+#define BIT_4             ( 1 << 4 )
+#define ALL_SYNC_BITS     ( BIT_0 | BIT_2 | BIT_4 )
+
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E    0xAA101
+
+/**
+ * @brief Expect a configASSERT from the function called.
+ *  Break out of the called function when this occurs.
+ * @details Use this macro when the call passed in as a parameter is expected
+ * to cause invalid memory access.
+ */
+#define EXPECT_ASSERT_BREAK( call )                  \
+    do                                               \
+    {                                                \
+        shouldAbortOnAssertion = true;               \
+        CEXCEPTION_T e = CEXCEPTION_NONE;            \
+        Try                                          \
+        {                                            \
+            call;                                    \
+            TEST_FAIL_MESSAGE( "Expected Assert!" ); \
+        }                                            \
+        Catch( e )                                   \
+        {                                            \
+            TEST_ASSERT_EQUAL( configASSERT_E, e );  \
+        }                                            \
+    } while( 0 )
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
 
@@ -64,6 +92,16 @@ static List_t * pxListTemp = &xListTemp;
 static ListItem_t xListItemDummy = { 0 };
 static ListItem_t * pxListItem_HasTaskBlockOnBit0 = &xListItemDummy;
 
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
+static int assertionFailed = 0;
+
+/**
+ * @brief Flag which denotes if test need to abort on assertion.
+ */
+static BaseType_t shouldAbortOnAssertion;
+
 /* ===========================  EXTERN VARIABLES  =========================== */
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
@@ -75,6 +113,22 @@ void * pvPortMalloc( size_t xSize )
 void vPortFree( void * pv )
 {
     return unity_free( pv );
+}
+
+static void vFakeAssertStub( bool x,
+                             char * file,
+                             int line,
+                             int cmock_num_calls )
+{
+    if( !x )
+    {
+        assertionFailed++;
+
+        if( shouldAbortOnAssertion == pdTRUE )
+        {
+            Throw( configASSERT_E );
+        }
+    }
 }
 
 /* ============================  Unity Fixtures  ============================ */
@@ -91,11 +145,13 @@ void setUp( void )
 
     pxListItem_HasTaskBlockOnBit0->xItemValue = BIT_0;
 
-    vFakeAssert_Ignore();
+    vFakeAssert_StubWithCallback( vFakeAssertStub );
     vFakePortEnterCriticalSection_Ignore();
     vFakePortExitCriticalSection_Ignore();
     ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0U );
     vFakePortClearInterruptMaskFromISR_Ignore();
+
+    vTaskSuspendAll_Ignore();
 
     /* Track calls to malloc / free */
     UnityMalloc_StartTest();
@@ -105,6 +161,8 @@ void setUp( void )
 void tearDown( void )
 {
     UnityMalloc_EndTest();
+    mock_fake_assert_Verify();
+    mock_fake_assert_Destroy();
 }
 
 /*! called at the beginning of the whole suite */
@@ -116,6 +174,12 @@ void suiteSetUp()
 int suiteTearDown( int numFailures )
 {
     return numFailures;
+}
+
+static void validate_and_clear_assertions( void )
+{
+    TEST_ASSERT_EQUAL( 1, assertionFailed );
+    assertionFailed = 0;
 }
 
 /* ===========================  Static Functions  =========================== */
@@ -134,7 +198,6 @@ void test_xEventGroupDynamicCreateAndDelete_Success( void )
     vListInitialise_IgnoreArg_pxList();
     vListInitialise_ReturnThruPtr_pxList( pxListTemp );
     /* Expectation of Function: vEventGroupDelete */
-    vTaskSuspendAll_Ignore();
     listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
     vTaskRemoveFromUnorderedEventList_Ignore();
     listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
@@ -175,7 +238,6 @@ void test_xEventGroupStaticCreate_Success( void )
     vListInitialise_Ignore();
 
     /* Expectation of Function: vEventGroupDelete */
-    vTaskSuspendAll_Ignore();
     listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
     vTaskRemoveFromUnorderedEventList_Ignore();
     listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
@@ -221,7 +283,6 @@ void test_xEventGroupSetBits_NoTaskBlockedOnBits_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -251,7 +312,6 @@ void test_xEventGroupSetBits_WithTaskBlockedOnBits_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( pxListItem_HasTaskBlockOnBit0 );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( BIT_0 );
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
@@ -283,7 +343,6 @@ void test_vEventGroupSetBitsCallback_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -314,7 +373,6 @@ void test_xEventGroupGetBits_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -372,7 +430,6 @@ void test_xEventGroupClearBits_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -406,7 +463,6 @@ void test_vEventGroupClearBitsCallback_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -437,7 +493,6 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_WaitForBoth_ClearBit_Success( void
     vListInitialise_ReturnThruPtr_pxList( pxListTemp );
 
     /* Expectation of Function: xEventGroupWaitBits */
-    vTaskSuspendAll_Ignore();
     xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
     vTaskPlaceOnUnorderedEventList_Ignore();
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -475,7 +530,6 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_NonBlock_WaitForEither_NoClear_Suc
     vListInitialise_ReturnThruPtr_pxList( pxListTemp );
 
     /* Expectation of Function: xEventGroupWaitBits */
-    vTaskSuspendAll_Ignore();
     xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
     vTaskPlaceOnUnorderedEventList_Ignore();
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -513,7 +567,6 @@ void test_xEventGroupWaitBits_WhenBitWasSet_WaitForEither_NoClear_Success( void 
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -557,7 +610,6 @@ void test_xEventGroupWaitBits_WhenBitWasSet_WaitForBoth_WithClear_Success( void 
 
     /* Expectation of Function: xEventGroupSetBits x2 */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     xTaskResumeAll_IgnoreAndReturn( 1 );
@@ -607,7 +659,6 @@ void test_xEventGroupSync_SetBits_BlockWait_NotSynced_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     xTaskResumeAll_IgnoreAndReturn( 1 );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
@@ -644,7 +695,6 @@ void test_xEventGroupSync_NoSetBit_NonBlockWait_NotSynced_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits x2 */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     xTaskResumeAll_IgnoreAndReturn( 1 );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
@@ -685,7 +735,6 @@ void test_xEventGroupSync_SetBits_BlockWait_Synced_Success( void )
 
     /* Expectation of Function: xEventGroupSetBits x2 */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     xTaskResumeAll_IgnoreAndReturn( 1 );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
@@ -790,4 +839,105 @@ void test_xEventGroupSetBitsFromISR_Success( void )
 
     /* API to Test */
     ( void ) xEventGroupSetBitsFromISR( NULL, BIT_0, &xHigherPriorityTaskWoken );
+}
+
+/*!
+ * @brief validate xEventGroupGetStaticBuffer with a null xEventGroup argument.
+ * @details Test that xEventGroupGetStaticBuffer asserts when xEventGroupGetStaticBuffer is called with a null EventGroupHandle_t
+ * @coverage xEventGroupGetStaticBuffer
+ */
+void test_xEventGroupGetStaticBuffer_null_xEventGroup( void )
+{
+    StaticEventGroup_t * pxEventGroupBufferRet = NULL;
+
+    EXPECT_ASSERT_BREAK( xEventGroupGetStaticBuffer( NULL, &pxEventGroupBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, pxEventGroupBufferRet );
+}
+
+/*!
+ * @brief validate xEventGroupGetStaticBuffer with a null ppxEventGroupBuffer argument.
+ * @details Test that xEventGroupGetStaticBuffer asserts when xEventGroupGetStaticBuffer is called with a null ppxEventGroupBuffer argument.
+ * @coverage xEventGroupGetStaticBuffer
+ */
+void test_xEventGroupGetStaticBuffer_null_ppxEventGroupBuffer( void )
+{
+    EventGroupHandle_t xEventGroupHandle = NULL;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+
+    EXPECT_ASSERT_BREAK( xEventGroupGetStaticBuffer( xEventGroupHandle, NULL ) );
+
+    /* Expectation of Function: vEventGroupDelete */
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
+    vTaskRemoveFromUnorderedEventList_Ignore();
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+
+    vEventGroupDelete( xEventGroupHandle );
+}
+
+/*!
+ * @brief validate xEventGroupGetStaticBuffer on a statically created event group
+ * @details Test xEventGroupGetStaticBuffer returns the buffer of a statically created event group
+ * @coverage xEventGroupGetStaticBuffer
+ */
+void test_xEventGroupGetStaticBuffer_static( void )
+{
+    EventGroupHandle_t xEventGroupHandle = NULL;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+    StaticEventGroup_t * pxEventGroupBufferRet = NULL;
+
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xEventGroupGetStaticBuffer( xEventGroupHandle, &pxEventGroupBufferRet ) );
+    TEST_ASSERT_EQUAL( &xCreatedEventGroup, pxEventGroupBufferRet );
+
+    /* Expectation of Function: vEventGroupDelete */
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
+    vTaskRemoveFromUnorderedEventList_Ignore();
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+
+    vEventGroupDelete( xEventGroupHandle );
+}
+
+/*!
+ * @brief validate xEventGroupGetStaticBuffer on a dynamically created event group
+ * @details Test xEventGroupGetStaticBuffer returns an error when called on a dynamically created event group
+ * @coverage xEventGroupGetStaticBuffer
+ */
+void test_xEventGroupGetStaticBuffer_dynamic( void )
+{
+    EventGroupHandle_t xEventGroupHandle = NULL;
+    StaticEventGroup_t * pxEventGroupBufferRet = NULL;
+
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    xEventGroupHandle = xEventGroupCreate();
+
+    TEST_ASSERT_EQUAL( pdFALSE, xEventGroupGetStaticBuffer( xEventGroupHandle, &pxEventGroupBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, pxEventGroupBufferRet );
+
+
+    /* Expectation of Function: vEventGroupDelete */
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 1 );
+    vTaskRemoveFromUnorderedEventList_Ignore();
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+
+    vEventGroupDelete( xEventGroupHandle );
 }

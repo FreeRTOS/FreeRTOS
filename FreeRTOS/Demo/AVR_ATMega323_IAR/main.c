@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -45,7 +45,7 @@
 
 /*
 Changes from V1.2.0
-	
+
 	+ Changed the baud rate for the serial test from 19200 to 57600.
 
 Changes from V1.2.3
@@ -71,10 +71,6 @@ Changes from V2.2.0
 Changes from V2.6.1
 
 	+ The IAR and WinAVR AVR ports are now maintained separately.
-
-Changes from V4.0.5
-
-	+ Modified to demonstrate the use of co-routines.
 */
 
 #include <stdlib.h>
@@ -88,14 +84,12 @@ Changes from V4.0.5
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "croutine.h"
 
 /* Demo file headers. */
 #include "PollQ.h"
 #include "integer.h"
 #include "serial.h"
 #include "comtest.h"
-#include "crflash.h"
 #include "print.h"
 #include "partest.h"
 #include "regtest.h"
@@ -127,9 +121,6 @@ again. */
 the demo application is not unexpectedly resetting. */
 #define mainRESET_COUNT_ADDRESS			( ( void * ) 0x50 )
 
-/* The number of coroutines to create. */
-#define mainNUM_FLASH_COROUTINES		( 3 )
-
 /*
  * The task function for the "Check" task.
  */
@@ -148,9 +139,9 @@ static void prvCheckOtherTasksAreStillRunning( void );
 static void prvIncrementResetCount( void );
 
 /*
- * Idle hook is used to scheduler co-routines.
+ * Idle hook (empty)
  */
-void vApplicationIdleHook( void );	
+void vApplicationIdleHook( void );
 
 short main( void )
 {
@@ -164,13 +155,10 @@ short main( void )
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartRegTestTasks();
-	
+
 	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Create the co-routines that flash the LED's. */
-	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
-	
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION
 	as 1 in portmacro.h.  To use the cooperative scheduler define
 	configUSE_PREEMPTION as 0. */
@@ -197,7 +185,7 @@ static volatile unsigned long ulDummyVariable = 3UL;
 		integer tasks get some exercise. The result here is not important -
 		see the demo application documentation for more info. */
 		ulDummyVariable *= 3;
-		
+
 		prvCheckOtherTasksAreStillRunning();
 	}
 }
@@ -226,7 +214,7 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 	{
 		xErrorHasOccurred = pdTRUE;
 	}
-	
+
 	if( xErrorHasOccurred == pdFALSE )
 	{
 		/* Toggle the LED if everything is okay so we know if an error occurs even if not
@@ -244,20 +232,20 @@ const unsigned char ucWrite1 = ( unsigned char ) 0x04;
 const unsigned char ucWrite2 = ( unsigned char ) 0x02;
 
 	/* Increment the EEPROM value at 0x00.
-	
+
 	Setup the EEPROM address. */
 	EEARH = 0x00;
 	EEARL = 0x00;
-	
+
 	/* Set the read enable bit. */
 	EECR |= ucReadBit;
 
 	/* Wait for the read. */
 	while( EECR & ucReadBit );
-	
+
 	/* The byte is ready. */
 	ucCount = EEDR;
-	
+
 	/* Increment the reset count, then write the byte back. */
 	ucCount++;
 	EEDR = ucCount;
@@ -268,6 +256,5 @@ const unsigned char ucWrite2 = ( unsigned char ) 0x02;
 
 void vApplicationIdleHook( void )
 {
-	vCoRoutineSchedule();
 }
 

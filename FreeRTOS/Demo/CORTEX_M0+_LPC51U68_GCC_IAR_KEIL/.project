@@ -56,11 +56,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/recmutex.c</locationURI>
 		</link>
 		<link>
-			<name>FreeRTOS_source/croutine.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/croutine.c</locationURI>
-		</link>
-		<link>
 			<name>FreeRTOS_source/event_groups.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/event_groups.c</locationURI>
@@ -114,11 +109,6 @@
 			<name>FreeRTOS_source/include/atomic.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/atomic.h</locationURI>
-		</link>
-		<link>
-			<name>FreeRTOS_source/include/croutine.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/include/croutine.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_source/include/deprecated_definitions.h</name>

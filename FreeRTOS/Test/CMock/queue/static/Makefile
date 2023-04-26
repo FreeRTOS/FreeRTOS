@@ -18,6 +18,7 @@ PROJECT_HEADER_DEPS +=  FreeRTOS.h
 # SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
 SUITE_UT_SRC        +=  queue_create_static_utest.c
 SUITE_UT_SRC        +=  queue_delete_static_utest.c
+SUITE_UT_SRC		+=  queue_get_static_buffers_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR

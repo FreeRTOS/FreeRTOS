@@ -631,38 +631,6 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
 }
 
 /**
- * @brief prvCheckForRunStateChange - first time check assertion fail.
- *
- * This function should be called when uxPrevCriticalNesting + uxPrevSchedulerSuspended = 0.
- * Cover the assertion that uxPrevCriticalNesting + uxPrevSchedulerSuspended is not 0.
- *
- * <b>Coverage</b>
- * @code{c}
- * configASSERT( ( uxPrevCriticalNesting + uxPrevSchedulerSuspended ) == 1U );
- * @endcode
- */
-void test_prvCheckForRunStateChange_assert_first_time_check_fail( void )
-{
-    TCB_t xTaskTCB = { NULL };
-
-    pxCurrentTCBs[ 0 ] = &xTaskTCB;
-    xTaskTCB.uxCriticalNesting = 1;
-    xTaskTCB.xTaskRunState = taskTASK_YIELDING;
-    uxSchedulerSuspended = 1;
-
-    /* Expection. */
-    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-
-    /* API Call. */
-    EXPECT_ASSERT_BREAK( prvCheckForRunStateChange() );
-
-    /* Test Verifications */
-    validate_and_clear_assertions();
-}
-
-/**
  * @brief vTaskStepTick - assert if scheduer suspended.
  *
  * <b>Coverage</b>
@@ -710,8 +678,6 @@ void test_prvCheckForRunStateChange_assert_task_state_not_changed( void )
     vFakePortCheckIfInISR_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
     vFakePortReleaseTaskLock_Expect();
     vFakePortEnableInterrupts_Expect();
 

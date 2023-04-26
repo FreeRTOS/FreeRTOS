@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -32,6 +32,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask,
                                     char * pcTaskName );
@@ -56,17 +57,17 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 int main()
 {
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-        {
-            main_blinky();
-        }
+    {
+        main_blinky();
+    }
     #elif ( mainCREATE_FULL_DEMO_ONLY == 1 )
-        {
-            main_full();
-        }
+    {
+        main_full();
+    }
     #else
-        {
-            #error "Invalid Selection...\nPlease Select a Demo application from the main command"
-        }
+    {
+        #error "Invalid Selection...\nPlease Select a Demo application from the main command"
+    }
     #endif /* if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 ) */
     return 0;
 }
@@ -108,11 +109,11 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationIdleHook( void )
 {
     #if ( mainCREATE_FULL_DEMO_ONLY == 1 )
-        {
-            /* Call the idle task processing used by the full demo.  The simple
-             * blinky demo does not use the idle task hook. */
-            vFullDemoIdleFunction();
-        }
+    {
+        /* Call the idle task processing used by the full demo.  The simple
+         * blinky demo does not use the idle task hook. */
+        vFullDemoIdleFunction();
+    }
     #endif
 }
 /*-----------------------------------------------------------*/
@@ -120,28 +121,28 @@ void vApplicationIdleHook( void )
 void vApplicationTickHook( void )
 {
     #if ( mainCREATE_FULL_DEMO_ONLY == 1 )
-        {
-            vFullDemoTickHookFunction();
-        }
+    {
+        vFullDemoTickHookFunction();
+    }
     #endif /* mainSELECTED_APPLICATION */
 }
+
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( void )
+void vAssertCalled( const char * pcFileName,
+                    int line )
 {
-    volatile unsigned long looping = 0;
+    printf( "Assertion failed at %s: %d\n", pcFileName, line );
+    fflush( NULL );
 
-    taskENTER_CRITICAL();
+    while( 1 )
     {
-        /* Use the debugger to set ul to a non-zero value in order to step out
-         *      of this function to determine why it was called. */
-        while( looping == 0LU )
-        {
-            portNOP();
-        }
+        asm ( "nop" );
     }
-    taskEXIT_CRITICAL();
+
+    exit( 1 );
 }
+
 /*-----------------------------------------------------------*/
 void vLoggingPrintf( const char * pcFormat,
                      ... )

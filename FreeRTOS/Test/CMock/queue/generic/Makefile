@@ -26,6 +26,7 @@ SUITE_UT_SRC        +=  queue_receive_blocking_utest.c
 SUITE_UT_SRC        +=  queue_send_nonblocking_utest.c
 SUITE_UT_SRC        +=  queue_send_blocking_utest.c
 SUITE_UT_SRC        +=  queue_status_utest.c
+SUITE_UT_SRC		+=  queue_get_static_buffers_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR

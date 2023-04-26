@@ -159,13 +159,6 @@
       <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
       <ParentItem>f3fa751d-c0a0-4678-bd40-d2230caccbbb</ParentItem>
     </Instance>
-    <Instance Guid="4485cadc-8e94-4522-b20c-22b77427f9d0">
-      <Name>croutine.h</Name>
-      <Type>File</Type>
-      <RelativePath>..\..\Source\include\croutine.h</RelativePath>
-      <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
-      <ParentItem>f3fa751d-c0a0-4678-bd40-d2230caccbbb</ParentItem>
-    </Instance>
     <Instance Guid="603a028c-d475-4020-9d21-fced62357cfe">
       <Name>deprecated_definitions.h</Name>
       <Type>File</Type>
@@ -651,20 +644,6 @@
       <Name>countsem.h</Name>
       <Type>File</Type>
       <RelativePath>..\Common\include\countsem.h</RelativePath>
-      <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
-      <ParentItem>61ddca75-90bd-4cf7-958a-f95eca44d615</ParentItem>
-    </Instance>
-    <Instance Guid="dbb49686-6c8c-40a2-a879-270b3f9fc7d6">
-      <Name>crflash.h</Name>
-      <Type>File</Type>
-      <RelativePath>..\Common\include\crflash.h</RelativePath>
-      <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
-      <ParentItem>61ddca75-90bd-4cf7-958a-f95eca44d615</ParentItem>
-    </Instance>
-    <Instance Guid="16daf389-fec7-4e9d-a9d0-ddc8d28240ad">
-      <Name>crhook.h</Name>
-      <Type>File</Type>
-      <RelativePath>..\Common\include\crhook.h</RelativePath>
       <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
       <ParentItem>61ddca75-90bd-4cf7-958a-f95eca44d615</ParentItem>
     </Instance>

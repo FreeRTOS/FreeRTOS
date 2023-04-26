@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -45,7 +45,7 @@ static QueueHandle_t xSerialRxQueue = NULL;
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 	/* Configure Rx. */
-	xSerialRxQueue = xQueueCreate( uxQueueLength, sizeof( signed char ) );	
+	xSerialRxQueue = xQueueCreate( uxQueueLength, sizeof( signed char ) );
 	isr_UART1_RX_BYTE_RECEIVED_ClearPending();
 	isr_UART1_RX_BYTE_RECEIVED_StartEx(vUartRxISR);
 
@@ -73,7 +73,7 @@ unsigned short usIndex = 0;
 		{
 			break;
 		}
-		
+
 		/* Send out, one character at a time. */
 		if( pdTRUE != xSerialPutChar( NULL, pcString[ usIndex ], serialSTRING_DELAY_TICKS ) )
 		{
@@ -102,7 +102,7 @@ portBASE_TYPE xReturn = pdFALSE;
 
 	/* The ISR is processing characters is so just add to the end of the queue. */
 	if( pdTRUE == xQueueSend( xSerialTxQueue, &cOutChar, xBlockTime ) )
-	{	
+	{
 		xReturn = pdTRUE;
 	}
 	else
@@ -117,7 +117,7 @@ portBASE_TYPE xReturn = pdFALSE;
 	taskENTER_CRITICAL();
 		UART_1_SetTxInterruptMode( UART_1_TX_STS_COMPLETE | UART_1_TX_STS_FIFO_EMPTY );
 	taskEXIT_CRITICAL();
-	
+
 	return xReturn;
 }
 /*---------------------------------------------------------------------------*/
@@ -137,7 +137,7 @@ unsigned long ulMask = 0;
 	{
 		/* Get the character. */
 		cInChar = UART_1_GetChar();
-		
+
 		/* Mask off the other RTOS interrupts to interact with the queue. */
 		ulMask = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
@@ -151,7 +151,7 @@ unsigned long ulMask = 0;
 	}
 
 	/* If we delivered the character then a context switch might be required.
-	xHigherPriorityTaskWoken was set to pdFALSE on interrupt entry.  If calling 
+	xHigherPriorityTaskWoken was set to pdFALSE on interrupt entry.  If calling
 	xQueueSendFromISR() caused a task to unblock, and the unblocked task has
 	a priority equal to or higher than the currently running task (the task this
 	ISR interrupted), then xHigherPriorityTaskWoken will have been set to pdTRUE and
@@ -170,17 +170,17 @@ unsigned long ulMask = 0;
 
 	/* Read the status to acknowledge. */
 	ucStatus = UART_1_ReadTxStatus();
-	
+
 	/* Check to see whether this is a genuine interrupt. */
 	if( ( 0 != ( ucStatus & UART_1_TX_STS_COMPLETE ) ) || ( 0 != ( ucStatus & UART_1_TX_STS_FIFO_EMPTY ) ) )
-	{	
+	{
 		/* Mask off the other RTOS interrupts to interact with the queue. */
 		ulMask = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
 			if( pdTRUE == xQueueReceiveFromISR( xSerialTxQueue, &cOutChar, &xHigherPriorityTaskWoken ) )
 			{
 				/* Send the next character. */
-				UART_1_PutChar( cOutChar );			
+				UART_1_PutChar( cOutChar );
 
 				/* If we are firing, then the only interrupt we are interested in
 				is the Complete. The application code will add the Empty interrupt
@@ -189,7 +189,7 @@ unsigned long ulMask = 0;
 			}
 			else
 			{
-				/* There is no work left so disable the interrupt until the application 
+				/* There is no work left so disable the interrupt until the application
 				puts more into the queue. */
 				UART_1_SetTxInterruptMode( 0 );
 			}
@@ -198,7 +198,7 @@ unsigned long ulMask = 0;
 	}
 
 	/* If we delivered the character then a context switch might be required.
-	xHigherPriorityTaskWoken was set to pdFALSE on interrupt entry.  If calling 
+	xHigherPriorityTaskWoken was set to pdFALSE on interrupt entry.  If calling
 	xQueueSendFromISR() caused a task to unblock, and the unblocked task has
 	a priority equal to or higher than the currently running task (the task this
 	ISR interrupted), then xHigherPriorityTaskWoken will have been set to pdTRUE and

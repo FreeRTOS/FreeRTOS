@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -43,7 +43,7 @@
  * https://www.FreeRTOS.org/a00110.html
  *----------------------------------------------------------*/
 
-extern uint32_t SystemCoreClock;
+#include "clock_config.h"
 
 /* Cortex M33 port configuration. */
 #define configENABLE_MPU								1
@@ -59,7 +59,7 @@ extern uint32_t SystemCoreClock;
 #define configUSE_16_BIT_TICKS							0 /* Only for 8 and 16-bit hardware. */
 
 /* Constants that describe the hardware and memory usage. */
-#define configCPU_CLOCK_HZ								SystemCoreClock
+#define configCPU_CLOCK_HZ								BOARD_BOOTCLOCKFROHF96M_CORE_CLOCK
 #define configMINIMAL_STACK_SIZE						( ( uint16_t ) 128 )
 #define configMINIMAL_SECURE_STACK_SIZE					( 1024 )
 #define configMAX_TASK_NAME_LEN							( 12 )
@@ -70,7 +70,6 @@ extern uint32_t SystemCoreClock;
 #define configUSE_TICKLESS_IDLE							1
 #define configUSE_APPLICATION_TASK_TAG					0
 #define configUSE_NEWLIB_REENTRANT						0
-#define configUSE_CO_ROUTINES							0
 #define configUSE_COUNTING_SEMAPHORES					1
 #define configUSE_RECURSIVE_MUTEXES						1
 #define configUSE_QUEUE_SETS							0

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://www.github.com/FreeRTOS
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -30,6 +30,10 @@
 
 /* Run a simple demo just prints 'Blink' */
 #define DEMO_BLINKY	1
+#define mainVECTOR_MODE_DIRECT	1
+
+extern void freertos_risc_v_trap_handler( void );
+extern void freertos_vector_table( void );
 
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
@@ -43,6 +47,16 @@ int main_blinky( void );
 int main( void )
 {
 	int ret;
+	// trap handler initialization
+		#if( mainVECTOR_MODE_DIRECT == 1 )
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+	}
+	#else
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
+	}
+	#endif
 
 #if defined(DEMO_BLINKY)
 	ret = main_blinky();

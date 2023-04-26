@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 void vListInitialiseItem( ListItem_t * const pxItem )
@@ -39,3 +41,5 @@ void vListInitialiseItem( ListItem_t * const pxItem )
     listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
     /*@close xLIST_ITEM(pxItem, _, _, _, NULL);@*/
 }
+
+/* *INDENT-ON* */

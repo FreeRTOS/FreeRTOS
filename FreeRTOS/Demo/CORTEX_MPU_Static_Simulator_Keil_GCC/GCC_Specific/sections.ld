@@ -156,6 +156,13 @@ SECTIONS
         PROVIDE_HIDDEN (__fini_array_end = .);
         . = ALIGN(4);
 
+        /* Set start of system calls to here */
+        __syscalls_flash_start__ = .;
+        /* Place all FreeRTOS System calls here */
+        *(freertos_system_calls)
+        __syscalls_flash_end__ = .;
+        /* Mark the end of the system calls */
+
         . = ALIGN(4);
 
         *(.text*)            /* all remaining code */

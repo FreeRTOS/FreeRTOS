@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -34,6 +34,8 @@
 
 /* Include header for logging level macros. */
 #include "logging_levels.h"
+
+#include "logging.h"
 
 /* Standard Include. */
 #include <stdio.h>
@@ -63,16 +65,17 @@
     #define LOG_METADATA_ARGS    __FUNCTION__, __LINE__  /**< @brief Arguments into the metadata logging prefix format. */
 #endif
 
+
 /**
  * @brief Common macro that maps all the logging interfaces,
  * (#LogDebug, #LogInfo, #LogWarn, #LogError) to the platform-specific logging
  * function.
  *
- * @note The default definition of the macro is an empty definition that does not
- * generate any logging.
+ * @note The default definition of this macro generates logging via a printf-like
+ * vLoggingPrintf function.
  */
 #ifndef SdkLog
-    #define SdkLog( string )
+    #define SdkLog( message )    vLoggingPrintf message
 #endif
 
 /**

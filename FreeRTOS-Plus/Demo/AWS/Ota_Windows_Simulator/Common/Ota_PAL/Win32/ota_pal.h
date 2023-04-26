@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -33,8 +33,6 @@
 #define _OTA_PAL_H_
 
 #include "ota.h"
-
-//static const char signingcredentialSIGNING_CERTIFICATE_PEM[] = "Paste code signing certificate here.";
 
 /**
  * @brief Abort an OTA transfer.

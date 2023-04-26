@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,13 +20,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 /*
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
-	
+
 	***Note*** This example uses queues to send each character into an interrupt
 	service routine and out of an interrupt service routine individually.  This
 	is done to demonstrate queues being used in an interrupt, and to deliberately
@@ -81,7 +81,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 	/* Create the queues used to hold Rx/Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	
+
 	/* If the queues were created correctly then setup the serial port
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
@@ -89,41 +89,41 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 		/* Ensure interrupts don't fire during the init process.  Interrupts
 		will be enabled automatically when the first task start running. */
 		portDISABLE_INTERRUPTS();
-		
+
 		/* Configure P21 and P22 for use by the UART. */
 		FM3_GPIO->PFR2 |= ( 1 << 0x01 ) | ( 1 << 0x02 );
-		
+
 		/* SIN0_0 and SOT0_0. */
 		FM3_GPIO->EPFR07 |= ( 1 << 6 );
-		
+
 		/* Reset. */
 		FM3_MFS0_UART->SCR = 0x80;
-		
+
 		/* Enable output in mode 0. */
 		FM3_MFS0_UART->SMR = 0x01;
-		
+
 		/* Clear all errors that may already be present. */
 		FM3_MFS0_UART->SSR = 0x00;
 		FM3_MFS0_UART->ESCR = 0x00;
-		
+
 		FM3_MFS0_UART->BGR = ( configCPU_CLOCK_HZ / 2UL ) / ( ulWantedBaud - 1UL );
 
-		/* Enable Rx, Tx, and the Rx interrupt. */		
+		/* Enable Rx, Tx, and the Rx interrupt. */
 		FM3_MFS0_UART->SCR |= ( serRX_ENABLE | serTX_ENABLE | serRX_INT_ENABLE );
-		
+
 		/* Configure the NVIC for UART interrupts. */
 		NVIC_ClearPendingIRQ( MFS0RX_IRQn );
 		NVIC_EnableIRQ( MFS0RX_IRQn );
-		
+
 		/* The priority *MUST* be at or below
 		configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY as FreeRTOS API functions
 		are called in the interrupt handler. */
 		NVIC_SetPriority( MFS0RX_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
-		
+
 		/* Do the same for the Tx interrupts. */
 		NVIC_ClearPendingIRQ( MFS0TX_IRQn );
 		NVIC_EnableIRQ( MFS0TX_IRQn );
-		
+
 		/* The priority *MUST* be at or below
 		configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY as FreeRTOS API functions
 		are called in the interrupt handler. */
@@ -185,7 +185,7 @@ signed portBASE_TYPE xReturn;
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) == pdPASS )
 	{
 		xReturn = pdPASS;
-		
+
 		/* Enable the UART Tx interrupt. */
 		FM3_MFS0_UART->SCR |= serTX_INT_ENABLE;
 	}
@@ -221,7 +221,7 @@ char cChar;
 		handler task. */
 		cChar = FM3_MFS0_UART->RDR;
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-	}	
+	}
 
 	/* If sending or receiving from a queue has caused a task to unblock, and
 	the unblocked task has a priority equal to or higher than the currently
@@ -252,8 +252,8 @@ char cChar;
 		{
 			/* Disable the Tx interrupt. */
 			FM3_MFS0_UART->SCR &= ~serTX_INT_ENABLE;
-		}		
-	}	
+		}
+	}
 
 	/* If sending or receiving from a queue has caused a task to unblock, and
 	the unblocked task has a priority equal to or higher than the currently
@@ -268,4 +268,4 @@ char cChar;
 
 
 
-	
+

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,12 +20,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 
-/* 
+/*
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART
 */
 
@@ -46,8 +46,8 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /* Structure that maintains information on the UART being used. */
 static XUartLite xUART;
@@ -82,13 +82,13 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 
 		if( xPortInstallInterruptHandler( XPAR_XPS_INTC_0_RS232_UART_1_INTERRUPT_INTR, ( XInterruptHandler )vSerialISR, (void *)&xUART ) == pdPASS )
 		{
-			/* xPortInstallInterruptHandler() could fail if 
-			vPortSetupInterruptController() has not been called prior to this 
+			/* xPortInstallInterruptHandler() could fail if
+			vPortSetupInterruptController() has not been called prior to this
 			function. */
 			XUartLite_EnableInterrupt( &xUART );
 		}
 	}
-	
+
 	/* There is only one port so the handle is not used. */
 	return ( xComPortHandle ) 0;
 }
@@ -131,17 +131,17 @@ portBASE_TYPE xReturn = pdTRUE;
 			}
 		}
 		/* Otherwise, if there is data already in the queue we should add the
-		new data to the back of the queue to ensure the sequencing is 
+		new data to the back of the queue to ensure the sequencing is
 		maintained. */
 		else if( uxQueueMessagesWaiting( xCharsForTx ) )
 		{
 			if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 			{
 				xReturn = pdFAIL;
-			}			
+			}
 		}
 		/* If the UART FIFO is not full and there is no data already in the
-		queue we can write directly to the FIFO without disrupting the 
+		queue we can write directly to the FIFO without disrupting the
 		sequence. */
 		else
 		{
@@ -179,13 +179,13 @@ char cChar;
 		if( ( ulISRStatus & XUL_SR_RX_FIFO_VALID_DATA ) != 0 )
 		{
 			/* A character is available - place it in the queue of received
-			characters.  This might wake a task that was blocked waiting for 
+			characters.  This might wake a task that was blocked waiting for
 			data. */
 			cChar = ( char ) XIo_In32( XPAR_RS232_UART_1_BASEADDR + XUL_RX_FIFO_OFFSET );
 			xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 			lDidSomething = pdTRUE;
 		}
-		
+
 		if( ( ulISRStatus & XUL_SR_TX_FIFO_EMPTY ) != 0 )
 		{
 			/* There is space in the FIFO - if there are any characters queue for
@@ -195,7 +195,7 @@ char cChar;
 			{
 				XIo_Out32( XPAR_RS232_UART_1_BASEADDR + XUL_TX_FIFO_OFFSET, cChar );
 				lDidSomething = pdTRUE;
-			}			
+			}
 		}
 	} while( lDidSomething == pdTRUE );
 

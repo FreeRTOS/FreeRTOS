@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -181,7 +181,7 @@ TickType_t xLastWakeTime;
 		/* Delay until it is time to execute again.  The delay period is
 		shorter following an error so the LED flashes faster. */
 		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
-	
+
 		/* Check all the standard demo application tasks are executing without
 		error. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
@@ -189,7 +189,7 @@ TickType_t xLastWakeTime;
 			/* An error has been detected in one of the tasks - flash faster. */
 			xDelayPeriod = mainERROR_FLASH_PERIOD;
 		}
-		
+
 		vParTestToggleLED( mainCHECK_TASK_LED );
 	}
 }

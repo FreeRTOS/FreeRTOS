@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -101,7 +101,6 @@ void main( void )
 	/* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
 	instructions. */
 
-	
 	/* Hardware initialisation.  printf() output uses the UART for IO. */
 	prvUARTInit();
 
@@ -307,6 +306,4 @@ void *malloc( size_t size )
 	for( ;; );
 
 }
-
-
 

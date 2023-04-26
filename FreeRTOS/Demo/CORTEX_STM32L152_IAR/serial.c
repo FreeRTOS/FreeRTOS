@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,19 +20,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 /*
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
-	
+
 	***Note*** This example uses queues to send each character into an interrupt
 	service routine and out of an interrupt service routine individually.  This
 	is done to demonstrate queues being used in an interrupt, and to deliberately
-	load the system to test the FreeRTOS port.  It is *NOT* meant to be an 
+	load the system to test the FreeRTOS port.  It is *NOT* meant to be an
 	example of an efficient implementation.  An efficient implementation should
-	use FIFO's or DMA if available, and only use FreeRTOS API functions when 
+	use FIFO's or DMA if available, and only use FreeRTOS API functions when
 	enough has been received to warrant a task being unblocked to process the
 	data.
 */
@@ -74,7 +74,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	/* Create the queues used to hold Rx/Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	
+
 	/* If the queues were created correctly then setup the serial port
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
@@ -85,11 +85,11 @@ NVIC_InitTypeDef NVIC_InitStructure;
 		USART_InitStructure.USART_Parity = USART_Parity_No;
 		USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-		
+
 		/* The Eval board COM2 is being used, which in reality is the STM32
 		USART3. */
 		STM_EVAL_COMInit( COM2, &USART_InitStructure );
-		
+
 		NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
 		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY;
 		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; /* Not used as 4 bits are used for the pre-emption priority. */;
@@ -181,7 +181,7 @@ char cChar;
 
 	if( USART_GetITStatus( USART3, USART_IT_TXE ) == SET )
 	{
-		/* The interrupt was caused by the TX register becoming empty.  Are 
+		/* The interrupt was caused by the TX register becoming empty.  Are
 		there any more characters to transmit? */
 		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
@@ -191,23 +191,23 @@ char cChar;
 		}
 		else
 		{
-			USART_ITConfig( USART3, USART_IT_TXE, DISABLE );		
-		}		
+			USART_ITConfig( USART3, USART_IT_TXE, DISABLE );
+		}
 	}
-	
+
 	if( USART_GetITStatus( USART3, USART_IT_RXNE ) == SET )
 	{
 		/* A character has been received on the USART, send it to the Rx
 		handler task. */
 		cChar = USART_ReceiveData( USART3 );
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-	}	
+	}
 
 	/* If sending or receiving from a queue has caused a task to unblock, and
-	the unblocked task has a priority equal to or higher than the currently 
-	running task (the task this ISR interrupted), then xHigherPriorityTaskWoken 
-	will have automatically been set to pdTRUE within the queue send or receive 
-	function.  portEND_SWITCHING_ISR() will then ensure that this ISR returns 
+	the unblocked task has a priority equal to or higher than the currently
+	running task (the task this ISR interrupted), then xHigherPriorityTaskWoken
+	will have automatically been set to pdTRUE within the queue send or receive
+	function.  portEND_SWITCHING_ISR() will then ensure that this ISR returns
 	directly to the higher priority unblocked task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
@@ -216,4 +216,4 @@ char cChar;
 
 
 
-	
+

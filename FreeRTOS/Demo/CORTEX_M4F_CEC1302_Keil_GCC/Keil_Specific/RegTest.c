@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -32,8 +32,8 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  */
- 
- 
+
+
 __asm void vRegTest1Implementation( void )
 {
 	PRESERVE8
@@ -76,7 +76,7 @@ reg1_loop
 	/* Check all the VFP registers still contain the values set above.
 	First save registers that are clobbered by the test. */
 	push { r0-r1 }
-	
+
 	vmov r0, r1, d0
 	cmp r0, #100
 	bne reg1_error_loopf
@@ -157,10 +157,10 @@ reg1_loop
 	bne reg1_error_loopf
 	cmp r1, #107
 	bne reg1_error_loopf
-	
+
 	/* Restore the registers that were clobbered by the test. */
 	pop {r0-r1}
-	
+
 	/* VFP register test passed.  Jump to the core register test. */
 	b reg1_loopf_pass
 
@@ -197,7 +197,7 @@ reg1_loopf_pass
 	bne	reg1_error_loop
 	cmp	r12, #112
 	bne	reg1_error_loop
-	
+
 	/* Everything passed, increment the loop counter. */
 	push { r0-r1 }
 	ldr	r0, =ulRegTest1LoopCounter
@@ -205,7 +205,7 @@ reg1_loopf_pass
 	adds r1, r1, #1
 	str r1, [r0]
 	pop { r0-r1 }
-	
+
 	/* Start again. */
 	b reg1_loop
 
@@ -256,11 +256,11 @@ __asm void vRegTest2Implementation( void )
 	vmov d15, r6, r7
 
 reg2_loop
-	
+
 	/* Check all the VFP registers still contain the values set above.
 	First save registers that are clobbered by the test. */
 	push { r0-r1 }
-	
+
 	vmov r0, r1, d0
 	cmp r0, #-1
 	bne reg2_error_loopf
@@ -341,10 +341,10 @@ reg2_loop
 	bne reg2_error_loopf
 	cmp r1, #7
 	bne reg2_error_loopf
-	
+
 	/* Restore the registers that were clobbered by the test. */
 	pop {r0-r1}
-	
+
 	/* VFP register test passed.  Jump to the core register test. */
 	b reg2_loopf_pass
 
@@ -381,7 +381,7 @@ reg2_loopf_pass
 	bne	reg2_error_loop
 	cmp	r12, #12
 	bne	reg2_error_loop
-	
+
 	/* Increment the loop counter to indicate this test is still functioning
 	correctly. */
 	push { r0-r1 }
@@ -389,16 +389,16 @@ reg2_loopf_pass
 	ldr r1, [r0]
 	adds r1, r1, #1
 	str r1, [r0]
-	
+
 	/* Yield to increase test coverage. */
 	movs r0, #0x01
 	ldr r1, =0xe000ed04 /*NVIC_INT_CTRL */
 	lsl r0, r0, #28 /* Shift to PendSV bit */
 	str r0, [r1]
 	dsb
-	
+
 	pop { r0-r1 }
-	
+
 	/* Start again. */
 	b reg2_loop
 

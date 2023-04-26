@@ -1,9 +1,9 @@
-certifi==2020.12.5
+certifi==2022.12.7
 chardet==4.0.0
 colorama
 Deprecated==1.2.10
 gitdb==4.0.5
-GitPython==3.1.11
+GitPython==3.1.30
 idna==2.10
 PyGithub==1.55
 PyJWT==2.4.0

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -63,7 +63,7 @@
 #include "core_http_client.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /* Common HTTP demo utilities. */
 #include "http_demo_utils.h"
@@ -166,8 +166,8 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -364,6 +364,19 @@ static void prvHTTPDemoTask( void * pvParameters )
      * times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /**************************** Connect. ******************************/
 
         /* Attempt to connect to the HTTP server. If connection fails, retry after a
@@ -474,6 +487,7 @@ static void prvHTTPDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         vTaskDelete( NULL );
     }
 }

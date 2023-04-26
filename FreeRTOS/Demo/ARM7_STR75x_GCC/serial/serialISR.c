@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -70,12 +70,12 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			}
 			else
 			{
-				*pxQueueEmpty = pdTRUE;		
-			}		
+				*pxQueueEmpty = pdTRUE;
+			}
 
 			UART_ClearITPendingBit( UART0, UART_IT_Transmit );
 		}
-	
+
 		if( UART0->MIS & UART_IT_Receive )
 		{
 			/* The interrupt was caused by a character being received.  Grab the

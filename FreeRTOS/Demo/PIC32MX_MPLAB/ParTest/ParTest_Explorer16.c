@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -39,8 +39,8 @@
 
 void vParTestInitialise( void )
 {
-	/* All LEDs output. */	
-	TRISA = ptOUTPUT;	
+	/* All LEDs output. */
+	TRISA = ptOUTPUT;
 	PORTA = ptALL_OFF;
 
 	/* Disable the JTAG. */
@@ -73,7 +73,7 @@ unsigned portBASE_TYPE uxLEDBit;
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 unsigned portBASE_TYPE uxLEDBit;
-	
+
 	uxLEDBit = 1 << uxLED;
 
 	/* Use of the PORTAINV register removes the need to use a critical section. */

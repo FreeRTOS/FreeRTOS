@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -28,13 +28,13 @@
 #define NET_IF_H
 
 /*
- * Send uip_len bytes from uip_buf to the network interface selected by the 
- * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h). 
+ * Send uip_len bytes from uip_buf to the network interface selected by the
+ * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h).
  */
 void vNetifTx( void );
 
 /*
- * Receive bytes from the network interface selected by the 
+ * Receive bytes from the network interface selected by the
  * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h).  The
  * bytes are placed in uip_buf.  The number of bytes copied into uip_buf is
  * returned.
@@ -42,9 +42,9 @@ void vNetifTx( void );
 unsigned portBASE_TYPE uxNetifRx( void );
 
 /*
- * Prepare a packet capture session.  This will print out all the network 
- * interfaces available, and the one actually used is set by the 
- * configNETWORK_INTERFACE_TO_USE constant that is defined in 
+ * Prepare a packet capture session.  This will print out all the network
+ * interfaces available, and the one actually used is set by the
+ * configNETWORK_INTERFACE_TO_USE constant that is defined in
  * FreeRTOSConfig.h. */
 portBASE_TYPE xNetifInit( void );
 

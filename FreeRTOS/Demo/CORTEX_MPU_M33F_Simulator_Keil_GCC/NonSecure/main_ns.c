@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -31,6 +31,7 @@
 /* Demo includes. */
 #include "tz_demo.h"
 #include "mpu_demo.h"
+#include "reg_tests.h"
 
 /* Externs needed by the MPU setup code. These are defined in Scatter-Loading
  * description file (FreeRTOSDemo_ns.sct). */
@@ -120,6 +121,9 @@ static void prvCreateTasks( void )
 
 	/* Create tasks for the TZ Demo. */
 	vStartTZDemo();
+	
+	/* Create tasks for reg tests. */
+	vStartRegTests();
 
 }
 /*-----------------------------------------------------------*/

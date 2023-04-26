@@ -22,26 +22,26 @@ Now the FreeRTOS application can be connected to a LAN and a Wi-Fi station and
 can uses multiple IP addresses. These addresses can be configured either statically
 or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in case of IPv6.
 
-┌────────────────────────┐
-│      ECHO CLIENT       │
-│ With mutiple Endpoints │                      ┌─────────────────────────┐
-│                        │                      │                         │
-│   ┌────────────────┐   │                      │      ECHO SERVER        │
-│   │ IPv4 Endpoint  │   │                      │                         │
-│   │                │   │sendto()    recvfrom()│   ┌────────────────┐    │
-│   └────────────────┘   ├─────────────────────►│   │                │    │
-│                        │                      │   │ IPv6 Server IP │    │
-│   ┌────────────────┐   │                      │   │                │    │
-│   │   IPv6 Public  │   │recvfrom()    sendto()│   │   Server Port  │    │
-│   │     Endpoint   │   │◄─────────────────────┤   └────────────────┘    │
-│   └────────────────┘   │                      │                         │
-│                        │                      │                         │
-│   ┌────────────────┐   │                      │                         │
-│   │  IPv6 Private  │   │                      └─────────────────────────┘
-│   │    Endpoint    │   │
-│   └────────────────┘   │
-│                        │
-└────────────────────────┘
++------------------------+
+|      ECHO CLIENT       |
+| With mutiple Endpoints |                      +-------------------------+
+|                        |                      |                         |
+|   +----------------+   |                      |      ECHO SERVER        |
+|   | IPv4 Endpoint  |   |                      |                         |
+|   |                |   |sendto()    recvfrom()|   +----------------+    |
+|   +----------------+   +--------------------->|   |                |    |
+|                        |                      |   | IPv6 Server IP |    |
+|   +----------------+   |                      |   |                |    |
+|   |   IPv6 Public  |   |recvfrom()    sendto()|   |   Server Port  |    |
+|   |     Endpoint   |   |<---------------------+   +----------------+    |
+|   +----------------+   |                      |                         |
+|                        |                      |                         |
+|   +----------------+   |                      |                         |
+|   |  IPv6 Private  |   |                      +-------------------------+
+|   |    Endpoint    |   |
+|   +----------------+   |
+|                        |
++------------------------+
 
 ## Setting up the workspace
 
@@ -150,7 +150,7 @@ detect a difference in the data that is received from that which was sent. As th
 RTOS tasks use UDP, which can legitimately loose packets, they can cause configASSERT()
 failures when they are executed in a less than perfect networking environment.
 
-#### *Note* Sample TCP and UDP echo server can be found at the end of the ReadMe.
+#### *Note* Sample TCP and UDP echo server can be found [here](https://github.com/FreeRTOS/FreeRTOS/blob/748897eea2491b7c4037f3501d076843f8b02362/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/IPv6_Multi_WinSim_demo/ReadMe.md#sample-echo-server)
 ### The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
 
 - ARP address resolution for IPv4 addresses on the LAN

@@ -110,7 +110,7 @@ detect a difference in the data that is received from that which was sent. As th
 RTOS tasks use UDP, which can legitimately loose packets, they can cause configASSERT()
 failures when they are executed in a less than perfect networking environment.
 
-#### *Note* Sample TCP and UDP echo server can be found [here](https://github.com/FreeRTOS/FreeRTOS/blob/748897eea2491b7c4037f3501d076843f8b02362/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/IPv6_Multi_WinSim_demo/ReadMe.md#sample-echo-server)
+#### *Note* Sample TCP and UDP echo server can be found at the last section of ReadME.
 ### The IPv6_Multi_WinSim_demo demo also performs some basic network activities:
 
 - ARP address resolution for IPv4 addresses on the LAN

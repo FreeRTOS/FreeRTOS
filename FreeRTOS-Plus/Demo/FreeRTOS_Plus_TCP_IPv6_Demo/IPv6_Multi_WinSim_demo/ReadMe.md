@@ -1,9 +1,5 @@
 # FreeRTOS+TCP IPv6 Multi-Endpoint Demo
 
-The demo contains a FreeRTOS windows simulator demo project for validating
-IPv6 protocol. The FreeRTOS+TCP source code is currently provided in the
-FreeRTOS+TCP repository's "dev/IPv6_integration" branch.
-
 The IPv6_Multi_WinSim Visual studio demo showcases the Multiple Interfaces (or
 rather the multiple endpoints) functionality of the FreeRTOS+TCP library.
 The Windows Simulator environment doesn't actually have multiple
@@ -11,39 +7,6 @@ interfaces which can be used by FreeRTOS and thus, this demo shows
 the use of different endpoints which will be resolved by the OS having multiple
 interfaces. It shows that the library will use different endpoints (IP-addresses)
 to connect to IP-addresses on different subnets (or using different netmasks).
-
-The demo requires 2 components -
-
-1. Echo Client - The demo in this repository.
-2. Echo Server - An external echo server.
-
-With multiple interfaces it is possible to use of more than one network interface.
-Now the FreeRTOS application can be connected to a LAN and a Wi-Fi station and
-can uses multiple IP addresses. These addresses can be configured either statically
-or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in case of IPv6.
-
-```
-+------------------------+
-|      ECHO CLIENT       |
-| With mutiple Endpoints |                      +-------------------------+
-|                        |                      |                         |
-|   +----------------+   |                      |      ECHO SERVER        |
-|   | IPv4 Endpoint  |   |                      |                         |
-|   |                |   |sendto()    recvfrom()|   +----------------+    |
-|   +----------------+   +--------------------->|   |                |    |
-|                        |                      |   | IPv6 Server IP |    |
-|   +----------------+   |                      |   |                |    |
-|   |   IPv6 Public  |   |recvfrom()    sendto()|   |   Server Port  |    |
-|   |     Endpoint   |   |<---------------------+   +----------------+    |
-|   +----------------+   |                      |                         |
-|                        |                      |                         |
-|   +----------------+   |                      |                         |
-|   |  IPv6 Private  |   |                      +-------------------------+
-|   |    Endpoint    |   |
-|   +----------------+   |
-|                        |
-+------------------------+
-```
 
 ## Setting up the workspace
 
@@ -92,7 +55,7 @@ source tree.
 The instructions are provided on the following URL, see the ["Hardware Setup" and "Software Setup"](http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html).
 This will give more hands on experience of running Echo server and client.
 
-For this demo, FreeRTOS configuration file *FreeRTOSConfig.h* header file needs to be updated as shown below :
+For this demo, FreeRTOS configuration file *FreeRTOSConfig.h* needs to be updated as shown below :
 
 *Client Configuration* :
 1. `configIP_ADDR0/3`         : Setup with client IP address, when DHCP is disabled.
@@ -102,7 +65,7 @@ For this demo, FreeRTOS configuration file *FreeRTOSConfig.h* header file needs 
 
 *Server Configuration :*
 1. `configECHO_SERVER_ADDR_STRING` as an IPv6 Server IP address for IPv6
-    validation, it can be updated to IPv4 address for IPv4 validaitons.
+    validation, it can be updated to IPv4 address for IPv4 validations.
 2. `configECHO_SERVER_PORT` Needs to be setup for the Server port number.
 
 Note that, as delivered, configUSE_DHCPv6 is set to 0, so a static IP address is used.
@@ -118,22 +81,18 @@ The example creates two RTOS tasks that send TCP echo requests to an external
 echo server using the echo port set in FreeRTOSConfig.h, then wait to receive
 the echo reply within the same RTOS task.
 
-For IPv6 validations an IPv6 address of the echo server must be configured by
-updating the `configECHO_SERVER_ADDR_STRING` and `configECHO_SERVER_PORT` must
-be set in FreeRTOSConfig.h.
+The IP address of the echo server must be configured by updating the `configECHO_SERVER_ADDR_STRING`
+as IPv4 or IPv6 address and server port number must be updated as `configECHO_SERVER_PORT` in FreeRTOSConfig.h.
 The echo server must be enabled and not blocked by a firewall.
 
 ### The TCP server example:
-This example can be enabled by setting the `mainCREATE_SIMPLE_TCP_ECHO_SERVER`
+
+This example can be enabled by setting the `mainCREATE_TCP_ECHO_SERVER_TASK`
 macro to 1 at the top of the project's main.c source file.
 
-The example creates two RTOS tasks that send TCP echo requests to an external
-echo server using the echo port set in FreeRTOSConfig.h, then wait to receive
-the echo reply within the same RTOS task.
-
-The IP address of the echo server must be configured by updating the
-`configECHO_SERVER_ADDR_STRING` and `configECHO_SERVER_PORT` must be set in
-FreeRTOSConfig.h, and the echo server must be enabled and not blocked by a firewall.
+This example creates an echo server that listens for echo requests on
+the standard echo protocol port number 7. It then echos back any data
+received on that connection.
 
 ### The UDP Echo Client example
 
@@ -163,10 +122,11 @@ failures when they are executed in a less than perfect networking environment.
 - Ping any server on the web or on the LAN, , with IPv4 or IPv6
 
 The demo can be easily adapted to your own needs. It works like a command line
-interface ( CLI ) that performs the above tasks.
+interface ( CLI ) that performs the above tasks. Although it is called a CLI,
+the demo does not have a STDIN. The commands are hard-coded in main.c pcCommandList.
 
-Here are some examples of valid command lines, using the keywords “http”, “ping”,
-“dnsq”, and “ntp:
+The pcCommandList options can be uncommented to run the commands. Here are some examples of
+valid command lines, using the keywords “http”, “ping”, “dnsq”, and “ntp:
 
     "http4 google.co.uk /index.html",
     "http6 amazon.com /index.html",
@@ -178,9 +138,6 @@ Here are some examples of valid command lines, using the keywords “http”, �
 
 The last line will first lookup the mentioned NTP server, send a request, and wait
 for a reply. The time will be printed in the logging.
-
-Although it is called a CLI, the demo does not have a STDIN. The commands are
-hard-coded in main.c
 
 The keywords can have some single-letter suffices: 4 or 6 ( for IPv4/6 ), “a” to do
 an asynchronous DNS lookup, and “c” to clear all caches before starting the task.

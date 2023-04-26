@@ -115,6 +115,11 @@
 #define BOARD_SW3_IRQ_HANDLER       PIN_INT1_IRQHandler
 #define BOARD_SW3_GPIO_PININT_INDEX 1
 
+/* USB PHY condfiguration */
+#define BOARD_USB_PHY_D_CAL     (0x05U)
+#define BOARD_USB_PHY_TXCAL45DP (0x0AU)
+#define BOARD_USB_PHY_TXCAL45DM (0x0AU)
+
 /* Board led color mapping */
 #define LOGIC_LED_ON  0U
 #define LOGIC_LED_OFF 1U

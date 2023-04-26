@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -35,9 +35,9 @@
 const unsigned long led_mask[ NB_LED ]= { LED1, LED2, LED3, LED4 };
 
 void vParTestInitialise( void )
-{	
+{
 	/* Start with all LED's off. */
-	AT91F_PIO_SetOutput( AT91C_BASE_PIOA, LED_MASK );	
+	AT91F_PIO_SetOutput( AT91C_BASE_PIOA, LED_MASK );
 }
 /*-----------------------------------------------------------*/
 
@@ -67,7 +67,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		}
 		else
 		{
-			AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );					
+			AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );
 		}
 	}
 }

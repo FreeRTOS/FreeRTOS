@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -31,13 +31,13 @@
 /* Demo file headers. */
 #include "regtest.h"
 
-/* The minimum stack size required by a register test task. 
- * 
- * The value should be at least the sum of: 
- * - Number of bytes used to save register context. 
+/* The minimum stack size required by a register test task.
+ *
+ * The value should be at least the sum of:
+ * - Number of bytes used to save register context.
  *   Refer to port.c, r0-r31 and/or RAMPZ and/or EIND.
  * - Number of bytes used in nested function call.
- *   Refer to GCC Developer Option -fstack-usage. 
+ *   Refer to GCC Developer Option -fstack-usage.
  */
 #define REGTEST_MIN_STACK_SIZE		( ( unsigned short ) 50 )
 
@@ -48,8 +48,8 @@
 static void prvRegisterCheck1( void *pvParameters );
 static void prvRegisterCheck2( void *pvParameters );
 
-/* Set to a none zero value should an error be found. 
- * Using two variables to identify offending task and register combination. 
+/* Set to a none zero value should an error be found.
+ * Using two variables to identify offending task and register combination.
  */
 UBaseType_t uxRegTestError1 = 0;
 UBaseType_t uxRegTestError2 = 0;
@@ -63,7 +63,7 @@ void vStartRegTestTasks( void )
 	 * context is not restored correctly, error is more likely to be caught.
 	 */
 	xTaskCreate( prvRegisterCheck1, "Reg1", REGTEST_MIN_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegisterCheck2, "Reg2", REGTEST_MIN_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );		
+	xTaskCreate( prvRegisterCheck2, "Reg2", REGTEST_MIN_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -72,14 +72,14 @@ BaseType_t xAreRegTestTasksStillRunning( void )
 BaseType_t xReturn;
 
 	/* If a register was found to contain an unexpected value then the
-	 * uxRegTestError variable would have been set to a none zero value. 
+	 * uxRegTestError variable would have been set to a none zero value.
 	 *
 	 * This check guarantees no false positive, but does not guarantee test
 	 * has actually run. Could have a counter to track how many times the loop
-	 * has been entered and ensure that the number is monotonically incrementing.  
-	 * And then it'll subject to integer overflow issue. To make things simple 
-	 * straight forward, set a breakpoint at the end of the loop in prvRegisterCheck1() 
-	 * and prvRegisterCheck2(). Make sure both can be hit. 
+	 * has been entered and ensure that the number is monotonically incrementing.
+	 * And then it'll subject to integer overflow issue. To make things simple
+	 * straight forward, set a breakpoint at the end of the loop in prvRegisterCheck1()
+	 * and prvRegisterCheck2(). Make sure both can be hit.
 	 */
 	if( uxRegTestError1 == 0 && uxRegTestError2 == 0 )
 	{
@@ -89,7 +89,7 @@ BaseType_t xReturn;
 	{
 		xReturn = pdFALSE;
 	}
-	
+
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -100,13 +100,13 @@ static void prvRegisterCheck1( void *pvParameters )
 
 	for( ;; )
 	{
-		/* Load register r0-r30 with known value. 
-		 * r31 is used to first load immediate value then copy into r0-15. 
+		/* Load register r0-r30 with known value.
+		 * r31 is used to first load immediate value then copy into r0-15.
 		 *
 		 * LDI Rd,K
 		 * Rd<--K (16 <= d <= 31, 0 <= K <= 255)
 		 */
-		asm(	"LDI	r31,	0x80"		);		
+		asm(	"LDI	r31,	0x80"		);
 		asm( 	"MOV	r0,		r31"		);
 		asm(	"LDI	r31,	0x81"		);
 		asm( 	"MOV	r1,		r31"		);
@@ -155,7 +155,7 @@ static void prvRegisterCheck1( void *pvParameters )
 		asm(	"LDI	r30,	0x9E"		);
 
 		/* Check whether register r0-30 still contain known good values.
-		 * If not, update uxRegTestError1 with the unique value. 
+		 * If not, update uxRegTestError1 with the unique value.
 		 */
 		asm(	"LDI	r31,	0x80"			);
 		asm(	"CPSE	r31,	r0"				);
@@ -250,7 +250,7 @@ static void prvRegisterCheck1( void *pvParameters )
 		asm(	"LDI	r31,	0x9E"			);
 		asm(	"CPSE	r31,	r30"			);
 		asm(	"STS	uxRegTestError1, r30"	);
-		
+
 		/* Give other tasks of the same priority a chance to run. */
 		taskYIELD();
 	}
@@ -263,13 +263,13 @@ static void prvRegisterCheck2( void *pvParameters )
 
 	for( ;; )
 	{
-		/* Load register r0-r30 with known value. 
-		 * r31 is used to first load immediate value then copy into r0-15. 
+		/* Load register r0-r30 with known value.
+		 * r31 is used to first load immediate value then copy into r0-15.
 		 *
 		 * LDI Rd,K
 		 * Rd<--K (16 <= d <= 31, 0 <= K <= 255)
 		 */
-		asm(	"LDI	r31,	0"		);		
+		asm(	"LDI	r31,	0"		);
 		asm( 	"MOV	r0,		r31"	);
 		asm(	"LDI	r31,	1"		);
 		asm( 	"MOV	r1,		r31"	);
@@ -316,9 +316,9 @@ static void prvRegisterCheck2( void *pvParameters )
 		asm(	"LDI	r28,	28"		);
 		asm(	"LDI	r29,	29"		);
 		asm(	"LDI	r30,	30"		);
-		
+
 		/* Check whether register r0-30 still contain known good values.
-		 * If not, update uxRegTestError2 with the unique value. 
+		 * If not, update uxRegTestError2 with the unique value.
 		 */
 		asm(	"LDI	r31,	0"				);
 		asm(	"CPSE	r31,	r0"				);
@@ -413,7 +413,7 @@ static void prvRegisterCheck2( void *pvParameters )
 		asm(	"LDI	r31,	30"				);
 		asm(	"CPSE	r31,	r30"			);
 		asm(	"STS	uxRegTestError2, r30"	);
-		
+
 		/* Give other tasks of the same priority a chance to run. */
 		taskYIELD();
 	}

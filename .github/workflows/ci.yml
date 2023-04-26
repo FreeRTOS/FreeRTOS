@@ -7,7 +7,7 @@ on:
 
 jobs:
   git-secrets:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -93,7 +93,7 @@ jobs:
           retention-days: 2
 
   spell-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Parent Repo
         uses: actions/checkout@v2
@@ -114,7 +114,7 @@ jobs:
           # Add path to the tool to the environment variable.
           PATH=$PATH:commonCI/spellings/tools
           # Make sure that only Amazon licenced files are checked.
-          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]"`/g' commonCI/spellings/tools/find-unknown-comment-words
+          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]" | grep -v "FreeRTOS\/FreeRTOS\/Test\/VeriFast"`/g' commonCI/spellings/tools/find-unknown-comment-words
           # Run the spell check script.
           find-unknown-comment-words --directory FreeRTOS/ --lexicon FreeRTOS/lexicon.txt
           # Check the exit status.
@@ -125,7 +125,7 @@ jobs:
           fi
 
   verify-manifest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -143,7 +143,7 @@ jobs:
           fail-on-incorrect-version: true
 
   memory-statistics:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
     steps:
@@ -170,7 +170,17 @@ jobs:
           path: ./freertos_lts_memory_estimates.json
           retention-days: 2
 
-
-
-
-
+  proof_ci:
+    runs-on: cbmc_ubuntu-latest_16-core
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          git submodule update --init --checkout --recursive --depth 1
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends gcc-multilib
+      - name: Set up CBMC runner
+        uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@main
+      - name: Run CBMC
+        uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@main
+        with:
+          proofs_dir: FreeRTOS/Test/CBMC/proofs

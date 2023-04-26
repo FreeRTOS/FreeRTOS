@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -97,11 +97,11 @@ unsigned char *pucTemp;
 		/* Point uip_buf at the next buffer that contains data. */
 		uip_buf = pucEthernetBufferPointers[ ucNextBufferToProcess ];
 
-		/* The buffer pointed to by 
+		/* The buffer pointed to by
 		pucEthernetBufferPointeres[ ucNextBufferToProcess ] is now in use by
 		uip_buf, but the buffer uip_buf was pointing to on entry to this
-		function is free.  Set 
-		pucEthernetBufferPointeres[ ucNextBufferToProcess ] to the free 
+		function is free.  Set
+		pucEthernetBufferPointeres[ ucNextBufferToProcess ] to the free
 		buffer. */
 		pucEthernetBufferPointers[ ucNextBufferToProcess ] = pucTemp;
 		lLengthOfDataInBuffer[ ucNextBufferToProcess ] = 0L;
@@ -132,11 +132,11 @@ pcap_if_t *pxAllNetworkInterfaces;
 	pucEthernetBufferPointers[] array. */
 	uip_buf = &( ucEthernetBuffer[ archNUM_BUFFERS - 1 ][ 0 ] );
 
-	/* Query the computer the simulation is being executed on to find the 
+	/* Query the computer the simulation is being executed on to find the
 	network interfaces it has installed. */
 	pxAllNetworkInterfaces = prvPrintAvailableNetworkInterfaces();
-	
-	/* Open the network interface.  The number of the interface to be opened is 
+
+	/* Open the network interface.  The number of the interface to be opened is
 	set by the configNETWORK_INTERFACE_TO_USE constant in FreeRTOSConfig.h.
 	Calling this function will set the pxOpenedInterfaceHandle variable.  If,
 	after calling this function, pxOpenedInterfaceHandle is equal to NULL, then
@@ -145,14 +145,14 @@ pcap_if_t *pxAllNetworkInterfaces;
 	{
 		prvOpenSelectedNetworkInterface( pxAllNetworkInterfaces );
 	}
-	
+
 
 	return x;
 }
 /*-----------------------------------------------------------*/
 
 static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
-{    
+{
 pcap_if_t * pxAllNetworkInterfaces = NULL, *xInterface;
 long lInterfaceNumber = 1;
 
@@ -169,7 +169,7 @@ long lInterfaceNumber = 1;
 		for( xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next )
 		{
 			printf( "%d. %s", lInterfaceNumber, xInterface->name );
-			
+
 			if( xInterface->description != NULL )
 			{
 				printf( " (%s)\r\n", xInterface->description );
@@ -178,7 +178,7 @@ long lInterfaceNumber = 1;
 			{
 				printf( " (No description available)\r\n") ;
 			}
-			
+
 			lInterfaceNumber++;
 		}
 	}
@@ -193,11 +193,11 @@ long lInterfaceNumber = 1;
 
 	printf( "\r\nThe interface that will be opened is set by configNETWORK_INTERFACE_TO_USE which should be defined in FreeRTOSConfig.h\r\n" );
 	printf( "Attempting to open interface number %d.\r\n", configNETWORK_INTERFACE_TO_USE );
-	
+
     if( ( configNETWORK_INTERFACE_TO_USE < 1L ) || ( configNETWORK_INTERFACE_TO_USE > lInterfaceNumber ) )
     {
         printf("\r\nconfigNETWORK_INTERFACE_TO_USE is not in the valid range.\r\n" );
-		
+
 		if( pxAllNetworkInterfaces != NULL )
 		{
 			/* Free the device list, as no devices are going to be opened. */
@@ -225,8 +225,8 @@ long x;
     /* Open the selected interface. */
 	pxOpenedInterfaceHandle = pcap_open(	xInterface->name,          	/* The name of the selected interface. */
 											UIP_CONF_BUFFER_SIZE, 		/* The size of the packet to capture. */
-											PCAP_OPENFLAG_PROMISCUOUS,	/* Open in promiscious mode as the MAC and 
-																		IP address is going to be "simulated", and 
+											PCAP_OPENFLAG_PROMISCUOUS,	/* Open in promiscious mode as the MAC and
+																		IP address is going to be "simulated", and
 																		not be the real MAC and IP address.  This allows
 																		trafic to the simulated IP address to be routed
 																		to uIP, and trafic to the real IP address to be
@@ -235,16 +235,16 @@ long x;
 																		until data is available. */
 											NULL,             			/* No authentication is required as this is
 																		not a remote capture session. */
-											cErrorBuffer            
+											cErrorBuffer
 									   );
-									   
+
     if ( pxOpenedInterfaceHandle == NULL )
     {
         printf( "\r\n%s is not supported by WinPcap and cannot be opened\r\n", xInterface->name );
     }
 	else
 	{
-		/* Configure the capture filter to allow blocking reads, and to filter 
+		/* Configure the capture filter to allow blocking reads, and to filter
 		out packets that are not of interest to this demo. */
 		prvConfigureCaptureBehaviour();
 	}
@@ -278,7 +278,7 @@ unsigned long ulNetMask;
         printf("\r\nThe packet filter string is invalid\r\n" );
     }
 	else
-	{    
+	{
 		if( pcap_setfilter( pxOpenedInterfaceHandle, &xFilterCode ) < 0 )
 		{
 			printf( "\r\nAn error occurred setting the packet filter.\r\n" );

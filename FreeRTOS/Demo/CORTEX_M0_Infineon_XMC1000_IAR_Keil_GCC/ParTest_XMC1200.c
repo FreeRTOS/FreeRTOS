@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -39,8 +39,8 @@
 #include "partest.h"
 
 /* The port bits on which LEDs are connected. */
-static const unsigned long ulLEDBits[] = 
-{ 
+static const unsigned long ulLEDBits[] =
+{
 	1UL << 0, /* P0.0 */
 	1UL << 2, /* P0.2 */
 	1UL << 5, /* P0.5 */
@@ -60,7 +60,7 @@ perform the desired operation. */
 void vParTestInitialise( void )
 {
 	/* Configure relevant port P0 to push pull output to drive LEDs. */
-	
+
 	/* P0.0 */
 	PORT0->IOCR0 &= ~( ( 0xFFUL <<  0 ) );
 	PORT0->IOCR0 |= ( 0x80UL <<  0 );
@@ -94,12 +94,12 @@ void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
 	{
 		if( xValue == pdTRUE )
 		{
-			/* Turn the LED on. */			
+			/* Turn the LED on. */
 			PORT0->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT );
 		}
 		else
 		{
-			/* Turn the LED off. */			
+			/* Turn the LED off. */
 			PORT0->OMR = ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
 		}
 	}

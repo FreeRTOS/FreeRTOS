@@ -65,8 +65,9 @@ AFLAGS=-mthumb         \
 #
 CFLAGS=-mthumb         \
        -mcpu=cortex-m3 \
-       -O2             \
-       -MD
+	   -fdata-sections -ffunction-sections \
+       -MD \
+	   -g
 
 #
 # The command for calling the library archiver.
@@ -81,7 +82,7 @@ LD=arm-none-eabi-ld
 #
 # The flags passed to the linker.
 #
-LDFLAGS= -Map gcc/out.map
+LDFLAGS= -Map gcc/out.map --gc-sections
 
 #
 # Get the location of libgcc.a from the GCC front-end.

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -36,6 +36,7 @@
 
 /* Demo includes. */
 #include "mpu_demo.h"
+#include "reg_tests.h"
 /*-----------------------------------------------------------*/
 
 /* Initialize the MPU symbols needed by the port code. */
@@ -78,6 +79,9 @@ int main( void )
 {
     /* Create tasks for the MPU Demo. */
     vStartMPUDemo();
+
+    /* Create tasks for register tests. */
+    vStartRegTests();
 
     /* Start scheduler. */
     vTaskStartScheduler();

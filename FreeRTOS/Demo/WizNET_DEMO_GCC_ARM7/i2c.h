@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -28,7 +28,7 @@
 #define I2C_H
 
 /* Structure used to capture the I2C message details.  The structure is then
- * queued for processing by the I2C ISR. 
+ * queued for processing by the I2C ISR.
  */
 typedef struct AN_I2C_MESSAGE
 {
@@ -53,7 +53,7 @@ void i2cInit( void );
  * Send or receive a message over the I2C bus.
  *
  * @param pucMessage	 The data to be transmitted or the buffer into which
- *						 received data will be placed. 
+ *						 received data will be placed.
  *
  * @param lMessageLength The number of bytes to either transmit or receive.
  *
@@ -66,12 +66,12 @@ void i2cInit( void );
  * @param ulDirection	 Must be either i2cWRITE or i2cREAD as #defined above.
  *
  * @param xMessageCompleteSemaphore
- *						 Can be used to pass a semaphore reference if the 
+ *						 Can be used to pass a semaphore reference if the
  *						 calling task want notification of when the message has
  *						 completed.  Otherwise NULL can be passed.
- * 
- * @param xBlockTime	 The time to wait for a space in the message queue to 
- *						 become available should one not be available 
+ *
+ * @param xBlockTime	 The time to wait for a space in the message queue to
+ *						 become available should one not be available
  *						 immediately.
  */
 void i2cMessage( const unsigned char * const pucMessage, long lMessageLength, unsigned char ucSlaveAddress, unsigned short usBufferAddress, unsigned long ulDirection, SemaphoreHandle_t xMessageCompleteSemaphore, TickType_t xBlockTime );

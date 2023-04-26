@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -40,7 +40,7 @@
 #define	lcdRUNNING			0U
 
 /* Characters on each line. */
-#define lcdSTRING_LEN		8 
+#define lcdSTRING_LEN		8
 
 /* Commands sent from the IRQ to the task controlling the second line of the
 display. */
@@ -65,8 +65,8 @@ static void prvIRQ3_Handler( void );
 #pragma interrupt ( prvIRQ4_Handler(vect = 68, enable ) )
 static void prvIRQ4_Handler( void );
 
-/* 
- * Setup the IO needed for the buttons to generate interrupts. 
+/*
+ * Setup the IO needed for the buttons to generate interrupts.
  */
 static void prvSetupButtonIOAndInterrupts( void );
 
@@ -80,20 +80,20 @@ static void prvLCDTaskLine1( void *pvParameters );
  * If no buttons are pushed, then this task acts as per prvLCDTaskLine1(), but
  * using the second line of the display.
  *
- * Using the buttons, it is possible to start and stop the scrolling of the 
+ * Using the buttons, it is possible to start and stop the scrolling of the
  * text.  Once the scrolling has been stopped, other buttons can be used to
  * manually scroll the text either left or right.
- */ 
+ */
 static void prvLCDTaskLine2( void *pvParameters );
 
 /*
  * Looks at the direction the string is currently being scrolled in, and moves
  * the index into the portion of the string that can be seen on the display
- * either forward or backward as appropriate. 
+ * either forward or backward as appropriate.
  */
 static prvScrollString( unsigned char *pucDirection, unsigned short *pusPosition, size_t xStringLength );
 
-/* 
+/*
  * Displays lcdSTRING_LEN characters starting from pcString on the line of the
  * display requested by ucLine.
  */
@@ -101,9 +101,9 @@ static void prvDisplayNextString( unsigned char ucLine, char *pcString );
 
 /*
  * Called from the IRQ interrupts, which are generated on button pushes.  Send
- * ucCommand to the task on the button command queue if 
+ * ucCommand to the task on the button command queue if
  * lcdMIN_TIME_BETWEEN_INTERRUPTS_MS milliseconds have passed since the button
- * was last pushed (for debouncing). 
+ * was last pushed (for debouncing).
  */
 static portBASE_TYPE prvSendCommandOnDebouncedInput( TickType_t *pxTimeLastInterrupt, unsigned char ucCommand );
 
@@ -120,18 +120,18 @@ static SemaphoreHandle_t xLCDMutex = NULL;
 /* The string that is scrolled up and down the first line of the display. */
 static const char cDataString1[] = "        http://www.FreeRTOS.org        ";
 
-/* The string that is scrolled/nudged up and down the second line of the 
+/* The string that is scrolled/nudged up and down the second line of the
 display. */
 static const char cDataString2[] = "........Rx210 Highlights....1.56 DMips/MHz....DSP functions....1.62V-5.5V operation....200 uA/MHz....Up to 512 kBytes Flash....up to 64 kbytes SRAM....EE Dataflash with 100k w/e....1.3 uA in Real Time Clock Mode....Powerful Motor control timer....4 x 16-bit timers....4 x 8-bit timers....Full Real Time Clock calendar with calibration and alarm functions....Up to 16 channels 1 uS 12-bit ADC, with Dual group programmable SCAN, 3 sample and holds, sample accumulate function....DMA controller....Data Transfer Controller....Up to 9 serial Channels....Up to 6 USARTs ( with Simple I2C / SPI )....USART ( with unique Frame based protocol support )....Multimaster IIC....RSPI....Temperature Sensor....Event Link Controller....Comparators....Safety features include CRC....March X....Dual watchdog Timers with window and independent oscillator....ADC self test....I/O Pin Test....Supported with E1 on chip debugger and RSK210 evaluation system....Rx210 Highlights........";
 
 /* Structures passed into the two tasks to inform them which line to use on the
 display, how long to delay for, and which string to use. */
-struct _LCD_Params xLCDLine1 = 
+struct _LCD_Params xLCDLine1 =
 {
-	LCD_LINE1, 215, ( char * ) cDataString1	
+	LCD_LINE1, 215, ( char * ) cDataString1
 };
 
-struct _LCD_Params xLCDLine2 = 
+struct _LCD_Params xLCDLine2 =
 {
 	LCD_LINE2, 350, ( char * ) cDataString2
 };
@@ -147,7 +147,7 @@ void vStartButtonAndLCDDemo( void )
 	/* Create the mutex used to guard the LCD. */
 	xLCDMutex = xSemaphoreCreateMutex();
 	configASSERT( xLCDMutex );
-	
+
 	/* Create the queue used to pass commands from the IRQ interrupts to the
 	prvLCDTaskLine2() task. */
 	xButtonCommandQueue = xQueueCreate( lcdCOMMAND_QUEUE_LENGTH, sizeof( unsigned char ) );
@@ -164,10 +164,10 @@ static void prvLCDTaskLine1( void *pvParameters )
 struct _LCD_Params *pxLCDParamaters = ( struct _LCD_Params * ) pvParameters;
 unsigned short usPosition = 0U;
 unsigned char ucDirection = lcdRIGHT_TO_LEFT;
-	
+
 	for( ;; )
 	{
-		vTaskDelay( pxLCDParamaters->Speed / portTICK_PERIOD_MS );		
+		vTaskDelay( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 
 		/* Write the string. */
 		prvDisplayNextString( pxLCDParamaters->Line, &( pxLCDParamaters->ptr_str[ usPosition ] ) );
@@ -185,7 +185,7 @@ struct _LCD_Params *pxLCDParamaters = ( struct _LCD_Params * ) pvParameters;
 unsigned short usPosition = 0U;
 unsigned char ucDirection = lcdRIGHT_TO_LEFT, ucStatus = lcdRUNNING, ucQueueData;
 TickType_t xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
-	
+
 	for(;;)
 	{
 		/* Wait for a message from an IRQ handler. */
@@ -194,10 +194,10 @@ TickType_t xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 			/* A message was not received before xDelayTicks ticks passed, so
 			generate the next string to display and display it. */
 			prvDisplayNextString( pxLCDParamaters->Line, &( pxLCDParamaters->ptr_str[ usPosition ] ) );
-			
-			/* Move the string in whichever direction the scroll is currently 
+
+			/* Move the string in whichever direction the scroll is currently
 			going in. */
-			prvScrollString( &ucDirection, &usPosition, strlen( pxLCDParamaters->ptr_str ) );			
+			prvScrollString( &ucDirection, &usPosition, strlen( pxLCDParamaters->ptr_str ) );
 		}
 		else
 		{
@@ -209,7 +209,7 @@ TickType_t xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 					/* If the LCD is running, top it.  If the LCD is stopped, start
 					it. */
 					ucStatus = !ucStatus;
-					
+
 					if( ucStatus == lcdRUNNING )
 					{
 						xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
@@ -220,7 +220,7 @@ TickType_t xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 					}
 					break;
 
-					
+
 				case lcdSHIFT_BACK_COMMAND :
 
 					if( ucStatus != lcdRUNNING )
@@ -229,13 +229,13 @@ TickType_t xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 						if( usPosition != 0U )
 						{
 							/* ....move the display position back by one char. */
-							usPosition--;												
+							usPosition--;
 							prvDisplayNextString( pxLCDParamaters->Line, &( pxLCDParamaters->ptr_str[ usPosition ] ) );
 						}
 					}
 					break;
-				
-				
+
+
 				case lcdSHIFT_FORWARD_COMMAND :
 
 					if( ucStatus != lcdRUNNING )
@@ -243,7 +243,7 @@ TickType_t xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 						/* If not already at the end of the display.... */
 						if( usPosition != ( strlen( pxLCDParamaters->ptr_str ) - ( lcdSTRING_LEN - 1 ) ) )
 						{
-							/* ....move the display position forward by one 
+							/* ....move the display position forward by one
 							char. */
 							usPosition++;
 							prvDisplayNextString( pxLCDParamaters->Line, &( pxLCDParamaters->ptr_str[ usPosition ] ) );
@@ -274,19 +274,19 @@ void prvSetupButtonIOAndInterrupts( void )
 	MPC.P34PFS.BIT.ISEL = 1;
 
 	/* IRQ1	*/
-	ICU.IER[ 0x08 ].BIT.IEN1 = 1;	
+	ICU.IER[ 0x08 ].BIT.IEN1 = 1;
 	ICU.IPR[ 65 ].BIT.IPR = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
 	ICU.IR[ 65 ].BIT.IR = 0;
 	ICU.IRQCR[ 1 ].BIT.IRQMD = 2;	/* Rising edge */
 
 	/* IRQ3	*/
-	ICU.IER[ 0x08 ].BIT.IEN3 = 1;	
+	ICU.IER[ 0x08 ].BIT.IEN3 = 1;
 	ICU.IPR[ 67 ].BIT.IPR = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
 	ICU.IR[ 67 ].BIT.IR = 0;
 	ICU.IRQCR[ 3 ].BIT.IRQMD = 2;	/* Rising edge */
 
 	/* IRQ4	*/
-	ICU.IER[ 0x08 ].BIT.IEN4 = 1;	
+	ICU.IER[ 0x08 ].BIT.IEN4 = 1;
 	ICU.IPR[ 68 ].BIT.IPR = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
 	ICU.IR[ 68 ].BIT.IR = 0;
 	ICU.IRQCR[ 4 ].BIT.IRQMD = 2;	/* Rising edge */
@@ -300,13 +300,13 @@ static prvScrollString( unsigned char *pucDirection, unsigned short *pusPosition
 	{
 		/* Move to the next character. */
 		( *pusPosition )++;
-		
+
 		/* Has the end of the string been reached? */
 		if( ( *pusPosition ) == ( xStringLength - ( lcdSTRING_LEN - 1 ) ) )
 		{
 			/* Switch direction. */
 			*pucDirection = lcdLEFT_TO_RIGHT;
-			( *pusPosition )--;				
+			( *pusPosition )--;
 		}
 	}
 	else
@@ -316,7 +316,7 @@ static prvScrollString( unsigned char *pucDirection, unsigned short *pusPosition
 		if( *pusPosition == 0U )
 		{
 			/* Switch Direction. */
-			*pucDirection = lcdRIGHT_TO_LEFT;				
+			*pucDirection = lcdRIGHT_TO_LEFT;
 		}
 	}
 }
@@ -337,10 +337,10 @@ static portBASE_TYPE prvSendCommandOnDebouncedInput( TickType_t *pxTimeLastInter
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 TickType_t xCurrentTickCount;
-	
+
 	/* Check the time now for debouncing purposes. */
 	xCurrentTickCount = xTaskGetTickCountFromISR();
-	
+
 	/* Has enough time passed since the button was last push to accept it as a
 	unique press? */
 	if( ( xCurrentTickCount - *pxTimeLastInterrupt ) > lcdMIN_TIME_BETWEEN_INTERRUPTS_MS )
@@ -349,9 +349,9 @@ TickType_t xCurrentTickCount;
 	}
 
 	/* Remember the time now, so debounce can be performed again on the next
-	interrupt. */	
+	interrupt. */
 	*pxTimeLastInterrupt = xCurrentTickCount;
-	
+
 	return xHigherPriorityTaskWoken;
 }
 /*-----------------------------------------------------------*/

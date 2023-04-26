@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -72,7 +72,7 @@ SECTIONS
         *(.bss)
         _ebss = .;
     } > RAM
-    
+
     .heap :
     {
         . = ALIGN(8);
@@ -84,14 +84,14 @@ SECTIONS
         . = . + _Min_Stack_Size;
         . = ALIGN(8);
    } >RAM
-   
+
    /* Set stack top to end of RAM, and stack limit move down by
     * size of stack_dummy section */
    __StackTop = ORIGIN(RAM) + LENGTH(RAM);
    __StackLimit = __StackTop - _Min_Stack_Size;
    PROVIDE(__stack = __StackTop);
-     
+
   /* Check if data + heap + stack exceeds RAM limit */
   ASSERT(__StackLimit >= _heap_top, "region RAM overflowed with stack")
-  
+
 }

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -43,7 +43,7 @@ volatile unsigned char *pucDisplayOutput[ 2 ] = { ( unsigned char * ) 3, ( unsig
 void vParTestInitialise( void )
 {
 	/* In this case all the initialisation is performed in prvSetupHardware()
-	in main.c. */	
+	in main.c. */
 }
 /*-----------------------------------------------------------*/
 
@@ -54,7 +54,7 @@ unsigned portBASE_TYPE uxLEDMask = 0x01;
 	if( uxLED < partstNUM_LEDs_PER_DISPLAY )
 	{
 		uxLEDMask <<= uxLED;
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( xValue )
@@ -63,7 +63,7 @@ unsigned portBASE_TYPE uxLEDMask = 0x01;
 			}
 			else
 			{
-				*pucDisplayOutput[ 0 ] |= uxLEDMask;				
+				*pucDisplayOutput[ 0 ] |= uxLEDMask;
 			}
 		}
 		taskEXIT_CRITICAL();
@@ -73,7 +73,7 @@ unsigned portBASE_TYPE uxLEDMask = 0x01;
 		uxLED -= partstNUM_LEDs_PER_DISPLAY;
 
 		uxLEDMask <<= uxLED;
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( xValue )
@@ -82,7 +82,7 @@ unsigned portBASE_TYPE uxLEDMask = 0x01;
 			}
 			else
 			{
-				*pucDisplayOutput[ 1 ] |= uxLEDMask;				
+				*pucDisplayOutput[ 1 ] |= uxLEDMask;
 			}
 		}
 		taskEXIT_CRITICAL();
@@ -97,7 +97,7 @@ unsigned portBASE_TYPE uxLEDMask = 0x01;
 	if( uxLED < partstNUM_LEDs_PER_DISPLAY )
 	{
 		uxLEDMask <<= uxLED;
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( *pucDisplayOutput[ 0 ] & uxLEDMask )
@@ -116,7 +116,7 @@ unsigned portBASE_TYPE uxLEDMask = 0x01;
 		uxLED -= partstNUM_LEDs_PER_DISPLAY;
 
 		uxLEDMask <<= uxLED;
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( *pucDisplayOutput[ 1 ] & uxLEDMask )

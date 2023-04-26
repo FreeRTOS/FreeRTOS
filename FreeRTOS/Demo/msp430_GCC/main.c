@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,30 +20,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
- * 
+ *
  * This demo is configured to execute on the ES449 prototyping board from
  * SoftBaugh. The ES449 has a built in LCD display and a single built in user
  * LED.  Therefore, in place of flashing an LED, the 'flash' and 'check' tasks
  * toggle '*' characters on the LCD.  The left most '*' represents LED 0, the
  * next LED 1, etc.
  *
- * Main. c also creates a task called 'Check'.  This only executes every three 
- * seconds but has the highest priority so is guaranteed to get processor time.  
- * Its main function is to check that all the other tasks are still operational.  
- * Each task that does not flash an LED maintains a unique count that is 
- * incremented each time the task successfully completes its function.  Should 
- * any error occur within such a task the count is permanently halted.  The 
+ * Main. c also creates a task called 'Check'.  This only executes every three
+ * seconds but has the highest priority so is guaranteed to get processor time.
+ * Its main function is to check that all the other tasks are still operational.
+ * Each task that does not flash an LED maintains a unique count that is
+ * incremented each time the task successfully completes its function.  Should
+ * any error occur within such a task the count is permanently halted.  The
  * 'check' task inspects the count of each task to ensure it has changed since
- * the last time the check task executed.  If all the count variables have 
+ * the last time the check task executed.  If all the count variables have
  * changed all the tasks are still executing error free, and the check task
- * toggles an LED with a three second period.  Should any task contain an error 
+ * toggles an LED with a three second period.  Should any task contain an error
  * at any time the LED toggle rate will increase to 500ms.
  *
  * Please read the documentation for the MSP430 port available on
@@ -83,18 +83,18 @@ the '*' characters on the LCD represent LED's] */
 /* Baud rate used by the COM test tasks. */
 #define mainCOM_TEST_BAUD_RATE			( ( unsigned long ) 19200 )
 
-/* The frequency at which the 'Check' tasks executes.  See the comments at the 
+/* The frequency at which the 'Check' tasks executes.  See the comments at the
 top of the page.  When the system is operating error free the 'Check' task
 toggles an LED every three seconds.  If an error is discovered in any task the
-rate is increased to 500 milliseconds.  [in this case the '*' characters on the 
+rate is increased to 500 milliseconds.  [in this case the '*' characters on the
 LCD represent LED's]*/
 #define mainNO_ERROR_CHECK_DELAY		( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
 #define mainERROR_CHECK_DELAY			( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 
-/* 
+/*
  * The function that implements the Check task.  See the comments at the head
  * of the page for implementation details.
- */ 
+ */
 static void vErrorChecks( void *pvParameters );
 
 /*
@@ -103,7 +103,7 @@ static void vErrorChecks( void *pvParameters );
  */
 static short prvCheckOtherTasksAreStillRunning( void );
 
-/* 
+/*
  * Perform the hardware setup required by the ES449 in order to run the demo
  * application.
  */
@@ -130,7 +130,7 @@ int main( void )
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
 	/* Start the 'Check' task which is defined in this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -151,22 +151,22 @@ TickType_t xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 	for( ;; )
 	{
 		/* Wait until it is time to check again.  The time we wait here depends
-		on whether an error has been detected or not.  When an error is 
+		on whether an error has been detected or not.  When an error is
 		detected the time is shortened resulting in a faster LED flash rate. */
 		vTaskDelay( xDelayPeriod );
 
-		/* Perform a bit of 32bit maths to ensure the registers used by the 
-		integer tasks get some exercise outside of the integer tasks 
+		/* Perform a bit of 32bit maths to ensure the registers used by the
+		integer tasks get some exercise outside of the integer tasks
 		themselves. The result here is not important we are just deliberately
 		changing registers used by other tasks to ensure that their context
-		switch is operating as required. - see the demo application 
+		switch is operating as required. - see the demo application
 		documentation for more info. */
 		ulDummyVariable *= 3UL;
-		
+
 		/* See if the other tasks are all ok. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
 		{
-			/* An error occurred in one of the tasks so shorten the delay 
+			/* An error occurred in one of the tasks so shorten the delay
 			period - which has the effect of increasing the frequency of the
 			LED toggle. */
 			xDelayPeriod = mainERROR_CHECK_DELAY;
@@ -184,7 +184,7 @@ static short sNoErrorFound = pdTRUE;
 static unsigned long ulLastIdleLoops = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
-	provided that the task has never encountered an error.  This function 
+	provided that the task has never encountered an error.  This function
 	checks the counts maintained by the tasks to ensure they are still being
 	incremented.  A count remaining at the same value between calls therefore
 	indicates that an error has been detected.  Only tasks that do not flash
@@ -199,7 +199,7 @@ static unsigned long ulLastIdleLoops = 0UL;
 	{
 		sNoErrorFound = pdFALSE;
 	}
-	
+
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
@@ -211,7 +211,7 @@ static unsigned long ulLastIdleLoops = 0UL;
 	}
 
 	ulLastIdleLoops = ulIdleLoops;
-	
+
 	return sNoErrorFound;
 }
 /*-----------------------------------------------------------*/
@@ -222,10 +222,10 @@ static void prvSetupHardware( void )
 	WDTCTL = WDTPW + WDTHOLD;
 
 	/* Setup DCO+ for ( xtal * D * (N + 1) ) operation. */
-	FLL_CTL0 |= DCOPLUS + XCAP18PF; 
+	FLL_CTL0 |= DCOPLUS + XCAP18PF;
 
 	/* X2 DCO frequency, 8MHz nominal DCO */
-	SCFI0 |= FN_4;                  
+	SCFI0 |= FN_4;
 
 	/* (121+1) x 32768 x 2 = 7.99 Mhz */
 	SCFQCTL = mainMAX_FREQUENCY;

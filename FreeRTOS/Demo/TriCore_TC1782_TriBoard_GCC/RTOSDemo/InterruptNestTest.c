@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -102,13 +102,13 @@ unsigned long ulCompareMatchBits;
 	interrupt and the task. */
 	vSemaphoreCreateBinary( xHighFrequencyTimerSemaphore );
 	configASSERT( xHighFrequencyTimerSemaphore );
-	
+
 	/* Create the task that pends on the semaphore that is given by the
 	high frequency interrupt. */
 	xTaskCreate( prvHighFrequencyTimerTask, "HFTmr", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
-	
-	/* Setup the interrupt itself.	The STM module clock divider is setup when 
-	the tick interrupt is configured - which is when the scheduler is started - 
+
+	/* Setup the interrupt itself.	The STM module clock divider is setup when
+	the tick interrupt is configured - which is when the scheduler is started -
 	so there is no need	to do it here.
 
 	The tick interrupt uses compare match 0, so this test uses compare match
@@ -116,7 +116,7 @@ unsigned long ulCompareMatchBits;
 	register. */
 	ulCompareMatchBits = ( 0x1fUL - __CLZ( ulCompareMatchValue ) );
 	ulCompareMatchBits <<= 16UL;
-	
+
 	/* Write the values to the relevant SMT registers, without changing other
 	bits. */
 	taskENTER_CRITICAL();
@@ -129,7 +129,7 @@ unsigned long ulCompareMatchBits;
 		{
 			/* Set-up the interrupt. */
 			STM_SRC1.reg = ( configHIGH_FREQUENCY_TIMER_PRIORITY | 0x00005000UL );
-	
+
 			/* Enable the Interrupt. */
 			STM_ISRR.reg &= ~( 0x03UL << 2UL );
 			STM_ISRR.reg |= ( 0x1UL << 2UL );
@@ -170,7 +170,7 @@ static void prvHighFrequencyTimerTask( void *pvParameters )
 	{
 		/* Wait for the next trigger from the high frequency timer interrupt. */
 		xSemaphoreTake( xHighFrequencyTimerSemaphore, portMAX_DELAY );
-		
+
 		/* Just count how many times the task has been unblocked before
 		returning to wait for the semaphore again. */
 		ulHighFrequencyTaskIterations++;
@@ -193,18 +193,18 @@ unsigned long ulHigherPriorityTaskWoken = pdFALSE;
 	STM_CMP1.reg += ulCompareMatchValue;
 
 	ulExecutionCounter++;
-	
+
 	if( ulExecutionCounter >= ulInterruptsPer10ms )
 	{
 		ulExecutionCounter = xSemaphoreGiveFromISR( xHighFrequencyTimerSemaphore, &ulHigherPriorityTaskWoken );
-		
+
 		/* If the semaphore was given ulExeuctionCounter will now be pdTRUE. */
 		configASSERT( ulExecutionCounter == pdTRUE );
-		
+
 		/* Start counting again. */
 		ulExecutionCounter = 0UL;
 	}
-	
+
 	/* Context switch on exit if necessary. */
 	portYIELD_FROM_ISR( ulHigherPriorityTaskWoken );
 }

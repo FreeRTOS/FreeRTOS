@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -34,27 +34,27 @@
 
 	This demo creates three tasks all of which access the same recursive mutex:
 
-	prvRecursiveMutexControllingTask() has the highest priority so executes 
-	first and grabs the mutex.  It then performs some recursive accesses - 
-	between each of which it sleeps for a short period to let the lower 
+	prvRecursiveMutexControllingTask() has the highest priority so executes
+	first and grabs the mutex.  It then performs some recursive accesses -
+	between each of which it sleeps for a short period to let the lower
 	priority tasks execute.  When it has completed its demo functionality
 	it gives the mutex back before suspending itself.
 
 	prvRecursiveMutexBlockingTask() attempts to access the mutex by performing
-	a blocking 'take'.  The blocking task has a lower priority than the 
+	a blocking 'take'.  The blocking task has a lower priority than the
 	controlling	task so by the time it executes the mutex has already been
-	taken by the controlling task,  causing the blocking task to block.  It 
-	does not unblock until the controlling task has given the mutex back, 
-	and it does not actually run until the controlling task has suspended 
+	taken by the controlling task,  causing the blocking task to block.  It
+	does not unblock until the controlling task has given the mutex back,
+	and it does not actually run until the controlling task has suspended
 	itself (due to the relative priorities).  When it eventually does obtain
-	the mutex all it does is give the mutex back prior to also suspending 
-	itself.  At this point both the controlling task and the blocking task are 
+	the mutex all it does is give the mutex back prior to also suspending
+	itself.  At this point both the controlling task and the blocking task are
 	suspended.
 
 	prvRecursiveMutexPollingTask() runs at the idle priority.  It spins round
 	a tight loop attempting to obtain the mutex with a non-blocking call.  As
 	the lowest priority task it will not successfully obtain the mutex until
-	both the controlling and blocking tasks are suspended.  Once it eventually 
+	both the controlling and blocking tasks are suspended.  Once it eventually
 	does obtain the mutex it first unsuspends both the controlling task and
 	blocking task prior to giving the mutex back - resulting in the polling
 	task temporarily inheriting the controlling tasks priority.
@@ -96,7 +96,7 @@ static SemaphoreHandle_t xMutex;
 static volatile portBASE_TYPE xErrorOccurred = pdFALSE, xControllingIsSuspended = pdFALSE, xBlockingIsSuspended = pdFALSE;
 static volatile unsigned portBASE_TYPE uxControllingCycles = 0, uxBlockingCycles = 0, uxPollingCycles = 0;
 
-/* Handles of the two higher priority tasks, required so they can be resumed 
+/* Handles of the two higher priority tasks, required so they can be resumed
 (unsuspended). */
 static TaskHandle_t xControllingTaskHandle, xBlockingTaskHandle, xPollingTaskHandle;
 
@@ -109,10 +109,10 @@ void vStartRecursiveMutexTasks( void )
 	xMutex = xSemaphoreCreateRecursiveMutex();
 
 	/* vQueueAddToRegistry() adds the mutex to the registry, if one is
-	in use.  The registry is provided as a means for kernel aware 
+	in use.  The registry is provided as a means for kernel aware
 	debuggers to locate mutex and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( ( QueueHandle_t ) xMutex, "Recursive_Mutex" );
 
@@ -148,7 +148,7 @@ unsigned portBASE_TYPE ux;
 		{
 			/* We should now be able to take the mutex as many times as
 			we like.
-			
+
 			The first time through the mutex will be immediately available, on
 			subsequent times through the mutex will be held by the polling task
 			at this point and this Take will cause the polling task to inherit
@@ -163,7 +163,7 @@ unsigned portBASE_TYPE ux;
 
 			/* Ensure the other task attempting to access the mutex (and the
 			other demo tasks) are able to execute to ensure they either block
-			(where a block time is specified) or return an error (where no 
+			(where a block time is specified) or return an error (where no
 			block time is specified) as the mutex is held by this task. */
 			vTaskDelay( recmuSHORT_DELAY );
 		}
@@ -197,7 +197,7 @@ unsigned portBASE_TYPE ux;
 			xErrorOccurred = pdTRUE;
 		}
 
-		/* Keep count of the number of cycles this task has performed so a 
+		/* Keep count of the number of cycles this task has performed so a
 		stall can be detected. */
 		uxControllingCycles++;
 
@@ -218,8 +218,8 @@ static void prvRecursiveMutexBlockingTask( void *pvParameters )
 	{
 		/* This task will run while the controlling task is blocked, and the
 		controlling task will block only once it has the mutex - therefore
-		this call should block until the controlling task has given up the 
-		mutex, and not actually execute	past this call until the controlling 
+		this call should block until the controlling task has given up the
+		mutex, and not actually execute	past this call until the controlling
 		task is suspended. */
 		if( xSemaphoreTakeRecursive( xMutex, portMAX_DELAY ) == pdPASS )
 		{
@@ -256,7 +256,7 @@ static void prvRecursiveMutexBlockingTask( void *pvParameters )
 			xErrorOccurred = pdTRUE;
 		}
 
-		/* Keep count of the number of cycles this task has performed so a 
+		/* Keep count of the number of cycles this task has performed so a
 		stall can be detected. */
 		uxBlockingCycles++;
 	}
@@ -282,7 +282,7 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 			}
 			else
 			{
-				/* Keep count of the number of cycles this task has performed 
+				/* Keep count of the number of cycles this task has performed
 				so a stall can be detected. */
 				uxPollingCycles++;
 
@@ -294,7 +294,7 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 				block indefinitely when it attempts to obtain the mutex, the
 				Controlling task will only block for a fixed period and an
 				error will be latched if the polling task has not returned the
-				mutex by the time this fixed period has expired. */				
+				mutex by the time this fixed period has expired. */
 				vTaskResume( xBlockingTaskHandle );
 				#if configUSE_PREEMPTION == 0
 					taskYIELD();
@@ -310,8 +310,8 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 				if( ( xBlockingIsSuspended == pdTRUE ) || ( xControllingIsSuspended == pdTRUE ) )
 				{
 					xErrorOccurred = pdTRUE;
-				}				
-			
+				}
+
 				/* Release the mutex, disinheriting the higher priority again. */
 				if( xSemaphoreGiveRecursive( xMutex ) != pdPASS )
 				{

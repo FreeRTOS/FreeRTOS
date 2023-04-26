@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -35,6 +35,7 @@
 #include "tzm_config.h"
 #include "pin_mux.h"
 #include "clock_config.h"
+#include "fsl_power.h"
 
 #if ( __ARM_FEATURE_CMSE & 1 ) == 0
 	#error "Need ARMv8-M security extensions"
@@ -70,7 +71,8 @@ void SystemInitHook( void );
 /* Secure main(). */
 int main(void)
 {
-	PRINTF( "Booting Secure World.\r\n" );
+	/* Set BOD VBAT level to 1.65V. */
+	POWER_SetBodVbatLevel( kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false );
 
 	/* Attach main clock divide to FLEXCOMM0 (debug console). */
 	CLOCK_AttachClk( BOARD_DEBUG_UART_CLK_ATTACH );

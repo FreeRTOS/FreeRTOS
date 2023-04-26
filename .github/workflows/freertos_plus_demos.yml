@@ -2,19 +2,9 @@ name: Build FreeRTOS+ Demos
 on:
   push:
     branches: ["**"]
-    paths:
-      - "FreeRTOS/Source"
-      - "FreeRTOS-Plus/Source/**"
-      - "FreeRTOS-Plus/Demo/Common/**"
-      - "FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/**"
 
   pull_request:
     branches: [main]
-    paths:
-      - "FreeRTOS/Source"
-      - "FreeRTOS-Plus/Source/**"
-      - "FreeRTOS-Plus/Demo/Common/**"
-      - "FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/**"
 
 jobs:
   winsim_cellular:
@@ -25,7 +15,22 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -59,6 +64,103 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/MQTT_Mutual_Auth_Demo_with_SARA_R4
         run: msbuild mqtt_mutual_auth_demo_with_sara_r4.sln -t:rebuild -property:Configuration=Debug
 
+  winsim_coreHTTP:
+    name: coreHTTP WinSim Demos
+    runs-on: windows-2019
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/sigv4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreHTTP \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/ThirdParty/mbedtls
+          git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Configure coreHTTP Demos
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator
+        run: |
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define democonfigSERVER_HOSTNAME ""' | tee -a */demo_config.h
+          echo '    #define democonfigAWS_IOT_ENDPOINT ""' | tee -a */demo_config.h
+          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_THING_NAME ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_PRESIGNED_GET_URL "ABCDEF"' | tee -a */demo_config.h
+          echo '    #define democonfigS3_PRESIGNED_PUT_URL "ABCDEF"' | tee -a */demo_config.h
+          echo '    #define democonfigS3_ROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_BUCKET_NAME ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_BUCKET_REGION ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_OBJECT_NAME ""' | tee -a */demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
+
+      - name: Build HTTP Mutual Auth Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: msbuild http_mutual_auth_demo.sln -t:rebuild
+
+      - name: Build HTTP Plain Text Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
+        run: msbuild http_plain_text_demo.sln -t:rebuild
+
+      - name: Build HTTP S3 Download Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: msbuild http_s3_download_demo.sln -t:rebuild
+
+      - name: Build HTTP S3 Download Multithreaded Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
+        run: msbuild http_s3_download_multithreaded_demo.sln -t:rebuild
+
+      - name: Build HTTP S3 Upload Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
+        run: msbuild http_s3_upload_demo.sln -t:rebuild
+
+
+  winsim_corePKCS11:
+    name: corePKCS11 WinSim Demos
+    runs-on: windows-2019
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/fleet-provisioning \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls
+
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: corePKCS11 Demo
+        working-directory: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator
+        run: msbuild CorePKCS11_Demos.sln -t:rebuild -m
+
   winsim_corelibs:
     name: core Library Windows Simulator Demos
     runs-on: windows-2019
@@ -67,7 +169,34 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/device-defender \
+            FreeRTOS-Plus/Source/AWS/device-shadow \
+            FreeRTOS-Plus/Source/AWS/fleet-provisioning \
+            FreeRTOS-Plus/Source/AWS/jobs \
+            FreeRTOS-Plus/Source/AWS/ota \
+            FreeRTOS-Plus/Source/AWS/sigv4 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreHTTP \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent \
+            FreeRTOS-Plus/Source/Application-Protocols/coreSNTP \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
+
+          git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -135,11 +264,7 @@ jobs:
 
       - name: Build corePKCS11 + coreMQTT Mutual Auth Demo
         working-directory: FreeRTOS-Plus/Demo/corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
-        run: msbuild pkcs11_mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
-
-      - name: corePKCS11 Demo
-        working-directory: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator
-        run: msbuild pkcs11_demos.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild corePKCS11_MQTT_Mutual_Auth.sln -t:rebuild
 
       - name: Configure coreSNTP_Windows_Simulator
         shell: bash
@@ -155,7 +280,7 @@ jobs:
 
       - name: coreSNTP Demo
         working-directory: FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator
-        run: msbuild core_sntp_demo.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild core_sntp_demo.sln -t:rebuild
 
 
   winsim_aws_iot:
@@ -167,7 +292,34 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/device-defender \
+            FreeRTOS-Plus/Source/AWS/device-shadow \
+            FreeRTOS-Plus/Source/AWS/fleet-provisioning \
+            FreeRTOS-Plus/Source/AWS/jobs \
+            FreeRTOS-Plus/Source/AWS/ota \
+            FreeRTOS-Plus/Source/AWS/sigv4 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreHTTP \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent \
+            FreeRTOS-Plus/Source/Application-Protocols/coreSNTP \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
+
+          git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -213,7 +365,49 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/AWS/Ota_Windows_Simulator/Ota_Over_Http_Demo
         run: msbuild ota_over_http_demo.sln -t:rebuild -property:Configuration=Debug -m
 
-  winsim_plus_tcp:
+  plus_tcp_posix:
+    name: FreeRTOS+TCP Posix Simulator Demo
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+
+      - name: Install prerequisite packages
+        run: sudo apt-get install -y git build-essential libpcap-dev
+
+      - name: Build FreeRTOS+TCP Minimal Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
+        run: make -j
+
+  plus_tcp_arm:
+    name: FreeRTOS+TCP QEMU ARM MPS2 AN385
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+
+      - name: Install prerequisite packages
+        run: sudo apt-get install -y git make gcc-arm-none-eabi
+
+      - name: Build FreeRTOS+TCP Minimal Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Qemu_mps2
+        run: make -j
+
+  plus_tcp_winsim:
     name: FreeRTOS+TCP Windows Simulator Demos
     runs-on: windows-2019
     continue-on-error: true
@@ -222,7 +416,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -252,7 +452,34 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/device-defender \
+            FreeRTOS-Plus/Source/AWS/device-shadow \
+            FreeRTOS-Plus/Source/AWS/fleet-provisioning \
+            FreeRTOS-Plus/Source/AWS/jobs \
+            FreeRTOS-Plus/Source/AWS/ota \
+            FreeRTOS-Plus/Source/AWS/sigv4 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreHTTP \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent \
+            FreeRTOS-Plus/Source/Application-Protocols/coreSNTP \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
+
+          git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1

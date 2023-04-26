@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -84,7 +84,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseStructInit( &TIM_TimeBaseStructure );
 
 	/* Time base configuration for timer 2 - which generates the interrupts. */
-	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;	
+	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;
 	TIM_TimeBaseStructure.TIM_Period = ( unsigned short ) ( ulFrequency & 0xffffUL );
 	TIM_TimeBaseStructure.TIM_Prescaler = 0x0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;
@@ -92,19 +92,19 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseInit( TIM2, &TIM_TimeBaseStructure );
 	TIM_ARRPreloadConfig( TIM2, ENABLE );
 
-	
+
 	/* Configuration for timer 3 which is used as a high resolution time
 	measurement. */
 	TIM_TimeBaseStructure.TIM_Period = ( unsigned short ) 0xffff;
 	TIM_TimeBaseInit( TIM3, &TIM_TimeBaseStructure );
 	TIM_ARRPreloadConfig( TIM3, ENABLE );
-	
+
 	/* Enable TIM2 IT.  TIM3 does not generate an interrupt. */
 	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQChannel;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = timerHIGHEST_PRIORITY;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init( &NVIC_InitStructure );	
+	NVIC_Init( &NVIC_InitStructure );
 	TIM_ITConfig( TIM2, TIM_IT_Update, ENABLE );
 
 	/* Finally, enable both timers. */
@@ -120,7 +120,7 @@ unsigned short usThisCount, usDifference;
 
 	/* Capture the free running timer 3 value as we enter the interrupt. */
 	usThisCount = TIM3->CNT;
-	
+
 	if( usSettleCount >= timerSETTLE_TIME )
 	{
 		/* What is the difference between the timer value in this interrupt

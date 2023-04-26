@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -25,8 +25,8 @@
  */
 
 /*-----------------------------------------------------------
- * Example console I/O wrappers.
- *----------------------------------------------------------*/
+* Example console I/O wrappers.
+*----------------------------------------------------------*/
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -37,21 +37,22 @@
 SemaphoreHandle_t xStdioMutex;
 StaticSemaphore_t xStdioMutexBuffer;
 
-void console_init(void)
+void console_init( void )
 {
-    xStdioMutex = xSemaphoreCreateMutexStatic(&xStdioMutexBuffer);
+    xStdioMutex = xSemaphoreCreateMutexStatic( &xStdioMutexBuffer );
 }
 
-void console_print(const char *fmt, ...)
+void console_print( const char * fmt,
+                    ... )
 {
     va_list vargs;
 
-    va_start(vargs, fmt);
+    va_start( vargs, fmt );
 
-    xSemaphoreTake(xStdioMutex, portMAX_DELAY);
+    xSemaphoreTake( xStdioMutex, portMAX_DELAY );
 
-    vprintf(fmt, vargs);
+    vprintf( fmt, vargs );
 
 
-    va_end(vargs);
+    va_end( vargs );
 }

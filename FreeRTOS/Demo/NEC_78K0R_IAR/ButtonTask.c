@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -63,7 +63,7 @@ void vButtonTask( void *pvParameters )
 		/* The button must have been pushed for this line to be executed.
 		Simply toggle the LED. */
 		butLED1 = !butLED1;
-		
+
 		/* Wait a short time then clear any pending button pushes as a crude
 		method of debouncing the switch.  xSemaphoreTake() uses a block time of
 		zero this time so it returns immediately rather than waiting for the
@@ -85,7 +85,7 @@ short sHigherPriorityTaskWoken = pdFALSE;
 
 	/* 'Give' the semaphore to unblock the button task. */
 	xSemaphoreGiveFromISR( xButtonSemaphore, &sHigherPriorityTaskWoken );
-	
+
 	/* If giving the semaphore unblocked a task, and the unblocked task has a
 	priority that is higher than the currently running task, then
 	sHigherPriorityTaskWoken will have been set to pdTRUE.  Passing a pdTRUE

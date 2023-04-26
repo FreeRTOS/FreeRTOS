@@ -30,8 +30,6 @@
         <itemPath>../Common/include/comtest2.h</itemPath>
         <itemPath>../Common/include/comtest_strings.h</itemPath>
         <itemPath>../Common/include/countsem.h</itemPath>
-        <itemPath>../Common/include/crflash.h</itemPath>
-        <itemPath>../Common/include/crhook.h</itemPath>
         <itemPath>../Common/include/death.h</itemPath>
         <itemPath>../Common/include/dynamic.h</itemPath>
         <itemPath>../Common/include/fileIO.h</itemPath>
@@ -50,7 +48,6 @@
         <itemPath>../Common/Minimal/PollQ.c</itemPath>
         <itemPath>../Common/Minimal/TaskNotify.c</itemPath>
         <itemPath>../Common/Minimal/comtest.c</itemPath>
-        <itemPath>../Common/Minimal/crflash.c</itemPath>
         <itemPath>../Common/Minimal/integer.c</itemPath>
         <itemPath>../Common/Minimal/recmutex.c</itemPath>
       </logicalFolder>
@@ -60,7 +57,6 @@
         <itemPath>../../Source/include/FreeRTOS.h</itemPath>
         <itemPath>../../Source/include/StackMacros.h</itemPath>
         <itemPath>../../Source/include/atomic.h</itemPath>
-        <itemPath>../../Source/include/croutine.h</itemPath>
         <itemPath>../../Source/include/deprecated_definitions.h</itemPath>
         <itemPath>../../Source/include/event_groups.h</itemPath>
         <itemPath>../../Source/include/list.h</itemPath>
@@ -89,7 +85,6 @@
           <itemPath>../../Source/portable/MemMang/heap_1.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../../Source/croutine.c</itemPath>
       <itemPath>../../Source/event_groups.c</itemPath>
       <itemPath>../../Source/list.c</itemPath>
       <itemPath>../../Source/queue.c</itemPath>

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -1797,4 +1797,64 @@ void test_timer_function_success_wrap_timer( void )
     pthread_join( thread_id, ( void ** ) &retVal );
     /* Validations */
     TEST_ASSERT_EQUAL( 1, *retVal );
+}
+
+void test_xTimerGetStaticBuffer_static( void )
+{
+    TimerHandle_t ret_timer_create;
+    UBaseType_t pvTimerID;
+    StaticTimer_t pxTimerBuffer[ sizeof( StaticTimer_t ) ];
+    StaticTimer_t * pxTimerBufferRet = NULL;
+
+    /* Setup */
+    /* Expectations */
+    /* prvInitialiseNewTimer */
+    /* prvCheckForValidListAndQueue */
+    vListInitialise_ExpectAnyArgs();
+    vListInitialise_ExpectAnyArgs();
+    xQueueGenericCreateStatic_ExpectAnyArgsAndReturn( NULL );
+    /* Back prvInitialiseNewTimer */
+    vListInitialiseItem_ExpectAnyArgs();
+
+    /* API Call */
+    ret_timer_create = xTimerCreateStatic( "ut_timer_task",
+                                           pdMS_TO_TICKS( 1000 ),
+                                           pdTRUE,
+                                           ( void * ) &pvTimerID,
+                                           xCallback_Test,
+                                           pxTimerBuffer );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xTimerGetStaticBuffer( ret_timer_create, &pxTimerBufferRet ) );
+    TEST_ASSERT_EQUAL( pxTimerBuffer, pxTimerBufferRet );
+}
+
+void test_xTimerGetStaticBuffer_dynamic( void )
+{
+    TimerHandle_t xTimer = NULL;
+    UBaseType_t pvTimerID = 0;
+    Timer_t pxNewTimer = { 0 };
+    StaticTimer_t * pxTimerBufferRet = NULL;
+
+    pvPortMalloc_ExpectAndReturn( sizeof( Timer_t ), &pxNewTimer );
+
+    /* Setup */
+    /* Expectations */
+    /* prvInitialiseNewTimer */
+    /* prvCheckForValidListAndQueue */
+    vListInitialise_ExpectAnyArgs();
+    vListInitialise_ExpectAnyArgs();
+    xQueueGenericCreateStatic_ExpectAnyArgsAndReturn( NULL );
+    /* Back prvInitialiseNewTimer */
+    vListInitialiseItem_ExpectAnyArgs();
+
+
+    /* API Call */
+    xTimer = xTimerCreate( "ut_timer_task",
+                           pdMS_TO_TICKS( 1000 ),
+                           pdTRUE,
+                           ( void * ) &pvTimerID,
+                           xCallback_Test );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xTimerGetStaticBuffer( xTimer, &pxTimerBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, pxTimerBufferRet );
 }

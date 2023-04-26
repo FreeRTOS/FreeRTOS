@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -51,7 +51,6 @@
 #define configMAX_TASK_NAME_LEN                    ( 15 )
 #define configUSE_16_BIT_TICKS                     0
 #define configIDLE_SHOULD_YIELD                    1
-#define configUSE_CO_ROUTINES                      0
 #ifndef configUSE_MUTEXES
     #define configUSE_MUTEXES                      1
 #endif
@@ -67,24 +66,20 @@
 
 /* Hook function related definitions. */
 #ifndef configUSE_TICK_HOOK
-    #define configUSE_TICK_HOOK            0
+    #define configUSE_TICK_HOOK           0
 #endif
-#define configUSE_IDLE_HOOK                1
-#define configUSE_MALLOC_FAILED_HOOK       1
-#define configCHECK_FOR_STACK_OVERFLOW     0              /* Not applicable to the Win32 port. */
+#define configUSE_IDLE_HOOK               1
+#define configUSE_MALLOC_FAILED_HOOK      1
+#define configCHECK_FOR_STACK_OVERFLOW    0               /* Not applicable to the Win32 port. */
 
 /* Software timer related definitions. */
-#define configUSE_TIMERS                   1
-#define configTIMER_TASK_PRIORITY          ( configMAX_PRIORITIES - 1 )
-#define configTIMER_QUEUE_LENGTH           5
-#define configTIMER_TASK_STACK_DEPTH       ( configMINIMAL_STACK_SIZE * 2 )
+#define configUSE_TIMERS                  1
+#define configTIMER_TASK_PRIORITY         ( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH          5
+#define configTIMER_TASK_STACK_DEPTH      ( configMINIMAL_STACK_SIZE * 2 )
 
 /* Event group related definitions. */
-#define configUSE_EVENT_GROUPS             1
-
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES              0
-#define configMAX_CO_ROUTINE_PRIORITIES    ( 2 )
+#define configUSE_EVENT_GROUPS            1
 
 /* Memory allocation strategy. */
 #ifndef configSUPPORT_DYNAMIC_ALLOCATION
@@ -118,15 +113,7 @@
 #define INCLUDE_xTimerPendFunctionCall          1
 #define INCLUDE_xTaskGetCurrentTaskHandle       1
 #define INCLUDE_xTaskAbortDelay                 1
-
-/* This demo makes use of one or more example stats formatting functions.  These
- * format the raw data provided by the uxTaskGetSystemState() function in to human
- * readable ASCII form.  See the notes in the implementation of vTaskList() within
- * FreeRTOS/Source/tasks.c for limitations.  configUSE_STATS_FORMATTING_FUNCTIONS
- * is set to 2 so the formatting functions are included without the stdio.h being
- * included in tasks.c.  That is because this project defines its own sprintf()
- * functions. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS    1
+#define configUSE_STATS_FORMATTING_FUNCTIONS    0
 
 /* Assert call defined for debug builds. */
 extern void vAssertCalled( const char * pcFile,

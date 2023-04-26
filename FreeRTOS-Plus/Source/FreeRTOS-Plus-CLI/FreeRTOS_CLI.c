@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+CLI V1.0.4
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -37,7 +37,7 @@
 
 /* If the application writer needs to place the buffer used by the CLI at a
 fixed address then set configAPPLICATION_PROVIDES_cOutputBuffer to 1 in
-FreeRTOSConfig.h, then declare an array with the following name and size in 
+FreeRTOSConfig.h, then declare an array with the following name and size in
 one of the application files:
 	char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
 */
@@ -45,11 +45,15 @@ one of the application files:
 	#define configAPPLICATION_PROVIDES_cOutputBuffer 0
 #endif
 
-typedef struct xCOMMAND_INPUT_LIST
-{
-	const CLI_Command_Definition_t *pxCommandLineDefinition;
-	struct xCOMMAND_INPUT_LIST *pxNext;
-} CLI_Definition_List_Item_t;
+/*
+ * Register the command passed in using the pxCommandToRegister parameter
+ * and using pxCliDefinitionListItemBuffer as the memory for command line
+ * list items. Registering a command adds the command to the list of
+ * commands that are handled by the command interpreter.  Once a command
+ * has been registered it can be executed from the command line.
+ */
+static void prvRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister,
+								CLI_Definition_List_Item_t * pxCliDefinitionListItemBuffer );
 
 /*
  * The callback function that is executed when "help" is entered.  This is the
@@ -101,45 +105,47 @@ buffer needs to be placed at a fixed address (rather than by the linker). */
 
 /*-----------------------------------------------------------*/
 
-BaseType_t FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister )
-{
-static CLI_Definition_List_Item_t *pxLastCommandInList = &xRegisteredCommands;
-CLI_Definition_List_Item_t *pxNewListItem;
-BaseType_t xReturn = pdFAIL;
+#if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	/* Check the parameter is not NULL. */
-	configASSERT( pxCommandToRegister );
-
-	/* Create a new list item that will reference the command being registered. */
-	pxNewListItem = ( CLI_Definition_List_Item_t * ) pvPortMalloc( sizeof( CLI_Definition_List_Item_t ) );
-	configASSERT( pxNewListItem );
-
-	if( pxNewListItem != NULL )
+	BaseType_t FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister )
 	{
-		taskENTER_CRITICAL();
+	BaseType_t xReturn = pdFAIL;
+	CLI_Definition_List_Item_t *pxNewListItem;
+
+		/* Check the parameter is not NULL. */
+		configASSERT( pxCommandToRegister != NULL );
+
+		/* Create a new list item that will reference the command being registered. */
+		pxNewListItem = ( CLI_Definition_List_Item_t * ) pvPortMalloc( sizeof( CLI_Definition_List_Item_t ) );
+		configASSERT( pxNewListItem != NULL );
+
+		if( pxNewListItem != NULL )
 		{
-			/* Reference the command being registered from the newly created
-			list item. */
-			pxNewListItem->pxCommandLineDefinition = pxCommandToRegister;
-
-			/* The new list item will get added to the end of the list, so
-			pxNext has nowhere to point. */
-			pxNewListItem->pxNext = NULL;
-
-			/* Add the newly created list item to the end of the already existing
-			list. */
-			pxLastCommandInList->pxNext = pxNewListItem;
-
-			/* Set the end of list marker to the new list item. */
-			pxLastCommandInList = pxNewListItem;
+			prvRegisterCommand( pxCommandToRegister, pxNewListItem );
+			xReturn = pdPASS;
 		}
-		taskEXIT_CRITICAL();
 
-		xReturn = pdPASS;
+		return xReturn;
 	}
 
-	return xReturn;
-}
+#endif /* #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
+/*-----------------------------------------------------------*/
+
+#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+
+	BaseType_t FreeRTOS_CLIRegisterCommandStatic( const CLI_Command_Definition_t * const pxCommandToRegister,
+												  CLI_Definition_List_Item_t * pxCliDefinitionListItemBuffer )
+	{
+		/* Check the parameters are not NULL. */
+		configASSERT( pxCommandToRegister != NULL );
+		configASSERT( pxCliDefinitionListItemBuffer != NULL );
+
+		prvRegisterCommand( pxCommandToRegister, pxCliDefinitionListItemBuffer );
+
+		return pdPASS;
+	}
+
+#endif /* #if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 /*-----------------------------------------------------------*/
 
 BaseType_t FreeRTOS_CLIProcessCommand( const char * const pcCommandInput, char * pcWriteBuffer, size_t xWriteBufferLen  )
@@ -279,6 +285,36 @@ const char *pcReturn = NULL;
 }
 /*-----------------------------------------------------------*/
 
+static void prvRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister,
+								CLI_Definition_List_Item_t * pxCliDefinitionListItemBuffer )
+{
+static CLI_Definition_List_Item_t *pxLastCommandInList = &xRegisteredCommands;
+
+	/* Check the parameters are not NULL. */
+	configASSERT( pxCommandToRegister != NULL );
+	configASSERT( pxCliDefinitionListItemBuffer != NULL );
+
+	taskENTER_CRITICAL();
+	{
+		/* Reference the command being registered from the newly created
+		list item. */
+		pxCliDefinitionListItemBuffer->pxCommandLineDefinition = pxCommandToRegister;
+
+		/* The new list item will get added to the end of the list, so
+		pxNext has nowhere to point. */
+		pxCliDefinitionListItemBuffer->pxNext = NULL;
+
+		/* Add the newly created list item to the end of the already existing
+		list. */
+		pxLastCommandInList->pxNext = pxCliDefinitionListItemBuffer;
+
+		/* Set the end of list marker to the new list item. */
+		pxLastCommandInList = pxCliDefinitionListItemBuffer;
+	}
+	taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
 static BaseType_t prvHelpCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 static const CLI_Definition_List_Item_t * pxCommand = NULL;
@@ -347,4 +383,4 @@ BaseType_t xLastCharacterWasSpace = pdFALSE;
 	as the first word should be the command itself. */
 	return cParameters;
 }
-
+/*-----------------------------------------------------------*/

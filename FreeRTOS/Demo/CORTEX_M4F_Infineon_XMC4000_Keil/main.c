@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -35,9 +35,9 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
- * 
+ *
  * Additional code:
- * 
+ *
  * This demo does not contain a non-kernel interrupt service routine that
  * can be used as an example for application writers to use as a reference.
  * Therefore, the framework of a dummy (not installed) handler is provided
@@ -65,9 +65,9 @@ or 0 to run the more comprehensive test and demo application. */
  */
 static void prvSetupHardware( void );
 
-/* 
+/*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0. 
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
 extern void main_blinky( void );
 extern void main_full( void );
@@ -98,7 +98,7 @@ int main( void )
 static void prvSetupHardware( void )
 {
 	configCONFIGURE_LED();
-	
+
 	/* Ensure all priority bits are assigned as preemption priority bits. */
 	NVIC_SetPriorityGrouping( 0 );
 }
@@ -150,7 +150,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
 void vApplicationTickHook( void )
 {
-	/* This function will be called by each tick interrupt if 
+	/* This function will be called by each tick interrupt if
 	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
 	added here, but the tick hook is called from an interrupt context, so
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
@@ -166,19 +166,19 @@ long lHigherPriorityTaskWoken = pdFALSE;
 
 	/* Clear the interrupt if necessary. */
 	Dummy_ClearITPendingBit();
-	
+
 	/* This interrupt does nothing more than demonstrate how to synchronise a
 	task with an interrupt.  A semaphore is used for this purpose.  Note
 	lHigherPriorityTaskWoken is initialised to zero. */
 	xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
-	
+
 	/* If there was a task that was blocked on the semaphore, and giving the
 	semaphore caused the task to unblock, and the unblocked task has a priority
 	higher than the current Running state task (the task that this interrupt
 	interrupted), then lHigherPriorityTaskWoken will have been set to pdTRUE
-	internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the 
+	internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the
 	portEND_SWITCHING_ISR() macro will result in a context switch being pended to
-	ensure this interrupt returns directly to the unblocked, higher priority, 
+	ensure this interrupt returns directly to the unblocked, higher priority,
 	task.  Passing pdFALSE into portEND_SWITCHING_ISR() has no effect. */
 	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
 }

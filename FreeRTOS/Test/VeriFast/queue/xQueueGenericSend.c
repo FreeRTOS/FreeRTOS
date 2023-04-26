@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #include "proof/queuecontracts.h"
 
@@ -31,50 +33,45 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                               const void * const pvItemToQueue,
                               TickType_t xTicksToWait,
                               const BaseType_t xCopyPosition )
-
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == false &*&
- *  [1/2]queuesuspend(xQueue) &*&
- *  chars(pvItemToQueue, M, ?x) &*&
- *  (xCopyPosition == queueSEND_TO_BACK || xCopyPosition == queueSEND_TO_FRONT || (xCopyPosition == queueOVERWRITE && N == 1));@*/
-
+    [1/2]queuesuspend(xQueue) &*&
+    chars(pvItemToQueue, M, ?x) &*&
+    (xCopyPosition == queueSEND_TO_BACK || xCopyPosition == queueSEND_TO_FRONT || (xCopyPosition == queueOVERWRITE && N == 1));@*/
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
- *  [1/2]queuesuspend(xQueue) &*&
- *  chars(pvItemToQueue, M, x);@*/
+    [1/2]queuesuspend(xQueue) &*&
+    chars(pvItemToQueue, M, x);@*/
 {
     BaseType_t xEntryTimeSet = pdFALSE, xYieldRequired;
     TimeOut_t xTimeOut;
+#ifdef VERIFAST /*< const pointer declaration */
+    Queue_t * pxQueue = xQueue;
+#else
+    Queue_t * const pxQueue = xQueue;
 
-    #ifdef VERIFAST /*< const pointer declaration */
-        Queue_t * pxQueue = xQueue;
-    #else
-        Queue_t * const pxQueue = xQueue;
-
-        configASSERT( pxQueue );
-        configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-        configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
+    configASSERT( pxQueue );
+    configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
+    configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
     #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-        {
-            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-        }
-        #endif
-    #endif /* ifdef VERIFAST */
+    {
+        configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+    }
+    #endif
+#endif
 
     /*lint -save -e904 This function relaxes the coding standard somewhat to
      * allow return statements within the function itself.  This is done in the
      * interest of execution time efficiency. */
     for( ; ; )
-
     /*@invariant [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-     *  [1/2]queuesuspend(xQueue) &*&
-     *  chars(pvItemToQueue, M, x) &*&
-     *  u_integer(&xTicksToWait, _) &*&
-     *  (xCopyPosition == queueSEND_TO_BACK || xCopyPosition == queueSEND_TO_FRONT || (xCopyPosition == queueOVERWRITE && N == 1)) &*&
-     *  xTIME_OUT(&xTimeOut);@*/
+        [1/2]queuesuspend(xQueue) &*&
+        chars(pvItemToQueue, M, x) &*&
+        u_integer(&xTicksToWait, _) &*&
+        (xCopyPosition == queueSEND_TO_BACK || xCopyPosition == queueSEND_TO_FRONT || (xCopyPosition == queueOVERWRITE && N == 1)) &*&
+        xTIME_OUT(&xTimeOut);@*/
     {
         taskENTER_CRITICAL();
         {
             /*@assert queue(pxQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
-
             /* Is there room on the queue now?  The running task must be the
              * highest priority task wanting to access the queue.  If the head item
              * in the queue is to be overwritten then it does not matter if the
@@ -182,19 +179,19 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                 #endif /* configUSE_QUEUE_SETS */
 
                 /*@
-                 * if (xCopyPosition == queueSEND_TO_BACK)
-                 * {
-                 *  close queue(pxQueue, Storage, N, M, (W+1)%N, R, (K+1), is_locked, append(abs, singleton(x)));
-                 * }
-                 * else if (xCopyPosition == queueSEND_TO_FRONT)
-                 * {
-                 *  close queue(pxQueue, Storage, N, M, W, (R == 0 ? (N-1) : (R-1)), (K+1), is_locked, cons(x, abs));
-                 * }
-                 * else if (xCopyPosition == queueOVERWRITE)
-                 * {
-                 *  close queue(pxQueue, Storage, N, M, W, R, 1, is_locked, singleton(x));
-                 * }
-                 * @*/
+                if (xCopyPosition == queueSEND_TO_BACK)
+                {
+                    close queue(pxQueue, Storage, N, M, (W+1)%N, R, (K+1), is_locked, append(abs, singleton(x)));
+                }
+                else if (xCopyPosition == queueSEND_TO_FRONT)
+                {
+                    close queue(pxQueue, Storage, N, M, W, (R == 0 ? (N-1) : (R-1)), (K+1), is_locked, cons(x, abs));
+                }
+                else if (xCopyPosition == queueOVERWRITE)
+                {
+                    close queue(pxQueue, Storage, N, M, W, R, 1, is_locked, singleton(x));
+                }
+                @*/
                 taskEXIT_CRITICAL();
                 return pdPASS;
             }
@@ -203,7 +200,6 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                 if( xTicksToWait == ( TickType_t ) 0 )
                 {
                     /*@close queue(pxQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
-
                     /* The queue was full and no block time is specified (or
                      * the block time has expired) so leave now. */
                     taskEXIT_CRITICAL();
@@ -226,7 +222,6 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                     mtCOVERAGE_TEST_MARKER();
                 }
             }
-
             /*@close queue(pxQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
         }
         taskEXIT_CRITICAL();
@@ -248,16 +243,16 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                 vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 
                 /* Unlocking the queue means queue events can effect the
-                 * event list.  It is possible that interrupts occurring now
+                 * event list. It is possible that interrupts occurring now
                  * remove this task from the event list again - but as the
                  * scheduler is suspended the task will go onto the pending
-                 * ready last instead of the actual ready list. */
+                 * ready list instead of the actual ready list. */
                 /*@close queue_locked_invariant(xQueue)();@*/
                 prvUnlockQueue( pxQueue );
 
                 /* Resuming the scheduler will move tasks from the pending
                  * ready list into the ready list - so it is feasible that this
-                 * task is already in a ready list before it yields - in which
+                 * task is already in the ready list before it yields - in which
                  * case the yield will not cause a context switch unless there
                  * is also a higher priority task in the pending ready list. */
                 /*@close exists(pxQueue);@*/
@@ -270,27 +265,29 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
             {
                 /* Try again. */
                 prvUnlockQueue( pxQueue );
-                #ifdef VERIFAST /*< void cast of unused return value */
-                    /*@close exists(pxQueue);@*/
-                    xTaskResumeAll();
-                #else
-                    ( void ) xTaskResumeAll();
-                #endif
+#ifdef VERIFAST /*< void cast of unused return value */
+                /*@close exists(pxQueue);@*/
+                xTaskResumeAll();
+#else
+                ( void ) xTaskResumeAll();
+#endif
             }
         }
         else
         {
             /* The timeout has expired. */
             prvUnlockQueue( pxQueue );
-            #ifdef VERIFAST /*< void cast of unused return value */
-                /*@close exists(pxQueue);@*/
-                xTaskResumeAll();
-            #else
-                ( void ) xTaskResumeAll();
-            #endif
+#ifdef VERIFAST /*< void cast of unused return value */
+            /*@close exists(pxQueue);@*/
+            xTaskResumeAll();
+#else
+            ( void ) xTaskResumeAll();
+#endif
 
             traceQUEUE_SEND_FAILED( pxQueue );
             return errQUEUE_FULL;
         }
     } /*lint -restore */
 }
+
+/* *INDENT-ON* */

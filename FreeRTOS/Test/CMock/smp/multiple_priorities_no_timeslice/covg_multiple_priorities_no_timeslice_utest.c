@@ -81,7 +81,8 @@ extern void vTaskExitCritical( void );
 extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 extern void prvCheckTasksWaitingTermination( void );
 extern void prvDeleteTCB( TCB_t * pxTCB );
-extern TCB_t * prvSearchForNameWithinSingleList( List_t * pxList, const char pcNameToQuery[] );
+extern TCB_t * prvSearchForNameWithinSingleList( List_t * pxList,
+                                                 const char pcNameToQuery[] );
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ] = { NULL };
@@ -4277,7 +4278,7 @@ void test_coverage_prvSearchForNameWithinSingleList_empty_list( void )
 {
     List_t xList;
     TCB_t xTaskTCB;
-    TCB_t *pReturnedTCB;
+    TCB_t * pReturnedTCB;
 
     /* Setup variables. */
     memset( &xList, 0, sizeof( List_t ) );
@@ -4310,7 +4311,7 @@ void test_coverage_prvSearchForNameWithinSingleList_task_found( void )
 {
     List_t xList;
     TCB_t xTaskTCB;
-    TCB_t *pReturnedTCB;
+    TCB_t * pReturnedTCB;
 
     /* Setup variables. */
     memset( &xList, 0, sizeof( List_t ) );
@@ -4351,7 +4352,7 @@ void test_coverage_prvSearchForNameWithinSingleList_task_not_found( void )
 {
     List_t xList;
     TCB_t xTaskTCB;
-    TCB_t *pReturnedTCB;
+    TCB_t * pReturnedTCB;
 
     /* Setup variables. */
     memset( &xList, 0, sizeof( List_t ) );
@@ -4391,7 +4392,7 @@ void test_coverage_prvSearchForNameWithinSingleList_long_task_name( void )
 {
     List_t xList;
     TCB_t xTaskTCB;
-    TCB_t *pReturnedTCB;
+    TCB_t * pReturnedTCB;
 
     /* Setup variables. */
     memset( &xList, 0, sizeof( List_t ) );

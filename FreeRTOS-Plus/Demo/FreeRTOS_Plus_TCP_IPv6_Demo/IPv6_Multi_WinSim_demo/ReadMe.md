@@ -184,11 +184,10 @@ hard-coded in main.c
 The keywords can have some single-letter suffices: 4 or 6 ( for IPv4/6 ), “a” to do
 an asynchronous DNS lookup, and “c” to clear all caches before starting the task.
 
-#### Sample UDP echo server in Go: 
-
+## Sample Echo server
 ##### Prerequisites : Install go
 
-#### Server :
+#### Sample UDP server in Go:
 ``` go
 
 // Filename: echo_server.go 
@@ -248,5 +247,5 @@ The UDP Echo Client demo also demonstrates the UDP zero copy for both IPv4 and I
 (based on the IP type), it can be enabled by setting `USE_ZERO_COPY` macro of the
 UDPEchoClient_SingleTasks.c file to 1.
 
-#### Sample TCP echo server in Go:
-	[TCP Echo Server] (https://github.com/aws/amazon-freertos/tree/main/tools/echo_server)
+#### Sample TCP server in Go:
+	[TCP Echo Server](https://github.com/aws/amazon-freertos/tree/main/tools/echo_server)

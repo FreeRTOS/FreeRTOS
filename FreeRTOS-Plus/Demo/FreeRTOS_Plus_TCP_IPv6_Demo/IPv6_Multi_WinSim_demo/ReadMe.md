@@ -143,7 +143,7 @@ The keywords can have some single-letter suffices: 4 or 6 ( for IPv4/6 ), “a�
 an asynchronous DNS lookup, and “c” to clear all caches before starting the task.
 
 ## Sample Echo server
-##### Prerequisites : Install go
+##### Prerequisites : [Install go](https://go.dev/doc/install)
 
 #### Sample UDP server in Go:
 ``` go

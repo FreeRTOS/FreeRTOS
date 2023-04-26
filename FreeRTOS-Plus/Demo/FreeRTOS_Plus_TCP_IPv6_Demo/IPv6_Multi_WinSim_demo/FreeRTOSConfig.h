@@ -42,10 +42,10 @@
 * the demo) are contained in FreeRTOSIPConfig.h.
 *----------------------------------------------------------*/
 
-/* Used for IPv6 validation, comment for IPv4 validation */
-#define configECHO_SERVER_ADDR_STRING             "fe80::a53b:3371:d92f:970b"
-/* Uncomment to for IPv4 validation */
-/* #define configECHO_SERVER_ADDR_STRING              "192.168.1.3" */
+/* Used for IPv6 validation */
+#define configECHO_SERVER_ADDR_STRING              "fe80::a53b:3371:d92f:970b"
+/* Used for IPv4 validation */
+/* #define configECHO_SERVER_ADDR_STRING           "192.168.1.3" */
 
 #define configECHO_SERVER_PORT                     7
 

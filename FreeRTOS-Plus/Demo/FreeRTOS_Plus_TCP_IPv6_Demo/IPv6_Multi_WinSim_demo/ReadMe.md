@@ -21,29 +21,27 @@ With multiple interfaces it is possible to use of more than one network interfac
 Now the FreeRTOS application can be connected to a LAN and a Wi-Fi station and
 can uses multiple IP addresses. These addresses can be configured either statically
 or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in case of IPv6.
-                                             ▼
-┌─────────────────────────────┐
-│        ECHO CLIENT          │
-│    With Multiple Endpoints  │
-│                             │                             ┌───────────────────────────┐
-│                             │                             │       ECHO SERVER         │
-│    ┌───────────────────┐    │sendto()           recvfrom()│                           │
-│    │   IPv4 EndPoint   │    ├─────────────────────────────►  ┌─────────────────────┐  │
-│    │                   │    │                             │  │                     │  │
-│    └───────────────────┘    │                             │  │    IPv6 Server IP   │  │
-│                             │                             │  │      Server Port    │  │
-│    ┌───────────────────┐    │recvfrom()           sendto()│  │                     │  │
-│    │    IPv6 Public    │    │◄────────────────────────────┤  └─────────────────────┘  │
-│    │     EndPoint      │    │                             │                           │
-│    └───────────────────┘    │                             │                           │
-│                             │                             └───────────────────────────┘
-│    ┌───────────────────┐    │
-│    │   IPv6 Private    │    │
-│    │      Endpoint     │    │
-│    └───────────────────┘    │
-│                             │
-└─────────────────────────────┘
 
+┌────────────────────────┐
+│      ECHO CLIENT       │
+│ With mutiple Endpoints │                      ┌─────────────────────────┐
+│                        │                      │                         │
+│   ┌────────────────┐   │                      │      ECHO SERVER        │
+│   │ IPv4 Endpoint  │   │                      │                         │
+│   │                │   │sendto()    recvfrom()│   ┌────────────────┐    │
+│   └────────────────┘   ├─────────────────────►│   │                │    │
+│                        │                      │   │ IPv6 Server IP │    │
+│   ┌────────────────┐   │                      │   │                │    │
+│   │   IPv6 Public  │   │recvfrom()    sendto()│   │   Server Port  │    │
+│   │     Endpoint   │   │◄─────────────────────┤   └────────────────┘    │
+│   └────────────────┘   │                      │                         │
+│                        │                      │                         │
+│   ┌────────────────┐   │                      │                         │
+│   │  IPv6 Private  │   │                      └─────────────────────────┘
+│   │    Endpoint    │   │
+│   └────────────────┘   │
+│                        │
+└────────────────────────┘
 
 ## Setting up the workspace
 
@@ -71,7 +69,7 @@ git submodule update --checkout
 ```
 
 The FreeRTOS+TCP Multiple Interface Visual Studio project file is in the following
-directory: `FreeRTOS-Plus\Demo\FreeRTOS_Plus_TCP_IPv6_Demo\IPv6_Multi_WinSim_dem`
+directory: `FreeRTOS-Plus\Demo\FreeRTOS_Plus_TCP_IPv6_Demo\IPv6_Multi_WinSim_demo`
 
 In FreeRTOS_Plus_TCP_IPv6_Multi.props, you will find a couple of macros that indicate
 the location of source files:
@@ -188,9 +186,9 @@ an asynchronous DNS lookup, and “c” to clear all caches before starting the 
 
 #### Sample UDP echo server in Go: 
 
-##### Prerequisites
-	Install go
+##### Prerequisites : Install go
 
+#### Server :
 ``` go
 
 // Filename: echo_server.go 

@@ -22,6 +22,7 @@ Now the FreeRTOS application can be connected to a LAN and a Wi-Fi station and
 can uses multiple IP addresses. These addresses can be configured either statically
 or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in case of IPv6.
 
+```
 +------------------------+
 |      ECHO CLIENT       |
 | With mutiple Endpoints |                      +-------------------------+
@@ -42,6 +43,7 @@ or automatically by the use of DHCP, or Router Advertisement ( “RA” ) in cas
 |   +----------------+   |
 |                        |
 +------------------------+
+```
 
 ## Setting up the workspace
 

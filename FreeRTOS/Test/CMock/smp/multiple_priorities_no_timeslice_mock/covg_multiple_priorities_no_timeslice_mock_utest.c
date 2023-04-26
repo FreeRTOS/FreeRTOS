@@ -692,9 +692,9 @@ void test_coverage_vTaskSuspendAll_critical_nesting_ne_zero( void )
     vFakePortAssertIfISR_Expect();
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetISRLock_Expect();
     vFakePortReleaseISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
 
     /* API Call */

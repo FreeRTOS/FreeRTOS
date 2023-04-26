@@ -633,6 +633,78 @@ void test_priority_change_tasks_different_priority_lower_to_lowest( void )
 }
 
 /**
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-110
+ * A task of equal priority will be created for each available CPU core. An
+ * additional task will be created in the ready state at equal priority.
+ * This test will verify that when the priority of running task is raised all
+ * the other running tasks remain running.
+ *
+ * #define configRUN_MULTIPLE_PRIORITIES                    1
+ * #define configUSE_TIME_SLICING                           0
+ * #define configNUMBER_OF_CORES                            (N > 1)
+ *
+ * This test can be run with FreeRTOS configured for any number of cores
+ * greater than 1.
+ *
+ * Tasks are created prior to starting the scheduler.
+ *
+ * Task (T1)	    Task (TN)       Task (TN+1)
+ * Priority – 1     Priority – 1    Priority – 1
+ * State - Ready    State - Ready   State - Ready
+ *
+ * After calling vTaskStartScheduler()
+ *
+ * Task (T1)	        Task (TN)           Task (TN+1)
+ * Priority – 1         Priority – 1        Priority – 1
+ * State - Running      State - Running     State - Ready
+ *
+ * After calling vTaskPrioritySet() and raising the priority of task T1
+ *
+ * Task (T1)	        Task (TN)           Task (TN+1)
+ * Priority – 2         Priority – 1        Priority – 1
+ * State - Running      State - Running     State - Ready
+ */
+void test_priority_change_tasks_equal_priority_raise_additional_task( void )
+{
+    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+    TaskStatus_t xTaskDetails;
+
+    /* Create tasks at equal priority. */
+    for( i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++ )
+    {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[ i ] );
+    }
+
+    vTaskStartScheduler();
+
+    /* Verify each task is in the running state. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify the last task is in the ready state. */
+    verifySmpTask( &xTaskHandles[ i ], eReady, -1 );
+
+    /* Raise the priority of a running task. */
+    vTaskPrioritySet( xTaskHandles[ 0 ], 2 );
+
+    /* Verify the priority has been changed. */
+    vTaskGetInfo( xTaskHandles[ 0 ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 2, xTaskDetails.xHandle->uxPriority );
+
+    /* Verify each task is in the running state. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify the last task is in the ready state */
+    verifySmpTask( &xTaskHandles[ i ], eReady, -1 );
+}
+
+/**
  * @brief AWS_IoT-FreeRTOS_SMP_TC-41
  * A single task of high priority will be created. A low priority task will be
  * created for each remaining available CPU core. The test will first verify

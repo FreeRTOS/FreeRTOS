@@ -184,18 +184,7 @@
 								<option id="com.crt.advproject.gas.thumb.637200097" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.gas.arch.776767206" name="Architecture" superClass="com.crt.advproject.gas.arch" useByScannerDiscovery="false" value="com.crt.advproject.gas.target.cm33" valueType="enumerated"/>
 								<option id="gnu.both.asm.option.flags.crt.1467956525" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__NEWLIB__" valueType="string"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.both.asm.option.include.paths.625113877" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="../../../../NXP_Code"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/board"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/source"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/drivers"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/CMSIS"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/device"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/startup"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/utilities"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/component/uart"/>
-									<listOptionValue builtIn="false" value="../../../../NXP_Code/component/lists"/>
-								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="gnu.both.asm.option.include.paths.625113877" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath"/>
 								<option id="gnu.both.asm.option.warnings.nowarn.966225616" name="Suppress warnings (-W)" superClass="gnu.both.asm.option.warnings.nowarn" useByScannerDiscovery="false"/>
 								<option id="gnu.both.asm.option.version.1875745469" name="Announce version (-v)" superClass="gnu.both.asm.option.version" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gas.exe.debug.option.debugging.level.582524981" name="Debug level" superClass="com.crt.advproject.gas.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
@@ -333,16 +322,6 @@
 								<option id="com.crt.advproject.debugger.security.nonsecureimageenable.791320010" name="Enable pre-programming of Non-Secure Image" superClass="com.crt.advproject.debugger.security.nonsecureimageenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.debugger.security.nonsecureimage.1907263627" name="Non-Secure Project" superClass="com.crt.advproject.debugger.security.nonsecureimage" useByScannerDiscovery="false" value="FreeRTOSDemo_ns" valueType="string"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.650465968.503295392" name="/" resourcePath="FaultHandler">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.2094613832" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1853991769" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.248036726"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1301159109" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1827685058"/>
-							<tool id="com.crt.advproject.gas.exe.debug.585800475" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.355931849"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1724410180" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.767850316"/>
-							<tool id="com.crt.advproject.link.exe.debug.506017471" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1425769789"/>
-							<tool id="com.crt.advproject.tool.debug.debug.50205818" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1632770985"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

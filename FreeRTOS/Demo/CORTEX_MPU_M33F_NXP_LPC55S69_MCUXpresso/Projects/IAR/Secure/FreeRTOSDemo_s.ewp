@@ -618,7 +618,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\..\..\Config</state>
+                    <state>$PROJ_DIR$\..\Config</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>

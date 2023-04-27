@@ -246,7 +246,7 @@ void vStartMPUDemo( void )
             { ( void * ) ucSharedMemory8,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
             #endif /* configTOTAL_MPU_REGIONS == 16 */
             { ( void * ) ucROTaskFaultTracker, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { 0,                    0,  0                                                      },
+            { 0,                               0,  0                                                      },
         }
     };
     TaskParameters_t xRWAccessTaskParameters =
@@ -270,8 +270,8 @@ void vStartMPUDemo( void )
             { ( void * ) ucSharedMemory7, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
             { ( void * ) ucSharedMemory8, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
             #endif /* configTOTAL_MPU_REGIONS == 16 */
-            { 0,               0,  0                                                      },
-            { 0,               0,  0                                                      },
+            { 0,                          0,  0                                                      },
+            { 0,                          0,  0                                                      },
         }
     };
 

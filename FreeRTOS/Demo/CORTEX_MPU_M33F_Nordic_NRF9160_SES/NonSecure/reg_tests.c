@@ -24,6 +24,9 @@
  *
  */
 
+/* Standard includes. */
+#include <stdio.h>
+
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -31,39 +34,23 @@
 /* Reg test includes. */
 #include "reg_tests.h"
 #include "reg_test_asm.h"
-#if( configENABLE_TRUSTZONE == 1 )
-    #include "secure_reg_test_asm.h"
-#endif
-
-/* Device includes. */
-#include "NuMicro.h"
+#include "secure_reg_test_asm.h"
 
 /*
  * Functions that implement reg test tasks.
  */
 static void prvRegTest1_Task( void * pvParameters );
 static void prvRegTest2_Task( void * pvParameters );
-#if( configENABLE_TRUSTZONE == 1 )
-    static void prvRegTest_Secure_Task( void * pvParameters );
-    static void prvRegTest_NonSecureCallback_Task( void * pvParameters );
-#endif
+static void prvRegTest3_Task( void * pvParameters );
+static void prvRegTest4_Task( void * pvParameters );
+static void prvRegTest_Secure_Task( void * pvParameters );
+static void prvRegTest_NonSecureCallback_Task( void * pvParameters );
 /*
  * Check task periodically checks that reg tests tasks
  * are running fine.
  */
 static void prvCheckTask( void * pvParameters );
 /*-----------------------------------------------------------*/
-
-/*
- * On board LEDs.
- */
-#if( configENABLE_TRUSTZONE == 1 )
-    #define YELLOW_LED  PA11_NS
-    #define GREEN_LED   PA10_NS
-#else
-    #define YELLOW_LED  PA11
-    #define GREEN_LED   PA10
-#endif
 
 /*
  * Priority of the check task.
@@ -81,6 +68,8 @@ static void prvCheckTask( void * pvParameters );
  */
 #define REG_TEST_1_TASK_PARAMETER                   ( ( void * ) 0x12345678 )
 #define REG_TEST_2_TASK_PARAMETER                   ( ( void * ) 0x87654321 )
+#define REG_TEST_3_TASK_PARAMETER                   ( ( void * ) 0x12348765 )
+#define REG_TEST_4_TASK_PARAMETER                   ( ( void * ) 0x43215678 )
 #define REG_TEST_SECURE_TASK_PARAMETER              ( ( void * ) 0x1234ABCD )
 #define REG_TEST_NON_SECURE_CALLBACK_TASK_PARAMETER ( ( void * ) 0xABCD1234 )
 /*-----------------------------------------------------------*/
@@ -92,10 +81,9 @@ static void prvCheckTask( void * pvParameters );
  * incrementing, then an error has been found.
  */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
-#if( configENABLE_TRUSTZONE == 1 )
-    volatile unsigned long ulRegTestSecureLoopCounter = 0UL;
-    volatile unsigned long ulRegTestNonSecureCallbackLoopCounter = 0UL;
-#endif
+volatile unsigned long ulRegTest3LoopCounter = 0UL, ulRegTest4LoopCounter = 0UL;
+volatile unsigned long ulRegTestSecureLoopCounter = 0UL;
+volatile unsigned long ulRegTestNonSecureCallbackLoopCounter = 0UL;
 
 /**
  * Counter to keep a count of how may times the check task loop has detected
@@ -108,11 +96,11 @@ void vStartRegTests( void )
 {
 static StackType_t xRegTest1TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
 static StackType_t xRegTest2TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+static StackType_t xRegTest3TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+static StackType_t xRegTest4TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+static StackType_t xRegTestSecureTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+static StackType_t xRegTestNonSecureCallbackTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
 static StackType_t xCheckTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
-#if( configENABLE_TRUSTZONE == 1 )
-    static StackType_t xRegTestSecureTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
-    static StackType_t xRegTestNonSecureCallbackTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
-#endif
 
 TaskParameters_t xRegTest1TaskParameters =
 {
@@ -123,6 +111,14 @@ TaskParameters_t xRegTest1TaskParameters =
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTest1TaskStack,
     .xRegions        =  {
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 },
                             { 0, 0, 0 }
@@ -139,9 +135,106 @@ TaskParameters_t xRegTest2TaskParameters =
     .xRegions        =  {
                             { 0, 0, 0 },
                             { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
                             { 0, 0, 0 }
                         }
 };
+TaskParameters_t xRegTest3TaskParameters =
+{
+    .pvTaskCode      = prvRegTest3_Task,
+    .pcName          = "RegTest3",
+    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .pvParameters    = REG_TEST_3_TASK_PARAMETER,
+    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+    .puxStackBuffer  = xRegTest3TaskStack,
+    .xRegions        =  {
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 }
+                        }
+};
+TaskParameters_t xRegTest4TaskParameters =
+{
+    .pvTaskCode      = prvRegTest4_Task,
+    .pcName          = "RegTest4",
+    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .pvParameters    = REG_TEST_4_TASK_PARAMETER,
+    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+    .puxStackBuffer  = xRegTest4TaskStack,
+    .xRegions        =  {
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 }
+                        }
+};
+TaskParameters_t xRegTestSecureTaskParameters =
+{
+    .pvTaskCode      = prvRegTest_Secure_Task,
+    .pcName          = "RegTestSecure",
+    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .pvParameters    = REG_TEST_SECURE_TASK_PARAMETER,
+    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+    .puxStackBuffer  = xRegTestSecureTaskStack,
+    .xRegions        =  {
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 }
+                        }
+};
+TaskParameters_t xRegTestNonSecureCallbackTaskParameters =
+{
+    .pvTaskCode      = prvRegTest_NonSecureCallback_Task,
+    .pcName          = "RegTestNonSecureCallback",
+    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .pvParameters    = REG_TEST_NON_SECURE_CALLBACK_TASK_PARAMETER,
+    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+    .puxStackBuffer  = xRegTestNonSecureCallbackTaskStack,
+    .xRegions        =  {
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 }
+                        }
+};
+
 TaskParameters_t xCheckTaskParameters =
 {
     .pvTaskCode      = prvCheckTask,
@@ -153,59 +246,25 @@ TaskParameters_t xCheckTaskParameters =
     .xRegions        =  {
                             { 0, 0, 0 },
                             { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
+                            { 0, 0, 0 },
                             { 0, 0, 0 }
                         }
 };
 
-#if( configENABLE_TRUSTZONE == 1 )
-    TaskParameters_t xRegTestSecureTaskParameters =
-    {
-        .pvTaskCode      = prvRegTest_Secure_Task,
-        .pcName          = "RegTestSecure",
-        .usStackDepth    = configMINIMAL_STACK_SIZE,
-        .pvParameters    = REG_TEST_SECURE_TASK_PARAMETER,
-        .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
-        .puxStackBuffer  = xRegTestSecureTaskStack,
-        .xRegions        =  {
-                                { 0, 0, 0 },
-                                { 0, 0, 0 },
-                                { 0, 0, 0 }
-                            }
-    };
-    TaskParameters_t xRegTestNonSecureCallbackTaskParameters =
-    {
-        .pvTaskCode      = prvRegTest_NonSecureCallback_Task,
-        .pcName          = "RegTestNonSecureCallback",
-        .usStackDepth    = configMINIMAL_STACK_SIZE,
-        .pvParameters    = REG_TEST_NON_SECURE_CALLBACK_TASK_PARAMETER,
-        .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
-        .puxStackBuffer  = xRegTestNonSecureCallbackTaskStack,
-        .xRegions        =  {
-                                { 0, 0, 0 },
-                                { 0, 0, 0 },
-                                { 0, 0, 0 }
-                            }
-    };
-#endif /* configENABLE_TRUSTZONE */
-
-    /* Configure pins in output mode to drive external LEDs. */
-    #if( configENABLE_TRUSTZONE == 1 )
-        GPIO_SetMode( PA_NS, BIT10 | BIT11, GPIO_MODE_OUTPUT );
-    #else
-        GPIO_SetMode( PA, BIT10 | BIT11, GPIO_MODE_OUTPUT );
-    #endif
-
-    /* Start with both LEDs off. */
-    YELLOW_LED = 1;
-    GREEN_LED = 1;
-
     xTaskCreateRestricted( &( xRegTest1TaskParameters ), NULL );
     xTaskCreateRestricted( &( xRegTest2TaskParameters ), NULL );
+    xTaskCreateRestricted( &( xRegTest3TaskParameters ), NULL );
+    xTaskCreateRestricted( &( xRegTest4TaskParameters ), NULL );
+    xTaskCreateRestricted( &( xRegTestSecureTaskParameters ), NULL );
+    xTaskCreateRestricted( &( xRegTestNonSecureCallbackTaskParameters ), NULL );
     xTaskCreateRestricted( &( xCheckTaskParameters ), NULL );
-    #if( configENABLE_TRUSTZONE == 1 )
-        xTaskCreateRestricted( &( xRegTestSecureTaskParameters ), NULL );
-        xTaskCreateRestricted( &( xRegTestNonSecureCallbackTaskParameters ), NULL );
-    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -247,7 +306,43 @@ static void prvRegTest2_Task( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-#if( configENABLE_TRUSTZONE == 1 )
+static void prvRegTest3_Task( void * pvParameters )
+{
+    /* Although the reg tests are written in assembly, its entry
+     * point is written in C for convenience of checking that the
+     * task parameter is being passed in correctly. */
+    if( pvParameters == REG_TEST_3_TASK_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest3Asm_NonSecure();
+    }
+
+    /* The following line will only execute if the task parameter
+     * is found to be incorrect. The check task will detect that
+     * the reg test loop counter is not being incremented and flag
+     * an error. */
+    vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvRegTest4_Task( void * pvParameters )
+{
+    /* Although the reg tests are written in assembly, its entry
+     * point is written in C for convenience of checking that the
+     * task parameter is being passed in correctly. */
+    if( pvParameters == REG_TEST_4_TASK_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest4Asm_NonSecure();
+    }
+
+    /* The following line will only execute if the task parameter
+     * is found to be incorrect. The check task will detect that
+     * the reg test loop counter is not being incremented and flag
+     * an error. */
+    vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
 
 static void prvRegTest_Secure_Task( void * pvParameters )
 {
@@ -279,11 +374,7 @@ static void prvRegTest_Secure_Task( void * pvParameters )
      * an error. */
     vTaskDelete( NULL );
 }
-
-#endif
 /*-----------------------------------------------------------*/
-
-#if( configENABLE_TRUSTZONE == 1 )
 
 static void prvRegTest_NonSecureCallback_Task( void * pvParameters )
 {
@@ -316,8 +407,6 @@ static void prvRegTest_NonSecureCallback_Task( void * pvParameters )
      * an error. */
     vTaskDelete( NULL );
 }
-
-#endif
 /*-----------------------------------------------------------*/
 
 static void prvCheckTask( void * pvParameters )
@@ -326,9 +415,8 @@ TickType_t xDelayPeriod = NO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 unsigned long ulErrorFound = pdFALSE;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-#if( configENABLE_TRUSTZONE == 1 )
-    static unsigned long ulLastRegTestSecureValue = 0, ulLastRegTestNonSecureCallbackValue = 0;
-#endif
+static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
+static unsigned long ulLastRegTestSecureValue = 0, ulLastRegTestNonSecureCallbackValue = 0;
 
     /* Just to stop compiler warnings. */
     ( void ) pvParameters;
@@ -362,37 +450,40 @@ static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
         }
         ulLastRegTest2Value = ulRegTest2LoopCounter;
 
-        #if( configENABLE_TRUSTZONE == 1 )
+        /* Check that the register test 3 task is still running. */
+        if( ulLastRegTest3Value == ulRegTest3LoopCounter )
         {
-            /* Check that the register test secure task is still running. */
-            if( ulLastRegTestSecureValue == ulRegTestSecureLoopCounter )
-            {
-                ulErrorFound |= 1UL << 2UL;
-            }
-            ulLastRegTestSecureValue = ulRegTestSecureLoopCounter;
-
-            /* Check that the register test non-secure callback task is
-            * still running. */
-            if( ulLastRegTestNonSecureCallbackValue == ulRegTestNonSecureCallbackLoopCounter )
-            {
-                ulErrorFound |= 1UL << 3UL;
-            }
-            ulLastRegTestNonSecureCallbackValue = ulRegTestNonSecureCallbackLoopCounter;
+            ulErrorFound |= 1UL << 2UL;
         }
-        #endif /* configENABLE_TRUSTZONE */
+        ulLastRegTest3Value = ulRegTest3LoopCounter;
 
-        /* Toggle the green LED to give an indication of the system status.
-         * If the LED toggles every NO_ERROR_CHECK_TASK_PERIOD milliseconds
-         * then everything is ok. A faster toggle indicates an error. */
-        GPIO_TOGGLE( GREEN_LED );
+        /* Check that the register test 4 task is still running. */
+        if( ulLastRegTest4Value == ulRegTest4LoopCounter )
+        {
+            ulErrorFound |= 1UL << 3UL;
+        }
+        ulLastRegTest4Value = ulRegTest4LoopCounter;
+
+        /* Check that the register test secure task is still running. */
+        if( ulLastRegTestSecureValue == ulRegTestSecureLoopCounter )
+        {
+            ulErrorFound |= 1UL << 4UL;
+        }
+        ulLastRegTestSecureValue = ulRegTestSecureLoopCounter;
+
+        /* Check that the register test non-secure callback task is
+         * still running. */
+        if( ulLastRegTestNonSecureCallbackValue == ulRegTestNonSecureCallbackLoopCounter )
+        {
+            ulErrorFound |= 1UL << 5UL;
+        }
+        ulLastRegTestNonSecureCallbackValue = ulRegTestNonSecureCallbackLoopCounter;
 
         if( ulErrorFound != pdFALSE )
         {
             /* An error has been detected in one of the tasks. */
             xDelayPeriod = ERROR_CHECK_TASK_PERIOD;
 
-            /* Turn on Yellow LED to indicate error. */
-            YELLOW_LED = 0;
             printf( "ERROR detected!\r\n" );
 
             /* Increment error detection count. */

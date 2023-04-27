@@ -34,16 +34,23 @@
 #include "pin_mux.h"
 #include "board.h"
 #include "clock_config.h"
+#include "fsl_power.h"
 
 /* Demo includes. */
 #include "tz_demo.h"
 #include "mpu_demo.h"
+#include "reg_tests.h"
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Create all demo tasks.
  */
 static void prvCreateTasks( void );
+
+/**
+ * @brief Setup hardware.
+ */
+static void prvSetupHardware( void );
 
 /**
  * @brief Application-specific implementation of the SystemInit() weak
@@ -66,6 +73,9 @@ void MemManage_Handler( void ) __attribute__ ( ( naked ) );
 /* Non-Secure main. */
 int main( void )
 {
+	/* Setup hardware. */
+	prvSetupHardware();
+
 	/* Create tasks. */
 	prvCreateTasks();
 
@@ -90,6 +100,15 @@ static void prvCreateTasks( void )
 	/* Create tasks for the TZ Demo. */
 	vStartTZDemo();
 
+	/* Create tasks for reg tests. */
+	vStartRegTests();
+}
+/*-----------------------------------------------------------*/
+
+static void prvSetupHardware( void )
+{
+	/* Set BOD VBAT level to 1.65V. */
+	POWER_SetBodVbatLevel( kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false );
 }
 /*-----------------------------------------------------------*/
 

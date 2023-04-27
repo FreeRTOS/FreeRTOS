@@ -54,7 +54,7 @@
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 80 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_MUTEXES				1
@@ -120,5 +120,9 @@ machine on which the test is developed). */
 #define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 5 )
 #define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 4 )
 #define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 5 )
+
+#ifdef PICOLIBC_TLS
+#define configUSE_PICOLIBC_TLS                  1
+#endif
 
 #endif /* FREERTOS_CONFIG_H */

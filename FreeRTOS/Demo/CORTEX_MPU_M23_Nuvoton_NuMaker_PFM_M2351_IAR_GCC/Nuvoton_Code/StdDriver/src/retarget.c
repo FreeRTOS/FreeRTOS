@@ -496,10 +496,15 @@ int fputc(int ch, FILE *stream)
 }
 
 
-#if defined ( __GNUC__ )
+#if ( defined ( __GNUC__ ) || defined( __ICCARM__ ) )
 
 #if !defined(OS_USE_SEMIHOSTING)
-int _write (int fd, char *ptr, int len)
+
+#if defined( __ICCARM__ )
+    int __write (int fd, char *ptr, int len)
+#else
+    int _write (int fd, char *ptr, int len)
+#endif
 {
     int i = len;
 

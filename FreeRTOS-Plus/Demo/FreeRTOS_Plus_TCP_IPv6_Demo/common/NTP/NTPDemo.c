@@ -607,6 +607,7 @@ static void prvNTPTask( void * pvParameters )
                 {
                     xAddress.sin_address.ulIP_IPv4 = ulIPAddressFound;
                     xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
+                    xAddress.sin_family = FREERTOS_AF_INET;
 
                     FreeRTOS_printf( ( "Sending UDP message to %lxip:%u\n",
                                        FreeRTOS_ntohl( ulIPAddressFound ),

@@ -182,6 +182,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
                 /* Set the address to which the print messages are sent. */
                 xPrintUDPAddress.sin_port = FreeRTOS_htons( usRemotePort );
                 xPrintUDPAddress.sin_address.ulIP_IPv4 = ulRemoteIPAddress;
+                xPrintUDPAddress.sin_family = FREERTOS_AF_INET;
             }
 
             /* If a disk file or stdout are to be used then Win32 system calls will

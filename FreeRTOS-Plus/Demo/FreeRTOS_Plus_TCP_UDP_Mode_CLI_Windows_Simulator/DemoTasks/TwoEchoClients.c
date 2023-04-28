@@ -156,6 +156,8 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 	}
 	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
+
 	for( ;; )
 	{
 		/* Create a socket. */
@@ -298,6 +300,8 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 																configECHO_SERVER_ADDR3 );
 	}
 	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{

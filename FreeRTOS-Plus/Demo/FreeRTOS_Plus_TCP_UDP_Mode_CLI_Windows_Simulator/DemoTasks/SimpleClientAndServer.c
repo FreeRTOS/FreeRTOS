@@ -112,6 +112,7 @@ const portTickType x150ms = 150UL / portTICK_RATE_MS;
 	
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
+	xDestinationAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{
@@ -237,6 +238,7 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
+	xDestinationAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{

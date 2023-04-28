@@ -409,6 +409,8 @@ struct freertos_sockaddr xAddress;
 					FreeRTOS_inet_ntoa( xAddress.sin_addr, pcBuf );
 				}
 				#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+				xAddress.sin_family = FREERTOS_AF_INET;
 				
 				FreeRTOS_printf( ( "Sending UDP message to %s:%u\n",
 					pcBuf,

@@ -744,6 +744,7 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     destinationAddress.sin_port = FreeRTOS_htons( serverPort );
+    destinationAddress.sin_family = FREERTOS_AF_INET;
 
     /* Send the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
      * is clear. */

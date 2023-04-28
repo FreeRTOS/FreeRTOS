@@ -93,7 +93,7 @@ FreeRTOS/Source/tasks.c for limitations. */
 #define configKERNEL_INTERRUPT_PRIORITY 		( 255 )	/* All eight bits as QEMU doesn't model the priority bits. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 )
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 4 )
 
 /* Use the Cortex-M3 optimised task selection rather than the generic C code
 version. */

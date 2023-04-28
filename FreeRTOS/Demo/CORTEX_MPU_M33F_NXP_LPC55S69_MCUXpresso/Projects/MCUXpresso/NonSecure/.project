@@ -83,19 +83,24 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Common/ARMv8M/tz_demo/tz_demo.h</locationURI>
 		</link>
 		<link>
-			<name>User/main_ns.c</name>
+			<name>User/fault_handler.c</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/main_ns.c</locationURI>
+			<locationURI>PROJECT_LOC/fault_handler.c</locationURI>
 		</link>
 		<link>
-			<name>User/res_tests.c</name>
+			<name>User/main_ns.c</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/reg_tests.c</locationURI>
+			<locationURI>DEMO_ROOT/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/User/NonSecure/main_ns.c</locationURI>
+		</link>
+		<link>
+			<name>User/reg_tests.c</name>
+			<type>1</type>
+			<locationURI>DEMO_ROOT/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/RegTests/reg_tests.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1681724631111</id>
+			<id>1682451970778</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -104,12 +109,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1681724631147</id>
+			<id>1682451970814</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-*.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1682451751797</id>
+			<name>NXP_Code</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-trustzone</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -155,6 +169,15 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-Common</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1682451733052</id>
+			<name>NXP_Code/startup</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-startup_LPC55S69_cm33_core0.s</arguments>
 			</matcher>
 		</filter>
 		<filter>

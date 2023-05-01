@@ -964,6 +964,8 @@ BaseType_t xResult;
 
 		
 		xAddress.sin_port = FreeRTOS_htons( pxClient->usClientPort );
+		xAddress.sin_family = FREERTOS_AF_INET;
+		
 		/* Start an active connection for this data socket */
 		xResult = FreeRTOS_connect( pxClient->xTransferSocket, &xAddress, sizeof( xAddress ) );
 	}

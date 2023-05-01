@@ -1838,6 +1838,8 @@ static void prvFreeRTOS_connect_InvalidParams( void )
         xEchoServerAddress.sin_addr = ulEchoServerIP;
     }
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    xEchoServerAddress.sin_family = FREERTOS_AF_INET;
     
 
     /* Invalid socket. */
@@ -1865,6 +1867,8 @@ static void prvFreeRTOS_connect_InvalidParams( void )
         xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( 0, 0, 0, 0 );
     }
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    xEchoServerAddress.sin_family = FREERTOS_AF_INET;
     
     xResult = FreeRTOS_connect( xSocket,
                                &xEchoServerAddress,
@@ -1892,6 +1896,8 @@ static void prvFreeRTOS_connect_InvalidParams( void )
         xEchoServerAddress.sin_addr = ulEchoServerIP;
     }
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    xEchoServerAddress.sin_family = FREERTOS_AF_INET;
     
     xResult = FreeRTOS_connect( xSocket,
                                &xEchoServerAddress,

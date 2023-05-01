@@ -1407,6 +1407,7 @@ static bool createUdpSocket( Socket_t * pSocket )
          * spoofing vulnerability from "network off-path" attackers. */
         uint16_t randomPort = ( generateRandomNumber() % UINT16_MAX );
         bindAddress.sin_port = FreeRTOS_htons( randomPort );
+        bindAddress.sin_family = FREERTOS_AF_INET;
 
         if( FreeRTOS_bind( *pSocket, &bindAddress, sizeof( bindAddress ) ) == 0 )
         {

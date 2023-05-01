@@ -192,6 +192,7 @@
          * listen for incoming connections. */
         xBindAddress.sin_port = tcpechoPORT_NUMBER;
         xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );
+        xBindAddress.sin_family = FREERTOS_AF_INET;
         FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
         FreeRTOS_listen( xListeningSocket, xBacklog );
 

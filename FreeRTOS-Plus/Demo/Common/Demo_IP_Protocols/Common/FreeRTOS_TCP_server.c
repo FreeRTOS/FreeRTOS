@@ -102,6 +102,7 @@ SocketSet_t xSocketSet;
 						#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 						
 						xAddress.sin_port = FreeRTOS_htons( xPortNumber );
+						xAddress.sin_family = FREERTOS_AF_INET;
 
 						FreeRTOS_bind( xSocket, &xAddress, sizeof( xAddress ) );
 						FreeRTOS_listen( xSocket, pxConfigs[ xIndex ].xBackLog );

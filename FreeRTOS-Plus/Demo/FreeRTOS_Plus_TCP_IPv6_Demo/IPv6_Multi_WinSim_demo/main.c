@@ -730,6 +730,7 @@ static void prvServerWorkTask( void * pvArgument )
         ( void ) memset( &( xAddress ), 0, sizeof( xAddress ) );
         xAddress.sin_family = FREERTOS_AF_INET6;
         xAddress.sin_port = FreeRTOS_htons( 5000U );
+        xAddress.sin_family = FREERTOS_AF_INET;
 
         BaseType_t xReturn = FreeRTOS_bind( xSocket, &xAddress, ( socklen_t ) sizeof( xAddress ) );
         FreeRTOS_printf( ( "Open socket %d bind = %d\n", xSocketValid( xSocket ), xReturn ) );

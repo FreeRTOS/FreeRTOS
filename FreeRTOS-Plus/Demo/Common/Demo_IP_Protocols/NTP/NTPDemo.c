@@ -160,6 +160,7 @@ void vStartNTPTask( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority )
 			#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 			xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
+			xAddress.sin_family = FREERTOS_AF_INET;
 
 			FreeRTOS_bind( xUDPSocket, &xAddress, sizeof( xAddress ) );
 			FreeRTOS_setsockopt( xUDPSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );

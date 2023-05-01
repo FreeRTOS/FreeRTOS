@@ -190,6 +190,7 @@ xSocket_t xSocket = FREERTOS_INVALID_SOCKET;
 
 		/* Set family and port. */
 		xServer.sin_port = FreeRTOS_htons( usPort );
+		xServer.sin_family = FREERTOS_AF_INET;
 
 		/* Bind the address to the socket. */
 		if( FreeRTOS_bind( xSocket, &xServer, sizeof( xServer ) ) == -1 )

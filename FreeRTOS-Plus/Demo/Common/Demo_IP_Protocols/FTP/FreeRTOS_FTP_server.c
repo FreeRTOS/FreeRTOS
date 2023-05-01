@@ -874,6 +874,7 @@ BaseType_t xResult;
 		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 		
 		xAddress.sin_port = FreeRTOS_htons( 0 );		/* Bind to any available port number */
+		xAddress.sin_family = FREERTOS_AF_INET;
 
 		BaseType_t xBindResult;
 		xBindResult = FreeRTOS_bind( xSocket, &xAddress, sizeof( xAddress ) );

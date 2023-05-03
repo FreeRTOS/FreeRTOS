@@ -69,14 +69,14 @@ jobs:
           sudo apt-get -y install build-essential
 
       - name: Build Posix_GCC Full Demo
-        id: build-posix-gcc-demo
+        id: build-posix-gcc-full-demo
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
           make -j
 
       - name: Run and monitor Posix_GCC Full Demo
-        if: success()
+        if: success() || failure() && steps.build-posix-gcc-full-demo.outcome == 'success'
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
           timeout 5m build/posix_demo | tee output.txt
@@ -88,7 +88,8 @@ jobs:
           fi
 
       - name: Build Posix_GCC Blinky Demo
-        if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
+        id: build-posix-gcc-blinky-demo
+        if: success() || failure()
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
@@ -96,7 +97,7 @@ jobs:
           make -j
 
       - name: Run and monitor Posix_GCC Blinky Demo
-        if: success() || failure() && steps.build-posix-gcc-demo.outcome == 'success'
+        if: success() || failure() && steps.build-posix-gcc-blinky-demo.outcome == 'success'
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
           timeout 30s build/posix_demo | tee output.txt

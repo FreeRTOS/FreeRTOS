@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<workspace>
+  <batchBuild>
+    <batchDefinition>
+      <name>all</name>
+      <member>
+        <project>FreeRTOSDemo_s</project>
+        <configuration>debug</configuration>
+      </member>
+      <member>
+        <project>FreeRTOSDemo_ns</project>
+        <configuration>debug</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+  <project>
+    <path>$WS_DIR$/Secure/FreeRTOSDemo_s.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$/NonSecure/FreeRTOSDemo_ns.ewp</path>
+  </project>
+</workspace>

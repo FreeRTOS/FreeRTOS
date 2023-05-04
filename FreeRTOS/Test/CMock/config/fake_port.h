@@ -61,8 +61,8 @@ BaseType_t vFakePortCheckIfInISR( void );
 unsigned int vFakePortGetCoreID( void );
 void vFakePortYieldCore( int );
 
-UBaseType_t vFakePortEnterCriticalFromISR( void );
-void vFakePortExitCriticalFromISR( UBaseType_t uxSavedInterruptState );
+portBASE_TYPE vFakePortEnterCriticalFromISR( void );
+void vFakePortExitCriticalFromISR( portBASE_TYPE uxSavedInterruptState );
 
 void vFakePortAllocateSecureContext( BaseType_t stackSize );
 

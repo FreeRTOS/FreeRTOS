@@ -76,9 +76,9 @@ extern void prvAddNewTaskToReadyList( TCB_t * pxNewTCB );
 extern void prvYieldForTask( TCB_t * pxTCB );
 extern void prvSelectHighestPriorityTask( BaseType_t xCoreID );
 extern void vTaskEnterCritical( void );
-extern UBaseType_t vTaskEnterCriticalFromISR( void );
+extern portBASE_TYPE vTaskEnterCriticalFromISR( void );
 extern void vTaskExitCritical( void );
-extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
+extern void vTaskExitCriticalFromISR( portBASE_TYPE xSavedInterruptStatus );
 extern void prvCheckTasksWaitingTermination( void );
 extern void prvDeleteTCB( TCB_t * pxTCB );
 extern TCB_t * prvSearchForNameWithinSingleList( List_t * pxList,
@@ -2050,7 +2050,7 @@ void test_coverage_vTaskEnterCritical_task_in_critical_already( void )
 void test_coverage_vTaskEnterCriticalFromISR_isr_in_critical_already( void )
 {
     TCB_t xTaskTCB = { NULL };
-    UBaseType_t uxSavedInterruptStatus;
+    portBASE_TYPE xSavedInterruptStatus;
 
     /* Setup the variables and structure. */
     xTaskTCB.uxCriticalNesting = 1;
@@ -2067,11 +2067,11 @@ void test_coverage_vTaskEnterCriticalFromISR_isr_in_critical_already( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 );                     /* Increment the critical nesting count. */
 
     /* API call. */
-    uxSavedInterruptStatus = vTaskEnterCriticalFromISR();
+    xSavedInterruptStatus = vTaskEnterCriticalFromISR();
 
     /* Validation. */
     TEST_ASSERT_EQUAL( 2, xTaskTCB.uxCriticalNesting );
-    TEST_ASSERT_EQUAL( 0X5a5a, uxSavedInterruptStatus );
+    TEST_ASSERT_EQUAL( 0X5a5a, xSavedInterruptStatus );
 }
 
 /**

@@ -83,8 +83,8 @@ static BaseType_t xTaskLockCount[ configNUMBER_OF_CORES ] = { 0 };
 
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-extern UBaseType_t vTaskEnterCriticalFromISR( void );
-extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
+extern portBASE_TYPE vTaskEnterCriticalFromISR( void );
+extern void vTaskExitCriticalFromISR( portBASE_TYPE uxSavedInterruptStatus );
 
 /* ==========================  CALLBACK FUNCTIONS  ========================== */
 
@@ -265,18 +265,18 @@ void vFakePortReleaseTaskLockCallback( int cmock_num_calls )
     }
 }
 
-UBaseType_t vFakePortEnterCriticalFromISRCallback( int cmock_num_calls )
+portBASE_TYPE vFakePortEnterCriticalFromISRCallback( int cmock_num_calls )
 {
-    UBaseType_t uxSavedInterruptState;
+    portBASE_TYPE xSavedInterruptState;
 
-    uxSavedInterruptState = vTaskEnterCriticalFromISR();
-    return uxSavedInterruptState;
+    xSavedInterruptState = vTaskEnterCriticalFromISR();
+    return xSavedInterruptState;
 }
 
-void vFakePortExitCriticalFromISRCallback( UBaseType_t uxSavedInterruptState,
+void vFakePortExitCriticalFromISRCallback( portBASE_TYPE xSavedInterruptState,
                                            int cmock_num_calls )
 {
-    vTaskExitCriticalFromISR( uxSavedInterruptState );
+    vTaskExitCriticalFromISR( xSavedInterruptState );
     /* Simulate yield cores when leaving the critical section. */
     vYieldCores();
 }

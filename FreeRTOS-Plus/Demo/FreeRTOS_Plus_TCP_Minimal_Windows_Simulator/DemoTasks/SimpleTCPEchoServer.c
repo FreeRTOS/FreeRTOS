@@ -1,6 +1,6 @@
 /*
     FreeRTOS V202212.00
-    All rights reserved
+    Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 

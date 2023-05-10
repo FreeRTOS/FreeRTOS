@@ -21,6 +21,7 @@
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
+ *
  */
 
 /* Standard includes. */

@@ -1,9 +1,4 @@
 /*
- *!
- *! The protocols implemented in this file are intended to be demo quality only,
- *! and not for production devices.
- *!
- *
  * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
@@ -26,10 +21,15 @@
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
- * 
+ *
  */
 
 /*
+ *!
+ *! The protocols implemented in this file are intended to be demo quality only,
+ *! and not for production devices.
+ *!
+ *
  * NTPDemo.c
  *
  * An example of how to lookup a domain using DNS

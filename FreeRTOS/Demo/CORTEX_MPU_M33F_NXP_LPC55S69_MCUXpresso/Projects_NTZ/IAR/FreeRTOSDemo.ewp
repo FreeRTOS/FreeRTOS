@@ -677,7 +677,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>128</hasPrio>
+                <hasPrio>1</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -1088,7 +1088,7 @@
     <group>
         <name>Config</name>
         <file>
-            <name>$PROJ_DIR$\..\Config\FreeRTOSConfig.h</name>
+            <name>$PROJ_DIR$\Config\FreeRTOSConfig.h</name>
         </file>
     </group>
     <group>

@@ -1,11 +1,6 @@
 /*
- *!
- *! The protocols implemented in this file are intended to be demo quality only,
- *! and not for production devices.
- *!
- *
- * FreeRTOS+TCP V2.0.3
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,8 +19,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
+/*
+ *!
+ *! The protocols implemented in this file are intended to be demo quality only,
+ *! and not for production devices.
+ *!
  */
 
 /* Standard includes. */
@@ -874,6 +877,7 @@ BaseType_t xResult;
 		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 		
 		xAddress.sin_port = FreeRTOS_htons( 0 );		/* Bind to any available port number */
+		xAddress.sin_family = FREERTOS_AF_INET;
 
 		BaseType_t xBindResult;
 		xBindResult = FreeRTOS_bind( xSocket, &xAddress, sizeof( xAddress ) );
@@ -963,6 +967,8 @@ BaseType_t xResult;
 
 		
 		xAddress.sin_port = FreeRTOS_htons( pxClient->usClientPort );
+		xAddress.sin_family = FREERTOS_AF_INET;
+		
 		/* Start an active connection for this data socket */
 		xResult = FreeRTOS_connect( pxClient->xTransferSocket, &xAddress, sizeof( xAddress ) );
 	}

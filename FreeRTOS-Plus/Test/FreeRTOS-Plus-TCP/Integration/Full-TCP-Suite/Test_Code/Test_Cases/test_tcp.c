@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Secure Sockets V1.1.9
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /* Standard includes. */
@@ -1838,6 +1839,8 @@ static void prvFreeRTOS_connect_InvalidParams( void )
         xEchoServerAddress.sin_addr = ulEchoServerIP;
     }
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    xEchoServerAddress.sin_family = FREERTOS_AF_INET;
     
 
     /* Invalid socket. */
@@ -1865,6 +1868,8 @@ static void prvFreeRTOS_connect_InvalidParams( void )
         xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( 0, 0, 0, 0 );
     }
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    xEchoServerAddress.sin_family = FREERTOS_AF_INET;
     
     xResult = FreeRTOS_connect( xSocket,
                                &xEchoServerAddress,
@@ -1892,6 +1897,8 @@ static void prvFreeRTOS_connect_InvalidParams( void )
         xEchoServerAddress.sin_addr = ulEchoServerIP;
     }
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    xEchoServerAddress.sin_family = FREERTOS_AF_INET;
     
     xResult = FreeRTOS_connect( xSocket,
                                &xEchoServerAddress,

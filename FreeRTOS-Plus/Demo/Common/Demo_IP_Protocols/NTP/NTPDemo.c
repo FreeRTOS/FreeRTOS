@@ -1,11 +1,6 @@
 /*
- *!
- *! The protocols implemented in this file are intended to be demo quality only,
- *! and not for production devices.
- *!
- *
- * FreeRTOS+TCP V2.0.3
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,11 +19,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /*
+ *!
+ *! The protocols implemented in this file are intended to be demo quality only,
+ *! and not for production devices.
+ *!
+ *
  * NTPDemo.c
  *
  * An example of how to lookup a domain using DNS
@@ -160,6 +161,7 @@ void vStartNTPTask( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority )
 			#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 			xAddress.sin_port = FreeRTOS_htons( NTP_PORT );
+			xAddress.sin_family = FREERTOS_AF_INET;
 
 			FreeRTOS_bind( xUDPSocket, &xAddress, sizeof( xAddress ) );
 			FreeRTOS_setsockopt( xUDPSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
@@ -409,6 +411,8 @@ struct freertos_sockaddr xAddress;
 					FreeRTOS_inet_ntoa( xAddress.sin_addr, pcBuf );
 				}
 				#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+				xAddress.sin_family = FREERTOS_AF_INET;
 				
 				FreeRTOS_printf( ( "Sending UDP message to %s:%u\n",
 					pcBuf,

@@ -125,6 +125,7 @@ const TickType_t x150ms = 150UL / portTICK_PERIOD_MS;
 	
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
+	xDestinationAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{
@@ -183,6 +184,7 @@ Socket_t xListeningSocket;
 	so the IP address is valid here. */
 	xBindAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );
+	xBindAddress.sin_family = FREERTOS_AF_INET;
 
 	/* Bind the socket to the port that the client task will send to. */
 	FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
@@ -244,6 +246,7 @@ const size_t xStringLength = strlen( pcStringToSend ) + 15;
 
 	xDestinationAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xDestinationAddress.sin_port = FreeRTOS_htons( xDestinationAddress.sin_port );
+	xDestinationAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{
@@ -352,6 +355,7 @@ Socket_t xListeningSocket;
 	
 	xBindAddress.sin_port = ( uint16_t ) ( ( uint32_t ) pvParameters ) & 0xffffUL;
 	xBindAddress.sin_port = FreeRTOS_htons( xBindAddress.sin_port );
+	xBindAddress.sin_family = FREERTOS_AF_INET;
 
 	/* Bind the socket to the port that the client task will send to. */
 	FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );

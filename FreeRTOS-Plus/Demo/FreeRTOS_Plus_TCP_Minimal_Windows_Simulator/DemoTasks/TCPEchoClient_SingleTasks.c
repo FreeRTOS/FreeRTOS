@@ -164,6 +164,8 @@ TickType_t xTimeOnEntering;
 	}
 	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
+
 	for( ;; )
 	{
 		/* Create a TCP socket. */

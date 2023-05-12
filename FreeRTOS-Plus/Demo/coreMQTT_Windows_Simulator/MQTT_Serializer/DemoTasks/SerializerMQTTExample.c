@@ -615,6 +615,8 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
             }
             #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
+            xBrokerAddress.sin_family = FREERTOS_AF_INET;
+
             if( FreeRTOS_connect( xMQTTSocket, &xBrokerAddress, sizeof( xBrokerAddress ) ) == 0 )
             {
                 /* Connection was successful. */

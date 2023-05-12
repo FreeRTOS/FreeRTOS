@@ -191,6 +191,8 @@ void vLoggingInit( BaseType_t xLogToStdout,
                     xPrintUDPAddress.sin_addr = ulRemoteIPAddress;
                 }
                 #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+                xPrintUDPAddress.sin_family = FREERTOS_AF_INET;
                 
             }
 

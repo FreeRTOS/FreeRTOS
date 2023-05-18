@@ -33,11 +33,7 @@
 /* These tests should work in all modes */
 #define mainENABLE_COUNTING_SEMAPHORE 1
 #define mainENABLE_DEATH 1
-
-/* TODO: This still seems flaky on SMP */
-#if ( portSUPPORT_SMP == 0)
-    #define mainENABLE_INTERRUPT_QUEUE 1
-#endif
+#define mainENABLE_INTERRUPT_QUEUE 1
 #define mainENABLE_MATH 1
 #define mainENABLE_QUEUE_OVERWRITE 1
 #define mainENABLE_REG_TEST 1
@@ -45,7 +41,7 @@
 #define mainENABLE_TASK_NOTIFY 1
 
 #if ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 )
-    /* These tests assume that a higher priority task will block a lower priority tax from running */
+    /* These tests assume that a higher priority task will block a lower priority task from running */
     #define mainENABLE_BLOCK_TIME 1
     #define mainENABLE_BLOCKING_QUEUE 1
     #define mainENABLE_GENERIC_QUEUE 1

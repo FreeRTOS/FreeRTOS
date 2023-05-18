@@ -93,8 +93,9 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          sed -i "s/#define[[:space:]]\+mainSELECTED_APPLICATION[[:space:]]\+FULL_DEMO/#define    mainSELECTED_APPLICATION      BLINKY_DEMO/g" main.c
-          make -j
+          # sed -i "s/#define[[:space:]]\+mainSELECTED_APPLICATION[[:space:]]\+FULL_DEMO/#define    mainSELECTED_APPLICATION      BLINKY_DEMO/g" main.c
+          # make -j
+          rm -rf build | make USER_DEMO=BLINKY_DEMO
 
       - name: Run and monitor Posix_GCC Blinky Demo
         if: success() || failure() && steps.build-posix-gcc-blinky-demo.outcome == 'success'

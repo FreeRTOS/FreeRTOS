@@ -181,6 +181,7 @@ int main( void )
     #elif ( mainSELECTED_APPLICATION == FULL_DEMO )
         {
             console_print( "Starting full demo\n" );
+            console_print( "Testing full demo\n" );
             main_full();
         }
     #else

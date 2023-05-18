@@ -376,7 +376,11 @@ static void prvHigherPriorityNormallyEmptyTask( void * pvParameters )
                 memset( ucNormallyEmptyReceivedValues, 0x00, sizeof( ucNormallyEmptyReceivedValues ) );
 
                 uxHighPriorityLoops1++;
-                uxValueForNormallyEmptyQueue = 0;
+                portENTER_CRITICAL();
+                {
+                    uxValueForNormallyEmptyQueue = 0;
+                }
+                portEXIT_CRITICAL();
 
                 /* Suspend ourselves, allowing the lower priority task to
                  * actually receive something from the queue.  Until now it
@@ -528,7 +532,11 @@ static void prv1stHigherPriorityNormallyFullTask( void * pvParameters )
             memset( ucNormallyFullReceivedValues, 0x00, sizeof( ucNormallyFullReceivedValues ) );
 
             uxHighPriorityLoops2++;
-            uxValueForNormallyFullQueue = 0;
+            portENTER_CRITICAL();
+            {
+                uxValueForNormallyFullQueue = 0;
+            }
+            portEXIT_CRITICAL();
 
             /* Suspend ourselves, allowing the lower priority task to
              * actually receive something from the queue.  Until now it

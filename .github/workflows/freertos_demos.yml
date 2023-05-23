@@ -29,7 +29,7 @@ jobs:
         working-directory: FreeRTOS/Demo/WIN32-MSVC
         run: |
           Start-Process Debug/RTOSDemo | Out-File output.txt
-          timeout -t 60
+          Wait-Process -Name "RTOSDemo" -Timeout 120
           if (Select-String -Path output.txt -Pattern 'No errors') {
             echo "\nSUCCESS - Found SUCCESS string in output."
           } 

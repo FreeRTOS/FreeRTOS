@@ -2,6 +2,7 @@ name: FreeRTOS Demos
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   WIN32-MSVC:

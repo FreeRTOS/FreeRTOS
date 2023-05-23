@@ -28,7 +28,7 @@ jobs:
         if: success() || failure() && steps.build-win32-msvs-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS/Demo/WIN32-MSVC/Debug/RTOSDemo.exe
+          exe-path: .\Debug/RTOSDemo.exe
           log-dir: demo_run_logs
           timeout-seconds: 300
           success-line: "No errors - tick count"

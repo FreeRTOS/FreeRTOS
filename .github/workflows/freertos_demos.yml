@@ -49,7 +49,7 @@ jobs:
         with:
           exe-path: FreeRTOS/Demo/WIN32-MSVC/Debug/RTOSDemo.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 60
           success-line: "Message received from software timer"
 
       - name: Build WIN32-MSVC-Static-Allocation-Only Demo

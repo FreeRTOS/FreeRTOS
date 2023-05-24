@@ -10,12 +10,23 @@ SIZE = riscv64-unknown-elf-size
 MAKE = make
 
 CFLAGS += $(INCLUDE_DIRS) -DportasmHANDLE_INTERRUPT=handle_trap -fmessage-length=0 \
-          -march=rv32imac -mabi=ilp32 -mcmodel=medlow -ffunction-sections -fdata-sections \
-          --specs=nano.specs -fno-builtin-printf  -Wno-unused-parameter -nostartfiles -g3 -Os
+          -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -ffunction-sections -fdata-sections \
+          -Wno-unused-parameter -nostartfiles -g3 -Os
           
+ifeq ($(PICOLIBC),1)
+CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF 
+else
+CFLAGS += --specs=nano.specs -fno-builtin-printf
+endif
+
 LDFLAGS += -nostartfiles -Xlinker --gc-sections -Wl,-Map,$(OUTPUT_DIR)/RTOSDemo.map \
            -T./fake_rom.ld -march=rv32imac -mabi=ilp32 -mcmodel=medlow -Xlinker \
-           --defsym=__stack_size=350 -Wl,--start-group -Wl,--end-group -Wl,--wrap=malloc \
+           --defsym=__stack_size=350 -Wl,--start-group -Wl,--end-group
+
+ifeq ($(PICOLIBC),1)
+LDFLAGS += --specs=picolibc.specs --oslib=semihost --crt0=minimal -DPICOLIBC_INTEGER_PRINTF_SCANF
+else
+LDFLAGS +=  -Wl,--wrap=malloc \
            -Wl,--wrap=free -Wl,--wrap=open -Wl,--wrap=lseek -Wl,--wrap=read -Wl,--wrap=write \
            -Wl,--wrap=fstat -Wl,--wrap=stat -Wl,--wrap=close -Wl,--wrap=link -Wl,--wrap=unlink \
            -Wl,--wrap=execve -Wl,--wrap=fork -Wl,--wrap=getpid -Wl,--wrap=kill -Wl,--wrap=wait \
@@ -24,6 +35,7 @@ LDFLAGS += -nostartfiles -Xlinker --gc-sections -Wl,-Map,$(OUTPUT_DIR)/RTOSDemo.
            -Wl,--wrap=_fstat -Wl,--wrap=_stat -Wl,--wrap=_close -Wl,--wrap=_link -Wl,--wrap=_unlink \
            -Wl,--wrap=_execve -Wl,--wrap=_fork -Wl,--wrap=_getpid -Wl,--wrap=_kill -Wl,--wrap=_wait \
            -Wl,--wrap=_isatty -Wl,--wrap=_times -Wl,--wrap=_sbrk -Wl,--wrap=__exit -Wl,--wrap=_puts
+endif
 
 # -Wl,--wrap=_exit
 #
@@ -92,7 +104,9 @@ SOURCE_FILES += (DEMO_PROJECT)/main_full.c
 SOURCE_FILES += (DEMO_PROJECT)/ns16550.c
 SOURCE_FILES += (DEMO_PROJECT)/riscv-virt.c
 # Lightweight print formatting to use in place of the heavier GCC equivalent.
+ifneq ($(PICOLIBC),1)
 SOURCE_FILES += ./printf-stdarg.c
+endif
 ASM_SOURCE_FILES += ./start.S
 ASM_SOURCE_FILES += ./RegTest.S
 ASM_SOURCE_FILES += ./vector.S

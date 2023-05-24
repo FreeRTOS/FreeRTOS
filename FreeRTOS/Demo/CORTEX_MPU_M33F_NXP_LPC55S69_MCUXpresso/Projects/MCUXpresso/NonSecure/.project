@@ -58,6 +58,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>reg_tests</name>
+			<type>2</type>
+			<locationURI>DEMO_ROOT/Common/ARMv8M/reg_tests</locationURI>
+		</link>
+		<link>
 			<name>Demos/mpu_demo.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Common/ARMv8M/mpu_demo/mpu_demo.c</locationURI>
@@ -78,14 +83,24 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Common/ARMv8M/tz_demo/tz_demo.h</locationURI>
 		</link>
 		<link>
+			<name>User/fault_handler.c</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/fault_handler.c</locationURI>
+		</link>
+		<link>
 			<name>User/main_ns.c</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/main_ns.c</locationURI>
+			<locationURI>DEMO_ROOT/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/User/NonSecure/main_ns.c</locationURI>
+		</link>
+		<link>
+			<name>User/reg_tests.c</name>
+			<type>1</type>
+			<locationURI>DEMO_ROOT/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/RegTests/reg_tests.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1557021723682</id>
+			<id>1682451970778</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -94,12 +109,30 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557021723695</id>
+			<id>1682451970814</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-*.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1682451751797</id>
+			<name>NXP_Code</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-trustzone</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1681721788469</id>
+			<name>reg_tests</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-GCC</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -139,6 +172,24 @@
 			</matcher>
 		</filter>
 		<filter>
+			<id>1682451733052</id>
+			<name>NXP_Code/startup</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-startup_LPC55S69_cm33_core0.s</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1681721804811</id>
+			<name>reg_tests/GCC</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-ARM_CM33</arguments>
+			</matcher>
+		</filter>
+		<filter>
 			<id>1553579192808</id>
 			<name>FreeRTOS/portable/GCC</name>
 			<type>9</type>
@@ -157,6 +208,15 @@
 			</matcher>
 		</filter>
 		<filter>
+			<id>1681721822064</id>
+			<name>reg_tests/GCC/ARM_CM33</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-non_secure</arguments>
+			</matcher>
+		</filter>
+		<filter>
 			<id>1553579213167</id>
 			<name>FreeRTOS/portable/GCC/ARM_CM33</name>
 			<type>9</type>
@@ -166,4 +226,10 @@
 			</matcher>
 		</filter>
 	</filteredResources>
+	<variableList>
+		<variable>
+			<name>DEMO_ROOT</name>
+			<value>$%7BPARENT-4-PROJECT_LOC%7D</value>
+		</variable>
+	</variableList>
 </projectDescription>

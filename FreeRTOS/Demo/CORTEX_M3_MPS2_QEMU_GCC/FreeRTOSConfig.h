@@ -39,10 +39,27 @@
 * See https://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
-#define configASSERT_DEFINED                             1
-extern void vAssertCalled( void );
-#define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled()
-#define configQUEUE_REGISTRY_SIZE                        20
+#define configASSERT_DEFINED    1
+
+extern void vAssertCalled( const char * pcFileName,
+                           int line );
+
+#define __NAME_ARG__    ( __builtin_strrchr( __BASE_FILE__, '/' ) ? __builtin_strrchr( __BASE_FILE__, '/' ) + 1 : __BASE_FILE__ )
+
+#define configASSERT( x )                            \
+    do {                                             \
+        if( ( x ) == 0 ) {                           \
+            vAssertCalled( __NAME_ARG__, __LINE__ ); \
+        }                                            \
+    } while( 0 )
+
+#ifdef __PICOLIBC__
+    #define configUSE_PICOLIBC_TLS                       1
+#endif /* __PICOLIBC__ */
+
+#ifdef __NEWLIB__
+    #define configUSE_NEWLIB_REENTRANT                   1
+#endif /* __NEWLIB__ */
 
 #define configUSE_PREEMPTION                             1
 #define configUSE_TIME_SLICING                           0
@@ -53,8 +70,7 @@ extern void vAssertCalled( void );
 #define configUSE_DAEMON_TASK_STARTUP_HOOK               0
 #define configCPU_CLOCK_HZ                               ( ( unsigned long ) 20000000 )
 #define configTICK_RATE_HZ                               ( ( TickType_t ) 1000 )
-#define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 2000 )
-#define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 900 ) )
+#define configMINIMAL_STACK_SIZE                         ( 2048 )
 #define configMAX_TASK_NAME_LEN                          ( 10 )
 #define configUSE_TRACE_FACILITY                         1
 #define configUSE_16_BIT_TICKS                           0
@@ -66,8 +82,9 @@ extern void vAssertCalled( void );
 #define configUSE_COUNTING_SEMAPHORES                    1
 #define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configSUPPORT_STATIC_ALLOCATION                  1
-#define  configNUM_TX_DESCRIPTORS                        15
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    2
+#define configQUEUE_REGISTRY_SIZE                        20
+#define configUSE_QUEUE_SETS                             1
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
@@ -104,7 +121,7 @@ unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that re
 
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
  * See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    191 /* equivalent to 0xa0, or priority 5. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    4
 #define configMAC_INTERRUPT_PRIORITY            5
 
 /* Prototype for the function used to print out.  In this case it prints to the

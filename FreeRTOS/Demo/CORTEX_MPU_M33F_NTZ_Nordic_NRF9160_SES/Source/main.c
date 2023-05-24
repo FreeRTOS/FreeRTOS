@@ -36,6 +36,7 @@
 
 /* Demo includes. */
 #include "mpu_demo.h"
+#include "reg_tests.h"
 /*-----------------------------------------------------------*/
 
 /* Initialize the MPU symbols needed by the port code. */
@@ -78,6 +79,9 @@ int main( void )
 {
     /* Create tasks for the MPU Demo. */
     vStartMPUDemo();
+
+    /* Create tasks for register tests. */
+    vStartRegTests();
 
     /* Start scheduler. */
     vTaskStartScheduler();

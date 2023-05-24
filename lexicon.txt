@@ -64,6 +64,7 @@ ascii
 asf
 asm
 asn
+aspr
 ast
 async
 atmega
@@ -818,6 +819,7 @@ fpga
 fpidiv
 fprintf
 fpu
+fpscr
 fr
 framming
 france
@@ -1235,6 +1237,7 @@ lsb
 lserialputstring
 lsize
 lsl
+lsls
 lsr
 lstringlength
 ltd
@@ -2169,6 +2172,7 @@ pxcertificatebufferlength
 pxcertificatecontext
 pxcertificateidbufferlength
 pxclass
+pxclidefinitionlistitembuffer
 pxclient
 pxcommand
 pxcommandcontext
@@ -2623,6 +2627,7 @@ subsquent
 succeds
 suicidaltasks
 summarise
+sv
 svc
 svr
 sw
@@ -3131,6 +3136,7 @@ vbuttonisrhandler
 vcellularconnecttask
 vcellulardemotask
 vclearemactxbuffer
+vcmp
 vconfiguretimerforruntimestats
 vcore
 vcreatesuicidaltask
@@ -3184,6 +3190,7 @@ vmaindeleteme
 vmainpoststopprocessing
 vmemchecktask
 vmov
+vmrs
 vodafone
 votademotask
 vpartestinitialise

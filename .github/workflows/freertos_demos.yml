@@ -39,7 +39,7 @@ jobs:
         working-directory: FreeRTOS/Demo/WIN32-MSVC
         run: |
           $content = Get-Content -Path 'main.c'
-          $newContent = $content -replace '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
+          $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
 

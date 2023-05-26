@@ -86,6 +86,9 @@ static void prvCheckTask( void *pvParameters );
 
 int main( void )
 {
+	/* No buffer for stdout. */
+    setvbuf(stdout, NULL, _IONBF, 0);
+
 	/* This demo has configSUPPORT_STATIC_ALLOCATION set to 1 and
 	configSUPPORT_DYNAMIC_ALLOCATION set to 0, so the only standard temo tasks
 	created are the ones that only use static allocation.  This allow the

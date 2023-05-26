@@ -178,6 +178,8 @@ static int xKeyPressed = mainNO_KEY_PRESS_VALUE;
 
 int main( void )
 {
+    
+    setvbuf(stdout, NULL, _IONBF, 0);
     /* This demo uses heap_5.c, so start by defining some heap regions.  heap_5
      * is only used for test and example reasons.  Heap_4 is more appropriate.  See
      * http://www.freertos.org/a00111.html for an explanation. */
@@ -219,10 +221,12 @@ int main( void )
      * of this file. */
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
         {
+            printf( "\nStarting the blinky demo.\n");
             main_blinky();
         }
     #else
         {
+            printf( "\nStarting the full demo.\n");
             main_full();
         }
     #endif /* if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 ) */

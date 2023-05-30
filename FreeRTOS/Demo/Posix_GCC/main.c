@@ -153,7 +153,7 @@ static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 int main( void )
 {
     /* No buffer for stdout. */
-    setvbuf(stdout, NULL, _IONBF, 0);
+    setvbuf( stdout, NULL, _IONBF, 0 );
 
     /* SIGINT is not blocked by the posix port */
     signal( SIGINT, handle_sigint );
@@ -452,7 +452,7 @@ static uint32_t ulEntryTime = 0;
 
 void vTraceTimerReset( void )
 {
-	ulEntryTime = xTaskGetTickCount();
+    ulEntryTime = xTaskGetTickCount();
 }
 
 uint32_t uiTraceTimerGetFrequency( void )
@@ -462,6 +462,5 @@ uint32_t uiTraceTimerGetFrequency( void )
 
 uint32_t uiTraceTimerGetValue( void )
 {
-	return ( xTaskGetTickCount() - ulEntryTime );
+    return( xTaskGetTickCount() - ulEntryTime );
 }
-

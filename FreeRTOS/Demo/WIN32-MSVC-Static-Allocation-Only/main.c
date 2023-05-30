@@ -91,7 +91,7 @@ static void prvCheckTask( void * pvParameters );
 
 int main( void )
 {
-    /* No buffer for stdout. */
+    /* Force stdout to write immediately by setting the buffer size for it to 0. */
     setvbuf( stdout, NULL, _IONBF, 0 );
 
     /* This demo has configSUPPORT_STATIC_ALLOCATION set to 1 and

@@ -152,7 +152,7 @@ static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 
 int main( void )
 {
-    /* No buffer for stdout. */
+    /* Force stdout to write immediately by setting the buffer size for it to 0. */
     setvbuf( stdout, NULL, _IONBF, 0 );
 
     /* SIGINT is not blocked by the posix port */

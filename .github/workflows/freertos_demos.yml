@@ -90,7 +90,7 @@ jobs:
           gcc --version
           make --version
           make
-      
+
       - name: Run and monitor WIN32-MingW Full Demo
         if: success() || failure() && steps.build-win32-mingw-full-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
@@ -99,7 +99,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 300
           success-line: "No errors - tick count"
-      
+
       - name: Build WIN32-MingW Blinky Demo
         id: build-win32-mingw-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
@@ -110,7 +110,7 @@ jobs:
           gcc --version
           make --version
           make
-      
+
       - name: Run and monitor WIN32-MingW Blinky Demo
         if: success() || failure() && steps.build-win32-mingw-blinky-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main

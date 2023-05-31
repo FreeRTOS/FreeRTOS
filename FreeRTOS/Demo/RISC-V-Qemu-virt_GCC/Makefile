@@ -24,7 +24,7 @@ LDFLAGS = -nostartfiles -Tfake_rom.lds \
 	-march=rv32imac -mabi=ilp32 -mcmodel=medany \
 	-Xlinker --gc-sections \
 	-Xlinker --defsym=__stack_size=300 \
-	-Xlinker -Map=RTOSDemo.map
+	-Xlinker -Map=$(BUILD_DIR)/RTOSDemo.map
 
 ifeq ($(DEBUG), 1)
     CFLAGS += -Og -ggdb3

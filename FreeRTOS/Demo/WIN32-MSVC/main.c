@@ -178,9 +178,6 @@ static int xKeyPressed = mainNO_KEY_PRESS_VALUE;
 
 int main( void )
 {
-    /* Force stdout to write immediately by setting the buffer size for it to 0. */
-    setvbuf( stdout, NULL, _IONBF, 0 );
-
     /* This demo uses heap_5.c, so start by defining some heap regions.  heap_5
      * is only used for test and example reasons.  Heap_4 is more appropriate.  See
      * http://www.freertos.org/a00111.html for an explanation. */

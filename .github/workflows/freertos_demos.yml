@@ -23,7 +23,11 @@ jobs:
       - name: Build WIN32-MSVC Full Demo
         id: build-win32-msvs-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
-        run: msbuild WIN32.sln -t:rebuild
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+          msbuild WIN32.sln -t:rebuild
 
       - name: Run and monitor WIN32-MSVC Full Demo
         if: success() || failure() && steps.build-win32-msvs-full-demo.outcome == 'success'
@@ -38,8 +42,9 @@ jobs:
         id: build-win32-msvs-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
         run: |
-          $content = Get-Content -Path 'main.c'
+          $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
+          $newContent = $newContent -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
 
@@ -55,7 +60,11 @@ jobs:
       - name: Build WIN32-MSVC-Static-Allocation-Only Demo
         id: build-win32-msvs-static-allocation-only-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only
-        run: msbuild WIN32.sln -t:rebuild
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+          msbuild WIN32.sln -t:rebuild
 
       - name: Run and monitor WIN32-MSVC-Static-Allocation-Only Demo
         if: success() || failure() && steps.build-win32-msvs-static-allocation-only-demo.outcome == 'success'
@@ -87,6 +96,9 @@ jobs:
         id: build-win32-mingw-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
         run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
           gcc --version
           make --version
           make
@@ -104,8 +116,9 @@ jobs:
         id: build-win32-mingw-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
         run: |
-          $content = Get-Content -Path 'main.c'
+          $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
+          $newContent = $newContent -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
           $newContent | Set-Content -Path 'main.c'
           gcc --version
           make --version
@@ -117,7 +130,7 @@ jobs:
         with:
           exe-path: FreeRTOS/Demo/WIN32-MingW/build/RTOSDemo.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 60
           success-line: "Message received from software timer"
 
   POSIX-GCC:

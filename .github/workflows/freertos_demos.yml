@@ -155,6 +155,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
+          sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           make -j
 
       - name: Run and monitor Posix_GCC Full Demo
@@ -177,6 +178,7 @@ jobs:
         run: |
           # sed -i "s/#define[[:space:]]\+mainSELECTED_APPLICATION[[:space:]]\+FULL_DEMO/#define    mainSELECTED_APPLICATION      BLINKY_DEMO/g" main.c
           # make -j
+          sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           rm -rf build
           make -j USER_DEMO=BLINKY_DEMO
 

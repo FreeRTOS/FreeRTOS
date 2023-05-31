@@ -162,7 +162,7 @@ jobs:
         if: success() || failure() && steps.build-posix-gcc-full-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo.exe
+          exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
           log-dir: demo_run_logs
           timeout-seconds: 300
           success-line: "OK: No errors"
@@ -183,7 +183,7 @@ jobs:
         if: success() || failure() && steps.build-posix-gcc-blinky-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo.exe
+          exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
           log-dir: demo_run_logs
           timeout-seconds: 60
           success-line: "Message received from software timer"

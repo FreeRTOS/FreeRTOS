@@ -172,6 +172,9 @@ static int xKeyPressed = mainNO_KEY_PRESS_VALUE;
 
 int main( void )
 {
+    /* Force stdout to write immediately by setting the buffer size for it to 0. */
+    setvbuf( stdout, NULL, _IONBF, 0 );
+
     /* Set interrupt handler for keyboard input. */
     vPortSetInterruptHandler( mainINTERRUPT_NUMBER_KEYBOARD, prvKeyboardInterruptHandler );
 

@@ -83,15 +83,45 @@ jobs:
         run: |
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
 
-      - name: Build WIN32-MingW Demo
+      - name: Build WIN32-MingW Full Demo
+        id: build-win32-mingw-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
         run: |
           gcc --version
           make --version
           make
+      
+      - name: Run and monitor WIN32-MingW Full Demo
+        if: success() || failure() && steps.build-win32-mingw-full-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/WIN32-MingW/Debug/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "No errors - tick count"
+      
+      - name: Build WIN32-MingW Blinky Demo
+        id: build-win32-mingw-blinky-demo
+        working-directory: FreeRTOS/Demo/WIN32-MingW
+        run: |
+          $content = Get-Content -Path 'main.c'
+          $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
+          $newContent | Set-Content -Path 'main.c'
+          gcc --version
+          make --version
+          make
+      
+      - name: Run and monitor WIN32-MingW Blinky Demo
+        if: success() || failure() && steps.build-win32-mingw-blinky-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/WIN32-MingW/Debug/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Message received from software timer"
 
   POSIX-GCC:
-    name: Native GCC
+    name: Posix GCC
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository

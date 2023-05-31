@@ -160,7 +160,6 @@ jobs:
 
       - name: Run and monitor Posix_GCC Full Demo
         if: success() || failure() && steps.build-posix-gcc-full-demo.outcome == 'success'
-        working-directory: FreeRTOS/Demo/Posix_GCC
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
           exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo.exe

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -45,7 +45,7 @@ const char pxLanguageStringDescriptor[] =
 	0x09, 0x04
 };
 
-const char pxManufacturerStringDescriptor[] =
+const char pxManufacturerStringDescriptor[] = 
 {
 	18,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -53,7 +53,7 @@ const char pxManufacturerStringDescriptor[] =
 	'F', 0x00, 'r', 0x00, 'e', 0x00, 'e', 0x00, 'R', 0x00, 'T', 0x00, 'O', 0x00, 'S', 0x00
 };
 
-const char pxProductStringDescriptor[] =
+const char pxProductStringDescriptor[] = 
 {
 	36,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -62,7 +62,7 @@ const char pxProductStringDescriptor[] =
 	'C', 0x00, ' ', 0x00, 'D', 0x00, 'E', 0x00, 'M', 0x00, 'O', 0x00
 };
 
-const char pxConfigurationStringDescriptor[] =
+const char pxConfigurationStringDescriptor[] = 
 {
 	38,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -71,7 +71,7 @@ const char pxConfigurationStringDescriptor[] =
 	'o', 0x00, 'n', 0x00, ' ', 0x00, 'N', 0x00, 'a', 0x00, 'm', 0x00, 'e', 0x00
 };
 
-const char pxInterfaceStringDescriptor[] =
+const char pxInterfaceStringDescriptor[] = 
 {
 	30,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -81,7 +81,7 @@ const char pxInterfaceStringDescriptor[] =
 };
 
 /* Device should properly be 0x134A:0x9001, using 0x05F9:0xFFFF for Linux testing */
-const char pxDeviceDescriptor[] =
+const char pxDeviceDescriptor[] = 
 {
 	/* Device descriptor */
 	0x12,								/* bLength				*/

@@ -339,7 +339,6 @@ config
 configapplication
 configassert
 configasserts
-configbenchmark
 configcheck
 configclear
 configclint

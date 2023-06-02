@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -93,19 +93,19 @@ const Pin xUSART_Pins[] = { BOARD_PIN_USART_RXD, BOARD_PIN_USART_TXD };
 		{
 			/* Enable the peripheral clock in the PMC. */
 			PMC_EnablePeripheral( BOARD_ID_USART );
-
+		
 			/* Configure the USART. */
 			USART_Configure( BOARD_USART_BASE, AT91C_US_CHRL_8_BITS | AT91C_US_PAR_NONE | AT91C_US_NBSTOP_1_BIT, ulWantedBaud, configCPU_CLOCK_HZ );
-
+		
 			/* Configure the interrupt.  Note the pre-emption priority is set
 			in bits [8:15] of the priority value passed as the parameter. */
 			IRQ_ConfigureIT( BOARD_ID_USART, ( configMAX_SYSCALL_INTERRUPT_PRIORITY << 8 ), vSerialISR );
 			IRQ_EnableIT( BOARD_ID_USART );
-
+		
 			/* Enable receiver & transmitter. */
 			USART_SetTransmitterEnabled( BOARD_USART_BASE, pdTRUE );
 			USART_SetReceiverEnabled( BOARD_USART_BASE, pdTRUE );
-
+			
 			/* Configure IO for USART use. */
 			PIO_Configure( xUSART_Pins, PIO_LISTSIZE( xUSART_Pins ) );
 		}
@@ -211,7 +211,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			/* Queue empty, nothing to send so turn off the Tx interrupt. */
 			vInterruptOff();
-		}
+		}		
 	}
 
 	if( ulStatus & AT91C_US_RXRDY )
@@ -231,4 +231,4 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 
 
-
+	

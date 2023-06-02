@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -52,7 +52,7 @@ void vInitialiseTimerForIntQueueTest( void )
 	{
 		EnablePRCR( PRC1_BIT );
 
-		/* Cascade two 8bit timer channels to generate the interrupts.
+		/* Cascade two 8bit timer channels to generate the interrupts. 
 		8bit timer unit 1 (TMR0 and TMR1) and 8bit timer unit 2 (TMR2 and TMR3 are
 		utilised for this test. */
 
@@ -75,11 +75,11 @@ void vInitialiseTimerForIntQueueTest( void )
 		/* 16 bit operation ( count from timer 1,2 ). */
 		TMR0.TCCR.BIT.CSS = 3;
 		TMR2.TCCR.BIT.CSS = 3;
-
+	
 		/* Use PCLK as the input. */
 		TMR1.TCCR.BIT.CSS = 1;
 		TMR3.TCCR.BIT.CSS = 1;
-
+	
 		/* Divide PCLK by 8. */
 		TMR1.TCCR.BIT.CKS = 2;
 		TMR3.TCCR.BIT.CKS = 2;

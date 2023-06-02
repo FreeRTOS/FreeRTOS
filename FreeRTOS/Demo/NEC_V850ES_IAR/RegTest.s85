@@ -20,7 +20,7 @@
 ; * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ; *
 ; * https://www.FreeRTOS.org
-; * https://github.com/FreeRTOS
+; * https://aws.amazon.com/freertos
 ; *
 ; * 1 tab == 4 spaces!
 ; */
@@ -44,7 +44,7 @@
 
 
 ;------------------------------------------------------------------------------
-;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------	
     RSEG CODE:CODE
 vRegTest1:
     MOV		0x01010101, R1
@@ -79,7 +79,7 @@ vRegTest1:
 	MOV		0x21212121, R28
 	MOV		0x22222222, R29
 	MOV		0x23232323, R30
-
+	
 vReg1TestLoopStart:
 	TRAP	0
 	MOV		0x01010101, R31
@@ -196,11 +196,11 @@ vReg1TestLoopStart:
 	CMP		R31, R30
 	BZ		$+6
 	JARL	vRegTestFailed, lp
-	MOV		vReg1TestLoopStart, R31
+	MOV		vReg1TestLoopStart, R31	
 	JMP		[R31]
 
 ;------------------------------------------------------------------------------
-;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------	
     RSEG CODE:CODE
 vRegTest2:
     MOV		0xa101010b, R1
@@ -235,7 +235,7 @@ vRegTest2:
 	MOV		0xa121212b, R28
 	MOV		0xa222222b, R29
 	MOV		0xa323232b, R30
-
+	
 vReg2TestLoopStart:
 	MOV		0xa101010b, R31
 	CMP		R31, R1
@@ -351,7 +351,8 @@ vReg2TestLoopStart:
 	CMP		R31, R30
 	BZ		$+6
 	JARL	vRegTestFailed, lp
-	MOV		vReg2TestLoopStart, R31
+	MOV		vReg2TestLoopStart, R31	
 	JMP		[R31]
 
       END
+	

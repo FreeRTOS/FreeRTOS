@@ -92,6 +92,9 @@
     </File>
   </VirtualDirectory>
   <VirtualDirectory Name="FreeRTOS">
+    <File Name="../../../../Source/croutine.c">
+      <FileOption/>
+    </File>
     <File Name="../../../../Source/event_groups.c">
       <FileOption/>
     </File>
@@ -112,6 +115,9 @@
     </File>
     <VirtualDirectory Name="inc">
       <File Name="../../../../Source/include/atomic.h">
+        <FileOption/>
+      </File>
+      <File Name="../../../../Source/include/croutine.h">
         <FileOption/>
       </File>
       <File Name="../../../../Source/include/deprecated_definitions.h">

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -51,6 +51,14 @@
  * generated, if SW2 is not pressed within the 5 seconds then the 7 tasks are
  * un-suspended and will once again toggle the segments of the left hand display.
  *
+ *
+ * - Right 7 segment display -
+ *
+ * Control of the right side 7 segment display is very similar to that of the
+ * left, except co-routines are used to toggle the segments instead of tasks,
+ * and button SW3 is used instead of SW2.
+ *
+ *
  * - Notes -
  *
  * Only one dice task is actually defined.  Two instances of this single
@@ -60,13 +68,17 @@
  * control.
  *
  * Both dice tasks and the flash tasks operate completely independently under
- * the control of FreeRTOS. 11 tasks are created in total, including the idle
- * task.
+ * the control of FreeRTOS.  11 tasks and 7 co-routines are created in total,
+ * including the idle task.
+ *
+ * The co-routines all execute within a single low priority task.
+ *
+ *
  *
  * When this demo is executing as expected:
  *
- * + Every segment of the left display will toggle at a fixed frequency - with
- *   each segment using a different frequency.
+ * + Every segment of both displays will toggle at a fixed frequency - with each
+ *   segment using a different frequency.
  * + When a button is pushed the segment toggling will temporarily stop and the
  *   dice 'throw' will start whereby the display will show a fast changing random
  *   number for a few seconds before the dice value is chosen and displayed.
@@ -93,9 +105,10 @@
 static void prvSetupHardware( void );
 
 /*
- * The function that creates the flash tasks.
+ * The function that creates the flash tasks and co-routines (the tasks and
+ * co-routines that toggle the 7 segment display segments.
  */
-extern vCreateFlashTasks( void );
+extern vCreateFlashTasksAndCoRoutines( void );
 
 /*-----------------------------------------------------------*/
 
@@ -104,8 +117,8 @@ void main( void )
 	/* Setup the MCU IO. */
 	prvSetupHardware();
 
-	/* Create the tasks that toggle the display segments. */
-	vCreateFlashTasks();
+	/* Create the tasks and co-routines that toggle the display segments. */
+	vCreateFlashTasksAndCoRoutines();
 
 	/* Create a 'dice' task to control the left hand display. */
 	xTaskCreate( vDiceTask, "Dice1", configMINIMAL_STACK_SIZE, ( void * ) configLEFT_DISPLAY, mainDICE_PRIORITY, NULL );

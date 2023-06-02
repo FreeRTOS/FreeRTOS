@@ -20,12 +20,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
-/*
-	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART0.
+/* 
+	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART0. 
 
 	This file contains all the serial port components that can be compiled to
 	either ARM or THUMB mode.  Components that must be compiled to ARM mode are
@@ -60,14 +60,14 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static QueueHandle_t xRxedChars;
-static QueueHandle_t xCharsForTx;
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 /*-----------------------------------------------------------*/
 
-/*
+/* 
  * The queues are created in serialISR.c as they are used from the ISR.
- * Obtain references to the queues and THRE Empty flag.
+ * Obtain references to the queues and THRE Empty flag. 
  */
 extern void vSerialISRCreateQueues(  unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, QueueHandle_t *pxCharsForTx );
 
@@ -84,10 +84,10 @@ extern void ( vUART_ISR_Wrapper )( void );
 	serialISR.c (which is always compiled to ARM mode. */
 	vSerialISRCreateQueues( uxQueueLength, &xRxedChars, &xCharsForTx );
 
-	if(
-		( xRxedChars != serINVALID_QUEUE ) &&
-		( xCharsForTx != serINVALID_QUEUE ) &&
-		( ulWantedBaud != ( unsigned long ) 0 )
+	if( 
+		( xRxedChars != serINVALID_QUEUE ) && 
+		( xCharsForTx != serINVALID_QUEUE ) && 
+		( ulWantedBaud != ( unsigned long ) 0 ) 
 	  )
 	{
 		portENTER_CRITICAL();
@@ -109,10 +109,10 @@ extern void ( vUART_ISR_Wrapper )( void );
 			AT91C_BASE_US0->US_TCR = 0;
 
 			/* Input clock to baud rate generator is MCK */
-			ulSpeed = configCPU_CLOCK_HZ * 10;
+			ulSpeed = configCPU_CLOCK_HZ * 10;  
 			ulSpeed = ulSpeed / 16;
 			ulSpeed = ulSpeed / ulWantedBaud;
-
+			
 			/* compute the error */
 			ulCD  = ulSpeed / 10;
 			if ((ulSpeed - (ulCD * 10)) >= 5)
@@ -131,10 +131,10 @@ extern void ( vUART_ISR_Wrapper )( void );
 
 			Store interrupt handler function address in USART0 vector register... */
 			AT91C_BASE_AIC->AIC_SVR[ portUSART0_AIC_CHANNEL ] = (unsigned long)vUART_ISR_Wrapper;
-
+			
 			/* USART0 interrupt level-sensitive, priority 1... */
 			AT91C_BASE_AIC->AIC_SMR[ portUSART0_AIC_CHANNEL ] = AIC_SRCTYPE_INT_LEVEL_SENSITIVE | 1;
-
+			
 			/* Clear some pending USART0 interrupts (just in case)... */
 			AT91C_BASE_US0->US_CR = US_RSTSTA;
 

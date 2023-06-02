@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -48,18 +48,18 @@ static void vLCDTask( void *pvParameters );
  */
 static void prvSetupLCD( void );
 
-/*
- * Move to the first (0) or second (1) row of the LCD.
+/* 
+ * Move to the first (0) or second (1) row of the LCD. 
  */
 static void prvLCDGotoRow( unsigned short usRow );
 
-/*
- * Write a string of text to the LCD.
+/* 
+ * Write a string of text to the LCD. 
  */
 static void prvLCDPutString( char *pcString );
 
-/*
- * Clear the LCD.
+/* 
+ * Clear the LCD. 
  */
 static void prvLCDClear( void );
 
@@ -115,18 +115,18 @@ QueueHandle_t xStartLCDTask( void )
 
 static void prvLCDGotoRow( unsigned short usRow )
 {
-	if(usRow == 0)
+	if(usRow == 0) 
 	{
 		prvLCDCommand( LCD_CURSOR_HOME_CMD );
-	}
-	else
+	} 
+	else 
 	{
 		prvLCDCommand( LCD_NEW_LINE );
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvLCDCommand( char cCommand )
+static void prvLCDCommand( char cCommand ) 
 {
 	PMPSetAddress( LCD_COMMAND_ADDRESS );
 	PMPMasterWrite( cCommand );
@@ -164,7 +164,7 @@ static void prvSetupLCD(void)
 {
 	/* Wait for proper power up. */
 	vTaskDelay( lcdLONG_DELAY );
-
+	
 	/* Open the PMP port */
 	mPMPOpen((PMP_ON | PMP_READ_WRITE_EN | PMP_CS2_CS1_EN |
 			  PMP_LATCH_POL_HI | PMP_CS2_POL_HI | PMP_CS1_POL_HI |
@@ -172,7 +172,7 @@ static void prvSetupLCD(void)
 			 (PMP_MODE_MASTER1 | PMP_WAIT_BEG_4 | PMP_WAIT_MID_15 |
 			  PMP_WAIT_END_4),
 			  PMP_PEN_0, 0);
-
+			 
 	/* Wait for the LCD to power up correctly. */
 	vTaskDelay( lcdLONG_DELAY );
 	vTaskDelay( lcdLONG_DELAY );
@@ -180,18 +180,18 @@ static void prvSetupLCD(void)
 
 	/* Set up the LCD function. */
 	prvLCDCommand( LCD_FUNCTION_SET_CMD | LCD_FUNCTION_SET_8_BITS | LCD_FUNCTION_SET_2_LINES | LCD_FUNCTION_SET_LRG_FONT );
-
+	
 	/* Turn the display on. */
 	prvLCDCommand( LCD_DISPLAY_CTRL_CMD | LCD_DISPLAY_CTRL_DISPLAY_ON );
-
+	
 	/* Clear the display. */
 	prvLCDCommand( LCD_CLEAR_DISPLAY_CMD );
-	vTaskDelay( lcdLONG_DELAY );
-
+	vTaskDelay( lcdLONG_DELAY );	
+	
 	/* Increase the cursor. */
 	prvLCDCommand( LCD_ENTRY_MODE_CMD | LCD_ENTRY_MODE_INCREASE );
-	vTaskDelay( lcdLONG_DELAY );
-	vTaskDelay( lcdLONG_DELAY );
+	vTaskDelay( lcdLONG_DELAY );		  	
+	vTaskDelay( lcdLONG_DELAY );		  	
 	vTaskDelay( lcdLONG_DELAY );
 }
 /*-----------------------------------------------------------*/
@@ -222,9 +222,9 @@ unsigned short usRow = 0;
 		usRow++;
 		prvLCDPutString( xMessage.pcMessage );
 
-		/* Delay the requested amount of time to ensure the text just written
+		/* Delay the requested amount of time to ensure the text just written 
 		to the LCD is not overwritten. */
-		vTaskDelay( xMessage.xMinDisplayTime );
+		vTaskDelay( xMessage.xMinDisplayTime );		
 	}
 }
 

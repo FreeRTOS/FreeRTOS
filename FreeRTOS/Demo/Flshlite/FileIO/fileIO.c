@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -57,7 +57,7 @@ const char * const pcSeparator = "\r\n-----------------------\r\n";
 FILE *pf;
 
 	taskENTER_CRITICAL();
-	{
+	{	
 		pf = fopen( pcFileName, "a" );
 		if( pf != NULL )
 		{

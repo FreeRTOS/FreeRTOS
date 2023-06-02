@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -106,7 +106,7 @@ unsigned long ulBaudRateCount;
 		IE2 |= URXIE1 + UTXIE1;
 	}
 	portEXIT_CRITICAL();
-
+	
 	/* Unlike other ports, this serial code does not allow for more than one
 	com port.  We therefore don't return a pointer to a port structure and can
 	instead just return NULL. */
@@ -187,11 +187,11 @@ signed portBASE_TYPE xReturn;
 	{
 	signed char cChar;
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-
+	
 		/* Get the character from the UART and post it on the queue of Rxed
 		characters. */
 		cChar = U1RXBUF;
-
+	
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 
 		if( xHigherPriorityTaskWoken )
@@ -206,7 +206,7 @@ signed portBASE_TYPE xReturn;
         __bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	}
 	/*-----------------------------------------------------------*/
-
+	
 	/*
 	 * UART Tx interrupt service routine.
 	 */
@@ -215,10 +215,10 @@ signed portBASE_TYPE xReturn;
 	{
 	signed char cChar;
 	portBASE_TYPE xTaskWoken = pdFALSE;
-
+	
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */
-
+	
 		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
 		{
 			/* There was another character queued - transmit it now. */
@@ -243,11 +243,11 @@ signed portBASE_TYPE xReturn;
 	{
 	signed char cChar;
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-
+	
 		/* Get the character from the UART and post it on the queue of Rxed
 		characters. */
 		cChar = U1RXBUF;
-
+	
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 
         /*If the post causes a task to wake force a context switch
@@ -256,17 +256,17 @@ signed portBASE_TYPE xReturn;
         portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
 	/*-----------------------------------------------------------*/
-
+	
     /* This is a standard C function as an assembly file wrapper is used as an
     interrupt entry point. */
 	void vTxISR( void )
 	{
 	signed char cChar;
 	portBASE_TYPE xTaskWoken = pdFALSE;
-
+	
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */
-
+	
 		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
 		{
 			/* There was another character queued - transmit it now. */

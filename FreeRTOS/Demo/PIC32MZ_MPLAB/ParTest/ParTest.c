@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -79,7 +79,7 @@ unsigned portBASE_TYPE uxLEDBit;
 	{
 		uxLEDBit = 1 << uxLED;
 
-		/* Use of the LATHINV register removes the need to use a critical
+		/* Use of the LATHINV register removes the need to use a critical 
 		section. */
 		LATHINV = uxLEDBit;
 	}

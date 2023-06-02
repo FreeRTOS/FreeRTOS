@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -96,17 +96,17 @@ const unsigned long ulFuclk = ( configCPU_CLOCK_HZ / 2 ) / 8UL;
 			PMC3 |= ( serRX_DATA_PIN | serTX_DATA_PIN );
 			PM3 &= ~( serTX_DATA_PIN );
 
-			/* Setup clock for required baud. */
+			/* Setup clock for required baud. */			
 			UD0CTL1 = serCLOCK_Fxx_DIV_8;
 			UD0CTL2 = ulFuclk / ( 2 * ulWantedBaud );
 
-			/* Enable, n81. */
+			/* Enable, n81. */			
 			UD0CTL0 = ( serUPWR | serUTXE | serURXE | serUCL | serLSB );
-
+			
 			/* Enable interrupts for both Rx and Tx. */
 			UD0TIC  = 0x07;
 			UD0RIC  = 0x07;
-
+			
 			ulTxInProgress = pdFALSE;
 		}
 		portEXIT_CRITICAL();
@@ -188,7 +188,7 @@ portBASE_TYPE xReturn = pdPASS;
 		}
 	}
 	portEXIT_CRITICAL();
-
+	
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -216,7 +216,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		/* The UART is no longer active. */
 		ulTxInProgress = pdFALSE;
 	}
-
+	
 	/* If reading a character from the Rx queue caused a task to unblock, and
 	the unblocked task has a priority higher than the currently running task,
 	then xHigherPriorityTaskWoken will have been set to true and a context
@@ -234,15 +234,15 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* Send the received character to the Rx queue. */
 	cChar = UD0RX;
 	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-
+	
 	/* If sending a character to the Tx queue caused a task to unblock, and
 	the unblocked task has a priority higher than the currently running task,
 	then xHigherPriorityTaskWoken will have been set to true and a context
 	switch should occur now. */
-	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );	
 }
 
 
 
 
-
+	

@@ -508,6 +508,9 @@
     <Compile Include="src\asf\sam\utils\cmsis\sam4s\source\templates\system_sam4s.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\croutine.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\asf\thirdparty\FreeRTOS\include\FreeRTOS.h">
       <SubType>compile</SubType>
     </Compile>

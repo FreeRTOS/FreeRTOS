@@ -20,20 +20,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
 /*
  * Creates all the demo application tasks, then starts the scheduler.
  *
- * Main. c also creates a task called "Print".  This only executes every five
- * seconds but has the highest priority so is guaranteed to get processor time.
- * Its main function is to check that all the other tasks are still operational.
- * Nearly all the tasks in the demo application maintain a unique count that is
- * incremented each time the task successfully completes its function.  Should any
- * error occur within the task the count is permanently halted.  The print task
- * checks the count of each task to ensure it has changed since the last time the
+ * Main. c also creates a task called "Print".  This only executes every five 
+ * seconds but has the highest priority so is guaranteed to get processor time.  
+ * Its main function is to check that all the other tasks are still operational.  
+ * Nearly all the tasks in the demo application maintain a unique count that is 
+ * incremented each time the task successfully completes its function.  Should any 
+ * error occur within the task the count is permanently halted.  The print task 
+ * checks the count of each task to ensure it has changed since the last time the 
  * print task executed.  If any count is found not to have changed the print task
  * displays an appropriate message, halts, and flashes the on board LED rapidly.
  * If all the tasks are still incrementing their unique counts the print task
@@ -64,7 +64,7 @@ Changes from V1.01:
 
 Changes from V1.2.3
 
-	+ The integer and comtest tasks are now used when the cooperative scheduler
+	+ The integer and comtest tasks are now used when the cooperative scheduler 
 	  is being used.  Previously they were only used with the preemptive
 	  scheduler.
 
@@ -242,7 +242,7 @@ static void	 prvCheckForKeyPresses( void )
 
 	short sIn;
 
-
+	
 		taskENTER_CRITICAL();
 			sIn = kbhit();
 		taskEXIT_CRITICAL();

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -42,8 +42,8 @@
 #define ser8BIT_WITH_RELOAD		( ( unsigned char ) 0x20 )
 #define serSMOD					( ( unsigned char ) 0x10 )
 
-static QueueHandle_t xRxedChars;
-static QueueHandle_t xCharsForTx;
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 data static unsigned portBASE_TYPE uxTxEmpty;
 
@@ -65,7 +65,7 @@ unsigned char ucOriginalSFRPage;
 		/* Create the queues used by the com test task. */
 		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
 		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
-
+	
 		/* Calculate the baud rate to use timer 1. */
 		ulReloadValue = ( unsigned long ) ( ( ( portFLOAT ) 256 - ( fBaudConst / ( portFLOAT ) ( 32 * ulWantedBaud ) ) ) + ( portFLOAT ) 0.5 );
 
@@ -90,7 +90,7 @@ unsigned char ucOriginalSFRPage;
 		SFRPAGE = ucOriginalSFRPage;
 	}
 	portEXIT_CRITICAL();
-
+	
 	/* Unlike some ports, this serial code does not allow for more than one
 	com port.  We therefore don't return a pointer to a port structure and can
 	instead just return NULL. */
@@ -108,7 +108,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	portENTER_CRITICAL();
 	{
-		if( RI )
+		if( RI ) 
 		{
 			/* Get the character and post it on the queue of Rxed characters.
 			If the post causes a task to wake force a context switch if the woken task
@@ -119,7 +119,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 		}
 
-		if( TI )
+		if( TI ) 
 		{
 			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == ( portBASE_TYPE ) pdTRUE )
 			{
@@ -134,7 +134,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 			TI = 0;
 		}
-
+	
 		if( xHigherPriorityTaskWoken )
 		{
 			portYIELD();

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -43,8 +43,8 @@ to represent an optimised solution. */
 
 /* The queues used to communicate between the task code and the interrupt
 service routines. */
-static QueueHandle_t xRxedChars;
-static QueueHandle_t xCharsForTx;
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 /* Interrupt identification bits. */
 #define serOVERRUN_INTERRUPT		( 0x08 )
@@ -59,8 +59,8 @@ static QueueHandle_t xCharsForTx;
  */
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-	/* Hardware setup is performed by the Processor Expert generated code.
-	This function just creates the queues used to communicate between the
+	/* Hardware setup is performed by the Processor Expert generated code.  
+	This function just creates the queues used to communicate between the 
 	interrupt code and the task code - then sets the required baud rate. */
 
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
@@ -106,16 +106,16 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
-{
+{	
 	/* Not supported. */
 	( void ) xPort;
 }
 /*-----------------------------------------------------------*/
 
 
-/*
+/* 
  * Interrupt service routine for the serial port.  Must be in non-banked
- * memory.
+ * memory. 
  */
 
 #pragma CODE_SEG __NEAR_SEG NON_BANKED
@@ -127,7 +127,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */
 	ucStatus = SCI0SR1;
-
+	
 	if( ucStatus & serOVERRUN_INTERRUPT )
 	{
 		/* The interrupt was caused by an overrun.  Clear the error by reading
@@ -136,18 +136,18 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	}
 
 	if( ucStatus & serRX_INTERRUPT )
-	{
+	{	
 		/* The interrupt was caused by a character being received.
 		Read the received byte. */
-		ucByte = SCI0DRL;
+		ucByte = SCI0DRL;                      
 
 		/* Post the character onto the queue of received characters - noting
 		whether or not this wakes a task. */
 		xQueueSendFromISR( xRxedChars, ( void * ) &ucByte, &xHigherPriorityTaskWoken );
 	}
-
+	
 	if( ( ucStatus & serTX_INTERRUPT ) && ( SCI0CR2_SCTIE ) )
-	{
+	{	
 		/* The interrupt was caused by a character being transmitted. */
 		if( xQueueReceiveFromISR( xCharsForTx, ( void * ) &ucByte, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
@@ -157,7 +157,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		else
 		{
 			/* Disable transmit interrupt */
-			SCI0CR2_SCTIE = 0;
+			SCI0CR2_SCTIE = 0;                 
 		}
 	}
 

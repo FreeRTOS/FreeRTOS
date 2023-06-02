@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -33,7 +33,7 @@
  */
 void vHardwareConfigurePerformance( void );
 
-/*
+/* 
  * Configure the interrupt controller to use a separate vector for each
  * interrupt.
  */

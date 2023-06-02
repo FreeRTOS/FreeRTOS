@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -70,12 +70,12 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			}
 			else
 			{
-				*pxQueueEmpty = pdTRUE;
-			}
+				*pxQueueEmpty = pdTRUE;		
+			}		
 
 			UART_ClearITPendingBit( UART0, UART_IT_Transmit );
 		}
-
+	
 		if( UART0->MIS & UART_IT_Receive )
 		{
 			/* The interrupt was caused by a character being received.  Grab the

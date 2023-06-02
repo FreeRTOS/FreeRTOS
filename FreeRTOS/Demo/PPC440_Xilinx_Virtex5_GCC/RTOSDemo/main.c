@@ -20,26 +20,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
- *
+ * 
  * In addition to the standard demo tasks, the follow demo specific tasks are
  * create:
  *
- * The "Check" task.  This only executes every three seconds but has the highest
- * priority so is guaranteed to get processor time.  Its main function is to
- * check that all the other tasks are still operational.  Most tasks maintain
- * a unique count that is incremented each time the task successfully completes
- * its function.  Should any error occur within such a task the count is
- * permanently halted.  The check task inspects the count of each task to ensure
- * it has changed since the last time the check task executed.  If all the count
- * variables have changed all the tasks are still executing error free, and the
- * check task toggles the onboard LED.  Should any task contain an error at any time
+ * The "Check" task.  This only executes every three seconds but has the highest 
+ * priority so is guaranteed to get processor time.  Its main function is to 
+ * check that all the other tasks are still operational.  Most tasks maintain 
+ * a unique count that is incremented each time the task successfully completes 
+ * its function.  Should any error occur within such a task the count is 
+ * permanently halted.  The check task inspects the count of each task to ensure 
+ * it has changed since the last time the check task executed.  If all the count 
+ * variables have changed all the tasks are still executing error free, and the 
+ * check task toggles the onboard LED.  Should any task contain an error at any time 
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
  * The "Register Check" tasks.  These tasks fill the CPU registers with known
@@ -96,15 +96,15 @@ baud rate parameters passed into the comtest initialisation has no effect. */
 
 /* Delay periods used by the check task.  If no errors have been found then
 the check LED will toggle every mainNO_ERROR_CHECK_DELAY milliseconds.  If an
-error has been found at any time then the toggle rate will increase to
+error has been found at any time then the toggle rate will increase to 
 mainERROR_CHECK_DELAY milliseconds. */
 #define mainNO_ERROR_CHECK_DELAY		( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
 #define mainERROR_CHECK_DELAY			( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 
 
-/*
+/* 
  * The tasks defined within this file - described within the comments at the
- * head of this page.
+ * head of this page. 
  */
 static void prvRegTestTask1( void *pvParameters );
 static void prvRegTestTask2( void *pvParameters );
@@ -145,12 +145,12 @@ int main( void )
 	/* Start the standard demo application tasks.  Note that the baud rate used
 	by the comtest tasks is set by the hardware, so the baud rate parameter
 	passed has no effect. */
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainBAUD_SET_IN_HARDWARE, mainCOM_TEST_LED );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartBlockingQueueTasks ( mainQUEUE_BLOCK_PRIORITY );
-	vStartDynamicPriorityTasks();
+	vStartBlockingQueueTasks ( mainQUEUE_BLOCK_PRIORITY );	
+	vStartDynamicPriorityTasks();	
 	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	vStartQueuePeekTasks();
 	vCreateBlockTimeTasks();
@@ -179,10 +179,10 @@ int main( void )
 	vCreateSuicidalTasks( mainDEATH_PRIORITY );
 
 	/* Now start the scheduler.  Following this call the created tasks should
-	be executing. */
+	be executing. */	
 	vTaskStartScheduler();
 
-	/* vTaskStartScheduler() will only return if an error occurs while the
+	/* vTaskStartScheduler() will only return if an error occurs while the 
 	idle task is being created. */
 	for( ;; );
 
@@ -196,7 +196,7 @@ portBASE_TYPE lReturn = pdPASS;
 static unsigned long ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
-	provided that the task has never encountered an error.  This function
+	provided that the task has never encountered an error.  This function 
 	checks the counts maintained by the tasks to ensure they are still being
 	incremented.  A count remaining at the same value between calls therefore
 	indicates that an error has been detected. */
@@ -210,37 +210,37 @@ static unsigned long ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
 	{
 		lReturn = pdFAIL;
 	}
-
+	
 	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
-
+	
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
-
+	
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
-
+	
 	if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
-
+	
 	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
-
+	
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
-
+	
 	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
@@ -325,14 +325,14 @@ volatile unsigned portBASE_TYPE uxFreeStack;
 		uxFreeStack = uxTaskGetStackHighWaterMark( NULL );
 
 		/* Wait until it is time to check again.  The time we wait here depends
-		on whether an error has been detected or not.  When an error is
+		on whether an error has been detected or not.  When an error is 
 		detected the time is shortened resulting in a faster LED flash rate. */
 		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
 		/* See if the other tasks are all ok. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
 		{
-			/* An error occurred in one of the tasks so shorten the delay
+			/* An error occurred in one of the tasks so shorten the delay 
 			period - which has the effect of increasing the frequency of the
 			LED toggle. */
 			xDelayPeriod = mainERROR_CHECK_DELAY;
@@ -384,7 +384,7 @@ static void prvRegTestTask1( void *pvParameters )
 	( void ) pvParameters;
 
 	/* The first register test task as described at the top of this file.  The
-	values used in the registers are different to those use in the second
+	values used in the registers are different to those use in the second 
 	register test task.  Also, unlike the second register test task, this task
 	yields between setting the register values and subsequently checking the
 	register values. */
@@ -524,7 +524,7 @@ static void prvRegTestTask2( void *pvParameters )
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
 
-	/* The second register test task as described at the top of this file.
+	/* The second register test task as described at the top of this file.  
 	Note that this task fills the registers with different values to the
 	first register test task. */
 	asm volatile

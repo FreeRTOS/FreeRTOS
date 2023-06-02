@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://aws.amazon.com/freertos
  *
  */
 
@@ -30,7 +30,7 @@
 	.extern ulRegTest1Counter
 	.extern ulRegTest2Counter
 	.extern vPortYield
-
+	
 	.global vRegTest1
 	.global vRegTest2
 

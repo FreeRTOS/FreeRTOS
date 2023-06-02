@@ -72,7 +72,7 @@
  * 'hook' co-routines should take. */
 #define mainHOOK_CR_PRIORITY          ( 1 )
 /*-----------------------------------------------------------*/
-
+#if ( configUSE_CO_ROUTINES == 1 )
 /*
  * The co-routine function itself.
  */
@@ -231,3 +231,5 @@ BaseType_t xAreHookCoRoutinesStillRunning( void )
         return pdTRUE;
     }
 }
+
+#endif

@@ -76,6 +76,7 @@
 /* We don't want to block when posting to the queue. */
 #define crfPOSTING_BLOCK_TIME      0
 
+#if ( configUSE_CO_ROUTINES == 1 )
 /*
  * The 'fixed delay' co-routine as described at the top of the file.
  */
@@ -212,3 +213,5 @@ BaseType_t xAreFlashCoRoutinesStillRunning( void )
      * or not. */
     return xCoRoutineFlashStatus;
 }
+
+#endif

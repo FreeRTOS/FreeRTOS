@@ -57,7 +57,7 @@ add_subdirectory( ${FREERTOS_KERNEL_PATH} ${CMAKE_CURRENT_BINARY_DIR}/FreeRTOS-K
 
 target_compile_options( freertos_kernel
     PRIVATE
-        # Trace macro cast pointer to int to store memory management event 
+        # Trace macro cast pointer to int to store memory management event
         $<IF:${COVERAGE_TEST},,-Wno-pointer-to-int-cast>
 )
 
@@ -97,11 +97,6 @@ add_executable( posix_demo
                 ${CMAKE_CURRENT_LIST_DIR}/../Common/Minimal/TaskNotify.c
                 ${CMAKE_CURRENT_LIST_DIR}/../Common/Minimal/TimerDemo.c
               )
-
-target_compile_definitions( posix_demo
-    PRIVATE
-        mainCREATE_SIMPLE_BLINKY_DEMO_ONLY=0
-)
 
 target_include_directories( posix_demo
     PRIVATE

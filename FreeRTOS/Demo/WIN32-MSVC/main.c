@@ -219,12 +219,12 @@ int main( void )
      * of this file. */
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
         {
-            printf( "\nStarting the blinky demo.\n" );
+            printf( "\nStarting the blinky demo.\r\n" );
             main_blinky();
         }
     #else
         {
-            printf( "\nStarting the full demo.\n" );
+            printf( "\nStarting the full demo.\r\n" );
             main_full();
         }
     #endif /* if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 ) */

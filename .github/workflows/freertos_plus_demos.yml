@@ -390,9 +390,8 @@ jobs:
           git clone https://gitlab.gnome.org/GNOME/glib
           cd glib
           meson _build
-          sudo ninja -C _build
-          sudo ninja -C _build install
-          echo "::set-output name=glib-path::/usr/local"
+          ninja -C _build
+          ninja -C _build install
 
       - name: Build and Install Libslirp
         run: |
@@ -401,7 +400,6 @@ jobs:
           meson _build
           ninja -C _build
           ninja -C _build install
-          echo "::set-output name=glib-path::$(pwd)"
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

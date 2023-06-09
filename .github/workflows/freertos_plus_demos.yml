@@ -380,11 +380,24 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
       - name: Install prerequisite packages
-        run: sudo apt-get install -y git build-essential libpcap-dev
+        run: sudo apt-get install -y git build-essential libpcap-dev libffi-dev libxm12-dev libglib2.0-dev libslirp-dev gettext-dev pcre2-dev
 
-      - name: Build FreeRTOS+TCP Minimal Demo
+      - name: Set Up Echo Server
+        run: sudo nc -vklp 7 -e /bin/cat
+  
+      - name: Build FreeRTOS+TCP Echo Posix Demo
+        id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
         run: make -j
+      
+      - name: Run and monitor Posix_GCC Full Demo
+        if: success() || failure() && steps.build-echo-posix-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/build/posix_tcp_demo
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "eFIN_WAIT_1->eCLOSE_WAIT"
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385

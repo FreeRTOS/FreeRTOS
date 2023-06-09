@@ -387,6 +387,7 @@ jobs:
       - name: Build and Install Glib
         run: |
           git clone https://gitlab.gnome.org/GNOME/glib
+          cd glib
           meson _build
           ninja -C _build
           ninja -C _build install
@@ -395,6 +396,7 @@ jobs:
       - name: Build and Install Libslirp
         run: |
           git clone https://gitlab.freedesktop.org/slirp/libslirp
+          cd libslirp
           meson _build
           ninja -C _build
           ninja -C _build install

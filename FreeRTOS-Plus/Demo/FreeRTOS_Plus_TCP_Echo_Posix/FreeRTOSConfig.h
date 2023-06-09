@@ -158,17 +158,17 @@ used with multiple project configurations.  If it is
 #define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 1 )
 #define ipconfigUSE_NETWORK_EVENT_HOOK 1
 //#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000)
-#define configNETWORK_INTERFACE_TO_USE 1L
+#define configNETWORK_INTERFACE_TO_USE 6L
 
 /* The address of an echo server that will be used by the two demo echo client
 tasks.
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-#define configECHO_SERVER_ADDR0	172
-#define configECHO_SERVER_ADDR1 19
-#define configECHO_SERVER_ADDR2 195
-#define configECHO_SERVER_ADDR3 36
+#define configECHO_SERVER_ADDR0	127
+#define configECHO_SERVER_ADDR1 0
+#define configECHO_SERVER_ADDR2 0
+#define configECHO_SERVER_ADDR3 1
 
 /* Default MAC address configuration.  The demo creates a virtual network
 connection that uses this MAC address by accessing the raw Ethernet/WiFi data

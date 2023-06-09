@@ -380,7 +380,9 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
       - name: Install prerequisite packages
-        run: sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
+        run: |
+          sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
+          pip install --user meson ninja
 
       - name: Build and Install Glib
         run: |
@@ -398,9 +400,6 @@ jobs:
           ninja -C _build install
           echo "::set-output name=glib-path::$(pwd)"
 
-      - name: Install prerequisite packages
-        run: sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
-      
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &
 

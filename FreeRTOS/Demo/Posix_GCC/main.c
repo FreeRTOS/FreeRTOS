@@ -449,7 +449,7 @@ static uint32_t ulEntryTime = 0;
 
 void vTraceTimerReset( void )
 {
-	ulEntryTime = xTaskGetTickCount();
+    ulEntryTime = xTaskGetTickCount();
 }
 
 uint32_t uiTraceTimerGetFrequency( void )
@@ -459,6 +459,5 @@ uint32_t uiTraceTimerGetFrequency( void )
 
 uint32_t uiTraceTimerGetValue( void )
 {
-	return ( xTaskGetTickCount() - ulEntryTime );
+    return( xTaskGetTickCount() - ulEntryTime );
 }
-

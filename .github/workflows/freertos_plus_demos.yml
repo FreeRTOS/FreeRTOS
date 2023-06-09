@@ -383,7 +383,7 @@ jobs:
         run: sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
 
       - name: Set Up Echo Server
-        run: sudo nc -vklp 7 -e /bin/cat
+        run: sudo nc -vklp 7
   
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo

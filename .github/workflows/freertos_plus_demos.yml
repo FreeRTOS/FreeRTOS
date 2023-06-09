@@ -383,13 +383,13 @@ jobs:
         run: sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
 
       - name: Set Up Echo Server
-        run: sudo nc -vklp 7
-  
+        run: sudo nc -nvvlp 7 -e /bin/cat
+
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
         run: make -j
-      
+
       - name: Run and monitor Posix_GCC Full Demo
         if: success() || failure() && steps.build-echo-posix-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main

@@ -37,6 +37,12 @@ void vSerialInit( void );
  */
 void vCommsRxTask( void * pvParameters );
 
+/*
+ * The co-routine that periodically initiates the transmission of the string on
+ * the UART.
+ */
+void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
+
 unsigned portBASE_TYPE uxGetCommsStatus( void );
 
 #endif

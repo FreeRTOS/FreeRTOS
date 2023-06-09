@@ -99,7 +99,7 @@ short sError = pdFALSE;
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pulTaskCheckVariable = ( unsigned long * ) pvParameters;
-
+    
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
 	{

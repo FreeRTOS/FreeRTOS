@@ -88,7 +88,7 @@ void main_blinky( void )
 {
     /* Create the queue. */
      xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
-
+ 
     if( xQueue != NULL )
     {
         /* Start the two tasks as described in the comments at the top of this

@@ -57,7 +57,7 @@ const char * const pcSeparator = "\r\n-----------------------\r\n";
 FILE *pf;
 
 	taskENTER_CRITICAL();
-	{
+	{	
 		pf = fopen( pcFileName, "a" );
 		if( pf != NULL )
 		{

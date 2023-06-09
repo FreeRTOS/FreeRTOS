@@ -308,7 +308,6 @@ FREERTOS_IGNORED_FILES = [
     'interrupt_vector.s',
     'reg_test.S',
     'gdbinit',
-
 ]
 
 FREERTOS_HEADER = [
@@ -360,4 +359,3 @@ def main():
 
 if __name__ == '__main__':
     exit(main())
-

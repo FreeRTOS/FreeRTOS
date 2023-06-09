@@ -109,12 +109,30 @@
 			</matcher>
 		</filter>
 		<filter>
+			<id>1629933988064</id>
+			<name>full_demo/Demo_Tasks/Minimal</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-crhook.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
 			<id>1629933988070</id>
 			<name>full_demo/Demo_Tasks/Minimal</name>
 			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-comtest.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1629933988073</id>
+			<name>full_demo/Demo_Tasks/Minimal</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-crflash.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

@@ -120,6 +120,7 @@
           <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/task.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\task.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/portable/gcc/arm_cm3/portmacro.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\portable\gcc\arm_cm3\portmacro.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/FreeRTOS_CLI.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\FreeRTOS_CLI.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/croutine.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\croutine.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/sam/drivers/ast/ast.c" framework="" version="" source="sam\drivers\ast\ast.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/sam/drivers/ast/ast.h" framework="" version="" source="sam\drivers\ast\ast.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/config/conf_ast.h" framework="" version="" source="sam\drivers\ast\module_config\conf_ast.h" changed="False" content-id="Atmel.ASF" />

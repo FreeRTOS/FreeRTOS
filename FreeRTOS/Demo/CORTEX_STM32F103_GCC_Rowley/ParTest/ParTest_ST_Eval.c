@@ -76,7 +76,7 @@ unsigned short usBit;
 			}
 
 			GPIO_Write( GPIOC, usOutputValue );
-		}
+		}	
 	}
 	xTaskResumeAll();
 }

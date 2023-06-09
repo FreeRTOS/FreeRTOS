@@ -66,7 +66,7 @@ signed portBASE_TYPE xReturn = pdPASS;
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
-{
+{	
 	/* Not supported. */
 	( void ) xPort;
 }

@@ -24,7 +24,7 @@
  *
  */
 
-/* NOTE:  This is just a test file and not intended to be a generic
+/* NOTE:  This is just a test file and not intended to be a generic 
 COM driver. */
 
 #include "altera_avalon_uart.h"
@@ -41,8 +41,8 @@ COM driver. */
 #define serNO_BLOCK						( ( TickType_t ) 0 )
 /*---------------------------------------------------------------------------*/
 
-static QueueHandle_t xRxedChars;
-static QueueHandle_t xCharsForTx;
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 alt_u32 uartControl;
 /*---------------------------------------------------------------------------*/
@@ -64,8 +64,8 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 		portENTER_CRITICAL();
 		{
 			uartControl = ALTERA_AVALON_UART_CONTROL_RTS_MSK | ALTERA_AVALON_UART_CONTROL_RRDY_MSK | ALTERA_AVALON_UART_CONTROL_DCTS_MSK;
-			IOWR_ALTERA_AVALON_UART_CONTROL( UART_BASE, uartControl );
-
+			IOWR_ALTERA_AVALON_UART_CONTROL( UART_BASE, uartControl ); 
+		  
 		    /* register the interrupt handler */
 			alt_irq_register ( UART_IRQ, NULL, vUARTInterruptHandler );
 		}
@@ -114,12 +114,12 @@ signed portBASE_TYPE lReturn = pdPASS;
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) == pdPASS )
 	{
         /*Triggers an interrupt on every character or (down) when queue is full. */
-        uartControl |= ALTERA_AVALON_UART_CONTROL_TRDY_MSK;
+        uartControl |= ALTERA_AVALON_UART_CONTROL_TRDY_MSK; 
         IOWR_ALTERA_AVALON_UART_CONTROL( UART_BASE, uartControl );
         lReturn = pdPASS;
     }
     else
-    {
+    {	
 		lReturn = pdFAIL;
 	}
 	return lReturn;
@@ -153,19 +153,19 @@ static void vUARTInterruptHandler( void* context, alt_u32 id )
 {
 	alt_u32 status;
 
-	/* Read the status register in order to determine the cause of the
+	/* Read the status register in order to determine the cause of the 
     interrupt. */
 	status = IORD_ALTERA_AVALON_UART_STATUS( UART_BASE );
-
+	
 	/* Clear any error flags set at the device */
 	IOWR_ALTERA_AVALON_UART_STATUS( UART_BASE, 0 );
-
+	
 	/* process a read irq */
 	if ( status & ALTERA_AVALON_UART_STATUS_RRDY_MSK )
 	{
 		vUARTReceiveHandler( status );
 	}
-
+	
 	/* process a write irq */
 	if ( status & ( ALTERA_AVALON_UART_STATUS_TRDY_MSK  ) )
 	{
@@ -190,12 +190,12 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	cChar = IORD_ALTERA_AVALON_UART_RXDATA( UART_BASE );
 	if ( pdTRUE != xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken ) )
 	{
-		/* If the circular buffer was full, disable interrupts. Interrupts will
+		/* If the circular buffer was full, disable interrupts. Interrupts will 
         be re-enabled when data is removed from the buffer. */
 		uartControl &= ~ALTERA_AVALON_UART_CONTROL_RRDY_MSK;
 		IOWR_ALTERA_AVALON_UART_CONTROL( UART_BASE, uartControl );
 	}
-
+    
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*---------------------------------------------------------------------------*/
@@ -213,8 +213,8 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
     {
 		uartControl &= ~ALTERA_AVALON_UART_CONTROL_TRDY_MSK;
     }
-
+	
 	IOWR_ALTERA_AVALON_UART_CONTROL( UART_BASE, uartControl );
-    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
-}
+    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );    
+}    
 /*---------------------------------------------------------------------------*/

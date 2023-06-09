@@ -105,7 +105,7 @@ unsigned char ucLED;
 			portENTER_CRITICAL();
 				P2DR &= ~ucLED;
 			portEXIT_CRITICAL();
-		}
+		}		
 	}
 }
 /*-----------------------------------------------------------*/
@@ -133,7 +133,7 @@ unsigned char ucLED;
 			}
 		}
 		portEXIT_CRITICAL();
-	}
+	}	
 }
 
 

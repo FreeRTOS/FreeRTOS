@@ -63,7 +63,7 @@ portBASE_TYPE xReturn;
     {
         xReturn = pdFALSE;
     }
-
+    
     return xReturn;
 }
 /*-----------------------------------------------------------*/

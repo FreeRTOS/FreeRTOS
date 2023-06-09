@@ -758,6 +758,11 @@
           <GroupName>FreeRTOS_Source</GroupName>
           <Files>
             <File>
+              <FileName>croutine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Source\croutine.c</FilePath>
+            </File>
+            <File>
               <FileName>event_groups.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Source\event_groups.c</FilePath>
@@ -791,6 +796,11 @@
               <FileName>atomic.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Source\include\atomic.h</FilePath>
+            </File>
+            <File>
+              <FileName>croutine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Source\include\croutine.h</FilePath>
             </File>
             <File>
               <FileName>deprecated_definitions.h</FileName>

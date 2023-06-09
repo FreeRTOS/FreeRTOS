@@ -383,15 +383,16 @@ jobs:
         run: |
           sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
           pip install --user meson ninja
+          export PATH="$HOME/.local/bin:$PATH"
 
       - name: Build and Install Glib
         run: |
           git clone https://gitlab.gnome.org/GNOME/glib
           cd glib
           meson _build
-          ninja -C _build
-          ninja -C _build install
-          echo "::set-output name=glib-path::$(pwd)"
+          sudo ninja -C _build
+          sudo ninja -C _build install
+          echo "::set-output name=glib-path::/usr/local"
 
       - name: Build and Install Libslirp
         run: |

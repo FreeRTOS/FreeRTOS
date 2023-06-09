@@ -79,7 +79,7 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Ne
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
 
 CFLAGS 			:= -ggdb3
-LDFLAGS			:= -ggdb3 -pthread -lpcap -lslirp -lglib-2.0 -lintl
+LDFLAGS			:= -ggdb3 -pthread -lpcap -lslirp -lglib-2.0
 CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 ifeq ($(TRACE_ON_ENTER),1)

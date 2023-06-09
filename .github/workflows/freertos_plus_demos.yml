@@ -380,7 +380,7 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
       - name: Install prerequisite packages
-        run: sudo apt-get install -y git build-essential libpcap-dev libffi-dev libxm12-dev libglib2.0-dev libslirp-dev gettext-dev pcre2-dev
+        run: sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
 
       - name: Set Up Echo Server
         run: sudo nc -vklp 7 -e /bin/cat

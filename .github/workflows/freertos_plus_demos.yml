@@ -383,7 +383,6 @@ jobs:
         run: |
           sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
           pip install --user meson ninja
-          export PATH="$HOME/.local/bin:$PATH"
 
       - name: Build and Install Glib
         run: |

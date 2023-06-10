@@ -75,8 +75,8 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Ti
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IP.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/BufferManagement/BufferAllocation_2.c
 # SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetifBackendLibslirp.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetworkInterface.c
 
 CFLAGS 			:= -ggdb3 -I/usr/include/slirp -I/usr/include -I/usr/include/glib-2.0
 LDFLAGS			:= -ggdb3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -pthread -lpcap -lglib-2.0 -lslirp

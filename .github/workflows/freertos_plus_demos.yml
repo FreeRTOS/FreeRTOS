@@ -381,24 +381,24 @@ jobs:
 
       - name: Install prerequisite packages
         run: |
-          sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
+          sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp
           pip install --user meson ninja
 
-      - name: Build and Install Glib
-        run: |
-          git clone https://gitlab.gnome.org/GNOME/glib
-          cd glib
-          meson _build
-          ninja -C _build
-          ninja -C _build install
+      # - name: Build and Install Glib
+      #   run: |
+      #     git clone https://gitlab.gnome.org/GNOME/glib
+      #     cd glib
+      #     meson _build
+      #     ninja -C _build
+      #     ninja -C _build install
 
-      - name: Build and Install Libslirp
-        run: |
-          git clone https://gitlab.freedesktop.org/slirp/libslirp
-          cd libslirp
-          meson _build
-          ninja -C _build
-          ninja -C _build install
+      # - name: Build and Install Libslirp
+      #   run: |
+      #     git clone https://gitlab.freedesktop.org/slirp/libslirp
+      #     cd libslirp
+      #     meson _build
+      #     ninja -C _build
+      #     ninja -C _build install
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

@@ -78,8 +78,8 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Bu
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
 
-CFLAGS 			:= -ggdb3
-LDFLAGS			:= -ggdb3 -pthread -lpcap -lglib-2.0 -lslirp
+CFLAGS 			:= -ggdb3 -I/usr/include/slirp -I/usr/include -I/usr/include/glib-2.0
+LDFLAGS			:= -ggdb3 -L/usr/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -pthread -lpcap -lglib-2.0 -lslirp
 CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 ifeq ($(TRACE_ON_ENTER),1)

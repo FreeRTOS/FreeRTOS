@@ -382,15 +382,10 @@ jobs:
       - name: Install prerequisite packages
         run: |
           sudo apt update  
-          sudo apt-get install -y git build-essential libpcap-dev
+          sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev
 
       - name: Install brew
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-      - name: Set up brew
-        run: |
-          (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/runner/.bash_profile
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
       - name: Install libslirp
         run: /home/linuxbrew/.linuxbrew/bin/brew install libslirp

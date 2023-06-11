@@ -388,7 +388,9 @@ jobs:
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
       - name: Install libslirp
-        run: /home/linuxbrew/.linuxbrew/bin/brew install libslirp
+        run: |
+          /home/linuxbrew/.linuxbrew/bin/brew install libslirp
+          /home/linuxbrew/.linuxbrew/bin/brew install gettext
 
       - name: Get packages info
         run: |
@@ -396,6 +398,7 @@ jobs:
           # dpkg -s slirp
           # dpkg -L libglib2.0-dev
           # dpkg -L slirp
+          ls /home/linuxbrew/.linuxbrew
           ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
           ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
 

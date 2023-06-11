@@ -382,7 +382,7 @@ jobs:
       - name: Install prerequisite packages
         run: |
           sudo apt update  
-          sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev
+          sudo apt-get install -y git build-essential libpcap-dev
 
       - name: Install brew
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -395,12 +395,12 @@ jobs:
       - name: Install libslirp
         run: /home/linuxbrew/.linuxbrew/bin/brew install libslirp
 
-      - name: Get packages info
-        run: |
-          dpkg -s libglib2.0-dev
-          dpkg -s libslirp-dev
-          dpkg -L libglib2.0-dev
-          dpkg -L libslirp
+      # - name: Get packages info
+      #   run: |
+      #     dpkg -s libglib2.0-dev
+      #     dpkg -s libslirp
+      #     dpkg -L libglib2.0-dev
+      #     dpkg -L libslirp
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

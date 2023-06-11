@@ -392,11 +392,14 @@ jobs:
 
       - name: Get packages info
         run: |
-          dpkg -s libglib2.0-dev
-          dpkg -s libslirp
-          dpkg -L libglib2.0-dev
-          dpkg -L libslirp
-
+          # dpkg -s libglib2.0-dev
+          # dpkg -s slirp
+          # dpkg -L libglib2.0-dev
+          # dpkg -L slirp
+          ls /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
+          ls /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include
+          ls /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp 
+          ls /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &
 

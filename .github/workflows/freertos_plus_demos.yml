@@ -390,12 +390,12 @@ jobs:
       - name: Install libslirp
         run: /home/linuxbrew/.linuxbrew/bin/brew install libslirp
 
-      # - name: Get packages info
-      #   run: |
-      #     dpkg -s libglib2.0-dev
-      #     dpkg -s libslirp
-      #     dpkg -L libglib2.0-dev
-      #     dpkg -L libslirp
+      - name: Get packages info
+        run: |
+          dpkg -s libglib2.0-dev
+          dpkg -s libslirp
+          dpkg -L libglib2.0-dev
+          dpkg -L libslirp
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

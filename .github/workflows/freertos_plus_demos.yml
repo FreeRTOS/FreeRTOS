@@ -393,7 +393,7 @@ jobs:
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
       - name: Install libslirp
-        run: brew install libslirp
+        run: /home/linuxbrew/.linuxbrew/bin/brew install libslirp
 
       - name: Get packages info
         run: |

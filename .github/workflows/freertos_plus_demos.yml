@@ -382,8 +382,7 @@ jobs:
       - name: Install prerequisite packages
         run: |
           sudo apt update  
-          sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev
-          sudo apt install libslirp
+          sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
 
       - name: Get packages info
         run: |

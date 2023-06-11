@@ -382,23 +382,6 @@ jobs:
       - name: Install prerequisite packages
         run: |
           sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
-          pip install --user meson ninja
-
-      - name: Build and Install Glib
-        run: |
-          git clone https://gitlab.gnome.org/GNOME/glib
-          cd glib
-          meson _build
-          ninja -C _build
-          ninja -C _build install
-
-      - name: Build and Install Libslirp
-        run: |
-          git clone https://gitlab.freedesktop.org/slirp/libslirp
-          cd libslirp
-          meson _build
-          ninja -C _build
-          ninja -C _build install
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &
@@ -406,7 +389,9 @@ jobs:
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
-        run: make -j
+        run: |
+          sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          make -j
 
       - name: Run and monitor Posix_GCC Full Demo
         if: success() || failure() && steps.build-echo-posix-demo.outcome == 'success'

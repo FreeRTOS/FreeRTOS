@@ -83,7 +83,7 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Ne
 # CFLAGS 			:= -ggdb3 -I/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp  -I/usr/include -I/usr/include/glib-2.0
 # LDFLAGS			:= -ggdb3 -L/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib  -L/usr/lib/x86_64-linux-gnu -pthread -lpcap -lglib-2.0 -lslirp
 CFLAGS 			:= -ggdb3 -I/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp  -I/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/include/glib-2.0 -I/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib/glib-2.0/include  -I/home/linuxbrew/.linuxbrew/opt/gettext/include -I/home/linuxbrew/.linuxbrew/Cellar/pcre2/10.42/include
-LDFLAGS			:= -ggdb3 -pthread -L/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib  -L/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib -L/home/linuxbrew/.linuxbrew/opt/gettext/lib -lslirp -lglib-2.0 -lintl
+LDFLAGS			:= -ggdb3 -pthread -L/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib  -L/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib -L/home/linuxbrew/.linuxbrew/opt/gettext/lib -lslirp -lglib-2.0
 CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 ifeq ($(TRACE_ON_ENTER),1)

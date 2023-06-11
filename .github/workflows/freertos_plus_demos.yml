@@ -384,15 +384,15 @@ jobs:
           sudo apt update  
           sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev
 
+      - name: Install brew
+        run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
       - name: Set up brew
         run: |
           echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.bashrc
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-      - name: Install package with brew
-        run: brew install libslirp
-
-      - name: Install brew
+      - name: Install libslirp
         run: brew install libslirp
 
       - name: Get packages info

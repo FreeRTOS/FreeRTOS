@@ -25,7 +25,10 @@ INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/config
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/config
-
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/glib/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/include/slirp/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/glib/include/glib-2.0/
 # FreeRTOS Kernel source files
 SOURCE_FILES :=
 SOURCE_FILES += ${FREERTOS_DIR}/Source/event_groups.c

@@ -1,0 +1,11 @@
+prefix=/opt/homebrew/Cellar/libslirp/4.7.0
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: slirp
+Description: User-space network stack
+Version: 4.7.0
+Requires: glib-2.0
+Libs: -L${libdir} -lslirp
+Libs.private: -lresolv
+Cflags: -I${includedir}/slirp

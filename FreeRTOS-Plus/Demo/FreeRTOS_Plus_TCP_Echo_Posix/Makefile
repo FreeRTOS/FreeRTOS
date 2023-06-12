@@ -75,17 +75,17 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Ti
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IP.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/BufferManagement/BufferAllocation_2.c
 # SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
-# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
-# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetifBackendLibslirp.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetworkInterface.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
+# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetifBackendLibslirp.c
+# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetworkInterface.c
 
 # CFLAGS 			:= -ggdb3 -I/opt/homebrew/Cellar/libslirp/4.7.0/include/slirp -I/opt/homebrew/Cellar/glib/2.76.3/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.76.3/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.42/include
 # LDFLAGS			:= -ggdb3 -pthread -lpcap -L/opt/homebrew/Cellar/libslirp/4.7.0/lib -L/opt/homebrew/Cellar/glib/2.76.3/lib -L/opt/homebrew/opt/gettext/lib -lslirp -lglib-2.0 -lintl
 # CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
-CFLAGS 			:= -ggdb3  -I/usr/include/slirp -I/usr/include -I/usr/include/glib-2.0
-LDFLAGS			:= -ggdb3 -pthread -lpcap -L/usr/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -lglib-2.0 -lslirp
+CFLAGS 			:= -ggdb3  -I/${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/include/slirp -I/${FREERTOS_PLUS_DIR}/ThirdParty/glib/include/glib-2.0
+LDFLAGS			:= -ggdb3 -pthread -lpcap -L/${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/lib -L/${FREERTOS_PLUS_DIR}/ThirdParty/glib/lib -lglib-2.0 -lslirp
 CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 ifeq ($(TRACE_ON_ENTER),1)

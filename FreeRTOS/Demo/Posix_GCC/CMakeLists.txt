@@ -4,27 +4,29 @@ project( posix_demo )
 
 set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_WINDOWS_")
 
-if( DEFINED TRACE_ON_ENTER AND TRACE_ON_ENTER )
+if( TRACE_ON_ENTER )
     set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTRACE_ON_ENTER=1" )
 else()
     set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTRACE_ON_ENTER=0" )
 endif()
 
-if( NOT DEFINED COVERAGE_TEST )
+if( COVERAGE_TEST )
+    set( COVERAGE_TEST 1 )
+else()
     set( COVERAGE_TEST 0 )
 endif()
 
-if( DEFINED PROFILE AND PROFILE )
+if( PROFILE )
     set( CMAKE_BUILD_TYPE "release" )
 else()
     set( CMAKE_BUILD_TYPE "debug" )
 endif()
 
-if( DEFINED SANITIZE_ADDRESS AND SANITIZE_ADDRESS )
+if( SANITIZE_ADDRESS )
     set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fsanitize=alignment" )
 endif()
 
-if( DEFINED SANITIZE_LEAK AND SANITIZE_LEAK )
+if( SANITIZE_LEAK )
     set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=leak" )
 endif()
 

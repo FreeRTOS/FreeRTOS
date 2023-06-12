@@ -25,6 +25,10 @@ INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/config
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/config
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/include/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/include/slirp/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/glib/include/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/ThirdParty/glib/include/glib/
 
 # FreeRTOS Kernel source files
 SOURCE_FILES :=
@@ -84,8 +88,8 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Ne
 # LDFLAGS			:= -ggdb3 -pthread -lpcap -L/opt/homebrew/Cellar/libslirp/4.7.0/lib -L/opt/homebrew/Cellar/glib/2.76.3/lib -L/opt/homebrew/opt/gettext/lib -lslirp -lglib-2.0 -lintl
 # CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
-CFLAGS 			:= -ggdb3  -I${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/include/slirp -I${FREERTOS_PLUS_DIR}/ThirdParty/glib/include -I${FREERTOS_PLUS_DIR}/ThirdParty/glib/include/glib
-LDFLAGS			:= -ggdb3 -pthread -lpcap -L${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/lib -L${FREERTOS_PLUS_DIR}/ThirdParty/glib/x86 -L${FREERTOS_PLUS_DIR}/ThirdParty/glib/lib -lslirp -lglib-2.0 -lintl
+CFLAGS 			:= -ggdb3
+LDFLAGS			:= -ggdb3 -pthread -lpcap -L${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/lib -L${FREERTOS_PLUS_DIR}/ThirdParty/glib/lib -L${FREERTOS_PLUS_DIR}/ThirdParty/glib -lslirp -lglib-2.0 -lintl
 CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 ifeq ($(TRACE_ON_ENTER),1)

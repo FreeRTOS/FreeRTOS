@@ -386,12 +386,6 @@ jobs:
       - name: Check Git server IP
         run: ifconfig
 
-      - name: ping cloud server
-        run: ping 10.169.127.97 &
-
-      - name: ping git server
-        run: ping 192.30.255.113 &
-
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &
 

@@ -220,7 +220,7 @@ void traceOnEnter()
         {
             taskENTER_CRITICAL();
             {
-                prvSaveTraceFile();
+                // prvSaveTraceFile();
             }
             taskEXIT_CRITICAL();
         }
@@ -273,7 +273,7 @@ void vAssertCalled( const char * const pcFileName,
 
             if( xTraceRunning == pdTRUE )
             {
-                prvSaveTraceFile();
+                // prvSaveTraceFile();
             }
         }
 
@@ -304,7 +304,7 @@ static void prvSaveTraceFile( void )
                     xTraceDisable();
                     fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
                     fclose( pxOutputFile );
-                    printf( "\r\nTrace output saved to Trace.dump\r\n" );
+                    // printf( "\r\nTrace output saved to Trace.dump\r\n" );
                     xTraceEnable( TRC_START );
                 }
             }

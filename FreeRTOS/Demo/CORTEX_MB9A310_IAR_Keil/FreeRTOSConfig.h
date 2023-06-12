@@ -68,6 +68,9 @@ assembly files that include this header file. */
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 		0
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
@@ -101,9 +104,9 @@ to exclude the API function. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
-
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
-
+	
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
+	
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define vPortSVCHandler SVC_Handler

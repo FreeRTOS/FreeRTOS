@@ -2319,6 +2319,9 @@
                 <name>$PROJ_DIR$\..\..\Source\include\atomic.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\Source\include\croutine.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\Source\include\deprecated_definitions.h</name>
             </file>
             <file>
@@ -2388,6 +2391,9 @@
                 </file>
             </group>
         </group>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+        </file>
         <file>
             <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
         </file>

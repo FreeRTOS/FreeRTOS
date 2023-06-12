@@ -4,7 +4,7 @@ description: "This is the standard distribution of FreeRTOS."
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "953c1ee6c"
+    version: "d3c289f"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"

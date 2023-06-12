@@ -56,10 +56,10 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 			{
 				case 0: LED_PORT_OUT |= LED_1;
 						break;
-
+	
 				case 1: LED_PORT_OUT |= LED_2;
 						break;
-
+						
 				default: /* Nothing to do here, there are only two LEDs. */
 						break;
 			}
@@ -70,7 +70,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 			{
 				case 0: LED_PORT_OUT &= ~LED_1;
 						break;
-
+	
 				case 1: LED_PORT_OUT &= ~LED_2;
 						break;
 				default: /* Nothing to do here, there are only two LEDs. */

@@ -185,10 +185,10 @@ configure the real network connection to use. */
 /* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 
-#define configIP_ADDR0		192
-#define configIP_ADDR1		30
-#define configIP_ADDR2		255
-#define configIP_ADDR3		112
+#define configIP_ADDR0		10
+#define configIP_ADDR1		1
+#define configIP_ADDR2		0
+#define configIP_ADDR3		20
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */

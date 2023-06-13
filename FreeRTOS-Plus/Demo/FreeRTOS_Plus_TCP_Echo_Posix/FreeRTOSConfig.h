@@ -165,10 +165,10 @@ tasks.
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-#define configECHO_SERVER_ADDR0	192
-#define configECHO_SERVER_ADDR1 30
-#define configECHO_SERVER_ADDR2 255
-#define configECHO_SERVER_ADDR3 112
+#define configECHO_SERVER_ADDR0	10
+#define configECHO_SERVER_ADDR1 169
+#define configECHO_SERVER_ADDR2 127
+#define configECHO_SERVER_ADDR3 97
 
 /* Default MAC address configuration.  The demo creates a virtual network
 connection that uses this MAC address by accessing the raw Ethernet/WiFi data

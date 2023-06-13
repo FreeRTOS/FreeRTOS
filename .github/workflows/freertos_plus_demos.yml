@@ -399,16 +399,16 @@ jobs:
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
 
-      # - name: Get packages info
-      #   run: |
-      #     # dpkg -s libglib2.0-dev
-      #     # dpkg -s slirp
-      #     # dpkg -L libglib2.0-dev
-      #     # dpkg -L slirp
-      #     ls /home/linuxbrew/.linuxbrew
-      #     ls /home/linuxbrew/.linuxbrew/opt
-      #     ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
-      #     ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
+      - name: Get packages info
+        run: |
+          # dpkg -s libglib2.0-dev
+          # dpkg -s slirp
+          # dpkg -L libglib2.0-dev
+          # dpkg -L slirp
+          # ls /home/linuxbrew/.linuxbrew
+          # ls /home/linuxbrew/.linuxbrew/opt
+          ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          # ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

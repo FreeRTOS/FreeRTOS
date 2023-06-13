@@ -89,7 +89,7 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Ne
 # CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 CFLAGS 			:= -ggdb3
-LDFLAGS			:= -ggdb3 -pthread -lpcap -L${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/lib -L${FREERTOS_PLUS_DIR}/ThirdParty/glib/lib -L${FREERTOS_PLUS_DIR}/ThirdParty/glib -lslirp -lglib-2.0 -lintl
+LDFLAGS			:= -ggdb3 -pthread -lpcap -L${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/lib -L${FREERTOS_PLUS_DIR}/ThirdParty/glib/lib -lslirp -lresolv -lglib-2.0
 CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 ifeq ($(TRACE_ON_ENTER),1)

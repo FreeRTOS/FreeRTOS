@@ -1,4 +1,4 @@
-prefix=/opt/homebrew/Cellar/libslirp/4.7.0
+prefix=../..
 includedir=${prefix}/include
 libdir=${prefix}/lib
 

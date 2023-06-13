@@ -390,7 +390,6 @@ jobs:
       - name: Install libslirp
         run: |
           /home/linuxbrew/.linuxbrew/bin/brew install libslirp
-          /home/linuxbrew/.linuxbrew/bin/brew install glibc
   
       - name: Check LD_Library
         run: echo $LD_LIBRARY_PATH
@@ -398,6 +397,8 @@ jobs:
       - name: Update LD_Library_Path
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/lib
+
           echo $LD_LIBRARY_PATH
           ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
 

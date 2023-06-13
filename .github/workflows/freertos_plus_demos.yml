@@ -397,7 +397,7 @@ jobs:
       - name: Update LD_Library_Path
         run: |
           # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-          ls -R LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1
+          ls -R /home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/lib
 
           echo $LD_LIBRARY_PATH

@@ -397,6 +397,7 @@ jobs:
       - name: Update LD_Library_Path
         run: |
           echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0' >> ~/.bashrc
+          echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3' >> ~/.bashrc
 
       # - name: Get packages info
       #   run: |

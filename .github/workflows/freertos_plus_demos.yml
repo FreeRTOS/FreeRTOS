@@ -395,7 +395,7 @@ jobs:
 
       - name: Update LD_Library_Path
         run: |
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/FreeRTOS-Plus/ThirdParty/libslirp/lib
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/work/FreeRTOS/FreeRTOS/FreeRTOS-Plus/ThirdParty/libslirp/lib
           echo $LD_LIBRARY_PATH
 
 

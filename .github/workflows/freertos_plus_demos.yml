@@ -382,7 +382,7 @@ jobs:
       - name: Install prerequisite packages
         run: |
           sudo apt update  
-          sudo apt-get install -y git build-essential libpcap-dev libc6
+          sudo apt-get install -y git build-essential libpcap-dev libc6=2.35-0ubuntu3.1
  
       - name: Install brew
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -410,6 +410,7 @@ jobs:
           # ls /home/linuxbrew/.linuxbrew/opt
           ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
           # ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
+          ls -R /lib/x86_64-linux-gnu
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

@@ -382,13 +382,22 @@ jobs:
       - name: Install prerequisite packages
         run: |
           sudo apt-get install -y git build-essential libpcap-dev
-          # sudo apt-get install -y git build-essential libpcap-dev libglib2.0-dev libslirp-dev
+          # sudo apt-get install -y git build-essential libpcap-dev
 
       - name: Check Git server IP
         run: ifconfig
 
       # - name: Set Up Echo Server
       #   run: sudo nc -nvvlp 7 &
+
+      - name: Check LD_Library
+        run: echo $LD_LIBRARY_PATH
+
+      - name: Update LD_Library_Path
+        run: |
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/FreeRTOS-Plus/ThirdParty/libslirp/lib
+          echo $LD_LIBRARY_PATH
+
 
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo

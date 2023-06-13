@@ -383,7 +383,6 @@ jobs:
         run: |
           sudo apt update  
           sudo apt-get install -y git build-essential libpcap-dev
-          sudo dpkg -i libc6_2.35-0ubuntu3_amd64.deb
  
       - name: Install brew
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -391,6 +390,7 @@ jobs:
       - name: Install libslirp
         run: |
           /home/linuxbrew/.linuxbrew/bin/brew install libslirp
+          /home/linuxbrew/.linuxbrew/bin/brew install glibc
   
       - name: Check LD_Library
         run: echo $LD_LIBRARY_PATH

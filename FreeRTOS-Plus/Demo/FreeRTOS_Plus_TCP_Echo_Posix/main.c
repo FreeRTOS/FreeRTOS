@@ -220,7 +220,7 @@ void traceOnEnter()
         {
             taskENTER_CRITICAL();
             {
-                prvSaveTraceFile();
+                // prvSaveTraceFile();
             }
             taskEXIT_CRITICAL();
         }
@@ -273,7 +273,7 @@ void vAssertCalled( const char * const pcFileName,
 
             if( xTraceRunning == pdTRUE )
             {
-                prvSaveTraceFile();
+                // prvSaveTraceFile();
             }
         }
 

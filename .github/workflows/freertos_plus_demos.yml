@@ -390,30 +390,24 @@ jobs:
       - name: Install libslirp
         run: |
           /home/linuxbrew/.linuxbrew/bin/brew install libslirp
-  
-      - name: Check LD_Library
-        run: echo $LD_LIBRARY_PATH
 
       - name: Update LD_Library_Path
         run: |
-          # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-          # ls -R /home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/lib
-
-          # echo $LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          echo $LD_LIBRARY_PATH
           # ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
 
-      - name: Get packages info
-        run: |
-          # dpkg -s libglib2.0-dev
-          # dpkg -s slirp
-          # dpkg -L libglib2.0-dev
-          # dpkg -L slirp
-          # ls /home/linuxbrew/.linuxbrew
-          # ls /home/linuxbrew/.linuxbrew/opt
-          ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-          # ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
-          ls -R /lib/x86_64-linux-gnu
+      # - name: Get packages info
+      #   run: |
+      #     # dpkg -s libglib2.0-dev
+      #     # dpkg -s slirp
+      #     # dpkg -L libglib2.0-dev
+      #     # dpkg -L slirp
+      #     # ls /home/linuxbrew/.linuxbrew
+      #     # ls /home/linuxbrew/.linuxbrew/opt
+      #     # ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+      #     # ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
+      #     # ls -R /lib/x86_64-linux-gnu
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

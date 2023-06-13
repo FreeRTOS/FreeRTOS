@@ -390,18 +390,24 @@ jobs:
       - name: Install libslirp
         run: |
           /home/linuxbrew/.linuxbrew/bin/brew install libslirp
-          /home/linuxbrew/.linuxbrew/bin/brew install gettext
+  
+      - name: Check LD_Library
+        run: echo LD_LIBRARY_PATH
 
-      - name: Get packages info
+      - name: Update LD_Library_Path
         run: |
-          # dpkg -s libglib2.0-dev
-          # dpkg -s slirp
-          # dpkg -L libglib2.0-dev
-          # dpkg -L slirp
-          ls /home/linuxbrew/.linuxbrew
-          ls /home/linuxbrew/.linuxbrew/opt
-          ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
-          ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
+          echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0' >> ~/.bashrc
+
+      # - name: Get packages info
+      #   run: |
+      #     # dpkg -s libglib2.0-dev
+      #     # dpkg -s slirp
+      #     # dpkg -L libglib2.0-dev
+      #     # dpkg -L slirp
+      #     ls /home/linuxbrew/.linuxbrew
+      #     ls /home/linuxbrew/.linuxbrew/opt
+      #     ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
+      #     ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
 
       - name: Set Up Echo Server
         run: sudo nc -nvvlp 7 &

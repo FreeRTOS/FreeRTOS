@@ -382,7 +382,9 @@ jobs:
       - name: Install prerequisite packages
         run: |
           sudo apt update  
-          sudo apt-get install -y git build-essential libpcap-dev libpthread-stubs0-dev libc6-dev
+          sudo apt-get install -y git build-essential libpcap-dev
+          sudo dpkg -i
+          sudo apt --fix-broken install
 
       - name: Install brew
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

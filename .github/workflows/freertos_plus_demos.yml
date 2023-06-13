@@ -367,7 +367,7 @@ jobs:
 
   plus_tcp_posix:
     name: FreeRTOS+TCP Posix Simulator Demo
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

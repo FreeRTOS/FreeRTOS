@@ -390,7 +390,8 @@ jobs:
 
       - name: Install libslirp
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew update
           brew install libslirp
 
       - name: Update LD_Library_Path

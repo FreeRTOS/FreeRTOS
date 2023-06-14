@@ -379,10 +379,10 @@ jobs:
             FreeRTOS/Source \
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
-      - name: Get git ip info
-        run: |
-          ifconfig
-          ping google.com
+      # - name: Get git ip info
+      #   run: |
+      #     ifconfig
+      #     # ping google.com
 
       # - name: Install prerequisite packages
       #   run: |

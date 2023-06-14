@@ -390,17 +390,18 @@ jobs:
 
       - name: Install libslirp
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew update
           brew install libpcap
           brew install libslirp
 
-      # - name: Update LD_Library_Path
-      #   run: |
-      #     # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-      #     # echo $LD_LIBRARY_PATH
-      #     ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-      #     ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
+      - name: Update LD_Library_Path
+        run: |
+          # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          # echo $LD_LIBRARY_PATH
+          # ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          # ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
+          ls -R /usr/local/Cellar/glib
 
       # - name: Get packages info
       #   run: |

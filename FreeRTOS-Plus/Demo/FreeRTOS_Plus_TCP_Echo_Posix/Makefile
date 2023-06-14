@@ -74,19 +74,19 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TC
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Tiny_TCP.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IP.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/BufferManagement/BufferAllocation_2.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
-# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
-# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
+# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
 # SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetifBackendLibslirp.c
 # SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetworkInterface.c
 
 # CFLAGS 			:= -ggdb3 -I/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp  -I/usr/include -I/usr/include/glib-2.0
 # LDFLAGS			:= -ggdb3 -L/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib  -L/usr/lib/x86_64-linux-gnu -pthread -lpcap -lglib-2.0 -lslirp
-# CFLAGS 			:= -ggdb3 -I/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp  -I/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/include/glib-2.0 -I/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib/glib-2.0/include  -I/home/linuxbrew/.linuxbrew/opt/gettext/include -I/home/linuxbrew/.linuxbrew/Cellar/pcre2/10.42/include -I/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/include
-# LDFLAGS			:= -ggdb3 -L/usr/lib/x86_64-linux-gnu -pthread -L/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/lib -L/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib  -L/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib -L/home/linuxbrew/.linuxbrew/opt/gettext/lib -lslirp -lglib-2.0
+CFLAGS 			:= -ggdb3 -I/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp  -I/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/include/glib-2.0 -I/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib/glib-2.0/include  -I/home/linuxbrew/.linuxbrew/opt/gettext/include -I/home/linuxbrew/.linuxbrew/Cellar/pcre2/10.42/include -I/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/include
+LDFLAGS			:= -ggdb3 -L/usr/lib/x86_64-linux-gnu -pthread -L/home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/lib -L/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib  -L/home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3/lib -L/home/linuxbrew/.linuxbrew/opt/gettext/lib -lslirp -lglib-2.0
 
-CFLAGS 			:= -ggdb3
-LDFLAGS			:= -ggdb3 -pthread -lpcap
+# CFLAGS 			:= -ggdb3
+# LDFLAGS			:= -ggdb3 -pthread -lpcap
 
 CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 

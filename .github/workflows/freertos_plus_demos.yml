@@ -379,17 +379,21 @@ jobs:
             FreeRTOS/Source \
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
+      - name: Get git ip info
+        run: |
+          ifconfig
+          nslookup github.com
+          ping github.com
+
       - name: Install prerequisite packages
         run: |
           sudo apt update  
           sudo apt-get install -y git build-essential libpcap-dev
- 
-      # - name: Install brew
-      #   run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-      # - name: Install libslirp
-      #   run: |
-      #     /home/linuxbrew/.linuxbrew/bin/brew install libslirp
+      - name: Install libslirp
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 
+          brew install libslirp
 
       - name: Update LD_Library_Path
         run: |

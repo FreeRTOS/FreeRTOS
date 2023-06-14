@@ -158,7 +158,7 @@ used with multiple project configurations.  If it is
 #define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 1 )
 #define ipconfigUSE_NETWORK_EVENT_HOOK 1
 //#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000)
-#define configNETWORK_INTERFACE_TO_USE 1L
+#define configNETWORK_INTERFACE_TO_USE 8L
 
 /* The address of an echo server that will be used by the two demo echo client
 tasks.

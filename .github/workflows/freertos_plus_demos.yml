@@ -398,9 +398,10 @@ jobs:
         run: |
           # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
           # echo $LD_LIBRARY_PATH
-          ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
           cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp-version.h
-          # ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
+          cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/.brew/libslirp.rb
+          ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
           # ls /usr/local/Cellar
 
       # - name: Get packages info

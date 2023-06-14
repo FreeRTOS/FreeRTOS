@@ -401,7 +401,7 @@ jobs:
           # echo $LD_LIBRARY_PATH
           # ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
           # ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
-          ls -R /usr/local/Cellar/glib
+          ls /usr/local/Cellar
 
       # - name: Get packages info
       #   run: |

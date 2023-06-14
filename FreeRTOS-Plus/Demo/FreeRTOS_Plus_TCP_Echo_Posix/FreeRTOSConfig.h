@@ -158,7 +158,7 @@ used with multiple project configurations.  If it is
 #define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 1 )
 #define ipconfigUSE_NETWORK_EVENT_HOOK 1
 //#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000)
-#define configNETWORK_INTERFACE_TO_USE 8L
+#define configNETWORK_INTERFACE_TO_USE 7L
 
 /* The address of an echo server that will be used by the two demo echo client
 tasks.
@@ -186,9 +186,9 @@ configure the real network connection to use. */
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 
 #define configIP_ADDR0		10
-#define configIP_ADDR1		1
-#define configIP_ADDR2		0
-#define configIP_ADDR3		20
+#define configIP_ADDR1		106
+#define configIP_ADDR2		49
+#define configIP_ADDR3		30
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */

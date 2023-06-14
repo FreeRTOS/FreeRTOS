@@ -382,8 +382,6 @@ jobs:
       - name: Get git ip info
         run: |
           ifconfig
-          nslookup github.com
-          ping github.com
 
       - name: Install prerequisite packages
         run: |

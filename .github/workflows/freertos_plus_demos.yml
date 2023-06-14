@@ -388,20 +388,20 @@ jobs:
       #     sudo apt update  
       #     sudo apt-get install -y git build-essential libpcap-dev
 
-      - name: Install libslirp
-        run: |
-          # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew update
-          brew install libpcap
-          # brew install libslirp
-
-      # - name: Update LD_Library_Path
+      # - name: Install libslirp
       #   run: |
-      #     # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-      #     # echo $LD_LIBRARY_PATH
-      #     # ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-      #     # ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
-      #     ls /usr/local/Cellar
+      #     # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      #     brew update
+      #     brew install libpcap
+      #     # brew install libslirp
+
+      - name: Update LD_Library_Path
+        run: |
+          # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          # echo $LD_LIBRARY_PATH
+          # ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          # ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
+          ls /usr/local/Cellar
 
       # - name: Get packages info
       #   run: |
@@ -415,8 +415,8 @@ jobs:
       #     # ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
       #     # ls -R /lib/x86_64-linux-gnu
 
-      - name: Set Up Echo Server
-        run: sudo nc -nvvlp 7 &
+      # - name: Set Up Echo Server
+      #   run: sudo nc -nvvlp 7 &
 
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo

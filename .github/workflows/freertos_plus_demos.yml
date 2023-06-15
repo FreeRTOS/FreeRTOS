@@ -383,15 +383,15 @@ jobs:
         run: |
           ifconfig
 
-      - name: Get git ip address
+      - name: Get echo server ip address
         id: git-ip-address
         uses: ChaiTowKway/CI-CD-GitHub-Actions/git-ip-address@main
       
-      - name: print git ip address 
-        shell: bash
-        run: |
-          echo_server_address = ${{ steps.git-ip-address.outputs.git-ip-address-path }}
-          echo "$echo_server_address"
+      # - name: print git ip address 
+      #   shell: bash
+      #   run: |
+      #     echo_server_address = ${{ steps.git-ip-address.outputs.git-ip-address-path }}
+      #     echo "$echo_server_address"
       # - name: Install prerequisite packages
       #   run: |
       #     sudo apt update  

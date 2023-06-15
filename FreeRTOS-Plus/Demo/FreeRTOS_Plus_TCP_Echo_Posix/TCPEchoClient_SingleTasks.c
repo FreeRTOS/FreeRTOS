@@ -61,7 +61,7 @@
 
 /* The echo server is assumed to be on port 7, which is the standard echo
  * protocol port. */
-    #define echoECHO_PORT                 ( 7 )
+    #define echoECHO_PORT                 ( 5000 )
 
 /* The size of the buffers is a multiple of the MSS - the length of the data
  * sent is a pseudo random size between 20 and echoBUFFER_SIZES. */
@@ -254,6 +254,7 @@
                         {
                             /* The echo reply was received without error. */
                             ulTxRxCycles[ xInstance ]++;
+                            printf("Received correct data.\n");
                         }
                         else
                         {

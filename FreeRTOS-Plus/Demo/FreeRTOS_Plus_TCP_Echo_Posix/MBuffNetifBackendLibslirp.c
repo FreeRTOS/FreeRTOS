@@ -200,7 +200,7 @@ void vMBuffNetifBackendInit( MessageBufferHandle_t * pxSendMsgBuffer,
     #else
         xSlirpConfig.version = 3U;
     #endif
-
+    fprintf( stderr, "xSlirpConfig.version: %zu\n", xSlirpConfig.version );
     xSlirpConfig.restricted = false;
 
     /* IPv4 Enabled */
@@ -227,7 +227,7 @@ void vMBuffNetifBackendInit( MessageBufferHandle_t * pxSendMsgBuffer,
 
     xSlirpConfig.disable_host_loopback = false;
     xSlirpConfig.enable_emu = false;
-    // xSlirpConfig.disable_dns = false;
+    xSlirpConfig.disable_dns = false;
 
     #if SLIRP_CHECK_VERSION( 4U, 7U, 0U )
         xSlirpConfig.disable_dhcp = false;

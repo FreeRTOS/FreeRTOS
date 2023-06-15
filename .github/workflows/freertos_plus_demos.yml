@@ -383,9 +383,9 @@ jobs:
         run: |
           ifconfig
 
-      - name: Get echo server ip address
-        id: git-ip-address
-        uses: ChaiTowKway/CI-CD-GitHub-Actions/git-ip-address@main
+      # - name: Get echo server ip address
+      #   id: git-ip-address
+      #   uses: ChaiTowKway/CI-CD-GitHub-Actions/git-ip-address@main
       
       # - name: print git ip address 
       #   shell: bash
@@ -403,15 +403,15 @@ jobs:
           brew update
           brew install libslirp
 
-      # - name: Update LD_Library_Path
-      #   run: |
-      #     # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-      #     # echo $LD_LIBRARY_PATH
-      #     ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
-      #     cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp-version.h
-      #     cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp.h
-      #     cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/.brew/libslirp.rb
-      #     ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
+      - name: Update LD_Library_Path
+        run: |
+          # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+          # echo $LD_LIBRARY_PATH
+          ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
+          cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp-version.h
+          cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp.h
+          cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/.brew/libslirp.rb
+          ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
       #     # ls /usr/local/Cellar
 
       # - name: Get packages info
@@ -427,7 +427,7 @@ jobs:
       #     # ls -R /lib/x86_64-linux-gnu
 
       - name: Set Up Echo Server
-        run: sudo nc -nvvlp 7 &
+        run: sudo nc -nvvlp 5000 &
 
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo

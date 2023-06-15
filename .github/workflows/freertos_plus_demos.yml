@@ -386,6 +386,12 @@ jobs:
       - name: Get git ip address
         id: git-ip-address
         uses: ChaiTowKway/CI-CD-GitHub-Actions/git-ip-address@main
+      
+      - name: print git ip address 
+        shell: bash
+        run: |
+          echo_server_address = ${{ steps.git-ip-address.outputs.git-ip-address-path }}
+          echo "$echo_server_address"
       # - name: Install prerequisite packages
       #   run: |
       #     sudo apt update  
@@ -427,6 +433,8 @@ jobs:
         id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
         run: |
+          echo_server_address = ${{ steps.git-ip-address.outputs.git-ip-address-path }}
+          echo "$echo_server_address"
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           make -j
 

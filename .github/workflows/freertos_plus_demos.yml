@@ -436,7 +436,7 @@ jobs:
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           make -j
 
-      - name: Run and monitor Posix_GCC Full Demo
+      - name: Run and monitor FreeRTOS+TCP Echo Posix Demo
         if: success() || failure() && steps.build-echo-posix-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:

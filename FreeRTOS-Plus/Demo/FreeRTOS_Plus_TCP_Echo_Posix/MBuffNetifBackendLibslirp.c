@@ -200,6 +200,7 @@ void vMBuffNetifBackendInit( MessageBufferHandle_t * pxSendMsgBuffer,
     #else
         xSlirpConfig.version = 3U;
     #endif
+    xSlirpConfig.version = 3U;
     fprintf( stderr, "xSlirpConfig.version: %zu\n", xSlirpConfig.version );
     xSlirpConfig.restricted = false;
 

@@ -379,9 +379,9 @@ jobs:
             FreeRTOS/Source \
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
-      - name: Get git ip info
-        run: |
-          ifconfig
+      # - name: Get git ip info
+      #   run: |
+      #     ifconfig
 
       # - name: Get echo server ip address
       #   id: git-ip-address
@@ -403,15 +403,15 @@ jobs:
           brew update
           brew install libslirp
 
-      - name: Update LD_Library_Path
-        run: |
-          # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
-          # echo $LD_LIBRARY_PATH
-          ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
-          cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp-version.h
-          cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp.h
-          cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/.brew/libslirp.rb
-          ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
+      # - name: Print libslirp source code
+      #   run: |
+      #     # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib
+      #     # echo $LD_LIBRARY_PATH
+      #     ls -R /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0
+      #     cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp-version.h
+      #     cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/include/slirp/libslirp.h
+      #     cat /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/.brew/libslirp.rb
+      #     ldd /home/linuxbrew/.linuxbrew/Cellar/libslirp/4.7.0/lib/libslirp.so.0
       #     # ls /usr/local/Cellar
 
       # - name: Get packages info
@@ -443,7 +443,7 @@ jobs:
           exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/build/posix_tcp_demo
           log-dir: demo_run_logs
           timeout-seconds: 300
-          success-line: "eFIN_WAIT"
+          success-line: "Received correct data"
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385

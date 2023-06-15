@@ -384,7 +384,7 @@ jobs:
           ifconfig
 
       - name: Get git ip address
-        id: get-ip-address
+        id: git-ip-address
         uses: ChaiTowKway/CI-CD-GitHub-Actions/get-ip-address@main
       # - name: Install prerequisite packages
       #   run: |

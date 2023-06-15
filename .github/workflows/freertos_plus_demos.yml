@@ -426,8 +426,8 @@ jobs:
       #     # ls -R /home/linuxbrew/.linuxbrew/Cellar/glib/2.76.3
       #     # ls -R /lib/x86_64-linux-gnu
 
-      # - name: Set Up Echo Server
-      #   run: sudo nc -nvvlp 7 &
+      - name: Set Up Echo Server
+        run: sudo nc -nvvlp 7 &
 
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo

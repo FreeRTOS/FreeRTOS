@@ -61,7 +61,7 @@
 
 /* The echo server is assumed to be on port 7, which is the standard echo
  * protocol port. */
-    #define echoECHO_PORT                 ( 5000 )
+    #define echoECHO_PORT                 ( 7 )
 
 /* The size of the buffers is a multiple of the MSS - the length of the data
  * sent is a pseudo random size between 20 and echoBUFFER_SIZES. */
@@ -106,7 +106,7 @@
 
 /*-----------------------------------------------------------*/
 
-    void vStartTCPEchoClientTasks_SingleTasks( uint16_t usTaskStackSize,
+    void vStartTCPEchoClientTasks_SingleTasks( size_t uxTaskStackSize,
                                                UBaseType_t uxTaskPriority )
     {
         BaseType_t x;
@@ -114,14 +114,20 @@
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
         {
-            xTaskCreateStatic( prvEchoClientTask,       /* The function that implements the task. */
-                               "Echo0",                 /* Just a text name for the task to aid debugging. */
-                               usTaskStackSize,         /* The stack size is defined in FreeRTOSIPConfig.h. */
-                               ( void * ) x,            /* The task parameter, not used in this case. */
-                               uxTaskPriority,          /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
-                               echoServerTaskStack,
-                               &echoServerTaskBuffer ); /* The task handle is not used. */
-        }
+            // xTaskCreateStatic( prvEchoClientTask,       /* The function that implements the task. */
+            //                    "Echo0",                 /* Just a text name for the task to aid debugging. */
+            //                    usTaskStackSize,         /* The stack size is defined in FreeRTOSIPConfig.h. */
+            //                    ( void * ) x,            /* The task parameter, not used in this case. */
+            //                    uxTaskPriority,          /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
+            //                    echoServerTaskStack,
+            //                    &echoServerTaskBuffer ); /* The task handle is not used. */
+            xTaskCreate( 
+                    prvEchoClientTask,       /* The function that implements the task. */
+                    "Echo0",                 /* Just a text name for the task to aid debugging. */
+                    uxTaskStackSize,         /* The stack size is defined in FreeRTOSIPConfig.h. */
+                    ( void * ) x,            /* The task parameter, not used in this case. */
+                    uxTaskPriority,
+                    NULL );          /* The priority assigned to the task is defined in FreeRTOSConfig.h. */        }
     }
 /*-----------------------------------------------------------*/
 

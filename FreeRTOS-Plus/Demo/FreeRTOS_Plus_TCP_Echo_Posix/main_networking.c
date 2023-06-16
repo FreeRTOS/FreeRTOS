@@ -54,11 +54,11 @@
 #define mainSIMPLE_UDP_CLIENT_SERVER_PORT             ( 5005UL )
 
 /* Echo client task parameters - used for both TCP and UDP echo clients. */
-#define mainECHO_CLIENT_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )      /* Not used in the linux port. */
+#define mainECHO_CLIENT_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 4 )      /* Not used in the linux port. */
 #define mainECHO_CLIENT_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 1 )
 
 /* Echo server task parameters. */
-#define mainECHO_SERVER_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )      /* Not used in the linux port. */
+#define mainECHO_SERVER_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 4 )      /* Not used in the linux port. */
 #define mainECHO_SERVER_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 1 )
 
 /* Define a name that will be used for LLMNR and NBNS searches. */

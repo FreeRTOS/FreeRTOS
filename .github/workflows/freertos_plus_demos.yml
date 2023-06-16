@@ -392,16 +392,16 @@ jobs:
       #   run: |
       #     echo_server_address = ${{ steps.git-ip-address.outputs.git-ip-address-path }}
       #     echo "$echo_server_address"
-      # - name: Install prerequisite packages
-      #   run: |
-      #     sudo apt update  
-      #     sudo apt-get install -y git build-essential libpcap-dev
-
-      - name: Install libslirp
+      - name: Install prerequisite packages
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew update
-          brew install libslirp
+          sudo apt update  
+          sudo apt-get install -y git build-essential libpcap-dev libslirp-dev ncat
+
+      # - name: Install libslirp
+        # run: |
+          # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          # brew update
+          # brew install libslirp
 
       # - name: Print libslirp source code
       #   run: |
@@ -427,7 +427,7 @@ jobs:
       #     # ls -R /lib/x86_64-linux-gnu
 
       - name: Set Up Echo Server
-        run: sudo nc -nvvlp 5000 &
+        run: ncat -vvklp 7 -e /bin/cat &
 
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo

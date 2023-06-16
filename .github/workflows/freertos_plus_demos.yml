@@ -427,7 +427,7 @@ jobs:
       #     # ls -R /lib/x86_64-linux-gnu
 
       - name: Set Up Echo Server
-        run: ncat -vvklp 7 -e /bin/cat &
+        run: ncat -vvklp 5000 -e /bin/cat &
 
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo

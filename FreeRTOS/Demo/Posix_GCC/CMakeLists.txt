@@ -2,18 +2,20 @@ cmake_minimum_required(VERSION 3.15)
 
 project( posix_demo )
 
-set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_WINDOWS_")
+add_compile_options( -D_WINDOWS_ )
 
 if( TRACE_ON_ENTER )
-    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTRACE_ON_ENTER=1" )
+    add_compile_options( -DTRACE_ON_ENTER=1 )
 else()
-    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTRACE_ON_ENTER=0" )
+    add_compile_options( -DTRACE_ON_ENTER=0 )
 endif()
 
 if( COVERAGE_TEST )
     set( COVERAGE_TEST 1 )
+    add_compile_options( -DprojCOVERAGE_TEST=1 )
 else()
     set( COVERAGE_TEST 0 )
+    add_compile_options( -DprojCOVERAGE_TEST=0 )
 endif()
 
 if( PROFILE )
@@ -23,11 +25,11 @@ else()
 endif()
 
 if( SANITIZE_ADDRESS )
-    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fsanitize=alignment" )
+    add_compile_options( -fsanitize=address -fsanitize=alignment )
 endif()
 
 if( SANITIZE_LEAK )
-    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=leak" )
+    add_compile_options( -fsanitize=leak )
 endif()
 
 set( FREERTOS_KERNEL_PATH "../../Source" )
@@ -41,11 +43,6 @@ target_include_directories( freertos_config
         ./
         ./Trace_Recorder_Configuration
         ${FREERTOS_PLUS_TRACE_PATH}/Include
-)
-
-target_compile_definitions( freertos_config
-    INTERFACE
-        $<IF:${COVERAGE_TEST},projCOVERAGE_TEST=1,projCOVERAGE_TEST=0>
 )
 
 # Select the heap port

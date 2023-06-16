@@ -220,7 +220,7 @@ void traceOnEnter()
         {
             taskENTER_CRITICAL();
             {
-                prvSaveTraceFile();
+                // prvSaveTraceFile();
             }
             taskEXIT_CRITICAL();
         }

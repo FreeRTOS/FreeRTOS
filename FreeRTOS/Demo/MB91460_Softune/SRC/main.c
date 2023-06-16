@@ -77,6 +77,7 @@
 #include "death.h"
 #include "taskutility.h"
 #include "partest.h"
+#include "crflash.h"
 
 /* Demo task priorities. */
 #define mainWATCHDOG_TASK_PRIORITY		( tskIDLE_PRIORITY + 5 )
@@ -100,6 +101,9 @@ LCD represent LEDs]*/
 #define mainNO_ERROR_CHECK_DELAY		( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
 #define mainERROR_CHECK_DELAY			( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 
+/* The total number of LEDs available. */
+#define mainNO_CO_ROUTINE_LEDs	( 8 )
+
 /* The first LED used by the comtest tasks. */
 #define mainCOM_TEST_LED		( 0x05 )
 
@@ -108,6 +112,9 @@ LCD represent LEDs]*/
 
 /* The number of interrupt levels to use. */
 #define mainINTERRUPT_LEVELS	( 31 )
+
+/* The number of 'flash' co-routines to create - each toggles a different LED. */
+#define mainNUM_FLASH_CO_ROUTINES	( 8 )
 
 /*---------------------------------------------------------------------------*/
 
@@ -162,6 +169,7 @@ void main(void)
 	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	vStartQueuePeekTasks();
 	vCreateBlockTimeTasks();
+	vStartFlashCoRoutines( mainNUM_FLASH_CO_ROUTINES );
 
 	/* Start the 'Check' task which is defined in this file. */
 	xTaskCreate( prvErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -326,6 +334,8 @@ static void prvSetupHardware( void )
 		#if WATCHDOG == WTC_IN_IDLE
 			Kick_Watchdog();
 		#endif
+
+		vCoRoutineSchedule();
 	}
 #else
 	#if WATCHDOG == WTC_IN_IDLE

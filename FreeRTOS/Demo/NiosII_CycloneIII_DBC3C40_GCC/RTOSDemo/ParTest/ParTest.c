@@ -51,7 +51,7 @@ static unsigned long ulLedStates;
 void vParTestInitialise( void )
 {
 	IOWR_ALTERA_AVALON_PIO_DIRECTION( LED_PIO_BASE, ALTERA_AVALON_PIO_DIRECTION_OUTPUT );
-	ulLedStates = 0;
+	ulLedStates = 0;    
 }
 /*-----------------------------------------------------------*/
 
@@ -83,7 +83,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		taskENTER_CRITICAL();
 		{
 			vParTestSetLED( uxLED, !( ulLedStates & ( 1 << uxLED ) ) );
-		}
+		}	
 		taskEXIT_CRITICAL();
 	}
 }

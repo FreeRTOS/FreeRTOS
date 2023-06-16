@@ -27,10 +27,10 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-/*
+/* 
  * The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be
- * executed from within the IDE!  Once it has been executed, re-open or refresh
+ * executed prior to this project being built.  The batch file *cannot* be 
+ * executed from within the IDE!  Once it has been executed, re-open or refresh 
  * the Eclipse project and remove the #error line below.
  */
 #error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
@@ -44,14 +44,14 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
-#define configCPU_CLOCK_HZ				( ( unsigned long ) SYS_CLK_FREQ )
+#define configCPU_CLOCK_HZ				( ( unsigned long ) SYS_CLK_FREQ )  
 #define configMAX_PRIORITIES			( 5 )
 #define configMINIMAL_STACK_SIZE		( 1024 )
 #define configISR_STACK_SIZE			configMINIMAL_STACK_SIZE
@@ -66,6 +66,9 @@
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configQUEUE_REGISTRY_SIZE		0
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 			0
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

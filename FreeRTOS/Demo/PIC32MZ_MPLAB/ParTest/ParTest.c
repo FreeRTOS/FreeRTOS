@@ -79,7 +79,7 @@ unsigned portBASE_TYPE uxLEDBit;
 	{
 		uxLEDBit = 1 << uxLED;
 
-		/* Use of the LATHINV register removes the need to use a critical
+		/* Use of the LATHINV register removes the need to use a critical 
 		section. */
 		LATHINV = uxLEDBit;
 	}

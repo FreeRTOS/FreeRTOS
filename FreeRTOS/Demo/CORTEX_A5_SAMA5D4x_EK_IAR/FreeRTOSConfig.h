@@ -61,6 +61,9 @@
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_COUNTING_SEMAPHORES			1
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 					0
+#define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS						1

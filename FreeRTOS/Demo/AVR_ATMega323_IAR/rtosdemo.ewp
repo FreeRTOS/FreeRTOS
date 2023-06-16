@@ -972,6 +972,9 @@
       <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\crflash.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
     </file>
     <file>
@@ -996,6 +999,9 @@
   <group>
     <name>Kernel Source</name>
     <file>
+      <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\Source\list.c</name>
     </file>
     <file>
@@ -1012,3 +1018,5 @@
     </file>
   </group>
 </project>
+
+

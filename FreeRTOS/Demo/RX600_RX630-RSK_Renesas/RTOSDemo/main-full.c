@@ -41,26 +41,26 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Reg test" tasks - These fill the registers with known values, then
- * repeatedly check that each register still contains its expected value for
- * the lifetime of the tasks.  Each task uses different values.  The tasks run
- * with very low priority so get preempted very frequently.  A check variable
- * is incremented on each iteration of the test loop.  A register containing an
- * unexpected value is indicative of an error in the context switching
- * mechanism and will result in a branch to a null loop - which in turn will
- * prevent the check variable from incrementing any further and allow the check
- * timer (described below) to determine that an error has occurred.  The nature
+ * "Reg test" tasks - These fill the registers with known values, then 
+ * repeatedly check that each register still contains its expected value for 
+ * the lifetime of the tasks.  Each task uses different values.  The tasks run 
+ * with very low priority so get preempted very frequently.  A check variable 
+ * is incremented on each iteration of the test loop.  A register containing an 
+ * unexpected value is indicative of an error in the context switching 
+ * mechanism and will result in a branch to a null loop - which in turn will 
+ * prevent the check variable from incrementing any further and allow the check 
+ * timer (described below) to determine that an error has occurred.  The nature 
  * of the reg test tasks necessitates that they are written in assembly code.
  *
- * "Check Timer" and Callback Function - The check timer period is initially
- * set to five seconds.  The check timer callback function checks that all the
- * standard demo tasks are not only still executing, but are executing without
- * reporting any errors.  If the check timer discovers that a task has either
- * stalled, or reported an error, then it changes its own period from the
- * initial five seconds, to just 200ms.  The check timer callback function
- * also toggles LED 3 each time it is called.  This provides a visual
- * indication of the system status:  If the LED toggles every five seconds,
- * then no issues have been discovered.  If the LED toggles every 200ms, then
+ * "Check Timer" and Callback Function - The check timer period is initially 
+ * set to five seconds.  The check timer callback function checks that all the 
+ * standard demo tasks are not only still executing, but are executing without 
+ * reporting any errors.  If the check timer discovers that a task has either 
+ * stalled, or reported an error, then it changes its own period from the 
+ * initial five seconds, to just 200ms.  The check timer callback function 
+ * also toggles LED 3 each time it is called.  This provides a visual 
+ * indication of the system status:  If the LED toggles every five seconds, 
+ * then no issues have been discovered.  If the LED toggles every 200ms, then 
  * an issue has been discovered with at least one task.
  *
  * "High frequency timer test" - A high frequency periodic interrupt is
@@ -249,10 +249,10 @@ extern void HardwareSetup( void );
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */
 								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
 							  );
-
+							  
 	/* Sanity check that the check timer was indeed created. */
 	configASSERT( xCheckTimer );
-
+	
 	/* Start the check timer.  It will actually start when the scheduler is
 	started. */
 	xTimerStart( xCheckTimer, mainDONT_BLOCK );
@@ -260,7 +260,7 @@ extern void HardwareSetup( void );
 	/* Start the tasks running. */
 	vTaskStartScheduler();
 
-	/* If all is well, the following line will never be reached as the scheduler
+	/* If all is well, the following line will never be reached as the scheduler 
 	will be	running.  If the following line is reached, there was insufficient
 	FreeRTOS heap available for the idle task to be created.  See
 	http://www.freertos.org/a00111.html and the malloc failed hook function for
@@ -339,16 +339,16 @@ static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2Cycl
 	the LED toggles every 5 seconds then everything is ok.  A faster toggle
 	indicates an error. */
 	vParTestToggleLED( mainCHECK_LED );
-
+	
 	/* Was an error detected this time through the callback execution? */
 	if( lErrorStatus != pdPASS )
 	{
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
-
-			/* This call to xTimerChangePeriod() uses a zero block time.
-			Functions called from inside of a timer callback function must
+			
+			/* This call to xTimerChangePeriod() uses a zero block time.  
+			Functions called from inside of a timer callback function must 
 			*never* attempt	to block. */
 			xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
 		}

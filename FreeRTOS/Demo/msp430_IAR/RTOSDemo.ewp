@@ -2186,6 +2186,9 @@
   <group>
     <name>FreeRTOS Source</name>
     <file>
+      <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\Source\list.c</name>
     </file>
     <file>
@@ -2202,3 +2205,5 @@
     </file>
   </group>
 </project>
+
+

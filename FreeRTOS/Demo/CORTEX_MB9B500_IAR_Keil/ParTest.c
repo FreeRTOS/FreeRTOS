@@ -50,15 +50,15 @@ const unsigned short usGPIOState = 0xFF00U;
 
 	/* Analog inputs are not used on the LED outputs. */
 	FM3_GPIO->ADE  = 0x00FF;
-
+	
 	/* LED seg1 to GPIO output (P18->P1F). */
 	FM3_GPIO->DDR1 = 0xFF00;
 	FM3_GPIO->PFR1 = 0x0000;
-
+	
 	/* LED seg2 to GPIO output (P30->P3F). */
 	FM3_GPIO->DDR3 = 0xFF00;
 	FM3_GPIO->PFR3 = 0x0000;
-
+	
 	/* Start with all LEDs off. */
 	FM3_GPIO->PDOR3 = usGPIOState;
 	FM3_GPIO->PDOR1 = usGPIOState;

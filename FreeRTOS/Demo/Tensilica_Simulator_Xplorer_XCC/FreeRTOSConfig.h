@@ -118,6 +118,9 @@
 	#define configCHECK_FOR_STACK_OVERFLOW				2
 #endif
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 							0
+#define configMAX_CO_ROUTINE_PRIORITIES					( 2 )
 
 /**
  * Set the following definitions to 1 to include the API function, or zero to

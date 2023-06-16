@@ -398,6 +398,11 @@
           <GroupName>FreeRTOS</GroupName>
           <Files>
             <File>
+              <FileName>croutine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../Source/croutine.c</FilePath>
+            </File>
+            <File>
               <FileName>event_groups.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../Source/event_groups.c</FilePath>

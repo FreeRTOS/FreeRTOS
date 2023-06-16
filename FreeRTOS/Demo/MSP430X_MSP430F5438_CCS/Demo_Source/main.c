@@ -58,9 +58,9 @@
  * the poll rate to ensure debouncing is not necessary and that the task does
  * not use all the available CPU processing time.
  *
- * Button Interrupt - The select button on the joystick input device is
- * configured to generate an external interrupt.  The handler for this interrupt
- * sends a message to LCD task, which then prints out a string to say the
+ * Button Interrupt - The select button on the joystick input device is 
+ * configured to generate an external interrupt.  The handler for this interrupt 
+ * sends a message to LCD task, which then prints out a string to say the 
  * joystick select button was pressed.
  *
  * Idle Hook - The idle hook is a function that is called on each iteration of
@@ -71,10 +71,10 @@
  * driven tasks, and slowing the tick interrupt frequency, etc.
  *
  * "Check" callback function - Called each time the 'check' timer expires.  The
- * check timer executes every five seconds.  Its main function is to check that
- * all the standard demo tasks are still operational.  Each time it executes it
- * sends a status code to the LCD task.  The LCD task interprets the code and
- * displays an appropriate message - which will be PASS if no tasks have
+ * check timer executes every five seconds.  Its main function is to check that 
+ * all the standard demo tasks are still operational.  Each time it executes it 
+ * sends a status code to the LCD task.  The LCD task interprets the code and 
+ * displays an appropriate message - which will be PASS if no tasks have 
  * reported any errors, or a message stating which task has reported an error.
  *
  * "Reg test" tasks - These fill the registers with known values, then check
@@ -84,11 +84,11 @@
  * test loop.  A register containing an unexpected value is indicative of an
  * error in the context switching mechanism and will result in a branch to a
  * null loop - which in turn will prevent the check variable from incrementing
- * any further and allow the check timer callback (described a above) to
- * determine that an error has occurred.  The nature of the reg test tasks
+ * any further and allow the check timer callback (described a above) to 
+ * determine that an error has occurred.  The nature of the reg test tasks 
  * necessitates that they are written in assembly code.
  *
- * Tick hook function - called inside the RTOS tick function, this simple
+ * Tick hook function - called inside the RTOS tick function, this simple 
  * example does nothing but toggle an LED.
  *
  * *NOTE 1* vApplicationSetupTimerInterrupt() is called by the kernel to let
@@ -246,7 +246,7 @@ void main( void )
 		vStartDynamicPriorityTasks();
 		vStartGenericQueueTasks( mainGENERIC_QUEUE_TEST_PRIORITY );
 		vStartCountingSemaphoreTasks();
-
+		
 		/* Note that creating the timer test/demo tasks will fill the timer
 		command queue.  This is intentional, and forms part of the test the tasks
 		perform.  It does mean however that, after this function is called, no
@@ -254,7 +254,7 @@ void main( void )
 		started (at which point the timer daemon will drained the timer command
 		queue, freeing up space for more commands to be received). */
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-
+		
 		/* Create the LCD, button poll and register test tasks, as described at
 		the top	of this	file. */
 		xTaskCreate( prvLCDTask, "LCD", configMINIMAL_STACK_SIZE * 2, mainTASK_PARAMETER_CHECK_VALUE, mainLCD_TASK_PRIORITY, NULL );
@@ -264,10 +264,10 @@ void main( void )
 
 		/* Create the 'check' timer - the timer that periodically calls the
 		check function as described at the top of this file.  Note that, for
-		the reasons stated in the comments above the call to
-		vStartTimerDemoTask(), that the check timer is not actually started
+		the reasons stated in the comments above the call to 
+		vStartTimerDemoTask(), that the check timer is not actually started 
 		until after the scheduler has been started. */
-		xCheckTimer = xTimerCreate( "Check timer", mainCHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
+		xCheckTimer = xTimerCreate( "Check timer", mainCHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback ); 
 
 		/* Start the scheduler. */
 		vTaskStartScheduler();
@@ -276,7 +276,7 @@ void main( void )
 	/* If all is well then this line will never be reached.  If it is reached
 	then it is likely that there was insufficient (FreeRTOS) heap memory space
 	to create the idle task.  This may have been trapped by the malloc() failed
-	hook function, if one is configured. */
+	hook function, if one is configured. */	
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -301,7 +301,7 @@ unsigned char ucLine = 1;
 	}
 
 	/* This is the only function that is permitted to access the LCD.
-
+	
 	First print out the number of bytes that remain in the FreeRTOS heap.  This
 	is done after a short delay to ensure all the demo tasks have created all
 	the objects they are going to use.  */
@@ -309,13 +309,13 @@ unsigned char ucLine = 1;
 	sprintf( cBuffer, "%d heap free", ( int ) xPortGetFreeHeapSize() );
 	halLcdPrintLine( cBuffer, ucLine, OVERWRITE_TEXT );
 	ucLine++;
-
+	
 	/* Just as a test of the port, and for no functional reason, check the task
 	parameter contains its expected value. */
 	if( pvParameters != mainTASK_PARAMETER_CHECK_VALUE )
 	{
 		halLcdPrintLine( "Invalid parameter", ucLine, OVERWRITE_TEXT );
-		ucLine++;
+		ucLine++;		
 	}
 
 	for( ;; )
@@ -333,7 +333,7 @@ unsigned char ucLine = 1;
 			halLcdClearScreen();
 			ucLine = 0;
 		}
-
+		
 		/* What is this message?  What does it contain? */
 		switch( xReceivedMessage.cMessageID )
 		{
@@ -347,15 +347,15 @@ unsigned char ucLine = 1;
 			case mainMESSAGE_BUTTON_SEL		:	/* The select button interrupt
 												just informed this task that the
 												select button has been pressed.
-												In this case the pointer to the
-												string to print is sent directly
-												in the ulMessageValue member of
-												the	message.  This just
-												demonstrates a different
+												In this case the pointer to the 
+												string to print is sent directly 
+												in the ulMessageValue member of 
+												the	message.  This just 
+												demonstrates a different 
 												communication technique. */
 												sprintf( cBuffer, "%s", ( char * ) xReceivedMessage.ulMessageValue );
 												break;
-
+												
 			case mainMESSAGE_STATUS			:	/* The tick interrupt hook
 												function has just informed this
 												task of the system status.
@@ -363,11 +363,11 @@ unsigned char ucLine = 1;
 												with the status value. */
 												prvGenerateStatusMessage( cBuffer, xReceivedMessage.ulMessageValue );
 												break;
-
+												
 			default							:	sprintf( cBuffer, "Unknown message" );
 												break;
 		}
-
+		
 		/* Output the message that was placed into the cBuffer array within the
 		switch statement above, then move onto the next line ready for the next
 		message to arrive on the queue. */
@@ -414,13 +414,13 @@ xQueueMessage xMessage;
 	{
 		/* Check the button state. */
 		ucState = ( halButtonsPressed() & BUTTON_UP );
-
+		
 		if( ucState != 0 )
 		{
 			/* The button was pressed. */
 			ucState = pdTRUE;
 		}
-
+		
 		if( ucState != ucLastState )
 		{
 			/* The state has changed, send a message to the LCD task. */
@@ -429,7 +429,7 @@ xQueueMessage xMessage;
 			ucLastState = ucState;
 			xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
 		}
-
+		
 		/* Block for 10 milliseconds so this task does not utilise all the CPU
 		time and debouncing of the button is not necessary. */
 		vTaskDelay( 10 / portTICK_PERIOD_MS );
@@ -450,7 +450,7 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 
 	/* The parameter is not used. */
 	( void ) xTimer;
-
+	
 	/* See if the standard demo tasks are executing as expected, changing
 	the message that is sent to the LCD task from PASS to an error code if
 	any tasks set reports an error. */
@@ -463,17 +463,17 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 	{
 		xStatusMessage.ulMessageValue = mainERROR_DYNAMIC_TASKS;
 	}
-
+	
 	if( xAreGenericQueueTasksStillRunning() != pdPASS )
 	{
 		xStatusMessage.ulMessageValue = mainERROR_GEN_QUEUE_TEST;
-	}
-
+	}			
+	
 	if( xAreCountingSemaphoreTasksStillRunning() != pdPASS )
 	{
 		xStatusMessage.ulMessageValue = mainERROR_COUNT_SEM_TEST;
 	}
-
+	
 	if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainCHECK_TIMER_PERIOD ) != pdPASS )
 	{
 		xStatusMessage.ulMessageValue = mainERROR_TIMER_TEST;
@@ -493,7 +493,7 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 
 	usLastRegTest1Counter = usRegTest1Counter;
 	usLastRegTest2Counter = usRegTest2Counter;
-
+	
 	/* This is called from a timer callback so must not block! */
 	xQueueSendToBack( xLCDQueue, &xStatusMessage, mainDONT_BLOCK );
 }
@@ -502,10 +502,10 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 static void prvSetupHardware( void )
 {
 	taskDISABLE_INTERRUPTS();
-
+	
 	/* Disable the watchdog. */
 	WDTCTL = WDTPW + WDTHOLD;
-
+  
 	halBoardInit();
 
 	LFXT_Start( XT1DRIVE_0 );
@@ -523,7 +523,7 @@ static void prvSetupHardware( void )
 	halLcdInit();
 	halLcdSetContrast( 100 );
 	halLcdClearScreen();
-
+	
 	halLcdPrintLine( " www.FreeRTOS.org", 0,  OVERWRITE_TEXT );
 }
 /*-----------------------------------------------------------*/
@@ -565,7 +565,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	xQueueSendFromISR( xLCDQueue, &xMessage, &xHigherPriorityTaskWoken );
 
 	P2IFG = 0;
-
+	
 	/* If writing to xLCDQueue caused a task to unblock, and the unblocked task
 	has a priority equal to or above the task that this interrupt interrupted,
 	then lHigherPriorityTaskWoken will have been set to pdTRUE internally within
@@ -631,7 +631,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pxTask;
 	( void ) pcTaskName;
-
+	
 	/* Run time stack overflow checking is performed if
 	configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */

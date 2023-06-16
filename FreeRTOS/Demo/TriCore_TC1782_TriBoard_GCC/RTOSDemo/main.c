@@ -87,6 +87,7 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "croutine.h"
 
 /* Demo application includes. */
 #include "partest.h"

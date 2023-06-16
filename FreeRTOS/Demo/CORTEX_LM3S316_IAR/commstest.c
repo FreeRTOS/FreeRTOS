@@ -25,7 +25,7 @@
  */
 
 /*
- * The comms test Rx and Tx task. See the comments at the top
+ * The comms test Rx and Tx task and co-routine.  See the comments at the top
  * of main.c for full information.
  */
 
@@ -34,6 +34,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "croutine.h"
 
 /* Demo application include files. */
 #include "partest.h"
@@ -42,7 +43,7 @@
 #include "DriverLib.h"
 
 /* The LED's toggled by the various tasks. */
-#define commsFAIL_LED		( 7 )
+#define commsFAIL_LED			( 7 )
 #define commsRX_LED			( 6 )
 #define commsTX_LED			( 5 )
 
@@ -50,7 +51,7 @@
 task. */
 #define commsRX_QUEUE_LEN			( 5 )
 
-/* The baud rate used by the UART comms tasks. */
+/* The baud rate used by the UART comms tasks/co-routine. */
 #define commsBAUD_RATE				( 57600 )
 
 /* FIFO setting for the UART.  The FIFO is not used to create a better test. */
@@ -116,6 +117,71 @@ void vSerialInit( void )
 }
 /*-----------------------------------------------------------*/
 
+void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
+{
+TickType_t xDelayPeriod;
+static unsigned long *pulRandomBytes = commsFIRST_PROGRAM_BYTES;
+
+	/* Co-routine MUST start with a call to crSTART. */
+	crSTART( xHandle );
+
+	for(;;)
+    {	
+		/* Was the previously transmitted string received correctly? */
+		if( uxCommsErrorStatus != pdPASS )
+		{
+			/* An error was encountered so set the error LED. */
+			vParTestSetLED( commsFAIL_LED, pdTRUE );
+		}
+
+		/* The next character to Tx is the first in the string. */
+		cNextChar = commsFIRST_TX_CHAR;
+
+		UARTIntDisable( UART0_BASE, UART_INT_TX );
+		{
+			/* Send the first character. */
+			if( !( HWREG( UART0_BASE + UART_O_FR ) & UART_FR_TXFF ) )
+			{
+				HWREG( UART0_BASE + UART_O_DR ) = cNextChar;
+			}
+
+			/* Move the variable to the char to Tx on so the ISR transmits
+			the next character in the string once this one has completed. */
+			cNextChar++;
+		}
+		UARTIntEnable(UART0_BASE, UART_INT_TX);
+
+		/* Toggle the LED to show a new string is being transmitted. */
+        vParTestToggleLED( commsTX_LED );
+
+		/* Delay before we start the string off again.  A pseudo-random delay
+		is used as this will provide a better test. */
+		xDelayPeriod = xTaskGetTickCount() + ( *pulRandomBytes );
+
+		pulRandomBytes++;
+		if( pulRandomBytes > commsTOTAL_PROGRAM_MEMORY )
+		{
+			pulRandomBytes = commsFIRST_PROGRAM_BYTES;
+		}
+
+		/* Make sure we don't wait too long... */
+		xDelayPeriod &= commsMAX_TX_DELAY;
+
+		/* ...but we do want to wait. */
+		if( xDelayPeriod < commsMIN_TX_DELAY )
+		{
+			xDelayPeriod = commsMIN_TX_DELAY;
+		}
+
+		/* Block for the random(ish) time. */
+		crDELAY( xHandle, xDelayPeriod );
+    }
+
+	/* Co-routine MUST end with a call to crEND. */
+	crEND();
+}
+/*-----------------------------------------------------------*/
+
 void vUART_ISR( void )
 {
 unsigned long ulStatus;
@@ -138,7 +204,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			blocked on the queue waiting for characters. */
 			cRxedChar = ( char ) HWREG( UART0_BASE + UART_O_DR );
 			xQueueSendFromISR( xCommsQueue, &cRxedChar, &xHigherPriorityTaskWoken );
-		}
+		}		
 	}
 
 	/* Was a Tx interrupt pending? */
@@ -154,7 +220,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			cNextChar++;
 		}
 	}
-
+	
 	/* If a task was woken by the character being received then we force
 	a context switch to occur in case the task is of higher priority than
 	the currently executing task (i.e. the task that this interrupt

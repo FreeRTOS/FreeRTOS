@@ -102,6 +102,15 @@
 			</matcher>
 		</filter>
 		<filter>
+			<id>1442848178229</id>
+			<name>src/FreeRTOS_Source</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-croutine.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
 			<id>1443970320129</id>
 			<name>src/cg_src</name>
 			<type>6</type>

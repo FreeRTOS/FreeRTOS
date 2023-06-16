@@ -122,6 +122,10 @@ extern "C" {
 /* Run time stats gathering related definitions. */
 #define configGENERATE_RUN_TIME_STATS			( 0 )
 
+/* Co-routine related definitions. */
+#define configUSE_CO_ROUTINES					( 0 )
+#define configMAX_CO_ROUTINE_PRIORITIES			( 1 )
+
 /* Software timer related definitions. */
 #define configUSE_TIMERS						( 1 )
 #define configTIMER_TASK_PRIORITY				( configMAX_PRIORITIES - 1 ) /* Highest priority */

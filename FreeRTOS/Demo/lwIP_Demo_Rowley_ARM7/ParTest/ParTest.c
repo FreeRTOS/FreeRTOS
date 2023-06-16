@@ -41,7 +41,7 @@
 const unsigned long ulLED_MASK[ NB_LED ]= { LED1, LED2, LED3, LED4 };
 
 void vParTestInitialise( void )
-{
+{	
 	/* Start with all LED's off. */
     AT91C_BASE_PIOB->PIO_SODR = LED_MASK;
 }

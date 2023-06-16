@@ -1062,6 +1062,9 @@
     <group>
         <name>FreeRTOS</name>
         <file>
+            <name>$PROJ_DIR$\..\..\..\..\Source\croutine.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\..\..\Source\event_groups.c</name>
         </file>
         <file>

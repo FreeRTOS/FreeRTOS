@@ -67,6 +67,7 @@
 #include "death.h"
 #include "taskutility.h"
 #include "partest.h"
+#include "crflash.h"
 #include "watchdog.h"
 
 /* Library includes. */
@@ -98,6 +99,7 @@ LCD represent LED's] */
 #define mainERROR_CHECK_DELAY		( (TickType_t) 500 / portTICK_PERIOD_MS )
 
 /* LED assignments for the demo tasks. */
+#define mainNUM_FLASH_CO_ROUTINES	8
 #define mainCOM_TEST_LED			0x05
 #define mainCHECK_TEST_LED			0x07
 
@@ -140,6 +142,7 @@ void main( void )
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
 	vStartDynamicPriorityTasks();
+	vStartFlashCoRoutines( mainNUM_FLASH_CO_ROUTINES );
 	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	vCreateBlockTimeTasks();
 
@@ -246,6 +249,11 @@ static short prvCheckOtherTasksAreStillRunning( void )
 		sNoErrorFound = pdFALSE;
 	}
 
+	if( xAreFlashCoRoutinesStillRunning() != pdTRUE )
+	{
+		sNoErrorFound = pdFALSE;
+	}
+
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
@@ -285,6 +293,8 @@ static short prvCheckOtherTasksAreStillRunning( void )
 		#if WATCHDOG == WTC_IN_IDLE
 			Kick_Watchdog();
 		#endif
+
+		vCoRoutineSchedule();
 	}
 #else
 	#if WATCHDOG == WTC_IN_IDLE

@@ -391,8 +391,9 @@ jobs:
         id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
         run: |
+          sed -i -z "s/define[[:space:]]*echoECHO_PORT[[:space:]]*([[:space:]]*[0-9]\+[[:space:]]*)/define echoECHO_PORT                 ( 5000 )/g" TCPEchoClient_SingleTasks.c
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
-          make -j
+          make -j TRACE_ON_ENTER=0
 
       - name: Run and monitor FreeRTOS+TCP Echo Posix Demo
         if: success() || failure() && steps.build-echo-posix-demo.outcome == 'success'

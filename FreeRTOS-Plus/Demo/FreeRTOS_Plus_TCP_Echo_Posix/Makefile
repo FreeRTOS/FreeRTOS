@@ -88,6 +88,10 @@ LDFLAGS += $(shell pkg-config --libs slirp)
 
 CPPFLAGS		=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
+ifndef TRACE_ON_ENTER
+  TRACE_ON_ENTER = 1
+endif
+
 ifeq ($(TRACE_ON_ENTER),1)
   CPPFLAGS		+= -DTRACE_ON_ENTER=1
 else

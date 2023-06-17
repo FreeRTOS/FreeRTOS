@@ -106,7 +106,11 @@ static void prvSaveTraceFile( void );
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 /* Notes if the trace is running or not. */
-static BaseType_t xTraceRunning = pdTRUE;
+#if ( TRACE_ON_ENTER == 1 )
+    static BaseType_t xTraceRunning = pdTRUE;
+#else
+    static BaseType_t xTraceRunning = pdFALSE;
+#endif
 
 /*-----------------------------------------------------------*/
 

@@ -82,18 +82,22 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Ti
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IP.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/BufferManagement/BufferAllocation_2.c
 # SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
-# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetifBackendLibslirp.c
-# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetworkInterface.c
+# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
+# SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetifBackendLibslirp.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Demo/FreeRTOS_Plus_TCP_Echo_Posix/MBuffNetworkInterface.c
 
-# CFLAGS 			:= -ggdb3 -I/opt/homebrew/Cellar/libslirp/4.7.0/include/slirp -I/opt/homebrew/Cellar/glib/2.76.3/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.76.3/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.42/include
-# LDFLAGS			:= -ggdb3 -pthread -lpcap -L/opt/homebrew/Cellar/libslirp/4.7.0/lib -L/opt/homebrew/Cellar/glib/2.76.3/lib -L/opt/homebrew/opt/gettext/lib -lslirp -lglib-2.0 -lintl
-# CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+CFLAGS 			:= -ggdb3 
+LDFLAGS			:= -ggdb3 -pthread
 
-CFLAGS 			:= -ggdb3
-LDFLAGS			:= -ggdb3 -pthread -lpcap -L${FREERTOS_PLUS_DIR}/ThirdParty/libslirp/lib -L${FREERTOS_PLUS_DIR}/ThirdParty/glib/lib -lslirp -lglib-2.0 -L${FREERTOS_PLUS_DIR}/ThirdParty/gettext/lib -lintl
-CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+CFLAGS += $(shell pkg-config --cflags slirp)
+LDFLAGS += $(shell pkg-config --libs slirp)
+
+CPPFLAGS		=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+
+ifndef TRACE_ON_ENTER
+  TRACE_ON_ENTER = 1
+endif
 
 ifeq ($(TRACE_ON_ENTER),1)
   CPPFLAGS		+= -DTRACE_ON_ENTER=1

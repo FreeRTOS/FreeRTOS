@@ -381,34 +381,28 @@ jobs:
 
       - name: Install prerequisite packages
         run: |
-          sudo apt-get install -y git build-essential libpcap-dev
-
-      - name: Check Git server IP
-        run: ifconfig
-
-      - name: Update LD_Library_Path
-        run: |
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/work/FreeRTOS/FreeRTOS/FreeRTOS-Plus/ThirdParty/libslirp/lib
-          echo $LD_LIBRARY_PATH
+          sudo apt update  
+          sudo apt-get install -y git build-essential libslirp-dev ncat
 
       - name: Set Up Echo Server
-        run: sudo nc -nvvlp 7 &
+        run: ncat -vvklp 5000 -e /bin/cat &
 
       - name: Build FreeRTOS+TCP Echo Posix Demo
         id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
         run: |
+          sed -i -z "s/define[[:space:]]*echoECHO_PORT[[:space:]]*([[:space:]]*[0-9]\+[[:space:]]*)/define echoECHO_PORT                 ( 5000 )/g" TCPEchoClient_SingleTasks.c
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
-          make -j
+          make -j TRACE_ON_ENTER=0
 
-      - name: Run and monitor Posix_GCC Full Demo
+      - name: Run and monitor FreeRTOS+TCP Echo Posix Demo
         if: success() || failure() && steps.build-echo-posix-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
           exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/build/posix_tcp_demo
           log-dir: demo_run_logs
           timeout-seconds: 300
-          success-line: "eFIN_WAIT_1->eCLOSE_WAIT"
+          success-line: "Received correct data"
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385

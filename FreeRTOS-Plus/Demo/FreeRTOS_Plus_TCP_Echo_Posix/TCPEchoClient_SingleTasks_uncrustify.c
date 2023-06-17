@@ -114,12 +114,12 @@
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
         {
-            xTaskCreate( 
+            xTaskCreate(
                 prvEchoClientTask,   /* The function that implements the task. */
                 "Echo0",             /* Just a text name for the task to aid debugging. */
                 uxTaskStackSize,     /* The stack size is defined in FreeRTOSIPConfig.h. */
                 ( void * ) x,        /* The task parameter, not used in this case. */
-                    uxTaskPriority,
+                uxTaskPriority,
                 NULL );              /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
         }
     }

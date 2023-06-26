@@ -1741,7 +1741,7 @@ void test_eTaskGetState_success_not_current_tcb_pending_ready( void )
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
     /* Validations */
-    TEST_ASSERT_EQUAL( eReady, ret_task_state );
+    TEST_ASSERT_EQUAL( ePendingReady, ret_task_state );
 }
 
 void test_eTaskGetState_success_not_current_tcb_blocked_delayed( void )

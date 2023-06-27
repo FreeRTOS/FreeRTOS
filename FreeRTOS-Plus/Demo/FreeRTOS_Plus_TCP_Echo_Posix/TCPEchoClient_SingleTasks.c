@@ -254,7 +254,7 @@
                         {
                             /* The echo reply was received without error. */
                             ulTxRxCycles[ xInstance ]++;
-                            printf( "Received correct data.\n" );
+                            printf( "Received correct data %d times.\n", ulTxRxCycles[ xInstance ] );
                         }
                         else
                         {

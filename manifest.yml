@@ -11,7 +11,7 @@ dependencies:
       path: "FreeRTOS/Source"
 
   - name: "FreeRTOS-Plus-TCP"
-    version: "a3f418a"
+    version: "f71fe91"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP.git"

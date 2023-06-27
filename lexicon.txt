@@ -3034,6 +3034,7 @@ usstackdepth
 usstackhighwatermark
 usstacksize
 ustaskstacksize
+uxTaskStackSize
 usthingnamelength
 ustopicfilterlength
 ustopiclength

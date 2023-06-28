@@ -35,7 +35,7 @@ SECTIONS
     .text :
     {
         *(vectors)
-        *(.text)
+        *(.text*)
         *(.rodata*)
         *(.constdata*)
         _etext = .;

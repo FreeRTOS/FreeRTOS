@@ -28,7 +28,7 @@
 /* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.
  *
  * This is not a proper UART driver.  It only supports one port, uses loopback
- * mode, and is used to test interrupts that use the FreeRTOS API as part of
+ * mode, and is used to test interrupts that use the FreeRTOS API as part of 
  * a wider test suite.  Nor is it intended to show an efficient implementation
  * of a UART interrupt service routine as queues are used to pass individual
  * characters one at a time!
@@ -76,7 +76,7 @@ unsigned long ulBaudRateCount;
 
 		/* Use SMCLK. */
 		UCA1CTL1 = UCSSEL0 | UCSSEL1;
-
+		
 		/* Setup baud rate low byte. */
 		UCA1BR0 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
@@ -89,12 +89,12 @@ unsigned long ulBaudRateCount;
 
 		/* Enable interrupts. */
 		UCA1IE |= UCRXIE;
-
+		
 		/* Take out of reset. */
 		UCA1CTL1 &= ~UCSWRST;
 	}
 	portEXIT_CRITICAL();
-
+	
 	/* Note the comments at the top of this file about this not being a generic
 	UART driver. */
 	return NULL;
@@ -125,7 +125,7 @@ signed portBASE_TYPE xReturn;
 	completed and switched itself off. */
 	xReturn = xQueueSend( xCharsForTx, &cOutChar, xBlockTime );
 	UCA1IE |= UCTXIE;
-
+	
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -148,7 +148,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		characters. */
 		cChar = UCA1RXBUF;
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-	}
+	}	
 	else if( ( UCA1IFG & UCTXIFG ) != 0 )
 	{
 		/* The previous character has been transmitted.  See if there are any
@@ -165,16 +165,16 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			UCA1IE &= ~UCTXIE;
 		}
 	}
-
+	
 	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
-
+	
 	/* If writing to a queue caused a task to unblock, and the unblocked task
 	has a priority equal to or above the task that this interrupt interrupted,
 	then lHigherPriorityTaskWoken will have been set to pdTRUE internally within
 	xQueuesendFromISR(), and portEND_SWITCHING_ISR() will ensure that this
-	interrupt returns directly to the higher priority unblocked task.
-
-	THIS MUST BE THE LAST THING DONE IN THE ISR. */
+	interrupt returns directly to the higher priority unblocked task. 
+	
+	THIS MUST BE THE LAST THING DONE IN THE ISR. */	
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 

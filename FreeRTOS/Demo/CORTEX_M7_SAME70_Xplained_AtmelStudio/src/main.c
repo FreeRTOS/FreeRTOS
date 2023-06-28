@@ -158,10 +158,10 @@ void vApplicationTickHook( void )
 	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
 	{
 	extern void vFullDemoTickHook( void );
-
+	
 		/* The full demo includes some tests that execute in an interrupt
 		context, and the tick hook is used for this purpose. */
-		vFullDemoTickHook();
+		vFullDemoTickHook();	
 	}
 	#endif
 }
@@ -349,7 +349,7 @@ static void ProcessButtonEvt(uint8_t uc_button)
 		}
 	}
 // [main_button1_evnt_process]
-#ifdef LED1_GPIO
+#ifdef LED1_GPIO 
 	else {
 // [main_button2_evnt_process]
 		g_b_led1_active = !g_b_led1_active;
@@ -402,7 +402,7 @@ static void Button1_Handler(uint32_t id, uint32_t mask)
  *
  *  Handle process led2 status change.
  */
-// [main_button2_handler]
+// [main_button2_handler] 
 static void Button2_Handler(uint32_t id, uint32_t mask)
 {
 	if (PIN_PUSHBUTTON_2_ID == id && PIN_PUSHBUTTON_2_MASK == mask) {

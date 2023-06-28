@@ -1,5 +1,8 @@
 name: FreeRTOS Demos
-on: pull_request
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   WIN32-MSVC:
@@ -17,13 +20,60 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Build WIN32-MSVC Demo
+      - name: Build WIN32-MSVC Full Demo
+        id: build-win32-msvs-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
-        run: msbuild WIN32.sln -t:rebuild
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+          msbuild WIN32.sln -t:rebuild
+
+      - name: Run and monitor WIN32-MSVC Full Demo
+        if: success() || failure() && steps.build-win32-msvs-full-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/WIN32-MSVC/Debug/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 60
+          success-line: "No errors - tick count"
+
+      - name: Build WIN32-MSVC Blinky Demo
+        id: build-win32-msvs-blinky-demo
+        working-directory: FreeRTOS/Demo/WIN32-MSVC
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
+          $newContent = $newContent -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+          msbuild WIN32.sln -t:rebuild
+
+      - name: Run and monitor WIN32-MSVC Blinky Demo
+        if: success() || failure() && steps.build-win32-msvs-blinky-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/WIN32-MSVC/Debug/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 60
+          success-line: "Message received from software timer"
 
       - name: Build WIN32-MSVC-Static-Allocation-Only Demo
+        id: build-win32-msvs-static-allocation-only-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only
-        run: msbuild WIN32.sln -t:rebuild
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+          msbuild WIN32.sln -t:rebuild
+
+      - name: Run and monitor WIN32-MSVC-Static-Allocation-Only Demo
+        if: success() || failure() && steps.build-win32-msvs-static-allocation-only-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only/Debug/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 60
+          success-line: "No errors - tick count"
 
   WIN32-MingW:
     name: WIN32 MingW
@@ -42,15 +92,49 @@ jobs:
         run: |
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
 
-      - name: Build WIN32-MingW Demo
+      - name: Build WIN32-MingW Full Demo
+        id: build-win32-mingw-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
         run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
           gcc --version
           make --version
           make
 
+      - name: Run and monitor WIN32-MingW Full Demo
+        if: success() || failure() && steps.build-win32-mingw-full-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/WIN32-MingW/build/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 60
+          success-line: "No errors - tick count"
+
+      - name: Build WIN32-MingW Blinky Demo
+        id: build-win32-mingw-blinky-demo
+        working-directory: FreeRTOS/Demo/WIN32-MingW
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
+          $newContent = $newContent -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+          gcc --version
+          make --version
+          make
+
+      - name: Run and monitor WIN32-MingW Blinky Demo
+        if: success() || failure() && steps.build-win32-mingw-blinky-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/WIN32-MingW/build/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 60
+          success-line: "Message received from software timer"
+
   POSIX-GCC:
-    name: Native GCC
+    name: Posix GCC
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -66,10 +150,41 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install build-essential
 
-      - name: Build Posix_GCC Demo
+      - name: Build Posix_GCC Full Demo
+        id: build-posix-gcc-full-demo
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
-        run: make -j
+        run: |
+          sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          make -j
+
+      - name: Run and monitor Posix_GCC Full Demo
+        if: success() || failure() && steps.build-posix-gcc-full-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
+          log-dir: demo_run_logs
+          timeout-seconds: 60
+          success-line: "OK: No errors"
+
+      - name: Build Posix_GCC Blinky Demo
+        id: build-posix-gcc-blinky-demo
+        if: success() || failure()
+        shell: bash
+        working-directory: FreeRTOS/Demo/Posix_GCC
+        run: |
+          sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          rm -rf build
+          make -j USER_DEMO=BLINKY_DEMO
+
+      - name: Run and monitor Posix_GCC Blinky Demo
+        if: success() || failure() && steps.build-posix-gcc-blinky-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
+          log-dir: demo_run_logs
+          timeout-seconds: 60
+          success-line: "Message received from software timer"
 
   MSP430-GCC:
     name: GNU MSP430 Toolchain

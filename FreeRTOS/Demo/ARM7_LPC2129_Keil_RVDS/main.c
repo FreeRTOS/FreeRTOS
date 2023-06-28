@@ -24,9 +24,9 @@
  *
  */
 
-/*
+/* 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is
+	The processor MUST be in supervisor mode when vTaskStartScheduler is 
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used.
@@ -36,17 +36,17 @@
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
- *
- * Main.c also creates a task called "Check".  This only executes every three
- * seconds but has the highest priority so is guaranteed to get processor time.
+ * 
+ * Main.c also creates a task called "Check".  This only executes every three 
+ * seconds but has the highest priority so is guaranteed to get processor time.  
  * Its main function is to check that all the other tasks are still operational.
- * Each task (other than the "flash" tasks) maintains a unique count that is
- * incremented each time the task successfully completes its function.  Should
- * any error occur within such a task the count is permanently halted.  The
+ * Each task (other than the "flash" tasks) maintains a unique count that is 
+ * incremented each time the task successfully completes its function.  Should 
+ * any error occur within such a task the count is permanently halted.  The 
  * check task inspects the count of each task to ensure it has changed since
- * the last time the check task executed.  If all the count variables have
+ * the last time the check task executed.  If all the count variables have 
  * changed all the tasks are still executing error free, and the check task
- * toggles the onboard LED.  Should any task contain an error at any time
+ * toggles the onboard LED.  Should any task contain an error at any time 
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
  */
@@ -106,7 +106,7 @@ then an error has been detected in at least one of the demo application tasks. *
 static long prvCheckOtherTasksAreStillRunning( void );
 
 /*
- * The task that executes at the highest priority and calls
+ * The task that executes at the highest priority and calls 
  * prvCheckOtherTasksAreStillRunning().  See the description at the top
  * of the file.
  */
@@ -125,7 +125,7 @@ static void prvSetupHardware( void );
 
 /*
  * Application entry point:
- * Starts all the other tasks, then starts the scheduler.
+ * Starts all the other tasks, then starts the scheduler. 
  */
 int main( void )
 {
@@ -141,14 +141,14 @@ int main( void )
 	vStartDynamicPriorityTasks();
 
 	/* Start the check task - which is defined in this file.  This is the task
-	that periodically checks to see that all the other tasks are executing
+	that periodically checks to see that all the other tasks are executing 
 	without error. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Now all the tasks have been started - start the scheduler.
 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is
+	The processor MUST be in supervisor mode when vTaskStartScheduler is 
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used here. */
@@ -176,7 +176,7 @@ TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 
 	for( ;; )
 	{
-		/* The period of the delay depends on whether an error has been
+		/* The period of the delay depends on whether an error has been 
 		detected or not.  If an error has been detected then the period
 		is reduced to increase the LED flash rate. */
 		vTaskDelay( xDelayPeriod );

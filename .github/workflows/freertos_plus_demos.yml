@@ -380,9 +380,7 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
       - name: Install prerequisite packages
-        run: |
-          sudo apt update
-          sudo apt-get install -y git build-essential libslirp-dev ncat
+        run: sudo apt-get install -y git build-essential glib-dev libslirp-dev ncat
 
       - name: Set Up Echo Server
         run: ncat -vvklp 5000 -e /bin/cat &
@@ -391,7 +389,7 @@ jobs:
         id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
         run: |
-          sed -i -z "s/define[[:space:]]*echoECHO_PORT[[:space:]]*([[:space:]]*[0-9]\+[[:space:]]*)/define echoECHO_PORT                 ( 5000 )/g" TCPEchoClient_SingleTasks.c
+          sed -i -z "s/define[[:space:]]*echoECHO_PORT[[:space:]]*([[:space:]]*[0-9]\+[[:space:]]*)/define echoECHO_PORT ( 5000 )/g" TCPEchoClient_SingleTasks.c
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           make -j TRACE_ON_ENTER=0
 

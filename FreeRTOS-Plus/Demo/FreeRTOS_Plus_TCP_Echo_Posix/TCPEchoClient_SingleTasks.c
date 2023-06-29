@@ -119,7 +119,7 @@
                 "Echo0",             /* Just a text name for the task to aid debugging. */
                 uxTaskStackSize,     /* The stack size is defined in FreeRTOSIPConfig.h. */
                 ( void * ) x,        /* The task parameter, not used in this case. */
-                    uxTaskPriority,
+                uxTaskPriority,
                 NULL );              /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
         }
     }
@@ -195,6 +195,7 @@
 
                     /* Add in some unique text at the front of the string. */
                     sprintf( pcTransmittedString, "TxRx message number %u", ulTxCount );
+                    pcTransmittedString[strlen(pcTransmittedString)] = "-";
                     ulTxCount++;
 
                     printf( "sending data to the echo server \n" );
@@ -316,7 +317,7 @@
                                        uint32_t ulBufferLength )
     {
         BaseType_t lCharactersToAdd, lCharacter;
-        char cChar = '0';
+        char cChar = 'A';
         const BaseType_t lMinimumLength = 60;
         uint32_t ulRandomNumber;
 
@@ -334,12 +335,12 @@
             cBuffer[ lCharacter ] = cChar;
             cChar++;
 
-            if( cChar > '~' )
+            if( cChar > 'Z' )
             {
-                cChar = '0';
+                cChar = 'A';
             }
         }
-
+        cBuffer[lCharacter] = "\n";
         return lCharactersToAdd;
     }
 /*-----------------------------------------------------------*/

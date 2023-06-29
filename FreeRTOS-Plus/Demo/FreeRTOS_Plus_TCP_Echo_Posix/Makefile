@@ -11,7 +11,7 @@ FREERTOS_PLUS_DIR_REL := ../../../FreeRTOS-Plus
 FREERTOS_PLUS_DIR := $(abspath $(FREERTOS_PLUS_DIR_REL))
 
 KERNEL_DIR            := ${FREERTOS_DIR}/Source
-FREERTOS_PLUS_TCP_DIR            := ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source
+FREERTOS_PLUS_TCP_DIR := ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source
 
 INCLUDE_DIRS := -I.
 INCLUDE_DIRS += -I./Trace_Recorder_Configuration
@@ -81,6 +81,7 @@ SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuf
 CFLAGS 			:= -ggdb3 
 LDFLAGS			:= -ggdb3 -pthread
 
+# Get libslirp package configuration (header and library paths)
 CFLAGS += $(shell pkg-config --cflags slirp)
 LDFLAGS += $(shell pkg-config --libs slirp)
 

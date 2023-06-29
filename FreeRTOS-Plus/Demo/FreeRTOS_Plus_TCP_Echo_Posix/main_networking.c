@@ -157,6 +157,8 @@ void main_tcp_echo_client_tasks( void )
     /* Initialise the network interface.*/
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
+    memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
+
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* Initialise the interface descriptor for WinPCap. */
     pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
@@ -170,7 +172,6 @@ void main_tcp_echo_client_tasks( void )
     }
     #endif /* ( ipconfigUSE_DHCP != 0 ) */
 
-    memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
     FreeRTOS_IPInit_Multi();
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */

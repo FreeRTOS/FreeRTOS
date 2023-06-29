@@ -43,7 +43,7 @@
 #define configUSE_TICK_HOOK						1
 #define configUSE_DAEMON_TASK_STARTUP_HOOK		1
 #define configTICK_RATE_HZ						( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
-#define configMINIMAL_STACK_SIZE				( PTHREAD_STACK_MIN )
+#define configMINIMAL_STACK_SIZE				( 0x4000 ) //( PTHREAD_STACK_MIN )
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 84 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 12 )
 #define configUSE_TRACE_FACILITY				1
@@ -89,7 +89,7 @@ FreeRTOS/Source/tasks.c for limitations. */
 
 /* Enables the test whereby a stack larger than the total heap size is
 requested. */
-#define configSTACK_DEPTH_TYPE uint32_t
+#define configSTACK_DEPTH_TYPE 					size_t
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function.  In most cases the linker will remove unused

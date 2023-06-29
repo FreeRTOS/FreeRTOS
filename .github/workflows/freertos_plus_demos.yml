@@ -380,7 +380,7 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
       - name: Install prerequisite packages
-        run: sudo apt-get install -y git build-essential glib-dev libslirp-dev ncat
+        run: sudo apt-get install -y git build-essential libglib2.0-dev libslirp-dev ncat
 
       - name: Set Up Echo Server
         run: ncat -vvklp 5000 -e /bin/cat &

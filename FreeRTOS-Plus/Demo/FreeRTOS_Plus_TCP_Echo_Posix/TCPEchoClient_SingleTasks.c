@@ -101,12 +101,9 @@
     static char cTxBuffers[ echoNUM_ECHO_CLIENTS ][ echoBUFFER_SIZES ],
                 cRxBuffers[ echoNUM_ECHO_CLIENTS ][ echoBUFFER_SIZES ];
 
-    static StaticTask_t echoServerTaskBuffer;
-    static StackType_t echoServerTaskStack[ PTHREAD_STACK_MIN * 2 ];
-
 /*-----------------------------------------------------------*/
 
-    void vStartTCPEchoClientTasks_SingleTasks( size_t uxTaskStackSize,
+    void vStartTCPEchoClientTasks_SingleTasks( configSTACK_DEPTH_TYPE uxTaskStackSize,
                                                UBaseType_t uxTaskPriority )
     {
         BaseType_t x;
@@ -195,7 +192,7 @@
 
                     /* Add in some unique text at the front of the string. */
                     sprintf( pcTransmittedString, "TxRx message number %u", ulTxCount );
-                    pcTransmittedString[strlen(pcTransmittedString)] = "-";
+                    pcTransmittedString[strlen(pcTransmittedString)] = '-';
                     ulTxCount++;
 
                     printf( "sending data to the echo server \n" );

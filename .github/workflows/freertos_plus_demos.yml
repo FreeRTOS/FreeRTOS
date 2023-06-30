@@ -1,5 +1,6 @@
 name: Build FreeRTOS+ Demos
 on:
+  workflow_dispatch:
   push:
     branches: ["**"]
 

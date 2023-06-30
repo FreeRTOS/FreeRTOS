@@ -111,7 +111,7 @@
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
         {
-            xTaskCreate( 
+            xTaskCreate(
                 prvEchoClientTask,   /* The function that implements the task. */
                 "Echo0",             /* Just a text name for the task to aid debugging. */
                 uxTaskStackSize,     /* The stack size is defined in FreeRTOSIPConfig.h. */
@@ -192,7 +192,9 @@
 
                     /* Add in some unique text at the front of the string. */
                     sprintf( pcTransmittedString, "TxRx message number %u", ulTxCount );
-                    pcTransmittedString[strlen(pcTransmittedString)] = '-';
+
+                    /* Replace '\0' with '-' for string length and comparison functions */
+                    pcTransmittedString[ strlen( pcTransmittedString ) ] = '-';
                     ulTxCount++;
 
                     printf( "sending data to the echo server \n" );
@@ -337,7 +339,9 @@
                 cChar = 'A';
             }
         }
-        cBuffer[lCharacter] = "\n";
+
+        cBuffer[ lCharacter - 1 ] = '\n';
+        cBuffer[ lCharacter ] = '\0';
         return lCharactersToAdd;
     }
 /*-----------------------------------------------------------*/

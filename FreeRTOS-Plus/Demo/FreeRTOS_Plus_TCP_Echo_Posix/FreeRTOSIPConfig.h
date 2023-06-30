@@ -304,3 +304,8 @@ disconnecting stage will timeout after a period of non-activity. */
 #define portINLINE __inline
 
 #endif /* FREERTOS_IP_CONFIG_H */
+
+/* Set ipconfigBUFFER_PADDING on 64-bit platforms */
+#if INTPTR_MAX == INT64_MAX
+    #define ipconfigBUFFER_PADDING                            ( 14U )
+#endif /* INTPTR_MAX == INT64_MAX */

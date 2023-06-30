@@ -54,7 +54,7 @@
 #define mainSIMPLE_UDP_CLIENT_SERVER_PORT             ( 5005UL )
 
 /* Echo client task parameters - used for both TCP and UDP echo clients. */
-#define mainECHO_CLIENT_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )
+#define mainECHO_CLIENT_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 4 )
 #define mainECHO_CLIENT_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 1 )
 
 /* Echo server task parameters. */

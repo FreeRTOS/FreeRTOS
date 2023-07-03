@@ -54,7 +54,7 @@
 #if ( ipconfigUSE_TCP == 1 )
 
 /* The echo tasks create a socket, send out a number of echo requests, listen
- * for the echo reply, then close the socket again before starting over.  This
+ * for the echo reply, then close the socket again before starting over. This
  * delay is used between each iteration to ensure the network does not get too
  * congested. */
     #define echoLOOP_DELAY                ( ( TickType_t ) 150 / portTICK_PERIOD_MS )
@@ -112,12 +112,12 @@
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
         {
             xTaskCreate(
-                prvEchoClientTask,   /* The function that implements the task. */
-                "Echo0",             /* Just a text name for the task to aid debugging. */
-                uxTaskStackSize,     /* The stack size is defined in FreeRTOSIPConfig.h. */
-                ( void * ) x,        /* The task parameter, not used in this case. */
+                prvEchoClientTask, /* The function that implements the task. */
+                "Echo0",           /* Just a text name for the task to aid debugging. */
+                uxTaskStackSize,   /* The stack size is defined in FreeRTOSIPConfig.h. */
+                ( void * ) x,      /* The task parameter, not used in this case. */
                 uxTaskPriority,
-                NULL );              /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
+                NULL );            /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
         }
     }
 /*-----------------------------------------------------------*/
@@ -142,8 +142,8 @@
         xWinProps.lRxBufSize = 6 * ipconfigTCP_MSS;
         xWinProps.lRxWinSize = 3;
 
-        /* This task can be created a number of times.  Each instance is numbered
-         * to enable each instance to use a different Rx and Tx buffer.  The number is
+        /* This task can be created a number of times. Each instance is numbered
+         * to enable each instance to use a different Rx and Tx buffer. The number is
          * passed in as the task's parameter. */
         xInstance = ( BaseType_t ) pvParameters;
 
@@ -151,7 +151,7 @@
         pcTransmittedString = &( cTxBuffers[ xInstance ][ 0 ] );
         pcReceivedString = &( cRxBuffers[ xInstance ][ 0 ] );
 
-        /* Echo requests are sent to the echo server.  The address of the echo
+        /* Echo requests are sent to the echo server. The address of the echo
          * server is configured by the constants configECHO_SERVER_ADDR0 to
          * configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
         xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
@@ -175,14 +175,18 @@
             FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_WIN_PROPERTIES, ( void * ) &xWinProps, sizeof( xWinProps ) );
 
             /* Connect to the echo server. */
-            printf( "connecting to echo server....\n" );
+            printf( "\nConnecting to echo server %d.%d.%d.%d:%d....\n",
+                    configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3, echoECHO_PORT );
 
             ret = FreeRTOS_connect( xSocket, &xEchoServerAddress, sizeof( xEchoServerAddress ) );
 
             if( ret == 0 )
             {
-                printf( "Connected to server.. \n" );
+                /* Clear the buffer into which the string will be placed */
+                memset( ( void * ) pcTransmittedString, 0x00, echoBUFFER_SIZES );
+
                 ulConnections[ xInstance ]++;
+                printf( "Connected to server %d times...\n", ulConnections[ xInstance ] );
 
                 /* Send a number of echo requests. */
                 for( lLoopCount = 0; lLoopCount < lMaxLoopCount; lLoopCount++ )
@@ -197,7 +201,7 @@
                     pcTransmittedString[ strlen( pcTransmittedString ) ] = '-';
                     ulTxCount++;
 
-                    printf( "sending data to the echo server \n" );
+                    printf( "\n\tSending %d bytes of data to the echo server\n", lStringLength );
                     /* Send the string to the socket. */
                     lTransmitted = FreeRTOS_send( xSocket,                        /* The socket being sent to. */
                                                   ( void * ) pcTransmittedString, /* The data being sent. */
@@ -225,7 +229,7 @@
 
                         if( xReturned < 0 )
                         {
-                            /* Error occurred.  Latch it so it can be detected
+                            /* Error occurred. Latch it so it can be detected
                              * below. */
                             xReceivedBytes = xReturned;
                             break;
@@ -254,13 +258,17 @@
                         {
                             /* The echo reply was received without error. */
                             ulTxRxCycles[ xInstance ]++;
-                            printf( "Received correct data %d times.\n", ulTxRxCycles[ xInstance ] );
+
+                            /* The "Received correct data" line is used to determine if
+                             * this demo runs as part of a GitHub workflow. */
+                            printf( "\tReceived correct data %d times.\n", ulTxRxCycles[ xInstance ] );
                         }
                         else
                         {
                             /* The received string did not match the transmitted
                              * string. */
                             ulTxRxFailures[ xInstance ]++;
+                            printf( "\tReceived incorrect data %d times.\n", ulTxRxFailures[ xInstance ] );
                             break;
                         }
                     }
@@ -299,7 +307,7 @@
             }
             else
             {
-                printf( "Could not connect to server %ld\n", ret );
+                printf( "Could not connect to server, received error code %ld\n", ret );
             }
 
             /* Close this socket before looping back to create another. */

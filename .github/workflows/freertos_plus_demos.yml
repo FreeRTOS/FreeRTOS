@@ -400,8 +400,8 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/build/posix_tcp_demo
           log-dir: demo_run_logs
-          timeout-seconds: 300
-          success-line: "Received correct data"
+          timeout-seconds: 180
+          success-line: "Received correct data 3 times."
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385

@@ -2044,6 +2044,7 @@ prvtransmasksetcommand
 prvtypecommand
 prvuartcommandconsoletask
 prvuartrxnotificationhandler
+prvudpechoclienttask
 prvunlockqueue
 prvupdateacceptedhandler
 prvupdatedeltahandler
@@ -3671,6 +3672,7 @@ xreturnvalue
 xrow
 xrtosticktimerinstance
 xrunindicator
+xrxaddress
 xrxdescriptors
 xrxtcbbuffer
 xscugic

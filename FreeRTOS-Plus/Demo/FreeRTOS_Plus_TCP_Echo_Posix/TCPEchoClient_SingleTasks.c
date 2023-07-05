@@ -116,8 +116,8 @@
                 "Echo0",           /* Just a text name for the task to aid debugging. */
                 uxTaskStackSize,   /* The stack size is defined in FreeRTOSIPConfig.h. */
                 ( void * ) x,      /* The task parameter, not used in this case. */
-                uxTaskPriority,
-                NULL );            /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
+                uxTaskPriority,    /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
+                NULL );
         }
     }
 /*-----------------------------------------------------------*/

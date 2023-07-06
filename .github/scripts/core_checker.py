@@ -280,6 +280,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator/Trace_Recorder_Configuration/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/common/WinPCap/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/common/WinPCap/pcap/.*',
+    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/IPv6_Multi_WinSim_demo/FreeRTOS_Plus_TCP_IPv6_Multi.props',
     r'FreeRTOS/Demo/lwIP_AVR32_UC3/.*',
     r'FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC/.*',
     r'FreeRTOS/Demo/CORTEX_LM3S102_GCC/makedefs',

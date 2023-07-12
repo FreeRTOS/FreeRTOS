@@ -161,14 +161,16 @@
 /**
  * @brief The length of the outgoing publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for outgoing publishes.
+ * Number of publishes = ulMaxPublishCount * mqttexampleTOPIC_COUNT
  */
-#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 10U )
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 15U )
 
 /**
  * @brief The length of the incoming publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for incoming publishes.
+ * Number of publishes = ulMaxPublishCount * mqttexampleTOPIC_COUNT
  */
-#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 10U )
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 15U )
 
 /**
  * @brief Milliseconds per second.

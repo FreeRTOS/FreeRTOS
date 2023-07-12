@@ -25,11 +25,13 @@
         <itemPath>../../Source/queue.c</itemPath>
         <itemPath>../../Source/tasks.c</itemPath>
         <itemPath>../../Source/timers.c</itemPath>
+        <itemPath>../../Source/croutine.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Standard Demo Tasks" projectFiles="true">
         <itemPath>../Common/Minimal/BlockQ.c</itemPath>
         <itemPath>../Common/Minimal/blocktim.c</itemPath>
         <itemPath>../Common/Minimal/comtest.c</itemPath>
+        <itemPath>../Common/Minimal/crflash.c</itemPath>
         <itemPath>../Common/Minimal/integer.c</itemPath>
         <itemPath>timertest.c</itemPath>
       </logicalFolder>

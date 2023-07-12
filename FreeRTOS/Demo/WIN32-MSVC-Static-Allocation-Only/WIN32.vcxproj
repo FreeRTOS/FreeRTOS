@@ -232,6 +232,7 @@
     <ClInclude Include="..\..\Source\include\timers.h" />
     <ClInclude Include="..\..\Source\portable\MSVC-MingW\portmacro.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="..\..\Source\include\croutine.h" />
     <ClInclude Include="..\..\Source\include\FreeRTOS.h" />
     <ClInclude Include="..\..\Source\include\list.h" />
     <ClInclude Include="..\..\Source\include\portable.h" />

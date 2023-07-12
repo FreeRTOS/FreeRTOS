@@ -2170,6 +2170,9 @@
                 <name>$PROJ_DIR$\..\Common\include\comtest.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\Common\include\crflash.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\Common\include\integer.h</name>
             </file>
             <file>
@@ -2200,6 +2203,9 @@
                 <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\crflash.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
             </file>
             <file>
@@ -2219,6 +2225,9 @@
             <name>include</name>
             <file>
                 <name>$PROJ_DIR$\..\..\Source\include\atomic.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\Source\include\croutine.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\Source\include\deprecated_definitions.h</name>
@@ -2296,6 +2305,9 @@
                 </file>
             </group>
         </group>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+        </file>
         <file>
             <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
         </file>

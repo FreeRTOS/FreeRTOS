@@ -24,7 +24,7 @@
  *
  */
 
-/*
+/* 
 Changes from V3.0.0
 	+ Added functionality to only call vTaskSwitchContext() once
 	  when handling multiple interruptsources in a single interruptcall.
@@ -58,7 +58,7 @@ void pointed Interrupt()
 	 * No contextswitch requested yet
 	 */
 	uxSwitchRequested	= pdFALSE;
-
+	
 	/*
 	 * Was the interrupt the FreeRTOS SystemTick?
 	 */
@@ -93,7 +93,7 @@ void pointed Interrupt()
 	 {
 	 	vTaskSwitchContext();
 	 }
-
+	 
 	/*
 	 * Restore the context of the (possibly other) task.
 	 */

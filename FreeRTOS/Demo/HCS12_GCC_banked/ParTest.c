@@ -24,7 +24,7 @@
  *
  */
 
-/**
+/** 
  * ParTest.c controls bits (LEDs) for GCC/HCS12 version of FreeRTOS Demo
  *
  * Modified from CodeWarrior/HCS12 by Jefferson L Smith, Robotronics Inc.
@@ -47,7 +47,7 @@
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
-	/* This function is required as it is called from the standard demo
+	/* This function is required as it is called from the standard demo 
 	application files.  It manipulates a bit to control one LED. */
 	portENTER_CRITICAL();
 

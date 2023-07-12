@@ -24,7 +24,7 @@
  *
  */
 
-/*
+/* 
 Changes from V2.0.0
 
 	+ Use scheduler suspends in place of critical sections.
@@ -39,7 +39,6 @@ Changes from V2.6.0
 #include "FreeRTOS.h"
 #include "task.h"
 #include "partest.h"
-#include <avr/io.h>
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
@@ -69,7 +68,7 @@ unsigned char ucBit = ( unsigned char ) 1;
 
 	if( uxLED <= partstMAX_OUTPUT_LED )
 	{
-		ucBit <<= uxLED;
+		ucBit <<= uxLED;	
 
 		vTaskSuspendAll();
 		{
@@ -111,7 +110,7 @@ unsigned char ucBit;
 
 			PORTB = ucCurrentOutputValue;
 		}
-		xTaskResumeAll();
+		xTaskResumeAll();			
 	}
 }
 

@@ -159,7 +159,7 @@
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 500U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 5000U )
 
 /**
  * @brief The keep-alive timeout period reported to the broker while establishing

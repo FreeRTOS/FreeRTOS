@@ -212,7 +212,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 5000U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 2000U )
 
 /**
  * @brief Keep alive time reported to the broker while establishing

@@ -161,9 +161,9 @@ void main_tcp_echo_client_tasks( void )
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* Initialise the interface descriptor for WinPCap. */
-    extern NetworkInterface_t * pxlinux_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+    extern NetworkInterface_t * pxLinux_FillInterfaceDescriptor( BaseType_t xEMACIndex,
                                                       NetworkInterface_t * pxInterface );
-    pxlinux_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    pxLinux_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints [ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );

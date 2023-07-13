@@ -112,6 +112,7 @@ unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that re
 #define configMAC_INTERRUPT_PRIORITY                   5
 
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY    ( 1 )
+#define configUSE_MPU_WRAPPERS_V1                       1
 
 /* Prototype for the function used to print out.  In this case it prints to the
  |     10 console before the network is connected then a UDP port after the network has

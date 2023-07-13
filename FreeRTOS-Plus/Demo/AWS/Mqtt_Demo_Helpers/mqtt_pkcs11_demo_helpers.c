@@ -111,6 +111,9 @@
 
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
+ * This timeout corresponds to time taken by Number of topic subscribed to publish
+ * messages from device to broker and broker to device to complete.
+ * Any change in Number of topic subscribed needs updating mqttexamplePROCESS_LOOP_TIMEOUT_MS.
  */
 #define mqttexamplePROCESS_LOOP_TIMEOUT_MS           ( 2000U )
 

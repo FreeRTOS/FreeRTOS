@@ -34,7 +34,15 @@ jobs:
       - name: Run Uncrustify
         run: |
           uncrustify --version
-          find FreeRTOS/Demo/Common FreeRTOS/Test \( -name ethernet -o -name drivers -o -path 'FreeRTOS/Test/CMock/CMock' \) -prune -false -o -name "*.[hc]" -exec uncrustify --check -c tools/uncrustify.cfg {} +
+          echo "::group::Uncrustify Check"
+          find FreeRTOS/Demo/Common FreeRTOS/Test \( -name ethernet -o -name drivers -o -path 'FreeRTOS/Test/CMock/CMock' \) -prune -false -o -name "*.[hc]" | xargs uncrustify --no-backup --replace --if-changed -c tools/uncrustify.cfg
+          echo "::endgroup::"
+          git diff --exit-code
+          if [ "$?" = "1" ]; then
+            echo -e "\033[31;1;43mFormatting check (using Uncrustify) failed...\033[0m"
+            exit 1
+          fi
+          echo "Uncrustify check passed"
       - name: Check For Trailing Whitespace
         run: |
           set +e

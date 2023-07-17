@@ -160,7 +160,9 @@
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
  * This timeout corresponds to time taken by Number of topic subscribed to publish
  * messages from device to broker and broker to device to complete.
- * Any change in Number of topic subscribed (mqttexampleTOPIC_COUNT) needs updating mqttexamplePROCESS_LOOP_TIMEOUT_MS.
+ * Currently 3 topics are subscribed and 15 publish records are maintained.
+ * Based on experimentation a timeout of 2000ms is necessary to maintain a steady state throughout the demo.
+ * Any change in Number of topic subscribed needs updating mqttexamplePROCESS_LOOP_TIMEOUT_MS.
  */
 #define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 2000U )
 

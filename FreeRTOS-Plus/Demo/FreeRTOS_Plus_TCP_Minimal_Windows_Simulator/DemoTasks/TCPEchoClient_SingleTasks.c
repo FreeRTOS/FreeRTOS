@@ -193,6 +193,12 @@ TickType_t xTimeOnEntering;
 
 				/* Add in some unique text at the front of the string. */
 				sprintf( pcTransmittedString, "TxRx message number %u", ulTxCount );
+
+				/* Replace '\0' with '-' for string length and comparison functions */
+				pcTransmittedString[ strlen( pcTransmittedString ) ] = '-';
+				ulTxCount++;
+
+				printf( "\n\tSending %d bytes of data to the echo server\n", lStringLength );
 				ulTxCount++;
 
 				/* Send the string to the socket. */
@@ -250,12 +256,17 @@ TickType_t xTimeOnEntering;
 					{
 						/* The echo reply was received without error. */
 						ulTxRxCycles[ xInstance ]++;
+
+						/* The "Received correct data" line is used to determine if
+							* this demo runs as part of a GitHub workflow. */
+						printf( "\tReceived correct data %d times.\n", ulTxRxCycles[ xInstance ] );
 					}
 					else
 					{
 						/* The received string did not match the transmitted
 						string. */
 						ulTxRxFailures[ xInstance ]++;
+						printf( "\tReceived incorrect data %d times.\n", ulTxRxFailures[ xInstance ] );
 						break;
 					}
 				}
@@ -324,11 +335,14 @@ uint32_t ulRandomNumber;
 		cBuffer[ lCharacter ] = cChar;
 		cChar++;
 
-		if( cChar > '~' )
+		if( cChar > 'Z' )
 		{
-			cChar = '0';
+			cChar = 'A';
 		}
 	}
+
+	cBuffer[ lCharacter - 1 ] = '\n';
+	cBuffer[ lCharacter ] = '\0';
 
 	return lCharactersToAdd;
 }

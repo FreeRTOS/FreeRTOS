@@ -12,10 +12,10 @@ env:
   AWS_REGION : "us-east-1"
   IOT_THING_NAME: "Test_Demo_On_Git_Action"
   IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
-# permission can be added at job level or workflow level    
 permissions:
       id-token: write   # This is required for requesting the JWT
       contents: read    # This is required for actions/checkout
+
 jobs:
   winsim_cellular:
     name: Windows Simulator Cellular Demos
@@ -131,7 +131,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
         run: |
-          echo '#define democonfigSERVER_HOSTNAME "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigSERVER_HOSTNAME "localhost"' >> demo_config.h
           echo '#define democonfigHTTP_PORT ( 8080 )' >> demo_config.h
 
       - name: Build HTTP Plain Text Demo
@@ -162,7 +162,7 @@ jobs:
           echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
           sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
           sed '$ s/.$//' device_priv_key.txt >> demo_config.h
-          echo '#define democonfigAWS_IOT_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigAWS_IOT_ENDPOINT "localhost"' >> demo_config.h
           echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
           sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
 
@@ -855,17 +855,17 @@ jobs:
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
           $newContent | Set-Content -Path 'main.c'
-          msbuild FreeRTOS_Plus_TCP_Minimal.sln -t:rebuild -property:Configuration=Debug -m
+          msbuild FreeRTOS_Plus_TCP_Minimal.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
 
-      # - name: Run and monitor FreeRTOS+TCP Minimal Demo
-      #   if: success() || failure() && steps.build-plus-tcp-minimal-demo.outcome == 'success'
-      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
-      #   with:
-      #     exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/x64/Debug/FreeRTOS_Plus_TCP_Minimal.exe
-      #     log-dir: demo_run_logs
-      #     timeout-seconds: 300
-      #     success-line: "Received correct data"
-      #     retry-attempts: 2
+      - name: Run and monitor FreeRTOS+TCP Minimal Demo
+        if: success() || failure() && steps.build-plus-tcp-minimal-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/x64/Debug/FreeRTOS_Plus_TCP_Minimal.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Received correct data"
+          retry-attempts: 2
 
       - name: Generate SSL credentials
         id: generate-credentials
@@ -886,17 +886,17 @@ jobs:
       - name: Build FreeRTOS+WolfSSL Demo
         id: build-freertos-wolfssl-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator
-        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
 
-      # - name: Run and monitor FreeRTOS+WolfSSL Demo
-      #   if: success() || failure() && steps.build-freertos-wolfssl.outcome == 'success'
-      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
-      #   with:
-      #     exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator/x64/Debug/FreeRTOS_Plus_WolfSSL_Windows_Simulator.exe
-      #     log-dir: demo_run_logs
-      #     timeout-seconds: 300
-      #     success-line: "Received by the secure server: Message number 9"
-      #     retry-attempts: 2
+      - name: Run and monitor FreeRTOS+WolfSSL Demo
+        if: success() || failure() && steps.build-freertos-wolfssl.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator/x64/Debug/FreeRTOS_Plus_WolfSSL_Windows_Simulator.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Received by the secure server: Message number 9"
+          retry-attempts: 2
 
       - name: Build FreeRTOS+TCP UDP CLI Demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_UDP_Mode_CLI_Windows_Simulator

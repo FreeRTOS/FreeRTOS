@@ -44,7 +44,6 @@ jobs:
         run: |
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
-          $newContent = $newContent -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
 
@@ -118,7 +117,6 @@ jobs:
         run: |
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
-          $newContent = $newContent -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
           $newContent | Set-Content -Path 'main.c'
           gcc --version
           make --version
@@ -173,7 +171,6 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           rm -rf build
           make -j USER_DEMO=BLINKY_DEMO
 

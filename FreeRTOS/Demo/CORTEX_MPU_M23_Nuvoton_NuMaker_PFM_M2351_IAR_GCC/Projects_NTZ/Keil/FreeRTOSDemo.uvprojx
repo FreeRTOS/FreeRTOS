@@ -470,6 +470,11 @@
               <FilePath>..\..\..\..\Source\portable\GCC\ARM_CM23_NTZ\non_secure\portasm.c</FilePath>
             </File>
             <File>
+              <FileName>mpu_wrappers_v2_asm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\Source\portable\GCC\ARM_CM23_NTZ\non_secure\mpu_wrappers_v2_asm.c</FilePath>
+            </File>
+            <File>
               <FileName>portasm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\..\Source\portable\GCC\ARM_CM23_NTZ\non_secure\portasm.h</FilePath>
@@ -493,6 +498,11 @@
               <FileName>mpu_wrappers.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\Source\portable\Common\mpu_wrappers.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu_wrappers_v2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\Source\portable\Common\mpu_wrappers_v2.c</FilePath>
             </File>
           </Files>
         </Group>

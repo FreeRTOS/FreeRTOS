@@ -417,6 +417,18 @@
     </File>
     <File>
       <GroupNumber>3</GroupNumber>
+      <FileNumber>19</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\..\..\Source\portable\Common\mpu_wrappers_v2.c</PathWithFileName>
+      <FilenameWithoutPath>mpu_wrappers_v2.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
       <FileNumber>17</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
@@ -436,6 +448,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\Source\portable\RVDS\ARM_CM4_MPU\portmacro.h</PathWithFileName>
       <FilenameWithoutPath>portmacro.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>19</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\..\..\Source\portable\RVDS\ARM_CM4_MPU\mpu_wrappers_v2_asm.c</PathWithFileName>
+      <FilenameWithoutPath>mpu_wrappers_v2_asm.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

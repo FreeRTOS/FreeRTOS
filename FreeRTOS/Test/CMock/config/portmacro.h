@@ -164,6 +164,15 @@ typedef unsigned long    UBaseType_t;
     volatile int fool_static2 = 0;                   \
     void vFunction( void * ( pvParameters ) )
 
+/* We need to define it here because CMock does not recognize the
+ * #if ( portUSING_MPU_WRAPPERS == 1 ) guard around xTaskGetMPUSettings
+ * and then complains about the missing xMPU_SETTINGS type in the
+ * generated mocks. */
+typedef struct MPU_SETTINGS
+{
+    uint32_t ulDummy;
+} xMPU_SETTINGS;
+
 /*-----------------------------------------------------------*/
 
 /* *INDENT-OFF* */

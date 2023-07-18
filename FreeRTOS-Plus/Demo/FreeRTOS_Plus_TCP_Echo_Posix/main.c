@@ -231,7 +231,9 @@ void traceOnEnter()
 
         /* clear the buffer */
         char buffer[ 1 ];
-        read( STDIN_FILENO, &buffer, 1 );
+        size_t xReadRet;
+        xReadRet = read( STDIN_FILENO, &buffer, 1 );
+        ( void ) xReadRet;
     }
 }
 

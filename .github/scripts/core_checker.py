@@ -309,6 +309,8 @@ FREERTOS_IGNORED_FILES = [
     'interrupt_vector.s',
     'reg_test.S',
     'gdbinit',
+    'libslirp-version.h',
+    'resource.h',
 ]
 
 FREERTOS_HEADER = [

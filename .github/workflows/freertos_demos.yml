@@ -32,6 +32,7 @@ jobs:
       - name: Build WIN32-MSVC Full Demo
         id: build-win32-msvs-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
+        shell: bash
         run: |
           # Build WIN32-MSVC Full Demo
           echo "::group::Build WIN32-MSVC Full Demo"
@@ -59,6 +60,7 @@ jobs:
       - name: Build WIN32-MSVC Blinky Demo
         id: build-win32-msvs-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
+        shell: bash
         run: |
           # Build WIN32-MSVC Blinky Demo
           echo "::group::MSBuild of WIN32-MSVC Blinky Demo"
@@ -87,6 +89,7 @@ jobs:
       - name: Build WIN32-MSVC-Static-Allocation-Only Demo
         id: build-win32-msvs-static-allocation-only-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only
+        shell: bash
         run: |
           # Build WIN32-MSVC-Static-Allocation-Only Demo
           echo "::group::Build WIN32-MSVC-Static-Allocation-Only Demo"
@@ -137,6 +140,7 @@ jobs:
       - name: Build WIN32-MingW Full Demo
         id: build-win32-mingw-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
+        shell: bash
         run: |
           # Build WIN32-MingW Full Demo
           echo "::group::Build WIN32-MingW Full Demo"
@@ -167,6 +171,7 @@ jobs:
       - name: Build WIN32-MingW Blinky Demo
         id: build-win32-mingw-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
+        shell: bash
         run: |
           # Build WIN32-MingW Blinky Demo
           echo "::group::Build WIN32-MingW Blinky Demo"

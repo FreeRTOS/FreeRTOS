@@ -190,6 +190,15 @@ typedef unsigned long    UBaseType_t;
     uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
 #endif /* if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 ) */
 
+/* We need to define it here because CMock does not recognize the
+ * #if ( portUSING_MPU_WRAPPERS == 1 ) guard around xTaskGetMPUSettings
+ * and then complains about the missing xMPU_SETTINGS type in the
+ * generated mocks. */
+typedef struct MPU_SETTINGS
+{
+    uint32_t ulDummy;
+} xMPU_SETTINGS;
+
 /*-----------------------------------------------------------*/
 
 /* *INDENT-OFF* */

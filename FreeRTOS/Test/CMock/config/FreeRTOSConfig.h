@@ -87,6 +87,10 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portHAS_STACK_OVERFLOW_CHECKING           1
 #define configENABLE_MPU                          0
 
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES                     0
+#define configMAX_CO_ROUTINE_PRIORITIES           ( 2 )
+
 /* This demo makes use of one or more example stats formatting functions.  These
  * format the raw data provided by the uxTaskGetSystemState() function in to human
  * readable ASCII form.  See the notes in the implementation of vTaskList() within

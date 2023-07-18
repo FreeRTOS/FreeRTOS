@@ -75,8 +75,10 @@ extern void vAssertCalled( const char * pcFileName,
 #define configUSE_TRACE_FACILITY                         1
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
+#define configUSE_CO_ROUTINES                            0
 
 #define configMAX_PRIORITIES                             ( 10 )
+#define configMAX_CO_ROUTINE_PRIORITIES                  ( 2 )
 #define configTIMER_QUEUE_LENGTH                         20
 #define configTIMER_TASK_PRIORITY                        ( configMAX_PRIORITIES - 1 )
 #define configUSE_COUNTING_SEMAPHORES                    1
@@ -121,7 +123,7 @@ unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that re
 
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
  * See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    191 /* equivalent to 0xa0, or priority 5. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    4
 #define configMAC_INTERRUPT_PRIORITY            5
 
 /* Prototype for the function used to print out.  In this case it prints to the

@@ -15,7 +15,7 @@ jobs:
       - name: Fetch Kernel Submodule
         shell: bash
         run: |
-          : # Fetch Kernel Submodule
+          # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
@@ -27,7 +27,7 @@ jobs:
         id: build-win32-msvs-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
         run: |
-          : # Build WIN32-MSVC Full Demo
+          # Build WIN32-MSVC Full Demo
           echo "::group::Build WIN32-MSVC Full Demo"
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
@@ -48,12 +48,12 @@ jobs:
         id: build-win32-msvs-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
         run: |
-          : # Build WIN32-MSVC Blinky Demo
+          # Build WIN32-MSVC Blinky Demo
           echo "::group::MSBuild of WIN32-MSVC Blinky Demo"
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
           $newContent | Set-Content -Path 'main.c'
-          : # Perform MSBuild of WIN32-MSVC Blinky Demo
+          # Perform MSBuild of WIN32-MSVC Blinky Demo
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
 
@@ -70,7 +70,7 @@ jobs:
         id: build-win32-msvs-static-allocation-only-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only
         run: |
-          : # Build WIN32-MSVC-Static-Allocation-Only Demo
+          # Build WIN32-MSVC-Static-Allocation-Only Demo
           echo "::group::Build WIN32-MSVC-Static-Allocation-Only Demo"
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
@@ -97,7 +97,7 @@ jobs:
       - name: Fetch Kernel Submodule
         shell: bash
         run: |
-          : # Fetch Kernel Submodule
+          # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
@@ -106,7 +106,7 @@ jobs:
         id: build-win32-mingw-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
         run: |
-          : # Build WIN32-MingW Full Demo
+          # Build WIN32-MingW Full Demo
           echo "::group::Build WIN32-MingW Full Demo"
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
@@ -129,7 +129,7 @@ jobs:
         id: build-win32-mingw-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
         run: |
-          : # Build WIN32-MingW Blinky Demo
+          # Build WIN32-MingW Blinky Demo
           echo "::group::Build WIN32-MingW Blinky Demo"
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
@@ -159,7 +159,7 @@ jobs:
       - name: Fetch Kernel Submodule
         shell: bash
         run: |
-          : # Fetch Kernel Submodule
+          # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
@@ -167,7 +167,7 @@ jobs:
       - name: Install GCC
         shell: bash
         run: |
-          : # Install GCC
+          # Install GCC
           echo "::group::Install GCC"
           sudo apt-get -y update
           sudo apt-get -y install build-essential
@@ -178,7 +178,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          : # Build Posix_GCC Full Demo
+          # Build Posix_GCC Full Demo
           echo "::group::Build Posix_GCC Full Demo"
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           make -j
@@ -199,7 +199,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          : # Build Posix_GCC Blinky Demo
+          # Build Posix_GCC Blinky Demo
           echo "::group::Build Posix_GCC Blinky Demo"
           rm -rf build
           make -j USER_DEMO=BLINKY_DEMO
@@ -224,7 +224,7 @@ jobs:
       - name: Fetch Kernel Submodule
         shell: bash
         run: |
-          : # Fetch Kernel Submodule
+          # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
@@ -232,7 +232,7 @@ jobs:
       - name: Install MSP430 Toolchain
         shell: bash
         run: |
-          : # Install MSP430 Toolchain
+          # Install MSP430 Toolchain
           echo "::group::Install MSP430 Toolchain"
           sudo apt-get -y update
           sudo apt-get -y install gcc-msp430 build-essential
@@ -242,7 +242,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/msp430_GCC
         run: |
-          : # Build msp430_GCC Demo
+          # Build msp430_GCC Demo
           echo "::group::Build msp430_GCC Demo"
           make -j
           echo "::endgroup::"
@@ -257,7 +257,7 @@ jobs:
       - name: Fetch Kernel Submodule
         shell: bash
         run: |
-          : # Fetch Kernel Submodule
+          # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
@@ -265,7 +265,7 @@ jobs:
       - name: Install GNU ARM Toolchain
         shell: bash
         run: |
-          : # Install GNU ARM Toolchain
+          # Install GNU ARM Toolchain
           echo "::group::Install GNU ARM Toolchain"
           sudo apt-get -y update
           sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
@@ -275,7 +275,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC
         run: |
-          : # Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo
+          # Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo
           echo "::group::Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo"
           make -j
           echo "::engdroup::"
@@ -284,7 +284,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/CORTEX_LM3S102_GCC
         run: |
-          : # Build CORTEX_LM3S102_GCC Demo
+          # Build CORTEX_LM3S102_GCC Demo
           echo "::group::Build CORTEX_LM3S102_GCC Demo"
           make -j
           echo "::engdroup::"
@@ -293,7 +293,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
         run: |
-          : # Build CORTEX_M3_MPS2_QEMU_GCC Demo
+          # Build CORTEX_M3_MPS2_QEMU_GCC Demo
           echo "::group::Build CORTEX_M3_MPS2_QEMU_GCC Demo"
           make clean
           make -j
@@ -303,7 +303,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
         run: |
-         : # Build CORTEX_M3_MPS2_QEMU_GCC Full Demo
+         # Build CORTEX_M3_MPS2_QEMU_GCC Full Demo
           echo "::group::Build CORTEX_M3_MPS2_QEMU_GCC Full Demo"
           make clean
           make FULL_DEMO=1 -j
@@ -313,7 +313,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/CORTEX_LM3S811_GCC
         run: |
-          : # Build CORTEX_LM3S811_GCC Demo
+          # Build CORTEX_LM3S811_GCC Demo
           echo "::group::Build CORTEX_LM3S811_GCC Demo"
           make -j
           echo "::engdroup::"
@@ -322,7 +322,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/ThirdParty/Community-Supported/CORTEX_M0+_RP2040
         run: |
-          : # Build CORTEX_M0+_RP2040 Demos
+          # Build CORTEX_M0+_RP2040 Demos
           echo "::group::Build CORTEX_M0+_RP2040 Demos"
           git clone https://github.com/raspberrypi/pico-sdk.git
           cmake -B build -DPICO_SDK_PATH=pico-sdk -GNinja
@@ -333,7 +333,7 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC
         run: |
-          : # Build CORTEX_MPS2_QEMU_IAR_GCC Demo
+          # Build CORTEX_MPS2_QEMU_IAR_GCC Demo
           echo "::group::Build CORTEX_MPS2_QEMU_IAR_GCC Demo"
           make -C build/gcc -j
           echo "::engdroup::"

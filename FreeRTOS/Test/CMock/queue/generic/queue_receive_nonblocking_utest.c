@@ -294,7 +294,7 @@ void test_xQueuePeek_noop_waiting_higher_priority( void )
 
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Veify that the task Yielded */
+    /* Verify that the task Yielded */
     TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
 
     /* Check that vTaskMissedYield was called */
@@ -338,7 +338,7 @@ void test_xQueuePeek_xQueuePeek_waiting_higher_priority( void )
 
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Veify that the task Yielded */
+    /* Verify that the task Yielded */
     TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
 
     /* Check that vTaskMissedYield was called */
@@ -382,7 +382,7 @@ void test_xQueuePeek_xQueueReceive_waiting_higher_priority( void )
 
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Veify that the task Yielded */
+    /* Verify that the task Yielded */
     TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
 
     /* Check that vTaskMissedYield was called */

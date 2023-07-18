@@ -19,6 +19,12 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Kernel\033[0m"
+          else
+            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -34,6 +40,12 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the WIN32-MSVC Full Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild WIN32-MSVC Full Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor WIN32-MSVC Full Demo
         if: success() || failure() && steps.build-win32-msvs-full-demo.outcome == 'success'
@@ -56,6 +68,12 @@ jobs:
           # Perform MSBuild of WIN32-MSVC Blinky Demo
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the WIN32-MSVC Blinky Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild WIN32-MSVC Blinky Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor WIN32-MSVC Blinky Demo
         if: success() || failure() && steps.build-win32-msvs-blinky-demo.outcome == 'success'
@@ -77,6 +95,12 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the WIN32-MSVC-Static-Allocation-Only Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild WIN32-MSVC-Static-Allocation-Only Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor WIN32-MSVC-Static-Allocation-Only Demo
         if: success() || failure() && steps.build-win32-msvs-static-allocation-only-demo.outcome == 'success'
@@ -101,6 +125,12 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Kernel\033[0m"
+          else
+            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build WIN32-MingW Full Demo
         id: build-win32-mingw-full-demo
@@ -115,6 +145,12 @@ jobs:
           make --version
           make
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the WIN32-MingW Full Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild WIN32-MingW Full Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor WIN32-MingW Full Demo
         if: success() || failure() && steps.build-win32-mingw-full-demo.outcome == 'success'
@@ -139,6 +175,12 @@ jobs:
           make --version
           make
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the WIN32-MingW Blinky Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild WIN32-MingW Blinky Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor WIN32-MingW Blinky Demo
         if: success() || failure() && steps.build-win32-mingw-blinky-demo.outcome == 'success'
@@ -163,26 +205,46 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Kernel\033[0m"
+          else
+            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Install GCC
         shell: bash
         run: |
           # Install GCC
-          echo "::group::Install GCC"
+          echo "::group::${{ github.step }}"
           sudo apt-get -y update
           sudo apt-get -y install build-essential
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\e[0;32m${{ github.step }} Passed\e[0m"
+          else
+            echo -e "\e[0;32m${{ github.step }} Failed\e[0m"
+          # If there is an error, set this flag high again so the exit 1 fails the run
+            set -e
+            exit 1
+          fi
 
       - name: Build Posix_GCC Full Demo
         id: build-posix-gcc-full-demo
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          # Build Posix_GCC Full Demo
-          echo "::group::Build Posix_GCC Full Demo"
+          # "${{ github.step }}"
+          echo "::group::${{ github.step }}"
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           make -j
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3m ${{ github.step }} Passed\033[0m"
+          else
+            echo -e "\033[32;31mBuild Posix_GCC Full Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor Posix_GCC Full Demo
         if: success() || failure() && steps.build-posix-gcc-full-demo.outcome == 'success'
@@ -204,6 +266,12 @@ jobs:
           rm -rf build
           make -j USER_DEMO=BLINKY_DEMO
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the Posix_GCC Blinky Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild Posix_GCC Blinky Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor Posix_GCC Blinky Demo
         if: success() || failure() && steps.build-posix-gcc-blinky-demo.outcome == 'success'
@@ -228,6 +296,12 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Kernel\033[0m"
+          else
+            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Install MSP430 Toolchain
         shell: bash
@@ -237,6 +311,12 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install gcc-msp430 build-essential
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mInstalled the MSP430 Toolchain\033[0m"
+          else
+            echo -e "\033[32;31mInstalling the MSP430 ToolchainFailed...\033[0m"
+            exit 1
+          fi
 
       - name: Build msp430_GCC Demo
         shell: bash
@@ -246,6 +326,12 @@ jobs:
           echo "::group::Build msp430_GCC Demo"
           make -j
           echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the msp430_GCC Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuilding the msp430_GCC Demo Failed...\033[0m"
+            exit 1
+          fi
 
   ARM-GCC:
     name: GNU ARM Toolchain
@@ -261,6 +347,12 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Kernel\033[0m"
+          else
+            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Install GNU ARM Toolchain
         shell: bash
@@ -270,6 +362,12 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mInstalled the GNU ARM Toolchain\033[0m"
+          else
+            echo -e "\033[32;31mInstalling GNU ARM Toolchain Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo
         shell: bash
@@ -279,6 +377,12 @@ jobs:
           echo "::group::Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo"
           make -j
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuild CORTEX_MPU_M3_MPS2_QEMU_GCC Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild CORTEX_MPU_M3_MPS2_QEMU_GCC Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build CORTEX_LM3S102_GCC Demo
         shell: bash
@@ -288,6 +392,12 @@ jobs:
           echo "::group::Build CORTEX_LM3S102_GCC Demo"
           make -j
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the CORTEX_LM3S102_GCC Demo Kernel\033[0m"
+          else
+            echo -e "\033[32;31mBuild CORTEX_LM3S102_GCC Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build CORTEX_M3_MPS2_QEMU_GCC Demo
         shell: bash
@@ -298,6 +408,12 @@ jobs:
           make clean
           make -j
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the CORTEX_M3_MPS2_QEMU_GCC Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild CORTEX_M3_MPS2_QEMU_GCC Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build CORTEX_M3_MPS2_QEMU_GCC Full Demo
         shell: bash
@@ -308,6 +424,12 @@ jobs:
           make clean
           make FULL_DEMO=1 -j
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the CORTEX_M3_MPS2_QEMU_GCC Full Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild CORTEX_M3_MPS2_QEMU_GCC Full Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build CORTEX_LM3S811_GCC Demo
         shell: bash
@@ -317,6 +439,12 @@ jobs:
           echo "::group::Build CORTEX_LM3S811_GCC Demo"
           make -j
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the CORTEX_LM3S811_GCC Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild CORTEX_LM3S811_GCC Demo Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build CORTEX_M0+_RP2040 Demos
         shell: bash
@@ -328,6 +456,12 @@ jobs:
           cmake -B build -DPICO_SDK_PATH=pico-sdk -GNinja
           ninja -C build --verbose
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt CORTEX_M0+_RP2040 Demos\033[0m"
+          else
+            echo -e "\033[32;31mBuild CORTEX_M0+_RP2040 Demos Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Build CORTEX_MPS2_QEMU_IAR_GCC Demo
         shell: bash
@@ -337,3 +471,9 @@ jobs:
           echo "::group::Build CORTEX_MPS2_QEMU_IAR_GCC Demo"
           make -C build/gcc -j
           echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mBuilt the CORTEX_MPS2_QEMU_IAR_GCC Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild CORTEX_MPS2_QEMU_IAR_GCC Demo Failed...\033[0m"
+            exit 1
+          fi

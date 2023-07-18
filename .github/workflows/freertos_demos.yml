@@ -41,7 +41,7 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          if($? -eq 0) {
+          if($? -eq 1) {
             Write-Host -ForegroundColor green "Built the WIN32-MSVC Full Demo"
           }else {
             Write-Host -ForegroundColor red "Build WIN32-MSVC Full Demo Failed..."
@@ -69,7 +69,7 @@ jobs:
           # Perform MSBuild of WIN32-MSVC Blinky Demo
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          if($? -eq 0) {
+          if($? -eq 1) {
             Write-Host -ForegroundColor green "Built the WIN32-MSVC Blinky Demo"
           }else {
             Write-Host -ForegroundColor red "Build WIN32-MSVC Blinky Demo Failed..."
@@ -96,7 +96,7 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          if($? -eq 0) {
+          if($? -eq 1) {
             Write-Host -ForegroundColor green "Built the WIN32-MSVC-Static-Allocation-Only Demo"
           }else {
             Write-Host -ForegroundColor red "Build WIN32-MSVC-Static-Allocation-Only Demo Failed..."
@@ -148,7 +148,7 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          if($? -eq 0) {
+          if($? -eq 1) {
             Write-Host -ForegroundColor green "Built the WIN32-MingW Full Demo"
           }else {
             Write-Host -ForegroundColor red "Build WIN32-MingW Full Demo Failed..."
@@ -178,7 +178,7 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          if($? -eq 0) {
+          if($? -eq 1) {
             Write-Host -ForegroundColor green "Built the WIN32-MingW Blinky Demo"
           }else {
             Write-Host -ForegroundColor red "Build WIN32-MingW Blinky Demo Failed..."

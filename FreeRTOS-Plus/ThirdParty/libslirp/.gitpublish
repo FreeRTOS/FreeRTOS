@@ -1,0 +1,3 @@
+[gitpublishprofile "default"]
+base = master
+to = slirp@lists.freedesktop.org

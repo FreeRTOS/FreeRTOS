@@ -1,0 +1,11 @@
+*.[aod]
+*.gcda
+*.gcno
+*.gcov
+*.lib
+*.obj
+/build/
+/TAGS
+/cscope*
+/src/libslirp-version.h
+/tags

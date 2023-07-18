@@ -1,0 +1,94 @@
+image: fedora:latest
+
+variables:
+  DEPS: meson ninja-build
+        gcc libasan liblsan libubsan pkg-config glib2-devel
+        mingw64-gcc mingw64-pkg-config mingw64-glib2
+        clang-analyzer git-core
+
+before_script:
+  - dnf install -y $DEPS
+  - git fetch --tags https://gitlab.freedesktop.org/slirp/libslirp.git
+  - git describe
+
+build:
+  script:
+    - meson --werror build || (cat build/meson-logs/meson-log.txt && exit 1)
+    - ninja -C build
+    - (cd build && meson test) || (cat build/meson-logs/testlog.txt && exit 1)
+    - ninja -C build scan-build
+
+build-asan:
+  script:
+    - CFLAGS=-fsanitize=address meson --werror build || (cat build/meson-logs/meson-log.txt && exit 1)
+    - ninja -C build
+    - (cd build && ASAN_OPTIONS=detect_leaks=0 meson test) || (cat build/meson-logs/testlog.txt && exit 1)
+
+build-lsan:
+  script:
+    - CFLAGS=-fsanitize=leak meson --werror build || (cat build/meson-logs/meson-log.txt && exit 1)
+    - ninja -C build
+    - (cd build && meson test) || (cat build/meson-logs/testlog.txt && exit 1)
+
+build-usan:
+  script:
+    - CFLAGS=-fsanitize=undefined meson --werror build || (cat build/meson-logs/meson-log.txt && exit 1)
+    - ninja -C build
+    - (cd build && meson test) || (cat build/meson-logs/testlog.txt && exit 1)
+
+build-mingw64:
+  script:
+    - (mkdir buildw && cd buildw && mingw64-meson --werror) || (cat buildw/meson-logs/meson-log.txt && exit 1)
+    - ninja -C buildw
+
+Coverity:
+  only:
+    refs:
+      - master
+      - coverity
+  script:
+  - dnf update -y
+  - dnf install -y curl clang
+  - curl -o /tmp/cov-analysis-linux64.tgz https://scan.coverity.com/download/linux64
+    --form project=$COVERITY_SCAN_PROJECT_NAME --form token=$COVERITY_SCAN_TOKEN
+  - tar xfz /tmp/cov-analysis-linux64.tgz
+  - CC=clang meson build
+  - cov-analysis-linux64-*/bin/cov-build --dir cov-int ninja -C build
+  - tar cfz cov-int.tar.gz cov-int
+  - curl https://scan.coverity.com/builds?project=$COVERITY_SCAN_PROJECT_NAME
+    --form token=$COVERITY_SCAN_TOKEN --form email=$GITLAB_USER_EMAIL
+    --form file=@cov-int.tar.gz --form version="`git describe --tags`"
+    --form description="`git describe --tags` / $CI_COMMIT_TITLE / $CI_COMMIT_REF_NAME:$CI_PIPELINE_ID "
+
+integration-slirp4netns:
+  variables:
+    SLIRP4NETNS_VERSION: "v1.1.12"
+    # Consumed by `make benchmark`
+    BENCHMARK_IPERF3_DURATION: "10"
+  script:
+  # Install libslirp
+  - meson build
+  - ninja -C build install
+  # Register the path of libslirp.so.0
+  - echo /usr/local/lib64 >/etc/ld.so.conf.d/libslirp.conf
+  - ldconfig
+  # Install the dependencies of slirp4netns and its test suite
+  # TODO: install udhcpc for `slirp4netns/tests/test-slirp4netns-dhcp.sh` (currently skipped, due to lack of udhcpc)
+  - dnf install -y autoconf automake findutils iperf3 iproute iputils jq libcap-devel libseccomp-devel nmap-ncat util-linux
+  # Check whether the runner environment is configured correctly
+  - unshare -rn true || (echo Make sure you have relaxed seccomp and appamor && exit 1)
+  - unshare -rn ip tap add tap0 mode tap || (echo Make sure you have /dev/net/tun && exit 1)
+  # Install slirp4netns
+  - git clone https://github.com/rootless-containers/slirp4netns -b "${SLIRP4NETNS_VERSION}"
+  - cd slirp4netns
+  - ./autogen.sh
+  - ./configure
+  - make
+  - make install
+  - slirp4netns --version
+  # Run slirp4netns integration test
+  - make distcheck || (cat $(find . -name 'test-suite.log' ) && exit 1)
+  # Run benchmark test to ensure that libslirp can actually handle packets, with several MTU configurations
+  - make benchmark MTU=1500
+  - make benchmark MTU=512
+  - make benchmark MTU=65520

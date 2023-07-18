@@ -127,9 +127,8 @@
 
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
- * Refer to FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/readme.txt for more details.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 2000U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 500U )
 
 /**
  * @brief Keep alive time reported to the broker while establishing
@@ -159,18 +158,14 @@
 /**
  * @brief The length of the outgoing publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for outgoing publishes.
- * Number of publishes = ulMaxPublishCount * Number of topic subscribed
- * Update in ulMaxPublishCount needs updating mqttexampleOUTGOING_PUBLISH_RECORD_LEN.
  */
-#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 15U )
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 10U )
 
 /**
  * @brief The length of the incoming publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for incoming publishes.
- * Number of publishes = ulMaxPublishCount * Number of topic subscribed
- * Update in ulMaxPublishCount needs updating mqttexampleINCOMING_PUBLISH_RECORD_LEN.
  */
-#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 15U )
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 10U )
 
 /**
  * @brief Milliseconds per second.

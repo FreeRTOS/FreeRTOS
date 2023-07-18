@@ -1,0 +1,40 @@
+SLIRP_4.0 {
+global:
+    slirp_add_exec;
+    slirp_add_guestfwd;
+    slirp_add_hostfwd;
+    slirp_cleanup;
+    slirp_connection_info;
+    slirp_init;
+    slirp_input;
+    slirp_pollfds_fill;
+    slirp_pollfds_poll;
+    slirp_remove_hostfwd;
+    slirp_socket_can_recv;
+    slirp_socket_recv;
+    slirp_state_load;
+    slirp_state_save;
+    slirp_state_version;
+    slirp_version_string;
+local:
+    *;
+};
+
+SLIRP_4.1 {
+    slirp_new;
+} SLIRP_4.0;
+
+SLIRP_4.2 {
+    slirp_add_unix;
+    slirp_remove_guestfwd;
+} SLIRP_4.1;
+
+SLIRP_4.5 {
+    slirp_add_hostxfwd;
+    slirp_remove_hostxfwd;
+    slirp_neighbor_info;
+} SLIRP_4.2;
+
+SLIRP_4.7 {
+    slirp_handle_timer;
+} SLIRP_4.5;

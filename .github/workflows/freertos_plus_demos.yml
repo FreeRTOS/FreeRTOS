@@ -6,7 +6,16 @@ on:
 
   pull_request:
     branches: [main]
-
+env:
+  BUCKET_NAME : "freertos-demos-on-github-action"
+  OBJECT_NAME: "Test_S3_Upload.txt"
+  AWS_REGION : "us-east-1"
+  IOT_THING_NAME: "Test_Demo_On_Git_Action"
+  IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
+# permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
 jobs:
   winsim_cellular:
     name: Windows Simulator Cellular Demos
@@ -83,55 +92,220 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
             FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
             FreeRTOS-Plus/Source/coreJSON \
-            FreeRTOS-Plus/ThirdParty/mbedtls
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/glib
           git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Configure coreHTTP Demos
-        shell: bash
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator
-        run: |
-          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
-          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
-          echo '    #define democonfigSERVER_HOSTNAME ""' | tee -a */demo_config.h
-          echo '    #define democonfigAWS_IOT_ENDPOINT ""' | tee -a */demo_config.h
-          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_THING_NAME ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_PRESIGNED_GET_URL "ABCDEF"' | tee -a */demo_config.h
-          echo '    #define democonfigS3_PRESIGNED_PUT_URL "ABCDEF"' | tee -a */demo_config.h
-          echo '    #define democonfigS3_ROOT_CA_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_BUCKET_NAME ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_BUCKET_REGION ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_OBJECT_NAME ""' | tee -a */demo_config.h
-          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
+      - name: Install meson
+        run: pip install meson
 
-      - name: Build HTTP Mutual Auth Demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
-        run: msbuild http_mutual_auth_demo.sln -t:rebuild
+      - name: Install Glib
+        run: |
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019
+          meson compile -C build
+
+      - name: Generate SSL credentials
+        id: generate-credentials
+        uses: FreeRTOS/CI-CD-GitHub-Actions/ssl-credential-creator@main
+
+      - name: Start localhost HTTP server
+        id: http-server
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-http-1.1-server@main
+        with:
+          root-ca-cert-path: ${{ steps.generate-credentials.outputs.root-ca-cert-path }}
+          server-priv-key-path: ${{ steps.generate-credentials.outputs.server-priv-key-path }}
+          server-cert-path: ${{ steps.generate-credentials.outputs.server-cert-path }}
+
+      - name: Update main.c to force stdout to write immediately
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+
+      - name: Configure HTTP Plain Text Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
+        run: |
+          echo '#define democonfigSERVER_HOSTNAME "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigHTTP_PORT ( 8080 )' >> demo_config.h
 
       - name: Build HTTP Plain Text Demo
+        id: build-http-plain-text-demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
-        run: msbuild http_plain_text_demo.sln -t:rebuild
+        run: msbuild http_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -m
 
-      - name: Build HTTP S3 Download Demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
-        run: msbuild http_s3_download_demo.sln -t:rebuild
+      # - name: Run and monitor HTTP Plain Text Demo
+      #   if: success() || failure() && steps.build-http-plain-text-demo.outcome == 'success'
+      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/x64/Debug/CoreHTTP_Plaintext.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Demo completed successfully"
+      #     retry-attempts: 2
 
-      - name: Build HTTP S3 Download Multithreaded Demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
-        run: msbuild http_s3_download_multithreaded_demo.sln -t:rebuild
+      - name: Configure HTTP Mutual Auth Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
+          sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-cert-path }} >> device_cert.txt
+          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
+          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          echo '#define democonfigAWS_IOT_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
+          sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
+
+      - name: Build HTTP Mutual Auth Demo
+        id: build-http-mutual-auth-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: msbuild http_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      # - name: Run and monitor HTTP Mutual Auth Demo
+      #   if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
+      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Demo completed successfully"
+      #     retry-attempts: 2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::707737545917:role/freertos-github-actions
+          role-session-name: MySessionName
+          aws-region: ${{ env.AWS_REGION }}
+          managed-session-policies: |
+            arn:aws:iam::aws:policy/AmazonS3FullAccess
+            arn:aws:iam::aws:policy/AWSIoTFullAccess
+
+      - name: Get AWS Root CA
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          curl https://www.amazontrust.com/repository/AmazonRootCA1.pem >> root_ca.txt
+          sed 's/.*/"&\\n"\\/' root_ca.txt >> root_ca_cert.txt
+
+      - name: Upload text file to S3
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          aws s3 cp ${{ env.OBJECT_NAME }} s3://${{ env.BUCKET_NAME }}/
+
+      - name: Presigned S3 URLs Generator
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          pip install boto3 argparse
+          python3 ./presigned_url_generator/presigned_urls_gen.py --bucket ${{ env.BUCKET_NAME }} --key ${{ env.OBJECT_NAME }} --region ${{ env.AWS_REGION }} >> presigned_urls.txt
+
+      - name: Configure HTTP S3 Upload Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          cat ../Common/presigned_urls.txt >> demo_config.h
 
       - name: Build HTTP S3 Upload Demo
+        id: build-http-s3-upload-demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
-        run: msbuild http_s3_upload_demo.sln -t:rebuild
+        run: msbuild http_s3_upload_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
 
+      - name: Run and monitor HTTP S3 Upload Demo
+        if: success() || failure() && steps.build-http-s3-upload-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload/x64/Debug/CoreHTTP_S3_Upload.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure HTTP S3 Download Multithreaded Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          cat ../Common/presigned_urls.txt >> demo_config.h
+
+      - name: Build HTTP S3 Download Multithreaded Demo
+        id: build-http-s3-download-multithreaded-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
+        run: msbuild http_s3_download_multithreaded_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor HTTP S3 Download Multithreaded Demo
+        if: success() || failure() && steps.build-http-s3-download-multithreaded-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded/x64/Debug/CoreHTTP_S3_Download_Multithreaded.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure HTTP S3 Download Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: |
+          aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile certificate_filename.pem --public-key-outfile public_filename.key --private-key-outfile private_filename.key >> iot_cert.txt
+          certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
+          aws iot attach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
+          aws iot attach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
+          endPoint=$(aws iot describe-endpoint --endpoint-type iot:CredentialProvider | python3 -c "import sys, json; print(json.load(sys.stdin)['endpointAddress'])")
+          echo '#define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT "'$endPoint'"' >> demo_config.h
+          echo '#define democonfigS3_BUCKET_NAME "'${{ env.BUCKET_NAME }}'"' >> demo_config.h
+          echo '#define democonfigS3_BUCKET_REGION "'${{ env.AWS_REGION }}'"' >> demo_config.h
+          echo '#define democonfigS3_OBJECT_NAME "'${{ env.OBJECT_NAME }}'"' >> demo_config.h
+          echo '#define democonfigIOT_CREDENTIAL_PROVIDER_ROLE "role-alias-git-action"' >> demo_config.h
+          echo '#define democonfigIOT_THING_NAME "'${{ env.IOT_THING_NAME }}'"' >> demo_config.h
+          echo '#define democonfigS3_ROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' certificate_filename.pem >> device_cert.txt
+          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' private_filename.key >> device_priv_key.txt
+          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+
+      - name: Build HTTP S3 Download Demo
+        id: build-http-s3-download-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: msbuild http_s3_download_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor HTTP S3 Download Demo
+        if: success() || failure() && steps.build-http-s3-download-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/x64/Debug/CoreHTTP_S3_Download.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Delete AWS IOT Certificate
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: |
+          certificateId=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateId'])")
+          certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
+          aws iot detach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
+          aws iot update-certificate --certificate-id $certificateId --new-status INACTIVE
+          aws iot detach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
+          aws iot delete-certificate --certificate-id $certificateId
 
   winsim_corePKCS11:
     name: corePKCS11 WinSim Demos
@@ -151,16 +325,37 @@ jobs:
             FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
             FreeRTOS-Plus/Source/coreJSON \
             FreeRTOS-Plus/Source/corePKCS11 \
-            FreeRTOS-Plus/ThirdParty/mbedtls
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/glib
 
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: corePKCS11 Demo
+      - name: Install meson
+        run: pip install meson
+
+      - name: Install Glib
+        run: |
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019
+          meson compile -C build
+
+      - name: Build corePKCS11 Demo
+        id: build-corePKCS11-demo
         working-directory: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator
-        run: msbuild CorePKCS11_Demos.sln -t:rebuild -m
+        run: msbuild CorePKCS11_Demos.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor corePKCS11 Demo
+        if: success() || failure() && steps.build-corePKCS11-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
+        with:
+          exe-path: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator/x64/Debug/CorePKCS11_Demos.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Finished DEMO"
+          retry-attempts: 2
 
   winsim_corelibs:
     name: core Library Windows Simulator Demos
@@ -194,7 +389,8 @@ jobs:
             FreeRTOS-Plus/Source/corePKCS11 \
             FreeRTOS-Plus/ThirdParty/mbedtls \
             FreeRTOS-Plus/ThirdParty/tinycbor \
-            FreeRTOS-Plus/ThirdParty/wolfSSL
+            FreeRTOS-Plus/ThirdParty/wolfSSL \
+            FreeRTOS-Plus/ThirdParty/glib
 
           git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
@@ -202,49 +398,232 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Configure coreMQTT Demos
-        shell: bash
-        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator
+      - name: Install meson
+        run: pip install meson
+
+      - name: Install Glib
         run: |
-          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
-          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_IDENTIFIER ""' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigMQTT_BROKER_ENDPOINT ""' | tee -a */demo_config.h
-          echo '    #define democonfigMQTT_BROKER_PORT ( 8883 )' | tee -a */demo_config.h
-          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigUSE_AWS_IOT_CORE_BROKER ( 1U )' | tee -a */demo_config.h
-          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019
+          meson compile -C build
+
+      - name: Generate SSL credentials
+        id: generate-credentials
+        uses: FreeRTOS/CI-CD-GitHub-Actions/ssl-credential-creator@main
+
+      - name: Start localhost MQTT broker
+        id: mqtt-broker
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-mqtt-broker@main
+        with:
+          root-ca-cert-path: ${{ steps.generate-credentials.outputs.root-ca-cert-path }}
+          server-priv-key-path: ${{ steps.generate-credentials.outputs.server-priv-key-path }}
+          server-cert-path: ${{ steps.generate-credentials.outputs.server-cert-path }}
+
+      - name: Update main.c to force stdout to write immediately
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/Common
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+
+      - name: Configure MQTT Plain Text Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text
+        run: |
+          echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_PORT ( 1883 )' >> demo_config.h
+
+      - name: Build MQTT Plain Text Demo
+        id: build-mqtt-plain-text-demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text
+        run: |
+          msbuild mqtt_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor MQTT Plain Text Demo
+        if: success() || failure() && steps.build-mqtt-plain-text-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text/x64/Debug/MQTT_Plain_Text.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure MQTT Basic TLS Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
+          sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >>  demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_PORT ( 8883 )' >> demo_config.h
+          sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
 
       - name: Build MQTT Basic TLS Demo
+        id: build-mqtt-basic-tls-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS
-        run: msbuild mqtt_basic_tls_demo.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild mqtt_basic_tls_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor MQTT Basic TLS Demo
+        if: success() || failure() && steps.build-mqtt-basic-tls-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS/x64/Debug/MQTT_Basic_TLS.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure MQTT Mutual Authentication with mbedtls Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
+          sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-cert-path }} >> device_cert.txt
+          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
+          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >>  demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_PORT ( 8883 )' >> demo_config.h
+          sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
+
+      - name: Build MQTT Mutual Authentication with mbedtls Demo
+        id: build-mqtt-mutual-auth-demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth
+        run: msbuild mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor MQTT Mutual Authentication with mbedtls Demo
+        if: success() || failure() && steps.build-mqtt-mutual-auth-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth/x64/Debug/MQTT_Mutual_Auth.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure MQTT Keep Alive Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive
+        run: |
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' >> demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' >> demo_config.h
+          echo '    #define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >> demo_config.h
+          echo '    #define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '    #define democonfigMQTT_BROKER_PORT ( 1883 )' >> demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' >> demo_config.h
 
       - name: Build MQTT Keep Alive Demo
+        id: build-mqtt-keep-alive-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive
-        run: msbuild mqtt_keep_alive_demo.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild mqtt_keep_alive_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor MQTT Keep Alive Demo
+        if: success() || failure() && steps.build-mqtt-keep-alive-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive/x64/Debug/MQTT_Keep_Alive.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure MQTT Serializer Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer
+        run: |
+          echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_PORT ( 1883 )' >> demo_config.h
+
+      - name: Build MQTT Serializer Demo
+        id: build-mqtt-serializer-demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer
+        run: msbuild mqtt_serializer_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor MQTT Serializer Demo
+        if: success() || failure() && steps.build-mqtt-serializer-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer/x64/Debug/MQTT_Serializer.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure MQTT Mutual Authentication with WolfSSL Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL
+        run: |
+          echo '#define democonfigCREDENTIALS_IN_BUFFER 0' >>  demo_config.h
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
+          sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-cert-path }} >> device_cert.txt
+          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
+          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >>  demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_PORT ( 8883 )' >> demo_config.h
+
+      - name: Build MQTT Mutual Authentication with WolfSSL Demo
+        id: build-mqtt-mutual-auth-with-wolfssl-demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL
+        run: msbuild mqtt_mutual_auth_demo_wolfSSL.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor MQTT Mutual Authentication with WolfSSL Demo
+        if: success() || failure() && steps.build-mqtt-mutual-auth-with-wolfssl-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/x64/Debug/RTOSDemo.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure MQTT Multi-Task Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Multitask
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
+          sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-cert-path }} >> device_cert.txt
+          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
+          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >>  demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_PORT ( 8883 )' >> demo_config.h
+          sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
 
       - name: Build MQTT Multi-Task Demo
+        id: build-mqtt-multitask-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Multitask
         run: msbuild mqtt_multitask_demo.sln -t:rebuild -property:Configuration=Debug -m
 
-      - name: Build MQTT Mutual Authentication with mbedtls Demo
-        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth
-        run: msbuild mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
-
-      - name: Build MQTT Mutual Authentication with WolfSSL Demo
-        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL
-        run: msbuild mqtt_mutual_auth_demo_wolfSSL.sln -t:rebuild -property:Configuration=Debug -m
-
-      - name: Build MQTT Plain Text Demo
-        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text
-        run: msbuild mqtt_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -m
-
-      - name: Build MQTT Serializer Demo
-        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer
-        run: msbuild mqtt_serializer_demo.sln -t:rebuild -property:Configuration=Debug -m
+      # - name: Run and monitor MQTT Multi-Task Demo
+      #   if: success() || failure() && steps.build-mqtt-multitask-demo.outcome == 'success'
+      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Multitask/x64/Debug/MQTT_Multitask.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Demo completed successfully"
+      #     retry-attempts: 2
 
       - name: Configure corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
         shell: bash
@@ -279,10 +658,9 @@ jobs:
           echo '    #define democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS 500U' | tee -a demo_config.h
           echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a demo_config.h
 
-      - name: coreSNTP Demo
+      - name: Build coreSNTP Demo
         working-directory: FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator
         run: msbuild core_sntp_demo.sln -t:rebuild
-
 
   winsim_aws_iot:
     name: AWS IoT Windows Simulator Demos
@@ -405,6 +783,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Received correct data 3 times."
+          retry-attempts: 2
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385
@@ -442,22 +821,86 @@ jobs:
             FreeRTOS/Source \
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
             FreeRTOS-Plus/ThirdParty/mbedtls \
-            FreeRTOS-Plus/ThirdParty/wolfSSL
+            FreeRTOS-Plus/ThirdParty/wolfSSL \
+            FreeRTOS-Plus/ThirdParty/glib
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
+      - name: Install meson
+        run: pip install meson
+
+      - name: Install Glib
+        run: |
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019
+          meson compile -C build
+
+      - name: Start localhost Echo server
+        id: echo-server
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-echo-server@main
+        with:
+          port_number: 5000
+
       - name: Build FreeRTOS+TCP Minimal Demo
+        id: build-plus-tcp-minimal-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator
-        run: msbuild FreeRTOS_Plus_TCP_Minimal.sln -t:rebuild -property:Configuration=Debug -m
+        run: |
+          $content = Get-Content -Path 'DemoTasks\TCPEchoClient_SingleTasks.c' -Raw
+          $newContent = $content -replace '#define\s+echoECHO_PORT.*', '#define echoECHO_PORT	( 5000 )'
+          $newContent | Set-Content -Path 'DemoTasks\TCPEchoClient_SingleTasks.c'
+          $content = Get-Content -Path 'tcp_echo_config.h' -Raw
+          $newContent = $content -replace '#define\s+configECHO_SERVER_ADDR.*', '#define configECHO_SERVER_ADDR    "127.0.0.1"'
+          $newContent | Set-Content -Path 'tcp_echo_config.h'
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
+          msbuild FreeRTOS_Plus_TCP_Minimal.sln -t:rebuild -property:Configuration=Debug -m
+
+      # - name: Run and monitor FreeRTOS+TCP Minimal Demo
+      #   if: success() || failure() && steps.build-plus-tcp-minimal-demo.outcome == 'success'
+      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/x64/Debug/FreeRTOS_Plus_TCP_Minimal.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Received correct data"
+      #     retry-attempts: 2
+
+      - name: Generate SSL credentials
+        id: generate-credentials
+        uses: FreeRTOS/CI-CD-GitHub-Actions/ssl-credential-creator@main
+
+      - name: Configure FreeRTOS+WolfSSL Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator
+        run: |
+          cp ${{ steps.generate-credentials.outputs.root-ca-cert-path }} .
+          cp ${{ steps.generate-credentials.outputs.server-cert-path }} .
+          cp ${{ steps.generate-credentials.outputs.server-priv-key-path }} .
+          sed -i -z "s/ca-cert.pem/root_ca_cert.crt/g" SecureTCPServerTask.c
+          sed -i -z "s/server-cert.pem/server_cert.crt/g" SecureTCPServerTask.c
+          sed -i -z "s/server-key.pem/server_priv_key.key/g" SecureTCPServerTask.c
+          sed -i -z "s/ca-cert.pem/root_ca_cert.crt/g" SecureTCPClientTask.c
+
+      - name: Build FreeRTOS+WolfSSL Demo
+        id: build-freertos-wolfssl-demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator
+        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -m
+
+      # - name: Run and monitor FreeRTOS+WolfSSL Demo
+      #   if: success() || failure() && steps.build-freertos-wolfssl.outcome == 'success'
+      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator/x64/Debug/FreeRTOS_Plus_WolfSSL_Windows_Simulator.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Received by the secure server: Message number 9"
+      #     retry-attempts: 2
 
       - name: Build FreeRTOS+TCP UDP CLI Demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_UDP_Mode_CLI_Windows_Simulator
         run: msbuild FreeRTOS_Plus_UDP_with_CLI.sln -t:rebuild -property:Configuration=Debug -m
-
-      - name: Build FreeRTOS+WolfSSL Demo
-        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator
-        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -m
 
       - name: Build FreeRTOS+WolfSSL FIPS Demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_FIPS_Ready_Windows_Simulator
@@ -511,4 +954,3 @@ jobs:
       - name: Build FreeRTOS+RelianceEdge+CLI Demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_Reliance_Edge_and_CLI_Windows_Simulator
         run: msbuild FreeRTOS_Plus_Reliance_Edge_with_CLI.sln -t:rebuild -property:Configuration=Debug -m
-

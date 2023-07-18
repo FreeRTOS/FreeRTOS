@@ -30,9 +30,8 @@ SECTIONS
 		_etext = .;
 	} >rom AT>rom
 
-	.rodata.align :
+	.rodata.align ALIGN(4):
 	{
-		. = ALIGN(4);
 		_rodata = .;
 	} >rom AT>rom
 

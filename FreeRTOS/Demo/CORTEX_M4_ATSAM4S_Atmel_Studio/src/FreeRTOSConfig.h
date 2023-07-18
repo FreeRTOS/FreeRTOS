@@ -73,6 +73,9 @@ extern uint32_t SystemCoreClock;
 #define configUSE_QUEUE_SETS					1
 #define configGENERATE_RUN_TIME_STATS			0
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 			0
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1

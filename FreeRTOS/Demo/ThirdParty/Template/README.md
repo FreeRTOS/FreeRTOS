@@ -19,7 +19,7 @@
 
 1. Compile the following additional files in your project:
    * All files in the [FreeRTOS/Demo/Common/Minimal](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/Common/Minimal) directory except
-     `comtest_strings.c` , `comtest.c` ,`flash.c`, `flash_timer.c` and `sp_flop.c`.
+     `comtest_strings.c`, `crhook.c` , `comtest.c` ,`crflash.c`,`flash.c`, `flash_timer.c` and `sp_flop.c`.
 2. Add the following paths to your include search path:
    * `FreeRTOS/Demo/Common/include`.
 3. Call the `void vStartTests( void )` function from your `main` function after
@@ -156,7 +156,7 @@ No errors
 
 ## Running All Tests
 
-1. Define all the `configSTART_<Test_Name>_TESTS` macros to `1` in your
+1. Define all the `configSTART_<Test_Name>_TESTS` macros to `1` in your 
 `FreeRTOSConfig.h`.
 2. Build and run the tests. The output should look like the following:
 ```

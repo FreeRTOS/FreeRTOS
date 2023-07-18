@@ -48,7 +48,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="Demo/Common/climon.c|Demo/Common/cliFatCmds.c|Demo/Common/IntQueue.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="Demo/Common/crhook.c|Demo/Common/crflash.c|Demo/Common/climon.c|Demo/Common/cliFatCmds.c|Demo/Common/IntQueue.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>
@@ -306,7 +306,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="Demo/Common/climon.c|Demo/Common/cliFatCmds.c|Demo/Common/IntQueue.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="Demo/Common/crhook.c|Demo/Common/crflash.c|Demo/Common/climon.c|Demo/Common/cliFatCmds.c|Demo/Common/IntQueue.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>

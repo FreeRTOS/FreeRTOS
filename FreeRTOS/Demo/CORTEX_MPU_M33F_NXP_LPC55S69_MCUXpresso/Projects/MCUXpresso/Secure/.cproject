@@ -119,6 +119,7 @@
 									<listOptionValue builtIn="false" value="../../../../NXP_Code/CMSIS"/>
 									<listOptionValue builtIn="false" value="../../../../NXP_Code/device"/>
 									<listOptionValue builtIn="false" value="../../../../NXP_Code/startup"/>
+									<listOptionValue builtIn="false" value="../../../../NXP_Code/trustzone"/>
 									<listOptionValue builtIn="false" value="../../../../NXP_Code/utilities"/>
 									<listOptionValue builtIn="false" value="../../../../NXP_Code/component/uart"/>
 									<listOptionValue builtIn="false" value="../../../../NXP_Code/component/lists"/>
@@ -331,16 +332,6 @@
 								<option id="com.crt.advproject.debugger.security.nonsecureimageenable.791320010" name="Enable pre-programming of Non-Secure Image" superClass="com.crt.advproject.debugger.security.nonsecureimageenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.debugger.security.nonsecureimage.1907263627" name="Non-Secure Project" superClass="com.crt.advproject.debugger.security.nonsecureimage" useByScannerDiscovery="false" value="FreeRTOSDemo_ns" valueType="string"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.650465968.1580633237" name="/" resourcePath="reg_tests">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1643158192" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1303225074" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.248036726"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.806639634" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1827685058"/>
-							<tool id="com.crt.advproject.gas.exe.debug.2004350830" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.355931849"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.141362876" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.767850316"/>
-							<tool id="com.crt.advproject.link.exe.debug.558086384" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1425769789"/>
-							<tool id="com.crt.advproject.tool.debug.debug.404468304" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1632770985"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

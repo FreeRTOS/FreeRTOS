@@ -48,7 +48,7 @@ void vParTestInitialise( void )
 	/* Set to output. */
 	FM3_GPIO->DDR1 |= 0xFFFF;
 	FM3_GPIO->DDR3 |= 0xFFFF;
-
+	
 	/* Set as GPIO. */
 	FM3_GPIO->PFR1 &= 0x0000;
 	FM3_GPIO->PFR3 &= 0x0000;

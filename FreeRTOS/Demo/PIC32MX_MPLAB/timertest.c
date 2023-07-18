@@ -83,7 +83,7 @@ static unsigned long ulCalls = 0;
 	++ulCalls;
 	if( ulCalls >= ulFrequencyHz )
 	{
-		/* Increment the count that will be shown on the LCD.
+		/* Increment the count that will be shown on the LCD. 
 		The increment occurs once every 20,000 interrupts so
 		ulHighFrequencyTimerInterrupts should count in seconds. */
 		ulHighFrequencyTimerInterrupts++;

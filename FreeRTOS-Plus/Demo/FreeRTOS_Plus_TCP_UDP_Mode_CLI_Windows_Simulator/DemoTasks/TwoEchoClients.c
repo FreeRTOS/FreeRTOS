@@ -139,10 +139,24 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 	server is configured by the constants configECHO_SERVER_ADDR0 to
 	configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 	xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-															configECHO_SERVER_ADDR1,
-															configECHO_SERVER_ADDR2,
-															configECHO_SERVER_ADDR3 );
+
+	#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	{
+		xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#else
+	{
+		xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{
@@ -270,10 +284,24 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 	server is configured by the constants configECHO_SERVER_ADDR0 to
 	configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 	xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-															configECHO_SERVER_ADDR1,
-															configECHO_SERVER_ADDR2,
-															configECHO_SERVER_ADDR3 );
+
+	#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	{
+		xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#else
+	{
+		xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{
@@ -296,11 +324,11 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 			ipconfigMAX_SEND_BLOCK_TIME_TICKS, hence the test to ensure a buffer
 			was actually obtained. */
 
-		#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_ByIPType( xBufferLength, portMAX_DELAY, ipTYPE_IPv4 );
+		#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer_Multi( xBufferLength, portMAX_DELAY, ipTYPE_IPv4 );
 		#else
 			pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xBufferLength, portMAX_DELAY );
-		#endif
+		#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 			if( pucUDPPayloadBuffer != NULL )
 			{

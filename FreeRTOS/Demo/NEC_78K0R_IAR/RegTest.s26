@@ -67,7 +67,7 @@ vRegTest1:
 	MOVW	DE, #0x5566
 	MOVW	HL, #0x7788
 	MOV		CS, #0x01
-#if configMEMORY_MODE == 1
+#if configMEMORY_MODE == 1	
 	; ES is not saved or restored when using the near memory model so only
 	; test it when using the far model.
 	MOV		ES, #0x02
@@ -84,18 +84,18 @@ loop1:
 	BZ		+5
 	; Jump over the branch to vRegTestError() if the register contained the
 	; expected value - otherwise flag an error by executing vRegTestError().
-	BR		vRegTestError
+	BR		vRegTestError	
 
 	; Repeat for all the registers.
 	MOVW	AX, BC
 	CMPW	AX, #0x3344
 	BZ		+5
-	BR		vRegTestError
+	BR		vRegTestError	
 	MOVW	AX, DE
 	CMPW	AX, #0x5566
 	BZ		+5
-	BR		vRegTestError
-	MOVW	AX, HL
+	BR		vRegTestError	
+	MOVW	AX, HL	
 	CMPW	AX, #0x7788
 	BZ		+5
 	BR		vRegTestError
@@ -103,7 +103,7 @@ loop1:
 	CMP		A, #0x01
 	BZ		+5
 	BR		vRegTestError
-#if configMEMORY_MODE == 1
+#if configMEMORY_MODE == 1	
 	; ES is not saved or restored when using the near memory model so only
 	; test it when using the far model.
 	MOV		A, ES
@@ -135,23 +135,23 @@ vRegTest2:
 	MOVW	DE, #0xddee
 	MOVW	HL, #0xff12
 	MOV		CS, #0x03
-#if configMEMORY_MODE == 1
-	MOV		ES, #0x04
+#if configMEMORY_MODE == 1	
+	MOV		ES, #0x04	
 #endif
 
 loop2:
 	CMPW	AX, #0x99aa
 	BZ		+5
-	BR		vRegTestError
+	BR		vRegTestError	
 	MOVW	AX, BC
 	CMPW	AX, #0xbbcc
 	BZ		+5
-	BR		vRegTestError
+	BR		vRegTestError	
 	MOVW	AX, DE
 	CMPW	AX, #0xddee
 	BZ		+5
-	BR		vRegTestError
-	MOVW	AX, HL
+	BR		vRegTestError	
+	MOVW	AX, HL	
 	CMPW	AX, #0xff12
 	BZ		+5
 	BR		vRegTestError
@@ -159,7 +159,7 @@ loop2:
 	CMP		A, #0x03
 	BZ		+5
 	BR		vRegTestError
-#if configMEMORY_MODE == 1
+#if configMEMORY_MODE == 1		
 	MOV		A, ES
 	CMP		A, #0x04
 	BZ		+5

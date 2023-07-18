@@ -39,8 +39,8 @@
 
 void vParTestInitialise( void )
 {
-	/* All LEDs output. */
-	TRISA = ptOUTPUT;
+	/* All LEDs output. */	
+	TRISA = ptOUTPUT;	
 	PORTA = ptALL_OFF;
 
 	/* Disable the JTAG. */
@@ -73,7 +73,7 @@ unsigned portBASE_TYPE uxLEDBit;
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 unsigned portBASE_TYPE uxLEDBit;
-
+	
 	uxLEDBit = 1 << uxLED;
 
 	/* Use of the PORTAINV register removes the need to use a critical section. */

@@ -108,7 +108,7 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
 /* Used by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 
     /* In case multiple interfaces are used, define them statically. */
 
@@ -118,7 +118,7 @@ static UBaseType_t ulNextRand;
     /* It will have several end-points. */
     static NetworkEndPoint_t xEndPoints[ 4 ];
 
-#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 /******************************************************************************
  *
@@ -145,7 +145,7 @@ const uint32_t ulLongTime_ms = 250UL;
     /* Initialise the network interface.*/
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* Initialise the interface descriptor for WinPCap. */
     pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
@@ -158,11 +158,11 @@ const uint32_t ulLongTime_ms = 250UL;
     }
     #endif /* ( ipconfigUSE_DHCP != 0 ) */
     memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
-    FreeRTOS_IPStart();
+    FreeRTOS_IPInit_Multi();
 #else
     /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
     FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
-#endif /* if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 ) */
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     /* Initialise the logging. */
     uint32_t ulLoggingIPAddress;
@@ -271,7 +271,12 @@ void vApplicationMallocFailedHook( void )
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-    BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        BaseType_t xApplicationDNSQueryHook_Multi( struct xNetworkEndPoint * pxEndPoint,
+                                                            const char * pcName )
+    #else
+        BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
 

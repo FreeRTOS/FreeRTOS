@@ -25,8 +25,8 @@
  */
 
 /**
- * Defines the tasks used to toggle the segments of the left
- * seven segment display, as described at the top of main.c
+ * Defines the tasks and co-routines used to toggle the segments of the two
+ * seven segment displays, as described at the top of main.c
  */
 
 
@@ -35,6 +35,7 @@
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "croutine.h"
 
 /* Demo program include files. */
 #include "partest.h"
@@ -47,22 +48,38 @@
 /* Each task toggles at a frequency that is a multiple of 333ms. */
 #define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
 
+/* One co-routine per segment of the right hand display. */
+#define ledNUM_OF_LED_CO_ROUTINES	7
+
+/* All co-routines run at the same priority. */
+#define ledCO_ROUTINE_PRIORITY		0
+
 /*-----------------------------------------------------------*/
 
 /* The task that is created 7 times. */
 static void vLEDFlashTask( void *pvParameters );
 
+/* The co-routine that is created 7 times. */
+static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, unsigned short usIndex );
+
+/* This task is created once, but itself creates 7 co-routines. */
+static void vLEDCoRoutineControlTask( void *pvParameters );
+
 /* Handles to each of the 7 tasks.  Used so the tasks can be suspended
 and resumed. */
 static TaskHandle_t xFlashTaskHandles[ ledNUM_OF_LED_TASKS ] = { 0 };
 
+/* Handle to the task in which the co-routines run.  Used so the
+co-routines can be suspended and resumed. */
+static TaskHandle_t xCoroutineTask;
+
 /*-----------------------------------------------------------*/
 
 /**
- * Creates the tasks used to toggle the segments of the left
- * seven segment display, as described at the top of main.c
+ * Creates the tasks and co-routines used to toggle the segments of the two
+ * seven segment displays, as described at the top of main.c
  */
-void vCreateFlashTasks( void )
+void vCreateFlashTasksAndCoRoutines( void )
 {
 signed short sLEDTask;
 
@@ -72,6 +89,10 @@ signed short sLEDTask;
 		/* Spawn the task. */
 		xTaskCreate( vLEDFlashTask, "LEDt", configMINIMAL_STACK_SIZE, ( void * ) sLEDTask, ( tskIDLE_PRIORITY + 1 ), &( xFlashTaskHandles[ sLEDTask ] ) );
 	}
+
+	/* Create the task in which the co-routines run.  The co-routines themselves
+	are created within the task. */
+	xTaskCreate( vLEDCoRoutineControlTask, "LEDc", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCoroutineTask );
 }
 /*-----------------------------------------------------------*/
 
@@ -96,6 +117,19 @@ short sLEDTask;
 					vTaskResume( xFlashTaskHandles[ sLEDTask ] );
 				}
 			}
+		}
+	}
+	else
+	{
+		/* Suspend or resume the task in which the co-routines are running.  The
+		co-routines toggle the segments of the right side display. */
+		if( sSuspendTasks == pdTRUE )
+		{
+			vTaskSuspend( xCoroutineTask );
+		}
+		else
+		{
+			vTaskResume( xCoroutineTask );
 		}
 	}
 }
@@ -132,7 +166,58 @@ unsigned short usLED;
 		vParTestToggleLED( usLED );
 	}
 }
+/*-----------------------------------------------------------*/
 
+static void vLEDCoRoutineControlTask( void *pvParameters )
+{
+unsigned short usCoroutine;
+
+	( void ) pvParameters;
+
+	/* Create the co-routines - one of each segment of the right side display. */
+	for( usCoroutine = 0; usCoroutine < ledNUM_OF_LED_CO_ROUTINES; usCoroutine++ )
+	{
+		xCoRoutineCreate( prvFixedDelayCoRoutine, ledCO_ROUTINE_PRIORITY, usCoroutine );
+	}
+
+	/* This task has nothing else to do except scheduler the co-routines it just
+	created. */
+	for( ;; )
+	{
+		vCoRoutineSchedule();
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, unsigned short usIndex )
+{
+/* The usIndex parameter of the co-routine function is used as an index into
+the xFlashRates array to obtain the delay period to use. */
+static const TickType_t xFlashRates[ ledNUM_OF_LED_CO_ROUTINES ] = { 150 / portTICK_PERIOD_MS,
+																300 / portTICK_PERIOD_MS,
+																450 / portTICK_PERIOD_MS,
+																600 / portTICK_PERIOD_MS,
+																750 / portTICK_PERIOD_MS,
+																900 / portTICK_PERIOD_MS,
+																1050 / portTICK_PERIOD_MS };
+
+	/* Co-routines MUST start with a call to crSTART. */
+	crSTART( xHandle );
+
+	for( ;; )
+	{
+		/* Toggle the LED.  An offset of 8 is used to skip over the segments of
+		the left side display which use the low numbers. */
+		vParTestToggleLED( usIndex + 8 );
+
+		/* Delay until it is time to toggle the segment that this co-routine is
+		controlling again. */
+		crDELAY( xHandle, xFlashRates[ usIndex ] );
+	}
+
+	/* Co-routines MUST end with a call to crEND. */
+	crEND();
+}
 /*-----------------------------------------------------------*/
 
 

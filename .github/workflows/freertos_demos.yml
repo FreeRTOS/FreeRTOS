@@ -19,12 +19,12 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mCloned the Kernel\033[0m"
-          else
-            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+          if($? -eq 0) {
+            Write-Host -ForegroundColor green "Cloned the Kernel"
+          }else {
+            Write-Host -ForegroundColor red "Kernel Clone Failed..."
             exit 1
-          fi
+          }
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -40,11 +40,12 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          If %ERRORLEVEL%==0 (
-            color 0A && Echo "\033[32;3mBuilt the WIN32-MSVC Full Demo\033[0m"
-          ) Else (
-            color 04 && Echo "\033[32;31mBuild WIN32-MSVC Full Demo Failed...\033[0m" && exit 1
-          )
+          if($? -eq 0) {
+            Write-Host -ForegroundColor green "Built the WIN32-MSVC Full Demo"
+          }else {
+            Write-Host -ForegroundColor red "Build WIN32-MSVC Full Demo Failed..."
+            exit 1
+          }
 
       - name: Run and monitor WIN32-MSVC Full Demo
         if: success() || failure() && steps.build-win32-msvs-full-demo.outcome == 'success'
@@ -67,11 +68,12 @@ jobs:
           # Perform MSBuild of WIN32-MSVC Blinky Demo
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          If %ERRORLEVEL%==0 (
-            color 0A && Echo "\033[32;3mBuilt the WIN32-MSVC Blinky Demo\033[0m"
-          ) Else (
-            color 04 && Echo "\033[32;31mBuild WIN32-MSVC Blinky Demo Failed...\033[0m" && exit 1
-          )
+          if($? -eq 0) {
+            Write-Host -ForegroundColor green "Built the WIN32-MSVC Blinky Demo"
+          }else {
+            Write-Host -ForegroundColor red "Build WIN32-MSVC Blinky Demo Failed..."
+            exit 1
+          }
 
       - name: Run and monitor WIN32-MSVC Blinky Demo
         if: success() || failure() && steps.build-win32-msvs-blinky-demo.outcome == 'success'
@@ -93,11 +95,12 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          If %ERRORLEVEL%==0 (
-            color 0A && Echo "\033[32;3mBuilt the WIN32-MSVC-Static-Allocation-Only Demo\033[0m"
-          ) Else (
-            color 04 && Echo "\033[32;31mBuild WIN32-MSVC-Static-Allocation-Only Demo Failed...\033[0m" && exit 1
-          )
+          if($? -eq 0) {
+            Write-Host -ForegroundColor green "Built the WIN32-MSVC-Static-Allocation-Only Demo"
+          }else {
+            Write-Host -ForegroundColor red "Build WIN32-MSVC-Static-Allocation-Only Demo Failed..."
+            exit 1
+          }
 
       - name: Run and monitor WIN32-MSVC-Static-Allocation-Only Demo
         if: success() || failure() && steps.build-win32-msvs-static-allocation-only-demo.outcome == 'success'
@@ -122,11 +125,13 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
-          If %ERRORLEVEL%==0 (
-            color 0A && Echo "\033[32;3mCloned the Kernel\033[0m"
-          ) Else (
-            color 04 && Echo "\033[32;31mKernel Clone Failed...\033[0m" && exit 1
-          )
+          if [[ "$?" = "0" ]]
+          then
+            echo -e "\033[32;3mCloned the Kernel\033[0m"
+          else
+            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+            exit 1
+          fi
 
 
       - name: Build WIN32-MingW Full Demo
@@ -142,11 +147,13 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          If %ERRORLEVEL%==0 (
-            color 0A && Echo "\033[32;3mBuilt the WIN32-MingW Full Demo\033[0m"
-          ) Else (
-            color 04 && Echo "\033[32;31mBuild WIN32-MingW Demo Full Failed...\033[0m" && exit 1
-          )
+          if [[ "$?" = "0" ]]
+          then
+            echo -e "\033[32;3mBuilt the WIN32-MingW Full Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild WIN32-MingW Demo Full Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor WIN32-MingW Full Demo
         if: success() || failure() && steps.build-win32-mingw-full-demo.outcome == 'success'
@@ -171,11 +178,13 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          If %ERRORLEVEL%==0 (
-            color 0A && Echo "\033[32;3mBuilt the WIN32-MingW Blinky Demo\033[0m"
-          ) Else (
-            color 04 && Echo "\033[32;31mBuild WIN32-MingW Blinky Demo Failed...\033[0m" && exit 1
-          )
+          if [[ "$?" = "0" ]]
+          then
+            echo -e "\033[32;3mBuilt the WIN32-MingW Blinky Demo\033[0m"
+          else
+            echo -e "\033[32;31mBuild WIN32-MingW Demo Blinky Failed...\033[0m"
+            exit 1
+          fi
 
       - name: Run and monitor WIN32-MingW Blinky Demo
         if: success() || failure() && steps.build-win32-mingw-blinky-demo.outcome == 'success'

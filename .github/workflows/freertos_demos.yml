@@ -40,12 +40,11 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mBuilt the WIN32-MSVC Full Demo\033[0m"
-          else
-            echo -e "\033[32;31mBuild WIN32-MSVC Full Demo Failed...\033[0m"
-            exit 1
-          fi
+          If %ERRORLEVEL%==0 (
+            color 0A && Echo "\033[32;3mBuilt the WIN32-MSVC Full Demo\033[0m"
+          ) Else (
+            color 04 && Echo "\033[32;31mBuild WIN32-MSVC Full Demo Failed...\033[0m" && exit 1
+          )
 
       - name: Run and monitor WIN32-MSVC Full Demo
         if: success() || failure() && steps.build-win32-msvs-full-demo.outcome == 'success'
@@ -68,12 +67,11 @@ jobs:
           # Perform MSBuild of WIN32-MSVC Blinky Demo
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mBuilt the WIN32-MSVC Blinky Demo\033[0m"
-          else
-            echo -e "\033[32;31mBuild WIN32-MSVC Blinky Demo Failed...\033[0m"
-            exit 1
-          fi
+          If %ERRORLEVEL%==0 (
+            color 0A && Echo "\033[32;3mBuilt the WIN32-MSVC Blinky Demo\033[0m"
+          ) Else (
+            color 04 && Echo "\033[32;31mBuild WIN32-MSVC Blinky Demo Failed...\033[0m" && exit 1
+          )
 
       - name: Run and monitor WIN32-MSVC Blinky Demo
         if: success() || failure() && steps.build-win32-msvs-blinky-demo.outcome == 'success'
@@ -95,12 +93,11 @@ jobs:
           $newContent | Set-Content -Path 'main.c'
           msbuild WIN32.sln -t:rebuild
           echo "::endgroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mBuilt the WIN32-MSVC-Static-Allocation-Only Demo\033[0m"
-          else
-            echo -e "\033[32;31mBuild WIN32-MSVC-Static-Allocation-Only Demo Failed...\033[0m"
-            exit 1
-          fi
+          If %ERRORLEVEL%==0 (
+            color 0A && Echo "\033[32;3mBuilt the WIN32-MSVC-Static-Allocation-Only Demo\033[0m"
+          ) Else (
+            color 04 && Echo "\033[32;31mBuild WIN32-MSVC-Static-Allocation-Only Demo Failed...\033[0m" && exit 1
+          )
 
       - name: Run and monitor WIN32-MSVC-Static-Allocation-Only Demo
         if: success() || failure() && steps.build-win32-msvs-static-allocation-only-demo.outcome == 'success'
@@ -125,12 +122,12 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mCloned the Kernel\033[0m"
-          else
-            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
-            exit 1
-          fi
+          If %ERRORLEVEL%==0 (
+            color 0A && Echo "\033[32;3mCloned the Kernel\033[0m"
+          ) Else (
+            color 04 && Echo "\033[32;31mKernel Clone Failed...\033[0m" && exit 1
+          )
+
 
       - name: Build WIN32-MingW Full Demo
         id: build-win32-mingw-full-demo
@@ -145,12 +142,11 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mBuilt the WIN32-MingW Full Demo\033[0m"
-          else
-            echo -e "\033[32;31mBuild WIN32-MingW Full Demo Failed...\033[0m"
-            exit 1
-          fi
+          If %ERRORLEVEL%==0 (
+            color 0A && Echo "\033[32;3mBuilt the WIN32-MingW Full Demo\033[0m"
+          ) Else (
+            color 04 && Echo "\033[32;31mBuild WIN32-MingW Demo Full Failed...\033[0m" && exit 1
+          )
 
       - name: Run and monitor WIN32-MingW Full Demo
         if: success() || failure() && steps.build-win32-mingw-full-demo.outcome == 'success'
@@ -175,12 +171,11 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mBuilt the WIN32-MingW Blinky Demo\033[0m"
-          else
-            echo -e "\033[32;31mBuild WIN32-MingW Blinky Demo Failed...\033[0m"
-            exit 1
-          fi
+          If %ERRORLEVEL%==0 (
+            color 0A && Echo "\033[32;3mBuilt the WIN32-MingW Blinky Demo\033[0m"
+          ) Else (
+            color 04 && Echo "\033[32;31mBuild WIN32-MingW Blinky Demo Failed...\033[0m" && exit 1
+          )
 
       - name: Run and monitor WIN32-MingW Blinky Demo
         if: success() || failure() && steps.build-win32-mingw-blinky-demo.outcome == 'success'
@@ -216,14 +211,14 @@ jobs:
         shell: bash
         run: |
           # Install GCC
-          echo "::group::${{ github.step }}"
+          echo "::group::Install GCC"
           sudo apt-get -y update
           sudo apt-get -y install build-essential
           echo "::endgroup::"
           if [ "$?" = "0" ]; then
-            echo -e "\e[0;32m${{ github.step }} Passed\e[0m"
+            echo -e "\e[0;32mInstall GCC Passed\e[0m"
           else
-            echo -e "\e[0;32m${{ github.step }} Failed\e[0m"
+            echo -e "\e[0;32mInstall GCC Failed\e[0m"
           # If there is an error, set this flag high again so the exit 1 fails the run
             set -e
             exit 1
@@ -234,13 +229,13 @@ jobs:
         shell: bash
         working-directory: FreeRTOS/Demo/Posix_GCC
         run: |
-          # "${{ github.step }}"
-          echo "::group::${{ github.step }}"
+          # Build Posix_GCC Full Demo
+          echo "::group::Build Posix_GCC Full Demo"
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
           make -j
           echo "::endgroup::"
           if [ "$?" = "0" ]; then
-            echo -e "\033[32;3m ${{ github.step }} Passed\033[0m"
+            echo -e "\033[32;3mBuild Posix_GCC Full Demo Passed\033[0m"
           else
             echo -e "\033[32;31mBuild Posix_GCC Full Demo Failed...\033[0m"
             exit 1

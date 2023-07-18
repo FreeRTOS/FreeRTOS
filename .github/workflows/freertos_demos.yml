@@ -19,12 +19,13 @@ jobs:
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
           echo "::engdroup::"
-          if($? -eq 0) {
-            Write-Host -ForegroundColor green "Cloned the Kernel"
-          }else {
-            Write-Host -ForegroundColor red "Kernel Clone Failed..."
+          if [[ "$?" = "0" ]]
+          then
+            echo -e "\033[32;3mCloned the Kernel\033[0m"
+          else
+            echo -e "\033[32;31mKernel Clone Failed...\033[0m"
             exit 1
-          }
+          fi
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -32,7 +33,6 @@ jobs:
       - name: Build WIN32-MSVC Full Demo
         id: build-win32-msvs-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
-        shell: bash
         run: |
           # Build WIN32-MSVC Full Demo
           echo "::group::Build WIN32-MSVC Full Demo"
@@ -60,7 +60,6 @@ jobs:
       - name: Build WIN32-MSVC Blinky Demo
         id: build-win32-msvs-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC
-        shell: bash
         run: |
           # Build WIN32-MSVC Blinky Demo
           echo "::group::MSBuild of WIN32-MSVC Blinky Demo"
@@ -89,7 +88,6 @@ jobs:
       - name: Build WIN32-MSVC-Static-Allocation-Only Demo
         id: build-win32-msvs-static-allocation-only-demo
         working-directory: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only
-        shell: bash
         run: |
           # Build WIN32-MSVC-Static-Allocation-Only Demo
           echo "::group::Build WIN32-MSVC-Static-Allocation-Only Demo"
@@ -140,7 +138,6 @@ jobs:
       - name: Build WIN32-MingW Full Demo
         id: build-win32-mingw-full-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
-        shell: bash
         run: |
           # Build WIN32-MingW Full Demo
           echo "::group::Build WIN32-MingW Full Demo"
@@ -151,13 +148,12 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          if [[ "$?" = "0" ]]
-          then
-            echo -e "\033[32;3mBuilt the WIN32-MingW Full Demo\033[0m"
-          else
-            echo -e "\033[32;31mBuild WIN32-MingW Demo Full Failed...\033[0m"
+          if($? -eq 0) {
+            Write-Host -ForegroundColor green "Built the WIN32-MingW Full Demo"
+          }else {
+            Write-Host -ForegroundColor red "Build WIN32-MingW Full Demo Failed..."
             exit 1
-          fi
+          }
 
       - name: Run and monitor WIN32-MingW Full Demo
         if: success() || failure() && steps.build-win32-mingw-full-demo.outcome == 'success'
@@ -171,7 +167,6 @@ jobs:
       - name: Build WIN32-MingW Blinky Demo
         id: build-win32-mingw-blinky-demo
         working-directory: FreeRTOS/Demo/WIN32-MingW
-        shell: bash
         run: |
           # Build WIN32-MingW Blinky Demo
           echo "::group::Build WIN32-MingW Blinky Demo"
@@ -183,13 +178,12 @@ jobs:
           make --version
           make
           echo "::endgroup::"
-          if [[ "$?" = "0" ]]
-          then
-            echo -e "\033[32;3mBuilt the WIN32-MingW Blinky Demo\033[0m"
-          else
-            echo -e "\033[32;31mBuild WIN32-MingW Demo Blinky Failed...\033[0m"
+          if($? -eq 0) {
+            Write-Host -ForegroundColor green "Built the WIN32-MingW Blinky Demo"
+          }else {
+            Write-Host -ForegroundColor red "Build WIN32-MingW Blinky Demo Failed..."
             exit 1
-          fi
+          }
 
       - name: Run and monitor WIN32-MingW Blinky Demo
         if: success() || failure() && steps.build-win32-mingw-blinky-demo.outcome == 'success'

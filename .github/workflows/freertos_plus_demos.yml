@@ -1,5 +1,6 @@
 name: Build FreeRTOS+ Demos
 on:
+  workflow_dispatch:
   push:
     branches: ["**"]
 
@@ -367,7 +368,7 @@ jobs:
 
   plus_tcp_posix:
     name: FreeRTOS+TCP Posix Simulator Demo
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -380,11 +381,30 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
 
       - name: Install prerequisite packages
-        run: sudo apt-get install -y git build-essential libpcap-dev
+        run: sudo apt-get install -y git build-essential libglib2.0-dev libslirp-dev
 
-      - name: Build FreeRTOS+TCP Minimal Demo
+      - name: Start localhost Echo server
+        id: echo-server
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-echo-server@main
+        with:
+          port_number: 5000
+
+      - name: Build FreeRTOS+TCP Echo Posix Demo
+        id: build-echo-posix-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
-        run: make -j
+        run: |
+          sed -i -z "s/define[[:space:]]*echoECHO_PORT[[:space:]]*([[:space:]]*[0-9]\+[[:space:]]*)/define echoECHO_PORT ( 5000 )/g" TCPEchoClient_SingleTasks.c
+          sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          make -j TRACE_ON_ENTER=0
+
+      - name: Run and monitor FreeRTOS+TCP Echo Posix Demo
+        if: success() || failure() && steps.build-echo-posix-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/build/posix_tcp_demo
+          log-dir: demo_run_logs
+          timeout-seconds: 180
+          success-line: "Received correct data 3 times."
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385

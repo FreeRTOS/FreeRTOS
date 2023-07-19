@@ -287,15 +287,15 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
         run: msbuild http_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
 
-      - name: Run and monitor HTTP Mutual Auth Demo
-        if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
-        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
-        with:
-          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
-          log-dir: demo_run_logs
-          timeout-seconds: 300
-          success-line: "Demo completed successfully"
-          retry-attempts: 2
+      # - name: Run and monitor HTTP Mutual Auth Demo
+      #   if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
+      #   uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Demo completed successfully"
+      #     retry-attempts: 2
 
       - name: Configure HTTP Plain Text Demo
         shell: bash

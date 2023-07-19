@@ -158,6 +158,7 @@ jobs:
           managed-session-policies: |
             arn:aws:iam::aws:policy/AmazonS3FullAccess
             arn:aws:iam::aws:policy/AWSIoTFullAccess
+            arn:aws:iam::aws:policy/AmazonFreeRTOSFullAccess
 
       - name: Get AWS Root CA
         shell: bash
@@ -203,7 +204,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Upload Demo
         if: success() || failure() && steps.build-http-s3-upload-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload/x64/Debug/CoreHTTP_S3_Upload.exe
           log-dir: demo_run_logs
@@ -226,7 +227,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Download Multithreaded Demo
         if: success() || failure() && steps.build-http-s3-download-multithreaded-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded/x64/Debug/CoreHTTP_S3_Download_Multithreaded.exe
           log-dir: demo_run_logs
@@ -267,7 +268,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Download Demo
         if: success() || failure() && steps.build-http-s3-download-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/x64/Debug/CoreHTTP_S3_Download.exe
           log-dir: demo_run_logs
@@ -310,7 +311,7 @@ jobs:
 
       - name: Run and monitor HTTP Mutual Auth Demo
         if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
           log-dir: demo_run_logs

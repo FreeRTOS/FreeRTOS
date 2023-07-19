@@ -39,16 +39,6 @@
     <Filter Include="Network Interface Backends\libslirp\library\source">
       <UniqueIdentifier>{9b57b765-eb1a-4d69-b04b-6622258b2625}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network Interface Backends\winpcap">
-      <UniqueIdentifier>{97a99563-c215-4975-9cb8-c6a29a30f03f}</UniqueIdentifier>
-      <Extensions>h</Extensions>
-    </Filter>
-    <Filter Include="Network Interface Backends\winpcap\include">
-      <UniqueIdentifier>{7a52d3bf-8fc9-4242-8636-e173ade0aa68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Network Interface Backends\winpcap\include\pcap">
-      <UniqueIdentifier>{2968f486-aba8-47f5-a175-fe77e197a2c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Network Interface Backends\libslirp\library\dependency\glib\x64\tcp_utilities">
       <UniqueIdentifier>{b2e06bcd-b665-4ef4-8eff-5203748463d1}</UniqueIdentifier>
     </Filter>
@@ -133,7 +123,6 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="plus_tcp_hooks_winsim.c" />
-    <ClCompile Include="NetworkInterface_WinPCap.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_BitConfig.c">
       <Filter>source</Filter>
     </ClCompile>
@@ -394,55 +383,7 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC\pack_struct_start.h">
       <Filter>compiler_msvc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\sll.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\usb.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\vlan.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-bpf.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-namedb.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\remote-ext.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\bittypes.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\ip6_misc.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\Win32-Extensions.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\Packet32.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-stdinc.h">
-      <Filter>Network Interface Backends\winpcap\include</Filter>
-    </ClInclude>
     <ClInclude Include="FreeRTOSIPConfig.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\pcap.h">
-      <Filter>Network Interface Backends\winpcap\include\pcap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\namedb.h">
-      <Filter>Network Interface Backends\winpcap\include\pcap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\bpf.h">
-      <Filter>Network Interface Backends\winpcap\include\pcap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\bluetooth.h">
-      <Filter>Network Interface Backends\winpcap\include\pcap</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_BitConfig.h">
       <Filter>include</Filter>
     </ClInclude>

@@ -216,7 +216,7 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_dump_packets.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_mem_stats.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_netstat.c" />
-    <ClCompile Include="..\..\ThirdParty\libslirp\src\arp_table.c"> 
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\arp_table.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -347,12 +347,6 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\libslirp\MBuffNetworkInterface.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="NetworkInterface_WinPCap.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="plus_tcp_hooks_winsim.c" />
   </ItemGroup>
@@ -552,22 +546,6 @@
     <ClInclude Include="..\..\ThirdParty\libslirp\src\udp.h" />
     <ClInclude Include="..\..\ThirdParty\libslirp\src\util.h" />
     <ClInclude Include="..\..\ThirdParty\libslirp\src\vmstate.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\bittypes.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\ip6_misc.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\Packet32.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-bpf.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-namedb.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-stdinc.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\bluetooth.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\bpf.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\namedb.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\pcap.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\sll.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\usb.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\vlan.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\remote-ext.h" />
-    <ClInclude Include="..\..\ThirdParty\winpcap\include\Win32-Extensions.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />
   </ItemGroup>
   <ItemGroup>

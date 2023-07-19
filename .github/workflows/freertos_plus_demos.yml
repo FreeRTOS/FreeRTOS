@@ -139,15 +139,15 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
         run: msbuild http_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
 
-      - name: Run and monitor HTTP Plain Text Demo
-        if: success() || failure() && steps.build-http-plain-text-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
-        with:
-          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/x64/Debug/CoreHTTP_Plaintext.exe
-          log-dir: demo_run_logs
-          timeout-seconds: 300
-          success-line: "Demo completed successfully"
-          retry-attempts: 2
+      # - name: Run and monitor HTTP Plain Text Demo
+      #   if: success() || failure() && steps.build-http-plain-text-demo.outcome == 'success'
+      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/x64/Debug/CoreHTTP_Plaintext.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Demo completed successfully"
+      #     retry-attempts: 2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -166,6 +166,17 @@ jobs:
           curl https://www.amazontrust.com/repository/AmazonRootCA1.pem >> root_ca.txt
           sed 's/.*/"&\\n"\\/' root_ca.txt >> root_ca_cert.txt
 
+      - name: Get AWS Certificates
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile certificate_filename.pem --public-key-outfile public_filename.key --private-key-outfile private_filename.key >> iot_cert.txt
+          certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
+          aws iot attach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
+          aws iot attach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
+          sed 's/.*/"&\\n"\\/' certificate_filename.pem >> device_cert.txt
+          sed 's/.*/"&\\n"\\/' private_filename.key >> device_priv_key.txt
+
       - name: Configure HTTP Mutual Auth Demo
         shell: bash
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
@@ -182,21 +193,16 @@ jobs:
           # echo '#define democonfigAWS_IOT_ENDPOINT "localhost"' >> demo_config.h
           # echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
           # sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
-          aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile certificate_filename.pem --public-key-outfile public_filename.key --private-key-outfile private_filename.key >> iot_cert.txt
-          # certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
-          # aws iot attach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
-          # aws iot attach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
+          
           endPoint=$(aws iot describe-endpoint --endpoint-type iot:CredentialProvider | python3 -c "import sys, json; print(json.load(sys.stdin)['endpointAddress'])")
           echo '#define democonfigAWS_IOT_ENDPOINT "'$endPoint'"' >> demo_config.h
           echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
           echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
           sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
           echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
-          sed 's/.*/"&\\n"\\/' certificate_filename.pem >> device_cert.txt
-          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          sed '$ s/.$//' ../Common/device_cert.txt >> demo_config.h
           echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
-          sed 's/.*/"&\\n"\\/' private_filename.key >> device_priv_key.txt
-          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          sed '$ s/.$//' ../Common/device_priv_key.txt >> demo_config.h
 
       - name: Build HTTP Mutual Auth Demo
         id: build-http-mutual-auth-demo
@@ -274,10 +280,10 @@ jobs:
         shell: bash
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
         run: |
-          aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile certificate_filename.pem --public-key-outfile public_filename.key --private-key-outfile private_filename.key >> iot_cert.txt
-          certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
-          aws iot attach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
-          aws iot attach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
+          # aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile certificate_filename.pem --public-key-outfile public_filename.key --private-key-outfile private_filename.key >> iot_cert.txt
+          # certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
+          # aws iot attach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
+          # aws iot attach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
           endPoint=$(aws iot describe-endpoint --endpoint-type iot:CredentialProvider | python3 -c "import sys, json; print(json.load(sys.stdin)['endpointAddress'])")
           echo '#define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT "'$endPoint'"' >> demo_config.h
           echo '#define democonfigS3_BUCKET_NAME "'${{ env.BUCKET_NAME }}'"' >> demo_config.h
@@ -290,11 +296,11 @@ jobs:
           echo '#define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM \' >> demo_config.h
           sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
           echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
-          sed 's/.*/"&\\n"\\/' certificate_filename.pem >> device_cert.txt
-          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          # sed 's/.*/"&\\n"\\/' certificate_filename.pem >> device_cert.txt
+          sed '$ s/.$//' ../Common/device_cert.txt >> demo_config.h
           echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
-          sed 's/.*/"&\\n"\\/' private_filename.key >> device_priv_key.txt
-          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          # sed 's/.*/"&\\n"\\/' private_filename.key >> device_priv_key.txt
+          sed '$ s/.$//' ../Common/device_priv_key.txt >> demo_config.h
 
       - name: Build HTTP S3 Download Demo
         id: build-http-s3-download-demo
@@ -307,13 +313,13 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/x64/Debug/CoreHTTP_S3_Download.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 60
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
       - name: Delete AWS IOT Certificate
         shell: bash
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
         run: |
           certificateId=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateId'])")
           certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")

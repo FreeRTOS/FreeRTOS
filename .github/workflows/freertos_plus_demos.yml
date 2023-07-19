@@ -139,15 +139,15 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
         run: msbuild http_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
 
-      # - name: Run and monitor HTTP Plain Text Demo
-      #   if: success() || failure() && steps.build-http-plain-text-demo.outcome == 'success'
-      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
-      #   with:
-      #     exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/x64/Debug/CoreHTTP_Plaintext.exe
-      #     log-dir: demo_run_logs
-      #     timeout-seconds: 300
-      #     success-line: "Demo completed successfully"
-      #     retry-attempts: 2
+      - name: Run and monitor HTTP Plain Text Demo
+        if: success() || failure() && steps.build-http-plain-text-demo.outcome == 'success'
+        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/x64/Debug/CoreHTTP_Plaintext.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -370,7 +370,7 @@ jobs:
 
       - name: Run and monitor corePKCS11 Demo
         if: success() || failure() && steps.build-corePKCS11-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
+        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
         with:
           exe-path: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator/x64/Debug/CorePKCS11_Demos.exe
           log-dir: demo_run_logs
@@ -880,7 +880,7 @@ jobs:
 
       - name: Run and monitor FreeRTOS+TCP Minimal Demo
         if: success() || failure() && steps.build-plus-tcp-minimal-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
         with:
           exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/x64/Debug/FreeRTOS_Plus_TCP_Minimal.exe
           log-dir: demo_run_logs

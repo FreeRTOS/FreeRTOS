@@ -173,7 +173,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload/x64/Debug/CoreHTTP_S3_Upload.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -196,7 +196,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded/x64/Debug/CoreHTTP_S3_Download_Multithreaded.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -237,7 +237,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/x64/Debug/CoreHTTP_S3_Download.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -283,7 +283,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/x64/Debug/CoreHTTP_Plaintext.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -315,7 +315,7 @@ jobs:
       #   with:
       #     exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
       #     log-dir: demo_run_logs
-      #     timeout-seconds: 300
+      #     timeout-seconds: 180
       #     success-line: "Demo completed successfully"
       #     retry-attempts: 2
 
@@ -365,7 +365,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator/x64/Debug/CorePKCS11_Demos.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Finished DEMO"
           retry-attempts: 2
 
@@ -458,7 +458,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text/x64/Debug/MQTT_Plain_Text.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -485,7 +485,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS/x64/Debug/MQTT_Basic_TLS.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -518,7 +518,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth/x64/Debug/MQTT_Mutual_Auth.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -544,7 +544,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive/x64/Debug/MQTT_Keep_Alive.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -567,7 +567,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer/x64/Debug/MQTT_Serializer.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -600,7 +600,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/x64/Debug/RTOSDemo.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Demo completed successfully"
           retry-attempts: 2
 
@@ -784,7 +784,7 @@ jobs:
           exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/build/posix_tcp_demo
           log-dir: demo_run_logs
           timeout-seconds: 180
-          success-line: "Received correct data 3 times."
+          success-line: "Received correct data 3 times"
           retry-attempts: 2
 
   plus_tcp_arm:
@@ -865,8 +865,8 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/x64/Debug/FreeRTOS_Plus_TCP_Minimal.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
-          success-line: "Received correct data"
+          timeout-seconds: 180
+          success-line: "Received correct data 3 times"
           retry-attempts: 2
 
       - name: Generate SSL credentials
@@ -891,12 +891,12 @@ jobs:
         run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
 
       - name: Run and monitor FreeRTOS+WolfSSL Demo
-        if: success() || failure() && steps.build-freertos-wolfssl.outcome == 'success'
+        if: success() || failure() && steps.build-freertos-wolfssl-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
           exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator/x64/Debug/FreeRTOS_Plus_WolfSSL_Windows_Simulator.exe
           log-dir: demo_run_logs
-          timeout-seconds: 300
+          timeout-seconds: 180
           success-line: "Received by the secure server: Message number 9"
           retry-attempts: 2
 

@@ -197,12 +197,6 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv6.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="MBuffNetifBackendLibslirp.c">
-      <Filter>Network Interface Backends\libslirp</Filter>
-    </ClCompile>
-    <ClCompile Include="MBuffNetworkInterface.c">
-      <Filter>Network Interface Backends\libslirp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\libslirp\src\arp_table.c">
       <Filter>Network Interface Backends\libslirp\library\source</Filter>
     </ClCompile>
@@ -295,6 +289,12 @@
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\libslirp\src\vmstate.c">
       <Filter>Network Interface Backends\libslirp\library\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\libslirp\MBuffNetifBackendLibslirp.c">
+      <Filter>Network Interface Backends\libslirp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\libslirp\MBuffNetworkInterface.c">
+      <Filter>Network Interface Backends\libslirp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

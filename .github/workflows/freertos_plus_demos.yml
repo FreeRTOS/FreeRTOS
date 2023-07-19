@@ -192,7 +192,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Download Multithreaded Demo
         if: success() || failure() && steps.build-http-s3-download-multithreaded-demo.outcome == 'success'
-        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded/x64/Debug/CoreHTTP_S3_Download_Multithreaded.exe
           log-dir: demo_run_logs
@@ -233,7 +233,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Download Demo
         if: success() || failure() && steps.build-http-s3-download-demo.outcome == 'success'
-        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/x64/Debug/CoreHTTP_S3_Download.exe
           log-dir: demo_run_logs
@@ -279,7 +279,7 @@ jobs:
 
       - name: Run and monitor HTTP Plain Text Demo
         if: success() || failure() && steps.build-http-plain-text-demo.outcome == 'success'
-        uses: Skptak/CI-CD-GitHub-Actions/executable-monitor@loggingUpdate
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/x64/Debug/CoreHTTP_Plaintext.exe
           log-dir: demo_run_logs

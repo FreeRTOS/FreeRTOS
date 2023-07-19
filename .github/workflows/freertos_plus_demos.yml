@@ -181,7 +181,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Upload Demo
         if: success() || failure() && steps.build-http-s3-upload-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload/x64/Debug/CoreHTTP_S3_Upload.exe
           log-dir: demo_run_logs
@@ -204,7 +204,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Download Multithreaded Demo
         if: success() || failure() && steps.build-http-s3-download-multithreaded-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded/x64/Debug/CoreHTTP_S3_Download_Multithreaded.exe
           log-dir: demo_run_logs
@@ -245,7 +245,7 @@ jobs:
 
       - name: Run and monitor HTTP S3 Download Demo
         if: success() || failure() && steps.build-http-s3-download-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/x64/Debug/CoreHTTP_S3_Download.exe
           log-dir: demo_run_logs
@@ -457,7 +457,7 @@ jobs:
 
       - name: Run and monitor MQTT Plain Text Demo
         if: success() || failure() && steps.build-mqtt-plain-text-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text/x64/Debug/MQTT_Plain_Text.exe
           log-dir: demo_run_logs
@@ -484,7 +484,7 @@ jobs:
 
       - name: Run and monitor MQTT Basic TLS Demo
         if: success() || failure() && steps.build-mqtt-basic-tls-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS/x64/Debug/MQTT_Basic_TLS.exe
           log-dir: demo_run_logs
@@ -517,7 +517,7 @@ jobs:
 
       - name: Run and monitor MQTT Mutual Authentication with mbedtls Demo
         if: success() || failure() && steps.build-mqtt-mutual-auth-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth/x64/Debug/MQTT_Mutual_Auth.exe
           log-dir: demo_run_logs
@@ -543,7 +543,7 @@ jobs:
 
       - name: Run and monitor MQTT Keep Alive Demo
         if: success() || failure() && steps.build-mqtt-keep-alive-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive/x64/Debug/MQTT_Keep_Alive.exe
           log-dir: demo_run_logs
@@ -566,7 +566,7 @@ jobs:
 
       - name: Run and monitor MQTT Serializer Demo
         if: success() || failure() && steps.build-mqtt-serializer-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer/x64/Debug/MQTT_Serializer.exe
           log-dir: demo_run_logs
@@ -599,7 +599,7 @@ jobs:
 
       - name: Run and monitor MQTT Mutual Authentication with WolfSSL Demo
         if: success() || failure() && steps.build-mqtt-mutual-auth-with-wolfssl-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@406befbab928397abaa8fe2c210dcbc731856ff0
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/x64/Debug/RTOSDemo.exe
           log-dir: demo_run_logs

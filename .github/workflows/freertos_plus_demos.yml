@@ -177,48 +177,6 @@ jobs:
           sed 's/.*/"&\\n"\\/' certificate_filename.pem >> device_cert.txt
           sed 's/.*/"&\\n"\\/' private_filename.key >> device_priv_key.txt
 
-      - name: Configure HTTP Mutual Auth Demo
-        shell: bash
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
-        run: |
-          # echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
-          # sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
-          # sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
-          # echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
-          # sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-cert-path }} >> device_cert.txt
-          # sed '$ s/.$//' device_cert.txt >> demo_config.h
-          # echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
-          # sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
-          # sed '$ s/.$//' device_priv_key.txt >> demo_config.h
-          # echo '#define democonfigAWS_IOT_ENDPOINT "localhost"' >> demo_config.h
-          # echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
-          # sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
-          
-          endPoint=$(aws iot describe-endpoint --endpoint-type iot:CredentialProvider | python3 -c "import sys, json; print(json.load(sys.stdin)['endpointAddress'])")
-          echo '#define democonfigAWS_IOT_ENDPOINT "'$endPoint'"' >> demo_config.h
-          echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
-          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
-          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
-          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
-          sed '$ s/.$//' ../Common/device_cert.txt >> demo_config.h
-          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
-          sed '$ s/.$//' ../Common/device_priv_key.txt >> demo_config.h
-
-      - name: Build HTTP Mutual Auth Demo
-        id: build-http-mutual-auth-demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
-        run: msbuild http_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
-
-      - name: Run and monitor HTTP Mutual Auth Demo
-        if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
-        with:
-          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
-          log-dir: demo_run_logs
-          timeout-seconds: 300
-          success-line: "Demo completed successfully"
-          retry-attempts: 2
-
       - name: Upload text file to S3
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
         run: |
@@ -314,6 +272,48 @@ jobs:
           exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/x64/Debug/CoreHTTP_S3_Download.exe
           log-dir: demo_run_logs
           timeout-seconds: 60
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure HTTP Mutual Auth Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: |
+          # echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          # sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
+          # sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
+          # echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          # sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-cert-path }} >> device_cert.txt
+          # sed '$ s/.$//' device_cert.txt >> demo_config.h
+          # echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          # sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
+          # sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          # echo '#define democonfigAWS_IOT_ENDPOINT "127.0.0.1"' >> demo_config.h
+          # echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
+          # sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
+
+          endPoint=$(aws iot describe-endpoint --endpoint-type iot:CredentialProvider | python3 -c "import sys, json; print(json.load(sys.stdin)['endpointAddress'])")
+          echo '#define democonfigAWS_IOT_ENDPOINT "'$endPoint'"' >> demo_config.h
+          echo '#define democonfigAWS_HTTP_PORT	( 443 )' >> demo_config.h
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/device_priv_key.txt >> demo_config.h
+  
+      - name: Build HTTP Mutual Auth Demo
+        id: build-http-mutual-auth-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: msbuild http_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+
+      - name: Run and monitor HTTP Mutual Auth Demo
+        if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
           success-line: "Demo completed successfully"
           retry-attempts: 2
 

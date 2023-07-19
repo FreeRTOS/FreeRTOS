@@ -83,8 +83,8 @@ static BaseType_t xTaskLockCount[ configNUMBER_OF_CORES ] = { 0 };
 
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-extern portBASE_TYPE vTaskEnterCriticalFromISR( void );
-extern void vTaskExitCriticalFromISR( portBASE_TYPE uxSavedInterruptStatus );
+extern UBaseType_t vTaskEnterCriticalFromISR( void );
+extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 
 /* ==========================  CALLBACK FUNCTIONS  ========================== */
 

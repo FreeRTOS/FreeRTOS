@@ -76,9 +76,9 @@ extern void prvAddNewTaskToReadyList( TCB_t * pxNewTCB );
 extern void prvYieldForTask( TCB_t * pxTCB );
 extern void prvSelectHighestPriorityTask( BaseType_t xCoreID );
 extern void vTaskEnterCritical( void );
-extern portBASE_TYPE vTaskEnterCriticalFromISR( void );
+extern UBaseType_t vTaskEnterCriticalFromISR( void );
 extern void vTaskExitCritical( void );
-extern void vTaskExitCriticalFromISR( portBASE_TYPE xSavedInterruptStatus );
+extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
 extern void prvCheckTasksWaitingTermination( void );
 extern void prvDeleteTCB( TCB_t * pxTCB );
 extern TCB_t * prvSearchForNameWithinSingleList( List_t * pxList,

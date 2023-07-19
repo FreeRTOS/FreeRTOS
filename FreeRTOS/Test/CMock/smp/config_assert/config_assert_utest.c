@@ -103,7 +103,7 @@ static BaseType_t shouldAbortOnAssertion;
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-extern void vTaskExitCriticalFromISR( portBASE_TYPE xSavedInterruptStatus );
+extern void vTaskExitCriticalFromISR( UBaseType_t xSavedInterruptStatus );
 extern void prvCheckForRunStateChange( void );
 
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;

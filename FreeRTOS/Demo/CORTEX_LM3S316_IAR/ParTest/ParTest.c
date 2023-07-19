@@ -73,7 +73,7 @@ unsigned char ucBit = ( unsigned char ) 1;
 			}
 
 			PDCWrite( PDC_LED, ucOutputValue );
-		}
+		}	
 	}
 	xTaskResumeAll();
 }

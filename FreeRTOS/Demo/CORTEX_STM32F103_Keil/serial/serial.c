@@ -71,19 +71,19 @@ GPIO_InitTypeDef GPIO_InitStructure;
 	/* Create the queues used to hold Rx/Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-
+	
 	/* If the queue/semaphore was created correctly then setup the serial port
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
 	{
 		/* Enable USART1 clock */
-		RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE );
+		RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE );	
 
 		/* Configure USART1 Rx (PA10) as input floating */
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 		GPIO_Init( GPIOA, &GPIO_InitStructure );
-
+		
 		/* Configure USART1 Tx (PA9) as alternate function push-pull */
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -100,18 +100,18 @@ GPIO_InitTypeDef GPIO_InitStructure;
 		USART_InitStructure.USART_CPOL = USART_CPOL_Low;
 		USART_InitStructure.USART_CPHA = USART_CPHA_2Edge;
 		USART_InitStructure.USART_LastBit = USART_LastBit_Disable;
-
+		
 		USART_Init( USART1, &USART_InitStructure );
-
+		
 		USART_ITConfig( USART1, USART_IT_RXNE, ENABLE );
-
+		
 		NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQChannel;
 		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_KERNEL_INTERRUPT_PRIORITY;
 		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 		NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 		NVIC_Init( &NVIC_InitStructure );
-
-		USART_Cmd( USART1, ENABLE );
+		
+		USART_Cmd( USART1, ENABLE );		
 	}
 	else
 	{
@@ -207,16 +207,16 @@ char cChar;
 		}
 		else
 		{
-			USART_ITConfig( USART1, USART_IT_TXE, DISABLE );
-		}
+			USART_ITConfig( USART1, USART_IT_TXE, DISABLE );		
+		}		
 	}
-
+	
 	if( USART_GetITStatus( USART1, USART_IT_RXNE ) == SET )
 	{
 		cChar = USART_ReceiveData( USART1 );
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-	}
-
+	}	
+	
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 
@@ -224,4 +224,4 @@ char cChar;
 
 
 
-
+	

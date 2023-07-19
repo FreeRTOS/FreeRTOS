@@ -56,7 +56,7 @@ _vUARTTx_Wrapper
 /*-----------------------------------------------------------*/
 
 
-
+      		
 
 	/* Place the UART ISRs in the correct vectors. */
 
@@ -68,11 +68,11 @@ _vUARTTx_Wrapper
 	DW		_vUARTRx_Wrapper
 
 	ORG		UART1TX_VECTOR
-	DW		_vUARTTx_Wrapper
-
+	DW		_vUARTTx_Wrapper		
+		
 
 #endif /* configINTERRUPT_EXAMPLE_METHOD */
 
 	END
-
-
+	
+		

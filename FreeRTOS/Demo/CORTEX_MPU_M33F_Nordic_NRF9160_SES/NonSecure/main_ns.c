@@ -37,6 +37,7 @@
 /* Demo includes. */
 #include "tz_demo.h"
 #include "mpu_demo.h"
+#include "reg_tests.h"
 /*-----------------------------------------------------------*/
 
 /* Initialize the MPU symbols needed by the port code. */
@@ -106,6 +107,8 @@ static void prvCreateTasks( void )
     /* Create tasks for the TZ Demo. */
     vStartTZDemo();
 
+    /* Create tasks for register tests. */
+    vStartRegTests();
 }
 /*-----------------------------------------------------------*/
 

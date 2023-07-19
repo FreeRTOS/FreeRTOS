@@ -40,7 +40,7 @@ typedef struct X_ISR_STATUS
 } xISRStatus;
 
 /* Structure used to hold the received requests. */
-typedef struct
+typedef struct 
 {
 	unsigned char ucReqType;
 	unsigned char ucRequest;

@@ -29,32 +29,32 @@
 
 #include <msp430x44x.h>
 
-/*
-Two interrupt examples are provided -
+/* 
+Two interrupt examples are provided - 
 
  + Method 1 does everything in C code.
  + Method 2 uses an assembly file wrapper.
 
 Code size:
-Method 1 uses assembly macros to save and restore the task context, whereas
-method 2 uses functions. This means method 1 will be faster, but method 2 will
-use less code space.
+Method 1 uses assembly macros to save and restore the task context, whereas 
+method 2 uses functions. This means method 1 will be faster, but method 2 will 
+use less code space. 
 
 Simplicity:
-Method 1 is very simplistic, whereas method 2 is more elaborate. This
-elaboration results in the code space saving, but also requires a slightly more
-complex procedure to define interrupt service routines.
+Method 1 is very simplistic, whereas method 2 is more elaborate. This 
+elaboration results in the code space saving, but also requires a slightly more 
+complex procedure to define interrupt service routines. 
 
 Interrupt efficiency:
-Method 1 uses the compiler generated function prologue and epilogue code to save
-and restore the necessary registers within an interrupt service routine (other
-than the RTOS tick ISR). Should a context switch be required from within the ISR
-the entire processor context is saved. This can result in some registers being saved
+Method 1 uses the compiler generated function prologue and epilogue code to save 
+and restore the necessary registers within an interrupt service routine (other 
+than the RTOS tick ISR). Should a context switch be required from within the ISR 
+the entire processor context is saved. This can result in some registers being saved 
 twice - once by the compiler generated code, and then again by the FreeRTOS code.
-Method 2 saves and restores all the processor registers within each interrupt service
-routine, whether or not a context switch actually occurs. This means no registers
-ever get saved twice, but imposes an overhead on the occasions that no context switch
-occurs.
+Method 2 saves and restores all the processor registers within each interrupt service 
+routine, whether or not a context switch actually occurs. This means no registers 
+ever get saved twice, but imposes an overhead on the occasions that no context switch 
+occurs. 
 */
 
 #define configINTERRUPT_EXAMPLE_METHOD 1
@@ -66,7 +66,7 @@ occurs.
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
  *
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
@@ -84,6 +84,9 @@ occurs.
 #define configUSE_16_BIT_TICKS		1
 #define configIDLE_SHOULD_YIELD		1
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 		0
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

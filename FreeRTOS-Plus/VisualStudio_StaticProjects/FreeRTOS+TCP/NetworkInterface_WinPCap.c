@@ -39,14 +39,13 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_IP_Private.h"
 #include "NetworkBufferManagement.h"
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-    #include "FreeRTOS_Routing.h"
-#endif
+#include "FreeRTOS_Routing.h"
 
 /* Thread-safe circular buffers are being used to pass data to and from the PCAP
  * access functions. */
 #include "Win32-Extensions.h"
 #include "FreeRTOS_Stream_Buffer.h"
+
 
 /* Sizes of the thread safe circular buffers used to pass data to and from the
  * WinPCAP Windows threads. */
@@ -75,6 +74,11 @@ DWORD WINAPI prvWinPcapRecvThread( void * pvParam );
 DWORD WINAPI prvWinPcapSendThread( void * pvParam );
 
 /*
+ * A pointer to the network interface is needed later when receiving packets.
+ */
+static NetworkInterface_t * pxMyInterface;
+
+/*
  * Print out a numbered list of network interfaces that are available on the
  * host computer.
  */
@@ -84,14 +88,17 @@ static pcap_if_t * prvPrintAvailableNetworkInterfaces( void );
  * Open the network interface.  The number of the interface to be opened is set
  * by the configNETWORK_INTERFACE_TO_USE constant in FreeRTOSConfig.h.
  */
-static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces );
-static int prvOpenInterface( const char * pucName );
+static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces,
+                                             const NetworkInterface_t * pxInterface );
+
+static int prvOpenInterface( const char * pucName,
+                             const NetworkInterface_t * pxInterface );
 
 /*
  * Configure the capture filter to allow blocking reads, and to filter out
  * packets that are not of interest to this demo.
  */
-static void prvConfigureCaptureBehaviour( void );
+static void prvConfigureCaptureBehaviour( const NetworkInterface_t * pxInterface );
 
 /*
  * A function that simulates Ethernet interrupts by periodically polling the
@@ -126,6 +133,13 @@ static const char * prvRemoveSpaces( char * pcBuffer,
                                      int aBuflen,
                                      const char * pcMessage );
 
+/*
+ * This function will return pdTRUE if the packet is targeted at
+ * the MAC address of this device, in other words when is was bounced-
+ * back by the WinPCap interface.
+ */
+static BaseType_t xPacketBouncedBack( const uint8_t * pucBuffer );
+
 /*-----------------------------------------------------------*/
 
 /* Required by the WinPCap library. */
@@ -153,34 +167,25 @@ static StreamBuffer_t * xRecvBuffer = NULL;
 /* Logs the number of WinPCAP send failures, for viewing in the debugger only. */
 static volatile uint32_t ulWinPCAPSendFailures = 0;
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-/*
- * A pointer to the network interface is needed later when receiving packets.
- */
-    static NetworkInterface_t * pxMyInterface;
+/*-----------------------------------------------------------*/
 
-    extern NetworkEndPoint_t * pxGetEndpoint( BaseType_t xIPType );
+static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface );
+static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
+                                                   NetworkBufferDescriptor_t * const pxNetworkBuffer,
+                                                   BaseType_t bReleaseAfterSend );
+static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface );
 
-    static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface );
-    static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
-                                                       NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                                       BaseType_t bReleaseAfterSend );
-    static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface );
-
-    NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                            NetworkInterface_t * pxInterface );
-#endif
+NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                        NetworkInterface_t * pxInterface );
 
 /*-----------------------------------------------------------*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-    static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
-#else
-    BaseType_t xNetworkInterfaceInitialise( void )
-#endif
+static BaseType_t xWinPcap_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
 {
     BaseType_t xReturn = pdFALSE;
     pcap_if_t * pxAllNetworkInterfaces;
+
+    ( void ) pxInterface;
 
     /* Query the computer the simulation is being executed on to find the
      * network interfaces it has installed. */
@@ -193,7 +198,7 @@ static volatile uint32_t ulWinPCAPSendFailures = 0;
      * the interface could not be opened. */
     if( pxAllNetworkInterfaces != NULL )
     {
-        prvOpenSelectedNetworkInterface( pxAllNetworkInterfaces );
+        prvOpenSelectedNetworkInterface( pxAllNetworkInterfaces, pxInterface );
     }
 
     if( pxOpenedInterfaceHandle != NULL )
@@ -227,7 +232,6 @@ static void prvCreateThreadSafeBuffers( void )
         xRecvBuffer->LENGTH = xRECV_BUFFER_SIZE + 1;
     }
 }
-
 /*-----------------------------------------------------------*/
 
 static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
@@ -282,16 +286,13 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 
 /*-----------------------------------------------------------*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
-    static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
-                                                       NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                                       BaseType_t bReleaseAfterSend )
-#else
-    BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                        BaseType_t bReleaseAfterSend )
-#endif
+static BaseType_t xWinPcap_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
+                                                   NetworkBufferDescriptor_t * const pxNetworkBuffer,
+                                                   BaseType_t bReleaseAfterSend )
 {
     size_t xSpace;
+
+    ( void ) pxInterface;
 
     iptraceNETWORK_INTERFACE_TRANSMIT();
     configASSERT( xIsCallingFromIPTask() == pdTRUE );
@@ -329,49 +330,100 @@ static size_t prvStreamBufferAdd( StreamBuffer_t * pxBuffer,
 }
 /*-----------------------------------------------------------*/
 
-#if defined( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface )
+{
+    BaseType_t xResult = pdFALSE;
 
-    static BaseType_t xWinPcap_GetPhyLinkStatus( NetworkInterface_t * pxInterface )
+    ( void ) pxInterface;
+
+    if( pxOpenedInterfaceHandle != NULL )
     {
-        BaseType_t xResult = pdFALSE;
+        xResult = pdTRUE;
+    }
 
-        ( void ) pxInterface;
+    return xResult;
+}
+/*-----------------------------------------------------------*/
 
-        if( pxOpenedInterfaceHandle != NULL )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+
+
+/* Do not call the following function directly. It is there for downward compatibility.
+ * The function FreeRTOS_IPInit() will call it to initialise the interface and end-point
+ * objects.  See the description in FreeRTOS_Routing.h. */
+    NetworkInterface_t * pxFillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                    NetworkInterface_t * pxInterface )
+    {
+        pxWinPcap_FillInterfaceDescriptor( xEMACIndex, pxInterface );
+    }
+
+#endif
+/*-----------------------------------------------------------*/
+
+NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                        NetworkInterface_t * pxInterface )
+{
+    static char pcName[ 17 ];
+
+    /* This function pxWinPcap_FillInterfaceDescriptor() adds a network-interface.
+     * Make sure that the object pointed to by 'pxInterface'
+     * is declared static or global, and that it will remain to exist. */
+
+    pxMyInterface = pxInterface;
+
+    snprintf( pcName, sizeof( pcName ), "eth%ld", xEMACIndex );
+
+    memset( pxInterface, '\0', sizeof( *pxInterface ) );
+    pxInterface->pcName = pcName;                    /* Just for logging, debugging. */
+    pxInterface->pvArgument = ( void * ) xEMACIndex; /* Has only meaning for the driver functions. */
+    pxInterface->pfInitialise = xWinPcap_NetworkInterfaceInitialise;
+    pxInterface->pfOutput = xWinPcap_NetworkInterfaceOutput;
+    pxInterface->pfGetPhyLinkStatus = xWinPcap_GetPhyLinkStatus;
+
+    FreeRTOS_AddNetworkInterface( pxInterface );
+
+    return pxInterface;
+}
+/*-----------------------------------------------------------*/
+
+#ifdef configNETWORK_INTERFACE_TYPE_TO_USE
+
+/* In earlier versions of this network interface,
+ * `configNETWORK_INTERFACE_TO_USE` indicated the interface
+ * sequence number to be used. On some laptops with dynamic
+ * adapters, the numbering of interfaces changes all the time.
+ * The new macro 'configNETWORK_INTERFACE_TYPE_TO_USE' can be
+ * used to define the name of the interface to use, e.g. "Realtek"
+ * Note that a sort of strcasestr() is used to find a match between
+ * an interface name and e.g. "Realtek".
+ */
+    static BaseType_t xDesiredAdapter( const char * pcDescription )
+    {
+        size_t uxIndex;
+        size_t uxLength;
+        size_t uxKeyLength = strlen( configNETWORK_INTERFACE_TYPE_TO_USE );
+        BaseType_t xMatchFound = pdFALSE;
+
+        if( ( pcDescription != NULL ) && ( pcDescription[ 0 ] != 0 ) )
         {
-            xResult = pdTRUE;
+            uxLength = strlen( pcDescription );
+
+            if( uxKeyLength <= uxLength )
+            {
+                for( uxIndex = 0U; ( uxIndex <= uxLength - uxKeyLength ) && ( xMatchFound == 0 ); uxIndex++ )
+                {
+                    if( strncasecmp( configNETWORK_INTERFACE_TYPE_TO_USE, &( pcDescription[ uxIndex ] ), uxKeyLength ) == 0 )
+                    {
+                        xMatchFound = pdTRUE;
+                        break;
+                    }
+                }
+            }
         }
 
-        return xResult;
+        return xMatchFound;
     }
-
-    /*-----------------------------------------------------------*/
-
-    NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                            NetworkInterface_t * pxInterface )
-    {
-        static char pcName[ 17 ];
-
-        /* This function pxWinPcap_FillInterfaceDescriptor() adds a network-interface.
-         * Make sure that the object pointed to by 'pxInterface'
-         * is declared static or global, and that it will continue to exist. */
-
-        pxMyInterface = pxInterface;
-
-        snprintf( pcName, sizeof( pcName ), "eth%ld", xEMACIndex );
-
-        memset( pxInterface, '\0', sizeof( *pxInterface ) );
-        pxInterface->pcName = pcName;                    /* Just for logging, debugging. */
-        pxInterface->pvArgument = ( void * ) xEMACIndex; /* Has only meaning for the driver functions. */
-        pxInterface->pfInitialise = xWinPcap_NetworkInterfaceInitialise;
-        pxInterface->pfOutput = xWinPcap_NetworkInterfaceOutput;
-        pxInterface->pfGetPhyLinkStatus = xWinPcap_GetPhyLinkStatus;
-
-        FreeRTOS_AddNetworkInterface( pxInterface );
-
-        return pxInterface;
-    }
-#endif
+#endif /* ifdef configNETWORK_INTERFACE_TYPE_TO_USE */
 /*-----------------------------------------------------------*/
 
 static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
@@ -405,6 +457,18 @@ static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
                 printf( "Interface %d - %s\n", lInterfaceNumber, prvRemoveSpaces( cBuffer, sizeof( cBuffer ), xInterface->name ) );
                 printf( "              (%s)\n", prvRemoveSpaces( cBuffer, sizeof( cBuffer ), xInterface->description ? xInterface->description : "No description" ) );
                 printf( "\n" );
+                #ifdef configNETWORK_INTERFACE_TYPE_TO_USE
+                    {
+                        if( xInterface->description != NULL )
+                        {
+                            if( xDesiredAdapter( xInterface->description ) )
+                            {
+                                printf( "The description of adapter %d matches with '%s'\n", lInterfaceNumber, configNETWORK_INTERFACE_TYPE_TO_USE );
+                                xConfigNetworkInterfaceToUse = lInterfaceNumber;
+                            }
+                        }
+                    }
+                #endif /* ifdef configNETWORK_INTERFACE_TYPE_TO_USE */
                 lInterfaceNumber++;
             }
         }
@@ -445,7 +509,8 @@ static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
 }
 /*-----------------------------------------------------------*/
 
-static int prvOpenInterface( const char * pucName )
+static int prvOpenInterface( const char * pucName,
+                             const NetworkInterface_t * pxInterface )
 {
     static char pucInterfaceName[ 256 ];
 
@@ -477,28 +542,29 @@ static int prvOpenInterface( const char * pucName )
     {
         /* Configure the capture filter to allow blocking reads, and to filter
          * out packets that are not of interest to this demo. */
-        prvConfigureCaptureBehaviour();
+        prvConfigureCaptureBehaviour( pxInterface );
     }
 
     return 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces )
+static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces,
+                                             const NetworkInterface_t * pxInterface )
 {
-    pcap_if_t * pxInterface;
+    pcap_if_t * pxPCAPInterface;
     int32_t x;
 
     /* Walk the list of devices until the selected device is located. */
-    pxInterface = pxAllNetworkInterfaces;
+    pxPCAPInterface = pxAllNetworkInterfaces;
 
     for( x = 0L; x < ( xConfigNetworkInterfaceToUse - 1L ); x++ )
     {
-        pxInterface = pxInterface->next;
+        pxPCAPInterface = pxPCAPInterface->next;
     }
 
     /* Open the selected interface. */
-    if( prvOpenInterface( pxInterface->name ) == 0 )
+    if( prvOpenInterface( pxPCAPInterface->name, pxInterface ) == 0 )
     {
         printf( "Successfully opened interface number %d.\n", x + 1 );
     }
@@ -512,16 +578,26 @@ static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces 
 }
 /*-----------------------------------------------------------*/
 
-static void prvConfigureCaptureBehaviour( void )
+static void prvConfigureCaptureBehaviour( const NetworkInterface_t * pxInterface )
 {
     struct bpf_program xFilterCode;
     uint32_t ulNetMask;
+    const uint8_t * pucMAC;
+    NetworkEndPoint_t * pxEndPoint;
+
+    /* Find the MAC address of the very first end-point. */
+    pxEndPoint = FreeRTOS_FirstEndPoint( pxInterface );
+
+    /* Make sure that at least one end-point is defined. */
+    configASSERT( pxEndPoint != NULL );
+
+    pucMAC = pxEndPoint->xMACAddress.ucBytes;
 
     /* Set up a filter so only the packets of interest are passed to the IP
      * stack.  cErrorBuffer is used for convenience to create the string.  Don't
      * confuse this with an error message. */
-    sprintf( cErrorBuffer, "broadcast or multicast or ether host %x:%x:%x:%x:%x:%x",
-             ipLOCAL_MAC_ADDRESS[ 0 ], ipLOCAL_MAC_ADDRESS[ 1 ], ipLOCAL_MAC_ADDRESS[ 2 ], ipLOCAL_MAC_ADDRESS[ 3 ], ipLOCAL_MAC_ADDRESS[ 4 ], ipLOCAL_MAC_ADDRESS[ 5 ] );
+    snprintf( cErrorBuffer, sizeof( cErrorBuffer ), "broadcast or multicast or ether host %x:%x:%x:%x:%x:%x",
+              pucMAC[ 0 ], pucMAC[ 1 ], pucMAC[ 2 ], pucMAC[ 3 ], pucMAC[ 4 ], pucMAC[ 5 ] );
 
     ulNetMask = ( configNET_MASK3 << 24UL ) | ( configNET_MASK2 << 16UL ) | ( configNET_MASK1 << 8L ) | configNET_MASK0;
 
@@ -668,69 +744,42 @@ DWORD WINAPI prvWinPcapSendThread( void * pvParam )
 }
 /*-----------------------------------------------------------*/
 
-#if defined  ( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+static BaseType_t xPacketBouncedBack( const uint8_t * pucBuffer )
+{
+    static BaseType_t xHasWarned = pdFALSE;
+    EthernetHeader_t * pxEtherHeader;
+    NetworkEndPoint_t * pxEndPoint;
+    BaseType_t xResult = pdFALSE;
 
-    static BaseType_t xPacketBouncedBack( const uint8_t * pucBuffer )
+    pxEtherHeader = ( EthernetHeader_t * ) pucBuffer;
+
+    /* Sometimes, packets are bounced back by the driver and we need not process them. Check
+     * whether this packet is one such packet. */
+    for( pxEndPoint = FreeRTOS_FirstEndPoint( NULL );
+         pxEndPoint != NULL;
+         pxEndPoint = FreeRTOS_NextEndPoint( NULL, pxEndPoint ) )
     {
-        static BaseType_t xHasWarned = pdFALSE;
-        EthernetHeader_t * pxEtherHeader;
-        NetworkEndPoint_t * pxEndPoint;
-        BaseType_t xResult = pdFALSE;
-
-        pxEtherHeader = ( EthernetHeader_t * ) pucBuffer;
-
-        /* Sometimes, packets are bounced back by the driver and we need not process them. Check
-         * whether this packet is one such packet. */
-        for( pxEndPoint = FreeRTOS_FirstEndPoint( NULL );
-             pxEndPoint != NULL;
-             pxEndPoint = FreeRTOS_NextEndPoint( NULL, pxEndPoint ) )
+        if( memcmp( pxEndPoint->xMACAddress.ucBytes, pxEtherHeader->xSourceAddress.ucBytes, ipMAC_ADDRESS_LENGTH_BYTES ) == 0 )
         {
-            if( memcmp( pxEndPoint->xMACAddress.ucBytes, pxEtherHeader->xSourceAddress.ucBytes, ipMAC_ADDRESS_LENGTH_BYTES ) == 0 )
+            if( xHasWarned == pdFALSE )
             {
-                if( xHasWarned == pdFALSE )
-                {
-                    xHasWarned = pdTRUE;
-                    FreeRTOS_printf( ( "Bounced back by WinPCAP interface: %02x:%02x:%02x:%02x:%02x:%02x\n",
-                                        pxEndPoint->xMACAddress.ucBytes[ 0 ],
-                                        pxEndPoint->xMACAddress.ucBytes[ 1 ],
-                                        pxEndPoint->xMACAddress.ucBytes[ 2 ],
-                                        pxEndPoint->xMACAddress.ucBytes[ 3 ],
-                                        pxEndPoint->xMACAddress.ucBytes[ 4 ],
-                                        pxEndPoint->xMACAddress.ucBytes[ 5 ] ) );
-                }
-
-                xResult = pdTRUE;
-                break;
+                xHasWarned = pdTRUE;
+                FreeRTOS_printf( ( "Bounced back by WinPCAP interface: %02x:%02x:%02x:%02x:%02x:%02x\n",
+                                   pxEndPoint->xMACAddress.ucBytes[ 0 ],
+                                   pxEndPoint->xMACAddress.ucBytes[ 1 ],
+                                   pxEndPoint->xMACAddress.ucBytes[ 2 ],
+                                   pxEndPoint->xMACAddress.ucBytes[ 3 ],
+                                   pxEndPoint->xMACAddress.ucBytes[ 4 ],
+                                   pxEndPoint->xMACAddress.ucBytes[ 5 ] ) );
             }
-        }
 
-        return xResult;
-    }
-
-#else
-
-    static BaseType_t xPacketBouncedBack( const uint8_t * pucBuffer )
-    {
-        EthernetHeader_t * pxEtherHeader;
-        BaseType_t xResult = pdFALSE;
-
-        pxEtherHeader = ( EthernetHeader_t * ) pucBuffer;
-
-        /* Sometimes, packets are bounced back by the driver and we need not process them. Check
-        * whether this packet is one such packet. */
-        if( memcmp( ipLOCAL_MAC_ADDRESS, pxEtherHeader->xSourceAddress.ucBytes, ipMAC_ADDRESS_LENGTH_BYTES ) == 0 )
-        {
             xResult = pdTRUE;
+            break;
         }
-        else
-        {
-            xResult = pdFALSE;
-        }
-
-        return xResult;
     }
 
-#endif
+    return xResult;
+}
 /*-----------------------------------------------------------*/
 
 static void prvInterruptSimulatorTask( void * pvParameters )
@@ -775,12 +824,14 @@ static void prvInterruptSimulatorTask( void * pvParameters )
                 /* Will the data fit into the frame buffer? */
                 if( pxHeader->len <= ipTOTAL_ETHERNET_FRAME_SIZE )
                 {
+                    BaseType_t xBounced = xPacketBouncedBack( pucPacketData );
+
                     /* Obtain a buffer into which the data can be placed.  This
                      * is only	an interrupt simulator, not a real interrupt, so it
                      * is ok to call the task level function here, but note that
                      * some buffer implementations cannot be called from a real
                      * interrupt. */
-                    if( xPacketBouncedBack( pucPacketData ) == pdFALSE )
+                    if( xBounced == pdFALSE )
                     {
                         pxNetworkBuffer = pxGetNetworkBufferWithDescriptor( pxHeader->len, 0 );
                     }
@@ -803,131 +854,32 @@ static void prvInterruptSimulatorTask( void * pvParameters )
                         if( pxNetworkBuffer != NULL )
                         {
                             xRxEvent.pvData = ( void * ) pxNetworkBuffer;
-                        #if defined ( FREERTOS_PLUS_TCP_VERSION ) && ( FREERTOS_PLUS_TCP_VERSION >= 10 )
+
                             pxNetworkBuffer->pxInterface = pxMyInterface;
                             pxNetworkBuffer->pxEndPoint = FreeRTOS_MatchingEndpoint( pxMyInterface, pxNetworkBuffer->pucEthernetBuffer );
 
+                            /* Just for now, make sure that there is a valid end-point. */
+                            if( pxNetworkBuffer->pxEndPoint == NULL )
                             {
-                                char pcDescription[ 129 ] = "unknown";
-                                const EthernetHeader_t * pxEthernetHeader = ( ( const EthernetHeader_t * ) pxNetworkBuffer->pucEthernetBuffer );
-                                uint8_t ucType = ipTYPE_IPv4;
-
-                                switch( pxEthernetHeader->usFrameType )
-                                {
-                                    case ipARP_FRAME_TYPE:
-                                       {
-                                           const ProtocolPacket_t * pxPacket = ( ( const ProtocolPacket_t * ) pxNetworkBuffer->pucEthernetBuffer );
-                                           snprintf( pcDescription, sizeof pcDescription, "ARP frame for %xip",
-                                                     FreeRTOS_ntohl( pxPacket->xARPPacket.xARPHeader.ulTargetProtocolAddress ) );
-                                       }
-                                       break;
-
-                                    case ipPROTOCOL_ICMP:
-                                        snprintf( pcDescription, sizeof pcDescription, "ICMP frame" );
-                                        break;
-
-                                    case ipIPv4_FRAME_TYPE:
-                                       {
-                                           const IPPacket_t * pxIPPacket;
-                                           uint8_t ucProtocol;
-                                           pxIPPacket = ( const IPPacket_t * ) pxNetworkBuffer->pucEthernetBuffer;
-                                           ucProtocol = pxIPPacket->xIPHeader.ucProtocol;
-
-                                           if( ucProtocol == ( uint8_t ) ipPROTOCOL_TCP )
-                                           {
-                                               const ProtocolHeaders_t * pxProtocolHeaders = ( ( const ProtocolHeaders_t * )
-                                                                                               &( pxNetworkBuffer->pucEthernetBuffer[ ipSIZE_OF_ETH_HEADER + uxIPHeaderSizePacket( pxNetworkBuffer ) ] ) );
-                                               uint32_t ulLocalIP, ulRemoteIP;
-                                               uint16_t usLocalPort = FreeRTOS_htons( pxProtocolHeaders->xTCPHeader.usDestinationPort );
-                                               uint16_t usRemotePort = FreeRTOS_htons( pxProtocolHeaders->xTCPHeader.usSourcePort );
-                                               const IPHeader_t * pxIPHeader;
-                                               pxIPHeader = ( ( const IPHeader_t * ) &( pxNetworkBuffer->pucEthernetBuffer[ ipSIZE_OF_ETH_HEADER ] ) );
-                                               ulLocalIP = FreeRTOS_htonl( pxIPHeader->ulDestinationIPAddress );
-                                               ulRemoteIP = FreeRTOS_htonl( pxIPHeader->ulSourceIPAddress );
-
-                                               snprintf( pcDescription, sizeof pcDescription, "TCP v4 packet %xip port%u to %xip: port %u",
-                                                         ulRemoteIP, usRemotePort, ulLocalIP, usLocalPort );
-                                           }
-                                           else if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
-                                           {
-                                               snprintf( pcDescription, sizeof pcDescription, "UDP v4 packet" );
-                                               const UDPPacket_t * pxUDPPacket = ( ( UDPPacket_t * ) pxNetworkBuffer->pucEthernetBuffer );
-
-                                               if( pxUDPPacket->xIPHeader.ulSourceIPAddress == 0x642c6276U )
-                                               {
-                                                   FreeRTOS_printf( ( "Received UDP packet from %xip\n",
-                                                                      ( unsigned ) ( FreeRTOS_htonl( pxUDPPacket->xIPHeader.ulSourceIPAddress ) ) ) );
-                                               }
-                                           }
-                                           else
-                                           {
-                                               snprintf( pcDescription, sizeof pcDescription, "v4 packet protocol %02X", ucProtocol );
-                                           }
-                                       }
-                                       break;
-
-                                    case ipIPv6_FRAME_TYPE:
-                                       {
-                                           const IPHeader_IPv6_t * pxIPHeader_IPv6;
-                                           uint8_t ucProtocol;
-
-                                           ucType = ipTYPE_IPv6;
-                                           pxIPHeader_IPv6 = ( const IPHeader_IPv6_t * ) &( pxNetworkBuffer->pucEthernetBuffer[ ipSIZE_OF_ETH_HEADER ] );
-
-                                           ucProtocol = pxIPHeader_IPv6->ucNextHeader;
-
-                                           if( ucProtocol == ( uint8_t ) ipPROTOCOL_TCP )
-                                           {
-                                               snprintf( pcDescription, sizeof pcDescription, "TCP v6 packet" );
-                                           }
-                                           else if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
-                                           {
-                                               snprintf( pcDescription, sizeof pcDescription, "UDP v6 packet" );
-                                           }
-                                           else if( ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP_IPv6 )
-                                           {
-                                               snprintf( pcDescription, sizeof pcDescription, "ICMP v6 packet" );
-                                           }
-                                           else
-                                           {
-                                               snprintf( pcDescription, sizeof pcDescription, "v6 packet protocol %02X", ucProtocol );
-                                           }
-                                       }
-                                       break;
-
-                                    default:
-                                        snprintf( pcDescription, sizeof pcDescription, "Unknown frame %04x", pxEthernetHeader->usFrameType );
-                                        break;
-                                }
-
-                                if( pxNetworkBuffer->pxEndPoint == NULL )
-                                {
-                                    pxNetworkBuffer->pxEndPoint = pxGetEndpoint( ucType );
-
-                                    if( strncasecmp( "ARP", pcDescription, 3 ) != 0 )
-                                    {
-                                        FreeRTOS_printf( ( "No end-point for \"%s\". Using 0x%p type IPv%d\n",
-                                                           pcDescription,
-                                                           pxNetworkBuffer->pxEndPoint,
-                                                           ucType == ipTYPE_IPv6 ? 6 : 4 ) );
-                                    }
-                                }
+                                FreeRTOS_printf( ( "Network interface: dropped packet\n" ) );
+                                vReleaseNetworkBufferAndDescriptor( BUFFER_FROM_WHERE_CALL( 153 ) pxNetworkBuffer );
                             }
-                        #endif
-
-                            /* Data was received and stored.  Send a message to
-                             * the IP task to let it know. */
-                            if( xSendEventStructToIPTask( &xRxEvent, ( TickType_t ) 0 ) == pdFAIL )
+                            else
                             {
-                                /* The buffer could not be sent to the stack so
-                                 * must be released again.  This is only an
-                                 * interrupt simulator, not a real interrupt, so it
-                                 * is ok to use the task level function here, but
-                                 * note no all buffer implementations will allow
-                                 * this function to be executed from a real
-                                 * interrupt. */
-                                vReleaseNetworkBufferAndDescriptor( pxNetworkBuffer );
-                                iptraceETHERNET_RX_EVENT_LOST();
+                                /* Data was received and stored.  Send a message to
+                                 * the IP task to let it know. */
+                                if( xSendEventStructToIPTask( &xRxEvent, ( TickType_t ) 0 ) == pdFAIL )
+                                {
+                                    /* The buffer could not be sent to the stack so
+                                     * must be released again.  This is only an
+                                     * interrupt simulator, not a real interrupt, so it
+                                     * is ok to use the task level function here, but
+                                     * note no all buffer implementations will allow
+                                     * this function to be executed from a real
+                                     * interrupt. */
+                                    vReleaseNetworkBufferAndDescriptor( pxNetworkBuffer );
+                                    iptraceETHERNET_RX_EVENT_LOST();
+                                }
                             }
                         }
                         else
@@ -1026,4 +978,3 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
         }
     }
 }
-/*-----------------------------------------------------------*/

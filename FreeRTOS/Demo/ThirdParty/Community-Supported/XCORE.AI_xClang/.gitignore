@@ -1,0 +1,23 @@
+/.metadata/
+
+**/.build*/*
+**/bin/*
+*.o
+*.xe
+*.vcd
+*.s
+*.xi
+*.i
+*.a
+*.xmt
+**/_build/
+**/run_*.log
+**/pdf/*
+**/html/*
+**/.settings/*
+*.pyc
+**/test_results.csv
+**/.venv/**
+# systemview debug files
+*.SVDAT
+

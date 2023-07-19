@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Network xmlns="http://www.xmos.com"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.xmos.com http://www.xmos.com">
+  <Type>Board</Type>
+  <Name>xcore.ai Explorer Kit</Name>
+
+  <Declarations>
+    <Declaration>tileref tile[2]</Declaration>
+  </Declarations>
+
+  <Packages>
+    <Package id="0" Type="XS3-UnA-1024-FB265">
+      <Nodes>
+        <Node Id="0" InPackageId="0" Type="XS3-L16A-1024" Oscillator="24MHz" SystemFrequency="700MHz" ReferenceFrequency="100MHz">
+          <Boot>
+            <Source Location="bootFlash"/>
+          </Boot>
+          <Extmem sizeMbit="1024" Frequency="175MHz">
+            <Padctrl clk="0x30" cke="0x30" cs_n="0x30" we_n="0x30" cas_n="0x30" ras_n="0x30" addr="0x30" ba="0x30" dq="0x31" dqs="0x31" dm="0x30"/>
+          </Extmem>
+          <Tile Number="0" Reference="tile[0]">
+            <Port Location="XS1_PORT_1B" Name="PORT_SQI_CS"/>
+            <Port Location="XS1_PORT_1C" Name="PORT_SQI_SCLK"/>
+            <Port Location="XS1_PORT_4B" Name="PORT_SQI_SIO"/>
+            
+            <Port Location="XS1_PORT_4C" Name="PORT_LEDS"/>
+            <Port Location="XS1_PORT_4D" Name="PORT_BUTTONS"/>
+            
+            <Port Location="XS1_PORT_1I"  Name="WIFI_WIRQ"/>
+            <Port Location="XS1_PORT_1J"  Name="WIFI_MOSI"/>
+            <Port Location="XS1_PORT_4E"  Name="WIFI_WUP_RST_N"/>
+            <Port Location="XS1_PORT_4F"  Name="WIFI_CS_N"/>
+            <Port Location="XS1_PORT_1L"  Name="WIFI_CLK"/>
+            <Port Location="XS1_PORT_1M"  Name="WIFI_MISO"/>
+          </Tile>
+          <Tile Number="1" Reference="tile[1]">
+            <!-- Mic related ports -->
+            <Port Location="XS1_PORT_1G" Name="PORT_PDM_CLK"/>
+            <Port Location="XS1_PORT_1F" Name="PORT_PDM_DATA"/>
+
+            <!-- Audio ports -->
+            <Port Location="XS1_PORT_1D" Name="PORT_MCLK_IN"/>
+            <Port Location="XS1_PORT_1C" Name="PORT_I2S_BCLK"/>
+            <Port Location="XS1_PORT_1B" Name="PORT_I2S_LRCLK"/>
+            <Port Location="XS1_PORT_1A" Name="PORT_I2S_DAC_DATA"/>
+            <Port Location="XS1_PORT_1N" Name="PORT_I2S_ADC_DATA"/>
+            <Port Location="XS1_PORT_4A" Name="PORT_CODEC_RST_N"/>
+          </Tile>
+        </Node>
+      </Nodes>
+    </Package>
+  </Packages>
+  <Nodes>
+    <Node Id="2" Type="device:" RoutingId="0x8000">
+      <Service Id="0" Proto="xscope_host_data(chanend c);">
+        <Chanend Identifier="c" end="3"/>
+      </Service>
+    </Node>
+  </Nodes>
+  <Links>
+    <Link Encoding="2wire" Delays="5clk" Flags="XSCOPE">
+      <LinkEndpoint NodeId="0" Link="XL0"/>
+      <LinkEndpoint NodeId="2" Chanend="1"/>
+    </Link>
+  </Links>
+  <ExternalDevices>
+    <Device NodeId="0" Tile="0" Class="SQIFlash" Name="bootFlash" Type="S25FL116K" PageSize="256" SectorSize="4096" NumPages="16384">
+      <Attribute Name="PORT_SQI_CS" Value="PORT_SQI_CS"/>
+      <Attribute Name="PORT_SQI_SCLK"   Value="PORT_SQI_SCLK"/>
+      <Attribute Name="PORT_SQI_SIO"  Value="PORT_SQI_SIO"/>
+      <Attribute Name="QE_REGISTER" Value="flash_qe_location_status_reg_0"/>
+      <Attribute Name="QE_BIT" Value="flash_qe_bit_6"/>
+    </Device>
+  </ExternalDevices>
+  <JTAGChain>
+    <JTAGDevice NodeId="0"/>
+  </JTAGChain>
+
+</Network>
+

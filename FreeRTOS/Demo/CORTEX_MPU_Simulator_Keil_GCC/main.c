@@ -250,7 +250,7 @@ volatile uint32_t ul1 = 0x123, ul2 = 0;
 	const uint32_t * __syscalls_flash_start__ = ( uint32_t * ) 0x8000UL;
 	const uint32_t * __syscalls_flash_end__ = ( uint32_t * ) 0xC000UL;
 	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x20000000UL;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20006000UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20004000UL;
 #endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/

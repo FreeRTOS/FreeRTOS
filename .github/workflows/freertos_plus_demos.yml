@@ -99,22 +99,6 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Install meson
-        run: pip install meson
-
-      - name: Install Glib
-        run: |
-          cd FreeRTOS-Plus/ThirdParty/glib
-          meson setup build --backend=vs2019
-          meson compile -C build
-
-      - name: Update main.c to force stdout to write immediately
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
-        run: |
-          $content = Get-Content -Path 'main.c' -Raw
-          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
-          $newContent | Set-Content -Path 'main.c'
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -153,6 +137,22 @@ jobs:
         run: |
           pip install boto3 argparse
           python3 ./presigned_url_generator/presigned_urls_gen.py --bucket ${{ env.BUCKET_NAME }} --key ${{ env.OBJECT_NAME }} --region ${{ env.AWS_REGION }} >> presigned_urls.txt
+
+      - name: Install meson
+        run: pip install meson
+
+      - name: Install Glib
+        run: |
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019
+          meson compile -C build
+
+      - name: Update main.c to force stdout to write immediately
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          $content = Get-Content -Path 'main.c' -Raw
+          $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
+          $newContent | Set-Content -Path 'main.c'
 
       - name: Configure HTTP S3 Upload Demo
         shell: bash

@@ -254,8 +254,10 @@ static PRIVILEGED_DATA StaticTimer_t xTimerBuffer;
 	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x20008000UL;
 	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x00UL;
 	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x8000UL;
+	const uint32_t * __syscalls_flash_start__			= ( uint32_t * ) 0x8000UL;
+	const uint32_t * __syscalls_flash_end__				= ( uint32_t * ) 0xC000UL;
 	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x20000000UL;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20000800UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20004000UL;
 #endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/

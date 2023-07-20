@@ -137,9 +137,9 @@ static void prvCheckTask( void *pvParameters );
  *
  * It is not possible to use xTaskCreate() to create an unprivileged task since
  * heap moved to the privileged data section, so the access tests implemented by
- * this function are now called from an unprivileged register check task created 
- * using the xTaskCreateRestricted() API. 
- */ 
+ * this function are now called from an unprivileged register check task created
+ * using the xTaskCreateRestricted() API.
+ */
 static void prvOldStyleUserModeTask( void );
 
 /*
@@ -247,8 +247,10 @@ volatile uint32_t ul1 = 0x123, ul2 = 0;
 	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x20008000UL;
 	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x00UL;
 	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x8000UL;
+	const uint32_t * __syscalls_flash_start__ = ( uint32_t * ) 0x8000UL;
+	const uint32_t * __syscalls_flash_end__ = ( uint32_t * ) 0xC000UL;
 	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x20000000UL;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20000200UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20006000UL;
 #endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/
@@ -812,7 +814,7 @@ static void prvTaskToDelete( void *pvParameters )
 	configASSERT( uxTaskGetStackHighWaterMark2( NULL ) > 0 );
 	/* Run time stats are not being gathered - this is just to exercise
 	API. */
-	configASSERT( ulTaskGetIdleRunTimeCounter() == 0 ); 
+	configASSERT( ulTaskGetIdleRunTimeCounter() == 0 );
 	vTaskSuspend( NULL );
 }
 /*-----------------------------------------------------------*/
@@ -1232,7 +1234,7 @@ static void prvRegTest3Task( void *pvParameters )
 		Since the heap moved to the privileged data section xTaskCreate() can
 		no longer be used to create unprivileged tasks. */
 		prvOldStyleUserModeTask();
-		
+
 		/* Start the part of the test that is written in assembler. */
 		vRegTest3Implementation();
 	}

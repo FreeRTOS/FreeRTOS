@@ -54,11 +54,11 @@
 #define mainSIMPLE_UDP_CLIENT_SERVER_PORT             ( 5005UL )
 
 /* Echo client task parameters - used for both TCP and UDP echo clients. */
-#define mainECHO_CLIENT_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )      /* Not used in the linux port. */
+#define mainECHO_CLIENT_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )
 #define mainECHO_CLIENT_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 1 )
 
 /* Echo server task parameters. */
-#define mainECHO_SERVER_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )      /* Not used in the linux port. */
+#define mainECHO_SERVER_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )
 #define mainECHO_SERVER_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 1 )
 
 /* Define a name that will be used for LLMNR and NBNS searches. */
@@ -160,10 +160,10 @@ void main_tcp_echo_client_tasks( void )
     memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-    /* Initialise the interface descriptor for WinPCap. */
-    NetworkInterface_t * pxLinux_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+
+    extern NetworkInterface_t * pxFillInterfaceDescriptor( BaseType_t xEMACIndex,
                                                       NetworkInterface_t * pxInterface );
-    pxLinux_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints [ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );

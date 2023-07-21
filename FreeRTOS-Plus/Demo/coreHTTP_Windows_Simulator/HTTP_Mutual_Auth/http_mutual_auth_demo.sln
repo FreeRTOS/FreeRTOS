@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.33027.164
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\..\VisualStudio_StaticProjects_IPv6_Libslirp\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\VisualStudio_StaticProjects_IPv6_Libslirp\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreHTTP_Mutual_Auth", "CoreHTTP_Mutual_Auth.vcxproj", "{382DC80F-E278-4BC9-9DB6-59014486DA0F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coreHTTP", "..\..\..\VisualStudio_StaticProjects_IPv6_Libslirp\coreHTTP\coreHTTP.vcxproj", "{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coreHTTP", "..\..\..\VisualStudio_StaticProjects\coreHTTP\coreHTTP.vcxproj", "{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\VisualStudio_StaticProjects_IPv6_Libslirp\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\VisualStudio_StaticProjects_IPv6_Libslirp\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\VisualStudio_StaticProjects\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{EDF3EA5A-89E8-4EA9-98CB-222CA21B8079}"
 EndProject

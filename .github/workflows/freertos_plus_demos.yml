@@ -390,6 +390,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Finished DEMO"
+          success-exit-code: 0
           retry-attempts: 2
 
   winsim_corelibs:

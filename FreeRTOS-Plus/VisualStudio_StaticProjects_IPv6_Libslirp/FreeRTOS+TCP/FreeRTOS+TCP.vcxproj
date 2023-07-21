@@ -515,7 +515,6 @@
     <ClInclude Include="..\..\ThirdParty\glib\glib\gvarianttype.h" />
     <ClInclude Include="..\..\ThirdParty\glib\glib\gvarianttypeinfo.h" />
     <ClInclude Include="..\..\ThirdParty\glib\glib\gversion.h" />
-    <ClInclude Include="..\..\ThirdParty\glib\glib\gversionmacros.h" />
     <ClInclude Include="..\..\ThirdParty\glib\glib\gwakeup.h" />
     <ClInclude Include="..\..\ThirdParty\glib\glib\gwin32.h" />
     <ClInclude Include="..\..\ThirdParty\glib\glib\valgrind.h" />

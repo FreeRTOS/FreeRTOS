@@ -867,9 +867,6 @@
     <ClInclude Include="..\..\ThirdParty\glib\subprojects\proxy-libintl\libintl.h">
       <Filter>Network Interface Backends\libslirp\library\dependency\glib\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\glib\glib\gversionmacros.h">
-      <Filter>Network Interface Backends</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ThirdParty\glib\msvc_recommended_pragmas.h">
       <Filter>Network Interface Backends\libslirp\library\dependency\glib\include</Filter>
     </ClInclude>

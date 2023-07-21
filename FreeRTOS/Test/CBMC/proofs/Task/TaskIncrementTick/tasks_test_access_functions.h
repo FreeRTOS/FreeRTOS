@@ -77,7 +77,7 @@ void vSetGlobalVariables()
 {
     xPendedTicks = nondet_ubasetype();
     uxSchedulerSuspended = nondet_ubasetype();
-    xYieldPending = nondet_basetype();
+    xYieldPendings[ 0 ] = nondet_basetype();
     xTickCount = nondet_ticktype();
 }
 

@@ -65,12 +65,12 @@ extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
 extern volatile BaseType_t xYieldPendings[];
-#define xYieldPending xYieldPendings[ 0 ]
+#define xYieldPending    xYieldPendings[ 0 ]
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
 extern TaskHandle_t xIdleTaskHandles[];
-#define xIdleTaskHandle xIdleTaskHandles[ 0 ]
+#define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
 extern volatile UBaseType_t uxSchedulerSuspended;
 
 

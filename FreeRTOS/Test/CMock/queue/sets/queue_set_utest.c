@@ -115,10 +115,10 @@ void test_xQueueCreateSet_oneLength( void )
 
     TEST_ASSERT_EQUAL( QUEUE_T_SIZE + sizeof( void * ), getLastMallocSize() );
 
-    /* Veify that QueueSet is not full */
+    /* Verify that QueueSet is not full */
     TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueueSet ) );
 
-    /* Veify that QueueSet is empty */
+    /* Verify that QueueSet is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueueSet ) );
 
     vQueueDelete( xQueueSet );

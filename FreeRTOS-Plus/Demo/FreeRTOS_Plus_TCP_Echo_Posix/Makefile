@@ -11,6 +11,7 @@ FREERTOS_PLUS_DIR_REL := ../../../FreeRTOS-Plus
 FREERTOS_PLUS_DIR := $(abspath $(FREERTOS_PLUS_DIR_REL))
 
 KERNEL_DIR            := ${FREERTOS_DIR}/Source
+FREERTOS_PLUS_TCP_DIR := ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source
 
 INCLUDE_DIRS := -I.
 INCLUDE_DIRS += -I./Trace_Recorder_Configuration
@@ -18,9 +19,9 @@ INCLUDE_DIRS += -I${KERNEL_DIR}/include
 INCLUDE_DIRS += -I${KERNEL_DIR}/portable/ThirdParty/GCC/Posix
 INCLUDE_DIRS += -I${KERNEL_DIR}/portable/ThirdParty/GCC/Posix/utils
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Demo/Common/include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/include/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Compiler/GCC/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/linux/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/include/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/Compiler/GCC/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/config
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/include
@@ -50,15 +51,24 @@ SOURCE_FILES += runtime_stats_hooks.c
 # Memory manager (use malloc() / free() )
 SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/MemMang/heap_3.c
 
-
 # FreeRTOS TCP
-SOURCE_FILES += $(wildcard ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/*.c )
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/BufferManagement/BufferAllocation_2.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
+SOURCE_FILES += $(wildcard ${FREERTOS_PLUS_TCP_DIR}/*.c )
+SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/BufferManagement/BufferAllocation_2.c
+SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
+SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
 
-CFLAGS 			:= -ggdb3
-LDFLAGS			:= -ggdb3 -pthread -lpcap
-CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+CFLAGS 			:= -ggdb3 
+LDFLAGS			:= -ggdb3 -pthread
+
+# Get libslirp package configuration (header and library paths)
+CFLAGS += $(shell pkg-config --cflags slirp)
+LDFLAGS += $(shell pkg-config --libs slirp)
+
+CPPFLAGS		=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+
+ifndef TRACE_ON_ENTER
+  TRACE_ON_ENTER = 1
+endif
 
 ifeq ($(TRACE_ON_ENTER),1)
   CPPFLAGS		+= -DTRACE_ON_ENTER=1

@@ -61,7 +61,7 @@
 #define blckqSTACK_SIZE       configMINIMAL_STACK_SIZE
 #define blckqNUM_TASK_SETS    ( 3 )
 
-#define blckqSHORT_DELAY	( 5 )
+#define blckqSHORT_DELAY      ( 5 )
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
     #error This example cannot be used if dynamic allocation is not allowed.
 #endif
@@ -212,7 +212,7 @@ static portTASK_FUNCTION( vBlockingQueueProducer, pvParameters )
             {
                 taskYIELD();
             }
-            #endif
+            #endif /* if ( configNUMBER_OF_CORES > 1 ) */
         }
     }
 }
@@ -265,7 +265,7 @@ static portTASK_FUNCTION( vBlockingQueueConsumer, pvParameters )
                     taskYIELD();
                 }
             }
-            #endif
+            #endif /* if ( configNUMBER_OF_CORES > 1 ) */
         }
     }
 }

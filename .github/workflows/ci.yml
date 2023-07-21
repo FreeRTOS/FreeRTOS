@@ -33,26 +33,46 @@ jobs:
         run: sudo apt-get install uncrustify=0.69.0+dfsg1-1build1
       - name: Run Uncrustify
         run: |
+          # Uncrustify on C files while ignoring symlinks.
+          # Make a collapsible section in the log to run uncrustify
+          echo "::group::Uncrustify Check"
+          # GitHub automtically use "set -e" which causes scripts to fail on the first exit code
+          # This would mean the first time a file fails the check that we exit without formatting all files.
+          set +e
           uncrustify --version
-          find FreeRTOS/Demo/Common FreeRTOS/Test \( -name ethernet -o -name drivers -o -path 'FreeRTOS/Test/CMock/CMock' \) -prune -false -o -name "*.[hc]" -exec uncrustify --check -c tools/uncrustify.cfg {} +
+          find FreeRTOS/Demo/Common FreeRTOS/Test \( -name ethernet -o -name drivers -o -path 'FreeRTOS/Test/CMock/CMock' \) -prune -false -o -name "*.[hc]" | xargs uncrustify --no-backup --replace --if-changed -c tools/uncrustify.cfg -l C
+          echo "::endgroup::"
+          # Run a git diff to print the differences if any exist, return an error code if there are any
+          git diff --exit-code
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mUncrustify check passed\033[0m"
+            exit 0
+          else
+            echo -e "\033[32;31mFormatting check (using Uncrustify) failed...\033[0m"
+            # If there is an error, set this flag high again so the exit 1 fails the run
+            set -e
+            exit 1
+          fi
       - name: Check For Trailing Whitespace
         run: |
+          # Trailing Whitespace Check
           set +e
           ERROR=0
           find .  \( -name '.git' -o -path "./FreeRTOS/Test/CBMC/patches" -o -path "./FreeRTOS-Plus" -o -path "./FreeRTOS/Source"  -o  -path "./FreeRTOS/Test/CMock/CMock"  -o -path "./FreeRTOS/Demo" \) -prune -false -o -type f -a -name "*" -exec grep  -In -e "[[:blank:]]$" {} +
           if [ "$?" = "0" ]; then
-            echo "Files have trailing whitespace."
             ERROR=1
           fi
 
           find FreeRTOS/Demo/Common   \( -name "ethernet" \) -prune -o -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} +
           if [ "$?" = "0" ]; then
-            echo "Files have trailing whitespace."
+            echo -e "\033[32;31mFiles have trailing whitespace.\033[0m"
             exit 1
           else
             if [ "$ERROR" -eq "1" ]; then
+              echo -e "\033[32;31mFiles have trailing whitespace.\033[0m"
               exit 1
             fi
+            echo -e "\033[32;3mTrailing whitespace check passed\033[0m"
             exit 0
           fi
 

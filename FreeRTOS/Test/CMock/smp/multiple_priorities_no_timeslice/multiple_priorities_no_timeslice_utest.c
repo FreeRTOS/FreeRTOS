@@ -3184,3 +3184,219 @@ void test_task_yield_run_equal_priority_new_task( void )
     /* The new task TN+1 should runs on core 0. */
     verifySmpTask( &xTaskHandles[ i ], eRunning, 0 );
 }
+
+/**
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-106
+ * Task can inherit or disinherit other higher priority task. This test verify that
+ * lower priority task will be selected to run when it inherit a higher priorirty task.
+ * The lower priority will be switched out when it disinherits higher priority task.
+ *
+ * #define configRUN_MULTIPLE_PRIORITIES                    1
+ * #define configUSE_TIME_SLICING                           0
+ * #define configNUMBER_OF_CORES                            (N > 1)
+ *
+ * This test can be run with FreeRTOS configured for any number of cores greater
+ * than 1.
+ *
+ * Tasks are created prior to starting the scheduler
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 1
+ * State – Ready	  State – Ready     State – Ready   State – Ready
+ *
+ * After calling vTaskStartScheduler()
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 1
+ * State – Running    State – Running   State – Running State – Ready
+ *
+ * Assuming task TN+1 is holding a mutex. Task TN+1 inherits task T1's priority
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 3
+ * State – Running    State – Running   State – Ready   State – Running
+ *                                                      uxMutexesHeld - 1
+ *
+ * Task TN+1 disinherits task T1's priority.
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 1
+ * State – Running    State – Running   State – Running State – Ready
+ *                                                      uxMutexesHeld - 0
+ */
+void test_task_priority_inherit_disinherit( void )
+{
+    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+    TaskStatus_t xTaskDetails;
+
+    /* Create 1 high priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[ 0 ] );
+
+    /* Create N - 1 Medium priority task. */
+    for( i = 1; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[ i ] );
+    }
+
+    /* Create 1 low priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[ i ] );
+
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+
+    /* Assuming the low priority task is holding a mutex. */
+    xTaskHandles[ configNUMBER_OF_CORES ]->uxMutexesHeld = 1;
+
+    /* Low priority task inherit current core task priority, which is the high priority task. */
+    taskENTER_CRITICAL();
+    {
+        xTaskPriorityInherit( xTaskHandles[ configNUMBER_OF_CORES ] );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 3, xTaskDetails.xHandle->uxPriority );
+
+    /* Verify that the low priority task is running on last core. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, ( configNUMBER_OF_CORES - 1 ) );
+
+    /* Disinherit low priority task after timeout to it's original priority. */
+    taskENTER_CRITICAL();
+    {
+        xTaskPriorityDisinherit( xTaskHandles[ configNUMBER_OF_CORES ] );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 1, xTaskDetails.xHandle->uxPriority );
+
+    /* Verify the mutex held count is decreased. */
+    TEST_ASSERT_EQUAL( 0U, xTaskHandles[ configNUMBER_OF_CORES ]->uxMutexesHeld );
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify that the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+}
+
+/**
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-107
+ * Task can inherit or disinherit other higher priority task. This test verify that
+ * lower priority task will be selected to run when it inherit a higher priorirty task.
+ * The lower priority will be switched out when it is disinherited by higher priority
+ * task due to timeout.
+ *
+ * #define configRUN_MULTIPLE_PRIORITIES                    1
+ * #define configUSE_TIME_SLICING                           0
+ * #define configNUMBER_OF_CORES                            (N > 1)
+ *
+ * This test can be run with FreeRTOS configured for any number of cores greater
+ * than 1.
+ *
+ * Tasks are created prior to starting the scheduler
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 1
+ * State – Ready	  State – Ready     State – Ready   State – Ready
+ *
+ * After calling vTaskStartScheduler()
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 1
+ * State – Running    State – Running   State – Running State – Ready
+ *
+ * Assuming task TN+1 is holding a mutex. Task TN+1 inherits task T1's priority
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 3
+ * State – Running    State – Running   State – Ready   State – Running
+ *
+ * Task TN+1 is disinherited by task T1 due to timeout
+ *
+ * Task (T1)	      Task (T2)         Task (TN)       Task (TN + 1)
+ * Priority – 3       Priority – 2      Priority – 2    Priority – 1
+ * State – Running    State – Running   State – Running State – Ready
+ */
+void test_task_priority_inherit_disinherit_timeout( void )
+{
+    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    uint32_t i;
+    TaskStatus_t xTaskDetails;
+
+    /* Create 1 high priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xTaskHandles[ 0 ] );
+
+    /* Create N - 1 Medium priority task. */
+    for( i = 1; i < configNUMBER_OF_CORES; i++ )
+    {
+        xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandles[ i ] );
+    }
+
+    /* Create 1 low priority task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[ i ] );
+
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+
+    /* Assuming the low priority task is holding a mutex. */
+    xTaskHandles[ configNUMBER_OF_CORES ]->uxMutexesHeld = 1;
+
+    /* Low priority task inherit current core task priority, which is the high priority task. */
+    taskENTER_CRITICAL();
+    {
+        xTaskPriorityInherit( xTaskHandles[ configNUMBER_OF_CORES ] );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 3, xTaskDetails.xHandle->uxPriority );
+
+    /* Verify that the low priority task is running on last core. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, ( configNUMBER_OF_CORES - 1 ) );
+
+    /* Disinherit low priority task after timeout to it's original priority. */
+    taskENTER_CRITICAL();
+    {
+        vTaskPriorityDisinheritAfterTimeout( xTaskHandles[ configNUMBER_OF_CORES ], 1 );
+    }
+    taskEXIT_CRITICAL();
+
+    /* Verify the priority has been changed */
+    vTaskGetInfo( xTaskHandles[ configNUMBER_OF_CORES ], &xTaskDetails, pdTRUE, eInvalid );
+    TEST_ASSERT_EQUAL( 1, xTaskDetails.xHandle->uxPriority );
+
+    /* Verify the high and medium priority tasks running. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        verifySmpTask( &xTaskHandles[ i ], eRunning, i );
+    }
+
+    /* Verify that the low priority task is ready. */
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
+}

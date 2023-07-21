@@ -30,7 +30,6 @@
 
 /* Standard includes. */
 #include <stdio.h>
-#include <windows.h>
 
 /* Visual studio intrinsics used so the __debugbreak() function is available
  * should an assert get hit. */
@@ -68,7 +67,6 @@ static void prvPKCS11DemoTask( void * pvParameters )
         vPKCS11SignVerifyDemo();
     #endif
     configPRINTF( ( "---------Finished DEMO---------\r\n" ) );
-    Sleep( 3000 );
     exit( 0 );
 }
 

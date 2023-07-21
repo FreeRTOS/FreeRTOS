@@ -196,7 +196,6 @@ TickType_t xTimeOnEntering;
 
 				/* Replace '\0' with '-' for string length and comparison functions */
 				pcTransmittedString[ strlen( pcTransmittedString ) ] = '-';
-				ulTxCount++;
 
 				printf( "\n\tSending %d bytes of data to the echo server\n", lStringLength );
 				ulTxCount++;
@@ -258,7 +257,7 @@ TickType_t xTimeOnEntering;
 						ulTxRxCycles[ xInstance ]++;
 
 						/* The "Received correct data" line is used to determine if
-							* this demo runs as part of a GitHub workflow. */
+							* this demo runs successfully on a GitHub workflow. */
 						printf( "\tReceived correct data %d times.\n", ulTxRxCycles[ xInstance ] );
 					}
 					else
@@ -317,7 +316,7 @@ TickType_t xTimeOnEntering;
 static BaseType_t prvCreateTxData( char *cBuffer, uint32_t ulBufferLength )
 {
 BaseType_t lCharactersToAdd, lCharacter;
-char cChar = '0';
+char cChar = 'A';
 const BaseType_t lMinimumLength = 60;
 uint32_t ulRandomNumber;
 

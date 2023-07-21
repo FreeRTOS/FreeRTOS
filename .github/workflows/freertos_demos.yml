@@ -18,7 +18,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [[ "$?" = "0" ]]
           then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
@@ -125,7 +125,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [[ "$?" = "0" ]]
           then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
@@ -206,7 +206,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
           else
@@ -297,7 +297,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
           else
@@ -348,7 +348,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
           else
@@ -363,7 +363,7 @@ jobs:
           echo "::group::Install GNU ARM Toolchain"
           sudo apt-get -y update
           sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mInstalled the GNU ARM Toolchain\033[0m"
           else
@@ -378,7 +378,7 @@ jobs:
           # Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo
           echo "::group::Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo"
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuild CORTEX_MPU_M3_MPS2_QEMU_GCC Demo\033[0m"
           else
@@ -393,7 +393,7 @@ jobs:
           # Build CORTEX_LM3S102_GCC Demo
           echo "::group::Build CORTEX_LM3S102_GCC Demo"
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_LM3S102_GCC Demo Kernel\033[0m"
           else
@@ -409,7 +409,7 @@ jobs:
           echo "::group::Build CORTEX_M3_MPS2_QEMU_GCC Demo"
           make clean
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_M3_MPS2_QEMU_GCC Demo\033[0m"
           else
@@ -425,7 +425,7 @@ jobs:
           echo "::group::Build CORTEX_M3_MPS2_QEMU_GCC Full Demo"
           make clean
           make FULL_DEMO=1 -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_M3_MPS2_QEMU_GCC Full Demo\033[0m"
           else
@@ -440,7 +440,7 @@ jobs:
           # Build CORTEX_LM3S811_GCC Demo
           echo "::group::Build CORTEX_LM3S811_GCC Demo"
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_LM3S811_GCC Demo\033[0m"
           else
@@ -457,7 +457,7 @@ jobs:
           git clone https://github.com/raspberrypi/pico-sdk.git
           cmake -B build -DPICO_SDK_PATH=pico-sdk -GNinja
           ninja -C build --verbose
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt CORTEX_M0+_RP2040 Demos\033[0m"
           else
@@ -472,7 +472,7 @@ jobs:
           # Build CORTEX_MPS2_QEMU_IAR_GCC Demo
           echo "::group::Build CORTEX_MPS2_QEMU_IAR_GCC Demo"
           make -C build/gcc -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_MPS2_QEMU_IAR_GCC Demo\033[0m"
           else

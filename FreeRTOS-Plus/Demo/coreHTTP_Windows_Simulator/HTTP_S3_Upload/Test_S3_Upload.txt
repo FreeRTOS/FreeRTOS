@@ -1,1 +1,0 @@
-Random file to be uploaded to AWS S3 for testing purpose only.

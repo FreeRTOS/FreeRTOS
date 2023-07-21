@@ -420,7 +420,7 @@ jobs:
         with:
           exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/x64/Debug/RTOSDemo.exe
           log-dir: demo_run_logs
-          timeout-seconds: 120
+          timeout-seconds: 90
           success-line: "Demo completed successfully"
           retry-attempts: 3
 

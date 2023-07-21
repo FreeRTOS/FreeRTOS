@@ -198,7 +198,7 @@ jobs:
       #     log-dir: demo_run_logs
       #     timeout-seconds: 180
       #     success-line: "Demo completed successfully"
-      #     retry-attempts: 2
+      #     retry-attempts: 3
 
       # - name: Configure HTTP S3 Download Multithreaded Demo
       #   shell: bash
@@ -221,7 +221,7 @@ jobs:
       #     log-dir: demo_run_logs
       #     timeout-seconds: 180
       #     success-line: "Demo completed successfully"
-      #     retry-attempts: 2
+      #     retry-attempts: 3
 
       # - name: Configure HTTP S3 Download Demo
       #   shell: bash
@@ -262,7 +262,7 @@ jobs:
       #     log-dir: demo_run_logs
       #     timeout-seconds: 180
       #     success-line: "Demo completed successfully"
-      #     retry-attempts: 2
+      #     retry-attempts: 3
 
       # - name: Delete AWS IOT Certificate
       #   shell: bash
@@ -308,7 +308,7 @@ jobs:
       #     log-dir: demo_run_logs
       #     timeout-seconds: 180
       #     success-line: "Demo completed successfully"
-      #     retry-attempts: 2
+      #     retry-attempts: 3
 
       # - name: Configure HTTP Mutual Auth Demo
       #   shell: bash
@@ -340,7 +340,7 @@ jobs:
       #     log-dir: demo_run_logs
       #     timeout-seconds: 180
       #     success-line: "Demo completed successfully"
-      #     retry-attempts: 2
+      #     retry-attempts: 3
 
   winsim_corePKCS11:
     name: corePKCS11 WinSim Demos
@@ -391,7 +391,7 @@ jobs:
           timeout-seconds: 180
           success-line: "Finished DEMO"
           success-exit-code: 0
-          retry-attempts: 2
+          retry-attempts: 3
 
   winsim_corelibs:
     name: core Library Windows Simulator Demos
@@ -484,7 +484,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Demo completed successfully"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Configure MQTT Basic TLS Demo
         shell: bash
@@ -511,7 +511,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Demo completed successfully"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Configure MQTT Mutual Authentication with mbedtls Demo
         shell: bash
@@ -544,7 +544,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Demo completed successfully"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Configure MQTT Keep Alive Demo
         shell: bash
@@ -570,7 +570,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Demo completed successfully"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Configure MQTT Serializer Demo
         shell: bash
@@ -593,7 +593,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Demo completed successfully"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Configure MQTT Mutual Authentication with WolfSSL Demo
         shell: bash
@@ -626,7 +626,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Demo completed successfully"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Configure MQTT Multi-Task Demo
         shell: bash
@@ -809,7 +809,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Received correct data 3 times"
-          retry-attempts: 2
+          retry-attempts: 3
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385
@@ -891,7 +891,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Received correct data 3 times"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Generate SSL credentials
         id: generate-credentials
@@ -922,7 +922,7 @@ jobs:
           log-dir: demo_run_logs
           timeout-seconds: 180
           success-line: "Received by the secure server: Message number 9"
-          retry-attempts: 2
+          retry-attempts: 3
 
       - name: Build FreeRTOS+TCP UDP CLI Demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_UDP_Mode_CLI_Windows_Simulator

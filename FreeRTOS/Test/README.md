@@ -7,4 +7,6 @@ For more information on FreeRTOS testing please refer to https://www.freertos.or
 This directory is in working progress -- we are migrating scattered test cases to this directory. Here only lists what's currently under this directory.
 
 - ```./CBMC```: This directory contains automated proofs of the memory safety of various parts of the FreeRTOS code base.
+- ```./CMock```: This directory contains unit tests for verification of functional correctness of FreeRTOS Kernel APIs.
+- ```./Target```:  This directory contains integration tests which run on target devices to verify functional correctness of FreeRTOS Kernel APIs.
 - ```./VeriFast```: This directory contains automated proofs of the functional correctness of various parts of the FreeRTOS code base.

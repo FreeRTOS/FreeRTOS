@@ -364,6 +364,7 @@ void test_priority_change_task_high_priority_raise( void )
 
     /* Verify the task is running. */
     verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
+
     for( i = 1; i < configNUMBER_OF_CORES; i++ )
     {
         /* Verify the idle task is running on all other CPU cores */

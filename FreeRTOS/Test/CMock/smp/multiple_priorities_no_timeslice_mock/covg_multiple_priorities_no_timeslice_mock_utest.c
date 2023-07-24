@@ -616,7 +616,7 @@ void test_coverage_eTaskGetState_task_not_running( void )
     /* Test Expectations */
     vFakePortEnterCriticalSection_Expect();
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( &list );
-    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );     /* Event list container is NULL. */
+    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL ); /* Event list container is NULL. */
     vFakePortExitCriticalSection_Expect();
 
     /* API Call */

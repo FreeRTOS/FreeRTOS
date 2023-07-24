@@ -3942,7 +3942,7 @@ void test_coverage_xTaskPriorityInherit_task_is_running( void )
     listINSERT_END( &pxReadyTasksLists[ 1 ], &xTaskTCBs[ i ].xStateListItem );
     pxCurrentTCBs[ i ] = &xTaskTCBs[ i ];
 
-   /* API call. */
+    /* API call. */
     xTaskPriorityInherit( &xTaskTCBs[ ( configNUMBER_OF_CORES - 1 ) ] );
 
     /* Validation. */
@@ -3990,7 +3990,7 @@ void test_coverage_xTaskPriorityInherit_task_invalid_state( void )
     xTaskTCBs[ i ].xStateListItem.pxContainer = &pxReadyTasksLists[ 1 ];
     listINSERT_END( &pxReadyTasksLists[ 1 ], &xTaskTCBs[ i ].xStateListItem );
 
-   /* API call. */
+    /* API call. */
     xTaskPriorityInherit( &xTaskTCBs[ configNUMBER_OF_CORES ] );
 
     /* Validation. */
@@ -4365,7 +4365,7 @@ void test_coverage_vTaskPriorityDisinheritAfterTimeout_task_invalid_state( void 
     xTaskTCBs[ i ].uxMutexesHeld = 1;
     xTaskTCBs[ i ].uxBasePriority = 1;
 
-   /* API call. */
+    /* API call. */
     vTaskPriorityDisinheritAfterTimeout( &xTaskTCBs[ configNUMBER_OF_CORES ], uxHighestPriorityWaitingTask );
 
     /* Validation. */

@@ -1,0 +1,13 @@
+VERSION = 0.5.0
+
+DEPENDENT_MODULES = 
+
+MODULE_XCC_FLAGS = $(XCC_FLAGS) -Os
+
+OPTIONAL_HEADERS += rtos_support_conf.h
+
+EXPORT_INCLUDE_DIRS = api src
+                      
+INCLUDE_DIRS = $(EXPORT_INCLUDE_DIRS)
+
+SOURCE_DIRS = src

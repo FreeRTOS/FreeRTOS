@@ -4529,6 +4529,7 @@ void test_ulTaskGenericNotifyTake_sucess_yield( void )
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem, xTickCount + 9 );
     vListInsert_Expect( pxDelayedTaskList, &ptcb->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -5151,7 +5152,7 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved( void )
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
                                     xTickCount + xTicksToWait );
     vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
-
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
                                   ulBitsToClearOnEntry,
@@ -5240,6 +5241,7 @@ void test_xTaskGenericNotifyWait_success_notif_recieved_while_waiting( void )
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
                                     xTickCount + xTicksToWait );
     vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     py_operation = &notif_received;
 
     /* API Call */
@@ -5694,3 +5696,6 @@ void test_xTaskGetStaticBuffers_dynamic_task( void )
 }
 
 /* -------------------- end testing xTaskGetStaticBuffers --------------------*/
+
+
+

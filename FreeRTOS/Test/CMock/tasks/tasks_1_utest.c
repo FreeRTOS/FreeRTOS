@@ -5696,4 +5696,3 @@ void test_xTaskGetStaticBuffers_dynamic_task( void )
 }
 
 /* -------------------- end testing xTaskGetStaticBuffers --------------------*/
-

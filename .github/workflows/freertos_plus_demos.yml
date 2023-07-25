@@ -142,7 +142,6 @@ jobs:
   winsim_corePKCS11:
     name: corePKCS11 WinSim Demos
     runs-on: windows-2019
-       
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

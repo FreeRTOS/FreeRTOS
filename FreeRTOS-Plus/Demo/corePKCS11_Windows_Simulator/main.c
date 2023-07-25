@@ -67,6 +67,7 @@ static void prvPKCS11DemoTask( void * pvParameters )
         vPKCS11SignVerifyDemo();
     #endif
     configPRINTF( ( "---------Finished DEMO---------\r\n" ) );
+
     exit( 0 );
 }
 

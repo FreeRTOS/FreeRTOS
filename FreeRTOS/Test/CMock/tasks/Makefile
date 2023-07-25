@@ -11,6 +11,7 @@ PROJECT          :=     tasks
 #
 # Test/CMock/tasks
 PROJECT_DIR      :=     $(abspath .)
+PROJ_DIR         :=     $(abspath .)
 
 # List the dependency files you wish to mock
 MOCK_FILES_FP    :=   $(KERNEL_DIR)/include/timers.h
@@ -181,7 +182,7 @@ directories :
         -mkdir   -p  $(BIN_DIR)
         -mkdir   -p  $(LIB_DIR)
 
-EXEC_PREFIX     :=  $(PROJECT)/
+EXEC_PREFIX     :=  $(PROJECT)
 
 include ../coverage.mk
 

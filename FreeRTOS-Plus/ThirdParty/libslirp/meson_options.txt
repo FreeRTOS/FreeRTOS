@@ -1,2 +1,0 @@
-option('version_suffix', type: 'string', value: '',
-       description: 'Suffix to append to SLIRP_VERSION_STRING')

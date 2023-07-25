@@ -84,7 +84,8 @@ jobs:
             FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
             FreeRTOS-Plus/Source/coreJSON \
             FreeRTOS-Plus/ThirdParty/mbedtls \
-            FreeRTOS-Plus/ThirdParty/glib
+            FreeRTOS-Plus/ThirdParty/glib \
+            FreeRTOS-Plus/ThirdParty/libslirp
           git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
 
       - name: Add msbuild to PATH
@@ -141,6 +142,7 @@ jobs:
   winsim_corePKCS11:
     name: corePKCS11 WinSim Demos
     runs-on: windows-2019
+       
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -157,7 +159,8 @@ jobs:
             FreeRTOS-Plus/Source/coreJSON \
             FreeRTOS-Plus/Source/corePKCS11 \
             FreeRTOS-Plus/ThirdParty/mbedtls \
-            FreeRTOS-Plus/ThirdParty/glib
+            FreeRTOS-Plus/ThirdParty/glib \
+            FreeRTOS-Plus/ThirdParty/libslirp
 
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
@@ -222,7 +225,8 @@ jobs:
             FreeRTOS-Plus/ThirdParty/mbedtls \
             FreeRTOS-Plus/ThirdParty/tinycbor \
             FreeRTOS-Plus/ThirdParty/wolfSSL \
-            FreeRTOS-Plus/ThirdParty/glib
+            FreeRTOS-Plus/ThirdParty/glib \
+            FreeRTOS-Plus/ThirdParty/libslirp
 
           git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
@@ -640,7 +644,8 @@ jobs:
             FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
             FreeRTOS-Plus/ThirdParty/mbedtls \
             FreeRTOS-Plus/ThirdParty/wolfSSL \
-            FreeRTOS-Plus/ThirdParty/glib
+            FreeRTOS-Plus/ThirdParty/glib \
+            FreeRTOS-Plus/ThirdParty/libslirp
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1

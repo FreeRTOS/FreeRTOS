@@ -101,6 +101,13 @@ dependencies:
       url:  "https://gitlab.gnome.org/GNOME/glib.git"
       path: "FreeRTOS-Plus/ThirdParty/glib"
 
+  - name: "libslirp"
+    version: "177da3d"
+    repository:
+      type: "git"
+      url:  "https://gitlab.freedesktop.org/slirp/libslirp.git"
+      path: "FreeRTOS-Plus/ThirdParty/libslirp"
+
   - name: "backoffAlgorithm"
     version: "f4b3fcf"
     repository:

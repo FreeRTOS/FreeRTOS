@@ -163,13 +163,15 @@ jobs:
 
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
 
       - name: Install meson
         run: pip install meson
 
       - name: Install Glib
+        continue-on-error: true
         run: |
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019
@@ -178,13 +180,13 @@ jobs:
       - name: Build corePKCS11 Demo
         id: build-corePKCS11-demo
         working-directory: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator
-        run: msbuild CorePKCS11_Demos.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+        run: msbuild CorePKCS11_Demos.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor corePKCS11 Demo
         if: success() || failure() && steps.build-corePKCS11-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator/x64/Debug/CorePKCS11_Demos.exe
+          exe-path: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator/Debug_with_Libslirp/CorePKCS11_Demos.exe
           log-dir: demo_run_logs
           timeout-seconds: 30
           success-line: "Finished DEMO"
@@ -273,13 +275,13 @@ jobs:
         id: build-mqtt-plain-text-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text
         run: |
-          msbuild mqtt_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+          msbuild mqtt_plain_text_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor MQTT Plain Text Demo
         if: success() || failure() && steps.build-mqtt-plain-text-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text/x64/Debug/MQTT_Plain_Text.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text/Debug_with_Libslirp/MQTT_Plain_Text.exe
           log-dir: demo_run_logs
           timeout-seconds: 120
           success-line: "Demo completed successfully"
@@ -300,13 +302,13 @@ jobs:
       - name: Build MQTT Basic TLS Demo
         id: build-mqtt-basic-tls-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS
-        run: msbuild mqtt_basic_tls_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+        run: msbuild mqtt_basic_tls_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor MQTT Basic TLS Demo
         if: success() || failure() && steps.build-mqtt-basic-tls-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS/x64/Debug/MQTT_Basic_TLS.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS/Debug_with_Libslirp/MQTT_Basic_TLS.exe
           log-dir: demo_run_logs
           timeout-seconds: 120
           success-line: "Demo completed successfully"
@@ -333,13 +335,13 @@ jobs:
       - name: Build MQTT Mutual Authentication with mbedtls Demo
         id: build-mqtt-mutual-auth-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth
-        run: msbuild mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+        run: msbuild mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor MQTT Mutual Authentication with mbedtls Demo
         if: success() || failure() && steps.build-mqtt-mutual-auth-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth/x64/Debug/MQTT_Mutual_Auth.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth/Debug_with_Libslirp/MQTT_Mutual_Auth.exe
           log-dir: demo_run_logs
           timeout-seconds: 120
           success-line: "Demo completed successfully"
@@ -359,13 +361,13 @@ jobs:
       - name: Build MQTT Keep Alive Demo
         id: build-mqtt-keep-alive-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive
-        run: msbuild mqtt_keep_alive_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+        run: msbuild mqtt_keep_alive_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor MQTT Keep Alive Demo
         if: success() || failure() && steps.build-mqtt-keep-alive-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive/x64/Debug/MQTT_Keep_Alive.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive/Debug_with_Libslirp/MQTT_Keep_Alive.exe
           log-dir: demo_run_logs
           timeout-seconds: 90
           success-line: "Demo completed successfully"
@@ -382,13 +384,13 @@ jobs:
       - name: Build MQTT Serializer Demo
         id: build-mqtt-serializer-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer
-        run: msbuild mqtt_serializer_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+        run: msbuild mqtt_serializer_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor MQTT Serializer Demo
         if: success() || failure() && steps.build-mqtt-serializer-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer/x64/Debug/MQTT_Serializer.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer/Debug_with_Libslirp/MQTT_Serializer.exe
           log-dir: demo_run_logs
           timeout-seconds: 90
           success-line: "Demo completed successfully"
@@ -415,13 +417,13 @@ jobs:
       - name: Build MQTT Mutual Authentication with WolfSSL Demo
         id: build-mqtt-mutual-auth-with-wolfssl-demo
         working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL
-        run: msbuild mqtt_mutual_auth_demo_wolfSSL.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+        run: msbuild mqtt_mutual_auth_demo_wolfSSL.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor MQTT Mutual Authentication with WolfSSL Demo
         if: success() || failure() && steps.build-mqtt-mutual-auth-with-wolfssl-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/x64/Debug/RTOSDemo.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/Debug_with_Libslirp/RTOSDemo.exe
           log-dir: demo_run_logs
           timeout-seconds: 90
           success-line: "Demo completed successfully"
@@ -677,13 +679,13 @@ jobs:
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
           $newContent | Set-Content -Path 'main.c'
-          msbuild FreeRTOS_Plus_TCP_Minimal.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+          msbuild FreeRTOS_Plus_TCP_Minimal.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor FreeRTOS+TCP Minimal Demo
         if: success() || failure() && steps.build-plus-tcp-minimal-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/x64/Debug/FreeRTOS_Plus_TCP_Minimal.exe
+          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/Debug_with_Libslirp/FreeRTOS_Plus_TCP_Minimal.exe
           log-dir: demo_run_logs
           timeout-seconds: 30
           success-line: "Received correct data 3 times"
@@ -708,13 +710,13 @@ jobs:
       - name: Build FreeRTOS+WolfSSL Demo
         id: build-freertos-wolfssl-demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator
-        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -property:Platform=x64 -m
+        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
       - name: Run and monitor FreeRTOS+WolfSSL Demo
         if: success() || failure() && steps.build-freertos-wolfssl-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator/x64/Debug/FreeRTOS_Plus_WolfSSL_Windows_Simulator.exe
+          exe-path: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator/Debug_with_Libslirp/FreeRTOS_Plus_WolfSSL_Windows_Simulator.exe
           log-dir: demo_run_logs
           timeout-seconds: 60
           success-line: "Received by the secure server: Message number 9"

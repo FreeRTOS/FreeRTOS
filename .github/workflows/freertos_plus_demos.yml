@@ -232,8 +232,19 @@ jobs:
           git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - name: Install meson
+        run: pip install meson
+
+      - name: Install Glib
+        continue-on-error: true
+        run: |
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019
+          meson compile -C build
 
       - name: Install meson
         run: pip install meson
@@ -648,8 +659,19 @@ jobs:
             FreeRTOS-Plus/ThirdParty/glib \
             FreeRTOS-Plus/ThirdParty/libslirp
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win32
+
+      - name: Install meson
+        run: pip install meson
+
+      - name: Install Glib
+        continue-on-error: true
+        run: |
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019
+          meson compile -C build
 
       - name: Install meson
         run: pip install meson

@@ -361,7 +361,7 @@ jobs:
         shell: bash
         run: |
           # Fetch Community-Supported-Demos Submodule
-          echo "::group::Fetch Kernel Submodule"
+          echo "::group::Fetch Community-Supported-Demos Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
           echo "::engdroup::"
           if [ "$?" = "0" ]; then

@@ -246,15 +246,6 @@ jobs:
           meson setup build --backend=vs2019
           meson compile -C build
 
-      - name: Install meson
-        run: pip install meson
-
-      - name: Install Glib
-        run: |
-          cd FreeRTOS-Plus/ThirdParty/glib
-          meson setup build --backend=vs2019
-          meson compile -C build
-
       - name: Generate SSL credentials
         id: generate-credentials
         uses: FreeRTOS/CI-CD-GitHub-Actions/ssl-credential-creator@main
@@ -668,15 +659,6 @@ jobs:
 
       - name: Install Glib
         continue-on-error: true
-        run: |
-          cd FreeRTOS-Plus/ThirdParty/glib
-          meson setup build --backend=vs2019
-          meson compile -C build
-
-      - name: Install meson
-        run: pip install meson
-
-      - name: Install Glib
         run: |
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019

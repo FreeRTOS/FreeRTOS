@@ -357,6 +357,20 @@ jobs:
             exit 1
           fi
 
+      - name: Fetch Community-Supported-Demos Submodule
+        shell: bash
+        run: |
+          # Fetch Community-Supported-Demos Submodule
+          echo "::group::Fetch Kernel Submodule"
+          git submodule update --checkout --init --depth 1 FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
+          echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Community-Supported-Demos\033[0m"
+          else
+            echo -e "\033[32;31mCommunity-Supported-Demos Clone Failed...\033[0m"
+            exit 1
+          fi
+
       - name: Install GNU ARM Toolchain
         shell: bash
         run: |

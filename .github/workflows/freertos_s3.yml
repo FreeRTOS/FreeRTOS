@@ -1,4 +1,4 @@
-name: Build FreeRTOS+ Demos
+name: HTTP S3 Demos 
 on:
   workflow_dispatch:
   push:

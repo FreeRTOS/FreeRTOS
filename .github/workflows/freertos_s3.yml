@@ -1,14 +1,8 @@
 name: HTTP S3 Demos 
 on:
-  workflow_dispatch:
-  push:
-    branches: ["**"]
-
-  pull_request:
-    branches: [main]
-
   issue_comment:
     types: [created]
+
 env:
   BUCKET_NAME : "freertos-demos-on-github-action"
   OBJECT_NAME: "Test_S3_Upload.txt"

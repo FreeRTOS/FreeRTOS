@@ -228,11 +228,6 @@ jobs:
           echo '    #define democonfigS3_OBJECT_NAME ""' | tee -a */demo_config.h
           echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
 
-      - name: Build HTTP Mutual Auth Demo
-        id: build-http-mutual-auth-demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
-        run: msbuild http_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
-
       - name: Build HTTP S3 Upload Demo
         id: build-http-s3-upload-demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload

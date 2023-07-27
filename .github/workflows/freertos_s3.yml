@@ -2,22 +2,22 @@ name: HTTP S3 Demos
 on:
   issue_comment:
     types: [created]
+env:
+  BUCKET_NAME : "freertos-demos-on-github-action"
+  OBJECT_NAME: "Test_S3_Upload.txt"
+  AWS_REGION : "us-east-1"
+  IOT_THING_NAME: "Test_Demo_On_Git_Action"
+  IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
+# permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
 
 jobs:
   winsim_coreHTTP:
     name: coreHTTP WinSim Demos
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/bot run coreHTTP' }}
     runs-on: windows-2019
-    env:
-      BUCKET_NAME : "freertos-demos-on-github-action"
-      OBJECT_NAME: "Test_S3_Upload.txt"
-      AWS_REGION : "us-east-1"
-      IOT_THING_NAME: "Test_Demo_On_Git_Action"
-      IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
-    # permission can be added at job level or workflow level    
-    permissions:
-          id-token: write   # This is required for requesting the JWT
-          contents: read    # This is required for actions/checkout
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -74,6 +74,110 @@ jobs:
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
           meson compile -C build
+
+      - name: Presigned S3 URLs Generator
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          pip install boto3 argparse
+          python3 ./presigned_url_generator/presigned_urls_gen.py --bucket ${{ env.BUCKET_NAME }} --key ${{ env.OBJECT_NAME }} --region ${{ env.AWS_REGION }} >> presigned_urls.txt
+
+      - name: Configure HTTP S3 Upload Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          cat ../Common/presigned_urls.txt >> demo_config.h
+
+      - name: Build HTTP S3 Upload Demo
+        id: build-http-s3-upload-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
+        run: msbuild http_s3_upload_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
+
+      - name: Run and monitor HTTP S3 Upload Demo
+        if: success() || failure() && steps.build-http-s3-upload-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload/Debug_with_Libslirp/CoreHTTP_S3_Upload.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure HTTP S3 Download Multithreaded Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          cat ../Common/presigned_urls.txt >> demo_config.h
+
+      - name: Build HTTP S3 Download Multithreaded Demo
+        id: build-http-s3-download-multithreaded-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
+        run: msbuild http_s3_download_multithreaded_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
+
+      - name: Run and monitor HTTP S3 Download Multithreaded Demo
+        if: success() || failure() && steps.build-http-s3-download-multithreaded-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded/Debug_with_Libslirp/CoreHTTP_S3_Download_Multithreaded.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Configure HTTP S3 Download Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: |
+          aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile certificate_filename.pem --public-key-outfile public_filename.key --private-key-outfile private_filename.key >> iot_cert.txt
+          certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
+          aws iot attach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
+          aws iot attach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
+          endPoint=$(aws iot describe-endpoint --endpoint-type iot:CredentialProvider | python3 -c "import sys, json; print(json.load(sys.stdin)['endpointAddress'])")
+          echo '#define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT "'$endPoint'"' >> demo_config.h
+          echo '#define democonfigS3_BUCKET_NAME "'${{ env.BUCKET_NAME }}'"' >> demo_config.h
+          echo '#define democonfigS3_BUCKET_REGION "'${{ env.AWS_REGION }}'"' >> demo_config.h
+          echo '#define democonfigS3_OBJECT_NAME "'${{ env.OBJECT_NAME }}'"' >> demo_config.h
+          echo '#define democonfigIOT_CREDENTIAL_PROVIDER_ROLE "role-alias-git-action"' >> demo_config.h
+          echo '#define democonfigIOT_THING_NAME "'${{ env.IOT_THING_NAME }}'"' >> demo_config.h
+          echo '#define democonfigS3_ROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM \' >> demo_config.h
+          sed '$ s/.$//' ../Common/root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' certificate_filename.pem >> device_cert.txt
+          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' private_filename.key >> device_priv_key.txt
+          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+
+      - name: Build HTTP S3 Download Demo
+        id: build-http-s3-download-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: msbuild http_s3_download_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
+
+      - name: Run and monitor HTTP S3 Download Demo
+        if: success() || failure() && steps.build-http-s3-download-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download/Debug_with_Libslirp/CoreHTTP_S3_Download.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 2
+
+      - name: Delete AWS IOT Certificate
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: |
+          certificateId=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateId'])")
+          certificateArn=$(cat iot_cert.txt | python3 -c "import sys, json; print(json.load(sys.stdin)['certificateArn'])")
+          aws iot detach-policy --policy-name ${{ env.IOT_POLICY_NAME }} --target $certificateArn
+          aws iot update-certificate --certificate-id $certificateId --new-status INACTIVE
+          aws iot detach-thing-principal --thing-name ${{ env.IOT_THING_NAME }} --principal $certificateArn
+          aws iot delete-certificate --certificate-id $certificateId
 
       - name: Generate SSL credentials
         id: generate-credentials
@@ -135,46 +239,8 @@ jobs:
         if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/Debug_with_Libslirp/CoreHTTP_Mutual_Auth.exe
           log-dir: demo_run_logs
           timeout-seconds: 300
           success-line: "Demo completed successfully"
           retry-attempts: 3
-
-      - name: Configure coreHTTP Demos
-        shell: bash
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator
-        run: |
-          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
-          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
-          echo '    #define democonfigSERVER_HOSTNAME ""' | tee -a */demo_config.h
-          echo '    #define democonfigAWS_IOT_ENDPOINT ""' | tee -a */demo_config.h
-          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE ""' | tee -a */demo_config.h
-          echo '    #define democonfigIOT_THING_NAME ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_PRESIGNED_GET_URL "ABCDEF"' | tee -a */demo_config.h
-          echo '    #define democonfigS3_PRESIGNED_PUT_URL "ABCDEF"' | tee -a */demo_config.h
-          echo '    #define democonfigS3_ROOT_CA_PEM ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_BUCKET_NAME ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_BUCKET_REGION ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_OBJECT_NAME ""' | tee -a */demo_config.h
-          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
-
-      - name: Build HTTP S3 Upload Demo
-        id: build-http-s3-upload-demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
-        run: msbuild http_s3_upload_demo.sln -t:rebuild -property:Configuration=Debug -m
-
-      - name: Build HTTP S3 Download Multithreaded Demo
-        id: build-http-s3-download-multithreaded-demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
-        run: msbuild http_s3_download_multithreaded_demo.sln -t:rebuild -property:Configuration=Debug -m
-
-      - name: Build HTTP S3 Download Demo
-        id: build-http-s3-download-demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
-        run: msbuild http_s3_download_demo.sln -t:rebuild -property:Configuration=Debug -m

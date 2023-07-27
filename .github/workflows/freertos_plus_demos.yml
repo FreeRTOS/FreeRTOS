@@ -174,7 +174,7 @@ jobs:
         continue-on-error: true
         run: |
           cd FreeRTOS-Plus/ThirdParty/glib
-          meson setup build --backend=vs2019
+          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release & meson compile -C build
           meson compile -C build
 
       - name: Build corePKCS11 Demo
@@ -243,7 +243,7 @@ jobs:
         continue-on-error: true
         run: |
           cd FreeRTOS-Plus/ThirdParty/glib
-          meson setup build --backend=vs2019
+          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release & meson compile -C build
           meson compile -C build
 
       - name: Generate SSL credentials
@@ -661,7 +661,7 @@ jobs:
         continue-on-error: true
         run: |
           cd FreeRTOS-Plus/ThirdParty/glib
-          meson setup build --backend=vs2019
+          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release & meson compile -C build
           meson compile -C build
 
       - name: Start localhost Echo server

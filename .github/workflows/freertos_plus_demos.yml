@@ -163,16 +163,17 @@ jobs:
 
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
-      - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: win32
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
 
       - name: Install meson
         run: pip install meson
 
       - name: Install Glib
         continue-on-error: true
+        shell: cmd
         run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
           meson compile -C build
@@ -232,16 +233,17 @@ jobs:
           git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
           git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
-      - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: win32
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
 
       - name: Install meson
         run: pip install meson
 
       - name: Install Glib
         continue-on-error: true
+        shell: cmd
         run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
           meson compile -C build
@@ -650,16 +652,17 @@ jobs:
             FreeRTOS-Plus/ThirdParty/glib \
             FreeRTOS-Plus/ThirdParty/libslirp
 
-      - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: win32
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
 
       - name: Install meson
         run: pip install meson
 
       - name: Install Glib
         continue-on-error: true
+        shell: cmd
         run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
           meson compile -C build

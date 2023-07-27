@@ -7,10 +7,24 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  BUCKET_NAME : "freertos-demos-on-github-action"
+  OBJECT_NAME: "Test_S3_Upload.txt"
+  AWS_REGION : "us-east-1"
+  IOT_THING_NAME: "Test_Demo_On_Git_Action"
+  IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
+# permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+
 jobs:
   winsim_cellular:
     name: Windows Simulator Cellular Demos
     runs-on: windows-2019
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -91,6 +105,106 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::707737545917:role/freertos-github-actions
+          role-session-name: MySessionName
+          aws-region: ${{ env.AWS_REGION }}
+          managed-session-policies: |
+            arn:aws:iam::aws:policy/AmazonS3FullAccess
+            arn:aws:iam::aws:policy/AWSIoTFullAccess
+
+      - name: Get AWS Root CA
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          curl https://www.amazontrust.com/repository/AmazonRootCA1.pem >> root_ca.txt
+          sed 's/.*/"&\\n"\\/' root_ca.txt >> root_ca_cert.txt
+
+      - name: Upload text file to S3
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/Common
+        run: |
+          aws s3 cp ${{ env.OBJECT_NAME }} s3://${{ env.BUCKET_NAME }}/
+
+      - name: Install meson
+        run: pip install meson
+
+      - name: Install Glib
+        continue-on-error: true
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
+          cd FreeRTOS-Plus/ThirdParty/glib
+          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
+          meson compile -C build
+
+      - name: Generate SSL credentials
+        id: generate-credentials
+        uses: FreeRTOS/CI-CD-GitHub-Actions/ssl-credential-creator@main
+
+      - name: Start localhost HTTP server
+        id: http-server
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-http-1.1-server@main
+        with:
+          root-ca-cert-path: ${{ steps.generate-credentials.outputs.root-ca-cert-path }}
+          server-priv-key-path: ${{ steps.generate-credentials.outputs.server-priv-key-path }}
+          server-cert-path: ${{ steps.generate-credentials.outputs.server-cert-path }}
+
+      - name: Configure HTTP Plain Text Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
+        run: |
+          echo '#define democonfigSERVER_HOSTNAME "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigHTTP_PORT ( 8080 )' >> demo_config.h
+
+      - name: Build HTTP Plain Text Demo
+        id: build-http-plain-text-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
+        run: msbuild http_plain_text_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
+
+      - name: Run and monitor HTTP Plain Text Demo
+        if: success() || failure() && steps.build-http-plain-text-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext/Debug_with_Libslirp/CoreHTTP_Plaintext.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 3
+
+      - name: Configure HTTP Mutual Auth Demo
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: |
+          echo '#define democonfigROOT_CA_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
+          sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_CERTIFICATE_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-cert-path }} >> device_cert.txt
+          sed '$ s/.$//' device_cert.txt >> demo_config.h
+          echo '#define democonfigCLIENT_PRIVATE_KEY_PEM \' >> demo_config.h
+          sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
+          sed '$ s/.$//' device_priv_key.txt >> demo_config.h
+          echo '#define democonfigAWS_IOT_ENDPOINT "localhost"' >> demo_config.h
+          echo '#define democonfigAWS_HTTP_PORT	( 4443 )' >> demo_config.h
+          sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
+
+      - name: Build HTTP Mutual Auth Demo
+        id: build-http-mutual-auth-demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: msbuild http_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
+
+      - name: Run and monitor HTTP Mutual Auth Demo
+        if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/x64/Debug/CoreHTTP_Mutual_Auth.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 300
+          success-line: "Demo completed successfully"
+          retry-attempts: 3
+
       - name: Configure coreHTTP Demos
         shell: bash
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator
@@ -113,11 +227,6 @@ jobs:
           echo '    #define democonfigS3_BUCKET_REGION ""' | tee -a */demo_config.h
           echo '    #define democonfigS3_OBJECT_NAME ""' | tee -a */demo_config.h
           echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
-
-      - name: Build HTTP Plain Text Demo
-        id: build-http-plain-text-demo
-        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
-        run: msbuild http_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -m
 
       - name: Build HTTP Mutual Auth Demo
         id: build-http-mutual-auth-demo

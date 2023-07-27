@@ -469,7 +469,7 @@ jobs:
 
       - name: Build corePKCS11 + coreMQTT Mutual Auth Demo
         working-directory: FreeRTOS-Plus/Demo/corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
-        run: msbuild corePKCS11_MQTT_Mutual_Auth.sln -t:rebuild
+        run: msbuild corePKCS11_MQTT_Mutual_Auth.sln -t:rebuild -property:Configuration=Debug -property:Platform=Win32 -m
 
       - name: Configure coreSNTP_Windows_Simulator
         shell: bash
@@ -485,7 +485,7 @@ jobs:
 
       - name: Build coreSNTP Demo
         working-directory: FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator
-        run: msbuild core_sntp_demo.sln -t:rebuild
+        run: msbuild core_sntp_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=Win32 -m
 
   winsim_aws_iot:
     name: AWS IoT Windows Simulator Demos

@@ -425,7 +425,7 @@ jobs:
         if: success() || failure() && steps.build-mqtt-mutual-auth-with-wolfssl-demo.outcome == 'success'
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/Debug_with_Libslirp/FreeRTOS_Plus_WolfSSL_Windows_Simulator.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL/Debug/RTOSDemo.exe
           log-dir: demo_run_logs
           timeout-seconds: 90
           success-line: "Demo completed successfully"

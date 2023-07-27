@@ -357,6 +357,20 @@ jobs:
             exit 1
           fi
 
+      - name: Fetch Community-Supported-Demos Submodule
+        shell: bash
+        run: |
+          # Fetch Community-Supported-Demos Submodule
+          echo "::group::Fetch Community-Supported-Demos Submodule"
+          git submodule update --checkout --init --depth 1 FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
+          echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Community-Supported-Demos\033[0m"
+          else
+            echo -e "\033[32;31mCommunity-Supported-Demos Clone Failed...\033[0m"
+            exit 1
+          fi
+
       - name: Install GNU ARM Toolchain
         shell: bash
         run: |
@@ -451,7 +465,7 @@ jobs:
 
       - name: Build CORTEX_M0+_RP2040 Demos
         shell: bash
-        working-directory: FreeRTOS/Demo/ThirdParty/Community-Supported/CORTEX_M0+_RP2040
+        working-directory: FreeRTOS/Demo/ThirdParty/Community-Supported-Demos/CORTEX_M0+_RP2040
         run: |
           # Build CORTEX_M0+_RP2040 Demos
           echo "::group::Build CORTEX_M0+_RP2040 Demos"

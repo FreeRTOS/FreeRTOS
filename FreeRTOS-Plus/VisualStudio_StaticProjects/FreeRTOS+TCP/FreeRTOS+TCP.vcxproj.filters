@@ -198,12 +198,6 @@
     <ClCompile Include="NetworkInterface_WinPCap.c">
       <Filter>Network Interface\winpcap</Filter>
     </ClCompile>
-    <ClCompile Include="plus_tcp_hooks_winsim.c">
-      <Filter>Network Interface\winpcap</Filter>
-    </ClCompile>
-    <ClCompile Include="plus_tcp_hooks_libslirp.c">
-      <Filter>Network Interface\libslirp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\libslirp\MBuffNetifBackendLibslirp.c">
       <Filter>Network Interface\libslirp</Filter>
     </ClCompile>
@@ -302,6 +296,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\libslirp\src\vmstate.c">
       <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="plus_tcp_hooks_winsim.c">
+      <Filter>Network Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -117,7 +117,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ipconfigUSE_LIBSLIRP;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\ThirdParty\glib;..\..\ThirdParty\glib\build;..\..\ThirdParty\glib\build\glib;..\..\ThirdParty\glib\build\subprojects\pcre2-10.42;..\..\ThirdParty\glib\subprojects\proxy-libintl;..\..\ThirdParty\libslirp\src;.;..\..\Source\Utilities\logging;DemoTasks\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

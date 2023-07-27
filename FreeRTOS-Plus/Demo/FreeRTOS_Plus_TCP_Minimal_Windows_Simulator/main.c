@@ -169,9 +169,13 @@ int main( void )
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 
+#ifdef ipconfigUSE_LIBSLIRP
     extern NetworkInterface_t* pxFillInterfaceDescriptor(BaseType_t xEMACIndex,
         NetworkInterface_t * pxInterface);
-    pxFillInterfaceDescriptor(0, &(xInterfaces[0]));
+    pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+#else
+    pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+#endif
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );

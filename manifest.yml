@@ -130,7 +130,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
 
   - name: "FreeRTOS-Community-Supported-Demos"
-    version: "e21b617"
+    version: "ce61bcc"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"

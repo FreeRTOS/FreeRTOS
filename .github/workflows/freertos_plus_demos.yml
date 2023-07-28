@@ -1,11 +1,18 @@
 name: Build FreeRTOS+ Demos
 on:
-  workflow_dispatch:
-  push:
-    branches: ["**"]
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened]
 
-  pull_request:
-    branches: [main]
+env:
+  BUCKET_NAME : "freertos-demos-on-github-action"
+  OBJECT_NAME: "Test_S3_Upload.txt"
+  AWS_REGION : "us-east-1"
+  IOT_THING_NAME: "Test_Demo_On_Git_Action"
+  IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
+# permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
 
 jobs:
   winsim_cellular:
@@ -90,6 +97,16 @@ jobs:
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::707737545917:role/freertos-github-actions
+          role-session-name: MySessionName
+          aws-region: ${{ env.AWS_REGION }}
+          managed-session-policies: |
+            arn:aws:iam::aws:policy/AmazonS3FullAccess
+            arn:aws:iam::aws:policy/AWSIoTFullAccess
 
       - name: Configure coreHTTP Demos
         shell: bash

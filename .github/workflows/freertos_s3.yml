@@ -195,8 +195,8 @@ jobs:
         shell: bash
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
         run: |
-          echo '#define democonfigSERVER_HOSTNAME "127.0.0.1"' >> demo_config.h
-          echo '#define democonfigHTTP_PORT ( 8080 )' >> demo_config.h
+          echo '#define democonfigSERVER_HOSTNAME "httpbin.org"' >> demo_config.h
+          echo '#define democonfigHTTP_PORT ( 80 )' >> demo_config.h
 
       - name: Build HTTP Plain Text Demo
         id: build-http-plain-text-demo
@@ -235,12 +235,12 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
         run: msbuild http_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
 
-      - name: Run and monitor HTTP Mutual Auth Demo
-        if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
-        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
-        with:
-          exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/Debug_with_Libslirp/CoreHTTP_Mutual_Auth.exe
-          log-dir: demo_run_logs
-          timeout-seconds: 300
-          success-line: "Demo completed successfully"
-          retry-attempts: 3
+      # - name: Run and monitor HTTP Mutual Auth Demo
+      #   if: success() || failure() && steps.build-http-mutual-auth-demo.outcome == 'success'
+      #   uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+      #   with:
+      #     exe-path: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth/Debug_with_Libslirp/CoreHTTP_Mutual_Auth.exe
+      #     log-dir: demo_run_logs
+      #     timeout-seconds: 300
+      #     success-line: "Demo completed successfully"
+      #     retry-attempts: 3

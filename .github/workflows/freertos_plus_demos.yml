@@ -173,23 +173,10 @@ jobs:
         continue-on-error: true
         shell: cmd
         run: |
-          # Install Glib
-          echo ::group::Swap to Developer Command Prompt
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
-          echo ::endgroup::
-          echo ::group::Build Glib
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
           meson compile -C build
-          IF EXIST build\glib\glib-2.0.lib (
-            echo ::endgroup::
-            echo Glib Built
-            exit 0
-          ) ELSE (
-            echo ::endgroup::
-            echo Glib Build Failed
-            exit 1
-          )
 
       - name: Build corePKCS11 Demo
         id: build-corePKCS11-demo
@@ -256,23 +243,10 @@ jobs:
         continue-on-error: true
         shell: cmd
         run: |
-          # Install Glib
-          echo ::group::Swap to Developer Command Prompt
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
-          echo ::endgroup::
-          echo ::group::Build Glib
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
           meson compile -C build
-          IF EXIST build\glib\glib-2.0.lib (
-            echo ::endgroup::
-            echo Glib Built
-            exit 0
-          ) ELSE (
-            echo ::endgroup::
-            echo Glib Build Failed
-            exit 1
-          )
 
       - name: Generate SSL credentials
         id: generate-credentials
@@ -688,23 +662,10 @@ jobs:
         continue-on-error: true
         shell: cmd
         run: |
-          # Install Glib
-          echo ::group::Swap to Developer Command Prompt
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
-          echo ::endgroup::
-          echo ::group::Build Glib
           cd FreeRTOS-Plus/ThirdParty/glib
           meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
           meson compile -C build
-          IF EXIST build\glib\glib-2.0.lib (
-            echo ::endgroup::
-            echo Glib Built
-            exit 0
-          ) ELSE (
-            echo ::endgroup::
-            echo Glib Build Failed
-            exit 1
-          )
 
       - name: Start localhost Echo server
         id: echo-server

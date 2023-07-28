@@ -87,6 +87,9 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	0
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES			 		0
+#define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS						1
@@ -152,6 +155,9 @@ header file. */
 
 /* Ensure that system calls can only be made from kernel code. */
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY		1
+
+/* Do not allow critical sections from unprivileged tasks. */
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS	0
 
 #ifdef __cplusplus
 }

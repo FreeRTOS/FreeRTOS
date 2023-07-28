@@ -26,8 +26,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief reset driver version 2.0.2. */
-#define FSL_RESET_DRIVER_VERSION (MAKE_VERSION(2, 0, 2))
+/*! @brief reset driver version 2.0.3. */
+#define FSL_RESET_DRIVER_VERSION (MAKE_VERSION(2, 0, 3))
 /*@}*/
 
 /*!
@@ -233,6 +233,22 @@ typedef enum _SYSCON_RSTn
     {                            \
         kOSTIMER0_RST_SHIFT_RSTn \
     } /* Reset bits for OSTIMER peripheral */
+#define POWERQUAD_RSTS            \
+    {                             \
+        kPOWERQUAD_RST_SHIFT_RSTn \
+    } /* Reset bits for Powerquad peripheral */
+#define CASPER_RSTS            \
+    {                          \
+        kCASPER_RST_SHIFT_RSTn \
+    } /* Reset bits for Casper peripheral */
+#define HASHCRYPT_RSTS            \
+    {                             \
+        kHASHCRYPT_RST_SHIFT_RSTn \
+    } /* Reset bits for Hashcrypt peripheral */
+#define PUF_RSTS            \
+    {                       \
+        kPUF_RST_SHIFT_RSTn \
+    } /* Reset bits for PUF peripheral */
 typedef SYSCON_RSTn_t reset_ip_name_t;
 
 /*******************************************************************************

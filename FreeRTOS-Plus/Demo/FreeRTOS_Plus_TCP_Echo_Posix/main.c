@@ -106,7 +106,11 @@ static void prvSaveTraceFile( void );
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 /* Notes if the trace is running or not. */
-static BaseType_t xTraceRunning = pdTRUE;
+#if ( TRACE_ON_ENTER == 1 )
+    static BaseType_t xTraceRunning = pdTRUE;
+#else
+    static BaseType_t xTraceRunning = pdFALSE;
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -197,10 +201,10 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationTickHook( void )
 {
     /* This function will be called by each tick interrupt if
-     * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-     * added here, but the tick hook is called from an interrupt context, so
-     * code must not attempt to block, and only the interrupt safe FreeRTOS API
-     * functions can be used (those that end in FromISR()). */
+    * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+    * added here, but the tick hook is called from an interrupt context, so
+    * code must not attempt to block, and only the interrupt safe FreeRTOS API
+    * functions can be used (those that end in FromISR()). */
 }
 
 void traceOnEnter()
@@ -227,7 +231,9 @@ void traceOnEnter()
 
         /* clear the buffer */
         char buffer[ 1 ];
-        read( STDIN_FILENO, &buffer, 1 );
+        size_t xReadRet;
+        xReadRet = read( STDIN_FILENO, &buffer, 1 );
+        ( void ) xReadRet;
     }
 }
 
@@ -245,7 +251,7 @@ void vLoggingPrintf( const char * pcFormat,
 void vApplicationDaemonTaskStartupHook( void )
 {
     /* This function will be called once only, when the daemon task starts to
-     * execute    (sometimes called the timer task).  This is useful if the
+     * execute (sometimes called the timer task). This is useful if the
      * application includes initialisation code that would benefit from executing
      * after the scheduler has been started. */
 }
@@ -260,12 +266,10 @@ void vAssertCalled( const char * const pcFileName,
     /* Called if an assertion passed to configASSERT() fails.  See
      * https://www.FreeRTOS.org/a00110.html#configASSERT for more information. */
 
-    /* Parameters are not used. */
-    ( void ) ulLine;
-    ( void ) pcFileName;
-
     taskENTER_CRITICAL();
     {
+        printf( "vAssertCalled( %s %lu )\n", pcFileName, ulLine );
+
         /* Stop the trace recording. */
         if( xPrinted == pdFALSE )
         {
@@ -280,7 +284,7 @@ void vAssertCalled( const char * const pcFileName,
         /* You can step out of this function to debug the assertion by using
          * the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
          * value. */
-        while( ulSetToNonZeroInDebuggerToContinue == 1 )
+        while( ulSetToNonZeroInDebuggerToContinue == 0 )
         {
             __asm volatile ( "NOP" );
             __asm volatile ( "NOP" );

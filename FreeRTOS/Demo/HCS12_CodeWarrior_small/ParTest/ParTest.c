@@ -40,7 +40,7 @@
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
-	/* This function is required as it is called from the standard demo
+	/* This function is required as it is called from the standard demo 
 	application files.  All it does however is call the Processor Expert
 	created function. */
 	portENTER_CRITICAL();

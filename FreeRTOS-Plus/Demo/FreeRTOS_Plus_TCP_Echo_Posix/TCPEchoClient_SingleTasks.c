@@ -54,7 +54,7 @@
 #if ( ipconfigUSE_TCP == 1 )
 
 /* The echo tasks create a socket, send out a number of echo requests, listen
- * for the echo reply, then close the socket again before starting over.  This
+ * for the echo reply, then close the socket again before starting over. This
  * delay is used between each iteration to ensure the network does not get too
  * congested. */
     #define echoLOOP_DELAY                ( ( TickType_t ) 150 / portTICK_PERIOD_MS )
@@ -101,12 +101,9 @@
     static char cTxBuffers[ echoNUM_ECHO_CLIENTS ][ echoBUFFER_SIZES ],
                 cRxBuffers[ echoNUM_ECHO_CLIENTS ][ echoBUFFER_SIZES ];
 
-    static StaticTask_t echoServerTaskBuffer;
-    static StackType_t echoServerTaskStack[ PTHREAD_STACK_MIN * 2 ];
-
 /*-----------------------------------------------------------*/
 
-    void vStartTCPEchoClientTasks_SingleTasks( uint16_t usTaskStackSize,
+    void vStartTCPEchoClientTasks_SingleTasks( configSTACK_DEPTH_TYPE uxTaskStackSize,
                                                UBaseType_t uxTaskPriority )
     {
         BaseType_t x;
@@ -114,13 +111,13 @@
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
         {
-            xTaskCreateStatic( prvEchoClientTask,       /* The function that implements the task. */
-                               "Echo0",                 /* Just a text name for the task to aid debugging. */
-                               usTaskStackSize,         /* The stack size is defined in FreeRTOSIPConfig.h. */
-                               ( void * ) x,            /* The task parameter, not used in this case. */
-                               uxTaskPriority,          /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
-                               echoServerTaskStack,
-                               &echoServerTaskBuffer ); /* The task handle is not used. */
+            xTaskCreate(
+                prvEchoClientTask, /* The function that implements the task. */
+                "Echo0",           /* Just a text name for the task to aid debugging. */
+                uxTaskStackSize,   /* The stack size is defined in FreeRTOSIPConfig.h. */
+                ( void * ) x,      /* The task parameter, not used in this case. */
+                uxTaskPriority,    /* The priority assigned to the task is defined in FreeRTOSConfig.h. */
+                NULL );
         }
     }
 /*-----------------------------------------------------------*/
@@ -145,8 +142,8 @@
         xWinProps.lRxBufSize = 6 * ipconfigTCP_MSS;
         xWinProps.lRxWinSize = 3;
 
-        /* This task can be created a number of times.  Each instance is numbered
-         * to enable each instance to use a different Rx and Tx buffer.  The number is
+        /* This task can be created a number of times. Each instance is numbered
+         * to enable each instance to use a different Rx and Tx buffer. The number is
          * passed in as the task's parameter. */
         xInstance = ( BaseType_t ) pvParameters;
 
@@ -154,14 +151,28 @@
         pcTransmittedString = &( cTxBuffers[ xInstance ][ 0 ] );
         pcReceivedString = &( cRxBuffers[ xInstance ][ 0 ] );
 
-        /* Echo requests are sent to the echo server.  The address of the echo
+        /* Echo requests are sent to the echo server. The address of the echo
          * server is configured by the constants configECHO_SERVER_ADDR0 to
          * configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
         xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-        xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-                                                                configECHO_SERVER_ADDR1,
-                                                                configECHO_SERVER_ADDR2,
-                                                                configECHO_SERVER_ADDR3 );
+
+        #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        {
+            xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+                                                                    configECHO_SERVER_ADDR1,
+                                                                    configECHO_SERVER_ADDR2,
+                                                                    configECHO_SERVER_ADDR3 );
+        }
+        #else
+        {
+            xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+                                                                    configECHO_SERVER_ADDR1,
+                                                                    configECHO_SERVER_ADDR2,
+                                                                    configECHO_SERVER_ADDR3 );
+        }
+        #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+        xEchoServerAddress.sin_family = FREERTOS_AF_INET;
 
         for( ; ; )
         {
@@ -178,14 +189,18 @@
             FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_WIN_PROPERTIES, ( void * ) &xWinProps, sizeof( xWinProps ) );
 
             /* Connect to the echo server. */
-            printf( "connecting to echo server....\n" );
+            printf( "\nConnecting to echo server %d.%d.%d.%d:%d....\n",
+                    configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3, echoECHO_PORT );
 
             ret = FreeRTOS_connect( xSocket, &xEchoServerAddress, sizeof( xEchoServerAddress ) );
 
             if( ret == 0 )
             {
-                printf( "Connected to server.. \n" );
+                /* Clear the buffer into which the string will be placed */
+                memset( ( void * ) pcTransmittedString, 0x00, echoBUFFER_SIZES );
+
                 ulConnections[ xInstance ]++;
+                printf( "Connected to server %d times...\n", ulConnections[ xInstance ] );
 
                 /* Send a number of echo requests. */
                 for( lLoopCount = 0; lLoopCount < lMaxLoopCount; lLoopCount++ )
@@ -195,9 +210,12 @@
 
                     /* Add in some unique text at the front of the string. */
                     sprintf( pcTransmittedString, "TxRx message number %u", ulTxCount );
+
+                    /* Replace '\0' with '-' for string length and comparison functions */
+                    pcTransmittedString[ strlen( pcTransmittedString ) ] = '-';
                     ulTxCount++;
 
-                    printf( "sending data to the echo server \n" );
+                    printf( "\n\tSending %d bytes of data to the echo server\n", lStringLength );
                     /* Send the string to the socket. */
                     lTransmitted = FreeRTOS_send( xSocket,                        /* The socket being sent to. */
                                                   ( void * ) pcTransmittedString, /* The data being sent. */
@@ -225,7 +243,7 @@
 
                         if( xReturned < 0 )
                         {
-                            /* Error occurred.  Latch it so it can be detected
+                            /* Error occurred. Latch it so it can be detected
                              * below. */
                             xReceivedBytes = xReturned;
                             break;
@@ -254,12 +272,17 @@
                         {
                             /* The echo reply was received without error. */
                             ulTxRxCycles[ xInstance ]++;
+
+                            /* The "Received correct data" line is used to determine if
+                             * this demo runs as part of a GitHub workflow. */
+                            printf( "\tReceived correct data %d times.\n", ulTxRxCycles[ xInstance ] );
                         }
                         else
                         {
                             /* The received string did not match the transmitted
                              * string. */
                             ulTxRxFailures[ xInstance ]++;
+                            printf( "\tReceived incorrect data %d times.\n", ulTxRxFailures[ xInstance ] );
                             break;
                         }
                     }
@@ -298,7 +321,7 @@
             }
             else
             {
-                printf( "Could not connect to server %ld\n", ret );
+                printf( "Could not connect to server, received error code %ld\n", ret );
             }
 
             /* Close this socket before looping back to create another. */
@@ -315,7 +338,7 @@
                                        uint32_t ulBufferLength )
     {
         BaseType_t lCharactersToAdd, lCharacter;
-        char cChar = '0';
+        char cChar = 'A';
         const BaseType_t lMinimumLength = 60;
         uint32_t ulRandomNumber;
 
@@ -333,12 +356,14 @@
             cBuffer[ lCharacter ] = cChar;
             cChar++;
 
-            if( cChar > '~' )
+            if( cChar > 'Z' )
             {
-                cChar = '0';
+                cChar = 'A';
             }
         }
 
+        cBuffer[ lCharacter - 1 ] = '\n';
+        cBuffer[ lCharacter ] = '\0';
         return lCharactersToAdd;
     }
 /*-----------------------------------------------------------*/
@@ -375,3 +400,21 @@
     }
 
 #endif /* ipconfigUSE_TCP */
+
+#if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) )
+
+    #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+        eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
+                                                    uint32_t ulIPAddress )
+    #else /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+        eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
+                                                          struct xNetworkEndPoint * pxEndPoint,
+                                                          IP_Address_t * pxIPAddress )
+    #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+    {
+        /* Provide a stub for this function. */
+        return eDHCPContinue;
+    }
+
+#endif
+/*-----------------------------------------------------------*/

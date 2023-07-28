@@ -41,27 +41,7 @@ SOURCE_FILES += ${KERNEL_DIR}/portable/MemMang/heap_3.c
 # FreeRTOS+TCP
 INCLUDE_DIRS += -I${FREERTOS_TCP}/source/include/
 
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_ARP.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_DHCP.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_DNS.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_DNS_Cache.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_DNS_Callback.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_DNS_Networking.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_DNS_Parser.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_ICMP.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_IP.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_IP_Timers.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_IP_Utils.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_Sockets.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_Stream_Buffer.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_TCP_IP.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_TCP_Reception.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_TCP_State_Handling.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_TCP_Transmission.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_TCP_Utils.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_TCP_WIN.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_Tiny_TCP.c
-SOURCE_FILES += ${FREERTOS_TCP}/source/FreeRTOS_UDP_IP.c
+SOURCE_FILES += $(wildcard ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/*.c )
 
 # FreeRTOS+TCP Port for ARM MPS2 SoC
 INCLUDE_DIRS += -I${FREERTOS_TCP}/source/portable/NetworkInterface/MPS2_AN385/ether_lan9118

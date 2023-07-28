@@ -94,6 +94,10 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portHAS_STACK_OVERFLOW_CHECKING              0
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS      5
 
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES                        0
+#define configMAX_CO_ROUTINE_PRIORITIES              ( 2 )
+
 #define portSTACK_GROWTH                             ( -1 )
 #define configRECORD_STACK_HIGH_ADDRESS              1
 

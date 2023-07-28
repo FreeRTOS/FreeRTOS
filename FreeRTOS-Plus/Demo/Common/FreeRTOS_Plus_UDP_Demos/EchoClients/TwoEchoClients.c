@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -130,10 +130,24 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 	server is configured by the constants configECHO_SERVER_ADDR0 to
 	configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 	xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-															configECHO_SERVER_ADDR1,
-															configECHO_SERVER_ADDR2,
-															configECHO_SERVER_ADDR3 );
+
+	#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	{
+		xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#else
+	{
+		xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{
@@ -238,10 +252,24 @@ const size_t xBufferLength = strlen( pcStringToSend ) + 15;
 	server is configured by the constants configECHO_SERVER_ADDR0 to
 	configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 	xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-															configECHO_SERVER_ADDR1,
-															configECHO_SERVER_ADDR2,
-															configECHO_SERVER_ADDR3 );
+
+	#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	{
+		xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#else
+	{
+		xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+																configECHO_SERVER_ADDR1,
+																configECHO_SERVER_ADDR2,
+																configECHO_SERVER_ADDR3 );
+	}
+	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{

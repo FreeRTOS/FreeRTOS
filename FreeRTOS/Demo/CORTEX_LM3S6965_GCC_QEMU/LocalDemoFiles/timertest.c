@@ -73,23 +73,23 @@ uint32_t ulFrequency;
     SysCtlPeripheralEnable( SYSCTL_PERIPH_TIMER1 );
     TimerConfigure( TIMER0_BASE, TIMER_CFG_32_BIT_PER );
     TimerConfigure( TIMER1_BASE, TIMER_CFG_32_BIT_PER );
-
+	
 	/* Set the timer interrupt to be above the kernel - highest. */
 	IntPrioritySet( INT_TIMER0A, timerHIGHEST_PRIORITY );
 
 	/* Just used to measure time. */
     TimerLoadSet(TIMER1_BASE, TIMER_A, timerMAX_32BIT_VALUE );
-
+	
 	/* Ensure interrupts do not start until the scheduler is running. */
 	portDISABLE_INTERRUPTS();
-
+	
 	/* The rate at which the timer will interrupt. */
-	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;
+	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;	
     TimerLoadSet( TIMER0_BASE, TIMER_A, ulFrequency );
     IntEnable( INT_TIMER0A );
     TimerIntEnable( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
 
-	/* Enable both timers. */
+	/* Enable both timers. */	
     TimerEnable( TIMER0_BASE, TIMER_A );
     TimerEnable( TIMER1_BASE, TIMER_A );
 }
@@ -108,10 +108,10 @@ static uint32_t ulMaxDifference = 0, ulLastCount = 0;
 	TimerIntClear( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
 
 	if( ulCurrentCount < ulLastCount )
-	{
+	{	
 		/* How many times has timer 1 counted since the last interrupt? */
 		ulDifference = 	ulLastCount - ulCurrentCount;
-
+	
 		/* Is this the largest difference we have measured yet? */
 		if( ulDifference > ulMaxDifference )
 		{
@@ -119,7 +119,7 @@ static uint32_t ulMaxDifference = 0, ulLastCount = 0;
 			ulMaxJitter = ulMaxDifference - timerEXPECTED_DIFFERENCE_VALUE;
 		}
 	}
-
+	
 	ulLastCount = ulCurrentCount;
 }
 

@@ -10,14 +10,14 @@
       <TargetName>FreeRTOSDemo</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6130001::V6.13.1::.\ARMCLANG</pCCUsed>
+      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H743ZITx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.4.0</PackID>
-          <PackURL>https://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.3.0.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x24000000-0x2407FFFF) IROM(0x8000000-0x81FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -185,6 +185,8 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -351,7 +353,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -411,6 +413,21 @@
               <FileName>mpu_demo.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Demo\mpu_demo.h</FilePath>
+            </File>
+            <File>
+              <FileName>reg_tests_asm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Demo\GCC\reg_tests_asm.c</FilePath>
+            </File>
+            <File>
+              <FileName>reg_tests.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Demo\reg_tests.c</FilePath>
+            </File>
+            <File>
+              <FileName>reg_tests.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Demo\reg_tests.h</FilePath>
             </File>
           </Files>
         </Group>

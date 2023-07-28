@@ -65,11 +65,13 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-extern volatile BaseType_t xYieldPending;
+extern volatile BaseType_t xYieldPendings[];
+#define xYieldPending    xYieldPendings[ 0 ]
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-extern TaskHandle_t xIdleTaskHandle;
+extern TaskHandle_t xIdleTaskHandles[];
+#define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
 extern volatile UBaseType_t uxSchedulerSuspended;
 
 /* =============================  DEFINES  ================================== */
@@ -1721,6 +1723,29 @@ void test_eTaskGetState_success_current_tcb( void )
     TEST_ASSERT_EQUAL( eRunning, ret_task_state );
 }
 
+void test_eTaskGetState_success_not_current_tcb_pending_ready( void )
+{
+    TaskHandle_t task_handle;
+
+    create_task_priority = 3;
+    task_handle = create_task();
+    create_task_priority = 5;
+    create_task();
+    ptcb = ( TCB_t * ) task_handle;
+    TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
+    eTaskState ret_task_state;
+    /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
+                                             NULL );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xPendingReadyList );
+
+    /* API Call */
+    ret_task_state = eTaskGetState( task_handle );
+    /* Validations */
+    TEST_ASSERT_EQUAL( eReady, ret_task_state );
+}
+
 void test_eTaskGetState_success_not_current_tcb_blocked_delayed( void )
 {
     TaskHandle_t task_handle;
@@ -1735,6 +1760,8 @@ void test_eTaskGetState_success_not_current_tcb_blocked_delayed( void )
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              pxDelayedTaskList );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             NULL );
 
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
@@ -1756,6 +1783,8 @@ void test_eTaskGetState_success_not_current_tcb_blocked_overflow( void )
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              pxOverflowDelayedTaskList );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             NULL );
 
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
@@ -1777,6 +1806,8 @@ void test_eTaskGetState_success_not_current_tcb_ready( void )
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              &pxReadyTasksLists[ 0 ] );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             NULL );
 
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
@@ -1800,6 +1831,8 @@ void test_eTaskGetState_success_not_current_tcb_suspended( void )
                                              &xSuspendedTaskList );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              NULL );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             NULL );
 
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
@@ -1821,6 +1854,8 @@ void test_eTaskGetState_success_not_current_tcb_deleted( void )
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              &xTasksWaitingTermination );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             NULL );
 
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
@@ -1842,6 +1877,9 @@ void test_eTaskGetState_success_not_current_tcb_deleted_not_found( void )
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              NULL );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             NULL );
+
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
     /* Validations */
@@ -1870,6 +1908,8 @@ void test_eTaskGetState_success_not_current_tcb_wait_notif( void )
                                              &xSuspendedTaskList );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              NULL );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             NULL );
 
     /* API Call */
     ret_task_state = eTaskGetState( task_handle );
@@ -1890,6 +1930,8 @@ void test_eTaskGetState_success_not_current_tcb_blocked( void )
     eTaskState ret_task_state;
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
+                                             &xSuspendedTaskList );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xSuspendedTaskList );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xSuspendedTaskList );
@@ -3101,6 +3143,7 @@ void test_xTaskAbortDelay_success( void )
     /* eTaskGetState */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              pxDelayedTaskList );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     /* back */
     uxListRemove_ExpectAndReturn( &tcb->xStateListItem, pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
@@ -3146,6 +3189,8 @@ void test_xTaskAbortDelay_success_notdelayed( void )
     /* Expectations */
     /* eTaskGetState */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
+                                             pxDelayedTaskList );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              pxDelayedTaskList );
     /* back */
     uxListRemove_ExpectAndReturn( &tcb->xStateListItem, pdTRUE );

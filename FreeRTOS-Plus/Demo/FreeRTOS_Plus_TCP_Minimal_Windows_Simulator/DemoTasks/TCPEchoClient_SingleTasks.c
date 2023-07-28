@@ -153,7 +153,18 @@ TickType_t xTimeOnEntering;
 	server is configured by the constants configECHO_SERVER_ADDR0 to
 	configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 	xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
+
+	#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	{
+		xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
+	}
+	#else
+	{
+		xEchoServerAddress.sin_addr = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
+	}
+	#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+	xEchoServerAddress.sin_family = FREERTOS_AF_INET;
 
 	for( ;; )
 	{
@@ -182,6 +193,11 @@ TickType_t xTimeOnEntering;
 
 				/* Add in some unique text at the front of the string. */
 				sprintf( pcTransmittedString, "TxRx message number %u", ulTxCount );
+
+				/* Replace '\0' with '-' for string length and comparison functions */
+				pcTransmittedString[ strlen( pcTransmittedString ) ] = '-';
+
+				printf( "\n\tSending %d bytes of data to the echo server\n", lStringLength );
 				ulTxCount++;
 
 				/* Send the string to the socket. */
@@ -239,12 +255,17 @@ TickType_t xTimeOnEntering;
 					{
 						/* The echo reply was received without error. */
 						ulTxRxCycles[ xInstance ]++;
+
+						/* The "Received correct data" line is used to determine if
+							* this demo runs successfully on a GitHub workflow. */
+						printf( "\tReceived correct data %d times.\n", ulTxRxCycles[ xInstance ] );
 					}
 					else
 					{
 						/* The received string did not match the transmitted
 						string. */
 						ulTxRxFailures[ xInstance ]++;
+						printf( "\tReceived incorrect data %d times.\n", ulTxRxFailures[ xInstance ] );
 						break;
 					}
 				}
@@ -295,7 +316,7 @@ TickType_t xTimeOnEntering;
 static BaseType_t prvCreateTxData( char *cBuffer, uint32_t ulBufferLength )
 {
 BaseType_t lCharactersToAdd, lCharacter;
-char cChar = '0';
+char cChar = 'A';
 const BaseType_t lMinimumLength = 60;
 uint32_t ulRandomNumber;
 
@@ -313,11 +334,14 @@ uint32_t ulRandomNumber;
 		cBuffer[ lCharacter ] = cChar;
 		cChar++;
 
-		if( cChar > '~' )
+		if( cChar > 'Z' )
 		{
-			cChar = '0';
+			cChar = 'A';
 		}
 	}
+
+	cBuffer[ lCharacter - 1 ] = '\n';
+	cBuffer[ lCharacter ] = '\0';
 
 	return lCharactersToAdd;
 }

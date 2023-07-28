@@ -7,24 +7,10 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  BUCKET_NAME : "freertos-demos-on-github-action"
-  OBJECT_NAME: "Test_S3_Upload.txt"
-  AWS_REGION : "us-east-1"
-  IOT_THING_NAME: "Test_Demo_On_Git_Action"
-  IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
-# permission can be added at job level or workflow level    
-permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
-
 jobs:
   winsim_cellular:
     name: Windows Simulator Cellular Demos
     runs-on: windows-2019
-    permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -80,6 +66,16 @@ jobs:
         run: msbuild mqtt_mutual_auth_demo_with_sara_r4.sln -t:rebuild -property:Configuration=Debug
 
   winsim_coreHTTP:
+    env:
+      BUCKET_NAME : "freertos-demos-on-github-action"
+      OBJECT_NAME: "Test_S3_Upload.txt"
+      AWS_REGION : "us-east-1"
+      IOT_THING_NAME: "Test_Demo_On_Git_Action"
+      IOT_POLICY_NAME: "Thing_Policy_For_Git-Action"
+    # permission can be added at job level or workflow level    
+    permissions:
+          id-token: write   # This is required for requesting the JWT
+          contents: read    # This is required for actions/checkout
     name: coreHTTP WinSim Demos
     runs-on: windows-2019
     steps:

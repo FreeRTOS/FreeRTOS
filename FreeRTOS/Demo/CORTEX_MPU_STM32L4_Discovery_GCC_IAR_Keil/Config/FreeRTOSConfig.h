@@ -98,22 +98,22 @@ FreeRTOS/Source/tasks.c for limitations. */
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet				1
-#define INCLUDE_uxTaskPriorityGet				1
-#define INCLUDE_vTaskDelete						1
-#define INCLUDE_vTaskCleanUpResources			1
-#define INCLUDE_vTaskSuspend					1
-#define INCLUDE_vTaskDelayUntil					1
-#define INCLUDE_vTaskDelay						1
-#define INCLUDE_eTaskGetState					1
-#define INCLUDE_xTimerPendFunctionCall			0
-#define INCLUDE_xSemaphoreGetMutexHolder		1
-#define INCLUDE_xTaskGetHandle					1
-#define INCLUDE_xTaskGetCurrentTaskHandle		1
-#define INCLUDE_xTaskGetIdleTaskHandle			1
-#define INCLUDE_xTaskAbortDelay					1
-#define INCLUDE_xTaskGetSchedulerState			1
-#define INCLUDE_xTaskGetIdleTaskHandle			1
+#define INCLUDE_vTaskPrioritySet							1
+#define INCLUDE_uxTaskPriorityGet							1
+#define INCLUDE_vTaskDelete										1
+#define INCLUDE_vTaskCleanUpResources					1
+#define INCLUDE_vTaskSuspend									1
+#define INCLUDE_vTaskDelayUntil								1
+#define INCLUDE_vTaskDelay										1
+#define INCLUDE_eTaskGetState									1
+#define INCLUDE_xTimerPendFunctionCall				0
+#define INCLUDE_xSemaphoreGetMutexHolder			1
+#define INCLUDE_xTaskGetHandle								1
+#define INCLUDE_xTaskGetCurrentTaskHandle			1
+#define INCLUDE_xTaskGetIdleTaskHandle				1
+#define INCLUDE_xTaskAbortDelay								1
+#define INCLUDE_xTaskGetSchedulerState				1
+#define INCLUDE_xTaskGetIdleTaskHandle				1
 #define INCLUDE_uxTaskGetStackHighWaterMark 	1
 
 /* Cortex-M specific definitions. */
@@ -141,11 +141,18 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY	 		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
+/* Set configUSE_MPU_WRAPPERS_V1 to 0 to use new MPU wrapper.
+ * See https://freertos.org/a00110.html#configUSE_MPU_WRAPPERS_V1 for details. */
+#define configUSE_MPU_WRAPPERS_V1										( 0 )
+/* See https://freertos.org/a00110.html#configPROTECTED_KERNEL_OBJECT_POOL_SIZE for details. */
+#define configPROTECTED_KERNEL_OBJECT_POOL_SIZE			( 150 )
+/* See https://freertos.org/a00110.html#configSYSTEM_CALL_STACK_SIZE for details. */
+#define configSYSTEM_CALL_STACK_SIZE								( 128 )
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
 #define xPortPendSVHandler 			PendSV_Handler
-#define vPortSVCHandler 			SVC_Handler
+#define vPortSVCHandler 				SVC_Handler
 #define xPortSysTickHandler 		SysTick_Handler
 
 /* Normal assert() semantics without relying on the provision of an assert.h
@@ -153,7 +160,7 @@ header file. */
 #define configASSERT( x ) 			if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 
 /* Ensure that system calls can only be made from kernel code. */
-#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY		1
+#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY						1
 
 #ifdef __cplusplus
 }

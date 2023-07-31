@@ -236,8 +236,10 @@ static TimerHandle_t xTimer = NULL;
 	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x120000;
 	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0xE0000UL;
 	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0xE4000UL;
+	const uint32_t * __syscalls_flash_start__ = ( uint32_t * ) 0xE4000UL;
+	const uint32_t * __syscalls_flash_end__ = ( uint32_t * ) 0xE8000UL;
 	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x100000UL;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x100200UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x108000UL;
 #endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/

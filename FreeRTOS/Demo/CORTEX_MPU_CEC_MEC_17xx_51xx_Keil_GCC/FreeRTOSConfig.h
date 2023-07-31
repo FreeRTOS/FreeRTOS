@@ -147,6 +147,9 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 /* See https://freertos.org/a00110.html#configSYSTEM_CALL_STACK_SIZE for details. */
 #define configSYSTEM_CALL_STACK_SIZE					( 128 )
 
+#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY			( 1 )
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS			( 0 )
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
 #define xPortPendSVHandler PendSV_Handler

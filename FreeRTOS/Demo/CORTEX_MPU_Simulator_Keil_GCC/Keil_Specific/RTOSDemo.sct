@@ -9,7 +9,7 @@ LR_IROM1 0x00000000  {    ; load region size_region
    *(InRoot$$Sections)
    *( privileged_functions )
   }
-  ER_IROM2 0x8000 FIXED {
+  ER_IROM2 0xC000 FIXED {
     .ANY (+RO)
   }
   RW_IRAM1 0x20000000  {  ; RW data

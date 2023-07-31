@@ -165,4 +165,6 @@ standard names. */
 /* Ensure that system calls can only be made from kernel code. */
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY		1
 
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS		0
+
 #endif /* FREERTOS_CONFIG_H */

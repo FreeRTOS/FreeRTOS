@@ -69,7 +69,7 @@ MEMORY
     FLASH (rx)          : ORIGIN = 0x8000000,   LENGTH = 512K
 }
 
-/* Initial 32K Flash is used to store kernel functions and
+/* Initial 64K Flash is used to store kernel functions and
  * initial 512 bytes of RAM is used to store kernel data. */
 __privileged_functions_region_size__  = 64K;
 __privileged_data_region_size__       = 32K;

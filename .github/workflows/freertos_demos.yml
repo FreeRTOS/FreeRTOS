@@ -231,6 +231,11 @@ jobs:
             exit 1
           fi
 
+      - name: Build Posix_GCC Demo for Coverage Test
+        shell: bash
+        working-directory: FreeRTOS/Demo/Posix_GCC
+        run: make -j COVERAGE_TEST=1
+
       - name: Build Posix_GCC Full Demo
         id: build-posix-gcc-full-demo
         shell: bash
@@ -239,6 +244,7 @@ jobs:
           # Build Posix_GCC Full Demo
           echo "::group::Build Posix_GCC Full Demo"
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          make clean
           make -j
           echo "::endgroup::"
           if [ "$?" = "0" ]; then

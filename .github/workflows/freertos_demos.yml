@@ -244,6 +244,7 @@ jobs:
           # Build Posix_GCC Full Demo
           echo "::group::Build Posix_GCC Full Demo"
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          make clean
           make -j
           echo "::endgroup::"
           if [ "$?" = "0" ]; then

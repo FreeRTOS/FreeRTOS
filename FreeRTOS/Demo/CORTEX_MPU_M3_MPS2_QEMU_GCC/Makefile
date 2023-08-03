@@ -12,9 +12,11 @@ SOURCE_FILES          +=    init/startup.c  syscall.c main.c
 
 # platform portable source file
 SOURCE_FILES          +=    $(KERNEL_DIR)/portable/GCC/ARM_CM3_MPU/port.c
+SOURCE_FILES          +=    $(KERNEL_DIR)/portable/GCC/ARM_CM3_MPU/mpu_wrappers_v2_asm.c
 
 # Kernel source files
 SOURCE_FILES          +=    $(KERNEL_DIR)/portable/Common/mpu_wrappers.c
+SOURCE_FILES          +=    $(KERNEL_DIR)/portable/Common/mpu_wrappers_v2.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/tasks.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/list.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/queue.c
@@ -46,6 +48,7 @@ CFLAGS                +=    -Wextra
 CFLAGS                +=    -fstrict-aliasing
 CFLAGS                +=    -Wstrict-aliasing
 CFLAGS                +=    -Wno-error=address-of-packed-member
+CFLAGS                +=    -Wno-unused-parameter
 CFLAGS                +=    $(INCLUDE_DIRS)
 
 LDFLAGS                =    -T ./scripts/mps2_m3.ld

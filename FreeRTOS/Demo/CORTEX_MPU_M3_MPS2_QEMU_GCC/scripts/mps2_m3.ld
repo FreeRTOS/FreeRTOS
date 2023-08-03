@@ -41,7 +41,7 @@ MEMORY
 
 M_VECTOR_RAM_SIZE = (16 + 48) * 4;
 
-__privileged_functions_region_size__  = 32K; /* 32000 bytes */
+__privileged_functions_region_size__  = 64K; /* 64000 bytes */
 __privileged_data_region_size__       = 32K; /* 32000 bytes */
 
 __FLASH_segment_start__               = ORIGIN( FLASH );
@@ -128,7 +128,7 @@ SECTIONS
         PROVIDE_HIDDEN (__preinit_array_end = .);
         . = ALIGN(4);
     } >FLASH
-    
+
     .init_array :
     {
         . = ALIGN(4);
@@ -138,7 +138,7 @@ SECTIONS
         PROVIDE_HIDDEN (__init_array_end = .);
         . = ALIGN(4);
     } >FLASH
-    
+
     .fini_array :
     {
         . = ALIGN(4);

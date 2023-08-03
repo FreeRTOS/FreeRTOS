@@ -73,6 +73,7 @@ endif
 
 ifeq ($(COVERAGE_TEST),1)
   CPPFLAGS              += -DprojCOVERAGE_TEST=1
+  CFLAGS                += -Werror
 else
   CPPFLAGS              += -DprojCOVERAGE_TEST=0
 # Trace library.

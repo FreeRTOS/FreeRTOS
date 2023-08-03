@@ -357,8 +357,10 @@
     <Folder Include="Source" />
     <Folder Include="Source\include" />
     <Folder Include="Source\portable" />
-    <Folder Include="Source\portable\GCC" />
-    <Folder Include="Source\portable\GCC\AVR_Mega0\" />
+    <Folder Include="Source\portable\ThirdParty\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\" />
     <Folder Include="Source\portable\MemMang" />
     <Folder Include="ParTest\" />
     <Folder Include="serial\" />
@@ -366,10 +368,6 @@
     <Folder Include="Common\include" />
     <Folder Include="Common\Minimal" />
     <Folder Include="Common\Full" />
-    <Folder Include="Source\portable\ThirdParty\" />
-    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\" />
-    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\" />
-    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

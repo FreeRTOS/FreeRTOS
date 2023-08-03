@@ -148,6 +148,14 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
 
+/* Set configUSE_MPU_WRAPPERS_V1 to 0 to use new MPU wrapper.
+ * See https://freertos.org/a00110.html#configUSE_MPU_WRAPPERS_V1 for details. */
+#define configUSE_MPU_WRAPPERS_V1						( 0 )
+/* See https://freertos.org/a00110.html#configPROTECTED_KERNEL_OBJECT_POOL_SIZE for details. */
+#define configPROTECTED_KERNEL_OBJECT_POOL_SIZE			( 150 )
+/* See https://freertos.org/a00110.html#configSYSTEM_CALL_STACK_SIZE for details. */
+#define configSYSTEM_CALL_STACK_SIZE					( 128 )
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
 #define vPortSVCHandler			SVC_Handler
@@ -156,5 +164,8 @@ standard names. */
 
 /* Ensure that system calls can only be made from kernel code. */
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY		1
+
+/* Do not allow unprivileged critical sections. */
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS		0
 
 #endif /* FREERTOS_CONFIG_H */

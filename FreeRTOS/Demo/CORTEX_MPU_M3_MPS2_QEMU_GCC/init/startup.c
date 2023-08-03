@@ -195,7 +195,7 @@ void Debug_Handler( void )
     );
 }
 
-const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
+const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
 {
     ( uint32_t * ) &_estack,
     ( uint32_t * ) &Reset_Handler,       /* Reset                     -15 */

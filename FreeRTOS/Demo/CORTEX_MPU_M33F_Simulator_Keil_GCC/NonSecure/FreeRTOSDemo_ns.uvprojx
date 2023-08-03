@@ -353,7 +353,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -440,6 +440,11 @@
               <FilePath>..\..\..\Source\portable\GCC\ARM_CM33\non_secure\port.c</FilePath>
             </File>
             <File>
+              <FileName>mpu_wrappers_v2_asm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Source\portable\GCC\ARM_CM33\non_secure\mpu_wrappers_v2_asm.c</FilePath>
+            </File>
+            <File>
               <FileName>portasm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Source\portable\GCC\ARM_CM33\non_secure\portasm.h</FilePath>
@@ -453,6 +458,11 @@
               <FileName>portasm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Source\portable\GCC\ARM_CM33\non_secure\portasm.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu_wrappers_v2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Source\portable\Common\mpu_wrappers_v2.c</FilePath>
             </File>
           </Files>
         </Group>

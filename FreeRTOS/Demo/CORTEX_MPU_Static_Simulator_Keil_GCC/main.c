@@ -136,16 +136,16 @@ extern void vRegTest4Implementation( void );
 static void prvCheckTask( void *pvParameters );
 
 /*
- * Prototype for a task created in User mode using vTaskCreateStatic() API
- * function.  The task demonstrates the characteristics of such a task,
- * before simply deleting itself.  As the task is created without using any
- * dynamic memory allocate the stack and variable in which the task's data
- * structure will be stored must also be provided - however the task is
- * unprivileged so the stack cannot be in a privileged section.
+ * Prototype for a task created in User mode using the original vTaskCreate()
+ * API function.  The task demonstrates the characteristics of such a task,
+ * before simply deleting itself.
+ *
+ * It is not possible to use xTaskCreate() to create an unprivileged task since
+ * heap moved to the privileged data section, so the access tests implemented by
+ * this function are now called from an unprivileged register check task created
+ * using the xTaskCreateRestricted() API.
  */
-static StackType_t xUserModeTaskStack[ configMINIMAL_STACK_SIZE ];
-static PRIVILEGED_DATA StaticTask_t xUserModeTaskBuffer;
-static void prvOldStyleUserModeTask( void *pvParameters );
+static void prvOldStyleUserModeTask( void  );
 
 /*
  * Prototype for a task created in Privileged mode using the
@@ -248,14 +248,19 @@ static PRIVILEGED_DATA StaticTimer_t xTimerBuffer;
 	extern uint32_t __privileged_functions_actual_end__[];
 	extern uint32_t __privileged_data_actual_end__[];
 #else
-	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0x00UL;
+	extern uint32_t Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Base;
+	extern uint32_t Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Limit;
+
+	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0x00000000UL;
 	const uint32_t * __FLASH_segment_end__ = ( uint32_t * ) 0x00080000UL;
 	const uint32_t * __SRAM_segment_start__ = ( uint32_t * ) 0x20000000UL;
 	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x20008000UL;
-	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x00UL;
-	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x8000UL;
+	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x00000000UL;
+	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x00010000UL;
+	const uint32_t * __syscalls_flash_start__ = ( uint32_t * ) &( Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Base );
+	const uint32_t * __syscalls_flash_end__ = ( uint32_t * ) &( Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Limit );
 	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x20000000UL;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20000800UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20004000UL;
 #endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/
@@ -419,7 +424,7 @@ static TaskParameters_t xTaskToDeleteParameters =
 	mainTASK_TO_DELETE_NAME,			/* pcName */
 	mainDELETE_TASK_STACK_SIZE_WORDS,	/* usStackDepth */
 	( void * ) NULL,					/* pvParameters - this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
-	tskIDLE_PRIORITY + 1,				/* uxPriority */
+	( tskIDLE_PRIORITY + 1 ) | portPRIVILEGE_BIT,	/* uxPriority - this task is privileged because it creates and deletes kernel objects. */
 	xDeleteTaskStack,					/* puxStackBuffer - the array to use as the task stack, as declared above. */
 	{									/* xRegions - this task does not use any non-stack data hence all members are zero. */
 		/* Base address		Length		Parameters */
@@ -464,15 +469,6 @@ int main( void )
 
 	/* Create the tasks that are created using the original xTaskCreate() API
 	function. */
-	xTaskCreateStatic(	prvOldStyleUserModeTask,	/* The function that implements the task. */
-						"Task1",					/* Text name for the task. */
-						100,						/* Stack depth in words. */
-						NULL,						/* Task parameters. */
-						3,							/* Priority and mode (user in this case). */
-						xUserModeTaskStack,			/* Used as the task's stack. */
-						&xUserModeTaskBuffer		/* Used to hold the task's data structure. */
-					);
-
 	xTaskCreateStatic(	prvOldStylePrivilegedModeTask,	/* The function that implements the task. */
 						"Task2",						/* Text name for the task. */
 						100,							/* Stack depth in words. */
@@ -862,7 +858,7 @@ volatile uint32_t ulReadData;
 }
 /*-----------------------------------------------------------*/
 
-static void prvOldStyleUserModeTask( void *pvParameters )
+static void prvOldStyleUserModeTask( void )
 {
 /*const volatile uint32_t *pulStandardPeripheralRegister = ( volatile uint32_t * ) 0x40000000;*/
 volatile const uint32_t *pul;
@@ -872,8 +868,6 @@ volatile uint32_t ulReadData;
 compiler warnings when the tests that use the variable are also commented out. */
 /* extern uint32_t __privileged_functions_start__[]; */
 /* const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0xe000e014; */
-
-	( void ) pvParameters;
 
 	/* This task is created in User mode using the original xTaskCreate() API
 	function.  It should have access to all Flash and RAM except that marked
@@ -917,11 +911,6 @@ compiler warnings when the tests that use the variable are also commented out. *
 
 	/*pul = __privileged_data_end__ - 1;
 	ulReadData = *pul;*/
-
-	/* Must not just run off the end of a task function, so delete this task.
-	Note that because this task was created using xTaskCreate() the stack was
-	allocated dynamically and I have not included any code to free it again. */
-	vTaskDelete( NULL );
 
 	( void ) ulReadData;
 }
@@ -1121,6 +1110,12 @@ static void prvRegTest3Task( void *pvParameters )
 	in correctly. */
 	if( pvParameters == configREG_TEST_TASK_3_PARAMETER )
 	{
+		/* Run the unprivileged mode access tests that used to be executed
+		form an unprivileged task created using the xTaskCreate() API.
+		Since the heap moved to the privileged data section xTaskCreate() can
+		no longer be used to create unprivileged tasks. */
+		prvOldStyleUserModeTask();
+
 		/* Start the part of the test that is written in assembler. */
 		vRegTest3Implementation();
 	}

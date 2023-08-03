@@ -44,7 +44,7 @@
                 </option>
                 <option>
                     <name>MemFile</name>
-                    <state>$TOOLKIT_DIR$\CONFIG\debugger\Nuvoton\iom2351ae.ddf</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>RunToEnable</name>
@@ -88,7 +88,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>9.32.2.57275</state>
+                    <state>9.30.1.50052</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -1072,7 +1072,7 @@
             <name>STLINK_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>8</version>
+                <version>7</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1081,7 +1081,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceRadio</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceCmdLine</name>
@@ -1098,7 +1098,7 @@
                 </option>
                 <option>
                     <name>CCSwoClockAuto</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCSwoClockEdit</name>
@@ -1189,14 +1189,6 @@
                     <name>CCSTLinkProbeList</name>
                     <version>1</version>
                     <state>0</state>
-                </option>
-                <option>
-                    <name>CCSTLinkTargetVccEnable</name>
-                    <state>1</state>
-                </option>
-                <option>
-                    <name>CCSTLinkTargetVoltage</name>
-                    <state>###Uninitialized###</state>
                 </option>
             </data>
         </settings>
@@ -1425,7 +1417,7 @@
                 </option>
                 <option>
                     <name>CCXds100ResetList</name>
-                    <version>1</version>
+                    <version>0</version>
                     <state>0</state>
                 </option>
                 <option>

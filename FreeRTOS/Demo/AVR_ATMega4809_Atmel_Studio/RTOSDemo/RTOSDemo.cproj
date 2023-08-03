@@ -118,7 +118,7 @@
             <Value>../../../../Source</Value>
             <Value>../../../../Source/include</Value>
             <Value>../../../../Source/portable/MemMang</Value>
-            <Value>../../../../Source/portable/GCC/AVR_Mega0</Value>
+            <Value>../../../../Source/portable/ThirdParty/Partner-Supported-Ports/GCC/AVR_Mega0</Value>
             <Value>../../../Common/include</Value>
           </ListValues>
         </avrgcc.compiler.directories.IncludePaths>
@@ -187,17 +187,17 @@
       <SubType>compile</SubType>
       <Link>Source\portable\MemMang\heap_1.c</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_Mega0\port.c">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\port.c">
       <SubType>compile</SubType>
-      <Link>Source\portable\GCC\AVR_Mega0\port.c</Link>
+      <Link>Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\port.c</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_Mega0\portmacro.h">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\portmacro.h">
       <SubType>compile</SubType>
-      <Link>Source\portable\GCC\AVR_Mega0\portmacro.h</Link>
+      <Link>Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\portmacro.h</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_Mega0\porthardware.h">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\porthardware.h">
       <SubType>compile</SubType>
-      <Link>Source\portable\GCC\AVR_Mega0\porthardware.h</Link>
+      <Link>Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\porthardware.h</Link>
     </Compile>
     <Compile Include="..\..\..\Source\include\atomic.h">
       <SubType>compile</SubType>
@@ -358,7 +358,6 @@
     <Folder Include="Source\include" />
     <Folder Include="Source\portable" />
     <Folder Include="Source\portable\GCC" />
-    <Folder Include="Source\portable\GCC\AVR_Mega0" />
     <Folder Include="Source\portable\GCC\AVR_Mega0\" />
     <Folder Include="Source\portable\MemMang" />
     <Folder Include="ParTest\" />
@@ -367,6 +366,10 @@
     <Folder Include="Common\include" />
     <Folder Include="Common\Minimal" />
     <Folder Include="Common\Full" />
+    <Folder Include="Source\portable\ThirdParty\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

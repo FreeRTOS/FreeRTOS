@@ -41,10 +41,24 @@
 extern void vLoggingPrintf( const char * pcFormatString,
                             ... );
 
+/* Set to 1 to enable IPv4. */
+#define ipconfigUSE_IPv4                    ( 1 )
+
+/* Set to 1 to enable IPv6. */
+#define ipconfigUSE_IPv6                    ( 1 )
+
+/* Set to 0 to disable backward compatible. */
+#define ipconfigIPv4_BACKWARD_COMPATIBLE    0
+
+/* Set to 0 to disable compatible for multiple end-points/interfaces.
+ * Only one interface/end-point is allowed to use when ipconfigCOMPATIBLE_WITH_SINGLE
+ * is set to 1. */
+#define ipconfigCOMPATIBLE_WITH_SINGLE      0
+
 /* Set to 1 to print out debug messages. If ipconfigHAS_DEBUG_PRINTF is set to
  * 1 then FreeRTOS_debug_printf should be defined to the function used to print
  * out the debugging messages. */
-#define ipconfigHAS_DEBUG_PRINTF    1
+#define ipconfigHAS_DEBUG_PRINTF            1
 #if ( ipconfigHAS_DEBUG_PRINTF == 1 )
     #define FreeRTOS_debug_printf( X )    vLoggingPrintf X
 #endif

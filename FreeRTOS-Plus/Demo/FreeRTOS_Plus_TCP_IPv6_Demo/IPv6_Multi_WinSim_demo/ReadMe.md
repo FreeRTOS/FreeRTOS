@@ -12,25 +12,8 @@ to connect to IP-addresses on different subnets (or using different netmasks).
 
 Clone the submodules used in the FreeRTOS repo:
 
-`git submodule update --init --recursive`
-
-Make sure the FreeRTOS+TCP submodule is pointing to the [`dev/IPv6_integration`](https://github.com/FreeRTOS/FreeRTOS-Plus-TCP/tree/dev/IPv6_integration) branch
-by checking:
-
-``` sh
-cd FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP
-git status
 ```
-
-If not checkout to `dev/IPv6_integration`:
-
-`git checkout dev/IPv6_integration`
-
-Update submodules:
-
-``` sh
 git submodule update --init --recursive
-git submodule update --checkout
 ```
 
 The FreeRTOS+TCP Multiple Interface Visual Studio project file is in the following

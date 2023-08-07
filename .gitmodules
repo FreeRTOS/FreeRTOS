@@ -40,6 +40,12 @@
 [submodule "FreeRTOS-Plus/ThirdParty/wolfSSL"]
 	path = FreeRTOS-Plus/ThirdParty/wolfSSL
 	url = https://github.com/wolfSSL/wolfssl.git
+[submodule "FreeRTOS-Plus/ThirdParty/libslirp"]
+	path = FreeRTOS-Plus/ThirdParty/libslirp
+	url = https://gitlab.freedesktop.org/slirp/libslirp.git
+[submodule "FreeRTOS-Plus/ThirdParty/glib"]
+	path = FreeRTOS-Plus/ThirdParty/glib
+	url = https://gitlab.gnome.org/GNOME/glib.git
 [submodule "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"]
 	path = FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent
 	url = https://github.com/FreeRTOS/coreMQTT-Agent.git

@@ -165,28 +165,28 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Routing.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPV4.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv4.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPV6.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv6.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPV4.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv4.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPV6.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv6.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPV4.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv4.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPV6.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv6.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPV4.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv4.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPV6.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv6.c">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv4.c">

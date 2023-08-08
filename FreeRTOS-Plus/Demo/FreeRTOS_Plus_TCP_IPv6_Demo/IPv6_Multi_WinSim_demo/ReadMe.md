@@ -189,4 +189,4 @@ The UDP Echo Client demo also demonstrates the UDP zero copy for both IPv4 and I
 UDPEchoClient_SingleTasks.c file to 1.
 
 #### Sample TCP server in Go:
-[TCP Echo Server](https://github.com/aws/amazon-freertos/tree/main/tools/echo_server)
+[TCP Echo Server](https://github.com/FreeRTOS/FreeRTOS-Libraries-Integration-Tests/tree/main/tools/echo_server)

@@ -215,7 +215,7 @@
                     pcTransmittedString[ strlen( pcTransmittedString ) ] = '-';
                     ulTxCount++;
 
-                    printf( "\n\tSending %d bytes of data to the echo server\n", lStringLength );
+                    printf( "\n\tSending %ld bytes of data to the echo server\n", lStringLength );
                     /* Send the string to the socket. */
                     lTransmitted = FreeRTOS_send( xSocket,                        /* The socket being sent to. */
                                                   ( void * ) pcTransmittedString, /* The data being sent. */

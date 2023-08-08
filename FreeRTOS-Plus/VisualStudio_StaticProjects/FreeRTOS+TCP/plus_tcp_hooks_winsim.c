@@ -205,9 +205,9 @@ void vPlatformInitIpStack( void )
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* Initialise the interface descriptor for WinPCap. */
     #ifdef ipconfigUSE_LIBSLIRP
-        extern NetworkInterface_t* pxFillInterfaceDescriptor(BaseType_t xEMACIndex,
+        extern NetworkInterface_t* pxLibslirp_FillInterfaceDescriptor(BaseType_t xEMACIndex,
             NetworkInterface_t * pxInterface);
-        pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+        pxLibslirp_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
     #else
         pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
     #endif

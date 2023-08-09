@@ -41,6 +41,7 @@ This demo provides 4 examples:
 4. The CLI Example
 
 ### Running The TCP Echo Client Example
+
 1. Set `mainCREATE_TCP_ECHO_TASKS_SINGLE` to 1 in the [main.c](main.c) file.
 1. Clone the [FreeRTOS-Libraries-Integration-Tests](https://github.com/FreeRTOS/FreeRTOS-Libraries-Integration-Tests/tree/main)
    repo on the host where you want to run the echo server:
@@ -71,6 +72,7 @@ This demo provides 4 examples:
    ```
 
 ### Running The TCP Echo Server Example
+
 1. Set `mainCREATE_TCP_ECHO_SERVER_TASK` to 1 in the [main.c](main.c) file.
 1. Build the project and run.
    ```
@@ -94,6 +96,7 @@ This demo provides 4 examples:
    and we get the same strings back.
 
 ### Running The UDP Echo Client Example
+
 1. Set `mainCREATE_UDP_ECHO_TASKS_SINGLE` to 1 in the [main.c](main.c) file.
 1. Clone the [FreeRTOS-Libraries-Integration-Tests](https://github.com/FreeRTOS/FreeRTOS-Libraries-Integration-Tests/tree/main)
    repo on the host where you want to run the echo server:
@@ -128,6 +131,7 @@ This demo provides 4 examples:
    ```
 
 ### Running The CLI Example
+
 1. Set `mainCREATE_CLI_TASK` to 1 in the [main.c](main.c) file.
 1. Uncomment the commands that you want to execute in the
    `pcCommandList` array in the [main.c](main.c) file. By default,
@@ -181,6 +185,9 @@ Set `ipconfigUSE_DHCP` to 0 and set the following in the
 * `configGATEWAY_ADDR0/3 `   : Set to the Default Gateway address.
 * `configDNS_SERVER_ADDR0/3` : Set to the DNS Server address.
 
+Note that we have only tested this demo with `ipconfigUSE_DHCPv6`
+set to 0.
+
 ### Enabling debug logs
 
 Set `ipconfigHAS_PRINTF` and `ipconfigHAS_DEBUG_PRINTF` to 1 in the
@@ -194,7 +201,7 @@ by setting `USE_ZERO_COPY` to 1 at the top of the
 
 ### Using the project in a different source tree
 
-The following macros in the [FreeRTOS_Plus_TCP_IPv6_Multi.props]FreeRTOS_Plus_TCP_IPv6_Multi.props()
+The following macros in the [FreeRTOS_Plus_TCP_IPv6_Multi.props](FreeRTOS_Plus_TCP_IPv6_Multi.props)
 file can be updated to se this project in a different source tree:
 
 * FREERTOS_SOURCE_DIR    : The location of the FreeRTOS Kernel source files.

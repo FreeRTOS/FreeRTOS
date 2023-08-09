@@ -869,16 +869,12 @@ static void prvServerWorkTask( void * pvArgument )
     struct tm * gmtime_r( const time_t * pxTime,
                           struct tm * tmStruct )
     {
-        struct tm tm;
-
-        memcpy( &( tm ), gmtime( pxTime ), sizeof( tm ) );
-
         if( tmStruct != NULL )
         {
-            memcpy( tmStruct, &( tm ), sizeof tm );
+            memcpy( tmStruct, gmtime( pxTime ), sizeof( struct tm ) );
         }
 
-        return &( tm );
+        return tmStruct;
     }
 /*-----------------------------------------------------------*/
 

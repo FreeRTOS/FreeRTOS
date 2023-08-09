@@ -181,7 +181,13 @@ Set `ipconfigUSE_DHCP` to 0 and set the following in the
 * `configGATEWAY_ADDR0/3 `   : Set to the Default Gateway address.
 * `configDNS_SERVER_ADDR0/3` : Set to the DNS Server address.
 
+### Enabling debug logs
+
+Set `ipconfigHAS_PRINTF` and `ipconfigHAS_DEBUG_PRINTF` to 1 in the
+[FreeRTOSIPConfig.h](FreeRTOSIPConfig.h) file.
+
 ### Using Zero Copy
+
 The UDP Echo Client demo also demonstrates the UDP zero copy which can be enabled
 by setting `USE_ZERO_COPY` to 1 at the top of the
 [UDPEchoClient_SingleTasks.c](UDPEchoClient_SingleTasks.c) file.

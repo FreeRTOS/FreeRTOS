@@ -173,7 +173,7 @@ This demo provides 4 examples:
 
 ### Using static IP configuration
 
-Set `configUSE_DHCP` to 0 and set the following in the
+Set `ipconfigUSE_DHCP` to 0 and set the following in the
 [FreeRTOSConfig.h](FreeRTOSConfig.h) file:
 
 * `configIP_ADDR0/3`         : Set to the IP address. It is used when DHCP is disabled.

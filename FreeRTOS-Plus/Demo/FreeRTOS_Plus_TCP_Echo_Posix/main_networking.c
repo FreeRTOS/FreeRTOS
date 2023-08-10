@@ -161,9 +161,9 @@ void main_tcp_echo_client_tasks( void )
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
 
-    extern NetworkInterface_t * pxFillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                      NetworkInterface_t * pxInterface );
-    pxFillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    extern NetworkInterface_t * pxLibslirp_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                                    NetworkInterface_t * pxInterface );
+    pxLibslirp_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints [ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
@@ -202,7 +202,7 @@ void main_tcp_echo_client_tasks( void )
  * events are only received if implemented in the MAC driver. */
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
-                                                   struct xNetworkEndPoint * pxEndPoint )
+                                               struct xNetworkEndPoint * pxEndPoint )
 #else
     void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
@@ -279,6 +279,7 @@ static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
     uint32_t ulRandomNumbers[ 4 ];
+
     /* Seed the random number generator. */
     time( &xTimeNow );
     FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\n", xTimeNow ) );
@@ -313,10 +314,10 @@ static void prvMiscInitialisation( void )
 
     #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         BaseType_t xApplicationDNSQueryHook_Multi( struct xNetworkEndPoint * pxEndPoint,
-                                                            const char * pcName )
+                                                   const char * pcName )
     #else
         BaseType_t xApplicationDNSQueryHook( const char * pcName )
-    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */    
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
 

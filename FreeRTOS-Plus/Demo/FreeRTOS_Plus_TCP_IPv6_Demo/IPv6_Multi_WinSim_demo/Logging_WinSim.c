@@ -159,7 +159,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
     /* Can only be called before the scheduler has started. */
     configASSERT( xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED );
 
-    #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
+    #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) || defined( configPRINTF ) )
         {
             HANDLE Win32Thread;
 
@@ -215,7 +215,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
                 SetThreadPriority( Win32Thread, THREAD_PRIORITY_IDLE );
             }
         }
-    #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
+    #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) || defined( configPRINTF ) ) */
         {
             /* FreeRTOSIPConfig is set such that no print messages will be output.
              * Avoid compiler warnings about unused parameters. */
@@ -225,7 +225,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
             ( void ) usRemotePort;
             ( void ) ulRemoteIPAddress;
         }
-    #endif /* ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 )  */
+    #endif /* ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) || defined( configPRINTF )  */
 }
 /*-----------------------------------------------------------*/
 

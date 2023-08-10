@@ -225,4 +225,8 @@
 #define strncasecmp    _strnicmp
 #define strcmpi        _strcmpi
 
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
+#define configPRINTF( X )    vLoggingPrintf X
+
 #endif /* FREERTOS_CONFIG_H */

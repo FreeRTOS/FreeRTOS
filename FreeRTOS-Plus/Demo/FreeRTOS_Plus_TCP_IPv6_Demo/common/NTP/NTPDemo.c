@@ -247,6 +247,7 @@ void vStartNTPTask( uint16_t usTaskStackSize,
         xStatus = EStatusAsking;
 
         ( void ) pvSearchID;
+        ( void ) pcName;
 
         if( pxAddress == NULL )
         {
@@ -431,6 +432,7 @@ static void prvReadTime( struct SNtpPacket * pxPacket )
     #if ( USE_PLUS_FAT != 0 )
         FreeRTOS_gmtime_r( &uxCurrentSeconds, &xTimeStruct );
     #else
+        extern struct tm * gmtime_r( const time_t * pxTime, struct tm * tmStruct );
         gmtime_r( &uxCurrentSeconds, &xTimeStruct );
     #endif /* ( USE_PLUS_FAT != 0 ) */
 

@@ -25,7 +25,7 @@
  */
 
  /*
-  * A set of tasks are created that send UDP echo requests to the 
+  * A set of tasks are created that send UDP echo requests to the
   * IP address set by the configECHO_SERVER_ADDR0 to
   * configECHO_SERVER_ADDR_STRING constant, then wait for and verify the reply
   *
@@ -99,11 +99,11 @@ void vStartUDPEchoClientTasks_SingleTasks(uint16_t usTaskStackSize, UBaseType_t 
                 xCount++;
             }
         }
-        FreeRTOS_printf(("Started %d / %d tasks\n", (int)xCount, (int)echoNUM_ECHO_CLIENTS));
+        configPRINTF(("Started %d / %d tasks\n", (int)xCount, (int)echoNUM_ECHO_CLIENTS));
     }
     else
     {
-        FreeRTOS_printf(("vStartUDPEchoClientTasks_SingleTasks: already started\n"));
+        configPRINTF(("vStartUDPEchoClientTasks_SingleTasks: already started\n"));
     }
 }
 /*-----------------------------------------------------------*/
@@ -159,6 +159,7 @@ static void prvUDPEchoClientTask(void* pvParameters)
 
     for (;; )
     {
+        configPRINTF( ( "-------- Starting New Iteration --------\n" ) );
         /* Create a socket. */
         xSocket = FreeRTOS_socket(xFamily, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP);
         configASSERT(xSocket != FREERTOS_INVALID_SOCKET);
@@ -216,15 +217,14 @@ static void prvUDPEchoClientTask(void* pvParameters)
             }
             else
             {
+                /* Keep a count of how many echo requests have been transmitted so
+                it can be compared to the number of echo replies received.  It would
+                be expected to loose at least one to an ARP message the first time
+                the	connection is created. */
+                ulTxCount++;
                 /* The send was successful. */
                 FreeRTOS_debug_printf(("[Echo Client] Data sent...  \r\n"));
             }
-
-            /* Keep a count of how many echo requests have been transmitted so
-            it can be compared to the number of echo replies received.  It would
-            be expected to loose at least one to an ARP message the first time
-            the	connection is created. */
-            ulTxCount++;
 
             /* Receive data echoed back to the socket.  ulFlags is zero, so the
             zero copy option is not being used and the received data will be
@@ -271,7 +271,10 @@ static void prvUDPEchoClientTask(void* pvParameters)
                 {
                     /* The echo reply was received without error. */
                     ulRxCount++;
-                    FreeRTOS_debug_printf(("[Echo Client] Data was received correctly.\r\n"));
+                    if( ( ulRxCount % 10 ) == 0 )
+                    {
+                        configPRINTF(("[Echo Client] Data was received correctly.\r\n"));
+                    }
                 }
                 else
                 {
@@ -283,6 +286,9 @@ static void prvUDPEchoClientTask(void* pvParameters)
                 FreeRTOS_debug_printf(("[Echo Client] Data was not received\r\n"));
             }
         }
+
+        configPRINTF( ( "Exchange (Sent/Received) : %u/%u\n", ulTxCount, ulRxCount ) );
+        configPRINTF( ( "--------------------------------------\n\n" ) );
 
         /* Pause for a short while to ensure the network is not too
         congested. */

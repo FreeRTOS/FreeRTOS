@@ -72,8 +72,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
-
-
+/* Length of the task printing buffer for task.c kernel module */
+#define configTASK_WRITE_BUFFER_LENGTH ( ( size_t ) 1024 )
 
 
 

@@ -96,13 +96,14 @@
  * expected to echo back the data, which, the created tasks receives.
  *
  */
-#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1 /* 1 */
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1
 #define mainCREATE_TCP_ECHO_SERVER_TASK               0
 #define mainCREATE_UDP_ECHO_TASKS_SINGLE              0
+#define mainCREATE_CLI_TASK                           0
 /*-----------------------------------------------------------*/
 
 /* Define a task that is used to start and monitor several tests. */
-static void prvServerWorkTask( void * pvArgument );
+static void prvCliTask( void * pvArgument );
 
 /* Let this task run at a low priority. */
 #define mainTCP_SERVER_TASK_PRIORITY    ( tskIDLE_PRIORITY + 1 )
@@ -234,7 +235,6 @@ int main( void )
             IPv6_Address_t xIPAddress;
             IPv6_Address_t xPrefix;
             IPv6_Address_t xGateWay;
-            IPv6_Address_t xDNSServer1, xDNSServer2;
 
             FreeRTOS_inet_pton6( "2001:470:ed44::", xPrefix.ucBytes );
 
@@ -315,8 +315,6 @@ int main( void )
     #endif /* ( mainNETWORK_UP_COUNT >= 3U ) */
 
     FreeRTOS_IPInit_Multi();
-
-    xTaskCreate( prvServerWorkTask, "SvrWork", mainTCP_SERVER_STACK_SIZE, NULL, mainTCP_SERVER_TASK_PRIORITY, NULL );
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );
@@ -408,6 +406,7 @@ void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
 
             #if ( mainCREATE_TCP_ECHO_SERVER_TASK == 1 )
                 {
+                    extern void vStartSimpleTCPServerTasks( uint16_t usStackSize, UBaseType_t uxPriority );
                     vStartSimpleTCPServerTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
                 }
             #endif
@@ -418,15 +417,21 @@ void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
                 }
             #endif
 
+            #if ( mainCREATE_CLI_TASK == 1 )
+            {
+                xTaskCreate( prvCliTask, "cli", mainTCP_SERVER_STACK_SIZE, NULL, mainTCP_SERVER_TASK_PRIORITY, NULL );
+            }
+            #endif
+
             xTasksAlreadyCreated = pdTRUE;
         }
 
-        FreeRTOS_printf( ( "uxNetworkisUp = %u\n", ( unsigned ) uxNetworkisUp ) );
+        configPRINTF( ( "uxNetworkisUp = %u\n", ( unsigned ) uxNetworkisUp ) );
 
         if( pxEndPoint->bits.bIPv6 == 0U )
         {
             *ipLOCAL_IP_ADDRESS_POINTER = pxEndPoint->ipv4_settings.ulIPAddress;
-            FreeRTOS_printf( ( "IPv4 address = %xip\n", FreeRTOS_ntohl( pxEndPoint->ipv4_settings.ulIPAddress ) ) );
+            configPRINTF( ( "IPv4 address = %xip\n", FreeRTOS_ntohl( pxEndPoint->ipv4_settings.ulIPAddress ) ) );
         }
 
         /* Print out the network configuration, which may have come from a DHCP
@@ -512,7 +517,7 @@ static void prvMiscInitialisation( void )
             BaseType_t xDone = pdFALSE;
             BaseType_t bDNS_IPv6 = ( pxEndPoint->usDNSType == dnsTYPE_AAAA_HOST ) ? 1 : 0;
 
-            FreeRTOS_printf( ( "Wanted v%c got v%c\n", bDNS_IPv6 ? '6' : '4', pxEndPoint->bits.bIPv6 ? '6' : '4' ) );
+            configPRINTF( ( "Wanted v%c got v%c\n", bDNS_IPv6 ? '6' : '4', pxEndPoint->bits.bIPv6 ? '6' : '4' ) );
 
             if( ( pxEndPoint->usDNSType == dnsTYPE_ANY_HOST ) ||
                 ( ( pxEndPoint->usDNSType == dnsTYPE_AAAA_HOST ) == ( pxEndPoint->bits.bIPv6 != 0U ) ) )
@@ -547,11 +552,11 @@ static void prvMiscInitialisation( void )
 
             if( pxEndPoint->bits.bIPv6 != 0 )
             {
-                FreeRTOS_printf( ( "%s address %pip\n", xDone ? "Success" : "Failed", pxEndPoint->ipv6_settings.xIPAddress.ucBytes ) );
+                configPRINTF( ( "%s address %pip\n", xDone ? "Success" : "Failed", pxEndPoint->ipv6_settings.xIPAddress.ucBytes ) );
             }
             else
             {
-                FreeRTOS_printf( ( "%s address %xip\n", xDone ? "Success" : "Failed", ( unsigned ) FreeRTOS_ntohl( pxEndPoint->ipv4_settings.ulIPAddress ) ) );
+                configPRINTF( ( "%s address %xip\n", xDone ? "Success" : "Failed", ( unsigned ) FreeRTOS_ntohl( pxEndPoint->ipv4_settings.ulIPAddress ) ) );
             }
 
             return xDone;
@@ -569,6 +574,9 @@ static void prvMiscInitialisation( void )
          * to this node: that returned by pcApplicationHostnameHook() and that set
          * by mainDEVICE_NICK_NAME. */
         const char * serviceName = ( strstr( pcName, ".local" ) != NULL ) ? "mDNS" : "LLMNR";
+
+        /* Suppress warnings when FreeRTOS_printf is not defined. */
+        ( void ) serviceName;
 
         if( strncasecmp( pcName, "bong", 4 ) == 0 )
         {
@@ -662,7 +670,7 @@ const char * pcCommandList[] =
     /*    "arpqc 192.168.2.10", */
     /*    "arpqc 172.217.194.100", */
     /*    "arpqc 2404:6800:4003:c0f::5e", */
-    "ifconfig",
+        "ifconfig",
     /*      "udp 192.168.2.255@2402 Hello", */
     /*      "udp 192.168.2.255@2402 Hello", */
     /*      "udp 192.168.2.255@2402 Hello", */
@@ -701,13 +709,12 @@ const char * pcCommandList[] =
     /*      "ntp6a 2.europe.pool.ntp.org", */
 };
 
-static void prvServerWorkTask( void * pvArgument )
+static void prvCliTask( void * pvArgument )
 {
     BaseType_t xCommandIndex = 0;
-    Socket_t xSocket;
 
     ( void ) pvArgument;
-    FreeRTOS_printf( ( "prvServerWorkTask started\n" ) );
+    configPRINTF( ( "prvCliTask started\n" ) );
 
     xServerSemaphore = xSemaphoreCreateBinary();
     configASSERT( xServerSemaphore != NULL );
@@ -722,20 +729,6 @@ static void prvServerWorkTask( void * pvArgument )
     } while( uxNetworkisUp != mainNETWORK_UP_COUNT );
 
     xDNS_IP_Preference = xPreferenceIPv6;
-
-    {
-        xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
-        struct freertos_sockaddr xAddress;
-
-        ( void ) memset( &( xAddress ), 0, sizeof( xAddress ) );
-        xAddress.sin_family = FREERTOS_AF_INET6;
-        xAddress.sin_port = FreeRTOS_htons( 5000U );
-
-        BaseType_t xReturn = FreeRTOS_bind( xSocket, &xAddress, ( socklen_t ) sizeof( xAddress ) );
-        FreeRTOS_printf( ( "Open socket %d bind = %d\n", xSocketValid( xSocket ), xReturn ) );
-        TickType_t xTimeoutTime = pdMS_TO_TICKS( 10U );
-        FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, &xTimeoutTime, sizeof( TickType_t ) );
-    }
 
     for( ; ; )
     {
@@ -752,76 +745,20 @@ static void prvServerWorkTask( void * pvArgument )
             }
 
             /*          vTaskDelay( pdMS_TO_TICKS( 1000U ) ); */
-            FreeRTOS_printf( ( "\n" ) );
+            configPRINTF( ( "\n" ) );
 
             snprintf( pcCommand, sizeof( pcCommand ), "%s", pcCommandList[ xCommandIndex ] );
-            FreeRTOS_printf( ( "\n" ) );
-            FreeRTOS_printf( ( "/*==================== %s (%d/%d) ====================*/\n",
+            configPRINTF( ( "\n" ) );
+            configPRINTF( ( "/*==================== %s (%d/%d) ====================*/\n",
                                pcCommand, xCommandIndex + 1, ARRAY_SIZE( pcCommandList ) ) );
-            FreeRTOS_printf( ( "\n" ) );
+            configPRINTF( ( "\n" ) );
             xHandleTestingCommand( pcCommand, sizeof( pcCommand ) );
             xCommandIndex++;
         }
-        else if( xCommandIndex == ARRAY_SIZE( pcCommandList ) )
+        else
         {
-            FreeRTOS_printf( ( "Server task now ready.\n" ) );
-
-
-            #if ( ipconfigUSE_NTP_DEMO != 0 )
-                /* if (xNTPTaskIsRunning() != pdFALSE) */
-                {
-                    /* Ask once more for the current time. */
-                    /*   vStartNTPTask(0U, 0U); */
-                }
-            #endif
-
-            /*vTaskDelete( NULL ); */
-            xCommandIndex++;
-        }
-
-        {
-            char pcBuffer[ 1500 ];
-            struct freertos_sockaddr xSourceAddress;
-            socklen_t xLength = sizeof( socklen_t );
-            int32_t rc = FreeRTOS_recvfrom( xSocket, pcBuffer, sizeof( pcBuffer ), 0, &xSourceAddress, &xLength );
-
-            if( rc > 0 )
-            {
-                if( xSourceAddress.sin_family == FREERTOS_AF_INET6 )
-                {
-                    FreeRTOS_printf( ( "Recv UDP %d bytes from %pip port %u\n", rc, xSourceAddress.sin_address.xIP_IPv6.ucBytes, FreeRTOS_ntohs( xSourceAddress.sin_port ) ) );
-                }
-                else
-                {
-                    FreeRTOS_printf( ( "Recv UDP %d bytes from %xip port %u\n", rc, FreeRTOS_ntohl( xSourceAddress.sin_address.ulIP_IPv4 ), FreeRTOS_ntohs( xSourceAddress.sin_port ) ) );
-                }
-
-                if( rc == 14 )
-                {
-                    static BaseType_t xDone = 0;
-
-                    if( xDone == 3 )
-                    {
-                        BaseType_t xIPv6 = ( xSourceAddress.sin_family == FREERTOS_AF_INET6 ) ? pdTRUE : pdFALSE;
-                        FreeRTOS_printf( ( "%d: Clear %s table\n", xDone, xIPv6 ? "ND" : "ARP" ) );
-
-                        if( xIPv6 == pdTRUE )
-                        {
-                            FreeRTOS_ClearND();
-                        }
-                        else
-                        {
-                            FreeRTOS_ClearARP( NULL );
-                        }
-
-                        xDone = 0;
-                    }
-                    else
-                    {
-                        xDone++;
-                    }
-                }
-            }
+            /* All the commands are handled - delete this task. */
+            vTaskDelete( NULL );
         }
     }
 }
@@ -869,16 +806,12 @@ static void prvServerWorkTask( void * pvArgument )
     struct tm * gmtime_r( const time_t * pxTime,
                           struct tm * tmStruct )
     {
-        struct tm tm;
-
-        memcpy( &( tm ), gmtime( pxTime ), sizeof( tm ) );
-
         if( tmStruct != NULL )
         {
-            memcpy( tmStruct, &( tm ), sizeof tm );
+            memcpy( tmStruct, gmtime( pxTime ), sizeof( struct tm ) );
         }
 
-        return &( tm );
+        return tmStruct;
     }
 /*-----------------------------------------------------------*/
 
@@ -905,7 +838,7 @@ void vOutputChar( const char cChar,
 /*    uint16_t usIdentifier) */
 /*{ */
 /*    ( void ) eStatus; */
-/*    FreeRTOS_printf( ( "vApplicationPingReplyHook called for %04x\n", usIdentifier ) ); */
+/*    configPRINTF( ( "vApplicationPingReplyHook called for %04x\n", usIdentifier ) ); */
 /*} */
 #endif
 
@@ -923,6 +856,7 @@ void vOutputChar( const char cChar,
 
 void handle_user_test( char * pcBuffer )
 {
+    ( void ) pcBuffer;
 }
 
 void show_single_addressinfo( const char * pcFormat,
@@ -948,11 +882,11 @@ void show_single_addressinfo( const char * pcFormat,
 
     if( pcFormat != NULL )
     {
-        FreeRTOS_printf( ( pcFormat, cBuffer ) );
+        configPRINTF( ( pcFormat, cBuffer ) );
     }
     else
     {
-        FreeRTOS_printf( ( "Address: %s\n", cBuffer ) );
+        configPRINTF( ( "Address: %s\n", cBuffer ) );
     }
 }
 /*-----------------------------------------------------------*/
@@ -973,7 +907,7 @@ void show_addressinfo( const struct freertos_addrinfo * pxAddress )
         ptr = ptr->ai_next;
     }
 
-    /* In case the function 'FreeRTOS_printf()` is not implemented. */
+    /* In case the function 'configPRINTF()` is not implemented. */
     ( void ) xIndex;
 }
 static BaseType_t xDNSResult = -2;
@@ -981,6 +915,9 @@ static void vDNSEvent( const char * pcName,
                        void * pvSearchID,
                        struct freertos_addrinfo * pxAddrInfo )
 {
+    ( void ) pcName;
+    ( void ) pvSearchID;
+
     FreeRTOS_printf( ( "vDNSEvent: called with %p\n", pxAddrInfo ) );
     showAddressInfo( pxAddrInfo );
 
@@ -994,7 +931,6 @@ static void dns_test( const char * pcHostName )
 {
     uint32_t ulID = uxRand32();
     BaseType_t rc;
-    TickType_t uxTimeout = pdMS_TO_TICKS( 2000U );
 
     FreeRTOS_dnsclear();
 

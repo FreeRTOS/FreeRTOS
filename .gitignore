@@ -4,6 +4,7 @@
 # Ignore build results
 [Dd]ebug/
 [Dd]ebugPublic/
+[Dd]ebug_with_Libslirp/
 [Rr]elease/
 [Rr]eleases/
 [Bb]in/

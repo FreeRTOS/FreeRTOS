@@ -18,7 +18,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [[ "$?" = "0" ]]
           then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
@@ -125,7 +125,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [[ "$?" = "0" ]]
           then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
@@ -172,7 +172,6 @@ jobs:
           echo "::group::Build WIN32-MingW Blinky Demo"
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace '#define\s+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY\s+0', '#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1'
-          $newContent = $newContent -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'
           $newContent | Set-Content -Path 'main.c'
           gcc --version
           make --version
@@ -207,7 +206,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
           else
@@ -232,6 +231,11 @@ jobs:
             exit 1
           fi
 
+      - name: Build Posix_GCC Demo for Coverage Test
+        shell: bash
+        working-directory: FreeRTOS/Demo/Posix_GCC
+        run: make -j COVERAGE_TEST=1
+
       - name: Build Posix_GCC Full Demo
         id: build-posix-gcc-full-demo
         shell: bash
@@ -240,6 +244,7 @@ jobs:
           # Build Posix_GCC Full Demo
           echo "::group::Build Posix_GCC Full Demo"
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          make clean
           make -j
           echo "::endgroup::"
           if [ "$?" = "0" ]; then
@@ -298,7 +303,7 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
           else
@@ -349,11 +354,25 @@ jobs:
           # Fetch Kernel Submodule
           echo "::group::Fetch Kernel Submodule"
           git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mCloned the Kernel\033[0m"
           else
             echo -e "\033[32;31mKernel Clone Failed...\033[0m"
+            exit 1
+          fi
+
+      - name: Fetch Community-Supported-Demos Submodule
+        shell: bash
+        run: |
+          # Fetch Community-Supported-Demos Submodule
+          echo "::group::Fetch Community-Supported-Demos Submodule"
+          git submodule update --checkout --init --depth 1 FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
+          echo "::engdroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned the Community-Supported-Demos\033[0m"
+          else
+            echo -e "\033[32;31mCommunity-Supported-Demos Clone Failed...\033[0m"
             exit 1
           fi
 
@@ -364,7 +383,7 @@ jobs:
           echo "::group::Install GNU ARM Toolchain"
           sudo apt-get -y update
           sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mInstalled the GNU ARM Toolchain\033[0m"
           else
@@ -379,7 +398,7 @@ jobs:
           # Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo
           echo "::group::Build CORTEX_MPU_M3_MPS2_QEMU_GCC Demo"
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuild CORTEX_MPU_M3_MPS2_QEMU_GCC Demo\033[0m"
           else
@@ -394,7 +413,7 @@ jobs:
           # Build CORTEX_LM3S102_GCC Demo
           echo "::group::Build CORTEX_LM3S102_GCC Demo"
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_LM3S102_GCC Demo Kernel\033[0m"
           else
@@ -410,7 +429,7 @@ jobs:
           echo "::group::Build CORTEX_M3_MPS2_QEMU_GCC Demo"
           make clean
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_M3_MPS2_QEMU_GCC Demo\033[0m"
           else
@@ -426,7 +445,7 @@ jobs:
           echo "::group::Build CORTEX_M3_MPS2_QEMU_GCC Full Demo"
           make clean
           make FULL_DEMO=1 -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_M3_MPS2_QEMU_GCC Full Demo\033[0m"
           else
@@ -441,7 +460,7 @@ jobs:
           # Build CORTEX_LM3S811_GCC Demo
           echo "::group::Build CORTEX_LM3S811_GCC Demo"
           make -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_LM3S811_GCC Demo\033[0m"
           else
@@ -451,14 +470,14 @@ jobs:
 
       - name: Build CORTEX_M0+_RP2040 Demos
         shell: bash
-        working-directory: FreeRTOS/Demo/ThirdParty/Community-Supported/CORTEX_M0+_RP2040
+        working-directory: FreeRTOS/Demo/ThirdParty/Community-Supported-Demos/CORTEX_M0+_RP2040
         run: |
           # Build CORTEX_M0+_RP2040 Demos
           echo "::group::Build CORTEX_M0+_RP2040 Demos"
           git clone https://github.com/raspberrypi/pico-sdk.git
           cmake -B build -DPICO_SDK_PATH=pico-sdk -GNinja
           ninja -C build --verbose
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt CORTEX_M0+_RP2040 Demos\033[0m"
           else
@@ -473,7 +492,7 @@ jobs:
           # Build CORTEX_MPS2_QEMU_IAR_GCC Demo
           echo "::group::Build CORTEX_MPS2_QEMU_IAR_GCC Demo"
           make -C build/gcc -j
-          echo "::engdroup::"
+          echo "::endgroup::"
           if [ "$?" = "0" ]; then
             echo -e "\033[32;3mBuilt the CORTEX_MPS2_QEMU_IAR_GCC Demo\033[0m"
           else

@@ -88,8 +88,8 @@
  * connections on the standard echo port (port 7), then echos back any data
  * received on that connection.
  */
-#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     1
-#define mainCREATE_TCP_ECHO_TASKS_SINGLE              0
+#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     0
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1
 #define mainCREATE_TCP_ECHO_SERVER_TASK               0
 /*-----------------------------------------------------------*/
 
@@ -168,8 +168,14 @@ int main( void )
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-    /* Initialise the interface descriptor for WinPCap. */
+
+#ifdef ipconfigUSE_LIBSLIRP
+    extern NetworkInterface_t* pxLibslirp_FillInterfaceDescriptor(BaseType_t xEMACIndex,
+        NetworkInterface_t * pxInterface);
+    pxLibslirp_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+#else
     pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+#endif
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );

@@ -78,11 +78,13 @@
       <folder Name="portable">
         <folder Name="Common">
           <file file_name="../../Source/portable/Common/mpu_wrappers.c" />
+          <file file_name="../../Source/portable/Common/mpu_wrappers_v2.c" />
         </folder>
         <folder Name="GCC">
           <folder Name="ARM_CM33">
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/port.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/portasm.c" />
+            <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/mpu_wrappers_v2_asm.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/portasm.h" />
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/portmacro.h" />
           </folder>

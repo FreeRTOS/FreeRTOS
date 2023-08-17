@@ -82,7 +82,7 @@
                 </option>
                 <option>
                     <name>GEndianModeBE</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OGBufferedTerminalOutput</name>
@@ -99,7 +99,7 @@
                 <option>
                     <name>GBECoreSlave</name>
                     <version>32</version>
-                    <state>60</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -1132,11 +1132,17 @@
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\Source\portable\Common\mpu_wrappers.c</name>
                 </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\Source\portable\Common\mpu_wrappers_v2.c</name>
+                </file>
             </group>
             <group>
                 <name>IAR</name>
                 <group>
                     <name>ARM_CM23_NTZ</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM23_NTZ\non_secure\mpu_wrappers_v2_asm.S</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM23_NTZ\non_secure\port.c</name>
                     </file>

@@ -10,7 +10,7 @@
     <aExt></aExt>
     <oExt>*.obj; *.o</oExt>
     <lExt>*.lib</lExt>
-    <tExt>*.txt; *.h; *.inc</tExt>
+    <tExt>*.txt; *.h; *.inc; *.md</tExt>
     <pExt>*.plm</pExt>
     <CppX>*.cpp</CppX>
     <nMigrate>0</nMigrate>
@@ -101,12 +101,14 @@
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
         <bEvRecOn>1</bEvRecOn>
+        <bSchkAxf>0</bSchkAxf>
+        <bTchkAxf>0</bTchkAxf>
         <nTsel>0</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
         <sDlgPa></sDlgPa>
-        <sIfile></sIfile>
+        <sIfile>..\simulator.ini</sIfile>
         <tDll></tDll>
         <tDllPa></tDllPa>
         <tDlgDll></tDlgDll>
@@ -211,6 +213,7 @@
       <pMultCmdsp></pMultCmdsp>
       <DebugDescription>
         <Enable>1</Enable>
+        <EnableFlashSeq>0</EnableFlashSeq>
         <EnableLog>0</EnableLog>
         <Protocol>2</Protocol>
         <DbgClock>10000000</DbgClock>
@@ -220,7 +223,7 @@
 
   <Group>
     <GroupName>System</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -240,7 +243,7 @@
 
   <Group>
     <GroupName>application_and_config</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -284,7 +287,7 @@
 
   <Group>
     <GroupName>FreeRTOS_Source</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -367,6 +370,18 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
+      <PathWithFileName>..\..\..\Source\portable\Common\mpu_wrappers_v2.c</PathWithFileName>
+      <FilenameWithoutPath>mpu_wrappers_v2.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>12</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\Source\portable\GCC\ARM_CM4_MPU\port.c</PathWithFileName>
       <FilenameWithoutPath>port.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -374,7 +389,19 @@
     </File>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>12</FileNumber>
+      <FileNumber>13</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\..\Source\portable\GCC\ARM_CM4_MPU\mpu_wrappers_v2_asm.c</PathWithFileName>
+      <FilenameWithoutPath>mpu_wrappers_v2_asm.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>14</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

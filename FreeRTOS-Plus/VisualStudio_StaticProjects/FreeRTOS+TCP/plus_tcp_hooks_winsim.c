@@ -204,7 +204,13 @@ void vPlatformInitIpStack( void )
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     /* Initialise the interface descriptor for WinPCap. */
-    pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    #ifdef ipconfigUSE_LIBSLIRP
+        extern NetworkInterface_t* pxLibslirp_FillInterfaceDescriptor(BaseType_t xEMACIndex,
+            NetworkInterface_t * pxInterface);
+        pxLibslirp_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    #else
+        pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+    #endif
 
     /* === End-point 0 === */
     FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );

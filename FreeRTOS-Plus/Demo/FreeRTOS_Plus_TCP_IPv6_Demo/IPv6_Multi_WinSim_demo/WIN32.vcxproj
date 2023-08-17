@@ -75,7 +75,7 @@ $(DEMO_COMMON_SOURCE_DIR)\logging\include;
 ..\common\Logging\windows
 </AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;ipconfigUSE_PCAP=1;_NO_CRT_STDIO_INLINE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
@@ -85,7 +85,7 @@ $(DEMO_COMMON_SOURCE_DIR)\logging\include;
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>/wd4210 /wd4127 /wd4214 /wd4201 /wd4244  /wd4310 %(AdditionalOptions)</AdditionalOptions>
       <BrowseInformation>true</BrowseInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -155,7 +155,9 @@ $(DEMO_COMMON_SOURCE_DIR)\logging\include;
   <ItemGroup>
     <ClCompile Include="$(UTILITIES_SOURCE_DIR)\date_and_time.c" />
     <ClCompile Include="$(UTILITIES_SOURCE_DIR)\http_client_test.c" />
-    <ClCompile Include="$(UTILITIES_SOURCE_DIR)\plus_tcp_demo_cli.c" />
+    <ClCompile Include="$(UTILITIES_SOURCE_DIR)\plus_tcp_demo_cli.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/wd4068 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="$(UTILITIES_SOURCE_DIR)\tcp_dump_packets.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_BitConfig.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4.c" />
@@ -164,14 +166,14 @@ $(DEMO_COMMON_SOURCE_DIR)\logging\include;
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Sockets.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Utils.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPV4.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPV6.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPV4.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPV6.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPV4.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPV6.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPV4.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPV6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv6.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Tiny_TCP.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv4.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv6.c" />

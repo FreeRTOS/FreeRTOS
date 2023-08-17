@@ -475,6 +475,11 @@
               <FilePath>..\..\..\..\Source\portable\MemMang\heap_4.c</FilePath>
             </File>
             <File>
+              <FileName>mpu_wrappers_v2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\Source\portable\Common\mpu_wrappers_v2.c</FilePath>
+            </File>
+            <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\Source\portable\RVDS\ARM_CM4_MPU\port.c</FilePath>
@@ -483,6 +488,11 @@
               <FileName>portmacro.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\..\Source\portable\RVDS\ARM_CM4_MPU\portmacro.h</FilePath>
+            </File>
+            <File>
+              <FileName>mpu_wrappers_v2_asm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\Source\portable\RVDS\ARM_CM4_MPU\mpu_wrappers_v2_asm.c</FilePath>
             </File>
           </Files>
         </Group>

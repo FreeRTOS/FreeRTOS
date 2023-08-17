@@ -230,14 +230,19 @@ static TimerHandle_t xTimer = NULL;
 	extern uint32_t __privileged_functions_actual_end__[];
 	extern uint32_t __privileged_data_actual_end__[];
 #else
+	extern uint32_t Image$$ER_FREERTOS_SYSTEM_CALLS$$Base;
+	extern uint32_t Image$$ER_FREERTOS_SYSTEM_CALLS$$Limit;
+
 	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0xE0000UL;
 	const uint32_t * __FLASH_segment_end__ = ( uint32_t * ) 0x100000UL;
 	const uint32_t * __SRAM_segment_start__ = ( uint32_t * ) 0x100000UL;
-	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x120000;
+	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x120000UL;
 	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0xE0000UL;
-	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0xE4000UL;
+	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0xF0000UL;
+	const uint32_t * __syscalls_flash_start__ = ( uint32_t * ) &( Image$$ER_FREERTOS_SYSTEM_CALLS$$Base );
+	const uint32_t * __syscalls_flash_end__ = ( uint32_t * ) &( Image$$ER_FREERTOS_SYSTEM_CALLS$$Limit );
 	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x100000UL;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x100200UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x108000UL;
 #endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/

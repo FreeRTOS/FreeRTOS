@@ -46,7 +46,7 @@ target_include_directories( freertos_config
 )
 
 # Select the heap port
-set( FREERTOS_HEAP "4" CACHE STRING "" FORCE)
+set( FREERTOS_HEAP "3" CACHE STRING "" FORCE)
 
 # Select the native compile PORT
 set( FREERTOS_PORT "GCC_POSIX" CACHE STRING "" FORCE)

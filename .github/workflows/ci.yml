@@ -1,34 +1,40 @@
 name: CI Checks
 
+env:
+  bashPass: \033[32;1mPASSED -
+  bashWarn: \033[33;1mWARNING -
+  bashFail: \033[31;1mFAILED -
+  bashEnd:  \033[0m
+
 on:
-  push:
-  pull_request:
-  workflow_dispatch:
+    push:
+    pull_request:
+    workflow_dispatch:
 
 jobs:
-  git-secrets:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Checkout awslabs/git-secrets
-        uses: actions/checkout@v2
-        with:
-          repository: awslabs/git-secrets
-          ref: master
-          path: git-secrets
-      - name: Install git-secrets
-        run: cd git-secrets && sudo make install && cd ..
-      - name: Run git-secrets
-        run: |
-          git-secrets --register-aws
-          git-secrets --scan
+    git-secrets:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+            - name: Checkout awslabs/git-secrets
+              uses: actions/checkout@v3
+              with:
+                  repository: awslabs/git-secrets
+                  ref: master
+                  path: git-secrets
+            - name: Install git-secrets
+              run: cd git-secrets && sudo make install && cd ..
+            - name: Run git-secrets
+              run: |
+                  git-secrets --register-aws
+                  git-secrets --scan
 
   formatting:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Uncrustify
         run: sudo apt-get install uncrustify=0.69.0+dfsg1-1build1
       - name: Run Uncrustify
@@ -76,131 +82,123 @@ jobs:
             exit 0
           fi
 
-  doxygen:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-          path: freertos
-      - name: Install Python3
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-      - name: Download tag dependency of coreMQTT-Agent
-        run: |
-          # We don't need to generate the coreMQTT docs, we only need the tag file.
-          # Therefore, we can just download it.
-          mkdir -p freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output
-          wget -O freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
-          "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
-      - name: Generate doxygen ZIP
-        uses: FreeRTOS/CI-CD-GitHub-Actions/doxygen@main
-        with:
-          path: ./freertos
-          # List of directories containing libraries whose doxygen output will be generated.
-          libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols,FreeRTOS-Plus/Source/Utilities
-          generate_zip: true
-      - name: Upload doxygen artifact if main branch
-        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
+    doxygen:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Clone repository
+          uses: actions/checkout@v3
+          with:
+              submodules: recursive
+              path: freertos
+        - name: Install Python3
+          uses: actions/setup-python@v3
+
+        - name: Download tag dependency of coreMQTT-Agent
+          run: |
+              # We don't need to generate the coreMQTT docs, we only need the tag file.
+              # Therefore, we can just download it.
+              mkdir -p freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output
+              wget -O freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
+              "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
+
+        - name: Generate doxygen ZIP
+          uses: FreeRTOS/CI-CD-Github-Actions/doxygen@CI-CD-Overhaul
+          with:
+              path: ./freertos
+              # List of directories containing libraries whose doxygen output will be generated.
+              libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols,FreeRTOS-Plus/Source/Utilities
+              generate_zip: true
+        - name: Upload doxygen artifact if main branch
+          if:
+              success() && ( github.ref == 'refs/heads/main' || github.ref
+              == 'refs/heads/release-candidate' )
+          env:
+              GIT_SHA:
+          uses: actions/upload-artifact@v2
+          with:
+              name: doxygen.zip-${{ github.sha }}
+              path: ./freertos/doxygen.zip
+              retention-days: 2
+
+    spell-check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Parent Repo
+              uses: actions/checkout@v3
+            - name: Run spellings check
+              uses: FreeRTOS/CI-CD-GitHub-Actions/rust-spell-check@CI-CD-Overhaul
+
+    verify-manifest:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+          with:
+            submodules: true
+            fetch-depth: 0
+        - name: Run manifest verifier
+          uses: FreeRTOS/CI-CD-GitHub-Actions/manifest-verifier@CI-CD-Overhaul
+          with:
+            path: ./
+            fail-on-incorrect-version: true
+
+    memory-statistics:
+        runs-on: ubuntu-latest
         env:
-          GIT_SHA:
-        uses: actions/upload-artifact@v2
-        with:
-          name: doxygen.zip-${{ github.sha }}
-          path: ./freertos/doxygen.zip
-          retention-days: 2
+            ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
+        steps:
+            - name: Install ARM GCC
+              run:
+                  wget -qO- "${{ env.ARM_GCC_TOOLCHAIN_URL }}" | sudo tar
+                  --strip-components=1 -xj -C /usr/local
+            - name: Clone FreeRTOS Repository with submodules
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+            - name: Clone mbedTLS submodule from corePKCS11
+              run:
+                  git submodule update --init --recursive --checkout --
+                  FreeRTOS-Plus/Source/corePKCS11
+            - name: Clone CI-CD-Github-Actions repository
+              uses: actions/checkout@v3
+              with:
+                  repository: skptak/CI-CD-GitHub-Actions
+                  path: tools
+            - name: Run script to generate JSON memory statistics
+              run:
+                  tools/memory_statistics/memory_statistics.py --json_report
+                  --config tools/memory_statistics/paths.json --output
+                  freertos_lts_memory_estimates.json
+            - name:
+                  Upload memory size report as artifact (for main and
+                  release-candidate ONLY)
+              if:
+                  success() && ( github.ref == 'refs/heads/main' || github.ref
+                  == 'refs/heads/release-candidate' )
+              uses: actions/upload-artifact@v2
+              with:
+                  name: freertos-memory-estimates
+                  path: ./freertos_lts_memory_estimates.json
+                  retention-days: 2
 
-  spell-check:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout Parent Repo
-        uses: actions/checkout@v2
-        with:
-          ref: main
-          repository: FreeRTOS/CI-CD-Github-Actions
-          path: commonCI
-      - name: Clone This Repo
-        uses: actions/checkout@v2
-        with:
-            path: ./FreeRTOS
-      - name: Install spell
-        run: |
-          sudo apt-get install spell
-          sudo apt-get install util-linux
-      - name: Check spelling
-        run: |
-          # Add path to the tool to the environment variable.
-          PATH=$PATH:commonCI/spellings/tools
-          # Make sure that only Amazon licenced files are checked.
-          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]" | grep -v "FreeRTOS\/FreeRTOS\/Test\/VeriFast"`/g' commonCI/spellings/tools/find-unknown-comment-words
-          # Run the spell check script.
-          find-unknown-comment-words --directory FreeRTOS/ --lexicon FreeRTOS/lexicon.txt
-          # Check the exit status.
-          if [ "$?" = "0" ]; then
-            exit 0
-          else
-            exit 1
-          fi
+    proof_ci:
+        if: ${{ github.event.pull_request }}
+        runs-on: cbmc_ubuntu-latest_16-core
+        steps:
+            - uses: actions/checkout@v3
+            - env:
+                stepName: Install Dependencies
+              run: |
+                  echo "::group::${{ env.stepName }}"
+                  git submodule update --init --checkout --recursive --depth 1
+                  sudo apt-get update
+                  sudo apt-get install --yes --no-install-recommends gcc-multilib
+                  echo "::endgroup::"
+                  echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
 
-  verify-manifest:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-          fetch-depth: 0
-      - name: Install Python3
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-      - name: Run manifest verifier
-        uses: FreeRTOS/CI-CD-Github-Actions/manifest-verifier@main
-        with:
-          path: ./
-          exclude-submodules: FreeRTOS-Plus/Test/CMock,FreeRTOS/Test/CMock/CMock,FreeRTOS/Test/litani
-          fail-on-incorrect-version: true
+            - name: Set up CBMC runner
+              uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@CI-CD-Overhaul
 
-  memory-statistics:
-    runs-on: ubuntu-20.04
-    env:
-      ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
-    steps:
-      - name: Install ARM GCC
-        run: wget -qO- "${{ env.ARM_GCC_TOOLCHAIN_URL }}" | sudo tar --strip-components=1 -xj -C /usr/local
-      - name: Clone FreeRTOS Repository with submodules
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Clone mbedTLS submodule from corePKCS11
-        run: git submodule update --init --recursive --checkout -- FreeRTOS-Plus/Source/corePKCS11
-      - name: Clone CI-CD-Github-Actions repository
-        uses: actions/checkout@v2
-        with:
-          repository: FreeRTOS/CI-CD-Github-Actions
-          path: tools
-      - name: Run script to generate JSON memory statistics
-        run: tools/memory_statistics/memory_statistics.py --json_report --config tools/memory_statistics/paths.json --output freertos_lts_memory_estimates.json
-      - name: Upload memory size report as artifact (for main and release-candidate ONLY)
-        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
-        uses: actions/upload-artifact@v2
-        with:
-          name: freertos-memory-estimates
-          path: ./freertos_lts_memory_estimates.json
-          retention-days: 2
-
-  proof_ci:
-    runs-on: cbmc_ubuntu-latest_16-core
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          git submodule update --init --checkout --recursive --depth 1
-          sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends gcc-multilib
-      - name: Set up CBMC runner
-        uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@main
-      - name: Run CBMC
-        uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@main
-        with:
-          proofs_dir: FreeRTOS/Test/CBMC/proofs
+            - name: Run CBMC
+              uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@CI-CD-Overhaul
+              with:
+                  proofs_dir: FreeRTOS/Test/CBMC/proofs

@@ -291,6 +291,8 @@ FREERTOS_IGNORED_PATTERNS = [
 ]
 
 FREERTOS_IGNORED_FILES = [
+    '.cSpellWords.txt',
+    'cspell.config.yaml',
     '.cproject',
     '.project',
     'fyi-another-way-to-ignore-file.txt',

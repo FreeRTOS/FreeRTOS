@@ -100,7 +100,7 @@ jobs:
             - env:
                   stepName: Run and monitor WIN32-MSVC Full Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/WIN32-MSVC/Debug/RTOSDemo.exe
                   timeout-seconds: 60
@@ -131,7 +131,7 @@ jobs:
             - env:
                   stepName: Run and monitor WIN32-MSVC Blinky Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/WIN32-MSVC/Debug/RTOSDemo.exe
                   timeout-seconds: 60
@@ -163,7 +163,7 @@ jobs:
                   stepName:
                       Run and monitor WIN32-MSVC-Static-Allocation-Only Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/WIN32-MSVC-Static-Allocation-Only/Debug/RTOSDemo.exe
                   timeout-seconds: 60
@@ -216,7 +216,7 @@ jobs:
             - env:
                   stepName: Run and monitor WIN32-MingW Full Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/WIN32-MingW/build/RTOSDemo.exe
                   timeout-seconds: 60
@@ -249,7 +249,7 @@ jobs:
             - env:
                   stepName: Run and monitor WIN32-MingW Blinky Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/WIN32-MingW/build/RTOSDemo.exe
                   timeout-seconds: 60
@@ -339,7 +339,7 @@ jobs:
             - env:
                   stepName: Run and monitor Posix_GCC Full Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
                   timeout-seconds: 60
@@ -371,7 +371,7 @@ jobs:
             - env:
                   stepName: Run and monitor Posix_GCC Blinky Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/Posix_GCC/build/posix_demo
                   timeout-seconds: 60
@@ -662,7 +662,7 @@ jobs:
             - env:
                   stepName: Run and monitor CORTEX_MPS2_QEMU_IAR_GCC Demo
               name: ${{ env.stepName }}
-              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/executable-monitor@v2
               with:
                   exe-path: FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC/qemu_reader.out
                   timeout-seconds: 20

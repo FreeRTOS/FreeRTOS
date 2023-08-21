@@ -129,7 +129,7 @@ jobs:
               "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
 
         - name: Generate doxygen ZIP
-          uses: FreeRTOS/CI-CD-Github-Actions/doxygen@CI-CD-Overhaul
+          uses: FreeRTOS/CI-CD-Github-Actions/doxygen@v2
           with:
               path: ./freertos
               # List of directories containing libraries whose doxygen output will be generated.
@@ -153,7 +153,7 @@ jobs:
             - name: Checkout Parent Repo
               uses: actions/checkout@v3
             - name: Run spellings check
-              uses: FreeRTOS/CI-CD-GitHub-Actions/rust-spell-check@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-GitHub-Actions/rust-spell-check@v2
 
     verify-manifest:
         runs-on: ubuntu-latest
@@ -163,7 +163,7 @@ jobs:
             submodules: true
             fetch-depth: 0
         - name: Run manifest verifier
-          uses: FreeRTOS/CI-CD-GitHub-Actions/manifest-verifier@CI-CD-Overhaul
+          uses: FreeRTOS/CI-CD-GitHub-Actions/manifest-verifier@v2
           with:
             path: ./
             fail-on-incorrect-version: true
@@ -223,9 +223,9 @@ jobs:
                   echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
 
             - name: Set up CBMC runner
-              uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@v2
 
             - name: Run CBMC
-              uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@v2
               with:
                   proofs_dir: FreeRTOS/Test/CBMC/proofs

@@ -507,11 +507,11 @@ jobs:
 
             - name: Generate SSL credentials
               id: generate-credentials
-              uses: FreeRTOS/CI-CD-Github-Actions/ssl-credential-creator@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/ssl-credential-creator@v2
 
             - name: Start localhost MQTT broker
               id: mqtt-broker
-              uses: FreeRTOS/CI-CD-Github-Actions/localhost-mqtt-broker@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/localhost-mqtt-broker@v2
               with:
                   root-ca-cert-path:
                       ${{ steps.generate-credentials.outputs.root-ca-cert-path }}
@@ -1203,7 +1203,7 @@ jobs:
 
             - name: Start localhost Echo server
               id: echo-server
-              uses: FreeRTOS/CI-CD-Github-Actions/localhost-echo-server@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/localhost-echo-server@v2
               with:
                   port_number: 5000
 
@@ -1364,7 +1364,7 @@ jobs:
 
             - name: Start localhost Echo server
               id: echo-server
-              uses: FreeRTOS/CI-CD-Github-Actions/localhost-echo-server@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/localhost-echo-server@v2
               with:
                   port_number: 5000
 
@@ -1408,7 +1408,7 @@ jobs:
 
             - name: Generate SSL credentials
               id: generate-credentials
-              uses: FreeRTOS/CI-CD-Github-Actions/ssl-credential-creator@CI-CD-Overhaul
+              uses: FreeRTOS/CI-CD-Github-Actions/ssl-credential-creator@v2
 
             - env:
                 stepName: Configure FreeRTOS+WolfSSL Demo

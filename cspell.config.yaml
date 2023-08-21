@@ -1,0 +1,22 @@
+---
+$schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
+version: '0.2'
+# Allows things like stringLength
+allowCompoundWords: true
+useGitignore: true
+# Could split this up? And do a dictionary for each repo?
+# But feel like if this isn't super slow
+# That having just one single dictionary might be nicer?
+dictionaryDefinitions:
+  - name: freertos-words
+    path: '.cSpellWords.txt'
+    addWords: true
+dictionaries:
+  - freertos-words
+ignorePaths:
+  - 'node_modules'
+  - '.cSpellWords.txt'
+  - 'dependency'
+  - 'docs'
+  - 'ThirdParty'
+

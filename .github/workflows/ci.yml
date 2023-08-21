@@ -208,24 +208,24 @@ jobs:
                   retention-days: 2
 
     proof_ci:
-        if: ${{ github.event.pull_request }}
-        runs-on: cbmc_ubuntu-latest_16-core
-        steps:
-            - uses: actions/checkout@v3
-            - env:
-                stepName: Install Dependencies
-              run: |
-                  echo "::group::${{ env.stepName }}"
-                  git submodule update --init --checkout --recursive --depth 1
-                  sudo apt-get update
-                  sudo apt-get install --yes --no-install-recommends gcc-multilib
-                  echo "::endgroup::"
-                  echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
+      if: ${{ github.event.pull_request }}
+      runs-on: cbmc_ubuntu-latest_16-core
+      steps:
+        - uses: actions/checkout@v3
+        - env:
+            stepName: Install Dependencies
+          run: |
+            echo "::group::${{ env.stepName }}"
+            git submodule update --init --checkout --recursive --depth 1
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends gcc-multilib
+            echo "::endgroup::"
+            echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
 
-            - name: Set up CBMC runner
-              uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@v2
+        - name: Set up CBMC runner
+          uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@main
 
-            - name: Run CBMC
-              uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@v2
-              with:
-                  proofs_dir: FreeRTOS/Test/CBMC/proofs
+        - name: Run CBMC
+          uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@main
+          with:
+              proofs_dir: FreeRTOS/Test/CBMC/proofs

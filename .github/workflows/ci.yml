@@ -36,7 +36,7 @@ jobs:
       steps:
         - uses: actions/checkout@v3
         - name: Install Uncrustify
-          run: sudo apt-get install uncrustify=0.69.0+dfsg1-1build1 dos2unix fdfind
+          run: sudo apt-get install uncrustify=0.69.0+dfsg1-1build1 dos2unix fd-find
         - env:
             stepName: Run Uncrustify
           id: uncrustify-files

@@ -2,7 +2,7 @@ name: CI Checks
 
 env:
   bashPass: \033[32;1mPASSED -
-  bashWarn: \033[33;1mWARNING -
+  bashInfo: \033[33;1mINFO -
   bashFail: \033[31;1mFAILED -
   bashEnd:  \033[0m
 
@@ -36,51 +36,78 @@ jobs:
       steps:
         - uses: actions/checkout@v3
         - name: Install Uncrustify
-          run: sudo apt-get install uncrustify=0.69.0+dfsg1-1build1
-        - name: Run Uncrustify
+          run: sudo apt-get install uncrustify=0.69.0+dfsg1-1build1 dos2unix fdfind
+        - env:
+            stepName: Run Uncrustify
+          id: uncrustify-files
           run: |
             # Uncrustify on C files while ignoring symlinks.
             # Make a collapsible section in the log to run uncrustify
-            echo "::group::Uncrustify Check"
+            echo "::group::${{ env.bashInfo }} Uncrustify Check ${{ env.bashEnd }}"
             # GitHub automtically use "set -e" which causes scripts to fail on the first exit code
             # This would mean the first time a file fails the check that we exit without formatting all files.
             set +e
             uncrustify --version
             find FreeRTOS/Demo/Common FreeRTOS/Test \( -name ethernet -o -name drivers -o -path 'FreeRTOS/Test/CMock/CMock' \) -prune -false -o -name "*.[hc]" | xargs uncrustify --no-backup --replace --if-changed -c tools/uncrustify.cfg -l C
             echo "::endgroup::"
-            # Run a git diff to print the differences if any exist, return an error code if there are any
-            git diff --exit-code
-            if [ "$?" = "0" ]; then
-              echo -e "\033[32;3mUncrustify check passed\033[0m"
-              exit 0
-            else
-              echo -e "\033[32;31mFormatting check (using Uncrustify) failed...\033[0m"
-              # If there is an error, set this flag high again so the exit 1 fails the run
-              set -e
-              exit 1
-            fi
-        - name: Check For Trailing Whitespace
-          run: |
-            # Trailing Whitespace Check
-            set +e
-            ERROR=0
-            find .  \( -name '.git' -o -path "./FreeRTOS/Test/CBMC/patches" -o -path "./FreeRTOS-Plus" -o -path "./FreeRTOS/Source"  -o  -path "./FreeRTOS/Test/CMock/CMock"  -o -path "./FreeRTOS/Demo" \) -prune -false -o -type f -a -name "*" -exec grep  -In -e "[[:blank:]]$" {} +
-            if [ "$?" = "0" ]; then
-              ERROR=1
-            fi
 
-            find FreeRTOS/Demo/Common   \( -name "ethernet" \) -prune -o -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} +
-            if [ "$?" = "0" ]; then
-              echo -e "\033[32;31mFiles have trailing whitespace.\033[0m"
-              exit 1
-            else
-              if [ "$ERROR" -eq "1" ]; then
-                echo -e "\033[32;31mFiles have trailing whitespace.\033[0m"
-                exit 1
-              fi
-              echo -e "\033[32;3mTrailing whitespace check passed\033[0m"
+            echo "::group::${{ env.bashInfo }} Check for Trailing Whitespace ${{ env.bashEnd }}"
+            # These checks will be captured in the git diff
+            # Replace all trailing whitespace, exclude photo files
+            fdfind --type=file -E '*.png' -E '*.jpg' -E '*.svg' . --exec sed -Ei 's/[[:blank:]]+$//'
+            echo "::endgroup::"
+
+            echo "::group::${{ env.bashInfo }} Check for CRLF Line Endings ${{ env.bashEnd }}"
+            # Replace all line endings with LF ones instead of CRLF
+            fdfind --type=file . --exec dos2unix
+            echo "::endgroup::"
+
+            # Run a git diff to print the differences if any exist, return an error code if there are any
+            # Wrap in a set+e and set -e so we can keep running after the error
+            echo "::group::${{ env.bashInfo }} File Difference ${{ env.bashEnd }}"
+            set +e
+            git diff --exit-code --color=always
+            exitCode=$?
+            set -e
+
+            if [ $exitCode -eq 0 ]; then
+              echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd}}"
               exit 0
+            else
+              # I am intentionally doing this a second time here.
+              # Using tee will mask the exit code of the diff
+              # And we don't want the colour to be added to the patch
+              # Put it in what the 'default' path will be for the upload step
+              git diff > formattingChanges.patch
+              echo -e "${{ env.bashFail }} List of files with formatting errors: ${{ env.bashEnd }}"
+              echo -e "${{ env.bashFail }} "$(git diff --name-only)" ${{ env.bashEnd }} "
+              echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
             fi
+        - name: Upload Formatting Git Patch
+          if: failure() && ( steps.uncrustify-files.outcome == 'failure' )
+          id: upload-formatting-patch
+          uses: actions/upload-artifact@v3
+          with:
+            name: formattingChanges
+            path: formattingChanges.patch
+            retention-days: 7
+
+        - env:
+            stepName: Formatting Git Patch Info
+            bashPass: \033[32;1m
+            bashInfo: \033[33;1m
+            bashFail: \033[31;1m
+            bashEnd:  \033[0
+          if: failure() && ( steps.upload-formatting-patch.outcome == 'success' )
+          shell: bash
+          run: |
+            # ${{ env.stepName }}
+            echo -e "${{ env.bashInfo }} A git patch of the formatting issues has been attached to this workflow ${{ env.bashEnd }}"
+            echo -e "${{ env.bashInfo }} This can be accessed by returning to the bottom of the summary page of the workflow run ${{ env.bashEnd }}"
+            echo -e "${{ env.bashInfo }} At the bottom of the page will be a formattingChanges.patch file that you can download ${{ env.bashEnd }}"
+            echo -e "${{ env.bashInfo }} Copy this patch to your repository and apply it using 'git apply formattingChanges.patch' ${{ env.bashEnd }}"
+            exit 1
+
 
     doxygen:
       runs-on: ubuntu-latest

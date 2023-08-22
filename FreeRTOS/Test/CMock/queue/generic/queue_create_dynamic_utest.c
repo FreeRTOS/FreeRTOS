@@ -154,6 +154,9 @@ void test_macro_xQueueCreate_oneItem_zeroLength( void )
 
     TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
 
+    /* Verify that Queue Length is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
+
     /* Verify that Queue ItemSize is zero */
     TEST_ASSERT_EQUAL( 0, uxQueueGetQueueItemSize( xQueue ) );
 
@@ -179,6 +182,9 @@ void test_macro_xQueueCreate_oneItem_oneLength( void )
     TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
 
     TEST_ASSERT_EQUAL( QUEUE_T_SIZE + 1, getLastMallocSize() );
+
+    /* Verify that Queue Length is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
 
     /* Verify that Queue ItemSize is one */
     TEST_ASSERT_EQUAL( 1, uxQueueGetQueueItemSize( xQueue ) );
@@ -227,6 +233,9 @@ void test_macro_xQueueCreate_oneItem_multiLength( void )
         QueueHandle_t xQueue = xQueueCreate( 1, i );
 
         TEST_ASSERT_EQUAL( QUEUE_T_SIZE + i, getLastMallocSize() );
+
+        /* Verify that Queue Length is one */
+        TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
 
         /* Verify that Queue ItemSize is equal to the mailbox size */
         TEST_ASSERT_EQUAL( i, uxQueueGetQueueItemSize( xQueue ) );

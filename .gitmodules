@@ -42,7 +42,7 @@
 	url = https://github.com/wolfSSL/wolfssl.git
 [submodule "FreeRTOS-Plus/ThirdParty/libslirp"]
 	path = FreeRTOS-Plus/ThirdParty/libslirp
-	url = https://gitlab.freedesktop.org/slirp/libslirp.git
+	url = https://gitlab.com/qemu-project/libslirp.git
 [submodule "FreeRTOS-Plus/ThirdParty/glib"]
 	path = FreeRTOS-Plus/ThirdParty/glib
 	url = https://github.com/GNOME/glib.git

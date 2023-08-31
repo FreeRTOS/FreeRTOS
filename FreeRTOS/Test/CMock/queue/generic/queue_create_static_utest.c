@@ -138,6 +138,9 @@ void test_macro_xQueueCreateStatic_nullQueueStorage_oneItem_zeroLength( void )
     /* validate returned queue handle */
     TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
 
+    /* Verify that Queue Length is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
+
     /* Verify that Queue ItemSize is zero */
     TEST_ASSERT_EQUAL( 0, uxQueueGetQueueItemSize( xQueue ) );
 
@@ -207,6 +210,9 @@ void test_macro_xQueueCreateStatic_large( void )
     uint32_t queueStorage[ MAX_QUEUE_ITEMS ];
     StaticQueue_t queueBuffer;
     QueueHandle_t xQueue = xQueueCreateStatic( MAX_QUEUE_ITEMS, sizeof( uint32_t ), ( void * ) queueStorage, &queueBuffer );
+
+    /* Verify that Queue Length is equal to the MAX_QUEUE_ITEMS */
+    TEST_ASSERT_EQUAL( MAX_QUEUE_ITEMS, uxQueueGetQueueLength( xQueue ) );
 
     /* Verify that Queue ItemSize is 4 */
     TEST_ASSERT_EQUAL( 4, uxQueueGetQueueItemSize( xQueue ) );

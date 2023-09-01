@@ -1035,10 +1035,9 @@ jobs:
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           git submodule update --checkout --init --depth 1 \
-          FreeRTOS/Source \
-          FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
-          echo "::endgroup::"
-          echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
 
       - env:
           stepName: Install prerequisite packages

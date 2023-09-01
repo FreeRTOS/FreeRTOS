@@ -60,7 +60,7 @@ FREERTOS_PLUS_TRACE_BUILD_DIR := $(BUILD_DIR)/FreeRTOS-Plus-Trace
 ## Trace Recorder includes
 FREERTOS_PLUS_TRACE_INCLUDES += $(wildcard $(FREERTOS_PLUS_TRACE_DIR)/include/*.h)
 FREERTOS_PLUS_TRACE_INCLUDE_DIRS += -I $(FREERTOS_PLUS_TRACE_DIR)/include
-FREERTOS_PLUS_TRACE_INCLUDES += $(wildcard $(FREERTOS_PLUS_TRACE_DIR)/kernelports/FreeRTOS/include*.h)
+FREERTOS_PLUS_TRACE_INCLUDES += $(wildcard $(FREERTOS_PLUS_TRACE_DIR)/kernelports/FreeRTOS/include/*.h)
 FREERTOS_PLUS_TRACE_INCLUDE_DIRS += -I $(FREERTOS_PLUS_TRACE_DIR)/kernelports/FreeRTOS/include
 
 ## Trace Recorder sources

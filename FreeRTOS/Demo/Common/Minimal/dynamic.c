@@ -279,7 +279,16 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
 
             #if ( INCLUDE_eTaskGetState == 1 )
             {
-                configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
+                #if ( configNUMBER_OF_CORES > 1 )
+                {
+                    eTaskState eState = eTaskGetState( xContinuousIncrementHandle );
+                    configASSERT( ( eState == eReady ) || ( eState == eRunning ) );
+                }
+                #else
+                {
+                    configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
+                }
+                #endif
             }
             #endif /* INCLUDE_eTaskGetState */
 

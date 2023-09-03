@@ -36,7 +36,7 @@ MEMORY
 
 /* Initial 32K SRAMX_CODE is used to store kernel functions and
  * initial 16K bytes of SRAM_0_1_2_3 is used to store kernel data. */
-__privileged_functions_region_size__  = 32K;
+__privileged_functions_region_size__  = 64K;
 __privileged_data_region_size__       = 16K;
 
 /* Symbols needed by the MPU setup code. */

@@ -54,7 +54,7 @@ extern void vAssertCalled( void );
 #define configCPU_CLOCK_HZ                               ( ( unsigned long ) 20000000 )
 #define configTICK_RATE_HZ                               ( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 256 )
-#define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 1024 ) )
+#define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 10 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 10 )
 #define configUSE_TRACE_FACILITY                         1
 #define configUSE_16_BIT_TICKS                           0
@@ -112,7 +112,14 @@ unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that re
 #define configMAC_INTERRUPT_PRIORITY                   5
 
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY    ( 1 )
-#define configUSE_MPU_WRAPPERS_V1                       1
+
+/* Set configUSE_MPU_WRAPPERS_V1 to 0 to use new MPU wrapper.
+ * See https://freertos.org/a00110.html#configUSE_MPU_WRAPPERS_V1 for details. */
+#define configUSE_MPU_WRAPPERS_V1                      ( 0 )
+/* See https://freertos.org/a00110.html#configPROTECTED_KERNEL_OBJECT_POOL_SIZE for details. */
+#define configPROTECTED_KERNEL_OBJECT_POOL_SIZE        ( 150 )
+/* See https://freertos.org/a00110.html#configSYSTEM_CALL_STACK_SIZE for details. */
+#define configSYSTEM_CALL_STACK_SIZE                   ( 128 )
 
 /* Prototype for the function used to print out.  In this case it prints to the
  |     10 console before the network is connected then a UDP port after the network has

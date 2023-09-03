@@ -64,11 +64,25 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-extern volatile BaseType_t xYieldPending;
+
+#ifdef configNUMBER_OF_CORES
+    extern volatile BaseType_t xYieldPendings[];
+    #define xYieldPending    xYieldPendings[ 0 ]
+#else
+    extern volatile BaseType_t xYieldPending;
+#endif
+
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-extern TaskHandle_t xIdleTaskHandle;
+
+#ifdef configNUMBER_OF_CORES
+    extern TaskHandle_t xIdleTaskHandles[];
+    #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
+#else
+    extern TaskHandle_t xIdleTaskHandle;
+#endif
+
 extern volatile UBaseType_t uxSchedulerSuspended;
 
 

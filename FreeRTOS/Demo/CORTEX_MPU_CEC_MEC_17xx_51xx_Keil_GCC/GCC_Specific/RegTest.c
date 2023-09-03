@@ -626,6 +626,7 @@ void HardFault_Handler( void )
 		" ldr r1, [r0, #24]									\n"
 		" ldr r2, handler_address_const						\n"
 		" bx r2												\n"
+		" .align 4											\n"
 		" handler_address_const: .word hard_fault_handler	\n"
 	);
 }
@@ -643,6 +644,7 @@ void MemManage_Handler( void )
 		" ldr r1, [r0, #24]									\n"
 		" ldr r2, handler2_address_const					\n"
 		" bx r2												\n"
+		" .align 4											\n"
 		" handler2_address_const: .word hard_fault_handler	\n"
 	);
 }/*-----------------------------------------------------------*/

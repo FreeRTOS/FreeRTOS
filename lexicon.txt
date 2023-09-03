@@ -2929,6 +2929,7 @@ ulmaxfpuinterruptnesting
 ulmaxjitter
 ulmaxloop
 ulmaxloopcount
+ulmaxpublishcount
 ulmemchecktaskrunningcount
 ulmessagevalue
 ulminorreportversion
@@ -3057,6 +3058,7 @@ usstackdepth
 usstackhighwatermark
 usstacksize
 ustaskstacksize
+uxtaskstacksize
 usthingnamelength
 ustopicfilterlength
 ustopiclength

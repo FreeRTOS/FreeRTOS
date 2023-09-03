@@ -65,11 +65,23 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-extern volatile BaseType_t xYieldPending;
+
+#ifdef configNUMBER_OF_CORES
+    extern volatile BaseType_t xYieldPendings[];
+    #define xYieldPending    xYieldPendings[ 0 ]
+#else
+    extern volatile BaseType_t xYieldPending;
+#endif
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-extern TaskHandle_t xIdleTaskHandle;
+
+#ifdef configNUMBER_OF_CORES
+    extern TaskHandle_t xIdleTaskHandles[];
+    #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
+#else
+    extern TaskHandle_t xIdleTaskHandle;
+#endif
 extern volatile UBaseType_t uxSchedulerSuspended;
 
 /* =============================  DEFINES  ================================== */
@@ -1443,11 +1455,10 @@ void test_vTaskPrioritySet_success_lt_curr_prio_not_curr_task( void )
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
-/* This test ensures that if the base priority is different greater than that the current
- * priority the resulting base  will be equal to the new priority while the
- * current priority will be equal to the inherited priority
- * and port yield hook will be called
- * */
+/* This test ensures that if the base priority is different than that the current
+ * priority, the resulting base and current priority will be equal to the new
+ * priority when the new priority is greater than the inherited priority.
+ */
 void test_vTaskPrioritySet_success_gt_curr_prio_diff_base( void )
 {
     TaskHandle_t taskHandle, taskHandle2;
@@ -1479,7 +1490,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio_diff_base( void )
 
     /* Validations */
     TEST_ASSERT_EQUAL( 5, ptcb->uxBasePriority );
-    TEST_ASSERT_EQUAL( 4, ptcb->uxPriority );
+    TEST_ASSERT_EQUAL( 5, ptcb->uxPriority );
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 

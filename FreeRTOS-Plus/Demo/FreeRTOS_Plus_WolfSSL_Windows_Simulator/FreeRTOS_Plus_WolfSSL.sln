@@ -15,6 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_with_Libslirp|Win32 = Debug_with_Libslirp|Win32
+		Debug_with_Libslirp|x64 = Debug_with_Libslirp|x64
+		Debug_with_Libslirp|x86 = Debug_with_Libslirp|x86
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -23,6 +26,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug_with_Libslirp|x64.ActiveCfg = Debug_with_Libslirp|x64
+		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug_with_Libslirp|x64.Build.0 = Debug_with_Libslirp|x64
+		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug_with_Libslirp|x86.ActiveCfg = Debug_with_Libslirp|Win32
+		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug_with_Libslirp|x86.Build.0 = Debug_with_Libslirp|Win32
 		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug|Win32.Build.0 = Debug|Win32
 		{C8144D60-5005-4111-841E-FA3529F84A8B}.Debug|x64.ActiveCfg = Debug|x64
@@ -35,6 +44,12 @@ Global
 		{C8144D60-5005-4111-841E-FA3529F84A8B}.Release|x64.Build.0 = Release|x64
 		{C8144D60-5005-4111-841E-FA3529F84A8B}.Release|x86.ActiveCfg = Release|Win32
 		{C8144D60-5005-4111-841E-FA3529F84A8B}.Release|x86.Build.0 = Release|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|x64.ActiveCfg = Debug_with_Libslirp|x64
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|x64.Build.0 = Debug_with_Libslirp|x64
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|x86.ActiveCfg = Debug_with_Libslirp|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|x86.Build.0 = Debug_with_Libslirp|Win32
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.Build.0 = Debug|Win32
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|x64.ActiveCfg = Debug|x64
@@ -47,6 +62,12 @@ Global
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Release|x64.Build.0 = Release|x64
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Release|x86.ActiveCfg = Release|Win32
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Release|x86.Build.0 = Release|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|x64.ActiveCfg = Debug_with_Libslirp|x64
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|x64.Build.0 = Debug_with_Libslirp|x64
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|x86.ActiveCfg = Debug_with_Libslirp|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|x86.Build.0 = Debug_with_Libslirp|Win32
 		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|Win32.Build.0 = Debug|Win32
 		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|x64.ActiveCfg = Debug|x64
@@ -59,6 +80,12 @@ Global
 		{72C209C4-49A4-4942-A201-44706C9D77EC}.Release|x64.Build.0 = Release|x64
 		{72C209C4-49A4-4942-A201-44706C9D77EC}.Release|x86.ActiveCfg = Release|Win32
 		{72C209C4-49A4-4942-A201-44706C9D77EC}.Release|x86.Build.0 = Release|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|x64.ActiveCfg = Debug_with_Libslirp|x64
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|x64.Build.0 = Debug_with_Libslirp|x64
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|x86.ActiveCfg = Debug_with_Libslirp|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|x86.Build.0 = Debug_with_Libslirp|Win32
 		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|Win32.Build.0 = Debug|Win32
 		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|x64.ActiveCfg = Debug|x64

@@ -185,7 +185,7 @@ dependencies:
       type: "git"
       url: "https://github.com/intel/tinycbor.git"
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
-  
+
   - name: "TraceRecorder"
     version: "v4.8.0.hotfix2"
     repository:

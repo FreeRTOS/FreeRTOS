@@ -25,22 +25,20 @@ jobs:
         name: ${{ env.stepName }}
         uses: actions/checkout@v3
 
-      - env:
-          stepName: Fetch Kernel Submodule
-        name: ${{ env.stepName }}
+      - name: Fetch Required Submodules
         shell: bash
         run: |
-          # ${{ env.stepName }}
-          echo -e "::group::${{ env.stepName }}"
-          set +e
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          exitStatus=$?
-          set -e
-          echo -e "::endgroup::"
-          if [ $exitStatus -eq 0 ]; then
-            echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
+          # Fetch Required Submodules
+          echo "::group::Fetch Required Submodules"
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
+          echo "::endgroup::"
+          if [[ "$?" = "0" ]]
+          then
+            echo -e "\033[32;3mCloned Submodules\033[0m"
           else
-            echo -e "${{ env.bashFail }} ${{env.stepName}} ${{ env.bashEnd }}"
+            echo -e "\033[32;31mSubmodules Clone Failed...\033[0m"
             exit 1
           fi
 
@@ -152,16 +150,22 @@ jobs:
         name: ${{ env.stepName }}
         uses: actions/checkout@v3
 
-      - env:
-          stepName: Fetch Kernel Submodule
-        name: ${{ env.stepName }}
+      - name: Fetch Required Submodules
         shell: bash
         run: |
-          # ${{ env.stepName }}
-          echo -e "::group::${{ env.stepName }}"
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          echo -e "::endgroup::"
-          echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
+          # Fetch Required Submodules
+          echo "::group::Fetch Required Submodules"
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
+          echo "::endgroup::"
+          if [[ "$?" = "0" ]]
+          then
+            echo -e "\033[32;3mCloned Submodules\033[0m"
+          else
+            echo -e "\033[32;31mSubmodules Clone Failed...\033[0m"
+            exit 1
+          fi
 
       - env:
           stepName: Build WIN32-MingW Full Demo
@@ -237,23 +241,19 @@ jobs:
         name: ${{ env.stepName }}
         uses: actions/checkout@v3
 
-      - env:
-          stepName: Fetch Kernel Submodule
-        name: ${{ env.stepName }}
+      - name: Fetch Required Submodules
         shell: bash
         run: |
-          # ${{ env.stepName }}
-          echo -e "::group::${{ env.stepName }}"
-          set +e
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source
-          set -e
-          exitStatus=$?
-          set -e
-          echo -e "::endgroup::"
-          if [ $exitStatus -eq 0 ]; then
-            echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          # Fetch Required Submodules
+          echo "::group::Fetch Required Submodules"
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
+          echo "::endgroup::"
+          if [ "$?" = "0" ]; then
+            echo -e "\033[32;3mCloned Submodules\033[0m"
           else
-            echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
+            echo -e "\033[32;31mSubmodules Clone Failed...\033[0m"
             exit 1
           fi
 

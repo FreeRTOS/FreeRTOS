@@ -45,7 +45,7 @@
     #endif
 
     #ifdef __cplusplus
-        extern "C" {
+    extern "C" {
     #endif
 
 /*!
@@ -204,7 +204,7 @@
     #define PCAP_OPENFLAG_PROMISCUOUS    1
 
 /*!
- *  \brief Defines if the data trasfer (in case of a remote
+ *  \brief Defines if the data transfer (in case of a remote
  *  capture) has to be done with UDP protocol.
  *
  *  If it is '1' if you want a UDP data connection, '0' if you want
@@ -232,7 +232,7 @@
  *  \brief Defines if the local adapter will capture its own generated traffic.
  *
  *  This flag tells the underlying capture driver to drop the packets that were sent by itself.
- *  This is usefult when building applications like bridges, that should ignore the traffic
+ *  This is useful when building applications like bridges, that should ignore the traffic
  *  they just sent.
  */
     #define PCAP_OPENFLAG_NOCAPTURE_LOCAL       8
@@ -324,7 +324,7 @@
 
 /*!
  *
- *  \brief This structure keeps the information needed to autheticate
+ *  \brief This structure keeps the information needed to authenticate
  *  the user on a remote machine.
  *
  *  The remote machine can either grant or refuse the access according
@@ -397,7 +397,7 @@
 
 
 
-/*! Maximum lenght of an host name (needed for the RPCAP active mode) */
+/*! Maximum length of an host name (needed for the RPCAP active mode) */
     #define RPCAP_HOSTLIST_SIZE    1024
 
 
@@ -465,7 +465,7 @@
 /* End of remote capture functions */
 
     #ifdef __cplusplus
-        }
+}
     #endif
 
 

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -74,7 +74,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * macro sets the limit on how many simultaneous PUBLISH states an MQTT
  * context maintains.
  */
-#define MQTT_STATE_ARRAY_MAX_COUNT              20U
+#define MQTT_STATE_ARRAY_MAX_COUNT      20U
 
 /**
  * @brief The maximum duration between non-empty network reads while
@@ -94,6 +94,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #define MQTT_RECV_POLLING_TIMEOUT_MS    0U
 
 /*********************** coreMQTT Agent Configurations **********************/
+
 /**
  * @brief The maximum number of pending acknowledgments to track for a single
  * connection.

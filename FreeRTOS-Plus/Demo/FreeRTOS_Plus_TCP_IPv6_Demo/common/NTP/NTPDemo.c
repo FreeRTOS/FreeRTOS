@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -144,9 +144,9 @@ void vNTPClearCache( void )
 {
     ulIPAddressFound = 0U;
     #if ( ipconfigUSE_IPv6 != 0 )
-        {
-            memset( &( xIPAddressFound ), 0, sizeof xIPAddressFound );
-        }
+    {
+        memset( &( xIPAddressFound ), 0, sizeof xIPAddressFound );
+    }
     #endif
     xHasIPAddress = pdFALSE;
 }
@@ -432,7 +432,8 @@ static void prvReadTime( struct SNtpPacket * pxPacket )
     #if ( USE_PLUS_FAT != 0 )
         FreeRTOS_gmtime_r( &uxCurrentSeconds, &xTimeStruct );
     #else
-        extern struct tm * gmtime_r( const time_t * pxTime, struct tm * tmStruct );
+        extern struct tm * gmtime_r( const time_t * pxTime,
+                                     struct tm * tmStruct );
         gmtime_r( &uxCurrentSeconds, &xTimeStruct );
     #endif /* ( USE_PLUS_FAT != 0 ) */
 
@@ -506,22 +507,22 @@ static void prvNTPTask( void * pvParameters )
 
     xStatus = EStatusLookup;
     #if ( ipconfigSOCKET_HAS_USER_SEMAPHORE != 0 ) || ( ipconfigUSE_CALLBACKS != 0 )
-        {
-            xNTPWakeupSem = xSemaphoreCreateBinary();
-        }
+    {
+        xNTPWakeupSem = xSemaphoreCreateBinary();
+    }
     #endif
 
     #if ( ipconfigUSE_CALLBACKS != 0 )
-        {
-            memset( &xHandler, '\0', sizeof( xHandler ) );
-            xHandler.pxOnUDPReceive = xOnUDPReceive;
-            FreeRTOS_setsockopt( xUDPSocket, 0, FREERTOS_SO_UDP_RECV_HANDLER, ( void * ) &xHandler, sizeof( xHandler ) );
-        }
+    {
+        memset( &xHandler, '\0', sizeof( xHandler ) );
+        xHandler.pxOnUDPReceive = xOnUDPReceive;
+        FreeRTOS_setsockopt( xUDPSocket, 0, FREERTOS_SO_UDP_RECV_HANDLER, ( void * ) &xHandler, sizeof( xHandler ) );
+    }
     #endif
     #if ( ipconfigSOCKET_HAS_USER_SEMAPHORE != 0 )
-        {
-            FreeRTOS_setsockopt( xUDPSocket, 0, FREERTOS_SO_SET_SEMAPHORE, ( void * ) &xNTPWakeupSem, sizeof( xNTPWakeupSem ) );
-        }
+    {
+        FreeRTOS_setsockopt( xUDPSocket, 0, FREERTOS_SO_SET_SEMAPHORE, ( void * ) &xNTPWakeupSem, sizeof( xNTPWakeupSem ) );
+    }
     #endif
 
     for( ; ; )
@@ -633,43 +634,43 @@ static void prvNTPTask( void * pvParameters )
         }
 
         #if ( ipconfigUSE_CALLBACKS != 0 )
-            {
-                xSemaphoreTake( xNTPWakeupSem, 5000 );
-            }
+        {
+            xSemaphoreTake( xNTPWakeupSem, 5000 );
+        }
         #else
+        {
+            uint32_t xAddressSize;
+            BaseType_t xReturned;
+
+            xAddressSize = sizeof( xAddress );
+            xReturned = FreeRTOS_recvfrom( xUDPSocket, ( void * ) cRecvBuffer, sizeof( cRecvBuffer ), 0, &xAddress, &xAddressSize );
+
+            switch( xReturned )
             {
-                uint32_t xAddressSize;
-                BaseType_t xReturned;
+                case 0:
+                case -pdFREERTOS_ERRNO_EAGAIN:
+                case -pdFREERTOS_ERRNO_EINTR:
+                    break;
 
-                xAddressSize = sizeof( xAddress );
-                xReturned = FreeRTOS_recvfrom( xUDPSocket, ( void * ) cRecvBuffer, sizeof( cRecvBuffer ), 0, &xAddress, &xAddressSize );
+                default:
 
-                switch( xReturned )
-                {
-                    case 0:
-                    case -pdFREERTOS_ERRNO_EAGAIN:
-                    case -pdFREERTOS_ERRNO_EINTR:
-                        break;
+                    if( xReturned < sizeof( xNTPPacket ) )
+                    {
+                        FreeRTOS_printf( ( "FreeRTOS_recvfrom: returns %ld\n", xReturned ) );
+                    }
+                    else
+                    {
+                        prvReadTime( ( struct SNtpPacket * ) cRecvBuffer );
 
-                    default:
-
-                        if( xReturned < sizeof( xNTPPacket ) )
+                        if( xStatus != EStatusPause )
                         {
-                            FreeRTOS_printf( ( "FreeRTOS_recvfrom: returns %ld\n", xReturned ) );
+                            xStatus = EStatusPause;
                         }
-                        else
-                        {
-                            prvReadTime( ( struct SNtpPacket * ) cRecvBuffer );
+                    }
 
-                            if( xStatus != EStatusPause )
-                            {
-                                xStatus = EStatusPause;
-                            }
-                        }
-
-                        break;
-                }
+                    break;
             }
+        }
         #endif /* if ( ipconfigUSE_CALLBACKS != 0 ) */
     }
 }

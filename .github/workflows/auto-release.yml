@@ -26,13 +26,13 @@ jobs:
 
       # Source the release tools from FreeRTOS/FreeRTOS
       - name: Checkout FreeRTOS Release Tools
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: tools
 
       # Simpler git auth if we use checkout action and forward the repo to release script
       - name: Checkout FreeRTOS
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: local_core
           fetch-depth: 0

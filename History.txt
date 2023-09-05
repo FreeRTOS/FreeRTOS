@@ -22,7 +22,7 @@ Changes between FreeRTOS 202112.00 and FreeRTOS 202212.00 released December 2022
 		- FreeRTOS Cellular Interface v1.3.0
 	+ Updated coreMQTT Agent library to v1.2.0 to be compatible with coreMQTT v2.X.X.
 	+ Demo Updates
-	    - Added Visual Studio static library projects for FreeRTOS Kernel, FreeRTOS+TCP, 
+	    - Added Visual Studio static library projects for FreeRTOS Kernel, FreeRTOS+TCP,
 		  Logging, MbedTLS, coreHTTP, and corePKCS11 in FreeRTOS-Plus/VisualStudio_StaticProjects.
 		- All demos dependent on coreMQTT have been updated to be compatible with coreMQTT v2.X.X.
 		- All Windows Simulator projects have been updated to use new static Visual Studio projects.
@@ -60,7 +60,7 @@ Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 	+ Demo Updates
 		- Add basic publish-subscribe demo for coreMQTT Agent library.
 			- For examples of using coreMQTT Agent library to communicate with
-			  multiple AWS IoT services from different tasks using a shared 
+			  multiple AWS IoT services from different tasks using a shared
 			  MQTT connection, refer to https://github.com/FreeRTOS/coreMQTT-Agent-Demos
 		- OTA demo over MQTT
 		- OTA demo over HTTP
@@ -99,8 +99,8 @@ Changes between FreeRTOS V10.4.1 and FreeRTOS 202011.00 released November 10 202
 Changes between FreeRTOS V10.4.0 and FreeRTOS V10.4.1 released September 17 2020
 	See https://www.FreeRTOS.org/FreeRTOS-V10.4.x.html
 
-	+ Fixed an incorrectly named parameter that prevented the 
-	  ulTaskNotifyTakeIndexed macro compiling, and the name space clash in the 
+	+ Fixed an incorrectly named parameter that prevented the
+	  ulTaskNotifyTakeIndexed macro compiling, and the name space clash in the
 	  test code that prevented this error causing test failures.
 
 
@@ -141,7 +141,7 @@ Changes between FreeRTOS V10.3.1 and FreeRTOS V10.4.0 released September 10 2020
 	+ Added new POSIX port layer that allows FreeRTOS to run on Linux hosts in
 	  the same way the Windows port layer enables FreeRTOS to run on Windows
 	  hosts.
-	+ Many other minor optimisations and enhancements. For full details  
+	+ Many other minor optimisations and enhancements. For full details
 	  see https://github.com/FreeRTOS/FreeRTOS-Kernel/commits/master
 
 

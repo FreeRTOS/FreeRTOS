@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -97,7 +97,7 @@ typedef struct SSLContext
     mbedtls_x509_crt clientCert;             /**< @brief Client certificate context. */
     mbedtls_pk_context privKey;              /**< @brief Client private key context. */
     mbedtls_entropy_context entropyContext;  /**< @brief Entropy context for random number generation. */
-    mbedtls_ctr_drbg_context ctrDrgbContext; /**< @brief CTR DRBG context for random number generation. */
+    mbedtls_ctr_drbg_context ctrDrbgContext; /**< @brief CTR DRBG context for random number generation. */
 } SSLContext_t;
 
 /**

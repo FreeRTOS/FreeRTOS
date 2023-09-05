@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -96,7 +96,7 @@
 #define INCLUDE_xEventGroupSetBitsFromISR          1
 #define INCLUDE_xTimerPendFunctionCall             1
 #define INCLUDE_pcTaskGetTaskName                  1
-#define INCLUDE_xTaskGetCurrentTaskHandle	       1
+#define INCLUDE_xTaskGetCurrentTaskHandle          1
 
 /* This demo makes use of one or more example stats formatting functions.  These
  * format the raw data provided by the uxTaskGetSystemState() function in to human
@@ -119,7 +119,7 @@
 unsigned long ulGetRunTimeCounterValue( void );
 void vConfigureTimerForRunTimeStats( void );
 
-#define configGENERATE_RUN_TIME_STATS	1
+#define configGENERATE_RUN_TIME_STATS    1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 
@@ -210,19 +210,19 @@ extern void vLoggingPrintf( const char * pcFormatString,
                             ... );
 #define configPRINTF( X )    vLoggingPrintf X
 
-#define portNOP()           __nop()
+#define portNOP()            __nop()
 
 /* The UDP port to use for incoming command inputs.  The outgoing port is
-set to ( configUDP_CLI_PORT_NUMBER + 1 ). */
-#define configUDP_CLI_PORT_NUMBER       5001
+ * set to ( configUDP_CLI_PORT_NUMBER + 1 ). */
+#define configUDP_CLI_PORT_NUMBER            5001
 
 /* The size of the global output buffer that is available for use when there
-are multiple command interpreters running at once (for example, one on a UART
-and one on TCP/IP).  This is done to prevent an output buffer being defined by
-each implementation - which would waste RAM.  In this case, there is only one
-command interpreter running, and it has its own local output buffer, so the
-global buffer is just set to be one byte long as it is not used and should not
-take up unnecessary RAM. */
-#define configCOMMAND_INT_MAX_OUTPUT_SIZE 1
+ * are multiple command interpreters running at once (for example, one on a UART
+ * and one on TCP/IP).  This is done to prevent an output buffer being defined by
+ * each implementation - which would waste RAM.  In this case, there is only one
+ * command interpreter running, and it has its own local output buffer, so the
+ * global buffer is just set to be one byte long as it is not used and should not
+ * take up unnecessary RAM. */
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE    1
 
 #endif /* FREERTOS_CONFIG_H */

@@ -1367,6 +1367,7 @@ minpollperiod
 mips
 misc
 misra
+mit
 mkd
 mkdir
 mmcr
@@ -1461,6 +1462,7 @@ nonnull
 noop
 nop
 nops
+nostdint
 notificationarray
 notifynotified
 notifynotify

@@ -915,6 +915,8 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     /* Avoid compiler warnings about unused parameter. */
     ( void ) pvParameters;
 
+    /* The duration of 1 period is kept at 50ms to allow IDLE task to
+     * free up this task's resources before suicidal tests can run. */
     xTimer = xTimerCreate( pcTimerName,
                            x50ms,
                            pdFALSE, /* Created as a one-shot timer. */

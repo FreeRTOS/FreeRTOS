@@ -76,9 +76,9 @@ This demo provides 4 examples:
 1. Set `mainCREATE_TCP_ECHO_SERVER_TASK` to 1 in the [main.c](main.c) file.
 1. Build the project and run.
    ```
-   0 0.167 [IP-task        ] uxNetworkisUp = 1
-   1 0.167 [IP-task        ] uxNetworkisUp = 2
-   2 1.727 [IP-task        ] uxNetworkisUp = 3
+   0 0.167 [IP-task        ] uxNetworkIsUp = 1
+   1 0.167 [IP-task        ] uxNetworkIsUp = 2
+   2 1.727 [IP-task        ] uxNetworkIsUp = 3
    3 1.727 [IP-task        ] IPv4 address = 192.168.1.83
    ```
 1. Echo server should now be running and ready to accept incoming connections

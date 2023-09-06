@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -118,7 +118,7 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t
 
 /**
  * @brief Receives data from an established TCP connection.
- * 
+ *
  * @note When the number of bytes requested is 1, the TCP socket's Rx stream
  * is checked for available bytes to read. If there are none, this function
  * immediately returns 0 without blocking.

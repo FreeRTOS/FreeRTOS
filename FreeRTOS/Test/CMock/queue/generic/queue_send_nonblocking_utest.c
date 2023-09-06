@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -136,7 +136,7 @@ void test_macro_xQueueSend_fail_full( void )
 /**
  * @brief Test xQueueSend with uxQueueLength=1, uxItemSize=0
  * @details xQueueSend should return pdTRUE because the queue is empty.
- *  This queue is eqivalent to a binary semaphore.
+ *  This queue is equivalent to a binary semaphore.
  * @coverage xQueueGenericSend
  */
 void test_macro_xQueueSend_oneQueueLength_zeroItemSize( void )
@@ -157,7 +157,7 @@ void test_macro_xQueueSend_oneQueueLength_zeroItemSize( void )
 /**
  * @brief Test xQueueSend with uxQueueLength=1, uxItemSize=0 and null item.
  * @details xQueueSend should return pdTRUE because the queue is empty.
- *  This queue is eqivalent to a binary semaphore.
+ *  This queue is equivalent to a binary semaphore.
  * @coverage xQueueGenericSend
  */
 void test_macro_xQueueSend_oneQueueLength_zeroItemSize_null( void )
@@ -403,7 +403,7 @@ void test_macro_xQueueSendFromISR_fail( void )
 /**
  * @brief Test xQueueSendFromISR with uxQueueLength=1, uxItemSize=0
  * @details xQueueSendFromISR should return pdTRUE because the queue is empty.
- *  This queue is eqivalent to a binary semaphore.
+ *  This queue is equivalent to a binary semaphore.
  * @coverage xQueueGenericSendFromISR
  */
 void test_macro_xQueueSendFromISR_oneQueueLength_zeroItemSize( void )
@@ -426,7 +426,7 @@ void test_macro_xQueueSendFromISR_oneQueueLength_zeroItemSize( void )
 /**
  * @brief Test xQueueSendFromISR with uxQueueLength=1, uxItemSize=0 and null item.
  * @details xQueueSendFromISR should return pdTRUE because the queue is empty.
- *  This queue is eqivalent to a binary semaphore.
+ *  This queue is equivalent to a binary semaphore.
  * @coverage xQueueGenericSendFromISR
  */
 void test_macro_xQueueSendFromISR_oneQueueLength_zeroItemSize_null( void )

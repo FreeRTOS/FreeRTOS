@@ -1,0 +1,23 @@
+name: Format Pull Request Files
+
+on:
+  issue_comment:
+    types: [created]
+
+env:
+  bashPass: \033[32;1mPASSED -
+  bashInfo: \033[33;1mINFO -
+  bashFail: \033[31;1mFAILED -
+  bashEnd:  \033[0m
+
+jobs:
+  Formatting:
+    name: Run Formatting Check
+    if: ${{ github.event.issue.pull_request }} &&
+        ( ( github.event.comment.body == '/bot run uncrustify' ) ||
+          ( github.event.comment.body == '/bot run formatting' ) )
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Apply Formatting Fix
+      uses: FreeRTOS/CI-CD-Github-Actions/formatting-bot@main
+      id: check-formatting

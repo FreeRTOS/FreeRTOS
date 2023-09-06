@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -226,11 +226,11 @@ static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces 
     /* Open the selected interface. */
     pxOpenedInterfaceHandle = pcap_open( xInterface->name,          /* The name of the selected interface. */
                                          UIP_CONF_BUFFER_SIZE,      /* The size of the packet to capture. */
-                                         PCAP_OPENFLAG_PROMISCUOUS, /* Open in promiscious mode as the MAC and
+                                         PCAP_OPENFLAG_PROMISCUOUS, /* Open in promiscuous mode as the MAC and
                                                                      * IP address is going to be "simulated", and
                                                                      * not be the real MAC and IP address.  This allows
-                                                                     * trafic to the simulated IP address to be routed
-                                                                     * to uIP, and trafic to the real IP address to be
+                                                                     * traffic to the simulated IP address to be routed
+                                                                     * to uIP, and traffic to the real IP address to be
                                                                      * routed to the Windows TCP/IP stack. */
                                          0xfffffffL,                /* The read time out.  This is going to block
                                                                      * until data is available. */
@@ -289,7 +289,7 @@ static void prvConfigureCaptureBehaviour( void )
     /* Create a task that simulates an interrupt in a real system.  This will
      * block waiting for packets, then send a message to the uIP task when data
      * is available. */
-    xTaskCreate( prvInterruptSimulator, ( signed char * ) "MAC_ISR", configMINIMAL_STACK_SIZE, NULL, ( configuIP_TASK_PRIORITY - 1 ), NULL );
+    xTaskCreate( prvInterruptSimulator, ( signed char * ) "MAC_ISR", configMINIMAL_STACK_SIZE, NULL, ( ipconfigIP_TASK_PRIORITY - 1 ), NULL );
 }
 /*-----------------------------------------------------------*/
 

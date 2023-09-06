@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -34,7 +34,7 @@
  *
  * Also note that it is assumed this demo is going to be used for short periods
  * of time only, and therefore timer overflows are not handled.
-*/
+ */
 
 #include <time.h>
 #include <Windows.h>
@@ -45,25 +45,25 @@
 #if configGENERATE_RUN_TIME_STATS == 1
 
 /* Time at start of day (in ns). */
-static LARGE_INTEGER lStartTime;
+    static LARGE_INTEGER lStartTime;
 
 /*-----------------------------------------------------------*/
 
-void vConfigureTimerForRunTimeStats( void )
-{
-	( void ) QueryPerformanceCounter( &lStartTime );
-}
+    void vConfigureTimerForRunTimeStats( void )
+    {
+        ( void ) QueryPerformanceCounter( &lStartTime );
+    }
 /*-----------------------------------------------------------*/
 
-unsigned long ulGetRunTimeCounterValue( void )
-{
-	LARGE_INTEGER lCurrentTime;
-	( void ) QueryPerformanceCounter( &lCurrentTime );
+    unsigned long ulGetRunTimeCounterValue( void )
+    {
+        LARGE_INTEGER lCurrentTime;
 
-	configASSERT( lCurrentTime.QuadPart > lStartTime.QuadPart );
+        ( void ) QueryPerformanceCounter( &lCurrentTime );
 
-	return ( unsigned long ) ( lCurrentTime.QuadPart - lStartTime.QuadPart );
+        configASSERT( lCurrentTime.QuadPart > lStartTime.QuadPart );
 
-}
+        return ( unsigned long ) ( lCurrentTime.QuadPart - lStartTime.QuadPart );
+    }
 /*-----------------------------------------------------------*/
 #endif /* configGENERATE_RUN_TIME_STATS == 1 */

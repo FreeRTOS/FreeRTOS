@@ -84,6 +84,6 @@ This directory contains the following subdirectories:
 
 - `proofs` contains the proofs run against each pull request
 - `patches` contains a set of patches that get applied to the codebase prior to
-  running the proofs. The patches are used to remove static and volatile qulaifiers
+  running the proofs. The patches are used to remove static and volatile qualifiers
   from the source.
 - `include` and `windows` contain header files used by the proofs.

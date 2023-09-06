@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -377,7 +377,7 @@ static BaseType_t prvTaskQueryFunctions( void )
     BaseType_t xReturn = pdPASS;
     UBaseType_t uxNumberOfTasks, uxReturned, ux;
     uint32_t ulTotalRunTime1, ulTotalRunTime2;
-    const uint32_t ulRunTimeTollerance = ( uint32_t ) 0xfff;
+    const uint32_t ulRunTimeTolerance = ( uint32_t ) 0xfff;
 
     /* Obtain task status with the stack high water mark and without the
      * state. */
@@ -464,12 +464,12 @@ static BaseType_t prvTaskQueryFunctions( void )
         memset( ( void * ) pxStatusArray, 0xaa, uxNumberOfTasks * sizeof( TaskStatus_t ) );
         uxReturned = uxTaskGetSystemState( pxStatusArray, uxNumberOfTasks, &ulTotalRunTime2 );
 
-        if( ( ulTotalRunTime2 - ulTotalRunTime1 ) > ulRunTimeTollerance )
+        if( ( ulTotalRunTime2 - ulTotalRunTime1 ) > ulRunTimeTolerance )
         {
             xReturn = pdFAIL;
         }
 
-        /* Basic santity check of array contents. */
+        /* Basic sanity check of array contents. */
         for( ux = 0; ux < uxReturned; ux++ )
         {
             if( pxStatusArray[ ux ].eCurrentState >= ( UBaseType_t ) eInvalid )
@@ -595,7 +595,7 @@ static BaseType_t prvTimerQuery( void )
                            xTimerPeriod,
                            pdFALSE,
                            ( void * ) xTimerPeriod,
-                           NULL );  /* Not actually going to start timer so NULL callback is ok. */
+                           NULL ); /* Not actually going to start timer so NULL callback is ok. */
 
     if( xTimer != NULL )
     {

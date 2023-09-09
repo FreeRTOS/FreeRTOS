@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_ram_init.c
@@ -33,13 +34,14 @@
 * Description  : internal extended RAM setting API of RZ/T1
 * Limitation   : none
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              : 21.05.2015 1.00     First Release
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 #include <stdint.h>
 #include "iodefine.h"
@@ -48,31 +50,31 @@ Includes <System Includes> , "Project Includes"
 #include "r_typedefs.h"
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
-#define RAM_ECC_ENABLE (0x00000001)
-#define RAM_ECC_DISABLE (0x00000000)
-#define RAM_PROTECT (0x00000000)
+#define RAM_ECC_ENABLE     ( 0x00000001 )
+#define RAM_ECC_DISABLE    ( 0x00000000 )
+#define RAM_PROTECT        ( 0x00000000 )
 
 /***********************************************************************************************************************
-Typedef definitions
-***********************************************************************************************************************/
-
-
-
-/***********************************************************************************************************************
-Imported global variables and functions (from other files)
-***********************************************************************************************************************/
-
-
-/***********************************************************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Typedef definitions
 ***********************************************************************************************************************/
 
 
 
 /***********************************************************************************************************************
-Private variables and functions
+*  Imported global variables and functions (from other files)
+***********************************************************************************************************************/
+
+
+/***********************************************************************************************************************
+*  Exported global variables and functions (to be accessed by other files)
+***********************************************************************************************************************/
+
+
+
+/***********************************************************************************************************************
+*  Private variables and functions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -81,21 +83,20 @@ Private variables and functions
 * Arguments    : none
 * Return Value : none
 ***********************************************************************************************************************/
-void R_RAM_ECCEnable(void)
+void R_RAM_ECCEnable( void )
 {
     /* Enables writing to the protected registers related to RAM function */
     R_RAM_WriteEnable();
-  
+
     /* Enable ECC function */
     ECCRAM.RAMEDC.LONG = RAM_ECC_ENABLE;
-    
+
     /* Disables writing to the protected registers related to RAM function */
     R_RAM_WriteDisable();
-    
 }
 
 /***********************************************************************************************************************
- End of function R_RAM_ECCEnable
+*  End of function R_RAM_ECCEnable
 ***********************************************************************************************************************/
 
 
@@ -106,23 +107,22 @@ void R_RAM_ECCEnable(void)
 * Arguments    : none
 * Return Value : none
 ***********************************************************************************************************************/
-void R_RAM_WriteEnable(void)
+void R_RAM_WriteEnable( void )
 {
-    volatile uint32_t dummy=0;
+    volatile uint32_t dummy = 0;
 
-    UNUSED_VARIABLE(dummy);
-    
+    UNUSED_VARIABLE( dummy );
+
     /* Special sequence for protect release */
-    ECCRAM.RAMPCMD.LONG = 0x000000A5;  // Write fixed value 0x000000A5
-    ECCRAM.RAMPCMD.LONG = 0x00000001;  // Write expected value 
-    ECCRAM.RAMPCMD.LONG = 0x0000FFFE;  // Write inverted value of the expected value
-    ECCRAM.RAMPCMD.LONG = 0x00000001;  // Write expected value again
-    dummy = ECCRAM.RAMPCMD.LONG;        
-    
+    ECCRAM.RAMPCMD.LONG = 0x000000A5; /* Write fixed value 0x000000A5 */
+    ECCRAM.RAMPCMD.LONG = 0x00000001; /* Write expected value */
+    ECCRAM.RAMPCMD.LONG = 0x0000FFFE; /* Write inverted value of the expected value */
+    ECCRAM.RAMPCMD.LONG = 0x00000001; /* Write expected value again */
+    dummy = ECCRAM.RAMPCMD.LONG;
 }
 
 /***********************************************************************************************************************
- End of function R_RAM_WriteEnable
+*  End of function R_RAM_WriteEnable
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -132,22 +132,19 @@ void R_RAM_WriteEnable(void)
 * Arguments    : none
 * Return Value : none
 ***********************************************************************************************************************/
-void R_RAM_WriteDisable(void)
+void R_RAM_WriteDisable( void )
 {
-    volatile uint32_t dummy=0;
+    volatile uint32_t dummy = 0;
 
-    UNUSED_VARIABLE(dummy);
-    
+    UNUSED_VARIABLE( dummy );
+
     /* Clear RAMPCMD register to zero */
-    ECCRAM.RAMPCMD.LONG = RAM_PROTECT;   
-    dummy = ECCRAM.RAMPCMD.LONG; 
-    
+    ECCRAM.RAMPCMD.LONG = RAM_PROTECT;
+    dummy = ECCRAM.RAMPCMD.LONG;
 }
 
 /***********************************************************************************************************************
- End of function R_RAM_WriteDisable
+*  End of function R_RAM_WriteDisable
 ***********************************************************************************************************************/
 
 /* End of File */
-
-

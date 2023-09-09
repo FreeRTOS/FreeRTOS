@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -38,114 +38,141 @@
 #include <interrupt.h>
 #include <debug.h>
 
-void Timer32_initModule(uint32_t timer, uint32_t preScaler, uint32_t resolution,
-        uint32_t mode)
+void Timer32_initModule( uint32_t timer,
+                         uint32_t preScaler,
+                         uint32_t resolution,
+                         uint32_t mode )
 {
     /* Setting up one shot or continuous mode */
-    if (mode == TIMER32_PERIODIC_MODE)
-    	BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_MODE_OFS)
-                    = 1;
-    else if (mode == TIMER32_FREE_RUN_MODE)
-    	BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_MODE_OFS)
-                    = 0;
+    if( mode == TIMER32_PERIODIC_MODE )
+    {
+        BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_MODE_OFS )
+            = 1;
+    }
+    else if( mode == TIMER32_FREE_RUN_MODE )
+    {
+        BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_MODE_OFS )
+        = 0;
+    }
     else
-        ASSERT(false);
+    {
+        ASSERT( false );
+    }
 
     /* Setting the resolution of the timer */
-    if (resolution == TIMER32_1_MODULE6BIT)
-    	BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_SIZE_OFS)
-		            = 0;
-    else if (resolution == TIMER32_32BIT)
-    	BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_SIZE_OFS)
-					= 1;
+    if( resolution == TIMER32_1_MODULE6BIT )
+    {
+        BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_SIZE_OFS )
+        = 0;
+    }
+    else if( resolution == TIMER32_32BIT )
+    {
+        BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_SIZE_OFS )
+            = 1;
+    }
     else
-        ASSERT(false);
+    {
+        ASSERT( false );
+    }
 
     /* Setting the PreScaler */
     ASSERT(
-            resolution == TIMER32_PRESCALER_1
-            || resolution == TIMER32_PRESCALER_16
-            || resolution == TIMER32_PRESCALER_256);
+        resolution == TIMER32_PRESCALER_1 ||
+        resolution == TIMER32_PRESCALER_16 ||
+        resolution == TIMER32_PRESCALER_256 );
 
-    TIMER32_CMSIS(timer)->CONTROL = TIMER32_CMSIS(timer)->CONTROL
-    		& (~TIMER32_CONTROL_PRESCALE_MASK) | preScaler;
-
+    TIMER32_CMSIS( timer )->CONTROL = TIMER32_CMSIS( timer )->CONTROL
+                                      & ( ~TIMER32_CONTROL_PRESCALE_MASK ) | preScaler;
 }
 
-void Timer32_setCount(uint32_t timer, uint32_t count)
+void Timer32_setCount( uint32_t timer,
+                       uint32_t count )
 {
-    if (!BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_SIZE_OFS)
-    		&& (count > UINT16_MAX))
-    	TIMER32_CMSIS(timer)->LOAD = UINT16_MAX;
+    if( !BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_SIZE_OFS ) &&
+        ( count > UINT16_MAX ) )
+    {
+        TIMER32_CMSIS( timer )->LOAD = UINT16_MAX;
+    }
     else
-    	TIMER32_CMSIS(timer)->LOAD = count;
+    {
+        TIMER32_CMSIS( timer )->LOAD = count;
+    }
 }
 
-void Timer32_setCountInBackground(uint32_t timer, uint32_t count)
+void Timer32_setCountInBackground( uint32_t timer,
+                                   uint32_t count )
 {
-    if (!BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_SIZE_OFS)
-    		&& (count > UINT16_MAX))
-        TIMER32_CMSIS(timer)->BGLOAD = UINT16_MAX;
+    if( !BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_SIZE_OFS ) &&
+        ( count > UINT16_MAX ) )
+    {
+        TIMER32_CMSIS( timer )->BGLOAD = UINT16_MAX;
+    }
     else
-    	TIMER32_CMSIS(timer)->BGLOAD = count;
+    {
+        TIMER32_CMSIS( timer )->BGLOAD = count;
+    }
 }
 
-uint32_t Timer32_getValue(uint32_t timer)
+uint32_t Timer32_getValue( uint32_t timer )
 {
-    return TIMER32_CMSIS(timer)->VALUE;
+    return TIMER32_CMSIS( timer )->VALUE;
 }
 
-void Timer32_startTimer(uint32_t timer, bool oneShot)
+void Timer32_startTimer( uint32_t timer,
+                         bool oneShot )
 {
-    ASSERT(timer == TIMER32_0_MODULE || timer == TIMER32_1_MODULE);
+    ASSERT( timer == TIMER32_0_MODULE || timer == TIMER32_1_MODULE );
 
-    if (oneShot)
-        BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_ONESHOT_OFS)
-                    = 1;
+    if( oneShot )
+    {
+        BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_ONESHOT_OFS )
+            = 1;
+    }
     else
-        BITBAND_PERI(TIMER32_CMSIS(timer)->CONTROL, TIMER32_CONTROL_ONESHOT_OFS)
-                    = 0;
+    {
+        BITBAND_PERI( TIMER32_CMSIS( timer )->CONTROL, TIMER32_CONTROL_ONESHOT_OFS )
+        = 0;
+    }
 
-    TIMER32_CMSIS(timer)->CONTROL |= TIMER32_CONTROL_ENABLE;
+    TIMER32_CMSIS( timer )->CONTROL |= TIMER32_CONTROL_ENABLE;
 }
 
-void Timer32_haltTimer(uint32_t timer)
+void Timer32_haltTimer( uint32_t timer )
 {
-    ASSERT(timer == TIMER32_0_MODULE || timer == TIMER32_1_MODULE);
+    ASSERT( timer == TIMER32_0_MODULE || timer == TIMER32_1_MODULE );
 
-    TIMER32_CMSIS(timer)->CONTROL &= ~TIMER32_CONTROL_ENABLE;
+    TIMER32_CMSIS( timer )->CONTROL &= ~TIMER32_CONTROL_ENABLE;
 }
 
-void Timer32_enableInterrupt(uint32_t timer)
+void Timer32_enableInterrupt( uint32_t timer )
 {
-    TIMER32_CMSIS(timer)->CONTROL |= TIMER32_CONTROL_IE;
+    TIMER32_CMSIS( timer )->CONTROL |= TIMER32_CONTROL_IE;
 }
 
-void Timer32_disableInterrupt(uint32_t timer)
+void Timer32_disableInterrupt( uint32_t timer )
 {
-    TIMER32_CMSIS(timer)->CONTROL &= ~TIMER32_CONTROL_IE;
+    TIMER32_CMSIS( timer )->CONTROL &= ~TIMER32_CONTROL_IE;
 }
 
-void Timer32_clearInterruptFlag(uint32_t timer)
+void Timer32_clearInterruptFlag( uint32_t timer )
 {
-    TIMER32_CMSIS(timer)->INTCLR |= 0x01;
+    TIMER32_CMSIS( timer )->INTCLR |= 0x01;
 }
 
-uint32_t Timer32_getInterruptStatus(uint32_t timer)
+uint32_t Timer32_getInterruptStatus( uint32_t timer )
 {
-    return TIMER32_CMSIS(timer)->MIS;
+    return TIMER32_CMSIS( timer )->MIS;
 }
 
-void Timer32_registerInterrupt(uint32_t timerInterrupt,
-        void (*intHandler)(void))
+void Timer32_registerInterrupt( uint32_t timerInterrupt,
+                                void ( * intHandler )( void ) )
 {
-    Interrupt_registerInterrupt(timerInterrupt, intHandler);
-    Interrupt_enableInterrupt(timerInterrupt);
+    Interrupt_registerInterrupt( timerInterrupt, intHandler );
+    Interrupt_enableInterrupt( timerInterrupt );
 }
 
-void Timer32_unregisterInterrupt(uint32_t timerInterrupt)
+void Timer32_unregisterInterrupt( uint32_t timerInterrupt )
 {
-    Interrupt_disableInterrupt(timerInterrupt);
-    Interrupt_unregisterInterrupt(timerInterrupt);
+    Interrupt_disableInterrupt( timerInterrupt );
+    Interrupt_unregisterInterrupt( timerInterrupt );
 }
-

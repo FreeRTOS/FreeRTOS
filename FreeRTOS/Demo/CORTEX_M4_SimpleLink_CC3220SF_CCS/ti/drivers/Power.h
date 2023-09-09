@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       Power.h
  *
@@ -53,54 +54,55 @@
  */
 
 #ifndef ti_drivers_Power__include
-#define ti_drivers_Power__include
+    #define ti_drivers_Power__include
 
-#include <stdint.h>
-#include <ti/drivers/utils/List.h>
+    #include <stdint.h>
+    #include <ti/drivers/utils/List.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /* Power latency types */
-#define Power_TOTAL               (1U)   /*!< total latency */
-#define Power_RESUME              (2U)   /*!< resume latency */
+    #define Power_TOTAL                  ( 1U ) /*!< total latency */
+    #define Power_RESUME                 ( 2U ) /*!< resume latency */
 
 /* Power notify responses */
-#define Power_NOTIFYDONE          (0)   /*!< OK, notify completed */
-#define Power_NOTIFYERROR         (-1)  /*!< an error occurred during notify */
+    #define Power_NOTIFYDONE             ( 0 )  /*!< OK, notify completed */
+    #define Power_NOTIFYERROR            ( -1 ) /*!< an error occurred during notify */
 
 /* Power status */
-#define Power_SOK                 (0)    /*!< OK, operation succeeded */
-#define Power_EFAIL               (-1)   /*!< general failure */
-#define Power_EINVALIDINPUT       (-2)   /*!< invalid data value */
-#define Power_EINVALIDPOINTER     (-3)   /*!< invalid pointer */
-#define Power_ECHANGE_NOT_ALLOWED (-4)   /*!< change is not allowed */
-#define Power_EBUSY               (-5)   /*!< busy with another transition */
+    #define Power_SOK                    ( 0 )  /*!< OK, operation succeeded */
+    #define Power_EFAIL                  ( -1 ) /*!< general failure */
+    #define Power_EINVALIDINPUT          ( -2 ) /*!< invalid data value */
+    #define Power_EINVALIDPOINTER        ( -3 ) /*!< invalid pointer */
+    #define Power_ECHANGE_NOT_ALLOWED    ( -4 ) /*!< change is not allowed */
+    #define Power_EBUSY                  ( -5 ) /*!< busy with another transition */
 
 /* Power transition states */
-#define Power_ACTIVE              (1U)   /*!< normal active state */
-#define Power_ENTERING_SLEEP      (2U)   /*!< entering a sleep state */
-#define Power_EXITING_SLEEP       (3U)   /*!< exiting a sleep state */
-#define Power_ENTERING_SHUTDOWN   (4U)   /*!< entering a shutdown state */
-#define Power_CHANGING_PERF_LEVEL (5U)   /*!< moving to new performance level */
+    #define Power_ACTIVE                 ( 1U ) /*!< normal active state */
+    #define Power_ENTERING_SLEEP         ( 2U ) /*!< entering a sleep state */
+    #define Power_EXITING_SLEEP          ( 3U ) /*!< exiting a sleep state */
+    #define Power_ENTERING_SHUTDOWN      ( 4U ) /*!< entering a shutdown state */
+    #define Power_CHANGING_PERF_LEVEL    ( 5U ) /*!< moving to new performance level */
 
 
 /*!
  *  @brief      Power policy initialization function pointer
  */
-typedef void (*Power_PolicyInitFxn)(void);
+    typedef void (* Power_PolicyInitFxn)( void );
 
 /*!
  *  @brief      Power policy function pointer
  */
-typedef void (*Power_PolicyFxn)(void);
+    typedef void (* Power_PolicyFxn)( void );
 
 /*!
  *  @brief      Power notify function pointer
  */
-typedef int_fast16_t (*Power_NotifyFxn)(uint_fast16_t eventType,
-     uintptr_t eventArg, uintptr_t clientArg);
+    typedef int_fast16_t (* Power_NotifyFxn)( uint_fast16_t eventType,
+                                              uintptr_t eventArg,
+                                              uintptr_t clientArg );
 
 /*!
  *  @brief      Power notify object structure.
@@ -110,12 +112,13 @@ typedef int_fast16_t (*Power_NotifyFxn)(uint_fast16_t eventType,
  *  Power_registerNotify() will take care initializing the internal elements
  *  appropriately.
  */
-typedef struct Power_NotifyObj_ {
-    List_Elem link;             /*!< for placing on the notify list */
-    uint_fast16_t eventTypes;   /*!< the event type */
-    Power_NotifyFxn notifyFxn;  /*!< notification function */
-    uintptr_t clientArg;        /*!< argument provided by client */
-} Power_NotifyObj;
+    typedef struct Power_NotifyObj_
+    {
+        List_Elem link;            /*!< for placing on the notify list */
+        uint_fast16_t eventTypes;  /*!< the event type */
+        Power_NotifyFxn notifyFxn; /*!< notification function */
+        uintptr_t clientArg;       /*!< argument provided by client */
+    } Power_NotifyObj;
 
 /*!
  *  @brief  Disable the configured power policy from running when the CPU is
@@ -129,7 +132,7 @@ typedef struct Power_NotifyObj_ {
  *
  *  @sa     Power_enablePolicy
  */
-void Power_disablePolicy(void);
+    void Power_disablePolicy( void );
 
 /*!
  *  @brief  Enable the configured power policy to run when the CPU is idle
@@ -150,7 +153,7 @@ void Power_disablePolicy(void);
  *
  *  @sa     Power_disablePolicy
  */
-void Power_enablePolicy(void);
+    void Power_enablePolicy( void );
 
 /*!
  *  @brief  Get the constraints that have been declared with Power
@@ -174,7 +177,7 @@ void Power_enablePolicy(void);
  *
  *  @sa     Power_setConstraint
  */
-uint_fast32_t Power_getConstraintMask(void);
+    uint_fast32_t Power_getConstraintMask( void );
 
 /*!
  *  @brief  Get the current dependency count for a resource
@@ -193,7 +196,7 @@ uint_fast32_t Power_getConstraintMask(void);
  *
  *  @sa     Power_setDependency
  */
-int_fast16_t Power_getDependencyCount(uint_fast16_t resourceId);
+    int_fast16_t Power_getDependencyCount( uint_fast16_t resourceId );
 
 /*!
  *  @brief  Get the current performance level
@@ -207,7 +210,7 @@ int_fast16_t Power_getDependencyCount(uint_fast16_t resourceId);
  *
  *  @sa     Power_setPerformanceLevel
  */
-uint_fast16_t Power_getPerformanceLevel(void);
+    uint_fast16_t Power_getPerformanceLevel( void );
 
 /*!
  *  @brief  Get the hardware transition latency for a sleep state
@@ -230,8 +233,8 @@ uint_fast16_t Power_getPerformanceLevel(void);
  *
  *  @return The latency value, in units of microseconds.
  */
-uint_fast32_t Power_getTransitionLatency(uint_fast16_t sleepState,
-    uint_fast16_t type);
+    uint_fast32_t Power_getTransitionLatency( uint_fast16_t sleepState,
+                                              uint_fast16_t type );
 
 /*!
  *  @brief  Get the current transition state of the Power manager
@@ -246,7 +249,7 @@ uint_fast32_t Power_getTransitionLatency(uint_fast16_t sleepState,
  *
  *  @return The current Power manager transition state.
  */
-uint_fast16_t Power_getTransitionState(void);
+    uint_fast16_t Power_getTransitionState( void );
 
 /*!
  *  @brief  Power function to be added to the application idle loop
@@ -258,7 +261,7 @@ uint_fast16_t Power_getTransitionState(void);
  *  in the application-defined Power configuration object.
  *
  */
-void Power_idleFunc(void);
+    void Power_idleFunc( void );
 
 /*!
  *  @brief  Power initialization function
@@ -270,7 +273,7 @@ void Power_idleFunc(void);
  *
  *  @return Power_SOK
  */
-int_fast16_t Power_init(void);
+    int_fast16_t Power_init( void );
 
 /*!
  *  @brief  Register a function to be called upon a specific power event
@@ -332,10 +335,10 @@ int_fast16_t Power_init(void);
  *
  *  @sa     Power_unregisterNotify
  */
-int_fast16_t Power_registerNotify(Power_NotifyObj *pNotifyObj,
-                                  uint_fast16_t eventTypes,
-                                  Power_NotifyFxn notifyFxn,
-                                  uintptr_t clientArg);
+    int_fast16_t Power_registerNotify( Power_NotifyObj * pNotifyObj,
+                                       uint_fast16_t eventTypes,
+                                       Power_NotifyFxn notifyFxn,
+                                       uintptr_t clientArg );
 
 /*!
  *  @brief  Release a previously declared constraint
@@ -367,7 +370,7 @@ int_fast16_t Power_registerNotify(Power_NotifyObj *pNotifyObj,
  *
  *  @sa     Power_setConstraint
  */
-int_fast16_t Power_releaseConstraint(uint_fast16_t constraintId);
+    int_fast16_t Power_releaseConstraint( uint_fast16_t constraintId );
 
 /*!
  *  @brief  Release a previously declared dependency
@@ -387,7 +390,7 @@ int_fast16_t Power_releaseConstraint(uint_fast16_t constraintId);
  *
  *  @sa     Power_setDependency
  */
-int_fast16_t Power_releaseDependency(uint_fast16_t resourceId);
+    int_fast16_t Power_releaseDependency( uint_fast16_t resourceId );
 
 /*!
  *  @brief  Declare an operational constraint
@@ -411,7 +414,7 @@ int_fast16_t Power_releaseDependency(uint_fast16_t resourceId);
  *
  *  @sa     Power_releaseConstraint
  */
-int_fast16_t Power_setConstraint(uint_fast16_t constraintId);
+    int_fast16_t Power_setConstraint( uint_fast16_t constraintId );
 
 /*!
  *  @brief  Declare a dependency upon a resource
@@ -443,7 +446,7 @@ int_fast16_t Power_setConstraint(uint_fast16_t constraintId);
  *
  *  @sa     Power_releaseDependency
  */
-int_fast16_t Power_setDependency(uint_fast16_t resourceId);
+    int_fast16_t Power_setDependency( uint_fast16_t resourceId );
 
 /*!
  *  @brief  Set the MCU performance level
@@ -482,7 +485,7 @@ int_fast16_t Power_setDependency(uint_fast16_t resourceId);
  *
  *  @sa     Power_getPerformanceLevel
  */
-int_fast16_t Power_setPerformanceLevel(uint_fast16_t level);
+    int_fast16_t Power_setPerformanceLevel( uint_fast16_t level );
 
 /*!
  *  @brief  Set a new Power policy
@@ -491,7 +494,7 @@ int_fast16_t Power_setPerformanceLevel(uint_fast16_t level);
  *
  *  @param  policy      the new Power policy function
  */
-void Power_setPolicy(Power_PolicyFxn policy);
+    void Power_setPolicy( Power_PolicyFxn policy );
 
 /*!
  *  @brief  Put the device into a shutdown state
@@ -534,8 +537,8 @@ void Power_setPolicy(Power_PolicyFxn policy);
  *          Power_EINVALIDINPUT if the shutdownState is invalid.
  *          Power_EBUSY if another transition is already in progress.
  */
-int_fast16_t Power_shutdown(uint_fast16_t shutdownState,
-    uint_fast32_t shutdownTime);
+    int_fast16_t Power_shutdown( uint_fast16_t shutdownState,
+                                 uint_fast32_t shutdownTime );
 
 /*!
  *  @brief  Transition the device into a sleep state
@@ -556,7 +559,7 @@ int_fast16_t Power_shutdown(uint_fast16_t shutdownState,
  *          Power_EINVALIDINPUT if the sleepState is invalid.
  *          Power_EBUSY if another transition is already in progress.
  */
-int_fast16_t Power_sleep(uint_fast16_t sleepState);
+    int_fast16_t Power_sleep( uint_fast16_t sleepState );
 
 /*!
  *  @brief  Unregister previously registered notifications
@@ -569,10 +572,10 @@ int_fast16_t Power_sleep(uint_fast16_t sleepState);
  *
  *  @sa     Power_registerNotify
  */
-void Power_unregisterNotify(Power_NotifyObj *pNotifyObj);
+    void Power_unregisterNotify( Power_NotifyObj * pNotifyObj );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_Power__include */

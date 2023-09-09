@@ -23,33 +23,32 @@
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-#define DBGMCU_SLEEP                 ((u32)0x00000001)
-#define DBGMCU_STOP                  ((u32)0x00000002)
-#define DBGMCU_STANDBY               ((u32)0x00000004)
-#define DBGMCU_IWDG_STOP             ((u32)0x00000100)
-#define DBGMCU_WWDG_STOP             ((u32)0x00000200)
-#define DBGMCU_TIM1_STOP             ((u32)0x00000400)
-#define DBGMCU_TIM2_STOP             ((u32)0x00000800)
-#define DBGMCU_TIM3_STOP             ((u32)0x00001000)
-#define DBGMCU_TIM4_STOP             ((u32)0x00002000)
-#define DBGMCU_CAN_STOP              ((u32)0x00004000)
-#define DBGMCU_I2C1_SMBUS_TIMEOUT    ((u32)0x00008000)
-#define DBGMCU_I2C2_SMBUS_TIMEOUT    ((u32)0x00010000)
-#define DBGMCU_TIM5_STOP             ((u32)0x00020000)
-#define DBGMCU_TIM6_STOP             ((u32)0x00040000)
-#define DBGMCU_TIM7_STOP             ((u32)0x00080000)
-#define DBGMCU_TIM8_STOP             ((u32)0x00100000)
-                                           
-#define IS_DBGMCU_PERIPH(PERIPH) ((((PERIPH) & 0xFFE000F8) == 0x00) && ((PERIPH) != 0x00))
+#define DBGMCU_SLEEP                 ( ( u32 ) 0x00000001 )
+#define DBGMCU_STOP                  ( ( u32 ) 0x00000002 )
+#define DBGMCU_STANDBY               ( ( u32 ) 0x00000004 )
+#define DBGMCU_IWDG_STOP             ( ( u32 ) 0x00000100 )
+#define DBGMCU_WWDG_STOP             ( ( u32 ) 0x00000200 )
+#define DBGMCU_TIM1_STOP             ( ( u32 ) 0x00000400 )
+#define DBGMCU_TIM2_STOP             ( ( u32 ) 0x00000800 )
+#define DBGMCU_TIM3_STOP             ( ( u32 ) 0x00001000 )
+#define DBGMCU_TIM4_STOP             ( ( u32 ) 0x00002000 )
+#define DBGMCU_CAN_STOP              ( ( u32 ) 0x00004000 )
+#define DBGMCU_I2C1_SMBUS_TIMEOUT    ( ( u32 ) 0x00008000 )
+#define DBGMCU_I2C2_SMBUS_TIMEOUT    ( ( u32 ) 0x00010000 )
+#define DBGMCU_TIM5_STOP             ( ( u32 ) 0x00020000 )
+#define DBGMCU_TIM6_STOP             ( ( u32 ) 0x00040000 )
+#define DBGMCU_TIM7_STOP             ( ( u32 ) 0x00080000 )
+#define DBGMCU_TIM8_STOP             ( ( u32 ) 0x00100000 )
+
+#define IS_DBGMCU_PERIPH( PERIPH )    ( ( ( ( PERIPH ) & 0xFFE000F8 ) == 0x00 ) && ( ( PERIPH ) != 0x00 ) )
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-u32 DBGMCU_GetREVID(void);
-u32 DBGMCU_GetDEVID(void);
-void DBGMCU_Config(u32 DBGMCU_Periph, FunctionalState NewState);
+u32 DBGMCU_GetREVID( void );
+u32 DBGMCU_GetDEVID( void );
+void DBGMCU_Config( u32 DBGMCU_Periph,
+                    FunctionalState NewState );
 
 #endif /* __STM32F10x_DBGMCU_H */
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/
-
-

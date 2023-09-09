@@ -36,4 +36,4 @@
 #include "src\uart.h"
 #include "src\watchdog.h"
 
-#endif
+#endif /* ifndef DRIVER_LIB_H */

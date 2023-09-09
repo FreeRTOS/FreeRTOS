@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_atcm_init.c
@@ -31,15 +32,16 @@
 * OS           : not use
 * H/W Platform : Renesas Starter Kit for RZ/T1(Preliminary)
 * Description  : ATCM access wait setting API of RZ/T1
-* Limitation   : This wait setting could not be executed in ATCM program area. 
+* Limitation   : This wait setting could not be executed in ATCM program area.
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
 *******************************************************************************/
 
 /*******************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 *******************************************************************************/
 #include <stdint.h>
 #include <Renesas/ior7s910017.h>
@@ -47,62 +49,59 @@ Includes <System Includes> , "Project Includes"
 #include "r_atcm_init.h"
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
-#define ATCM_WRITE_ENABLE (0x0000A508)
-#define ATCM_WRITE_DISABLE (0x0000A500)
+#define ATCM_WRITE_ENABLE     ( 0x0000A508 )
+#define ATCM_WRITE_DISABLE    ( 0x0000A500 )
 
 /*******************************************************************************
-Typedef definitions
-*******************************************************************************/
-
-
-
-/*******************************************************************************
-Imported global variables and functions (from other files)
-*******************************************************************************/
-
-
-/*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Typedef definitions
 *******************************************************************************/
 
 
 
 /*******************************************************************************
-Private variables and functions
+*  Imported global variables and functions (from other files)
+*******************************************************************************/
+
+
+/*******************************************************************************
+*  Exported global variables and functions (to be accessed by other files)
+*******************************************************************************/
+
+
+
+/*******************************************************************************
+*  Private variables and functions
 *******************************************************************************/
 
 
 
 /*******************************************************************************
 * Function Name : R_ATCM_WaitSet
-* Description   : Sets ATCM access wait.           
+* Description   : Sets ATCM access wait.
 * Arguments    : atcm_wait
 *                    Wait settings for ATCM access
 * Return Value : none
 *******************************************************************************/
-void R_ATCM_WaitSet(uint32_t atcm_wait)
+void R_ATCM_WaitSet( uint32_t atcm_wait )
 {
-    volatile uint32_t dummy; 
-  
+    volatile uint32_t dummy;
+
     /* Enables writing to the ATCM register */
     SYSTEM.PRCR.LONG = ATCM_WRITE_ENABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
+
     /* Sets ATCM access wait to atcm_wait value */
     SYSTEM.SYTATCMWAIT.LONG = atcm_wait;
-    
+
     /* Disables writing to the ATCM register */
     SYSTEM.PRCR.LONG = ATCM_WRITE_DISABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
 }
 
 /*******************************************************************************
- End of function R_ATCM_WaitSet
+*  End of function R_ATCM_WaitSet
 *******************************************************************************/
 
 /* End of File */
-
-

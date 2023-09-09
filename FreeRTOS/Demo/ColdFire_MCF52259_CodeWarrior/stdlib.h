@@ -9,71 +9,69 @@
 #define _STDLIB_H
 
 /********************************************************************
- * Standard library functions
- ********************************************************************/
+* Standard library functions
+********************************************************************/
 
-int
-isspace (int);
+int isspace( int );
 
-int
-isalnum (int);
+int isalnum( int );
 
-int
-isdigit (int);
+int isdigit( int );
 
-int
-isupper (int);
+int isupper( int );
 
-int
-strcasecmp (const char *, const char *);
+int strcasecmp( const char *,
+                const char * );
 
-int
-strncasecmp (const char *, const char *, int);
+int strncasecmp( const char *,
+                 const char *,
+                 int );
 
-unsigned long
-strtoul (char *, char **, int);
+unsigned long strtoul( char *,
+                       char **,
+                       int );
 
-int
-strlen (const char *);
+int strlen( const char * );
 
-char *
-strcat (char *, const char *);
+char * strcat( char *,
+               const char * );
 
-char *
-strncat (char *, const char *, int);
+char * strncat( char *,
+                const char *,
+                int );
 
-char *
-strcpy (char *, const char *);
+char * strcpy( char *,
+               const char * );
 
-char *
-strncpy (char *, const char *, int);
+char * strncpy( char *,
+                const char *,
+                int );
 
-int
-strcmp (const char *, const char *);
+int strcmp( const char *,
+            const char * );
 
-int
-strncmp (const char *, const char *, int);
+int strncmp( const char *,
+             const char *,
+             int );
 
-void *
-memcpy (void *, const void *, unsigned);
+void * memcpy( void *,
+               const void *,
+               unsigned );
 
-void *
-memset (void *, int, unsigned);
+void * memset( void *,
+               int,
+               unsigned );
 
-void
-free (void *);
- 
-void *
-malloc (unsigned);
+void free( void * );
 
-#define RAND_MAX 32767
+void * malloc( unsigned );
 
-int
-rand (void);
+#define RAND_MAX    32767
 
-void
-srand (int);
+int rand( void );
+
+void srand( int );
 
 /********************************************************************/
 
-#endif
+#endif /* ifndef _STDLIB_H */

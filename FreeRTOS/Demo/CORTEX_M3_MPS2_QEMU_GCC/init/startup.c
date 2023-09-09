@@ -96,6 +96,7 @@ void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
     for( ; ; )
     {
     }
+
     /* remove the warning: variable <x> is set but not used */
     ( void ) r0;
     ( void ) r1;
@@ -168,7 +169,7 @@ void Default_Handler6( void )
     }
 }
 
-const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) , used ) ) =
+const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ), used ) ) =
 {
     ( uint32_t * ) &_estack,
     ( uint32_t * ) &Reset_Handler,       /* Reset                -15 */
@@ -209,7 +210,7 @@ void _start( void )
     exit( 0 );
 }
 
-__attribute__( ( naked ) ) void exit(__attribute__((unused)) int status )
+__attribute__( ( naked ) ) void exit( __attribute__( ( unused ) ) int status )
 {
     /* Force qemu to exit using ARM Semihosting */
     __asm volatile (

@@ -23,12 +23,12 @@ HISTORY
     ETHARP_MAX_PENDING now should be at least 2. This prevents
     the counter from reaching 0 right away (which would allow
     too little time for ARP responses to be received).
-    
+
   2004-11-25 Leon Woestenberg <leon.woestenberg@gmx.net>
   * dhcp.c: Decline messages were not multicast but unicast.
   * etharp.c: ETHARP_CREATE is renamed to ETHARP_TRY_HARD.
     Do not try hard to insert arbitrary packet's source address,
-    etharp_ip_input() now calls etharp_update() without ETHARP_TRY_HARD. 
+    etharp_ip_input() now calls etharp_update() without ETHARP_TRY_HARD.
     etharp_query() now always DOES call ETHARP_TRY_HARD so that users
     querying an address will see it appear in the cache (DHCP could
     suffer from this when a server invalidly gave an in-use address.)
@@ -81,7 +81,7 @@ HISTORY
     of raw_recv() in raw.h and so avoid compiler error.
   * sockets.c: Added trivial (int) cast to keep compiler happier.
   * ip.c, netif.c Changed debug statements to use the tidier ip4_addrN() macros.
-  
+
 (STABLE-1_0_0)
 
   ++ Changes:
@@ -121,7 +121,7 @@ HISTORY
     is not queued, and gets lost. Fixed the case where the packets destination
     address is already known; we now always queue the packet and perform an ARP
     request.
-  
+
 (STABLE-0_7_0)
 
   ++ Bug fixes:

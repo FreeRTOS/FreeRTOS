@@ -77,32 +77,32 @@
  */
 
 /**  Softpack Version */
-#define SOFTPACK_VERSION       "0.1"
+#define SOFTPACK_VERSION        "0.1"
 
-#define TRACE_LEVEL_DEBUG      5
-#define TRACE_LEVEL_INFO       4
-#define TRACE_LEVEL_WARNING    3
-#define TRACE_LEVEL_ERROR      2
-#define TRACE_LEVEL_FATAL      1
-#define TRACE_LEVEL_NO_TRACE   0
+#define TRACE_LEVEL_DEBUG       5
+#define TRACE_LEVEL_INFO        4
+#define TRACE_LEVEL_WARNING     3
+#define TRACE_LEVEL_ERROR       2
+#define TRACE_LEVEL_FATAL       1
+#define TRACE_LEVEL_NO_TRACE    0
 
 /* By default, all traces are output except the debug one. */
-#if !defined(TRACE_LEVEL)
-#define TRACE_LEVEL TRACE_LEVEL_INFO
+#if !defined( TRACE_LEVEL )
+    #define TRACE_LEVEL    TRACE_LEVEL_INFO
 #endif
 
 /* By default, trace level is static (not dynamic) */
-#if !defined(DYN_TRACES)
-#define DYN_TRACES 0
+#if !defined( DYN_TRACES )
+    #define DYN_TRACES    0
 #endif
 
-#if defined(NOTRACE)
-#error "Error: NOTRACE has to be not defined !"
+#if defined( NOTRACE )
+    #error "Error: NOTRACE has to be not defined !"
 #endif
 
 #undef NOTRACE
-#if (DYN_TRACES==0)
-    #if (TRACE_LEVEL == TRACE_LEVEL_NO_TRACE)
+#if ( DYN_TRACES == 0 )
+    #if ( TRACE_LEVEL == TRACE_LEVEL_NO_TRACE )
         #define NOTRACE
     #endif
 #endif
@@ -114,7 +114,8 @@
  * ------------------------------------------------------------------------------
  */
 
-extern void TRACE_CONFIGURE( uint32_t dwBaudRate, uint32_t dwMCk ) ;
+extern void TRACE_CONFIGURE( uint32_t dwBaudRate,
+                             uint32_t dwMCk );
 
 /**
  *  Initializes the DBGU for ISP project
@@ -124,16 +125,17 @@ extern void TRACE_CONFIGURE( uint32_t dwBaudRate, uint32_t dwMCk ) ;
  *  \param mck  Master clock frequency.
  */
 #ifndef DYNTRACE
-#define DYNTRACE 0
+    #define DYNTRACE    0
 #endif
 
-#if (TRACE_LEVEL==0) && (DYNTRACE==0)
-#define TRACE_CONFIGURE_ISP(mode, baudrate, mck) {}
+#if ( TRACE_LEVEL == 0 ) && ( DYNTRACE == 0 )
+    #define TRACE_CONFIGURE_ISP( mode, baudrate, mck )    {}
 #else
-#define TRACE_CONFIGURE_ISP(mode, baudrate, mck) { \
-    const Pin pinsUART0[] = {PINS_UART}; \
-    PIO_Configure(pinsUART0, PIO_LISTSIZE(pinsUART0)); \
-    UART_Configure( baudrate, mck ) ; \
+    #define TRACE_CONFIGURE_ISP( mode, baudrate, mck )         \
+    {                                                          \
+        const Pin pinsUART0[] = { PINS_UART };                 \
+        PIO_Configure( pinsUART0, PIO_LISTSIZE( pinsUART0 ) ); \
+        UART_Configure( baudrate, mck );                       \
     }
 #endif
 
@@ -142,89 +144,92 @@ extern void TRACE_CONFIGURE( uint32_t dwBaudRate, uint32_t dwMCk ) ;
  *  enough. Can be disabled by defining TRACE_LEVEL=0 during compilation.
  *  \param ...  Additional parameters depending on formatted string.
  */
-#if defined(NOTRACE)
+#if defined( NOTRACE )
 
 /* Empty macro */
-#define TRACE_DEBUG(...)      { }
-#define TRACE_INFO(...)       { }
-#define TRACE_WARNING(...)    { }
-#define TRACE_ERROR(...)      { }
-#define TRACE_FATAL(...)      { while(1); }
+    #define TRACE_DEBUG( ... )         {}
+    #define TRACE_INFO( ... )          {}
+    #define TRACE_WARNING( ... )       {}
+    #define TRACE_ERROR( ... )         {}
+    #define TRACE_FATAL( ... )         { while( 1 ); }
 
-#define TRACE_DEBUG_WP(...)   { }
-#define TRACE_INFO_WP(...)    { }
-#define TRACE_WARNING_WP(...) { }
-#define TRACE_ERROR_WP(...)   { }
-#define TRACE_FATAL_WP(...)   { while(1); }
+    #define TRACE_DEBUG_WP( ... )      {}
+    #define TRACE_INFO_WP( ... )       {}
+    #define TRACE_WARNING_WP( ... )    {}
+    #define TRACE_ERROR_WP( ... )      {}
+    #define TRACE_FATAL_WP( ... )      { while( 1 ); }
 
-#elif (DYN_TRACES == 1)
+#elif ( DYN_TRACES == 1 )
 
 /* Trace output depends on dwTraceLevel value */
-#define TRACE_DEBUG(...)      { if (dwTraceLevel >= TRACE_LEVEL_DEBUG)   { printf("-D- " __VA_ARGS__); } }
-#define TRACE_INFO(...)       { if (dwTraceLevel >= TRACE_LEVEL_INFO)    { printf("-I- " __VA_ARGS__); } }
-#define TRACE_WARNING(...)    { if (dwTraceLevel >= TRACE_LEVEL_WARNING) { printf("-W- " __VA_ARGS__); } }
-#define TRACE_ERROR(...)      { if (dwTraceLevel >= TRACE_LEVEL_ERROR)   { printf("-E- " __VA_ARGS__); } }
-#define TRACE_FATAL(...)      { if (dwTraceLevel >= TRACE_LEVEL_FATAL)   { printf("-F- " __VA_ARGS__); while(1); } }
+    #define TRACE_DEBUG( ... )         { if( dwTraceLevel >= TRACE_LEVEL_DEBUG ) { printf( "-D- " __VA_ARGS__ ); } }
+    #define TRACE_INFO( ... )          { if( dwTraceLevel >= TRACE_LEVEL_INFO ) { printf( "-I- " __VA_ARGS__ ); } }
+    #define TRACE_WARNING( ... )       { if( dwTraceLevel >= TRACE_LEVEL_WARNING ) { printf( "-W- " __VA_ARGS__ ); } }
+    #define TRACE_ERROR( ... )         { if( dwTraceLevel >= TRACE_LEVEL_ERROR ) { printf( "-E- " __VA_ARGS__ ); } }
+    #define TRACE_FATAL( ... )                                                              \
+    { if( dwTraceLevel >= TRACE_LEVEL_FATAL ) { printf( "-F- " __VA_ARGS__ ); while( 1 ); } \
+    }
 
-#define TRACE_DEBUG_WP(...)   { if (dwTraceLevel >= TRACE_LEVEL_DEBUG)   { printf(__VA_ARGS__); } }
-#define TRACE_INFO_WP(...)    { if (dwTraceLevel >= TRACE_LEVEL_INFO)    { printf(__VA_ARGS__); } }
-#define TRACE_WARNING_WP(...) { if (dwTraceLevel >= TRACE_LEVEL_WARNING) { printf(__VA_ARGS__); } }
-#define TRACE_ERROR_WP(...)   { if (dwTraceLevel >= TRACE_LEVEL_ERROR)   { printf(__VA_ARGS__); } }
-#define TRACE_FATAL_WP(...)   { if (dwTraceLevel >= TRACE_LEVEL_FATAL)   { printf(__VA_ARGS__); while(1); } }
+    #define TRACE_DEBUG_WP( ... )      { if( dwTraceLevel >= TRACE_LEVEL_DEBUG ) { printf( __VA_ARGS__ ); } }
+    #define TRACE_INFO_WP( ... )       { if( dwTraceLevel >= TRACE_LEVEL_INFO ) { printf( __VA_ARGS__ ); } }
+    #define TRACE_WARNING_WP( ... )    { if( dwTraceLevel >= TRACE_LEVEL_WARNING ) { printf( __VA_ARGS__ ); } }
+    #define TRACE_ERROR_WP( ... )      { if( dwTraceLevel >= TRACE_LEVEL_ERROR ) { printf( __VA_ARGS__ ); } }
+    #define TRACE_FATAL_WP( ... )                                                    \
+    { if( dwTraceLevel >= TRACE_LEVEL_FATAL ) { printf( __VA_ARGS__ ); while( 1 ); } \
+    }
 
-#else
+#else  /* if defined( NOTRACE ) */
 
 /* Trace compilation depends on TRACE_LEVEL value */
-#if (TRACE_LEVEL >= TRACE_LEVEL_DEBUG)
-#define TRACE_DEBUG(...)      { printf("-D- " __VA_ARGS__); }
-#define TRACE_DEBUG_WP(...)   { printf(__VA_ARGS__); }
-#else
-#define TRACE_DEBUG(...)      { }
-#define TRACE_DEBUG_WP(...)   { }
-#endif
+    #if ( TRACE_LEVEL >= TRACE_LEVEL_DEBUG )
+        #define TRACE_DEBUG( ... )       { printf( "-D- " __VA_ARGS__ ); }
+        #define TRACE_DEBUG_WP( ... )    { printf( __VA_ARGS__ ); }
+    #else
+        #define TRACE_DEBUG( ... )       {}
+        #define TRACE_DEBUG_WP( ... )    {}
+    #endif
 
-#if (TRACE_LEVEL >= TRACE_LEVEL_INFO)
-#define TRACE_INFO(...)       { printf("-I- " __VA_ARGS__); }
-#define TRACE_INFO_WP(...)    { printf(__VA_ARGS__); }
-#else
-#define TRACE_INFO(...)       { }
-#define TRACE_INFO_WP(...)    { }
-#endif
+    #if ( TRACE_LEVEL >= TRACE_LEVEL_INFO )
+        #define TRACE_INFO( ... )       { printf( "-I- " __VA_ARGS__ ); }
+        #define TRACE_INFO_WP( ... )    { printf( __VA_ARGS__ ); }
+    #else
+        #define TRACE_INFO( ... )       {}
+        #define TRACE_INFO_WP( ... )    {}
+    #endif
 
-#if (TRACE_LEVEL >= TRACE_LEVEL_WARNING)
-#define TRACE_WARNING(...)    { printf("-W- " __VA_ARGS__); }
-#define TRACE_WARNING_WP(...) { printf(__VA_ARGS__); }
-#else
-#define TRACE_WARNING(...)    { }
-#define TRACE_WARNING_WP(...) { }
-#endif
+    #if ( TRACE_LEVEL >= TRACE_LEVEL_WARNING )
+        #define TRACE_WARNING( ... )       { printf( "-W- " __VA_ARGS__ ); }
+        #define TRACE_WARNING_WP( ... )    { printf( __VA_ARGS__ ); }
+    #else
+        #define TRACE_WARNING( ... )       {}
+        #define TRACE_WARNING_WP( ... )    {}
+    #endif
 
-#if (TRACE_LEVEL >= TRACE_LEVEL_ERROR)
-#define TRACE_ERROR(...)      { printf("-E- " __VA_ARGS__); }
-#define TRACE_ERROR_WP(...)   { printf(__VA_ARGS__); }
-#else
-#define TRACE_ERROR(...)      { }
-#define TRACE_ERROR_WP(...)   { }
-#endif
+    #if ( TRACE_LEVEL >= TRACE_LEVEL_ERROR )
+        #define TRACE_ERROR( ... )       { printf( "-E- " __VA_ARGS__ ); }
+        #define TRACE_ERROR_WP( ... )    { printf( __VA_ARGS__ ); }
+    #else
+        #define TRACE_ERROR( ... )       {}
+        #define TRACE_ERROR_WP( ... )    {}
+    #endif
 
-#if (TRACE_LEVEL >= TRACE_LEVEL_FATAL)
-#define TRACE_FATAL(...)      { printf("-F- " __VA_ARGS__); while(1); }
-#define TRACE_FATAL_WP(...)   { printf(__VA_ARGS__); while(1); }
-#else
-#define TRACE_FATAL(...)      { while(1); }
-#define TRACE_FATAL_WP(...)   { while(1); }
-#endif
+    #if ( TRACE_LEVEL >= TRACE_LEVEL_FATAL )
+        #define TRACE_FATAL( ... )       { printf( "-F- " __VA_ARGS__ ); while( 1 ); }
+        #define TRACE_FATAL_WP( ... )    { printf( __VA_ARGS__ ); while( 1 ); }
+    #else
+        #define TRACE_FATAL( ... )       { while( 1 ); }
+        #define TRACE_FATAL_WP( ... )    { while( 1 ); }
+    #endif
 
-#endif
+#endif /* if defined( NOTRACE ) */
 
 
 /**
  *        Exported variables
  */
 /** Depending on DYN_TRACES, dwTraceLevel is a modifable runtime variable or a define */
-#if !defined(NOTRACE) && (DYN_TRACES == 1)
-    extern uint32_t dwTraceLevel ;
+#if !defined( NOTRACE ) && ( DYN_TRACES == 1 )
+    extern uint32_t dwTraceLevel;
 #endif
 
 #endif //#ifndef TRACE_H
-

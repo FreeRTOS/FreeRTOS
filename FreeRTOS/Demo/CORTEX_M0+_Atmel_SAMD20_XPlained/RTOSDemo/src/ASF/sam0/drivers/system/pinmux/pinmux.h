@@ -41,7 +41,7 @@
  *
  */
 #ifndef PINMUX_H_INCLUDED
-#define PINMUX_H_INCLUDED
+    #define PINMUX_H_INCLUDED
 
 /**
  * \defgroup asfdoc_samd20_system_pinmux_group SAM D20 System Pin Multiplexer Driver (SYSTEM PINMUX)
@@ -172,14 +172,14 @@
  * @{
  */
 
-#include <compiler.h>
+    #include <compiler.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /** Peripheral multiplexer index to select GPIO mode for a pin. */
-#define SYSTEM_PINMUX_GPIO    (1 << 7)
+    #define SYSTEM_PINMUX_GPIO    ( 1 << 7 )
 
 /**
  * \brief Port pin direction configuration enum.
@@ -187,17 +187,20 @@ extern "C" {
  * Enum for the possible pin direction settings of the port pin configuration
  * structure, to indicate the direction the pin should use.
  */
-enum system_pinmux_pin_dir {
-	/** The pin's input buffer should be enabled, so that the pin state can
-	 *  be read. */
-	SYSTEM_PINMUX_PIN_DIR_INPUT,
-	/** The pin's output buffer should be enabled, so that the pin state can
-	 *  be set (but not read back). */
-	SYSTEM_PINMUX_PIN_DIR_OUTPUT,
-	/** The pin's output and input buffers should both be enabled, so that the
-	 *  pin state can be set and read back. */
-	SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK,
-};
+    enum system_pinmux_pin_dir
+    {
+        /** The pin's input buffer should be enabled, so that the pin state can
+         *  be read. */
+        SYSTEM_PINMUX_PIN_DIR_INPUT,
+
+        /** The pin's output buffer should be enabled, so that the pin state can
+         *  be set (but not read back). */
+        SYSTEM_PINMUX_PIN_DIR_OUTPUT,
+
+        /** The pin's output and input buffers should both be enabled, so that the
+         *  pin state can be set and read back. */
+        SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK,
+    };
 
 /**
  * \brief Port pin input pull configuration enum.
@@ -205,14 +208,15 @@ enum system_pinmux_pin_dir {
  * Enum for the possible pin pull settings of the port pin configuration
  * structure, to indicate the type of logic level pull the pin should use.
  */
-enum system_pinmux_pin_pull {
-	/** No logical pull should be applied to the pin. */
-	SYSTEM_PINMUX_PIN_PULL_NONE,
-	/** Pin should be pulled up when idle. */
-	SYSTEM_PINMUX_PIN_PULL_UP,
-	/** Pin should be pulled down when idle. */
-	SYSTEM_PINMUX_PIN_PULL_DOWN,
-};
+    enum system_pinmux_pin_pull
+    {
+        /** No logical pull should be applied to the pin. */
+        SYSTEM_PINMUX_PIN_PULL_NONE,
+        /** Pin should be pulled up when idle. */
+        SYSTEM_PINMUX_PIN_PULL_UP,
+        /** Pin should be pulled down when idle. */
+        SYSTEM_PINMUX_PIN_PULL_DOWN,
+    };
 
 /**
  * \brief Port pin digital input sampling mode enum.
@@ -220,12 +224,13 @@ enum system_pinmux_pin_pull {
  * Enum for the possible input sampling modes for the port pin configuration
  * structure, to indicate the type of sampling a port pin should use.
  */
-enum system_pinmux_pin_sample {
-	/** Pin input buffer should continuously sample the pin state. */
-	SYSTEM_PINMUX_PIN_SAMPLE_CONTINUOUS,
-	/** Pin input buffer should be enabled when the IN register is read. */
-	SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND,
-};
+    enum system_pinmux_pin_sample
+    {
+        /** Pin input buffer should continuously sample the pin state. */
+        SYSTEM_PINMUX_PIN_SAMPLE_CONTINUOUS,
+        /** Pin input buffer should be enabled when the IN register is read. */
+        SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND,
+    };
 
 /**
  * \brief Port pin drive output strength enum.
@@ -234,12 +239,13 @@ enum system_pinmux_pin_sample {
  * configuration structure, to indicate the driver strength the pin should
  * use.
  */
-enum system_pinmux_pin_strength {
-	/** Normal output driver strength. */
-	SYSTEM_PINMUX_PIN_STRENGTH_NORMAL,
-	/** High current output driver strength. */
-	SYSTEM_PINMUX_PIN_STRENGTH_HIGH,
-};
+    enum system_pinmux_pin_strength
+    {
+        /** Normal output driver strength. */
+        SYSTEM_PINMUX_PIN_STRENGTH_NORMAL,
+        /** High current output driver strength. */
+        SYSTEM_PINMUX_PIN_STRENGTH_HIGH,
+    };
 
 /**
  * \brief Port pin output slew rate enum.
@@ -248,12 +254,13 @@ enum system_pinmux_pin_strength {
  * configuration structure, to indicate the driver slew rate the pin should
  * use.
  */
-enum system_pinmux_pin_slew_rate {
-	/** Normal pin output slew rate. */
-	SYSTEM_PINMUX_PIN_SLEW_RATE_NORMAL,
-	/** Enable slew rate limiter on the pin. */
-	SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED,
-};
+    enum system_pinmux_pin_slew_rate
+    {
+        /** Normal pin output slew rate. */
+        SYSTEM_PINMUX_PIN_SLEW_RATE_NORMAL,
+        /** Enable slew rate limiter on the pin. */
+        SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED,
+    };
 
 /**
  * \brief Port pin output drive mode enum.
@@ -261,12 +268,13 @@ enum system_pinmux_pin_slew_rate {
  * Enum for the possible output drive modes for the port pin configuration
  * structure, to indicate the output mode the pin should use.
  */
-enum system_pinmux_pin_drive {
-	/** Use totem pole output drive mode. */
-	SYSTEM_PINMUX_PIN_DRIVE_TOTEM,
-	/** Use open drain output drive mode. */
-	SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN,
-};
+    enum system_pinmux_pin_drive
+    {
+        /** Use totem pole output drive mode. */
+        SYSTEM_PINMUX_PIN_DRIVE_TOTEM,
+        /** Use open drain output drive mode. */
+        SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN,
+    };
 
 /**
  * \brief Port pin configuration structure.
@@ -276,18 +284,19 @@ enum system_pinmux_pin_drive {
  * \ref system_pinmux_get_config_defaults() function before being modified by
  * the user application.
  */
-struct system_pinmux_config {
-	/** MUX index of the peripheral that should control the pin, if peripheral
-	 *  control is desired. For GPIO use, this should be set to
-	 *  \ref SYSTEM_PINMUX_GPIO. */
-	uint8_t mux_position;
+    struct system_pinmux_config
+    {
+        /** MUX index of the peripheral that should control the pin, if peripheral
+         *  control is desired. For GPIO use, this should be set to
+         *  \ref SYSTEM_PINMUX_GPIO. */
+        uint8_t mux_position;
 
-	/** Port buffer input/output direction. */
-	enum system_pinmux_pin_dir direction;
+        /** Port buffer input/output direction. */
+        enum system_pinmux_pin_dir direction;
 
-	/** Logic level pull of the input buffer. */
-	enum system_pinmux_pin_pull input_pull;
-};
+        /** Logic level pull of the input buffer. */
+        enum system_pinmux_pin_pull input_pull;
+    };
 
 /** \name Configuration and initialization
  * @{
@@ -307,26 +316,23 @@ struct system_pinmux_config {
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
-static inline void system_pinmux_get_config_defaults(
-		struct system_pinmux_config *const config)
-{
-	/* Sanity check arguments */
-	Assert(config);
+    static inline void system_pinmux_get_config_defaults( struct system_pinmux_config * const config )
+    {
+        /* Sanity check arguments */
+        Assert( config );
 
-	/* Default configuration values */
-	config->mux_position = SYSTEM_PINMUX_GPIO;
-	config->direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	config->input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
-}
+        /* Default configuration values */
+        config->mux_position = SYSTEM_PINMUX_GPIO;
+        config->direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+        config->input_pull = SYSTEM_PINMUX_PIN_PULL_UP;
+    }
 
-void system_pinmux_pin_set_config(
-		const uint8_t gpio_pin,
-		const struct system_pinmux_config *const config);
+    void system_pinmux_pin_set_config( const uint8_t gpio_pin,
+                                       const struct system_pinmux_config * const config );
 
-void system_pinmux_group_set_config(
-		PortGroup *const port,
-		const uint32_t mask,
-		const struct system_pinmux_config *const config);
+    void system_pinmux_group_set_config( PortGroup * const port,
+                                         const uint32_t mask,
+                                         const struct system_pinmux_config * const config );
 
 /** @} */
 
@@ -344,42 +350,40 @@ void system_pinmux_group_set_config(
  *
  * \return Base address of the associated PORT module.
  */
-static inline PortGroup* system_pinmux_get_group_from_gpio_pin(
-		const uint8_t gpio_pin)
-{
-	uint8_t port_index  = (gpio_pin / 128);
-	uint8_t group_index = (gpio_pin / 32);
+    static inline PortGroup * system_pinmux_get_group_from_gpio_pin( const uint8_t gpio_pin )
+    {
+        uint8_t port_index = ( gpio_pin / 128 );
+        uint8_t group_index = ( gpio_pin / 32 );
 
-	/* Array of available ports. */
-	Port *const ports[PORT_INST_NUM] = PORT_INSTS;
+        /* Array of available ports. */
+        Port * const ports[ PORT_INST_NUM ] = PORT_INSTS;
 
-	if (port_index < PORT_INST_NUM) {
-		return &(ports[port_index]->Group[group_index]);
-	} else {
-		Assert(false);
-		return NULL;
-	}
-}
+        if( port_index < PORT_INST_NUM )
+        {
+            return &( ports[ port_index ]->Group[ group_index ] );
+        }
+        else
+        {
+            Assert( false );
+            return NULL;
+        }
+    }
 
-void system_pinmux_group_set_input_sample_mode(
-		PortGroup *const port,
-		const uint32_t mask,
-		const enum system_pinmux_pin_sample mode);
+    void system_pinmux_group_set_input_sample_mode( PortGroup * const port,
+                                                    const uint32_t mask,
+                                                    const enum system_pinmux_pin_sample mode );
 
-void system_pinmux_group_set_output_strength(
-		PortGroup *const port,
-		const uint32_t mask,
-		const enum system_pinmux_pin_strength mode);
+    void system_pinmux_group_set_output_strength( PortGroup * const port,
+                                                  const uint32_t mask,
+                                                  const enum system_pinmux_pin_strength mode );
 
-void system_pinmux_group_set_output_slew_rate(
-		PortGroup *const port,
-		const uint32_t mask,
-		const enum system_pinmux_pin_slew_rate mode);
+    void system_pinmux_group_set_output_slew_rate( PortGroup * const port,
+                                                   const uint32_t mask,
+                                                   const enum system_pinmux_pin_slew_rate mode );
 
-void system_pinmux_group_set_output_drive(
-		PortGroup *const port,
-		const uint32_t mask,
-		const enum system_pinmux_pin_drive mode);
+    void system_pinmux_group_set_output_drive( PortGroup * const port,
+                                               const uint32_t mask,
+                                               const enum system_pinmux_pin_drive mode );
 
 /** @} */
 
@@ -396,25 +400,27 @@ void system_pinmux_group_set_output_drive(
  *
  * \return Currently selected peripheral index on the specified pin.
  */
-static inline uint8_t system_pinmux_pin_get_mux_position(
-		const uint8_t gpio_pin)
-{
-	PortGroup *const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t pin_index = (gpio_pin % 32);
+    static inline uint8_t system_pinmux_pin_get_mux_position( const uint8_t gpio_pin )
+    {
+        PortGroup * const port = system_pinmux_get_group_from_gpio_pin( gpio_pin );
+        uint32_t pin_index = ( gpio_pin % 32 );
 
-	if (!(port->PINCFG[pin_index].reg & PORT_PINCFG_PMUXEN)) {
-		return SYSTEM_PINMUX_GPIO;
-	}
+        if( !( port->PINCFG[ pin_index ].reg & PORT_PINCFG_PMUXEN ) )
+        {
+            return SYSTEM_PINMUX_GPIO;
+        }
 
-	uint32_t pmux_reg = port->PMUX[pin_index / 2].reg;
+        uint32_t pmux_reg = port->PMUX[ pin_index / 2 ].reg;
 
-	if (pin_index & 1) {
-		return (pmux_reg & PORT_PMUX_PMUXO_Msk) >> PORT_PMUX_PMUXO_Pos;
-	}
-	else {
-		return (pmux_reg & PORT_PMUX_PMUXE_Msk) >> PORT_PMUX_PMUXE_Pos;
-	}
-}
+        if( pin_index & 1 )
+        {
+            return ( pmux_reg & PORT_PMUX_PMUXO_Msk ) >> PORT_PMUX_PMUXO_Pos;
+        }
+        else
+        {
+            return ( pmux_reg & PORT_PMUX_PMUXE_Msk ) >> PORT_PMUX_PMUXE_Pos;
+        }
+    }
 
 /**
  * \brief Configures the input sampling mode for a GPIO pin.
@@ -426,20 +432,21 @@ static inline uint8_t system_pinmux_pin_get_mux_position(
  * \param[in] gpio_pin Index of the GPIO pin to configure.
  * \param[in] mode     New pin sampling mode to configure.
  */
-static inline void system_pinmux_pin_set_input_sample_mode(
-		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_sample mode)
-{
-	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t sample_quad_mask = (1UL << ((gpio_pin % 32) / 4));
+    static inline void system_pinmux_pin_set_input_sample_mode( const uint8_t gpio_pin,
+                                                                const enum system_pinmux_pin_sample mode )
+    {
+        PortGroup * const port = system_pinmux_get_group_from_gpio_pin( gpio_pin );
+        uint32_t sample_quad_mask = ( 1UL << ( ( gpio_pin % 32 ) / 4 ) );
 
-	if (mode == SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND) {
-		port->CTRL.reg |=  sample_quad_mask;
-	}
-	else {
-		port->CTRL.reg &= ~sample_quad_mask;
-	}
-}
+        if( mode == SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND )
+        {
+            port->CTRL.reg |= sample_quad_mask;
+        }
+        else
+        {
+            port->CTRL.reg &= ~sample_quad_mask;
+        }
+    }
 
 /**
  * \brief Configures the output driver strength mode for a GPIO pin.
@@ -450,20 +457,21 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  * \param[in] gpio_pin  Index of the GPIO pin to configure.
  * \param[in] mode      New output driver strength mode to configure.
  */
-static inline void system_pinmux_pin_set_output_strength(
-		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_strength mode)
-{
-	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t pin_index = (gpio_pin % 32);
+    static inline void system_pinmux_pin_set_output_strength( const uint8_t gpio_pin,
+                                                              const enum system_pinmux_pin_strength mode )
+    {
+        PortGroup * const port = system_pinmux_get_group_from_gpio_pin( gpio_pin );
+        uint32_t pin_index = ( gpio_pin % 32 );
 
-	if (mode == SYSTEM_PINMUX_PIN_STRENGTH_HIGH) {
-		port->PINCFG[pin_index].reg |=  PORT_PINCFG_DRVSTR;
-	}
-	else {
-		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_DRVSTR;
-	}
-}
+        if( mode == SYSTEM_PINMUX_PIN_STRENGTH_HIGH )
+        {
+            port->PINCFG[ pin_index ].reg |= PORT_PINCFG_DRVSTR;
+        }
+        else
+        {
+            port->PINCFG[ pin_index ].reg &= ~PORT_PINCFG_DRVSTR;
+        }
+    }
 
 /**
  * \brief Configures the output slew rate mode for a GPIO pin.
@@ -475,20 +483,21 @@ static inline void system_pinmux_pin_set_output_strength(
  * \param[in] gpio_pin  Index of the GPIO pin to configure.
  * \param[in] mode      New pin slew rate mode to configure.
  */
-static inline void system_pinmux_pin_set_output_slew_rate(
-		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_slew_rate mode)
-{
-	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t pin_index = (gpio_pin % 32);
+    static inline void system_pinmux_pin_set_output_slew_rate( const uint8_t gpio_pin,
+                                                               const enum system_pinmux_pin_slew_rate mode )
+    {
+        PortGroup * const port = system_pinmux_get_group_from_gpio_pin( gpio_pin );
+        uint32_t pin_index = ( gpio_pin % 32 );
 
-	if (mode == SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED) {
-		port->PINCFG[pin_index].reg |=  PORT_PINCFG_SLEWLIM;
-	}
-	else {
-		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_SLEWLIM;
-	}
-}
+        if( mode == SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED )
+        {
+            port->PINCFG[ pin_index ].reg |= PORT_PINCFG_SLEWLIM;
+        }
+        else
+        {
+            port->PINCFG[ pin_index ].reg &= ~PORT_PINCFG_SLEWLIM;
+        }
+    }
 
 /**
  * \brief Configures the output driver mode for a GPIO pin.
@@ -499,26 +508,27 @@ static inline void system_pinmux_pin_set_output_slew_rate(
  * \param[in] gpio_pin  Index of the GPIO pin to configure.
  * \param[in] mode      New pad output driver mode to configure.
  */
-static inline void system_pinmux_pin_set_output_drive(
-		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_drive mode)
-{
-	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t pin_index = (gpio_pin % 32);
+    static inline void system_pinmux_pin_set_output_drive( const uint8_t gpio_pin,
+                                                           const enum system_pinmux_pin_drive mode )
+    {
+        PortGroup * const port = system_pinmux_get_group_from_gpio_pin( gpio_pin );
+        uint32_t pin_index = ( gpio_pin % 32 );
 
-	if (mode == SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN) {
-		port->PINCFG[pin_index].reg |=  PORT_PINCFG_ODRAIN;
-	}
-	else {
-		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_ODRAIN;
-	}
-}
+        if( mode == SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN )
+        {
+            port->PINCFG[ pin_index ].reg |= PORT_PINCFG_ODRAIN;
+        }
+        else
+        {
+            port->PINCFG[ pin_index ].reg &= ~PORT_PINCFG_ODRAIN;
+        }
+    }
 
 /** @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 /** @} */
 
@@ -605,4 +615,4 @@ static inline void system_pinmux_pin_set_output_drive(
  * </table>
  */
 
-#endif
+#endif /* ifndef PINMUX_H_INCLUDED */

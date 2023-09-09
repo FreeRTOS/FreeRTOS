@@ -42,30 +42,30 @@ CY_ISR_PROTO( vHighFrequencySecondISR );
  */
 void vInitialiseTimerForIntQueueTest( void )
 {
-	taskENTER_CRITICAL();
-	{
-		/* Initialise and start the First Timer ISR. */
-		isr_High_Frequency_2000Hz_ClearPending();
-		isr_High_Frequency_2000Hz_StartEx( ( cyisraddress ) vHighFrequencyFirstISR );
+    taskENTER_CRITICAL();
+    {
+        /* Initialise and start the First Timer ISR. */
+        isr_High_Frequency_2000Hz_ClearPending();
+        isr_High_Frequency_2000Hz_StartEx( ( cyisraddress ) vHighFrequencyFirstISR );
 
-		/* Initialise and start the Second Timer ISR. */
-		isr_High_Frequency_2001Hz_ClearPending();
-		isr_High_Frequency_2001Hz_StartEx( ( cyisraddress ) vHighFrequencySecondISR );
-	}
-	taskEXIT_CRITICAL();
+        /* Initialise and start the Second Timer ISR. */
+        isr_High_Frequency_2001Hz_ClearPending();
+        isr_High_Frequency_2001Hz_StartEx( ( cyisraddress ) vHighFrequencySecondISR );
+    }
+    taskEXIT_CRITICAL();
 }
 /*---------------------------------------------------------------------------*/
 
-CY_ISR(vHighFrequencyFirstISR)
+CY_ISR( vHighFrequencyFirstISR )
 {
-	/* Call back into the test code and context switch if necessary. */
-	portEND_SWITCHING_ISR( xFirstTimerHandler() );
+    /* Call back into the test code and context switch if necessary. */
+    portEND_SWITCHING_ISR( xFirstTimerHandler() );
 }
 /*---------------------------------------------------------------------------*/
 
-CY_ISR(vHighFrequencySecondISR)
+CY_ISR( vHighFrequencySecondISR )
 {
-	/* Call back into the test code and context switch if necessary. */
-	portEND_SWITCHING_ISR( xSecondTimerHandler() );
+    /* Call back into the test code and context switch if necessary. */
+    portEND_SWITCHING_ISR( xSecondTimerHandler() );
 }
 /*---------------------------------------------------------------------------*/

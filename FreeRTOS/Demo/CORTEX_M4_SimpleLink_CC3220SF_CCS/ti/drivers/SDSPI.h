@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*!*****************************************************************************
  *  @file       SDSPI.h
  *
@@ -173,13 +174,13 @@
  */
 
 #ifndef ti_drivers_SDSPI__include
-#define ti_drivers_SDSPI__include
+    #define ti_drivers_SDSPI__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /**
  *  @defgroup SDSPI_CONTROL SDSPI_control command and status codes
@@ -198,7 +199,7 @@ extern "C" {
  * #define SDSPIXYZ_CMD_COMMAND1    SDSPI_CMD_RESERVED + 1
  * @endcode
  */
-#define SDSPI_CMD_RESERVED           (32)
+    #define SDSPI_CMD_RESERVED       ( 32 )
 
 /*!
  * Common SDSPI_control status code reservation offset.
@@ -212,7 +213,7 @@ extern "C" {
  * #define SDSPIXYZ_STATUS_ERROR2   SDSPI_STATUS_RESERVED - 2
  * @endcode
  */
-#define SDSPI_STATUS_RESERVED       (-32)
+    #define SDSPI_STATUS_RESERVED    ( -32 )
 
 /**
  *  @defgroup SDSPI_STATUS Status Codes
@@ -227,7 +228,7 @@ extern "C" {
  * SDSPI_control() returns SDSPI_STATUS_SUCCESS if the control code was executed
  * successfully.
  */
-#define SDSPI_STATUS_SUCCESS        (0)
+    #define SDSPI_STATUS_SUCCESS         ( 0 )
 
 /*!
  * @brief   Generic error status code returned by SDSPI_control().
@@ -235,7 +236,7 @@ extern "C" {
  * SDSPI_control() returns SDSPI_STATUS_ERROR if the control code was not
  * executed successfully.
  */
-#define SDSPI_STATUS_ERROR         (-1)
+    #define SDSPI_STATUS_ERROR           ( -1 )
 
 /*!
  * @brief   An error status code returned by SDSPI_control() for undefined
@@ -244,7 +245,7 @@ extern "C" {
  * SDSPI_control() returns SDSPI_STATUS_UNDEFINEDCMD if the control code is not
  * recognized by the driver implementation.
  */
-#define SDSPI_STATUS_UNDEFINEDCMD  (-2)
+    #define SDSPI_STATUS_UNDEFINEDCMD    ( -2 )
 /** @}*/
 
 /**
@@ -264,7 +265,7 @@ extern "C" {
 /*!
  *  @brief      A handle that is returned from a SDSPI_open() call.
  */
-typedef struct SDSPI_Config_ *SDSPI_Handle;
+    typedef struct SDSPI_Config_ * SDSPI_Handle;
 
 
 /*!
@@ -275,57 +276,59 @@ typedef struct SDSPI_Config_ *SDSPI_Handle;
  *
  *  @sa         SDSPI_Params_init()
  */
-typedef struct SDSPI_Params_ {
-    uint32_t  bitRate; /*!< SPI bit rate in Hz */
-    void     *custom;  /*!< Custom argument used by driver implementation */
-} SDSPI_Params;
+    typedef struct SDSPI_Params_
+    {
+        uint32_t bitRate; /*!< SPI bit rate in Hz */
+        void * custom;    /*!< Custom argument used by driver implementation */
+    } SDSPI_Params;
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SDSPI_init().
  */
-typedef void          (*SDSPI_InitFxn)     (SDSPI_Handle handle);
+    typedef void (* SDSPI_InitFxn)     ( SDSPI_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SDSPI_open().
  */
-typedef SDSPI_Handle  (*SDSPI_OpenFxn)   (SDSPI_Handle handle,
-                                          uint_least8_t drv,
-                                          SDSPI_Params *params);
+    typedef SDSPI_Handle (* SDSPI_OpenFxn)   ( SDSPI_Handle handle,
+                                               uint_least8_t drv,
+                                               SDSPI_Params * params );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SDSPI_close().
  */
-typedef void          (*SDSPI_CloseFxn)    (SDSPI_Handle handle);
+    typedef void (* SDSPI_CloseFxn)    ( SDSPI_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SDSPI_control().
  */
-typedef int_fast16_t  (*SDSPI_ControlFxn)  (SDSPI_Handle handle,
-                                            uint_fast16_t cmd,
-                                            void *arg);
+    typedef int_fast16_t (* SDSPI_ControlFxn)  ( SDSPI_Handle handle,
+                                                 uint_fast16_t cmd,
+                                                 void * arg );
 
 /*!
  *  @brief      The definition of a SDSPI function table that contains the
  *              required set of functions to control a specific SDSPI driver
  *              implementation.
  */
-typedef struct SDSPI_FxnTable_ {
-    /*! Function to initialized the given data object */
-    SDSPI_InitFxn initFxn;
+    typedef struct SDSPI_FxnTable_
+    {
+        /*! Function to initialized the given data object */
+        SDSPI_InitFxn initFxn;
 
-    /*! Function to open the specified peripheral */
-    SDSPI_OpenFxn openFxn;
+        /*! Function to open the specified peripheral */
+        SDSPI_OpenFxn openFxn;
 
-    /*! Function to close the specified peripheral */
-    SDSPI_CloseFxn closeFxn;
+        /*! Function to close the specified peripheral */
+        SDSPI_CloseFxn closeFxn;
 
-    /*! Function to implementation specific control function */
-    SDSPI_ControlFxn controlFxn;
-} SDSPI_FxnTable;
+        /*! Function to implementation specific control function */
+        SDSPI_ControlFxn controlFxn;
+    } SDSPI_FxnTable;
 
 /*!
  *  @brief  SDSPI Global configuration
@@ -338,16 +341,17 @@ typedef struct SDSPI_FxnTable_ {
  *
  *  @sa     SDSPI_init()
  */
-typedef struct SDSPI_Config_ {
-    /*! Pointer to a table of driver-specific implementations of SDSPI APIs */
-    SDSPI_FxnTable const *fxnTablePtr;
+    typedef struct SDSPI_Config_
+    {
+        /*! Pointer to a table of driver-specific implementations of SDSPI APIs */
+        SDSPI_FxnTable const * fxnTablePtr;
 
-    /*! Pointer to a driver specific data object */
-    void                 *object;
+        /*! Pointer to a driver specific data object */
+        void * object;
 
-    /*! Pointer to a driver specific hardware attributes structure */
-    void           const *hwAttrs;
-} SDSPI_Config;
+        /*! Pointer to a driver specific hardware attributes structure */
+        void const * hwAttrs;
+    } SDSPI_Config;
 
 /*!
  *  @brief  Function to close a SDSPI peripheral specified by the SDSPI handle.
@@ -360,7 +364,7 @@ typedef struct SDSPI_Config_ {
  *
  *  @sa     SDSPI_open()
  */
-extern void SDSPI_close(SDSPI_Handle handle);
+    extern void SDSPI_close( SDSPI_Handle handle );
 
 /*!
  *  @brief  Function performs implementation specific features on a given
@@ -399,8 +403,9 @@ extern void SDSPI_close(SDSPI_Handle handle);
  *
  *  @sa     SDSPI_open()
  */
-extern int_fast16_t SDSPI_control(SDSPI_Handle handle, uint_fast16_t cmd,
-                                  void *arg);
+    extern int_fast16_t SDSPI_control( SDSPI_Handle handle,
+                                       uint_fast16_t cmd,
+                                       void * arg );
 
 /*!
  *  @brief  This function initializes the SDSPI driver module.
@@ -410,7 +415,7 @@ extern int_fast16_t SDSPI_control(SDSPI_Handle handle, uint_fast16_t cmd,
  *          any other SDSPI driver APIs. This function call does not modify any
  *          peripheral registers.
  */
-extern void SDSPI_init(void);
+    extern void SDSPI_init( void );
 
 /*!
  *  @brief  This function registers the SDSPI driver with BIOS' FatFs module
@@ -434,8 +439,9 @@ extern void SDSPI_init(void);
  *  @sa     SDSPI_init()
  *  @sa     SDSPI_close()
  */
-extern SDSPI_Handle SDSPI_open(uint_least8_t index, uint_least8_t drv,
-                               SDSPI_Params *params);
+    extern SDSPI_Handle SDSPI_open( uint_least8_t index,
+                                    uint_least8_t drv,
+                                    SDSPI_Params * params );
 
 /*!
  *  @brief  Function to initialize the SDSPI_Params struct to its defaults
@@ -446,10 +452,10 @@ extern SDSPI_Handle SDSPI_open(uint_least8_t index, uint_least8_t drv,
  *  Defaults values are:
  *      bitRate             = 12500000 (Hz)
  */
-extern void SDSPI_Params_init(SDSPI_Params *params);
+    extern void SDSPI_Params_init( SDSPI_Params * params );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_SDSPI__include */

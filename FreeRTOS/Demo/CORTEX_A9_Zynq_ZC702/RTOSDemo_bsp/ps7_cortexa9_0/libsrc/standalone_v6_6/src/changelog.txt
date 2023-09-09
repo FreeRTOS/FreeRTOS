@@ -507,7 +507,7 @@
  * 6.6 mus   01/30/18 Updated hypervisor enabled Cortexa53 64 bit BSP, to add xen PV console
  *                    support. Now, xil_printf would use PV console instead of UART in case of
  *                    hypervisor enabled BSP.
- * 6.6 mus   02/02/18 Updated get_connected_if proc in standalone tcl to detect the HPC port 
+ * 6.6 mus   02/02/18 Updated get_connected_if proc in standalone tcl to detect the HPC port
  *                    configured with smart interconnect.It fixes CR#990318.
  * 6.6 srm   02/10/18 Updated csu_wdt interrupt to the correct value. Fixes CR#992229
  * 6.6 asa   02/12/18 Fix for heap handling for ARM platforms. CR#993932.
@@ -516,9 +516,9 @@
  * 6.6 mus   02/23/18 Presently Cortex R5 BSP boot code is disabling the debug logic in
 *		      non-JTAG boot mode, when processor is in lockstep configuration.
 *		      This behavior is restricting application debugging in non-JTAG boot
-*		      mode.  To get rid of this restriction, added new mld parameter 
-*		      "lockstep_mode_debug", to enable/disable debug logic from BSP 
-*		      settings. Now, debug logic can be enabled through BSP settings, 
+*		      mode.  To get rid of this restriction, added new mld parameter
+*		      "lockstep_mode_debug", to enable/disable debug logic from BSP
+*		      settings. Now, debug logic can be enabled through BSP settings,
 *		      by modifying value of parameter "lockstep_mode_debug" as "true".
 *		      It fixes CR#993896.
  * 6.6.mus   02/27/18  Updated Xil_DCacheInvalidateRange and

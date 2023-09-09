@@ -16,150 +16,153 @@
 *
 * Copyright (C) 2019 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : mcu_init.c
 * Description  : Performs initialization common to all MCUs in this Group
 ***********************************************************************************************************************/
+
 /**********************************************************************************************************************
-* History : DD.MM.YYYY Version  Description
-*         : 08.10.2019 1.00     First Release
-***********************************************************************************************************************/
+ * History : DD.MM.YYYY Version  Description
+ *         : 08.10.2019 1.00     First Release
+ ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* Get specifics on this MCU. */
 #include "platform.h"
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
+
 /* RX MCUs come in different packages and different pin counts.
-   Each bit of PORTm.PDR corresponds to each pin of port m; I/O direction can be specified in 1-bit units.
-   Each bit of PDR corresponding to port m that does not exist is reserved.
-   Also, each bit of PDR corresponding to P35 pins is reserved, because such pins are input only.
-   Make settings of the reserved bit according to the description in section 22.4, Initialization of the Port Direction
-   Register (PDR). These values are then ORed into the direction registers to set non-existent pins as outputs or
-   inputs, which can help save power.
+ * Each bit of PORTm.PDR corresponds to each pin of port m; I/O direction can be specified in 1-bit units.
+ * Each bit of PDR corresponding to port m that does not exist is reserved.
+ * Also, each bit of PDR corresponding to P35 pins is reserved, because such pins are input only.
+ * Make settings of the reserved bit according to the description in section 22.4, Initialization of the Port Direction
+ * Register (PDR). These values are then ORed into the direction registers to set non-existent pins as outputs or
+ * inputs, which can help save power.
  */
 #if BSP_PACKAGE_PINS == 224
     /* Refer User's Manual: Hardware Table 22.4. */
-    #define BSP_PRV_PORT0_NE_PIN_MASK     (0x50)
-    #define BSP_PRV_PORT1_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT2_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT3_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT4_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT5_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT6_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT7_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT8_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT9_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTA_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTB_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTC_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTD_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTE_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTF_NE_PIN_MASK     (0xC0)
-    #define BSP_PRV_PORTG_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTH_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xD0)
-    #define BSP_PRV_PORTK_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTL_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTM_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTN_NE_PIN_MASK     (0xC0)
-    #define BSP_PRV_PORTQ_NE_PIN_MASK     (0x00)
+    #define BSP_PRV_PORT0_NE_PIN_MASK    ( 0x50 )
+    #define BSP_PRV_PORT1_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT2_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT3_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT4_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT5_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT6_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT7_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT8_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT9_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTA_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTB_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTC_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTD_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTE_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTF_NE_PIN_MASK    ( 0xC0 )
+    #define BSP_PRV_PORTG_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTH_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTJ_NE_PIN_MASK    ( 0xD0 )
+    #define BSP_PRV_PORTK_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTL_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTM_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTN_NE_PIN_MASK    ( 0xC0 )
+    #define BSP_PRV_PORTQ_NE_PIN_MASK    ( 0x00 )
 #elif BSP_PACKAGE_PINS == 176
     /* Refer User's Manual: Hardware Table 22.5. */
-    #define BSP_PRV_PORT0_NE_PIN_MASK     (0x50)
-    #define BSP_PRV_PORT1_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT2_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT3_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT4_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT5_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT6_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT7_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT8_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT9_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTA_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTB_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTC_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTD_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTE_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTF_NE_PIN_MASK     (0xC0)
-    #define BSP_PRV_PORTG_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTH_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xD0)
-    #define BSP_PRV_PORTK_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTL_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTM_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTN_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTQ_NE_PIN_MASK     (0xFF)
-#elif (BSP_PACKAGE_PINS == 145) || (BSP_PACKAGE_PINS == 144)
+    #define BSP_PRV_PORT0_NE_PIN_MASK    ( 0x50 )
+    #define BSP_PRV_PORT1_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT2_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT3_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT4_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT5_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT6_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT7_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT8_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT9_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTA_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTB_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTC_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTD_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTE_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTF_NE_PIN_MASK    ( 0xC0 )
+    #define BSP_PRV_PORTG_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTH_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTJ_NE_PIN_MASK    ( 0xD0 )
+    #define BSP_PRV_PORTK_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTL_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTM_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTN_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTQ_NE_PIN_MASK    ( 0xFF )
+#elif ( BSP_PACKAGE_PINS == 145 ) || ( BSP_PACKAGE_PINS == 144 )
     /* Refer User's Manual: Hardware Table 22.6. */
-    #define BSP_PRV_PORT0_NE_PIN_MASK     (0x50)
-    #define BSP_PRV_PORT1_NE_PIN_MASK     (0x03)
-    #define BSP_PRV_PORT2_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT3_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT4_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT5_NE_PIN_MASK     (0x80)
-    #define BSP_PRV_PORT6_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT7_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT8_NE_PIN_MASK     (0x30)
-    #define BSP_PRV_PORT9_NE_PIN_MASK     (0xF0)
-    #define BSP_PRV_PORTA_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTB_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTC_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTD_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTE_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTF_NE_PIN_MASK     (0xDF)
-    #define BSP_PRV_PORTG_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTH_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xD7)
-    #define BSP_PRV_PORTK_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTL_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTM_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTN_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTQ_NE_PIN_MASK     (0xFF)
+    #define BSP_PRV_PORT0_NE_PIN_MASK    ( 0x50 )
+    #define BSP_PRV_PORT1_NE_PIN_MASK    ( 0x03 )
+    #define BSP_PRV_PORT2_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT3_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT4_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT5_NE_PIN_MASK    ( 0x80 )
+    #define BSP_PRV_PORT6_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT7_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT8_NE_PIN_MASK    ( 0x30 )
+    #define BSP_PRV_PORT9_NE_PIN_MASK    ( 0xF0 )
+    #define BSP_PRV_PORTA_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTB_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTC_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTD_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTE_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTF_NE_PIN_MASK    ( 0xDF )
+    #define BSP_PRV_PORTG_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTH_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTJ_NE_PIN_MASK    ( 0xD7 )
+    #define BSP_PRV_PORTK_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTL_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTM_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTN_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTQ_NE_PIN_MASK    ( 0xFF )
 #elif BSP_PACKAGE_PINS == 100
     /* Refer User's Manual: Hardware Table 22.7. */
-    #define BSP_PRV_PORT0_NE_PIN_MASK     (0x5F)
-    #define BSP_PRV_PORT1_NE_PIN_MASK     (0x03)
-    #define BSP_PRV_PORT2_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT3_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT4_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORT5_NE_PIN_MASK     (0xC0)
-    #define BSP_PRV_PORT6_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORT7_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORT8_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORT9_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTA_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTB_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTC_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTD_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTE_NE_PIN_MASK     (0x00)
-    #define BSP_PRV_PORTF_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTG_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTH_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xF7)
-    #define BSP_PRV_PORTK_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTL_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTM_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTN_NE_PIN_MASK     (0xFF)
-    #define BSP_PRV_PORTQ_NE_PIN_MASK     (0xFF)
-#else
+    #define BSP_PRV_PORT0_NE_PIN_MASK    ( 0x5F )
+    #define BSP_PRV_PORT1_NE_PIN_MASK    ( 0x03 )
+    #define BSP_PRV_PORT2_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT3_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT4_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORT5_NE_PIN_MASK    ( 0xC0 )
+    #define BSP_PRV_PORT6_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORT7_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORT8_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORT9_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTA_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTB_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTC_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTD_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTE_NE_PIN_MASK    ( 0x00 )
+    #define BSP_PRV_PORTF_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTG_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTH_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTJ_NE_PIN_MASK    ( 0xF7 )
+    #define BSP_PRV_PORTK_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTL_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTM_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTN_NE_PIN_MASK    ( 0xFF )
+    #define BSP_PRV_PORTQ_NE_PIN_MASK    ( 0xFF )
+#else  /* if BSP_PACKAGE_PINS == 224 */
     #error "ERROR - This package is not defined in mcu_init.c"
-#endif
+#endif /* if BSP_PACKAGE_PINS == 224 */
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Exported global variables (to be accessed by other files)
+*  Exported global variables (to be accessed by other files)
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Private global variables and functions
+*  Private global variables and functions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -170,7 +173,7 @@ Private global variables and functions
 * Arguments    : none
 * Return Value : none
 ***********************************************************************************************************************/
-void bsp_non_existent_port_init (void)
+void bsp_non_existent_port_init( void )
 {
     /* OR in missing pin masks from above. */
 
@@ -246,4 +249,3 @@ void bsp_non_existent_port_init (void)
     /* Set PORTQ.PDR */
     PORTQ.PDR.BYTE |= BSP_PRV_PORTQ_NE_PIN_MASK;
 } /* End of function bsp_non_existent_port_init() */
-

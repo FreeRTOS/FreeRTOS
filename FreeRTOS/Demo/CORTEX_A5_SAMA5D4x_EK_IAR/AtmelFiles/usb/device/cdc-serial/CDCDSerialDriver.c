@@ -68,16 +68,16 @@
  *  Initializes the USB Device CDC serial driver & USBD Driver.
  *  \param  pDescriptors Pointer to Descriptors list for CDC Serial Device.
  */
-void CDCDSerialDriver_Initialize(const USBDDriverDescriptors *pDescriptors)
+void CDCDSerialDriver_Initialize( const USBDDriverDescriptors * pDescriptors )
 {
-    USBDDriver *pUsbd = USBD_GetDriver();
+    USBDDriver * pUsbd = USBD_GetDriver();
 
     /* Initialize the standard driver */
-    USBDDriver_Initialize(pUsbd,
-                          pDescriptors,
-                          0); /* Multiple settings for interfaces not supported */
+    USBDDriver_Initialize( pUsbd,
+                           pDescriptors,
+                           0 ); /* Multiple settings for interfaces not supported */
 
-    CDCDSerial_Initialize(pUsbd, CDCDSerialDriver_CC_INTERFACE);
+    CDCDSerial_Initialize( pUsbd, CDCDSerialDriver_CC_INTERFACE );
 
     /* Initialize the USB driver */
     USBD_Init();
@@ -88,14 +88,16 @@ void CDCDSerialDriver_Initialize(const USBDDriverDescriptors *pDescriptors)
  * host.
  * \param cfgnum Configuration number.
  */
-void CDCDSerialDriver_ConfigurationChangedHandler(uint8_t cfgnum)
+void CDCDSerialDriver_ConfigurationChangedHandler( uint8_t cfgnum )
 {
-    USBDDriver *pUsbd = USBD_GetDriver();
-    USBConfigurationDescriptor *pDesc;
-    if (cfgnum) {
-        pDesc = USBDDriver_GetCfgDescriptors(pUsbd, cfgnum);
-        CDCDSerial_ConfigureFunction((USBGenericDescriptor *)pDesc,
-                                      pDesc->wTotalLength);
+    USBDDriver * pUsbd = USBD_GetDriver();
+    USBConfigurationDescriptor * pDesc;
+
+    if( cfgnum )
+    {
+        pDesc = USBDDriver_GetCfgDescriptors( pUsbd, cfgnum );
+        CDCDSerial_ConfigureFunction( ( USBGenericDescriptor * ) pDesc,
+                                      pDesc->wTotalLength );
     }
 }
 
@@ -104,13 +106,16 @@ void CDCDSerialDriver_ConfigurationChangedHandler(uint8_t cfgnum)
  * re-implementation of USBDCallbacks_RequestReceived() method.
  * \param request Pointer to a USBGenericRequest instance.
  */
-void CDCDSerialDriver_RequestHandler(const USBGenericRequest *request)
+void CDCDSerialDriver_RequestHandler( const USBGenericRequest * request )
 {
-    USBDDriver *pUsbd = USBD_GetDriver();
-    TRACE_INFO_WP("NewReq ");
-    if (CDCDSerial_RequestHandler(request))
-        USBDDriver_RequestHandler(pUsbd, request);
+    USBDDriver * pUsbd = USBD_GetDriver();
+
+    TRACE_INFO_WP( "NewReq " );
+
+    if( CDCDSerial_RequestHandler( request ) )
+    {
+        USBDDriver_RequestHandler( pUsbd, request );
+    }
 }
 
 /**@}*/
-

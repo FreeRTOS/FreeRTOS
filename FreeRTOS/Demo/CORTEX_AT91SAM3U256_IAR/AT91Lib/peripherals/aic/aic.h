@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,53 +27,52 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-/// 
-/// Methods and definitions for configuring interrupts using the Advanced
-/// Interrupt Controller (AIC).
-/// 
-/// !Usage
-///
-/// -# Configure an interrupt source using AIC_ConfigureIT
-/// -# Enable or disable interrupt generation of a particular source with
-///    AIC_EnableIT and AIC_DisableIT.
-///
-/// \note Most of the time, peripheral interrupts must be also configured
-/// inside the peripheral itself.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Methods and definitions for configuring interrupts using the Advanced */
+/*/ Interrupt Controller (AIC). */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Configure an interrupt source using AIC_ConfigureIT */
+/*/ -# Enable or disable interrupt generation of a particular source with */
+/*/    AIC_EnableIT and AIC_DisableIT. */
+/*/ */
+/*/ \note Most of the time, peripheral interrupts must be also configured */
+/*/ inside the peripheral itself. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef AIC_H
 #define AIC_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <board.h>
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
 
 #ifndef AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL
-    /// Interrupt is internal and uses a logical 1 level.
-    #define AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL AT91C_AIC_SRCTYPE_INT_LEVEL_SENSITIVE
+    /*/ Interrupt is internal and uses a logical 1 level. */
+    #define AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL    AT91C_AIC_SRCTYPE_INT_LEVEL_SENSITIVE
 #endif
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void AIC_ConfigureIT(unsigned int source,
-                                   unsigned int mode,
-                                   void (*handler)( void ));
+extern void AIC_ConfigureIT( unsigned int source,
+                             unsigned int mode,
+                             void ( * handler )( void ) );
 
-extern void AIC_EnableIT(unsigned int source);
+extern void AIC_EnableIT( unsigned int source );
 
-extern void AIC_DisableIT(unsigned int source);
+extern void AIC_DisableIT( unsigned int source );
 
 #endif //#ifndef AIC_H
-

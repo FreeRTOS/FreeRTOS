@@ -40,14 +40,14 @@
  *         Exported functions
  *---------------------------------------------------------------------------*/
 
-extern void rstc_configure_mode(uint32_t rmr);
-extern void rstc_set_user_reset_enable(uint8_t enable);
-extern void rstc_set_user_reset_interrupt_enable(uint8_t enable);
-extern void rstc_processor_reset(void);
-extern void rstc_peripheral_reset(void);
-extern uint8_t rstc_get_nrst_level(void);
-extern uint8_t rstc_is_user_reset_detected(void);
-extern uint8_t rstc_is_busy(void);
-extern uint32_t rstc_get_status(void);
+extern void rstc_configure_mode( uint32_t rmr );
+extern void rstc_set_user_reset_enable( uint8_t enable );
+extern void rstc_set_user_reset_interrupt_enable( uint8_t enable );
+extern void rstc_processor_reset( void );
+extern void rstc_peripheral_reset( void );
+extern uint8_t rstc_get_nrst_level( void );
+extern uint8_t rstc_is_user_reset_detected( void );
+extern uint8_t rstc_is_busy( void );
+extern uint32_t rstc_get_status( void );
 
-#endif				/* #ifndef _RSTC_H */
+#endif /* #ifndef _RSTC_H */

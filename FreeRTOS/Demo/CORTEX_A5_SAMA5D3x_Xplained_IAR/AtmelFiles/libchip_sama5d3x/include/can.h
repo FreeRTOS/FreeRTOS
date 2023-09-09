@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -59,8 +59,8 @@
  *    - CAN_SetMessage() : setup _MDLx and _MDHx.
  *    - CAN_MessageControl() : setup _MCRx.
  *  - The following get status and data from mailbox:
- *    - CAN_GetMessage() : 
- *    - CAN_GetMessageStatus() : 
+ *    - CAN_GetMessage() :
+ *    - CAN_GetMessageStatus() :
  */
 
 #ifndef _CAN_H_
@@ -78,81 +78,149 @@
  *----------------------------------------------------------------------------*/
 
 /** Number of mailboxes in a CAN controller */
-#define CAN_NUM_MAILBOX     8
+#define CAN_NUM_MAILBOX    8
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void CAN_ConfigureMode(Can * pCan,uint32_t dwMr);
-void CAN_Enable(Can * pCan,uint8_t bEnDis);
-void CAN_EnableLowPower(Can * pCan,uint8_t bEnDis);
-void CAN_EnableAutobaud(Can * pCan,uint8_t bEnDis);
-void CAN_EnableOverloadFrame(Can * pCan,uint8_t bEnDis);
-void CAN_EnableTimeStampEof(Can * pCan,uint8_t bEofSof);
-void CAN_EnableTimeTriggerMode(Can * pCan,uint8_t bEnDis);
-void CAN_EnableTimerFreeze(Can * pCan,uint8_t bEnDis);
-void CAN_DisableRepeat(Can * pCan,uint8_t bDisEn);
+void CAN_ConfigureMode( Can * pCan,
+                        uint32_t dwMr );
+void CAN_Enable( Can * pCan,
+                 uint8_t bEnDis );
+void CAN_EnableLowPower( Can * pCan,
+                         uint8_t bEnDis );
+void CAN_EnableAutobaud( Can * pCan,
+                         uint8_t bEnDis );
+void CAN_EnableOverloadFrame( Can * pCan,
+                              uint8_t bEnDis );
+void CAN_EnableTimeStampEof( Can * pCan,
+                             uint8_t bEofSof );
+void CAN_EnableTimeTriggerMode( Can * pCan,
+                                uint8_t bEnDis );
+void CAN_EnableTimerFreeze( Can * pCan,
+                            uint8_t bEnDis );
+void CAN_DisableRepeat( Can * pCan,
+                        uint8_t bDisEn );
 
-void CAN_EnableIt(Can * pCan,uint32_t dwSources);
-void CAN_DisableIt(Can * pCan,uint32_t dwSources);
-uint32_t CAN_GetItMask(Can * pCan);
-uint32_t CAN_GetStatus(Can * pCan);
+void CAN_EnableIt( Can * pCan,
+                   uint32_t dwSources );
+void CAN_DisableIt( Can * pCan,
+                    uint32_t dwSources );
+uint32_t CAN_GetItMask( Can * pCan );
+uint32_t CAN_GetStatus( Can * pCan );
 
-uint8_t CAN_CalcBaudrate(Can * pCan, uint32_t dwBaud, uint32_t dwMck);
-void CAN_ConfigureBaudrate(Can * pCan,uint32_t dwBr);
-void CAN_SetSamplingMode(Can * pCan,uint8_t bAvg3);
+uint8_t CAN_CalcBaudrate( Can * pCan,
+                          uint32_t dwBaud,
+                          uint32_t dwMck );
+void CAN_ConfigureBaudrate( Can * pCan,
+                            uint32_t dwBr );
+void CAN_SetSamplingMode( Can * pCan,
+                          uint8_t bAvg3 );
 
-uint32_t CAN_GetTimer(Can * pCan);
-uint32_t CAN_GetTimestamp(Can * pCan);
+uint32_t CAN_GetTimer( Can * pCan );
+uint32_t CAN_GetTimestamp( Can * pCan );
 
-uint32_t CAN_GetErrorCount(Can * pCan);
-uint32_t CAN_GetRxErrorCount(Can * pCan);
-uint32_t CAN_GetTxErrorCount(Can * pCan);
+uint32_t CAN_GetErrorCount( Can * pCan );
+uint32_t CAN_GetRxErrorCount( Can * pCan );
+uint32_t CAN_GetTxErrorCount( Can * pCan );
 
-void CAN_Command(Can * pCan,uint32_t dwRequests);
-void CAN_ResetTimer(Can * pCan);
-void CAN_Tx(Can * pCan,uint8_t bMb);
+void CAN_Command( Can * pCan,
+                  uint32_t dwRequests );
+void CAN_ResetTimer( Can * pCan );
+void CAN_Tx( Can * pCan,
+             uint8_t bMb );
 
-void CAN_Abort(Can * pCan,uint32_t dwAborts);
-void CAN_AbortMailbox(Can * pCan,uint8_t bMb);
+void CAN_Abort( Can * pCan,
+                uint32_t dwAborts );
+void CAN_AbortMailbox( Can * pCan,
+                       uint8_t bMb );
 
-void CAN_ConfigureMessageMode(Can * pCan,uint8_t bMb,uint32_t dwMr);
-uint32_t CAN_GetMessageMode(Can * pCan,uint8_t bMb);
-void CAN_SetTimemark(Can * pCan,uint8_t bMb,uint8_t bTimemarks);
-void CAN_SetPriority(Can * pCan,uint8_t bMb,uint8_t bPriority);
-void CAN_SetObjectType(Can * pCan,uint8_t bMb,uint8_t bType);
+void CAN_ConfigureMessageMode( Can * pCan,
+                               uint8_t bMb,
+                               uint32_t dwMr );
+uint32_t CAN_GetMessageMode( Can * pCan,
+                             uint8_t bMb );
+void CAN_SetTimemark( Can * pCan,
+                      uint8_t bMb,
+                      uint8_t bTimemarks );
+void CAN_SetPriority( Can * pCan,
+                      uint8_t bMb,
+                      uint8_t bPriority );
+void CAN_SetObjectType( Can * pCan,
+                        uint8_t bMb,
+                        uint8_t bType );
 
-void CAN_ConfigureMessageAcceptanceMask(Can * pCan,uint8_t bMb,uint32_t dwMAM);
-uint32_t CAN_GetMessageAcceptanceMask(Can * pCan,uint8_t bMb);
-void CAN_ConfigureIdentifierMask(Can * pCan,uint8_t bMb,uint8_t bIdCfg);
-void CAN_SetMIDvAMask(Can * pCan,uint8_t bMb,uint32_t dwIDvA);
-void CAN_SetMIDvBMask(Can * pCan,uint8_t bMb,uint32_t dwIDvA);
+void CAN_ConfigureMessageAcceptanceMask( Can * pCan,
+                                         uint8_t bMb,
+                                         uint32_t dwMAM );
+uint32_t CAN_GetMessageAcceptanceMask( Can * pCan,
+                                       uint8_t bMb );
+void CAN_ConfigureIdentifierMask( Can * pCan,
+                                  uint8_t bMb,
+                                  uint8_t bIdCfg );
+void CAN_SetMIDvAMask( Can * pCan,
+                       uint8_t bMb,
+                       uint32_t dwIDvA );
+void CAN_SetMIDvBMask( Can * pCan,
+                       uint8_t bMb,
+                       uint32_t dwIDvA );
 
-void CAN_ConfigureMessageID(Can * pCan,uint8_t bMb,uint32_t dwMID);
-uint32_t CAN_GetMessageID(Can * pCan,uint8_t bMb);
-void CAN_ConfigureIdVer(Can * pCan,uint8_t bMb,uint8_t bIdVer);
-void CAN_SetMIDvA(Can * pCan,uint8_t bMb,uint32_t dwIDvA);
-void CAN_SetMIDvB(Can * pCan,uint8_t bMb,uint32_t dwIDvA);
+void CAN_ConfigureMessageID( Can * pCan,
+                             uint8_t bMb,
+                             uint32_t dwMID );
+uint32_t CAN_GetMessageID( Can * pCan,
+                           uint8_t bMb );
+void CAN_ConfigureIdVer( Can * pCan,
+                         uint8_t bMb,
+                         uint8_t bIdVer );
+void CAN_SetMIDvA( Can * pCan,
+                   uint8_t bMb,
+                   uint32_t dwIDvA );
+void CAN_SetMIDvB( Can * pCan,
+                   uint8_t bMb,
+                   uint32_t dwIDvA );
 
-uint32_t CAN_GetFamilyID(Can * pCan,uint8_t bMb);
+uint32_t CAN_GetFamilyID( Can * pCan,
+                          uint8_t bMb );
 
-uint32_t CAN_GetMessageStatus(Can * pCan,uint8_t bMb);
+uint32_t CAN_GetMessageStatus( Can * pCan,
+                               uint8_t bMb );
 
-void CAN_SetMessageDataL(Can * pCan,uint8_t bMb,uint32_t dwL);
-uint32_t CAN_GetMessageDataL(Can * pCan,uint8_t bMb);
-void CAN_SetMessageDataH(Can * pCan,uint8_t bMb,uint32_t dwH);
-uint32_t CAN_GetMessageDataH(Can * pCan,uint8_t bMb);
-void CAN_SetMessage(Can * pCan,uint8_t bMb,uint32_t * pDwData);
-void CAN_GetMessage(Can * pCan,uint8_t bMb,uint32_t * pDwData);
-void CAN_SetMessageData64(Can * pCan,uint8_t bMb,uint64_t u64);
-uint64_t CAN_GetMessageData64(Can * pCan,uint8_t bMb);
+void CAN_SetMessageDataL( Can * pCan,
+                          uint8_t bMb,
+                          uint32_t dwL );
+uint32_t CAN_GetMessageDataL( Can * pCan,
+                              uint8_t bMb );
+void CAN_SetMessageDataH( Can * pCan,
+                          uint8_t bMb,
+                          uint32_t dwH );
+uint32_t CAN_GetMessageDataH( Can * pCan,
+                              uint8_t bMb );
+void CAN_SetMessage( Can * pCan,
+                     uint8_t bMb,
+                     uint32_t * pDwData );
+void CAN_GetMessage( Can * pCan,
+                     uint8_t bMb,
+                     uint32_t * pDwData );
+void CAN_SetMessageData64( Can * pCan,
+                           uint8_t bMb,
+                           uint64_t u64 );
+uint64_t CAN_GetMessageData64( Can * pCan,
+                               uint8_t bMb );
 
-void CAN_MessageControl(Can * pCan,uint8_t bMb,uint32_t dwCtrl);
-void CAN_MessageRemote(Can * pCan,uint8_t bMb);
-void CAN_MessageAbort(Can * pCan,uint8_t bMb);
-void CAN_MessageTx(Can * pCan,uint8_t bMb,uint8_t bLen);
-void CAN_MessageRx(Can * pCan,uint8_t bMb);
+void CAN_MessageControl( Can * pCan,
+                         uint8_t bMb,
+                         uint32_t dwCtrl );
+void CAN_MessageRemote( Can * pCan,
+                        uint8_t bMb );
+void CAN_MessageAbort( Can * pCan,
+                       uint8_t bMb );
+void CAN_MessageTx( Can * pCan,
+                    uint8_t bMb,
+                    uint8_t bLen );
+void CAN_MessageRx( Can * pCan,
+                    uint8_t bMb );
 
 /**@}*/
 #endif /* #ifndef _CAN_H_ */

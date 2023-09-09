@@ -24,16 +24,16 @@
  *
  */
 
-/* 
-Changes from V3.0.0
-	+ Added functionality to only call vTaskSwitchContext() once
-	  when handling multiple interruptsources in a single interruptcall.
-
-	+ Included Filenames changed to a .c extension to allow stepping through
-	  code using F7.
-
-Changes from V3.0.1
-*/
+/*
+ * Changes from V3.0.0
+ + Added functionality to only call vTaskSwitchContext() once
+ +    when handling multiple interruptsources in a single interruptcall.
+ +
+ + Included Filenames changed to a .c extension to allow stepping through
+ +    code using F7.
+ +
+ + Changes from V3.0.1
+ */
 
 #include <pic.h>
 
@@ -49,20 +49,20 @@ static bit uxSwitchRequested;
  */
 void pointed Interrupt()
 {
-	/*
-	 * Save the context of the current task.
-	 */
-	portSAVE_CONTEXT( portINTERRUPTS_FORCED );
+    /*
+     * Save the context of the current task.
+     */
+    portSAVE_CONTEXT( portINTERRUPTS_FORCED );
 
-	/*
-	 * No contextswitch requested yet
-	 */
-	uxSwitchRequested	= pdFALSE;
-	
-	/*
-	 * Was the interrupt the FreeRTOS SystemTick?
-	 */
-	#include <libFreeRTOS/Drivers/Tick/isrTick.c>
+    /*
+     * No contextswitch requested yet
+     */
+    uxSwitchRequested = pdFALSE;
+
+    /*
+     * Was the interrupt the FreeRTOS SystemTick?
+     */
+    #include <libFreeRTOS/Drivers/Tick/isrTick.c>
 
 /*******************************************************************************
 ** DO NOT MODIFY ANYTHING ABOVE THIS LINE
@@ -76,28 +76,23 @@ void pointed Interrupt()
 ** See "../Serial/isrSerialTx.c" for an example of this last option
 *******************************************************************************/
 
-
-
-
-
-
-
 /*******************************************************************************
 ** DO NOT MODIFY ANYTHING BELOW THIS LINE
 *******************************************************************************/
-	/*
-	 * Was a contextswitch requested by one of the
-	 * interrupthandlers?
-	 */
-	 if ( uxSwitchRequested )
-	 {
-	 	vTaskSwitchContext();
-	 }
-	 
-	/*
-	 * Restore the context of the (possibly other) task.
-	 */
-	portRESTORE_CONTEXT();
 
-	#pragma asmline retfie	0
+    /*
+     * Was a contextswitch requested by one of the
+     * interrupthandlers?
+     */
+    if( uxSwitchRequested )
+    {
+        vTaskSwitchContext();
+    }
+
+    /*
+     * Restore the context of the (possibly other) task.
+     */
+    portRESTORE_CONTEXT();
+
+    #pragma asmline retfie	0
 }

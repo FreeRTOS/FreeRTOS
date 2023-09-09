@@ -35,7 +35,8 @@
 
 #ifdef __cplusplus
 extern "C" {
-	__attribute__((weak)) int _kill(pid_t pid, int sig);
+__attribute__( ( weak ) ) int _kill( pid_t pid,
+                                     int sig );
 }
 #endif
 
@@ -43,18 +44,24 @@ extern "C" {
  * kill -- go out via exit...
  */
 
-__attribute__((weak)) int kill(pid_t pid, int sig)
+__attribute__( ( weak ) ) int kill( pid_t pid,
+                                    int sig )
 {
-  if(pid == 1) {
-    _exit(sig);
-  }
-  return 0;
+    if( pid == 1 )
+    {
+        _exit( sig );
+    }
+
+    return 0;
 }
 
-__attribute__((weak)) int _kill(pid_t pid, int sig)
+__attribute__( ( weak ) ) int _kill( pid_t pid,
+                                     int sig )
 {
-  if(pid == 1) {
-    _exit(sig);
-  }
-  return 0;
+    if( pid == 1 )
+    {
+        _exit( sig );
+    }
+
+    return 0;
 }

@@ -35,9 +35,9 @@
 
 /* mbed TLS includes. */
 #if defined( MBEDTLS_CONFIG_FILE )
-#include MBEDTLS_CONFIG_FILE
+    #include MBEDTLS_CONFIG_FILE
 #else
-#include "mbedtls/mbedtls_config.h"
+    #include "mbedtls/mbedtls_config.h"
 #endif
 #include "mbedtls/entropy.h"
 
@@ -103,21 +103,22 @@ void mbedtls_platform_free( void * ptr )
  *
  * @param[in, out] pMutex mbedtls mutex handle.
  */
-static void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex )
-{
-    configASSERT( pMutex != NULL );
+    static void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex )
+    {
+        configASSERT( pMutex != NULL );
 
-    #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-        /* Create a statically-allocated FreeRTOS mutex. This should never fail as
-        * storage is provided. */
+        #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-        pMutex->mutexHandle = xSemaphoreCreateMutexStatic( &( pMutex->mutexStorage ) );
-    #elif( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-        pMutex->mutexHandle = xSemaphoreCreateMutex();
-    #endif
+            /* Create a statically-allocated FreeRTOS mutex. This should never fail as
+             * storage is provided. */
 
-    configASSERT( pMutex->mutexHandle != NULL );
-}
+            pMutex->mutexHandle = xSemaphoreCreateMutexStatic( &( pMutex->mutexStorage ) );
+        #elif ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+            pMutex->mutexHandle = xSemaphoreCreateMutex();
+        #endif
+
+        configASSERT( pMutex->mutexHandle != NULL );
+    }
 
 /*-----------------------------------------------------------*/
 
@@ -129,11 +130,11 @@ static void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex )
  * @note This function is an empty stub as nothing needs to be done to free
  * a statically allocated FreeRTOS mutex.
  */
-static void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex )
-{
-    vSemaphoreDelete( pMutex->mutexHandle );
-    pMutex->mutexHandle = NULL;
-}
+    static void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex )
+    {
+        vSemaphoreDelete( pMutex->mutexHandle );
+        pMutex->mutexHandle = NULL;
+    }
 
 /*-----------------------------------------------------------*/
 
@@ -144,23 +145,23 @@ static void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex )
  *
  * @return 0 (success) is always returned as any other failure is asserted.
  */
-static int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
-{
-    BaseType_t mutexStatus = 0;
+    static int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
+    {
+        BaseType_t mutexStatus = 0;
 
-    configASSERT( pMutex != NULL );
-    configASSERT( pMutex->mutexHandle != NULL );
+        configASSERT( pMutex != NULL );
+        configASSERT( pMutex->mutexHandle != NULL );
 
-    /* mutexStatus is not used if asserts are disabled. */
-    ( void ) mutexStatus;
+        /* mutexStatus is not used if asserts are disabled. */
+        ( void ) mutexStatus;
 
-    /* This function should never fail if the mutex is initialized. */
-    mutexStatus = xSemaphoreTake( pMutex->mutexHandle, portMAX_DELAY );
+        /* This function should never fail if the mutex is initialized. */
+        mutexStatus = xSemaphoreTake( pMutex->mutexHandle, portMAX_DELAY );
 
-    configASSERT( mutexStatus == pdTRUE );
+        configASSERT( mutexStatus == pdTRUE );
 
-    return 0;
-}
+        return 0;
+    }
 
 /*-----------------------------------------------------------*/
 
@@ -171,69 +172,69 @@ static int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
  *
  * @return 0 is always returned as any other failure is asserted.
  */
-static int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
-{
-    BaseType_t mutexStatus = 0;
+    static int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
+    {
+        BaseType_t mutexStatus = 0;
 
-    configASSERT( pMutex != NULL );
-    configASSERT( pMutex->mutexHandle != NULL );
-    /* mutexStatus is not used if asserts are disabled. */
-    ( void ) mutexStatus;
+        configASSERT( pMutex != NULL );
+        configASSERT( pMutex->mutexHandle != NULL );
+        /* mutexStatus is not used if asserts are disabled. */
+        ( void ) mutexStatus;
 
-    /* This function should never fail if the mutex is initialized. */
-    mutexStatus = xSemaphoreGive( pMutex->mutexHandle );
-    configASSERT( mutexStatus == pdTRUE );
+        /* This function should never fail if the mutex is initialized. */
+        mutexStatus = xSemaphoreGive( pMutex->mutexHandle );
+        configASSERT( mutexStatus == pdTRUE );
 
-    return 0;
-}
+        return 0;
+    }
 
 /*-----------------------------------------------------------*/
 
-#if defined( MBEDTLS_THREADING_ALT )
-int mbedtls_platform_threading_init( void )
-{
-    mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
-                               mbedtls_platform_mutex_free,
-                               mbedtls_platform_mutex_lock,
-                               mbedtls_platform_mutex_unlock );
-    return 0;
-}
+    #if defined( MBEDTLS_THREADING_ALT )
+        int mbedtls_platform_threading_init( void )
+        {
+            mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
+                                       mbedtls_platform_mutex_free,
+                                       mbedtls_platform_mutex_lock,
+                                       mbedtls_platform_mutex_unlock );
+            return 0;
+        }
 
-#else /* !MBEDTLS_THREADING_ALT */
+    #else /* !MBEDTLS_THREADING_ALT */
 
-void (* mbedtls_mutex_init)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_init;
-void (* mbedtls_mutex_free)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_free;
-int (* mbedtls_mutex_lock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_lock;
-int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_unlock;
+        void (* mbedtls_mutex_init)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_init;
+        void (* mbedtls_mutex_free)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_free;
+        int (* mbedtls_mutex_lock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_lock;
+        int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_unlock;
 
-#endif /* !MBEDTLS_THREADING_ALT */
+    #endif /* !MBEDTLS_THREADING_ALT */
 
 #endif /* MBEDTLS_THREADING_C */
 /*-----------------------------------------------------------*/
 
 #if defined( MBEDTLS_ENTROPY_HARDWARE_ALT )
     /* Determine which API is available */
-    #if defined(_WIN32)
+    #if defined( _WIN32 )
         #define RNG_SOURCE_WINDOWS_CRYPT
-    #elif defined(__linux__)
+    #elif defined( __linux__ )
         #include <unistd.h>
         #include <sys/syscall.h>
-        #if defined(SYS_getrandom)
+        #if defined( SYS_getrandom )
             #define RNG_SOURCE_GETRANDOM
         #endif /* SYS_getrandom */
     #elif defined( ARM_RDI_MONITOR ) || defined( SEMIHOSTING )
         #define RNG_SOURCE_SEMIHOST
     #else
         #define RNG_SOURCE_DEV_RANDOM
-    #endif
+    #endif /* if defined( _WIN32 ) */
 
-    #if defined(RNG_SOURCE_WINDOWS_CRYPT)
+    #if defined( RNG_SOURCE_WINDOWS_CRYPT )
         #include <windows.h>
         #include <wincrypt.h>
         int mbedtls_hardware_poll( void * data,
-                                unsigned char * output,
-                                size_t len,
-                                size_t * olen )
+                                   unsigned char * output,
+                                   size_t len,
+                                   size_t * olen )
         {
             int lStatus = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
             HCRYPTPROV hProv = 0;
@@ -242,8 +243,8 @@ int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_plat
             ( void ) data;
 
             /*
-            * This is port-specific for the Windows simulator, so just use Crypto API.
-            */
+             * This is port-specific for the Windows simulator, so just use Crypto API.
+             */
 
             if( TRUE == CryptAcquireContextA(
                     &hProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) )
@@ -274,13 +275,14 @@ int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_plat
 
             if( rslt >= 0 )
             {
-                *olen = (size_t) rslt;
+                *olen = ( size_t ) rslt;
                 rslt = 0;
             }
             else
             {
                 rslt = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
             }
+
             return rslt;
         }
     #elif defined( RNG_SOURCE_SEMIHOST )
@@ -292,7 +294,7 @@ int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_plat
             int rslt = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
             int file;
 
-            (void) data;
+            ( void ) data;
 
             configASSERT( olen != NULL );
             configASSERT( output != NULL );
@@ -322,7 +324,7 @@ int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_plat
             ( void ) _close( file );
             return rslt;
         }
-    #else
+    #else  /* if defined( RNG_SOURCE_WINDOWS_CRYPT ) */
         #include <stdio.h>
         int mbedtls_hardware_poll( void * data,
                                    unsigned char * output,
@@ -336,7 +338,8 @@ int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_plat
             configASSERT( olen != NULL );
             configASSERT( output != NULL );
 
-            file = fopen("/dev/urandom", "rb");
+            file = fopen( "/dev/urandom", "rb" );
+
             if( file != NULL )
             {
                 rslt = fread( output, 1, len, file );
@@ -352,8 +355,9 @@ int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_plat
             {
                 rslt = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
             }
+
             return rslt;
         }
-    #endif
-#endif
+    #endif /* if defined( RNG_SOURCE_WINDOWS_CRYPT ) */
+#endif /* if defined( MBEDTLS_ENTROPY_HARDWARE_ALT ) */
 /*-----------------------------------------------------------*/

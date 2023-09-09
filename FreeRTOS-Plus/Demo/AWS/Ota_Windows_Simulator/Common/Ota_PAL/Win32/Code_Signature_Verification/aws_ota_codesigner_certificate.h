@@ -24,14 +24,14 @@
  *
  */
 
- /**
-  * @file aws_ota_codesigner_certificate.h
-  * @brief Code signer certificate as char array.
-  *
-  * Define this char array containing the PEM encode signing certificate.
-  * Note -  It is highly recommended to use this for demo purpose and store
-  * certificates in secure location in production devices.
-  */
+/**
+ * @file aws_ota_codesigner_certificate.h
+ * @brief Code signer certificate as char array.
+ *
+ * Define this char array containing the PEM encode signing certificate.
+ * Note -  It is highly recommended to use this for demo purpose and store
+ * certificates in secure location in production devices.
+ */
 
 #ifndef __CODESIGNER_CERTIFICATE__H__
 #define __CODESIGNER_CERTIFICATE__H__

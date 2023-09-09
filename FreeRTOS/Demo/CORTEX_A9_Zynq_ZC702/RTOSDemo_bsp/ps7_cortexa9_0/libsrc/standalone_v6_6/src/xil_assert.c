@@ -30,22 +30,23 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xil_assert.c
-*
-* This file contains basic assert related functions for Xilinx software IP.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who    Date   Changes
-* ----- ---- -------- -------------------------------------------------------
-* 1.00a hbm  07/14/09 Initial release
-* 6.0   kvn  05/31/16 Make Xil_AsserWait a global variable
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xil_assert.c
+ *
+ * This file contains basic assert related functions for Xilinx software IP.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who    Date   Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 1.00a hbm  07/14/09 Initial release
+ * 6.0   kvn  05/31/16 Make Xil_AsserWait a global variable
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -80,68 +81,74 @@ static Xil_AssertCallback Xil_AssertCallbackRoutine = NULL;
 /************************** Function Prototypes ******************************/
 
 /*****************************************************************************/
-/**
-*
-* @brief    Implement assert. Currently, it calls a user-defined callback
-*           function if one has been set.  Then, it potentially enters an
-*           infinite loop depending on the value of the Xil_AssertWait
-*           variable.
-*
-* @param    file: filename of the source
-* @param    line: linenumber within File
-*
-* @return   None.
-*
-* @note     None.
-*
-******************************************************************************/
-void Xil_Assert(const char8 *File, s32 Line)
-{
-	/* if the callback has been set then invoke it */
-	if (Xil_AssertCallbackRoutine != 0) {
-		(*Xil_AssertCallbackRoutine)(File, Line);
-	}
 
-	/* if specified, wait indefinitely such that the assert will show up
-	 * in testing
-	 */
-	while (Xil_AssertWait != 0) {
-	}
+/**
+ *
+ * @brief    Implement assert. Currently, it calls a user-defined callback
+ *           function if one has been set.  Then, it potentially enters an
+ *           infinite loop depending on the value of the Xil_AssertWait
+ *           variable.
+ *
+ * @param    file: filename of the source
+ * @param    line: linenumber within File
+ *
+ * @return   None.
+ *
+ * @note     None.
+ *
+ ******************************************************************************/
+void Xil_Assert( const char8 * File,
+                 s32 Line )
+{
+    /* if the callback has been set then invoke it */
+    if( Xil_AssertCallbackRoutine != 0 )
+    {
+        ( *Xil_AssertCallbackRoutine )( File, Line );
+    }
+
+    /* if specified, wait indefinitely such that the assert will show up
+     * in testing
+     */
+    while( Xil_AssertWait != 0 )
+    {
+    }
 }
 
 /*****************************************************************************/
+
 /**
-*
-* @brief    Set up a callback function to be invoked when an assert occurs.
-*           If a callback is already installed, then it will be replaced.
-*
-* @param    routine: callback to be invoked when an assert is taken
-*
-* @return   None.
-*
-* @note     This function has no effect if NDEBUG is set
-*
-******************************************************************************/
-void Xil_AssertSetCallback(Xil_AssertCallback Routine)
+ *
+ * @brief    Set up a callback function to be invoked when an assert occurs.
+ *           If a callback is already installed, then it will be replaced.
+ *
+ * @param    routine: callback to be invoked when an assert is taken
+ *
+ * @return   None.
+ *
+ * @note     This function has no effect if NDEBUG is set
+ *
+ ******************************************************************************/
+void Xil_AssertSetCallback( Xil_AssertCallback Routine )
 {
-	Xil_AssertCallbackRoutine = Routine;
+    Xil_AssertCallbackRoutine = Routine;
 }
 
 /*****************************************************************************/
+
 /**
-*
-* @brief    Null handler function. This follows the XInterruptHandler
-*           signature for interrupt handlers. It can be used to assign a null
-*           handler (a stub) to an interrupt controller vector table.
-*
-* @param    NullParameter: arbitrary void pointer and not used.
-*
-* @return   None.
-*
-* @note     None.
-*
-******************************************************************************/
-void XNullHandler(void *NullParameter)
+ *
+ * @brief    Null handler function. This follows the XInterruptHandler
+ *           signature for interrupt handlers. It can be used to assign a null
+ *           handler (a stub) to an interrupt controller vector table.
+ *
+ * @param    NullParameter: arbitrary void pointer and not used.
+ *
+ * @return   None.
+ *
+ * @note     None.
+ *
+ ******************************************************************************/
+void XNullHandler( void * NullParameter )
 {
-	(void) NullParameter;
+    ( void ) NullParameter;
 }

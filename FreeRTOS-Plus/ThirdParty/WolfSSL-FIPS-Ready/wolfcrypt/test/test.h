@@ -21,23 +21,22 @@
 
 
 #ifndef WOLFCRYPT_TEST_H
-#define WOLFCRYPT_TEST_H
+    #define WOLFCRYPT_TEST_H
 
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
     extern "C" {
-#endif
+    #endif
 
-#ifdef HAVE_STACK_SIZE
-THREAD_RETURN WOLFSSL_THREAD wolfcrypt_test(void* args);
-#else
-int wolfcrypt_test(void* args);
-#endif
+    #ifdef HAVE_STACK_SIZE
+        THREAD_RETURN WOLFSSL_THREAD wolfcrypt_test( void * args );
+    #else
+        int wolfcrypt_test( void * args );
+    #endif
 
-#ifdef __cplusplus
-    }  /* extern "C" */
-#endif
+    #ifdef __cplusplus
+}      /* extern "C" */
+    #endif
 
 
 #endif /* WOLFCRYPT_TEST_H */
-

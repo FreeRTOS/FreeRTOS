@@ -51,8 +51,8 @@
 #include <stdbool.h>
 
 /* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
+#if ( SAMD20 )
+    #include "samd20.h"
 #endif
 
 #endif /* _SAM_IO_ */

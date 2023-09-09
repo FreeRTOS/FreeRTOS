@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_reset.h
@@ -33,6 +34,7 @@
 * Description  : Reset function API of RZ/T1
 * Limitation   : none
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              : 21.05.2015 1.00     First Release
@@ -43,20 +45,20 @@
 
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
-#define RST_SOURCE_RES  (0x00000002)
-#define RST_SOURCE_ECM  (0x00000004)
-#define RST_SOURCE_SWR1 (0x00000008)
+#define RST_SOURCE_RES     ( 0x00000002 )
+#define RST_SOURCE_ECM     ( 0x00000004 )
+#define RST_SOURCE_SWR1    ( 0x00000008 )
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
 
 /* RESET and Low-Power function registers access control */
-void r_rst_write_enable(void);
-void r_rst_write_disable(void);
+void r_rst_write_enable( void );
+void r_rst_write_disable( void );
 
-#endif
+#endif /* ifndef _R_RESET_HEADER_ */
 
 /* End of File */

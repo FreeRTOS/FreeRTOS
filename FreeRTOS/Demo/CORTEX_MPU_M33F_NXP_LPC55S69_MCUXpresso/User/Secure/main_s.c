@@ -44,10 +44,10 @@
 #endif
 
 /* Start address of non-secure application. */
-#define mainNONSECURE_APP_START_ADDRESS     ( 0x00010000UL )
+#define mainNONSECURE_APP_START_ADDRESS    ( 0x00010000UL )
 
 /* typedef for non-secure Reset Handler. */
-typedef void ( *NonSecureResetHandler_t ) ( void ) __attribute__( ( cmse_nonsecure_call ) );
+typedef void ( *NonSecureResetHandler_t )( void ) __attribute__( ( cmse_nonsecure_call ) );
 /*-----------------------------------------------------------*/
 
 /**
@@ -69,7 +69,7 @@ void SystemInitHook( void );
  */
 
 /* Secure main(). */
-int main(void)
+int main( void )
 {
     /* Set BOD VBAT level to 1.65V. */
     POWER_SetBodVbatLevel( kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false );
@@ -104,12 +104,12 @@ static void prvBootNonSecure( uint32_t ulNonSecureStartAddress )
     /* Main Stack Pointer value for the non-secure side is the first entry in
      * the non-secure vector table. Read the first entry and assign the same to
      * the non-secure main stack pointer(MSP_NS). */
-    secureportSET_MSP_NS( *( ( uint32_t * )( ulNonSecureStartAddress ) ) );
+    secureportSET_MSP_NS( *( ( uint32_t * ) ( ulNonSecureStartAddress ) ) );
 
     /* Reset Handler for the non-secure side is the second entry in the
      * non-secure vector table. Read the second entry to get the non-secure
      * Reset Handler. */
-    pxNonSecureResetHandler = ( NonSecureResetHandler_t )( * ( ( uint32_t * ) ( ( ulNonSecureStartAddress ) + 4U ) ) );
+    pxNonSecureResetHandler = ( NonSecureResetHandler_t ) ( *( ( uint32_t * ) ( ( ulNonSecureStartAddress ) + 4U ) ) );
 
     /* Start non-secure state software application by jumping to the non-secure
      * Reset Handler. */

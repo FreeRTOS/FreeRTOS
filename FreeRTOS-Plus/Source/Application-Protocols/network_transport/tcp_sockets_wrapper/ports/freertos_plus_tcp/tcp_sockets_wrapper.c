@@ -117,15 +117,17 @@ BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
         serverAddress.sin_port = FreeRTOS_htons( port );
         serverAddress.sin_len = ( uint8_t ) sizeof( serverAddress );
 
-#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-        serverAddress.sin_address.ulIP_IPv4 = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
-        /* Check for errors from DNS lookup. */
-        if( serverAddress.sin_address.ulIP_IPv4 == 0U )
-#else
-        serverAddress.sin_addr = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
-        /* Check for errors from DNS lookup. */
-        if( serverAddress.sin_addr == 0U )
-#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+        #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+            serverAddress.sin_address.ulIP_IPv4 = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
+
+            /* Check for errors from DNS lookup. */
+            if( serverAddress.sin_address.ulIP_IPv4 == 0U )
+        #else
+            serverAddress.sin_addr = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
+
+            /* Check for errors from DNS lookup. */
+            if( serverAddress.sin_addr == 0U )
+        #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
         {
             LogError( ( "Failed to connect to server: DNS resolution failed: Hostname=%s.",

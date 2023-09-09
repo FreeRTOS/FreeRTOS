@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_cgc.h"
@@ -48,11 +48,11 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
 
-void R_Systeminit(void);
+void R_Systeminit( void );
 
 /* End user code. Do not edit comment generated here */
 
@@ -62,7 +62,7 @@ void R_Systeminit(void);
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_Systeminit(void)
+void R_Systeminit( void )
 {
     DI();
 
@@ -82,7 +82,7 @@ void R_Systeminit(void)
     R_TPU_Create();
     R_RSPI1_Create();
     R_MPC_Create();
-	R_SCIFA2_Create();
+    R_SCIFA2_Create();
 
     /* Disable writing to MPC pin function control registers */
     MPC.PWPR.BIT.PFSWE = 0U;

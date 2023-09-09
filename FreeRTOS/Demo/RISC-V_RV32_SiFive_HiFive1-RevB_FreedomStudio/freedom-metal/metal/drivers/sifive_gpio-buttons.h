@@ -8,14 +8,16 @@
 #include <metal/compiler.h>
 #include <string.h>
 
-struct __metal_driver_vtable_sifive_button {
+struct __metal_driver_vtable_sifive_button
+{
     struct metal_button_vtable button_vtable;
 };
 
-__METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_button)
+__METAL_DECLARE_VTABLE( __metal_driver_vtable_sifive_button )
 
-struct __metal_driver_sifive_gpio_button {
+struct __metal_driver_sifive_gpio_button
+{
     struct metal_button button;
 };
 
-#endif
+#endif /* ifndef METAL__DRIVERS__SIFIVE_GPIO_BUTTONS_H */

@@ -183,9 +183,9 @@
 
         /* Set the window and buffer sizes. */
         #if ( ipconfigUSE_TCP_WIN == 1 )
-            {
-                FreeRTOS_setsockopt( xListeningSocket, 0, FREERTOS_SO_WIN_PROPERTIES, ( void * ) &xWinProps, sizeof( xWinProps ) );
-            }
+        {
+            FreeRTOS_setsockopt( xListeningSocket, 0, FREERTOS_SO_WIN_PROPERTIES, ( void * ) &xWinProps, sizeof( xWinProps ) );
+        }
         #endif /* ipconfigUSE_TCP_WIN */
 
         /* Bind the socket to the port that the client task will send to, then
@@ -196,7 +196,7 @@
         FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
         FreeRTOS_listen( xListeningSocket, xBacklog );
 
-        for( ;; )
+        for( ; ; )
         {
             /* Wait for a client to connect. */
             xConnectedSocket = FreeRTOS_accept( xListeningSocket, &xClient, &xSize );
@@ -235,7 +235,7 @@
             FreeRTOS_setsockopt( xConnectedSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
             FreeRTOS_setsockopt( xConnectedSocket, 0, FREERTOS_SO_SNDTIMEO, &xSendTimeOut, sizeof( xReceiveTimeOut ) );
 
-            for( ;; )
+            for( ; ; )
             {
                 /* Zero out the receive array so there is NULL at the end of the string
                  * when it is printed out. */

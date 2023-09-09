@@ -30,22 +30,22 @@
 
 /* Comment the line below to disable the specific peripheral inclusion */
 /************************************* ADC ************************************/
-//#define _ADC
-//#define _ADC1
-//#define _ADC2
+/*#define _ADC */
+/*#define _ADC1 */
+/*#define _ADC2 */
 
 /************************************* CAN ************************************/
-//#define _CAN
+/*#define _CAN */
 
 /************************************* DMA ************************************/
-//#define _DMA
-//#define _DMA_Channel1
-//#define _DMA_Channel2
-//#define _DMA_Channel3
-//#define _DMA_Channel4
-//#define _DMA_Channel5
-//#define _DMA_Channel6
-//#define _DMA_Channel7
+/*#define _DMA */
+/*#define _DMA_Channel1 */
+/*#define _DMA_Channel2 */
+/*#define _DMA_Channel3 */
+/*#define _DMA_Channel4 */
+/*#define _DMA_Channel5 */
+/*#define _DMA_Channel6 */
+/*#define _DMA_Channel7 */
 
 /************************************* EXTI ***********************************/
 #define _EXTI
@@ -60,28 +60,28 @@
 #define _AFIO
 
 /************************************* I2C ************************************/
-//#define _I2C
-//#define _I2C1
-//#define _I2C2
+/*#define _I2C */
+/*#define _I2C1 */
+/*#define _I2C2 */
 
 /************************************* IWDG ***********************************/
-//#define _IWDG
+/*#define _IWDG */
 
 /************************************* NVIC ***********************************/
 #define _NVIC
 #define _SCB
 
 /************************************* BKP ************************************/
-//#define _BKP
+/*#define _BKP */
 
 /************************************* PWR ************************************/
-//#define _PWR
+/*#define _PWR */
 
 /************************************* RCC ************************************/
 #define _RCC
 
 /************************************* RTC ************************************/
-//#define _RTC
+/*#define _RTC */
 
 /************************************* SPI ************************************/
 #define _SPI
@@ -92,27 +92,28 @@
 #define _SysTick
 
 /************************************* TIM ************************************/
-//#define _TIM
+/*#define _TIM */
 #define _TIM2
 #define _TIM3
-//#define _TIM4
+/*#define _TIM4 */
 
 /************************************* USART **********************************/
 #define _USART
 #define _USART1
-//#define _USART2
-//#define _USART3
+/*#define _USART2 */
+/*#define _USART3 */
 
 /************************************* WWDG ***********************************/
-//#define _WWDG
+/*#define _WWDG */
 
 /* In the following line adjust the value of External High Speed oscillator (HSE)
-   used in your application */
-#define HSE_Value    ((u32)8000000)   /* Value of the External oscillator in Hz*/
+ * used in your application */
+#define HSE_Value    ( ( u32 ) 8000000 ) /* Value of the External oscillator in Hz*/
 
 /* Exported macro ------------------------------------------------------------*/
 #undef assert
 #ifdef  DEBUG
+
 /*******************************************************************************
 * Macro Name     : assert
 * Description    : The assert macro is used for function's parameters check.
@@ -123,11 +124,12 @@
 *                    If expr is true, it returns no value.
 * Return         : None
 *******************************************************************************/
-  #define assert(expr) ((expr) ? (void)0 : assert_failed(__FILE__, __LINE__))
+    #define assert( expr )    ( ( expr ) ? ( void ) 0 : assert_failed( __FILE__, __LINE__ ) )
 /* Exported functions ------------------------------------------------------- */
-  void assert_failed(u8* file, u32 line);
+    void assert_failed( u8 * file,
+                        u32 line );
 #else
-  #define assert(expr) ((void)0)
+    #define assert( expr )    ( ( void ) 0 )
 #endif /* DEBUG */
 
 /* Exported functions ------------------------------------------------------- */

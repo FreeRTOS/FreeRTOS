@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -38,157 +38,157 @@
 #include <interrupt.h>
 #include <mpu.h>
 
-void MPU_enableModule(uint32_t mpuConfig)
+void MPU_enableModule( uint32_t mpuConfig )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(!(mpuConfig & ~(MPU_CONFIG_PRIV_DEFAULT | MPU_CONFIG_HARDFLT_NMI)));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( !( mpuConfig & ~( MPU_CONFIG_PRIV_DEFAULT | MPU_CONFIG_HARDFLT_NMI ) ) );
 
-    //
-    // Set the MPU control bits according to the flags passed by the user,
-    // and also set the enable bit.
-    //
+    /* */
+    /* Set the MPU control bits according to the flags passed by the user, */
+    /* and also set the enable bit. */
+    /* */
     MPU->CTRL = mpuConfig | MPU_CTRL_ENABLE_Msk;
 }
 
-void MPU_disableModule(void)
+void MPU_disableModule( void )
 {
-    //
-    // Turn off the MPU enable bit.
-    //
+    /* */
+    /* Turn off the MPU enable bit. */
+    /* */
     MPU->CTRL &= ~MPU_CTRL_ENABLE_Msk;
-
 }
 
-uint32_t MPU_getRegionCount(void)
+uint32_t MPU_getRegionCount( void )
 {
-    //
-    // Read the DREGION field of the MPU type register and mask off
-    // the bits of interest to get the count of regions.
-    //
-    return ((MPU->TYPE & MPU_TYPE_DREGION_Msk) >> NVIC_MPU_TYPE_DREGION_S);
+    /* */
+    /* Read the DREGION field of the MPU type register and mask off */
+    /* the bits of interest to get the count of regions. */
+    /* */
+    return( ( MPU->TYPE & MPU_TYPE_DREGION_Msk ) >> NVIC_MPU_TYPE_DREGION_S );
 }
 
-void MPU_enableRegion(uint32_t region)
+void MPU_enableRegion( uint32_t region )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(region < 8);
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( region < 8 );
 
-    //
-    // Select the region to modify.
-    //
+    /* */
+    /* Select the region to modify. */
+    /* */
     MPU->RNR = region;
 
-    //
-    // Modify the enable bit in the region attributes.
-    //
+    /* */
+    /* Modify the enable bit in the region attributes. */
+    /* */
     MPU->RASR |= MPU_RASR_ENABLE_Msk;
 }
 
-void MPU_disableRegion(uint32_t region)
+void MPU_disableRegion( uint32_t region )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(region < 8);
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( region < 8 );
 
-    //
-    // Select the region to modify.
-    //
+    /* */
+    /* Select the region to modify. */
+    /* */
     MPU->RNR = region;
 
-    //
-    // Modify the enable bit in the region attributes.
-    //
+    /* */
+    /* Modify the enable bit in the region attributes. */
+    /* */
     MPU->RASR &= ~MPU_RASR_ENABLE_Msk;
 }
 
-void MPU_setRegion(uint32_t region, uint32_t addr, uint32_t flags)
+void MPU_setRegion( uint32_t region,
+                    uint32_t addr,
+                    uint32_t flags )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(region < 8);
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( region < 8 );
 
-    //
-    // Program the base address, use the region field to select the
-    // region at the same time.
-    //
+    /* */
+    /* Program the base address, use the region field to select the */
+    /* region at the same time. */
+    /* */
     MPU->RBAR = addr | region | MPU_RBAR_VALID_Msk;
 
-    //
-    // Program the region attributes.  Set the TEX field and the S, C,
-    // and B bits to fixed values that are suitable for all Stellaris
-    // memory.
-    //
-    MPU->RASR = (flags & ~(MPU_RASR_TEX_Msk | MPU_RASR_C_Msk)) | MPU_RASR_S_Msk
-            | MPU_RASR_B_Msk;
+    /* */
+    /* Program the region attributes.  Set the TEX field and the S, C, */
+    /* and B bits to fixed values that are suitable for all Stellaris */
+    /* memory. */
+    /* */
+    MPU->RASR = ( flags & ~( MPU_RASR_TEX_Msk | MPU_RASR_C_Msk ) ) | MPU_RASR_S_Msk
+                | MPU_RASR_B_Msk;
 }
 
-void MPU_getRegion(uint32_t region, uint32_t *addr, uint32_t *pflags)
+void MPU_getRegion( uint32_t region,
+                    uint32_t * addr,
+                    uint32_t * pflags )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(region < 8);
-    ASSERT(addr);
-    ASSERT(pflags);
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( region < 8 );
+    ASSERT( addr );
+    ASSERT( pflags );
 
-    //
-    // Select the region to get.
-    //
+    /* */
+    /* Select the region to get. */
+    /* */
     MPU->RNR = region;
 
-    //
-    // Read and store the base address for the region.
-    //
+    /* */
+    /* Read and store the base address for the region. */
+    /* */
     *addr = MPU->RBAR & MPU_RBAR_ADDR_Msk;
 
-    //
-    // Read and store the region attributes.
-    //
+    /* */
+    /* Read and store the region attributes. */
+    /* */
     *pflags = MPU->RASR;
 }
 
-void MPU_registerInterrupt(void (*intHandler)(void))
+void MPU_registerInterrupt( void ( * intHandler )( void ) )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(intHandler);
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( intHandler );
 
-    //
-    // Register the interrupt handler.
-    //
-    Interrupt_registerInterrupt(FAULT_MPU, intHandler);
-
+    /* */
+    /* Register the interrupt handler. */
+    /* */
+    Interrupt_registerInterrupt( FAULT_MPU, intHandler );
 }
 
-void MPU_unregisterInterrupt(void)
+void MPU_unregisterInterrupt( void )
 {
-    //
-    // Unregister the interrupt handler.
-    //
-    Interrupt_unregisterInterrupt(FAULT_MPU);
+    /* */
+    /* Unregister the interrupt handler. */
+    /* */
+    Interrupt_unregisterInterrupt( FAULT_MPU );
 }
 
-void MPU_enableInterrupt(void)
+void MPU_enableInterrupt( void )
 {
-
-    //
-    // Enable the memory management fault.
-    //
-    Interrupt_enableInterrupt(FAULT_MPU);
-
+    /* */
+    /* Enable the memory management fault. */
+    /* */
+    Interrupt_enableInterrupt( FAULT_MPU );
 }
 
-void MPU_disableInterrupt(void)
+void MPU_disableInterrupt( void )
 {
-    //
-    // Disable the interrupt.
-    //
-    Interrupt_disableInterrupt(FAULT_MPU);
+    /* */
+    /* Disable the interrupt. */
+    /* */
+    Interrupt_disableInterrupt( FAULT_MPU );
 }

@@ -25,22 +25,22 @@
  */
 
 /*
-Changes from V3.0.0
-	+ Several modules predefined to avoid linker problems
-
-Changes from V3.0.1
-*/
+ * Changes from V3.0.0
+ + Several modules predefined to avoid linker problems
+ +
+ + Changes from V3.0.1
+ */
 
 #ifndef _memcpy
-	#define _memcpy 1
+    #define _memcpy    1
 #endif
 
 #ifndef _memset
-	#define _memset 1
+    #define _memset    1
 #endif
 
 #ifndef _strncpy
-	#define _strncpy 1
+    #define _strncpy    1
 #endif
 
 

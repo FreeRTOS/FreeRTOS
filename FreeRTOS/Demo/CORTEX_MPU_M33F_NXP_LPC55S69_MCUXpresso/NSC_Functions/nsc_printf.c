@@ -39,10 +39,10 @@
 
 /* Maximum length of the string that the non-secure code
  * can print. */
-#define MAX_ALLOWED_STRING_LENGTH   0x400
+#define MAX_ALLOWED_STRING_LENGTH    0x400
 /*-----------------------------------------------------------*/
 
-secureportNON_SECURE_CALLABLE void NSC_Printf( char const *str )
+secureportNON_SECURE_CALLABLE void NSC_Printf( char const * str )
 {
     uint32_t isInvalidSting = 0;
     size_t stringLength;
@@ -51,7 +51,7 @@ secureportNON_SECURE_CALLABLE void NSC_Printf( char const *str )
     stringLength = strnlen( str, MAX_ALLOWED_STRING_LENGTH );
 
     if( ( stringLength == MAX_ALLOWED_STRING_LENGTH ) &&
-        ( str[ stringLength ] != '\0') )
+        ( str[ stringLength ] != '\0' ) )
     {
         PRINTF( "[ERROR] [NSC_Printf] String too long or not null terminated!\r\n" );
         isInvalidSting = 1;

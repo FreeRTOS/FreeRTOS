@@ -32,8 +32,8 @@
 #include "partest.h"
 #include "demoGpio.h"
 
-#define partstNUM_LEDS			( 8 )
-#define partstALL_OUTPUTS_OFF	( ( unsigned long ) ~(0xFFFFFFFF << partstNUM_LEDS) )
+#define partstNUM_LEDS           ( 8 )
+#define partstALL_OUTPUTS_OFF    ( ( unsigned long ) ~( 0xFFFFFFFF << partstNUM_LEDS ) )
 
 static unsigned long ulLEDReg;
 
@@ -41,46 +41,46 @@ static unsigned long ulLEDReg;
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-static void SetLeds (unsigned int leds)
+static void SetLeds( unsigned int leds )
 {
-	gpio->out.leds = leds;
+    gpio->out.leds = leds;
 }
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-	gpio->dir.leds = 0xff;
+    gpio->dir.leds = 0xff;
 }
 
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	/* Switch an LED on or off as requested. */
-	if (uxLED < partstNUM_LEDS)
-	{
-		if( xValue )
-		{
-			ulLEDReg &= ~( 1 << uxLED );
-		}
-		else
-		{
-			ulLEDReg |= ( 1 << uxLED );
-		}
+    /* Switch an LED on or off as requested. */
+    if( uxLED < partstNUM_LEDS )
+    {
+        if( xValue )
+        {
+            ulLEDReg &= ~( 1 << uxLED );
+        }
+        else
+        {
+            ulLEDReg |= ( 1 << uxLED );
+        }
 
-		SetLeds( ulLEDReg );
-	}
+        SetLeds( ulLEDReg );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	/* Toggle the state of the requested LED. */
-	if (uxLED < partstNUM_LEDS)
-	{
-		ulLEDReg ^= ( 1 << uxLED );
-		SetLeds( ulLEDReg );
-	}
+    /* Toggle the state of the requested LED. */
+    if( uxLED < partstNUM_LEDS )
+    {
+        ulLEDReg ^= ( 1 << uxLED );
+        SetLeds( ulLEDReg );
+    }
 }
-

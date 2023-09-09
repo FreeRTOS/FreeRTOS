@@ -31,7 +31,7 @@
  *-----------------------------------------------------------*/
 
 /* Standard includes for printing messages when QEMU is used (as LEDs can't be
-seen). */
+ * seen). */
 #include <stdio.h>
 #include "xil_printf.h"
 
@@ -45,10 +45,10 @@ seen). */
 /* Xilinx includes. */
 #include "xgpiops.h"
 
-#define partstNUM_LEDS			( 1 )
-#define partstDIRECTION_OUTPUT	( 1 )
-#define partstOUTPUT_ENABLED	( 1 )
-#define partstLED_OUTPUT		( 10 ) /* Change to 47 for MicroZed. */
+#define partstNUM_LEDS            ( 1 )
+#define partstDIRECTION_OUTPUT    ( 1 )
+#define partstOUTPUT_ENABLED      ( 1 )
+#define partstLED_OUTPUT          ( 10 ) /* Change to 47 for MicroZed. */
 
 /*-----------------------------------------------------------*/
 
@@ -58,43 +58,41 @@ static XGpioPs xGpio;
 
 void vParTestInitialise( void )
 {
-XGpioPs_Config *pxConfigPtr;
-BaseType_t xStatus;
+    XGpioPs_Config * pxConfigPtr;
+    BaseType_t xStatus;
 
-	/* Initialise the GPIO driver. */
-	pxConfigPtr = XGpioPs_LookupConfig( XPAR_XGPIOPS_0_DEVICE_ID );
-	xStatus = XGpioPs_CfgInitialize( &xGpio, pxConfigPtr, pxConfigPtr->BaseAddr );
-	configASSERT( xStatus == XST_SUCCESS );
-	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
+    /* Initialise the GPIO driver. */
+    pxConfigPtr = XGpioPs_LookupConfig( XPAR_XGPIOPS_0_DEVICE_ID );
+    xStatus = XGpioPs_CfgInitialize( &xGpio, pxConfigPtr, pxConfigPtr->BaseAddr );
+    configASSERT( xStatus == XST_SUCCESS );
+    ( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
-	/* Enable outputs and set low. */
-	XGpioPs_SetDirectionPin( &xGpio, partstLED_OUTPUT, partstDIRECTION_OUTPUT );
-	XGpioPs_SetOutputEnablePin( &xGpio, partstLED_OUTPUT, partstOUTPUT_ENABLED );
-	XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, 0x0 );
+    /* Enable outputs and set low. */
+    XGpioPs_SetDirectionPin( &xGpio, partstLED_OUTPUT, partstDIRECTION_OUTPUT );
+    XGpioPs_SetOutputEnablePin( &xGpio, partstLED_OUTPUT, partstOUTPUT_ENABLED );
+    XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, 0x0 );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
+void vParTestSetLED( UBaseType_t uxLED,
+                     BaseType_t xValue )
 {
-	( void ) uxLED;
-	XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, xValue );
+    ( void ) uxLED;
+    XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, xValue );
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-BaseType_t xLEDState;
+    BaseType_t xLEDState;
 
-	( void ) uxLED;
+    ( void ) uxLED;
 
-	xLEDState = XGpioPs_ReadPin( &xGpio, partstLED_OUTPUT );
-	XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, !xLEDState );
+    xLEDState = XGpioPs_ReadPin( &xGpio, partstLED_OUTPUT );
+    XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, !xLEDState );
 
-	#if( configUSING_QEMU == 1 )
-		/* Can't see the LED blink when using QEMU, so print a message as well. */
-		xil_printf( "blink\n" );
-	#endif
+    #if ( configUSING_QEMU == 1 )
+        /* Can't see the LED blink when using QEMU, so print a message as well. */
+        xil_printf( "blink\n" );
+    #endif
 }
-
-
-

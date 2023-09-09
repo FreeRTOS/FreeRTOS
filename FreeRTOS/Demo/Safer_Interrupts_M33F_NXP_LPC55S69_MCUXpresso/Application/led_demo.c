@@ -67,10 +67,12 @@ static void prvTurnOnRgbLed( void )
     {
         GPIO_PortClear( GPIO, BOARD_LED_RED_GPIO_PORT, 1u << BOARD_LED_RED_GPIO_PIN );
     }
+
     if( xLedState.xGreen == pdTRUE )
     {
         GPIO_PortClear( GPIO, BOARD_LED_GREEN_GPIO_PORT, 1u << BOARD_LED_GREEN_GPIO_PIN );
     }
+
     if( xLedState.xBlue == pdTRUE )
     {
         GPIO_PortClear( GPIO, BOARD_LED_BLUE_GPIO_PORT, 1u << BOARD_LED_BLUE_GPIO_PIN );
@@ -97,7 +99,7 @@ void vLedDemoTask( void * pvParams )
     /* Silence compiler warnings about unused variables. */
     ( void ) pvParams;
 
-    for( ;; )
+    for( ; ; )
     {
         prvTurnOnRgbLed();
         vTaskDelay( pdMS_TO_TICKS( 1000 ) );

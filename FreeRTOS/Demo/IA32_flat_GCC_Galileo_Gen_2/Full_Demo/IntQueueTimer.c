@@ -61,7 +61,7 @@ void vApplicationHPETTimer2Handler( void );
 static volatile BaseType_t xSchedulerRunning = pdFALSE;
 
 /* Used to count the nesting depth to ensure the test is testing what it is
-intended to test. */
+ * intended to test. */
 static volatile uint32_t ulMaxInterruptNesting = 0;
 extern volatile uint32_t ulInterruptNesting;
 
@@ -69,53 +69,52 @@ extern volatile uint32_t ulInterruptNesting;
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-	/* The HPET timers are set up in main(), before the scheduler is started,
-	so there is nothing to do here other than note the scheduler is now running.
-	This could be done by calling a FreeRTOS API function, but its convenient
-	and efficient just to store the fact in a file scope variable. */
-	xSchedulerRunning = pdTRUE;
+    /* The HPET timers are set up in main(), before the scheduler is started,
+     * so there is nothing to do here other than note the scheduler is now running.
+     * This could be done by calling a FreeRTOS API function, but its convenient
+     * and efficient just to store the fact in a file scope variable. */
+    xSchedulerRunning = pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationHPETTimer0Handler( void )
 {
-BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xHigherPriorityTaskWoken;
 
-	if( xSchedulerRunning != pdFALSE )
-	{
-		if( ulInterruptNesting > ulMaxInterruptNesting )
-		{
-			ulMaxInterruptNesting = ulInterruptNesting;
-		}
+    if( xSchedulerRunning != pdFALSE )
+    {
+        if( ulInterruptNesting > ulMaxInterruptNesting )
+        {
+            ulMaxInterruptNesting = ulInterruptNesting;
+        }
 
-		xHigherPriorityTaskWoken = xFirstTimerHandler();
-		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-	}
+        xHigherPriorityTaskWoken = xFirstTimerHandler();
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationHPETTimer1Handler( void )
 {
-BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t xHigherPriorityTaskWoken;
 
-	if( xSchedulerRunning != pdFALSE )
-	{
-		if( ulInterruptNesting > ulMaxInterruptNesting )
-		{
-			ulMaxInterruptNesting = ulInterruptNesting;
-		}
+    if( xSchedulerRunning != pdFALSE )
+    {
+        if( ulInterruptNesting > ulMaxInterruptNesting )
+        {
+            ulMaxInterruptNesting = ulInterruptNesting;
+        }
 
-		xHigherPriorityTaskWoken = xSecondTimerHandler();
-		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-	}
+        xHigherPriorityTaskWoken = xSecondTimerHandler();
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationHPETTimer2Handler( void )
 {
-	if( ulInterruptNesting > ulMaxInterruptNesting )
-	{
-		ulMaxInterruptNesting = ulInterruptNesting;
-	}
+    if( ulInterruptNesting > ulMaxInterruptNesting )
+    {
+        ulMaxInterruptNesting = ulInterruptNesting;
+    }
 }
-

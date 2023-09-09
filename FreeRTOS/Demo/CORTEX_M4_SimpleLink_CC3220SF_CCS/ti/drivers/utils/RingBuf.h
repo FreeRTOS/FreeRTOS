@@ -31,24 +31,25 @@
  */
 
 #ifndef ti_drivers_uart_RingBuf__include
-#define ti_drivers_uart_RingBuf__include
+    #define ti_drivers_uart_RingBuf__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
+    #include <stdint.h>
+    #include <stddef.h>
+    #include <stdbool.h>
 
-typedef struct RingBuf_Object {
-    unsigned char      *buffer;
-    size_t              length;
-    size_t              count;
-    size_t              head;
-    size_t              tail;
-    size_t              maxCount;
-} RingBuf_Object, *RingBuf_Handle;
+    typedef struct RingBuf_Object
+    {
+        unsigned char * buffer;
+        size_t length;
+        size_t count;
+        size_t head;
+        size_t tail;
+        size_t maxCount;
+    } RingBuf_Object, * RingBuf_Handle;
 
 /*!
  *  @brief  Initialize circular buffer
@@ -61,8 +62,9 @@ typedef struct RingBuf_Object {
  *
  *  @param  bufSize The size of bufPtr in number of unsigned chars.
  */
-void RingBuf_construct(RingBuf_Handle object, unsigned char *bufPtr,
-    size_t bufSize);
+    void RingBuf_construct( RingBuf_Handle object,
+                            unsigned char * bufPtr,
+                            size_t bufSize );
 
 /*!
  *  @brief  Get an unsigned char from the end of the circular buffer and remove
@@ -78,7 +80,8 @@ void RingBuf_construct(RingBuf_Handle object, unsigned char *bufPtr,
  *                  of the circular buffer. If it returns -1, the circular
  *                  buffer was already empty and data is invalid.
  */
-int RingBuf_get(RingBuf_Handle object, unsigned char *data);
+    int RingBuf_get( RingBuf_Handle object,
+                     unsigned char * data );
 
 /*!
  *  @brief  Get the number of unsigned chars currently stored on the circular
@@ -89,7 +92,7 @@ int RingBuf_get(RingBuf_Handle object, unsigned char *data);
  *
  *  @return         Number of unsigned chars on the circular buffer.
  */
-int RingBuf_getCount(RingBuf_Handle object);
+    int RingBuf_getCount( RingBuf_Handle object );
 
 /*!
  *  @brief  Function to determine if the circular buffer is full or not.
@@ -99,7 +102,7 @@ int RingBuf_getCount(RingBuf_Handle object);
  *
  *  @return         true if circular buffer is full, else false.
  */
-bool RingBuf_isFull(RingBuf_Handle object);
+    bool RingBuf_isFull( RingBuf_Handle object );
 
 /*!
  *  @brief  A high-water mark indicating the largest number of unsigned chars
@@ -108,7 +111,7 @@ bool RingBuf_isFull(RingBuf_Handle object);
  *  @return         Get the largest number of unsigned chars that were at one
  *                  point in the circular buffer.
  */
-int RingBuf_getMaxCount(RingBuf_Handle object);
+    int RingBuf_getMaxCount( RingBuf_Handle object );
 
 /*!
  *  @brief  Get an unsigned char from the end of the circular buffer without
@@ -126,7 +129,8 @@ int RingBuf_getMaxCount(RingBuf_Handle object);
  *                  number != 0, then data will contain the unsigned char at the
  *                  end of the circular buffer.
  */
-int RingBuf_peek(RingBuf_Handle object, unsigned char *data);
+    int RingBuf_peek( RingBuf_Handle object,
+                      unsigned char * data );
 
 /*!
  *  @brief  Put an unsigned char into the end of the circular buffer.
@@ -140,10 +144,11 @@ int RingBuf_peek(RingBuf_Handle object, unsigned char *data);
  *  @return         Number of unsigned chars on the buffer after it was added,
  *                  or -1 if it's already full.
  */
-int RingBuf_put(RingBuf_Handle object, unsigned char data);
+    int RingBuf_put( RingBuf_Handle object,
+                     unsigned char data );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_uart_RingBuf__include */

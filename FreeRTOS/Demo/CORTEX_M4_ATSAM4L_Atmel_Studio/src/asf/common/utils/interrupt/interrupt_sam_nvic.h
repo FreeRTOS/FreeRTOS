@@ -77,8 +77,8 @@
  *
  * \param func Name for the function.
  */
-#  define ISR(func)   \
-	void func (void)
+#define ISR( func ) \
+    void func( void )
 
 /**
  * \brief Initialize interrupt vectors
@@ -89,9 +89,9 @@
  *
  * This must be called prior to \ref irq_register_handler.
  */
-#  define irq_initialize_vectors()   \
-	do {                             \
-	} while(0)
+#define irq_initialize_vectors() \
+    do {                         \
+    } while( 0 )
 
 /**
  * \brief Register handler for interrupt
@@ -110,45 +110,48 @@
  * \note The functions prototypes can be found in the device exception header
  *       files (exceptions.h).
  */
-#  define irq_register_handler(int_num, int_prio)                      \
-	NVIC_ClearPendingIRQ(    (IRQn_Type)int_num);                      \
-	NVIC_SetPriority(    (IRQn_Type)int_num, int_prio);                \
-	NVIC_EnableIRQ(      (IRQn_Type)int_num);                          \
+#define irq_register_handler( int_num, int_prio )        \
+    NVIC_ClearPendingIRQ( ( IRQn_Type ) int_num );       \
+    NVIC_SetPriority( ( IRQn_Type ) int_num, int_prio ); \
+    NVIC_EnableIRQ( ( IRQn_Type ) int_num );             \
 
-//@}
+/*@} */
 
-#  define cpu_irq_enable()                     \
-	do {                                       \
-		g_interrupt_enabled = true;            \
-		__DMB();                               \
-		__enable_irq();                        \
-	} while (0)
-#  define cpu_irq_disable()                    \
-	do {                                       \
-		__disable_irq();                       \
-		__DMB();                               \
-		g_interrupt_enabled = false;           \
-	} while (0)
+#define cpu_irq_enable()            \
+    do {                            \
+        g_interrupt_enabled = true; \
+        __DMB();                    \
+        __enable_irq();             \
+    } while( 0 )
+#define cpu_irq_disable()            \
+    do {                             \
+        __disable_irq();             \
+        __DMB();                     \
+        g_interrupt_enabled = false; \
+    } while( 0 )
 
 typedef uint32_t irqflags_t;
 extern volatile bool g_interrupt_enabled;
 
-static inline irqflags_t cpu_irq_save(void)
+static inline irqflags_t cpu_irq_save( void )
 {
-	irqflags_t flags = g_interrupt_enabled;
-	cpu_irq_disable();
-	return flags;
+    irqflags_t flags = g_interrupt_enabled;
+
+    cpu_irq_disable();
+    return flags;
 }
 
-static inline bool cpu_irq_is_enabled_flags(irqflags_t flags)
+static inline bool cpu_irq_is_enabled_flags( irqflags_t flags )
 {
-	return (flags);
+    return( flags );
 }
 
-static inline void cpu_irq_restore(irqflags_t flags)
+static inline void cpu_irq_restore( irqflags_t flags )
 {
-	if (cpu_irq_is_enabled_flags(flags))
-		cpu_irq_enable();
+    if( cpu_irq_is_enabled_flags( flags ) )
+    {
+        cpu_irq_enable();
+    }
 }
 
 #define cpu_irq_is_enabled()    g_interrupt_enabled
@@ -158,12 +161,12 @@ static inline void cpu_irq_restore(irqflags_t flags)
  * @{
  */
 
-#define Enable_global_interrupt()            cpu_irq_enable()
-#define Disable_global_interrupt()           cpu_irq_disable()
-#define Is_global_interrupt_enabled()        cpu_irq_is_enabled()
+#define Enable_global_interrupt()        cpu_irq_enable()
+#define Disable_global_interrupt()       cpu_irq_disable()
+#define Is_global_interrupt_enabled()    cpu_irq_is_enabled()
 
-//@}
+/*@} */
 
-//@}
+/*@} */
 
 #endif /* UTILS_INTERRUPT_INTERRUPT_H */

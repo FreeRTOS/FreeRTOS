@@ -38,57 +38,64 @@
 #pragma TASK(vLedTask)
 #pragma CODE_STATE(vLedTask, 16)
 
-void vLedTask(void *pvParameters)
+void vLedTask( void * pvParameters )
 {
-	unsigned led    = 0;
-	unsigned count  = 0;
-	unsigned colour = 0;
+    unsigned led = 0;
+    unsigned count = 0;
+    unsigned colour = 0;
 
-	/* Initialise the IO ports that drive the LEDs */
-	gioSetDirection(hetPORT, 0xFFFFFFFF);
-	/* switch all leds off */
-	gioSetPort(hetPORT, 0x08110034);
+    /* Initialise the IO ports that drive the LEDs */
+    gioSetDirection( hetPORT, 0xFFFFFFFF );
+    /* switch all leds off */
+    gioSetPort( hetPORT, 0x08110034 );
 
-	for(;;)
-	{
-		/* toggle on/off */
-		led ^= 1;
-		/* switch TOP row */
-		gioSetBit(hetPORT, 25, led);
-		gioSetBit(hetPORT, 18, led);
-		gioSetBit(hetPORT, 29, led);
-		/* switch BOTTOM row */
-		gioSetBit(hetPORT, 17, led ^ 1);
-		gioSetBit(hetPORT, 31, led ^ 1);
-		gioSetBit(hetPORT,  0, led ^ 1);
-		vTaskDelay(500);
+    for( ; ; )
+    {
+        /* toggle on/off */
+        led ^= 1;
+        /* switch TOP row */
+        gioSetBit( hetPORT, 25, led );
+        gioSetBit( hetPORT, 18, led );
+        gioSetBit( hetPORT, 29, led );
+        /* switch BOTTOM row */
+        gioSetBit( hetPORT, 17, led ^ 1 );
+        gioSetBit( hetPORT, 31, led ^ 1 );
+        gioSetBit( hetPORT, 0, led ^ 1 );
+        vTaskDelay( 500 );
 
-		if (++count > 5)
-		{
-			count = 0;
-			/* both leds to off */
-			gioSetBit(hetPORT, 2, 1);  gioSetBit(hetPORT,  5, 1);  gioSetBit(hetPORT, 20, 1);
-			gioSetBit(hetPORT, 4, 1);  gioSetBit(hetPORT, 27, 1);  gioSetBit(hetPORT, 16, 1);
-			switch(colour)
-			{
-			case 0:
-				gioSetBit(hetPORT, 2, 0);  /* red */
-				gioSetBit(hetPORT, 4, 0);
-				colour++;
-				continue;
-			case 1:
-				gioSetBit(hetPORT,  5, 0);  /* blue */
-				gioSetBit(hetPORT, 27, 0);
-				colour++;
-				continue;
-			case 2:
-				gioSetBit(hetPORT, 20, 0);  /* green */
-				gioSetBit(hetPORT, 16, 0);
-				colour++;
-				continue;
-			}
-			colour = 0;
-		}
-	}
+        if( ++count > 5 )
+        {
+            count = 0;
+            /* both leds to off */
+            gioSetBit( hetPORT, 2, 1 );
+            gioSetBit( hetPORT, 5, 1 );
+            gioSetBit( hetPORT, 20, 1 );
+            gioSetBit( hetPORT, 4, 1 );
+            gioSetBit( hetPORT, 27, 1 );
+            gioSetBit( hetPORT, 16, 1 );
+
+            switch( colour )
+            {
+                case 0:
+                    gioSetBit( hetPORT, 2, 0 ); /* red */
+                    gioSetBit( hetPORT, 4, 0 );
+                    colour++;
+                    continue;
+
+                case 1:
+                    gioSetBit( hetPORT, 5, 0 ); /* blue */
+                    gioSetBit( hetPORT, 27, 0 );
+                    colour++;
+                    continue;
+
+                case 2:
+                    gioSetBit( hetPORT, 20, 0 ); /* green */
+                    gioSetBit( hetPORT, 16, 0 );
+                    colour++;
+                    continue;
+            }
+
+            colour = 0;
+        }
+    }
 }
-

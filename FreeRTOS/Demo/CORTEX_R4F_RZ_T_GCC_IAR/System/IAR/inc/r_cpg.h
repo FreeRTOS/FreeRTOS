@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_cpg.h
@@ -33,6 +34,7 @@
 * Description  : CPG setting API of RZ/T1
 * Limitation   : none
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
@@ -42,42 +44,42 @@
 #define _R_CPG_HEADER_
 
 /*******************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 *******************************************************************************/
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
-#define CPG_CPUCLK_150_MHz (0)
-#define CPG_CPUCLK_300_MHz (1)
-#define CPG_CPUCLK_450_MHz (2)
-#define CPG_CPUCLK_600_MHz (3)
+#define CPG_CPUCLK_150_MHz    ( 0 )
+#define CPG_CPUCLK_300_MHz    ( 1 )
+#define CPG_CPUCLK_450_MHz    ( 2 )
+#define CPG_CPUCLK_600_MHz    ( 3 )
 
-#define CPG_PLL1_OFF (0)
-#define CPG_PLL1_ON  (1)
+#define CPG_PLL1_OFF          ( 0 )
+#define CPG_PLL1_ON           ( 1 )
 
-#define CPG_SELECT_PLL0 (0)
-#define CPG_SELECT_PLL1 (1)
+#define CPG_SELECT_PLL0       ( 0 )
+#define CPG_SELECT_PLL1       ( 1 )
 
-#define CPG_CKIO_75_MHz    (0)
-#define CPG_CKIO_50_MHz    (1)
-#define CPG_CKIO_37_5_MHz  (2)
-#define CPG_CKIO_30_MHz    (3)
-#define CPG_CKIO_25_MHz    (4)
-#define CPG_CKIO_21_43_MHz (5)
-#define CPG_CKIO_18_75_MHz (6)
+#define CPG_CKIO_75_MHz       ( 0 )
+#define CPG_CKIO_50_MHz       ( 1 )
+#define CPG_CKIO_37_5_MHz     ( 2 )
+#define CPG_CKIO_30_MHz       ( 3 )
+#define CPG_CKIO_25_MHz       ( 4 )
+#define CPG_CKIO_21_43_MHz    ( 5 )
+#define CPG_CKIO_18_75_MHz    ( 6 )
 
-#define CPG_LOCO_ENABLE  (0x00000000)
-#define CPG_LOCO_DISABLE (0x00000001)
+#define CPG_LOCO_ENABLE       ( 0x00000000 )
+#define CPG_LOCO_DISABLE      ( 0x00000001 )
 
 
 /*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Exported global variables and functions (to be accessed by other files)
 *******************************************************************************/
-void R_CPG_WriteEnable(void);
-void R_CPG_WriteDisable(void);
-void R_CPG_PLL_Wait(void);
+void R_CPG_WriteEnable( void );
+void R_CPG_WriteDisable( void );
+void R_CPG_PLL_Wait( void );
 
-#endif
+#endif /* ifndef _R_CPG_HEADER_ */
 
 /* End of File */

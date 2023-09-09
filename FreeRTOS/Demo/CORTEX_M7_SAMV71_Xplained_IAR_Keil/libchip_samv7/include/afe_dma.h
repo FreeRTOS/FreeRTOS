@@ -44,7 +44,7 @@
  *  -# Wait the end of the conversion by polling status with AFEC_GetStatus().
  *  -# Finally, get the converted data using AFEC_GetConvertedData() or AFEC_GetLastConvertedData().
  *
-*/
+ */
 #ifndef _AFE_DMA_
 #define _AFE_DMA_
 
@@ -60,7 +60,8 @@
  *----------------------------------------------------------------------------*/
 
 /** AFE transfer complete callback. */
-typedef void (*AfeCallback)( uint8_t, void* ) ;
+typedef void (* AfeCallback)( uint8_t,
+                              void * );
 
 /** \brief Spi Transfer Request prepared by the application upper layer.
  *
@@ -70,48 +71,49 @@ typedef void (*AfeCallback)( uint8_t, void* ) ;
 typedef struct
 {
     /** Pointer to the Rx data. */
-    uint32_t *pRxBuff;
+    uint32_t * pRxBuff;
     /** Rx size in bytes. */
     uint16_t RxSize;
     /** Callback function invoked at the end of transfer. */
     AfeCallback callback;
     /** Callback arguments. */
-    void *pArgument;
-} AfeCmd ;
+    void * pArgument;
+} AfeCmd;
 
 
 /** Constant structure associated with AFE port. This structure prevents
-    client applications to have access in the same time. */
-typedef struct 
+ *  client applications to have access in the same time. */
+typedef struct
 {
     /** Pointer to AFE Hardware registers */
-    Afec* pAfeHw ;
+    Afec * pAfeHw;
     /** Current SpiCommand being processed */
-    AfeCmd *pCurrentCommand ;
+    AfeCmd * pCurrentCommand;
     /** Pointer to DMA driver */
-    sXdmad* pXdmad;
+    sXdmad * pXdmad;
     /** AFEC Id as defined in the product datasheet */
-    uint8_t afeId ;
+    uint8_t afeId;
     /** Mutual exclusion semaphore. */
-    volatile int8_t semaphore ;
+    volatile int8_t semaphore;
 } AfeDma;
 
 
 /*------------------------------------------------------------------------------
  *         Definitions
  *------------------------------------------------------------------------------*/
-#define AFE_OK          0
-#define AFE_ERROR       1
-#define AFE_ERROR_LOCK  2
+#define AFE_OK            0
+#define AFE_ERROR         1
+#define AFE_ERROR_LOCK    2
+
 /*------------------------------------------------------------------------------
  *         Exported functions
  *------------------------------------------------------------------------------*/
-extern uint32_t Afe_ConfigureDma( AfeDma *pAfed ,
-                           Afec *pAfeHw ,
-                           uint8_t AfeId,
-                           sXdmad *pXdmad );
-extern uint32_t Afe_SendData( AfeDma *pAfed, AfeCmd *pCommand);
+extern uint32_t Afe_ConfigureDma( AfeDma * pAfed,
+                                  Afec * pAfeHw,
+                                  uint8_t AfeId,
+                                  sXdmad * pXdmad );
+extern uint32_t Afe_SendData( AfeDma * pAfed,
+                              AfeCmd * pCommand );
 
 
 #endif /* #ifndef _AFE_DMA_ */
-

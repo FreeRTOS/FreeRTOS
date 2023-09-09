@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       I2CSlave.h
  *
@@ -84,7 +85,7 @@
  *  if (!ret) {
  *      System_printf("Unsuccessful I2CSlave write");
  *  }
-
+ *
  *  @endcode
  *
  *  # Implementation #
@@ -116,21 +117,22 @@
  */
 
 #ifndef ti_drivers_I2CSLAVE__include
-#define ti_drivers_I2CSLAVE__include
+    #define ti_drivers_I2CSLAVE__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <stddef.h>
 
 /**
  *  @defgroup I2CSLAVE_CONTROL I2CSlave_control command and status codes
  *  These I2CSlave macros are reservations for I2CSlave.h
  *  @{
  */
+
 /*!
  * Common I2CSlave_control command code reservation offset.
  * I2CSlave driver implementations should offset command codes with
@@ -142,7 +144,7 @@ extern "C" {
  * #define I2CSLAVEXYZ_COMMAND1          I2CSLAVE_CMD_RESERVED + 1
  * @endcode
  */
-#define I2CSLAVE_CMD_RESERVED             (32)
+    #define I2CSLAVE_CMD_RESERVED       ( 32 )
 
 /*!
  * Common I2CSlave_control status code reservation offset.
@@ -156,7 +158,7 @@ extern "C" {
  * #define I2CSLAVEXYZ_STATUS_ERROR2     I2CSLAVE_STATUS_RESERVED - 2
  * @endcode
  */
-#define I2CSLAVE_STATUS_RESERVED         (-32)
+    #define I2CSLAVE_STATUS_RESERVED    ( -32 )
 
 /**
  *  @defgroup I2CSLAVE_STATUS Status Codes
@@ -164,13 +166,14 @@ extern "C" {
  *  @{
  *  @ingroup I2CSLAVE_CONTROL
  */
+
 /*!
  * @brief    Successful status code returned by I2CSlave_control().
  *
  * I2CSlave_control() returns I2CSLAVE_STATUS_SUCCESS if the control code was
  * executed successfully.
  */
-#define I2CSLAVE_STATUS_SUCCESS          (0)
+    #define I2CSLAVE_STATUS_SUCCESS         ( 0 )
 
 /*!
  * @brief    Generic error status code returned by I2CSlave_control().
@@ -178,7 +181,7 @@ extern "C" {
  * I2CSlave_control() returns I2CSLAVE_STATUS_ERROR if the control code was not
  * executed successfully.
  */
-#define I2CSLAVE_STATUS_ERROR           (-1)
+    #define I2CSLAVE_STATUS_ERROR           ( -1 )
 
 /*!
  * @brief    An error status code returned by I2CSlave_control() for undefined
@@ -187,7 +190,7 @@ extern "C" {
  * I2CSlave_control() returns I2CSLAVE_STATUS_UNDEFINEDCMD if the control code
  * is not recognized by the driver implementation.
  */
-#define I2CSLAVE_STATUS_UNDEFINEDCMD   (-2)
+    #define I2CSLAVE_STATUS_UNDEFINEDCMD    ( -2 )
 /** @}*/
 
 /**
@@ -207,7 +210,7 @@ extern "C" {
 /*!
  *  @brief      A handle that is returned from a I2CSlave_open() call.
  */
-typedef struct I2CSlave_Config_      *I2CSlave_Handle;
+    typedef struct I2CSlave_Config_ * I2CSlave_Handle;
 
 /*!
  *  @brief  I2CSlave mode
@@ -215,13 +218,14 @@ typedef struct I2CSlave_Config_      *I2CSlave_Handle;
  *  This enum defines the state of the I2CSlave driver's state-machine. Do not
  *  modify.
  */
-typedef enum I2CSlave_Mode_ {
-    I2CSLAVE_IDLE_MODE = 0,  /*!< I2CSlave is not performing a transaction */
-    I2CSLAVE_WRITE_MODE = 1, /*!< I2CSlave is currently performing write */
-    I2CSLAVE_READ_MODE = 2,  /*!< I2CSlave is currently performing read */
-    I2CSLAVE_START_MODE = 3, /*!< I2CSlave received a START from a master */
-    I2CSLAVE_ERROR = 0xFF    /*!< I2CSlave error has occurred, exit gracefully */
-} I2CSlave_Mode;
+    typedef enum I2CSlave_Mode_
+    {
+        I2CSLAVE_IDLE_MODE = 0,  /*!< I2CSlave is not performing a transaction */
+        I2CSLAVE_WRITE_MODE = 1, /*!< I2CSlave is currently performing write */
+        I2CSLAVE_READ_MODE = 2,  /*!< I2CSlave is currently performing read */
+        I2CSLAVE_START_MODE = 3, /*!< I2CSlave received a START from a master */
+        I2CSLAVE_ERROR = 0xFF    /*!< I2CSlave error has occurred, exit gracefully */
+    } I2CSlave_Mode;
 
 /*!
  *  @brief  I2CSlave transfer mode
@@ -230,11 +234,12 @@ typedef enum I2CSlave_Mode_ {
  *  progress. I2CSLAVE_MODE_CALLBACK does not block task execution; but calls a
  *  callback function when the I2CSlave transfer has completed
  */
-typedef enum I2CSlave_TransferMode_ {
-    I2CSLAVE_MODE_BLOCKING,  /*!< I2CSlave read/write blocks execution*/
-    I2CSLAVE_MODE_CALLBACK   /*!< I2CSlave read/wrire queues transactions and
-                                  does not block */
-} I2CSlave_TransferMode;
+    typedef enum I2CSlave_TransferMode_
+    {
+        I2CSLAVE_MODE_BLOCKING, /*!< I2CSlave read/write blocks execution*/
+        I2CSLAVE_MODE_CALLBACK  /*!< I2CSlave read/wrire queues transactions and
+                                 *   does not block */
+    } I2CSlave_TransferMode;
 
 /*!
  *  @brief  I2CSlave callback function
@@ -244,10 +249,11 @@ typedef enum I2CSlave_TransferMode_ {
  *  return value of I2CSlave_read/I2CSlave_write.
  *
  *  @param  I2CSlave_Handle          I2CSlave_Handle
-
+ *
  *  @param  bool                     Results of the I2CSlave transaction
  */
-typedef void (*I2CSlave_CallbackFxn)(I2CSlave_Handle handle, bool status);
+    typedef void (* I2CSlave_CallbackFxn)( I2CSlave_Handle handle,
+                                           bool status );
 
 /*!
  *  @brief  I2CSlave Parameters
@@ -268,56 +274,59 @@ typedef void (*I2CSlave_CallbackFxn)(I2CSlave_Handle handle, bool status);
  *
  *  @sa     I2CSlave_Params_init()
  */
-typedef struct I2CSlave_Params_ {
-    /*!< Blocking or Callback mode */
-    I2CSlave_TransferMode   transferMode;
-    /*!< Callback function pointer */
-    I2CSlave_CallbackFxn    transferCallbackFxn;
-    /*!< Custom argument used by driver implementation */
-    void                   *custom;
-} I2CSlave_Params;
+    typedef struct I2CSlave_Params_
+    {
+        /*!< Blocking or Callback mode */
+        I2CSlave_TransferMode transferMode;
+        /*!< Callback function pointer */
+        I2CSlave_CallbackFxn transferCallbackFxn;
+        /*!< Custom argument used by driver implementation */
+        void * custom;
+    } I2CSlave_Params;
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2CSlave_close().
  */
-typedef void        (*I2CSlave_CloseFxn)    (I2CSlave_Handle handle);
+    typedef void (* I2CSlave_CloseFxn)    ( I2CSlave_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2CSlave_control().
  */
-typedef int_fast16_t (*I2CSlave_ControlFxn)  (I2CSlave_Handle handle,
-                                        uint_fast16_t cmd,
-                                        void *arg);
+    typedef int_fast16_t (* I2CSlave_ControlFxn)  ( I2CSlave_Handle handle,
+                                                    uint_fast16_t cmd,
+                                                    void * arg );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2CSlave_init().
  */
-typedef void        (*I2CSlave_InitFxn)     (I2CSlave_Handle handle);
+    typedef void (* I2CSlave_InitFxn)     ( I2CSlave_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2CSlave_open().
  */
-typedef I2CSlave_Handle  (*I2CSlave_OpenFxn)     (I2CSlave_Handle handle,
-                                        I2CSlave_Params *params);
+    typedef I2CSlave_Handle (* I2CSlave_OpenFxn)     ( I2CSlave_Handle handle,
+                                                       I2CSlave_Params * params );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2CSlave_WriteTransaction().
  */
-typedef bool        (*I2CSlave_WriteFxn) (I2CSlave_Handle handle,
-        const void *buffer, size_t size);
+    typedef bool (* I2CSlave_WriteFxn) ( I2CSlave_Handle handle,
+                                         const void * buffer,
+                                         size_t size );
 
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2CSlave_ReadFxn().
  */
-typedef bool        (*I2CSlave_ReadFxn) (I2CSlave_Handle handle, void *buffer,
-        size_t size);
+    typedef bool (* I2CSlave_ReadFxn) ( I2CSlave_Handle handle,
+                                        void * buffer,
+                                        size_t size );
 
 
 /*!
@@ -325,25 +334,26 @@ typedef bool        (*I2CSlave_ReadFxn) (I2CSlave_Handle handle, void *buffer,
  *              required set of functions to control a specific I2CSlave
  *              driver implementation.
  */
-typedef struct I2CSlave_FxnTable_ {
-    /*! Function to close the specified peripheral */
-    I2CSlave_CloseFxn        closeFxn;
+    typedef struct I2CSlave_FxnTable_
+    {
+        /*! Function to close the specified peripheral */
+        I2CSlave_CloseFxn closeFxn;
 
-    /*! Function to implementation specific control function */
-    I2CSlave_ControlFxn      controlFxn;
+        /*! Function to implementation specific control function */
+        I2CSlave_ControlFxn controlFxn;
 
-    /*! Function to initialize the given data object */
-    I2CSlave_InitFxn         initFxn;
+        /*! Function to initialize the given data object */
+        I2CSlave_InitFxn initFxn;
 
-    /*! Function to open the specified peripheral */
-    I2CSlave_OpenFxn         openFxn;
+        /*! Function to open the specified peripheral */
+        I2CSlave_OpenFxn openFxn;
 
-    /*! Function to initiate a I2CSlave data read */
-    I2CSlave_ReadFxn     readFxn;
+        /*! Function to initiate a I2CSlave data read */
+        I2CSlave_ReadFxn readFxn;
 
-    /*! Function to initiate a I2CSlave data write */
-    I2CSlave_WriteFxn  writeFxn;
-} I2CSlave_FxnTable;
+        /*! Function to initiate a I2CSlave data write */
+        I2CSlave_WriteFxn writeFxn;
+    } I2CSlave_FxnTable;
 
 /*!
  *  @brief  I2CSlave Global configuration
@@ -356,16 +366,17 @@ typedef struct I2CSlave_FxnTable_ {
  *
  *  @sa     I2CSlave_init()
  */
-typedef struct I2CSlave_Config_ {
-    /*! Pointer to a table of driver-specific implementations of I2CSlave APIs*/
-    I2CSlave_FxnTable const *fxnTablePtr;
+    typedef struct I2CSlave_Config_
+    {
+        /*! Pointer to a table of driver-specific implementations of I2CSlave APIs*/
+        I2CSlave_FxnTable const * fxnTablePtr;
 
-    /*! Pointer to a driver specific data object */
-    void               *object;
+        /*! Pointer to a driver specific data object */
+        void * object;
 
-    /*! Pointer to a driver specific hardware attributes structure */
-    void         const *hwAttrs;
-} I2CSlave_Config;
+        /*! Pointer to a driver specific hardware attributes structure */
+        void const * hwAttrs;
+    } I2CSlave_Config;
 
 
 /*!
@@ -377,7 +388,7 @@ typedef struct I2CSlave_Config_ {
  *
  *  @sa     I2CSlave_open()
  */
-extern void I2CSlave_close(I2CSlave_Handle handle);
+    extern void I2CSlave_close( I2CSlave_Handle handle );
 
 /*!
  *  @brief  Function performs implementation specific features on a given
@@ -417,8 +428,9 @@ extern void I2CSlave_close(I2CSlave_Handle handle);
  *
  *  @sa     I2CSlave_open()
  */
-extern int_fast16_t I2CSlave_control(I2CSlave_Handle handle, uint_fast16_t cmd,
-    void *arg);
+    extern int_fast16_t I2CSlave_control( I2CSlave_Handle handle,
+                                          uint_fast16_t cmd,
+                                          void * arg );
 
 /*!
  *  @brief  Function to initializes the I2CSlave module
@@ -428,7 +440,7 @@ extern int_fast16_t I2CSlave_control(I2CSlave_Handle handle, uint_fast16_t cmd,
  *          before any other I2CSlave driver APIs. This function call does not
  *          modify any peripheral registers.
  */
-extern void I2CSlave_init(void);
+    extern void I2CSlave_init( void );
 
 /*!
  *  @brief  Function to initialize a given I2CSlave peripheral specified by the
@@ -450,8 +462,8 @@ extern void I2CSlave_init(void);
  *  @sa     I2CSlave_init()
  *  @sa     I2CSlave_close()
  */
-extern I2CSlave_Handle I2CSlave_open(uint_least8_t index,
-    I2CSlave_Params *params);
+    extern I2CSlave_Handle I2CSlave_open( uint_least8_t index,
+                                          I2CSlave_Params * params );
 
 /*!
  *  @brief  Function to initialize the I2CSlave_Params struct to its defaults
@@ -463,7 +475,7 @@ extern I2CSlave_Handle I2CSlave_open(uint_least8_t index,
  *      transferMode = I2CSLAVE_MODE_BLOCKING
  *      transferCallbackFxn = NULL
  */
-extern void I2CSlave_Params_init(I2CSlave_Params *params);
+    extern void I2CSlave_Params_init( I2CSlave_Params * params );
 
 /*!
  *  @brief  Function that handles the I2CSlave read for SYS/BIOS
@@ -497,8 +509,10 @@ extern void I2CSlave_Params_init(I2CSlave_Params *params);
  *  @sa     I2CSlave_open
  */
 
-extern bool I2CSlave_read(I2CSlave_Handle handle, void *buffer,
-        size_t size);
+    extern bool I2CSlave_read( I2CSlave_Handle handle,
+                               void * buffer,
+                               size_t size );
+
 /*!
  *  @brief  Function that handles the I2CSlave write for SYS/BIOS
  *
@@ -534,11 +548,12 @@ extern bool I2CSlave_read(I2CSlave_Handle handle, void *buffer,
  *
  *  @sa     I2CSlave_open
  */
-extern bool I2CSlave_write(I2CSlave_Handle handle, const void *buffer,
-        size_t size);
+    extern bool I2CSlave_write( I2CSlave_Handle handle,
+                                const void * buffer,
+                                size_t size );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_I2CSLAVE__include */

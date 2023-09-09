@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,17 +25,17 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
-typedef signed char _SBYTE;
-typedef unsigned char _UBYTE;
-typedef signed short _SWORD;
-typedef unsigned short _UWORD;
-typedef signed int _SINT;
-typedef unsigned int _UINT;
-typedef signed long _SDWORD;
-typedef unsigned long _UDWORD;
-typedef signed long long _SQWORD;
-typedef unsigned long long _UQWORD;
+typedef signed char          _SBYTE;
+typedef unsigned char        _UBYTE;
+typedef signed short         _SWORD;
+typedef unsigned short       _UWORD;
+typedef signed int           _SINT;
+typedef unsigned int         _UINT;
+typedef signed long          _SDWORD;
+typedef unsigned long        _UDWORD;
+typedef signed long long     _SQWORD;
+typedef unsigned long long   _UQWORD;

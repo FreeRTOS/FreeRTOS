@@ -24,36 +24,36 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* --------- PWR registers bit address in the alias region ---------- */
-#define PWR_OFFSET               (PWR_BASE - PERIPH_BASE)
+#define PWR_OFFSET    ( PWR_BASE - PERIPH_BASE )
 
 /* --- CR Register ---*/
 /* Alias word address of DBP bit */
-#define CR_OFFSET                (PWR_OFFSET + 0x00)
-#define DBP_BitNumber            0x08
-#define CR_DBP_BB                (PERIPH_BB_BASE + (CR_OFFSET * 32) + (DBP_BitNumber * 4))
+#define CR_OFFSET         ( PWR_OFFSET + 0x00 )
+#define DBP_BitNumber     0x08
+#define CR_DBP_BB         ( PERIPH_BB_BASE + ( CR_OFFSET * 32 ) + ( DBP_BitNumber * 4 ) )
 
 /* Alias word address of PVDE bit */
-#define PVDE_BitNumber           0x04
-#define CR_PVDE_BB               (PERIPH_BB_BASE + (CR_OFFSET * 32) + (PVDE_BitNumber * 4))
+#define PVDE_BitNumber    0x04
+#define CR_PVDE_BB        ( PERIPH_BB_BASE + ( CR_OFFSET * 32 ) + ( PVDE_BitNumber * 4 ) )
 
 /* --- CSR Register ---*/
 /* Alias word address of EWUP bit */
-#define CSR_OFFSET               (PWR_OFFSET + 0x04)
-#define EWUP_BitNumber           0x08
-#define CSR_EWUP_BB              (PERIPH_BB_BASE + (CSR_OFFSET * 32) + (EWUP_BitNumber * 4))
+#define CSR_OFFSET        ( PWR_OFFSET + 0x04 )
+#define EWUP_BitNumber    0x08
+#define CSR_EWUP_BB       ( PERIPH_BB_BASE + ( CSR_OFFSET * 32 ) + ( EWUP_BitNumber * 4 ) )
 
 /* ------------------ PWR registers bit mask ------------------------ */
 /* CR register bit mask */
-#define CR_PDDS_Set              ((u32)0x00000002)
-#define CR_DS_Mask               ((u32)0xFFFFFFFC)
-#define CR_CWUF_Set              ((u32)0x00000004)
-#define CR_PLS_Mask              ((u32)0xFFFFFF1F)
+#define CR_PDDS_Set    ( ( u32 ) 0x00000002 )
+#define CR_DS_Mask     ( ( u32 ) 0xFFFFFFFC )
+#define CR_CWUF_Set    ( ( u32 ) 0x00000004 )
+#define CR_PLS_Mask    ( ( u32 ) 0xFFFFFF1F )
 
 /* --------- Cortex System Control register bit mask ---------------- */
 /* Cortex System Control register address */
-#define SCB_SysCtrl              ((u32)0xE000ED10)
+#define SCB_SysCtrl              ( ( u32 ) 0xE000ED10 )
 /* SLEEPDEEP bit mask */
-#define SysCtrl_SLEEPDEEP_Set    ((u32)0x00000004)
+#define SysCtrl_SLEEPDEEP_Set    ( ( u32 ) 0x00000004 )
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -68,10 +68,10 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_DeInit(void)
+void PWR_DeInit( void )
 {
-  RCC_APB1PeriphResetCmd(RCC_APB1Periph_PWR, ENABLE);
-  RCC_APB1PeriphResetCmd(RCC_APB1Periph_PWR, DISABLE);
+    RCC_APB1PeriphResetCmd( RCC_APB1Periph_PWR, ENABLE );
+    RCC_APB1PeriphResetCmd( RCC_APB1Periph_PWR, DISABLE );
 }
 
 /*******************************************************************************
@@ -82,12 +82,12 @@ void PWR_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_BackupAccessCmd(FunctionalState NewState)
+void PWR_BackupAccessCmd( FunctionalState NewState )
 {
-  /* Check the parameters */
-  assert(IS_FUNCTIONAL_STATE(NewState));
+    /* Check the parameters */
+    assert( IS_FUNCTIONAL_STATE( NewState ) );
 
-  *(vu32 *) CR_DBP_BB = (u32)NewState;
+    *( vu32 * ) CR_DBP_BB = ( u32 ) NewState;
 }
 
 /*******************************************************************************
@@ -98,12 +98,12 @@ void PWR_BackupAccessCmd(FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_PVDCmd(FunctionalState NewState)
+void PWR_PVDCmd( FunctionalState NewState )
 {
-  /* Check the parameters */
-  assert(IS_FUNCTIONAL_STATE(NewState));
+    /* Check the parameters */
+    assert( IS_FUNCTIONAL_STATE( NewState ) );
 
-  *(vu32 *) CR_PVDE_BB = (u32)NewState;
+    *( vu32 * ) CR_PVDE_BB = ( u32 ) NewState;
 }
 
 /*******************************************************************************
@@ -122,23 +122,23 @@ void PWR_PVDCmd(FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_PVDLevelConfig(u32 PWR_PVDLevel)
+void PWR_PVDLevelConfig( u32 PWR_PVDLevel )
 {
-  u32 tmpreg = 0;
+    u32 tmpreg = 0;
 
-  /* Check the parameters */
-  assert(IS_PWR_PVD_LEVEL(PWR_PVDLevel));
+    /* Check the parameters */
+    assert( IS_PWR_PVD_LEVEL( PWR_PVDLevel ) );
 
-  tmpreg = PWR->CR;
+    tmpreg = PWR->CR;
 
-  /* Clear PLS[7:5] bits */
-  tmpreg &= CR_PLS_Mask;
+    /* Clear PLS[7:5] bits */
+    tmpreg &= CR_PLS_Mask;
 
-  /* Set PLS[7:5] bits according to PWR_PVDLevel value */
-  tmpreg |= PWR_PVDLevel;
+    /* Set PLS[7:5] bits according to PWR_PVDLevel value */
+    tmpreg |= PWR_PVDLevel;
 
-  /* Store the new value */
-  PWR->CR = tmpreg;
+    /* Store the new value */
+    PWR->CR = tmpreg;
 }
 
 /*******************************************************************************
@@ -149,12 +149,12 @@ void PWR_PVDLevelConfig(u32 PWR_PVDLevel)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_WakeUpPinCmd(FunctionalState NewState)
+void PWR_WakeUpPinCmd( FunctionalState NewState )
 {
-  /* Check the parameters */
-  assert(IS_FUNCTIONAL_STATE(NewState));
+    /* Check the parameters */
+    assert( IS_FUNCTIONAL_STATE( NewState ) );
 
-  *(vu32 *) CSR_EWUP_BB = (u32)NewState;
+    *( vu32 * ) CSR_EWUP_BB = ( u32 ) NewState;
 }
 
 /*******************************************************************************
@@ -165,7 +165,7 @@ void PWR_WakeUpPinCmd(FunctionalState NewState)
 *                       - PWR_Regulator_ON: STOP mode with regulator ON
 *                       - PWR_Regulator_LowPower: STOP mode with
 *                         regulator in low power mode
-*                  - PWR_STOPEntry: specifies if STOP mode in entered with WFI or 
+*                  - PWR_STOPEntry: specifies if STOP mode in entered with WFI or
 *                    WFE instruction.
 *                    This parameter can be one of the following values:
 *                       - PWR_STOPEntry_WFI: enter STOP mode with WFI instruction
@@ -173,40 +173,41 @@ void PWR_WakeUpPinCmd(FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_EnterSTOPMode(u32 PWR_Regulator, u8 PWR_STOPEntry)
+void PWR_EnterSTOPMode( u32 PWR_Regulator,
+                        u8 PWR_STOPEntry )
 {
-  u32 tmpreg = 0;
+    u32 tmpreg = 0;
 
-  /* Check the parameters */
-  assert(IS_PWR_REGULATOR(PWR_Regulator));
-  assert(IS_PWR_STOP_ENTRY(PWR_STOPEntry));
-  
-  /* Select the regulator state in STOP mode ---------------------------------*/
-  tmpreg = PWR->CR;
+    /* Check the parameters */
+    assert( IS_PWR_REGULATOR( PWR_Regulator ) );
+    assert( IS_PWR_STOP_ENTRY( PWR_STOPEntry ) );
 
-  /* Clear PDDS and LPDS bits */
-  tmpreg &= CR_DS_Mask;
+    /* Select the regulator state in STOP mode ---------------------------------*/
+    tmpreg = PWR->CR;
 
-  /* Set LPDS bit according to PWR_Regulator value */
-  tmpreg |= PWR_Regulator;
+    /* Clear PDDS and LPDS bits */
+    tmpreg &= CR_DS_Mask;
 
-  /* Store the new value */
-  PWR->CR = tmpreg;
+    /* Set LPDS bit according to PWR_Regulator value */
+    tmpreg |= PWR_Regulator;
 
-  /* Set SLEEPDEEP bit of Cortex System Control Register */
-  *(vu32 *) SCB_SysCtrl |= SysCtrl_SLEEPDEEP_Set;
-  
-  /* Select STOP mode entry --------------------------------------------------*/
-  if(PWR_STOPEntry == PWR_STOPEntry_WFI)
-  {   
-    /* Request Wait For Interrupt */
-    __WFI();
-  }
-  else
-  {
-    /* Request Wait For Event */
-    __WFE();
-  }
+    /* Store the new value */
+    PWR->CR = tmpreg;
+
+    /* Set SLEEPDEEP bit of Cortex System Control Register */
+    *( vu32 * ) SCB_SysCtrl |= SysCtrl_SLEEPDEEP_Set;
+
+    /* Select STOP mode entry --------------------------------------------------*/
+    if( PWR_STOPEntry == PWR_STOPEntry_WFI )
+    {
+        /* Request Wait For Interrupt */
+        __WFI();
+    }
+    else
+    {
+        /* Request Wait For Event */
+        __WFE();
+    }
 }
 
 /*******************************************************************************
@@ -216,19 +217,19 @@ void PWR_EnterSTOPMode(u32 PWR_Regulator, u8 PWR_STOPEntry)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_EnterSTANDBYMode(void)
+void PWR_EnterSTANDBYMode( void )
 {
-  /* Clear Wake-up flag */
-  PWR->CR |= CR_CWUF_Set;
+    /* Clear Wake-up flag */
+    PWR->CR |= CR_CWUF_Set;
 
-  /* Select STANDBY mode */
-  PWR->CR |= CR_PDDS_Set;
+    /* Select STANDBY mode */
+    PWR->CR |= CR_PDDS_Set;
 
-  /* Set SLEEPDEEP bit of Cortex System Control Register */
-  *(vu32 *) SCB_SysCtrl |= SysCtrl_SLEEPDEEP_Set;
+    /* Set SLEEPDEEP bit of Cortex System Control Register */
+    *( vu32 * ) SCB_SysCtrl |= SysCtrl_SLEEPDEEP_Set;
 
-  /* Request Wait For Interrupt */
-  __WFI();
+    /* Request Wait For Interrupt */
+    __WFI();
 }
 
 /*******************************************************************************
@@ -242,24 +243,24 @@ void PWR_EnterSTANDBYMode(void)
 * Output         : None
 * Return         : The new state of PWR_FLAG (SET or RESET).
 *******************************************************************************/
-FlagStatus PWR_GetFlagStatus(u32 PWR_FLAG)
+FlagStatus PWR_GetFlagStatus( u32 PWR_FLAG )
 {
-  FlagStatus bitstatus = RESET;
+    FlagStatus bitstatus = RESET;
 
-  /* Check the parameters */
-  assert(IS_PWR_GET_FLAG(PWR_FLAG));
-  
-  if ((PWR->CSR & PWR_FLAG) != (u32)RESET)
-  {
-    bitstatus = SET;
-  }
-  else
-  {
-    bitstatus = RESET;
-  }
+    /* Check the parameters */
+    assert( IS_PWR_GET_FLAG( PWR_FLAG ) );
 
-  /* Return the flag status */
-  return bitstatus;
+    if( ( PWR->CSR & PWR_FLAG ) != ( u32 ) RESET )
+    {
+        bitstatus = SET;
+    }
+    else
+    {
+        bitstatus = RESET;
+    }
+
+    /* Return the flag status */
+    return bitstatus;
 }
 
 /*******************************************************************************
@@ -272,12 +273,12 @@ FlagStatus PWR_GetFlagStatus(u32 PWR_FLAG)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWR_ClearFlag(u32 PWR_FLAG)
+void PWR_ClearFlag( u32 PWR_FLAG )
 {
-  /* Check the parameters */
-  assert(IS_PWR_CLEAR_FLAG(PWR_FLAG));
-         
-  PWR->CR |=  PWR_FLAG << 2;
+    /* Check the parameters */
+    assert( IS_PWR_CLEAR_FLAG( PWR_FLAG ) );
+
+    PWR->CR |= PWR_FLAG << 2;
 }
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

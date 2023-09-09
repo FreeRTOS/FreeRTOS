@@ -83,22 +83,22 @@
 #define COLOR_SNOW           0xFFFAFA
 #define COLOR_YELLOW         0xFFFF00
 
-#define BLACK 0x0000
-#define BLUE  0x001F
-#define RED   0xF800
-#define GREEN 0x07E0
-#define WHITE 0xFFFF
+#define BLACK                0x0000
+#define BLUE                 0x001F
+#define RED                  0xF800
+#define GREEN                0x07E0
+#define WHITE                0xFFFF
 
-#define BLUE_LEV( level)  (   (level)&BLUE )                                      // level is in [0; 31]
-#define GREEN_LEV(level)  ( (((level)*2)<<5)&GREEN )                              // level is in [0; 31]
-#define RED_LEV(  level)  (  ((level)<<(5+6))&RED )                               // level is in [0; 31]
-#define GRAY_LEV( level)  ( BLUE_LEV(level) | GREEN_LEV(level) | RED_LEV(level) ) // level is in [0; 31]
+#define BLUE_LEV( level )            ( ( level ) & BLUE )                                          /* level is in [0; 31] */
+#define GREEN_LEV( level )           ( ( ( ( level ) * 2 ) << 5 ) & GREEN )                        /* level is in [0; 31] */
+#define RED_LEV( level )             ( ( ( level ) << ( 5 + 6 ) ) & RED )                          /* level is in [0; 31] */
+#define GRAY_LEV( level )            ( BLUE_LEV( level ) | GREEN_LEV( level ) | RED_LEV( level ) ) /* level is in [0; 31] */
 
-   
-#define RGB_24_TO_18BIT(RGB)      (((RGB >>18) << 18) | (((RGB & 0x00FF00) >>10) << 10) | (RGB & 0x0000FC))
-#define RGB_16_TO_18BIT(RGB)      (((((RGB >>11)*63)/31) << 18) | (RGB & 0x00FC00) | (((RGB & 0x00001F)*63)/31) )
-#define BGR_TO_RGB_18BIT(RGB)     ((RGB & 0xFF0000) | ((RGB & 0x00FF00) >> 8 ) | ( (RGB & 0x0000FC) >> 16 ))
 
-#define BGR_16_TO_18BITRGB(RGB)  BGR_TO_RGB_18BIT(RGB_16_TO_18BIT(RGB))
-   
+#define RGB_24_TO_18BIT( RGB )       ( ( ( RGB >> 18 ) << 18 ) | ( ( ( RGB & 0x00FF00 ) >> 10 ) << 10 ) | ( RGB & 0x0000FC ) )
+#define RGB_16_TO_18BIT( RGB )       ( ( ( ( ( RGB >> 11 ) * 63 ) / 31 ) << 18 ) | ( RGB & 0x00FC00 ) | ( ( ( RGB & 0x00001F ) * 63 ) / 31 ) )
+#define BGR_TO_RGB_18BIT( RGB )      ( ( RGB & 0xFF0000 ) | ( ( RGB & 0x00FF00 ) >> 8 ) | ( ( RGB & 0x0000FC ) >> 16 ) )
+
+#define BGR_16_TO_18BITRGB( RGB )    BGR_TO_RGB_18BIT( RGB_16_TO_18BIT( RGB ) )
+
 #endif /* #define COLOR_H */

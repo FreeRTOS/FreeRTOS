@@ -35,27 +35,30 @@ unsigned char __low_level_init( void );
 
 unsigned char __low_level_init( void )
 {
-unsigned char resetflag = RESF;
-unsigned portBASE_TYPE i = 0;         
+    unsigned char resetflag = RESF;
+    unsigned portBASE_TYPE i = 0;
 
-	portDISABLE_INTERRUPTS();         /* disable global interrupts */                      
+    portDISABLE_INTERRUPTS();    /* disable global interrupts */
 
-	PRCMD = 0x00;                     /* On-chip debug mode */
-	PCC  = 0x00;                      /* high speed mode fCPU */
-	VSWC = 0x00;
-	WDTM2 = 0xF;	                  /* Stop watchdog Timer */
-	PLLS = 0x03;                      /* Set PLL stabilisation time */
-	PLLON = 1;                        /* activate PLL */
-	for( i = 0; i <= 2000; i++ )      /* Wait for stabilisation */
-	{
-		portNOP();
-	}
-	while( LOCK )                     /* Wait for PLL frequency stabiliasation */
-	{
-		portNOP();
-	}
-	SELPLL = 1;                       /* Set CPU operation to PLL mode */
+    PRCMD = 0x00;                /* On-chip debug mode */
+    PCC = 0x00;                  /* high speed mode fCPU */
+    VSWC = 0x00;
+    WDTM2 = 0xF;                 /* Stop watchdog Timer */
+    PLLS = 0x03;                 /* Set PLL stabilisation time */
+    PLLON = 1;                   /* activate PLL */
 
-	return pdTRUE;
+    for( i = 0; i <= 2000; i++ ) /* Wait for stabilisation */
+    {
+        portNOP();
+    }
+
+    while( LOCK ) /* Wait for PLL frequency stabiliasation */
+    {
+        portNOP();
+    }
+
+    SELPLL = 1; /* Set CPU operation to PLL mode */
+
+    return pdTRUE;
 }
 /*-----------------------------------------------------------*/

@@ -413,7 +413,7 @@ typedef enum
 } tcptestEchoTestModes_t;
 
 typedef struct
-{    
+{
     uint16_t usTaskTag;
     BaseType_t xResult;
     TaskHandle_t xTaskHandle;
@@ -509,7 +509,7 @@ static Socket_t prvTcpSocketHelper( volatile BaseType_t * pxSocketOpen )
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvNonSecureConnectHelper( Socket_t xSocketLocal,
-                                            struct freertos_sockaddr* pxHostAddress )
+                                             struct freertos_sockaddr * pxHostAddress )
 {
     /* Disable unused parameter warning. */
     ( void ) xSocketLocal;
@@ -520,9 +520,9 @@ static BaseType_t prvNonSecureConnectHelper( Socket_t xSocketLocal,
     #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     {
         pxHostAddress->sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( tcptestECHO_SERVER_ADDR0,
-                                                            tcptestECHO_SERVER_ADDR1,
-                                                            tcptestECHO_SERVER_ADDR2,
-                                                            tcptestECHO_SERVER_ADDR3 );
+                                                                         tcptestECHO_SERVER_ADDR1,
+                                                                         tcptestECHO_SERVER_ADDR2,
+                                                                         tcptestECHO_SERVER_ADDR3 );
     }
     #else
     {
@@ -542,38 +542,38 @@ static BaseType_t prvNonSecureConnectHelper( Socket_t xSocketLocal,
 
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvConnect( Socket_t xSocketLocal)
+static BaseType_t prvConnect( Socket_t xSocketLocal )
 {
     BaseType_t xResult = pdFAIL;
     struct freertos_sockaddr xAddress;
 
     xResult = prvNonSecureConnectHelper( xSocketLocal, &xAddress );
-    
+
     if( xResult == pdFREERTOS_ERRNO_NONE )
     {
         xResult = FreeRTOS_connect( xSocketLocal,
-                                   &xAddress,
-                                   sizeof( xAddress ) );
+                                    &xAddress,
+                                    sizeof( xAddress ) );
     }
     else
     {
-        tcptestFAILUREPRINTF( ("%s: Non Secure connect helper failed", __FUNCTION__) );
+        tcptestFAILUREPRINTF( ( "%s: Non Secure connect helper failed", __FUNCTION__ ) );
     }
 
     return xResult;
 }
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvConnectHelper( Socket_t xSocketLocal)
+static BaseType_t prvConnectHelper( Socket_t xSocketLocal )
 {
     BaseType_t xResult = pdFAIL;
     uint32_t ulInitialRetryPeriodMs = tcptestLOOP_DELAY_MS;
     BaseType_t xMaxRetries = tcptestRETRY_CONNECTION_TIMES;
 
-    RETRY_EXPONENTIAL( xResult = prvConnect( xSocketLocal),
-                        pdFREERTOS_ERRNO_NONE,
-                        ulInitialRetryPeriodMs,
-                        xMaxRetries );
+    RETRY_EXPONENTIAL( xResult = prvConnect( xSocketLocal ),
+                       pdFREERTOS_ERRNO_NONE,
+                       ulInitialRetryPeriodMs,
+                       xMaxRetries );
 
     return xResult;
 }
@@ -589,18 +589,18 @@ static BaseType_t prvSetSockOptHelper( Socket_t xSocketLocal,
     /* Set a time out so a missing reply does not cause the task to block
      * indefinitely. */
     xResult = FreeRTOS_setsockopt( xSocketLocal,
-                                    0,
-                                    FREERTOS_SO_RCVTIMEO,
-                                    &xRxTimeOut,
-                                    sizeof( xRxTimeOut ) );
+                                   0,
+                                   FREERTOS_SO_RCVTIMEO,
+                                   &xRxTimeOut,
+                                   sizeof( xRxTimeOut ) );
 
     if( xResult == pdFREERTOS_ERRNO_NONE )
     {
         xResult = FreeRTOS_setsockopt( xSocketLocal,
-                                        0,
-                                        FREERTOS_SO_SNDTIMEO,
-                                        &xTxTimeOut,
-                                        sizeof( xTxTimeOut ) );
+                                       0,
+                                       FREERTOS_SO_SNDTIMEO,
+                                       &xTxTimeOut,
+                                       sizeof( xTxTimeOut ) );
 
         if( xResult != pdFREERTOS_ERRNO_NONE )
         {
@@ -643,7 +643,7 @@ static BaseType_t prvConnectHelperWithRetry( volatile Socket_t * pxSocket,
         /* Set the appropriate socket options for the destination. */
         if( pdFREERTOS_ERRNO_NONE == xResult )
         {
-            xResult = prvNonSecureConnectHelper( *pxSocket, &xEchoServerAddress );            
+            xResult = prvNonSecureConnectHelper( *pxSocket, &xEchoServerAddress );
         }
 
         /* Set socket timeout options. */
@@ -656,15 +656,15 @@ static BaseType_t prvConnectHelperWithRetry( volatile Socket_t * pxSocket,
         if( pdFREERTOS_ERRNO_NONE == xResult )
         {
             xResult = FreeRTOS_connect( *pxSocket,
-                                       &xEchoServerAddress,
-                                       sizeof( xEchoServerAddress ) );
+                                        &xEchoServerAddress,
+                                        sizeof( xEchoServerAddress ) );
 
             if( pdFREERTOS_ERRNO_NONE == xResult )
             {
                 xIsConnected = pdTRUE;
             }
             else
-            {                
+            {
                 if( xRetry < tcptestRETRY_CONNECTION_TIMES )
                 {
                     FreeRTOS_closesocket( *pxSocket );
@@ -703,10 +703,10 @@ static BaseType_t prvSendHelper( Socket_t xSocketLocal,
 
     while( ( size_t ) xNumBytesSentTotal < xLength )
     {
-        xNumBytes = FreeRTOS_send( xSocketLocal,                            /* The socket being sent to. */
-                                  &pucTxBuffer[ xNumBytesSentTotal ], /* The data being sent. */
-                                  xLength - xNumBytesSentTotal,       /* The length of the data being sent. */
-                                  0 );                                /* No flags. */
+        xNumBytes = FreeRTOS_send( xSocketLocal,                       /* The socket being sent to. */
+                                   &pucTxBuffer[ xNumBytesSentTotal ], /* The data being sent. */
+                                   xLength - xNumBytesSentTotal,       /* The length of the data being sent. */
+                                   0 );                                /* No flags. */
 
         if( xNumBytes <= 0 )
         {
@@ -742,9 +742,9 @@ static BaseType_t prvRecvHelper( Socket_t xSocketLocal,
     while( ( size_t ) xNumBytesRecvTotal < xLength )
     {
         xNumBytes = FreeRTOS_recv( xSocketLocal,
-                                  &pucRxBuffer[ xNumBytesRecvTotal ],
-                                  xLength - xNumBytesRecvTotal,
-                                  0 );
+                                   &pucRxBuffer[ xNumBytesRecvTotal ],
+                                   xLength - xNumBytesRecvTotal,
+                                   0 );
 
         if( xNumBytes == 0 )
         {
@@ -774,7 +774,7 @@ static BaseType_t prvRecvHelper( Socket_t xSocketLocal,
 
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvShutdownHelper( Socket_t xSocketLocal)
+static BaseType_t prvShutdownHelper( Socket_t xSocketLocal )
 {
     BaseType_t xResult;
 
@@ -787,10 +787,10 @@ static BaseType_t prvShutdownHelper( Socket_t xSocketLocal)
         /* Keep calling receive until an error code is returned. */
         do
         {
-            xResult = FreeRTOS_recv( xSocketLocal,            /* The socket being received from. */
-                                    pcRxBuffer,         /* The buffer into which the received data will be written. */
-                                    tcptestBUFFER_SIZE, /* The size of the buffer provided to receive the data. */
-                                    0 );
+            xResult = FreeRTOS_recv( xSocketLocal,       /* The socket being received from. */
+                                     pcRxBuffer,         /* The buffer into which the received data will be written. */
+                                     tcptestBUFFER_SIZE, /* The size of the buffer provided to receive the data. */
+                                     0 );
         }
         while( xResult >= 0 );
 
@@ -943,7 +943,7 @@ static BaseType_t prvCheckTimeout( TickType_t xStartTime,
 
 TEST_GROUP_RUNNER( Full_TCP )
 {
-    RUN_TEST_CASE( Full_TCP, TCP_Socket ); 
+    RUN_TEST_CASE( Full_TCP, TCP_Socket );
     RUN_TEST_CASE( Full_TCP, TCP_Socket_InvalidInputParams );
     RUN_TEST_CASE( Full_TCP, TCP_Socket_Setsockopt_InvalidParams );
     RUN_TEST_CASE( Full_TCP, TCP_Socket_Close_InvalidParams );
@@ -964,7 +964,7 @@ TEST_GROUP_RUNNER( Full_TCP )
     RUN_TEST_CASE( Full_TCP, TCP_Socket_Recv_ByteByByte );
     RUN_TEST_CASE( Full_TCP, TCP_Socket_SendRecv_VaryLength );
     RUN_TEST_CASE( Full_TCP, TCP_test_dns_multiple_addresses );
-    
+
     /* Thread safety tests */
     RUN_TEST_CASE( Full_TCP, TCP_Threadsafe_SameSocketDifferentTasks );
     RUN_TEST_CASE( Full_TCP, TCP_Threadsafe_DifferentSocketsDifferentTasks );
@@ -1053,7 +1053,7 @@ static void prvSOCKETS_ShutdownWithoutReceiving( void )
     xResult = FreeRTOS_send( xSocket, &cTransmittedString, tcptestTWICE_MAX_FRAME_SIZE, 0 );
     TEST_ASSERT_GREATER_THAN_MESSAGE( 0, xResult, "Socket was not able to send" );
 
-    xResult = FreeRTOS_shutdown( xSocket, FREERTOS_SHUT_RDWR);
+    xResult = FreeRTOS_shutdown( xSocket, FREERTOS_SHUT_RDWR );
     TEST_ASSERT_EQUAL_INT32_MESSAGE( pdFREERTOS_ERRNO_NONE, xResult, "Socket failed to shutdown" );
 
     xResult = prvCloseHelper( xSocket, &xSocketOpen );
@@ -1136,8 +1136,8 @@ static void prvSOCKETS_Socket_TCP( void )
 
     /* Make TCP socket. */
     xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-                              FREERTOS_SOCK_STREAM,
-                              FREERTOS_IPPROTO_TCP );
+                               FREERTOS_SOCK_STREAM,
+                               FREERTOS_IPPROTO_TCP );
 
     TEST_ASSERT_NOT_EQUAL( xSocket, FREERTOS_INVALID_SOCKET );
 
@@ -1257,7 +1257,7 @@ static void prvSOCKETS_NonBlocking_Test( void )
          */
         xResult = FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, &xTimeout, sizeof( TickType_t ) );
         TEST_ASSERT_EQUAL_INT32_MESSAGE( pdFREERTOS_ERRNO_NONE, xResult, "Failed to set receive timeout" );
-                
+
         xStartTime = xTaskGetTickCount();
         xResult = FreeRTOS_recv( xSocket, &pucRxBuffer, 1, 0 );
         xEndTime = xTaskGetTickCount();
@@ -1333,11 +1333,11 @@ static void prvSetSockOpt_InvalidParams( void )
 
         /* Try to set the invalid option. */
         xResult = FreeRTOS_setsockopt( xSocket,
-                                      0,    /* lLevel - Not used. */
-                                      -1,   /* Invalid option name. */
-                                      NULL, /* pvOptionValue - This is insignificant as the option name is invalid. */
-                                      0     /* xOptionLength - zero for NULL value. */
-                                      );
+                                       0,    /* lLevel - Not used. */
+                                       -1,   /* Invalid option name. */
+                                       NULL, /* pvOptionValue - This is insignificant as the option name is invalid. */
+                                       0     /* xOptionLength - zero for NULL value. */
+                                       );
 
         /* Since the option name supplied in the previous
          * call was invalid, we expect the call to the API
@@ -1346,10 +1346,10 @@ static void prvSetSockOpt_InvalidParams( void )
 
         /* Try to set a valid option on an invalid socket. */
         xResult = FreeRTOS_setsockopt( FREERTOS_INVALID_SOCKET, /* Invalid socket. */
-                                      0,                      /* lLevel - Not used. */
-                                      FREERTOS_SO_RCVTIMEO,    /* Receive timeout. */
-                                      &( xReceiveTimeOut ),
-                                      sizeof( TickType_t ) );
+                                       0,                       /* lLevel - Not used. */
+                                       FREERTOS_SO_RCVTIMEO,    /* Receive timeout. */
+                                       &( xReceiveTimeOut ),
+                                       sizeof( TickType_t ) );
 
         /* Since the socket passed in the previous call was
          * invalid, we expect the call to the API
@@ -1380,7 +1380,7 @@ TEST( Full_TCP, TCP_Socket_Setsockopt_InvalidParams )
 /*-----------------------------------------------------------*/
 
 static void prvSOCKETS_SetSockOpt_SNDTIMEO( void )
-{    
+{
     /* TODO: This is a stub function. */
     TEST_FAIL_MESSAGE( "This test is not implemented." );
 }
@@ -1423,7 +1423,7 @@ static void prvSOCKETS_Shutdown( void )
 
     /* Shutdown: Write. Expected behavior of send after
      * Shutdown/WRITE is ambiguous. Therefore, we cannot
-     * test anything except the read/recv. */       
+     * test anything except the read/recv. */
 }
 
 TEST( Full_TCP, TCP_Socket_Shutdown )
@@ -1659,8 +1659,8 @@ static void prvSOCKETS_Socket_InvalidInputParams( void )
     if( TEST_PROTECT() )
     {
         xSocket = FreeRTOS_socket( ( FREERTOS_AF_INET + 1 ),
-                                        FREERTOS_SOCK_STREAM,
-                                        FREERTOS_IPPROTO_TCP );
+                                   FREERTOS_SOCK_STREAM,
+                                   FREERTOS_IPPROTO_TCP );
 
         /* If the test code reaches here, it failed. */
         TEST_FAIL_MESSAGE( "Invalid socket domain accepted" );
@@ -1672,8 +1672,8 @@ static void prvSOCKETS_Socket_InvalidInputParams( void )
     if( TEST_PROTECT() )
     {
         xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-                                  ( FREERTOS_SOCK_STREAM | FREERTOS_SOCK_DGRAM ),
-                                    FREERTOS_IPPROTO_TCP );
+                                   ( FREERTOS_SOCK_STREAM | FREERTOS_SOCK_DGRAM ),
+                                   FREERTOS_IPPROTO_TCP );
 
         TEST_FAIL_MESSAGE( "Invalid socket type accepted" );
         xResult = prvCloseHelper( xSocket, &xSocketOpen );
@@ -1683,9 +1683,9 @@ static void prvSOCKETS_Socket_InvalidInputParams( void )
     /* Providing invalid protocol. */
     if( TEST_PROTECT() )
     {
-        xSocket = FreeRTOS_socket(FREERTOS_AF_INET,
-                                    FREERTOS_SOCK_STREAM,
-                                  ( FREERTOS_IPPROTO_TCP | FREERTOS_IPPROTO_UDP ) );
+        xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+                                   FREERTOS_SOCK_STREAM,
+                                   ( FREERTOS_IPPROTO_TCP | FREERTOS_IPPROTO_UDP ) );
 
         TEST_FAIL_MESSAGE( "Invalid socket protocol accepted" );
         xResult = prvCloseHelper( xSocket, &xSocketOpen );
@@ -1695,9 +1695,9 @@ static void prvSOCKETS_Socket_InvalidInputParams( void )
     if( TEST_PROTECT() )
     {
         /* Mixing DGRAM type with TCP protocol (instead of UDP). */
-        xSocket = FreeRTOS_socket(  FREERTOS_AF_INET,
-                                    FREERTOS_SOCK_DGRAM,
-                                    FREERTOS_IPPROTO_TCP );
+        xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+                                   FREERTOS_SOCK_DGRAM,
+                                   FREERTOS_IPPROTO_TCP );
 
         TEST_FAIL_MESSAGE( "Invalid socket created - mixed TCP with DGRAM " );
         xResult = prvCloseHelper( xSocket, &xSocketOpen );
@@ -1708,8 +1708,8 @@ static void prvSOCKETS_Socket_InvalidInputParams( void )
     if( TEST_PROTECT() )
     {
         xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-                                    FREERTOS_SOCK_STREAM,
-                                    FREERTOS_IPPROTO_UDP );
+                                   FREERTOS_SOCK_STREAM,
+                                   FREERTOS_IPPROTO_UDP );
 
         TEST_FAIL_MESSAGE( "Invalid socket created - mixed UDP with STREAM" );
         xResult = prvCloseHelper( xSocket, &xSocketOpen );
@@ -1773,7 +1773,7 @@ static void prvSOCKETS_Socket_ConcurrentCount( void )
     #ifdef integrationtestportableMAX_NUM_UNSECURE_SOCKETS
         if( xResult == pdPASS )
         {
-            xSocketLocal = FreeRTOS_socket(FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP);
+            xSocketLocal = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
 
             if( xSocketLocal != FREERTOS_INVALID_SOCKET )
             {
@@ -1784,17 +1784,17 @@ static void prvSOCKETS_Socket_ConcurrentCount( void )
             }
         }
     #endif /* ifdef integrationtestportableMAX_NUM_UNSECURE_SOCKETS */
-    
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(pdPASS, xResult, "Concurrent num sockets test failed");
+
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE( pdPASS, xResult, "Concurrent num sockets test failed" );
 
     /* Cleanup. */
     while( xSocketsCreated > 0 )
     {
         --xSocketsCreated;
         xResult = FreeRTOS_closesocket( xCreatedSockets[ xSocketsCreated ] );
-        TEST_ASSERT_GREATER_OR_EQUAL_INT32_MESSAGE(0, xResult, "Closing Socket in Multiple Concurrent Socket test failed\n");
+        TEST_ASSERT_GREATER_OR_EQUAL_INT32_MESSAGE( 0, xResult, "Closing Socket in Multiple Concurrent Socket test failed\n" );
     }
-    
+
     /* Report Test Results. */
     tcptestPRINTF( ( "%s passed\r\n", __FUNCTION__ ) );
 }
@@ -1841,18 +1841,18 @@ static void prvFreeRTOS_connect_InvalidParams( void )
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     xEchoServerAddress.sin_family = FREERTOS_AF_INET;
-    
+
 
     /* Invalid socket. */
     xResult = FreeRTOS_connect( FREERTOS_INVALID_SOCKET,
-                               &xEchoServerAddress,
-                               sizeof( xEchoServerAddress ) );
+                                &xEchoServerAddress,
+                                sizeof( xEchoServerAddress ) );
 
     TEST_ASSERT_LESS_THAN_INT32_MESSAGE( 0, xResult, "Connect on an invalid socket succeeded\n" );
 
     xResult = prvCloseHelper( xSocket, &xSocketOpen );
     TEST_ASSERT_GREATER_OR_EQUAL_INT32_MESSAGE( pdFREERTOS_ERRNO_NONE, xResult, "Socket failed to close" );
-    
+
 
 
     /* Invalid IP address (0.0.0.0).  TODO: Investigate reserved IP addresses */
@@ -1870,10 +1870,10 @@ static void prvFreeRTOS_connect_InvalidParams( void )
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     xEchoServerAddress.sin_family = FREERTOS_AF_INET;
-    
+
     xResult = FreeRTOS_connect( xSocket,
-                               &xEchoServerAddress,
-                               sizeof( xEchoServerAddress ) );
+                                &xEchoServerAddress,
+                                sizeof( xEchoServerAddress ) );
 
     TEST_ASSERT_LESS_THAN_INT32_MESSAGE( 0, xResult, "Connect to IP Address 0.0.0.0 worked" );
 
@@ -1899,10 +1899,10 @@ static void prvFreeRTOS_connect_InvalidParams( void )
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     xEchoServerAddress.sin_family = FREERTOS_AF_INET;
-    
+
     xResult = FreeRTOS_connect( xSocket,
-                               &xEchoServerAddress,
-                               sizeof( xEchoServerAddress ) );
+                                &xEchoServerAddress,
+                                sizeof( xEchoServerAddress ) );
 
     TEST_ASSERT_LESS_THAN_INT32_MESSAGE( 0, xResult, "Connect to Port 0 worked" );
 
@@ -2239,9 +2239,9 @@ static void prvEchoClientTxTask( void * pvParameters )
             }
 
             xReturned = FreeRTOS_send( xSocket,                                            /* The socket being sent to. */
-                                      ( void * ) &( cTransmittedString[ xTransmitted ] ), /* The data being sent. */
-                                      xLenToSend,                                         /* The length of the data being sent. */
-                                      0 );                                                /* ulFlags. */
+                                       ( void * ) &( cTransmittedString[ xTransmitted ] ), /* The data being sent. */
+                                       xLenToSend,                                         /* The length of the data being sent. */
+                                       0 );                                                /* ulFlags. */
 
             if( xReturned >= 0 )
             {
@@ -2300,7 +2300,7 @@ void prvStartTCPEchoClientTasks_DifferentSockets( void )
         /* Create the echo client tasks. */
         for( usIndex = 0; usIndex < tcptestNUM_ECHO_CLIENTS; usIndex++ )
         {
-            xTcptestEchoClientsTaskParams[ usIndex ].usTaskTag = usIndex;            
+            xTcptestEchoClientsTaskParams[ usIndex ].usTaskTag = usIndex;
             xTcptestEchoClientsTaskParams[ usIndex ].xResult = FREERTOS_SOCKET_ERROR;
 
             xResult = xTaskCreate( prvThreadSafeDifferentSocketsDifferentTasks,                 /* The function that implements the task. */
@@ -2387,7 +2387,7 @@ static void prvThreadSafeDifferentSocketsDifferentTasks( void * pvParameters )
             xResult = prvConnectHelperWithRetry( &xTaskSocket,
                                                  xEchoTestRxTxTimeOut,
                                                  xEchoTestRxTxTimeOut,
-                                                 &xSocketOpenLocal);
+                                                 &xSocketOpenLocal );
 
             if( xResult != pdFREERTOS_ERRNO_NONE )
             {
@@ -2401,9 +2401,9 @@ static void prvThreadSafeDifferentSocketsDifferentTasks( void * pvParameters )
 
             /* Send the string to the socket. */
             xTransmitted = FreeRTOS_send( xTaskSocket,                   /* The socket being sent to. */
-                                         ( void * ) cTransmittedString, /* The data being sent. */
-                                         ipconfigTCP_MSS,               /* The length of the data being sent. */
-                                         0 );                           /* No flags. */
+                                          ( void * ) cTransmittedString, /* The data being sent. */
+                                          ipconfigTCP_MSS,               /* The length of the data being sent. */
+                                          0 );                           /* No flags. */
 
             if( xTransmitted < ipconfigTCP_MSS )
             {
@@ -2423,9 +2423,9 @@ static void prvThreadSafeDifferentSocketsDifferentTasks( void * pvParameters )
             while( xReceivedBytes < xTransmitted )
             {
                 xReturned = FreeRTOS_recv( xTaskSocket,                             /* The socket being received from. */
-                                          &( pcReceivedString[ xReceivedBytes ] ), /* The buffer into which the received data will be written. */
-                                          ipconfigTCP_MSS - xReceivedBytes,        /* The size of the buffer provided to receive the data. */
-                                          0 );                                     /* No flags. */
+                                           &( pcReceivedString[ xReceivedBytes ] ), /* The buffer into which the received data will be written. */
+                                           ipconfigTCP_MSS - xReceivedBytes,        /* The size of the buffer provided to receive the data. */
+                                           0 );                                     /* No flags. */
 
                 if( xReturned <= 0 )
                 {
@@ -2461,7 +2461,7 @@ static void prvThreadSafeDifferentSocketsDifferentTasks( void * pvParameters )
 
             /* Close this socket before looping back to create another. */
             ( void ) prvShutdownHelper( xTaskSocket );
-            ( void ) prvCloseHelper( xTaskSocket, &xSocketOpenLocal);
+            ( void ) prvCloseHelper( xTaskSocket, &xSocketOpenLocal );
         }
     }
 
@@ -2500,7 +2500,7 @@ TEST( Full_TCP, TCP_htons_HappyCase )
      * value. */
     usNetworkOrderValue = FreeRTOS_htons( 0x1234 );
 
-    #if defined(ipconfigBYTE_ORDER) && ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
+    #if defined( ipconfigBYTE_ORDER ) && ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
 
         /* If the platform we are running on, is little
          * endian, bytes must have been swapped. */
@@ -2560,15 +2560,16 @@ TEST( Full_TCP, TCP_test_dns_multiple_addresses )
     }
 
     tcptestPRINTF( ( "%s: identified %d different IP addresses for %s.\r\n",
-                    __FUNCTION__,
-                    ulNumUniqueIPAddresses,
-                    HostNameUNIQUE_ADDRESSES_TEST ) );
+                     __FUNCTION__,
+                     ulNumUniqueIPAddresses,
+                     HostNameUNIQUE_ADDRESSES_TEST ) );
 
     /* Require a minimum number of IP addresses for AWS IoT Core endpoints */
     if( ulNumUniqueIPAddresses >= dnstestNUM_UNIQUE_IP_ADDRESSES )
     {
         xResult = pdPASS;
     }
+
     TEST_ASSERT_EQUAL_UINT32_MESSAGE( pdPASS, xResult, "Less number of IP addresses per entry than expected\n" );
 
     tcptestPRINTF( ( "%s complete.\r\n", __FUNCTION__ ) );
@@ -2584,7 +2585,7 @@ TEST( Full_TCP, TCP_inet_addr_quick_HappyCase )
 
     ulPackedIpAddress = FreeRTOS_inet_addr_quick( 192, 168, 2, 6 );
 
-    #if defined(ipconfigBYTE_ORDER) && ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
+    #if defined( ipconfigBYTE_ORDER ) && ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
 
         /* The expected return value of FreeRTOS_inet_addr_quick
          * on a little endian platform must be same as the correct

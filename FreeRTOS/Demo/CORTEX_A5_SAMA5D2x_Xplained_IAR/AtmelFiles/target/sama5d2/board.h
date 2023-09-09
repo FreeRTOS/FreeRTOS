@@ -30,18 +30,18 @@
 #ifndef _BOARD_HEADER_
 #define _BOARD_HEADER_
 
-#if defined(CONFIG_BOARD_SAMA5D2_XPLAINED)
-  #include "board_sama5d2-xplained.h"
-#elif defined(CONFIG_BOARD_SAMA5D2_XPLAINED_PROTO)
-  #include "board_sama5d2-xplained-proto.h"
-#elif defined(CONFIG_BOARD_SAMA5D2_VB_BGA196)
-  #include "board_sama5d2-vb-bga196.h"
-#elif defined(CONFIG_BOARD_SAMA5D2_VB_BGA289)
-  #include "board_sama5d2-vb-bga289.h"
-#elif defined(CONFIG_BOARD_SAMA5D2_PTC_ENGI)
-  #include "board_sama5d2-ptc-engi.h"
+#if defined( CONFIG_BOARD_SAMA5D2_XPLAINED )
+    #include "board_sama5d2-xplained.h"
+#elif defined( CONFIG_BOARD_SAMA5D2_XPLAINED_PROTO )
+    #include "board_sama5d2-xplained-proto.h"
+#elif defined( CONFIG_BOARD_SAMA5D2_VB_BGA196 )
+    #include "board_sama5d2-vb-bga196.h"
+#elif defined( CONFIG_BOARD_SAMA5D2_VB_BGA289 )
+    #include "board_sama5d2-vb-bga289.h"
+#elif defined( CONFIG_BOARD_SAMA5D2_PTC_ENGI )
+    #include "board_sama5d2-ptc-engi.h"
 #else
-  #error "No board defined"
-#endif
+    #error "No board defined"
+#endif /* if defined( CONFIG_BOARD_SAMA5D2_XPLAINED ) */
 
 #endif /* _BOARD_HEADER_ */

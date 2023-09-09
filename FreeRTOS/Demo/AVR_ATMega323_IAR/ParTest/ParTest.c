@@ -24,17 +24,17 @@
  *
  */
 
-/* 
-Changes from V2.0.0
-
-	+ Use scheduler suspends in place of critical sections.
-
-Changes from V2.6.0
-
-	+ Replaced the inb() and outb() functions with direct memory
-	  access.  This allows the port to be built with the 20050414 build of
-	  WinAVR.
-*/
+/*
+ * Changes from V2.0.0
+ *
+ + Use scheduler suspends in place of critical sections.
+ +
+ + Changes from V2.6.0
+ +
+ + Replaced the inb() and outb() functions with direct memory
+ +    access.  This allows the port to be built with the 20050414 build of
+ +    WinAVR.
+ */
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -44,9 +44,9 @@ Changes from V2.6.0
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-#define partstALL_BITS_OUTPUT			( ( unsigned char ) 0xff )
-#define partstALL_OUTPUTS_OFF			( ( unsigned char ) 0xff )
-#define partstMAX_OUTPUT_LED			( ( unsigned char ) 7 )
+#define partstALL_BITS_OUTPUT    ( ( unsigned char ) 0xff )
+#define partstALL_OUTPUTS_OFF    ( ( unsigned char ) 0xff )
+#define partstMAX_OUTPUT_LED     ( ( unsigned char ) 7 )
 
 static volatile unsigned char ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*lint !e956 File scope parameters okay here. */
 
@@ -54,64 +54,63 @@ static volatile unsigned char ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*li
 
 void vParTestInitialise( void )
 {
-	ucCurrentOutputValue = partstALL_OUTPUTS_OFF;
+    ucCurrentOutputValue = partstALL_OUTPUTS_OFF;
 
-	/* Set port B direction to outputs.  Start with all output off. */
-	DDRB = partstALL_BITS_OUTPUT;
-	PORTB = ucCurrentOutputValue;
+    /* Set port B direction to outputs.  Start with all output off. */
+    DDRB = partstALL_BITS_OUTPUT;
+    PORTB = ucCurrentOutputValue;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned char ucBit = ( unsigned char ) 1;
+    unsigned char ucBit = ( unsigned char ) 1;
 
-	if( uxLED <= partstMAX_OUTPUT_LED )
-	{
-		ucBit <<= uxLED;
+    if( uxLED <= partstMAX_OUTPUT_LED )
+    {
+        ucBit <<= uxLED;
 
-		vTaskSuspendAll();
-		{
-			if( xValue == pdTRUE )
-			{
-				ucBit ^= ( unsigned char ) 0xff;
-				ucCurrentOutputValue &= ucBit;
-			}
-			else
-			{
-				ucCurrentOutputValue |= ucBit;
-			}
+        vTaskSuspendAll();
+        {
+            if( xValue == pdTRUE )
+            {
+                ucBit ^= ( unsigned char ) 0xff;
+                ucCurrentOutputValue &= ucBit;
+            }
+            else
+            {
+                ucCurrentOutputValue |= ucBit;
+            }
 
-			PORTB = ucCurrentOutputValue;
-		}
-		xTaskResumeAll();
-	}
+            PORTB = ucCurrentOutputValue;
+        }
+        xTaskResumeAll();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned char ucBit;
+    unsigned char ucBit;
 
-	if( uxLED <= partstMAX_OUTPUT_LED )
-	{
-		ucBit = ( ( unsigned char ) 1 ) << uxLED;
+    if( uxLED <= partstMAX_OUTPUT_LED )
+    {
+        ucBit = ( ( unsigned char ) 1 ) << uxLED;
 
-		vTaskSuspendAll();
-		{
-			if( ucCurrentOutputValue & ucBit )
-			{
-				ucCurrentOutputValue &= ~ucBit;
-			}
-			else
-			{
-				ucCurrentOutputValue |= ucBit;
-			}
+        vTaskSuspendAll();
+        {
+            if( ucCurrentOutputValue & ucBit )
+            {
+                ucCurrentOutputValue &= ~ucBit;
+            }
+            else
+            {
+                ucCurrentOutputValue |= ucBit;
+            }
 
-			PORTB = ucCurrentOutputValue;
-		}
-		xTaskResumeAll();			
-	}
+            PORTB = ucCurrentOutputValue;
+        }
+        xTaskResumeAll();
+    }
 }
-
-

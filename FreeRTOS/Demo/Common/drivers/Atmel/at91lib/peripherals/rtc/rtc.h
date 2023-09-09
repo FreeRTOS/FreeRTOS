@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,44 +30,39 @@
 #ifndef RTC_H
 #define RTC_H
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
 
-extern void RTC_SetHourMode(unsigned int mode);
+extern void RTC_SetHourMode( unsigned int mode );
 
-extern void RTC_EnableIt(unsigned int sources);
+extern void RTC_EnableIt( unsigned int sources );
 
-extern void RTC_DisableIt(unsigned int sources);
+extern void RTC_DisableIt( unsigned int sources );
 
-extern void RTC_SetTime(
-	unsigned char hour,
-	unsigned char minute,
-	unsigned char second);
+extern void RTC_SetTime( unsigned char hour,
+                         unsigned char minute,
+                         unsigned char second );
 
-extern void RTC_GetTime(
-	unsigned char *pHour,
-	unsigned char *pMinute,
-	unsigned char *pSecond);
+extern void RTC_GetTime( unsigned char * pHour,
+                         unsigned char * pMinute,
+                         unsigned char * pSecond );
 
-extern void RTC_SetTimeAlarm(
-	unsigned char *pHour,
-	unsigned char *pMinute,
-	unsigned char *pSecond);
+extern void RTC_SetTimeAlarm( unsigned char * pHour,
+                              unsigned char * pMinute,
+                              unsigned char * pSecond );
 
-void RTC_GetDate(
-    unsigned short *pYear,
-    unsigned char *pMonth,
-    unsigned char *pDay,
-    unsigned char *pWeek);
+void RTC_GetDate( unsigned short * pYear,
+                  unsigned char * pMonth,
+                  unsigned char * pDay,
+                  unsigned char * pWeek );
 
-extern void RTC_SetDate(
-    unsigned short year,
-    unsigned char month,
-    unsigned char day,
-    unsigned char week);
+extern void RTC_SetDate( unsigned short year,
+                         unsigned char month,
+                         unsigned char day,
+                         unsigned char week );
 
-extern void RTC_SetDateAlarm(unsigned char *pMonth, unsigned char *pDay);
+extern void RTC_SetDateAlarm( unsigned char * pMonth,
+                              unsigned char * pDay );
 
 #endif //#ifndef RTC_H
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -46,6 +46,7 @@
 /** \addtogroup usbd_config
  *@{
  */
+
 /*----------------------------------------------------------------------------
  *      Constants
  *----------------------------------------------------------------------------*/
@@ -53,24 +54,24 @@
 /** \addtogroup usbd_ids USBD Device IDs
  *      @{
  */
-#define USBD_VID_ATMEL              0x03EB  /**< Vendor ID: Atmel */
+#define USBD_VID_ATMEL          0x03EB      /**< Vendor ID: Atmel */
 
-#define USBD_PID_ENUM               0x0001  /**< Product ID: Enum (Core) */
-#define USBD_PID_CDCDSERIAL         0x6119  /**< Product ID: CDC Serial */
-#define USBD_PID_HIDKEYBOARD        0x6127  /**< Product ID: HID Keyboard */
-#define USBD_PID_AUDIO              0x6128  /**< Product ID: Audio devices */
-#define USBD_PID_MSD                0x6129  /**< Product ID: Massstorage */
-#define USBD_PID_CDCHID             0x6130  /**< Product ID: composite */
-#define USBD_PID_CDCAUDIO           0x6131  /**< Product ID: composite */
-#define USBD_PID_CDCMSD             0x6132  /**< Product ID: composite */
-#define USBD_PID_CDCCDC             0x6133  /**< Product ID: composite */
-#define USBD_PID_HIDAUDIO           0x6134  /**< Product ID: composite */
-#define USBD_PID_HIDMSD             0x6135  /**< Product ID: composite */
-#define USBD_PID_HIDMOUSE           0x6200  /**< Product ID: HID Mouse */
-#define USBD_PID_HIDTRANSFER        0x6201  /**< Product ID: HID Transfer */
-#define USBD_PID_CCID               0x6203  /**< Product ID: CCID */
+#define USBD_PID_ENUM           0x0001      /**< Product ID: Enum (Core) */
+#define USBD_PID_CDCDSERIAL     0x6119      /**< Product ID: CDC Serial */
+#define USBD_PID_HIDKEYBOARD    0x6127      /**< Product ID: HID Keyboard */
+#define USBD_PID_AUDIO          0x6128      /**< Product ID: Audio devices */
+#define USBD_PID_MSD            0x6129      /**< Product ID: Massstorage */
+#define USBD_PID_CDCHID         0x6130      /**< Product ID: composite */
+#define USBD_PID_CDCAUDIO       0x6131      /**< Product ID: composite */
+#define USBD_PID_CDCMSD         0x6132      /**< Product ID: composite */
+#define USBD_PID_CDCCDC         0x6133      /**< Product ID: composite */
+#define USBD_PID_HIDAUDIO       0x6134      /**< Product ID: composite */
+#define USBD_PID_HIDMSD         0x6135      /**< Product ID: composite */
+#define USBD_PID_HIDMOUSE       0x6200      /**< Product ID: HID Mouse */
+#define USBD_PID_HIDTRANSFER    0x6201      /**< Product ID: HID Transfer */
+#define USBD_PID_CCID           0x6203      /**< Product ID: CCID */
 
-#define USBD_RELEASE_1_00           0x0100  /**< Release: 1.00 */
+#define USBD_RELEASE_1_00       0x0100      /**< Release: 1.00 */
 /**     @}*/
 
 /** \addtogroup usbd_general_config USBD General Configure
@@ -78,9 +79,10 @@
  * This page lists general configurations for all USB device drivers.
  * - \ref USBD_BMATTRIBUTES
  */
+
 /** default USB Device attributes configuration descriptor
  *  (bus or self powered, remote wakeup) */
-#define USBD_BMATTRIBUTES           BOARD_USB_BMATTRIBUTES
+#define USBD_BMATTRIBUTES    BOARD_USB_BMATTRIBUTES
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -96,9 +98,9 @@
  * - \ref MSDDriverDescriptors_BULKIN
  */
 /** Address of the Mass Storage bulk-out endpoint.*/
-#define MSDDriverDescriptors_BULKOUT                1
+#define MSDDriverDescriptors_BULKOUT    1
 /** Address of the Mass Storage bulk-in endpoint.*/
-#define MSDDriverDescriptors_BULKIN                 2
+#define MSDDriverDescriptors_BULKIN     2
 /**      @}*/
 
 /*----------------------------------------------------------------------------
@@ -115,11 +117,11 @@
  * - \ref CDCDSerialDriverDescriptors_NOTIFICATION
  */
 /** Data OUT endpoint number */
-#define CDCDSerialDriverDescriptors_DATAOUT             1
+#define CDCDSerialDriverDescriptors_DATAOUT         1
 /** Data IN endpoint number */
-#define CDCDSerialDriverDescriptors_DATAIN              2
+#define CDCDSerialDriverDescriptors_DATAIN          2
 /** Notification endpoint number */
-#define CDCDSerialDriverDescriptors_NOTIFICATION        3
+#define CDCDSerialDriverDescriptors_NOTIFICATION    3
 /**      @}*/
 
 /*----------------------------------------------------------------------------
@@ -131,32 +133,35 @@
  * This page lists definitions for USB Audio Devices Drivers.
  * - \ref
  */
-#if defined(at91sam7s) || defined(at91sam9xe)
- /** Sample rate in Hz. */
- #define AUDDevice_SAMPLERATE        32000UL
- /** Number of channels in audio stream. */
- #define AUDDevice_NUMCHANNELS       1
- /** Number of bytes in one sample. */
- #define AUDDevice_BYTESPERSAMPLE    2
+#if defined( at91sam7s ) || defined( at91sam9xe )
+    /** Sample rate in Hz. */
+    #define AUDDevice_SAMPLERATE        32000UL
+    /** Number of channels in audio stream. */
+    #define AUDDevice_NUMCHANNELS       1
+    /** Number of bytes in one sample. */
+    #define AUDDevice_BYTESPERSAMPLE    2
 #else
- /** Sample rate in Hz. */
- #define AUDDevice_SAMPLERATE        48000UL
- /** Number of channels in audio stream. */
- #define AUDDevice_NUMCHANNELS       2
- /** Number of bytes in one sample. */
- #define AUDDevice_BYTESPERSAMPLE    2
-#endif
+    /** Sample rate in Hz. */
+    #define AUDDevice_SAMPLERATE        48000UL
+    /** Number of channels in audio stream. */
+    #define AUDDevice_NUMCHANNELS       2
+    /** Number of bytes in one sample. */
+    #define AUDDevice_BYTESPERSAMPLE    2
+#endif /* if defined( at91sam7s ) || defined( at91sam9xe ) */
 /** Number of bits in one sample. */
-#define AUDDevice_BITSPERSAMPLE     (AUDDevice_BYTESPERSAMPLE * 8)
+#define AUDDevice_BITSPERSAMPLE         ( AUDDevice_BYTESPERSAMPLE * 8 )
 /** Number of bytes in one USB subframe. */
-#define AUDDevice_BYTESPERSUBFRAME  (AUDDevice_NUMCHANNELS * \
-                                     AUDDevice_BYTESPERSAMPLE)
+#define AUDDevice_BYTESPERSUBFRAME \
+    ( AUDDevice_NUMCHANNELS *      \
+      AUDDevice_BYTESPERSAMPLE )
 /** Number of samples in one USB frame. */
-#define AUDDevice_SAMPLESPERFRAME   (AUDDevice_SAMPLERATE / 1000 \
-                                     * AUDDevice_NUMCHANNELS)
+#define AUDDevice_SAMPLESPERFRAME \
+    ( AUDDevice_SAMPLERATE / 1000 \
+      * AUDDevice_NUMCHANNELS )
 /** Number of bytes in one USB frame. */
-#define AUDDevice_BYTESPERFRAME     (AUDDevice_SAMPLESPERFRAME * \
-                                     AUDDevice_BYTESPERSAMPLE)
+#define AUDDevice_BYTESPERFRAME   \
+    ( AUDDevice_SAMPLESPERFRAME * \
+      AUDDevice_BYTESPERSAMPLE )
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -174,11 +179,11 @@
  *       IN EPs that support DMA and High bandwidth.
  */
 /** Data out endpoint number. */
-#define AUDDSpeakerDriverDescriptors_DATAOUT            0x04
+#define AUDDSpeakerDriverDescriptors_DATAOUT        0x04
 /** Endpoint polling interval 2^(x-1) * 125us */
-#define AUDDSpeakerDriverDescriptors_HS_INTERVAL        0x04
+#define AUDDSpeakerDriverDescriptors_HS_INTERVAL    0x04
 /** Endpoint polling interval 2^(x-1) * ms */
-#define AUDDSpeakerDriverDescriptors_FS_INTERVAL        0x01
+#define AUDDSpeakerDriverDescriptors_FS_INTERVAL    0x01
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -194,31 +199,31 @@
  * - \ref AUDDSpeakerPhoneDriverDescriptors_FS_INTERVAL
  */
 
-#if defined(at91sam7s) || defined(at91sam9xe)
+#if defined( at91sam7s ) || defined( at91sam9xe )
     /** Data out endpoint number, size 64B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT        0x01
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT    0x01
     /** Data in endpoint number, size 64B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN         0x02
-#elif defined(CHIP_USB_UDP)
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN     0x02
+#elif defined( CHIP_USB_UDP )
     /** Data out endpoint number, size 192B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT        0x04
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT    0x04
     /** Data in endpoint number, size 192B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN         0x05
-#elif defined(at91sam9m10ek)
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN     0x05
+#elif defined( at91sam9m10ek )
     /** Data out endpoint number, size 192B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT        0x01
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT    0x01
     /** Data in endpoint number, size 192B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN         0x06
-#else
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN     0x06
+#else  /* if defined( at91sam7s ) || defined( at91sam9xe ) */
     /** Data out endpoint number, size 192B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT        0x05
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAOUT    0x05
     /** Data in endpoint number, size 192B */
-    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN         0x06
-#endif
+    #define AUDDSpeakerPhoneDriverDescriptors_DATAIN     0x06
+#endif /* if defined( at91sam7s ) || defined( at91sam9xe ) */
 /** Endpoint polling interval 2^(x-1) * 125us */
-#define AUDDSpeakerPhoneDriverDescriptors_HS_INTERVAL        0x04
+#define AUDDSpeakerPhoneDriverDescriptors_HS_INTERVAL    0x04
 /** Endpoint polling interval 2^(x-1) * ms */
-#define AUDDSpeakerPhoneDriverDescriptors_FS_INTERVAL        0x01
+#define AUDDSpeakerPhoneDriverDescriptors_FS_INTERVAL    0x01
 /**      @}*/
 
 /*----------------------------------------------------------------------------
@@ -237,13 +242,13 @@
  * - \ref HIDDKeyboardDriverDescriptors_INTERRUPTOUT_POLLING
  */
 /** Interrupt IN endpoint number */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTIN           1
+#define HIDDKeyboardDriverDescriptors_INTERRUPTIN             1
 /** Interrupt IN endpoint polling rate (in milliseconds) */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTIN_POLLING   10
+#define HIDDKeyboardDriverDescriptors_INTERRUPTIN_POLLING     10
 /** Interrupt OUT endpoint number */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT          2
+#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT            2
 /** Interrupt OUT endpoint polling rate (in milliseconds) */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT_POLLING  10
+#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT_POLLING    10
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -260,9 +265,9 @@
  * - \ref HIDDMouseDriverDescriptors_INTERRUPTIN_POLLING
  */
 /** Interrupt IN endpoint number */
-#define HIDDMouseDriverDescriptors_INTERRUPTIN           1
+#define HIDDMouseDriverDescriptors_INTERRUPTIN            1
 /** Interrupt IN endpoint polling rate (in milliseconds) */
-#define HIDDMouseDriverDescriptors_INTERRUPTIN_POLLING   10
+#define HIDDMouseDriverDescriptors_INTERRUPTIN_POLLING    10
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -281,13 +286,13 @@
  * - \ref HIDDTransferDriverDescriptors_INTERRUPTOUT_POLLING
  */
 /** Interrupt IN endpoint number. */
-#define HIDDTransferDriverDescriptors_INTERRUPTIN           1
+#define HIDDTransferDriverDescriptors_INTERRUPTIN             1
 /** Polling rate in ms */
-#define HIDDTransferDriverDescriptors_INTERRUPTIN_POLLING   50
+#define HIDDTransferDriverDescriptors_INTERRUPTIN_POLLING     50
 /** Interrupt IN endpoint polling rate (in milliseconds). */
-#define HIDDTransferDriverDescriptors_INTERRUPTOUT          2
+#define HIDDTransferDriverDescriptors_INTERRUPTOUT            2
 /** Polling rate in ms */
-#define HIDDTransferDriverDescriptors_INTERRUPTOUT_POLLING  50
+#define HIDDTransferDriverDescriptors_INTERRUPTOUT_POLLING    50
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -301,5 +306,3 @@
 
 /**@}*/
 #endif //#ifndef USBD_CONFIG_H
-
-

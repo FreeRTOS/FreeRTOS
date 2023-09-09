@@ -139,7 +139,7 @@ SECTIONS
         . = ALIGN(32);
 		__privileged_functions_end__ = .;
 	} >rom
- 
+
 
     .ctors : {
         . = ALIGN(32);
@@ -295,7 +295,7 @@ SECTIONS
         . = ALIGN(32);
 		__privileged_data_end__ = .;
 	} >ram
- 
+
 
     .stack (NOLOAD) : ALIGN(16) {
         PROVIDE(metal_segment_stack_begin = .);

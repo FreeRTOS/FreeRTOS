@@ -37,12 +37,12 @@
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-	/* Initialize a hardware timer. */
+    /* Initialize a hardware timer. */
 }
 /*-----------------------------------------------------------*/
 
 void IntQueueTestTimerHandler( void )
 {
-	portYIELD_FROM_ISR( xSecondTimerHandler() );
+    portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
 /*-----------------------------------------------------------*/

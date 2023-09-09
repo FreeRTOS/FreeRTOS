@@ -20,57 +20,57 @@
 extern "C" {
 #endif
 
-#define RTC_PRESCALER 100UL
+#define RTC_PRESCALER    100UL
 
-#define SUCCESS 0U
-#define ERROR   1U
-
-/*------------------------------------------------------------------------------
- *
- */
-uint8_t Invalid_IRQHandler(void);
-uint8_t External_1_IRQHandler(void);
-uint8_t External_2_IRQHandler(void);
-uint8_t External_3_IRQHandler(void);
-uint8_t External_4_IRQHandler(void);
-uint8_t External_5_IRQHandler(void);
-uint8_t External_6_IRQHandler(void);
-uint8_t External_7_IRQHandler(void);
-uint8_t External_8_IRQHandler(void);
-uint8_t External_9_IRQHandler(void);
-uint8_t External_10_IRQHandler(void);
-uint8_t External_11_IRQHandler(void);
-uint8_t External_12_IRQHandler(void);
-uint8_t External_13_IRQHandler(void);
-uint8_t External_14_IRQHandler(void);
-uint8_t External_15_IRQHandler(void);
-uint8_t External_16_IRQHandler(void);
-uint8_t External_17_IRQHandler(void);
-uint8_t External_18_IRQHandler(void);
-uint8_t External_19_IRQHandler(void);
-uint8_t External_20_IRQHandler(void);
-uint8_t External_21_IRQHandler(void);
-uint8_t External_22_IRQHandler(void);
-uint8_t External_23_IRQHandler(void);
-uint8_t External_24_IRQHandler(void);
-uint8_t External_25_IRQHandler(void);
-uint8_t External_26_IRQHandler(void);
-uint8_t External_27_IRQHandler(void);
-uint8_t External_28_IRQHandler(void);
-uint8_t External_29_IRQHandler(void);
-uint8_t External_30_IRQHandler(void);
-uint8_t External_31_IRQHandler(void);
+#define SUCCESS          0U
+#define ERROR            1U
 
 /*------------------------------------------------------------------------------
  *
  */
-extern void Software_IRQHandler(void);
+uint8_t Invalid_IRQHandler( void );
+uint8_t External_1_IRQHandler( void );
+uint8_t External_2_IRQHandler( void );
+uint8_t External_3_IRQHandler( void );
+uint8_t External_4_IRQHandler( void );
+uint8_t External_5_IRQHandler( void );
+uint8_t External_6_IRQHandler( void );
+uint8_t External_7_IRQHandler( void );
+uint8_t External_8_IRQHandler( void );
+uint8_t External_9_IRQHandler( void );
+uint8_t External_10_IRQHandler( void );
+uint8_t External_11_IRQHandler( void );
+uint8_t External_12_IRQHandler( void );
+uint8_t External_13_IRQHandler( void );
+uint8_t External_14_IRQHandler( void );
+uint8_t External_15_IRQHandler( void );
+uint8_t External_16_IRQHandler( void );
+uint8_t External_17_IRQHandler( void );
+uint8_t External_18_IRQHandler( void );
+uint8_t External_19_IRQHandler( void );
+uint8_t External_20_IRQHandler( void );
+uint8_t External_21_IRQHandler( void );
+uint8_t External_22_IRQHandler( void );
+uint8_t External_23_IRQHandler( void );
+uint8_t External_24_IRQHandler( void );
+uint8_t External_25_IRQHandler( void );
+uint8_t External_26_IRQHandler( void );
+uint8_t External_27_IRQHandler( void );
+uint8_t External_28_IRQHandler( void );
+uint8_t External_29_IRQHandler( void );
+uint8_t External_30_IRQHandler( void );
+uint8_t External_31_IRQHandler( void );
+
+/*------------------------------------------------------------------------------
+ *
+ */
+extern void Software_IRQHandler( void );
 extern void Timer_IRQHandle( void );
 
 /*------------------------------------------------------------------------------
  * RISC-V interrupt handler for external interrupts.
  */
-uint8_t (*ext_irq_handler_table[32])(void) =
+uint8_t (* ext_irq_handler_table[ 32 ])( void ) =
 {
     Invalid_IRQHandler,
     External_1_IRQHandler,
@@ -109,18 +109,18 @@ uint8_t (*ext_irq_handler_table[32])(void) =
 /*------------------------------------------------------------------------------
  *
  */
-void handle_m_ext_interrupt(void)
+void handle_m_ext_interrupt( void )
 {
-    uint32_t int_num  = PLIC_ClaimIRQ();
+    uint32_t int_num = PLIC_ClaimIRQ();
     uint8_t disable = EXT_IRQ_KEEP_ENABLED;
 
-    disable = ext_irq_handler_table[int_num]();
+    disable = ext_irq_handler_table[ int_num ]();
 
-    PLIC_CompleteIRQ(int_num);
+    PLIC_CompleteIRQ( int_num );
 
-    if(EXT_IRQ_DISABLE == disable)
+    if( EXT_IRQ_DISABLE == disable )
     {
-        PLIC_DisableIRQ((IRQn_Type)int_num);
+        PLIC_DisableIRQ( ( IRQn_Type ) int_num );
     }
 }
 

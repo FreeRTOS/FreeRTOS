@@ -25,37 +25,37 @@
 #include "75x_map.h"
 
 /* Exported types ------------------------------------------------------------*/
- typedef struct
+typedef struct
 {
-  u16 WDG_Mode;       /* Watchdog or Timer mode */
-  u16 WDG_Preload;    /* Preload register */
-  u8 WDG_Prescaler;   /* Prescaler register */
-}WDG_InitTypeDef;
+    u16 WDG_Mode;     /* Watchdog or Timer mode */
+    u16 WDG_Preload;  /* Preload register */
+    u8 WDG_Prescaler; /* Prescaler register */
+} WDG_InitTypeDef;
 /* Exported constants --------------------------------------------------------*/
 
 /* WDG/Timer Select */
-#define WDG_Mode_WDG       0x0001
-#define WDG_Mode_Timer     0xFFFE
+#define WDG_Mode_WDG      0x0001
+#define WDG_Mode_Timer    0xFFFE
 
 /* WDG End of Count interrupt request */
-#define WDG_IT_EC          0x0001
+#define WDG_IT_EC         0x0001
 
 /* WDG end of count Flag */
-#define WDG_FLAG_EC        0x0001
+#define WDG_FLAG_EC       0x0001
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-void WDG_DeInit(void);
-void WDG_Init(WDG_InitTypeDef* WDG_InitStruct);
-void WDG_StructInit(WDG_InitTypeDef* WDG_InitStruct);
-void WDG_Cmd(FunctionalState NewState);
-void WDG_ITConfig(FunctionalState NewState);
-u16 WDG_GetCounter(void);
-FlagStatus WDG_GetFlagStatus(void);
-void WDG_ClearFlag(void);
-ITStatus WDG_GetITStatus(void);
-void WDG_ClearITPendingBit(void);
+void WDG_DeInit( void );
+void WDG_Init( WDG_InitTypeDef * WDG_InitStruct );
+void WDG_StructInit( WDG_InitTypeDef * WDG_InitStruct );
+void WDG_Cmd( FunctionalState NewState );
+void WDG_ITConfig( FunctionalState NewState );
+u16 WDG_GetCounter( void );
+FlagStatus WDG_GetFlagStatus( void );
+void WDG_ClearFlag( void );
+ITStatus WDG_GetITStatus( void );
+void WDG_ClearITPendingBit( void );
 
 #endif /* __WDG_H */
 

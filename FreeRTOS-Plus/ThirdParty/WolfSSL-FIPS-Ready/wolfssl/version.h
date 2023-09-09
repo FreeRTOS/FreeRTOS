@@ -21,20 +21,19 @@
 
 
 #ifndef WOLFSSL_VERSION_H
-#define WOLFSSL_VERSION_H
+    #define WOLFSSL_VERSION_H
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#define LIBWOLFSSL_VERSION_STRING "4.5.0"
-#define LIBWOLFSSL_VERSION_HEX 0x04005000
+    #define LIBWOLFSSL_VERSION_STRING    "4.5.0"
+    #define LIBWOLFSSL_VERSION_HEX       0x04005000
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 
 #endif /* WOLFSSL_VERSION_H */
-

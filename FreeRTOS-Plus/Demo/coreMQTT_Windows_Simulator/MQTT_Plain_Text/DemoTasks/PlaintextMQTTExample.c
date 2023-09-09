@@ -734,7 +734,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
     /* Populate subscription list. */
-    for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         xMQTTSubscription[ ulTopicCount ].qos = MQTTQoS2;
         xMQTTSubscription[ ulTopicCount ].pTopicFilter = xTopicFilterContext[ ulTopicCount ].pcTopicFilter;
@@ -762,7 +762,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                                   usSubscribePacketIdentifier );
         configASSERT( xResult == MQTTSuccess );
 
-        for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
         {
             LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n",
                        xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
@@ -865,7 +865,7 @@ static void prvMQTTUnsubscribeFromTopics( MQTTContext_t * pxMQTTContext )
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
 
     /* Populate subscription list. */
-    for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         xMQTTSubscription[ ulTopicCount ].qos = MQTTQoS2;
         xMQTTSubscription[ ulTopicCount ].pTopicFilter = xTopicFilterContext[ ulTopicCount ].pcTopicFilter;
@@ -979,7 +979,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
     LogInfo( ( "Incoming QoS : %d\n", pxPublishInfo->qos ) );
 
     /* Verify the received publish is for one of the topics that's been subscribed to. */
-    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         if( ( pxPublishInfo->topicNameLength == strlen( xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) ) &&
             ( strncmp( xTopicFilterContext[ ulTopicCount ].pcTopicFilter, pxPublishInfo->pTopicName, pxPublishInfo->topicNameLength ) == 0 ) )
@@ -1090,7 +1090,7 @@ static void prvInitializeTopicBuffers( void )
     int xCharactersWritten;
 
 
-    for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         /* Write topic strings into buffers. */
         xCharactersWritten = snprintf( xTopicFilterContext[ ulTopicCount ].pcTopicFilter,

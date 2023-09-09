@@ -47,9 +47,14 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern uint8_t ILI9488_EbiInitializeWithDma(sXdmad * dmad);
-extern uint8_t ILI9488_EbiDmaTxTransfer( uint16_t *pTxBuffer, uint32_t wTxSize);
-extern uint8_t ILI9488_EbiDmaRxTransfer( uint32_t *pRxBuffer,uint32_t wRxSize);
-extern uint8_t ILI9488_EbiSendCommand(uint16_t Instr, uint16_t *pTxData,
-		uint32_t *pRxData, AccessIli_t ReadWrite, uint32_t size);
+extern uint8_t ILI9488_EbiInitializeWithDma( sXdmad * dmad );
+extern uint8_t ILI9488_EbiDmaTxTransfer( uint16_t * pTxBuffer,
+                                         uint32_t wTxSize );
+extern uint8_t ILI9488_EbiDmaRxTransfer( uint32_t * pRxBuffer,
+                                         uint32_t wRxSize );
+extern uint8_t ILI9488_EbiSendCommand( uint16_t Instr,
+                                       uint16_t * pTxData,
+                                       uint32_t * pRxData,
+                                       AccessIli_t ReadWrite,
+                                       uint32_t size );
 #endif /* #ifndef ILI9488_EBI_DMA */

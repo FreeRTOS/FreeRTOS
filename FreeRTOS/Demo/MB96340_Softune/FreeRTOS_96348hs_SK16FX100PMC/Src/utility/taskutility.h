@@ -5,4 +5,3 @@
 void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority );
 
 #endif
-

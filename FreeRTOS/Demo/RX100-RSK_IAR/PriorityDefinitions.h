@@ -29,15 +29,15 @@
 
 
 /* The interrupt priority used by the kernel itself for the tick interrupt and
-the pended interrupt.  This would normally be the lowest priority. */
+ * the pended interrupt.  This would normally be the lowest priority. */
 #define configKERNEL_INTERRUPT_PRIORITY         1
 
 /* The maximum interrupt priority from which FreeRTOS API calls can be made.
-Interrupts that use a priority above this will not be effected by anything the
-kernel is doing but must not make any use of FreeRTOS functionality.
-interrupts that use a priority at or below configMAX_SYSCALL_INTERRUPT_PRIORITY
-can make use of FreeRTOS API function but *only* functions that end in
-"FromISR()". */
+ * Interrupts that use a priority above this will not be effected by anything the
+ * kernel is doing but must not make any use of FreeRTOS functionality.
+ * interrupts that use a priority at or below configMAX_SYSCALL_INTERRUPT_PRIORITY
+ * can make use of FreeRTOS API function but *only* functions that end in
+ * "FromISR()". */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    4
 
 #endif /* PRIORITY_DEFINITIONS_H */

@@ -118,7 +118,7 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t
 
 /**
  * @brief Receives data from an established TCP connection.
- * 
+ *
  * @note When the number of bytes requested is 1, the TCP socket's Rx stream
  * is checked for available bytes to read. If there are none, this function
  * immediately returns 0 without blocking.

@@ -44,46 +44,51 @@
 /*
  *  ======== SemaphoreP_create ========
  */
-SemaphoreP_Handle SemaphoreP_create(unsigned int count,
-                                    SemaphoreP_Params *params)
+SemaphoreP_Handle SemaphoreP_create( unsigned int count,
+                                     SemaphoreP_Params * params )
 {
     SemaphoreHandle_t sem = NULL;
     SemaphoreP_Params semParams;
 
-    if (params == NULL) {
+    if( params == NULL )
+    {
         params = &semParams;
-        SemaphoreP_Params_init(params);
+        SemaphoreP_Params_init( params );
     }
 
-    if (params->mode == SemaphoreP_Mode_COUNTING) {
-#if (configUSE_COUNTING_SEMAPHORES == 1)
-        sem = xSemaphoreCreateCounting((UBaseType_t)params->maxCount,
-                (UBaseType_t)count);
-#endif
+    if( params->mode == SemaphoreP_Mode_COUNTING )
+    {
+        #if ( configUSE_COUNTING_SEMAPHORES == 1 )
+            sem = xSemaphoreCreateCounting( ( UBaseType_t ) params->maxCount,
+                                            ( UBaseType_t ) count );
+        #endif
     }
-    else {
+    else
+    {
         sem = xSemaphoreCreateBinary();
-        if (count != 0) {
-            xSemaphoreGive(sem);
+
+        if( count != 0 )
+        {
+            xSemaphoreGive( sem );
         }
     }
 
-    return ((SemaphoreP_Handle)sem);
+    return( ( SemaphoreP_Handle ) sem );
 }
 
 /*
  *  ======== SemaphoreP_delete ========
  */
-SemaphoreP_Status SemaphoreP_delete(SemaphoreP_Handle handle)
+SemaphoreP_Status SemaphoreP_delete( SemaphoreP_Handle handle )
 {
-    vSemaphoreDelete((SemaphoreHandle_t)handle);
-    return (SemaphoreP_OK);
+    vSemaphoreDelete( ( SemaphoreHandle_t ) handle );
+    return( SemaphoreP_OK );
 }
 
 /*
  *  ======== SemaphoreP_Params_init ========
  */
-void SemaphoreP_Params_init(SemaphoreP_Params *params)
+void SemaphoreP_Params_init( SemaphoreP_Params * params )
 {
     params->mode = SemaphoreP_Mode_BINARY;
     params->name = NULL;
@@ -94,72 +99,84 @@ void SemaphoreP_Params_init(SemaphoreP_Params *params)
 /*
  *  ======== SemaphoreP_pend ========
  */
-SemaphoreP_Status SemaphoreP_pend(SemaphoreP_Handle handle, uint32_t timeout)
+SemaphoreP_Status SemaphoreP_pend( SemaphoreP_Handle handle,
+                                   uint32_t timeout )
 {
     BaseType_t status;
     uint32_t ticks;
     uint32_t tickRateMS;
 
-    if (timeout == SemaphoreP_WAIT_FOREVER) {
+    if( timeout == SemaphoreP_WAIT_FOREVER )
+    {
         ticks = portMAX_DELAY;
     }
-    else {
-        tickRateMS = (configTICK_RATE_HZ / 1000);
+    else
+    {
+        tickRateMS = ( configTICK_RATE_HZ / 1000 );
+
         /*
          * Don't wait if tick rate resolution is greater than 1ms and
          * prevent potential division by 0 when calculating the ticks to
          * delay.
          */
-        if (tickRateMS == 0) {
+        if( tickRateMS == 0 )
+        {
             ticks = 0;
         }
-        else {
-            ticks = (timeout / tickRateMS);
+        else
+        {
+            ticks = ( timeout / tickRateMS );
         }
     }
 
-    status = xSemaphoreTake((SemaphoreHandle_t)handle, ticks);
+    status = xSemaphoreTake( ( SemaphoreHandle_t ) handle, ticks );
 
-    if (status == pdTRUE) {
-        return (SemaphoreP_OK);
+    if( status == pdTRUE )
+    {
+        return( SemaphoreP_OK );
     }
 
-    return (SemaphoreP_TIMEOUT);
+    return( SemaphoreP_TIMEOUT );
 }
 
 /*
  *  ======== SemaphoreP_post ========
  */
-SemaphoreP_Status SemaphoreP_post(SemaphoreP_Handle handle)
+SemaphoreP_Status SemaphoreP_post( SemaphoreP_Handle handle )
 {
-       BaseType_t xHigherPriorityTaskWoken;
-       BaseType_t result;
-       SemaphoreP_Status status;
+    BaseType_t xHigherPriorityTaskWoken;
+    BaseType_t result;
+    SemaphoreP_Status status;
 
-    if (!HwiP_inISR()) {
+    if( !HwiP_inISR() )
+    {
         /* Not in ISR */
-        xSemaphoreGive((SemaphoreHandle_t)handle);
+        xSemaphoreGive( ( SemaphoreHandle_t ) handle );
         status = SemaphoreP_OK;
     }
-    else {
-        result = xSemaphoreGiveFromISR((SemaphoreHandle_t)handle,
-            &xHigherPriorityTaskWoken);
+    else
+    {
+        result = xSemaphoreGiveFromISR( ( SemaphoreHandle_t ) handle,
+                                        &xHigherPriorityTaskWoken );
 
-        if (result == pdTRUE) {
+        if( result == pdTRUE )
+        {
             status = SemaphoreP_OK;
         }
-        else {
+        else
+        {
             /* The queue is full */
             status = SemaphoreP_FAILURE;
         }
     }
-    return (status);
+
+    return( status );
 }
 
 /*
  *  ======== SemaphoreP_postFromClock ========
  */
-SemaphoreP_Status SemaphoreP_postFromClock(SemaphoreP_Handle handle)
+SemaphoreP_Status SemaphoreP_postFromClock( SemaphoreP_Handle handle )
 {
-    return (SemaphoreP_post(handle));
+    return( SemaphoreP_post( handle ) );
 }

@@ -37,20 +37,20 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void sfrbu_enable_ddr_backup(void)
+void sfrbu_enable_ddr_backup( void )
 {
-	/* Enable DDR backup mode. Isolate the DDR Pads from the CPU domain,
-	   VCCCORE */
-	SFRBU->SFRBU_DDRBUMCR = SFRBU_DDRBUMCR_BUMEN;
+    /* Enable DDR backup mode. Isolate the DDR Pads from the CPU domain,
+     * VCCCORE */
+    SFRBU->SFRBU_DDRBUMCR = SFRBU_DDRBUMCR_BUMEN;
 }
 
-void sfrbu_disable_ddr_backup(void)
+void sfrbu_disable_ddr_backup( void )
 {
-	/* Connect the DDR Pads to the CPU domain, VCCCORE */
-	SFRBU->SFRBU_DDRBUMCR &= ~SFRBU_DDRBUMCR_BUMEN;
+    /* Connect the DDR Pads to the CPU domain, VCCCORE */
+    SFRBU->SFRBU_DDRBUMCR &= ~SFRBU_DDRBUMCR_BUMEN;
 }
 
-bool sfrbu_is_ddr_backup_enabled(void)
+bool sfrbu_is_ddr_backup_enabled( void )
 {
-	return (SFRBU->SFRBU_DDRBUMCR & SFRBU_DDRBUMCR_BUMEN) != 0;
+    return ( SFRBU->SFRBU_DDRBUMCR & SFRBU_DDRBUMCR_BUMEN ) != 0;
 }

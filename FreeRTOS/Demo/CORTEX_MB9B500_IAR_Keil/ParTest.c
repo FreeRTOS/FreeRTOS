@@ -37,116 +37,118 @@
 #include "system_mb9bf50x.h"
 
 /* Only the LEDs on one of the two seven segment displays are used. */
-#define partstMAX_LEDS		8
+#define partstMAX_LEDS        8
 
 /* The LEDs are controlled by bits 8 to 15 of the IO port. */
-#define partstLED_0_OFFSET	8
+#define partstLED_0_OFFSET    8
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-const unsigned short usGPIOState = 0xFF00U;
+    const unsigned short usGPIOState = 0xFF00U;
 
-	/* Analog inputs are not used on the LED outputs. */
-	FM3_GPIO->ADE  = 0x00FF;
-	
-	/* LED seg1 to GPIO output (P18->P1F). */
-	FM3_GPIO->DDR1 = 0xFF00;
-	FM3_GPIO->PFR1 = 0x0000;
-	
-	/* LED seg2 to GPIO output (P30->P3F). */
-	FM3_GPIO->DDR3 = 0xFF00;
-	FM3_GPIO->PFR3 = 0x0000;
-	
-	/* Start with all LEDs off. */
-	FM3_GPIO->PDOR3 = usGPIOState;
-	FM3_GPIO->PDOR1 = usGPIOState;
+    /* Analog inputs are not used on the LED outputs. */
+    FM3_GPIO->ADE = 0x00FF;
+
+    /* LED seg1 to GPIO output (P18->P1F). */
+    FM3_GPIO->DDR1 = 0xFF00;
+    FM3_GPIO->PFR1 = 0x0000;
+
+    /* LED seg2 to GPIO output (P30->P3F). */
+    FM3_GPIO->DDR3 = 0xFF00;
+    FM3_GPIO->PFR3 = 0x0000;
+
+    /* Start with all LEDs off. */
+    FM3_GPIO->PDOR3 = usGPIOState;
+    FM3_GPIO->PDOR1 = usGPIOState;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < partstMAX_LEDS )
-	{
-		/* A critical section is used as the LEDs are also accessed from an
-		interrupt. */
-		taskENTER_CRITICAL();
-		{
-			if( xValue == pdTRUE )
-			{
-				FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
-			}
-			else
-			{
-				FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstMAX_LEDS )
+    {
+        /* A critical section is used as the LEDs are also accessed from an
+         * interrupt. */
+        taskENTER_CRITICAL();
+        {
+            if( xValue == pdTRUE )
+            {
+                FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
+            }
+            else
+            {
+                FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED,
+                            signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxInterruptFlags;
+    unsigned portBASE_TYPE uxInterruptFlags;
 
-	uxInterruptFlags = portSET_INTERRUPT_MASK_FROM_ISR();
-	{
-		if( uxLED < partstMAX_LEDS )
-		{
-			if( xValue == pdTRUE )
-			{
-				FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
-			}
-			else
-			{
-				FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
-			}
-		}
-	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
+    uxInterruptFlags = portSET_INTERRUPT_MASK_FROM_ISR();
+    {
+        if( uxLED < partstMAX_LEDS )
+        {
+            if( xValue == pdTRUE )
+            {
+                FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
+            }
+            else
+            {
+                FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
+            }
+        }
+    }
+    portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstMAX_LEDS )
-	{
-		/* A critical section is used as the LEDs are also accessed from an
-		interrupt. */
-		taskENTER_CRITICAL();
-		{
-			if( ( FM3_GPIO->PDOR3 & ( 1UL << ( uxLED + partstLED_0_OFFSET ) ) ) != 0UL )
-			{
-				FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
-			}
-			else
-			{
-				FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstMAX_LEDS )
+    {
+        /* A critical section is used as the LEDs are also accessed from an
+         * interrupt. */
+        taskENTER_CRITICAL();
+        {
+            if( ( FM3_GPIO->PDOR3 & ( 1UL << ( uxLED + partstLED_0_OFFSET ) ) ) != 0UL )
+            {
+                FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
+            }
+            else
+            {
+                FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 long lParTestGetLEDState( unsigned long ulLED )
 {
-long lReturn = pdFALSE;
+    long lReturn = pdFALSE;
 
-	if( ulLED < partstMAX_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			if( ( FM3_GPIO->PDOR3 & ( 1UL << ( ulLED + partstLED_0_OFFSET ) ) ) == 0UL )
-			{
-				lReturn = pdTRUE;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( ulLED < partstMAX_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            if( ( FM3_GPIO->PDOR3 & ( 1UL << ( ulLED + partstLED_0_OFFSET ) ) ) == 0UL )
+            {
+                lReturn = pdTRUE;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 
-	return lReturn;
+    return lReturn;
 }
 /*-----------------------------------------------------------*/

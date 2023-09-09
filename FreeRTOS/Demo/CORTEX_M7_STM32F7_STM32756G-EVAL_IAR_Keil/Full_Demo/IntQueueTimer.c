@@ -52,65 +52,65 @@
 #include "IntQueue.h"
 
 /* The frequencies at which the first two timers expire are slightly offset to
-ensure they don't remain synchronised.  The frequency of the highest priority
-interrupt is 20 times faster so really hammers the interrupt entry and exit
-code. */
-#define tmrTIMER_2_FREQUENCY	( 2000UL )
-#define tmrTIMER_3_FREQUENCY	( 2003UL )
-#define tmrTIMER_4_FREQUENCY	( 20000UL )
+ * ensure they don't remain synchronised.  The frequency of the highest priority
+ * interrupt is 20 times faster so really hammers the interrupt entry and exit
+ * code. */
+#define tmrTIMER_2_FREQUENCY    ( 2000UL )
+#define tmrTIMER_3_FREQUENCY    ( 2003UL )
+#define tmrTIMER_4_FREQUENCY    ( 20000UL )
 
 /* The high frequency interrupt given a priority above the maximum at which
-interrupt safe FreeRTOS calls can be made.  The priority of the lower frequency
-timers must still be above the tick interrupt priority. */
-#define tmrLOWER_PRIORITY		configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1
-#define tmrMEDIUM_PRIORITY		configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
-#define tmrHIGHER_PRIORITY		configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY - 1
+ * interrupt safe FreeRTOS calls can be made.  The priority of the lower frequency
+ * timers must still be above the tick interrupt priority. */
+#define tmrLOWER_PRIORITY       configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1
+#define tmrMEDIUM_PRIORITY      configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
+#define tmrHIGHER_PRIORITY      configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY - 1
 /*-----------------------------------------------------------*/
 
 /* For convenience the high frequency timer increments a variable that is then
-used as the time base for the run time stats. */
+ * used as the time base for the run time stats. */
 volatile uint32_t ulHighFrequencyTimerCounts = 0;
 
 /*-----------------------------------------------------------*/
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-TIM_HandleTypeDef    xTimHandle;
-const uint32_t ulPrescale = 0; /* No prescale. */
+    TIM_HandleTypeDef xTimHandle;
+    const uint32_t ulPrescale = 0; /* No prescale. */
 
-	/* Clock the utilised timers. */
-	__TIM2_CLK_ENABLE();
-	__TIM3_CLK_ENABLE();
-	__TIM4_CLK_ENABLE();
+    /* Clock the utilised timers. */
+    __TIM2_CLK_ENABLE();
+    __TIM3_CLK_ENABLE();
+    __TIM4_CLK_ENABLE();
 
-	/* Configure TIM2 to generate an interrupt at the required frequency. */
-	xTimHandle.Instance = TIM2;
-	xTimHandle.Init.Period = ( SystemCoreClock / 2UL ) / ( tmrTIMER_2_FREQUENCY - 1 );
-	xTimHandle.Init.Prescaler = ulPrescale;
-	xTimHandle.Init.ClockDivision = 0;
-	xTimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_Base_Init( &xTimHandle );
-	HAL_TIM_Base_Start_IT( &xTimHandle );
+    /* Configure TIM2 to generate an interrupt at the required frequency. */
+    xTimHandle.Instance = TIM2;
+    xTimHandle.Init.Period = ( SystemCoreClock / 2UL ) / ( tmrTIMER_2_FREQUENCY - 1 );
+    xTimHandle.Init.Prescaler = ulPrescale;
+    xTimHandle.Init.ClockDivision = 0;
+    xTimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    HAL_TIM_Base_Init( &xTimHandle );
+    HAL_TIM_Base_Start_IT( &xTimHandle );
 
     /* Configure and enable TIM2 interrupt. */
-	NVIC_SetPriority( TIM2_IRQn, tmrLOWER_PRIORITY );
+    NVIC_SetPriority( TIM2_IRQn, tmrLOWER_PRIORITY );
     NVIC_ClearPendingIRQ( TIM2_IRQn );
     NVIC_EnableIRQ( TIM2_IRQn );
 
-	/* Repeat for TIM3 and TIM4. */
-	xTimHandle.Instance = TIM3;
-	xTimHandle.Init.Period = ( SystemCoreClock / 2UL ) / ( tmrTIMER_3_FREQUENCY - 1 );
-	HAL_TIM_Base_Init( &xTimHandle );
-	HAL_TIM_Base_Start_IT( &xTimHandle );
-	NVIC_SetPriority( TIM3_IRQn, tmrMEDIUM_PRIORITY );
+    /* Repeat for TIM3 and TIM4. */
+    xTimHandle.Instance = TIM3;
+    xTimHandle.Init.Period = ( SystemCoreClock / 2UL ) / ( tmrTIMER_3_FREQUENCY - 1 );
+    HAL_TIM_Base_Init( &xTimHandle );
+    HAL_TIM_Base_Start_IT( &xTimHandle );
+    NVIC_SetPriority( TIM3_IRQn, tmrMEDIUM_PRIORITY );
     NVIC_ClearPendingIRQ( TIM3_IRQn );
     NVIC_EnableIRQ( TIM3_IRQn );
 
-	xTimHandle.Instance = TIM4;
-	xTimHandle.Init.Period = ( SystemCoreClock / 2UL ) / ( tmrTIMER_4_FREQUENCY - 1 );
-	HAL_TIM_Base_Init( &xTimHandle );
-	HAL_TIM_Base_Start_IT( &xTimHandle );
-	NVIC_SetPriority( TIM4_IRQn, tmrHIGHER_PRIORITY );
+    xTimHandle.Instance = TIM4;
+    xTimHandle.Init.Period = ( SystemCoreClock / 2UL ) / ( tmrTIMER_4_FREQUENCY - 1 );
+    HAL_TIM_Base_Init( &xTimHandle );
+    HAL_TIM_Base_Start_IT( &xTimHandle );
+    NVIC_SetPriority( TIM4_IRQn, tmrHIGHER_PRIORITY );
     NVIC_ClearPendingIRQ( TIM4_IRQn );
     NVIC_EnableIRQ( TIM4_IRQn );
 }
@@ -118,26 +118,25 @@ const uint32_t ulPrescale = 0; /* No prescale. */
 
 void TIM2_IRQHandler( void )
 {
-	/* Clear the interrupt and call the IntQTimer test function. */
-	TIM2->SR = 0;
-	portYIELD_FROM_ISR( xFirstTimerHandler() );
+    /* Clear the interrupt and call the IntQTimer test function. */
+    TIM2->SR = 0;
+    portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
 void TIM3_IRQHandler( void )
 {
-	/* Clear the interrupt and call the IntQTimer test function. */
-	TIM3->SR = 0;
-	portYIELD_FROM_ISR( xSecondTimerHandler() );
+    /* Clear the interrupt and call the IntQTimer test function. */
+    TIM3->SR = 0;
+    portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
 void TIM4_IRQHandler( void )
 {
-	TIM4->SR = 0;
+    TIM4->SR = 0;
 
-	/* Keep a count of the number of interrupts to use as a time base for the
-	run-time stats. */
-	ulHighFrequencyTimerCounts++;
+    /* Keep a count of the number of interrupts to use as a time base for the
+     * run-time stats. */
+    ulHighFrequencyTimerCounts++;
 }
-

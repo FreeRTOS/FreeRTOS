@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,20 +25,20 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #ifndef __ALT_DMA_H__
-#define __ALT_DMA_H__
+    #define __ALT_DMA_H__
 
-#include "hwlib.h"
-#include "alt_dma_common.h"
-#include "alt_dma_program.h"
+    #include "hwlib.h"
+    #include "alt_dma_common.h"
+    #include "alt_dma_program.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 /*!
  * \addtogroup ALT_DMA DMA Controller API
@@ -67,13 +67,13 @@ extern "C"
  * @{
  */
 
-#ifndef ALT_DMA_PERIPH_PROVISION_16550_SUPPORT
-#define ALT_DMA_PERIPH_PROVISION_16550_SUPPORT (1)
-#endif
+    #ifndef ALT_DMA_PERIPH_PROVISION_16550_SUPPORT
+        #define ALT_DMA_PERIPH_PROVISION_16550_SUPPORT    ( 1 )
+    #endif
 
-#ifndef ALT_DMA_PERIPH_PROVISION_QSPI_SUPPORT
-#define ALT_DMA_PERIPH_PROVISION_QSPI_SUPPORT (1)
-#endif
+    #ifndef ALT_DMA_PERIPH_PROVISION_QSPI_SUPPORT
+        #define ALT_DMA_PERIPH_PROVISION_QSPI_SUPPORT    ( 1 )
+    #endif
 
 /*!
  * @}
@@ -92,232 +92,232 @@ extern "C"
  * This type definition enumerates the operational states that the DMA manager
  * may have.
  */
-typedef enum ALT_DMA_MANAGER_STATE_e
-{
-    ALT_DMA_MANAGER_STATE_STOPPED     = 0, /*!< Stopped */
-    ALT_DMA_MANAGER_STATE_EXECUTING   = 1, /*!< Executing */
-    ALT_DMA_MANAGER_STATE_CACHE_MISS  = 2, /*!< Cache Miss */
-    ALT_DMA_MANAGER_STATE_UPDATING_PC = 3, /*!< Updating PC */
-    ALT_DMA_MANAGER_STATE_WFE         = 4, /*!< Waiting for Event */
-    ALT_DMA_MANAGER_STATE_FAULTING    = 15 /*!< Faulting */
-}
-ALT_DMA_MANAGER_STATE_t;
+    typedef enum ALT_DMA_MANAGER_STATE_e
+    {
+        ALT_DMA_MANAGER_STATE_STOPPED = 0,     /*!< Stopped */
+        ALT_DMA_MANAGER_STATE_EXECUTING = 1,   /*!< Executing */
+        ALT_DMA_MANAGER_STATE_CACHE_MISS = 2,  /*!< Cache Miss */
+        ALT_DMA_MANAGER_STATE_UPDATING_PC = 3, /*!< Updating PC */
+        ALT_DMA_MANAGER_STATE_WFE = 4,         /*!< Waiting for Event */
+        ALT_DMA_MANAGER_STATE_FAULTING = 15    /*!< Faulting */
+    }
+    ALT_DMA_MANAGER_STATE_t;
 
 /*!
  * This type definition enumerates the operational states that a DMA channel
  * may have.
  */
-typedef enum ALT_DMA_CHANNEL_STATE_e
-{
-    ALT_DMA_CHANNEL_STATE_STOPPED             = 0,  /*!< Stopped */
-    ALT_DMA_CHANNEL_STATE_EXECUTING           = 1,  /*!< Executing */
-    ALT_DMA_CHANNEL_STATE_CACHE_MISS          = 2,  /*!< Cache Miss */
-    ALT_DMA_CHANNEL_STATE_UPDATING_PC         = 3,  /*!< Updating PC */
-    ALT_DMA_CHANNEL_STATE_WFE                 = 4,  /*!< Waiting for Event */
-    ALT_DMA_CHANNEL_STATE_AT_BARRIER          = 5,  /*!< At Barrier */
-    ALT_DMA_CHANNEL_STATE_WFP                 = 7,  /*!< Waiting for Peripheral */
-    ALT_DMA_CHANNEL_STATE_KILLING             = 8,  /*!< Killing */
-    ALT_DMA_CHANNEL_STATE_COMPLETING          = 9,  /*!< Completing */
-    ALT_DMA_CHANNEL_STATE_FAULTING_COMPLETING = 14, /*!< Faulting Completing */
-    ALT_DMA_CHANNEL_STATE_FAULTING            = 15  /*!< Faulting */
-}
-ALT_DMA_CHANNEL_STATE_t;
+    typedef enum ALT_DMA_CHANNEL_STATE_e
+    {
+        ALT_DMA_CHANNEL_STATE_STOPPED = 0,              /*!< Stopped */
+        ALT_DMA_CHANNEL_STATE_EXECUTING = 1,            /*!< Executing */
+        ALT_DMA_CHANNEL_STATE_CACHE_MISS = 2,           /*!< Cache Miss */
+        ALT_DMA_CHANNEL_STATE_UPDATING_PC = 3,          /*!< Updating PC */
+        ALT_DMA_CHANNEL_STATE_WFE = 4,                  /*!< Waiting for Event */
+        ALT_DMA_CHANNEL_STATE_AT_BARRIER = 5,           /*!< At Barrier */
+        ALT_DMA_CHANNEL_STATE_WFP = 7,                  /*!< Waiting for Peripheral */
+        ALT_DMA_CHANNEL_STATE_KILLING = 8,              /*!< Killing */
+        ALT_DMA_CHANNEL_STATE_COMPLETING = 9,           /*!< Completing */
+        ALT_DMA_CHANNEL_STATE_FAULTING_COMPLETING = 14, /*!< Faulting Completing */
+        ALT_DMA_CHANNEL_STATE_FAULTING = 15             /*!< Faulting */
+    }
+    ALT_DMA_CHANNEL_STATE_t;
 
 /*!
  * This type definition enumerates the possible fault status that the DMA
  * manager can have as a register mask.
  */
-typedef enum ALT_DMA_MANAGER_FAULT_e
-{
-    /*!
-     * The DMA manager abort occured because of an instruction issued through
-     * the debug interface.
-     */
-    ALT_DMA_MANAGER_FAULT_DBG_INSTR       = (int32_t)(1UL << 30),
+    typedef enum ALT_DMA_MANAGER_FAULT_e
+    {
+        /*!
+         * The DMA manager abort occured because of an instruction issued through
+         * the debug interface.
+         */
+        ALT_DMA_MANAGER_FAULT_DBG_INSTR = ( int32_t )( 1UL << 30 ),
 
-    /*!
-     * The DMA manager instruction fetch AXI bus response was not OKAY.
-     */
-    ALT_DMA_MANAGER_FAULT_INSTR_FETCH_ERR = (int32_t)(1UL << 16),
+        /*!
+         * The DMA manager instruction fetch AXI bus response was not OKAY.
+         */
+        ALT_DMA_MANAGER_FAULT_INSTR_FETCH_ERR = ( int32_t )( 1UL << 16 ),
 
-    /*!
-     * The DMA manager attempted to execute DMAWFE or DMASEV with
-     * inappropriate security permissions.
-     */
-    ALT_DMA_MANAGER_FAULT_MGR_EVNT_ERR    = (int32_t)(1UL <<  5),
+        /*!
+         * The DMA manager attempted to execute DMAWFE or DMASEV with
+         * inappropriate security permissions.
+         */
+        ALT_DMA_MANAGER_FAULT_MGR_EVNT_ERR = ( int32_t )( 1UL << 5 ),
 
-    /*!
-     * The DMA manager attempted to execute DMAGO with inappropriate security
-     * permissions.
-     */
-    ALT_DMA_MANAGER_FAULT_DMAGO_ERR       = (int32_t)(1UL <<  4),
+        /*!
+         * The DMA manager attempted to execute DMAGO with inappropriate security
+         * permissions.
+         */
+        ALT_DMA_MANAGER_FAULT_DMAGO_ERR = ( int32_t )( 1UL << 4 ),
 
-    /*!
-     * The DMA manager attempted to execute an instruction operand that was
-     * not valid for the DMA configuration.
-     */
-    ALT_DMA_MANAGER_FAULT_OPERAND_INVALID = (int32_t)(1UL <<  1),
+        /*!
+         * The DMA manager attempted to execute an instruction operand that was
+         * not valid for the DMA configuration.
+         */
+        ALT_DMA_MANAGER_FAULT_OPERAND_INVALID = ( int32_t )( 1UL << 1 ),
 
-    /*!
-     * The DMA manager attempted to execute an undefined instruction.
-     */
-    ALT_DMA_MANAGER_FAULT_UNDEF_INSTR     = (int32_t)(1UL <<  0)
-}
-ALT_DMA_MANAGER_FAULT_t;
+        /*!
+         * The DMA manager attempted to execute an undefined instruction.
+         */
+        ALT_DMA_MANAGER_FAULT_UNDEF_INSTR = ( int32_t )( 1UL << 0 )
+    }
+    ALT_DMA_MANAGER_FAULT_t;
 
 /*!
  * This type definition enumerates the possible fault status that a channel
  * may have as a register mask.
  */
-typedef enum ALT_DMA_CHANNEL_FAULT_e
-{
-    /*!
-     * The DMA channel has locked up due to resource starvation.
-     */
-    ALT_DMA_CHANNEL_FAULT_LOCKUP_ERR          = (int32_t)(1UL << 31),
+    typedef enum ALT_DMA_CHANNEL_FAULT_e
+    {
+        /*!
+         * The DMA channel has locked up due to resource starvation.
+         */
+        ALT_DMA_CHANNEL_FAULT_LOCKUP_ERR = ( int32_t )( 1UL << 31 ),
 
-    /*!
-     * The DMA channel abort occured because of an instruction issued through
-     * the debug interface.
-     */
-    ALT_DMA_CHANNEL_FAULT_DBG_INSTR           = (int32_t)(1UL << 30),
+        /*!
+         * The DMA channel abort occured because of an instruction issued through
+         * the debug interface.
+         */
+        ALT_DMA_CHANNEL_FAULT_DBG_INSTR = ( int32_t )( 1UL << 30 ),
 
-    /*!
-     * The DMA channel data read AXI bus reponse was not OKAY.
-     */
-    ALT_DMA_CHANNEL_FAULT_DATA_READ_ERR       = (int32_t)(1UL << 18),
+        /*!
+         * The DMA channel data read AXI bus reponse was not OKAY.
+         */
+        ALT_DMA_CHANNEL_FAULT_DATA_READ_ERR = ( int32_t )( 1UL << 18 ),
 
-    /*!
-     * The DMA channel data write AXI bus response was not OKAY.
-     */
-    ALT_DMA_CHANNEL_FAULT_DATA_WRITE_ERR      = (int32_t)(1UL << 17),
+        /*!
+         * The DMA channel data write AXI bus response was not OKAY.
+         */
+        ALT_DMA_CHANNEL_FAULT_DATA_WRITE_ERR = ( int32_t )( 1UL << 17 ),
 
-    /*!
-     * The DMA channel instruction fetch AXI bus response was not OKAY.
-     */
-    ALT_DMA_CHANNEL_FAULT_INSTR_FETCH_ERR     = (int32_t)(1UL << 16),
+        /*!
+         * The DMA channel instruction fetch AXI bus response was not OKAY.
+         */
+        ALT_DMA_CHANNEL_FAULT_INSTR_FETCH_ERR = ( int32_t )( 1UL << 16 ),
 
-    /*!
-     * The DMA channel MFIFO did not have the data for the DMAST instruction.
-     */
-    ALT_DMA_CHANNEL_FAULT_ST_DATA_UNAVAILABLE = (int32_t)(1UL << 13),
+        /*!
+         * The DMA channel MFIFO did not have the data for the DMAST instruction.
+         */
+        ALT_DMA_CHANNEL_FAULT_ST_DATA_UNAVAILABLE = ( int32_t )( 1UL << 13 ),
 
-    /*!
-     * The DMA channel MFIFO is too small to hold the DMALD instruction data,
-     * or too small to servic the DMAST instruction request.
-     */
-    ALT_DMA_CHANNEL_FAULT_MFIFO_ERR           = (int32_t)(1UL << 12),
+        /*!
+         * The DMA channel MFIFO is too small to hold the DMALD instruction data,
+         * or too small to servic the DMAST instruction request.
+         */
+        ALT_DMA_CHANNEL_FAULT_MFIFO_ERR = ( int32_t )( 1UL << 12 ),
 
-    /*!
-     * The DMA channel in non-secure state attempted to perform a secure read
-     * or write.
-     */
-    ALT_DMA_CHANNEL_FAULT_CH_RDWR_ERR         = (int32_t)(1UL <<  7),
+        /*!
+         * The DMA channel in non-secure state attempted to perform a secure read
+         * or write.
+         */
+        ALT_DMA_CHANNEL_FAULT_CH_RDWR_ERR = ( int32_t )( 1UL << 7 ),
 
-    /*!
-     * The DMA channel in non-secure state attempted to execute the DMAWFP,
-     * DMALDP, DMASTP, or DMAFLUSHP instruction involving a secure peripheral.
-     */
-    ALT_DMA_CHANNEL_FAULT_CH_PERIPH_ERR       = (int32_t)(1UL <<  6),
+        /*!
+         * The DMA channel in non-secure state attempted to execute the DMAWFP,
+         * DMALDP, DMASTP, or DMAFLUSHP instruction involving a secure peripheral.
+         */
+        ALT_DMA_CHANNEL_FAULT_CH_PERIPH_ERR = ( int32_t )( 1UL << 6 ),
 
-    /*!
-     * The DMA channel in non-secure state attempted to execute the DMAWFE or
-     * DMASEV instruction for a secure event or secure interrupt (if
-     * applicable).
-     */
-    ALT_DMA_CHANNEL_FAULT_CH_EVNT_ERR         = (int32_t)(1UL <<  5),
+        /*!
+         * The DMA channel in non-secure state attempted to execute the DMAWFE or
+         * DMASEV instruction for a secure event or secure interrupt (if
+         * applicable).
+         */
+        ALT_DMA_CHANNEL_FAULT_CH_EVNT_ERR = ( int32_t )( 1UL << 5 ),
 
-    /*!
-     * The DMA channel attempted to execute an instruction operand that was
-     * not valid for the DMA configuration.
-     */
-    ALT_DMA_CHANNEL_FAULT_OPERAND_INVALID     = (int32_t)(1UL <<  1),
+        /*!
+         * The DMA channel attempted to execute an instruction operand that was
+         * not valid for the DMA configuration.
+         */
+        ALT_DMA_CHANNEL_FAULT_OPERAND_INVALID = ( int32_t )( 1UL << 1 ),
 
-    /*!
-     * The DMA channel attempted to execute an undefined instruction.
-     */
-    ALT_DMA_CHANNEL_FAULT_UNDEF_INSTR         = (int32_t)(1UL <<  0)
-}
-ALT_DMA_CHANNEL_FAULT_t;
+        /*!
+         * The DMA channel attempted to execute an undefined instruction.
+         */
+        ALT_DMA_CHANNEL_FAULT_UNDEF_INSTR = ( int32_t )( 1UL << 0 )
+    }
+    ALT_DMA_CHANNEL_FAULT_t;
 
 /*!
  * This type definition enumerates the possible DMA event-interrupt behavior
  * option selections when a DMASEV instruction is executed.
  */
-typedef enum ALT_DMA_EVENT_SELECT_e
-{
-    /*!
-     * If the DMA controller executes DMASEV for the event-interrupt resource
-     * then the DMA sends the event to all of the channel threads.
-     */
-    ALT_DMA_EVENT_SELECT_SEND_EVT,
+    typedef enum ALT_DMA_EVENT_SELECT_e
+    {
+        /*!
+         * If the DMA controller executes DMASEV for the event-interrupt resource
+         * then the DMA sends the event to all of the channel threads.
+         */
+        ALT_DMA_EVENT_SELECT_SEND_EVT,
 
-    /*!
-     * If the DMA controller executes DMASEV for the event-interrupt resource
-     * then the DMA sets the \b irq[N] HIGH.
-     */
-    ALT_DMA_EVENT_SELECT_SIG_IRQ
-}
-ALT_DMA_EVENT_SELECT_t;
+        /*!
+         * If the DMA controller executes DMASEV for the event-interrupt resource
+         * then the DMA sets the \b irq[N] HIGH.
+         */
+        ALT_DMA_EVENT_SELECT_SIG_IRQ
+    }
+    ALT_DMA_EVENT_SELECT_t;
 
 /*!
  * This type enumerates the DMA peripheral interface MUX selection options
  * available.
  */
-typedef enum ALT_DMA_PERIPH_MUX_e
-{
-    /*! 
-     * Accept the reset default MUX selection
-     */ 
-    ALT_DMA_PERIPH_MUX_DEFAULT = 0,
+    typedef enum ALT_DMA_PERIPH_MUX_e
+    {
+        /*!
+         * Accept the reset default MUX selection
+         */
+        ALT_DMA_PERIPH_MUX_DEFAULT = 0,
 
-    /*!
-     * Select FPGA as the peripheral interface
-     */
-    ALT_DMA_PERIPH_MUX_FPGA    = 1,
+        /*!
+         * Select FPGA as the peripheral interface
+         */
+        ALT_DMA_PERIPH_MUX_FPGA = 1,
 
-    /*!
-     * Select CAN as the peripheral interface
-     */
-    ALT_DMA_PERIPH_MUX_CAN     = 2
-}
-ALT_DMA_PERIPH_MUX_t;
+        /*!
+         * Select CAN as the peripheral interface
+         */
+        ALT_DMA_PERIPH_MUX_CAN = 2
+    }
+    ALT_DMA_PERIPH_MUX_t;
 
 /*!
  * This type defines the structure used to specify the configuration of the
  * security states and peripheral interface MUX selections for the DMA
  * controller.
  */
-typedef struct ALT_DMA_CFG_s
-{
-    /*!
-     * DMA Manager security state configuration.
-     */
-    ALT_DMA_SECURITY_t manager_sec;
+    typedef struct ALT_DMA_CFG_s
+    {
+        /*!
+         * DMA Manager security state configuration.
+         */
+        ALT_DMA_SECURITY_t manager_sec;
 
-    /*!
-     * DMA interrupt output security state configurations. Security state
-     * configurations are 0-based index-aligned with the enumeration values
-     * ALT_DMA_EVENT_0 through ALT_DMA_EVENT_7 of the ALT_DMA_EVENT_t type.
-     */
-    ALT_DMA_SECURITY_t irq_sec[8];
+        /*!
+         * DMA interrupt output security state configurations. Security state
+         * configurations are 0-based index-aligned with the enumeration values
+         * ALT_DMA_EVENT_0 through ALT_DMA_EVENT_7 of the ALT_DMA_EVENT_t type.
+         */
+        ALT_DMA_SECURITY_t irq_sec[ 8 ];
 
-    /*!
-     * Peripheral request interface security state configurations. Security
-     * state configurations are 0-based index-aligned with the enumeration
-     * values of the ALT_DMA_PERIPH_t type.
-     */
-    ALT_DMA_SECURITY_t periph_sec[32];
+        /*!
+         * Peripheral request interface security state configurations. Security
+         * state configurations are 0-based index-aligned with the enumeration
+         * values of the ALT_DMA_PERIPH_t type.
+         */
+        ALT_DMA_SECURITY_t periph_sec[ 32 ];
 
-    /*!
-     * DMA Peripheral Register Interface MUX Selections. MUX selections are
-     * 0-based index-aligned with the enumeration values
-     * ALT_DMA_PERIPH_FPGA_4_OR_CAN0_IF1 through
-     * ALT_DMA_PERIPH_FPGA_7_OR_CAN1_IF2 of the ALT_DMA_PERIPH_t type.
-     */
-    ALT_DMA_PERIPH_MUX_t periph_mux[4];
-}
-ALT_DMA_CFG_t;
+        /*!
+         * DMA Peripheral Register Interface MUX Selections. MUX selections are
+         * 0-based index-aligned with the enumeration values
+         * ALT_DMA_PERIPH_FPGA_4_OR_CAN0_IF1 through
+         * ALT_DMA_PERIPH_FPGA_7_OR_CAN1_IF2 of the ALT_DMA_PERIPH_t type.
+         */
+        ALT_DMA_PERIPH_MUX_t periph_mux[ 4 ];
+    }
+    ALT_DMA_CFG_t;
 
 /*!
  * Initialize the DMA controller.
@@ -345,7 +345,7 @@ ALT_DMA_CFG_t;
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_dma_init(const ALT_DMA_CFG_t * dma_cfg);
+    ALT_STATUS_CODE alt_dma_init( const ALT_DMA_CFG_t * dma_cfg );
 
 /*!
  * Uninitializes the DMA controller.
@@ -356,7 +356,7 @@ ALT_STATUS_CODE alt_dma_init(const ALT_DMA_CFG_t * dma_cfg);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_dma_uninit(void);
+    ALT_STATUS_CODE alt_dma_uninit( void );
 
 /*!
  * Allocate a DMA channel resource for use.
@@ -367,7 +367,7 @@ ALT_STATUS_CODE alt_dma_uninit(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_dma_channel_alloc(ALT_DMA_CHANNEL_t channel);
+    ALT_STATUS_CODE alt_dma_channel_alloc( ALT_DMA_CHANNEL_t channel );
 
 /*!
  * Allocate a free DMA channel resource for use if there are any.
@@ -381,7 +381,7 @@ ALT_STATUS_CODE alt_dma_channel_alloc(ALT_DMA_CHANNEL_t channel);
  *                              may not be available at the time of the API
  *                              call.
  */
-ALT_STATUS_CODE alt_dma_channel_alloc_any(ALT_DMA_CHANNEL_t * allocated);
+    ALT_STATUS_CODE alt_dma_channel_alloc_any( ALT_DMA_CHANNEL_t * allocated );
 
 /*!
  * Free a DMA channel resource for reuse.
@@ -393,7 +393,7 @@ ALT_STATUS_CODE alt_dma_channel_alloc_any(ALT_DMA_CHANNEL_t * allocated);
  * \retval      ALT_E_ERROR     The operation failed. The channel may not be in
  *                              the STOPPED state.
  */
-ALT_STATUS_CODE alt_dma_channel_free(ALT_DMA_CHANNEL_t channel);
+    ALT_STATUS_CODE alt_dma_channel_free( ALT_DMA_CHANNEL_t channel );
 
 /*!
  * Start execution of a DMA microcode program on the specified DMA channel
@@ -408,8 +408,8 @@ ALT_STATUS_CODE alt_dma_channel_free(ALT_DMA_CHANNEL_t channel);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_dma_channel_exec(ALT_DMA_CHANNEL_t channel,
-                                     ALT_DMA_PROGRAM_t * pgm);
+    ALT_STATUS_CODE alt_dma_channel_exec( ALT_DMA_CHANNEL_t channel,
+                                          ALT_DMA_PROGRAM_t * pgm );
 
 /*!
  * Kill (abort) execution of any microcode program executing on the specified
@@ -427,7 +427,7 @@ ALT_STATUS_CODE alt_dma_channel_exec(ALT_DMA_CHANNEL_t channel,
  * \retval      ALT_E_TMO       Timeout waiting for the channel to change into
  *                              KILLING or STOPPED state.
  */
-ALT_STATUS_CODE alt_dma_channel_kill(ALT_DMA_CHANNEL_t channel);
+    ALT_STATUS_CODE alt_dma_channel_kill( ALT_DMA_CHANNEL_t channel );
 
 /*!
  * Returns the current register value for the given DMA channel.
@@ -446,8 +446,9 @@ ALT_STATUS_CODE alt_dma_channel_kill(ALT_DMA_CHANNEL_t channel);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The specified channel or register is invalid.
  */
-ALT_STATUS_CODE alt_dma_channel_reg_get(ALT_DMA_CHANNEL_t channel,
-                                        ALT_DMA_PROGRAM_REG_t reg, uint32_t * val);
+    ALT_STATUS_CODE alt_dma_channel_reg_get( ALT_DMA_CHANNEL_t channel,
+                                             ALT_DMA_PROGRAM_REG_t reg,
+                                             uint32_t * val );
 
 /*!
  * Signals the occurrence of an event or interrupt, using the specified event
@@ -475,7 +476,7 @@ ALT_STATUS_CODE alt_dma_channel_reg_get(ALT_DMA_CHANNEL_t channel,
  *  * 2.5.1, Issuing Instructions to the DMAC using a Slave Interface
  *  * 2.7, Using Events and Interrupts
  *
- * \param       evt_num   
+ * \param       evt_num
  *              A DMA event-interrupt resource. Allowable event values may be
  *              ALT_DMA_EVENT_0 .. ALT_DMA_EVENT_7 but ALT_DMA_EVENT_ABORT is
  *              not.
@@ -484,7 +485,7 @@ ALT_STATUS_CODE alt_dma_channel_reg_get(ALT_DMA_CHANNEL_t channel,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given event number is invalid.
  */
-ALT_STATUS_CODE alt_dma_send_event(ALT_DMA_EVENT_t evt_num);
+    ALT_STATUS_CODE alt_dma_send_event( ALT_DMA_EVENT_t evt_num );
 
 /*!
  * Returns the current operational state of the DMA manager thread.
@@ -496,7 +497,7 @@ ALT_STATUS_CODE alt_dma_send_event(ALT_DMA_EVENT_t evt_num);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_dma_manager_state_get(ALT_DMA_MANAGER_STATE_t * state);
+    ALT_STATUS_CODE alt_dma_manager_state_get( ALT_DMA_MANAGER_STATE_t * state );
 
 /*!
  * Returns the current operational state of the specified DMA channel thread.
@@ -512,8 +513,8 @@ ALT_STATUS_CODE alt_dma_manager_state_get(ALT_DMA_MANAGER_STATE_t * state);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given channel identifier is invalid.
  */
-ALT_STATUS_CODE alt_dma_channel_state_get(ALT_DMA_CHANNEL_t channel,
-                                          ALT_DMA_CHANNEL_STATE_t * state);
+    ALT_STATUS_CODE alt_dma_channel_state_get( ALT_DMA_CHANNEL_t channel,
+                                               ALT_DMA_CHANNEL_STATE_t * state );
 
 /*!
  * Return the current fault status of the DMA manager thread.
@@ -525,7 +526,7 @@ ALT_STATUS_CODE alt_dma_channel_state_get(ALT_DMA_CHANNEL_t channel,
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_dma_manager_fault_status_get(ALT_DMA_MANAGER_FAULT_t * fault);
+    ALT_STATUS_CODE alt_dma_manager_fault_status_get( ALT_DMA_MANAGER_FAULT_t * fault );
 
 /*!
  * Return the current fault status of the specified DMA channel thread.
@@ -541,8 +542,8 @@ ALT_STATUS_CODE alt_dma_manager_fault_status_get(ALT_DMA_MANAGER_FAULT_t * fault
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given channel identifier is invalid.
  */
-ALT_STATUS_CODE alt_dma_channel_fault_status_get(ALT_DMA_CHANNEL_t channel,
-                                                 ALT_DMA_CHANNEL_FAULT_t * fault);
+    ALT_STATUS_CODE alt_dma_channel_fault_status_get( ALT_DMA_CHANNEL_t channel,
+                                                      ALT_DMA_CHANNEL_FAULT_t * fault );
 
 /*!
  * Select whether the DMA controller sends the specific event to all channel
@@ -561,8 +562,8 @@ ALT_STATUS_CODE alt_dma_channel_fault_status_get(ALT_DMA_CHANNEL_t channel,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given selection identifier is invalid.
  */
-ALT_STATUS_CODE alt_dma_event_int_select(ALT_DMA_EVENT_t evt_num,
-                                         ALT_DMA_EVENT_SELECT_t opt);
+    ALT_STATUS_CODE alt_dma_event_int_select( ALT_DMA_EVENT_t evt_num,
+                                              ALT_DMA_EVENT_SELECT_t opt );
 
 /*!
  * Returns the status of the specified event-interrupt resource.
@@ -579,7 +580,7 @@ ALT_STATUS_CODE alt_dma_event_int_select(ALT_DMA_EVENT_t evt_num,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given event identifier is invalid.
  */
-ALT_STATUS_CODE alt_dma_event_int_status_get_raw(ALT_DMA_EVENT_t evt_num);
+    ALT_STATUS_CODE alt_dma_event_int_status_get_raw( ALT_DMA_EVENT_t evt_num );
 
 /*!
  * Returns the status of the specified interrupt resource.
@@ -596,13 +597,13 @@ ALT_STATUS_CODE alt_dma_event_int_status_get_raw(ALT_DMA_EVENT_t evt_num);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given event identifier is invalid.
  */
-ALT_STATUS_CODE alt_dma_int_status_get(ALT_DMA_EVENT_t irq_num);
+    ALT_STATUS_CODE alt_dma_int_status_get( ALT_DMA_EVENT_t irq_num );
 
 /*!
  * Clear the active (HIGH) status of the specified interrupt resource.
  *
  * If the specified interrupt is HIGH, then sets \b irq[N] to LOW if the
- * event-interrupt resource is configured (see: alt_dma_event_int_enable()) 
+ * event-interrupt resource is configured (see: alt_dma_event_int_enable())
  * to signal an interrupt. Otherwise, the status of \b irq[N] does not change.
  *
  * \param       irq_num
@@ -613,7 +614,7 @@ ALT_STATUS_CODE alt_dma_int_status_get(ALT_DMA_EVENT_t irq_num);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given event identifier is invalid.
  */
-ALT_STATUS_CODE alt_dma_int_clear(ALT_DMA_EVENT_t irq_num);
+    ALT_STATUS_CODE alt_dma_int_clear( ALT_DMA_EVENT_t irq_num );
 
 /*!
  * @}
@@ -631,7 +632,7 @@ ALT_STATUS_CODE alt_dma_int_clear(ALT_DMA_EVENT_t irq_num);
  *
  * All DMA operations are asynchronous. The following are the ways to receive
  * notification of a DMA transfer complete operation:
- *  * Use alt_dma_channel_state_get() and poll for the 
+ *  * Use alt_dma_channel_state_get() and poll for the
  *    ALT_DMA_CHANNEL_STATE_STOPPED status.
  *  * In conjunction with the interrupt API, use DMA events to signal an
  *    interrupt. The event first must be configured to signal an interrupt
@@ -695,13 +696,13 @@ ALT_STATUS_CODE alt_dma_int_clear(ALT_DMA_EVENT_t irq_num);
  *                              used) is invalid, or the memory regions
  *                              specified are overlapping.
  */
-ALT_STATUS_CODE alt_dma_memory_to_memory(ALT_DMA_CHANNEL_t channel,
-                                         ALT_DMA_PROGRAM_t * program,
-                                         void * dest,
-                                         const void * src,
-                                         size_t size,
-                                         bool send_evt,
-                                         ALT_DMA_EVENT_t evt);
+    ALT_STATUS_CODE alt_dma_memory_to_memory( ALT_DMA_CHANNEL_t channel,
+                                              ALT_DMA_PROGRAM_t * program,
+                                              void * dest,
+                                              const void * src,
+                                              size_t size,
+                                              bool send_evt,
+                                              ALT_DMA_EVENT_t evt );
 
 /*!
  * Uses the DMA engine to asynchronously zero out the specified memory buffer.
@@ -732,12 +733,12 @@ ALT_STATUS_CODE alt_dma_memory_to_memory(ALT_DMA_CHANNEL_t channel,
  * \retval      ALT_E_BAD_ARG   The given channel or event identifier (if
  *                              used) is invalid.
  */
-ALT_STATUS_CODE alt_dma_zero_to_memory(ALT_DMA_CHANNEL_t channel,
-                                       ALT_DMA_PROGRAM_t * program,
-                                       void * buf,
-                                       size_t size,
-                                       bool send_evt,
-                                       ALT_DMA_EVENT_t evt);
+    ALT_STATUS_CODE alt_dma_zero_to_memory( ALT_DMA_CHANNEL_t channel,
+                                            ALT_DMA_PROGRAM_t * program,
+                                            void * buf,
+                                            size_t size,
+                                            bool send_evt,
+                                            ALT_DMA_EVENT_t evt );
 
 /*!
  * Uses the DMA engine to asynchronously transfer the contents of a memory
@@ -778,14 +779,14 @@ ALT_STATUS_CODE alt_dma_zero_to_memory(ALT_DMA_CHANNEL_t channel,
  *                              destination register or source buffer is
  *                              unaligned to the register width.
  */
-ALT_STATUS_CODE alt_dma_memory_to_register(ALT_DMA_CHANNEL_t channel,
-                                           ALT_DMA_PROGRAM_t * program,
-                                           void * dst_reg,
-                                           const void * src_buf,
-                                           size_t count,
-                                           uint32_t register_width_bits,
-                                           bool send_evt,
-                                           ALT_DMA_EVENT_t evt);
+    ALT_STATUS_CODE alt_dma_memory_to_register( ALT_DMA_CHANNEL_t channel,
+                                                ALT_DMA_PROGRAM_t * program,
+                                                void * dst_reg,
+                                                const void * src_buf,
+                                                size_t count,
+                                                uint32_t register_width_bits,
+                                                bool send_evt,
+                                                ALT_DMA_EVENT_t evt );
 
 /*!
  * Uses the DMA engine to asynchronously transfer the contents of a keyhole
@@ -826,14 +827,14 @@ ALT_STATUS_CODE alt_dma_memory_to_register(ALT_DMA_CHANNEL_t channel,
  *                              destination buffer or source register is
  *                              unaligned to the register width.
  */
-ALT_STATUS_CODE alt_dma_register_to_memory(ALT_DMA_CHANNEL_t channel,
-                                           ALT_DMA_PROGRAM_t * program,
-                                           void * dst_buf,
-                                           const void * src_reg,
-                                           size_t count,
-                                           uint32_t register_width_bits,
-                                           bool send_evt,
-                                           ALT_DMA_EVENT_t evt);
+    ALT_STATUS_CODE alt_dma_register_to_memory( ALT_DMA_CHANNEL_t channel,
+                                                ALT_DMA_PROGRAM_t * program,
+                                                void * dst_buf,
+                                                const void * src_reg,
+                                                size_t count,
+                                                uint32_t register_width_bits,
+                                                bool send_evt,
+                                                ALT_DMA_EVENT_t evt );
 
 /*!
  * Uses the DMA engine to asynchronously copy memory from the given source
@@ -905,14 +906,14 @@ ALT_STATUS_CODE alt_dma_register_to_memory(ALT_DMA_CHANNEL_t channel,
  *  * ALT_DMA_PERIPH_SPI1_SLAVE_TX
  * \endinternal
  */
-ALT_STATUS_CODE alt_dma_memory_to_periph(ALT_DMA_CHANNEL_t channel,
-                                         ALT_DMA_PROGRAM_t * program,
-                                         ALT_DMA_PERIPH_t dest,
-                                         const void * src,
-                                         size_t size,
-                                         void * periph_info,
-                                         bool send_evt,
-                                         ALT_DMA_EVENT_t evt);
+    ALT_STATUS_CODE alt_dma_memory_to_periph( ALT_DMA_CHANNEL_t channel,
+                                              ALT_DMA_PROGRAM_t * program,
+                                              ALT_DMA_PERIPH_t dest,
+                                              const void * src,
+                                              size_t size,
+                                              void * periph_info,
+                                              bool send_evt,
+                                              ALT_DMA_EVENT_t evt );
 
 /*!
  * Uses the DMA engine to copy memory from the specified peripheral to the
@@ -962,7 +963,7 @@ ALT_STATUS_CODE alt_dma_memory_to_periph(ALT_DMA_CHANNEL_t channel,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given channel, peripheral, or event
  *                              identifier (if used) is invalid.
-*
+ *
  * \internal
  * Priority peripheral IDs to be supported:
  *  * ALT_DMA_PERIPH_FPGA_0
@@ -983,14 +984,14 @@ ALT_STATUS_CODE alt_dma_memory_to_periph(ALT_DMA_CHANNEL_t channel,
  *  * ALT_DMA_PERIPH_SPI1_SLAVE_RX
  * \endinternal
  */
-ALT_STATUS_CODE alt_dma_periph_to_memory(ALT_DMA_CHANNEL_t channel,
-                                         ALT_DMA_PROGRAM_t * program,
-                                         void * dest,
-                                         ALT_DMA_PERIPH_t src,
-                                         size_t size,
-                                         void * periph_info,
-                                         bool send_evt,
-                                         ALT_DMA_EVENT_t evt);
+    ALT_STATUS_CODE alt_dma_periph_to_memory( ALT_DMA_CHANNEL_t channel,
+                                              ALT_DMA_PROGRAM_t * program,
+                                              void * dest,
+                                              ALT_DMA_PERIPH_t src,
+                                              size_t size,
+                                              void * periph_info,
+                                              bool send_evt,
+                                              ALT_DMA_EVENT_t evt );
 
 /*!
  * @}
@@ -1000,8 +1001,8 @@ ALT_STATUS_CODE alt_dma_periph_to_memory(ALT_DMA_CHANNEL_t channel,
  * @}
  */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
+    #endif /* __cplusplus */
 
-#endif  /* __ALT_DMA_H__ */
+#endif /* __ALT_DMA_H__ */

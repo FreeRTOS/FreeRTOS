@@ -30,11 +30,12 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
  *
  * @file xemacps_control.c
-* @addtogroup emacps_v3_7
-* @{
+ * @addtogroup emacps_v3_7
+ * @{
  *
  * Functions in this file implement general purpose command and control related
  * functionality. See xemacps.h for a detailed description of the driver.
@@ -75,6 +76,7 @@
 
 
 /*****************************************************************************/
+
 /**
  * Set the MAC address for this driver/device.  The address is a 48-bit value.
  * The device must be stopped before calling this function.
@@ -88,53 +90,60 @@
  * - XST_DEVICE_IS_STARTED if the device has not yet been stopped
  *
  *****************************************************************************/
-LONG XEmacPs_SetMacAddress(XEmacPs *InstancePtr, void *AddressPtr, u8 Index)
+LONG XEmacPs_SetMacAddress( XEmacPs * InstancePtr,
+                            void * AddressPtr,
+                            u8 Index )
 {
-	u32 MacAddr;
-	u8 *Aptr = (u8 *)(void *)AddressPtr;
-	u8 IndexLoc = Index;
-	LONG Status;
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(Aptr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
-	Xil_AssertNonvoid((IndexLoc <= (u8)XEMACPS_MAX_MAC_ADDR) && (IndexLoc > 0x00U));
+    u32 MacAddr;
+    u8 * Aptr = ( u8 * ) ( void * ) AddressPtr;
+    u8 IndexLoc = Index;
+    LONG Status;
 
-	/* Be sure device has been stopped */
-	if (InstancePtr->IsStarted == (u32)XIL_COMPONENT_IS_STARTED) {
-		Status = (LONG)(XST_DEVICE_IS_STARTED);
-	}
-	else{
-	/* Index ranges 1 to 4, for offset calculation is 0 to 3. */
-		IndexLoc--;
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( Aptr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
+    Xil_AssertNonvoid( ( IndexLoc <= ( u8 ) XEMACPS_MAX_MAC_ADDR ) && ( IndexLoc > 0x00U ) );
 
-	/* Set the MAC bits [31:0] in BOT */
-		MacAddr = *(Aptr);
-		MacAddr |= ((u32)(*(Aptr+1)) << 8U);
-		MacAddr |= ((u32)(*(Aptr+2)) << 16U);
-		MacAddr |= ((u32)(*(Aptr+3)) << 24U);
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				((u32)XEMACPS_LADDR1L_OFFSET + ((u32)IndexLoc * (u32)8)), MacAddr);
+    /* Be sure device has been stopped */
+    if( InstancePtr->IsStarted == ( u32 ) XIL_COMPONENT_IS_STARTED )
+    {
+        Status = ( LONG ) ( XST_DEVICE_IS_STARTED );
+    }
+    else
+    {
+        /* Index ranges 1 to 4, for offset calculation is 0 to 3. */
+        IndexLoc--;
 
-	/* There are reserved bits in TOP so don't affect them */
-	MacAddr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					((u32)XEMACPS_LADDR1H_OFFSET + ((u32)IndexLoc * (u32)8)));
+        /* Set the MAC bits [31:0] in BOT */
+        MacAddr = *( Aptr );
+        MacAddr |= ( ( u32 ) ( *( Aptr + 1 ) ) << 8U );
+        MacAddr |= ( ( u32 ) ( *( Aptr + 2 ) ) << 16U );
+        MacAddr |= ( ( u32 ) ( *( Aptr + 3 ) ) << 24U );
+        XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                          ( ( u32 ) XEMACPS_LADDR1L_OFFSET + ( ( u32 ) IndexLoc * ( u32 ) 8 ) ), MacAddr );
 
-		MacAddr &= (u32)(~XEMACPS_LADDR_MACH_MASK);
+        /* There are reserved bits in TOP so don't affect them */
+        MacAddr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   ( ( u32 ) XEMACPS_LADDR1H_OFFSET + ( ( u32 ) IndexLoc * ( u32 ) 8 ) ) );
 
-	/* Set MAC bits [47:32] in TOP */
-		MacAddr |= (u32)(*(Aptr+4));
-		MacAddr |= (u32)(*(Aptr+5)) << 8U;
+        MacAddr &= ( u32 ) ( ~XEMACPS_LADDR_MACH_MASK );
 
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				((u32)XEMACPS_LADDR1H_OFFSET + ((u32)IndexLoc * (u32)8)), MacAddr);
+        /* Set MAC bits [47:32] in TOP */
+        MacAddr |= ( u32 ) ( *( Aptr + 4 ) );
+        MacAddr |= ( u32 ) ( *( Aptr + 5 ) ) << 8U;
 
-		Status = (LONG)(XST_SUCCESS);
-	}
-	return Status;
+        XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                          ( ( u32 ) XEMACPS_LADDR1H_OFFSET + ( ( u32 ) IndexLoc * ( u32 ) 8 ) ), MacAddr );
+
+        Status = ( LONG ) ( XST_SUCCESS );
+    }
+
+    return Status;
 }
 
 
 /*****************************************************************************/
+
 /**
  * Get the MAC address for this driver/device.
  *
@@ -144,35 +153,39 @@ LONG XEmacPs_SetMacAddress(XEmacPs *InstancePtr, void *AddressPtr, u8 Index)
  * @param Index is a index to which MAC (1-4) address.
  *
  *****************************************************************************/
-void XEmacPs_GetMacAddress(XEmacPs *InstancePtr, void *AddressPtr, u8 Index)
+void XEmacPs_GetMacAddress( XEmacPs * InstancePtr,
+                            void * AddressPtr,
+                            u8 Index )
 {
-	u32 MacAddr;
-	u8 *Aptr = (u8 *)(void *)AddressPtr;
-	u8 IndexLoc = Index;
-	Xil_AssertVoid(InstancePtr != NULL);
-	Xil_AssertVoid(Aptr != NULL);
-	Xil_AssertVoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
-	Xil_AssertVoid((IndexLoc <= (u8)XEMACPS_MAX_MAC_ADDR) && (IndexLoc > 0x00U));
+    u32 MacAddr;
+    u8 * Aptr = ( u8 * ) ( void * ) AddressPtr;
+    u8 IndexLoc = Index;
 
-	/* Index ranges 1 to 4, for offset calculation is 0 to 3. */
-	IndexLoc--;
+    Xil_AssertVoid( InstancePtr != NULL );
+    Xil_AssertVoid( Aptr != NULL );
+    Xil_AssertVoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
+    Xil_AssertVoid( ( IndexLoc <= ( u8 ) XEMACPS_MAX_MAC_ADDR ) && ( IndexLoc > 0x00U ) );
 
-	MacAddr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				    ((u32)XEMACPS_LADDR1L_OFFSET + ((u32)IndexLoc * (u32)8)));
-	*Aptr = (u8) MacAddr;
-	*(Aptr+1) = (u8) (MacAddr >> 8U);
-	*(Aptr+2) = (u8) (MacAddr >> 16U);
-	*(Aptr+3) = (u8) (MacAddr >> 24U);
+    /* Index ranges 1 to 4, for offset calculation is 0 to 3. */
+    IndexLoc--;
 
-	/* Read MAC bits [47:32] in TOP */
-	MacAddr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				    ((u32)XEMACPS_LADDR1H_OFFSET + ((u32)IndexLoc * (u32)8)));
-	*(Aptr+4) = (u8) MacAddr;
-	*(Aptr+5) = (u8) (MacAddr >> 8U);
+    MacAddr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                               ( ( u32 ) XEMACPS_LADDR1L_OFFSET + ( ( u32 ) IndexLoc * ( u32 ) 8 ) ) );
+    *Aptr = ( u8 ) MacAddr;
+    *( Aptr + 1 ) = ( u8 ) ( MacAddr >> 8U );
+    *( Aptr + 2 ) = ( u8 ) ( MacAddr >> 16U );
+    *( Aptr + 3 ) = ( u8 ) ( MacAddr >> 24U );
+
+    /* Read MAC bits [47:32] in TOP */
+    MacAddr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                               ( ( u32 ) XEMACPS_LADDR1H_OFFSET + ( ( u32 ) IndexLoc * ( u32 ) 8 ) ) );
+    *( Aptr + 4 ) = ( u8 ) MacAddr;
+    *( Aptr + 5 ) = ( u8 ) ( MacAddr >> 8U );
 }
 
 
 /*****************************************************************************/
+
 /**
  * Set 48-bit MAC addresses in hash table.
  * The device must be stopped before calling this function.
@@ -230,59 +243,71 @@ void XEmacPs_GetMacAddress(XEmacPs *InstancePtr, void *AddressPtr, u8 Index)
  * Having Aptr be unsigned type prevents the following operations from sign
  * extending.
  *****************************************************************************/
-LONG XEmacPs_SetHash(XEmacPs *InstancePtr, void *AddressPtr)
+LONG XEmacPs_SetHash( XEmacPs * InstancePtr,
+                      void * AddressPtr )
 {
-	u32 HashAddr;
-	u8 *Aptr = (u8 *)(void *)AddressPtr;
-	u8 Temp1, Temp2, Temp3, Temp4, Temp5, Temp6, Temp7, Temp8;
-	u32 Result;
-	LONG Status;
+    u32 HashAddr;
+    u8 * Aptr = ( u8 * ) ( void * ) AddressPtr;
+    u8 Temp1, Temp2, Temp3, Temp4, Temp5, Temp6, Temp7, Temp8;
+    u32 Result;
+    LONG Status;
 
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(AddressPtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( AddressPtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	/* Be sure device has been stopped */
-	if (InstancePtr->IsStarted == (u32)XIL_COMPONENT_IS_STARTED) {
-		Status = (LONG)(XST_DEVICE_IS_STARTED);
-	} else {
-		Temp1 = (*(Aptr+0)) & 0x3FU;
-		Temp2 = ((*(Aptr+0) >> 6U) & 0x03U) | ((*(Aptr+1) & 0x0FU) << 2U);
+    /* Be sure device has been stopped */
+    if( InstancePtr->IsStarted == ( u32 ) XIL_COMPONENT_IS_STARTED )
+    {
+        Status = ( LONG ) ( XST_DEVICE_IS_STARTED );
+    }
+    else
+    {
+        Temp1 = ( *( Aptr + 0 ) ) & 0x3FU;
+        Temp2 = ( ( *( Aptr + 0 ) >> 6U ) & 0x03U ) | ( ( *( Aptr + 1 ) & 0x0FU ) << 2U );
 
-		Temp3 = ((*(Aptr+1) >> 4U) & 0x0FU) | ((*(Aptr+2) & 0x3U) << 4U);
-		Temp4 = ((*(Aptr+2) >> 2U) & 0x3FU);
-		Temp5 =   (*(Aptr+3)) & 0x3FU;
-		Temp6 = ((*(Aptr+3) >> 6U) & 0x03U) | ((*(Aptr+4) & 0x0FU) << 2U);
-		Temp7 = ((*(Aptr+4) >> 4U) & 0x0FU) | ((*(Aptr+5) & 0x03U) << 4U);
-		Temp8 = ((*(Aptr+5) >> 2U) & 0x3FU);
+        Temp3 = ( ( *( Aptr + 1 ) >> 4U ) & 0x0FU ) | ( ( *( Aptr + 2 ) & 0x3U ) << 4U );
+        Temp4 = ( ( *( Aptr + 2 ) >> 2U ) & 0x3FU );
+        Temp5 = ( *( Aptr + 3 ) ) & 0x3FU;
+        Temp6 = ( ( *( Aptr + 3 ) >> 6U ) & 0x03U ) | ( ( *( Aptr + 4 ) & 0x0FU ) << 2U );
+        Temp7 = ( ( *( Aptr + 4 ) >> 4U ) & 0x0FU ) | ( ( *( Aptr + 5 ) & 0x03U ) << 4U );
+        Temp8 = ( ( *( Aptr + 5 ) >> 2U ) & 0x3FU );
 
-		Result = (u32)((u32)Temp1 ^ (u32)Temp2 ^ (u32)Temp3 ^ (u32)Temp4 ^
-				(u32)Temp5 ^ (u32)Temp6 ^ (u32)Temp7 ^ (u32)Temp8);
+        Result = ( u32 ) ( ( u32 ) Temp1 ^ ( u32 ) Temp2 ^ ( u32 ) Temp3 ^ ( u32 ) Temp4 ^
+                           ( u32 ) Temp5 ^ ( u32 ) Temp6 ^ ( u32 ) Temp7 ^ ( u32 ) Temp8 );
 
-		if (Result >= (u32)XEMACPS_MAX_HASH_BITS) {
-			Status = (LONG)(XST_INVALID_PARAM);
-		} else {
+        if( Result >= ( u32 ) XEMACPS_MAX_HASH_BITS )
+        {
+            Status = ( LONG ) ( XST_INVALID_PARAM );
+        }
+        else
+        {
+            if( Result < ( u32 ) 32 )
+            {
+                HashAddr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                            XEMACPS_HASHL_OFFSET );
+                HashAddr |= ( u32 ) ( 0x00000001U << Result );
+                XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                                  XEMACPS_HASHL_OFFSET, HashAddr );
+            }
+            else
+            {
+                HashAddr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                            XEMACPS_HASHH_OFFSET );
+                HashAddr |= ( u32 ) ( 0x00000001U << ( u32 ) ( Result - ( u32 ) 32 ) );
+                XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                                  XEMACPS_HASHH_OFFSET, HashAddr );
+            }
 
-			if (Result < (u32)32) {
-		HashAddr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_HASHL_OFFSET);
-				HashAddr |= (u32)(0x00000001U << Result);
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_HASHL_OFFSET, HashAddr);
-	} else {
-		HashAddr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_HASHH_OFFSET);
-				HashAddr |= (u32)(0x00000001U << (u32)(Result - (u32)32));
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_HASHH_OFFSET, HashAddr);
-	}
-			Status = (LONG)(XST_SUCCESS);
-		}
-	}
-	return Status;
+            Status = ( LONG ) ( XST_SUCCESS );
+        }
+    }
+
+    return Status;
 }
 
 /*****************************************************************************/
+
 /**
  * Delete 48-bit MAC addresses in hash table.
  * The device must be stopped before calling this function.
@@ -300,77 +325,91 @@ LONG XEmacPs_SetHash(XEmacPs *InstancePtr, void *AddressPtr)
  * Having Aptr be unsigned type prevents the following operations from sign
  * extending.
  *****************************************************************************/
-LONG XEmacPs_DeleteHash(XEmacPs *InstancePtr, void *AddressPtr)
+LONG XEmacPs_DeleteHash( XEmacPs * InstancePtr,
+                         void * AddressPtr )
 {
-	u32 HashAddr;
-	u8 *Aptr = (u8 *)(void *)AddressPtr;
-	u8 Temp1, Temp2, Temp3, Temp4, Temp5, Temp6, Temp7, Temp8;
-	u32 Result;
-	LONG Status;
+    u32 HashAddr;
+    u8 * Aptr = ( u8 * ) ( void * ) AddressPtr;
+    u8 Temp1, Temp2, Temp3, Temp4, Temp5, Temp6, Temp7, Temp8;
+    u32 Result;
+    LONG Status;
 
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(Aptr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( Aptr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	/* Be sure device has been stopped */
-	if (InstancePtr->IsStarted == (u32)XIL_COMPONENT_IS_STARTED) {
-		Status = (LONG)(XST_DEVICE_IS_STARTED);
-	} else {
-		Temp1 = (*(Aptr+0)) & 0x3FU;
-		Temp2 = ((*(Aptr+0) >> 6U) & 0x03U) | ((*(Aptr+1) & 0x0FU) << 2U);
-		Temp3 = ((*(Aptr+1) >> 4U) & 0x0FU) | ((*(Aptr+2) & 0x03U) << 4U);
-		Temp4 = ((*(Aptr+2) >> 2U) & 0x3FU);
-		Temp5 =   (*(Aptr+3)) & 0x3FU;
-		Temp6 = ((*(Aptr+3) >> 6U) & 0x03U) | ((*(Aptr+4) & 0x0FU) << 2U);
-		Temp7 = ((*(Aptr+4) >> 4U) & 0x0FU) | ((*(Aptr+5) & 0x03U) << 4U);
-		Temp8 = ((*(Aptr+5) >> 2U) & 0x3FU);
+    /* Be sure device has been stopped */
+    if( InstancePtr->IsStarted == ( u32 ) XIL_COMPONENT_IS_STARTED )
+    {
+        Status = ( LONG ) ( XST_DEVICE_IS_STARTED );
+    }
+    else
+    {
+        Temp1 = ( *( Aptr + 0 ) ) & 0x3FU;
+        Temp2 = ( ( *( Aptr + 0 ) >> 6U ) & 0x03U ) | ( ( *( Aptr + 1 ) & 0x0FU ) << 2U );
+        Temp3 = ( ( *( Aptr + 1 ) >> 4U ) & 0x0FU ) | ( ( *( Aptr + 2 ) & 0x03U ) << 4U );
+        Temp4 = ( ( *( Aptr + 2 ) >> 2U ) & 0x3FU );
+        Temp5 = ( *( Aptr + 3 ) ) & 0x3FU;
+        Temp6 = ( ( *( Aptr + 3 ) >> 6U ) & 0x03U ) | ( ( *( Aptr + 4 ) & 0x0FU ) << 2U );
+        Temp7 = ( ( *( Aptr + 4 ) >> 4U ) & 0x0FU ) | ( ( *( Aptr + 5 ) & 0x03U ) << 4U );
+        Temp8 = ( ( *( Aptr + 5 ) >> 2U ) & 0x3FU );
 
-		Result = (u32)((u32)Temp1 ^ (u32)Temp2 ^ (u32)Temp3 ^ (u32)Temp4 ^
-					(u32)Temp5 ^ (u32)Temp6 ^ (u32)Temp7 ^ (u32)Temp8);
+        Result = ( u32 ) ( ( u32 ) Temp1 ^ ( u32 ) Temp2 ^ ( u32 ) Temp3 ^ ( u32 ) Temp4 ^
+                           ( u32 ) Temp5 ^ ( u32 ) Temp6 ^ ( u32 ) Temp7 ^ ( u32 ) Temp8 );
 
-		if (Result >= (u32)(XEMACPS_MAX_HASH_BITS)) {
-			Status =  (LONG)(XST_INVALID_PARAM);
-		} else {
-			if (Result < (u32)32) {
-		HashAddr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_HASHL_OFFSET);
-				HashAddr &= (u32)(~(0x00000001U << Result));
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_HASHL_OFFSET, HashAddr);
-	} else {
-		HashAddr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_HASHH_OFFSET);
-				HashAddr &= (u32)(~(0x00000001U << (u32)(Result - (u32)32)));
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_HASHH_OFFSET, HashAddr);
-	}
-			Status = (LONG)(XST_SUCCESS);
-		}
-	}
-	return Status;
+        if( Result >= ( u32 ) ( XEMACPS_MAX_HASH_BITS ) )
+        {
+            Status = ( LONG ) ( XST_INVALID_PARAM );
+        }
+        else
+        {
+            if( Result < ( u32 ) 32 )
+            {
+                HashAddr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                            XEMACPS_HASHL_OFFSET );
+                HashAddr &= ( u32 ) ( ~( 0x00000001U << Result ) );
+                XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                                  XEMACPS_HASHL_OFFSET, HashAddr );
+            }
+            else
+            {
+                HashAddr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                            XEMACPS_HASHH_OFFSET );
+                HashAddr &= ( u32 ) ( ~( 0x00000001U << ( u32 ) ( Result - ( u32 ) 32 ) ) );
+                XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                                  XEMACPS_HASHH_OFFSET, HashAddr );
+            }
+
+            Status = ( LONG ) ( XST_SUCCESS );
+        }
+    }
+
+    return Status;
 }
 /*****************************************************************************/
+
 /**
  * Clear the Hash registers for the mac address pointed by AddressPtr.
  *
  * @param InstancePtr is a pointer to the instance to be worked on.
  *
  *****************************************************************************/
-void XEmacPs_ClearHash(XEmacPs *InstancePtr)
+void XEmacPs_ClearHash( XEmacPs * InstancePtr )
 {
-	Xil_AssertVoid(InstancePtr != NULL);
-	Xil_AssertVoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    Xil_AssertVoid( InstancePtr != NULL );
+    Xil_AssertVoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				    XEMACPS_HASHL_OFFSET, 0x0U);
+    XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                      XEMACPS_HASHL_OFFSET, 0x0U );
 
-	/* write bits [63:32] in TOP */
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				    XEMACPS_HASHH_OFFSET, 0x0U);
+    /* write bits [63:32] in TOP */
+    XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                      XEMACPS_HASHH_OFFSET, 0x0U );
 }
 
 
 /*****************************************************************************/
+
 /**
  * Get the Hash address for this driver/device.
  *
@@ -379,24 +418,26 @@ void XEmacPs_ClearHash(XEmacPs *InstancePtr)
  *        which the current HASH MAC address will be copied.
  *
  *****************************************************************************/
-void XEmacPs_GetHash(XEmacPs *InstancePtr, void *AddressPtr)
+void XEmacPs_GetHash( XEmacPs * InstancePtr,
+                      void * AddressPtr )
 {
-	u32 *Aptr = (u32 *)(void *)AddressPtr;
+    u32 * Aptr = ( u32 * ) ( void * ) AddressPtr;
 
-	Xil_AssertVoid(InstancePtr != NULL);
-	Xil_AssertVoid(AddressPtr != NULL);
-	Xil_AssertVoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    Xil_AssertVoid( InstancePtr != NULL );
+    Xil_AssertVoid( AddressPtr != NULL );
+    Xil_AssertVoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	*(Aptr+0) = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				    XEMACPS_HASHL_OFFSET);
+    *( Aptr + 0 ) = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                     XEMACPS_HASHL_OFFSET );
 
-	/* Read Hash bits [63:32] in TOP */
-	*(Aptr+1) = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				    XEMACPS_HASHH_OFFSET);
+    /* Read Hash bits [63:32] in TOP */
+    *( Aptr + 1 ) = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                     XEMACPS_HASHH_OFFSET );
 }
 
 
 /*****************************************************************************/
+
 /**
  * Set the Type ID match for this driver/device.  The register is a 32-bit
  * value. The device must be stopped before calling this function.
@@ -410,32 +451,39 @@ void XEmacPs_GetHash(XEmacPs *InstancePtr, void *AddressPtr)
  * - XST_DEVICE_IS_STARTED if the device has not yet been stopped
  *
  *****************************************************************************/
-LONG XEmacPs_SetTypeIdCheck(XEmacPs *InstancePtr, u32 Id_Check, u8 Index)
+LONG XEmacPs_SetTypeIdCheck( XEmacPs * InstancePtr,
+                             u32 Id_Check,
+                             u8 Index )
 {
-	u8 IndexLoc = Index;
-	LONG Status;
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
-	Xil_AssertNonvoid((IndexLoc <= (u8)XEMACPS_MAX_TYPE_ID) && (IndexLoc > 0x00U));
+    u8 IndexLoc = Index;
+    LONG Status;
 
-	/* Be sure device has been stopped */
-	if (InstancePtr->IsStarted == (u32)XIL_COMPONENT_IS_STARTED) {
-		Status = (LONG)(XST_DEVICE_IS_STARTED);
-	} else {
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
+    Xil_AssertNonvoid( ( IndexLoc <= ( u8 ) XEMACPS_MAX_TYPE_ID ) && ( IndexLoc > 0x00U ) );
 
-	/* Index ranges 1 to 4, for offset calculation is 0 to 3. */
-		IndexLoc--;
+    /* Be sure device has been stopped */
+    if( InstancePtr->IsStarted == ( u32 ) XIL_COMPONENT_IS_STARTED )
+    {
+        Status = ( LONG ) ( XST_DEVICE_IS_STARTED );
+    }
+    else
+    {
+        /* Index ranges 1 to 4, for offset calculation is 0 to 3. */
+        IndexLoc--;
 
-	/* Set the ID bits in MATCHx register */
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				   ((u32)XEMACPS_MATCH1_OFFSET + ((u32)IndexLoc * (u32)4)), Id_Check);
+        /* Set the ID bits in MATCHx register */
+        XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                          ( ( u32 ) XEMACPS_MATCH1_OFFSET + ( ( u32 ) IndexLoc * ( u32 ) 4 ) ), Id_Check );
 
-		Status = (LONG)(XST_SUCCESS);
-	}
-	return Status;
+        Status = ( LONG ) ( XST_SUCCESS );
+    }
+
+    return Status;
 }
 
 /*****************************************************************************/
+
 /**
  * Set options for the driver/device. The driver should be stopped with
  * XEmacPs_Stop() before changing options.
@@ -453,157 +501,178 @@ LONG XEmacPs_SetTypeIdCheck(XEmacPs *InstancePtr, u32 Id_Check, u8 Index)
  * See xemacps.h for a description of the available options.
  *
  *****************************************************************************/
-LONG XEmacPs_SetOptions(XEmacPs *InstancePtr, u32 Options)
+LONG XEmacPs_SetOptions( XEmacPs * InstancePtr,
+                         u32 Options )
 {
-	u32 Reg;		/* Generic register contents */
-	u32 RegNetCfg;		/* Reflects original contents of NET_CONFIG */
-	u32 RegNewNetCfg;	/* Reflects new contents of NET_CONFIG */
-	LONG Status;
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    u32 Reg;          /* Generic register contents */
+    u32 RegNetCfg;    /* Reflects original contents of NET_CONFIG */
+    u32 RegNewNetCfg; /* Reflects new contents of NET_CONFIG */
+    LONG Status;
 
-	/* Be sure device has been stopped */
-	if (InstancePtr->IsStarted == (u32)XIL_COMPONENT_IS_STARTED) {
-		Status = (LONG)(XST_DEVICE_IS_STARTED);
-	} else {
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	/* Many of these options will change the NET_CONFIG registers.
-	 * To reduce the amount of IO to the device, group these options here
-	 * and change them all at once.
-	 */
+    /* Be sure device has been stopped */
+    if( InstancePtr->IsStarted == ( u32 ) XIL_COMPONENT_IS_STARTED )
+    {
+        Status = ( LONG ) ( XST_DEVICE_IS_STARTED );
+    }
+    else
+    {
+        /* Many of these options will change the NET_CONFIG registers.
+         * To reduce the amount of IO to the device, group these options here
+         * and change them all at once.
+         */
 
-	/* Grab current register contents */
-	RegNetCfg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				      XEMACPS_NWCFG_OFFSET);
-	RegNewNetCfg = RegNetCfg;
+        /* Grab current register contents */
+        RegNetCfg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                     XEMACPS_NWCFG_OFFSET );
+        RegNewNetCfg = RegNetCfg;
 
-	/*
-	 * It is configured to max 1536.
-	 */
-		if ((Options & XEMACPS_FRAME1536_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= (XEMACPS_NWCFG_1536RXEN_MASK);
-	}
+        /*
+         * It is configured to max 1536.
+         */
+        if( ( Options & XEMACPS_FRAME1536_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= ( XEMACPS_NWCFG_1536RXEN_MASK );
+        }
 
-	/* Turn on VLAN packet only, only VLAN tagged will be accepted */
-		if ((Options & XEMACPS_VLAN_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= XEMACPS_NWCFG_NVLANDISC_MASK;
-	}
+        /* Turn on VLAN packet only, only VLAN tagged will be accepted */
+        if( ( Options & XEMACPS_VLAN_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_NVLANDISC_MASK;
+        }
 
-	/* Turn on FCS stripping on receive packets */
-		if ((Options & XEMACPS_FCS_STRIP_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= XEMACPS_NWCFG_FCSREM_MASK;
-	}
+        /* Turn on FCS stripping on receive packets */
+        if( ( Options & XEMACPS_FCS_STRIP_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_FCSREM_MASK;
+        }
 
-	/* Turn on length/type field checking on receive packets */
-		if ((Options & XEMACPS_LENTYPE_ERR_OPTION) != 0x00000000U) {
-			RegNewNetCfg |= XEMACPS_NWCFG_LENERRDSCRD_MASK;
-	}
+        /* Turn on length/type field checking on receive packets */
+        if( ( Options & XEMACPS_LENTYPE_ERR_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_LENERRDSCRD_MASK;
+        }
 
-	/* Turn on flow control */
-		if ((Options & XEMACPS_FLOW_CONTROL_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= XEMACPS_NWCFG_PAUSEEN_MASK;
-	}
+        /* Turn on flow control */
+        if( ( Options & XEMACPS_FLOW_CONTROL_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_PAUSEEN_MASK;
+        }
 
-	/* Turn on promiscuous frame filtering (all frames are received) */
-		if ((Options & XEMACPS_PROMISC_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= XEMACPS_NWCFG_COPYALLEN_MASK;
-	}
+        /* Turn on promiscuous frame filtering (all frames are received) */
+        if( ( Options & XEMACPS_PROMISC_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_COPYALLEN_MASK;
+        }
 
-	/* Allow broadcast address reception */
-		if ((Options & XEMACPS_BROADCAST_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_BCASTDI_MASK);
-	}
+        /* Allow broadcast address reception */
+        if( ( Options & XEMACPS_BROADCAST_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_BCASTDI_MASK );
+        }
 
-	/* Allow multicast address filtering */
-		if ((Options & XEMACPS_MULTICAST_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= XEMACPS_NWCFG_MCASTHASHEN_MASK;
-	}
+        /* Allow multicast address filtering */
+        if( ( Options & XEMACPS_MULTICAST_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_MCASTHASHEN_MASK;
+        }
 
-	/* enable RX checksum offload */
-		if ((Options & XEMACPS_RX_CHKSUM_ENABLE_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= XEMACPS_NWCFG_RXCHKSUMEN_MASK;
-	}
+        /* enable RX checksum offload */
+        if( ( Options & XEMACPS_RX_CHKSUM_ENABLE_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_RXCHKSUMEN_MASK;
+        }
 
-	/* Enable jumbo frames */
-	if (((Options & XEMACPS_JUMBO_ENABLE_OPTION) != 0x00000000U) &&
-		(InstancePtr->Version > 2)) {
-		RegNewNetCfg |= XEMACPS_NWCFG_JUMBO_MASK;
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_JUMBOMAXLEN_OFFSET, XEMACPS_RX_BUF_SIZE_JUMBO);
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				      XEMACPS_DMACR_OFFSET);
-		Reg &= ~XEMACPS_DMACR_RXBUF_MASK;
-		Reg |= (((((u32)XEMACPS_RX_BUF_SIZE_JUMBO / (u32)XEMACPS_RX_BUF_UNIT) +
-			(((((u32)XEMACPS_RX_BUF_SIZE_JUMBO %
-			(u32)XEMACPS_RX_BUF_UNIT))!=(u32)0) ? 1U : 0U)) <<
-			(u32)(XEMACPS_DMACR_RXBUF_SHIFT)) &
-			(u32)(XEMACPS_DMACR_RXBUF_MASK));
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_DMACR_OFFSET, Reg);
-		InstancePtr->MaxMtuSize = XEMACPS_MTU_JUMBO;
-		InstancePtr->MaxFrameSize = XEMACPS_MTU_JUMBO +
-					XEMACPS_HDR_SIZE + XEMACPS_TRL_SIZE;
-		InstancePtr->MaxVlanFrameSize = InstancePtr->MaxFrameSize +
-					XEMACPS_HDR_VLAN_SIZE;
-		InstancePtr->RxBufMask = XEMACPS_RXBUF_LEN_JUMBO_MASK;
-	}
+        /* Enable jumbo frames */
+        if( ( ( Options & XEMACPS_JUMBO_ENABLE_OPTION ) != 0x00000000U ) &&
+            ( InstancePtr->Version > 2 ) )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_JUMBO_MASK;
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_JUMBOMAXLEN_OFFSET, XEMACPS_RX_BUF_SIZE_JUMBO );
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_DMACR_OFFSET );
+            Reg &= ~XEMACPS_DMACR_RXBUF_MASK;
+            Reg |= ( ( ( ( ( u32 ) XEMACPS_RX_BUF_SIZE_JUMBO / ( u32 ) XEMACPS_RX_BUF_UNIT ) +
+                         ( ( ( ( ( u32 ) XEMACPS_RX_BUF_SIZE_JUMBO %
+                                 ( u32 ) XEMACPS_RX_BUF_UNIT ) ) != ( u32 ) 0 ) ? 1U : 0U ) ) <<
+                       ( u32 ) ( XEMACPS_DMACR_RXBUF_SHIFT ) ) &
+                     ( u32 ) ( XEMACPS_DMACR_RXBUF_MASK ) );
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_DMACR_OFFSET, Reg );
+            InstancePtr->MaxMtuSize = XEMACPS_MTU_JUMBO;
+            InstancePtr->MaxFrameSize = XEMACPS_MTU_JUMBO +
+                                        XEMACPS_HDR_SIZE + XEMACPS_TRL_SIZE;
+            InstancePtr->MaxVlanFrameSize = InstancePtr->MaxFrameSize +
+                                            XEMACPS_HDR_VLAN_SIZE;
+            InstancePtr->RxBufMask = XEMACPS_RXBUF_LEN_JUMBO_MASK;
+        }
 
-	if (((Options & XEMACPS_SGMII_ENABLE_OPTION) != 0x00000000U) &&
-		(InstancePtr->Version > 2)) {
-		RegNewNetCfg |= (XEMACPS_NWCFG_SGMIIEN_MASK |
-						XEMACPS_NWCFG_PCSSEL_MASK);
-	}
+        if( ( ( Options & XEMACPS_SGMII_ENABLE_OPTION ) != 0x00000000U ) &&
+            ( InstancePtr->Version > 2 ) )
+        {
+            RegNewNetCfg |= ( XEMACPS_NWCFG_SGMIIEN_MASK |
+                              XEMACPS_NWCFG_PCSSEL_MASK );
+        }
 
-	/* Officially change the NET_CONFIG registers if it needs to be
-	 * modified.
-	 */
-	if (RegNetCfg != RegNewNetCfg) {
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				   XEMACPS_NWCFG_OFFSET, RegNewNetCfg);
-	}
+        /* Officially change the NET_CONFIG registers if it needs to be
+         * modified.
+         */
+        if( RegNetCfg != RegNewNetCfg )
+        {
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWCFG_OFFSET, RegNewNetCfg );
+        }
 
-	/* Enable TX checksum offload */
-		if ((Options & XEMACPS_TX_CHKSUM_ENABLE_OPTION) != 0x00000000U) {
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					XEMACPS_DMACR_OFFSET);
-		Reg |= XEMACPS_DMACR_TCPCKSUM_MASK;
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-					 XEMACPS_DMACR_OFFSET, Reg);
-	}
+        /* Enable TX checksum offload */
+        if( ( Options & XEMACPS_TX_CHKSUM_ENABLE_OPTION ) != 0x00000000U )
+        {
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_DMACR_OFFSET );
+            Reg |= XEMACPS_DMACR_TCPCKSUM_MASK;
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_DMACR_OFFSET, Reg );
+        }
 
-	/* Enable transmitter */
-		if ((Options & XEMACPS_TRANSMITTER_ENABLE_OPTION) != 0x00000000U) {
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					XEMACPS_NWCTRL_OFFSET);
-		Reg |= XEMACPS_NWCTRL_TXEN_MASK;
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				   XEMACPS_NWCTRL_OFFSET, Reg);
-	}
+        /* Enable transmitter */
+        if( ( Options & XEMACPS_TRANSMITTER_ENABLE_OPTION ) != 0x00000000U )
+        {
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_NWCTRL_OFFSET );
+            Reg |= XEMACPS_NWCTRL_TXEN_MASK;
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWCTRL_OFFSET, Reg );
+        }
 
-	/* Enable receiver */
-		if ((Options & XEMACPS_RECEIVER_ENABLE_OPTION) != 0x00000000U) {
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					XEMACPS_NWCTRL_OFFSET);
-		Reg |= XEMACPS_NWCTRL_RXEN_MASK;
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				   XEMACPS_NWCTRL_OFFSET, Reg);
-	}
+        /* Enable receiver */
+        if( ( Options & XEMACPS_RECEIVER_ENABLE_OPTION ) != 0x00000000U )
+        {
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_NWCTRL_OFFSET );
+            Reg |= XEMACPS_NWCTRL_RXEN_MASK;
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWCTRL_OFFSET, Reg );
+        }
 
-	/* The remaining options not handled here are managed elsewhere in the
-	 * driver. No register modifications are needed at this time. Reflecting
-	 * the option in InstancePtr->Options is good enough for now.
-	 */
+        /* The remaining options not handled here are managed elsewhere in the
+         * driver. No register modifications are needed at this time. Reflecting
+         * the option in InstancePtr->Options is good enough for now.
+         */
 
-	/* Set options word to its new value */
-	InstancePtr->Options |= Options;
+        /* Set options word to its new value */
+        InstancePtr->Options |= Options;
 
-		Status = (LONG)(XST_SUCCESS);
-	}
-	return Status;
+        Status = ( LONG ) ( XST_SUCCESS );
+    }
+
+    return Status;
 }
 
 
 /*****************************************************************************/
+
 /**
  * Clear options for the driver/device
  *
@@ -620,155 +689,176 @@ LONG XEmacPs_SetOptions(XEmacPs *InstancePtr, u32 Options)
  * See xemacps.h for a description of the available options.
  *
  *****************************************************************************/
-LONG XEmacPs_ClearOptions(XEmacPs *InstancePtr, u32 Options)
+LONG XEmacPs_ClearOptions( XEmacPs * InstancePtr,
+                           u32 Options )
 {
-	u32 Reg;		/* Generic */
-	u32 RegNetCfg;		/* Reflects original contents of NET_CONFIG */
-	u32 RegNewNetCfg;	/* Reflects new contents of NET_CONFIG */
-	LONG Status;
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    u32 Reg;          /* Generic */
+    u32 RegNetCfg;    /* Reflects original contents of NET_CONFIG */
+    u32 RegNewNetCfg; /* Reflects new contents of NET_CONFIG */
+    LONG Status;
 
-	/* Be sure device has been stopped */
-	if (InstancePtr->IsStarted == (u32)XIL_COMPONENT_IS_STARTED) {
-		Status = (LONG)(XST_DEVICE_IS_STARTED);
-	} else {
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	/* Many of these options will change the NET_CONFIG registers.
-	 * To reduce the amount of IO to the device, group these options here
-	 * and change them all at once.
-	 */
+    /* Be sure device has been stopped */
+    if( InstancePtr->IsStarted == ( u32 ) XIL_COMPONENT_IS_STARTED )
+    {
+        Status = ( LONG ) ( XST_DEVICE_IS_STARTED );
+    }
+    else
+    {
+        /* Many of these options will change the NET_CONFIG registers.
+         * To reduce the amount of IO to the device, group these options here
+         * and change them all at once.
+         */
 
-	/* Grab current register contents */
-	RegNetCfg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				      XEMACPS_NWCFG_OFFSET);
-	RegNewNetCfg = RegNetCfg;
+        /* Grab current register contents */
+        RegNetCfg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                     XEMACPS_NWCFG_OFFSET );
+        RegNewNetCfg = RegNetCfg;
 
-	/* There is only RX configuration!?
-	 * It is configured in two different length, upto 1536 and 10240 bytes
-	 */
-		if ((Options & XEMACPS_FRAME1536_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_1536RXEN_MASK);
-	}
+        /* There is only RX configuration!?
+         * It is configured in two different length, upto 1536 and 10240 bytes
+         */
+        if( ( Options & XEMACPS_FRAME1536_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_1536RXEN_MASK );
+        }
 
-	/* Turn off VLAN packet only */
-		if ((Options & XEMACPS_VLAN_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_NVLANDISC_MASK);
-	}
+        /* Turn off VLAN packet only */
+        if( ( Options & XEMACPS_VLAN_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_NVLANDISC_MASK );
+        }
 
-	/* Turn off FCS stripping on receive packets */
-		if ((Options & XEMACPS_FCS_STRIP_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_FCSREM_MASK);
-	}
+        /* Turn off FCS stripping on receive packets */
+        if( ( Options & XEMACPS_FCS_STRIP_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_FCSREM_MASK );
+        }
 
-	/* Turn off length/type field checking on receive packets */
-		if ((Options & XEMACPS_LENTYPE_ERR_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_LENERRDSCRD_MASK);
-	}
+        /* Turn off length/type field checking on receive packets */
+        if( ( Options & XEMACPS_LENTYPE_ERR_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_LENERRDSCRD_MASK );
+        }
 
-	/* Turn off flow control */
-		if ((Options & XEMACPS_FLOW_CONTROL_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_PAUSEEN_MASK);
-	}
+        /* Turn off flow control */
+        if( ( Options & XEMACPS_FLOW_CONTROL_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_PAUSEEN_MASK );
+        }
 
-	/* Turn off promiscuous frame filtering (all frames are received) */
-		if ((Options & XEMACPS_PROMISC_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_COPYALLEN_MASK);
-	}
+        /* Turn off promiscuous frame filtering (all frames are received) */
+        if( ( Options & XEMACPS_PROMISC_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_COPYALLEN_MASK );
+        }
 
-	/* Disallow broadcast address filtering => broadcast reception */
-		if ((Options & XEMACPS_BROADCAST_OPTION) != 0x00000000U) {
-		RegNewNetCfg |= XEMACPS_NWCFG_BCASTDI_MASK;
-	}
+        /* Disallow broadcast address filtering => broadcast reception */
+        if( ( Options & XEMACPS_BROADCAST_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg |= XEMACPS_NWCFG_BCASTDI_MASK;
+        }
 
-	/* Disallow multicast address filtering */
-		if ((Options & XEMACPS_MULTICAST_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_MCASTHASHEN_MASK);
-	}
+        /* Disallow multicast address filtering */
+        if( ( Options & XEMACPS_MULTICAST_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_MCASTHASHEN_MASK );
+        }
 
-	/* Disable RX checksum offload */
-		if ((Options & XEMACPS_RX_CHKSUM_ENABLE_OPTION) != 0x00000000U) {
-			RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_RXCHKSUMEN_MASK);
-	}
+        /* Disable RX checksum offload */
+        if( ( Options & XEMACPS_RX_CHKSUM_ENABLE_OPTION ) != 0x00000000U )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_RXCHKSUMEN_MASK );
+        }
 
-	/* Disable jumbo frames */
-	if (((Options & XEMACPS_JUMBO_ENABLE_OPTION) != 0x00000000U) &&
-		(InstancePtr->Version > 2)) {
-		RegNewNetCfg &= (u32)(~XEMACPS_NWCFG_JUMBO_MASK);
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				      XEMACPS_DMACR_OFFSET);
-		Reg &= ~XEMACPS_DMACR_RXBUF_MASK;
-		Reg |= (((((u32)XEMACPS_RX_BUF_SIZE / (u32)XEMACPS_RX_BUF_UNIT) +
-			(((((u32)XEMACPS_RX_BUF_SIZE %
-			(u32)XEMACPS_RX_BUF_UNIT))!=(u32)0) ? 1U : 0U)) <<
-			(u32)(XEMACPS_DMACR_RXBUF_SHIFT)) &
-			(u32)(XEMACPS_DMACR_RXBUF_MASK));
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_DMACR_OFFSET, Reg);
-		InstancePtr->MaxMtuSize = XEMACPS_MTU;
-		InstancePtr->MaxFrameSize = XEMACPS_MTU +
-					XEMACPS_HDR_SIZE + XEMACPS_TRL_SIZE;
-		InstancePtr->MaxVlanFrameSize = InstancePtr->MaxFrameSize +
-					XEMACPS_HDR_VLAN_SIZE;
-		InstancePtr->RxBufMask = XEMACPS_RXBUF_LEN_MASK;
-	}
+        /* Disable jumbo frames */
+        if( ( ( Options & XEMACPS_JUMBO_ENABLE_OPTION ) != 0x00000000U ) &&
+            ( InstancePtr->Version > 2 ) )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~XEMACPS_NWCFG_JUMBO_MASK );
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_DMACR_OFFSET );
+            Reg &= ~XEMACPS_DMACR_RXBUF_MASK;
+            Reg |= ( ( ( ( ( u32 ) XEMACPS_RX_BUF_SIZE / ( u32 ) XEMACPS_RX_BUF_UNIT ) +
+                         ( ( ( ( ( u32 ) XEMACPS_RX_BUF_SIZE %
+                                 ( u32 ) XEMACPS_RX_BUF_UNIT ) ) != ( u32 ) 0 ) ? 1U : 0U ) ) <<
+                       ( u32 ) ( XEMACPS_DMACR_RXBUF_SHIFT ) ) &
+                     ( u32 ) ( XEMACPS_DMACR_RXBUF_MASK ) );
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_DMACR_OFFSET, Reg );
+            InstancePtr->MaxMtuSize = XEMACPS_MTU;
+            InstancePtr->MaxFrameSize = XEMACPS_MTU +
+                                        XEMACPS_HDR_SIZE + XEMACPS_TRL_SIZE;
+            InstancePtr->MaxVlanFrameSize = InstancePtr->MaxFrameSize +
+                                            XEMACPS_HDR_VLAN_SIZE;
+            InstancePtr->RxBufMask = XEMACPS_RXBUF_LEN_MASK;
+        }
 
-	if (((Options & XEMACPS_SGMII_ENABLE_OPTION) != 0x00000000U) &&
-		(InstancePtr->Version > 2)) {
-		RegNewNetCfg &= (u32)(~(XEMACPS_NWCFG_SGMIIEN_MASK |
-						XEMACPS_NWCFG_PCSSEL_MASK));
-	}
+        if( ( ( Options & XEMACPS_SGMII_ENABLE_OPTION ) != 0x00000000U ) &&
+            ( InstancePtr->Version > 2 ) )
+        {
+            RegNewNetCfg &= ( u32 ) ( ~( XEMACPS_NWCFG_SGMIIEN_MASK |
+                                         XEMACPS_NWCFG_PCSSEL_MASK ) );
+        }
 
-	/* Officially change the NET_CONFIG registers if it needs to be
-	 * modified.
-	 */
-	if (RegNetCfg != RegNewNetCfg) {
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				   XEMACPS_NWCFG_OFFSET, RegNewNetCfg);
-	}
+        /* Officially change the NET_CONFIG registers if it needs to be
+         * modified.
+         */
+        if( RegNetCfg != RegNewNetCfg )
+        {
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWCFG_OFFSET, RegNewNetCfg );
+        }
 
-	/* Disable TX checksum offload */
-		if ((Options & XEMACPS_TX_CHKSUM_ENABLE_OPTION) != 0x00000000U) {
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					XEMACPS_DMACR_OFFSET);
-			Reg &= (u32)(~XEMACPS_DMACR_TCPCKSUM_MASK);
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-					 XEMACPS_DMACR_OFFSET, Reg);
-	}
+        /* Disable TX checksum offload */
+        if( ( Options & XEMACPS_TX_CHKSUM_ENABLE_OPTION ) != 0x00000000U )
+        {
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_DMACR_OFFSET );
+            Reg &= ( u32 ) ( ~XEMACPS_DMACR_TCPCKSUM_MASK );
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_DMACR_OFFSET, Reg );
+        }
 
-	/* Disable transmitter */
-		if ((Options & XEMACPS_TRANSMITTER_ENABLE_OPTION) != 0x00000000U) {
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					XEMACPS_NWCTRL_OFFSET);
-			Reg &= (u32)(~XEMACPS_NWCTRL_TXEN_MASK);
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				   XEMACPS_NWCTRL_OFFSET, Reg);
-	}
+        /* Disable transmitter */
+        if( ( Options & XEMACPS_TRANSMITTER_ENABLE_OPTION ) != 0x00000000U )
+        {
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_NWCTRL_OFFSET );
+            Reg &= ( u32 ) ( ~XEMACPS_NWCTRL_TXEN_MASK );
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWCTRL_OFFSET, Reg );
+        }
 
-	/* Disable receiver */
-		if ((Options & XEMACPS_RECEIVER_ENABLE_OPTION) != 0x00000000U) {
-		Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					XEMACPS_NWCTRL_OFFSET);
-			Reg &= (u32)(~XEMACPS_NWCTRL_RXEN_MASK);
-		XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-				   XEMACPS_NWCTRL_OFFSET, Reg);
-	}
+        /* Disable receiver */
+        if( ( Options & XEMACPS_RECEIVER_ENABLE_OPTION ) != 0x00000000U )
+        {
+            Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                   XEMACPS_NWCTRL_OFFSET );
+            Reg &= ( u32 ) ( ~XEMACPS_NWCTRL_RXEN_MASK );
+            XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWCTRL_OFFSET, Reg );
+        }
 
-	/* The remaining options not handled here are managed elsewhere in the
-	 * driver. No register modifications are needed at this time. Reflecting
-	 * option in InstancePtr->Options is good enough for now.
-	 */
+        /* The remaining options not handled here are managed elsewhere in the
+         * driver. No register modifications are needed at this time. Reflecting
+         * option in InstancePtr->Options is good enough for now.
+         */
 
-	/* Set options word to its new value */
-	InstancePtr->Options &= ~Options;
+        /* Set options word to its new value */
+        InstancePtr->Options &= ~Options;
 
-		Status = (LONG)(XST_SUCCESS);
-	}
-	return Status;
+        Status = ( LONG ) ( XST_SUCCESS );
+    }
+
+    return Status;
 }
 
 
 /*****************************************************************************/
+
 /**
  * Get current option settings
  *
@@ -782,16 +872,17 @@ LONG XEmacPs_ClearOptions(XEmacPs *InstancePtr, u32 Options)
  * See xemacps.h for a description of the available options.
  *
  *****************************************************************************/
-u32 XEmacPs_GetOptions(XEmacPs *InstancePtr)
+u32 XEmacPs_GetOptions( XEmacPs * InstancePtr )
 {
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	return (InstancePtr->Options);
+    return( InstancePtr->Options );
 }
 
 
 /*****************************************************************************/
+
 /**
  * Send a pause packet
  *
@@ -802,30 +893,35 @@ u32 XEmacPs_GetOptions(XEmacPs *InstancePtr)
  * - XST_DEVICE_IS_STOPPED if the device has not been started.
  *
  *****************************************************************************/
-LONG XEmacPs_SendPausePacket(XEmacPs *InstancePtr)
+LONG XEmacPs_SendPausePacket( XEmacPs * InstancePtr )
 {
-	u32 Reg;
-	LONG Status;
+    u32 Reg;
+    LONG Status;
 
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	/* Make sure device is ready for this operation */
-	if (InstancePtr->IsStarted != (u32)XIL_COMPONENT_IS_STARTED) {
-		Status = (LONG)(XST_DEVICE_IS_STOPPED);
-	} else {
-	/* Send flow control frame */
-	Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_NWCTRL_OFFSET);
-	Reg |= XEMACPS_NWCTRL_PAUSETX_MASK;
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			   XEMACPS_NWCTRL_OFFSET, Reg);
-		Status = (LONG)(XST_SUCCESS);
-	}
-	return Status;
+    /* Make sure device is ready for this operation */
+    if( InstancePtr->IsStarted != ( u32 ) XIL_COMPONENT_IS_STARTED )
+    {
+        Status = ( LONG ) ( XST_DEVICE_IS_STOPPED );
+    }
+    else
+    {
+        /* Send flow control frame */
+        Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                               XEMACPS_NWCTRL_OFFSET );
+        Reg |= XEMACPS_NWCTRL_PAUSETX_MASK;
+        XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                          XEMACPS_NWCTRL_OFFSET, Reg );
+        Status = ( LONG ) ( XST_SUCCESS );
+    }
+
+    return Status;
 }
 
 /*****************************************************************************/
+
 /**
  * XEmacPs_GetOperatingSpeed gets the current operating link speed. This may
  * be the value set by XEmacPs_SetOperatingSpeed() or a hardware default.
@@ -838,31 +934,39 @@ LONG XEmacPs_SendPausePacket(XEmacPs *InstancePtr)
  * @note
  *
  *****************************************************************************/
-u16 XEmacPs_GetOperatingSpeed(XEmacPs *InstancePtr)
+u16 XEmacPs_GetOperatingSpeed( XEmacPs * InstancePtr )
 {
-	u32 Reg;
-	u16 Status;
+    u32 Reg;
+    u16 Status;
 
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
 
-	Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_NWCFG_OFFSET);
+    Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                           XEMACPS_NWCFG_OFFSET );
 
-	if ((Reg & XEMACPS_NWCFG_1000_MASK) != 0x00000000U) {
-		Status = (u16)(1000);
-	} else {
-		if ((Reg & XEMACPS_NWCFG_100_MASK) != 0x00000000U) {
-			Status = (u16)(100);
-		} else {
-			Status = (u16)(10);
-		}
-	}
-	return Status;
+    if( ( Reg & XEMACPS_NWCFG_1000_MASK ) != 0x00000000U )
+    {
+        Status = ( u16 ) ( 1000 );
+    }
+    else
+    {
+        if( ( Reg & XEMACPS_NWCFG_100_MASK ) != 0x00000000U )
+        {
+            Status = ( u16 ) ( 100 );
+        }
+        else
+        {
+            Status = ( u16 ) ( 10 );
+        }
+    }
+
+    return Status;
 }
 
 
 /*****************************************************************************/
+
 /**
  * XEmacPs_SetOperatingSpeed sets the current operating link speed. For any
  * traffic to be passed, this speed must match the current MII/GMII/SGMII/RGMII
@@ -875,48 +979,54 @@ u16 XEmacPs_GetOperatingSpeed(XEmacPs *InstancePtr)
  * @note
  *
  *****************************************************************************/
-void XEmacPs_SetOperatingSpeed(XEmacPs *InstancePtr, u16 Speed)
+void XEmacPs_SetOperatingSpeed( XEmacPs * InstancePtr,
+                                u16 Speed )
 {
-        u32 Reg;
-	u16 Status;
-        Xil_AssertVoid(InstancePtr != NULL);
-	Xil_AssertVoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
-    Xil_AssertVoid((Speed == (u16)10) || (Speed == (u16)100) || (Speed == (u16)1000));
+    u32 Reg;
+    u16 Status;
 
-        Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-			XEMACPS_NWCFG_OFFSET);
-	Reg &= (u32)(~(XEMACPS_NWCFG_1000_MASK | XEMACPS_NWCFG_100_MASK));
+    Xil_AssertVoid( InstancePtr != NULL );
+    Xil_AssertVoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
+    Xil_AssertVoid( ( Speed == ( u16 ) 10 ) || ( Speed == ( u16 ) 100 ) || ( Speed == ( u16 ) 1000 ) );
 
-	switch (Speed) {
-		case (u16)10:
-				Status = 0U;
-                break;
+    Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                           XEMACPS_NWCFG_OFFSET );
+    Reg &= ( u32 ) ( ~( XEMACPS_NWCFG_1000_MASK | XEMACPS_NWCFG_100_MASK ) );
 
-        case (u16)100:
-			Status = 0U;
-                Reg |= XEMACPS_NWCFG_100_MASK;
-                break;
+    switch( Speed )
+    {
+        case ( u16 ) 10:
+            Status = 0U;
+            break;
 
-        case (u16)1000:
-			Status = 0U;
-                Reg |= XEMACPS_NWCFG_1000_MASK;
-                break;
+        case ( u16 ) 100:
+            Status = 0U;
+            Reg |= XEMACPS_NWCFG_100_MASK;
+            break;
+
+        case ( u16 ) 1000:
+            Status = 0U;
+            Reg |= XEMACPS_NWCFG_1000_MASK;
+            break;
 
         default:
-			Status = 1U;
-                break;
+            Status = 1U;
+            break;
     }
-	if(Status == (u16)1){
-                return;
-        }
 
-        /* Set register and return */
-        XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-                XEMACPS_NWCFG_OFFSET, Reg);
+    if( Status == ( u16 ) 1 )
+    {
+        return;
+    }
+
+    /* Set register and return */
+    XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                      XEMACPS_NWCFG_OFFSET, Reg );
 }
 
 
 /*****************************************************************************/
+
 /**
  * Set the MDIO clock divisor.
  *
@@ -948,227 +1058,248 @@ void XEmacPs_SetOperatingSpeed(XEmacPs *InstancePtr, u16 Speed)
  * @param Divisor is the divisor to set. Range is 0b000 to 0b111.
  *
  *****************************************************************************/
-void XEmacPs_SetMdioDivisor(XEmacPs *InstancePtr, XEmacPs_MdcDiv Divisor)
+void XEmacPs_SetMdioDivisor( XEmacPs * InstancePtr,
+                             XEmacPs_MdcDiv Divisor )
 {
-	u32 Reg;
-	Xil_AssertVoid(InstancePtr != NULL);
-	Xil_AssertVoid(InstancePtr->IsReady == (u32)XIL_COMPONENT_IS_READY);
-	Xil_AssertVoid(Divisor <= (XEmacPs_MdcDiv)0x7); /* only last three bits are valid */
+    u32 Reg;
 
-	Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_NWCFG_OFFSET);
-	/* clear these three bits, could be done with mask */
-	Reg &= (u32)(~XEMACPS_NWCFG_MDCCLKDIV_MASK);
+    Xil_AssertVoid( InstancePtr != NULL );
+    Xil_AssertVoid( InstancePtr->IsReady == ( u32 ) XIL_COMPONENT_IS_READY );
+    Xil_AssertVoid( Divisor <= ( XEmacPs_MdcDiv ) 0x7 ); /* only last three bits are valid */
 
-	Reg |= ((u32)Divisor << XEMACPS_NWCFG_MDC_SHIFT_MASK);
+    Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                           XEMACPS_NWCFG_OFFSET );
+    /* clear these three bits, could be done with mask */
+    Reg &= ( u32 ) ( ~XEMACPS_NWCFG_MDCCLKDIV_MASK );
 
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			   XEMACPS_NWCFG_OFFSET, Reg);
+    Reg |= ( ( u32 ) Divisor << XEMACPS_NWCFG_MDC_SHIFT_MASK );
+
+    XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                      XEMACPS_NWCFG_OFFSET, Reg );
 }
 
 
 /*****************************************************************************/
+
 /**
-* Read the current value of the PHY register indicated by the PhyAddress and
-* the RegisterNum parameters. The MAC provides the driver with the ability to
-* talk to a PHY that adheres to the Media Independent Interface (MII) as
-* defined in the IEEE 802.3 standard.
-*
-* Prior to PHY access with this function, the user should have setup the MDIO
-* clock with XEmacPs_SetMdioDivisor().
-*
-* @param InstancePtr is a pointer to the XEmacPs instance to be worked on.
-* @param PhyAddress is the address of the PHY to be read (supports multiple
-*        PHYs)
-* @param RegisterNum is the register number, 0-31, of the specific PHY register
-*        to read
-* @param PhyDataPtr is an output parameter, and points to a 16-bit buffer into
-*        which the current value of the register will be copied.
-*
-* @return
-*
-* - XST_SUCCESS if the PHY was read from successfully
-* - XST_EMAC_MII_BUSY if there is another PHY operation in progress
-*
-* @note
-*
-* This function is not thread-safe. The user must provide mutually exclusive
-* access to this function if there are to be multiple threads that can call it.
-*
-* There is the possibility that this function will not return if the hardware
-* is broken (i.e., it never sets the status bit indicating that the read is
-* done). If this is of concern to the user, the user should provide a mechanism
-* suitable to their needs for recovery.
-*
-* For the duration of this function, all host interface reads and writes are
-* blocked to the current XEmacPs instance.
-*
-******************************************************************************/
-LONG XEmacPs_PhyRead(XEmacPs *InstancePtr, u32 PhyAddress,
-		     u32 RegisterNum, u16 *PhyDataPtr)
+ * Read the current value of the PHY register indicated by the PhyAddress and
+ * the RegisterNum parameters. The MAC provides the driver with the ability to
+ * talk to a PHY that adheres to the Media Independent Interface (MII) as
+ * defined in the IEEE 802.3 standard.
+ *
+ * Prior to PHY access with this function, the user should have setup the MDIO
+ * clock with XEmacPs_SetMdioDivisor().
+ *
+ * @param InstancePtr is a pointer to the XEmacPs instance to be worked on.
+ * @param PhyAddress is the address of the PHY to be read (supports multiple
+ *        PHYs)
+ * @param RegisterNum is the register number, 0-31, of the specific PHY register
+ *        to read
+ * @param PhyDataPtr is an output parameter, and points to a 16-bit buffer into
+ *        which the current value of the register will be copied.
+ *
+ * @return
+ *
+ * - XST_SUCCESS if the PHY was read from successfully
+ * - XST_EMAC_MII_BUSY if there is another PHY operation in progress
+ *
+ * @note
+ *
+ * This function is not thread-safe. The user must provide mutually exclusive
+ * access to this function if there are to be multiple threads that can call it.
+ *
+ * There is the possibility that this function will not return if the hardware
+ * is broken (i.e., it never sets the status bit indicating that the read is
+ * done). If this is of concern to the user, the user should provide a mechanism
+ * suitable to their needs for recovery.
+ *
+ * For the duration of this function, all host interface reads and writes are
+ * blocked to the current XEmacPs instance.
+ *
+ ******************************************************************************/
+LONG XEmacPs_PhyRead( XEmacPs * InstancePtr,
+                      u32 PhyAddress,
+                      u32 RegisterNum,
+                      u16 * PhyDataPtr )
 {
-	u32 Mgtcr;
-	volatile u32 Ipisr;
-	u32 IpReadTemp;
-	LONG Status;
+    u32 Mgtcr;
+    volatile u32 Ipisr;
+    u32 IpReadTemp;
+    LONG Status;
 
-	Xil_AssertNonvoid(InstancePtr != NULL);
+    Xil_AssertNonvoid( InstancePtr != NULL );
 
-	/* Make sure no other PHY operation is currently in progress */
-	if ((!(XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_NWSR_OFFSET) &
-	      XEMACPS_NWSR_MDIOIDLE_MASK))==TRUE) {
-		Status = (LONG)(XST_EMAC_MII_BUSY);
-	} else {
+    /* Make sure no other PHY operation is currently in progress */
+    if( ( !( XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWSR_OFFSET ) &
+             XEMACPS_NWSR_MDIOIDLE_MASK ) ) == TRUE )
+    {
+        Status = ( LONG ) ( XST_EMAC_MII_BUSY );
+    }
+    else
+    {
+        /* Construct Mgtcr mask for the operation */
+        Mgtcr = XEMACPS_PHYMNTNC_OP_MASK | XEMACPS_PHYMNTNC_OP_R_MASK |
+                ( PhyAddress << XEMACPS_PHYMNTNC_PHAD_SHFT_MSK ) |
+                ( RegisterNum << XEMACPS_PHYMNTNC_PREG_SHFT_MSK );
 
-	/* Construct Mgtcr mask for the operation */
-	Mgtcr = XEMACPS_PHYMNTNC_OP_MASK | XEMACPS_PHYMNTNC_OP_R_MASK |
-			(PhyAddress << XEMACPS_PHYMNTNC_PHAD_SHFT_MSK) |
-			(RegisterNum << XEMACPS_PHYMNTNC_PREG_SHFT_MSK);
+        /* Write Mgtcr and wait for completion */
+        XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                          XEMACPS_PHYMNTNC_OFFSET, Mgtcr );
 
-	/* Write Mgtcr and wait for completion */
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			   XEMACPS_PHYMNTNC_OFFSET, Mgtcr);
+        do
+        {
+            Ipisr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                     XEMACPS_NWSR_OFFSET );
+            IpReadTemp = Ipisr;
+        } while( ( IpReadTemp & XEMACPS_NWSR_MDIOIDLE_MASK ) == 0x00000000U );
 
-	do {
-		Ipisr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					  XEMACPS_NWSR_OFFSET);
-			IpReadTemp = Ipisr;
-		} while ((IpReadTemp & XEMACPS_NWSR_MDIOIDLE_MASK) == 0x00000000U);
+        /* Read data */
+        *PhyDataPtr = ( u16 ) XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                               XEMACPS_PHYMNTNC_OFFSET );
+        Status = ( LONG ) ( XST_SUCCESS );
+    }
 
-	/* Read data */
-		*PhyDataPtr = (u16)XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					XEMACPS_PHYMNTNC_OFFSET);
-		Status = (LONG)(XST_SUCCESS);
-	}
-	return Status;
+    return Status;
 }
 
 
 /*****************************************************************************/
+
 /**
-* Write data to the specified PHY register. The Ethernet driver does not
-* require the device to be stopped before writing to the PHY.  Although it is
-* probably a good idea to stop the device, it is the responsibility of the
-* application to deem this necessary. The MAC provides the driver with the
-* ability to talk to a PHY that adheres to the Media Independent Interface
-* (MII) as defined in the IEEE 802.3 standard.
-*
-* Prior to PHY access with this function, the user should have setup the MDIO
-* clock with XEmacPs_SetMdioDivisor().
-*
-* @param InstancePtr is a pointer to the XEmacPs instance to be worked on.
-* @param PhyAddress is the address of the PHY to be written (supports multiple
-*        PHYs)
-* @param RegisterNum is the register number, 0-31, of the specific PHY register
-*        to write
-* @param PhyData is the 16-bit value that will be written to the register
-*
-* @return
-*
-* - XST_SUCCESS if the PHY was written to successfully. Since there is no error
-*   status from the MAC on a write, the user should read the PHY to verify the
-*   write was successful.
-* - XST_EMAC_MII_BUSY if there is another PHY operation in progress
-*
-* @note
-*
-* This function is not thread-safe. The user must provide mutually exclusive
-* access to this function if there are to be multiple threads that can call it.
-*
-* There is the possibility that this function will not return if the hardware
-* is broken (i.e., it never sets the status bit indicating that the write is
-* done). If this is of concern to the user, the user should provide a mechanism
-* suitable to their needs for recovery.
-*
-* For the duration of this function, all host interface reads and writes are
-* blocked to the current XEmacPs instance.
-*
-******************************************************************************/
-LONG XEmacPs_PhyWrite(XEmacPs *InstancePtr, u32 PhyAddress,
-		      u32 RegisterNum, u16 PhyData)
+ * Write data to the specified PHY register. The Ethernet driver does not
+ * require the device to be stopped before writing to the PHY.  Although it is
+ * probably a good idea to stop the device, it is the responsibility of the
+ * application to deem this necessary. The MAC provides the driver with the
+ * ability to talk to a PHY that adheres to the Media Independent Interface
+ * (MII) as defined in the IEEE 802.3 standard.
+ *
+ * Prior to PHY access with this function, the user should have setup the MDIO
+ * clock with XEmacPs_SetMdioDivisor().
+ *
+ * @param InstancePtr is a pointer to the XEmacPs instance to be worked on.
+ * @param PhyAddress is the address of the PHY to be written (supports multiple
+ *        PHYs)
+ * @param RegisterNum is the register number, 0-31, of the specific PHY register
+ *        to write
+ * @param PhyData is the 16-bit value that will be written to the register
+ *
+ * @return
+ *
+ * - XST_SUCCESS if the PHY was written to successfully. Since there is no error
+ *   status from the MAC on a write, the user should read the PHY to verify the
+ *   write was successful.
+ * - XST_EMAC_MII_BUSY if there is another PHY operation in progress
+ *
+ * @note
+ *
+ * This function is not thread-safe. The user must provide mutually exclusive
+ * access to this function if there are to be multiple threads that can call it.
+ *
+ * There is the possibility that this function will not return if the hardware
+ * is broken (i.e., it never sets the status bit indicating that the write is
+ * done). If this is of concern to the user, the user should provide a mechanism
+ * suitable to their needs for recovery.
+ *
+ * For the duration of this function, all host interface reads and writes are
+ * blocked to the current XEmacPs instance.
+ *
+ ******************************************************************************/
+LONG XEmacPs_PhyWrite( XEmacPs * InstancePtr,
+                       u32 PhyAddress,
+                       u32 RegisterNum,
+                       u16 PhyData )
 {
-	u32 Mgtcr;
-	volatile u32 Ipisr;
-	u32 IpWriteTemp;
-	LONG Status;
+    u32 Mgtcr;
+    volatile u32 Ipisr;
+    u32 IpWriteTemp;
+    LONG Status;
 
-	Xil_AssertNonvoid(InstancePtr != NULL);
+    Xil_AssertNonvoid( InstancePtr != NULL );
 
-	/* Make sure no other PHY operation is currently in progress */
-	if ((!(XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-				XEMACPS_NWSR_OFFSET) &
-	      XEMACPS_NWSR_MDIOIDLE_MASK))==TRUE) {
-		Status = (LONG)(XST_EMAC_MII_BUSY);
-	} else {
-	/* Construct Mgtcr mask for the operation */
-	Mgtcr = XEMACPS_PHYMNTNC_OP_MASK | XEMACPS_PHYMNTNC_OP_W_MASK |
-			(PhyAddress << XEMACPS_PHYMNTNC_PHAD_SHFT_MSK) |
-			(RegisterNum << XEMACPS_PHYMNTNC_PREG_SHFT_MSK) | (u32)PhyData;
+    /* Make sure no other PHY operation is currently in progress */
+    if( ( !( XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                              XEMACPS_NWSR_OFFSET ) &
+             XEMACPS_NWSR_MDIOIDLE_MASK ) ) == TRUE )
+    {
+        Status = ( LONG ) ( XST_EMAC_MII_BUSY );
+    }
+    else
+    {
+        /* Construct Mgtcr mask for the operation */
+        Mgtcr = XEMACPS_PHYMNTNC_OP_MASK | XEMACPS_PHYMNTNC_OP_W_MASK |
+                ( PhyAddress << XEMACPS_PHYMNTNC_PHAD_SHFT_MSK ) |
+                ( RegisterNum << XEMACPS_PHYMNTNC_PREG_SHFT_MSK ) | ( u32 ) PhyData;
 
-	/* Write Mgtcr and wait for completion */
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress,
-			   XEMACPS_PHYMNTNC_OFFSET, Mgtcr);
+        /* Write Mgtcr and wait for completion */
+        XEmacPs_WriteReg( InstancePtr->Config.BaseAddress,
+                          XEMACPS_PHYMNTNC_OFFSET, Mgtcr );
 
-	do {
-		Ipisr = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-					  XEMACPS_NWSR_OFFSET);
-				IpWriteTemp = Ipisr;
-		} while ((IpWriteTemp & XEMACPS_NWSR_MDIOIDLE_MASK) == 0x00000000U);
+        do
+        {
+            Ipisr = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                                     XEMACPS_NWSR_OFFSET );
+            IpWriteTemp = Ipisr;
+        } while( ( IpWriteTemp & XEMACPS_NWSR_MDIOIDLE_MASK ) == 0x00000000U );
 
-		Status = (LONG)(XST_SUCCESS);
-	}
-	return Status;
+        Status = ( LONG ) ( XST_SUCCESS );
+    }
+
+    return Status;
 }
 
 /*****************************************************************************/
+
 /**
-* API to update the Burst length in the DMACR register.
-*
-* @param InstancePtr is a pointer to the XEmacPs instance to be worked on.
-* @param BLength is the length in bytes for the dma burst.
-*
-* @return None
-*
-******************************************************************************/
-void XEmacPs_DMABLengthUpdate(XEmacPs *InstancePtr, s32 BLength)
+ * API to update the Burst length in the DMACR register.
+ *
+ * @param InstancePtr is a pointer to the XEmacPs instance to be worked on.
+ * @param BLength is the length in bytes for the dma burst.
+ *
+ * @return None
+ *
+ ******************************************************************************/
+void XEmacPs_DMABLengthUpdate( XEmacPs * InstancePtr,
+                               s32 BLength )
 {
-	u32 Reg;
-	u32 RegUpdateVal;
+    u32 Reg;
+    u32 RegUpdateVal;
 
-	Xil_AssertVoid(InstancePtr != NULL);
-	Xil_AssertVoid((BLength == XEMACPS_SINGLE_BURST) ||
-					(BLength == XEMACPS_4BYTE_BURST) ||
-					(BLength == XEMACPS_8BYTE_BURST) ||
-					(BLength == XEMACPS_16BYTE_BURST));
+    Xil_AssertVoid( InstancePtr != NULL );
+    Xil_AssertVoid( ( BLength == XEMACPS_SINGLE_BURST ) ||
+                    ( BLength == XEMACPS_4BYTE_BURST ) ||
+                    ( BLength == XEMACPS_8BYTE_BURST ) ||
+                    ( BLength == XEMACPS_16BYTE_BURST ) );
 
-	switch (BLength) {
-		case XEMACPS_SINGLE_BURST:
-			RegUpdateVal = XEMACPS_DMACR_SINGLE_AHB_BURST;
-			break;
+    switch( BLength )
+    {
+        case XEMACPS_SINGLE_BURST:
+            RegUpdateVal = XEMACPS_DMACR_SINGLE_AHB_BURST;
+            break;
 
-		case XEMACPS_4BYTE_BURST:
-			RegUpdateVal = XEMACPS_DMACR_INCR4_AHB_BURST;
-			break;
+        case XEMACPS_4BYTE_BURST:
+            RegUpdateVal = XEMACPS_DMACR_INCR4_AHB_BURST;
+            break;
 
-		case XEMACPS_8BYTE_BURST:
-			RegUpdateVal = XEMACPS_DMACR_INCR8_AHB_BURST;
-			break;
+        case XEMACPS_8BYTE_BURST:
+            RegUpdateVal = XEMACPS_DMACR_INCR8_AHB_BURST;
+            break;
 
-		case XEMACPS_16BYTE_BURST:
-			RegUpdateVal = XEMACPS_DMACR_INCR16_AHB_BURST;
-			break;
+        case XEMACPS_16BYTE_BURST:
+            RegUpdateVal = XEMACPS_DMACR_INCR16_AHB_BURST;
+            break;
 
-		default:
-			RegUpdateVal = 0x00000000U;
-			break;
-	}
-	Reg = XEmacPs_ReadReg(InstancePtr->Config.BaseAddress,
-						XEMACPS_DMACR_OFFSET);
+        default:
+            RegUpdateVal = 0x00000000U;
+            break;
+    }
 
-	Reg &= (u32)(~XEMACPS_DMACR_BLENGTH_MASK);
-	Reg |= RegUpdateVal;
-	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress, XEMACPS_DMACR_OFFSET,
-																	Reg);
+    Reg = XEmacPs_ReadReg( InstancePtr->Config.BaseAddress,
+                           XEMACPS_DMACR_OFFSET );
+
+    Reg &= ( u32 ) ( ~XEMACPS_DMACR_BLENGTH_MASK );
+    Reg |= RegUpdateVal;
+    XEmacPs_WriteReg( InstancePtr->Config.BaseAddress, XEMACPS_DMACR_OFFSET,
+                      Reg );
 }
 /** @} */

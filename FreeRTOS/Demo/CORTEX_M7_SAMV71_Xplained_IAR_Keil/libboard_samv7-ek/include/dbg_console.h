@@ -28,26 +28,32 @@
  */
 
 /**
-  *  \file
-  *
-  *  Include function prototype for the uart console.
-  */
+ *  \file
+ *
+ *  Include function prototype for the uart console.
+ */
 
 #ifndef _DBG_CONSOLE_
 #define _DBG_CONSOLE_
 
 #include <stdint.h>
 
-extern void DBG_Configure( uint32_t dwBaudrate, uint32_t dwMasterClock ) ;
-extern void DBG_PutChar( uint8_t uc ) ;
-extern uint32_t DBG_GetChar( void ) ;
-extern uint32_t DBG_IsRxReady( void ) ;
+extern void DBG_Configure( uint32_t dwBaudrate,
+                           uint32_t dwMasterClock );
+extern void DBG_PutChar( uint8_t uc );
+extern uint32_t DBG_GetChar( void );
+extern uint32_t DBG_IsRxReady( void );
 
 
-extern void DBG_DumpFrame( uint8_t* pucFrame, uint32_t dwSize ) ;
-extern void DBG_DumpMemory( uint8_t* pucBuffer, uint32_t dwSize, uint32_t dwAddress ) ;
-extern uint32_t DBG_GetInteger( int32_t* pdwValue ) ;
-extern uint32_t DBG_GetIntegerMinMax( int32_t* pdwValue, int32_t dwMin, int32_t dwMax ) ;
-extern uint32_t DBG_GetHexa32( uint32_t* pdwValue ) ;
+extern void DBG_DumpFrame( uint8_t * pucFrame,
+                           uint32_t dwSize );
+extern void DBG_DumpMemory( uint8_t * pucBuffer,
+                            uint32_t dwSize,
+                            uint32_t dwAddress );
+extern uint32_t DBG_GetInteger( int32_t * pdwValue );
+extern uint32_t DBG_GetIntegerMinMax( int32_t * pdwValue,
+                                      int32_t dwMin,
+                                      int32_t dwMax );
+extern uint32_t DBG_GetHexa32( uint32_t * pdwValue );
 
 #endif /* _DBG_CONSOLE_ */

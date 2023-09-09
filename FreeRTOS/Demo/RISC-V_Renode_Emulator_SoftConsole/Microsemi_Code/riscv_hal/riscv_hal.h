@@ -10,31 +10,31 @@
  */
 
 #ifndef RISCV_HAL_H
-#define RISCV_HAL_H
+    #define RISCV_HAL_H
 
-#include "riscv_plic.h"
+    #include "riscv_plic.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*
- *Return value from External IRQ handler. This will be used to disable the External
- *interrupt.
+ * Return value from External IRQ handler. This will be used to disable the External
+ * interrupt.
  */
-#define EXT_IRQ_KEEP_ENABLED                0U
-#define EXT_IRQ_DISABLE                     1U
+    #define EXT_IRQ_KEEP_ENABLED    0U
+    #define EXT_IRQ_DISABLE         1U
 
 /*------------------------------------------------------------------------------
  * Interrupt enable/disable.
  */
-void __disable_irq(void);
-void __enable_irq(void);
+    void __disable_irq( void );
+    void __enable_irq( void );
 
 /*------------------------------------------------------------------------------
  *  System tick handler. This is generated from the RISC-V machine timer.
  */
-void SysTick_Handler(void);
+    void SysTick_Handler( void );
 
 /*------------------------------------------------------------------------------
  * System tick configuration.
@@ -45,11 +45,10 @@ void SysTick_Handler(void);
  * Returns 0 if successful.
  * Returns 1 if the interrupt interval cannot be achieved.
  */
-uint32_t SysTick_Config(uint32_t ticks);
+    uint32_t SysTick_Config( uint32_t ticks );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif  /* RISCV_HAL_H */
-
+#endif /* RISCV_HAL_H */

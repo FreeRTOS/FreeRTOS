@@ -40,27 +40,28 @@
 /**
  * @brief The command menu presented to the user.
  */
-#define UART_COMMAND_MENU           "\r\nChoose one of the following:\r\n" \
-                                    "1. Get current tick count.\r\n"       \
-                                    "2. Get number of tasks.\r\n"
-#define UART_COMMAND_MENU_LEN       ( sizeof( UART_COMMAND_MENU ) - 1 )
+#define UART_COMMAND_MENU                  \
+    "\r\nChoose one of the following:\r\n" \
+    "1. Get current tick count.\r\n"       \
+    "2. Get number of tasks.\r\n"
+#define UART_COMMAND_MENU_LEN     ( sizeof( UART_COMMAND_MENU ) - 1 )
 
 /**
  * @brief Prompt for the user input.
  */
-#define UART_PROMPT_STR             "> "
-#define UART_PROMPT_STR_LEN         ( sizeof( UART_PROMPT_STR ) - 1 )
+#define UART_PROMPT_STR           "> "
+#define UART_PROMPT_STR_LEN       ( sizeof( UART_PROMPT_STR ) - 1 )
 
 /**
  * @brief Valid commands entered by the user.
  */
-#define GET_TICK_COUNT_COMMAND      49 /* ASCII code for char '1'. */
-#define GET_NUM_TASKS_COMMAND       50 /* ASCII code for char '2'. */
+#define GET_TICK_COUNT_COMMAND    49   /* ASCII code for char '1'. */
+#define GET_NUM_TASKS_COMMAND     50   /* ASCII code for char '2'. */
 
 /**
  * @brief Length of the buffer used for the response.
  */
-#define UART_RESPONSE_BUF_LEN      ( 32 )
+#define UART_RESPONSE_BUF_LEN     ( 32 )
 /*-----------------------------------------------------------*/
 
 /* The following needs to be placed in the shared memory as it is accessed in
@@ -73,7 +74,7 @@ void vUartDemoTask( void * pvParams )
     /* Silence compiler warnings about unused variables. */
     ( void ) pvParams;
 
-    for( ;; )
+    for( ; ; )
     {
         USART_WriteBlocking( USART0, UART_COMMAND_MENU, UART_COMMAND_MENU_LEN );
         USART_WriteBlocking( USART0, UART_PROMPT_STR, UART_PROMPT_STR_LEN );

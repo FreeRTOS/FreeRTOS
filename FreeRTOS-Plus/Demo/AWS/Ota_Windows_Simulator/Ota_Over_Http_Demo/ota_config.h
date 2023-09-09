@@ -179,8 +179,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * can be set to following -
  * Enable data over MQTT - ( OTA_DATA_OVER_MQTT )
  * Enable data over HTTP - ( OTA_DATA_OVER_HTTP)
- * 
- * Note - Please check the OTA over MQTT demo which has the MQTT data transfer functionality and 
+ *
+ * Note - Please check the OTA over MQTT demo which has the MQTT data transfer functionality and
  * and this configuration is set to OTA_DATA_OVER_MQTT.
  */
 #define configENABLED_DATA_PROTOCOLS      ( OTA_DATA_OVER_HTTP )

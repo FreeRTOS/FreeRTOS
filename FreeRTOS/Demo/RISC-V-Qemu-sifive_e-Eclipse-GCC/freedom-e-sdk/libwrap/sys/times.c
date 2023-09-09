@@ -5,8 +5,8 @@
 #include "stub.h"
 #include "weak_under_alias.h"
 
-clock_t __wrap_times(struct tms* buf)
+clock_t __wrap_times( struct tms * buf )
 {
-  return _stub(EACCES);
+    return _stub( EACCES );
 }
-weak_under_alias(times);
+weak_under_alias( times );

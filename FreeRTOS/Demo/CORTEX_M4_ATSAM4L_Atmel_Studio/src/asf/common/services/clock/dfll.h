@@ -47,11 +47,11 @@
 #include "conf_clock.h"
 
 #if UC3L
-# include "uc3l/dfll.h"
+    #include "uc3l/dfll.h"
 #elif SAM4L
-# include "sam4l/dfll.h"
+    #include "sam4l/dfll.h"
 #else
-# error Unsupported chip type
+    #error Unsupported chip type
 #endif
 
 /**
@@ -73,19 +73,19 @@
  * closed-loop mode using the default parameters specified through
  * configuration symbols.
  * \code
-	dfll_enable_config_defaults(0); \endcode
+ *  dfll_enable_config_defaults(0); \endcode
  *
  * To configure and enable DFLL0 in closed-loop mode using the default
  * parameters and to enable specific feature like dithering for better accuracy,
  * you can use this initialization process.
  * \code
-	struct dfll_config dfllcfg;
-
-	dfll_enable_source(CONFIG_DFLL0_SOURCE);
-	dfll_config_defaults(&dfllcfg, 0);
-	dfll_config_enable_dithering(&dfllcfg);
-	dfll_enable(&dfllcfg, 0);
-	dfll_wait_for_accurate_lock(0); \endcode
+ *  struct dfll_config dfllcfg;
+ *
+ *  dfll_enable_source(CONFIG_DFLL0_SOURCE);
+ *  dfll_config_defaults(&dfllcfg, 0);
+ *  dfll_config_enable_dithering(&dfllcfg);
+ *  dfll_enable(&dfllcfg, 0);
+ *  dfll_wait_for_accurate_lock(0); \endcode
  *
  * When the last function call returns, DFLL0 is running at a frequency
  * which matches the default configuration as accurately as possible.
@@ -97,29 +97,32 @@
  * @{
  */
 
-//! \name Chip-specific DFLL characteristics
-//@{
+/*! \name Chip-specific DFLL characteristics */
+/*@{ */
+
 /**
  * \def NR_DFLLS
  * \brief Number of on-chip DFLLs.
  */
+
 /**
  * \def DFLL_MIN_HZ
  * \brief Minimum frequency that the DFLL can generate.
  */
+
 /**
  * \def DFLL_MAX_HZ
  * \brief Maximum frequency that the DFLL can generate.
  */
-//@}
+/*@} */
 
 /**
  * \typedef dfll_refclk_t
  * \brief Type used for identifying a reference clock source for the DFLL.
  */
 
-//! \name DFLL Configuration
-//@{
+/*! \name DFLL Configuration */
+/*@{ */
 
 /**
  * \struct dfll_config
@@ -138,6 +141,7 @@
  *
  * \param cfg The DFLL configuration to be initialized.
  */
+
 /**
  * \fn void dfll_config_init_closed_loop_mode(struct dfll_config *cfg,
  *              dfll_refclk_t refclk, uint16_t div, uint16_t mul)
@@ -148,6 +152,7 @@
  * \param div Reference clock divider.
  * \param mul Multiplier (integer part only).
  */
+
 /**
  * \def dfll_config_defaults(cfg, dfll_id)
  * \brief Initialize DFLL configuration using default parameters.
@@ -160,6 +165,7 @@
  * \param cfg The DFLL configuration to be initialized.
  * \param dfll_id Use defaults for this DFLL.
  */
+
 /**
  * \def dfll_get_default_rate(dfll_id)
  * \brief Return the default rate in Hz of \a dfll_id.
@@ -181,6 +187,7 @@
  * \param mul_i Integer part of multiplier.
  * \param mul_f Fractional part of multiplier.
  */
+
 /**
  * \fn void dfll_config_enable_dithering(struct dfll_config *cfg)
  * \brief Enable dithering for more accurate frequency generation.
@@ -190,6 +197,7 @@
  *
  * \param cfg The DFLL configuration to be modified.
  */
+
 /**
  * \fn void dfll_config_disable_dithering(struct dfll_config *cfg)
  * \brief Disable dithering.
@@ -198,6 +206,7 @@
  *
  * \param cfg The DFLL configuration to be modified.
  */
+
 /**
  * \fn void dfll_config_set_initial_tuning(struct dfll_config *cfg,
  *              uint16_t coarse, uint16_t fine)
@@ -214,6 +223,7 @@
  * \param coarse Coarse tuning of the frequency generator.
  * \param fine Fine tuning of the frequency generator.
  */
+
 /**
  * \fn void dfll_config_set_max_step(struct dfll_config *cfg,
  *              uint16_t coarse, uint16_t fine)
@@ -230,6 +240,7 @@
  * \param coarse The maximum step size of the coarse VCO tuning.
  * \param fine The maximum step size of the fine VCO tuning.
  */
+
 /**
  * \fn void dfll_config_enable_ssg(struct dfll_config *cfg,
  *              uint16_t amplitude, uint16_t step_size)
@@ -239,16 +250,18 @@
  * \param amplitude The amplitude of the spread spectrum.
  * \param step_size The step size of the spread spectrum.
  */
+
 /**
  * \fn void dfll_config_disable_ssg(struct dfll_config *cfg)
  * \brief Disable Spread Spectrum Generator.
  *
  * \param cfg The DFLL configuration to be modified.
  */
-//@}
+/*@} */
 
-//! \name Interaction with the DFLL hardware
-//@{
+/*! \name Interaction with the DFLL hardware */
+/*@{ */
+
 /**
  * \fn void dfll_enable_open_loop(const struct dfll_config *cfg,
  *              unsigned int dfll_id)
@@ -261,6 +274,7 @@
  * \param cfg The configuration to be activated.
  * \param dfll_id The ID of the DFLL to be enabled.
  */
+
 /**
  * \fn void dfll_enable_closed_loop(const struct dfll_config *cfg,
  *              unsigned int dfll_id)
@@ -273,6 +287,7 @@
  * \param cfg The configuration to be activated.
  * \param dfll_id The ID of the DFLL to be enabled.
  */
+
 /**
  * \fn void dfll_disable_open_loop(unsigned int dfll_id)
  * \brief Disable the DFLL identified by \a dfll_id.
@@ -281,6 +296,7 @@
  *
  * \param dfll_id The ID of the DFLL to be disabled.
  */
+
 /**
  * \fn void dfll_disable_closed_loop(unsigned int dfll_id)
  * \brief Disable the DFLL identified by \a dfll_id.
@@ -289,6 +305,7 @@
  *
  * \param dfll_id The ID of the DFLL to be disabled.
  */
+
 /**
  * \fn bool dfll_is_coarse_locked(unsigned int dfll_id)
  * \brief Determine whether or not a DFLL has achieved coarse lock.
@@ -300,6 +317,7 @@
  * \retval false The DFLL has not yet determined the coarse VCO tuning
  * value, or has not been enabled.
  */
+
 /**
  * \fn bool dfll_is_fine_locked(unsigned int dfll_id)
  * \brief Determine whether or not a DFLL has achieved fine lock.
@@ -311,6 +329,7 @@
  * \retval false The DFLL has not yet determined the fine VCO tuning
  * value, or has not been enabled.
  */
+
 /**
  * \fn bool dfll_is_accurate_locked(unsigned int dfll_id)
  * \brief Determine whether or not a DFLL has achieved accurate lock.
@@ -321,6 +340,7 @@
  * \retval false The DFLL has not yet determined the dithering duty
  * cycle, or has not been enabled with dithering enabled.
  */
+
 /**
  * \fn void dfll_enable_source(enum dfll_refclk_t src)
  * \brief Enable the source of the dfll.
@@ -328,6 +348,7 @@
  *
  * \param dfll_source src The ID of the DFLL source to enable.
  */
+
 /**
  * \fn void dfll_enable_config_defaults(unsigned int dfll_id)
  * \brief Enable the dfll with the default configuration.
@@ -345,14 +366,15 @@
  * \retval STATUS_OK The DFLL has achieved coarse lock.
  * \retval ERR_TIMEOUT Timed out waiting for lock.
  */
-static inline int dfll_wait_for_coarse_lock(unsigned int dfll_id)
+static inline int dfll_wait_for_coarse_lock( unsigned int dfll_id )
 {
-	/* TODO: Add timeout mechanism */
-	while (!dfll_is_coarse_locked(dfll_id)) {
-		/* Do nothing */
-	}
+    /* TODO: Add timeout mechanism */
+    while( !dfll_is_coarse_locked( dfll_id ) )
+    {
+        /* Do nothing */
+    }
 
-	return 0;
+    return 0;
 }
 
 /**
@@ -364,14 +386,15 @@ static inline int dfll_wait_for_coarse_lock(unsigned int dfll_id)
  * \retval STATUS_OK The DFLL has achieved fine lock.
  * \retval ERR_TIMEOUT Timed out waiting for lock.
  */
-static inline int dfll_wait_for_fine_lock(unsigned int dfll_id)
+static inline int dfll_wait_for_fine_lock( unsigned int dfll_id )
 {
-	/* TODO: Add timeout mechanism */
-	while (!dfll_is_fine_locked(dfll_id)) {
-		/* Do nothing */
-	}
+    /* TODO: Add timeout mechanism */
+    while( !dfll_is_fine_locked( dfll_id ) )
+    {
+        /* Do nothing */
+    }
 
-	return 0;
+    return 0;
 }
 
 /**
@@ -383,17 +406,18 @@ static inline int dfll_wait_for_fine_lock(unsigned int dfll_id)
  * \retval STATUS_OK The DFLL has achieved accurate lock.
  * \retval ERR_TIMEOUT Timed out waiting for lock.
  */
-static inline int dfll_wait_for_accurate_lock(unsigned int dfll_id)
+static inline int dfll_wait_for_accurate_lock( unsigned int dfll_id )
 {
-	/* TODO: Add timeout mechanism */
-	while (!dfll_is_accurate_locked(dfll_id)) {
-		/* Do nothing */
-	}
+    /* TODO: Add timeout mechanism */
+    while( !dfll_is_accurate_locked( dfll_id ) )
+    {
+        /* Do nothing */
+    }
 
-	return 0;
+    return 0;
 }
 
-//@}
-//! @}
+/*@} */
+/*! @} */
 
 #endif /* CLK_DFLL_H_INCLUDED */

@@ -3,7 +3,7 @@ PLEASE REFER TO THE APPLICATION NOTE FOR THIS MIDDLEWARE FOR MORE INFORMATION
 r_dtc_rx
 =========
 
-Document Number 
+Document Number
 ---------------
 R01AN1819EJ0350
 R01AN1819JJ0350
@@ -16,8 +16,8 @@ Overview
 --------
 The DTC driver provides a method to transmit the data using Data Transfer Controller (DTC).
 The driver includes API functions to initialize DTC, create Transfer data, Control and get status of DTC.
-The driver can be reduced in size by removing code used for parameter checking. 
-All configuration options can be found in "r_config\r_dtc_rx_config.h". 
+The driver can be reduced in size by removing code used for parameter checking.
+All configuration options can be found in "r_config\r_dtc_rx_config.h".
 An original copy of the configuration file is stored in "r_dtc_rx\ref\r_dtc_rx_config_reference.h".
 
 Features
@@ -93,7 +93,7 @@ However, "Smart Configurator" only supports some RX devices.
 Please use the methods of (2) or (4) for unsupported RX devices.
 
 (1)	Adding the FIT module to your project using "Smart Configurator" in e2 studio
-By using the "Smart Configurator" in e2 studio, 
+By using the "Smart Configurator" in e2 studio,
 the FIT module is automatically added to your project.
 Refer to "Renesas e2 studio Smart Configurator User Guide (R20AN0451)" for details.
 

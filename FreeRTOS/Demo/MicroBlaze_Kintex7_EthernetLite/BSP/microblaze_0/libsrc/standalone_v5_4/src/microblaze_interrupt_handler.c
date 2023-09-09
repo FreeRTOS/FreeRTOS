@@ -30,21 +30,22 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file microblaze_interrupt_handler.c
-*
-* This file contains the standard interrupt handler for the MicroBlaze processor.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Date     Changes
-* ----- -------- -----------------------------------------------
-* 1.00b 10/03/03 First release
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file microblaze_interrupt_handler.c
+ *
+ * This file contains the standard interrupt handler for the MicroBlaze processor.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Date     Changes
+ * ----- -------- -----------------------------------------------
+ * 1.00b 10/03/03 First release
+ * </pre>
+ *
+ ******************************************************************************/
 
 
 /***************************** Include Files *********************************/
@@ -63,60 +64,64 @@
 
 /************************** Function Prototypes ******************************/
 
-void __interrupt_handler (void) __attribute__ ((interrupt_handler));
-void microblaze_register_handler(XInterruptHandler Handler, void *DataPtr);
+void __interrupt_handler( void ) __attribute__( ( interrupt_handler ) );
+void microblaze_register_handler( XInterruptHandler Handler,
+                                  void * DataPtr );
 
 /************************** Variable Definitions *****************************/
 
 extern MB_InterruptVectorTableEntry MB_InterruptVectorTable;
 /*****************************************************************************/
+
 /**
-*
-* This function is the standard interrupt handler used by the MicroBlaze processor.
-* It saves all volatile registers, calls the users top level interrupt handler.
-* When this returns, it restores all registers, and returns using a rtid instruction.
-*
-* @param
-*
-* None
-*
-* @return
-*
-* None.
-*
-* @note
-*
-* None.
-*
-******************************************************************************/
-void __interrupt_handler(void)
+ *
+ * This function is the standard interrupt handler used by the MicroBlaze processor.
+ * It saves all volatile registers, calls the users top level interrupt handler.
+ * When this returns, it restores all registers, and returns using a rtid instruction.
+ *
+ * @param
+ *
+ * None
+ *
+ * @return
+ *
+ * None.
+ *
+ * @note
+ *
+ * None.
+ *
+ ******************************************************************************/
+void __interrupt_handler( void )
 {
-	/* The compiler saves all volatiles and the MSR */
-	(void)MB_InterruptVectorTable.Handler(MB_InterruptVectorTable.CallBackRef);
-	/* The compiler restores all volatiles and MSR, and returns from interrupt */
+    /* The compiler saves all volatiles and the MSR */
+    ( void ) MB_InterruptVectorTable.Handler( MB_InterruptVectorTable.CallBackRef );
+    /* The compiler restores all volatiles and MSR, and returns from interrupt */
 }
 
 /****************************************************************************/
 /*****************************************************************************/
-/**
-*
-* Registers a top-level interrupt handler for the MicroBlaze. The
-* argument provided in this call as the DataPtr is used as the argument
-* for the handler when it is called.
-*
-* @param    Top level handler.
-* @param    DataPtr is a reference to data that will be passed to the handler
-*           when it gets called.
 
-* @return   None.
-*
-* @note
-*
-* None.
-*
-****************************************************************************/
-void microblaze_register_handler(XInterruptHandler Handler, void *DataPtr)
+/**
+ *
+ * Registers a top-level interrupt handler for the MicroBlaze. The
+ * argument provided in this call as the DataPtr is used as the argument
+ * for the handler when it is called.
+ *
+ * @param    Top level handler.
+ * @param    DataPtr is a reference to data that will be passed to the handler
+ *           when it gets called.
+ *
+ * @return   None.
+ *
+ * @note
+ *
+ * None.
+ *
+ ****************************************************************************/
+void microblaze_register_handler( XInterruptHandler Handler,
+                                  void * DataPtr )
 {
-   MB_InterruptVectorTable.Handler = Handler;
-   MB_InterruptVectorTable.CallBackRef = DataPtr;
+    MB_InterruptVectorTable.Handler = Handler;
+    MB_InterruptVectorTable.CallBackRef = DataPtr;
 }

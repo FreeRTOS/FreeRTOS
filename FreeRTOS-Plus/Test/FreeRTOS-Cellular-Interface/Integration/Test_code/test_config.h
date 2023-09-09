@@ -30,7 +30,7 @@
 /**
  * @brief test cellular APIs.
  */
-#define testCELLULAR_API                                       ( 1 )
+#define testCELLULAR_API    ( 1 )
 
 /**
  * DNS server address.
@@ -75,9 +75,9 @@
  */
 
 
-#define testconfigTEST_STACKSIZE                               ( 1024 )
+#define testconfigTEST_STACKSIZE    ( 1024 )
 
-#define testconfigTEST_PRIORITY                                ( tskIDLE_PRIORITY + 1 )
+#define testconfigTEST_PRIORITY     ( tskIDLE_PRIORITY + 1 )
 
 /* UNITY test config. */
 #define UNITY_EXCLUDE_SETJMP_H

@@ -24,25 +24,25 @@
  *
  */
 
- /**
-  * @file code_signature_verification_mbedtls.c
-  * @brief Code signature verification using mbedtls crypto.
-  *
-  * The file demonstrates implements the code signature verification functionality on 
-  * the specified file using mbedtls for SHA256 ECDSA.
-  */
+/**
+ * @file code_signature_verification_mbedtls.c
+ * @brief Code signature verification using mbedtls crypto.
+ *
+ * The file demonstrates implements the code signature verification functionality on
+ * the specified file using mbedtls for SHA256 ECDSA.
+ */
 
- /* C runtime includes. */
+/* C runtime includes. */
 #include <string.h>
 
- /* FreeRTOS includes. */
+/* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
 /* mbedTLS includes. */
 #if !defined( MBEDTLS_CONFIG_FILE )
-#include "mbedtls_config_v3.2.1.h"
+    #include "mbedtls_config_v3.2.1.h"
 #else
-#include MBEDTLS_CONFIG_FILE
+    #include MBEDTLS_CONFIG_FILE
 #endif
 #include "mbedtls/platform.h"
 #include "mbedtls/sha256.h"
@@ -60,10 +60,10 @@
 /**
  * @brief SHA256 buffer size for storing cryptographic hash computation results.
  */
-#define SHA256_DIGEST_BYTES    32
+#define SHA256_DIGEST_BYTES           32
 
- /* Size of buffer used in file operations on this platform (Windows). */
-#define OTA_PAL_WIN_BUF_SIZE ( ( size_t ) 4096UL )
+/* Size of buffer used in file operations on this platform (Windows). */
+#define OTA_PAL_WIN_BUF_SIZE          ( ( size_t ) 4096UL )
 
 /**
  * @brief Library-independent cryptographic algorithm identifiers.
@@ -73,9 +73,9 @@
 #define ASYMMETRIC_ALGORITHM_RSA      1
 #define ASYMMETRIC_ALGORITHM_ECDSA    2
 
- /**
-  * @brief Internal signature verification context structure.
-  */
+/**
+ * @brief Internal signature verification context structure.
+ */
 typedef struct SignatureVerificationState
 {
     BaseType_t xAsymmetricAlgorithm;
@@ -92,9 +92,9 @@ typedef struct SignatureVerificationState
  *
  * @return pdTRUE if initialization succeeds, or pdFALSE otherwise.
  */
-static BaseType_t prvSignatureVerificationStart(void** ppvContext,
-    BaseType_t xAsymmetricAlgorithm,
-    BaseType_t xHashAlgorithm);
+static BaseType_t prvSignatureVerificationStart( void ** ppvContext,
+                                                 BaseType_t xAsymmetricAlgorithm,
+                                                 BaseType_t xHashAlgorithm );
 
 /**
  * @brief Updates a cryptographic hash computation with the specified byte array.
@@ -103,9 +103,9 @@ static BaseType_t prvSignatureVerificationStart(void** ppvContext,
  * @param[in] pucData Byte array that was signed.
  * @param[in] xDataLength Length in bytes of data that was signed.
  */
-static void prvSignatureVerificationUpdate(void* pvContext,
-    const uint8_t* pucData,
-    size_t xDataLength);
+static void prvSignatureVerificationUpdate( void * pvContext,
+                                            const uint8_t * pucData,
+                                            size_t xDataLength );
 
 /**
  * @brief Verifies a digital signature computation using the public key from the
@@ -120,41 +120,41 @@ static void prvSignatureVerificationUpdate(void* pvContext,
  *
  * @return pdTRUE if the signature is correct or pdFALSE if the signature is invalid.
  */
-static BaseType_t prvSignatureVerificationFinal(void* pvContext,
-    char* pcSignerCertificate,
-    size_t xSignerCertificateLength,
-    uint8_t* pucSignature,
-    size_t xSignatureLength);
+static BaseType_t prvSignatureVerificationFinal( void * pvContext,
+                                                 char * pcSignerCertificate,
+                                                 size_t xSignerCertificateLength,
+                                                 uint8_t * pucSignature,
+                                                 size_t xSignatureLength );
 
 /* Read the specified signer certificate from the filesystem into a local buffer. The allocated
  * memory becomes the property of the caller who is responsible for freeing it.
  */
 
-static uint8_t* otaPal_ReadAndAssumeCertificate(const uint8_t* const pucCertName,
-    uint32_t* const ulSignerCertSize)
+static uint8_t * otaPal_ReadAndAssumeCertificate( const uint8_t * const pucCertName,
+                                                  uint32_t * const ulSignerCertSize )
 {
-    FILE* pFile;
-    uint8_t* pucSignerCert = NULL;
-    uint8_t* pucCertData = NULL;
+    FILE * pFile;
+    uint8_t * pucSignerCert = NULL;
+    uint8_t * pucCertData = NULL;
     int32_t lSize = 0; /* For MISRA mandatory. */
     int32_t lWindowsError;
 
-    pFile = fopen((const char*)pucCertName, "rb"); /*lint !e586
-                                                            * C standard library call is being used for portability. */
+    pFile = fopen( ( const char * ) pucCertName, "rb" ); /*lint !e586
+                                                          * C standard library call is being used for portability. */
 
-    if (pFile != NULL)
+    if( pFile != NULL )
     {
-        lWindowsError = fseek(pFile, 0, SEEK_END);         /*lint !e586
-                                                                * C standard library call is being used for portability. */
+        lWindowsError = fseek( pFile, 0, SEEK_END );         /*lint !e586
+                                                              * C standard library call is being used for portability. */
 
-        if (lWindowsError == 0)                               /* fseek returns a non-zero value on error. */
+        if( lWindowsError == 0 )                             /* fseek returns a non-zero value on error. */
         {
-            lSize = (int32_t)ftell(pFile);                  /*lint !e586 Allow call in this context. */
+            lSize = ( int32_t ) ftell( pFile );              /*lint !e586 Allow call in this context. */
 
-            if (lSize != -1L)                                 /* ftell returns -1 on error. */
+            if( lSize != -1L )                               /* ftell returns -1 on error. */
             {
-                lWindowsError = fseek(pFile, 0, SEEK_SET); /*lint !e586
-                                                                * C standard library call is being used for portability. */
+                lWindowsError = fseek( pFile, 0, SEEK_SET ); /*lint !e586
+                                                              * C standard library call is being used for portability. */
             }
             else /* ftell returned an error, pucSignerCert remains NULL. */
             {
@@ -162,60 +162,60 @@ static uint8_t* otaPal_ReadAndAssumeCertificate(const uint8_t* const pucCertName
             }
         } /* else fseek returned an error, pucSignerCert remains NULL. */
 
-        if (lWindowsError == 0)
+        if( lWindowsError == 0 )
         {
             /* Allocate memory for the signer certificate plus a terminating zero so we can load and return it to the caller. */
-            pucSignerCert = pvPortMalloc(lSize + 1); /*lint !e732 !e9034 !e9079 Allow conversion. */
+            pucSignerCert = pvPortMalloc( lSize + 1 ); /*lint !e732 !e9034 !e9079 Allow conversion. */
         }
 
-        if (pucSignerCert != NULL)
+        if( pucSignerCert != NULL )
         {
-            if (fread(pucSignerCert, 1, lSize, pFile) == (size_t)lSize) /*lint !e586 !e732 !e9034
-                                                                                 * C standard library call is being used for portability. */
+            if( fread( pucSignerCert, 1, lSize, pFile ) == ( size_t ) lSize ) /*lint !e586 !e732 !e9034
+                                                                               * C standard library call is being used for portability. */
             {
                 /* The crypto code requires the terminating zero to be part of the length so add 1 to the size. */
                 *ulSignerCertSize = lSize + 1;
-                pucSignerCert[lSize] = 0;
+                pucSignerCert[ lSize ] = 0;
             }
             else
-            {   /* There was a problem reading the certificate file so free the memory and abort. */
-                vPortFree(pucSignerCert);
+            { /* There was a problem reading the certificate file so free the memory and abort. */
+                vPortFree( pucSignerCert );
                 pucSignerCert = NULL;
             }
         }
         else
         {
-            LogError(("Failed to allocate memory for signer cert contents.\r\n"));
+            LogError( ( "Failed to allocate memory for signer cert contents.\r\n" ) );
             /* Nothing special to do. */
         }
 
-        lWindowsError = fclose(pFile); /*lint !e586
-                                            * C standard library call is being used for portability. */
+        lWindowsError = fclose( pFile ); /*lint !e586
+                                          * C standard library call is being used for portability. */
 
-        if (lWindowsError != 0)
+        if( lWindowsError != 0 )
         {
-            LogError(("File pointer operation failed.\r\n"));
+            LogError( ( "File pointer operation failed.\r\n" ) );
             pucSignerCert = NULL;
         }
     }
     else
     {
-        LogError(("No such certificate file: %s. Using aws_ota_codesigner_certificate.h.\r\n",
-            (const char*)pucCertName));
+        LogError( ( "No such certificate file: %s. Using aws_ota_codesigner_certificate.h.\r\n",
+                    ( const char * ) pucCertName ) );
 
         /* Allocate memory for the signer certificate plus a terminating zero so we can copy it and return to the caller. */
-        lSize = sizeof(signingcredentialSIGNING_CERTIFICATE_PEM);
-        pucSignerCert = pvPortMalloc(lSize);                           /*lint !e9029 !e9079 !e838 malloc proto requires void*. */
-        pucCertData = (uint8_t*)signingcredentialSIGNING_CERTIFICATE_PEM; /*lint !e9005 we don't modify the cert but it could be set by PKCS11 so it's not const. */
+        lSize = sizeof( signingcredentialSIGNING_CERTIFICATE_PEM );
+        pucSignerCert = pvPortMalloc( lSize );                                /*lint !e9029 !e9079 !e838 malloc proto requires void*. */
+        pucCertData = ( uint8_t * ) signingcredentialSIGNING_CERTIFICATE_PEM; /*lint !e9005 we don't modify the cert but it could be set by PKCS11 so it's not const. */
 
-        if (pucSignerCert != NULL)
+        if( pucSignerCert != NULL )
         {
-            memcpy(pucSignerCert, pucCertData, lSize);
+            memcpy( pucSignerCert, pucCertData, lSize );
             *ulSignerCertSize = lSize;
         }
         else
         {
-            LogError(("No memory for certificate of size %d!\r\n", lSize));
+            LogError( ( "No memory for certificate of size %d!\r\n", lSize ) );
         }
     }
 
@@ -226,29 +226,29 @@ static uint8_t* otaPal_ReadAndAssumeCertificate(const uint8_t* const pucCertName
  * @brief Verifies a cryptographic signature based on the signer
  * certificate, hash algorithm, and the data that was signed.
  */
-static BaseType_t prvVerifySignature(char* pcSignerCertificate,
-    size_t xSignerCertificateLength,
-    BaseType_t xHashAlgorithm,
-    uint8_t* pucHash,
-    size_t xHashLength,
-    uint8_t* pucSignature,
-    size_t xSignatureLength)
+static BaseType_t prvVerifySignature( char * pcSignerCertificate,
+                                      size_t xSignerCertificateLength,
+                                      BaseType_t xHashAlgorithm,
+                                      uint8_t * pucHash,
+                                      size_t xHashLength,
+                                      uint8_t * pucSignature,
+                                      size_t xSignatureLength )
 {
     BaseType_t xResult = pdTRUE;
     mbedtls_x509_crt xCertCtx;
     mbedtls_md_type_t xMbedHashAlg = MBEDTLS_MD_SHA256;
 
-    (void)xHashAlgorithm;
+    ( void ) xHashAlgorithm;
 
-    memset(&xCertCtx, 0, sizeof(mbedtls_x509_crt));
+    memset( &xCertCtx, 0, sizeof( mbedtls_x509_crt ) );
 
     /*
      * Decode and create a certificate context
      */
-    mbedtls_x509_crt_init(&xCertCtx);
+    mbedtls_x509_crt_init( &xCertCtx );
 
-    if (0 != mbedtls_x509_crt_parse(
-        &xCertCtx, (const unsigned char*)pcSignerCertificate, xSignerCertificateLength))
+    if( 0 != mbedtls_x509_crt_parse(
+            &xCertCtx, ( const unsigned char * ) pcSignerCertificate, xSignerCertificateLength ) )
     {
         xResult = pdFALSE;
     }
@@ -256,15 +256,15 @@ static BaseType_t prvVerifySignature(char* pcSignerCertificate,
     /*
      * Verify the signature using the public key from the decoded certificate
      */
-    if (pdTRUE == xResult)
+    if( pdTRUE == xResult )
     {
-        if (0 != mbedtls_pk_verify(
-            &xCertCtx.pk,
-            xMbedHashAlg,
-            pucHash,
-            xHashLength,
-            pucSignature,
-            xSignatureLength))
+        if( 0 != mbedtls_pk_verify(
+                &xCertCtx.pk,
+                xMbedHashAlg,
+                pucHash,
+                xHashLength,
+                pucSignature,
+                xSignatureLength ) )
         {
             xResult = pdFALSE;
         }
@@ -273,7 +273,7 @@ static BaseType_t prvVerifySignature(char* pcSignerCertificate,
     /*
      * Clean-up
      */
-    mbedtls_x509_crt_free(&xCertCtx);
+    mbedtls_x509_crt_free( &xCertCtx );
 
     return xResult;
 }
@@ -283,23 +283,23 @@ static BaseType_t prvVerifySignature(char* pcSignerCertificate,
 /**
  * @brief Creates signature verification context.
  */
-static BaseType_t prvSignatureVerificationStart(void** ppvContext,
-    BaseType_t xAsymmetricAlgorithm,
-    BaseType_t xHashAlgorithm)
+static BaseType_t prvSignatureVerificationStart( void ** ppvContext,
+                                                 BaseType_t xAsymmetricAlgorithm,
+                                                 BaseType_t xHashAlgorithm )
 {
     BaseType_t xResult = pdTRUE;
-    SignatureVerificationState_t* pxCtx = NULL;
+    SignatureVerificationState_t * pxCtx = NULL;
 
     /*
      * Allocate the context
      */
-    if (NULL == (pxCtx = (SignatureVerificationStatePtr_t)pvPortMalloc(
-        sizeof(*pxCtx)))) /*lint !e9087 Allow casting void* to other types. */
+    if( NULL == ( pxCtx = ( SignatureVerificationStatePtr_t ) pvPortMalloc(
+                      sizeof( *pxCtx ) ) ) ) /*lint !e9087 Allow casting void* to other types. */
     {
         xResult = pdFALSE;
     }
 
-    if (pdTRUE == xResult)
+    if( pdTRUE == xResult )
     {
         *ppvContext = pxCtx;
 
@@ -312,8 +312,8 @@ static BaseType_t prvSignatureVerificationStart(void** ppvContext,
         /*
          * Initialize the requested hash type
          */
-        mbedtls_sha256_init(&pxCtx->xSHA256Context);
-        (void)mbedtls_sha256_starts(&pxCtx->xSHA256Context, 0);
+        mbedtls_sha256_init( &pxCtx->xSHA256Context );
+        ( void ) mbedtls_sha256_starts( &pxCtx->xSHA256Context, 0 );
     }
 
     return xResult;
@@ -322,59 +322,58 @@ static BaseType_t prvSignatureVerificationStart(void** ppvContext,
 /**
  * @brief Adds bytes to an in-progress hash for subsequent signature verification.
  */
-static void prvSignatureVerificationUpdate(void* pvContext,
-    const uint8_t* pucData,
-    size_t xDataLength)
+static void prvSignatureVerificationUpdate( void * pvContext,
+                                            const uint8_t * pucData,
+                                            size_t xDataLength )
 {
-    SignatureVerificationState_t* pxCtx = (SignatureVerificationStatePtr_t)pvContext; /*lint !e9087 Allow casting void* to other types. */
+    SignatureVerificationState_t * pxCtx = ( SignatureVerificationStatePtr_t ) pvContext; /*lint !e9087 Allow casting void* to other types. */
 
     /*
      * Add the data to the hash of the requested type
      */
-    (void)mbedtls_sha256_update(&pxCtx->xSHA256Context, pucData, xDataLength);
-
+    ( void ) mbedtls_sha256_update( &pxCtx->xSHA256Context, pucData, xDataLength );
 }
 
 /**
  * @brief Performs signature verification on a cryptographic hash.
  */
-static BaseType_t prvSignatureVerificationFinal(void* pvContext,
-    char* pcSignerCertificate,
-    size_t xSignerCertificateLength,
-    uint8_t* pucSignature,
-    size_t xSignatureLength)
+static BaseType_t prvSignatureVerificationFinal( void * pvContext,
+                                                 char * pcSignerCertificate,
+                                                 size_t xSignerCertificateLength,
+                                                 uint8_t * pucSignature,
+                                                 size_t xSignatureLength )
 {
     BaseType_t xResult = pdFALSE;
 
-    if (pvContext != NULL)
+    if( pvContext != NULL )
     {
-        SignatureVerificationStatePtr_t pxCtx = (SignatureVerificationStatePtr_t)pvContext; /*lint !e9087 Allow casting void* to other types. */
-        uint8_t ucSHA256[SHA256_DIGEST_BYTES];                                      /* Reserve enough space for the larger for SHA256 results. */
-        uint8_t* pucHash = NULL;
+        SignatureVerificationStatePtr_t pxCtx = ( SignatureVerificationStatePtr_t ) pvContext; /*lint !e9087 Allow casting void* to other types. */
+        uint8_t ucSHA256[ SHA256_DIGEST_BYTES ];                                               /* Reserve enough space for the larger for SHA256 results. */
+        uint8_t * pucHash = NULL;
         size_t xHashLength = 0;
 
-        if ((pcSignerCertificate != NULL) &&
-            (pucSignature != NULL) &&
-            (xSignerCertificateLength > 0UL) &&
-            (xSignatureLength > 0UL))
+        if( ( pcSignerCertificate != NULL ) &&
+            ( pucSignature != NULL ) &&
+            ( xSignerCertificateLength > 0UL ) &&
+            ( xSignatureLength > 0UL ) )
         {
             /*
              * Finish the hash.
              */
-            (void)mbedtls_sha256_finish(&pxCtx->xSHA256Context, ucSHA256);
+            ( void ) mbedtls_sha256_finish( &pxCtx->xSHA256Context, ucSHA256 );
             pucHash = ucSHA256;
             xHashLength = SHA256_DIGEST_BYTES;
 
             /*
              * Verify the signature.
              */
-            xResult = prvVerifySignature(pcSignerCertificate,
-                xSignerCertificateLength,
-                pxCtx->xHashAlgorithm,
-                pucHash,
-                xHashLength,
-                pucSignature,
-                xSignatureLength);
+            xResult = prvVerifySignature( pcSignerCertificate,
+                                          xSignerCertificateLength,
+                                          pxCtx->xHashAlgorithm,
+                                          pucHash,
+                                          xHashLength,
+                                          pucSignature,
+                                          xSignatureLength );
         }
         else
         {
@@ -384,82 +383,83 @@ static BaseType_t prvSignatureVerificationFinal(void* pvContext,
         /*
          * Clean-up
          */
-        vPortFree(pxCtx);
+        vPortFree( pxCtx );
     }
 
     return xResult;
 }
 
 /* Verify the signature of the specified file. */
-OtaPalMainStatus_t xValidateImageSignature(OtaFileContext_t* const C)
+OtaPalMainStatus_t xValidateImageSignature( OtaFileContext_t * const C )
 {
     OtaPalMainStatus_t eResult = OtaPalSuccess;
     uint32_t ulBytesRead;
     uint32_t ulSignerCertSize;
-    uint8_t* pucBuf, * pucSignerCert;
-    void* pvSigVerifyContext;
+    uint8_t * pucBuf, * pucSignerCert;
+    void * pvSigVerifyContext;
 
-        /* Verify an ECDSA-SHA256 signature. */
-        if (pdFALSE == prvSignatureVerificationStart(&pvSigVerifyContext, ASYMMETRIC_ALGORITHM_ECDSA, HASH_ALGORITHM_SHA256))
-        {
-            eResult = OtaPalSignatureCheckFailed;
-        }
-        else
-        {
-            LogInfo(("Started %s signature verification, file: %s\r\n",
-                OTA_JsonFileSignatureKey, (const char*)C->pCertFilepath));
-            pucSignerCert = otaPal_ReadAndAssumeCertificate((const uint8_t* const)C->pCertFilepath, &ulSignerCertSize);
+    /* Verify an ECDSA-SHA256 signature. */
+    if( pdFALSE == prvSignatureVerificationStart( &pvSigVerifyContext, ASYMMETRIC_ALGORITHM_ECDSA, HASH_ALGORITHM_SHA256 ) )
+    {
+        eResult = OtaPalSignatureCheckFailed;
+    }
+    else
+    {
+        LogInfo( ( "Started %s signature verification, file: %s\r\n",
+                   OTA_JsonFileSignatureKey, ( const char * ) C->pCertFilepath ) );
+        pucSignerCert = otaPal_ReadAndAssumeCertificate( ( const uint8_t * const ) C->pCertFilepath, &ulSignerCertSize );
 
-            if (pucSignerCert != NULL)
+        if( pucSignerCert != NULL )
+        {
+            pucBuf = pvPortMalloc( OTA_PAL_WIN_BUF_SIZE );     /*lint !e9079 Allow conversion. */
+
+            if( pucBuf != NULL )
             {
-                pucBuf = pvPortMalloc( OTA_PAL_WIN_BUF_SIZE ); /*lint !e9079 Allow conversion. */
-
-                if (pucBuf != NULL)
+                /* Rewind the received file to the beginning. */
+                if( fseek( C->pFile, 0L, SEEK_SET ) == 0 )  /*lint !e586
+                                                             * C standard library call is being used for portability. */
                 {
-                    /* Rewind the received file to the beginning. */
-                    if (fseek(C->pFile, 0L, SEEK_SET) == 0) /*lint !e586
-                                                                  * C standard library call is being used for portability. */
+                    do
                     {
-                        do
-                        {
-                            ulBytesRead = fread(pucBuf, 1, OTA_PAL_WIN_BUF_SIZE, C->pFile); /*lint !e586
-                                                                                               * C standard library call is being used for portability. */
-                                                                                               /* Include the file chunk in the signature validation. Zero size is OK. */
-                            prvSignatureVerificationUpdate(pvSigVerifyContext, pucBuf, ulBytesRead);
-                        } while (ulBytesRead > 0UL);
+                        ulBytesRead = fread( pucBuf, 1, OTA_PAL_WIN_BUF_SIZE, C->pFile );   /*lint !e586
+                                                                                             * C standard library call is being used for portability. */
+                                                                                            /* Include the file chunk in the signature validation. Zero size is OK. */
+                        prvSignatureVerificationUpdate( pvSigVerifyContext, pucBuf, ulBytesRead );
+                    } while( ulBytesRead > 0UL );
 
-                        if (pdFALSE == prvSignatureVerificationFinal(pvSigVerifyContext,
-                            (char*)pucSignerCert,
-                            (size_t)ulSignerCertSize,
-                            C->pSignature->data,
-                            C->pSignature->size)) /*lint !e732 !e9034 Allow comparison in this context. */
-                        {
-                            eResult = OtaPalSignatureCheckFailed;
-                        }
-                        pvSigVerifyContext = NULL;	/* The context has been freed by prvSignatureVerificationFinal(). */
-                    }
-                    else
+                    if( pdFALSE == prvSignatureVerificationFinal( pvSigVerifyContext,
+                                                                  ( char * ) pucSignerCert,
+                                                                  ( size_t ) ulSignerCertSize,
+                                                                  C->pSignature->data,
+                                                                  C->pSignature->size ) ) /*lint !e732 !e9034 Allow comparison in this context. */
                     {
-                        /* Nothing special to do. */
+                        eResult = OtaPalSignatureCheckFailed;
                     }
 
-                    /* Free the temporary file page buffer. */
-                    vPortFree(pucBuf);
+                    pvSigVerifyContext = NULL;      /* The context has been freed by prvSignatureVerificationFinal(). */
                 }
                 else
                 {
-                    LogError(("Failed to allocate buffer memory.\r\n"));
-                    eResult = OtaPalOutOfMemory;
+                    /* Nothing special to do. */
                 }
 
-                /* Free the signer certificate that we now own after prvReadAndAssumeCertificate(). */
-                vPortFree(pucSignerCert);
+                /* Free the temporary file page buffer. */
+                vPortFree( pucBuf );
             }
             else
             {
-                eResult = OtaPalBadSignerCert;
+                LogError( ( "Failed to allocate buffer memory.\r\n" ) );
+                eResult = OtaPalOutOfMemory;
             }
+
+            /* Free the signer certificate that we now own after prvReadAndAssumeCertificate(). */
+            vPortFree( pucSignerCert );
         }
+        else
+        {
+            eResult = OtaPalBadSignerCert;
+        }
+    }
 
     return eResult;
 }

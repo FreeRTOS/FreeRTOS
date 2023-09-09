@@ -28,6 +28,7 @@
  */
 
 /** \file */
+
 /*---------------------------------------------------------------------------
  *         Headers
  *---------------------------------------------------------------------------*/
@@ -44,88 +45,97 @@
  * The configuration is computed by the lib (RSTC_RMR_*).
  * \param mr Desired mode configuration.
  */
-void rstc_configure_mode(uint32_t mr)
+void rstc_configure_mode( uint32_t mr )
 {
-	RSTC->RSTC_MR = (mr & ~RSTC_MR_KEY_Msk) | RSTC_MR_KEY_PASSWD;
+    RSTC->RSTC_MR = ( mr & ~RSTC_MR_KEY_Msk ) | RSTC_MR_KEY_PASSWD;
 }
 
 /**
  * Enable/Disable the detection of a low level on the pin NRST as User Reset
  * \param enable 1 to enable & 0 to disable.
  */
-void rstc_set_user_reset_enable(uint8_t enable)
+void rstc_set_user_reset_enable( uint8_t enable )
 {
-	uint32_t mr = RSTC->RSTC_MR;
-	if (enable) {
-		mr |= RSTC_MR_URSTEN;
-	} else {
-		mr &= ~RSTC_MR_URSTEN;
-	}
-	RSTC->RSTC_MR = mr | RSTC_MR_KEY_PASSWD;
+    uint32_t mr = RSTC->RSTC_MR;
+
+    if( enable )
+    {
+        mr |= RSTC_MR_URSTEN;
+    }
+    else
+    {
+        mr &= ~RSTC_MR_URSTEN;
+    }
+
+    RSTC->RSTC_MR = mr | RSTC_MR_KEY_PASSWD;
 }
 
 /**
  * Enable/Disable the interrupt of a User Reset (USRTS bit in RSTC_RST).
  * \param enable 1 to enable & 0 to disable.
  */
-void rstc_set_user_reset_interrupt_enable(uint8_t enable)
+void rstc_set_user_reset_interrupt_enable( uint8_t enable )
 {
-	uint32_t mr = RSTC->RSTC_MR;
-	if (enable) {
-		mr |= RSTC_MR_URSTIEN;
-	} else {
+    uint32_t mr = RSTC->RSTC_MR;
 
-		mr &= ~RSTC_MR_URSTIEN;
-	}
-	RSTC->RSTC_MR = mr | RSTC_MR_KEY_PASSWD;
+    if( enable )
+    {
+        mr |= RSTC_MR_URSTIEN;
+    }
+    else
+    {
+        mr &= ~RSTC_MR_URSTIEN;
+    }
+
+    RSTC->RSTC_MR = mr | RSTC_MR_KEY_PASSWD;
 }
 
 /**
  * Resets the processor.
  */
-void rstc_processor_reset(void)
+void rstc_processor_reset( void )
 {
-	RSTC->RSTC_CR = RSTC_CR_PROCRST | RSTC_MR_KEY_PASSWD;
+    RSTC->RSTC_CR = RSTC_CR_PROCRST | RSTC_MR_KEY_PASSWD;
 }
 
 /**
  * Resets the peripherals.
  */
-void rstc_peripheral_reset(void)
+void rstc_peripheral_reset( void )
 {
-	RSTC->RSTC_CR = RSTC_CR_PERRST | RSTC_MR_KEY_PASSWD;
+    RSTC->RSTC_CR = RSTC_CR_PERRST | RSTC_MR_KEY_PASSWD;
 }
 
 /**
  * Return NRST pin level ( 1 or 0 ).
  */
-uint8_t rstc_get_nrst_level(void)
+uint8_t rstc_get_nrst_level( void )
 {
-	return (RSTC->RSTC_SR & RSTC_SR_NRSTL) != 0;
+    return ( RSTC->RSTC_SR & RSTC_SR_NRSTL ) != 0;
 }
 
 /**
  * Returns 1 if at least one high-to-low transition of NRST (User Reset) has
  * been detected since the last read of RSTC_RSR.
  */
-uint8_t rstc_is_user_reset_detected(void)
+uint8_t rstc_is_user_reset_detected( void )
 {
-	return (RSTC->RSTC_SR & RSTC_SR_URSTS) != 0;
+    return ( RSTC->RSTC_SR & RSTC_SR_URSTS ) != 0;
 }
 
 /**
  * Return 1 if a software reset command is being performed by the reset
  * controller. The reset controller is busy.
  */
-uint8_t rstc_is_busy(void)
+uint8_t rstc_is_busy( void )
 {
-	return (RSTC->RSTC_SR & RSTC_SR_SRCMP) != 0;
+    return ( RSTC->RSTC_SR & RSTC_SR_SRCMP ) != 0;
 }
 
 /**
  * Get the status
  */
-uint32_t rstc_get_status(void)
+uint32_t rstc_get_status( void )
 {
-	return RSTC->RSTC_SR;
+    return RSTC->RSTC_SR;
 }

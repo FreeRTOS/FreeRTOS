@@ -26,6 +26,7 @@
 /* Private functions ---------------------------------------------------------*/
 
 #ifdef ETH_DEBUG
+
 /*******************************************************************************
 * Function Name  : ethernet_debug
 * Description    : This function initialize peripherals pointers.
@@ -33,26 +34,26 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void eth_debug(void)
-{
+    void eth_debug( void )
+    {
 /********************************** ETHERNET **********************************/
-#ifdef _ETH_MAC
-  ETH_MAC = ((ETH_MAC_TypeDef *) ETH_MAC_BASE);
-#endif /*_ETH_MAC */
+        #ifdef _ETH_MAC
+            ETH_MAC = ( ( ETH_MAC_TypeDef * ) ETH_MAC_BASE );
+        #endif /*_ETH_MAC */
 
-#ifdef _ETH_MMC
-  ETH_MMC = ((ETH_MMC_TypeDef *) ETH_MMC_BASE);
-#endif /*_ETH_MMC */
+        #ifdef _ETH_MMC
+            ETH_MMC = ( ( ETH_MMC_TypeDef * ) ETH_MMC_BASE );
+        #endif /*_ETH_MMC */
 
-#ifdef _ETH_PTP
-  ETH_PTP = ((ETH_PTP_TypeDef *) ETH_PTP_BASE);
-#endif /*_ETH_PTP */
+        #ifdef _ETH_PTP
+            ETH_PTP = ( ( ETH_PTP_TypeDef * ) ETH_PTP_BASE );
+        #endif /*_ETH_PTP */
 
-#ifdef _ETH_DMA
-  ETH_DMA = ((ETH_DMA_TypeDef *) ETH_DMA_BASE);
-#endif /*_ETH_DMA */
-}
+        #ifdef _ETH_DMA
+            ETH_DMA = ( ( ETH_DMA_TypeDef * ) ETH_DMA_BASE );
+        #endif /*_ETH_DMA */
+    }
 
-#endif  /* ETH_DEBUG*/
+#endif /* ETH_DEBUG*/
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

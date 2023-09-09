@@ -31,34 +31,34 @@
 #define _SAMA5_TDES_INSTANCE_
 
 /* ========== Register definition for TDES peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_TDES_CR                 (0xF803C000U) /**< \brief (TDES) Control Register */
-#define REG_TDES_MR                 (0xF803C004U) /**< \brief (TDES) Mode Register */
-#define REG_TDES_IER                (0xF803C010U) /**< \brief (TDES) Interrupt Enable Register */
-#define REG_TDES_IDR                (0xF803C014U) /**< \brief (TDES) Interrupt Disable Register */
-#define REG_TDES_IMR                (0xF803C018U) /**< \brief (TDES) Interrupt Mask Register */
-#define REG_TDES_ISR                (0xF803C01CU) /**< \brief (TDES) Interrupt Status Register */
-#define REG_TDES_KEY1WR             (0xF803C020U) /**< \brief (TDES) Key 1 Word Register */
-#define REG_TDES_KEY2WR             (0xF803C028U) /**< \brief (TDES) Key 2 Word Register */
-#define REG_TDES_KEY3WR             (0xF803C030U) /**< \brief (TDES) Key 3 Word Register */
-#define REG_TDES_IDATAR             (0xF803C040U) /**< \brief (TDES) Input Data Register */
-#define REG_TDES_ODATAR             (0xF803C050U) /**< \brief (TDES) Output Data Register */
-#define REG_TDES_IVR                (0xF803C060U) /**< \brief (TDES) Initialization Vector Register */
-#define REG_TDES_XTEARNDR           (0xF803C070U) /**< \brief (TDES) XTEA Rounds Register */
-#else
-#define REG_TDES_CR        (*(WoReg*)0xF803C000U) /**< \brief (TDES) Control Register */
-#define REG_TDES_MR        (*(RwReg*)0xF803C004U) /**< \brief (TDES) Mode Register */
-#define REG_TDES_IER       (*(WoReg*)0xF803C010U) /**< \brief (TDES) Interrupt Enable Register */
-#define REG_TDES_IDR       (*(WoReg*)0xF803C014U) /**< \brief (TDES) Interrupt Disable Register */
-#define REG_TDES_IMR       (*(RoReg*)0xF803C018U) /**< \brief (TDES) Interrupt Mask Register */
-#define REG_TDES_ISR       (*(RoReg*)0xF803C01CU) /**< \brief (TDES) Interrupt Status Register */
-#define REG_TDES_KEY1WR    (*(WoReg*)0xF803C020U) /**< \brief (TDES) Key 1 Word Register */
-#define REG_TDES_KEY2WR    (*(WoReg*)0xF803C028U) /**< \brief (TDES) Key 2 Word Register */
-#define REG_TDES_KEY3WR    (*(WoReg*)0xF803C030U) /**< \brief (TDES) Key 3 Word Register */
-#define REG_TDES_IDATAR    (*(WoReg*)0xF803C040U) /**< \brief (TDES) Input Data Register */
-#define REG_TDES_ODATAR    (*(RoReg*)0xF803C050U) /**< \brief (TDES) Output Data Register */
-#define REG_TDES_IVR       (*(WoReg*)0xF803C060U) /**< \brief (TDES) Initialization Vector Register */
-#define REG_TDES_XTEARNDR  (*(RwReg*)0xF803C070U) /**< \brief (TDES) XTEA Rounds Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_TDES_CR          ( 0xF803C000U )              /**< \brief (TDES) Control Register */
+    #define REG_TDES_MR          ( 0xF803C004U )              /**< \brief (TDES) Mode Register */
+    #define REG_TDES_IER         ( 0xF803C010U )              /**< \brief (TDES) Interrupt Enable Register */
+    #define REG_TDES_IDR         ( 0xF803C014U )              /**< \brief (TDES) Interrupt Disable Register */
+    #define REG_TDES_IMR         ( 0xF803C018U )              /**< \brief (TDES) Interrupt Mask Register */
+    #define REG_TDES_ISR         ( 0xF803C01CU )              /**< \brief (TDES) Interrupt Status Register */
+    #define REG_TDES_KEY1WR      ( 0xF803C020U )              /**< \brief (TDES) Key 1 Word Register */
+    #define REG_TDES_KEY2WR      ( 0xF803C028U )              /**< \brief (TDES) Key 2 Word Register */
+    #define REG_TDES_KEY3WR      ( 0xF803C030U )              /**< \brief (TDES) Key 3 Word Register */
+    #define REG_TDES_IDATAR      ( 0xF803C040U )              /**< \brief (TDES) Input Data Register */
+    #define REG_TDES_ODATAR      ( 0xF803C050U )              /**< \brief (TDES) Output Data Register */
+    #define REG_TDES_IVR         ( 0xF803C060U )              /**< \brief (TDES) Initialization Vector Register */
+    #define REG_TDES_XTEARNDR    ( 0xF803C070U )              /**< \brief (TDES) XTEA Rounds Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_TDES_CR          ( *( WoReg * ) 0xF803C000U ) /**< \brief (TDES) Control Register */
+    #define REG_TDES_MR          ( *( RwReg * ) 0xF803C004U ) /**< \brief (TDES) Mode Register */
+    #define REG_TDES_IER         ( *( WoReg * ) 0xF803C010U ) /**< \brief (TDES) Interrupt Enable Register */
+    #define REG_TDES_IDR         ( *( WoReg * ) 0xF803C014U ) /**< \brief (TDES) Interrupt Disable Register */
+    #define REG_TDES_IMR         ( *( RoReg * ) 0xF803C018U ) /**< \brief (TDES) Interrupt Mask Register */
+    #define REG_TDES_ISR         ( *( RoReg * ) 0xF803C01CU ) /**< \brief (TDES) Interrupt Status Register */
+    #define REG_TDES_KEY1WR      ( *( WoReg * ) 0xF803C020U ) /**< \brief (TDES) Key 1 Word Register */
+    #define REG_TDES_KEY2WR      ( *( WoReg * ) 0xF803C028U ) /**< \brief (TDES) Key 2 Word Register */
+    #define REG_TDES_KEY3WR      ( *( WoReg * ) 0xF803C030U ) /**< \brief (TDES) Key 3 Word Register */
+    #define REG_TDES_IDATAR      ( *( WoReg * ) 0xF803C040U ) /**< \brief (TDES) Input Data Register */
+    #define REG_TDES_ODATAR      ( *( RoReg * ) 0xF803C050U ) /**< \brief (TDES) Output Data Register */
+    #define REG_TDES_IVR         ( *( WoReg * ) 0xF803C060U ) /**< \brief (TDES) Initialization Vector Register */
+    #define REG_TDES_XTEARNDR    ( *( RwReg * ) 0xF803C070U ) /**< \brief (TDES) XTEA Rounds Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_TDES_INSTANCE_ */

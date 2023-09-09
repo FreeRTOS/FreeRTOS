@@ -44,82 +44,88 @@
 
 static TickType_t ticksToWait = portMAX_DELAY;
 
-void ClockP_callbackFxn(uintptr_t arg);
+void ClockP_callbackFxn( uintptr_t arg );
 
-typedef struct ClockP_FreeRTOSObj {
-    TimerHandle_t    timer;
-    ClockP_Fxn    fxn;
-    uintptr_t        arg;
+typedef struct ClockP_FreeRTOSObj
+{
+    TimerHandle_t timer;
+    ClockP_Fxn fxn;
+    uintptr_t arg;
 } ClockP_FreeRTOSObj;
 
 /*
  *  ======== ClockP_callbackFxn ========
  */
-void ClockP_callbackFxn(uintptr_t arg)
+void ClockP_callbackFxn( uintptr_t arg )
 {
-    TimerHandle_t    handle = (TimerHandle_t)arg;
-    ClockP_FreeRTOSObj *obj;
+    TimerHandle_t handle = ( TimerHandle_t ) arg;
+    ClockP_FreeRTOSObj * obj;
 
-    obj = (ClockP_FreeRTOSObj *)pvTimerGetTimerID(handle);
-    (obj->fxn)(obj->arg);
+    obj = ( ClockP_FreeRTOSObj * ) pvTimerGetTimerID( handle );
+    ( obj->fxn )( obj->arg );
 }
 
 /*
  *  ======== ClockP_create ========
  */
-ClockP_Handle ClockP_create(ClockP_Fxn clockFxn, ClockP_Params *params)
+ClockP_Handle ClockP_create( ClockP_Fxn clockFxn,
+                             ClockP_Params * params )
 {
     ClockP_Params defaultParams;
-    ClockP_FreeRTOSObj *pObj;
-    TimerHandle_t    handle = NULL;
+    ClockP_FreeRTOSObj * pObj;
+    TimerHandle_t handle = NULL;
 
-    if (params == NULL) {
+    if( params == NULL )
+    {
         params = &defaultParams;
-        ClockP_Params_init(&defaultParams);
+        ClockP_Params_init( &defaultParams );
     }
 
-    if ((pObj = pvPortMalloc(sizeof(ClockP_FreeRTOSObj))) == NULL) {
-        return (NULL);
+    if( ( pObj = pvPortMalloc( sizeof( ClockP_FreeRTOSObj ) ) ) == NULL )
+    {
+        return( NULL );
     }
 
-    handle = xTimerCreate(params->name, 1, 0, (void *)pObj,
-                          (TimerCallbackFunction_t)ClockP_callbackFxn);
+    handle = xTimerCreate( params->name, 1, 0, ( void * ) pObj,
+                           ( TimerCallbackFunction_t ) ClockP_callbackFxn );
 
-    if (handle == NULL) {
-        vPortFree(pObj);
-        return (NULL);
+    if( handle == NULL )
+    {
+        vPortFree( pObj );
+        return( NULL );
     }
 
     pObj->timer = handle;
     pObj->fxn = clockFxn;
     pObj->arg = params->arg;
 
-    return ((ClockP_Handle)pObj);
+    return( ( ClockP_Handle ) pObj );
 }
 
 /*
  *  ======== ClockP_delete ========
  */
-ClockP_Status ClockP_delete(ClockP_Handle handle)
+ClockP_Status ClockP_delete( ClockP_Handle handle )
 {
-    ClockP_FreeRTOSObj *pObj = (ClockP_FreeRTOSObj *)handle;
+    ClockP_FreeRTOSObj * pObj = ( ClockP_FreeRTOSObj * ) handle;
     BaseType_t status;
 
-    status = xTimerDelete((TimerHandle_t)pObj->timer, ticksToWait);
+    status = xTimerDelete( ( TimerHandle_t ) pObj->timer, ticksToWait );
 
-    if (status != pdPASS) {
-        return (ClockP_FAILURE);
+    if( status != pdPASS )
+    {
+        return( ClockP_FAILURE );
     }
 
-    vPortFree(pObj);
+    vPortFree( pObj );
 
-    return (ClockP_OK);
+    return( ClockP_OK );
 }
 
 /*
  *  ======== ClockP_getCpuFreq ========
  */
-void ClockP_getCpuFreq(ClockP_FreqHz *freq)
+void ClockP_getCpuFreq( ClockP_FreqHz * freq )
 {
     unsigned long configCpuFreq;
 
@@ -134,10 +140,10 @@ void ClockP_getCpuFreq(ClockP_FreqHz *freq)
      *  #define configCPU_CLOCK_HZ     ( ( unsigned long ) 8000000 )
      */
 
-    configCpuFreq = (unsigned long)configCPU_CLOCK_HZ;
-    freq->lo = (uint32_t)configCpuFreq;
+    configCpuFreq = ( unsigned long ) configCPU_CLOCK_HZ;
+    freq->lo = ( uint32_t ) configCpuFreq;
     freq->hi = 0;
-//    freq->hi = (uint32_t)(configCpuFreq >> 32);
+/*    freq->hi = (uint32_t)(configCpuFreq >> 32); */
 }
 
 /*
@@ -153,7 +159,7 @@ uint32_t ClockP_getSystemTickPeriod()
      */
     tickPeriodUs = 1000000 / configTICK_RATE_HZ;
 
-    return (tickPeriodUs);
+    return( tickPeriodUs );
 }
 
 /*
@@ -162,124 +168,137 @@ uint32_t ClockP_getSystemTickPeriod()
  */
 uint32_t ClockP_getSystemTicks()
 {
-    return ((uint32_t)xTaskGetTickCount());
+    return( ( uint32_t ) xTaskGetTickCount() );
 }
 
 /*
  *  ======== ClockP_Params_init ========
  */
-void ClockP_Params_init(ClockP_Params *params)
+void ClockP_Params_init( ClockP_Params * params )
 {
     params->name = NULL;
-    params->arg = (uintptr_t)0;
+    params->arg = ( uintptr_t ) 0;
 }
 
 /*
  *  ======== ClockP_start ========
  */
-ClockP_Status ClockP_start(ClockP_Handle handle, uint32_t timeout)
+ClockP_Status ClockP_start( ClockP_Handle handle,
+                            uint32_t timeout )
 {
-    ClockP_FreeRTOSObj *pObj = (ClockP_FreeRTOSObj *)handle;
+    ClockP_FreeRTOSObj * pObj = ( ClockP_FreeRTOSObj * ) handle;
     BaseType_t status;
 
-    status = xTimerChangePeriod(pObj->timer, (TickType_t)timeout, ticksToWait);
+    status = xTimerChangePeriod( pObj->timer, ( TickType_t ) timeout, ticksToWait );
 
-    if (status != pdPASS) {
-        return (ClockP_FAILURE);
-    }
-    status = xTimerStart(pObj->timer, ticksToWait);
-
-    if (status != pdPASS) {
-        return (ClockP_FAILURE);
+    if( status != pdPASS )
+    {
+        return( ClockP_FAILURE );
     }
 
-    return (ClockP_OK);
+    status = xTimerStart( pObj->timer, ticksToWait );
+
+    if( status != pdPASS )
+    {
+        return( ClockP_FAILURE );
+    }
+
+    return( ClockP_OK );
 }
 
 /*
  *  ======== ClockP_startFromISR ========
  */
-ClockP_Status ClockP_startFromISR(ClockP_Handle handle, uint32_t timeout)
+ClockP_Status ClockP_startFromISR( ClockP_Handle handle,
+                                   uint32_t timeout )
 {
-    ClockP_FreeRTOSObj *pObj = (ClockP_FreeRTOSObj *)handle;
+    ClockP_FreeRTOSObj * pObj = ( ClockP_FreeRTOSObj * ) handle;
     BaseType_t xHigherPriorityTaskWoken;
     BaseType_t status;
 
-    status = xTimerChangePeriodFromISR(pObj->timer, (TickType_t)timeout,
-                                       &xHigherPriorityTaskWoken);
-    if (status != pdPASS) {
-        return (ClockP_FAILURE);
-    }
-    status = xTimerStartFromISR(pObj->timer, &xHigherPriorityTaskWoken);
+    status = xTimerChangePeriodFromISR( pObj->timer, ( TickType_t ) timeout,
+                                        &xHigherPriorityTaskWoken );
 
-    if (status != pdPASS) {
-        return (ClockP_FAILURE);
+    if( status != pdPASS )
+    {
+        return( ClockP_FAILURE );
     }
 
-    return (ClockP_OK);
+    status = xTimerStartFromISR( pObj->timer, &xHigherPriorityTaskWoken );
+
+    if( status != pdPASS )
+    {
+        return( ClockP_FAILURE );
+    }
+
+    return( ClockP_OK );
 }
 
 /*
  *  ======== ClockP_stop ========
  */
-ClockP_Status ClockP_stop(ClockP_Handle handle)
+ClockP_Status ClockP_stop( ClockP_Handle handle )
 {
-    ClockP_FreeRTOSObj *pObj = (ClockP_FreeRTOSObj *)handle;
+    ClockP_FreeRTOSObj * pObj = ( ClockP_FreeRTOSObj * ) handle;
     BaseType_t status;
 
-    status = xTimerStop(pObj->timer, ticksToWait);
+    status = xTimerStop( pObj->timer, ticksToWait );
 
-    if (status != pdPASS) {
-        return (ClockP_FAILURE);
+    if( status != pdPASS )
+    {
+        return( ClockP_FAILURE );
     }
-    return (ClockP_OK);
+
+    return( ClockP_OK );
 }
 
 /*
  *  ======== ClockP_stopFromISR ========
  */
-ClockP_Status ClockP_stopFromISR(ClockP_Handle handle)
+ClockP_Status ClockP_stopFromISR( ClockP_Handle handle )
 {
-    ClockP_FreeRTOSObj *pObj = (ClockP_FreeRTOSObj *)handle;
+    ClockP_FreeRTOSObj * pObj = ( ClockP_FreeRTOSObj * ) handle;
     BaseType_t xHigherPriorityTaskWoken;
     BaseType_t status;
 
-    status = xTimerStopFromISR(pObj->timer, &xHigherPriorityTaskWoken);
+    status = xTimerStopFromISR( pObj->timer, &xHigherPriorityTaskWoken );
 
-    if (status != pdPASS) {
-        return (ClockP_FAILURE);
+    if( status != pdPASS )
+    {
+        return( ClockP_FAILURE );
     }
-    return (ClockP_OK);
+
+    return( ClockP_OK );
 }
 
 /*
  *  ======== ClockP_sleep ========
  */
-ClockP_Status ClockP_sleep(uint32_t sec)
+ClockP_Status ClockP_sleep( uint32_t sec )
 {
     uint32_t msecs = sec * 1000;
     TickType_t xDelay;
 
     /* Take the ceiling */
-    xDelay = (msecs + portTICK_PERIOD_MS - 1) / portTICK_PERIOD_MS;
+    xDelay = ( msecs + portTICK_PERIOD_MS - 1 ) / portTICK_PERIOD_MS;
 
-    vTaskDelay(xDelay);
+    vTaskDelay( xDelay );
 
-    return (ClockP_OK);
+    return( ClockP_OK );
 }
 
 /*
  *  ======== ClockP_usleep ========
  */
-ClockP_Status ClockP_usleep(uint32_t usec)
+ClockP_Status ClockP_usleep( uint32_t usec )
 {
-    uint32_t msecs = (usec + 999) / 1000;
+    uint32_t msecs = ( usec + 999 ) / 1000;
     TickType_t xDelay;
 
     /* Take the ceiling */
-    xDelay = (msecs + portTICK_PERIOD_MS - 1) / portTICK_PERIOD_MS;
+    xDelay = ( msecs + portTICK_PERIOD_MS - 1 ) / portTICK_PERIOD_MS;
 
-    vTaskDelay(xDelay);
+    vTaskDelay( xDelay );
 
-    return (ClockP_OK);
+    return( ClockP_OK );
 }

@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_port.h
@@ -33,6 +34,7 @@
 * Description  : PORT setting API of RZ/T1
 * Limitation   : none
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
@@ -42,35 +44,35 @@
 #define _R_PORT_HEADER_
 
 /*******************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 *******************************************************************************/
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
-#define PORT_DIRECTION_HIZ    (0)
-#define PORT_DIRECTION_INPUT  (2)
-#define PORT_DIRECTION_OUTPUT (3)
+#define PORT_DIRECTION_HIZ          ( 0 )
+#define PORT_DIRECTION_INPUT        ( 2 )
+#define PORT_DIRECTION_OUTPUT       ( 3 )
 
-#define PORT_OUTPUT_LOW  (0)
-#define PORT_OUTPUT_HIGH (1)
+#define PORT_OUTPUT_LOW             ( 0 )
+#define PORT_OUTPUT_HIGH            ( 1 )
 
-#define PORT_MODE_GENERAL    (0)
-#define PORT_MODE_PERIPHERAL (1)
+#define PORT_MODE_GENERAL           ( 0 )
+#define PORT_MODE_PERIPHERAL        ( 1 )
 
-#define PORT_PULL_UPDOWN_DISABLE (0)
-#define PORT_PULL_DOWN           (1)
-#define PORT_PULL_UP             (2)
+#define PORT_PULL_UPDOWN_DISABLE    ( 0 )
+#define PORT_PULL_DOWN              ( 1 )
+#define PORT_PULL_UP                ( 2 )
 
-#define PORT_P10_NORMAL_DRIVE (0)
-#define PORT_P10_HIGH_DRIVE   (1)
+#define PORT_P10_NORMAL_DRIVE       ( 0 )
+#define PORT_P10_HIGH_DRIVE         ( 1 )
 
 /*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Exported global variables and functions (to be accessed by other files)
 *******************************************************************************/
 
 
 
-#endif
+#endif /* ifndef _R_PORT_HEADER_ */
 
 /* End of File */

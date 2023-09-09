@@ -46,37 +46,39 @@
  */
 
 #ifndef _RTT_
-#define _RTT_
+    #define _RTT_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-extern void RTT_SetPrescaler( Rtt* pRtt, uint16_t wPrescaler ) ;
+    extern void RTT_SetPrescaler( Rtt * pRtt,
+                                  uint16_t wPrescaler );
 
-extern uint32_t RTT_GetTime( Rtt* pRtt ) ;
+    extern uint32_t RTT_GetTime( Rtt * pRtt );
 
-extern void RTT_EnableIT( Rtt* pRtt, uint32_t dwSources ) ;
+    extern void RTT_EnableIT( Rtt * pRtt,
+                              uint32_t dwSources );
 
-extern uint32_t RTT_GetStatus( Rtt *pRtt ) ;
+    extern uint32_t RTT_GetStatus( Rtt * pRtt );
 
-extern void RTT_SetAlarm( Rtt *pRtt, uint32_t dwTime ) ;
+    extern void RTT_SetAlarm( Rtt * pRtt,
+                              uint32_t dwTime );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef RTT_H */
-

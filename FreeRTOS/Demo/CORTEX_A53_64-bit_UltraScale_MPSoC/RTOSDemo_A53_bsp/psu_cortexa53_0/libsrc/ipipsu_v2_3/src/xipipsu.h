@@ -30,11 +30,12 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
  * @file xipipsu.h
-* @addtogroup ipipsu_v2_3
-* @{
-* @details
+ * @addtogroup ipipsu_v2_3
+ * @{
+ * @details
  *
  * This is the header file for implementation of IPIPSU driver.
  * Inter Processor Interrupt (IPI) is used for communication between
@@ -85,7 +86,7 @@
  *                    examples to ensure that "Successfully ran" and "Failed"
  *                    strings are available in all examples. This is a fix
  *                    for CR-965028.
- *  	kvn 02/17/17  Add support for updating ConfigTable at run time
+ *      kvn 02/17/17  Add support for updating ConfigTable at run time
  *      ms  03/17/17  Added readme.txt file in examples folder for doxygen
  *                    generation.
  * 2.3  ms  04/11/17  Modified tcl file to add suffix U for all macro
@@ -104,29 +105,32 @@
 #include "xipipsu_hw.h"
 
 /************************** Constant Definitions *****************************/
-#define XIPIPSU_BUF_TYPE_MSG	(0x00000001U)
-#define XIPIPSU_BUF_TYPE_RESP	(0x00000002U)
-#define XIPIPSU_MAX_MSG_LEN		XIPIPSU_MSG_BUF_SIZE
+#define XIPIPSU_BUF_TYPE_MSG     ( 0x00000001U )
+#define XIPIPSU_BUF_TYPE_RESP    ( 0x00000002U )
+#define XIPIPSU_MAX_MSG_LEN      XIPIPSU_MSG_BUF_SIZE
 /**************************** Type Definitions *******************************/
+
 /**
  * Data structure used to refer IPI Targets
  */
-typedef struct {
-	u32 Mask; /**< Bit Mask for the target */
-	u32 BufferIndex; /**< Buffer Index used for calculating buffer address */
+typedef struct
+{
+    u32 Mask;        /**< Bit Mask for the target */
+    u32 BufferIndex; /**< Buffer Index used for calculating buffer address */
 } XIpiPsu_Target;
 
 /**
  * This typedef contains configuration information for the device.
  */
-typedef struct {
-	u32 DeviceId; /**< Unique ID  of device */
-	u32 BaseAddress; /**< Base address of the device */
-	u32 BitMask; /**< BitMask to be used to identify this CPU */
-	u32 BufferIndex; /**< Index of the IPI Message Buffer */
-	u32 IntId; /**< Interrupt ID on GIC **/
-	u32 TargetCount; /**< Number of available IPI Targets */
-	XIpiPsu_Target TargetList[XIPIPSU_MAX_TARGETS] ; /** < List of IPI Targets */
+typedef struct
+{
+    u32 DeviceId;                                     /**< Unique ID  of device */
+    u32 BaseAddress;                                  /**< Base address of the device */
+    u32 BitMask;                                      /**< BitMask to be used to identify this CPU */
+    u32 BufferIndex;                                  /**< Index of the IPI Message Buffer */
+    u32 IntId;                                        /**< Interrupt ID on GIC **/
+    u32 TargetCount;                                  /**< Number of available IPI Targets */
+    XIpiPsu_Target TargetList[ XIPIPSU_MAX_TARGETS ]; /** < List of IPI Targets */
 } XIpiPsu_Config;
 
 /**
@@ -134,165 +138,183 @@ typedef struct {
  * variable of this type for each IPI device in the system. A pointer
  * to a variable of this type is then passed to the driver API functions.
  */
-typedef struct {
-	XIpiPsu_Config Config; /**< Configuration structure */
-	u32 IsReady; /**< Device is initialized and ready */
-	u32 Options; /**< Options set in the device */
+typedef struct
+{
+    XIpiPsu_Config Config; /**< Configuration structure */
+    u32 IsReady;           /**< Device is initialized and ready */
+    u32 Options;           /**< Options set in the device */
 } XIpiPsu;
 
 /***************** Macros (Inline Functions) Definitions *********************/
+
 /**
-*
-* Read the register specified by the base address and offset
-*
-* @param	BaseAddress is the base address of the IPI instance
-* @param	RegOffset is the offset of the register relative to base
-*
-* @return	Value of the specified register
-* @note
-* C-style signature
-*	u32 XIpiPsu_ReadReg(u32 BaseAddress, u32 RegOffset)
-*
-*****************************************************************************/
+ *
+ * Read the register specified by the base address and offset
+ *
+ * @param	BaseAddress is the base address of the IPI instance
+ * @param	RegOffset is the offset of the register relative to base
+ *
+ * @return	Value of the specified register
+ * @note
+ * C-style signature
+ *	u32 XIpiPsu_ReadReg(u32 BaseAddress, u32 RegOffset)
+ *
+ *****************************************************************************/
 
-#define XIpiPsu_ReadReg(BaseAddress, RegOffset) \
-		Xil_In32((BaseAddress) + (RegOffset))
-
-/****************************************************************************/
-/**
-*
-* Write a value into a register specified by base address and offset
-*
-* @param BaseAddress is the base address of the IPI instance
-* @param RegOffset is the offset of the register relative to base
-* @param Data is a 32-bit value that is to be written into the specified register
-*
-* @note
-* C-style signature
-*	void XIpiPsu_WriteReg(u32 BaseAddress, u32 RegOffset, u32 Data)
-*
-*****************************************************************************/
-
-#define XIpiPsu_WriteReg(BaseAddress, RegOffset, Data) \
-		Xil_Out32(((BaseAddress) + (RegOffset)), (Data))
+#define XIpiPsu_ReadReg( BaseAddress, RegOffset ) \
+    Xil_In32( ( BaseAddress ) + ( RegOffset ) )
 
 /****************************************************************************/
+
 /**
-*
-* Enable interrupts specified in <i>Mask</i>. The corresponding interrupt for
-* each bit set to 1 in <i>Mask</i>, will be enabled.
-*
-* @param	InstancePtr is a pointer to the instance to be worked on.
-* @param	Mask contains a bit mask of interrupts to enable. The mask can
-*			be formed using a set of bitwise or'd values of individual CPU masks
-*
-* @note
-* C-style signature
-*	void XIpiPsu_InterruptEnable(XIpiPsu *InstancePtr, u32 Mask)
-*
-*****************************************************************************/
-#define XIpiPsu_InterruptEnable(InstancePtr, Mask) \
-	XIpiPsu_WriteReg((InstancePtr)->Config.BaseAddress, \
-		XIPIPSU_IER_OFFSET, \
-		((Mask) & XIPIPSU_ALL_MASK));
+ *
+ * Write a value into a register specified by base address and offset
+ *
+ * @param BaseAddress is the base address of the IPI instance
+ * @param RegOffset is the offset of the register relative to base
+ * @param Data is a 32-bit value that is to be written into the specified register
+ *
+ * @note
+ * C-style signature
+ *	void XIpiPsu_WriteReg(u32 BaseAddress, u32 RegOffset, u32 Data)
+ *
+ *****************************************************************************/
+
+#define XIpiPsu_WriteReg( BaseAddress, RegOffset, Data ) \
+    Xil_Out32( ( ( BaseAddress ) + ( RegOffset ) ), ( Data ) )
 
 /****************************************************************************/
-/**
-*
-* Disable interrupts specified in <i>Mask</i>. The corresponding interrupt for
-* each bit set to 1 in <i>Mask</i>, will be disabled.
-*
-* @param	InstancePtr is a pointer to the instance to be worked on.
-* @param	Mask contains a bit mask of interrupts to disable. The mask can
-*			be formed using a set of bitwise or'd values of individual CPU masks
-*
-* @note
-* C-style signature
-*	void XIpiPsu_InterruptDisable(XIpiPsu *InstancePtr, u32 Mask)
-*
-*****************************************************************************/
-#define XIpiPsu_InterruptDisable(InstancePtr, Mask)  \
-	XIpiPsu_WriteReg((InstancePtr)->Config.BaseAddress, \
-		XIPIPSU_IDR_OFFSET, \
-		((Mask) & XIPIPSU_ALL_MASK));
-/****************************************************************************/
-/**
-*
-* Get the <i>STATUS REGISTER</i> of the current IPI instance.
-*
-* @param InstancePtr is a pointer to the instance to be worked on.
-* @return Returns the Interrupt Status register(ISR) contents
-* @note User needs to parse this 32-bit value to check the source CPU
-* C-style signature
-*	u32 XIpiPsu_GetInterruptStatus(XIpiPsu *InstancePtr)
-*
-*****************************************************************************/
-#define XIpiPsu_GetInterruptStatus(InstancePtr)  \
-	XIpiPsu_ReadReg((InstancePtr)->Config.BaseAddress, \
-		XIPIPSU_ISR_OFFSET)
-/****************************************************************************/
-/**
-*
-* Clear the <i>STATUS REGISTER</i> of the current IPI instance.
-* The corresponding interrupt status for
-* each bit set to 1 in <i>Mask</i>, will be cleared
-*
-* @param InstancePtr is a pointer to the instance to be worked on.
-* @param Mask corresponding to the source CPU*
-*
-* @note This function should be used after handling the IPI.
-* Clearing the status will automatically clear the corresponding bit in
-* OBSERVATION register of Source CPU
-* C-style signature
-*	void XIpiPsu_ClearInterruptStatus(XIpiPsu *InstancePtr, u32 Mask)
-*
-*****************************************************************************/
 
-#define XIpiPsu_ClearInterruptStatus(InstancePtr, Mask)  \
-	XIpiPsu_WriteReg((InstancePtr)->Config.BaseAddress, \
-		XIPIPSU_ISR_OFFSET, \
-		((Mask) & XIPIPSU_ALL_MASK));
-/****************************************************************************/
 /**
-*
-* Get the <i>OBSERVATION REGISTER</i> of the current IPI instance.
-*
-* @param	InstancePtr is a pointer to the instance to be worked on.
-* @return	Returns the Observation register(OBS) contents
-* @note		User needs to parse this 32-bit value to check the status of
-*			individual CPUs
-* C-style signature
-*	u32 XIpiPsu_GetObsStatus(XIpiPsu *InstancePtr)
-*
-*****************************************************************************/
-#define XIpiPsu_GetObsStatus(InstancePtr)  \
-	XIpiPsu_ReadReg((InstancePtr)->Config.BaseAddress, \
-		XIPIPSU_OBS_OFFSET)
+ *
+ * Enable interrupts specified in <i>Mask</i>. The corresponding interrupt for
+ * each bit set to 1 in <i>Mask</i>, will be enabled.
+ *
+ * @param	InstancePtr is a pointer to the instance to be worked on.
+ * @param	Mask contains a bit mask of interrupts to enable. The mask can
+ *			be formed using a set of bitwise or'd values of individual CPU masks
+ *
+ * @note
+ * C-style signature
+ *	void XIpiPsu_InterruptEnable(XIpiPsu *InstancePtr, u32 Mask)
+ *
+ *****************************************************************************/
+#define XIpiPsu_InterruptEnable( InstancePtr, Mask )       \
+    XIpiPsu_WriteReg( ( InstancePtr )->Config.BaseAddress, \
+                      XIPIPSU_IER_OFFSET,                  \
+                      ( ( Mask ) &XIPIPSU_ALL_MASK ) );
+
+/****************************************************************************/
+
+/**
+ *
+ * Disable interrupts specified in <i>Mask</i>. The corresponding interrupt for
+ * each bit set to 1 in <i>Mask</i>, will be disabled.
+ *
+ * @param	InstancePtr is a pointer to the instance to be worked on.
+ * @param	Mask contains a bit mask of interrupts to disable. The mask can
+ *			be formed using a set of bitwise or'd values of individual CPU masks
+ *
+ * @note
+ * C-style signature
+ *	void XIpiPsu_InterruptDisable(XIpiPsu *InstancePtr, u32 Mask)
+ *
+ *****************************************************************************/
+#define XIpiPsu_InterruptDisable( InstancePtr, Mask )      \
+    XIpiPsu_WriteReg( ( InstancePtr )->Config.BaseAddress, \
+                      XIPIPSU_IDR_OFFSET,                  \
+                      ( ( Mask ) &XIPIPSU_ALL_MASK ) );
+/****************************************************************************/
+
+/**
+ *
+ * Get the <i>STATUS REGISTER</i> of the current IPI instance.
+ *
+ * @param InstancePtr is a pointer to the instance to be worked on.
+ * @return Returns the Interrupt Status register(ISR) contents
+ * @note User needs to parse this 32-bit value to check the source CPU
+ * C-style signature
+ *	u32 XIpiPsu_GetInterruptStatus(XIpiPsu *InstancePtr)
+ *
+ *****************************************************************************/
+#define XIpiPsu_GetInterruptStatus( InstancePtr )         \
+    XIpiPsu_ReadReg( ( InstancePtr )->Config.BaseAddress, \
+                     XIPIPSU_ISR_OFFSET )
+/****************************************************************************/
+
+/**
+ *
+ * Clear the <i>STATUS REGISTER</i> of the current IPI instance.
+ * The corresponding interrupt status for
+ * each bit set to 1 in <i>Mask</i>, will be cleared
+ *
+ * @param InstancePtr is a pointer to the instance to be worked on.
+ * @param Mask corresponding to the source CPU*
+ *
+ * @note This function should be used after handling the IPI.
+ * Clearing the status will automatically clear the corresponding bit in
+ * OBSERVATION register of Source CPU
+ * C-style signature
+ *	void XIpiPsu_ClearInterruptStatus(XIpiPsu *InstancePtr, u32 Mask)
+ *
+ *****************************************************************************/
+
+#define XIpiPsu_ClearInterruptStatus( InstancePtr, Mask )  \
+    XIpiPsu_WriteReg( ( InstancePtr )->Config.BaseAddress, \
+                      XIPIPSU_ISR_OFFSET,                  \
+                      ( ( Mask ) &XIPIPSU_ALL_MASK ) );
+/****************************************************************************/
+
+/**
+ *
+ * Get the <i>OBSERVATION REGISTER</i> of the current IPI instance.
+ *
+ * @param	InstancePtr is a pointer to the instance to be worked on.
+ * @return	Returns the Observation register(OBS) contents
+ * @note		User needs to parse this 32-bit value to check the status of
+ *			individual CPUs
+ * C-style signature
+ *	u32 XIpiPsu_GetObsStatus(XIpiPsu *InstancePtr)
+ *
+ *****************************************************************************/
+#define XIpiPsu_GetObsStatus( InstancePtr )               \
+    XIpiPsu_ReadReg( ( InstancePtr )->Config.BaseAddress, \
+                     XIPIPSU_OBS_OFFSET )
 /****************************************************************************/
 /************************** Function Prototypes *****************************/
 
 /* Static lookup function implemented in xipipsu_sinit.c */
 
-XIpiPsu_Config *XIpiPsu_LookupConfig(u32 DeviceId);
+XIpiPsu_Config * XIpiPsu_LookupConfig( u32 DeviceId );
 
 /* Interface Functions implemented in xipipsu.c */
 
-XStatus XIpiPsu_CfgInitialize(XIpiPsu *InstancePtr, XIpiPsu_Config * CfgPtr,
-		UINTPTR EffectiveAddress);
+XStatus XIpiPsu_CfgInitialize( XIpiPsu * InstancePtr,
+                               XIpiPsu_Config * CfgPtr,
+                               UINTPTR EffectiveAddress );
 
-void XIpiPsu_Reset(XIpiPsu *InstancePtr);
+void XIpiPsu_Reset( XIpiPsu * InstancePtr );
 
-XStatus XIpiPsu_TriggerIpi(XIpiPsu *InstancePtr, u32 DestCpuMask);
+XStatus XIpiPsu_TriggerIpi( XIpiPsu * InstancePtr,
+                            u32 DestCpuMask );
 
-XStatus XIpiPsu_PollForAck(XIpiPsu *InstancePtr, u32 DestCpuMask,
-		u32 TimeOutCount);
+XStatus XIpiPsu_PollForAck( XIpiPsu * InstancePtr,
+                            u32 DestCpuMask,
+                            u32 TimeOutCount );
 
-XStatus XIpiPsu_ReadMessage(XIpiPsu *InstancePtr, u32 SrcCpuMask, u32 *MsgPtr,
-		u32 MsgLength, u8 BufferType);
+XStatus XIpiPsu_ReadMessage( XIpiPsu * InstancePtr,
+                             u32 SrcCpuMask,
+                             u32 * MsgPtr,
+                             u32 MsgLength,
+                             u8 BufferType );
 
-XStatus XIpiPsu_WriteMessage(XIpiPsu *InstancePtr, u32 DestCpuMask, u32 *MsgPtr,
-		u32 MsgLength, u8 BufferType);
-void XIpiPsu_SetConfigTable(u32 DeviceId, XIpiPsu_Config *ConfigTblPtr);
+XStatus XIpiPsu_WriteMessage( XIpiPsu * InstancePtr,
+                              u32 DestCpuMask,
+                              u32 * MsgPtr,
+                              u32 MsgLength,
+                              u8 BufferType );
+void XIpiPsu_SetConfigTable( u32 DeviceId,
+                             XIpiPsu_Config * ConfigTblPtr );
 
 #endif /* XIPIPSU_H_ */
 /** @} */

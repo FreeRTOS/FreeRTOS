@@ -63,7 +63,7 @@ qemu-system-riscv32 -nographic -machine virt -net none \
   -chardev stdio,id=con,mux=on -serial chardev:con \
   -mon chardev=con,mode=readline -bios none \
   -smp 4 -kernel ./build/RTOSDemo.axf \
-  -s -S 
+  -s -S
 ```
 This command is nearly identical to the one above with the exception of the `-s` and `-S` flags. The `-s` flag attaches Qemu to port 1234 for GDB to connect to. The `-S` flag starts the simulation halted and waits for GDB to connect.
 

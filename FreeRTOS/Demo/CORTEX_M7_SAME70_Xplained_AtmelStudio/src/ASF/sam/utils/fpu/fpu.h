@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -50,35 +51,37 @@
 #include <compiler.h>
 
 /** Address for ARM CPACR */
-#define ADDR_CPACR 0xE000ED88
+#define ADDR_CPACR    0xE000ED88
 
 /** CPACR Register */
-#define REG_CPACR  (*((volatile uint32_t *)ADDR_CPACR))
+#define REG_CPACR     ( *( ( volatile uint32_t * ) ADDR_CPACR ) )
 
 /**
  * \brief Enable FPU
  */
-__always_inline static void fpu_enable(void)
+__always_inline static void fpu_enable( void )
 {
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR |=  (0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
+    irqflags_t flags;
+
+    flags = cpu_irq_save();
+    REG_CPACR |= ( 0xFu << 20 );
+    __DSB();
+    __ISB();
+    cpu_irq_restore( flags );
 }
 
 /**
  * \brief Disable FPU
  */
-__always_inline static void fpu_disable(void)
+__always_inline static void fpu_disable( void )
 {
-	irqflags_t flags;
-	flags = cpu_irq_save();
-	REG_CPACR &= ~(0xFu << 20);
-	__DSB();
-	__ISB();
-	cpu_irq_restore(flags);
+    irqflags_t flags;
+
+    flags = cpu_irq_save();
+    REG_CPACR &= ~( 0xFu << 20 );
+    __DSB();
+    __ISB();
+    cpu_irq_restore( flags );
 }
 
 /**
@@ -86,9 +89,9 @@ __always_inline static void fpu_disable(void)
  *
  * \return Return ture if FPU is enabled, otherwise return false.
  */
-__always_inline static bool fpu_is_enabled(void)
+__always_inline static bool fpu_is_enabled( void )
 {
-	return (REG_CPACR & (0xFu << 20));
+    return( REG_CPACR & ( 0xFu << 20 ) );
 }
 
 #endif /* _FPU_H_INCLUDED_ */

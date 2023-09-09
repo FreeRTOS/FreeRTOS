@@ -71,8 +71,8 @@
  */
 typedef struct SSLContext
 {
-    WOLFSSL_CTX* ctx;                     /**< @brief wolfSSL context */
-    WOLFSSL* ssl;                         /**< @brief wolfSSL ssl session context */
+    WOLFSSL_CTX * ctx; /**< @brief wolfSSL context */
+    WOLFSSL * ssl;     /**< @brief wolfSSL ssl session context */
 } SSLContext_t;
 
 /**

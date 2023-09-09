@@ -98,222 +98,224 @@
 /*-----------------------------------------------------------*/
 
 /* Task priorities. */
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
-#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainQUEUE_POLL_PRIORITY          ( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY          ( tskIDLE_PRIORITY + 3 )
+#define mainSEM_TEST_PRIORITY            ( tskIDLE_PRIORITY + 1 )
+#define mainCREATOR_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3 )
+#define mainGEN_QUEUE_TASK_PRIORITY      ( tskIDLE_PRIORITY )
 
 /* Stack sizes are defined relative to configMINIMAL_STACK_SIZE so they scale
-across projects that have that constant set differently - in this case the
-constant is different depending on the compiler in use. */
-#define mainMESSAGE_BUFFER_STACK_SIZE		( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
-#define mainCHECK_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+ * across projects that have that constant set differently - in this case the
+ * constant is different depending on the compiler in use. */
+#define mainMESSAGE_BUFFER_STACK_SIZE    ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#define mainCHECK_TASK_STACK_SIZE        ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
 /*-----------------------------------------------------------*/
 
 /* The task that checks the operation of all the other standard demo tasks, as
  * described at the top of this file. */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
-	/* Start the standard demo tasks. */
-	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-	vStartInterruptQueueTasks();
-	vStartRecursiveMutexTasks();
-	vCreateBlockTimeTasks();
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartQueuePeekTasks();
-	vStartQueueSetTasks();
-	vStartEventGroupTasks();
-	vStartMessageBufferTasks( mainMESSAGE_BUFFER_STACK_SIZE );
-	vStartStreamBufferTasks();
-	vCreateAbortDelayTasks();
-	vStartCountingSemaphoreTasks();
-	vStartDynamicPriorityTasks();
-	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
-	vStartQueueOverwriteTask( tskIDLE_PRIORITY );
-	vStartQueueSetPollingTask();
-	vStartStaticallyAllocatedTasks();
-	vStartTaskNotifyTask();
-	vStartTaskNotifyArrayTask();
-	vStartTimerDemoTask( 50 );
-	vStartStreamBufferInterruptDemo();
-	vStartInterruptSemaphoreTasks();
+    /* Start the standard demo tasks. */
+    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+    vStartInterruptQueueTasks();
+    vStartRecursiveMutexTasks();
+    vCreateBlockTimeTasks();
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartQueuePeekTasks();
+    vStartQueueSetTasks();
+    vStartEventGroupTasks();
+    vStartMessageBufferTasks( mainMESSAGE_BUFFER_STACK_SIZE );
+    vStartStreamBufferTasks();
+    vCreateAbortDelayTasks();
+    vStartCountingSemaphoreTasks();
+    vStartDynamicPriorityTasks();
+    vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
+    vStartQueueOverwriteTask( tskIDLE_PRIORITY );
+    vStartQueueSetPollingTask();
+    vStartStaticallyAllocatedTasks();
+    vStartTaskNotifyTask();
+    vStartTaskNotifyArrayTask();
+    vStartTimerDemoTask( 50 );
+    vStartStreamBufferInterruptDemo();
+    vStartInterruptSemaphoreTasks();
 
-	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    /* The suicide tasks must be created last as they need to know how many
+     * tasks were running prior to their creation in order to ascertain whether
+     * or not the correct/expected number of tasks are running at any given time. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* If configSUPPORT_STATIC_ALLOCATION was false then execution would only
-	get here if there was insufficient heap memory to create either the idle or
-	timer tasks.  As static allocation is used execution should never be able
-	to reach here. */
-	for( ;; );
+    /* If configSUPPORT_STATIC_ALLOCATION was false then execution would only
+     * get here if there was insufficient heap memory to create either the idle or
+     * timer tasks.  As static allocation is used execution should never be able
+     * to reach here. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 /* See the comments at the top of this file. */
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTask( void * pvParameters )
 {
-static const char * pcMessage = "PASS";
-const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
-TickType_t xPreviousWakeTime;
-extern uint32_t ulNestCount;
+    static const char * pcMessage = "PASS";
+    const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
+    TickType_t xPreviousWakeTime;
+    extern uint32_t ulNestCount;
 
     /* Avoid warning about unused parameter. */
     ( void ) pvParameters;
 
-	xPreviousWakeTime = xTaskGetTickCount();
+    xPreviousWakeTime = xTaskGetTickCount();
 
-	for( ;; )
-	{
-		vTaskDelayUntil( &xPreviousWakeTime, xTaskPeriod );
+    for( ; ; )
+    {
+        vTaskDelayUntil( &xPreviousWakeTime, xTaskPeriod );
 
-		/* Has an error been found in any task? */
-		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreStreamBufferTasksStillRunning() returned false";
-		}
-		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreMessageBufferTasksStillRunning() returned false";
-		}
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreGenericQueueTasksStillRunning() returned false";
-		}
-	    else if( xIsCreateTaskStillRunning() != pdTRUE )
-	    {
-	        pcMessage = "xIsCreateTaskStillRunning() returned false";
-	    }
-		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreIntQueueTasksStillRunning() returned false";
-		}
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreBlockTimeTestTasksStillRunning() returned false";
-		}
-		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreSemaphoreTasksStillRunning() returned false";
-		}
-		else if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			pcMessage = "xArePollingQueuesStillRunning() returned false";
-		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreQueuePeekTasksStillRunning() returned false";
-		}
-		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreRecursiveMutexTasksStillRunning() returned false";
-		}
-		else if( xAreQueueSetTasksStillRunning() != pdPASS )
-		{
-			pcMessage = "xAreQueueSetTasksStillRunning() returned false";
-		}
-		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreEventGroupTasksStillRunning() returned false";
-		}
-		else if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreAbortDelayTestTasksStillRunning() returned false";
-		}
-		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreCountingSemaphoreTasksStillRunning() returned false";
-		}
-		else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreDynamicPriorityTasksStillRunning() returned false";
-		}
-		else if( xAreMessageBufferAMPTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreMessageBufferAMPTasksStillRunning() returned false";
-		}
-		else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
-		{
-			pcMessage = "xIsQueueOverwriteTaskStillRunning() returned false";
-		}
-		else if( xAreQueueSetPollTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreQueueSetPollTasksStillRunning() returned false";
-		}
-		else if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreStaticAllocationTasksStillRunning() returned false";
-		}
-		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreTaskNotificationTasksStillRunning() returned false";
-		}
-		else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreTaskNotificationArrayTasksStillRunning() returned false";
-		}
-		else if( xAreTimerDemoTasksStillRunning( xTaskPeriod ) != pdTRUE )
-		{
-			pcMessage = "xAreTimerDemoTasksStillRunning() returned false";
-		}
-		else if( xIsInterruptStreamBufferDemoStillRunning() != pdTRUE )
-		{
-			pcMessage = "xIsInterruptStreamBufferDemoStillRunning() returned false";
-		}
-		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
-		}
+        /* Has an error been found in any task? */
+        if( xAreStreamBufferTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreStreamBufferTasksStillRunning() returned false";
+        }
+        else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreMessageBufferTasksStillRunning() returned false";
+        }
 
-		/* It is normally not good to call printf() from an embedded system,
-		although it is ok in this simulated case. */
-		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ( int ) ulNestCount );
-	}
+        if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreGenericQueueTasksStillRunning() returned false";
+        }
+        else if( xIsCreateTaskStillRunning() != pdTRUE )
+        {
+            pcMessage = "xIsCreateTaskStillRunning() returned false";
+        }
+        else if( xAreIntQueueTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreIntQueueTasksStillRunning() returned false";
+        }
+        else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreBlockTimeTestTasksStillRunning() returned false";
+        }
+        else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreSemaphoreTasksStillRunning() returned false";
+        }
+        else if( xArePollingQueuesStillRunning() != pdTRUE )
+        {
+            pcMessage = "xArePollingQueuesStillRunning() returned false";
+        }
+        else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreQueuePeekTasksStillRunning() returned false";
+        }
+        else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreRecursiveMutexTasksStillRunning() returned false";
+        }
+        else if( xAreQueueSetTasksStillRunning() != pdPASS )
+        {
+            pcMessage = "xAreQueueSetTasksStillRunning() returned false";
+        }
+        else if( xAreEventGroupTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreEventGroupTasksStillRunning() returned false";
+        }
+        else if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreAbortDelayTestTasksStillRunning() returned false";
+        }
+        else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreCountingSemaphoreTasksStillRunning() returned false";
+        }
+        else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreDynamicPriorityTasksStillRunning() returned false";
+        }
+        else if( xAreMessageBufferAMPTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreMessageBufferAMPTasksStillRunning() returned false";
+        }
+        else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
+        {
+            pcMessage = "xIsQueueOverwriteTaskStillRunning() returned false";
+        }
+        else if( xAreQueueSetPollTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreQueueSetPollTasksStillRunning() returned false";
+        }
+        else if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreStaticAllocationTasksStillRunning() returned false";
+        }
+        else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreTaskNotificationTasksStillRunning() returned false";
+        }
+        else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreTaskNotificationArrayTasksStillRunning() returned false";
+        }
+        else if( xAreTimerDemoTasksStillRunning( xTaskPeriod ) != pdTRUE )
+        {
+            pcMessage = "xAreTimerDemoTasksStillRunning() returned false";
+        }
+        else if( xIsInterruptStreamBufferDemoStillRunning() != pdTRUE )
+        {
+            pcMessage = "xIsInterruptStreamBufferDemoStillRunning() returned false";
+        }
+        else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
+        }
+
+        /* It is normally not good to call printf() from an embedded system,
+         * although it is ok in this simulated case. */
+        printf( "%s : %d (%d)\r\n", pcMessage, ( int ) xTaskGetTickCount(), ( int ) ulNestCount );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vFullDemoTickHookFunction( void )
 {
-	/* Write to a queue that is in use as part of the queue set demo to
-	demonstrate using queue sets from an ISR. */
-	vQueueSetAccessQueueSetFromISR();
+    /* Write to a queue that is in use as part of the queue set demo to
+     * demonstrate using queue sets from an ISR. */
+    vQueueSetAccessQueueSetFromISR();
 
-	/* Call the event group ISR tests. */
-	vPeriodicEventGroupsProcessing();
+    /* Call the event group ISR tests. */
+    vPeriodicEventGroupsProcessing();
 
-	/* Exercise stream buffers from interrupts. */
-	vPeriodicStreamBufferProcessing();
+    /* Exercise stream buffers from interrupts. */
+    vPeriodicStreamBufferProcessing();
 
-	/* Exercise using queue overwrites from interrupts. */
-	vQueueOverwritePeriodicISRDemo();
+    /* Exercise using queue overwrites from interrupts. */
+    vQueueOverwritePeriodicISRDemo();
 
-	/* Exercise using Queue Sets from interrupts. */
-	vQueueSetPollingInterruptAccess();
+    /* Exercise using Queue Sets from interrupts. */
+    vQueueSetPollingInterruptAccess();
 
-	/* Exercise using task notifications from interrupts. */
-	xNotifyTaskFromISR();
-	xNotifyArrayTaskFromISR();
+    /* Exercise using task notifications from interrupts. */
+    xNotifyTaskFromISR();
+    xNotifyArrayTaskFromISR();
 
-	/* Exercise software timers from interrupts. */
-	vTimerPeriodicISRTests();
+    /* Exercise software timers from interrupts. */
+    vTimerPeriodicISRTests();
 
-	/* Exercise stream buffers from interrupts. */
-	vBasicStreamBufferSendFromISR();
+    /* Exercise stream buffers from interrupts. */
+    vBasicStreamBufferSendFromISR();
 
-	/* Exercise semaphores from interrupts. */
-	vInterruptSemaphorePeriodicTest();
+    /* Exercise semaphores from interrupts. */
+    vInterruptSemaphorePeriodicTest();
 }
 /*-----------------------------------------------------------*/
-

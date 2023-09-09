@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -33,11 +33,11 @@
  * \addtogroup tsd_module TouchScreen Driver
  *
  * \section Purpose
- * 
+ *
  * This unit provides a very powerful touchscreen driver which handles all the
  * complexity. This includes touchscreen calibration, retrieving measurements,
  * configuring the TSADC, etc.
- * 
+ *
  * \section Usage
  *
  * -# Implement ADC interrupt handler in application, to invoke TSD_Handler()
@@ -67,20 +67,25 @@
  *         Global functions
  *----------------------------------------------------------------------------*/
 
-extern void TSD_Handler(uint32_t dwAdcStatus);
-extern void TSD_Initialize(void);
-extern void TSD_DeInitialize(void);
-extern void TSD_Enable(uint8_t bEnDis);
-extern uint8_t TSD_Calibrate(void);
+extern void TSD_Handler( uint32_t dwAdcStatus );
+extern void TSD_Initialize( void );
+extern void TSD_DeInitialize( void );
+extern void TSD_Enable( uint8_t bEnDis );
+extern uint8_t TSD_Calibrate( void );
 
 /* calibration used functions */
-extern void TSD_GetRawMeasurement(uint32_t * pData);
-extern void TSD_WaitPenPressed(void);
-extern void TSD_WaitPenReleased(void);
+extern void TSD_GetRawMeasurement( uint32_t * pData );
+extern void TSD_WaitPenPressed( void );
+extern void TSD_WaitPenReleased( void );
 
 /* callbacks */
-extern void TSD_PenPressed(uint32_t x, uint32_t y, uint32_t pressure);
-extern void TSD_PenMoved(uint32_t x, uint32_t y, uint32_t pressure);
-extern void TSD_PenReleased(uint32_t x, uint32_t y);
+extern void TSD_PenPressed( uint32_t x,
+                            uint32_t y,
+                            uint32_t pressure );
+extern void TSD_PenMoved( uint32_t x,
+                          uint32_t y,
+                          uint32_t pressure );
+extern void TSD_PenReleased( uint32_t x,
+                             uint32_t y );
 
 #endif //#ifndef TSD_H

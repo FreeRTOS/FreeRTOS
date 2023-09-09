@@ -121,25 +121,26 @@
 #include <compiler.h>
 #include <core_cm0plus.h>
 
-#if !defined(__DOXYGEN__)
+#if !defined( __DOXYGEN__ )
+
 /* Generates a interrupt vector table enum list entry for a given module type
-   and index (e.g. "SYSTEM_INTERRUPT_MODULE_TC0 = TC0_IRQn,"). */
-#  define _MODULE_IRQn(n, module) \
-		SYSTEM_INTERRUPT_MODULE_##module##n = module##n##_IRQn,
+ * and index (e.g. "SYSTEM_INTERRUPT_MODULE_TC0 = TC0_IRQn,"). */
+    #define _MODULE_IRQn( n, module ) \
+    SYSTEM_INTERRUPT_MODULE_ ## module ## n = module ## n ## _IRQn,
 
 /* Generates interrupt vector table enum list entries for all instances of a
-   given module type on the selected device. */
-#  define _SYSTEM_INTERRUPT_MODULES(name) \
-		MREPEAT(name##_INST_NUM, _MODULE_IRQn, name)
+ * given module type on the selected device. */
+    #define _SYSTEM_INTERRUPT_MODULES( name ) \
+    MREPEAT( name ## _INST_NUM, _MODULE_IRQn, name )
 
 
-#  define _SYSTEM_INTERRUPT_IPSR_MASK              0x0000003f
-#  define _SYSTEM_INTERRUPT_PRIORITY_MASK          0x00000007
+    #define _SYSTEM_INTERRUPT_IPSR_MASK                0x0000003f
+    #define _SYSTEM_INTERRUPT_PRIORITY_MASK            0x00000007
 
-#  define _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START  0
+    #define _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START    0
 
-#  define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        29
-#endif
+    #define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS          29
+#endif /* if !defined( __DOXYGEN__ ) */
 
 /**
  * \brief Table of possible system interrupt/exception vector numbers.
@@ -147,59 +148,62 @@
  * Table of all possible interrupt and exception vector indexes within the
  * device.
  */
-enum system_interrupt_vector {
-	/** Interrupt vector index for a NMI interrupt. */
-	SYSTEM_INTERRUPT_NON_MASKABLE      = NonMaskableInt_IRQn,
-	/** Interrupt vector index for a Hard Fault memory access exception. */
-	SYSTEM_INTERRUPT_HARD_FAULT        = HardFault_IRQn,
-	/** Interrupt vector index for a Supervisor Call exception. */
-	SYSTEM_INTERRUPT_SV_CALL           = SVCall_IRQn,
-	/** Interrupt vector index for a Pending Supervisor interrupt. */
-	SYSTEM_INTERRUPT_PENDING_SV        = PendSV_IRQn,
-	/** Interrupt vector index for a System Tick interrupt. */
-	SYSTEM_INTERRUPT_SYSTICK           = SysTick_IRQn,
+enum system_interrupt_vector
+{
+    /** Interrupt vector index for a NMI interrupt. */
+    SYSTEM_INTERRUPT_NON_MASKABLE = NonMaskableInt_IRQn,
+    /** Interrupt vector index for a Hard Fault memory access exception. */
+    SYSTEM_INTERRUPT_HARD_FAULT = HardFault_IRQn,
+    /** Interrupt vector index for a Supervisor Call exception. */
+    SYSTEM_INTERRUPT_SV_CALL = SVCall_IRQn,
+    /** Interrupt vector index for a Pending Supervisor interrupt. */
+    SYSTEM_INTERRUPT_PENDING_SV = PendSV_IRQn,
+    /** Interrupt vector index for a System Tick interrupt. */
+    SYSTEM_INTERRUPT_SYSTICK = SysTick_IRQn,
 
-	/** Interrupt vector index for a Power Manager peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_PM         = PM_IRQn,
-	/** Interrupt vector index for a System Control peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_SYSCTRL    = SYSCTRL_IRQn,
-	/** Interrupt vector index for a Watch Dog peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_WDT        = WDT_IRQn,
-	/** Interrupt vector index for a Real Time Clock peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_RTC        = RTC_IRQn,
-	/** Interrupt vector index for an External Interrupt peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_EIC        = EIC_IRQn,
-	/** Interrupt vector index for a Non Volatile Memory Controller interrupt. */
-	SYSTEM_INTERRUPT_MODULE_NVMCTRL    = NVMCTRL_IRQn,
-	/** Interrupt vector index for an Event System interrupt. */
-	SYSTEM_INTERRUPT_MODULE_EVSYS      = EVSYS_IRQn,
-#if defined(__DOXYGEN__)
-	/** Interrupt vector index for a SERCOM peripheral interrupt.
-	 *
-	 *  Each specific device may contain several SERCOM peripherals; each module
-	 *  instance will have its own entry in the table, with the instance number
-	 *  substituted for "n" in the entry name (e.g.
-	 *  \c SYSTEM_INTERRUPT_MODULE_SERCOM0).
-	 */
-	SYSTEM_INTERRUPT_MODULE_SERCOMn    = SERCOMn_IRQn,
-	/** Interrupt vector index for a Timer/Counter peripheral interrupt.
-	 *
-	 *  Each specific device may contain several TC peripherals; each module
-	 *  instance will have its own entry in the table, with the instance number
-	 *  substituted for "n" in the entry name (e.g.
-	 *  \c SYSTEM_INTERRUPT_MODULE_TC0).
-	 */
-	SYSTEM_INTERRUPT_MODULE_TCn        = TCn_IRQn,
-#else
-	_SYSTEM_INTERRUPT_MODULES(SERCOM)
-	_SYSTEM_INTERRUPT_MODULES(TC)
-#endif
-	/** Interrupt vector index for an Analog Comparator peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_AC         = AC_IRQn,
-	/** Interrupt vector index for an Analog-to-Digital peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_ADC        = ADC_IRQn,
-	/** Interrupt vector index for a Digital-to-Analog peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
+    /** Interrupt vector index for a Power Manager peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_PM = PM_IRQn,
+    /** Interrupt vector index for a System Control peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_SYSCTRL = SYSCTRL_IRQn,
+    /** Interrupt vector index for a Watch Dog peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_WDT = WDT_IRQn,
+    /** Interrupt vector index for a Real Time Clock peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_RTC = RTC_IRQn,
+    /** Interrupt vector index for an External Interrupt peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_EIC = EIC_IRQn,
+    /** Interrupt vector index for a Non Volatile Memory Controller interrupt. */
+    SYSTEM_INTERRUPT_MODULE_NVMCTRL = NVMCTRL_IRQn,
+    /** Interrupt vector index for an Event System interrupt. */
+    SYSTEM_INTERRUPT_MODULE_EVSYS = EVSYS_IRQn,
+    #if defined( __DOXYGEN__ )
+
+        /** Interrupt vector index for a SERCOM peripheral interrupt.
+         *
+         *  Each specific device may contain several SERCOM peripherals; each module
+         *  instance will have its own entry in the table, with the instance number
+         *  substituted for "n" in the entry name (e.g.
+         *  \c SYSTEM_INTERRUPT_MODULE_SERCOM0).
+         */
+        SYSTEM_INTERRUPT_MODULE_SERCOMn = SERCOMn_IRQn,
+
+        /** Interrupt vector index for a Timer/Counter peripheral interrupt.
+         *
+         *  Each specific device may contain several TC peripherals; each module
+         *  instance will have its own entry in the table, with the instance number
+         *  substituted for "n" in the entry name (e.g.
+         *  \c SYSTEM_INTERRUPT_MODULE_TC0).
+         */
+        SYSTEM_INTERRUPT_MODULE_TCn = TCn_IRQn,
+    #else
+        _SYSTEM_INTERRUPT_MODULES( SERCOM )
+        _SYSTEM_INTERRUPT_MODULES( TC )
+    #endif
+    /** Interrupt vector index for an Analog Comparator peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_AC = AC_IRQn,
+    /** Interrupt vector index for an Analog-to-Digital peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_ADC = ADC_IRQn,
+    /** Interrupt vector index for a Digital-to-Analog peripheral interrupt. */
+    SYSTEM_INTERRUPT_MODULE_DAC = DAC_IRQn,
 };
 
 /**
@@ -208,15 +212,16 @@ enum system_interrupt_vector {
  * Table of all possible interrupt and exception vector priorities within the
  * device.
  */
-enum system_interrupt_priority_level {
-	/** Priority level 0, the highest possible interrupt priority. */
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_0  = 0,
-	/** Priority level 1. */
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_1  = 1,
-	/** Priority level 2. */
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_2  = 2,
-	/** Priority level 3, the lowest possible interrupt priority. */
-	SYSTEM_INTERRUPT_PRIORITY_LEVEL_3  = 3,
+enum system_interrupt_priority_level
+{
+    /** Priority level 0, the highest possible interrupt priority. */
+    SYSTEM_INTERRUPT_PRIORITY_LEVEL_0 = 0,
+    /** Priority level 1. */
+    SYSTEM_INTERRUPT_PRIORITY_LEVEL_1 = 1,
+    /** Priority level 2. */
+    SYSTEM_INTERRUPT_PRIORITY_LEVEL_2 = 2,
+    /** Priority level 3, the lowest possible interrupt priority. */
+    SYSTEM_INTERRUPT_PRIORITY_LEVEL_3 = 3,
 };
 
 /**
@@ -232,9 +237,9 @@ enum system_interrupt_priority_level {
  * are only re-enabled upon leaving the outermost nested critical section.
  *
  */
-static inline void system_interrupt_enter_critical_section(void)
+static inline void system_interrupt_enter_critical_section( void )
 {
-	cpu_irq_enter_critical();
+    cpu_irq_enter_critical();
 }
 
 /**
@@ -245,9 +250,9 @@ static inline void system_interrupt_enter_critical_section(void)
  * are only re-enabled upon leaving the outermost nested critical section.
  *
  */
-static inline void system_interrupt_leave_critical_section(void)
+static inline void system_interrupt_leave_critical_section( void )
 {
-	cpu_irq_leave_critical();
+    cpu_irq_leave_critical();
 }
 
 /** @} */
@@ -268,9 +273,9 @@ static inline void system_interrupt_leave_critical_section(void)
  * \retval false  Global interrupts are currently disabled
  *
  */
-static inline bool system_interrupt_is_global_enabled(void)
+static inline bool system_interrupt_is_global_enabled( void )
 {
-	return cpu_irq_is_enabled();
+    return cpu_irq_is_enabled();
 }
 
 /**
@@ -278,9 +283,9 @@ static inline bool system_interrupt_is_global_enabled(void)
  *
  * Enables global interrupts in the device to fire any enabled interrupt handlers.
  */
-static inline void system_interrupt_enable_global(void)
+static inline void system_interrupt_enable_global( void )
 {
-	cpu_irq_enable();
+    cpu_irq_enable();
 }
 
 /**
@@ -289,9 +294,9 @@ static inline void system_interrupt_enable_global(void)
  * Disabled global interrupts in the device, preventing any enabled interrupt
  * handlers from executing.
  */
-static inline void system_interrupt_disable_global(void)
+static inline void system_interrupt_disable_global( void )
 {
-	cpu_irq_disable();
+    cpu_irq_disable();
 }
 
 /**
@@ -307,10 +312,9 @@ static inline void system_interrupt_disable_global(void)
  * \retval false  Specified interrupt vector is currently disabled
  *
  */
-static inline bool system_interrupt_is_enabled(
-		const enum system_interrupt_vector vector)
+static inline bool system_interrupt_is_enabled( const enum system_interrupt_vector vector )
 {
-	return (bool)((NVIC->ISER[0] >> (uint32_t)vector) & 0x00000001);
+    return ( bool ) ( ( NVIC->ISER[ 0 ] >> ( uint32_t ) vector ) & 0x00000001 );
 }
 
 /**
@@ -320,10 +324,9 @@ static inline bool system_interrupt_is_enabled(
  *
  * \param[in] vector Interrupt vector to enable
  */
-static inline void system_interrupt_enable(
-		const enum system_interrupt_vector vector)
+static inline void system_interrupt_enable( const enum system_interrupt_vector vector )
 {
-	NVIC->ISER[0] = (uint32_t)(1 << ((uint32_t)vector & 0x0000001f));
+    NVIC->ISER[ 0 ] = ( uint32_t ) ( 1 << ( ( uint32_t ) vector & 0x0000001f ) );
 }
 
 /**
@@ -333,10 +336,9 @@ static inline void system_interrupt_enable(
  *
  * \param[in] vector  Interrupt vector to disable
  */
-static inline void system_interrupt_disable(
-		const enum system_interrupt_vector vector)
+static inline void system_interrupt_disable( const enum system_interrupt_vector vector )
 {
-	NVIC->ICER[0] = (uint32_t)(1 << ((uint32_t)vector & 0x0000001f));
+    NVIC->ICER[ 0 ] = ( uint32_t ) ( 1 << ( ( uint32_t ) vector & 0x0000001f ) );
 }
 
 /** @} */
@@ -353,21 +355,18 @@ static inline void system_interrupt_disable(
  *
  * \return Interrupt number that is currently executing.
  */
-static inline enum system_interrupt_vector system_interrupt_get_active(void)
+static inline enum system_interrupt_vector system_interrupt_get_active( void )
 {
-	uint32_t IPSR = __get_IPSR();
+    uint32_t IPSR = __get_IPSR();
 
-	return (enum system_interrupt_vector)(IPSR & _SYSTEM_INTERRUPT_IPSR_MASK);
+    return ( enum system_interrupt_vector ) ( IPSR & _SYSTEM_INTERRUPT_IPSR_MASK );
 }
 
-bool system_interrupt_is_pending(
-		const enum system_interrupt_vector vector);
+bool system_interrupt_is_pending( const enum system_interrupt_vector vector );
 
-enum status_code system_interrupt_set_pending(
-		const enum system_interrupt_vector vector);
+enum status_code system_interrupt_set_pending( const enum system_interrupt_vector vector );
 
-enum status_code system_interrupt_clear_pending(
-		const enum system_interrupt_vector vector);
+enum status_code system_interrupt_clear_pending( const enum system_interrupt_vector vector );
 
 /** @} */
 
@@ -376,12 +375,10 @@ enum status_code system_interrupt_clear_pending(
  * @{
  */
 
-enum status_code system_interrupt_set_priority(
-		const enum system_interrupt_vector vector,
-		const enum system_interrupt_priority_level priority_level);
+enum status_code system_interrupt_set_priority( const enum system_interrupt_vector vector,
+                                                const enum system_interrupt_priority_level priority_level );
 
-enum system_interrupt_priority_level system_interrupt_get_priority(
-		const enum system_interrupt_vector vector);
+enum system_interrupt_priority_level system_interrupt_get_priority( const enum system_interrupt_vector vector );
 
 /** @} */
 
@@ -464,4 +461,4 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * </table>
  */
 
-#endif
+#endif /* ifndef SYSTEM_INTERRUPT_H_INCLUDED */

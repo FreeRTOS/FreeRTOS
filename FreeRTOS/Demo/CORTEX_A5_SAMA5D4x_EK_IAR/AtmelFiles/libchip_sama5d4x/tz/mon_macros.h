@@ -58,54 +58,53 @@
  * Secure Configuration Register
  */
 
-#define NS_BIT		        0x01
-#define SCR_NW_BIT		0x25
-#define SCR_SW_BIT		0x22
+#define NS_BIT                0x01
+#define SCR_NW_BIT            0x25
+#define SCR_SW_BIT            0x22
 
 /*
  *----------------------------------------------------------------------------
  * Standard definitions of ARM processor mode bits
  *----------------------------------------------------------------------------
  */
-#define MODE_MSK         0x1F            // Bit mask for mode bits in CPSR
-#define ARM_MODE_ABT     0x17
-#define ARM_MODE_FIQ     0x11
-#define ARM_MODE_IRQ     0x12
-#define ARM_MODE_SVC     0x13
-#define ARM_MODE_MON     0x16
-#define ARM_MODE_SYS     0x1F
-#define ARM_MODE_UND     0x1B
-#define I_BIT            0x80
-#define F_BIT            0x40
+#define MODE_MSK              0x1F       /* Bit mask for mode bits in CPSR */
+#define ARM_MODE_ABT          0x17
+#define ARM_MODE_FIQ          0x11
+#define ARM_MODE_IRQ          0x12
+#define ARM_MODE_SVC          0x13
+#define ARM_MODE_MON          0x16
+#define ARM_MODE_SYS          0x1F
+#define ARM_MODE_UND          0x1B
+#define I_BIT                 0x80
+#define F_BIT                 0x40
 
-#define CHANGE_TO_SVC_MODE    asm volatile ("CPS   #0x13");
-#define CHANGE_TO_MON_MODE    asm volatile ("CPS   #0x16");
-
-
-#define INITIAL_NWD_STATE	0x1D3
-   
+#define CHANGE_TO_SVC_MODE    asm volatile ( "CPS   #0x13" );
+#define CHANGE_TO_MON_MODE    asm volatile ( "CPS   #0x16" );
 
 
-#define Struct_size            0x54
-   
+#define INITIAL_NWD_STATE     0x1D3
+
+
+
+#define Struct_size           0x54
+
 /* Stacks configuration */
-#define STACK_SIZE		0x1FF
-#define MON_DATA_BASE_SIZE	0x100
+#define STACK_SIZE            0x1FF
+#define MON_DATA_BASE_SIZE    0x100
 
 /* Stacks are descending */
-#if defined (ddram)   
-    #define MON_DATA_BASE       0x23FFFE00
-    #define MON_DATA_END        0x24000000
-#elif defined (sram)   
-   #define MON_DATA_BASE        0x21FE00
-   #define MON_DATA_END         0x220000   
+#if defined( ddram )
+    #define MON_DATA_BASE    0x23FFFE00
+    #define MON_DATA_END     0x24000000
+#elif defined( sram )
+    #define MON_DATA_BASE    0x21FE00
+    #define MON_DATA_END     0x220000
 #else
-    #define MON_DATA_BASE       0x23FFFE00
-    #define MON_DATA_END        0x24000000
+    #define MON_DATA_BASE    0x23FFFE00
+    #define MON_DATA_END     0x24000000
 #endif
 
 
-#define MON_DATA_SIZE           ((MON_DATA_END - MON_DATA_BASE) >> 2)
+#define MON_DATA_SIZE    ( ( MON_DATA_END - MON_DATA_BASE ) >> 2 )
 
 #endif /* #ifndef __MON_MACROS_H__ */
-

@@ -52,7 +52,7 @@
  * Related files :\n
  * \ref pit.c\n
  * \ref pit.h.\n
-*/
+ */
 /*@{*/
 /*@}*/
 
@@ -62,6 +62,7 @@
  * Implementation of PIT (Periodic Interval Timer) controller.
  *
  */
+
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
@@ -74,55 +75,57 @@
  *         Exported functions
  *------------------------------------------------------------------------------*/
 
-void pit_init(uint32_t period)
+void pit_init( uint32_t period )
 {
-	uint32_t pit_frequency = pmc_get_peripheral_clock(ID_PIT) / 1000000;
-	PIT->PIT_MR = period ? (period * pit_frequency + 8) >> 4 : 0;
-	PIT->PIT_MR |= PIT_MR_PITEN;
+    uint32_t pit_frequency = pmc_get_peripheral_clock( ID_PIT ) / 1000000;
+
+    PIT->PIT_MR = period ? ( period * pit_frequency + 8 ) >> 4 : 0;
+    PIT->PIT_MR |= PIT_MR_PITEN;
 }
 
-void pit_set_piv(uint32_t piv)
+void pit_set_piv( uint32_t piv )
 {
-	uint32_t dwMr = PIT->PIT_MR & (~PIT_MR_PIV_Msk);
-	PIT->PIT_MR = dwMr | PIT_MR_PIV(piv);
+    uint32_t dwMr = PIT->PIT_MR & ( ~PIT_MR_PIV_Msk );
+
+    PIT->PIT_MR = dwMr | PIT_MR_PIV( piv );
 }
 
-void pit_enable(void)
+void pit_enable( void )
 {
-	PIT->PIT_MR |= PIT_MR_PITEN;
+    PIT->PIT_MR |= PIT_MR_PITEN;
 }
 
-void pit_disable(void)
+void pit_disable( void )
 {
-	PIT->PIT_MR &= ~PIT_MR_PITEN;
+    PIT->PIT_MR &= ~PIT_MR_PITEN;
 }
 
-void pit_enable_it(void)
+void pit_enable_it( void )
 {
-	PIT->PIT_MR |= PIT_MR_PITIEN;
+    PIT->PIT_MR |= PIT_MR_PITIEN;
 }
 
-void pit_disable_it(void)
+void pit_disable_it( void )
 {
-	PIT->PIT_MR &= ~PIT_MR_PITIEN;
+    PIT->PIT_MR &= ~PIT_MR_PITIEN;
 }
 
-uint32_t pit_get_mode(void)
+uint32_t pit_get_mode( void )
 {
-	return PIT->PIT_MR;
+    return PIT->PIT_MR;
 }
 
-uint32_t pit_get_status(void)
+uint32_t pit_get_status( void )
 {
-	return PIT->PIT_SR;
+    return PIT->PIT_SR;
 }
 
-uint32_t pit_get_piir(void)
+uint32_t pit_get_piir( void )
 {
-	return PIT->PIT_PIIR;
+    return PIT->PIT_PIIR;
 }
 
-uint32_t pit_get_pivr(void)
+uint32_t pit_get_pivr( void )
 {
-	return PIT->PIT_PIVR;
+    return PIT->PIT_PIVR;
 }

@@ -60,11 +60,11 @@
  * \param header Wav header information.
  * \return true if the header of a Wav file is valid; otherwise returns false.
  */
-bool wav_is_valid(const struct _wav_header *header)
+bool wav_is_valid( const struct _wav_header * header )
 {
-	return (header->chunk_id == WAV_CHUNKID
-			&& header->format == WAV_FORMAT
-			&& header->subchunk1_size == 0x10);
+    return( header->chunk_id == WAV_CHUNKID &&
+            header->format == WAV_FORMAT &&
+            header->subchunk1_size == 0x10 );
 }
 
 /**
@@ -74,34 +74,34 @@ bool wav_is_valid(const struct _wav_header *header)
  * \param header Wav header information.
  */
 
-void wav_display_info(const struct _wav_header *header)
+void wav_display_info( const struct _wav_header * header )
 {
-	printf("Wave file header information\n\r");
-	printf("--------------------------------\n\r");
-	printf("  - Chunk ID        = 0x%08X\n\r",
-			(unsigned int)header->chunk_id);
-	printf("  - Chunk Size      = %u\n\r",
-			(unsigned int)header->chunk_size);
-	printf("  - Format          = 0x%08X\n\r",
-			(unsigned int)header->format);
-	printf("  - SubChunk ID     = 0x%08X\n\r",
-			(unsigned int)header->subchunk1_id);
-	printf("  - Subchunk1 Size  = %u\n\r",
-			(unsigned int)header->subchunk1_size);
-	printf("  - Audio Format    = 0x%04X\n\r",
-			(unsigned int)header->audio_format);
-	printf("  - Num. Channels   = %d\n\r",
-			(unsigned int)header->num_channels);
-	printf("  - Sample Rate     = %u\n\r",
-			(unsigned int)header->sample_rate);
-	printf("  - Byte Rate       = %u\n\r",
-			(unsigned int)header->byte_rate);
-	printf("  - Block Align     = %d\n\r",
-			(unsigned int)header->block_align);
-	printf("  - Bits Per Sample = %d\n\r",
-			(unsigned int)header->bits_per_sample);
-	printf("  - Subchunk2 ID    = 0x%08X\n\r",
-			(unsigned int)header->subchunk2_id);
-	printf("  - Subchunk2 Size  = %u\n\r",
-			(unsigned int)header->subchunk2_size);
+    printf( "Wave file header information\n\r" );
+    printf( "--------------------------------\n\r" );
+    printf( "  - Chunk ID        = 0x%08X\n\r",
+            ( unsigned int ) header->chunk_id );
+    printf( "  - Chunk Size      = %u\n\r",
+            ( unsigned int ) header->chunk_size );
+    printf( "  - Format          = 0x%08X\n\r",
+            ( unsigned int ) header->format );
+    printf( "  - SubChunk ID     = 0x%08X\n\r",
+            ( unsigned int ) header->subchunk1_id );
+    printf( "  - Subchunk1 Size  = %u\n\r",
+            ( unsigned int ) header->subchunk1_size );
+    printf( "  - Audio Format    = 0x%04X\n\r",
+            ( unsigned int ) header->audio_format );
+    printf( "  - Num. Channels   = %d\n\r",
+            ( unsigned int ) header->num_channels );
+    printf( "  - Sample Rate     = %u\n\r",
+            ( unsigned int ) header->sample_rate );
+    printf( "  - Byte Rate       = %u\n\r",
+            ( unsigned int ) header->byte_rate );
+    printf( "  - Block Align     = %d\n\r",
+            ( unsigned int ) header->block_align );
+    printf( "  - Bits Per Sample = %d\n\r",
+            ( unsigned int ) header->bits_per_sample );
+    printf( "  - Subchunk2 ID    = 0x%08X\n\r",
+            ( unsigned int ) header->subchunk2_id );
+    printf( "  - Subchunk2 Size  = %u\n\r",
+            ( unsigned int ) header->subchunk2_size );
 }

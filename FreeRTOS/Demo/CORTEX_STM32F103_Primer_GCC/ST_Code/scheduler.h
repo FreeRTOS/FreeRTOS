@@ -1,13 +1,14 @@
 /********************* (C) COPYRIGHT 2007 RAISONANCE S.A.S. *******************/
+
 /**
-*
-* @file     scheduler.h
-* @brief    Header file for the SysTick interrupt handler of the CircleOS project.
-* @author   FL
-* @author   IB
-* @date     07/2007
-*
-**/
+ *
+ * @file     scheduler.h
+ * @brief    Header file for the SysTick interrupt handler of the CircleOS project.
+ * @author   FL
+ * @author   IB
+ * @date     07/2007
+ *
+ **/
 /******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -70,12 +71,12 @@ void EXTI15_10_IRQHandler( void );
 void RTCAlarm_IRQHandler( void );
 void USBWakeUp_IRQHandler( void );
 
-//FL071107 Make the scheduler configurable. The handler are inserted into a list that could
-//be modified by the applications.
-typedef void  (*tHandler)    ( void );
-extern tHandler SchHandler [16+1];
-#define SCH_HDL_MAX   ( sizeof SchHandler / sizeof (tHandler) )
+/*FL071107 Make the scheduler configurable. The handler are inserted into a list that could */
+/*be modified by the applications. */
+typedef void (* tHandler)    ( void );
+extern tHandler SchHandler[ 16 + 1 ];
+#define SCH_HDL_MAX    ( sizeof SchHandler / sizeof( tHandler ) )
 
 
-					 
+
 #endif /* __STM32F10x_IT_H */

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,98 +27,96 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-///
-/// Interface for configuration the LCD Controller (LCDC) peripheral.
-///
-/// !Usage
-///
-/// -# Decode the RGB file to designated buffer using LCD_DecodeRGB().
-/// -# Sets the address of the frame buffer in the LCD controller DMA using
-/// LCD_SetFrameBufferAddress().
-/// -# LCD Configuration functions prefixed with "LCD_Set" refer to 
-/// the functions in the #Overview# tab.
-/// 
-/// Please refer to the list of functions in the #Overview# tab of this unit
-/// for more detailed information.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Interface for configuration the LCD Controller (LCDC) peripheral. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Decode the RGB file to designated buffer using LCD_DecodeRGB(). */
+/*/ -# Sets the address of the frame buffer in the LCD controller DMA using */
+/*/ LCD_SetFrameBufferAddress(). */
+/*/ -# LCD Configuration functions prefixed with "LCD_Set" refer to */
+/*/ the functions in the #Overview# tab. */
+/*/ */
+/*/ Please refer to the list of functions in the #Overview# tab of this unit */
+/*/ for more detailed information. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef LCD_H
 #define LCD_H
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
 
-extern void LCD_Enable(unsigned int frames);
+extern void LCD_Enable( unsigned int frames );
 
-extern void LCD_Disable(unsigned int frames);
+extern void LCD_Disable( unsigned int frames );
 
-extern void LCD_EnableDma(void);
+extern void LCD_EnableDma( void );
 
-extern void LCD_DisableDma(void);
+extern void LCD_DisableDma( void );
 
-extern void LCD_EnableInterrupts(unsigned int sources);
+extern void LCD_EnableInterrupts( unsigned int sources );
 
-extern void LCD_SetPixelClock(unsigned int masterClock, unsigned int pixelClock);
+extern void LCD_SetPixelClock( unsigned int masterClock,
+                               unsigned int pixelClock );
 
-extern void LCD_SetDisplayType(unsigned int displayType);
+extern void LCD_SetDisplayType( unsigned int displayType );
 
-extern void LCD_SetScanMode(unsigned int scanMode);
+extern void LCD_SetScanMode( unsigned int scanMode );
 
-extern void LCD_SetBitsPerPixel(unsigned int bitsPerPixel);
+extern void LCD_SetBitsPerPixel( unsigned int bitsPerPixel );
 
-extern void LCD_SetPolarities(
-    unsigned int lcdd,
-    unsigned int lcdvsync,
-    unsigned int lcdhsync,
-    unsigned int lcddotclk,
-    unsigned int lcdden);
+extern void LCD_SetPolarities( unsigned int lcdd,
+                               unsigned int lcdvsync,
+                               unsigned int lcdhsync,
+                               unsigned int lcddotclk,
+                               unsigned int lcdden );
 
-extern void LCD_SetClockMode(unsigned int clockMode);
+extern void LCD_SetClockMode( unsigned int clockMode );
 
-extern void LCD_SetMemoryFormat(unsigned int format);
+extern void LCD_SetMemoryFormat( unsigned int format );
 
-extern void LCD_SetSize(unsigned int width, unsigned int height);
+extern void LCD_SetSize( unsigned int width,
+                         unsigned int height );
 
-extern void LCD_SetVerticalTimings(
-    unsigned int vfp,
-    unsigned int vbp,
-    unsigned int vpw,
-    unsigned int vhdly);
+extern void LCD_SetVerticalTimings( unsigned int vfp,
+                                    unsigned int vbp,
+                                    unsigned int vpw,
+                                    unsigned int vhdly );
 
-extern void LCD_SetHorizontalTimings(
-    unsigned int hbp,
-    unsigned int hpw,
-    unsigned int hfp);
+extern void LCD_SetHorizontalTimings( unsigned int hbp,
+                                      unsigned int hpw,
+                                      unsigned int hfp );
 
-extern void* LCD_SetFrameBufferAddress(void *address);
+extern void * LCD_SetFrameBufferAddress( void * address );
 
-extern void LCD_SetFrameSize(unsigned int frameSize);
+extern void LCD_SetFrameSize( unsigned int frameSize );
 
-extern void LCD_SetBurstLength(unsigned int burstLength);
+extern void LCD_SetBurstLength( unsigned int burstLength );
 
-extern void LCD_SetContrastPrescaler(unsigned int prescaler);
+extern void LCD_SetContrastPrescaler( unsigned int prescaler );
 
-extern void LCD_SetContrastPolarity(unsigned int polarity);
+extern void LCD_SetContrastPolarity( unsigned int polarity );
 
-extern void LCD_SetContrastValue(unsigned int value);
+extern void LCD_SetContrastValue( unsigned int value );
 
-extern void LCD_EnableContrast(void);
+extern void LCD_EnableContrast( void );
 
-extern void LCD_SetPixelClock(unsigned int masterClock, unsigned int pixelClock);
+extern void LCD_SetPixelClock( unsigned int masterClock,
+                               unsigned int pixelClock );
 
-extern void LCD_DMAReset(void);
+extern void LCD_DMAReset( void );
 
-extern void LCD_DecodeRGB(
-    unsigned char *file,
-    unsigned char *bufferLCD,
-    unsigned int width,
-    unsigned int height,
-    unsigned char bpp);
+extern void LCD_DecodeRGB( unsigned char * file,
+                           unsigned char * bufferLCD,
+                           unsigned int width,
+                           unsigned int height,
+                           unsigned char bpp );
 
 #endif //#ifndef LCD_H
-

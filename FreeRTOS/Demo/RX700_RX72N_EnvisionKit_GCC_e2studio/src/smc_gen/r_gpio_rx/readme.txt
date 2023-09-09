@@ -1,4 +1,4 @@
-﻿PLEASE REFER TO THE APPLICATION NOTE FOR THIS MODULE FOR MORE INFORMATION 
+PLEASE REFER TO THE APPLICATION NOTE FOR THIS MODULE FOR MORE INFORMATION
 
 r_gpio_rx
 =========
@@ -21,28 +21,28 @@ File Structure
 r_gpio_rx
 |   readme.txt
 |   r_gpio_rx_if.h
-|   
+|
 +---doc
 |   +---ja
 |   |    r01an1721jj{VERSION_NUMBER}-rx-gpio.pdf
 |   +---en
 |        r01an1721ej{VERSION_NUMBER}-rx-gpio.pdf
-|       
+|
 +---ref
 |       r_gpio_rx_config_reference.h
-|       
+|
 \---src
     |   r_gpio_rx.c
-    |   
+    |
     \---targets
         +---rx110
         |       r_gpio_rx110.c
         |       r_gpio_rx110.h
-        |       
+        |
         +---rx111
         |       r_gpio_rx111.c
         |       r_gpio_rx111.h
-        |       
+        |
         :
 
 r_config

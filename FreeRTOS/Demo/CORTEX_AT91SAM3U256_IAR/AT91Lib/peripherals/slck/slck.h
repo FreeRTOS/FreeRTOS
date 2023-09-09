@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,20 +30,20 @@
 #ifndef SLCK_H
 #define SLCK_H
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern unsigned char SLCK_Is32k(void);
+extern unsigned char SLCK_Is32k( void );
 
-extern void SLCK_RCto32k(void);
+extern void SLCK_RCto32k( void );
 
-extern void SLCK_32ktoRC(void);
+extern void SLCK_32ktoRC( void );
 
-extern void SLCK_bypass32Kosc(void);
+extern void SLCK_bypass32Kosc( void );
 
-extern void SLCK_UtilSetSlowClockMode(unsigned int timeInSlowClockMode);
+extern void SLCK_UtilSetSlowClockMode( unsigned int timeInSlowClockMode );
 
-extern unsigned int SLCK_UtilGetFreq(void);
+extern unsigned int SLCK_UtilGetFreq( void );
 
 #endif //#ifndef SLCK_H

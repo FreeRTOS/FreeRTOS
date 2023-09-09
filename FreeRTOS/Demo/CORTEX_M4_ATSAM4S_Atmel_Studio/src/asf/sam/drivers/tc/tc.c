@@ -44,15 +44,15 @@
 #include <assert.h>
 #include "tc.h"
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
-#define TC_WPMR_WPKEY_VALUE TC_WPMR_WPKEY((uint32_t)0x54494D)
+#define TC_WPMR_WPKEY_VALUE    TC_WPMR_WPKEY( ( uint32_t ) 0x54494D )
 
 /**
  * \defgroup sam_drivers_tc_group Timer Counter (TC)
@@ -81,25 +81,27 @@ extern "C" {
  * external event trigger has not been enabled with \c TC_CMR_ENETRG, and
  * thus prevents normal operation of TIOB.
  */
-void tc_init(Tc *p_tc, uint32_t ul_channel, uint32_t ul_mode)
+void tc_init( Tc * p_tc,
+              uint32_t ul_channel,
+              uint32_t ul_mode )
 {
-	TcChannel *tc_channel;
+    TcChannel * tc_channel;
 
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
-	tc_channel = p_tc->TC_CHANNEL + ul_channel;
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
+    tc_channel = p_tc->TC_CHANNEL + ul_channel;
 
-	/*  Disable TC clock. */
-	tc_channel->TC_CCR = TC_CCR_CLKDIS;
+    /*  Disable TC clock. */
+    tc_channel->TC_CCR = TC_CCR_CLKDIS;
 
-	/*  Disable interrupts. */
-	tc_channel->TC_IDR = 0xFFFFFFFF;
+    /*  Disable interrupts. */
+    tc_channel->TC_IDR = 0xFFFFFFFF;
 
-	/*  Clear status register. */
-	tc_channel->TC_SR;
+    /*  Clear status register. */
+    tc_channel->TC_SR;
 
-	/*  Set mode. */
-	tc_channel->TC_CMR = ul_mode;
+    /*  Set mode. */
+    tc_channel->TC_CMR = ul_mode;
 }
 
 /**
@@ -109,9 +111,9 @@ void tc_init(Tc *p_tc, uint32_t ul_channel, uint32_t ul_mode)
  * \param p_tc Pointer to a TC instance.
  *
  */
-void tc_sync_trigger(Tc *p_tc)
+void tc_sync_trigger( Tc * p_tc )
 {
-  p_tc->TC_BCR = TC_BCR_SYNC;
+    p_tc->TC_BCR = TC_BCR_SYNC;
 }
 
 /**
@@ -122,12 +124,13 @@ void tc_sync_trigger(Tc *p_tc)
  * \param ul_blockmode Block mode register value to set.
  *
  */
-void tc_set_block_mode(Tc *p_tc, uint32_t ul_blockmode)
+void tc_set_block_mode( Tc * p_tc,
+                        uint32_t ul_blockmode )
 {
-	p_tc->TC_BMR = ul_blockmode;
+    p_tc->TC_BMR = ul_blockmode;
 }
 
-#if (!SAM3U)
+#if ( !SAM3U )
 
 /**
  * \brief Configure TC for 2-bit Gray Counter for Stepper Motor.
@@ -139,17 +142,18 @@ void tc_set_block_mode(Tc *p_tc, uint32_t ul_blockmode)
  *
  * \return 0 for OK.
  */
-uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_steppermode)
-{
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    uint32_t tc_init_2bit_gray( Tc * p_tc,
+                                uint32_t ul_channel,
+                                uint32_t ul_steppermode )
+    {
+        Assert( ul_channel <
+                ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	p_tc->TC_CHANNEL[ul_channel].TC_SMMR = ul_steppermode;
-	return 0;
-}
+        p_tc->TC_CHANNEL[ ul_channel ].TC_SMMR = ul_steppermode;
+        return 0;
+    }
 
-#endif
+#endif /* if ( !SAM3U ) */
 
 /**
  * \brief Start TC clock counter on the selected channel.
@@ -157,12 +161,13 @@ uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
  * \param p_tc Pointer to a TC instance.
  * \param ul_channel Channel to configure.
  */
-void tc_start(Tc *p_tc, uint32_t ul_channel)
+void tc_start( Tc * p_tc,
+               uint32_t ul_channel )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	p_tc->TC_CHANNEL[ul_channel].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
+    p_tc->TC_CHANNEL[ ul_channel ].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
 }
 
 /**
@@ -171,12 +176,13 @@ void tc_start(Tc *p_tc, uint32_t ul_channel)
  * \param p_tc Pointer to a TC instance.
  * \param ul_channel Channel to configure.
  */
-void tc_stop(Tc *p_tc, uint32_t ul_channel)
+void tc_stop( Tc * p_tc,
+              uint32_t ul_channel )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	p_tc->TC_CHANNEL[ul_channel].TC_CCR = TC_CCR_CLKDIS;
+    p_tc->TC_CHANNEL[ ul_channel ].TC_CCR = TC_CCR_CLKDIS;
 }
 
 /**
@@ -187,12 +193,13 @@ void tc_stop(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RA value.
  */
-int tc_read_ra(Tc *p_tc, uint32_t ul_channel)
+int tc_read_ra( Tc * p_tc,
+                uint32_t ul_channel )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	return p_tc->TC_CHANNEL[ul_channel].TC_RA;
+    return p_tc->TC_CHANNEL[ ul_channel ].TC_RA;
 }
 
 /**
@@ -203,12 +210,13 @@ int tc_read_ra(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RB value.
  */
-int tc_read_rb(Tc *p_tc, uint32_t ul_channel)
+int tc_read_rb( Tc * p_tc,
+                uint32_t ul_channel )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	return p_tc->TC_CHANNEL[ul_channel].TC_RB;
+    return p_tc->TC_CHANNEL[ ul_channel ].TC_RB;
 }
 
 /**
@@ -219,12 +227,13 @@ int tc_read_rb(Tc *p_tc, uint32_t ul_channel)
  *
  * \return RC value.
  */
-int tc_read_rc(Tc *p_tc, uint32_t ul_channel)
+int tc_read_rc( Tc * p_tc,
+                uint32_t ul_channel )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	return p_tc->TC_CHANNEL[ul_channel].TC_RC;
+    return p_tc->TC_CHANNEL[ ul_channel ].TC_RC;
 }
 
 /**
@@ -234,13 +243,14 @@ int tc_read_rc(Tc *p_tc, uint32_t ul_channel)
  * \param ul_channel Channel to configure.
  * \param ul_value Value to set in register.
  */
-void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_value)
+void tc_write_ra( Tc * p_tc,
+                  uint32_t ul_channel,
+                  uint32_t ul_value )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	p_tc->TC_CHANNEL[ul_channel].TC_RA = ul_value;
+    p_tc->TC_CHANNEL[ ul_channel ].TC_RA = ul_value;
 }
 
 /**
@@ -250,13 +260,14 @@ void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_value Value to set in register.
  */
-void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_value)
+void tc_write_rb( Tc * p_tc,
+                  uint32_t ul_channel,
+                  uint32_t ul_value )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	p_tc->TC_CHANNEL[ul_channel].TC_RB = ul_value;
+    p_tc->TC_CHANNEL[ ul_channel ].TC_RB = ul_value;
 }
 
 /**
@@ -266,13 +277,14 @@ void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_value Value to set in register.
  */
-void tc_write_rc(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_value)
+void tc_write_rc( Tc * p_tc,
+                  uint32_t ul_channel,
+                  uint32_t ul_value )
 {
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
 
-	p_tc->TC_CHANNEL[ul_channel].TC_RC = ul_value;
+    p_tc->TC_CHANNEL[ ul_channel ].TC_RC = ul_value;
 }
 
 /**
@@ -282,15 +294,16 @@ void tc_write_rc(Tc *p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_sources Interrupt sources bit map.
  */
-void tc_enable_interrupt(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_sources)
+void tc_enable_interrupt( Tc * p_tc,
+                          uint32_t ul_channel,
+                          uint32_t ul_sources )
 {
-	TcChannel *tc_channel;
+    TcChannel * tc_channel;
 
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
-	tc_channel = p_tc->TC_CHANNEL + ul_channel;
-	tc_channel->TC_IER = ul_sources;
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
+    tc_channel = p_tc->TC_CHANNEL + ul_channel;
+    tc_channel->TC_IER = ul_sources;
 }
 
 /**
@@ -300,15 +313,16 @@ void tc_enable_interrupt(Tc *p_tc, uint32_t ul_channel,
  * \param ul_channel Channel to configure.
  * \param ul_sources Interrupt sources bit map.
  */
-void tc_disable_interrupt(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_sources)
+void tc_disable_interrupt( Tc * p_tc,
+                           uint32_t ul_channel,
+                           uint32_t ul_sources )
 {
-	TcChannel *tc_channel;
+    TcChannel * tc_channel;
 
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
-	tc_channel = p_tc->TC_CHANNEL + ul_channel;
-	tc_channel->TC_IDR = ul_sources;
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
+    tc_channel = p_tc->TC_CHANNEL + ul_channel;
+    tc_channel->TC_IDR = ul_sources;
 }
 
 /**
@@ -319,14 +333,15 @@ void tc_disable_interrupt(Tc *p_tc, uint32_t ul_channel,
  *
  * \return The interrupt mask value.
  */
-uint32_t tc_get_interrupt_mask(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_get_interrupt_mask( Tc * p_tc,
+                                uint32_t ul_channel )
 {
-	TcChannel *tc_channel;
+    TcChannel * tc_channel;
 
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
-	tc_channel = p_tc->TC_CHANNEL + ul_channel;
-	return tc_channel->TC_IMR;
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
+    tc_channel = p_tc->TC_CHANNEL + ul_channel;
+    return tc_channel->TC_IMR;
 }
 
 /**
@@ -337,24 +352,25 @@ uint32_t tc_get_interrupt_mask(Tc *p_tc, uint32_t ul_channel)
  *
  * \return The current TC status.
  */
-uint32_t tc_get_status(Tc *p_tc, uint32_t ul_channel)
+uint32_t tc_get_status( Tc * p_tc,
+                        uint32_t ul_channel )
 {
-	TcChannel *tc_channel;
+    TcChannel * tc_channel;
 
-	Assert(ul_channel <
-			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
-	tc_channel = p_tc->TC_CHANNEL + ul_channel;
-	return tc_channel->TC_SR;
+    Assert( ul_channel <
+            ( sizeof( p_tc->TC_CHANNEL ) / sizeof( p_tc->TC_CHANNEL[ 0 ] ) ) );
+    tc_channel = p_tc->TC_CHANNEL + ul_channel;
+    return tc_channel->TC_SR;
 }
 
 /* TC divisor used to find the lowest acceptable timer frequency */
-#define TC_DIV_FACTOR 65536
+#define TC_DIV_FACTOR    65536
 
-#if (!SAM4L)
+#if ( !SAM4L )
 
-#ifndef FREQ_SLOW_CLOCK_EXT
-#define FREQ_SLOW_CLOCK_EXT 32768 /* External slow clock frequency (hz) */
-#endif
+    #ifndef FREQ_SLOW_CLOCK_EXT
+        #define FREQ_SLOW_CLOCK_EXT    32768/* External slow clock frequency (hz) */
+    #endif
 
 /**
  * \brief Find the best MCK divisor.
@@ -375,45 +391,61 @@ uint32_t tc_get_status(Tc *p_tc, uint32_t ul_channel)
  *
  * \return 1 if a proper divisor has been found, otherwise 0.
  */
-uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
-		uint32_t *p_uldiv, uint32_t *p_ultcclks, uint32_t ul_boardmck)
-{
-	const uint32_t divisors[5] = { 2, 8, 32, 128,
-			ul_boardmck / FREQ_SLOW_CLOCK_EXT };
-	uint32_t ul_index;
-	uint32_t ul_high, ul_low;
+    uint32_t tc_find_mck_divisor( uint32_t ul_freq,
+                                  uint32_t ul_mck,
+                                  uint32_t * p_uldiv,
+                                  uint32_t * p_ultcclks,
+                                  uint32_t ul_boardmck )
+    {
+        const uint32_t divisors[ 5 ] =
+        {
+            2, 8, 32, 128,
+            ul_boardmck / FREQ_SLOW_CLOCK_EXT
+        };
+        uint32_t ul_index;
+        uint32_t ul_high, ul_low;
 
-	/*  Satisfy frequency bound. */
-	for (ul_index = 0;
-			ul_index < (sizeof(divisors) / sizeof(divisors[0]));
-			ul_index++) {
-		ul_high = ul_mck / divisors[ul_index];
-		ul_low  = ul_high / TC_DIV_FACTOR;
-		if (ul_freq > ul_high) {
-			return 0;
-		} else if (ul_freq >= ul_low) {
-			break;
-		}
-	}
-	if (ul_index >= (sizeof(divisors) / sizeof(divisors[0]))) {
-		return 0;
-	}
+        /*  Satisfy frequency bound. */
+        for( ul_index = 0;
+             ul_index < ( sizeof( divisors ) / sizeof( divisors[ 0 ] ) );
+             ul_index++ )
+        {
+            ul_high = ul_mck / divisors[ ul_index ];
+            ul_low = ul_high / TC_DIV_FACTOR;
 
-	/*  Store results. */
-	if (p_uldiv) {
-		*p_uldiv = divisors[ul_index];
-	}
+            if( ul_freq > ul_high )
+            {
+                return 0;
+            }
+            else if( ul_freq >= ul_low )
+            {
+                break;
+            }
+        }
 
-	if (p_ultcclks) {
-		*p_ultcclks = ul_index;
-	}
+        if( ul_index >= ( sizeof( divisors ) / sizeof( divisors[ 0 ] ) ) )
+        {
+            return 0;
+        }
 
-	return 1;
-}
+        /*  Store results. */
+        if( p_uldiv )
+        {
+            *p_uldiv = divisors[ ul_index ];
+        }
 
-#endif
+        if( p_ultcclks )
+        {
+            *p_ultcclks = ul_index;
+        }
 
-#if (SAM4L)
+        return 1;
+    }
+
+#endif /* if ( !SAM4L ) */
+
+#if ( SAM4L )
+
 /**
  * \brief Find the best PBA clock divisor.
  *
@@ -433,46 +465,58 @@ uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
  *
  * \return 1 if a proper divisor has been found, otherwise 0.
  */
-uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
-		uint32_t *p_uldiv, uint32_t *p_ultcclks, uint32_t ul_boardmck)
-{
-	const uint32_t divisors[5] = { 0, 2, 8, 32, 128};
-	uint32_t ul_index;
-	uint32_t ul_high, ul_low;
+    uint32_t tc_find_mck_divisor( uint32_t ul_freq,
+                                  uint32_t ul_mck,
+                                  uint32_t * p_uldiv,
+                                  uint32_t * p_ultcclks,
+                                  uint32_t ul_boardmck )
+    {
+        const uint32_t divisors[ 5 ] = { 0, 2, 8, 32, 128 };
+        uint32_t ul_index;
+        uint32_t ul_high, ul_low;
 
-	UNUSED(ul_boardmck);
+        UNUSED( ul_boardmck );
 
-	/*  Satisfy frequency bound. */
-	for (ul_index = 1;
-			ul_index < (sizeof(divisors) / sizeof(divisors[0]));
-			ul_index++) {
-		ul_high = ul_mck / divisors[ul_index];
-		ul_low  = ul_high / TC_DIV_FACTOR;
-		if (ul_freq > ul_high) {
-			return 0;
-		} else if (ul_freq >= ul_low) {
-			break;
-		}
-	}
-	if (ul_index >= (sizeof(divisors) / sizeof(divisors[0]))) {
-		return 0;
-	}
+        /*  Satisfy frequency bound. */
+        for( ul_index = 1;
+             ul_index < ( sizeof( divisors ) / sizeof( divisors[ 0 ] ) );
+             ul_index++ )
+        {
+            ul_high = ul_mck / divisors[ ul_index ];
+            ul_low = ul_high / TC_DIV_FACTOR;
 
-	/*  Store results. */
-	if (p_uldiv) {
-		*p_uldiv = divisors[ul_index];
-	}
+            if( ul_freq > ul_high )
+            {
+                return 0;
+            }
+            else if( ul_freq >= ul_low )
+            {
+                break;
+            }
+        }
 
-	if (p_ultcclks) {
-		*p_ultcclks = ul_index;
-	}
+        if( ul_index >= ( sizeof( divisors ) / sizeof( divisors[ 0 ] ) ) )
+        {
+            return 0;
+        }
 
-	return 1;
-}
+        /*  Store results. */
+        if( p_uldiv )
+        {
+            *p_uldiv = divisors[ ul_index ];
+        }
 
-#endif
+        if( p_ultcclks )
+        {
+            *p_ultcclks = ul_index;
+        }
 
-#if (!SAM4L)
+        return 1;
+    }
+
+#endif /* if ( SAM4L ) */
+
+#if ( !SAM4L )
 
 /**
  * \brief Enable TC QDEC interrupts.
@@ -480,10 +524,11 @@ uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
  * \param p_tc Pointer to a TC instance.
  * \param ul_sources Interrupts to be enabled.
  */
-void tc_enable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources)
-{
-	p_tc->TC_QIER = ul_sources;
-}
+    void tc_enable_qdec_interrupt( Tc * p_tc,
+                                   uint32_t ul_sources )
+    {
+        p_tc->TC_QIER = ul_sources;
+    }
 
 /**
  * \brief Disable TC QDEC interrupts.
@@ -491,10 +536,11 @@ void tc_enable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources)
  * \param p_tc Pointer to a TC instance.
  * \param ul_sources Interrupts to be disabled.
  */
-void tc_disable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources)
-{
-	p_tc->TC_QIDR = ul_sources;
-}
+    void tc_disable_qdec_interrupt( Tc * p_tc,
+                                    uint32_t ul_sources )
+    {
+        p_tc->TC_QIDR = ul_sources;
+    }
 
 /**
  * \brief Read TC QDEC interrupt mask.
@@ -503,10 +549,10 @@ void tc_disable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources)
  *
  * \return The interrupt mask value.
  */
-uint32_t tc_get_qdec_interrupt_mask(Tc *p_tc)
-{
-	return p_tc->TC_QIMR;
-}
+    uint32_t tc_get_qdec_interrupt_mask( Tc * p_tc )
+    {
+        return p_tc->TC_QIMR;
+    }
 
 /**
  * \brief Get current QDEC status.
@@ -515,14 +561,14 @@ uint32_t tc_get_qdec_interrupt_mask(Tc *p_tc)
  *
  * \return The current TC status.
  */
-uint32_t tc_get_qdec_interrupt_status(Tc *p_tc)
-{
-	return p_tc->TC_QISR;
-}
+    uint32_t tc_get_qdec_interrupt_status( Tc * p_tc )
+    {
+        return p_tc->TC_QISR;
+    }
 
-#endif
+#endif /* if ( !SAM4L ) */
 
-#if (!SAM3U)
+#if ( !SAM3U )
 
 /**
  * \brief Enable or disable write protection of TC registers.
@@ -530,16 +576,20 @@ uint32_t tc_get_qdec_interrupt_status(Tc *p_tc)
  * \param p_tc Pointer to a TC instance.
  * \param ul_enable 1 to enable, 0 to disable.
  */
-void tc_set_writeprotect(Tc *p_tc, uint32_t ul_enable)
-{
-	if (ul_enable) {
-		p_tc->TC_WPMR = TC_WPMR_WPKEY_VALUE | TC_WPMR_WPEN;
-	} else {
-		p_tc->TC_WPMR = TC_WPMR_WPKEY_VALUE;
-	}
-}
+    void tc_set_writeprotect( Tc * p_tc,
+                              uint32_t ul_enable )
+    {
+        if( ul_enable )
+        {
+            p_tc->TC_WPMR = TC_WPMR_WPKEY_VALUE | TC_WPMR_WPEN;
+        }
+        else
+        {
+            p_tc->TC_WPMR = TC_WPMR_WPKEY_VALUE;
+        }
+    }
 
-#endif
+#endif /* if ( !SAM3U ) */
 
 #if SAM4L
 
@@ -550,10 +600,10 @@ void tc_set_writeprotect(Tc *p_tc, uint32_t ul_enable)
  *
  * \return TC_FEATURES value.
  */
-uint32_t tc_get_feature(Tc *p_tc)
-{
-	return p_tc->TC_FEATURES;
-}
+    uint32_t tc_get_feature( Tc * p_tc )
+    {
+        return p_tc->TC_FEATURES;
+    }
 
 /**
  * \brief Indicate version.
@@ -562,19 +612,19 @@ uint32_t tc_get_feature(Tc *p_tc)
  *
  * \return TC_VERSION value.
  */
-uint32_t tc_get_version(Tc *p_tc)
-{
-	return p_tc->TC_VERSION;
-}
+    uint32_t tc_get_version( Tc * p_tc )
+    {
+        return p_tc->TC_VERSION;
+    }
 
-#endif
+#endif /* if SAM4L */
 
-//@}
+/*@} */
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */

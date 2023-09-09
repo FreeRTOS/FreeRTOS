@@ -43,7 +43,7 @@
 #ifndef CONF_SLEEPMGR_INCLUDED
 #define CONF_SLEEPMGR_INCLUDED
 
-// Sleep manager options
+/* Sleep manager options */
 #define CONFIG_SLEEPMGR_ENABLE
 
 #endif /* CONF_SLEEPMGR_INCLUDED */

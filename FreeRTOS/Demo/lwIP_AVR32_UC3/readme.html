@@ -13,7 +13,7 @@
 <h2>Introduction</h2>
     <p>This example implements a basic Web server and a basic TFTP server.
     It is running on top of the <a href="http://savannah.nongnu.org/projects/lwip"<font color="red"></font>lwIP TCP/IP stack</a> and the AVR32 UC3 <a href="http://freertos.org"<font color="red"></font>freeRTOS.org</a> port.</p>
-    <p>This example thus contains a port of the <a href="http://savannah.nongnu.org/projects/lwip"<font color="red"></font>lwIP TCP/IP stack</a>. This port is using both the AVR32 UC3 <a href="http://freertos.org"<font color="red"></font>freeRTOS.org</a> port and the AVR32 UC3A MACB interface for the Ethernet access.</p>  
+    <p>This example thus contains a port of the <a href="http://savannah.nongnu.org/projects/lwip"<font color="red"></font>lwIP TCP/IP stack</a>. This port is using both the AVR32 UC3 <a href="http://freertos.org"<font color="red"></font>freeRTOS.org</a> port and the AVR32 UC3A MACB interface for the Ethernet access.</p>
 
 <p>&nbsp;</p>
 
@@ -41,17 +41,17 @@
 
 <h2>The Basic TFTP server</h2>
     <p>Implements a simplistic TFTP server. To use this demo part, define TFTP_USED to 1, else define to 0. (default is 1)</p>
-    <DT><B><u>Demo description</u>:</B> 
+    <DT><B><u>Demo description</u>:</B>
     <DD><p class="whs3"><li>To put a file onto the TFTP server (Supported file size < 2048 bytes), on a PC command line type <i><b>tftp 192.168.0.2 PUT "a_file"</i></b>: this will copy <i>a_file</i> from your hard drive to a RAM buffer of the demo.</p></li>
     <DD><p class="whs3"><li>To get a file from the TFTP server, on a PC command line type <i><b>tftp 192.168.0.2 GET "a_file"</i></b>: this will copy <i>a_file</i> from the RAM buffer of the application to the PC's hard drive.</p></li>
     <B><u>Note 1</u>:</B> only one file at a time is supported on this TFTP server. This is because the TFTP server being a simplistic example, it does not use a file system to store files but a predefined RAM area of 2048 Bytes.
-    <p><B><u>Note 2</u>:</B> The TFTP server is reachable at the IP address 192.168.0.2.</p> 
+    <p><B><u>Note 2</u>:</B> The TFTP server is reachable at the IP address 192.168.0.2.</p>
 
 <p>&nbsp;</p>
 
 <h2>The Basic SMTP client</h2>
     <p>Implements a simplistic SMTP client. To use this demo part, define SMTP_USED to 1, else define to 0. (default is 0)</p>
-    <DT><B><u>Demo description</u>:</B> 
+    <DT><B><u>Demo description</u>:</B>
     <DD><p class="whs3"><li>Prior to compile and run the SMTP client, you will have to configure the connection settings :
     <DD><DD><li>Server address : default is <i>192.168.0.1</i>.</li>
     <DD><DD><li>Server name : used in the EHLO field, default is <i>smtp.domain.com</i>.</li>
@@ -67,7 +67,7 @@
 <h2>Device Info</h2>
     All AVR32 UC3A devices with a MACB module can be used. This example has been tested with the following setup(s):
     <DD><p class="whs3"><li type="disc">AT32UC3A0512 on the EVK1100 evaluation kit.</li></p>
-    
+
 <p>&nbsp;</p>
 
 

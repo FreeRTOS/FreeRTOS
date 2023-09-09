@@ -27,7 +27,7 @@
  * ----------------------------------------------------------------------------
  */
 
- /**
+/**
  * \file
  *
  * Font 10x14 table definition.
@@ -40,6 +40,6 @@
 #include <stdint.h>
 
 /** Char set of font 10x14 */
-extern const uint8_t pCharset10x14[] ;
+extern const uint8_t pCharset10x14[];
 
 #endif /* #ifdef _LCD_FONT_10x14_ */

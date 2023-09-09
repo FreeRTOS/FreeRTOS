@@ -51,13 +51,13 @@
  */
 
 #ifndef _ASSERT_H_INCLUDED
-#define _ASSERT_H_INCLUDED
+    #define _ASSERT_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdbool.h>
+    #include <stdbool.h>
 
 /**
  * \brief Assert macro
@@ -69,16 +69,16 @@ extern "C" {
  *                      assert is thrown if the given condition is false
  */
 
-#ifdef DEBUG
-#define ASSERT(condition)                                                                                              \
-	if (!(condition))                                                                                                  \
-		while (true)                                                                                                   \
-			;
-#else
-#define ASSERT(condition) ((void)0)
-#endif
+    #ifdef DEBUG
+        #define ASSERT( condition ) \
+    if( !( condition ) )            \
+    while( true )                   \
+    ;
+    #else
+        #define ASSERT( condition )    ( ( void ) 0 )
+    #endif
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif /* _ASSERT_H_INCLUDED */

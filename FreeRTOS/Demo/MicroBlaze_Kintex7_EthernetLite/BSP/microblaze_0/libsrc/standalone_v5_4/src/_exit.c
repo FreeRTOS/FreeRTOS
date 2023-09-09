@@ -32,15 +32,15 @@
 
 #include <unistd.h>
 #include "xil_types.h"
-void _exit (sint32 status);
+void _exit( sint32 status );
 
 /* _exit - Simple implementation. Does not return.
-*/
-void _exit (sint32 status)
+ */
+void _exit( sint32 status )
 {
-  (void) status;
-  while (1)
+    ( void ) status;
+
+    while( 1 )
     {
-		;
     }
 }

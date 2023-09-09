@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -35,95 +35,97 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
 #ifndef __PMAP_H__
-#define __PMAP_H__
+    #define __PMAP_H__
 
-//*****************************************************************************
-//
-//! \addtogroup pmap_api
-//! @{
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/*! \addtogroup pmap_api */
+/*! @{ */
+/* */
+/****************************************************************************** */
 
-//*****************************************************************************
-//
-// If building with a C++ compiler, make all of the definitions in this header
-// have a C binding.
-//
-//*****************************************************************************
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+/****************************************************************************** */
+/* */
+/* If building with a C++ compiler, make all of the definitions in this header */
+/* have a C binding. */
+/* */
+/****************************************************************************** */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif
 
-#include <stdint.h>
-#include <msp.h>
+    #include <stdint.h>
+    #include <msp.h>
 
-//*****************************************************************************
-//
-//The following are values that can be passed to the PMAP_configurePorts() API
-//as the portMapReconfigure parameter.
-//
-//*****************************************************************************
-#define PMAP_ENABLE_RECONFIGURATION     PMAP_CTL_PRECFG
-#define PMAP_DISABLE_RECONFIGURATION    0x00
+/****************************************************************************** */
+/* */
+/*The following are values that can be passed to the PMAP_configurePorts() API */
+/*as the portMapReconfigure parameter. */
+/* */
+/****************************************************************************** */
+    #define PMAP_ENABLE_RECONFIGURATION     PMAP_CTL_PRECFG
+    #define PMAP_DISABLE_RECONFIGURATION    0x00
 
-//*****************************************************************************
-//
-//The following are values that can be passed to the PMAP_configurePorts() API
-//as the portMapReconfigure parameter.
-//
-//*****************************************************************************
-#define PMAP_P1MAP ((uint32_t)P1MAP - PMAP_BASE)
-#define PMAP_P2MAP ((uint32_t)P2MAP - PMAP_BASE)
-#define PMAP_P3MAP ((uint32_t)P3MAP - PMAP_BASE)
-#define PMAP_P4MAP ((uint32_t)P4MAP - PMAP_BASE)
-#define PMAP_P5MAP ((uint32_t)P5MAP - PMAP_BASE)
-#define PMAP_P6MAP ((uint32_t)P6MAP - PMAP_BASE)
-#define PMAP_P7MAP ((uint32_t)P7MAP - PMAP_BASE)
+/****************************************************************************** */
+/* */
+/*The following are values that can be passed to the PMAP_configurePorts() API */
+/*as the portMapReconfigure parameter. */
+/* */
+/****************************************************************************** */
+    #define PMAP_P1MAP    ( ( uint32_t ) P1MAP - PMAP_BASE )
+    #define PMAP_P2MAP    ( ( uint32_t ) P2MAP - PMAP_BASE )
+    #define PMAP_P3MAP    ( ( uint32_t ) P3MAP - PMAP_BASE )
+    #define PMAP_P4MAP    ( ( uint32_t ) P4MAP - PMAP_BASE )
+    #define PMAP_P5MAP    ( ( uint32_t ) P5MAP - PMAP_BASE )
+    #define PMAP_P6MAP    ( ( uint32_t ) P6MAP - PMAP_BASE )
+    #define PMAP_P7MAP    ( ( uint32_t ) P7MAP - PMAP_BASE )
 
 
-//*****************************************************************************
-//
-//Prototypes for the APIs.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/*Prototypes for the APIs. */
+/* */
+/****************************************************************************** */
 
-//*****************************************************************************
-//
-//! This function configures the MSP432 Port Mapper
-//!
-//! \param portMapping is the pointer to init Data
-//! \param pxMAPy is the Port Mapper to initialize
-//! \param numberOfPorts is the number of Ports to initialize
-//! \param portMapReconfigure is used to enable/disable reconfiguration
-//!             Valid values are
-//!             \b PMAP_ENABLE_RECONFIGURATION
-//!             \b PMAP_DISABLE_RECONFIGURATION [Default value]
-//! Modified registers are \b PMAPKEYID, \b PMAPCTL
-//!
-//! \return None
-//
-//*****************************************************************************
-extern void PMAP_configurePorts(const uint8_t *portMapping, uint8_t pxMAPy,
-        uint8_t numberOfPorts, uint8_t portMapReconfigure);
+/****************************************************************************** */
+/* */
+/*! This function configures the MSP432 Port Mapper */
+/*! */
+/*! \param portMapping is the pointer to init Data */
+/*! \param pxMAPy is the Port Mapper to initialize */
+/*! \param numberOfPorts is the number of Ports to initialize */
+/*! \param portMapReconfigure is used to enable/disable reconfiguration */
+/*!             Valid values are */
+/*!             \b PMAP_ENABLE_RECONFIGURATION */
+/*!             \b PMAP_DISABLE_RECONFIGURATION [Default value] */
+/*! Modified registers are \b PMAPKEYID, \b PMAPCTL */
+/*! */
+/*! \return None */
+/* */
+/****************************************************************************** */
+    extern void PMAP_configurePorts( const uint8_t * portMapping,
+                                     uint8_t pxMAPy,
+                                     uint8_t numberOfPorts,
+                                     uint8_t portMapReconfigure );
 
 /* Defines for future devices that might have multiple instances */
-#define PMAP_configurePortsMultipleInstance(a,b,c,d,e) PMAP_configurePorts(b,c,d,e)
+    #define PMAP_configurePortsMultipleInstance( a, b, c, d, e )    PMAP_configurePorts( b, c, d, e )
 
-//*****************************************************************************
-//
-// Mark the end of the C bindings section for C++ compilers.
-//
-//*****************************************************************************
-#ifdef __cplusplus
+/****************************************************************************** */
+/* */
+/* Mark the end of the C bindings section for C++ compilers. */
+/* */
+/****************************************************************************** */
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-//*****************************************************************************
-//
-// Close the Doxygen group.
-//! @}
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* Close the Doxygen group. */
+/*! @} */
+/* */
+/****************************************************************************** */
 
-#endif
+#endif /* ifndef __PMAP_H__ */

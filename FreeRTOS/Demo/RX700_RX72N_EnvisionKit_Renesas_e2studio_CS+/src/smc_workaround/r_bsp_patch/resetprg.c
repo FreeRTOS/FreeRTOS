@@ -12,7 +12,7 @@
  * by such as '#pragma section'. The other is that the special section should be placed
  * at the lowest address among all program codes by such as linker command line option.
  */
-#if defined(__CCRX__)
-#pragma section P PResetPRG
+#if defined( __CCRX__ )
+    #pragma section P PResetPRG
 #endif /* defined(__CCRX__) */
 #include "../../smc_gen/r_bsp/mcu/all/resetprg.c"

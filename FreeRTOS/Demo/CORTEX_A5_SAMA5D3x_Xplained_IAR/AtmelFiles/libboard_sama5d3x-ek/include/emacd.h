@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -69,69 +69,72 @@
 /*---------------------------------------------------------------------------
  *         Definitions
  *---------------------------------------------------------------------------*/
+
 /** \addtogroup emacd_defines
-    @{*/
+ *  @{*/
 
 /** \addtogroup emacd_buf_size EMACD Default Buffer Size
-        @{*/
-#define EMAC_RX_UNITSIZE            128     /**< Fixed size for RX buffer  */
-#define EMAC_TX_UNITSIZE            1518    /**< Size for ETH frame length */
+ *      @{*/
+#define EMAC_RX_UNITSIZE    128             /**< Fixed size for RX buffer  */
+#define EMAC_TX_UNITSIZE    1518            /**< Size for ETH frame length */
 /**     @}*/
 
 /** \addtogroup emacd_rc EMACD Return Codes
-        @{*/
-#define EMACD_OK                0   /**< Operation OK */
-#define EMACD_TX_BUSY           1   /**< TX in progress */
-#define EMACD_RX_NULL           1   /**< No data received */
+ *      @{*/
+#define EMACD_OK                 0  /**< Operation OK */
+#define EMACD_TX_BUSY            1  /**< TX in progress */
+#define EMACD_RX_NULL            1  /**< No data received */
 /** Buffer size not enough */
-#define EMACD_SIZE_TOO_SMALL    2
+#define EMACD_SIZE_TOO_SMALL     2
 /** Parameter error, TX packet invalid or RX size too small */
-#define EMACD_PARAM             3
+#define EMACD_PARAM              3
 /** Transter is not initialized */
-#define EMACD_NOT_INITIALIZED   4
+#define EMACD_NOT_INITIALIZED    4
 /**     @}*/
 
 /** @}*/
+
 /*---------------------------------------------------------------------------
  *         Types
  *---------------------------------------------------------------------------*/
+
 /** \addtogroup emacd_types
-    @{*/
+ *  @{*/
 
 /** RX callback */
-typedef void (*fEmacdTransferCallback)(uint32_t status);
+typedef void (* fEmacdTransferCallback)( uint32_t status );
 /** Wakeup callback */
-typedef void (*fEmacdWakeupCallback)(void);
+typedef void (* fEmacdWakeupCallback)( void );
 
 /**
  * EMAC driver struct.
  */
-typedef struct _EmacDriver {
-
+typedef struct _EmacDriver
+{
     /** Pointer to HW register base */
-    Emac *pHw;
+    Emac * pHw;
 
     /** Pointer to allocated TX buffer
-        Section 3.6 of AMBA 2.0 spec states that burst should not cross
-        1K Boundaries.
-        Receive buffer manager writes are burst of 2 words => 3 lsb bits
-        of the address shall be set to 0
-        */
-    uint8_t *pTxBuffer;
+     *  Section 3.6 of AMBA 2.0 spec states that burst should not cross
+     *  1K Boundaries.
+     *  Receive buffer manager writes are burst of 2 words => 3 lsb bits
+     *  of the address shall be set to 0
+     */
+    uint8_t * pTxBuffer;
     /** Pointer to allocated RX buffer */
-    uint8_t *pRxBuffer;
+    uint8_t * pRxBuffer;
 
     /** Pointer to Rx TDs (must be 8-byte aligned) */
-    sEmacRxDescriptor *pRxD;
+    sEmacRxDescriptor * pRxD;
     /** Pointer to Tx TDs (must be 8-byte aligned) */
-    sEmacTxDescriptor *pTxD;
+    sEmacTxDescriptor * pTxD;
 
     /** Optional callback to be invoked once a frame has been received */
     fEmacdTransferCallback fRxCb;
     /** Optional callback to be invoked once several TD have been released */
     fEmacdWakeupCallback fWakupCb;
     /** Optional callback list to be invoked once TD has been processed */
-    fEmacdTransferCallback *fTxCbList;
+    fEmacdTransferCallback * fTxCbList;
 
     /** RX TD list size */
     uint16_t wRxListSize;
@@ -146,7 +149,7 @@ typedef struct _EmacDriver {
     uint16_t wTxTail;
 
     /** Number of free TD before wakeup callback is invoked */
-    uint8_t  bWakeupThreshold;
+    uint8_t bWakeupThreshold;
     /** HW ID */
     uint8_t bId;
 } sEmacd;
@@ -154,7 +157,7 @@ typedef struct _EmacDriver {
 /** @}*/
 
 /** \addtogroup emacd_functions
-    @{*/
+ *  @{*/
 
 /*---------------------------------------------------------------------------
  *         PHY Exported functions
@@ -164,39 +167,44 @@ typedef struct _EmacDriver {
  *         EMAC Exported functions
  *---------------------------------------------------------------------------*/
 
-extern void EMACD_Init( sEmacd *pEmacd,
-                        Emac   *pHw, uint8_t bID,
-                        uint8_t bCAF, uint8_t bNBC);
+extern void EMACD_Init( sEmacd * pEmacd,
+                        Emac * pHw,
+                        uint8_t bID,
+                        uint8_t bCAF,
+                        uint8_t bNBC );
 
-extern uint8_t EMACD_InitTransfer( sEmacd *pEmacd,
-    uint8_t *pRxBuffer, sEmacRxDescriptor *pRxD,
-    uint16_t wRxSize,
-    uint8_t *pTxBuffer, sEmacTxDescriptor *pTxD, fEmacdTransferCallback *pTxCb,
-    uint16_t wTxSize);
+extern uint8_t EMACD_InitTransfer( sEmacd * pEmacd,
+                                   uint8_t * pRxBuffer,
+                                   sEmacRxDescriptor * pRxD,
+                                   uint16_t wRxSize,
+                                   uint8_t * pTxBuffer,
+                                   sEmacTxDescriptor * pTxD,
+                                   fEmacdTransferCallback * pTxCb,
+                                   uint16_t wTxSize );
 
-extern void EMACD_SetRxCallback( sEmacd *pEmacd, fEmacdTransferCallback fRxCb);
+extern void EMACD_SetRxCallback( sEmacd * pEmacd,
+                                 fEmacdTransferCallback fRxCb );
 
-extern uint8_t EMACD_SetTxWakeupCallback( sEmacd *pEmacd,
+extern uint8_t EMACD_SetTxWakeupCallback( sEmacd * pEmacd,
                                           fEmacdWakeupCallback fWakeup,
                                           uint8_t bThreshold );
 
-extern void EMACD_Handler( sEmacd *pEmacd );
+extern void EMACD_Handler( sEmacd * pEmacd );
 
 extern void EMACD_Reset( sEmacd * pEmacd );
 
-extern uint8_t EMACD_Send(sEmacd * pEmacd,
-                          void *pBuffer, 
-                          uint32_t size, 
-                          fEmacdTransferCallback fTxCallback);
+extern uint8_t EMACD_Send( sEmacd * pEmacd,
+                           void * pBuffer,
+                           uint32_t size,
+                           fEmacdTransferCallback fTxCallback );
 
-extern uint32_t EMACD_TxLoad( sEmacd *pEmacd );
+extern uint32_t EMACD_TxLoad( sEmacd * pEmacd );
 
-extern uint8_t EMACD_Poll(sEmacd * pEmacd,
-                          uint8_t *pFrame,
-                          uint32_t frameSize,
-                          uint32_t *pRcvSize);
+extern uint8_t EMACD_Poll( sEmacd * pEmacd,
+                           uint8_t * pFrame,
+                           uint32_t frameSize,
+                           uint32_t * pRcvSize );
 
 /** @}*/
 
 #endif // #ifndef _EMACD_H_
-

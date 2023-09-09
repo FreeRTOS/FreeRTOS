@@ -130,30 +130,30 @@ extern void vAssertCalled( const char * const pcFileName,
 
 #if ( projCOVERAGE_TEST == 1 )
 
-    /* Insert NOPs in empty decision paths to ensure both true and false paths
-     * are being tested. */
+/* Insert NOPs in empty decision paths to ensure both true and false paths
+ * are being tested. */
     #define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
 
-    /* Ensure the tick count overflows during the coverage test. */
+/* Ensure the tick count overflows during the coverage test. */
     #define configINITIAL_TICK_COUNT        0xffffd800UL
 
-    /* Allows tests of trying to allocate more than the heap has free. */
+/* Allows tests of trying to allocate more than the heap has free. */
     #define configUSE_MALLOC_FAILED_HOOK    0
 
-    /* To test builds that remove the static qualifier for debug builds. */
+/* To test builds that remove the static qualifier for debug builds. */
     #define portREMOVE_STATIC_QUALIFIER
 #else /* if ( projCOVERAGE_TEST == 1 ) */
 
-    /* It is a good idea to define configASSERT() while developing. configASSERT()
-     * uses the same semantics as the standard C assert() macro. Don't define
-     * configASSERT() when performing code coverage tests though, as it is not
-     * intended to asserts() to fail, some some code is intended not to run if no
-     * errors are present. */
+/* It is a good idea to define configASSERT() while developing. configASSERT()
+ * uses the same semantics as the standard C assert() macro. Don't define
+ * configASSERT() when performing code coverage tests though, as it is not
+ * intended to asserts() to fail, some some code is intended not to run if no
+ * errors are present. */
     #define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
 
     #define configUSE_MALLOC_FAILED_HOOK    0
 
-    /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
+/* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
     #include "trcRecorder.h"
 #endif /* if ( projCOVERAGE_TEST == 1 ) */
 

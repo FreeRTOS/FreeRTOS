@@ -31,7 +31,7 @@
 #include "partest.h"
 /*---------------------------------------------------------------------------*/
 
-#define partstMAX_LED			( 4 )
+#define partstMAX_LED    ( 4 )
 /*---------------------------------------------------------------------------*/
 
 static volatile char cLedOutput[ partstMAX_LED ];
@@ -39,53 +39,58 @@ static volatile char cLedOutput[ partstMAX_LED ];
 
 void vParTestInitialise( void )
 {
-long lIndex;
+    long lIndex;
 
-	for( lIndex = 0; lIndex < partstMAX_LED; lIndex++ )
-	{
-		cLedOutput[ lIndex ] = 0;
-	}
+    for( lIndex = 0; lIndex < partstMAX_LED; lIndex++ )
+    {
+        cLedOutput[ lIndex ] = 0;
+    }
 }
 /*---------------------------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	taskENTER_CRITICAL();
-	{
-		switch( uxLED )
-		{
-			case 0:
-				Pin_LED_0_Write( xValue & 0x1 );
-				break;
-			case 1:
-				Pin_LED_1_Write( xValue & 0x1 );
-				break;
-			case 2:
-				Pin_LED_2_Write( xValue & 0x1 );
-				break;
-			case 3:
-				Pin_LED_3_Write( xValue & 0x1 );
-				break;
-			default:
-				/* Do nothing. */
-				break;
-		}
-	}
-	taskEXIT_CRITICAL();
-	
-	/* Record the output for the sake of toggling. */
-	if( uxLED < partstMAX_LED )
-	{
-		cLedOutput[ uxLED ] = ( xValue & 0x1 );
-	}
+    taskENTER_CRITICAL();
+    {
+        switch( uxLED )
+        {
+            case 0:
+                Pin_LED_0_Write( xValue & 0x1 );
+                break;
+
+            case 1:
+                Pin_LED_1_Write( xValue & 0x1 );
+                break;
+
+            case 2:
+                Pin_LED_2_Write( xValue & 0x1 );
+                break;
+
+            case 3:
+                Pin_LED_3_Write( xValue & 0x1 );
+                break;
+
+            default:
+                /* Do nothing. */
+                break;
+        }
+    }
+    taskEXIT_CRITICAL();
+
+    /* Record the output for the sake of toggling. */
+    if( uxLED < partstMAX_LED )
+    {
+        cLedOutput[ uxLED ] = ( xValue & 0x1 );
+    }
 }
 /*---------------------------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstMAX_LED )
-	{
-		vParTestSetLED( uxLED, !cLedOutput[ uxLED ] );
-	}
+    if( uxLED < partstMAX_LED )
+    {
+        vParTestSetLED( uxLED, !cLedOutput[ uxLED ] );
+    }
 }
 /*---------------------------------------------------------------------------*/

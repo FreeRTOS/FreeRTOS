@@ -24,7 +24,7 @@
  *
  */
 #ifdef __cplusplus
-    extern "C" {
+extern "C" {
 #endif
 
 #include <sys/types.h>
@@ -61,7 +61,7 @@ void uart_init()
 
 #ifdef __PICOLIBC__
 
-#include <stdio.h>
+    #include <stdio.h>
 
 /**
  * @brief  Write byte to the UART channel to be displayed on the command line
@@ -71,43 +71,43 @@ void uart_init()
  * @returns the character written (cast to unsigned so it is not an error value)
  */
 
-int
-_uart_putc(char c, FILE *file)
-{
-    (void) file;
-    UART_DR( UART0_ADDR ) = c;
-    return (unsigned char) c;
-}
+    int _uart_putc( char c,
+                    FILE * file )
+    {
+        ( void ) file;
+        UART_DR( UART0_ADDR ) = c;
+        return ( unsigned char ) c;
+    }
 
-static FILE __stdio = FDEV_SETUP_STREAM(_uart_putc, NULL, NULL, _FDEV_SETUP_WRITE);
+    static FILE __stdio = FDEV_SETUP_STREAM( _uart_putc, NULL, NULL, _FDEV_SETUP_WRITE );
 
-FILE *const stdout = &__stdio;
+    FILE * const stdout = &__stdio;
 
-#else
+#else  /* ifdef __PICOLIBC__ */
 
-static void * heap_end = 0;
-
-/**
- * @brief not used anywhere in the code
- * @todo  implement if necessary
- *
- */
-int _fstat(__attribute__((unused)) int file )
-{
-    return 0;
-}
+    static void * heap_end = 0;
 
 /**
  * @brief not used anywhere in the code
  * @todo  implement if necessary
  *
  */
-int _read(__attribute__((unused)) int file,
-          __attribute__((unused)) char * buf,
-          __attribute__((unused)) int len )
-{
-    return -1;
-}
+    int _fstat( __attribute__( ( unused ) ) int file )
+    {
+        return 0;
+    }
+
+/**
+ * @brief not used anywhere in the code
+ * @todo  implement if necessary
+ *
+ */
+    int _read( __attribute__( ( unused ) ) int file,
+               __attribute__( ( unused ) ) char * buf,
+               __attribute__( ( unused ) ) int len )
+    {
+        return -1;
+    }
 
 /**
  * @brief  Write bytes to the UART channel to be displayed on the command line
@@ -117,19 +117,19 @@ int _read(__attribute__((unused)) int file,
  * @param [in] len   length of the buffer
  * @returns the number of bytes written
  */
-int _write(__attribute__((unused)) int file,
-           __attribute__((unused)) char * buf,
-           int len )
-{
-    int todo;
-
-    for( todo = 0; todo < len; todo++ )
+    int _write( __attribute__( ( unused ) ) int file,
+                __attribute__( ( unused ) ) char * buf,
+                int len )
     {
-        UART_DR( UART0_ADDR ) = *buf++;
-    }
+        int todo;
 
-    return len;
-}
+        for( todo = 0; todo < len; todo++ )
+        {
+            UART_DR( UART0_ADDR ) = *buf++;
+        }
+
+        return len;
+    }
 
 /**
  * @brief function called by malloc and friends to reserve memory on the heap
@@ -137,29 +137,29 @@ int _write(__attribute__((unused)) int file,
  * @returns the previous top of the heap
  * @note uses a global variable <b>heap_end</b> to keep track of the previous top
  */
-void * _sbrk( int incr )
-{
-    char * prev_heap_end;
-
-    if( heap_end == 0 )
+    void * _sbrk( int incr )
     {
-        heap_end = ( void * ) &_heap_bottom;
+        char * prev_heap_end;
+
+        if( heap_end == 0 )
+        {
+            heap_end = ( void * ) &_heap_bottom;
+        }
+
+        prev_heap_end = heap_end;
+
+        if( ( heap_end + incr ) > ( void * ) &_heap_top )
+        {
+            return ( void * ) -1;
+        }
+
+        heap_end += incr;
+
+        return prev_heap_end;
     }
 
-    prev_heap_end = heap_end;
-
-    if( ( heap_end + incr ) > ( void * ) &_heap_top )
-    {
-        return ( void * ) -1;
-    }
-
-    heap_end += incr;
-
-    return prev_heap_end;
-}
-
-#endif
+#endif /* ifdef __PICOLIBC__ */
 
 #ifdef __cplusplus
-    }
+}
 #endif

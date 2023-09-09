@@ -29,16 +29,17 @@
 ******************************************************************************/
 
 #ifndef __ALT_SDMMC_H__
-#define __ALT_SDMMC_H__
+    #define __ALT_SDMMC_H__
 
-#include "hwlib.h"
+    #include "hwlib.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 /******************************************************************************/
+
 /*!
  * \addtogroup ALT_SDMMC SD/MMC Controller API
  *
@@ -56,7 +57,7 @@ extern "C"
  * The primary purpose of this API is to a provide a general purpose framework
  * that can be used for writing software drivers that interact with a wide range of
  * card and device types that may interface to HPS through the SD/MMC host controller.
- * 
+ *
  * Although the HPS SD/MMC Controller supports SD, SDIO, CE-ATA, and MMC card and
  * device types, this driver only supports block read/write data transfers to
  * SD and MMC storage devices.
@@ -117,7 +118,7 @@ extern "C"
  *  * To avoid glitches in the card clock outputs (cclk_out), the software should
  *    use the steps outlined in section 7.4 Phase Switching of the databook when
  *    changing the card clock frequency.
- *    
+ *
  *  * In order to utilize ECC, follow the embedded RAM initialization procedure in
  *    section 8 Enabling ECC of the data book.
  *
@@ -132,7 +133,7 @@ extern "C"
  * Features:
  *  * Block Read/Write support
  *    - Internal DMA used for efficiency
- *  * Command Engine Interface 
+ *  * Command Engine Interface
  *  * Internal DMA Interface
  *  * Configuration and Status Interface
  *  * Interrupt Status and Control Interface
@@ -140,6 +141,7 @@ extern "C"
  */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_SDMMC_CSR General Control and Status Functions
  *
  * The declarations and functions in this group provide general purpose control
@@ -151,18 +153,18 @@ extern "C"
  * This type enumerates the possible card/device type that may be connected to the
  * SD/MMC controller.
  */
-typedef enum ALT_SDMMC_CARD_TYPE_e
-{
-    ALT_SDMMC_CARD_TYPE_NOTDETECT  = 0, /*!< Cart type has not identified yet */
-    ALT_SDMMC_CARD_TYPE_MMC        = 1, /*!< MultiMedia Card */
-    ALT_SDMMC_CARD_TYPE_SD         = 2, /*!< Secure Digital Memory Card */
-    ALT_SDMMC_CARD_TYPE_SDIOIO     = 3, /*!< Secure Digital Input Output */
-    ALT_SDMMC_CARD_TYPE_SDIOCOMBO  = 4, /*!< Secure Digital Input Output Combo */
-    ALT_SDMMC_CARD_TYPE_SDHC       = 5, /*!< Secure Digital High Capacity */
-    ALT_SDMMC_CARD_TYPE_CEATA      = 6, /*!< Serial ATA interface based on the 
-                                         *   MultiMediaCard standard
-                                         */
-} ALT_SDMMC_CARD_TYPE_t;
+    typedef enum ALT_SDMMC_CARD_TYPE_e
+    {
+        ALT_SDMMC_CARD_TYPE_NOTDETECT = 0, /*!< Cart type has not identified yet */
+        ALT_SDMMC_CARD_TYPE_MMC = 1,       /*!< MultiMedia Card */
+        ALT_SDMMC_CARD_TYPE_SD = 2,        /*!< Secure Digital Memory Card */
+        ALT_SDMMC_CARD_TYPE_SDIOIO = 3,    /*!< Secure Digital Input Output */
+        ALT_SDMMC_CARD_TYPE_SDIOCOMBO = 4, /*!< Secure Digital Input Output Combo */
+        ALT_SDMMC_CARD_TYPE_SDHC = 5,      /*!< Secure Digital High Capacity */
+        ALT_SDMMC_CARD_TYPE_CEATA = 6,     /*!< Serial ATA interface based on the
+                                            *   MultiMediaCard standard
+                                            */
+    } ALT_SDMMC_CARD_TYPE_t;
 
 /*!
  * This type defines a structure to hold identification and type information for a
@@ -172,20 +174,20 @@ typedef enum ALT_SDMMC_CARD_TYPE_e
  * See: Card_info declaration in synopmob_bus.h
  * \endinternal
  */
-typedef struct ALT_SDMMC_CARD_INFO_s
-{
-    ALT_SDMMC_CARD_TYPE_t   card_type;          /*!< Type of the card */
-    uint32_t                rca;                /*!< Releative Card Address (RCA) */
-    uint32_t                xfer_speed;         /*!< The maximum data transfer rate (bit/s) */
-    uint32_t                max_r_blkln;        /*!< Max read data block length */
-    uint32_t                max_w_blkln;        /*!< Max write data block length */
-    bool                    partial_r_allowed;  /*!< Partial blocks for read allowed */
-    bool                    partial_w_allowed;  /*!< Partial blocks for write allowed */
-} ALT_SDMMC_CARD_INFO_t;
+    typedef struct ALT_SDMMC_CARD_INFO_s
+    {
+        ALT_SDMMC_CARD_TYPE_t card_type;        /*!< Type of the card */
+        uint32_t rca;                           /*!< Releative Card Address (RCA) */
+        uint32_t xfer_speed;                    /*!< The maximum data transfer rate (bit/s) */
+        uint32_t max_r_blkln;                   /*!< Max read data block length */
+        uint32_t max_w_blkln;                   /*!< Max write data block length */
+        bool partial_r_allowed;                 /*!< Partial blocks for read allowed */
+        bool partial_w_allowed;                 /*!< Partial blocks for write allowed */
+    } ALT_SDMMC_CARD_INFO_t;
 
 /*!
  * Initialize the SD/MMC controller.
- * 
+ *
  * Initializes the SD/MMC controller by gracefully bringing the controller out of
  * reset. This function also initializes the registers, FIFO buffer pointers, DMA
  * interface controls, and state machines in the controller. All interrupts are
@@ -194,7 +196,7 @@ typedef struct ALT_SDMMC_CARD_INFO_s
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_init(void);
+    ALT_STATUS_CODE alt_sdmmc_init( void );
 
 /*!
  * Uninitializes the SD/MMC controller by stopping any data transfers in progress and
@@ -203,7 +205,7 @@ ALT_STATUS_CODE alt_sdmmc_init(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_uninit(void);
+    ALT_STATUS_CODE alt_sdmmc_uninit( void );
 
 /*!
  * Reset the SD/MMC controller by stopping any data transfers in progress and
@@ -212,150 +214,162 @@ ALT_STATUS_CODE alt_sdmmc_uninit(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_reset(void);
+    ALT_STATUS_CODE alt_sdmmc_reset( void );
 
 /*!
- * This type enumerates the SDMMC evailable commands. Read specification 
+ * This type enumerates the SDMMC evailable commands. Read specification
  * to the appropriate card type
  */
-typedef enum ALT_SDMMC_CMD_INDEX_e
-{
-    /* TBD - Standart sdmmc commands... */
-    ALT_SDMMC_GO_IDLE_STATE          = 0,
-    ALT_SDMMC_ALL_SEND_CID           = 2,
-    ALT_SDMMC_SET_RELATIVE_ADDR      = 3,
-    ALT_SDMMC_SET_DSR                = 4,
-    ALT_SDMMC_SEND_OP_COND           = 5,
-    ALT_SDMMC_SWITCH                 = 6,
-    ALT_SDMMC_SEL_DES_CARD           = 7,
-    ALT_SDMMC_IF_COND                = 8,
-    ALT_SDMMC_SEND_EXT_CSD           = 8,
-    ALT_SDMMC_SEND_CSD               = 9,
-    ALT_SDMMC_SEND_CID               = 10,
-    ALT_SDMMC_READ_DAT_UNTIL_STOP    = 11,
-    ALT_SDMMC_STOP_TRANSMISSION      = 12,
-    ALT_SDMMC_SEND_STATUS            = 13,
-    ALT_SDMMC_GO_INACTIVE_STATE      = 15,
-    ALT_SDMMC_SET_BLOCKLEN           = 16,
-    ALT_SDMMC_READ_SINGLE_BLOCK      = 17,
-    ALT_SDMMC_READ_MULTIPLE_BLOCK    = 18,
-    ALT_SDMMC_WRITE_DAT_UNTIL_STOP   = 20,
-    ALT_SDMMC_WRITE_BLOCK            = 24,
-    ALT_SDMMC_WRITE_MULTIPLE_BLOCK   = 25,
-    ALT_SDMMC_PROGRAM_CID            = 26,
-    ALT_SDMMC_PROGRAM_CSD            = 27,
-    ALT_SDMMC_SET_WRITE_PROT         = 28,
-    ALT_SDMMC_CLR_WRITE_PROT         = 29,
-    ALT_SDMMC_SEND_WRITE_PROT        = 30,
-    ALT_SDMMC_TAG_SECTOR_START       = 32,
-    ALT_SDMMC_TAG_SECTOR_END         = 33,
-    ALT_SDMMC_UNTAG_SECTOR           = 34,
-    ALT_SDMMC_TAG_ERASE_GROUP_START  = 35,
-    ALT_SDMMC_TAG_ERASE_GROUP_END    = 36,
-    ALT_SDMMC_UNTAG_ERASE_GROUP      = 37,
-    ALT_SDMMC_ERASE                  = 38,
-    ALT_SDMMC_FAST_IO                = 39,
-    ALT_SDMMC_GO_IRQ_STATE           = 40,
-    ALT_SDMMC_LOCK_UNLOCK            = 42,
-    ALT_SDMMC_APP_CMD                = 55,
-    ALT_SDMMC_GEN_CMD                = 56,
-    ALT_SDMMC_READ_OCR               = 58,
-    ALT_SDMMC_CRC_ON_OFF             = 59,
-    
-    ALT_SDMMC_STANDART_CMD_ALL       = 60,
-    
-    /* TBD - Commands specific for card type. */
-    ALT_SD_SET_BUS_WIDTH             = 6,
-    ALT_SD_SEND_OP_COND              = 41,
-    ALT_SD_SEND_SCR                  = 51,
+    typedef enum ALT_SDMMC_CMD_INDEX_e
+    {
+        /* TBD - Standart sdmmc commands... */
+        ALT_SDMMC_GO_IDLE_STATE = 0,
+        ALT_SDMMC_ALL_SEND_CID = 2,
+        ALT_SDMMC_SET_RELATIVE_ADDR = 3,
+        ALT_SDMMC_SET_DSR = 4,
+        ALT_SDMMC_SEND_OP_COND = 5,
+        ALT_SDMMC_SWITCH = 6,
+        ALT_SDMMC_SEL_DES_CARD = 7,
+        ALT_SDMMC_IF_COND = 8,
+        ALT_SDMMC_SEND_EXT_CSD = 8,
+        ALT_SDMMC_SEND_CSD = 9,
+        ALT_SDMMC_SEND_CID = 10,
+        ALT_SDMMC_READ_DAT_UNTIL_STOP = 11,
+        ALT_SDMMC_STOP_TRANSMISSION = 12,
+        ALT_SDMMC_SEND_STATUS = 13,
+        ALT_SDMMC_GO_INACTIVE_STATE = 15,
+        ALT_SDMMC_SET_BLOCKLEN = 16,
+        ALT_SDMMC_READ_SINGLE_BLOCK = 17,
+        ALT_SDMMC_READ_MULTIPLE_BLOCK = 18,
+        ALT_SDMMC_WRITE_DAT_UNTIL_STOP = 20,
+        ALT_SDMMC_WRITE_BLOCK = 24,
+        ALT_SDMMC_WRITE_MULTIPLE_BLOCK = 25,
+        ALT_SDMMC_PROGRAM_CID = 26,
+        ALT_SDMMC_PROGRAM_CSD = 27,
+        ALT_SDMMC_SET_WRITE_PROT = 28,
+        ALT_SDMMC_CLR_WRITE_PROT = 29,
+        ALT_SDMMC_SEND_WRITE_PROT = 30,
+        ALT_SDMMC_TAG_SECTOR_START = 32,
+        ALT_SDMMC_TAG_SECTOR_END = 33,
+        ALT_SDMMC_UNTAG_SECTOR = 34,
+        ALT_SDMMC_TAG_ERASE_GROUP_START = 35,
+        ALT_SDMMC_TAG_ERASE_GROUP_END = 36,
+        ALT_SDMMC_UNTAG_ERASE_GROUP = 37,
+        ALT_SDMMC_ERASE = 38,
+        ALT_SDMMC_FAST_IO = 39,
+        ALT_SDMMC_GO_IRQ_STATE = 40,
+        ALT_SDMMC_LOCK_UNLOCK = 42,
+        ALT_SDMMC_APP_CMD = 55,
+        ALT_SDMMC_GEN_CMD = 56,
+        ALT_SDMMC_READ_OCR = 58,
+        ALT_SDMMC_CRC_ON_OFF = 59,
 
-    /* TBD - Clock command or command index does not matter... */
-    ALT_SDMMC_CLK_INDEX              = -1,
+        ALT_SDMMC_STANDART_CMD_ALL = 60,
 
-    ALT_SDMMC_CMD_ALL                = ALT_SDMMC_STANDART_CMD_ALL + 1
-} ALT_SDMMC_CMD_INDEX_t;
+        /* TBD - Commands specific for card type. */
+        ALT_SD_SET_BUS_WIDTH = 6,
+        ALT_SD_SEND_OP_COND = 41,
+        ALT_SD_SEND_SCR = 51,
+
+        /* TBD - Clock command or command index does not matter... */
+        ALT_SDMMC_CLK_INDEX = -1,
+
+        ALT_SDMMC_CMD_ALL = ALT_SDMMC_STANDART_CMD_ALL + 1
+    } ALT_SDMMC_CMD_INDEX_t;
 
 /*!
  * This type defines a structure for command with options.
  */
-typedef struct ALT_SDMMC_CMD_CONFIG_s 
-{
-    uint32_t    cmd_index                       : 6; //0-5
-                                /*!< Command index */
-    uint32_t    response_expect                 : 1; //6
-                                /*!< Response expected from card */
-    uint32_t    response_length_long            : 1; //7
-                                /*!< Long response expected from card */
-    uint32_t    check_response_crc              : 1; //8
-                                /*!< Check response CRC */
-    uint32_t    data_expected                   : 1; //9
-                                /*!< Data transfer expected (read/write) */
-    uint32_t    write_active                    : 1; //10
-                                /*!< 0 – Read from card 
-                                 *   1 – Write to card 
-                                 */
-    uint32_t    stream_mode_active              : 1; //11
-                                /*!< Stream data transfer command */
-    uint32_t    send_auto_stop                  : 1; //12
-                                /*!< Send stop command at end of data transfer */
-    uint32_t    wait_prvdata_complete           : 1; //13
-                                /*!< Wait for previous data transfer completion
-                                 *   before sending command 
-                                 */
-    uint32_t    stop_abort_cmd                  : 1; //14
-                                /*!< Stop or abort command intended to stop
-                                 *   current data transfer in progress.
-                                 */
-    uint32_t    send_initialization             : 1; //15
-                                /*!< Send initialization sequence before 
-                                 *   sending this command
-                                 */
-    uint32_t    card_number                     : 5; //16-20
-                                /*!< Card number in use. Represents physical
-                                 *   slot number of card being accessed.
-                                 */
-    uint32_t    update_clock_registers_only     : 1; //21
-                                /*!< Do not send commands, just update clock
-                                 *   register value into card clock domain
-                                 */
-    uint32_t    read_ceata_device               : 1; //22
-                                /*!< Host is performing read access (RW_REG or RW_BLK)
-                                 *   towards CE-ATA device 
-                                 */
-    uint32_t    ccs_expected                    : 1; //23
-                                /*!< Interrupts are enabled in CE-ATA device (nIEN = 0),
-                                 *   and RW_BLK command expects command completion
-                                 *   signal from CE-ATA device 
-                                 */
-    uint32_t    enable_boot                     : 1; //24
-                                /*!< Enable Boot—this bit should be set only for
-                                 *   mandatory boot mode.
-                                 */
-    uint32_t    expect_boot_ack                 : 1; //25
-                                /*!< Expect Boot Acknowledge. When Software sets
-                                 *   this bit along with enable_boot, CIU expects a boot
-                                 *   acknowledge start pattern of 0-1-0 from the selected card 
-                                 */
-    uint32_t    disable_boot                    : 1; //26
-                                /*!< Disable Boot. */
-    uint32_t    boot_mode                       : 1; //27
-                                /*!< Boot Mode 
-                                 *   0 - Mandatory Boot operation
-                                 *   1 - Alternate Boot operation
-                                 */
-    uint32_t    volt_switch                     : 1; //28
-                                /*!< Voltage switching enabled; must be set for CMD11 only */
-    uint32_t    use_hold_reg                    : 1; //29
-                                /*!< CMD and DATA sent to card through the HOLD Register */
-    uint32_t    reserved                        : 1; //30
-    uint32_t    start_bit                       : 1; //31
-                                /*!< Start command. Once command is taken by CIU, 
-                                 *   bit is cleared. When bit is set, host should 
-                                 *   not attempt to write to any command registers. 
-                                 *   If write is attempted, hardware lock error 
-                                 *   is set in raw interrupt register.
-                                 */
-} ALT_SDMMC_CMD_CONFIG_t;
+    typedef struct ALT_SDMMC_CMD_CONFIG_s
+    {
+        uint32_t cmd_index                       : 6; /*0-5 */
+        /*!< Command index */
+        uint32_t response_expect                 : 1; /*6 */
+        /*!< Response expected from card */
+        uint32_t response_length_long            : 1; /*7 */
+        /*!< Long response expected from card */
+        uint32_t check_response_crc              : 1; /*8 */
+        /*!< Check response CRC */
+        uint32_t data_expected                   : 1; /*9 */
+        /*!< Data transfer expected (read/write) */
+        uint32_t write_active                    : 1; /*10 */
+
+        /*!< 0 – Read from card
+         *   1 – Write to card
+         */
+        uint32_t stream_mode_active              : 1; /*11 */
+        /*!< Stream data transfer command */
+        uint32_t send_auto_stop                  : 1; /*12 */
+        /*!< Send stop command at end of data transfer */
+        uint32_t wait_prvdata_complete           : 1; /*13 */
+
+        /*!< Wait for previous data transfer completion
+         *   before sending command
+         */
+        uint32_t stop_abort_cmd                  : 1;/*14 */
+
+        /*!< Stop or abort command intended to stop
+         *   current data transfer in progress.
+         */
+        uint32_t send_initialization             : 1;/*15 */
+
+        /*!< Send initialization sequence before
+         *   sending this command
+         */
+        uint32_t card_number                     : 5;/*16-20 */
+
+        /*!< Card number in use. Represents physical
+         *   slot number of card being accessed.
+         */
+        uint32_t update_clock_registers_only     : 1;/*21 */
+
+        /*!< Do not send commands, just update clock
+         *   register value into card clock domain
+         */
+        uint32_t read_ceata_device               : 1;/*22 */
+
+        /*!< Host is performing read access (RW_REG or RW_BLK)
+         *   towards CE-ATA device
+         */
+        uint32_t ccs_expected                    : 1;/*23 */
+
+        /*!< Interrupts are enabled in CE-ATA device (nIEN = 0),
+         *   and RW_BLK command expects command completion
+         *   signal from CE-ATA device
+         */
+        uint32_t enable_boot                     : 1;/*24 */
+
+        /*!< Enable Boot—this bit should be set only for
+         *   mandatory boot mode.
+         */
+        uint32_t expect_boot_ack                 : 1;/*25 */
+
+        /*!< Expect Boot Acknowledge. When Software sets
+         *   this bit along with enable_boot, CIU expects a boot
+         *   acknowledge start pattern of 0-1-0 from the selected card
+         */
+        uint32_t disable_boot                    : 1; /*26 */
+        /*!< Disable Boot. */
+        uint32_t boot_mode                       : 1; /*27 */
+
+        /*!< Boot Mode
+         *   0 - Mandatory Boot operation
+         *   1 - Alternate Boot operation
+         */
+        uint32_t volt_switch                     : 1; /*28 */
+        /*!< Voltage switching enabled; must be set for CMD11 only */
+        uint32_t use_hold_reg                    : 1; /*29 */
+        /*!< CMD and DATA sent to card through the HOLD Register */
+        uint32_t reserved                        : 1; /*30 */
+        uint32_t start_bit                       : 1; /*31 */
+
+        /*!< Start command. Once command is taken by CIU,
+         *   bit is cleared. When bit is set, host should
+         *   not attempt to write to any command registers.
+         *   If write is attempted, hardware lock error
+         *   is set in raw interrupt register.
+         */
+    } ALT_SDMMC_CMD_CONFIG_t;
 
 /*!
  * Send the a command and command argument to the card and optionally return the
@@ -375,20 +389,21 @@ typedef struct ALT_SDMMC_CMD_CONFIG_s
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_command_send(ALT_SDMMC_CMD_INDEX_t command,
-                                        uint32_t command_arg, uint32_t *response);
+    ALT_STATUS_CODE alt_sdmmc_command_send( ALT_SDMMC_CMD_INDEX_t command,
+                                            uint32_t command_arg,
+                                            uint32_t * response );
 
 /*!
  * This type defines a structure for get long response of last
  * last complete command.
  */
-typedef struct ALT_SDMMC_RESPONSE_s
-{
-    uint32_t     resp0;
-    uint32_t     resp1;
-    uint32_t     resp2;
-    uint32_t     resp3;
- } ALT_SDMMC_RESPONSE_t;
+    typedef struct ALT_SDMMC_RESPONSE_s
+    {
+        uint32_t resp0;
+        uint32_t resp1;
+        uint32_t resp2;
+        uint32_t resp3;
+    } ALT_SDMMC_RESPONSE_t;
 
 /*!
  * Get the long response of the last compleated command.
@@ -400,7 +415,7 @@ typedef struct ALT_SDMMC_RESPONSE_s
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_read_long_response(ALT_SDMMC_RESPONSE_t *response);
+    ALT_STATUS_CODE alt_sdmmc_read_long_response( ALT_SDMMC_RESPONSE_t * response );
 
 /*!
  * Returns the SD/MMC controller interrupt status register value which reflects
@@ -410,19 +425,19 @@ ALT_STATUS_CODE alt_sdmmc_read_long_response(ALT_SDMMC_RESPONSE_t *response);
  *              which reflects the current SD/MMC controller interrupt status
  *              conditions before masking.
  */
-uint32_t alt_sdmmc_int_status_get(void);
+    uint32_t alt_sdmmc_int_status_get( void );
 
 /*!
  * Returns the SD/MMC controller interrupt mask register value which reflects the
  * enabled (i.e. unmasked) interrupt status conditions.
  *
- * \returns     The aggregate value of the enabled SD/MMC controller interrupt 
+ * \returns     The aggregate value of the enabled SD/MMC controller interrupt
  *              status conditions.  A set (1) bit in the corresponding
  *              ALT_SDMMC_INT_STATUS_t position indicates an interrupt that is
  *              enabled. A clear (0) bit the corresponding ALT_SDMMC_INT_STATUS_t
  *              position indicates an interrupt that is masked.
  */
-uint32_t alt_sdmmc_int_mask_get(void);
+    uint32_t alt_sdmmc_int_mask_get( void );
 
 /*!
  * Clears the specified SD/MMC controller interrupt status conditions identified in
@@ -439,7 +454,7 @@ uint32_t alt_sdmmc_int_mask_get(void);
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
  * \retval      ALT_E_ERROR     Indicates an error occurred.
  */
-ALT_STATUS_CODE alt_sdmmc_int_clear(const uint32_t mask);
+    ALT_STATUS_CODE alt_sdmmc_int_clear( const uint32_t mask );
 
 /*!
  * Disable the specified SD/MMC controller interrupt status conditions identified in
@@ -462,7 +477,7 @@ ALT_STATUS_CODE alt_sdmmc_int_clear(const uint32_t mask);
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
  * \retval      ALT_E_ERROR     Indicates an error occurred.
  */
-ALT_STATUS_CODE alt_sdmmc_int_disable(const uint32_t mask);
+    ALT_STATUS_CODE alt_sdmmc_int_disable( const uint32_t mask );
 
 /*!
  * Enable the specified SD/MMC controller interrupt status conditions identified in
@@ -485,7 +500,7 @@ ALT_STATUS_CODE alt_sdmmc_int_disable(const uint32_t mask);
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
  * \retval      ALT_E_ERROR     Indicates an error occurred.
  */
-ALT_STATUS_CODE alt_sdmmc_int_enable(const uint32_t mask);
+    ALT_STATUS_CODE alt_sdmmc_int_enable( const uint32_t mask );
 
 /*!
  * This type definition enumerates the interrupt status conditions that contribute
@@ -496,32 +511,33 @@ ALT_STATUS_CODE alt_sdmmc_int_enable(const uint32_t mask);
  * for the internal DMA controller (\ref ALT_SDMMC_DMA_INT_STATUS_t) contribute to
  * the overall \b ALT_INT_INTERRUPT_SDMMC_IRQ signal state
  */
-typedef enum ALT_SDMMC_INT_STATUS_e
-{
-    ALT_SDMMC_INT_STATUS_CD     = (1UL << 0),    /*!< Card Detect (CD) */
-    ALT_SDMMC_INT_STATUS_RE     = (1UL << 1),    /*!< Response Error (RE) */
-    ALT_SDMMC_INT_STATUS_CMD    = (1UL << 2),    /*!< Command Done (CMD) */
-    ALT_SDMMC_INT_STATUS_DTO    = (1UL << 3),    /*!< Data Transfer Over (DTO) */
-    ALT_SDMMC_INT_STATUS_TXDR   = (1UL << 4),    /*!< Transmit FIFO Data Request (TXDR) */
-    ALT_SDMMC_INT_STATUS_RXDR   = (1UL << 5),    /*!< Receive FIFO Data Request (RXDR) */
-    ALT_SDMMC_INT_STATUS_RCRC   = (1UL << 6),    /*!< Response CRC Error (RCRC) */
-    ALT_SDMMC_INT_STATUS_DCRC   = (1UL << 7),    /*!< Data CRC Error (DCRC) */
-    ALT_SDMMC_INT_STATUS_RTO    = (1UL << 8),    /*!< Response Timeout Boot Ack Received (RTO) */
-    ALT_SDMMC_INT_STATUS_DRTO   = (1UL << 9),    /*!< Data Read Timeout Boot Data Start (DRTO) */
-    ALT_SDMMC_INT_STATUS_HTO    = (1UL << 10),   /*!< Data Starvation Host Timeout (HTO) / Volt Switch_int */
-    ALT_SDMMC_INT_STATUS_FRUN   = (1UL << 11),   /*!< FIFO Underrun Overrun Error (FRUN) */
-    ALT_SDMMC_INT_STATUS_HLE    = (1UL << 12),   /*!< Hardware Locked Write Error (HLE) */
-    ALT_SDMMC_INT_STATUS_SBE    = (1UL << 13),   /*!< Start-Bit Error (SBE) */
-    ALT_SDMMC_INT_STATUS_ACD    = (1UL << 14),   /*!< Auto Command Done (ACD) */
-    ALT_SDMMC_INT_STATUS_EBE    = (1UL << 15),   /*!< End-Bit Error (read) / write no CRC (EBE) */
-    ALT_SDMMC_INT_STATUS_SDIO_0 = (1UL << 16),    /*!< SDIO Interrupt Card 0 - only one card supported */
+    typedef enum ALT_SDMMC_INT_STATUS_e
+    {
+        ALT_SDMMC_INT_STATUS_CD = ( 1UL << 0 ),      /*!< Card Detect (CD) */
+        ALT_SDMMC_INT_STATUS_RE = ( 1UL << 1 ),      /*!< Response Error (RE) */
+        ALT_SDMMC_INT_STATUS_CMD = ( 1UL << 2 ),     /*!< Command Done (CMD) */
+        ALT_SDMMC_INT_STATUS_DTO = ( 1UL << 3 ),     /*!< Data Transfer Over (DTO) */
+        ALT_SDMMC_INT_STATUS_TXDR = ( 1UL << 4 ),    /*!< Transmit FIFO Data Request (TXDR) */
+        ALT_SDMMC_INT_STATUS_RXDR = ( 1UL << 5 ),    /*!< Receive FIFO Data Request (RXDR) */
+        ALT_SDMMC_INT_STATUS_RCRC = ( 1UL << 6 ),    /*!< Response CRC Error (RCRC) */
+        ALT_SDMMC_INT_STATUS_DCRC = ( 1UL << 7 ),    /*!< Data CRC Error (DCRC) */
+        ALT_SDMMC_INT_STATUS_RTO = ( 1UL << 8 ),     /*!< Response Timeout Boot Ack Received (RTO) */
+        ALT_SDMMC_INT_STATUS_DRTO = ( 1UL << 9 ),    /*!< Data Read Timeout Boot Data Start (DRTO) */
+        ALT_SDMMC_INT_STATUS_HTO = ( 1UL << 10 ),    /*!< Data Starvation Host Timeout (HTO) / Volt Switch_int */
+        ALT_SDMMC_INT_STATUS_FRUN = ( 1UL << 11 ),   /*!< FIFO Underrun Overrun Error (FRUN) */
+        ALT_SDMMC_INT_STATUS_HLE = ( 1UL << 12 ),    /*!< Hardware Locked Write Error (HLE) */
+        ALT_SDMMC_INT_STATUS_SBE = ( 1UL << 13 ),    /*!< Start-Bit Error (SBE) */
+        ALT_SDMMC_INT_STATUS_ACD = ( 1UL << 14 ),    /*!< Auto Command Done (ACD) */
+        ALT_SDMMC_INT_STATUS_EBE = ( 1UL << 15 ),    /*!< End-Bit Error (read) / write no CRC (EBE) */
+        ALT_SDMMC_INT_STATUS_SDIO_0 = ( 1UL << 16 ), /*!< SDIO Interrupt Card 0 - only one card supported */
 
-    ALT_SDMMC_INT_STATUS_ALL    = 0x1FFFF    /*!< All previous status types*/
-} ALT_SDMMC_INT_STATUS_t;
+        ALT_SDMMC_INT_STATUS_ALL = 0x1FFFF           /*!< All previous status types*/
+    } ALT_SDMMC_INT_STATUS_t;
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_SDMMC_CARD_INTFC Card Interface
  *
  * The clock control block provides different clock frequencies required for
@@ -541,33 +557,33 @@ typedef enum ALT_SDMMC_INT_STATUS_e
 /*!
  * This type enumerates the SDMMC evailable bus width.
  */
-typedef enum ALT_SDMMC_BUS_WIDTH_e
-{
-    ALT_SDMMC_BUS_WIDTH_1         = 1,
-    ALT_SDMMC_BUS_WIDTH_4         = 4,
-    ALT_SDMMC_BUS_WIDTH_8         = 8
-}ALT_SDMMC_BUS_WIDTH_t;
+    typedef enum ALT_SDMMC_BUS_WIDTH_e
+    {
+        ALT_SDMMC_BUS_WIDTH_1 = 1,
+        ALT_SDMMC_BUS_WIDTH_4 = 4,
+        ALT_SDMMC_BUS_WIDTH_8 = 8
+    } ALT_SDMMC_BUS_WIDTH_t;
 
 /*!
  * This type defines a structure for configuration of miscellaneous interface
  * parameters for an attached card.
  */
-typedef struct ALT_SDMMC_CARD_MISC_s
-{
-    uint32_t                 response_timeout; /*!< Card response timeout period in
+    typedef struct ALT_SDMMC_CARD_MISC_s
+    {
+        uint32_t response_timeout;             /*!< Card response timeout period in
                                                 *   sdmmc_cclk_out (SD/MMC card clock) ticks.
                                                 */
-    uint32_t                 data_timeout;     /*!< Card data read timeout period in
+        uint32_t data_timeout;                 /*!< Card data read timeout period in
                                                 *   sdmmc_cclk_out (SD/MMC card clock) ticks.
                                                 */
-    ALT_SDMMC_BUS_WIDTH_t    card_width;       /*!< Indicates card interface width (1, 4, or
+        ALT_SDMMC_BUS_WIDTH_t card_width;      /*!< Indicates card interface width (1, 4, or
                                                 *   8 bits).
                                                 */
-    uint32_t                 block_size;       /*!< The card block size in bytes. */
-    uint32_t                 debounce_count;   /*!< Number of host clock (l4_mp_clk) ticks
+        uint32_t block_size;                   /*!< The card block size in bytes. */
+        uint32_t debounce_count;               /*!< Number of host clock (l4_mp_clk) ticks
                                                 *   used to debounce card interface signals.
                                                 */
-} ALT_SDMMC_CARD_MISC_t;
+    } ALT_SDMMC_CARD_MISC_t;
 
 /*!
  * Get the current card interface configuration values for the miscellaneous set
@@ -580,7 +596,7 @@ typedef struct ALT_SDMMC_CARD_MISC_s
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_card_misc_get(ALT_SDMMC_CARD_MISC_t *card_misc_cfg);
+    ALT_STATUS_CODE alt_sdmmc_card_misc_get( ALT_SDMMC_CARD_MISC_t * card_misc_cfg );
 
 /*!
  * Set the specified card interface configuration for the miscellaneous set of
@@ -593,7 +609,7 @@ ALT_STATUS_CODE alt_sdmmc_card_misc_get(ALT_SDMMC_CARD_MISC_t *card_misc_cfg);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_card_misc_set(const ALT_SDMMC_CARD_MISC_t *card_misc_cfg);
+    ALT_STATUS_CODE alt_sdmmc_card_misc_set( const ALT_SDMMC_CARD_MISC_t * card_misc_cfg );
 
 /*!
  * Set the bus width appropriate supported by the card, send this parameter to the card.
@@ -604,7 +620,7 @@ ALT_STATUS_CODE alt_sdmmc_card_misc_set(const ALT_SDMMC_CARD_MISC_t *card_misc_c
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_card_bus_width_set(const ALT_SDMMC_BUS_WIDTH_t width);
+    ALT_STATUS_CODE alt_sdmmc_card_bus_width_set( const ALT_SDMMC_BUS_WIDTH_t width );
 
 /*!
  * Send block size to the card.
@@ -615,7 +631,7 @@ ALT_STATUS_CODE alt_sdmmc_card_bus_width_set(const ALT_SDMMC_BUS_WIDTH_t width);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_card_block_size_set(const uint16_t block_size);
+    ALT_STATUS_CODE alt_sdmmc_card_block_size_set( const uint16_t block_size );
 
 /*!
  * Detects and identifies any connected card.
@@ -631,7 +647,7 @@ ALT_STATUS_CODE alt_sdmmc_card_block_size_set(const uint16_t block_size);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_card_identify(ALT_SDMMC_CARD_INFO_t *card_info);
+    ALT_STATUS_CODE alt_sdmmc_card_identify( ALT_SDMMC_CARD_INFO_t * card_info );
 
 /*!
  * Gets the configured card clock divider value (\b sdmmc_cclk_out).
@@ -640,10 +656,10 @@ ALT_STATUS_CODE alt_sdmmc_card_identify(ALT_SDMMC_CARD_INFO_t *card_info);
  * example, a value of 0 means divide by 2 * 0 = 0 (no division, effectively a
  * bypass), a value of 1 means divide by 2 * 1 = 2, value of 0xff means divide by 2
  * * 255 = 510. Valid range is 0 to 255.
- * 
+ *
  * \returns     The clock divider value.
  */
-uint32_t alt_sdmmc_card_clk_div_get(void);
+    uint32_t alt_sdmmc_card_clk_div_get( void );
 
 /*!
  * Sets the card clock divider configuration (\b sdmmc_cclk_out).
@@ -653,15 +669,15 @@ uint32_t alt_sdmmc_card_clk_div_get(void);
  *              of 0 means divide by 2 * 0 = 0 (no division, effectively a bypass),
  *              a value of 1 means divide by 2 * 1 = 2, value of 0xff means divide
  *              by 2 * 255 = 510. Valid range is 0 to 255.
- * 
+ *
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
- *              
+ *
  * \internal
  * The card clock must be diesabled before changing the clk_div value.
  * \endinternal
  */
-ALT_STATUS_CODE alt_sdmmc_card_clk_div_set(const uint32_t clk_div);
+    ALT_STATUS_CODE alt_sdmmc_card_clk_div_set( const uint32_t clk_div );
 
 /*!
  * Gets the configured card data transfer rate in bit/s. The units is
@@ -669,7 +685,7 @@ ALT_STATUS_CODE alt_sdmmc_card_clk_div_set(const uint32_t clk_div);
  *
  * \returns     The data transfer rate in bit/s.
  */
-uint32_t alt_sdmmc_card_speed_get(void);
+    uint32_t alt_sdmmc_card_speed_get( void );
 
 /*!
  * Sets the card data transfer rate. The units is compatible with
@@ -680,7 +696,7 @@ uint32_t alt_sdmmc_card_speed_get(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_card_speed_set(uint32_t xfer_speed);
+    ALT_STATUS_CODE alt_sdmmc_card_speed_set( uint32_t xfer_speed );
 
 /*!
  * Disables the card clock (\b sdmmc_cclk_out).
@@ -688,7 +704,7 @@ ALT_STATUS_CODE alt_sdmmc_card_speed_set(uint32_t xfer_speed);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_card_clk_disable(void);
+    ALT_STATUS_CODE alt_sdmmc_card_clk_disable( void );
 
 /*!
  * Enables the card clock (\b sdmmc_cclk_out).
@@ -703,7 +719,7 @@ ALT_STATUS_CODE alt_sdmmc_card_clk_disable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_card_clk_enable(const bool use_low_pwr_mode);
+    ALT_STATUS_CODE alt_sdmmc_card_clk_enable( const bool use_low_pwr_mode );
 
 /*!
  * Returns true if the card clock (\b sdmmc_cclk_out) is enabled otherwise returns
@@ -712,7 +728,7 @@ ALT_STATUS_CODE alt_sdmmc_card_clk_enable(const bool use_low_pwr_mode);
  * \retval      true            The card clock is enabled.
  * \retval      false           The card clock is not enabled.
  */
-bool alt_sdmmc_card_clk_is_enabled(void);
+    bool alt_sdmmc_card_clk_is_enabled( void );
 
 /*!
  * Reset the card device.
@@ -727,41 +743,41 @@ bool alt_sdmmc_card_clk_is_enabled(void);
  * purpose output pin.
  * \endinternal
  */
-ALT_STATUS_CODE alt_sdmmc_card_reset(void);
+    ALT_STATUS_CODE alt_sdmmc_card_reset( void );
 
 /*!
  * Returns true if a card presence is detected otherwise returns false.
  *
  * \retval      true            A card is present.
  * \retval      false           A card is not present.
- *              
+ *
  * \internal
  * \endinternal
  */
-bool alt_sdmmc_card_is_detected(void);
+    bool alt_sdmmc_card_is_detected( void );
 
 /*!
  * Returns true if card write protection is enabled otherwise returns false.
  *
  * \retval      true            Card is write protected.
  * \retval      false           Card is not write protected.
- *              
+ *
  * \internal
  * \endinternal
  */
-bool alt_sdmmc_card_is_write_protected(void);
+    bool alt_sdmmc_card_is_write_protected( void );
 
 /*!
  * Returns true if power is on (enabled) to the card otherwise returns false.
  *
  * \retval      true            Card power is on (enabled).
  * \retval      false           Card power is off (disabled).
- *              
+ *
  * \internal
  * pwren
  * \endinternal
  */
-bool alt_sdmmc_card_pwr_is_on(void);
+    bool alt_sdmmc_card_pwr_is_on( void );
 
 /*!
  * Enable (turn on) power to the card device.
@@ -772,7 +788,7 @@ bool alt_sdmmc_card_pwr_is_on(void);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_card_pwr_on(void);
+    ALT_STATUS_CODE alt_sdmmc_card_pwr_on( void );
 
 /*!
  * Disable (turn off) power to the card device.
@@ -782,11 +798,12 @@ ALT_STATUS_CODE alt_sdmmc_card_pwr_on(void);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_card_pwr_off(void);
+    ALT_STATUS_CODE alt_sdmmc_card_pwr_off( void );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_SDMMC_DMA SD/MMC Controller Internal DMA
  *
  * The internal DMA controller has a control and status register interface and a
@@ -828,18 +845,18 @@ ALT_STATUS_CODE alt_sdmmc_card_pwr_off(void);
  * for the internal DMA controller (\ref ALT_SDMMC_DMA_INT_STATUS_t) contribute to
  * the overall \b ALT_INT_INTERRUPT_SDMMC_IRQ signal state
  */
-typedef enum ALT_SDMMC_DMA_INT_STATUS_e
-{
-    ALT_SDMMC_DMA_INT_STATUS_TI   = (1UL << 0), /*!< Transmit Interrupt Enable */
-    ALT_SDMMC_DMA_INT_STATUS_RI   = (1UL << 1), /*!< Receive Interrupt Enable */
-    ALT_SDMMC_DMA_INT_STATUS_FBE  = (1UL << 2), /*!< Fatal Bus Error */
-    ALT_SDMMC_DMA_INT_STATUS_DU   = (1UL << 4), /*!< Descriptor Unavailable Interrupt */
-    ALT_SDMMC_DMA_INT_STATUS_CES  = (1UL << 5), /*!< Card Error Summary Interrupt Enable */
-    ALT_SDMMC_DMA_INT_STATUS_NI   = (1UL << 8), /*!< Normal Interrupt Summary Enable */
-    ALT_SDMMC_DMA_INT_STATUS_AI   = (1UL << 9), /*!< Abnormal Interrupt Summary Enable. */
+    typedef enum ALT_SDMMC_DMA_INT_STATUS_e
+    {
+        ALT_SDMMC_DMA_INT_STATUS_TI = ( 1UL << 0 ),  /*!< Transmit Interrupt Enable */
+        ALT_SDMMC_DMA_INT_STATUS_RI = ( 1UL << 1 ),  /*!< Receive Interrupt Enable */
+        ALT_SDMMC_DMA_INT_STATUS_FBE = ( 1UL << 2 ), /*!< Fatal Bus Error */
+        ALT_SDMMC_DMA_INT_STATUS_DU = ( 1UL << 4 ),  /*!< Descriptor Unavailable Interrupt */
+        ALT_SDMMC_DMA_INT_STATUS_CES = ( 1UL << 5 ), /*!< Card Error Summary Interrupt Enable */
+        ALT_SDMMC_DMA_INT_STATUS_NI = ( 1UL << 8 ),  /*!< Normal Interrupt Summary Enable */
+        ALT_SDMMC_DMA_INT_STATUS_AI = ( 1UL << 9 ),  /*!< Abnormal Interrupt Summary Enable. */
 
-    ALT_SDMMC_DMA_INT_STATUS_ALL  = 0x337,
-} ALT_SDMMC_DMA_INT_STATUS_t;
+        ALT_SDMMC_DMA_INT_STATUS_ALL = 0x337,
+    } ALT_SDMMC_DMA_INT_STATUS_t;
 
 /*!
  * This type defines the SD/MMC controller internal DMA controller descriptor
@@ -852,18 +869,18 @@ typedef enum ALT_SDMMC_DMA_INT_STATUS_e
  *   * Chain structure - Each descriptor points to a unique buffer, and to the next
  *     descriptor in a linked list.
  */
-typedef struct ALT_SDMMC_DMA_BUF_DESC_s
-{
-  /*! The DES0 field in the internal DMA controller descriptor contains control and
-   *  status information.
-   */
-  union DES0
-  {
-    /*! Structure for DES0 register data fields. */
-    struct
+    typedef struct ALT_SDMMC_DMA_BUF_DESC_s
     {
-      uint32_t                  :  1;           /*!< Reserved */
-      uint32_t  dic             :  1;           /*!< Disable Interrupt on Completion
+        /*! The DES0 field in the internal DMA controller descriptor contains control and
+         *  status information.
+         */
+        union DES0
+        {
+            /*! Structure for DES0 register data fields. */
+            struct
+            {
+                uint32_t                  :  1; /*!< Reserved */
+                uint32_t dic             :  1;  /*!< Disable Interrupt on Completion
                                                  *   (DIC). When set to 1, this bit
                                                  *   prevents the setting of the
                                                  *   TI/RI bit of the internal DMA
@@ -872,13 +889,13 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   in the buffer pointed to by
                                                  *   this descriptor.
                                                  */
-      uint32_t  ld              :  1;           /*!< Last Descriptor (LD). When set
+                uint32_t ld              :  1;  /*!< Last Descriptor (LD). When set
                                                  *   to 1, this bit indicates that
                                                  *   the buffers pointed to by this
                                                  *   descriptor are the last buffers
                                                  *   of the data.
                                                  */
-      uint32_t  fs              :  1;           /*!< First Descriptor (FS). When set
+                uint32_t fs              :  1;  /*!< First Descriptor (FS). When set
                                                  *   to 1, this bit indicates that
                                                  *   this descriptor contains the
                                                  *   first buffer of the data. If
@@ -886,7 +903,7 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   0, next descriptor contains the
                                                  *   beginning of the data.
                                                  */
-      uint32_t  ch              :  1;           /*!< Second Address Chained
+                uint32_t ch              :  1;  /*!< Second Address Chained
                                                  *   (CH). When set to 1, this bit
                                                  *   indicates that the second
                                                  *   address in the descriptor is
@@ -896,7 +913,7 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   to 1, BS2 (DES1[25:13]) must be
                                                  *   all zeros.
                                                  */
-      uint32_t  er              :  1;           /*!< End of Ring (ER). When set to
+                uint32_t er              :  1;  /*!< End of Ring (ER). When set to
                                                  *   1, this bit indicates that the
                                                  *   descriptor list reached its
                                                  *   final descriptor. The internal
@@ -907,13 +924,13 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   dual-buffer descriptor
                                                  *   structure.
                                                  */
-      uint32_t  ces             :  1;           /*!< Card Error Summary (CES). The
+                uint32_t ces             :  1;  /*!< Card Error Summary (CES). The
                                                  *   CES bit indicates whether a
                                                  *   transaction error occurred. The
                                                  *   CES bit is the logical OR of
                                                  *   the following error bits in the
                                                  *   rintsts register.
-                                                 *   * End-bit error (ebe) 
+                                                 *   * End-bit error (ebe)
                                                  *   * Response timeout (rto)
                                                  *   * Response CRC (rcrc)
                                                  *   * Start-bit error (sbe)
@@ -921,8 +938,8 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   * Data CRC for receive (dcrc)
                                                  *   * Response error (re)
                                                  */
-      uint32_t                  : 24;           /*!< Reserved */
-      uint32_t  own             :  1;           /*!< When set to 1, this bit
+                uint32_t                  : 24; /*!< Reserved */
+                uint32_t own             :  1;  /*!< When set to 1, this bit
                                                  *   indicates that the descriptor
                                                  *   is owned by the internal DMA
                                                  *   controller. When this bit is
@@ -933,67 +950,66 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   when it completes the data
                                                  *   transfer.
                                                  */
-    }         fld;                              /*!< Union data member access to
+            } fld;                              /*!< Union data member access to
                                                  *   DES0 fields.
                                                  */
-    uint32_t  raw;                              /*!< The DES0 raw register aggregate
+            uint32_t raw;                       /*!< The DES0 raw register aggregate
                                                  *   value.
                                                  */
-  } des0;                                       /*!< The DES0 field in the internal
+        } des0;                                 /*!< The DES0 field in the internal
                                                  *   DMA controller descriptor
                                                  *   contains control and status
                                                  *   information.
                                                  */
-  /*! The DES1 descriptor field contains the buffer size. */
-  union DES1
-  {
-    /*! Structure for DES1 register data fields. */
-    struct
-    {
-        uint32_t  bs1             : 13;           /*!< Buffer 1 Size (BS1). Indicates
-                                                   *   the data buffer byte size,
-                                                   *   which must be a multiple of
-                                                   *   four bytes. When the buffer
-                                                   *   size is not a multiple of four,
-                                                   *   the resulting behavior is
-                                                   *   undefined. If this field is 0,
-                                                   *   the DMA ignores the buffer and
-                                                   *   proceeds to the next descriptor
-                                                   *   for a chain structure, or to
-                                                   *   the next buffer for a
-                                                   *   dual-buffer structure. If there
-                                                   *   is only one descriptor and only
-                                                   *   one buffer to be programmed,
-                                                   *   you need to use only buffer 1
-                                                   *   and not buffer 2.
-                                                   */
-        uint32_t  bs2             : 13;           /*!< Buffer 2 Size (BS2). These bits
-                                                   *   indicate the second data buffer
-                                                   *   byte size. The buffer size must
-                                                   *   be a multiple of four. When the
-                                                   *   buffer size is not a multiple
-                                                   *   of four, the resulting behavior
-                                                   *   is undefined. This field is not
-                                                   *   valid if DES0[4] is set to 1.
-                                                   */
-        uint32_t                  :  6;           /*!< Reserved */
-
-    }         fld;                              /*!< Union data member access to
+        /*! The DES1 descriptor field contains the buffer size. */
+        union DES1
+        {
+            /*! Structure for DES1 register data fields. */
+            struct
+            {
+                uint32_t bs1             : 13;  /*!< Buffer 1 Size (BS1). Indicates
+                                                 *   the data buffer byte size,
+                                                 *   which must be a multiple of
+                                                 *   four bytes. When the buffer
+                                                 *   size is not a multiple of four,
+                                                 *   the resulting behavior is
+                                                 *   undefined. If this field is 0,
+                                                 *   the DMA ignores the buffer and
+                                                 *   proceeds to the next descriptor
+                                                 *   for a chain structure, or to
+                                                 *   the next buffer for a
+                                                 *   dual-buffer structure. If there
+                                                 *   is only one descriptor and only
+                                                 *   one buffer to be programmed,
+                                                 *   you need to use only buffer 1
+                                                 *   and not buffer 2.
+                                                 */
+                uint32_t bs2             : 13;  /*!< Buffer 2 Size (BS2). These bits
+                                                 *   indicate the second data buffer
+                                                 *   byte size. The buffer size must
+                                                 *   be a multiple of four. When the
+                                                 *   buffer size is not a multiple
+                                                 *   of four, the resulting behavior
+                                                 *   is undefined. This field is not
+                                                 *   valid if DES0[4] is set to 1.
+                                                 */
+                uint32_t                  :  6; /*!< Reserved */
+            } fld;                              /*!< Union data member access to
                                                  *   DES1 fields.
                                                  */
-    uint32_t  raw;                              /*!< The DES1 raw register aggregate
+            uint32_t raw;                       /*!< The DES1 raw register aggregate
                                                  *   value.
                                                  */
-  } des1;                                       /*!< The DES1 descriptor field
+        } des1;                                 /*!< The DES1 descriptor field
                                                  *   contains the buffer size.
                                                  */
-  /*! The DES2 descriptor field contains the address pointer to the data buffer. */
-  union DES2
-  {
-    /*! Structure for DES2 register data fields. */
-    struct
-    {
-      uint32_t  bap1            : 32;           /*!< Buffer Address Pointer 1
+        /*! The DES2 descriptor field contains the address pointer to the data buffer. */
+        union DES2
+        {
+            /*! Structure for DES2 register data fields. */
+            struct
+            {
+                uint32_t bap1            : 32;  /*!< Buffer Address Pointer 1
                                                  *   (BAP1). These bits indicate the
                                                  *   physical address of the first
                                                  *   data buffer. The internal DMA
@@ -1001,26 +1017,27 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   because it only performs
                                                  *   32-bit-aligned accesses.
                                                  */
-    }         fld;                              /*!< Union data member access to
+            } fld;                              /*!< Union data member access to
                                                  *   DES2 fields.
                                                  */
-    uint32_t  raw;                              /*!< The DES2 raw register aggregate
+            uint32_t raw;                       /*!< The DES2 raw register aggregate
                                                  *   value.
                                                  */
-  } des2;                                       /*!< The DES2 descriptor field
+        } des2;                                 /*!< The DES2 descriptor field
                                                  *   contains the address pointer to
                                                  *   the data buffer.
                                                  */
-  /*! The DES3 descriptor field contains the address pointer to the next descriptor
-   *  if the present descriptor is not the last descriptor in a chained descriptor
-   *  structure or the second buffer address for a dual-buffer structure.
-   */
-  union DES3
-  {
-    /*! Structure for DES3 register data fields. */
-    struct
-    {
-      uint32_t  bap2_or_next    : 32;           /*!< Buffer Address Pointer 2 (BAP2)
+
+        /*! The DES3 descriptor field contains the address pointer to the next descriptor
+         *  if the present descriptor is not the last descriptor in a chained descriptor
+         *  structure or the second buffer address for a dual-buffer structure.
+         */
+        union DES3
+        {
+            /*! Structure for DES3 register data fields. */
+            struct
+            {
+                uint32_t bap2_or_next    : 32;  /*!< Buffer Address Pointer 2 (BAP2)
                                                  *   or Next Descriptor
                                                  *   Address. These bits indicate
                                                  *   the physical address of the
@@ -1037,13 +1054,13 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   be aligned to 32 bits. Bits 1
                                                  *   and 0 are ignored.
                                                  */
-    }         fld;                              /*!< Union data member access to
+            } fld;                              /*!< Union data member access to
                                                  *   DES3 fields.
                                                  */
-    uint32_t  raw;                              /*!< The DES3 raw register aggregate
+            uint32_t raw;                       /*!< The DES3 raw register aggregate
                                                  *   value.
                                                  */
-  } des3;                                       /*!< The DES3 descriptor field
+        } des3;                                 /*!< The DES3 descriptor field
                                                  *   contains the address pointer to
                                                  *   the next descriptor if the
                                                  *   present descriptor is not the
@@ -1052,8 +1069,7 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
                                                  *   second buffer address for a
                                                  *   dual-buffer structure.
                                                  */
-
-} ALT_SDMMC_DMA_BUF_DESC_t;
+    } ALT_SDMMC_DMA_BUF_DESC_t;
 
 /*!
  * Resets the SD/MMC internal DMA controller.
@@ -1070,7 +1086,7 @@ typedef struct ALT_SDMMC_DMA_BUF_DESC_s
  * What's the difference if the effect of these two controls?
  * \endinternal
  */
-ALT_STATUS_CODE alt_sdmmc_dma_reset(void);
+    ALT_STATUS_CODE alt_sdmmc_dma_reset( void );
 
 /*!
  * Disables use of the SD/MMC controller internal DMA for data transfers.
@@ -1088,7 +1104,7 @@ ALT_STATUS_CODE alt_sdmmc_dma_reset(void);
  * What's the difference if the effect of these two controls?
  * \endinternal
  */
-ALT_STATUS_CODE alt_sdmmc_dma_disable(void);
+    ALT_STATUS_CODE alt_sdmmc_dma_disable( void );
 
 /*!
  * Enables use of the SD/MMC controller internal DMA for data transfers.
@@ -1106,24 +1122,23 @@ ALT_STATUS_CODE alt_sdmmc_dma_disable(void);
  * What's the difference if the effect of these two controls?
  * \endinternal
  */
-ALT_STATUS_CODE alt_sdmmc_dma_enable(void);
+    ALT_STATUS_CODE alt_sdmmc_dma_enable( void );
 
 /*!
  * This type enumerates the host bus programmable burst length options
  * available to the SD/MMC internal DMA controller.
  */
-typedef enum ALT_SDMMC_DMA_PBL_e
-{
-    ALT_SDMMC_DMA_PBL_1     = 0x0,      /*!< 1 transfer unit    */
-    ALT_SDMMC_DMA_PBL_4     = 0x1,      /*!< 4 transfer units   */
-    ALT_SDMMC_DMA_PBL_8     = 0x2,      /*!< 8 transfer units   */
-    ALT_SDMMC_DMA_PBL_16    = 0x3,      /*!< 16 transfer units  */
-    ALT_SDMMC_DMA_PBL_32    = 0x4,      /*!< 32 transfer units  */
-    ALT_SDMMC_DMA_PBL_64    = 0x5,      /*!< 64 transfer units  */
-    ALT_SDMMC_DMA_PBL_128   = 0x6,      /*!< 128 transfer units */
-    ALT_SDMMC_DMA_PBL_256   = 0x7,      /*!< 256 transfer units */
-    
-} ALT_SDMMC_DMA_PBL_t;
+    typedef enum ALT_SDMMC_DMA_PBL_e
+    {
+        ALT_SDMMC_DMA_PBL_1 = 0x0,      /*!< 1 transfer unit    */
+        ALT_SDMMC_DMA_PBL_4 = 0x1,      /*!< 4 transfer units   */
+        ALT_SDMMC_DMA_PBL_8 = 0x2,      /*!< 8 transfer units   */
+        ALT_SDMMC_DMA_PBL_16 = 0x3,     /*!< 16 transfer units  */
+        ALT_SDMMC_DMA_PBL_32 = 0x4,     /*!< 32 transfer units  */
+        ALT_SDMMC_DMA_PBL_64 = 0x5,     /*!< 64 transfer units  */
+        ALT_SDMMC_DMA_PBL_128 = 0x6,    /*!< 128 transfer units */
+        ALT_SDMMC_DMA_PBL_256 = 0x7,    /*!< 256 transfer units */
+    } ALT_SDMMC_DMA_PBL_t;
 
 /*!
  * Starts the SD/MMC internal DMA transfer with the specified
@@ -1158,10 +1173,10 @@ typedef enum ALT_SDMMC_DMA_PBL_e
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_dma_start(ALT_SDMMC_DMA_BUF_DESC_t *buf_desc_list, 
-                                    const uint32_t desc_skip_len,
-                                    const ALT_SDMMC_DMA_PBL_t burst_len,
-                                    const bool use_fixed_burst);
+    ALT_STATUS_CODE alt_sdmmc_dma_start( ALT_SDMMC_DMA_BUF_DESC_t * buf_desc_list,
+                                         const uint32_t desc_skip_len,
+                                         const ALT_SDMMC_DMA_PBL_t burst_len,
+                                         const bool use_fixed_burst );
 
 /*!
  * Sets any value for the IDMAC FSM to resume normal descriptor
@@ -1173,7 +1188,7 @@ ALT_STATUS_CODE alt_sdmmc_dma_start(ALT_SDMMC_DMA_BUF_DESC_t *buf_desc_list,
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_poll_demand_set(const uint32_t value);
+    ALT_STATUS_CODE alt_sdmmc_poll_demand_set( const uint32_t value );
 
 /*!
  * Returns the SD/MMC internal DMA controller status register value which
@@ -1183,7 +1198,7 @@ ALT_STATUS_CODE alt_sdmmc_poll_demand_set(const uint32_t value);
  *              reflects the current SD/MMC internal DMA interrupt status
  *              conditions.
  */
-uint32_t alt_sdmmc_dma_int_status_get(void);
+    uint32_t alt_sdmmc_dma_int_status_get( void );
 
 /*!
  * Returns the SD/MMC internal DMA controller interrupt mask value which
@@ -1196,7 +1211,7 @@ uint32_t alt_sdmmc_dma_int_status_get(void);
  *              ALT_SDMMC_DMA_INT_STATUS_t position indicates an interrupt that
  *              is masked.
  */
-uint32_t alt_sdmmc_dma_int_mask_get(void);
+    uint32_t alt_sdmmc_dma_int_mask_get( void );
 
 /*!
  * Clears the specified SD/MMC internal DMA controller interrupt status
@@ -1214,7 +1229,7 @@ uint32_t alt_sdmmc_dma_int_mask_get(void);
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
  * \retval      ALT_E_ERROR     Indicates an error occurred.
  */
-ALT_STATUS_CODE alt_sdmmc_dma_int_clear(const uint32_t mask);
+    ALT_STATUS_CODE alt_sdmmc_dma_int_clear( const uint32_t mask );
 
 /*!
  * Disable the specified SD/MMC internal DMA controller interrupt status
@@ -1237,7 +1252,7 @@ ALT_STATUS_CODE alt_sdmmc_dma_int_clear(const uint32_t mask);
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
  * \retval      ALT_E_ERROR     Indicates an error occurred.
  */
-ALT_STATUS_CODE alt_sdmmc_dma_int_disable(const uint32_t mask);
+    ALT_STATUS_CODE alt_sdmmc_dma_int_disable( const uint32_t mask );
 
 /*!
  * Enable the specified SD/MMC internal DMA controller interrupt status conditions
@@ -1260,11 +1275,12 @@ ALT_STATUS_CODE alt_sdmmc_dma_int_disable(const uint32_t mask);
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
  * \retval      ALT_E_ERROR     Indicates an error occurred.
  */
-ALT_STATUS_CODE alt_sdmmc_dma_int_enable(const uint32_t mask);
+    ALT_STATUS_CODE alt_sdmmc_dma_int_enable( const uint32_t mask );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_SDMMC_FIFO SD/MMC Controller FIFO
  *
  *
@@ -1274,34 +1290,34 @@ ALT_STATUS_CODE alt_sdmmc_dma_int_enable(const uint32_t mask);
 /*!
  * The number of entries (depth) of the SDMMC controller FIFO.
  */
-#define ALT_SDMMC_FIFO_NUM_ENTRIES     1024
+    #define ALT_SDMMC_FIFO_NUM_ENTRIES    1024
 
 /*!
  * Resets the SD/MMC controller FIFO.
  *
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
- * 
+ *
  * \internal
  * ctrl.fifo_reset - write 1 to reset FIFO
  * \endinternal
  */
-ALT_STATUS_CODE alt_sdmmc_fifo_reset(void);
+    ALT_STATUS_CODE alt_sdmmc_fifo_reset( void );
 
 /*!
  * This type enumerates the burst size of multiple transaction
  * available to the SD/MMC internal DMA controller.
  */
-typedef enum ALT_SDMMC_MULT_TRANS_e
-{
-    ALT_SDMMC_MULT_TRANS_TXMSIZE1     = 0x0,      /*!< Msize 1 and TX_WMARK 1-1023 */
-    ALT_SDMMC_MULT_TRANS_TXMSIZE4     = 0x1,      /*!< Msize 1 and TX_WMARK 1-1023 */
-    ALT_SDMMC_MULT_TRANS_TXMSIZEK8    = 0x2,      /*!< Msize 4 and TX_WMARK 256    */
-    ALT_SDMMC_MULT_TRANS_TXMSIZEK16   = 0x3,      /*!< Msize 16 and TX_WMARK 64    */
-    ALT_SDMMC_MULT_TRANS_RXMSIZEK1    = 0x5,      /*!< Msize 1 and RX_WMARK 512    */
-    ALT_SDMMC_MULT_TRANS_RXMSIZEK4    = 0x6,      /*!< Msize 1 and RX_WMARK 512    */
-    ALT_SDMMC_MULT_TRANS_RXMSIZE8     = 0x7,      /*!< Msize 8 and RX_WMARK 64     */
-} ALT_SDMMC_MULT_TRANS_t;
+    typedef enum ALT_SDMMC_MULT_TRANS_e
+    {
+        ALT_SDMMC_MULT_TRANS_TXMSIZE1 = 0x0,      /*!< Msize 1 and TX_WMARK 1-1023 */
+        ALT_SDMMC_MULT_TRANS_TXMSIZE4 = 0x1,      /*!< Msize 1 and TX_WMARK 1-1023 */
+        ALT_SDMMC_MULT_TRANS_TXMSIZEK8 = 0x2,     /*!< Msize 4 and TX_WMARK 256    */
+        ALT_SDMMC_MULT_TRANS_TXMSIZEK16 = 0x3,    /*!< Msize 16 and TX_WMARK 64    */
+        ALT_SDMMC_MULT_TRANS_RXMSIZEK1 = 0x5,     /*!< Msize 1 and RX_WMARK 512    */
+        ALT_SDMMC_MULT_TRANS_RXMSIZEK4 = 0x6,     /*!< Msize 1 and RX_WMARK 512    */
+        ALT_SDMMC_MULT_TRANS_RXMSIZE8 = 0x7,      /*!< Msize 8 and RX_WMARK 64     */
+    } ALT_SDMMC_MULT_TRANS_t;
 
 /*!
  * Gets the configured FIFO operational parameter values.
@@ -1322,8 +1338,9 @@ typedef enum ALT_SDMMC_MULT_TRANS_e
  * \retval      ALT_E_ERROR     The operation failed.
  */
 
-ALT_STATUS_CODE alt_sdmmc_fifo_param_get(uint32_t *rx_wtrmk, uint32_t *tx_wtrmk,
-                                                ALT_SDMMC_MULT_TRANS_t *mult_trans_size);
+    ALT_STATUS_CODE alt_sdmmc_fifo_param_get( uint32_t * rx_wtrmk,
+                                              uint32_t * tx_wtrmk,
+                                              ALT_SDMMC_MULT_TRANS_t * mult_trans_size );
 
 /*!
  * Sets the configured FIFO operational parameter values.
@@ -1343,7 +1360,9 @@ ALT_STATUS_CODE alt_sdmmc_fifo_param_get(uint32_t *rx_wtrmk, uint32_t *tx_wtrmk,
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_fifo_param_set(uint32_t rx_wtrmk, uint32_t tx_wtrmk, ALT_SDMMC_MULT_TRANS_t mult_trans_size);
+    ALT_STATUS_CODE alt_sdmmc_fifo_param_set( uint32_t rx_wtrmk,
+                                              uint32_t tx_wtrmk,
+                                              ALT_SDMMC_MULT_TRANS_t mult_trans_size );
 
 /*!
  * Returns true if SD/MMC controller FIFO has reached the receive watermark level
@@ -1351,11 +1370,11 @@ ALT_STATUS_CODE alt_sdmmc_fifo_param_set(uint32_t rx_wtrmk, uint32_t tx_wtrmk, A
  *
  * \retval      true            The FIFO has reached the receive watermark level.
  * \retval      false           The FIFO has not reached the receive watermark level.
- *              
+ *
  * \internal
  * \endinternal
  */
-bool alt_sdmmc_fifo_is_rx_wtrmk_reached(void);
+    bool alt_sdmmc_fifo_is_rx_wtrmk_reached( void );
 
 /*!
  * Returns true if SD/MMC controller FIFO has reached the transmit watermark level
@@ -1363,40 +1382,40 @@ bool alt_sdmmc_fifo_is_rx_wtrmk_reached(void);
  *
  * \retval      true            The FIFO has reached the transmit watermark level.
  * \retval      false           The FIFO has not reached the transmit watermark level.
- *              
+ *
  * \internal
  * \endinternal
  */
-bool alt_sdmmc_fifo_is_tx_wtrmk_reached(void);
+    bool alt_sdmmc_fifo_is_tx_wtrmk_reached( void );
 
 /*!
  * Returns true if SD/MMC controller FIFO is empty otherwise returns false.
  *
  * \retval      true            The FIFO is empty.
  * \retval      false           The FIFO is not empty.
- *              
+ *
  * \internal
  * \endinternal
  */
-bool alt_sdmmc_fifo_is_empty(void);
+    bool alt_sdmmc_fifo_is_empty( void );
 
 /*!
  * Returns true if SD/MMC controller FIFO is full otherwise returns false.
  *
  * \retval      true            The FIFO is full.
  * \retval      false           The FIFO is not full.
- *              
+ *
  * \internal
  * \endinternal
  */
-bool alt_sdmmc_fifo_is_full(void);
+    bool alt_sdmmc_fifo_is_full( void );
 
 /*!
  * Returns the number of filled FIFO locations.
  *
  * \returns     The number of filled FIFO locations.
  */
-int32_t alt_sdmmc_fifo_count(void);
+    int32_t alt_sdmmc_fifo_count( void );
 
 /*!
  * Read data from the SD/MMC controller FIFO.
@@ -1416,7 +1435,8 @@ int32_t alt_sdmmc_fifo_count(void);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_fifo_read(void *dest, const size_t size);
+    ALT_STATUS_CODE alt_sdmmc_fifo_read( void * dest,
+                                         const size_t size );
 
 /*!
  * Writes data to the SD/MMC controller FIFO.
@@ -1426,7 +1446,7 @@ ALT_STATUS_CODE alt_sdmmc_fifo_read(void *dest, const size_t size);
  * written to the FIFO or if an error occurs.
  *
  * \param       src
- *              A pointer to 
+ *              A pointer to
  *              A pointer to the source buffer containing the data to be written to the
  *              FIFO. The buffer must be as large the requested number of
  *              bytes rounded up to the nearest 32-bit word size.
@@ -1439,11 +1459,13 @@ ALT_STATUS_CODE alt_sdmmc_fifo_read(void *dest, const size_t size);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_sdmmc_fifo_write(const void *src, const size_t size);
+    ALT_STATUS_CODE alt_sdmmc_fifo_write( const void * src,
+                                          const size_t size );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_SDMMC_BLKIO General Purpose Block I/O
  *
  * The functions in this group provide general purpose block read and write flash
@@ -1471,7 +1493,9 @@ ALT_STATUS_CODE alt_sdmmc_fifo_write(const void *src, const size_t size);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_sdmmc_read(void *dest, void *src, const size_t size);
+    ALT_STATUS_CODE alt_sdmmc_read( void * dest,
+                                    void * src,
+                                    const size_t size );
 
 /*!
  * Write a block of data to the SD/MMC flash card.
@@ -1479,7 +1503,7 @@ ALT_STATUS_CODE alt_sdmmc_read(void *dest, void *src, const size_t size);
  * Writes a block of \e size data bytes to the SD/MMC flash \e dest address from the
  * designated \e src buffer. The actual number of bytes written to the flash card is
  * \e size bytes rounded up to the next whole multiple flash card block size. That
- * is: 
+ * is:
  * \e actual_bytes_written = ((\e size / \e flash_block_size) + 1) * \e flash_block_size
  *
  *
@@ -1495,14 +1519,16 @@ ALT_STATUS_CODE alt_sdmmc_read(void *dest, void *src, const size_t size);
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
  * \retval      ALT_E_ERROR     Indicates an error occurred.
  */
-ALT_STATUS_CODE alt_sdmmc_write(void *dest, void *src, const size_t size);
+    ALT_STATUS_CODE alt_sdmmc_write( void * dest,
+                                     void * src,
+                                     const size_t size );
 
 /*! @} */
 
 /*! @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
+    #endif /* __cplusplus */
 
-#endif  /* __ALT_SDMMC_H__ */
+#endif /* __ALT_SDMMC_H__ */

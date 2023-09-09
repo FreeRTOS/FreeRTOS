@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -33,7 +33,7 @@
  * Implementation of DMA controller (DMAC).
  *
  */
- 
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <stdint.h>
 #include <assert.h>
+
 /** \addtogroup dmac_functions DMAC Functions
  *@{
  */
@@ -55,10 +56,10 @@
  *
  * \param pDmac  Pointer to the DMAC peripheral.
  */
-void DMAC_Modified_Arbiter( Dmac *pDmac)
+void DMAC_Modified_Arbiter( Dmac * pDmac )
 {
-    assert(pDmac);
-    pDmac->DMAC_GCFG = DMAC_GCFG_ARB_CFG ;
+    assert( pDmac );
+    pDmac->DMAC_GCFG = DMAC_GCFG_ARB_CFG;
 }
 
 /**
@@ -66,9 +67,9 @@ void DMAC_Modified_Arbiter( Dmac *pDmac)
  *
  * \param pDmac  Pointer to the DMAC peripheral.
  */
-void DMAC_Enable( Dmac *pDmac )
+void DMAC_Enable( Dmac * pDmac )
 {
-    assert(pDmac);
+    assert( pDmac );
     pDmac->DMAC_EN = DMAC_EN_ENABLE;
 }
 
@@ -77,10 +78,10 @@ void DMAC_Enable( Dmac *pDmac )
  *
  * \param pDmac Pointer to the DMAC peripheral .
  */
-void DMAC_Disable( Dmac *pDmac )
+void DMAC_Disable( Dmac * pDmac )
 {
-    assert(pDmac);
-    pDmac->DMAC_EN = ~(uint32_t)DMAC_EN_ENABLE;
+    assert( pDmac );
+    pDmac->DMAC_EN = ~( uint32_t ) DMAC_EN_ENABLE;
 }
 
 /**
@@ -89,9 +90,10 @@ void DMAC_Disable( Dmac *pDmac )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param dwInteruptMask IT to be enabled.
  */
-void DMAC_EnableIt (Dmac *pDmac, uint32_t dwInteruptMask )
+void DMAC_EnableIt( Dmac * pDmac,
+                    uint32_t dwInteruptMask )
 {
-    assert(pDmac);
+    assert( pDmac );
     pDmac->DMAC_EBCIER = dwInteruptMask;
 }
 
@@ -101,9 +103,10 @@ void DMAC_EnableIt (Dmac *pDmac, uint32_t dwInteruptMask )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param dwInteruptMask IT to be enabled
  */
-void DMAC_DisableIt (Dmac *pDmac, uint32_t dwInteruptMask )
+void DMAC_DisableIt( Dmac * pDmac,
+                     uint32_t dwInteruptMask )
 {
-    assert(pDmac);
+    assert( pDmac );
     pDmac->DMAC_EBCIDR = dwInteruptMask;
 }
 
@@ -114,10 +117,10 @@ void DMAC_DisableIt (Dmac *pDmac, uint32_t dwInteruptMask )
  * \return DMAC Error, buffer transfer and chained buffer
  *  transfer interrupt mask register value.
  */
-uint32_t DMAC_GetInterruptMask( Dmac *pDmac )
+uint32_t DMAC_GetInterruptMask( Dmac * pDmac )
 {
-    assert(pDmac);
-    return (pDmac->DMAC_EBCIMR);
+    assert( pDmac );
+    return( pDmac->DMAC_EBCIMR );
 }
 
 /**
@@ -128,10 +131,10 @@ uint32_t DMAC_GetInterruptMask( Dmac *pDmac )
  * \return DMAC Error, buffer transfer and chained buffer
  *  transfer status register.
  */
-uint32_t DMAC_GetStatus( Dmac *pDmac )
+uint32_t DMAC_GetStatus( Dmac * pDmac )
 {
-    assert(pDmac);
-    return (pDmac->DMAC_EBCISR);
+    assert( pDmac );
+    return( pDmac->DMAC_EBCISR );
 }
 
 /**
@@ -143,10 +146,11 @@ uint32_t DMAC_GetStatus( Dmac *pDmac )
  * \return DMAC Error, buffer transfer and chained buffer
  *  transfer status register.
  */
-uint32_t DMAC_GetMaskedStatus( Dmac *pDmac )
+uint32_t DMAC_GetMaskedStatus( Dmac * pDmac )
 {
     uint32_t _dwStatus;
-    assert(pDmac);
+
+    assert( pDmac );
     _dwStatus = pDmac->DMAC_EBCISR;
     _dwStatus &= pDmac->DMAC_EBCIMR;
     return _dwStatus;
@@ -158,10 +162,11 @@ uint32_t DMAC_GetMaskedStatus( Dmac *pDmac )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-void DMAC_EnableChannel( Dmac *pDmac, uint8_t channel )
+void DMAC_EnableChannel( Dmac * pDmac,
+                         uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
     pDmac->DMAC_CHER |= DMAC_CHER_ENA0 << channel;
 }
 
@@ -171,9 +176,10 @@ void DMAC_EnableChannel( Dmac *pDmac, uint8_t channel )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param bmChannels Channels bitmap.
  */
-void DMAC_EnableChannels( Dmac *pDmac, uint8_t bmChannels )
+void DMAC_EnableChannels( Dmac * pDmac,
+                          uint8_t bmChannels )
 {
-    assert(pDmac);
+    assert( pDmac );
     pDmac->DMAC_CHER = bmChannels;
 }
 
@@ -183,10 +189,11 @@ void DMAC_EnableChannels( Dmac *pDmac, uint8_t bmChannels )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-void DMAC_DisableChannel( Dmac *pDmac, uint8_t channel )
+void DMAC_DisableChannel( Dmac * pDmac,
+                          uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
     pDmac->DMAC_CHDR |= DMAC_CHDR_DIS0 << channel;
 }
 
@@ -196,9 +203,10 @@ void DMAC_DisableChannel( Dmac *pDmac, uint8_t channel )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param bmChannels Channels bitmap.
  */
-void DMAC_DisableChannels( Dmac *pDmac, uint8_t bmChannels )
+void DMAC_DisableChannels( Dmac * pDmac,
+                           uint8_t bmChannels )
 {
-    assert(pDmac);
+    assert( pDmac );
     pDmac->DMAC_CHDR = bmChannels;
 }
 
@@ -208,10 +216,11 @@ void DMAC_DisableChannels( Dmac *pDmac, uint8_t bmChannels )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-void DMAC_SuspendChannel( Dmac *pDmac, uint8_t channel )
+void DMAC_SuspendChannel( Dmac * pDmac,
+                          uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
     pDmac->DMAC_CHER |= DMAC_CHER_SUSP0 << channel;
 }
 
@@ -222,10 +231,11 @@ void DMAC_SuspendChannel( Dmac *pDmac, uint8_t channel )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-void DMAC_KeepChannel( Dmac *pDmac, uint8_t channel )
+void DMAC_KeepChannel( Dmac * pDmac,
+                       uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
     pDmac->DMAC_CHER |= DMAC_CHER_KEEP0 << channel;
 }
 
@@ -235,10 +245,11 @@ void DMAC_KeepChannel( Dmac *pDmac, uint8_t channel )
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-void DMAC_RestoreChannel( Dmac *pDmac, uint8_t channel )
+void DMAC_RestoreChannel( Dmac * pDmac,
+                          uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
     pDmac->DMAC_CHDR |= DMAC_CHDR_RES0 << channel;
 }
 
@@ -248,10 +259,10 @@ void DMAC_RestoreChannel( Dmac *pDmac, uint8_t channel )
  * \param pDmac Pointer to the DMAC peripheral.
  * \return DMAC channel handler status register.
  */
-uint32_t DMAC_GetChannelStatus( Dmac *pDmac )
+uint32_t DMAC_GetChannelStatus( Dmac * pDmac )
 {
-    assert(pDmac);
-    return (pDmac->DMAC_CHSR);
+    assert( pDmac );
+    return( pDmac->DMAC_CHSR );
 }
 
 /**
@@ -262,13 +273,13 @@ uint32_t DMAC_GetChannelStatus( Dmac *pDmac )
  * \param saddr sources address.
  * \note This register must be aligned with the source transfer width.
  */
-void DMAC_SetSourceAddr( Dmac *pDmac,
+void DMAC_SetSourceAddr( Dmac * pDmac,
                          uint8_t channel,
                          uint32_t saddr )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_SADDR = saddr;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_SADDR = saddr;
 }
 
 /**
@@ -277,12 +288,12 @@ void DMAC_SetSourceAddr( Dmac *pDmac,
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-uint32_t DMAC_GetSourceAddr( Dmac *pDmac,
+uint32_t DMAC_GetSourceAddr( Dmac * pDmac,
                              uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    return pDmac->DMAC_CH_NUM[channel].DMAC_SADDR;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    return pDmac->DMAC_CH_NUM[ channel ].DMAC_SADDR;
 }
 
 /**
@@ -293,13 +304,13 @@ uint32_t DMAC_GetSourceAddr( Dmac *pDmac,
  * \param daddr sources address.
  * \note This register must be aligned with the source transfer width.
  */
-void DMAC_SetDestinationAddr( Dmac *pDmac,
+void DMAC_SetDestinationAddr( Dmac * pDmac,
                               uint8_t channel,
                               uint32_t daddr )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_DADDR = daddr;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_DADDR = daddr;
 }
 
 /**
@@ -308,12 +319,12 @@ void DMAC_SetDestinationAddr( Dmac *pDmac,
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-uint32_t DMAC_GetDestinationAddr( Dmac *pDmac,
+uint32_t DMAC_GetDestinationAddr( Dmac * pDmac,
                                   uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    return pDmac->DMAC_CH_NUM[channel].DMAC_DADDR;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    return pDmac->DMAC_CH_NUM[ channel ].DMAC_DADDR;
 }
 
 /**
@@ -324,16 +335,16 @@ uint32_t DMAC_GetDestinationAddr( Dmac *pDmac,
  * \param descr Buffer Transfer descriptor address
  * \param descrIf AHB-Lite interface to be fetched
  */
-void DMAC_SetDescriptorAddr( Dmac *pDmac,
+void DMAC_SetDescriptorAddr( Dmac * pDmac,
                              uint8_t channel,
                              uint32_t descr,
                              uint8_t descrif )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    assert(descrif < 2);
-    //pDmac->DMAC_CH_NUM[channel].DMAC_DSCR = DMAC_DSCR_DSCR( descr ) | descrif;
-    pDmac->DMAC_CH_NUM[channel].DMAC_DSCR = ( descr & 0xFFFFFFFC ) | descrif;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    assert( descrif < 2 );
+    /*pDmac->DMAC_CH_NUM[channel].DMAC_DSCR = DMAC_DSCR_DSCR( descr ) | descrif; */
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_DSCR = ( descr & 0xFFFFFFFC ) | descrif;
 }
 
 /**
@@ -343,13 +354,13 @@ void DMAC_SetDescriptorAddr( Dmac *pDmac,
  * \param channel Particular channel number.
  * \param controlA Configuration for controlA register.
  */
-void DMAC_SetControlA( Dmac *pDmac,
+void DMAC_SetControlA( Dmac * pDmac,
                        uint8_t channel,
                        uint32_t controlA )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA = controlA;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA = controlA;
 }
 
 
@@ -360,14 +371,14 @@ void DMAC_SetControlA( Dmac *pDmac,
  * \param channel Particular channel number.
  * \param bsize number of transfers to be performed.
  */
-void DMAC_SetBufferSize( Dmac *pDmac,
+void DMAC_SetBufferSize( Dmac * pDmac,
                          uint8_t channel,
-                         uint16_t bsize)
+                         uint16_t bsize )
 {
-   assert(pDmac);
-   assert(channel < DMAC_CHANNEL_NUM);
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA &= ~DMAC_CTRLA_BTSIZE_Msk;
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA |= DMAC_CTRLA_BTSIZE( bsize );
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA &= ~DMAC_CTRLA_BTSIZE_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA |= DMAC_CTRLA_BTSIZE( bsize );
 }
 
 /**
@@ -378,16 +389,16 @@ void DMAC_SetBufferSize( Dmac *pDmac,
  * \param srcWidth source width for single transfer.
  * \param dstWidth destination width for single transfer.
  */
- void DMAC_SetSingleTransferSize ( Dmac *pDmac,
-                                  uint8_t channel,
-                                  uint8_t srcWidth,
-                                  uint8_t dstWidth )
+void DMAC_SetSingleTransferSize( Dmac * pDmac,
+                                 uint8_t channel,
+                                 uint8_t srcWidth,
+                                 uint8_t dstWidth )
 {
-   assert(pDmac);
-   assert(channel < DMAC_CHANNEL_NUM);
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA &= ~DMAC_CTRLA_SRC_WIDTH_Msk;
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA &= ~DMAC_CTRLA_DST_WIDTH_Msk;
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA |= srcWidth | dstWidth;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA &= ~DMAC_CTRLA_SRC_WIDTH_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA &= ~DMAC_CTRLA_DST_WIDTH_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA |= srcWidth | dstWidth;
 }
 
 /**
@@ -398,16 +409,16 @@ void DMAC_SetBufferSize( Dmac *pDmac,
  * \param scSize Size of source chunk transfer.
  * \param dcSize Size of destination chunk transfer.
  */
-void DMAC_SetChunkTransferSize ( Dmac *pDmac,
-                                 uint8_t channel,
-                                 uint8_t scSize,
-                                 uint8_t dcSize)
+void DMAC_SetChunkTransferSize( Dmac * pDmac,
+                                uint8_t channel,
+                                uint8_t scSize,
+                                uint8_t dcSize )
 {
-   assert(pDmac);
-   assert(channel < DMAC_CHANNEL_NUM);
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA &= ~DMAC_CTRLA_SCSIZE_Msk;
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA &= ~DMAC_CTRLA_DCSIZE_Msk;
-   pDmac->DMAC_CH_NUM[channel].DMAC_CTRLA |= scSize | dcSize;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA &= ~DMAC_CTRLA_SCSIZE_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA &= ~DMAC_CTRLA_DCSIZE_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLA |= scSize | dcSize;
 }
 
 /**
@@ -417,41 +428,43 @@ void DMAC_SetChunkTransferSize ( Dmac *pDmac,
  * \param channel Particular channel number.
  * \param controlB Configuration for controlA register.
  */
-void DMAC_SetControlB( Dmac *pDmac,
+void DMAC_SetControlB( Dmac * pDmac,
                        uint8_t channel,
                        uint32_t controlB )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB = controlB;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB = controlB;
 }
 
 /**
- * \brief Enables DMAC automatic multiple buffer transfer 
+ * \brief Enables DMAC automatic multiple buffer transfer
  *        mode used by a DMAC channel.
  *
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-void DMAC_EnableAutoMode( Dmac *pDmac, uint8_t channel )
+void DMAC_EnableAutoMode( Dmac * pDmac,
+                          uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB |= DMAC_CTRLB_AUTO;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB |= DMAC_CTRLB_AUTO;
 }
 
 /**
- * \brief Disable DMAC automatic multiple buffer transfer 
+ * \brief Disable DMAC automatic multiple buffer transfer
  *        mode used by a DMAC channel.
  *
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
  */
-void DMAC_DisableAutoMode( Dmac *pDmac, uint8_t channel )
+void DMAC_DisableAutoMode( Dmac * pDmac,
+                           uint8_t channel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_AUTO;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_AUTO;
 }
 
 /**
@@ -462,16 +475,16 @@ void DMAC_DisableAutoMode( Dmac *pDmac, uint8_t channel )
  * \param srcIf Source AHB-Lite interface.
  * \param dstIf Destination AHB-Lite interface.
  */
-void DMAC_SelectAHBInterface( Dmac *pDmac,
+void DMAC_SelectAHBInterface( Dmac * pDmac,
                               uint8_t channel,
                               uint8_t srcIf,
                               uint8_t dstIf )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_SIF_Msk;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_DIF_Msk;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB |= srcIf | dstIf;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_SIF_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_DIF_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB |= srcIf | dstIf;
 }
 
 
@@ -483,16 +496,16 @@ void DMAC_SelectAHBInterface( Dmac *pDmac,
  * \param srcPip Source picture-in-picture mode.
  * \param srcPip destination picture-in-picture mode.
  */
-void DMAC_SetPipMode( Dmac *pDmac,
+void DMAC_SetPipMode( Dmac * pDmac,
                       uint8_t channel,
                       uint8_t srcPip,
                       uint8_t dstPip )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM );
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_SRC_PIP;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_DST_PIP;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB |= srcPip | dstPip;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_SRC_PIP;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_DST_PIP;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB |= srcPip | dstPip;
 }
 
 /**
@@ -503,16 +516,16 @@ void DMAC_SetPipMode( Dmac *pDmac,
  * \param srcDscr Source buffer descriptor fetch mode.
  * \param dstDscr destination buffer descriptor fetch mode.
  */
-void DMAC_SetDescFetchMode( Dmac *pDmac,
+void DMAC_SetDescFetchMode( Dmac * pDmac,
                             uint8_t channel,
                             uint8_t srcDscr,
                             uint8_t dstDscr )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM );
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_SRC_DSCR;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_DST_DSCR;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB |= srcDscr | dstDscr;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_SRC_DSCR;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_DST_DSCR;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB |= srcDscr | dstDscr;
 }
 
 /**
@@ -522,14 +535,14 @@ void DMAC_SetDescFetchMode( Dmac *pDmac,
  * \param channel Particular channel number.
  * \param flow which device controls the size of the buffer transfer.
  */
-void DMAC_SetFlowControl( Dmac *pDmac,
+void DMAC_SetFlowControl( Dmac * pDmac,
                           uint8_t channel,
                           uint8_t flowControl )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB &= ~DMAC_CTRLB_FC_Msk;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CTRLB |= flowControl;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB &= ~DMAC_CTRLB_FC_Msk;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CTRLB |= flowControl;
 }
 
 /**
@@ -539,13 +552,13 @@ void DMAC_SetFlowControl( Dmac *pDmac,
  * \param channel Particular channel number.
  * \param configuration Configuration for CFG register.
  */
-void DMAC_SetCFG( Dmac *pDmac,
+void DMAC_SetCFG( Dmac * pDmac,
                   uint8_t channel,
                   uint32_t configuration )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM);
-    pDmac->DMAC_CH_NUM[channel].DMAC_CFG = configuration;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CFG = configuration;
 }
 
 /**
@@ -556,37 +569,37 @@ void DMAC_SetCFG( Dmac *pDmac,
  * \param srcRep Source buffer reload mode.
  * \param dstRep Destination buffer reload mode.
  */
-void DMAC_SetReloadMode( Dmac *pDmac,
+void DMAC_SetReloadMode( Dmac * pDmac,
                          uint8_t channel,
                          uint8_t srcRep,
                          uint8_t dstRep )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM );
-    pDmac->DMAC_CH_NUM[channel].DMAC_CFG &= ~DMAC_CFG_SRC_REP;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CFG &= ~DMAC_CFG_DST_REP;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CFG |= srcRep | dstRep;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CFG &= ~DMAC_CFG_SRC_REP;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CFG &= ~DMAC_CFG_DST_REP;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CFG |= srcRep | dstRep;
 }
 
 /**
- * \brief Set DMAC SW/HW handshaking interface used to 
+ * \brief Set DMAC SW/HW handshaking interface used to
  *        trigger a transfer request.
  *
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
- * \param srcH2sel Source handshaking interface. 
+ * \param srcH2sel Source handshaking interface.
  * \param dstH2sel Destination handshaking interface.
  */
-void DMAC_SethandshakeInterface( Dmac *pDmac,
+void DMAC_SethandshakeInterface( Dmac * pDmac,
                                  uint8_t channel,
                                  uint8_t srcH2sel,
                                  uint8_t dstH2sel )
 {
-    assert(pDmac);
-    assert(channel < DMAC_CHANNEL_NUM );
-    pDmac->DMAC_CH_NUM[channel].DMAC_CFG &= ~DMAC_CFG_SRC_H2SEL;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CFG &= ~DMAC_CFG_DST_H2SEL;
-    pDmac->DMAC_CH_NUM[channel].DMAC_CFG |= srcH2sel | dstH2sel;
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CFG &= ~DMAC_CFG_SRC_H2SEL;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CFG &= ~DMAC_CFG_DST_H2SEL;
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_CFG |= srcH2sel | dstH2sel;
 }
 
 
@@ -600,16 +613,16 @@ void DMAC_SethandshakeInterface( Dmac *pDmac,
  * \param pipBoundary the number of source transfers to perform before
  *                the automatic address increment operation.
  */
-void DMAC_SetSourcePip( Dmac *pDmac,
+void DMAC_SetSourcePip( Dmac * pDmac,
                         uint8_t channel,
                         uint16_t pipHole,
-                        uint16_t pipBoundary)
+                        uint16_t pipBoundary )
 
 {
-   assert(pDmac);
-   assert(channel < DMAC_CHANNEL_NUM);
-   pDmac->DMAC_CH_NUM[channel].DMAC_SPIP = DMAC_SPIP_SPIP_HOLE( pipHole ) |
-                                           DMAC_SPIP_SPIP_BOUNDARY( pipBoundary );
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_SPIP = DMAC_SPIP_SPIP_HOLE( pipHole ) |
+                                              DMAC_SPIP_SPIP_BOUNDARY( pipBoundary );
 }
 
 /**
@@ -622,17 +635,16 @@ void DMAC_SetSourcePip( Dmac *pDmac,
  * \param pipBoundary the number of source transfers to perform before
  *                the automatic address increment operation.
  */
-void DMAC_SetDestPip( Dmac *pDmac,
+void DMAC_SetDestPip( Dmac * pDmac,
                       uint8_t channel,
                       uint16_t pipHole,
-                      uint16_t pipBoundary)
+                      uint16_t pipBoundary )
 
 {
-   assert(pDmac);
-   assert(channel < DMAC_CHANNEL_NUM);
-   pDmac->DMAC_CH_NUM[channel].DMAC_DPIP = DMAC_DPIP_DPIP_HOLE( pipHole ) |
-                                           DMAC_DPIP_DPIP_BOUNDARY( pipBoundary );
+    assert( pDmac );
+    assert( channel < DMAC_CHANNEL_NUM );
+    pDmac->DMAC_CH_NUM[ channel ].DMAC_DPIP = DMAC_DPIP_DPIP_HOLE( pipHole ) |
+                                              DMAC_DPIP_DPIP_BOUNDARY( pipBoundary );
 }
 
 /**@}*/
-

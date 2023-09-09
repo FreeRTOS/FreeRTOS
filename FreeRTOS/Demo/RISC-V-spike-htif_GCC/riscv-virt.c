@@ -33,34 +33,38 @@
 
 int xGetCoreID( void )
 {
-	int id;
+    int id;
 
-	__asm ("csrr %0, mhartid" : "=r" ( id ) );
+    __asm( "csrr %0, mhartid" : "=r" ( id ) );
 
-	return id;
+    return id;
 }
 
 /* Use a debugger to set this to 0 if this binary was loaded through gdb instead
  * of spike's ELF loader. HTIF only works if spike's ELF loader was used. */
 volatile int use_htif = 1;
 
-void vSendString( const char *s )
+void vSendString( const char * s )
 {
-	portENTER_CRITICAL();
+    portENTER_CRITICAL();
 
-	if (use_htif) {
-		while (*s) {
-			htif_putc(*s);
-			s++;
-		}
-		htif_putc('\n');
-	}
+    if( use_htif )
+    {
+        while( *s )
+        {
+            htif_putc( *s );
+            s++;
+        }
 
-	portEXIT_CRITICAL();
+        htif_putc( '\n' );
+    }
+
+    portEXIT_CRITICAL();
 }
 
-void handle_trap(void)
+void handle_trap( void )
 {
-	while (1)
-		;
+    while( 1 )
+    {
+    }
 }

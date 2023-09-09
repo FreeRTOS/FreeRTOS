@@ -75,44 +75,42 @@
  */
 
 /** Start of reading bulk data */
-#define SBC_STATE_READ                          0x01
+#define SBC_STATE_READ           0x01
 /** Waiting for the bulk data reading complete */
-#define SBC_STATE_WAIT_READ                     0x02
+#define SBC_STATE_WAIT_READ      0x02
 /** Read error state */
-#define SBC_STATE_READ_ERROR                    0x03
+#define SBC_STATE_READ_ERROR     0x03
 /** Start next read block */
-#define SBC_STATE_NEXT_READ                     0x04
+#define SBC_STATE_NEXT_READ      0x04
 /** Start writing bulk data to host */
-#define SBC_STATE_WRITE                         0x05
+#define SBC_STATE_WRITE          0x05
 /** Waiting for the bulk data sending complete */
-#define SBC_STATE_WAIT_WRITE                    0x06
+#define SBC_STATE_WAIT_WRITE     0x06
 /** Write error state */
-#define SBC_STATE_WRITE_ERROR                   0x07
+#define SBC_STATE_WRITE_ERROR    0x07
 /** Start next write block */
-#define SBC_STATE_NEXT_WRITE                    0x08
+#define SBC_STATE_NEXT_WRITE     0x08
 /** Start next command block */
-#define SBC_STATE_NEXT_BLOCK                    0x09
+#define SBC_STATE_NEXT_BLOCK     0x09
 /**      @}*/
 
 /*------------------------------------------------------------------------------
  *      Exported functions
  *------------------------------------------------------------------------------*/
 
-void SBC_UpdateSenseData(SBCRequestSenseData *requestSenseData,
-                         unsigned char senseKey,
-                         unsigned char additionalSenseCode,
-                         unsigned char additionalSenseCodeQualifier);
+void SBC_UpdateSenseData( SBCRequestSenseData * requestSenseData,
+                          unsigned char senseKey,
+                          unsigned char additionalSenseCode,
+                          unsigned char additionalSenseCodeQualifier );
 
-unsigned char SBC_GetCommandInformation(void          *command,
-                               unsigned int  *length,
-                               unsigned char *type,
-                               MSDLun         *lun);
+unsigned char SBC_GetCommandInformation( void * command,
+                                         unsigned int * length,
+                                         unsigned char * type,
+                                         MSDLun * lun );
 
-unsigned char SBC_ProcessCommand(MSDLun               *lun,
-                                 MSDCommandState *commandState);
+unsigned char SBC_ProcessCommand( MSDLun * lun,
+                                  MSDCommandState * commandState );
 
 /**@}*/
 
 #endif /*#ifndef SBCMETHODS_H */
-
-

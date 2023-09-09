@@ -14,14 +14,14 @@
  *
  * The CPU macro should be declared in the project or makefile.
  */
-#if (defined(CPU_LPC54018JBD208) || defined(CPU_LPC54018JET180))
+#if ( defined( CPU_LPC54018JBD208 ) || defined( CPU_LPC54018JET180 ) )
 
-#define LPC54018_SERIES
+    #define LPC54018_SERIES
 
 /* CMSIS-style register definitions */
-#include "LPC54018.h"
+    #include "LPC54018.h"
 /* CPU specific feature definitions */
-#include "LPC54018_features.h"
+    #include "LPC54018_features.h"
 
 #else
     #error "No valid CPU defined!"

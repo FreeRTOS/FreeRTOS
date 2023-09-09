@@ -9,21 +9,20 @@
 #define __RTC_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- Real Time Clock Controller -------------------------*/
+
 /**
-    @addtogroup RTC Real Time Clock Controller(RTC)
-    Memory Mapped Structure for RTC Controller
-@{ */
+ *  @addtogroup RTC Real Time Clock Controller(RTC)
+ *  Memory Mapped Structure for RTC Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var RTC_T::INIT
      * Offset: 0x00  RTC Initiation Register
@@ -746,577 +745,576 @@ typedef struct
      * |        |          |When LXT frequency monitor counter lower than Clock Frequency Detector fail Boundary , the LXT frequency detect fail interrupt flag will set to 1.
      * |        |          |Note: The boundary is defined as the minimum value of LXT among 256 LIRC32K clock time.
      */
-    __IO uint32_t INIT;                  /*!< [0x0000] RTC Initiation Register                                          */
-    __IO uint32_t RWEN;                  /*!< [0x0004] RTC Access Enable Register                                       */
-    __IO uint32_t FREQADJ;               /*!< [0x0008] RTC Frequency Compensation Register                              */
-    __IO uint32_t TIME;                  /*!< [0x000c] RTC Time Loading Register                                        */
-    __IO uint32_t CAL;                   /*!< [0x0010] RTC Calendar Loading Register                                    */
-    __IO uint32_t CLKFMT;                /*!< [0x0014] RTC Time Scale Selection Register                                */
-    __IO uint32_t WEEKDAY;               /*!< [0x0018] RTC Day of the Week Register                                     */
-    __IO uint32_t TALM;                  /*!< [0x001c] RTC Time Alarm Register                                          */
-    __IO uint32_t CALM;                  /*!< [0x0020] RTC Calendar Alarm Register                                      */
-    __I  uint32_t LEAPYEAR;              /*!< [0x0024] RTC Leap Year Indicator Register                                 */
-    __IO uint32_t INTEN;                 /*!< [0x0028] RTC Interrupt Enable Register                                    */
-    __IO uint32_t INTSTS;                /*!< [0x002c] RTC Interrupt Status Register                                    */
-    __IO uint32_t TICK;                  /*!< [0x0030] RTC Time Tick Register                                           */
-    __IO uint32_t TAMSK;                 /*!< [0x0034] RTC Time Alarm Mask Register                                     */
-    __IO uint32_t CAMSK;                 /*!< [0x0038] RTC Calendar Alarm Mask Register                                 */
-    __IO uint32_t SPRCTL;                /*!< [0x003c] RTC Spare Functional Control Register                            */
-    __IO uint32_t SPR[20];               /*!< [0x0040] ~ [0x008C] RTC Spare Register 0 ~ 19                             */
-    __I  uint32_t RESERVE0[28];          /* 0x90 ~ 0xFC */
-    __IO uint32_t LXTCTL;                /*!< [0x0100] RTC 32.768 kHz Oscillator Control Register                       */
-    __IO uint32_t GPIOCTL0;              /*!< [0x0104] RTC GPIO Control 0 Register                                      */
-    __IO uint32_t GPIOCTL1;              /*!< [0x0108] RTC GPIO Control 1 Register                                      */
-    __I  uint32_t RESERVE1[1];
-    __IO uint32_t DSTCTL;                /*!< [0x0110] RTC Daylight Saving Time Control Register                        */
-    __I  uint32_t RESERVE2[3];
-    __IO uint32_t TAMPCTL;               /*!< [0x0120] RTC Tamper Pin Control Register                                  */
-    __I  uint32_t RESERVE3[1];
-    __IO uint32_t TAMPSEED;              /*!< [0x0128] RTC Tamper Dynamic Seed Register                                 */
-    __I  uint32_t RESERVE4[1];
-    __I  uint32_t TAMPTIME;              /*!< [0x0130] RTC Tamper Time Register                                         */
-    __I  uint32_t TAMPCAL;               /*!< [0x0134] RTC Tamper Calendar Register                                     */
-    __I  uint32_t RESERVE5[2];
-    __IO uint32_t CLKDCTL;               /*!< [0x0140] Clock Fail Detector Control Register                             */
-    __IO uint32_t CDBR;                  /*!< [0x0144] Clock Frequency Detector Boundary Register                       */
-
+    __IO uint32_t INIT;          /*!< [0x0000] RTC Initiation Register                                          */
+    __IO uint32_t RWEN;          /*!< [0x0004] RTC Access Enable Register                                       */
+    __IO uint32_t FREQADJ;       /*!< [0x0008] RTC Frequency Compensation Register                              */
+    __IO uint32_t TIME;          /*!< [0x000c] RTC Time Loading Register                                        */
+    __IO uint32_t CAL;           /*!< [0x0010] RTC Calendar Loading Register                                    */
+    __IO uint32_t CLKFMT;        /*!< [0x0014] RTC Time Scale Selection Register                                */
+    __IO uint32_t WEEKDAY;       /*!< [0x0018] RTC Day of the Week Register                                     */
+    __IO uint32_t TALM;          /*!< [0x001c] RTC Time Alarm Register                                          */
+    __IO uint32_t CALM;          /*!< [0x0020] RTC Calendar Alarm Register                                      */
+    __I uint32_t LEAPYEAR;       /*!< [0x0024] RTC Leap Year Indicator Register                                 */
+    __IO uint32_t INTEN;         /*!< [0x0028] RTC Interrupt Enable Register                                    */
+    __IO uint32_t INTSTS;        /*!< [0x002c] RTC Interrupt Status Register                                    */
+    __IO uint32_t TICK;          /*!< [0x0030] RTC Time Tick Register                                           */
+    __IO uint32_t TAMSK;         /*!< [0x0034] RTC Time Alarm Mask Register                                     */
+    __IO uint32_t CAMSK;         /*!< [0x0038] RTC Calendar Alarm Mask Register                                 */
+    __IO uint32_t SPRCTL;        /*!< [0x003c] RTC Spare Functional Control Register                            */
+    __IO uint32_t SPR[ 20 ];     /*!< [0x0040] ~ [0x008C] RTC Spare Register 0 ~ 19                             */
+    __I uint32_t RESERVE0[ 28 ]; /* 0x90 ~ 0xFC */
+    __IO uint32_t LXTCTL;        /*!< [0x0100] RTC 32.768 kHz Oscillator Control Register                       */
+    __IO uint32_t GPIOCTL0;      /*!< [0x0104] RTC GPIO Control 0 Register                                      */
+    __IO uint32_t GPIOCTL1;      /*!< [0x0108] RTC GPIO Control 1 Register                                      */
+    __I uint32_t RESERVE1[ 1 ];
+    __IO uint32_t DSTCTL;        /*!< [0x0110] RTC Daylight Saving Time Control Register                        */
+    __I uint32_t RESERVE2[ 3 ];
+    __IO uint32_t TAMPCTL;       /*!< [0x0120] RTC Tamper Pin Control Register                                  */
+    __I uint32_t RESERVE3[ 1 ];
+    __IO uint32_t TAMPSEED;      /*!< [0x0128] RTC Tamper Dynamic Seed Register                                 */
+    __I uint32_t RESERVE4[ 1 ];
+    __I uint32_t TAMPTIME;       /*!< [0x0130] RTC Tamper Time Register                                         */
+    __I uint32_t TAMPCAL;        /*!< [0x0134] RTC Tamper Calendar Register                                     */
+    __I uint32_t RESERVE5[ 2 ];
+    __IO uint32_t CLKDCTL;       /*!< [0x0140] Clock Fail Detector Control Register                             */
+    __IO uint32_t CDBR;          /*!< [0x0144] Clock Frequency Detector Boundary Register                       */
 } RTC_T;
 
 /**
-    @addtogroup RTC_CONST RTC Bit Field Definition
-    Constant Definitions for RTC Controller
-@{ */
+ *  @addtogroup RTC_CONST RTC Bit Field Definition
+ *  Constant Definitions for RTC Controller
+ * @{ */
 
-#define RTC_INIT_ACTIVE_Pos              (0)                                               /*!< RTC_T::INIT: ACTIVE Position           */
-#define RTC_INIT_ACTIVE_Msk              (0x1ul << RTC_INIT_ACTIVE_Pos)                    /*!< RTC_T::INIT: ACTIVE Mask               */
+#define RTC_INIT_ACTIVE_Pos           ( 0 )                                                /*!< RTC_T::INIT: ACTIVE Position           */
+#define RTC_INIT_ACTIVE_Msk           ( 0x1ul << RTC_INIT_ACTIVE_Pos )                     /*!< RTC_T::INIT: ACTIVE Mask               */
 
-#define RTC_INIT_INIT_Pos                (1)                                               /*!< RTC_T::INIT: INIT Position             */
-#define RTC_INIT_INIT_Msk                (0x7ffffffful << RTC_INIT_INIT_Pos)               /*!< RTC_T::INIT: INIT Mask                 */
+#define RTC_INIT_INIT_Pos             ( 1 )                                                /*!< RTC_T::INIT: INIT Position             */
+#define RTC_INIT_INIT_Msk             ( 0x7ffffffful << RTC_INIT_INIT_Pos )                /*!< RTC_T::INIT: INIT Mask                 */
 
-#define RTC_RWEN_RWEN_Pos                (0)                                               /*!< RTC_T::RWEN: RWEN Position             */
-#define RTC_RWEN_RWEN_Msk                (0xfffful << RTC_RWEN_RWEN_Pos)                   /*!< RTC_T::RWEN: RWEN Mask                 */
+#define RTC_RWEN_RWEN_Pos             ( 0 )                                                /*!< RTC_T::RWEN: RWEN Position             */
+#define RTC_RWEN_RWEN_Msk             ( 0xfffful << RTC_RWEN_RWEN_Pos )                    /*!< RTC_T::RWEN: RWEN Mask                 */
 
-#define RTC_RWEN_RWENF_Pos               (16)                                              /*!< RTC_T::RWEN: RWENF Position            */
-#define RTC_RWEN_RWENF_Msk               (0x1ul << RTC_RWEN_RWENF_Pos)                     /*!< RTC_T::RWEN: RWENF Mask                */
+#define RTC_RWEN_RWENF_Pos            ( 16 )                                               /*!< RTC_T::RWEN: RWENF Position            */
+#define RTC_RWEN_RWENF_Msk            ( 0x1ul << RTC_RWEN_RWENF_Pos )                      /*!< RTC_T::RWEN: RWENF Mask                */
 
-#define RTC_RWEN_RTCBUSY_Pos             (24)                                              /*!< RTC_T::RWEN: RTCBUSY Position          */
-#define RTC_RWEN_RTCBUSY_Msk             (0x1ul << RTC_RWEN_RTCBUSY_Pos)                   /*!< RTC_T::RWEN: RTCBUSY Mask              */
+#define RTC_RWEN_RTCBUSY_Pos          ( 24 )                                               /*!< RTC_T::RWEN: RTCBUSY Position          */
+#define RTC_RWEN_RTCBUSY_Msk          ( 0x1ul << RTC_RWEN_RTCBUSY_Pos )                    /*!< RTC_T::RWEN: RTCBUSY Mask              */
 
-#define RTC_FREQADJ_FREQADJ_Pos          (0)                                               /*!< RTC_T::FREQADJ: FREQADJ Position       */
-#define RTC_FREQADJ_FREQADJ_Msk          (0x3ffffful << RTC_FREQADJ_FREQADJ_Pos)           /*!< RTC_T::FREQADJ: FREQADJ Mask           */
+#define RTC_FREQADJ_FREQADJ_Pos       ( 0 )                                                /*!< RTC_T::FREQADJ: FREQADJ Position       */
+#define RTC_FREQADJ_FREQADJ_Msk       ( 0x3ffffful << RTC_FREQADJ_FREQADJ_Pos )            /*!< RTC_T::FREQADJ: FREQADJ Mask           */
 
-#define RTC_TIME_SEC_Pos                 (0)                                               /*!< RTC_T::TIME: SEC Position              */
-#define RTC_TIME_SEC_Msk                 (0xful << RTC_TIME_SEC_Pos)                       /*!< RTC_T::TIME: SEC Mask                  */
+#define RTC_TIME_SEC_Pos              ( 0 )                                                /*!< RTC_T::TIME: SEC Position              */
+#define RTC_TIME_SEC_Msk              ( 0xful << RTC_TIME_SEC_Pos )                        /*!< RTC_T::TIME: SEC Mask                  */
 
-#define RTC_TIME_TENSEC_Pos              (4)                                               /*!< RTC_T::TIME: TENSEC Position           */
-#define RTC_TIME_TENSEC_Msk              (0x7ul << RTC_TIME_TENSEC_Pos)                    /*!< RTC_T::TIME: TENSEC Mask               */
+#define RTC_TIME_TENSEC_Pos           ( 4 )                                                /*!< RTC_T::TIME: TENSEC Position           */
+#define RTC_TIME_TENSEC_Msk           ( 0x7ul << RTC_TIME_TENSEC_Pos )                     /*!< RTC_T::TIME: TENSEC Mask               */
 
-#define RTC_TIME_MIN_Pos                 (8)                                               /*!< RTC_T::TIME: MIN Position              */
-#define RTC_TIME_MIN_Msk                 (0xful << RTC_TIME_MIN_Pos)                       /*!< RTC_T::TIME: MIN Mask                  */
+#define RTC_TIME_MIN_Pos              ( 8 )                                                /*!< RTC_T::TIME: MIN Position              */
+#define RTC_TIME_MIN_Msk              ( 0xful << RTC_TIME_MIN_Pos )                        /*!< RTC_T::TIME: MIN Mask                  */
 
-#define RTC_TIME_TENMIN_Pos              (12)                                              /*!< RTC_T::TIME: TENMIN Position           */
-#define RTC_TIME_TENMIN_Msk              (0x7ul << RTC_TIME_TENMIN_Pos)                    /*!< RTC_T::TIME: TENMIN Mask               */
+#define RTC_TIME_TENMIN_Pos           ( 12 )                                               /*!< RTC_T::TIME: TENMIN Position           */
+#define RTC_TIME_TENMIN_Msk           ( 0x7ul << RTC_TIME_TENMIN_Pos )                     /*!< RTC_T::TIME: TENMIN Mask               */
 
-#define RTC_TIME_HR_Pos                  (16)                                              /*!< RTC_T::TIME: HR Position               */
-#define RTC_TIME_HR_Msk                  (0xful << RTC_TIME_HR_Pos)                        /*!< RTC_T::TIME: HR Mask                   */
+#define RTC_TIME_HR_Pos               ( 16 )                                               /*!< RTC_T::TIME: HR Position               */
+#define RTC_TIME_HR_Msk               ( 0xful << RTC_TIME_HR_Pos )                         /*!< RTC_T::TIME: HR Mask                   */
 
-#define RTC_TIME_TENHR_Pos               (20)                                              /*!< RTC_T::TIME: TENHR Position            */
-#define RTC_TIME_TENHR_Msk               (0x3ul << RTC_TIME_TENHR_Pos)                     /*!< RTC_T::TIME: TENHR Mask                */
+#define RTC_TIME_TENHR_Pos            ( 20 )                                               /*!< RTC_T::TIME: TENHR Position            */
+#define RTC_TIME_TENHR_Msk            ( 0x3ul << RTC_TIME_TENHR_Pos )                      /*!< RTC_T::TIME: TENHR Mask                */
 
-#define RTC_TIME_HZCNT_Pos               (24)                                              /*!< RTC_T::TIME: HZCNT Position            */
-#define RTC_TIME_HZCNT_Msk               (0x7ful << RTC_TIME_HZCNT_Pos)                    /*!< RTC_T::TIME: HZCNT Mask                */
+#define RTC_TIME_HZCNT_Pos            ( 24 )                                               /*!< RTC_T::TIME: HZCNT Position            */
+#define RTC_TIME_HZCNT_Msk            ( 0x7ful << RTC_TIME_HZCNT_Pos )                     /*!< RTC_T::TIME: HZCNT Mask                */
 
-#define RTC_CAL_DAY_Pos                  (0)                                               /*!< RTC_T::CAL: DAY Position               */
-#define RTC_CAL_DAY_Msk                  (0xful << RTC_CAL_DAY_Pos)                        /*!< RTC_T::CAL: DAY Mask                   */
+#define RTC_CAL_DAY_Pos               ( 0 )                                                /*!< RTC_T::CAL: DAY Position               */
+#define RTC_CAL_DAY_Msk               ( 0xful << RTC_CAL_DAY_Pos )                         /*!< RTC_T::CAL: DAY Mask                   */
 
-#define RTC_CAL_TENDAY_Pos               (4)                                               /*!< RTC_T::CAL: TENDAY Position            */
-#define RTC_CAL_TENDAY_Msk               (0x3ul << RTC_CAL_TENDAY_Pos)                     /*!< RTC_T::CAL: TENDAY Mask                */
+#define RTC_CAL_TENDAY_Pos            ( 4 )                                                /*!< RTC_T::CAL: TENDAY Position            */
+#define RTC_CAL_TENDAY_Msk            ( 0x3ul << RTC_CAL_TENDAY_Pos )                      /*!< RTC_T::CAL: TENDAY Mask                */
 
-#define RTC_CAL_MON_Pos                  (8)                                               /*!< RTC_T::CAL: MON Position               */
-#define RTC_CAL_MON_Msk                  (0xful << RTC_CAL_MON_Pos)                        /*!< RTC_T::CAL: MON Mask                   */
+#define RTC_CAL_MON_Pos               ( 8 )                                                /*!< RTC_T::CAL: MON Position               */
+#define RTC_CAL_MON_Msk               ( 0xful << RTC_CAL_MON_Pos )                         /*!< RTC_T::CAL: MON Mask                   */
 
-#define RTC_CAL_TENMON_Pos               (12)                                              /*!< RTC_T::CAL: TENMON Position            */
-#define RTC_CAL_TENMON_Msk               (0x1ul << RTC_CAL_TENMON_Pos)                     /*!< RTC_T::CAL: TENMON Mask                */
+#define RTC_CAL_TENMON_Pos            ( 12 )                                               /*!< RTC_T::CAL: TENMON Position            */
+#define RTC_CAL_TENMON_Msk            ( 0x1ul << RTC_CAL_TENMON_Pos )                      /*!< RTC_T::CAL: TENMON Mask                */
 
-#define RTC_CAL_YEAR_Pos                 (16)                                              /*!< RTC_T::CAL: YEAR Position              */
-#define RTC_CAL_YEAR_Msk                 (0xful << RTC_CAL_YEAR_Pos)                       /*!< RTC_T::CAL: YEAR Mask                  */
+#define RTC_CAL_YEAR_Pos              ( 16 )                                               /*!< RTC_T::CAL: YEAR Position              */
+#define RTC_CAL_YEAR_Msk              ( 0xful << RTC_CAL_YEAR_Pos )                        /*!< RTC_T::CAL: YEAR Mask                  */
 
-#define RTC_CAL_TENYEAR_Pos              (20)                                              /*!< RTC_T::CAL: TENYEAR Position           */
-#define RTC_CAL_TENYEAR_Msk              (0xful << RTC_CAL_TENYEAR_Pos)                    /*!< RTC_T::CAL: TENYEAR Mask               */
+#define RTC_CAL_TENYEAR_Pos           ( 20 )                                               /*!< RTC_T::CAL: TENYEAR Position           */
+#define RTC_CAL_TENYEAR_Msk           ( 0xful << RTC_CAL_TENYEAR_Pos )                     /*!< RTC_T::CAL: TENYEAR Mask               */
 
-#define RTC_CLKFMT_24HEN_Pos             (0)                                               /*!< RTC_T::CLKFMT: 24HEN Position          */
-#define RTC_CLKFMT_24HEN_Msk             (0x1ul << RTC_CLKFMT_24HEN_Pos)                   /*!< RTC_T::CLKFMT: 24HEN Mask              */
+#define RTC_CLKFMT_24HEN_Pos          ( 0 )                                                /*!< RTC_T::CLKFMT: 24HEN Position          */
+#define RTC_CLKFMT_24HEN_Msk          ( 0x1ul << RTC_CLKFMT_24HEN_Pos )                    /*!< RTC_T::CLKFMT: 24HEN Mask              */
 
-#define RTC_CLKFMT_HZCNTEN_Pos           (8)                                               /*!< RTC_T::CLKFMT: HZCNTEN Position        */
-#define RTC_CLKFMT_HZCNTEN_Msk           (0x1ul << RTC_CLKFMT_HZCNTEN_Pos)                 /*!< RTC_T::CLKFMT: HZCNTEN Mask            */
+#define RTC_CLKFMT_HZCNTEN_Pos        ( 8 )                                                /*!< RTC_T::CLKFMT: HZCNTEN Position        */
+#define RTC_CLKFMT_HZCNTEN_Msk        ( 0x1ul << RTC_CLKFMT_HZCNTEN_Pos )                  /*!< RTC_T::CLKFMT: HZCNTEN Mask            */
 
-#define RTC_WEEKDAY_WEEKDAY_Pos          (0)                                               /*!< RTC_T::WEEKDAY: WEEKDAY Position       */
-#define RTC_WEEKDAY_WEEKDAY_Msk          (0x7ul << RTC_WEEKDAY_WEEKDAY_Pos)                /*!< RTC_T::WEEKDAY: WEEKDAY Mask           */
+#define RTC_WEEKDAY_WEEKDAY_Pos       ( 0 )                                                /*!< RTC_T::WEEKDAY: WEEKDAY Position       */
+#define RTC_WEEKDAY_WEEKDAY_Msk       ( 0x7ul << RTC_WEEKDAY_WEEKDAY_Pos )                 /*!< RTC_T::WEEKDAY: WEEKDAY Mask           */
 
-#define RTC_TALM_SEC_Pos                 (0)                                               /*!< RTC_T::TALM: SEC Position              */
-#define RTC_TALM_SEC_Msk                 (0xful << RTC_TALM_SEC_Pos)                       /*!< RTC_T::TALM: SEC Mask                  */
+#define RTC_TALM_SEC_Pos              ( 0 )                                                /*!< RTC_T::TALM: SEC Position              */
+#define RTC_TALM_SEC_Msk              ( 0xful << RTC_TALM_SEC_Pos )                        /*!< RTC_T::TALM: SEC Mask                  */
 
-#define RTC_TALM_TENSEC_Pos              (4)                                               /*!< RTC_T::TALM: TENSEC Position           */
-#define RTC_TALM_TENSEC_Msk              (0x7ul << RTC_TALM_TENSEC_Pos)                    /*!< RTC_T::TALM: TENSEC Mask               */
+#define RTC_TALM_TENSEC_Pos           ( 4 )                                                /*!< RTC_T::TALM: TENSEC Position           */
+#define RTC_TALM_TENSEC_Msk           ( 0x7ul << RTC_TALM_TENSEC_Pos )                     /*!< RTC_T::TALM: TENSEC Mask               */
 
-#define RTC_TALM_MIN_Pos                 (8)                                               /*!< RTC_T::TALM: MIN Position              */
-#define RTC_TALM_MIN_Msk                 (0xful << RTC_TALM_MIN_Pos)                       /*!< RTC_T::TALM: MIN Mask                  */
+#define RTC_TALM_MIN_Pos              ( 8 )                                                /*!< RTC_T::TALM: MIN Position              */
+#define RTC_TALM_MIN_Msk              ( 0xful << RTC_TALM_MIN_Pos )                        /*!< RTC_T::TALM: MIN Mask                  */
 
-#define RTC_TALM_TENMIN_Pos              (12)                                              /*!< RTC_T::TALM: TENMIN Position           */
-#define RTC_TALM_TENMIN_Msk              (0x7ul << RTC_TALM_TENMIN_Pos)                    /*!< RTC_T::TALM: TENMIN Mask               */
+#define RTC_TALM_TENMIN_Pos           ( 12 )                                               /*!< RTC_T::TALM: TENMIN Position           */
+#define RTC_TALM_TENMIN_Msk           ( 0x7ul << RTC_TALM_TENMIN_Pos )                     /*!< RTC_T::TALM: TENMIN Mask               */
 
-#define RTC_TALM_HR_Pos                  (16)                                              /*!< RTC_T::TALM: HR Position               */
-#define RTC_TALM_HR_Msk                  (0xful << RTC_TALM_HR_Pos)                        /*!< RTC_T::TALM: HR Mask                   */
+#define RTC_TALM_HR_Pos               ( 16 )                                               /*!< RTC_T::TALM: HR Position               */
+#define RTC_TALM_HR_Msk               ( 0xful << RTC_TALM_HR_Pos )                         /*!< RTC_T::TALM: HR Mask                   */
 
-#define RTC_TALM_TENHR_Pos               (20)                                              /*!< RTC_T::TALM: TENHR Position            */
-#define RTC_TALM_TENHR_Msk               (0x3ul << RTC_TALM_TENHR_Pos)                     /*!< RTC_T::TALM: TENHR Mask                */
+#define RTC_TALM_TENHR_Pos            ( 20 )                                               /*!< RTC_T::TALM: TENHR Position            */
+#define RTC_TALM_TENHR_Msk            ( 0x3ul << RTC_TALM_TENHR_Pos )                      /*!< RTC_T::TALM: TENHR Mask                */
 
-#define RTC_TALM_HZCNT_Pos               (24)                                              /*!< RTC_T::TALM: HZCNT Position            */
-#define RTC_TALM_HZCNT_Msk               (0x7ful << RTC_TALM_HZCNT_Pos)                    /*!< RTC_T::TALM: HZCNT Mask                */
+#define RTC_TALM_HZCNT_Pos            ( 24 )                                               /*!< RTC_T::TALM: HZCNT Position            */
+#define RTC_TALM_HZCNT_Msk            ( 0x7ful << RTC_TALM_HZCNT_Pos )                     /*!< RTC_T::TALM: HZCNT Mask                */
 
-#define RTC_CALM_DAY_Pos                 (0)                                               /*!< RTC_T::CALM: DAY Position              */
-#define RTC_CALM_DAY_Msk                 (0xful << RTC_CALM_DAY_Pos)                       /*!< RTC_T::CALM: DAY Mask                  */
+#define RTC_CALM_DAY_Pos              ( 0 )                                                /*!< RTC_T::CALM: DAY Position              */
+#define RTC_CALM_DAY_Msk              ( 0xful << RTC_CALM_DAY_Pos )                        /*!< RTC_T::CALM: DAY Mask                  */
 
-#define RTC_CALM_TENDAY_Pos              (4)                                               /*!< RTC_T::CALM: TENDAY Position           */
-#define RTC_CALM_TENDAY_Msk              (0x3ul << RTC_CALM_TENDAY_Pos)                    /*!< RTC_T::CALM: TENDAY Mask               */
+#define RTC_CALM_TENDAY_Pos           ( 4 )                                                /*!< RTC_T::CALM: TENDAY Position           */
+#define RTC_CALM_TENDAY_Msk           ( 0x3ul << RTC_CALM_TENDAY_Pos )                     /*!< RTC_T::CALM: TENDAY Mask               */
 
-#define RTC_CALM_MON_Pos                 (8)                                               /*!< RTC_T::CALM: MON Position              */
-#define RTC_CALM_MON_Msk                 (0xful << RTC_CALM_MON_Pos)                       /*!< RTC_T::CALM: MON Mask                  */
+#define RTC_CALM_MON_Pos              ( 8 )                                                /*!< RTC_T::CALM: MON Position              */
+#define RTC_CALM_MON_Msk              ( 0xful << RTC_CALM_MON_Pos )                        /*!< RTC_T::CALM: MON Mask                  */
 
-#define RTC_CALM_TENMON_Pos              (12)                                              /*!< RTC_T::CALM: TENMON Position           */
-#define RTC_CALM_TENMON_Msk              (0x1ul << RTC_CALM_TENMON_Pos)                    /*!< RTC_T::CALM: TENMON Mask               */
+#define RTC_CALM_TENMON_Pos           ( 12 )                                               /*!< RTC_T::CALM: TENMON Position           */
+#define RTC_CALM_TENMON_Msk           ( 0x1ul << RTC_CALM_TENMON_Pos )                     /*!< RTC_T::CALM: TENMON Mask               */
 
-#define RTC_CALM_YEAR_Pos                (16)                                              /*!< RTC_T::CALM: YEAR Position             */
-#define RTC_CALM_YEAR_Msk                (0xful << RTC_CALM_YEAR_Pos)                      /*!< RTC_T::CALM: YEAR Mask                 */
+#define RTC_CALM_YEAR_Pos             ( 16 )                                               /*!< RTC_T::CALM: YEAR Position             */
+#define RTC_CALM_YEAR_Msk             ( 0xful << RTC_CALM_YEAR_Pos )                       /*!< RTC_T::CALM: YEAR Mask                 */
 
-#define RTC_CALM_TENYEAR_Pos             (20)                                              /*!< RTC_T::CALM: TENYEAR Position          */
-#define RTC_CALM_TENYEAR_Msk             (0xful << RTC_CALM_TENYEAR_Pos)                   /*!< RTC_T::CALM: TENYEAR Mask              */
+#define RTC_CALM_TENYEAR_Pos          ( 20 )                                               /*!< RTC_T::CALM: TENYEAR Position          */
+#define RTC_CALM_TENYEAR_Msk          ( 0xful << RTC_CALM_TENYEAR_Pos )                    /*!< RTC_T::CALM: TENYEAR Mask              */
 
-#define RTC_LEAPYEAR_LEAPYEAR_Pos        (0)                                               /*!< RTC_T::LEAPYEAR: LEAPYEAR Position     */
-#define RTC_LEAPYEAR_LEAPYEAR_Msk        (0x1ul << RTC_LEAPYEAR_LEAPYEAR_Pos)              /*!< RTC_T::LEAPYEAR: LEAPYEAR Mask         */
+#define RTC_LEAPYEAR_LEAPYEAR_Pos     ( 0 )                                                /*!< RTC_T::LEAPYEAR: LEAPYEAR Position     */
+#define RTC_LEAPYEAR_LEAPYEAR_Msk     ( 0x1ul << RTC_LEAPYEAR_LEAPYEAR_Pos )               /*!< RTC_T::LEAPYEAR: LEAPYEAR Mask         */
 
-#define RTC_INTEN_ALMIEN_Pos             (0)                                               /*!< RTC_T::INTEN: ALMIEN Position          */
-#define RTC_INTEN_ALMIEN_Msk             (0x1ul << RTC_INTEN_ALMIEN_Pos)                   /*!< RTC_T::INTEN: ALMIEN Mask              */
+#define RTC_INTEN_ALMIEN_Pos          ( 0 )                                                /*!< RTC_T::INTEN: ALMIEN Position          */
+#define RTC_INTEN_ALMIEN_Msk          ( 0x1ul << RTC_INTEN_ALMIEN_Pos )                    /*!< RTC_T::INTEN: ALMIEN Mask              */
 
-#define RTC_INTEN_TICKIEN_Pos            (1)                                               /*!< RTC_T::INTEN: TICKIEN Position         */
-#define RTC_INTEN_TICKIEN_Msk            (0x1ul << RTC_INTEN_TICKIEN_Pos)                  /*!< RTC_T::INTEN: TICKIEN Mask             */
+#define RTC_INTEN_TICKIEN_Pos         ( 1 )                                                /*!< RTC_T::INTEN: TICKIEN Position         */
+#define RTC_INTEN_TICKIEN_Msk         ( 0x1ul << RTC_INTEN_TICKIEN_Pos )                   /*!< RTC_T::INTEN: TICKIEN Mask             */
 
-#define RTC_INTEN_TAMP0IEN_Pos           (8)                                               /*!< RTC_T::INTEN: TAMP0IEN Position        */
-#define RTC_INTEN_TAMP0IEN_Msk           (0x1ul << RTC_INTEN_TAMP0IEN_Pos)                 /*!< RTC_T::INTEN: TAMP0IEN Mask            */
+#define RTC_INTEN_TAMP0IEN_Pos        ( 8 )                                                /*!< RTC_T::INTEN: TAMP0IEN Position        */
+#define RTC_INTEN_TAMP0IEN_Msk        ( 0x1ul << RTC_INTEN_TAMP0IEN_Pos )                  /*!< RTC_T::INTEN: TAMP0IEN Mask            */
 
-#define RTC_INTEN_TAMP1IEN_Pos           (9)                                               /*!< RTC_T::INTEN: TAMP1IEN Position        */
-#define RTC_INTEN_TAMP1IEN_Msk           (0x1ul << RTC_INTEN_TAMP1IEN_Pos)                 /*!< RTC_T::INTEN: TAMP1IEN Mask            */
+#define RTC_INTEN_TAMP1IEN_Pos        ( 9 )                                                /*!< RTC_T::INTEN: TAMP1IEN Position        */
+#define RTC_INTEN_TAMP1IEN_Msk        ( 0x1ul << RTC_INTEN_TAMP1IEN_Pos )                  /*!< RTC_T::INTEN: TAMP1IEN Mask            */
 
-#define RTC_INTEN_TAMP2IEN_Pos           (10)                                              /*!< RTC_T::INTEN: TAMP2IEN Position        */
-#define RTC_INTEN_TAMP2IEN_Msk           (0x1ul << RTC_INTEN_TAMP2IEN_Pos)                 /*!< RTC_T::INTEN: TAMP2IEN Mask            */
+#define RTC_INTEN_TAMP2IEN_Pos        ( 10 )                                               /*!< RTC_T::INTEN: TAMP2IEN Position        */
+#define RTC_INTEN_TAMP2IEN_Msk        ( 0x1ul << RTC_INTEN_TAMP2IEN_Pos )                  /*!< RTC_T::INTEN: TAMP2IEN Mask            */
 
-#define RTC_INTEN_TAMP3IEN_Pos           (11)                                              /*!< RTC_T::INTEN: TAMP3IEN Position        */
-#define RTC_INTEN_TAMP3IEN_Msk           (0x1ul << RTC_INTEN_TAMP3IEN_Pos)                 /*!< RTC_T::INTEN: TAMP3IEN Mask            */
+#define RTC_INTEN_TAMP3IEN_Pos        ( 11 )                                               /*!< RTC_T::INTEN: TAMP3IEN Position        */
+#define RTC_INTEN_TAMP3IEN_Msk        ( 0x1ul << RTC_INTEN_TAMP3IEN_Pos )                  /*!< RTC_T::INTEN: TAMP3IEN Mask            */
 
-#define RTC_INTEN_TAMP4IEN_Pos           (12)                                              /*!< RTC_T::INTEN: TAMP4IEN Position        */
-#define RTC_INTEN_TAMP4IEN_Msk           (0x1ul << RTC_INTEN_TAMP4IEN_Pos)                 /*!< RTC_T::INTEN: TAMP4IEN Mask            */
+#define RTC_INTEN_TAMP4IEN_Pos        ( 12 )                                               /*!< RTC_T::INTEN: TAMP4IEN Position        */
+#define RTC_INTEN_TAMP4IEN_Msk        ( 0x1ul << RTC_INTEN_TAMP4IEN_Pos )                  /*!< RTC_T::INTEN: TAMP4IEN Mask            */
 
-#define RTC_INTEN_TAMP5IEN_Pos           (13)                                              /*!< RTC_T::INTEN: TAMP5IEN Position        */
-#define RTC_INTEN_TAMP5IEN_Msk           (0x1ul << RTC_INTEN_TAMP5IEN_Pos)                 /*!< RTC_T::INTEN: TAMP5IEN Mask            */
+#define RTC_INTEN_TAMP5IEN_Pos        ( 13 )                                               /*!< RTC_T::INTEN: TAMP5IEN Position        */
+#define RTC_INTEN_TAMP5IEN_Msk        ( 0x1ul << RTC_INTEN_TAMP5IEN_Pos )                  /*!< RTC_T::INTEN: TAMP5IEN Mask            */
 
-#define RTC_INTEN_CLKFIEN_Pos            (24)                                              /*!< RTC_T::INTEN: CLKFIEN Position         */
-#define RTC_INTEN_CLKFIEN_Msk            (0x1ul << RTC_INTEN_CLKFIEN_Pos)                  /*!< RTC_T::INTEN: CLKFIEN Mask             */
+#define RTC_INTEN_CLKFIEN_Pos         ( 24 )                                               /*!< RTC_T::INTEN: CLKFIEN Position         */
+#define RTC_INTEN_CLKFIEN_Msk         ( 0x1ul << RTC_INTEN_CLKFIEN_Pos )                   /*!< RTC_T::INTEN: CLKFIEN Mask             */
 
-#define RTC_INTEN_CLKSPIEN_Pos           (25)                                              /*!< RTC_T::INTEN: CLKSPIEN Position        */
-#define RTC_INTEN_CLKSPIEN_Msk           (0x1ul << RTC_INTEN_CLKSPIEN_Pos)                 /*!< RTC_T::INTEN: CLKSPIEN Mask            */
+#define RTC_INTEN_CLKSPIEN_Pos        ( 25 )                                               /*!< RTC_T::INTEN: CLKSPIEN Position        */
+#define RTC_INTEN_CLKSPIEN_Msk        ( 0x1ul << RTC_INTEN_CLKSPIEN_Pos )                  /*!< RTC_T::INTEN: CLKSPIEN Mask            */
 
-#define RTC_INTSTS_ALMIF_Pos             (0)                                               /*!< RTC_T::INTSTS: ALMIF Position          */
-#define RTC_INTSTS_ALMIF_Msk             (0x1ul << RTC_INTSTS_ALMIF_Pos)                   /*!< RTC_T::INTSTS: ALMIF Mask              */
+#define RTC_INTSTS_ALMIF_Pos          ( 0 )                                                /*!< RTC_T::INTSTS: ALMIF Position          */
+#define RTC_INTSTS_ALMIF_Msk          ( 0x1ul << RTC_INTSTS_ALMIF_Pos )                    /*!< RTC_T::INTSTS: ALMIF Mask              */
 
-#define RTC_INTSTS_TICKIF_Pos            (1)                                               /*!< RTC_T::INTSTS: TICKIF Position         */
-#define RTC_INTSTS_TICKIF_Msk            (0x1ul << RTC_INTSTS_TICKIF_Pos)                  /*!< RTC_T::INTSTS: TICKIF Mask             */
+#define RTC_INTSTS_TICKIF_Pos         ( 1 )                                                /*!< RTC_T::INTSTS: TICKIF Position         */
+#define RTC_INTSTS_TICKIF_Msk         ( 0x1ul << RTC_INTSTS_TICKIF_Pos )                   /*!< RTC_T::INTSTS: TICKIF Mask             */
 
-#define RTC_INTSTS_TAMP0IF_Pos           (8)                                               /*!< RTC_T::INTSTS: TAMP0IF Position        */
-#define RTC_INTSTS_TAMP0IF_Msk           (0x1ul << RTC_INTSTS_TAMP0IF_Pos)                 /*!< RTC_T::INTSTS: TAMP0IF Mask            */
+#define RTC_INTSTS_TAMP0IF_Pos        ( 8 )                                                /*!< RTC_T::INTSTS: TAMP0IF Position        */
+#define RTC_INTSTS_TAMP0IF_Msk        ( 0x1ul << RTC_INTSTS_TAMP0IF_Pos )                  /*!< RTC_T::INTSTS: TAMP0IF Mask            */
 
-#define RTC_INTSTS_TAMP1IF_Pos           (9)                                               /*!< RTC_T::INTSTS: TAMP1IF Position        */
-#define RTC_INTSTS_TAMP1IF_Msk           (0x1ul << RTC_INTSTS_TAMP1IF_Pos)                 /*!< RTC_T::INTSTS: TAMP1IF Mask            */
+#define RTC_INTSTS_TAMP1IF_Pos        ( 9 )                                                /*!< RTC_T::INTSTS: TAMP1IF Position        */
+#define RTC_INTSTS_TAMP1IF_Msk        ( 0x1ul << RTC_INTSTS_TAMP1IF_Pos )                  /*!< RTC_T::INTSTS: TAMP1IF Mask            */
 
-#define RTC_INTSTS_TAMP2IF_Pos           (10)                                              /*!< RTC_T::INTSTS: TAMP2IF Position        */
-#define RTC_INTSTS_TAMP2IF_Msk           (0x1ul << RTC_INTSTS_TAMP2IF_Pos)                 /*!< RTC_T::INTSTS: TAMP2IF Mask            */
+#define RTC_INTSTS_TAMP2IF_Pos        ( 10 )                                               /*!< RTC_T::INTSTS: TAMP2IF Position        */
+#define RTC_INTSTS_TAMP2IF_Msk        ( 0x1ul << RTC_INTSTS_TAMP2IF_Pos )                  /*!< RTC_T::INTSTS: TAMP2IF Mask            */
 
-#define RTC_INTSTS_TAMP3IF_Pos           (11)                                              /*!< RTC_T::INTSTS: TAMP3IF Position        */
-#define RTC_INTSTS_TAMP3IF_Msk           (0x1ul << RTC_INTSTS_TAMP3IF_Pos)                 /*!< RTC_T::INTSTS: TAMP3IF Mask            */
+#define RTC_INTSTS_TAMP3IF_Pos        ( 11 )                                               /*!< RTC_T::INTSTS: TAMP3IF Position        */
+#define RTC_INTSTS_TAMP3IF_Msk        ( 0x1ul << RTC_INTSTS_TAMP3IF_Pos )                  /*!< RTC_T::INTSTS: TAMP3IF Mask            */
 
-#define RTC_INTSTS_TAMP4IF_Pos           (12)                                              /*!< RTC_T::INTSTS: TAMP4IF Position        */
-#define RTC_INTSTS_TAMP4IF_Msk           (0x1ul << RTC_INTSTS_TAMP4IF_Pos)                 /*!< RTC_T::INTSTS: TAMP4IF Mask            */
+#define RTC_INTSTS_TAMP4IF_Pos        ( 12 )                                               /*!< RTC_T::INTSTS: TAMP4IF Position        */
+#define RTC_INTSTS_TAMP4IF_Msk        ( 0x1ul << RTC_INTSTS_TAMP4IF_Pos )                  /*!< RTC_T::INTSTS: TAMP4IF Mask            */
 
-#define RTC_INTSTS_TAMP5IF_Pos           (13)                                              /*!< RTC_T::INTSTS: TAMP5IF Position        */
-#define RTC_INTSTS_TAMP5IF_Msk           (0x1ul << RTC_INTSTS_TAMP5IF_Pos)                 /*!< RTC_T::INTSTS: TAMP5IF Mask            */
+#define RTC_INTSTS_TAMP5IF_Pos        ( 13 )                                               /*!< RTC_T::INTSTS: TAMP5IF Position        */
+#define RTC_INTSTS_TAMP5IF_Msk        ( 0x1ul << RTC_INTSTS_TAMP5IF_Pos )                  /*!< RTC_T::INTSTS: TAMP5IF Mask            */
 
-#define RTC_INTSTS_CLKFIF_Pos            (24)                                              /*!< RTC_T::INTSTS: CLKFIF Position         */
-#define RTC_INTSTS_CLKFIF_Msk            (0x1ul << RTC_INTSTS_CLKFIF_Pos)                  /*!< RTC_T::INTSTS: CLKFIF Mask             */
+#define RTC_INTSTS_CLKFIF_Pos         ( 24 )                                               /*!< RTC_T::INTSTS: CLKFIF Position         */
+#define RTC_INTSTS_CLKFIF_Msk         ( 0x1ul << RTC_INTSTS_CLKFIF_Pos )                   /*!< RTC_T::INTSTS: CLKFIF Mask             */
 
-#define RTC_INTSTS_CLKSPIF_Pos           (25)                                              /*!< RTC_T::INTSTS: CLKSPIF Position        */
-#define RTC_INTSTS_CLKSPIF_Msk           (0x1ul << RTC_INTSTS_CLKSPIF_Pos)                 /*!< RTC_T::INTSTS: CLKSPIF Mask            */
+#define RTC_INTSTS_CLKSPIF_Pos        ( 25 )                                               /*!< RTC_T::INTSTS: CLKSPIF Position        */
+#define RTC_INTSTS_CLKSPIF_Msk        ( 0x1ul << RTC_INTSTS_CLKSPIF_Pos )                  /*!< RTC_T::INTSTS: CLKSPIF Mask            */
 
-#define RTC_TICK_TICK_Pos                (0)                                               /*!< RTC_T::TICK: TICK Position             */
-#define RTC_TICK_TICK_Msk                (0x7ul << RTC_TICK_TICK_Pos)                      /*!< RTC_T::TICK: TICK Mask                 */
+#define RTC_TICK_TICK_Pos             ( 0 )                                                /*!< RTC_T::TICK: TICK Position             */
+#define RTC_TICK_TICK_Msk             ( 0x7ul << RTC_TICK_TICK_Pos )                       /*!< RTC_T::TICK: TICK Mask                 */
 
-#define RTC_TAMSK_MSEC_Pos               (0)                                               /*!< RTC_T::TAMSK: MSEC Position            */
-#define RTC_TAMSK_MSEC_Msk               (0x1ul << RTC_TAMSK_MSEC_Pos)                     /*!< RTC_T::TAMSK: MSEC Mask                */
+#define RTC_TAMSK_MSEC_Pos            ( 0 )                                                /*!< RTC_T::TAMSK: MSEC Position            */
+#define RTC_TAMSK_MSEC_Msk            ( 0x1ul << RTC_TAMSK_MSEC_Pos )                      /*!< RTC_T::TAMSK: MSEC Mask                */
 
-#define RTC_TAMSK_MTENSEC_Pos            (1)                                               /*!< RTC_T::TAMSK: MTENSEC Position         */
-#define RTC_TAMSK_MTENSEC_Msk            (0x1ul << RTC_TAMSK_MTENSEC_Pos)                  /*!< RTC_T::TAMSK: MTENSEC Mask             */
+#define RTC_TAMSK_MTENSEC_Pos         ( 1 )                                                /*!< RTC_T::TAMSK: MTENSEC Position         */
+#define RTC_TAMSK_MTENSEC_Msk         ( 0x1ul << RTC_TAMSK_MTENSEC_Pos )                   /*!< RTC_T::TAMSK: MTENSEC Mask             */
 
-#define RTC_TAMSK_MMIN_Pos               (2)                                               /*!< RTC_T::TAMSK: MMIN Position            */
-#define RTC_TAMSK_MMIN_Msk               (0x1ul << RTC_TAMSK_MMIN_Pos)                     /*!< RTC_T::TAMSK: MMIN Mask                */
+#define RTC_TAMSK_MMIN_Pos            ( 2 )                                                /*!< RTC_T::TAMSK: MMIN Position            */
+#define RTC_TAMSK_MMIN_Msk            ( 0x1ul << RTC_TAMSK_MMIN_Pos )                      /*!< RTC_T::TAMSK: MMIN Mask                */
 
-#define RTC_TAMSK_MTENMIN_Pos            (3)                                               /*!< RTC_T::TAMSK: MTENMIN Position         */
-#define RTC_TAMSK_MTENMIN_Msk            (0x1ul << RTC_TAMSK_MTENMIN_Pos)                  /*!< RTC_T::TAMSK: MTENMIN Mask             */
+#define RTC_TAMSK_MTENMIN_Pos         ( 3 )                                                /*!< RTC_T::TAMSK: MTENMIN Position         */
+#define RTC_TAMSK_MTENMIN_Msk         ( 0x1ul << RTC_TAMSK_MTENMIN_Pos )                   /*!< RTC_T::TAMSK: MTENMIN Mask             */
 
-#define RTC_TAMSK_MHR_Pos                (4)                                               /*!< RTC_T::TAMSK: MHR Position             */
-#define RTC_TAMSK_MHR_Msk                (0x1ul << RTC_TAMSK_MHR_Pos)                      /*!< RTC_T::TAMSK: MHR Mask                 */
+#define RTC_TAMSK_MHR_Pos             ( 4 )                                                /*!< RTC_T::TAMSK: MHR Position             */
+#define RTC_TAMSK_MHR_Msk             ( 0x1ul << RTC_TAMSK_MHR_Pos )                       /*!< RTC_T::TAMSK: MHR Mask                 */
 
-#define RTC_TAMSK_MTENHR_Pos             (5)                                               /*!< RTC_T::TAMSK: MTENHR Position          */
-#define RTC_TAMSK_MTENHR_Msk             (0x1ul << RTC_TAMSK_MTENHR_Pos)                   /*!< RTC_T::TAMSK: MTENHR Mask              */
+#define RTC_TAMSK_MTENHR_Pos          ( 5 )                                                /*!< RTC_T::TAMSK: MTENHR Position          */
+#define RTC_TAMSK_MTENHR_Msk          ( 0x1ul << RTC_TAMSK_MTENHR_Pos )                    /*!< RTC_T::TAMSK: MTENHR Mask              */
 
-#define RTC_CAMSK_MDAY_Pos               (0)                                               /*!< RTC_T::CAMSK: MDAY Position            */
-#define RTC_CAMSK_MDAY_Msk               (0x1ul << RTC_CAMSK_MDAY_Pos)                     /*!< RTC_T::CAMSK: MDAY Mask                */
+#define RTC_CAMSK_MDAY_Pos            ( 0 )                                                /*!< RTC_T::CAMSK: MDAY Position            */
+#define RTC_CAMSK_MDAY_Msk            ( 0x1ul << RTC_CAMSK_MDAY_Pos )                      /*!< RTC_T::CAMSK: MDAY Mask                */
 
-#define RTC_CAMSK_MTENDAY_Pos            (1)                                               /*!< RTC_T::CAMSK: MTENDAY Position         */
-#define RTC_CAMSK_MTENDAY_Msk            (0x1ul << RTC_CAMSK_MTENDAY_Pos)                  /*!< RTC_T::CAMSK: MTENDAY Mask             */
+#define RTC_CAMSK_MTENDAY_Pos         ( 1 )                                                /*!< RTC_T::CAMSK: MTENDAY Position         */
+#define RTC_CAMSK_MTENDAY_Msk         ( 0x1ul << RTC_CAMSK_MTENDAY_Pos )                   /*!< RTC_T::CAMSK: MTENDAY Mask             */
 
-#define RTC_CAMSK_MMON_Pos               (2)                                               /*!< RTC_T::CAMSK: MMON Position            */
-#define RTC_CAMSK_MMON_Msk               (0x1ul << RTC_CAMSK_MMON_Pos)                     /*!< RTC_T::CAMSK: MMON Mask                */
+#define RTC_CAMSK_MMON_Pos            ( 2 )                                                /*!< RTC_T::CAMSK: MMON Position            */
+#define RTC_CAMSK_MMON_Msk            ( 0x1ul << RTC_CAMSK_MMON_Pos )                      /*!< RTC_T::CAMSK: MMON Mask                */
 
-#define RTC_CAMSK_MTENMON_Pos            (3)                                               /*!< RTC_T::CAMSK: MTENMON Position         */
-#define RTC_CAMSK_MTENMON_Msk            (0x1ul << RTC_CAMSK_MTENMON_Pos)                  /*!< RTC_T::CAMSK: MTENMON Mask             */
+#define RTC_CAMSK_MTENMON_Pos         ( 3 )                                                /*!< RTC_T::CAMSK: MTENMON Position         */
+#define RTC_CAMSK_MTENMON_Msk         ( 0x1ul << RTC_CAMSK_MTENMON_Pos )                   /*!< RTC_T::CAMSK: MTENMON Mask             */
 
-#define RTC_CAMSK_MYEAR_Pos              (4)                                               /*!< RTC_T::CAMSK: MYEAR Position           */
-#define RTC_CAMSK_MYEAR_Msk              (0x1ul << RTC_CAMSK_MYEAR_Pos)                    /*!< RTC_T::CAMSK: MYEAR Mask               */
+#define RTC_CAMSK_MYEAR_Pos           ( 4 )                                                /*!< RTC_T::CAMSK: MYEAR Position           */
+#define RTC_CAMSK_MYEAR_Msk           ( 0x1ul << RTC_CAMSK_MYEAR_Pos )                     /*!< RTC_T::CAMSK: MYEAR Mask               */
 
-#define RTC_CAMSK_MTENYEAR_Pos           (5)                                               /*!< RTC_T::CAMSK: MTENYEAR Position        */
-#define RTC_CAMSK_MTENYEAR_Msk           (0x1ul << RTC_CAMSK_MTENYEAR_Pos)                 /*!< RTC_T::CAMSK: MTENYEAR Mask            */
+#define RTC_CAMSK_MTENYEAR_Pos        ( 5 )                                                /*!< RTC_T::CAMSK: MTENYEAR Position        */
+#define RTC_CAMSK_MTENYEAR_Msk        ( 0x1ul << RTC_CAMSK_MTENYEAR_Pos )                  /*!< RTC_T::CAMSK: MTENYEAR Mask            */
 
-#define RTC_SPRCTL_SPRRWEN_Pos           (2)                                               /*!< RTC_T::SPRCTL: SPRRWEN Position        */
-#define RTC_SPRCTL_SPRRWEN_Msk           (0x1ul << RTC_SPRCTL_SPRRWEN_Pos)                 /*!< RTC_T::SPRCTL: SPRRWEN Mask            */
+#define RTC_SPRCTL_SPRRWEN_Pos        ( 2 )                                                /*!< RTC_T::SPRCTL: SPRRWEN Position        */
+#define RTC_SPRCTL_SPRRWEN_Msk        ( 0x1ul << RTC_SPRCTL_SPRRWEN_Pos )                  /*!< RTC_T::SPRCTL: SPRRWEN Mask            */
 
-#define RTC_SPRCTL_SPRCSTS_Pos           (5)                                               /*!< RTC_T::SPRCTL: SPRCSTS Position        */
-#define RTC_SPRCTL_SPRCSTS_Msk           (0x1ul << RTC_SPRCTL_SPRCSTS_Pos)                 /*!< RTC_T::SPRCTL: SPRCSTS Mask            */
+#define RTC_SPRCTL_SPRCSTS_Pos        ( 5 )                                                /*!< RTC_T::SPRCTL: SPRCSTS Position        */
+#define RTC_SPRCTL_SPRCSTS_Msk        ( 0x1ul << RTC_SPRCTL_SPRCSTS_Pos )                  /*!< RTC_T::SPRCTL: SPRCSTS Mask            */
 
-#define RTC_SPRCTL_LXTFCLR_Pos           (16)                                              /*!< RTC_T::SPRCTL: LXTFCLR Position        */
-#define RTC_SPRCTL_LXTFCLR_Msk           (0x1ul << RTC_SPRCTL_LXTFCLR_Pos)                 /*!< RTC_T::SPRCTL: LXTFCLR Mask            */
+#define RTC_SPRCTL_LXTFCLR_Pos        ( 16 )                                               /*!< RTC_T::SPRCTL: LXTFCLR Position        */
+#define RTC_SPRCTL_LXTFCLR_Msk        ( 0x1ul << RTC_SPRCTL_LXTFCLR_Pos )                  /*!< RTC_T::SPRCTL: LXTFCLR Mask            */
 
-#define RTC_SPR0_SPARE_Pos               (0)                                               /*!< RTC_T::SPR0: SPARE Position            */
-#define RTC_SPR0_SPARE_Msk               (0xfffffffful << RTC_SPR0_SPARE_Pos)              /*!< RTC_T::SPR0: SPARE Mask                */
+#define RTC_SPR0_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR0: SPARE Position            */
+#define RTC_SPR0_SPARE_Msk            ( 0xfffffffful << RTC_SPR0_SPARE_Pos )               /*!< RTC_T::SPR0: SPARE Mask                */
 
-#define RTC_SPR1_SPARE_Pos               (0)                                               /*!< RTC_T::SPR1: SPARE Position            */
-#define RTC_SPR1_SPARE_Msk               (0xfffffffful << RTC_SPR1_SPARE_Pos)              /*!< RTC_T::SPR1: SPARE Mask                */
+#define RTC_SPR1_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR1: SPARE Position            */
+#define RTC_SPR1_SPARE_Msk            ( 0xfffffffful << RTC_SPR1_SPARE_Pos )               /*!< RTC_T::SPR1: SPARE Mask                */
 
-#define RTC_SPR2_SPARE_Pos               (0)                                               /*!< RTC_T::SPR2: SPARE Position            */
-#define RTC_SPR2_SPARE_Msk               (0xfffffffful << RTC_SPR2_SPARE_Pos)              /*!< RTC_T::SPR2: SPARE Mask                */
+#define RTC_SPR2_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR2: SPARE Position            */
+#define RTC_SPR2_SPARE_Msk            ( 0xfffffffful << RTC_SPR2_SPARE_Pos )               /*!< RTC_T::SPR2: SPARE Mask                */
 
-#define RTC_SPR3_SPARE_Pos               (0)                                               /*!< RTC_T::SPR3: SPARE Position            */
-#define RTC_SPR3_SPARE_Msk               (0xfffffffful << RTC_SPR3_SPARE_Pos)              /*!< RTC_T::SPR3: SPARE Mask                */
+#define RTC_SPR3_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR3: SPARE Position            */
+#define RTC_SPR3_SPARE_Msk            ( 0xfffffffful << RTC_SPR3_SPARE_Pos )               /*!< RTC_T::SPR3: SPARE Mask                */
 
-#define RTC_SPR4_SPARE_Pos               (0)                                               /*!< RTC_T::SPR4: SPARE Position            */
-#define RTC_SPR4_SPARE_Msk               (0xfffffffful << RTC_SPR4_SPARE_Pos)              /*!< RTC_T::SPR4: SPARE Mask                */
+#define RTC_SPR4_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR4: SPARE Position            */
+#define RTC_SPR4_SPARE_Msk            ( 0xfffffffful << RTC_SPR4_SPARE_Pos )               /*!< RTC_T::SPR4: SPARE Mask                */
 
-#define RTC_SPR5_SPARE_Pos               (0)                                               /*!< RTC_T::SPR5: SPARE Position            */
-#define RTC_SPR5_SPARE_Msk               (0xfffffffful << RTC_SPR5_SPARE_Pos)              /*!< RTC_T::SPR5: SPARE Mask                */
+#define RTC_SPR5_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR5: SPARE Position            */
+#define RTC_SPR5_SPARE_Msk            ( 0xfffffffful << RTC_SPR5_SPARE_Pos )               /*!< RTC_T::SPR5: SPARE Mask                */
 
-#define RTC_SPR6_SPARE_Pos               (0)                                               /*!< RTC_T::SPR6: SPARE Position            */
-#define RTC_SPR6_SPARE_Msk               (0xfffffffful << RTC_SPR6_SPARE_Pos)              /*!< RTC_T::SPR6: SPARE Mask                */
+#define RTC_SPR6_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR6: SPARE Position            */
+#define RTC_SPR6_SPARE_Msk            ( 0xfffffffful << RTC_SPR6_SPARE_Pos )               /*!< RTC_T::SPR6: SPARE Mask                */
 
-#define RTC_SPR7_SPARE_Pos               (0)                                               /*!< RTC_T::SPR7: SPARE Position            */
-#define RTC_SPR7_SPARE_Msk               (0xfffffffful << RTC_SPR7_SPARE_Pos)              /*!< RTC_T::SPR7: SPARE Mask                */
+#define RTC_SPR7_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR7: SPARE Position            */
+#define RTC_SPR7_SPARE_Msk            ( 0xfffffffful << RTC_SPR7_SPARE_Pos )               /*!< RTC_T::SPR7: SPARE Mask                */
 
-#define RTC_SPR8_SPARE_Pos               (0)                                               /*!< RTC_T::SPR8: SPARE Position            */
-#define RTC_SPR8_SPARE_Msk               (0xfffffffful << RTC_SPR8_SPARE_Pos)              /*!< RTC_T::SPR8: SPARE Mask                */
+#define RTC_SPR8_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR8: SPARE Position            */
+#define RTC_SPR8_SPARE_Msk            ( 0xfffffffful << RTC_SPR8_SPARE_Pos )               /*!< RTC_T::SPR8: SPARE Mask                */
 
-#define RTC_SPR9_SPARE_Pos               (0)                                               /*!< RTC_T::SPR9: SPARE Position            */
-#define RTC_SPR9_SPARE_Msk               (0xfffffffful << RTC_SPR9_SPARE_Pos)              /*!< RTC_T::SPR9: SPARE Mask                */
+#define RTC_SPR9_SPARE_Pos            ( 0 )                                                /*!< RTC_T::SPR9: SPARE Position            */
+#define RTC_SPR9_SPARE_Msk            ( 0xfffffffful << RTC_SPR9_SPARE_Pos )               /*!< RTC_T::SPR9: SPARE Mask                */
 
-#define RTC_SPR10_SPARE_Pos              (0)                                               /*!< RTC_T::SPR10: SPARE Position           */
-#define RTC_SPR10_SPARE_Msk              (0xfffffffful << RTC_SPR10_SPARE_Pos)             /*!< RTC_T::SPR10: SPARE Mask               */
+#define RTC_SPR10_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR10: SPARE Position           */
+#define RTC_SPR10_SPARE_Msk           ( 0xfffffffful << RTC_SPR10_SPARE_Pos )              /*!< RTC_T::SPR10: SPARE Mask               */
 
-#define RTC_SPR11_SPARE_Pos              (0)                                               /*!< RTC_T::SPR11: SPARE Position           */
-#define RTC_SPR11_SPARE_Msk              (0xfffffffful << RTC_SPR11_SPARE_Pos)             /*!< RTC_T::SPR11: SPARE Mask               */
+#define RTC_SPR11_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR11: SPARE Position           */
+#define RTC_SPR11_SPARE_Msk           ( 0xfffffffful << RTC_SPR11_SPARE_Pos )              /*!< RTC_T::SPR11: SPARE Mask               */
 
-#define RTC_SPR12_SPARE_Pos              (0)                                               /*!< RTC_T::SPR12: SPARE Position           */
-#define RTC_SPR12_SPARE_Msk              (0xfffffffful << RTC_SPR12_SPARE_Pos)             /*!< RTC_T::SPR12: SPARE Mask               */
+#define RTC_SPR12_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR12: SPARE Position           */
+#define RTC_SPR12_SPARE_Msk           ( 0xfffffffful << RTC_SPR12_SPARE_Pos )              /*!< RTC_T::SPR12: SPARE Mask               */
 
-#define RTC_SPR13_SPARE_Pos              (0)                                               /*!< RTC_T::SPR13: SPARE Position           */
-#define RTC_SPR13_SPARE_Msk              (0xfffffffful << RTC_SPR13_SPARE_Pos)             /*!< RTC_T::SPR13: SPARE Mask               */
+#define RTC_SPR13_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR13: SPARE Position           */
+#define RTC_SPR13_SPARE_Msk           ( 0xfffffffful << RTC_SPR13_SPARE_Pos )              /*!< RTC_T::SPR13: SPARE Mask               */
 
-#define RTC_SPR14_SPARE_Pos              (0)                                               /*!< RTC_T::SPR14: SPARE Position           */
-#define RTC_SPR14_SPARE_Msk              (0xfffffffful << RTC_SPR14_SPARE_Pos)             /*!< RTC_T::SPR14: SPARE Mask               */
+#define RTC_SPR14_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR14: SPARE Position           */
+#define RTC_SPR14_SPARE_Msk           ( 0xfffffffful << RTC_SPR14_SPARE_Pos )              /*!< RTC_T::SPR14: SPARE Mask               */
 
-#define RTC_SPR15_SPARE_Pos              (0)                                               /*!< RTC_T::SPR15: SPARE Position           */
-#define RTC_SPR15_SPARE_Msk              (0xfffffffful << RTC_SPR15_SPARE_Pos)             /*!< RTC_T::SPR15: SPARE Mask               */
+#define RTC_SPR15_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR15: SPARE Position           */
+#define RTC_SPR15_SPARE_Msk           ( 0xfffffffful << RTC_SPR15_SPARE_Pos )              /*!< RTC_T::SPR15: SPARE Mask               */
 
-#define RTC_SPR16_SPARE_Pos              (0)                                               /*!< RTC_T::SPR16: SPARE Position           */
-#define RTC_SPR16_SPARE_Msk              (0xfffffffful << RTC_SPR16_SPARE_Pos)             /*!< RTC_T::SPR16: SPARE Mask               */
+#define RTC_SPR16_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR16: SPARE Position           */
+#define RTC_SPR16_SPARE_Msk           ( 0xfffffffful << RTC_SPR16_SPARE_Pos )              /*!< RTC_T::SPR16: SPARE Mask               */
 
-#define RTC_SPR17_SPARE_Pos              (0)                                               /*!< RTC_T::SPR17: SPARE Position           */
-#define RTC_SPR17_SPARE_Msk              (0xfffffffful << RTC_SPR17_SPARE_Pos)             /*!< RTC_T::SPR17: SPARE Mask               */
+#define RTC_SPR17_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR17: SPARE Position           */
+#define RTC_SPR17_SPARE_Msk           ( 0xfffffffful << RTC_SPR17_SPARE_Pos )              /*!< RTC_T::SPR17: SPARE Mask               */
 
-#define RTC_SPR18_SPARE_Pos              (0)                                               /*!< RTC_T::SPR18: SPARE Position           */
-#define RTC_SPR18_SPARE_Msk              (0xfffffffful << RTC_SPR18_SPARE_Pos)             /*!< RTC_T::SPR18: SPARE Mask               */
+#define RTC_SPR18_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR18: SPARE Position           */
+#define RTC_SPR18_SPARE_Msk           ( 0xfffffffful << RTC_SPR18_SPARE_Pos )              /*!< RTC_T::SPR18: SPARE Mask               */
 
-#define RTC_SPR19_SPARE_Pos              (0)                                               /*!< RTC_T::SPR19: SPARE Position           */
-#define RTC_SPR19_SPARE_Msk              (0xfffffffful << RTC_SPR19_SPARE_Pos)             /*!< RTC_T::SPR19: SPARE Mask               */
+#define RTC_SPR19_SPARE_Pos           ( 0 )                                                /*!< RTC_T::SPR19: SPARE Position           */
+#define RTC_SPR19_SPARE_Msk           ( 0xfffffffful << RTC_SPR19_SPARE_Pos )              /*!< RTC_T::SPR19: SPARE Mask               */
 
-#define RTC_LXTCTL_LIRC32KEN_Pos         (0)                                               /*!< RTC_T::LXTCTL: LIRC32KEN Position      */
-#define RTC_LXTCTL_LIRC32KEN_Msk         (0x1ul << RTC_LXTCTL_LIRC32KEN_Pos)               /*!< RTC_T::LXTCTL: LIRC32KEN Mask          */
+#define RTC_LXTCTL_LIRC32KEN_Pos      ( 0 )                                                /*!< RTC_T::LXTCTL: LIRC32KEN Position      */
+#define RTC_LXTCTL_LIRC32KEN_Msk      ( 0x1ul << RTC_LXTCTL_LIRC32KEN_Pos )                /*!< RTC_T::LXTCTL: LIRC32KEN Mask          */
 
-#define RTC_LXTCTL_GAIN_Pos              (1)                                               /*!< RTC_T::LXTCTL: GAIN Position           */
-#define RTC_LXTCTL_GAIN_Msk              (0x7ul << RTC_LXTCTL_GAIN_Pos)                    /*!< RTC_T::LXTCTL: GAIN Mask               */
+#define RTC_LXTCTL_GAIN_Pos           ( 1 )                                                /*!< RTC_T::LXTCTL: GAIN Position           */
+#define RTC_LXTCTL_GAIN_Msk           ( 0x7ul << RTC_LXTCTL_GAIN_Pos )                     /*!< RTC_T::LXTCTL: GAIN Mask               */
 
-#define RTC_LXTCTL_C32KS_Pos             (7)                                               /*!< RTC_T::LXTCTL: C32KS Position          */
-#define RTC_LXTCTL_C32KS_Msk             (0x1ul << RTC_LXTCTL_C32KS_Pos)                   /*!< RTC_T::LXTCTL: C32KS Mask              */
+#define RTC_LXTCTL_C32KS_Pos          ( 7 )                                                /*!< RTC_T::LXTCTL: C32KS Position          */
+#define RTC_LXTCTL_C32KS_Msk          ( 0x1ul << RTC_LXTCTL_C32KS_Pos )                    /*!< RTC_T::LXTCTL: C32KS Mask              */
 
-#define RTC_GPIOCTL0_OPMODE0_Pos         (0)                                               /*!< RTC_T::GPIOCTL0: OPMODE0 Position      */
-#define RTC_GPIOCTL0_OPMODE0_Msk         (0x3ul << RTC_GPIOCTL0_OPMODE0_Pos)               /*!< RTC_T::GPIOCTL0: OPMODE0 Mask          */
+#define RTC_GPIOCTL0_OPMODE0_Pos      ( 0 )                                                /*!< RTC_T::GPIOCTL0: OPMODE0 Position      */
+#define RTC_GPIOCTL0_OPMODE0_Msk      ( 0x3ul << RTC_GPIOCTL0_OPMODE0_Pos )                /*!< RTC_T::GPIOCTL0: OPMODE0 Mask          */
 
-#define RTC_GPIOCTL0_DOUT0_Pos           (2)                                               /*!< RTC_T::GPIOCTL0: DOUT0 Position        */
-#define RTC_GPIOCTL0_DOUT0_Msk           (0x1ul << RTC_GPIOCTL0_DOUT0_Pos)                 /*!< RTC_T::GPIOCTL0: DOUT0 Mask            */
+#define RTC_GPIOCTL0_DOUT0_Pos        ( 2 )                                                /*!< RTC_T::GPIOCTL0: DOUT0 Position        */
+#define RTC_GPIOCTL0_DOUT0_Msk        ( 0x1ul << RTC_GPIOCTL0_DOUT0_Pos )                  /*!< RTC_T::GPIOCTL0: DOUT0 Mask            */
 
-#define RTC_GPIOCTL0_CTLSEL0_Pos         (3)                                               /*!< RTC_T::GPIOCTL0: CTLSEL0 Position      */
-#define RTC_GPIOCTL0_CTLSEL0_Msk         (0x1ul << RTC_GPIOCTL0_CTLSEL0_Pos)               /*!< RTC_T::GPIOCTL0: CTLSEL0 Mask          */
+#define RTC_GPIOCTL0_CTLSEL0_Pos      ( 3 )                                                /*!< RTC_T::GPIOCTL0: CTLSEL0 Position      */
+#define RTC_GPIOCTL0_CTLSEL0_Msk      ( 0x1ul << RTC_GPIOCTL0_CTLSEL0_Pos )                /*!< RTC_T::GPIOCTL0: CTLSEL0 Mask          */
 
-#define RTC_GPIOCTL0_PUSEL0_Pos          (4)                                               /*!< RTC_T::GPIOCTL0: PUSEL0 Position       */
-#define RTC_GPIOCTL0_PUSEL0_Msk          (0x3ul << RTC_GPIOCTL0_PUSEL0_Pos)                /*!< RTC_T::GPIOCTL0: PUSEL0 Mask           */
+#define RTC_GPIOCTL0_PUSEL0_Pos       ( 4 )                                                /*!< RTC_T::GPIOCTL0: PUSEL0 Position       */
+#define RTC_GPIOCTL0_PUSEL0_Msk       ( 0x3ul << RTC_GPIOCTL0_PUSEL0_Pos )                 /*!< RTC_T::GPIOCTL0: PUSEL0 Mask           */
 
-#define RTC_GPIOCTL0_OPMODE1_Pos         (8)                                               /*!< RTC_T::GPIOCTL0: OPMODE1 Position      */
-#define RTC_GPIOCTL0_OPMODE1_Msk         (0x3ul << RTC_GPIOCTL0_OPMODE1_Pos)               /*!< RTC_T::GPIOCTL0: OPMODE1 Mask          */
+#define RTC_GPIOCTL0_OPMODE1_Pos      ( 8 )                                                /*!< RTC_T::GPIOCTL0: OPMODE1 Position      */
+#define RTC_GPIOCTL0_OPMODE1_Msk      ( 0x3ul << RTC_GPIOCTL0_OPMODE1_Pos )                /*!< RTC_T::GPIOCTL0: OPMODE1 Mask          */
 
-#define RTC_GPIOCTL0_DOUT1_Pos           (10)                                              /*!< RTC_T::GPIOCTL0: DOUT1 Position        */
-#define RTC_GPIOCTL0_DOUT1_Msk           (0x1ul << RTC_GPIOCTL0_DOUT1_Pos)                 /*!< RTC_T::GPIOCTL0: DOUT1 Mask            */
+#define RTC_GPIOCTL0_DOUT1_Pos        ( 10 )                                               /*!< RTC_T::GPIOCTL0: DOUT1 Position        */
+#define RTC_GPIOCTL0_DOUT1_Msk        ( 0x1ul << RTC_GPIOCTL0_DOUT1_Pos )                  /*!< RTC_T::GPIOCTL0: DOUT1 Mask            */
 
-#define RTC_GPIOCTL0_CTLSEL1_Pos         (11)                                              /*!< RTC_T::GPIOCTL0: CTLSEL1 Position      */
-#define RTC_GPIOCTL0_CTLSEL1_Msk         (0x1ul << RTC_GPIOCTL0_CTLSEL1_Pos)               /*!< RTC_T::GPIOCTL0: CTLSEL1 Mask          */
+#define RTC_GPIOCTL0_CTLSEL1_Pos      ( 11 )                                               /*!< RTC_T::GPIOCTL0: CTLSEL1 Position      */
+#define RTC_GPIOCTL0_CTLSEL1_Msk      ( 0x1ul << RTC_GPIOCTL0_CTLSEL1_Pos )                /*!< RTC_T::GPIOCTL0: CTLSEL1 Mask          */
 
-#define RTC_GPIOCTL0_PUSEL1_Pos          (12)                                              /*!< RTC_T::GPIOCTL0: PUSEL1 Position       */
-#define RTC_GPIOCTL0_PUSEL1_Msk          (0x3ul << RTC_GPIOCTL0_PUSEL1_Pos)                /*!< RTC_T::GPIOCTL0: PUSEL1 Mask           */
+#define RTC_GPIOCTL0_PUSEL1_Pos       ( 12 )                                               /*!< RTC_T::GPIOCTL0: PUSEL1 Position       */
+#define RTC_GPIOCTL0_PUSEL1_Msk       ( 0x3ul << RTC_GPIOCTL0_PUSEL1_Pos )                 /*!< RTC_T::GPIOCTL0: PUSEL1 Mask           */
 
-#define RTC_GPIOCTL0_OPMODE2_Pos         (16)                                              /*!< RTC_T::GPIOCTL0: OPMODE2 Position      */
-#define RTC_GPIOCTL0_OPMODE2_Msk         (0x3ul << RTC_GPIOCTL0_OPMODE2_Pos)               /*!< RTC_T::GPIOCTL0: OPMODE2 Mask          */
+#define RTC_GPIOCTL0_OPMODE2_Pos      ( 16 )                                               /*!< RTC_T::GPIOCTL0: OPMODE2 Position      */
+#define RTC_GPIOCTL0_OPMODE2_Msk      ( 0x3ul << RTC_GPIOCTL0_OPMODE2_Pos )                /*!< RTC_T::GPIOCTL0: OPMODE2 Mask          */
 
-#define RTC_GPIOCTL0_DOUT2_Pos           (18)                                              /*!< RTC_T::GPIOCTL0: DOUT2 Position        */
-#define RTC_GPIOCTL0_DOUT2_Msk           (0x1ul << RTC_GPIOCTL0_DOUT2_Pos)                 /*!< RTC_T::GPIOCTL0: DOUT2 Mask            */
+#define RTC_GPIOCTL0_DOUT2_Pos        ( 18 )                                               /*!< RTC_T::GPIOCTL0: DOUT2 Position        */
+#define RTC_GPIOCTL0_DOUT2_Msk        ( 0x1ul << RTC_GPIOCTL0_DOUT2_Pos )                  /*!< RTC_T::GPIOCTL0: DOUT2 Mask            */
 
-#define RTC_GPIOCTL0_CTLSEL2_Pos         (19)                                              /*!< RTC_T::GPIOCTL0: CTLSEL2 Position      */
-#define RTC_GPIOCTL0_CTLSEL2_Msk         (0x1ul << RTC_GPIOCTL0_CTLSEL2_Pos)               /*!< RTC_T::GPIOCTL0: CTLSEL2 Mask          */
+#define RTC_GPIOCTL0_CTLSEL2_Pos      ( 19 )                                               /*!< RTC_T::GPIOCTL0: CTLSEL2 Position      */
+#define RTC_GPIOCTL0_CTLSEL2_Msk      ( 0x1ul << RTC_GPIOCTL0_CTLSEL2_Pos )                /*!< RTC_T::GPIOCTL0: CTLSEL2 Mask          */
 
-#define RTC_GPIOCTL0_PUSEL2_Pos          (20)                                              /*!< RTC_T::GPIOCTL0: PUSEL2 Position       */
-#define RTC_GPIOCTL0_PUSEL2_Msk          (0x3ul << RTC_GPIOCTL0_PUSEL2_Pos)                /*!< RTC_T::GPIOCTL0: PUSEL2 Mask           */
+#define RTC_GPIOCTL0_PUSEL2_Pos       ( 20 )                                               /*!< RTC_T::GPIOCTL0: PUSEL2 Position       */
+#define RTC_GPIOCTL0_PUSEL2_Msk       ( 0x3ul << RTC_GPIOCTL0_PUSEL2_Pos )                 /*!< RTC_T::GPIOCTL0: PUSEL2 Mask           */
 
-#define RTC_GPIOCTL0_OPMODE3_Pos         (24)                                              /*!< RTC_T::GPIOCTL0: OPMODE3 Position      */
-#define RTC_GPIOCTL0_OPMODE3_Msk         (0x3ul << RTC_GPIOCTL0_OPMODE3_Pos)               /*!< RTC_T::GPIOCTL0: OPMODE3 Mask          */
+#define RTC_GPIOCTL0_OPMODE3_Pos      ( 24 )                                               /*!< RTC_T::GPIOCTL0: OPMODE3 Position      */
+#define RTC_GPIOCTL0_OPMODE3_Msk      ( 0x3ul << RTC_GPIOCTL0_OPMODE3_Pos )                /*!< RTC_T::GPIOCTL0: OPMODE3 Mask          */
 
-#define RTC_GPIOCTL0_DOUT3_Pos           (26)                                              /*!< RTC_T::GPIOCTL0: DOUT3 Position        */
-#define RTC_GPIOCTL0_DOUT3_Msk           (0x1ul << RTC_GPIOCTL0_DOUT3_Pos)                 /*!< RTC_T::GPIOCTL0: DOUT3 Mask            */
+#define RTC_GPIOCTL0_DOUT3_Pos        ( 26 )                                               /*!< RTC_T::GPIOCTL0: DOUT3 Position        */
+#define RTC_GPIOCTL0_DOUT3_Msk        ( 0x1ul << RTC_GPIOCTL0_DOUT3_Pos )                  /*!< RTC_T::GPIOCTL0: DOUT3 Mask            */
 
-#define RTC_GPIOCTL0_CTLSEL3_Pos         (27)                                              /*!< RTC_T::GPIOCTL0: CTLSEL3 Position      */
-#define RTC_GPIOCTL0_CTLSEL3_Msk         (0x1ul << RTC_GPIOCTL0_CTLSEL3_Pos)               /*!< RTC_T::GPIOCTL0: CTLSEL3 Mask          */
+#define RTC_GPIOCTL0_CTLSEL3_Pos      ( 27 )                                               /*!< RTC_T::GPIOCTL0: CTLSEL3 Position      */
+#define RTC_GPIOCTL0_CTLSEL3_Msk      ( 0x1ul << RTC_GPIOCTL0_CTLSEL3_Pos )                /*!< RTC_T::GPIOCTL0: CTLSEL3 Mask          */
 
-#define RTC_GPIOCTL0_PUSEL3_Pos          (28)                                              /*!< RTC_T::GPIOCTL0: PUSEL3 Position       */
-#define RTC_GPIOCTL0_PUSEL3_Msk          (0x3ul << RTC_GPIOCTL0_PUSEL3_Pos)                /*!< RTC_T::GPIOCTL0: PUSEL3 Mask           */
+#define RTC_GPIOCTL0_PUSEL3_Pos       ( 28 )                                               /*!< RTC_T::GPIOCTL0: PUSEL3 Position       */
+#define RTC_GPIOCTL0_PUSEL3_Msk       ( 0x3ul << RTC_GPIOCTL0_PUSEL3_Pos )                 /*!< RTC_T::GPIOCTL0: PUSEL3 Mask           */
 
-#define RTC_GPIOCTL1_OPMODE4_Pos         (0)                                               /*!< RTC_T::GPIOCTL1: OPMODE4 Position      */
-#define RTC_GPIOCTL1_OPMODE4_Msk         (0x3ul << RTC_GPIOCTL1_OPMODE4_Pos)               /*!< RTC_T::GPIOCTL1: OPMODE4 Mask          */
+#define RTC_GPIOCTL1_OPMODE4_Pos      ( 0 )                                                /*!< RTC_T::GPIOCTL1: OPMODE4 Position      */
+#define RTC_GPIOCTL1_OPMODE4_Msk      ( 0x3ul << RTC_GPIOCTL1_OPMODE4_Pos )                /*!< RTC_T::GPIOCTL1: OPMODE4 Mask          */
 
-#define RTC_GPIOCTL1_DOUT4_Pos           (2)                                               /*!< RTC_T::GPIOCTL1: DOUT4 Position        */
-#define RTC_GPIOCTL1_DOUT4_Msk           (0x1ul << RTC_GPIOCTL1_DOUT4_Pos)                 /*!< RTC_T::GPIOCTL1: DOUT4 Mask            */
+#define RTC_GPIOCTL1_DOUT4_Pos        ( 2 )                                                /*!< RTC_T::GPIOCTL1: DOUT4 Position        */
+#define RTC_GPIOCTL1_DOUT4_Msk        ( 0x1ul << RTC_GPIOCTL1_DOUT4_Pos )                  /*!< RTC_T::GPIOCTL1: DOUT4 Mask            */
 
-#define RTC_GPIOCTL1_CTLSEL4_Pos         (3)                                               /*!< RTC_T::GPIOCTL1: CTLSEL4 Position      */
-#define RTC_GPIOCTL1_CTLSEL4_Msk         (0x1ul << RTC_GPIOCTL1_CTLSEL4_Pos)               /*!< RTC_T::GPIOCTL1: CTLSEL4 Mask          */
+#define RTC_GPIOCTL1_CTLSEL4_Pos      ( 3 )                                                /*!< RTC_T::GPIOCTL1: CTLSEL4 Position      */
+#define RTC_GPIOCTL1_CTLSEL4_Msk      ( 0x1ul << RTC_GPIOCTL1_CTLSEL4_Pos )                /*!< RTC_T::GPIOCTL1: CTLSEL4 Mask          */
 
-#define RTC_GPIOCTL1_PUSEL4_Pos          (4)                                               /*!< RTC_T::GPIOCTL1: PUSEL4 Position       */
-#define RTC_GPIOCTL1_PUSEL4_Msk          (0x3ul << RTC_GPIOCTL1_PUSEL4_Pos)                /*!< RTC_T::GPIOCTL1: PUSEL4 Mask           */
+#define RTC_GPIOCTL1_PUSEL4_Pos       ( 4 )                                                /*!< RTC_T::GPIOCTL1: PUSEL4 Position       */
+#define RTC_GPIOCTL1_PUSEL4_Msk       ( 0x3ul << RTC_GPIOCTL1_PUSEL4_Pos )                 /*!< RTC_T::GPIOCTL1: PUSEL4 Mask           */
 
-#define RTC_GPIOCTL1_OPMODE5_Pos         (8)                                               /*!< RTC_T::GPIOCTL1: OPMODE5 Position      */
-#define RTC_GPIOCTL1_OPMODE5_Msk         (0x3ul << RTC_GPIOCTL1_OPMODE5_Pos)               /*!< RTC_T::GPIOCTL1: OPMODE5 Mask          */
+#define RTC_GPIOCTL1_OPMODE5_Pos      ( 8 )                                                /*!< RTC_T::GPIOCTL1: OPMODE5 Position      */
+#define RTC_GPIOCTL1_OPMODE5_Msk      ( 0x3ul << RTC_GPIOCTL1_OPMODE5_Pos )                /*!< RTC_T::GPIOCTL1: OPMODE5 Mask          */
 
-#define RTC_GPIOCTL1_DOUT5_Pos           (10)                                              /*!< RTC_T::GPIOCTL1: DOUT5 Position        */
-#define RTC_GPIOCTL1_DOUT5_Msk           (0x1ul << RTC_GPIOCTL1_DOUT5_Pos)                 /*!< RTC_T::GPIOCTL1: DOUT5 Mask            */
+#define RTC_GPIOCTL1_DOUT5_Pos        ( 10 )                                               /*!< RTC_T::GPIOCTL1: DOUT5 Position        */
+#define RTC_GPIOCTL1_DOUT5_Msk        ( 0x1ul << RTC_GPIOCTL1_DOUT5_Pos )                  /*!< RTC_T::GPIOCTL1: DOUT5 Mask            */
 
-#define RTC_GPIOCTL1_CTLSEL5_Pos         (11)                                              /*!< RTC_T::GPIOCTL1: CTLSEL5 Position      */
-#define RTC_GPIOCTL1_CTLSEL5_Msk         (0x1ul << RTC_GPIOCTL1_CTLSEL5_Pos)               /*!< RTC_T::GPIOCTL1: CTLSEL5 Mask          */
+#define RTC_GPIOCTL1_CTLSEL5_Pos      ( 11 )                                               /*!< RTC_T::GPIOCTL1: CTLSEL5 Position      */
+#define RTC_GPIOCTL1_CTLSEL5_Msk      ( 0x1ul << RTC_GPIOCTL1_CTLSEL5_Pos )                /*!< RTC_T::GPIOCTL1: CTLSEL5 Mask          */
 
-#define RTC_GPIOCTL1_PUSEL5_Pos          (12)                                              /*!< RTC_T::GPIOCTL1: PUSEL5 Position       */
-#define RTC_GPIOCTL1_PUSEL5_Msk          (0x3ul << RTC_GPIOCTL1_PUSEL5_Pos)                /*!< RTC_T::GPIOCTL1: PUSEL5 Mask           */
+#define RTC_GPIOCTL1_PUSEL5_Pos       ( 12 )                                               /*!< RTC_T::GPIOCTL1: PUSEL5 Position       */
+#define RTC_GPIOCTL1_PUSEL5_Msk       ( 0x3ul << RTC_GPIOCTL1_PUSEL5_Pos )                 /*!< RTC_T::GPIOCTL1: PUSEL5 Mask           */
 
-#define RTC_GPIOCTL1_OPMODE6_Pos         (16)                                              /*!< RTC_T::GPIOCTL1: OPMODE6 Position      */
-#define RTC_GPIOCTL1_OPMODE6_Msk         (0x3ul << RTC_GPIOCTL1_OPMODE6_Pos)               /*!< RTC_T::GPIOCTL1: OPMODE6 Mask          */
+#define RTC_GPIOCTL1_OPMODE6_Pos      ( 16 )                                               /*!< RTC_T::GPIOCTL1: OPMODE6 Position      */
+#define RTC_GPIOCTL1_OPMODE6_Msk      ( 0x3ul << RTC_GPIOCTL1_OPMODE6_Pos )                /*!< RTC_T::GPIOCTL1: OPMODE6 Mask          */
 
-#define RTC_GPIOCTL1_DOUT6_Pos           (18)                                              /*!< RTC_T::GPIOCTL1: DOUT6 Position        */
-#define RTC_GPIOCTL1_DOUT6_Msk           (0x1ul << RTC_GPIOCTL1_DOUT6_Pos)                 /*!< RTC_T::GPIOCTL1: DOUT6 Mask            */
+#define RTC_GPIOCTL1_DOUT6_Pos        ( 18 )                                               /*!< RTC_T::GPIOCTL1: DOUT6 Position        */
+#define RTC_GPIOCTL1_DOUT6_Msk        ( 0x1ul << RTC_GPIOCTL1_DOUT6_Pos )                  /*!< RTC_T::GPIOCTL1: DOUT6 Mask            */
 
-#define RTC_GPIOCTL1_CTLSEL6_Pos         (19)                                              /*!< RTC_T::GPIOCTL1: CTLSEL6 Position      */
-#define RTC_GPIOCTL1_CTLSEL6_Msk         (0x1ul << RTC_GPIOCTL1_CTLSEL6_Pos)               /*!< RTC_T::GPIOCTL1: CTLSEL6 Mask          */
+#define RTC_GPIOCTL1_CTLSEL6_Pos      ( 19 )                                               /*!< RTC_T::GPIOCTL1: CTLSEL6 Position      */
+#define RTC_GPIOCTL1_CTLSEL6_Msk      ( 0x1ul << RTC_GPIOCTL1_CTLSEL6_Pos )                /*!< RTC_T::GPIOCTL1: CTLSEL6 Mask          */
 
-#define RTC_GPIOCTL1_PUSEL6_Pos          (20)                                              /*!< RTC_T::GPIOCTL1: PUSEL6 Position       */
-#define RTC_GPIOCTL1_PUSEL6_Msk          (0x3ul << RTC_GPIOCTL1_PUSEL6_Pos)                /*!< RTC_T::GPIOCTL1: PUSEL6 Mask           */
+#define RTC_GPIOCTL1_PUSEL6_Pos       ( 20 )                                               /*!< RTC_T::GPIOCTL1: PUSEL6 Position       */
+#define RTC_GPIOCTL1_PUSEL6_Msk       ( 0x3ul << RTC_GPIOCTL1_PUSEL6_Pos )                 /*!< RTC_T::GPIOCTL1: PUSEL6 Mask           */
 
-#define RTC_GPIOCTL1_OPMODE7_Pos         (24)                                              /*!< RTC_T::GPIOCTL1: OPMODE7 Position      */
-#define RTC_GPIOCTL1_OPMODE7_Msk         (0x3ul << RTC_GPIOCTL1_OPMODE7_Pos)               /*!< RTC_T::GPIOCTL1: OPMODE7 Mask          */
+#define RTC_GPIOCTL1_OPMODE7_Pos      ( 24 )                                               /*!< RTC_T::GPIOCTL1: OPMODE7 Position      */
+#define RTC_GPIOCTL1_OPMODE7_Msk      ( 0x3ul << RTC_GPIOCTL1_OPMODE7_Pos )                /*!< RTC_T::GPIOCTL1: OPMODE7 Mask          */
 
-#define RTC_GPIOCTL1_DOUT7_Pos           (26)                                              /*!< RTC_T::GPIOCTL1: DOUT7 Position        */
-#define RTC_GPIOCTL1_DOUT7_Msk           (0x1ul << RTC_GPIOCTL1_DOUT7_Pos)                 /*!< RTC_T::GPIOCTL1: DOUT7 Mask            */
+#define RTC_GPIOCTL1_DOUT7_Pos        ( 26 )                                               /*!< RTC_T::GPIOCTL1: DOUT7 Position        */
+#define RTC_GPIOCTL1_DOUT7_Msk        ( 0x1ul << RTC_GPIOCTL1_DOUT7_Pos )                  /*!< RTC_T::GPIOCTL1: DOUT7 Mask            */
 
-#define RTC_GPIOCTL1_CTLSEL7_Pos         (27)                                              /*!< RTC_T::GPIOCTL1: CTLSEL7 Position      */
-#define RTC_GPIOCTL1_CTLSEL7_Msk         (0x1ul << RTC_GPIOCTL1_CTLSEL7_Pos)               /*!< RTC_T::GPIOCTL1: CTLSEL7 Mask          */
+#define RTC_GPIOCTL1_CTLSEL7_Pos      ( 27 )                                               /*!< RTC_T::GPIOCTL1: CTLSEL7 Position      */
+#define RTC_GPIOCTL1_CTLSEL7_Msk      ( 0x1ul << RTC_GPIOCTL1_CTLSEL7_Pos )                /*!< RTC_T::GPIOCTL1: CTLSEL7 Mask          */
 
-#define RTC_GPIOCTL1_PUSEL7_Pos          (28)                                              /*!< RTC_T::GPIOCTL1: PUSEL7 Position       */
-#define RTC_GPIOCTL1_PUSEL7_Msk          (0x3ul << RTC_GPIOCTL1_PUSEL7_Pos)                /*!< RTC_T::GPIOCTL1: PUSEL7 Mask           */
+#define RTC_GPIOCTL1_PUSEL7_Pos       ( 28 )                                               /*!< RTC_T::GPIOCTL1: PUSEL7 Position       */
+#define RTC_GPIOCTL1_PUSEL7_Msk       ( 0x3ul << RTC_GPIOCTL1_PUSEL7_Pos )                 /*!< RTC_T::GPIOCTL1: PUSEL7 Mask           */
 
-#define RTC_DSTCTL_ADDHR_Pos             (0)                                               /*!< RTC_T::DSTCTL: ADDHR Position          */
-#define RTC_DSTCTL_ADDHR_Msk             (0x1ul << RTC_DSTCTL_ADDHR_Pos)                   /*!< RTC_T::DSTCTL: ADDHR Mask              */
+#define RTC_DSTCTL_ADDHR_Pos          ( 0 )                                                /*!< RTC_T::DSTCTL: ADDHR Position          */
+#define RTC_DSTCTL_ADDHR_Msk          ( 0x1ul << RTC_DSTCTL_ADDHR_Pos )                    /*!< RTC_T::DSTCTL: ADDHR Mask              */
 
-#define RTC_DSTCTL_SUBHR_Pos             (1)                                               /*!< RTC_T::DSTCTL: SUBHR Position          */
-#define RTC_DSTCTL_SUBHR_Msk             (0x1ul << RTC_DSTCTL_SUBHR_Pos)                   /*!< RTC_T::DSTCTL: SUBHR Mask              */
+#define RTC_DSTCTL_SUBHR_Pos          ( 1 )                                                /*!< RTC_T::DSTCTL: SUBHR Position          */
+#define RTC_DSTCTL_SUBHR_Msk          ( 0x1ul << RTC_DSTCTL_SUBHR_Pos )                    /*!< RTC_T::DSTCTL: SUBHR Mask              */
 
-#define RTC_DSTCTL_DSBAK_Pos             (2)                                               /*!< RTC_T::DSTCTL: DSBAK Position          */
-#define RTC_DSTCTL_DSBAK_Msk             (0x1ul << RTC_DSTCTL_DSBAK_Pos)                   /*!< RTC_T::DSTCTL: DSBAK Mask              */
+#define RTC_DSTCTL_DSBAK_Pos          ( 2 )                                                /*!< RTC_T::DSTCTL: DSBAK Position          */
+#define RTC_DSTCTL_DSBAK_Msk          ( 0x1ul << RTC_DSTCTL_DSBAK_Pos )                    /*!< RTC_T::DSTCTL: DSBAK Mask              */
 
-#define RTC_TAMPCTL_DYN1ISS_Pos          (0)                                               /*!< RTC_T::TAMPCTL: DYN1ISS Position       */
-#define RTC_TAMPCTL_DYN1ISS_Msk          (0x1ul << RTC_TAMPCTL_DYN1ISS_Pos)                /*!< RTC_T::TAMPCTL: DYN1ISS Mask           */
+#define RTC_TAMPCTL_DYN1ISS_Pos       ( 0 )                                                /*!< RTC_T::TAMPCTL: DYN1ISS Position       */
+#define RTC_TAMPCTL_DYN1ISS_Msk       ( 0x1ul << RTC_TAMPCTL_DYN1ISS_Pos )                 /*!< RTC_T::TAMPCTL: DYN1ISS Mask           */
 
-#define RTC_TAMPCTL_DYN2ISS_Pos          (1)                                               /*!< RTC_T::TAMPCTL: DYN2ISS Position       */
-#define RTC_TAMPCTL_DYN2ISS_Msk          (0x1ul << RTC_TAMPCTL_DYN2ISS_Pos)                /*!< RTC_T::TAMPCTL: DYN2ISS Mask           */
+#define RTC_TAMPCTL_DYN2ISS_Pos       ( 1 )                                                /*!< RTC_T::TAMPCTL: DYN2ISS Position       */
+#define RTC_TAMPCTL_DYN2ISS_Msk       ( 0x1ul << RTC_TAMPCTL_DYN2ISS_Pos )                 /*!< RTC_T::TAMPCTL: DYN2ISS Mask           */
 
-#define RTC_TAMPCTL_DYNSRC_Pos           (2)                                               /*!< RTC_T::TAMPCTL: DYNSRC Position        */
-#define RTC_TAMPCTL_DYNSRC_Msk           (0x3ul << RTC_TAMPCTL_DYNSRC_Pos)                 /*!< RTC_T::TAMPCTL: DYNSRC Mask            */
+#define RTC_TAMPCTL_DYNSRC_Pos        ( 2 )                                                /*!< RTC_T::TAMPCTL: DYNSRC Position        */
+#define RTC_TAMPCTL_DYNSRC_Msk        ( 0x3ul << RTC_TAMPCTL_DYNSRC_Pos )                  /*!< RTC_T::TAMPCTL: DYNSRC Mask            */
 
-#define RTC_TAMPCTL_SEEDRLD_Pos          (4)                                               /*!< RTC_T::TAMPCTL: SEEDRLD Position       */
-#define RTC_TAMPCTL_SEEDRLD_Msk          (0x1ul << RTC_TAMPCTL_SEEDRLD_Pos)                /*!< RTC_T::TAMPCTL: SEEDRLD Mask           */
+#define RTC_TAMPCTL_SEEDRLD_Pos       ( 4 )                                                /*!< RTC_T::TAMPCTL: SEEDRLD Position       */
+#define RTC_TAMPCTL_SEEDRLD_Msk       ( 0x1ul << RTC_TAMPCTL_SEEDRLD_Pos )                 /*!< RTC_T::TAMPCTL: SEEDRLD Mask           */
 
-#define RTC_TAMPCTL_DYNRATE_Pos          (5)                                               /*!< RTC_T::TAMPCTL: DYNRATE Position       */
-#define RTC_TAMPCTL_DYNRATE_Msk          (0x7ul << RTC_TAMPCTL_DYNRATE_Pos)                /*!< RTC_T::TAMPCTL: DYNRATE Mask           */
+#define RTC_TAMPCTL_DYNRATE_Pos       ( 5 )                                                /*!< RTC_T::TAMPCTL: DYNRATE Position       */
+#define RTC_TAMPCTL_DYNRATE_Msk       ( 0x7ul << RTC_TAMPCTL_DYNRATE_Pos )                 /*!< RTC_T::TAMPCTL: DYNRATE Mask           */
 
-#define RTC_TAMPCTL_TAMP0EN_Pos          (8)                                               /*!< RTC_T::TAMPCTL: TAMP0EN Position       */
-#define RTC_TAMPCTL_TAMP0EN_Msk          (0x1ul << RTC_TAMPCTL_TAMP0EN_Pos)                /*!< RTC_T::TAMPCTL: TAMP0EN Mask           */
+#define RTC_TAMPCTL_TAMP0EN_Pos       ( 8 )                                                /*!< RTC_T::TAMPCTL: TAMP0EN Position       */
+#define RTC_TAMPCTL_TAMP0EN_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP0EN_Pos )                 /*!< RTC_T::TAMPCTL: TAMP0EN Mask           */
 
-#define RTC_TAMPCTL_TAMP0LV_Pos          (9)                                               /*!< RTC_T::TAMPCTL: TAMP0LV Position       */
-#define RTC_TAMPCTL_TAMP0LV_Msk          (0x1ul << RTC_TAMPCTL_TAMP0LV_Pos)                /*!< RTC_T::TAMPCTL: TAMP0LV Mask           */
+#define RTC_TAMPCTL_TAMP0LV_Pos       ( 9 )                                                /*!< RTC_T::TAMPCTL: TAMP0LV Position       */
+#define RTC_TAMPCTL_TAMP0LV_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP0LV_Pos )                 /*!< RTC_T::TAMPCTL: TAMP0LV Mask           */
 
-#define RTC_TAMPCTL_TAMP0DBEN_Pos        (10)                                              /*!< RTC_T::TAMPCTL: TAMP0DBEN Position     */
-#define RTC_TAMPCTL_TAMP0DBEN_Msk        (0x1ul << RTC_TAMPCTL_TAMP0DBEN_Pos)              /*!< RTC_T::TAMPCTL: TAMP0DBEN Mask         */
+#define RTC_TAMPCTL_TAMP0DBEN_Pos     ( 10 )                                               /*!< RTC_T::TAMPCTL: TAMP0DBEN Position     */
+#define RTC_TAMPCTL_TAMP0DBEN_Msk     ( 0x1ul << RTC_TAMPCTL_TAMP0DBEN_Pos )               /*!< RTC_T::TAMPCTL: TAMP0DBEN Mask         */
 
-#define RTC_TAMPCTL_TAMP1EN_Pos          (12)                                              /*!< RTC_T::TAMPCTL: TAMP1EN Position       */
-#define RTC_TAMPCTL_TAMP1EN_Msk          (0x1ul << RTC_TAMPCTL_TAMP1EN_Pos)                /*!< RTC_T::TAMPCTL: TAMP1EN Mask           */
+#define RTC_TAMPCTL_TAMP1EN_Pos       ( 12 )                                               /*!< RTC_T::TAMPCTL: TAMP1EN Position       */
+#define RTC_TAMPCTL_TAMP1EN_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP1EN_Pos )                 /*!< RTC_T::TAMPCTL: TAMP1EN Mask           */
 
-#define RTC_TAMPCTL_TAMP1LV_Pos          (13)                                              /*!< RTC_T::TAMPCTL: TAMP1LV Position       */
-#define RTC_TAMPCTL_TAMP1LV_Msk          (0x1ul << RTC_TAMPCTL_TAMP1LV_Pos)                /*!< RTC_T::TAMPCTL: TAMP1LV Mask           */
+#define RTC_TAMPCTL_TAMP1LV_Pos       ( 13 )                                               /*!< RTC_T::TAMPCTL: TAMP1LV Position       */
+#define RTC_TAMPCTL_TAMP1LV_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP1LV_Pos )                 /*!< RTC_T::TAMPCTL: TAMP1LV Mask           */
 
-#define RTC_TAMPCTL_TAMP1DBEN_Pos        (14)                                              /*!< RTC_T::TAMPCTL: TAMP1DBEN Position     */
-#define RTC_TAMPCTL_TAMP1DBEN_Msk        (0x1ul << RTC_TAMPCTL_TAMP1DBEN_Pos)              /*!< RTC_T::TAMPCTL: TAMP1DBEN Mask         */
+#define RTC_TAMPCTL_TAMP1DBEN_Pos     ( 14 )                                               /*!< RTC_T::TAMPCTL: TAMP1DBEN Position     */
+#define RTC_TAMPCTL_TAMP1DBEN_Msk     ( 0x1ul << RTC_TAMPCTL_TAMP1DBEN_Pos )               /*!< RTC_T::TAMPCTL: TAMP1DBEN Mask         */
 
-#define RTC_TAMPCTL_DYNPR0EN_Pos         (15)                                              /*!< RTC_T::TAMPCTL: DYNPR0EN Position      */
-#define RTC_TAMPCTL_DYNPR0EN_Msk         (0x1ul << RTC_TAMPCTL_DYNPR0EN_Pos)               /*!< RTC_T::TAMPCTL: DYNPR0EN Mask          */
+#define RTC_TAMPCTL_DYNPR0EN_Pos      ( 15 )                                               /*!< RTC_T::TAMPCTL: DYNPR0EN Position      */
+#define RTC_TAMPCTL_DYNPR0EN_Msk      ( 0x1ul << RTC_TAMPCTL_DYNPR0EN_Pos )                /*!< RTC_T::TAMPCTL: DYNPR0EN Mask          */
 
-#define RTC_TAMPCTL_TAMP2EN_Pos          (16)                                              /*!< RTC_T::TAMPCTL: TAMP2EN Position       */
-#define RTC_TAMPCTL_TAMP2EN_Msk          (0x1ul << RTC_TAMPCTL_TAMP2EN_Pos)                /*!< RTC_T::TAMPCTL: TAMP2EN Mask           */
+#define RTC_TAMPCTL_TAMP2EN_Pos       ( 16 )                                               /*!< RTC_T::TAMPCTL: TAMP2EN Position       */
+#define RTC_TAMPCTL_TAMP2EN_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP2EN_Pos )                 /*!< RTC_T::TAMPCTL: TAMP2EN Mask           */
 
-#define RTC_TAMPCTL_TAMP2LV_Pos          (17)                                              /*!< RTC_T::TAMPCTL: TAMP2LV Position       */
-#define RTC_TAMPCTL_TAMP2LV_Msk          (0x1ul << RTC_TAMPCTL_TAMP2LV_Pos)                /*!< RTC_T::TAMPCTL: TAMP2LV Mask           */
+#define RTC_TAMPCTL_TAMP2LV_Pos       ( 17 )                                               /*!< RTC_T::TAMPCTL: TAMP2LV Position       */
+#define RTC_TAMPCTL_TAMP2LV_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP2LV_Pos )                 /*!< RTC_T::TAMPCTL: TAMP2LV Mask           */
 
-#define RTC_TAMPCTL_TAMP2DBEN_Pos        (18)                                              /*!< RTC_T::TAMPCTL: TAMP2DBEN Position     */
-#define RTC_TAMPCTL_TAMP2DBEN_Msk        (0x1ul << RTC_TAMPCTL_TAMP2DBEN_Pos)              /*!< RTC_T::TAMPCTL: TAMP2DBEN Mask         */
+#define RTC_TAMPCTL_TAMP2DBEN_Pos     ( 18 )                                               /*!< RTC_T::TAMPCTL: TAMP2DBEN Position     */
+#define RTC_TAMPCTL_TAMP2DBEN_Msk     ( 0x1ul << RTC_TAMPCTL_TAMP2DBEN_Pos )               /*!< RTC_T::TAMPCTL: TAMP2DBEN Mask         */
 
-#define RTC_TAMPCTL_TAMP3EN_Pos          (20)                                              /*!< RTC_T::TAMPCTL: TAMP3EN Position       */
-#define RTC_TAMPCTL_TAMP3EN_Msk          (0x1ul << RTC_TAMPCTL_TAMP3EN_Pos)                /*!< RTC_T::TAMPCTL: TAMP3EN Mask           */
+#define RTC_TAMPCTL_TAMP3EN_Pos       ( 20 )                                               /*!< RTC_T::TAMPCTL: TAMP3EN Position       */
+#define RTC_TAMPCTL_TAMP3EN_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP3EN_Pos )                 /*!< RTC_T::TAMPCTL: TAMP3EN Mask           */
 
-#define RTC_TAMPCTL_TAMP3LV_Pos          (21)                                              /*!< RTC_T::TAMPCTL: TAMP3LV Position       */
-#define RTC_TAMPCTL_TAMP3LV_Msk          (0x1ul << RTC_TAMPCTL_TAMP3LV_Pos)                /*!< RTC_T::TAMPCTL: TAMP3LV Mask           */
+#define RTC_TAMPCTL_TAMP3LV_Pos       ( 21 )                                               /*!< RTC_T::TAMPCTL: TAMP3LV Position       */
+#define RTC_TAMPCTL_TAMP3LV_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP3LV_Pos )                 /*!< RTC_T::TAMPCTL: TAMP3LV Mask           */
 
-#define RTC_TAMPCTL_TAMP3DBEN_Pos        (22)                                              /*!< RTC_T::TAMPCTL: TAMP3DBEN Position     */
-#define RTC_TAMPCTL_TAMP3DBEN_Msk        (0x1ul << RTC_TAMPCTL_TAMP3DBEN_Pos)              /*!< RTC_T::TAMPCTL: TAMP3DBEN Mask         */
+#define RTC_TAMPCTL_TAMP3DBEN_Pos     ( 22 )                                               /*!< RTC_T::TAMPCTL: TAMP3DBEN Position     */
+#define RTC_TAMPCTL_TAMP3DBEN_Msk     ( 0x1ul << RTC_TAMPCTL_TAMP3DBEN_Pos )               /*!< RTC_T::TAMPCTL: TAMP3DBEN Mask         */
 
-#define RTC_TAMPCTL_DYNPR1EN_Pos         (23)                                              /*!< RTC_T::TAMPCTL: DYNPR1EN Position      */
-#define RTC_TAMPCTL_DYNPR1EN_Msk         (0x1ul << RTC_TAMPCTL_DYNPR1EN_Pos)               /*!< RTC_T::TAMPCTL: DYNPR1EN Mask          */
+#define RTC_TAMPCTL_DYNPR1EN_Pos      ( 23 )                                               /*!< RTC_T::TAMPCTL: DYNPR1EN Position      */
+#define RTC_TAMPCTL_DYNPR1EN_Msk      ( 0x1ul << RTC_TAMPCTL_DYNPR1EN_Pos )                /*!< RTC_T::TAMPCTL: DYNPR1EN Mask          */
 
-#define RTC_TAMPCTL_TAMP4EN_Pos          (24)                                              /*!< RTC_T::TAMPCTL: TAMP4EN Position       */
-#define RTC_TAMPCTL_TAMP4EN_Msk          (0x1ul << RTC_TAMPCTL_TAMP4EN_Pos)                /*!< RTC_T::TAMPCTL: TAMP4EN Mask           */
+#define RTC_TAMPCTL_TAMP4EN_Pos       ( 24 )                                               /*!< RTC_T::TAMPCTL: TAMP4EN Position       */
+#define RTC_TAMPCTL_TAMP4EN_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP4EN_Pos )                 /*!< RTC_T::TAMPCTL: TAMP4EN Mask           */
 
-#define RTC_TAMPCTL_TAMP4LV_Pos          (25)                                              /*!< RTC_T::TAMPCTL: TAMP4LV Position       */
-#define RTC_TAMPCTL_TAMP4LV_Msk          (0x1ul << RTC_TAMPCTL_TAMP4LV_Pos)                /*!< RTC_T::TAMPCTL: TAMP4LV Mask           */
+#define RTC_TAMPCTL_TAMP4LV_Pos       ( 25 )                                               /*!< RTC_T::TAMPCTL: TAMP4LV Position       */
+#define RTC_TAMPCTL_TAMP4LV_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP4LV_Pos )                 /*!< RTC_T::TAMPCTL: TAMP4LV Mask           */
 
-#define RTC_TAMPCTL_TAMP4DBEN_Pos        (26)                                              /*!< RTC_T::TAMPCTL: TAMP4DBEN Position     */
-#define RTC_TAMPCTL_TAMP4DBEN_Msk        (0x1ul << RTC_TAMPCTL_TAMP4DBEN_Pos)              /*!< RTC_T::TAMPCTL: TAMP4DBEN Mask         */
+#define RTC_TAMPCTL_TAMP4DBEN_Pos     ( 26 )                                               /*!< RTC_T::TAMPCTL: TAMP4DBEN Position     */
+#define RTC_TAMPCTL_TAMP4DBEN_Msk     ( 0x1ul << RTC_TAMPCTL_TAMP4DBEN_Pos )               /*!< RTC_T::TAMPCTL: TAMP4DBEN Mask         */
 
-#define RTC_TAMPCTL_TAMP5EN_Pos          (28)                                              /*!< RTC_T::TAMPCTL: TAMP5EN Position       */
-#define RTC_TAMPCTL_TAMP5EN_Msk          (0x1ul << RTC_TAMPCTL_TAMP5EN_Pos)                /*!< RTC_T::TAMPCTL: TAMP5EN Mask           */
+#define RTC_TAMPCTL_TAMP5EN_Pos       ( 28 )                                               /*!< RTC_T::TAMPCTL: TAMP5EN Position       */
+#define RTC_TAMPCTL_TAMP5EN_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP5EN_Pos )                 /*!< RTC_T::TAMPCTL: TAMP5EN Mask           */
 
-#define RTC_TAMPCTL_TAMP5LV_Pos          (29)                                              /*!< RTC_T::TAMPCTL: TAMP5LV Position       */
-#define RTC_TAMPCTL_TAMP5LV_Msk          (0x1ul << RTC_TAMPCTL_TAMP5LV_Pos)                /*!< RTC_T::TAMPCTL: TAMP5LV Mask           */
+#define RTC_TAMPCTL_TAMP5LV_Pos       ( 29 )                                               /*!< RTC_T::TAMPCTL: TAMP5LV Position       */
+#define RTC_TAMPCTL_TAMP5LV_Msk       ( 0x1ul << RTC_TAMPCTL_TAMP5LV_Pos )                 /*!< RTC_T::TAMPCTL: TAMP5LV Mask           */
 
-#define RTC_TAMPCTL_TAMP5DBEN_Pos        (30)                                              /*!< RTC_T::TAMPCTL: TAMP5DBEN Position     */
-#define RTC_TAMPCTL_TAMP5DBEN_Msk        (0x1ul << RTC_TAMPCTL_TAMP5DBEN_Pos)              /*!< RTC_T::TAMPCTL: TAMP5DBEN Mask         */
+#define RTC_TAMPCTL_TAMP5DBEN_Pos     ( 30 )                                               /*!< RTC_T::TAMPCTL: TAMP5DBEN Position     */
+#define RTC_TAMPCTL_TAMP5DBEN_Msk     ( 0x1ul << RTC_TAMPCTL_TAMP5DBEN_Pos )               /*!< RTC_T::TAMPCTL: TAMP5DBEN Mask         */
 
-#define RTC_TAMPCTL_DYNPR2EN_Pos         (31)                                              /*!< RTC_T::TAMPCTL: DYNPR2EN Position      */
-#define RTC_TAMPCTL_DYNPR2EN_Msk         (0x1ul << RTC_TAMPCTL_DYNPR2EN_Pos)               /*!< RTC_T::TAMPCTL: DYNPR2EN Mask          */
+#define RTC_TAMPCTL_DYNPR2EN_Pos      ( 31 )                                               /*!< RTC_T::TAMPCTL: DYNPR2EN Position      */
+#define RTC_TAMPCTL_DYNPR2EN_Msk      ( 0x1ul << RTC_TAMPCTL_DYNPR2EN_Pos )                /*!< RTC_T::TAMPCTL: DYNPR2EN Mask          */
 
-#define RTC_TAMPSEED_SEED_Pos            (0)                                               /*!< RTC_T::TAMPSEED: SEED Position         */
-#define RTC_TAMPSEED_SEED_Msk            (0xfffffffful << RTC_TAMPSEED_SEED_Pos)           /*!< RTC_T::TAMPSEED: SEED Mask             */
+#define RTC_TAMPSEED_SEED_Pos         ( 0 )                                                /*!< RTC_T::TAMPSEED: SEED Position         */
+#define RTC_TAMPSEED_SEED_Msk         ( 0xfffffffful << RTC_TAMPSEED_SEED_Pos )            /*!< RTC_T::TAMPSEED: SEED Mask             */
 
-#define RTC_TAMPTIME_SEC_Pos             (0)                                               /*!< RTC_T::TAMPTIME: SEC Position          */
-#define RTC_TAMPTIME_SEC_Msk             (0xful << RTC_TAMPTIME_SEC_Pos)                   /*!< RTC_T::TAMPTIME: SEC Mask              */
+#define RTC_TAMPTIME_SEC_Pos          ( 0 )                                                /*!< RTC_T::TAMPTIME: SEC Position          */
+#define RTC_TAMPTIME_SEC_Msk          ( 0xful << RTC_TAMPTIME_SEC_Pos )                    /*!< RTC_T::TAMPTIME: SEC Mask              */
 
-#define RTC_TAMPTIME_TENSEC_Pos          (4)                                               /*!< RTC_T::TAMPTIME: TENSEC Position       */
-#define RTC_TAMPTIME_TENSEC_Msk          (0x7ul << RTC_TAMPTIME_TENSEC_Pos)                /*!< RTC_T::TAMPTIME: TENSEC Mask           */
+#define RTC_TAMPTIME_TENSEC_Pos       ( 4 )                                                /*!< RTC_T::TAMPTIME: TENSEC Position       */
+#define RTC_TAMPTIME_TENSEC_Msk       ( 0x7ul << RTC_TAMPTIME_TENSEC_Pos )                 /*!< RTC_T::TAMPTIME: TENSEC Mask           */
 
-#define RTC_TAMPTIME_MIN_Pos             (8)                                               /*!< RTC_T::TAMPTIME: MIN Position          */
-#define RTC_TAMPTIME_MIN_Msk             (0xful << RTC_TAMPTIME_MIN_Pos)                   /*!< RTC_T::TAMPTIME: MIN Mask              */
+#define RTC_TAMPTIME_MIN_Pos          ( 8 )                                                /*!< RTC_T::TAMPTIME: MIN Position          */
+#define RTC_TAMPTIME_MIN_Msk          ( 0xful << RTC_TAMPTIME_MIN_Pos )                    /*!< RTC_T::TAMPTIME: MIN Mask              */
 
-#define RTC_TAMPTIME_TENMIN_Pos          (12)                                              /*!< RTC_T::TAMPTIME: TENMIN Position       */
-#define RTC_TAMPTIME_TENMIN_Msk          (0x7ul << RTC_TAMPTIME_TENMIN_Pos)                /*!< RTC_T::TAMPTIME: TENMIN Mask           */
+#define RTC_TAMPTIME_TENMIN_Pos       ( 12 )                                               /*!< RTC_T::TAMPTIME: TENMIN Position       */
+#define RTC_TAMPTIME_TENMIN_Msk       ( 0x7ul << RTC_TAMPTIME_TENMIN_Pos )                 /*!< RTC_T::TAMPTIME: TENMIN Mask           */
 
-#define RTC_TAMPTIME_HR_Pos              (16)                                              /*!< RTC_T::TAMPTIME: HR Position           */
-#define RTC_TAMPTIME_HR_Msk              (0xful << RTC_TAMPTIME_HR_Pos)                    /*!< RTC_T::TAMPTIME: HR Mask               */
+#define RTC_TAMPTIME_HR_Pos           ( 16 )                                               /*!< RTC_T::TAMPTIME: HR Position           */
+#define RTC_TAMPTIME_HR_Msk           ( 0xful << RTC_TAMPTIME_HR_Pos )                     /*!< RTC_T::TAMPTIME: HR Mask               */
 
-#define RTC_TAMPTIME_TENHR_Pos           (20)                                              /*!< RTC_T::TAMPTIME: TENHR Position        */
-#define RTC_TAMPTIME_TENHR_Msk           (0x3ul << RTC_TAMPTIME_TENHR_Pos)                 /*!< RTC_T::TAMPTIME: TENHR Mask            */
+#define RTC_TAMPTIME_TENHR_Pos        ( 20 )                                               /*!< RTC_T::TAMPTIME: TENHR Position        */
+#define RTC_TAMPTIME_TENHR_Msk        ( 0x3ul << RTC_TAMPTIME_TENHR_Pos )                  /*!< RTC_T::TAMPTIME: TENHR Mask            */
 
-#define RTC_TAMPTIME_HZCNT_Pos           (24)                                              /*!< RTC_T::TAMPTIME: HZCNT Position        */
-#define RTC_TAMPTIME_HZCNT_Msk           (0x7ful << RTC_TAMPTIME_HZCNT_Pos)                /*!< RTC_T::TAMPTIME: HZCNT Mask            */
+#define RTC_TAMPTIME_HZCNT_Pos        ( 24 )                                               /*!< RTC_T::TAMPTIME: HZCNT Position        */
+#define RTC_TAMPTIME_HZCNT_Msk        ( 0x7ful << RTC_TAMPTIME_HZCNT_Pos )                 /*!< RTC_T::TAMPTIME: HZCNT Mask            */
 
-#define RTC_TAMPCAL_DAY_Pos              (0)                                               /*!< RTC_T::TAMPCAL: DAY Position           */
-#define RTC_TAMPCAL_DAY_Msk              (0xful << RTC_TAMPCAL_DAY_Pos)                    /*!< RTC_T::TAMPCAL: DAY Mask               */
+#define RTC_TAMPCAL_DAY_Pos           ( 0 )                                                /*!< RTC_T::TAMPCAL: DAY Position           */
+#define RTC_TAMPCAL_DAY_Msk           ( 0xful << RTC_TAMPCAL_DAY_Pos )                     /*!< RTC_T::TAMPCAL: DAY Mask               */
 
-#define RTC_TAMPCAL_TENDAY_Pos           (4)                                               /*!< RTC_T::TAMPCAL: TENDAY Position        */
-#define RTC_TAMPCAL_TENDAY_Msk           (0x3ul << RTC_TAMPCAL_TENDAY_Pos)                 /*!< RTC_T::TAMPCAL: TENDAY Mask            */
+#define RTC_TAMPCAL_TENDAY_Pos        ( 4 )                                                /*!< RTC_T::TAMPCAL: TENDAY Position        */
+#define RTC_TAMPCAL_TENDAY_Msk        ( 0x3ul << RTC_TAMPCAL_TENDAY_Pos )                  /*!< RTC_T::TAMPCAL: TENDAY Mask            */
 
-#define RTC_TAMPCAL_MON_Pos              (8)                                               /*!< RTC_T::TAMPCAL: MON Position           */
-#define RTC_TAMPCAL_MON_Msk              (0xful << RTC_TAMPCAL_MON_Pos)                    /*!< RTC_T::TAMPCAL: MON Mask               */
+#define RTC_TAMPCAL_MON_Pos           ( 8 )                                                /*!< RTC_T::TAMPCAL: MON Position           */
+#define RTC_TAMPCAL_MON_Msk           ( 0xful << RTC_TAMPCAL_MON_Pos )                     /*!< RTC_T::TAMPCAL: MON Mask               */
 
-#define RTC_TAMPCAL_TENMON_Pos           (12)                                              /*!< RTC_T::TAMPCAL: TENMON Position        */
-#define RTC_TAMPCAL_TENMON_Msk           (0x1ul << RTC_TAMPCAL_TENMON_Pos)                 /*!< RTC_T::TAMPCAL: TENMON Mask            */
+#define RTC_TAMPCAL_TENMON_Pos        ( 12 )                                               /*!< RTC_T::TAMPCAL: TENMON Position        */
+#define RTC_TAMPCAL_TENMON_Msk        ( 0x1ul << RTC_TAMPCAL_TENMON_Pos )                  /*!< RTC_T::TAMPCAL: TENMON Mask            */
 
-#define RTC_TAMPCAL_YEAR_Pos             (16)                                              /*!< RTC_T::TAMPCAL: YEAR Position          */
-#define RTC_TAMPCAL_YEAR_Msk             (0xful << RTC_TAMPCAL_YEAR_Pos)                   /*!< RTC_T::TAMPCAL: YEAR Mask              */
+#define RTC_TAMPCAL_YEAR_Pos          ( 16 )                                               /*!< RTC_T::TAMPCAL: YEAR Position          */
+#define RTC_TAMPCAL_YEAR_Msk          ( 0xful << RTC_TAMPCAL_YEAR_Pos )                    /*!< RTC_T::TAMPCAL: YEAR Mask              */
 
-#define RTC_TAMPCAL_TENYEAR_Pos          (20)                                              /*!< RTC_T::TAMPCAL: TENYEAR Position       */
-#define RTC_TAMPCAL_TENYEAR_Msk          (0xful << RTC_TAMPCAL_TENYEAR_Pos)                /*!< RTC_T::TAMPCAL: TENYEAR Mask           */
+#define RTC_TAMPCAL_TENYEAR_Pos       ( 20 )                                               /*!< RTC_T::TAMPCAL: TENYEAR Position       */
+#define RTC_TAMPCAL_TENYEAR_Msk       ( 0xful << RTC_TAMPCAL_TENYEAR_Pos )                 /*!< RTC_T::TAMPCAL: TENYEAR Mask           */
 
-#define RTC_CLKDCTL_LXTFDEN_Pos          (0)                                               /*!< RTC_T::CLKDCTL: LXTFDEN Position       */
-#define RTC_CLKDCTL_LXTFDEN_Msk          (0x1ul << RTC_CLKDCTL_LXTFDEN_Pos)                /*!< RTC_T::CLKDCTL: LXTFDEN Mask           */
+#define RTC_CLKDCTL_LXTFDEN_Pos       ( 0 )                                                /*!< RTC_T::CLKDCTL: LXTFDEN Position       */
+#define RTC_CLKDCTL_LXTFDEN_Msk       ( 0x1ul << RTC_CLKDCTL_LXTFDEN_Pos )                 /*!< RTC_T::CLKDCTL: LXTFDEN Mask           */
 
-#define RTC_CLKDCTL_LXTFSW_Pos           (1)                                               /*!< RTC_T::CLKDCTL: LXTFSW Position        */
-#define RTC_CLKDCTL_LXTFSW_Msk           (0x1ul << RTC_CLKDCTL_LXTFSW_Pos)                 /*!< RTC_T::CLKDCTL: LXTFSW Mask            */
+#define RTC_CLKDCTL_LXTFSW_Pos        ( 1 )                                                /*!< RTC_T::CLKDCTL: LXTFSW Position        */
+#define RTC_CLKDCTL_LXTFSW_Msk        ( 0x1ul << RTC_CLKDCTL_LXTFSW_Pos )                  /*!< RTC_T::CLKDCTL: LXTFSW Mask            */
 
-#define RTC_CLKDCTL_LXTSPSW_Pos          (2)                                               /*!< RTC_T::CLKDCTL: LXTSPSW Position       */
-#define RTC_CLKDCTL_LXTSPSW_Msk          (0x1ul << RTC_CLKDCTL_LXTSPSW_Pos)                /*!< RTC_T::CLKDCTL: LXTSPSW Mask           */
+#define RTC_CLKDCTL_LXTSPSW_Pos       ( 2 )                                                /*!< RTC_T::CLKDCTL: LXTSPSW Position       */
+#define RTC_CLKDCTL_LXTSPSW_Msk       ( 0x1ul << RTC_CLKDCTL_LXTSPSW_Pos )                 /*!< RTC_T::CLKDCTL: LXTSPSW Mask           */
 
-#define RTC_CLKDCTL_CLKSWLIRCF_Pos       (16)                                              /*!< RTC_T::CLKDCTL: CLKSWLIRCF Position    */
-#define RTC_CLKDCTL_CLKSWLIRCF_Msk       (0x1ul << RTC_CLKDCTL_CLKSWLIRCF_Pos)             /*!< RTC_T::CLKDCTL: CLKSWLIRCF Mask        */
+#define RTC_CLKDCTL_CLKSWLIRCF_Pos    ( 16 )                                               /*!< RTC_T::CLKDCTL: CLKSWLIRCF Position    */
+#define RTC_CLKDCTL_CLKSWLIRCF_Msk    ( 0x1ul << RTC_CLKDCTL_CLKSWLIRCF_Pos )              /*!< RTC_T::CLKDCTL: CLKSWLIRCF Mask        */
 
-#define RTC_CLKDCTL_LXTFASTF_Pos         (17)                                              /*!< RTC_T::CLKDCTL: LXTFASTF Position      */
-#define RTC_CLKDCTL_LXTFASTF_Msk         (0x1ul << RTC_CLKDCTL_LXTFASTF_Pos)               /*!< RTC_T::CLKDCTL: LXTFASTF Mask          */
+#define RTC_CLKDCTL_LXTFASTF_Pos      ( 17 )                                               /*!< RTC_T::CLKDCTL: LXTFASTF Position      */
+#define RTC_CLKDCTL_LXTFASTF_Msk      ( 0x1ul << RTC_CLKDCTL_LXTFASTF_Pos )                /*!< RTC_T::CLKDCTL: LXTFASTF Mask          */
 
-#define RTC_CDBR_STOPBD_Pos              (0)                                               /*!< RTC_T::CDBR: STOPBD Position           */
-#define RTC_CDBR_STOPBD_Msk              (0xfful << RTC_CDBR_STOPBD_Pos)                   /*!< RTC_T::CDBR: STOPBD Mask               */
+#define RTC_CDBR_STOPBD_Pos           ( 0 )                                                /*!< RTC_T::CDBR: STOPBD Position           */
+#define RTC_CDBR_STOPBD_Msk           ( 0xfful << RTC_CDBR_STOPBD_Pos )                    /*!< RTC_T::CDBR: STOPBD Mask               */
 
-#define RTC_CDBR_FAILBD_Pos              (16)                                              /*!< RTC_T::CDBR: FAILBD Position           */
-#define RTC_CDBR_FAILBD_Msk              (0xfful << RTC_CDBR_FAILBD_Pos)                   /*!< RTC_T::CDBR: FAILBD Mask               */
+#define RTC_CDBR_FAILBD_Pos           ( 16 )                                               /*!< RTC_T::CDBR: FAILBD Position           */
+#define RTC_CDBR_FAILBD_Msk           ( 0xfful << RTC_CDBR_FAILBD_Pos )                    /*!< RTC_T::CDBR: FAILBD Mask               */
 
 /**@}*/ /* RTC_CONST */
 /**@}*/ /* end of RTC register group */

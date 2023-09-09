@@ -22,17 +22,17 @@
 #include "stm32fxxx_eth_map.h"
 
 #ifdef _ETH_MAC
-//RP_Modif
-  #include "ipport.h"
-  #include "netbuf.h"
-  #include "stm32fxxx_eth.h"
+/*RP_Modif */
+    #include "ipport.h"
+    #include "netbuf.h"
+    #include "stm32fxxx_eth.h"
 #endif /*_ETH_MAC */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void eth_debug(void);
+void eth_debug( void );
 
 #endif /* __STM32FXXX_ETH_LIB_H */
 

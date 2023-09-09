@@ -45,31 +45,31 @@
 #define _SAMD20_DAC_INSTANCE_
 
 /* ========== Register definition for DAC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_DAC_CTRLA              (0x42004800U) /**< \brief (DAC) Control Register A */
-#define REG_DAC_CTRLB              (0x42004801U) /**< \brief (DAC) Control Register B */
-#define REG_DAC_EVCTRL             (0x42004802U) /**< \brief (DAC) Event Control Register */
-#define REG_DAC_TEST               (0x42004803U) /**< \brief (DAC) Test Register */
-#define REG_DAC_INTENCLR           (0x42004804U) /**< \brief (DAC) Interrupt Enable Clear Register */
-#define REG_DAC_INTENSET           (0x42004805U) /**< \brief (DAC) Interrupt Enable Set Register */
-#define REG_DAC_INTFLAG            (0x42004806U) /**< \brief (DAC) Interrupt Flag Status and Clear Register */
-#define REG_DAC_STATUS             (0x42004807U) /**< \brief (DAC) Status Register */
-#define REG_DAC_DATA               (0x42004808U) /**< \brief (DAC) Data Register */
-#define REG_DAC_DATABUF            (0x4200480CU) /**< \brief (DAC) Data Buffer Register */
-#else
-#define REG_DAC_CTRLA              (*(RwReg8 *)0x42004800U) /**< \brief (DAC) Control Register A */
-#define REG_DAC_CTRLB              (*(RwReg8 *)0x42004801U) /**< \brief (DAC) Control Register B */
-#define REG_DAC_EVCTRL             (*(RwReg8 *)0x42004802U) /**< \brief (DAC) Event Control Register */
-#define REG_DAC_TEST               (*(RwReg8 *)0x42004803U) /**< \brief (DAC) Test Register */
-#define REG_DAC_INTENCLR           (*(RwReg8 *)0x42004804U) /**< \brief (DAC) Interrupt Enable Clear Register */
-#define REG_DAC_INTENSET           (*(RwReg8 *)0x42004805U) /**< \brief (DAC) Interrupt Enable Set Register */
-#define REG_DAC_INTFLAG            (*(RwReg8 *)0x42004806U) /**< \brief (DAC) Interrupt Flag Status and Clear Register */
-#define REG_DAC_STATUS             (*(RoReg8 *)0x42004807U) /**< \brief (DAC) Status Register */
-#define REG_DAC_DATA               (*(RwReg16*)0x42004808U) /**< \brief (DAC) Data Register */
-#define REG_DAC_DATABUF            (*(RwReg16*)0x4200480CU) /**< \brief (DAC) Data Buffer Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_DAC_CTRLA       ( 0x42004800U )                /**< \brief (DAC) Control Register A */
+    #define REG_DAC_CTRLB       ( 0x42004801U )                /**< \brief (DAC) Control Register B */
+    #define REG_DAC_EVCTRL      ( 0x42004802U )                /**< \brief (DAC) Event Control Register */
+    #define REG_DAC_TEST        ( 0x42004803U )                /**< \brief (DAC) Test Register */
+    #define REG_DAC_INTENCLR    ( 0x42004804U )                /**< \brief (DAC) Interrupt Enable Clear Register */
+    #define REG_DAC_INTENSET    ( 0x42004805U )                /**< \brief (DAC) Interrupt Enable Set Register */
+    #define REG_DAC_INTFLAG     ( 0x42004806U )                /**< \brief (DAC) Interrupt Flag Status and Clear Register */
+    #define REG_DAC_STATUS      ( 0x42004807U )                /**< \brief (DAC) Status Register */
+    #define REG_DAC_DATA        ( 0x42004808U )                /**< \brief (DAC) Data Register */
+    #define REG_DAC_DATABUF     ( 0x4200480CU )                /**< \brief (DAC) Data Buffer Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_DAC_CTRLA       ( *( RwReg8 * ) 0x42004800U )  /**< \brief (DAC) Control Register A */
+    #define REG_DAC_CTRLB       ( *( RwReg8 * ) 0x42004801U )  /**< \brief (DAC) Control Register B */
+    #define REG_DAC_EVCTRL      ( *( RwReg8 * ) 0x42004802U )  /**< \brief (DAC) Event Control Register */
+    #define REG_DAC_TEST        ( *( RwReg8 * ) 0x42004803U )  /**< \brief (DAC) Test Register */
+    #define REG_DAC_INTENCLR    ( *( RwReg8 * ) 0x42004804U )  /**< \brief (DAC) Interrupt Enable Clear Register */
+    #define REG_DAC_INTENSET    ( *( RwReg8 * ) 0x42004805U )  /**< \brief (DAC) Interrupt Enable Set Register */
+    #define REG_DAC_INTFLAG     ( *( RwReg8 * ) 0x42004806U )  /**< \brief (DAC) Interrupt Flag Status and Clear Register */
+    #define REG_DAC_STATUS      ( *( RoReg8 * ) 0x42004807U )  /**< \brief (DAC) Status Register */
+    #define REG_DAC_DATA        ( *( RwReg16 * ) 0x42004808U ) /**< \brief (DAC) Data Register */
+    #define REG_DAC_DATABUF     ( *( RwReg16 * ) 0x4200480CU ) /**< \brief (DAC) Data Buffer Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for DAC peripheral ========== */
-#define DAC_GCLK_ID                 26
+#define DAC_GCLK_ID    26
 
 #endif /* _SAMD20_DAC_INSTANCE_ */

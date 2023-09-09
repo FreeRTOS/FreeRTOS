@@ -1,24 +1,24 @@
 /*
  * Copyright 2017 NXP
  * All rights reserved.
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef _PIN_MUX_H_
-#define _PIN_MUX_H_
+    #define _PIN_MUX_H_
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
 
 /*! @brief Direction type  */
-typedef enum _pin_mux_direction
-{
-  kPIN_MUX_DirectionInput = 0U,         /* Input direction */
-  kPIN_MUX_DirectionOutput = 1U,        /* Output direction */
-  kPIN_MUX_DirectionInputOrOutput = 2U  /* Input or output direction */
-} pin_mux_direction_t;
+    typedef enum _pin_mux_direction
+    {
+        kPIN_MUX_DirectionInput = 0U,        /* Input direction */
+        kPIN_MUX_DirectionOutput = 1U,       /* Output direction */
+        kPIN_MUX_DirectionInputOrOutput = 2U /* Input or output direction */
+    } pin_mux_direction_t;
 
 /*!
  * @addtogroup pin_mux
@@ -29,25 +29,25 @@ typedef enum _pin_mux_direction
  * API
  ******************************************************************************/
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
+    #if defined( __cplusplus )
+    extern "C" {
+    #endif
 
 /*!
  * @brief Calls initialization functions.
  *
  */
-void BOARD_InitBootPins(void);
+    void BOARD_InitBootPins( void );
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *
  */
-void BOARD_InitPins(void);
+    void BOARD_InitPins( void );
 
-#if defined(__cplusplus)
+    #if defined( __cplusplus )
 }
-#endif
+    #endif
 
 /*!
  * @}

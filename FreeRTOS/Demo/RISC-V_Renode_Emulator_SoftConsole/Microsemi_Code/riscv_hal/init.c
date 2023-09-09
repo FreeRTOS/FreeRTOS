@@ -19,23 +19,25 @@
 extern "C" {
 #endif
 
-extern uint32_t     __sdata_load;
-extern uint32_t     __sdata_start;
-extern uint32_t     __sdata_end;
+extern uint32_t __sdata_load;
+extern uint32_t __sdata_start;
+extern uint32_t __sdata_end;
 
-extern uint32_t     __data_load;
-extern uint32_t     __data_start;
-extern uint32_t     __data_end;
+extern uint32_t __data_load;
+extern uint32_t __data_start;
+extern uint32_t __data_end;
 
-extern uint32_t     __sbss_start;
-extern uint32_t     __sbss_end;
-extern uint32_t     __bss_start;
-extern uint32_t     __bss_end;
+extern uint32_t __sbss_start;
+extern uint32_t __sbss_end;
+extern uint32_t __bss_start;
+extern uint32_t __bss_end;
 
 
-static void copy_section(uint32_t * p_load, uint32_t * p_vma, uint32_t * p_vma_end)
+static void copy_section( uint32_t * p_load,
+                          uint32_t * p_vma,
+                          uint32_t * p_vma_end )
 {
-    while(p_vma <= p_vma_end)
+    while( p_vma <= p_vma_end )
     {
         *p_vma = *p_load;
         ++p_load;
@@ -43,38 +45,38 @@ static void copy_section(uint32_t * p_load, uint32_t * p_vma, uint32_t * p_vma_e
     }
 }
 
-static void zero_section(uint32_t * start, uint32_t * end)
+static void zero_section( uint32_t * start,
+                          uint32_t * end )
 {
     uint32_t * p_zero = start;
-    
-    while(p_zero <= end)
+
+    while( p_zero <= end )
     {
         *p_zero = 0;
         ++p_zero;
     }
 }
 
-void _init(void)
+void _init( void )
 {
-    extern int main(int, char**);
-    const char *argv0 = "hello";
-    char *argv[] = {(char *)argv0, NULL, NULL};
+    extern int main( int,
+                     char ** );
+    const char * argv0 = "hello";
+    char * argv[] = { ( char * ) argv0, NULL, NULL };
 
-    copy_section(&__sdata_load, &__sdata_start, &__sdata_end);
-    copy_section(&__data_load, &__data_start, &__data_end);
-    zero_section(&__sbss_start, &__sbss_end);
-    zero_section(&__bss_start, &__bss_end);
-    
-    main(1, argv);
+    copy_section( &__sdata_load, &__sdata_start, &__sdata_end );
+    copy_section( &__data_load, &__data_start, &__data_end );
+    zero_section( &__sbss_start, &__sbss_end );
+    zero_section( &__bss_start, &__bss_end );
+
+    main( 1, argv );
 }
 
 /* Function called after main() finishes */
-void
-_fini()
+void _fini()
 {
 }
 
 #ifdef __cplusplus
 }
 #endif
-

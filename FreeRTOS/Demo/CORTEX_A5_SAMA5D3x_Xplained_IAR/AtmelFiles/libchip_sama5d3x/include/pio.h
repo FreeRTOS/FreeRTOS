@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -65,74 +65,74 @@
  */
 
 #ifndef _PIO_
-#define _PIO_
+    #define _PIO_
 
 /*
  *         Headers
  */
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*
  *         Global Definitions
  */
 
 /*  The pin is controlled by the associated signal of peripheral A. */
-#define PIO_PERIPH_A                0
+    #define PIO_PERIPH_A            0
 /*  The pin is controlled by the associated signal of peripheral B. */
-#define PIO_PERIPH_B                1
+    #define PIO_PERIPH_B            1
 /*  The pin is controlled by the associated signal of peripheral C. */
-#define PIO_PERIPH_C                2
+    #define PIO_PERIPH_C            2
 /*  The pin is controlled by the associated signal of peripheral D. */
-#define PIO_PERIPH_D                3
+    #define PIO_PERIPH_D            3
 /*  The pin is an input. */
-#define PIO_INPUT                   4
+    #define PIO_INPUT               4
 /*  The pin is an output and has a default level of 0. */
-#define PIO_OUTPUT_0                5
+    #define PIO_OUTPUT_0            5
 /*  The pin is an output and has a default level of 1. */
-#define PIO_OUTPUT_1                6
+    #define PIO_OUTPUT_1            6
 
 /*  Default pin configuration (no attribute). */
-#define PIO_DEFAULT                 (0 << 0)
+    #define PIO_DEFAULT             ( 0 << 0 )
 /*  The internal pin pull-up is active. */
-#define PIO_PULLUP                  (1 << 0)
+    #define PIO_PULLUP              ( 1 << 0 )
 /*  The internal glitch filter is active. */
-#define PIO_DEGLITCH                (1 << 1)
+    #define PIO_DEGLITCH            ( 1 << 1 )
 /*  The pin is open-drain. */
-#define PIO_OPENDRAIN               (1 << 2)
+    #define PIO_OPENDRAIN           ( 1 << 2 )
 /* The internal pin pull-down is active. */
-#define PIO_PULLDOWN                (1 << 3)
+    #define PIO_PULLDOWN            ( 1 << 3 )
 /*  The internal debouncing filter is active. */
-#define PIO_DEBOUNCE                (1 << 3)
+    #define PIO_DEBOUNCE            ( 1 << 3 )
 
 /*  Enable additional interrupt modes. */
-#define PIO_IT_AIME                 (1 << 4)
+    #define PIO_IT_AIME             ( 1 << 4 )
 
 /*  Interrupt High Level/Rising Edge detection is active. */
-#define PIO_IT_RE_OR_HL             (1 << 5)
+    #define PIO_IT_RE_OR_HL         ( 1 << 5 )
 /*  Interrupt Edge detection is active. */
-#define PIO_IT_EDGE                 (1 << 6)
+    #define PIO_IT_EDGE             ( 1 << 6 )
 
 /*  Low level interrupt is active */
-#define PIO_IT_LOW_LEVEL            (0               | 0 | PIO_IT_AIME)
+    #define PIO_IT_LOW_LEVEL        ( 0 | 0 | PIO_IT_AIME )
 /*  High level interrupt is active */
-#define PIO_IT_HIGH_LEVEL           (PIO_IT_RE_OR_HL | 0 | PIO_IT_AIME)
+    #define PIO_IT_HIGH_LEVEL       ( PIO_IT_RE_OR_HL | 0 | PIO_IT_AIME )
 /*  Falling edge interrupt is active */
-#define PIO_IT_FALL_EDGE            (0               | PIO_IT_EDGE | PIO_IT_AIME)
+    #define PIO_IT_FALL_EDGE        ( 0 | PIO_IT_EDGE | PIO_IT_AIME )
 /*  Rising edge interrupt is active */
-#define PIO_IT_RISE_EDGE            (PIO_IT_RE_OR_HL | PIO_IT_EDGE | PIO_IT_AIME)
+    #define PIO_IT_RISE_EDGE        ( PIO_IT_RE_OR_HL | PIO_IT_EDGE | PIO_IT_AIME )
 
-#define PIO_WPMR_WPEN_EN            ( 0x01     << 0 )
+    #define PIO_WPMR_WPEN_EN        ( 0x01 << 0 )
 
-#define PIO_WPMR_WPEN_DIS           ( 0x00     << 0 )
+    #define PIO_WPMR_WPEN_DIS       ( 0x00 << 0 )
 
-#define PIO_WPMR_WPKEY_VALID        ( 0x50494F << 8 )
+    #define PIO_WPMR_WPKEY_VALID    ( 0x50494F << 8 )
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*
  *          Global Macros
@@ -144,7 +144,7 @@
  *  \param pPins  Local array of Pin instances.
  *  \return Number of elements in array.
  */
-#define PIO_LISTSIZE(pPins)    (sizeof(pPins) / sizeof(Pin))
+    #define PIO_LISTSIZE( pPins )    ( sizeof( pPins ) / sizeof( Pin ) )
 
 /*
  *         Global Types
@@ -171,19 +171,19 @@
  *     - PIO_IT_FALL_EDGE
  *     - PIO_IT_RISE_EDGE
  */
-typedef struct _Pin
-{
-    /*  Bitmask indicating which pin(s) to configure. */
-    uint32_t mask;
-    /*  Pointer to the PIO controller which has the pin(s). */
-    Pio    *pio;
-    /*  Peripheral ID of the PIO controller which has the pin(s). */
-    uint8_t id;
-    /*  Pin type. */
-    uint8_t type;
-    /*  Pin attribute. */
-    uint8_t attribute;
-} Pin ;
+    typedef struct _Pin
+    {
+        /*  Bitmask indicating which pin(s) to configure. */
+        uint32_t mask;
+        /*  Pointer to the PIO controller which has the pin(s). */
+        Pio * pio;
+        /*  Peripheral ID of the PIO controller which has the pin(s). */
+        uint8_t id;
+        /*  Pin type. */
+        uint8_t type;
+        /*  Pin attribute. */
+        uint8_t attribute;
+    } Pin;
 
 /*
  *         Global Access Macros
@@ -193,29 +193,31 @@ typedef struct _Pin
  *         Global Functions
  */
 
-extern uint8_t PIO_Configure( const Pin *list, uint32_t size ) ;
+    extern uint8_t PIO_Configure( const Pin * list,
+                                  uint32_t size );
 
-extern void PIO_Set( const Pin *pin ) ;
+    extern void PIO_Set( const Pin * pin );
 
-extern void PIO_Clear( const Pin *pin ) ;
+    extern void PIO_Clear( const Pin * pin );
 
-extern uint8_t PIO_Get( const Pin *pin ) ;
+    extern uint8_t PIO_Get( const Pin * pin );
 
-extern uint8_t PIO_GetOutputDataStatus( const Pin *pin ) ;
+    extern uint8_t PIO_GetOutputDataStatus( const Pin * pin );
 
-extern void PIO_SetDebounceFilter( const Pin *pin, uint32_t cuttoff );
+    extern void PIO_SetDebounceFilter( const Pin * pin,
+                                       uint32_t cuttoff );
 
-extern void PIO_EnableWriteProtect( const Pin *pin );
+    extern void PIO_EnableWriteProtect( const Pin * pin );
 
-extern void PIO_DisableWriteProtect( const Pin *pin );
+    extern void PIO_DisableWriteProtect( const Pin * pin );
 
-extern uint32_t PIO_GetWriteProtectViolationInfo( const Pin * pin );
+    extern uint32_t PIO_GetWriteProtectViolationInfo( const Pin * pin );
 
-extern void PIO_Output_Low (Pio * pio, uint32_t pioId);
+    extern void PIO_Output_Low( Pio * pio,
+                                uint32_t pioId );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _PIO_ */
-

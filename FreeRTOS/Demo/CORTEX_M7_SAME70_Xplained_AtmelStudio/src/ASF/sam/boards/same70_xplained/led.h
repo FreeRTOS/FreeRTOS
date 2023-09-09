@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -57,7 +58,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Off(led)     ioport_set_pin_level(led##_GPIO, led##_INACTIVE_LEVEL)
+#define LED_Off( led )       ioport_set_pin_level( led ## _GPIO, led ## _INACTIVE_LEVEL )
 
 /**
  * \brief Turns on the specified LEDs.
@@ -66,7 +67,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_On(led)      ioport_set_pin_level(led##_GPIO, led##_ACTIVE_LEVEL)
+#define LED_On( led )        ioport_set_pin_level( led ## _GPIO, led ## _ACTIVE_LEVEL )
 
 /**
  * \brief Toggles the specified LEDs.
@@ -75,7 +76,7 @@
  *
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
-#define LED_Toggle(led)  ioport_toggle_pin_level(led##_GPIO)
+#define LED_Toggle( led )    ioport_toggle_pin_level( led ## _GPIO )
 
 
-#endif  // LED_H_INCLUDED
+#endif // LED_H_INCLUDED

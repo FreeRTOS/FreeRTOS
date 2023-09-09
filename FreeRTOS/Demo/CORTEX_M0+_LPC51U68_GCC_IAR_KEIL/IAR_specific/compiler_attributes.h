@@ -25,4 +25,4 @@
  */
 
 /* Placing variable at specified address. */
-#define COMPILER_ATTRIBUTE_PLACE_IN_2ND_MEMORY_BANK			 @ 0x20000000
+#define COMPILER_ATTRIBUTE_PLACE_IN_2ND_MEMORY_BANK    @0x20000000

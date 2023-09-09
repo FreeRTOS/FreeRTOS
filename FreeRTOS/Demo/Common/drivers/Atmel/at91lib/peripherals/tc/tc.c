@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,114 +27,118 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "tc.h"
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// Configures a Timer Counter to operate in the given mode. Timer is stopped
-/// after configuration and must be restarted with TC_Start().
-/// to obtain the target frequency.
-/// \param pTc  Pointer to an AT91S_TC instance.
-/// \param mode  Operating mode.
-//------------------------------------------------------------------------------
-void TC_Configure(AT91S_TC *pTc, unsigned int mode)
+/*------------------------------------------------------------------------------ */
+/*/ Configures a Timer Counter to operate in the given mode. Timer is stopped */
+/*/ after configuration and must be restarted with TC_Start(). */
+/*/ to obtain the target frequency. */
+/*/ \param pTc  Pointer to an AT91S_TC instance. */
+/*/ \param mode  Operating mode. */
+/*------------------------------------------------------------------------------ */
+void TC_Configure( AT91S_TC * pTc,
+                   unsigned int mode )
 {
-    // Disable TC clock
+    /* Disable TC clock */
     pTc->TC_CCR = AT91C_TC_CLKDIS;
 
-    // Disable interrupts
+    /* Disable interrupts */
     pTc->TC_IDR = 0xFFFFFFFF;
 
-    // Clear status register
+    /* Clear status register */
     pTc->TC_SR;
 
-    // Set mode
+    /* Set mode */
     pTc->TC_CMR = mode;
 }
 
-//------------------------------------------------------------------------------
-/// Starts the timer clock.
-/// \param pTc  Pointer to an AT91S_TC instance.
-//------------------------------------------------------------------------------
-void TC_Start(AT91S_TC *pTc)
+/*------------------------------------------------------------------------------ */
+/*/ Starts the timer clock. */
+/*/ \param pTc  Pointer to an AT91S_TC instance. */
+/*------------------------------------------------------------------------------ */
+void TC_Start( AT91S_TC * pTc )
 {
     pTc->TC_CCR = AT91C_TC_CLKEN | AT91C_TC_SWTRG;
 }
 
-//------------------------------------------------------------------------------
-/// Stops the timer clock.
-/// \param pTc  Pointer to an AT91S_TC instance.
-//------------------------------------------------------------------------------
-void TC_Stop(AT91S_TC *pTc)
+/*------------------------------------------------------------------------------ */
+/*/ Stops the timer clock. */
+/*/ \param pTc  Pointer to an AT91S_TC instance. */
+/*------------------------------------------------------------------------------ */
+void TC_Stop( AT91S_TC * pTc )
 {
     pTc->TC_CCR = AT91C_TC_CLKDIS;
 }
 
-//------------------------------------------------------------------------------
-/// Finds the best MCK divisor given the timer frequency and MCK. The result
-/// is guaranteed to satisfy the following equation:
-///   (MCK / (DIV * 65536)) <= freq <= (MCK / DIV)
-/// with DIV being the highest possible value.
-/// Returns 1 if a divisor could be found; otherwise returns 0.
-/// \param freq  Desired timer frequency.
-/// \param mck  Master clock frequency.
-/// \param div  Divisor value.
-/// \param tcclks  TCCLKS field value for divisor.
-//------------------------------------------------------------------------------
-unsigned char TC_FindMckDivisor(
-    unsigned int freq,
-    unsigned int mck,
-    unsigned int *div,
-    unsigned int *tcclks)
+/*------------------------------------------------------------------------------ */
+/*/ Finds the best MCK divisor given the timer frequency and MCK. The result */
+/*/ is guaranteed to satisfy the following equation: */
+/*/   (MCK / (DIV * 65536)) <= freq <= (MCK / DIV) */
+/*/ with DIV being the highest possible value. */
+/*/ Returns 1 if a divisor could be found; otherwise returns 0. */
+/*/ \param freq  Desired timer frequency. */
+/*/ \param mck  Master clock frequency. */
+/*/ \param div  Divisor value. */
+/*/ \param tcclks  TCCLKS field value for divisor. */
+/*------------------------------------------------------------------------------ */
+unsigned char TC_FindMckDivisor( unsigned int freq,
+                                 unsigned int mck,
+                                 unsigned int * div,
+                                 unsigned int * tcclks )
 {
-    const unsigned int divisors[5] = {2, 8, 32, 128,
-#if defined(at91sam9260) || defined(at91sam9261) || defined(at91sam9263) \
-    || defined(at91sam9xe) || defined(at91sam9rl64) || defined(at91cap9)
-        BOARD_MCK / 32768};
-#else
-        1024};
-#endif
+    const unsigned int divisors[ 5 ] =
+    {
+        2, 8, 32, 128,
+        #if defined( at91sam9260 ) || defined( at91sam9261 ) || defined( at91sam9263 ) \
+        || defined( at91sam9xe ) || defined( at91sam9rl64 ) || defined( at91cap9 )
+            BOARD_MCK / 32768
+    };
+        #else
+        1024 };
+    #endif
     unsigned int index = 0;
 
-    // Satisfy lower bound
-    while (freq < ((mck / divisors[index]) / 65536)) {
-
+    /* Satisfy lower bound */
+    while( freq < ( ( mck / divisors[ index ] ) / 65536 ) )
+    {
         index++;
 
-        // If no divisor can be found, return 0
-        if (index == 5) {
-
+        /* If no divisor can be found, return 0 */
+        if( index == 5 )
+        {
             return 0;
         }
     }
 
-    // Try to maximise DIV while satisfying upper bound
-    while (index < 4) {
-
-        if (freq > (mck / divisors[index + 1])) {
-
+    /* Try to maximise DIV while satisfying upper bound */
+    while( index < 4 )
+    {
+        if( freq > ( mck / divisors[ index + 1 ] ) )
+        {
             break;
         }
+
         index++;
     }
 
-    // Store results
-    if (div) {
-
-        *div = divisors[index];
+    /* Store results */
+    if( div )
+    {
+        *div = divisors[ index ];
     }
-    if (tcclks) {
 
+    if( tcclks )
+    {
         *tcclks = index;
     }
 
     return 1;
 }
-

@@ -15,21 +15,22 @@
  */
 
 /******************************************************************************
- * @file     pin_name.h
- * @brief    header file for the pin_name
- * @version  V1.0
- * @date     02. June 2017
- ******************************************************************************/
+* @file     pin_name.h
+* @brief    header file for the pin_name
+* @version  V1.0
+* @date     02. June 2017
+******************************************************************************/
 #ifndef _PINNAMES_H
-#define _PINNAMES_H
+    #define _PINNAMES_H
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 
-typedef enum {
+    typedef enum
+    {
         PA0_I2C0SCL_SPI1CS1_SPU0_UART1TX = 0,
         PA1_I2C0SDA_SPI1CS2_SPU1_UART1RX,
         PA2_QSPI0CLK_XX_XX_XX,
@@ -78,16 +79,17 @@ typedef enum {
         PB13_UART3TX_SPI1MISO_SPU29_SIROUT3,
         PB14_UART3RTS_SPI1MOSI_SPU30_XX,
         PB15_UART3CTS_SPI1SCK_SPU31_XX,
+    }
+    pin_name_t;
+
+    typedef enum
+    {
+        PORTA = 0,
+        PORTB = 1
+    } port_name_t;
+
+    #ifdef __cplusplus
 }
-pin_name_t;
+    #endif
 
-typedef enum {
-    PORTA = 0,
-    PORTB = 1
-} port_name_t;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* ifndef _PINNAMES_H */

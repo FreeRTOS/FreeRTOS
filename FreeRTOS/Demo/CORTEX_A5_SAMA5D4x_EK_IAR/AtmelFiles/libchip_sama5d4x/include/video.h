@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -34,9 +34,9 @@
  *        Definitions
  *----------------------------------------------------------------------------*/
 /** Type of video is YUV */
-#define YUV 0
+#define YUV    0
 /** Type of video is RGB */
-#define RGB 1
+#define RGB    1
 
 /*----------------------------------------------------------------------------
  *        Type
@@ -44,37 +44,38 @@
 typedef struct _isi_Video
 {
     /** LCD Vertical Size */
-    uint32_t  lcd_vsize;
+    uint32_t lcd_vsize;
     /** LCD Horizontal Size*/
-    uint32_t  lcd_hsize;
+    uint32_t lcd_hsize;
     /** LCD Number of Bit Per Pixel*/
-    uint32_t  lcd_nbpp;
+    uint32_t lcd_nbpp;
     /** LCD Frame Buffer Address*/
-    uint32_t  lcd_fb_addr;
+    uint32_t lcd_fb_addr;
     /** Base address for the frame buffer descriptors list*/
-    uint32_t  Isi_fbd_base;
+    uint32_t Isi_fbd_base;
     /** Start of Line Delay*/
-    uint32_t  Hblank;
+    uint32_t Hblank;
     /** Start of frame Delay */
-    uint32_t  Vblank;
+    uint32_t Vblank;
     /** Vertical size of the Image sensor [0..2047]*/
-    uint32_t  codec_vsize;
+    uint32_t codec_vsize;
     /** Horizontal size of the Image sensor [0..2047]*/
-    uint32_t  codec_hsize;
+    uint32_t codec_hsize;
     /** Base address for codec DMA*/
-    uint32_t  codec_fb_addr;
+    uint32_t codec_fb_addr;
     /** Base address for the frame buffer descriptors list*/
-    uint32_t  codec_fbd_base;
+    uint32_t codec_fbd_base;
     /** Buffer index */
-    uint32_t  IsiPrevBuffIndex;
+    uint32_t IsiPrevBuffIndex;
     /** Type of video */
     uint8_t rgb_or_yuv;
-}isi_Video, *pIsi_Video;
+} isi_Video, * pIsi_Video;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern void VIDEO_Ycc2Rgb(uint8_t *ycc, uint16_t *rgb, uint32_t len);
+extern void VIDEO_Ycc2Rgb( uint8_t * ycc,
+                           uint16_t * rgb,
+                           uint32_t len );
 
-#endif
-
+#endif /* ifndef _VIDEO_H */

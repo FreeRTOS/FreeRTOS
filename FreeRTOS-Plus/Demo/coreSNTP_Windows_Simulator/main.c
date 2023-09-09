@@ -66,7 +66,7 @@ int main( void )
 
     /* Create the task that represents an application needing wall-clock time. */
     xTaskCreate( sampleAppTask,            /* Function that implements the task. */
-                 "SampleAppTask",              /* Text name for the task - only used for debugging. */
+                 "SampleAppTask",          /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */

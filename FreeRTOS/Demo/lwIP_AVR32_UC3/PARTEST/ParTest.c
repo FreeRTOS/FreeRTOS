@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief FreeRTOS Led Driver example for AVR32 UC3.
@@ -50,8 +51,8 @@
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-#define partstALL_OUTPUTS_OFF     ( ( unsigned char ) 0x00 )
-#define partstMAX_OUTPUT_LED      ( ( unsigned char ) 8 )
+#define partstALL_OUTPUTS_OFF    ( ( unsigned char ) 0x00 )
+#define partstMAX_OUTPUT_LED     ( ( unsigned char ) 8 )
 
 static volatile unsigned char ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*lint !e956 File scope parameters okay here. */
 
@@ -59,54 +60,54 @@ static volatile unsigned char ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*li
 
 void vParTestInitialise( void )
 {
-	LED_Display(partstALL_OUTPUTS_OFF); /* Start with all LEDs off. */
+    LED_Display( partstALL_OUTPUTS_OFF ); /* Start with all LEDs off. */
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned char ucBit;
+    unsigned char ucBit;
 
-	if( uxLED >= partstMAX_OUTPUT_LED )
-	{
-		return;
-	}
+    if( uxLED >= partstMAX_OUTPUT_LED )
+    {
+        return;
+    }
 
-	ucBit = ( ( unsigned char ) 1 ) << uxLED;
+    ucBit = ( ( unsigned char ) 1 ) << uxLED;
 
-	vTaskSuspendAll();
-	{
-		if( xValue == pdTRUE )
-		{
-		  ucCurrentOutputValue |= ucBit;
-		}
-		else
-		{
-		  ucCurrentOutputValue &= ~ucBit;
-		}
+    vTaskSuspendAll();
+    {
+        if( xValue == pdTRUE )
+        {
+            ucCurrentOutputValue |= ucBit;
+        }
+        else
+        {
+            ucCurrentOutputValue &= ~ucBit;
+        }
 
-		LED_Display(ucCurrentOutputValue);
-	}
-	xTaskResumeAll();
+        LED_Display( ucCurrentOutputValue );
+    }
+    xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	unsigned char ucBit;
+    unsigned char ucBit;
 
-	if( uxLED >= partstMAX_OUTPUT_LED )
-	{
-		return;
-	}
+    if( uxLED >= partstMAX_OUTPUT_LED )
+    {
+        return;
+    }
 
-	ucBit = ( ( unsigned char ) 1 ) << uxLED;
+    ucBit = ( ( unsigned char ) 1 ) << uxLED;
 
-	vTaskSuspendAll();
-	{
-		ucCurrentOutputValue ^= ucBit;
-		LED_Display(ucCurrentOutputValue);
-	}
-	xTaskResumeAll();
+    vTaskSuspendAll();
+    {
+        ucCurrentOutputValue ^= ucBit;
+        LED_Display( ucCurrentOutputValue );
+    }
+    xTaskResumeAll();
 }
-

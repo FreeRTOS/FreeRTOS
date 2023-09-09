@@ -221,7 +221,7 @@ int main_full( void )
     xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvDemonstrateChangingTimerReloadMode, "TimerMode", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+    xTaskCreate( prvDemonstrateChangingTimerReloadMode, "TimerMode", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
     vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
     vStartStreamBufferTasks();
@@ -229,23 +229,23 @@ int main_full( void )
     vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
 
     #if ( configUSE_QUEUE_SETS == 1 )
-        {
-            vStartQueueSetTasks();
-            vStartQueueSetPollingTask();
-        }
+    {
+        vStartQueueSetTasks();
+        vStartQueueSetPollingTask();
+    }
     #endif
 
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-        {
-            vStartStaticallyAllocatedTasks();
-        }
+    {
+        vStartStaticallyAllocatedTasks();
+    }
     #endif
 
     #if ( configUSE_PREEMPTION != 0 )
-        {
-            /* Don't expect these tasks to pass when preemption is not used. */
-            vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-        }
+    {
+        /* Don't expect these tasks to pass when preemption is not used. */
+        vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+    }
     #endif
 
     /* The suicide tasks must be created last as they need to know how many
@@ -285,14 +285,14 @@ static void prvCheckTask( void * pvParameters )
 
         /* Check the standard demo tasks are running without error. */
         #if ( configUSE_PREEMPTION != 0 )
+        {
+            /* These tasks are only created when preemption is used. */
+            if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
             {
-                /* These tasks are only created when preemption is used. */
-                if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
-                {
-                    pcStatusMessage = "Error: TimerDemo";
-                    xErrorCount++;
-                }
+                pcStatusMessage = "Error: TimerDemo";
+                xErrorCount++;
             }
+        }
         #endif
 
         if( xAreStreamBufferTasksStillRunning() != pdTRUE )
@@ -310,6 +310,7 @@ static void prvCheckTask( void * pvParameters )
             pcStatusMessage = "Error:  Notification";
             xErrorCount++;
         }
+
         /*
          * else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
          * {
@@ -436,6 +437,7 @@ static void prvCheckTask( void * pvParameters )
         {
             exit( 1 );
         }
+
         /* Reset the error condition */
         pcStatusMessage = "OK: No errors";
     }
@@ -510,21 +512,21 @@ void vFullDemoIdleFunction( void )
     /* Exit after a fixed time so code coverage results are written to the
      * disk. */
     #if ( projCOVERAGE_TEST == 1 )
+    {
+        const TickType_t xMaxRunTime = pdMS_TO_TICKS( 30000UL );
+
+        /* Exercise code not otherwise executed by standard demo/test tasks. */
+        if( xRunCodeCoverageTestAdditions() != pdPASS )
         {
-            const TickType_t xMaxRunTime = pdMS_TO_TICKS( 30000UL );
-
-            /* Exercise code not otherwise executed by standard demo/test tasks. */
-            if( xRunCodeCoverageTestAdditions() != pdPASS )
-            {
-                pcStatusMessage = "Code coverage additions failed.\r\n";
-                xErrorCount++;
-            }
-
-            if( ( xTaskGetTickCount() - configINITIAL_TICK_COUNT ) >= xMaxRunTime )
-            {
-                vTaskEndScheduler();
-            }
+            pcStatusMessage = "Code coverage additions failed.\r\n";
+            xErrorCount++;
         }
+
+        if( ( xTaskGetTickCount() - configINITIAL_TICK_COUNT ) >= xMaxRunTime )
+        {
+            vTaskEndScheduler();
+        }
+    }
     #endif /* if ( projCOVERAGE_TEST == 1 ) */
 }
 /*-----------------------------------------------------------*/
@@ -537,22 +539,22 @@ void vFullDemoTickHookFunction( void )
     /* Call the periodic timer test, which tests the timer API functions that
      * can be called from an ISR. */
     #if ( configUSE_PREEMPTION != 0 )
-        {
-            /* Only created when preemption is used. */
-            vTimerPeriodicISRTests();
-        }
+    {
+        /* Only created when preemption is used. */
+        vTimerPeriodicISRTests();
+    }
     #endif
 
     /* Call the periodic queue overwrite from ISR demo. */
     vQueueOverwritePeriodicISRDemo();
 
     #if ( configUSE_QUEUE_SETS == 1 ) /* Remove the tests if queue sets are not defined. */
-        {
-            /* Write to a queue that is in use as part of the queue set demo to
-             * demonstrate using queue sets from an ISR. */
-            vQueueSetAccessQueueSetFromISR();
-            vQueueSetPollingInterruptAccess();
-        }
+    {
+        /* Write to a queue that is in use as part of the queue set demo to
+         * demonstrate using queue sets from an ISR. */
+        vQueueSetAccessQueueSetFromISR();
+        vQueueSetPollingInterruptAccess();
+    }
     #endif
 
     /* Exercise event groups from interrupts. */

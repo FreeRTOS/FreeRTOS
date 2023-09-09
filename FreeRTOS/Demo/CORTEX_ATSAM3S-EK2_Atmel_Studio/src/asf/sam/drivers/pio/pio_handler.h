@@ -42,27 +42,33 @@
  */
 
 #ifndef PIO_HANDLER_H_INCLUDED
-#define PIO_HANDLER_H_INCLUDED
+    #define PIO_HANDLER_H_INCLUDED
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
-void pio_handler_process(Pio *p_pio, uint32_t ul_id);
-void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priority);
-uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
-		uint32_t ul_attr, void (*p_handler) (uint32_t, uint32_t));
+    void pio_handler_process( Pio * p_pio,
+                              uint32_t ul_id );
+    void pio_handler_set_priority( Pio * p_pio,
+                                   IRQn_Type ul_irqn,
+                                   uint32_t ul_priority );
+    uint32_t pio_handler_set( Pio * p_pio,
+                              uint32_t ul_id,
+                              uint32_t ul_mask,
+                              uint32_t ul_attr,
+                              void ( * p_handler )( uint32_t, uint32_t ) );
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
 #endif /* PIO_HANDLER_H_INCLUDED */

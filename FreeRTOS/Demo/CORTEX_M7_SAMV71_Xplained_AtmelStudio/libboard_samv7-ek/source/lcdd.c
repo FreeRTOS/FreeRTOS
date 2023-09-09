@@ -44,7 +44,7 @@
 /*----------------------------------------------------------------------------
  *        Local variables
  *----------------------------------------------------------------------------*/
- uint8_t ili9488_lcdMode;
+uint8_t ili9488_lcdMode;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -53,25 +53,31 @@
 /**
  * \brief Turn on the LCD.
  */
-void LCDD_On( void)
+void LCDD_On( void )
 {
-	if (ili9488_lcdMode == ILI9488_SPIMODE ) {
-		ILI9488_SpiOn();
-	} else {
-		ILI9488_EbiOn();
-	} 
+    if( ili9488_lcdMode == ILI9488_SPIMODE )
+    {
+        ILI9488_SpiOn();
+    }
+    else
+    {
+        ILI9488_EbiOn();
+    }
 }
 
 /**
  * \brief Turn off the LCD.
  */
-void LCDD_Off( void)
+void LCDD_Off( void )
 {
-	if (ili9488_lcdMode == ILI9488_SPIMODE ) {
-		ILI9488_SpiOff();
-	} else {
-		ILI9488_EbiOff();
-	}
+    if( ili9488_lcdMode == ILI9488_SPIMODE )
+    {
+        ILI9488_SpiOff();
+    }
+    else
+    {
+        ILI9488_EbiOff();
+    }
 }
 
 /**
@@ -79,14 +85,14 @@ void LCDD_Off( void)
  *
  * \param level   Back-light brightness level [1..16], 1 means maximum brightness.
  */
-#if defined (BOARD_LCD_SPI_EXT1)
-void LCDD_SpiSetBacklight (uint32_t level)
-{
-	/* Ensure valid level */
-	level = (level < 1) ? 1 : level;
-	level = (level > 16) ? 16 : level;
-	PWMC_SetDutyCycle(PWM0, CHANNEL_PWM_LCD, level);
-}
+#if defined( BOARD_LCD_SPI_EXT1 )
+    void LCDD_SpiSetBacklight( uint32_t level )
+    {
+        /* Ensure valid level */
+        level = ( level < 1 ) ? 1 : level;
+        level = ( level > 16 ) ? 16 : level;
+        PWMC_SetDutyCycle( PWM0, CHANNEL_PWM_LCD, level );
+    }
 #endif
 
 /**
@@ -95,22 +101,26 @@ void LCDD_SpiSetBacklight (uint32_t level)
  * \param lcdMode LCD_SPI or LCD_EBI mode
  * \param cRotate rotate direction 0: H 1:V
  */
-void LCDD_Initialize( uint8_t lcdMode, sXdmad * dmad, uint8_t cRotate)
+void LCDD_Initialize( uint8_t lcdMode,
+                      sXdmad * dmad,
+                      uint8_t cRotate )
 {
-	ili9488_lcdMode = lcdMode;
-	/* Initialize LCD controller */
-	if (lcdMode == ILI9488_SPIMODE ) {
-		ILI9488_SpiInitialize(dmad) ;
-		ILI9488_SpiSetDisplayLandscape(1, cRotate);
-	} else {
-		ILI9488_EbiInitialize(dmad) ;
-		ILI9488_EbiSetDisplayLandscape(1, cRotate);
-	}
+    ili9488_lcdMode = lcdMode;
 
-#if defined (BOARD_LCD_SPI_EXT1)
-	/* Set LCD back-light */
-	LCDD_SpiSetBacklight( 16 );
-#endif
+    /* Initialize LCD controller */
+    if( lcdMode == ILI9488_SPIMODE )
+    {
+        ILI9488_SpiInitialize( dmad );
+        ILI9488_SpiSetDisplayLandscape( 1, cRotate );
+    }
+    else
+    {
+        ILI9488_EbiInitialize( dmad );
+        ILI9488_EbiSetDisplayLandscape( 1, cRotate );
+    }
 
+    #if defined( BOARD_LCD_SPI_EXT1 )
+        /* Set LCD back-light */
+        LCDD_SpiSetBacklight( 16 );
+    #endif
 }
-

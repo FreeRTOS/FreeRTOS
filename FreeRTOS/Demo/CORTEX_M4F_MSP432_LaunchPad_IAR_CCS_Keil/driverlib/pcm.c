@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -45,14 +45,15 @@
 #include <rtc_c.h>
 #include <cpu.h>
 
-static bool __PCM_setCoreVoltageLevelAdvanced(uint_fast8_t voltageLevel,
-        uint32_t timeOut, bool blocking)
+static bool __PCM_setCoreVoltageLevelAdvanced( uint_fast8_t voltageLevel,
+                                               uint32_t timeOut,
+                                               bool blocking )
 {
     uint8_t powerMode, bCurrentVoltageLevel;
     uint32_t regValue;
     bool boolTimeout;
 
-    ASSERT(voltageLevel == PCM_VCORE0 || voltageLevel == PCM_VCORE1);
+    ASSERT( voltageLevel == PCM_VCORE0 || voltageLevel == PCM_VCORE1 );
 
     /* Getting current power mode and level */
     powerMode = PCM_getPowerMode();
@@ -61,38 +62,43 @@ static bool __PCM_setCoreVoltageLevelAdvanced(uint_fast8_t voltageLevel,
     boolTimeout = timeOut > 0 ? true : false;
 
     /* If we are already at the power mode they requested, return */
-    if (bCurrentVoltageLevel == voltageLevel)
+    if( bCurrentVoltageLevel == voltageLevel )
+    {
         return true;
+    }
 
-    while (bCurrentVoltageLevel != voltageLevel)
+    while( bCurrentVoltageLevel != voltageLevel )
     {
         regValue = PCM->CTL0;
 
-        switch (PCM_getPowerState())
+        switch( PCM_getPowerState() )
         {
-        case PCM_AM_LF_VCORE1:
-        case PCM_AM_DCDC_VCORE1:
-        case PCM_AM_LDO_VCORE0:
-            PCM->CTL0 = (PCM_KEY | (PCM_AM_LDO_VCORE1)
-                    | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            break;
-        case PCM_AM_LF_VCORE0:
-        case PCM_AM_DCDC_VCORE0:
-        case PCM_AM_LDO_VCORE1:
-            PCM->CTL0 = (PCM_KEY | (PCM_AM_LDO_VCORE0)
-                    | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            break;
-        default:
-            ASSERT(false);
+            case PCM_AM_LF_VCORE1:
+            case PCM_AM_DCDC_VCORE1:
+            case PCM_AM_LDO_VCORE0:
+                PCM->CTL0 = ( PCM_KEY | ( PCM_AM_LDO_VCORE1 )
+                              | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                break;
+
+            case PCM_AM_LF_VCORE0:
+            case PCM_AM_DCDC_VCORE0:
+            case PCM_AM_LDO_VCORE1:
+                PCM->CTL0 = ( PCM_KEY | ( PCM_AM_LDO_VCORE0 )
+                              | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                break;
+
+            default:
+                ASSERT( false );
         }
 
-        if(blocking)
+        if( blocking )
         {
-            while (BITBAND_PERI(PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS))
+            while( BITBAND_PERI( PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS ) )
             {
-                if (boolTimeout && !(--timeOut))
+                if( boolTimeout && !( --timeOut ) )
+                {
                     return false;
-
+                }
             }
         }
         else
@@ -104,329 +110,398 @@ static bool __PCM_setCoreVoltageLevelAdvanced(uint_fast8_t voltageLevel,
     }
 
     /* Changing the power mode if we are stuck in LDO mode */
-    if (powerMode != PCM_getPowerMode())
+    if( powerMode != PCM_getPowerMode() )
     {
-        if (powerMode == PCM_DCDC_MODE)
-            return PCM_setPowerMode(PCM_DCDC_MODE);
+        if( powerMode == PCM_DCDC_MODE )
+        {
+            return PCM_setPowerMode( PCM_DCDC_MODE );
+        }
         else
-            return PCM_setPowerMode(PCM_LF_MODE);
+        {
+            return PCM_setPowerMode( PCM_LF_MODE );
+        }
     }
 
     return true;
-
 }
 
 
-bool PCM_setCoreVoltageLevel(uint_fast8_t voltageLevel)
+bool PCM_setCoreVoltageLevel( uint_fast8_t voltageLevel )
 {
-    return __PCM_setCoreVoltageLevelAdvanced(voltageLevel, 0, true);
+    return __PCM_setCoreVoltageLevelAdvanced( voltageLevel, 0, true );
 }
 
-bool PCM_setCoreVoltageLevelWithTimeout(uint_fast8_t voltageLevel,
-        uint32_t timeOut)
+bool PCM_setCoreVoltageLevelWithTimeout( uint_fast8_t voltageLevel,
+                                         uint32_t timeOut )
 {
-    return __PCM_setCoreVoltageLevelAdvanced(voltageLevel, timeOut, true);
+    return __PCM_setCoreVoltageLevelAdvanced( voltageLevel, timeOut, true );
 }
 
-bool PCM_setCoreVoltageLevelNonBlocking(uint_fast8_t voltageLevel)
+bool PCM_setCoreVoltageLevelNonBlocking( uint_fast8_t voltageLevel )
 {
-    return __PCM_setCoreVoltageLevelAdvanced(voltageLevel, 0, false);
+    return __PCM_setCoreVoltageLevelAdvanced( voltageLevel, 0, false );
 }
 
-uint8_t PCM_getPowerMode(void)
+uint8_t PCM_getPowerMode( void )
 {
     uint8_t currentPowerState;
 
     currentPowerState = PCM_getPowerState();
 
-    switch (currentPowerState)
+    switch( currentPowerState )
     {
-    case PCM_AM_LDO_VCORE0:
-    case PCM_AM_LDO_VCORE1:
-    case PCM_LPM0_LDO_VCORE0:
-    case PCM_LPM0_LDO_VCORE1:
-        return PCM_LDO_MODE;
-    case PCM_AM_DCDC_VCORE0:
-    case PCM_AM_DCDC_VCORE1:
-    case PCM_LPM0_DCDC_VCORE0:
-    case PCM_LPM0_DCDC_VCORE1:
-        return PCM_DCDC_MODE;
-    case PCM_LPM0_LF_VCORE0:
-    case PCM_LPM0_LF_VCORE1:
-    case PCM_AM_LF_VCORE1:
-    case PCM_AM_LF_VCORE0:
-        return PCM_LF_MODE;
-    default:
-        ASSERT(false);
-        return false;
+        case PCM_AM_LDO_VCORE0:
+        case PCM_AM_LDO_VCORE1:
+        case PCM_LPM0_LDO_VCORE0:
+        case PCM_LPM0_LDO_VCORE1:
+            return PCM_LDO_MODE;
 
+        case PCM_AM_DCDC_VCORE0:
+        case PCM_AM_DCDC_VCORE1:
+        case PCM_LPM0_DCDC_VCORE0:
+        case PCM_LPM0_DCDC_VCORE1:
+            return PCM_DCDC_MODE;
+
+        case PCM_LPM0_LF_VCORE0:
+        case PCM_LPM0_LF_VCORE1:
+        case PCM_AM_LF_VCORE1:
+        case PCM_AM_LF_VCORE0:
+            return PCM_LF_MODE;
+
+        default:
+            ASSERT( false );
+            return false;
     }
 }
 
-uint8_t PCM_getCoreVoltageLevel(void)
+uint8_t PCM_getCoreVoltageLevel( void )
 {
     uint8_t currentPowerState = PCM_getPowerState();
 
-    switch (currentPowerState)
+    switch( currentPowerState )
     {
-    case PCM_AM_LDO_VCORE0:
-    case PCM_AM_DCDC_VCORE0:
-    case PCM_AM_LF_VCORE0:
-    case PCM_LPM0_LDO_VCORE0:
-    case PCM_LPM0_DCDC_VCORE0:
-    case PCM_LPM0_LF_VCORE0:
-        return PCM_VCORE0;
-    case PCM_AM_LDO_VCORE1:
-    case PCM_AM_DCDC_VCORE1:
-    case PCM_AM_LF_VCORE1:
-    case PCM_LPM0_LDO_VCORE1:
-    case PCM_LPM0_DCDC_VCORE1:
-    case PCM_LPM0_LF_VCORE1:
-        return PCM_VCORE1;
-    case PCM_LPM3:
-        return PCM_VCORELPM3;
-    default:
-        ASSERT(false);
-        return false;
+        case PCM_AM_LDO_VCORE0:
+        case PCM_AM_DCDC_VCORE0:
+        case PCM_AM_LF_VCORE0:
+        case PCM_LPM0_LDO_VCORE0:
+        case PCM_LPM0_DCDC_VCORE0:
+        case PCM_LPM0_LF_VCORE0:
+            return PCM_VCORE0;
 
+        case PCM_AM_LDO_VCORE1:
+        case PCM_AM_DCDC_VCORE1:
+        case PCM_AM_LF_VCORE1:
+        case PCM_LPM0_LDO_VCORE1:
+        case PCM_LPM0_DCDC_VCORE1:
+        case PCM_LPM0_LF_VCORE1:
+            return PCM_VCORE1;
+
+        case PCM_LPM3:
+            return PCM_VCORELPM3;
+
+        default:
+            ASSERT( false );
+            return false;
     }
 }
 
-static bool __PCM_setPowerModeAdvanced(uint_fast8_t powerMode, uint32_t timeOut,
-bool blocking)
+static bool __PCM_setPowerModeAdvanced( uint_fast8_t powerMode,
+                                        uint32_t timeOut,
+                                        bool blocking )
 {
     uint8_t bCurrentPowerMode, bCurrentPowerState;
     uint32_t regValue;
     bool boolTimeout;
 
     ASSERT(
-            powerMode == PCM_LDO_MODE || powerMode == PCM_DCDC_MODE
-            || powerMode == PCM_LF_MODE);
+        powerMode == PCM_LDO_MODE || powerMode == PCM_DCDC_MODE ||
+        powerMode == PCM_LF_MODE );
 
     /* Getting Current Power Mode */
     bCurrentPowerMode = PCM_getPowerMode();
 
     /* If the power mode being set it the same as the current mode, return */
-    if (powerMode == bCurrentPowerMode)
+    if( powerMode == bCurrentPowerMode )
+    {
         return true;
+    }
 
     bCurrentPowerState = PCM_getPowerState();
 
     boolTimeout = timeOut > 0 ? true : false;
 
     /* Go through the while loop while we haven't achieved the power mode */
-    while (bCurrentPowerMode != powerMode)
+    while( bCurrentPowerMode != powerMode )
     {
         regValue = PCM->CTL0;
 
-        switch (bCurrentPowerState)
+        switch( bCurrentPowerState )
         {
-        case PCM_AM_DCDC_VCORE0:
-        case PCM_AM_LF_VCORE0:
-            PCM->CTL0 = (PCM_KEY | PCM_AM_LDO_VCORE0
-                    | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            break;
-        case PCM_AM_LF_VCORE1:
-        case PCM_AM_DCDC_VCORE1:
-            PCM->CTL0 = (PCM_KEY | PCM_AM_LDO_VCORE1
-                    | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            break;
-        case PCM_AM_LDO_VCORE1:
-        {
-            if (powerMode == PCM_DCDC_MODE)
-            {
-                PCM->CTL0 = (PCM_KEY | PCM_AM_DCDC_VCORE1
-                        | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            } else if (powerMode == PCM_LF_MODE)
-            {
-                PCM->CTL0 = (PCM_KEY | PCM_AM_LF_VCORE1
-                        | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            } else
-                ASSERT(false);
+            case PCM_AM_DCDC_VCORE0:
+            case PCM_AM_LF_VCORE0:
+                PCM->CTL0 = ( PCM_KEY | PCM_AM_LDO_VCORE0
+                              | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                break;
 
-            break;
-        }
-        case PCM_AM_LDO_VCORE0:
-        {
-            if (powerMode == PCM_DCDC_MODE)
-            {
-                PCM->CTL0 = (PCM_KEY | PCM_AM_DCDC_VCORE0
-                        | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            } else if (powerMode == PCM_LF_MODE)
-            {
-                PCM->CTL0 = (PCM_KEY | PCM_AM_LF_VCORE0
-                        | (regValue & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK)));
-            } else
-                ASSERT(false);
+            case PCM_AM_LF_VCORE1:
+            case PCM_AM_DCDC_VCORE1:
+                PCM->CTL0 = ( PCM_KEY | PCM_AM_LDO_VCORE1
+                              | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                break;
 
-            break;
-        }
-        default:
-            ASSERT(false);
+            case PCM_AM_LDO_VCORE1:
+
+                if( powerMode == PCM_DCDC_MODE )
+                {
+                    PCM->CTL0 = ( PCM_KEY | PCM_AM_DCDC_VCORE1
+                                  | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                }
+                else if( powerMode == PCM_LF_MODE )
+                {
+                    PCM->CTL0 = ( PCM_KEY | PCM_AM_LF_VCORE1
+                                  | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                }
+                else
+                {
+                    ASSERT( false );
+                }
+
+                break;
+
+            case PCM_AM_LDO_VCORE0:
+
+                if( powerMode == PCM_DCDC_MODE )
+                {
+                    PCM->CTL0 = ( PCM_KEY | PCM_AM_DCDC_VCORE0
+                                  | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                }
+                else if( powerMode == PCM_LF_MODE )
+                {
+                    PCM->CTL0 = ( PCM_KEY | PCM_AM_LF_VCORE0
+                                  | ( regValue & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_AMR_MASK ) ) );
+                }
+                else
+                {
+                    ASSERT( false );
+                }
+
+                break;
+
+            default:
+                ASSERT( false );
         }
 
-        if (blocking)
+        if( blocking )
         {
-            while (BITBAND_PERI(PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS))
+            while( BITBAND_PERI( PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS ) )
             {
-                if (boolTimeout && !(--timeOut))
+                if( boolTimeout && !( --timeOut ) )
+                {
                     return false;
-
+                }
             }
-        } else
+        }
+        else
+        {
             return true;
+        }
 
         bCurrentPowerMode = PCM_getPowerMode();
         bCurrentPowerState = PCM_getPowerState();
     }
 
     return true;
-
 }
 
-bool PCM_setPowerMode(uint_fast8_t powerMode)
+bool PCM_setPowerMode( uint_fast8_t powerMode )
 {
-    return __PCM_setPowerModeAdvanced(powerMode, 0, true);
+    return __PCM_setPowerModeAdvanced( powerMode, 0, true );
 }
 
-bool PCM_setPowerModeNonBlocking(uint_fast8_t powerMode)
+bool PCM_setPowerModeNonBlocking( uint_fast8_t powerMode )
 {
-    return __PCM_setPowerModeAdvanced(powerMode, 0, false);
+    return __PCM_setPowerModeAdvanced( powerMode, 0, false );
 }
 
-bool PCM_setPowerModeWithTimeout(uint_fast8_t powerMode, uint32_t timeOut)
+bool PCM_setPowerModeWithTimeout( uint_fast8_t powerMode,
+                                  uint32_t timeOut )
 {
-    return __PCM_setPowerModeAdvanced(powerMode, timeOut, true);
+    return __PCM_setPowerModeAdvanced( powerMode, timeOut, true );
 }
 
-static bool __PCM_setPowerStateAdvanced(uint_fast8_t powerState,
-        uint32_t timeout,
-        bool blocking)
+static bool __PCM_setPowerStateAdvanced( uint_fast8_t powerState,
+                                         uint32_t timeout,
+                                         bool blocking )
 {
     uint8_t bCurrentPowerState;
+
     bCurrentPowerState = PCM_getPowerState();
 
     ASSERT(
-            powerState == PCM_AM_LDO_VCORE0 || powerState == PCM_AM_LDO_VCORE1
-            || powerState == PCM_AM_DCDC_VCORE0 || powerState == PCM_AM_DCDC_VCORE1
-            || powerState == PCM_AM_LF_VCORE0 || powerState == PCM_AM_LF_VCORE1
-            || powerState == PCM_LPM0_LDO_VCORE0 || powerState == PCM_LPM0_LDO_VCORE1
-            || powerState == PCM_LPM0_DCDC_VCORE0 || powerState == PCM_LPM0_DCDC_VCORE1
-            || powerState == PCM_LPM3 || powerState == PCM_LPM35_VCORE0
-            || powerState == PCM_LPM45 || powerState == PCM_LPM4);
+        powerState == PCM_AM_LDO_VCORE0 || powerState == PCM_AM_LDO_VCORE1 ||
+        powerState == PCM_AM_DCDC_VCORE0 || powerState == PCM_AM_DCDC_VCORE1 ||
+        powerState == PCM_AM_LF_VCORE0 || powerState == PCM_AM_LF_VCORE1 ||
+        powerState == PCM_LPM0_LDO_VCORE0 || powerState == PCM_LPM0_LDO_VCORE1 ||
+        powerState == PCM_LPM0_DCDC_VCORE0 || powerState == PCM_LPM0_DCDC_VCORE1 ||
+        powerState == PCM_LPM3 || powerState == PCM_LPM35_VCORE0 ||
+        powerState == PCM_LPM45 || powerState == PCM_LPM4 );
 
-    if (bCurrentPowerState == powerState)
-        return true;
-
-    switch (powerState)
+    if( bCurrentPowerState == powerState )
     {
-    case PCM_AM_LDO_VCORE0:
-        return (__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE0, timeout, blocking)
-                && __PCM_setPowerModeAdvanced(PCM_LDO_MODE, timeout, blocking));
-    case PCM_AM_LDO_VCORE1:
-        return (__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE1, timeout, blocking)
-                && __PCM_setPowerModeAdvanced(PCM_LDO_MODE, timeout, blocking));
-    case PCM_AM_DCDC_VCORE0:
-        return (__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE0, timeout, blocking)
-                && __PCM_setPowerModeAdvanced(PCM_DCDC_MODE, timeout, blocking));
-    case PCM_AM_DCDC_VCORE1:
-        return (__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE1, timeout, blocking)
-                && __PCM_setPowerModeAdvanced(PCM_DCDC_MODE, timeout, blocking));
-    case PCM_AM_LF_VCORE0:
-        return (__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE0, timeout, blocking)
-                && __PCM_setPowerModeAdvanced(PCM_LF_MODE, timeout, blocking));
-    case PCM_AM_LF_VCORE1:
-        return (__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE1, timeout, blocking)
-                && __PCM_setPowerModeAdvanced(PCM_LF_MODE, timeout, blocking));
-    case PCM_LPM0_LDO_VCORE0:
-        if (!__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE0, timeout, blocking)
-                || !__PCM_setPowerModeAdvanced(PCM_LDO_MODE, timeout, blocking))
-            break;
-        return PCM_gotoLPM0();
-    case PCM_LPM0_LDO_VCORE1:
-        if (!__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE1, timeout, blocking)
-                || !__PCM_setPowerModeAdvanced(PCM_LDO_MODE, timeout, blocking))
-            break;
-        return PCM_gotoLPM0();
-    case PCM_LPM0_DCDC_VCORE0:
-        if (!__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE0, timeout, blocking)
-                || !__PCM_setPowerModeAdvanced(PCM_DCDC_MODE, timeout,
-                        blocking))
-            break;
-        return PCM_gotoLPM0();
-    case PCM_LPM0_DCDC_VCORE1:
-        if (!__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE1, timeout, blocking)
-                || !__PCM_setPowerModeAdvanced(PCM_DCDC_MODE, timeout,
-                        blocking))
-            break;
-        return PCM_gotoLPM0();
-    case PCM_LPM0_LF_VCORE0:
-        if (!__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE0, timeout, blocking)
-                || !__PCM_setPowerModeAdvanced(PCM_LF_MODE, timeout, blocking))
-            break;
-        return PCM_gotoLPM0();
-    case PCM_LPM0_LF_VCORE1:
-        if (!__PCM_setCoreVoltageLevelAdvanced(PCM_VCORE1, timeout, blocking)
-                || !__PCM_setPowerModeAdvanced(PCM_LF_MODE, timeout, blocking))
-            break;
-        return PCM_gotoLPM0();
-    case PCM_LPM3:
-        return PCM_gotoLPM3();
-    case PCM_LPM4:
-        return PCM_gotoLPM4();
-    case PCM_LPM45:
-        return PCM_shutdownDevice(PCM_LPM45);
-    case PCM_LPM35_VCORE0:
-        return PCM_shutdownDevice(PCM_LPM35_VCORE0);
-    default:
-        ASSERT(false);
-        return false;
+        return true;
+    }
+
+    switch( powerState )
+    {
+        case PCM_AM_LDO_VCORE0:
+            return( __PCM_setCoreVoltageLevelAdvanced( PCM_VCORE0, timeout, blocking ) &&
+                    __PCM_setPowerModeAdvanced( PCM_LDO_MODE, timeout, blocking ) );
+
+        case PCM_AM_LDO_VCORE1:
+            return( __PCM_setCoreVoltageLevelAdvanced( PCM_VCORE1, timeout, blocking ) &&
+                    __PCM_setPowerModeAdvanced( PCM_LDO_MODE, timeout, blocking ) );
+
+        case PCM_AM_DCDC_VCORE0:
+            return( __PCM_setCoreVoltageLevelAdvanced( PCM_VCORE0, timeout, blocking ) &&
+                    __PCM_setPowerModeAdvanced( PCM_DCDC_MODE, timeout, blocking ) );
+
+        case PCM_AM_DCDC_VCORE1:
+            return( __PCM_setCoreVoltageLevelAdvanced( PCM_VCORE1, timeout, blocking ) &&
+                    __PCM_setPowerModeAdvanced( PCM_DCDC_MODE, timeout, blocking ) );
+
+        case PCM_AM_LF_VCORE0:
+            return( __PCM_setCoreVoltageLevelAdvanced( PCM_VCORE0, timeout, blocking ) &&
+                    __PCM_setPowerModeAdvanced( PCM_LF_MODE, timeout, blocking ) );
+
+        case PCM_AM_LF_VCORE1:
+            return( __PCM_setCoreVoltageLevelAdvanced( PCM_VCORE1, timeout, blocking ) &&
+                    __PCM_setPowerModeAdvanced( PCM_LF_MODE, timeout, blocking ) );
+
+        case PCM_LPM0_LDO_VCORE0:
+
+            if( !__PCM_setCoreVoltageLevelAdvanced( PCM_VCORE0, timeout, blocking ) ||
+                !__PCM_setPowerModeAdvanced( PCM_LDO_MODE, timeout, blocking ) )
+            {
+                break;
+            }
+
+            return PCM_gotoLPM0();
+
+        case PCM_LPM0_LDO_VCORE1:
+
+            if( !__PCM_setCoreVoltageLevelAdvanced( PCM_VCORE1, timeout, blocking ) ||
+                !__PCM_setPowerModeAdvanced( PCM_LDO_MODE, timeout, blocking ) )
+            {
+                break;
+            }
+
+            return PCM_gotoLPM0();
+
+        case PCM_LPM0_DCDC_VCORE0:
+
+            if( !__PCM_setCoreVoltageLevelAdvanced( PCM_VCORE0, timeout, blocking ) ||
+                !__PCM_setPowerModeAdvanced( PCM_DCDC_MODE, timeout,
+                                             blocking ) )
+            {
+                break;
+            }
+
+            return PCM_gotoLPM0();
+
+        case PCM_LPM0_DCDC_VCORE1:
+
+            if( !__PCM_setCoreVoltageLevelAdvanced( PCM_VCORE1, timeout, blocking ) ||
+                !__PCM_setPowerModeAdvanced( PCM_DCDC_MODE, timeout,
+                                             blocking ) )
+            {
+                break;
+            }
+
+            return PCM_gotoLPM0();
+
+        case PCM_LPM0_LF_VCORE0:
+
+            if( !__PCM_setCoreVoltageLevelAdvanced( PCM_VCORE0, timeout, blocking ) ||
+                !__PCM_setPowerModeAdvanced( PCM_LF_MODE, timeout, blocking ) )
+            {
+                break;
+            }
+
+            return PCM_gotoLPM0();
+
+        case PCM_LPM0_LF_VCORE1:
+
+            if( !__PCM_setCoreVoltageLevelAdvanced( PCM_VCORE1, timeout, blocking ) ||
+                !__PCM_setPowerModeAdvanced( PCM_LF_MODE, timeout, blocking ) )
+            {
+                break;
+            }
+
+            return PCM_gotoLPM0();
+
+        case PCM_LPM3:
+            return PCM_gotoLPM3();
+
+        case PCM_LPM4:
+            return PCM_gotoLPM4();
+
+        case PCM_LPM45:
+            return PCM_shutdownDevice( PCM_LPM45 );
+
+        case PCM_LPM35_VCORE0:
+            return PCM_shutdownDevice( PCM_LPM35_VCORE0 );
+
+        default:
+            ASSERT( false );
+            return false;
     }
 
     return false;
-
 }
 
-bool PCM_setPowerState(uint_fast8_t powerState)
+bool PCM_setPowerState( uint_fast8_t powerState )
 {
-    return __PCM_setPowerStateAdvanced(powerState, 0, true);
+    return __PCM_setPowerStateAdvanced( powerState, 0, true );
 }
 
-bool PCM_setPowerStateWithTimeout(uint_fast8_t powerState, uint32_t timeout)
+bool PCM_setPowerStateWithTimeout( uint_fast8_t powerState,
+                                   uint32_t timeout )
 {
-    return __PCM_setPowerStateAdvanced(powerState, timeout, true);
+    return __PCM_setPowerStateAdvanced( powerState, timeout, true );
 }
 
-bool PCM_setPowerStateNonBlocking(uint_fast8_t powerState)
+bool PCM_setPowerStateNonBlocking( uint_fast8_t powerState )
 {
-    return __PCM_setPowerStateAdvanced(powerState, 0, false);
+    return __PCM_setPowerStateAdvanced( powerState, 0, false );
 }
 
-bool PCM_shutdownDevice(uint32_t shutdownMode)
+bool PCM_shutdownDevice( uint32_t shutdownMode )
 {
-    uint32_t shutdownModeBits = (shutdownMode == PCM_LPM45) ?
-    		PCM_CTL0_LPMR_12 : PCM_CTL0_LPMR_10;
+    uint32_t shutdownModeBits = ( shutdownMode == PCM_LPM45 ) ?
+                                PCM_CTL0_LPMR_12 : PCM_CTL0_LPMR_10;
 
     ASSERT(
-            shutdownMode == PCM_SHUTDOWN_PARTIAL
-            || shutdownMode == PCM_SHUTDOWN_COMPLETE);
+        shutdownMode == PCM_SHUTDOWN_PARTIAL ||
+        shutdownMode == PCM_SHUTDOWN_COMPLETE );
 
     /* If a power transition is occuring, return false */
-    if (BITBAND_PERI(PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS))
+    if( BITBAND_PERI( PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS ) )
+    {
         return false;
+    }
 
     /* Initiating the shutdown */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    PCM->CTL0 = (PCM_KEY | shutdownModeBits
-            | (PCM->CTL0 & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_LPMR_MASK)));
+    PCM->CTL0 = ( PCM_KEY | shutdownModeBits
+                  | ( PCM->CTL0 & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_LPMR_MASK ) ) );
 
     CPU_wfi();
 
     return true;
 }
 
-bool PCM_gotoLPM4(void)
+bool PCM_gotoLPM4( void )
 {
     /* Disabling RTC_C and WDT_A */
     WDT_A_holdTimer();
@@ -436,30 +511,32 @@ bool PCM_gotoLPM4(void)
     return PCM_gotoLPM3();
 }
 
-bool PCM_gotoLPM4InterruptSafe(void)
+bool PCM_gotoLPM4InterruptSafe( void )
 {
     bool slHappenedCorrect;
 
-    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but 
-     master interrupts are disabled and a WFI happens the WFI will
-     immediately exit. */
+    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but
+     * master interrupts are disabled and a WFI happens the WFI will
+     * immediately exit. */
     Interrupt_disableMaster();
 
     slHappenedCorrect = PCM_gotoLPM4();
 
     /* Enabling and Disabling Interrupts very quickly so that the
-     processor catches any pending interrupts */
+     * processor catches any pending interrupts */
     Interrupt_enableMaster();
     Interrupt_disableMaster();
 
     return slHappenedCorrect;
 }
 
-bool PCM_gotoLPM0(void)
+bool PCM_gotoLPM0( void )
 {
     /* If we are in the middle of a state transition, return false */
-    if (BITBAND_PERI(PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS))
+    if( BITBAND_PERI( PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS ) )
+    {
         return false;
+    }
 
     SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
 
@@ -468,47 +545,53 @@ bool PCM_gotoLPM0(void)
     return true;
 }
 
-bool PCM_gotoLPM0InterruptSafe(void)
+bool PCM_gotoLPM0InterruptSafe( void )
 {
     bool slHappenedCorrect;
 
-    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but 
-     master interrupts are disabled and a WFI happens the WFI will
-     immediately exit. */
+    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but
+     * master interrupts are disabled and a WFI happens the WFI will
+     * immediately exit. */
     Interrupt_disableMaster();
 
     slHappenedCorrect = PCM_gotoLPM0();
 
     /* Enabling and Disabling Interrupts very quickly so that the
-     processor catches any pending interrupts */
+     * processor catches any pending interrupts */
     Interrupt_enableMaster();
     Interrupt_disableMaster();
 
     return slHappenedCorrect;
 }
 
-bool PCM_gotoLPM3(void)
+bool PCM_gotoLPM3( void )
 {
     uint_fast8_t bCurrentPowerState;
     uint_fast8_t currentPowerMode;
 
     /* If we are in the middle of a state transition, return false */
-    if (BITBAND_PERI(PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS))
+    if( BITBAND_PERI( PCM->CTL1, PCM_CTL1_PMR_BUSY_OFS ) )
+    {
         return false;
+    }
 
     /* If we are in the middle of a shutdown, return false */
-    if ((PCM->CTL0 & PCM_CTL0_LPMR_MASK) == PCM_CTL0_LPMR_10
-    		|| (PCM->CTL0 & PCM_CTL0_LPMR_MASK) == PCM_CTL0_LPMR_12)
+    if( ( ( PCM->CTL0 & PCM_CTL0_LPMR_MASK ) == PCM_CTL0_LPMR_10 ) ||
+        ( ( PCM->CTL0 & PCM_CTL0_LPMR_MASK ) == PCM_CTL0_LPMR_12 ) )
+    {
         return false;
+    }
 
     currentPowerMode = PCM_getPowerMode();
     bCurrentPowerState = PCM_getPowerState();
 
-    if (currentPowerMode == PCM_DCDC_MODE || currentPowerMode == PCM_LF_MODE)
-        PCM_setPowerMode(PCM_LDO_MODE);
+    if( ( currentPowerMode == PCM_DCDC_MODE ) || ( currentPowerMode == PCM_LF_MODE ) )
+    {
+        PCM_setPowerMode( PCM_LDO_MODE );
+    }
 
     /* Clearing the SDR */
-    PCM->CTL0 = (PCM->CTL0 & ~(PCM_CTL0_KEY_MASK | PCM_CTL0_LPMR_MASK)) | PCM_KEY;
+    PCM->CTL0 = ( PCM->CTL0 & ~( PCM_CTL0_KEY_MASK | PCM_CTL0_LPMR_MASK ) ) | PCM_KEY;
 
     /* Setting the sleep deep bit */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
@@ -517,93 +600,92 @@ bool PCM_gotoLPM3(void)
 
     SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
 
-    return PCM_setPowerState(bCurrentPowerState);
+    return PCM_setPowerState( bCurrentPowerState );
 }
 
-bool PCM_gotoLPM3InterruptSafe(void)
+bool PCM_gotoLPM3InterruptSafe( void )
 {
     bool lpmHappenedCorrect;
 
-    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but 
-     master interrupts are disabled and a WFI happens the WFI will
-     immediately exit. */
+    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but
+     * master interrupts are disabled and a WFI happens the WFI will
+     * immediately exit. */
     Interrupt_disableMaster();
 
     lpmHappenedCorrect = PCM_gotoLPM3();
 
     /* Enabling and Disabling Interrupts very quickly so that the
-     processor catches any pending interrupts */
+     * processor catches any pending interrupts */
     Interrupt_enableMaster();
     Interrupt_disableMaster();
 
     return lpmHappenedCorrect;
 }
 
-uint8_t PCM_getPowerState(void)
+uint8_t PCM_getPowerState( void )
 {
-    return (PCM->CTL0 | PCM_CTL0_CPM_MASK);
+    return( PCM->CTL0 | PCM_CTL0_CPM_MASK );
 }
 
-void PCM_enableRudeMode(void)
+void PCM_enableRudeMode( void )
 {
-
-    PCM->CTL1 = (PCM->CTL1 & ~(PCM_CTL0_KEY_MASK)) | PCM_KEY
-    		| PCM_CTL1_FORCE_LPM_ENTRY;
+    PCM->CTL1 = ( PCM->CTL1 & ~( PCM_CTL0_KEY_MASK ) ) | PCM_KEY
+                | PCM_CTL1_FORCE_LPM_ENTRY;
 }
 
-void PCM_disableRudeMode(void)
+void PCM_disableRudeMode( void )
 {
-    PCM->CTL1 = (PCM->CTL1 & ~(PCM_CTL0_KEY_MASK | PCM_CTL1_FORCE_LPM_ENTRY))
-    		| PCM_KEY;
+    PCM->CTL1 = ( PCM->CTL1 & ~( PCM_CTL0_KEY_MASK | PCM_CTL1_FORCE_LPM_ENTRY ) )
+                | PCM_KEY;
 }
 
-void PCM_enableInterrupt(uint32_t flags)
+void PCM_enableInterrupt( uint32_t flags )
 {
     PCM->IE |= flags;
 }
 
-void PCM_disableInterrupt(uint32_t flags)
+void PCM_disableInterrupt( uint32_t flags )
 {
     PCM->IE &= ~flags;
 }
 
-uint32_t PCM_getInterruptStatus(void)
+uint32_t PCM_getInterruptStatus( void )
 {
     return PCM->IFG;
 }
 
-uint32_t PCM_getEnabledInterruptStatus(void)
+uint32_t PCM_getEnabledInterruptStatus( void )
 {
     return PCM_getInterruptStatus() & PCM->IE;
 }
 
-void PCM_clearInterruptFlag(uint32_t flags)
+void PCM_clearInterruptFlag( uint32_t flags )
 {
     PCM->CLRIFG |= flags;
 }
 
-void PCM_registerInterrupt(void (*intHandler)(void))
+void PCM_registerInterrupt( void ( * intHandler )( void ) )
 {
-    //
-    // Register the interrupt handler, returning an error if an error occurs.
-    //
-    Interrupt_registerInterrupt(INT_PCM, intHandler);
+    /* */
+    /* Register the interrupt handler, returning an error if an error occurs. */
+    /* */
+    Interrupt_registerInterrupt( INT_PCM, intHandler );
 
-    //
-    // Enable the system control interrupt.
-    //
-    Interrupt_enableInterrupt(INT_PCM);
+    /* */
+    /* Enable the system control interrupt. */
+    /* */
+    Interrupt_enableInterrupt( INT_PCM );
 }
 
-void PCM_unregisterInterrupt(void)
+void PCM_unregisterInterrupt( void )
 {
-    //
-    // Disable the interrupt.
-    //
-    Interrupt_disableInterrupt(INT_PCM);
+    /* */
+    /* Disable the interrupt. */
+    /* */
+    Interrupt_disableInterrupt( INT_PCM );
 
-    //
-    // Unregister the interrupt handler.
-    //
-    Interrupt_unregisterInterrupt(INT_PCM);
+    /* */
+    /* Unregister the interrupt handler. */
+    /* */
+    Interrupt_unregisterInterrupt( INT_PCM );
 }

@@ -51,8 +51,8 @@ unsigned int xHeapAfter;
  * RUN_TEST_GROUP statements.
  */
 static void RunTests( void )
-{    
-    RUN_TEST_GROUP( Full_TCP ); 
+{
+    RUN_TEST_GROUP( Full_TCP );
 }
 /*-----------------------------------------------------------*/
 

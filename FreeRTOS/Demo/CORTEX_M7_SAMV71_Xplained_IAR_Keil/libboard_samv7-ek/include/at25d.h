@@ -46,31 +46,30 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern void AT25D_WaitReady(At25 *pAt25);
+extern void AT25D_WaitReady( At25 * pAt25 );
 
-extern unsigned int AT25D_ReadJedecId(At25 *pAt25);
+extern unsigned int AT25D_ReadJedecId( At25 * pAt25 );
 
-extern void AT25D_EnableWrite(At25 *pAt25);
+extern void AT25D_EnableWrite( At25 * pAt25 );
 
-extern void AT25D_DisableWrite(At25 *pAt25);
-extern unsigned char AT25D_Unprotect(At25 *pAt25);
+extern void AT25D_DisableWrite( At25 * pAt25 );
+extern unsigned char AT25D_Unprotect( At25 * pAt25 );
 
-extern unsigned char AT25D_EraseChip(At25 *pAt25);
+extern unsigned char AT25D_EraseChip( At25 * pAt25 );
 
-extern unsigned char AT25D_EraseBlock(At25 *pAt25, unsigned int address);
-extern unsigned char AT25D_Erase64KBlock(At25 *pAt25, unsigned int address);
+extern unsigned char AT25D_EraseBlock( At25 * pAt25,
+                                       unsigned int address );
+extern unsigned char AT25D_Erase64KBlock( At25 * pAt25,
+                                          unsigned int address );
 
-extern unsigned char AT25D_Write(
-    At25 *pAt25,
-    unsigned char *pData,
-    unsigned int size,
-    unsigned int address);
+extern unsigned char AT25D_Write( At25 * pAt25,
+                                  unsigned char * pData,
+                                  unsigned int size,
+                                  unsigned int address );
 
-extern unsigned char AT25D_Read(
-    At25 *pAt25,
-    unsigned char *pData,
-    unsigned int size,
-    unsigned int address);
+extern unsigned char AT25D_Read( At25 * pAt25,
+                                 unsigned char * pData,
+                                 unsigned int size,
+                                 unsigned int address );
 
 #endif // #ifndef AT25D_H
-

@@ -36,16 +36,17 @@
 /** \addtogroup SAMA5D2_SCKC Slow Clock Controller */
 /*@{*/
 
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#if !( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
 /** \brief Sckc hardware registers */
-typedef struct {
-  __IO uint32_t SCKC_CR; /**< \brief (Sckc Offset: 0x0) Slow Clock Controller Configuration Register */
-} Sckc;
+    typedef struct
+    {
+        __IO uint32_t SCKC_CR; /**< \brief (Sckc Offset: 0x0) Slow Clock Controller Configuration Register */
+    } Sckc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- SCKC_CR : (SCKC Offset: 0x0) Slow Clock Controller Configuration Register -------- */
-#define SCKC_CR_OSCSEL (0x1u << 3) /**< \brief (SCKC_CR) Slow Clock Selector */
-#define   SCKC_CR_OSCSEL_RC (0x0u << 3) /**< \brief (SCKC_CR) Slow clock is the embedded 64 kHz (typical) RC oscillator. */
-#define   SCKC_CR_OSCSEL_XTAL (0x1u << 3) /**< \brief (SCKC_CR) Slow clock is the 32.768 kHz crystal oscillator. */
+#define SCKC_CR_OSCSEL           ( 0x1u << 3 ) /**< \brief (SCKC_CR) Slow Clock Selector */
+#define   SCKC_CR_OSCSEL_RC      ( 0x0u << 3 ) /**< \brief (SCKC_CR) Slow clock is the embedded 64 kHz (typical) RC oscillator. */
+#define   SCKC_CR_OSCSEL_XTAL    ( 0x1u << 3 ) /**< \brief (SCKC_CR) Slow clock is the 32.768 kHz crystal oscillator. */
 
 /*@}*/
 

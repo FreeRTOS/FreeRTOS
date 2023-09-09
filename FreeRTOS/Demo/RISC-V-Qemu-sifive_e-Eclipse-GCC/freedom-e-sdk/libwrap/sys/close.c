@@ -4,8 +4,8 @@
 #include "stub.h"
 #include "weak_under_alias.h"
 
-int __wrap_close(int fd)
+int __wrap_close( int fd )
 {
-  return _stub(EBADF);
+    return _stub( EBADF );
 }
-weak_under_alias(close);
+weak_under_alias( close );

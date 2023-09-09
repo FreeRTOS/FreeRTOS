@@ -45,8 +45,9 @@ void vLoggingInit( BaseType_t xLogToStdout,
                    uint32_t ulRemoteIPAddress,
                    uint16_t usRemotePort );
 
-void vPlatformInitLogging(void);
+void vPlatformInitLogging( void );
 
-void vLoggingPrintf(const char* pcFormat, ...);
+void vLoggingPrintf( const char * pcFormat,
+                     ... );
 
 #endif /* DEMO_LOGGING_H */

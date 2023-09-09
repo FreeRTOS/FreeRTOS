@@ -43,6 +43,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -52,15 +53,15 @@
 
 /* Note: this is a local workaround to avoid a pre-processor clash due to the
  * lwIP macro ERR_TIMEOUT. */
-#if defined(__LWIP_ERR_H__) && defined(ERR_TIMEOUT)
-#if (ERR_TIMEOUT != -3)
+#if defined( __LWIP_ERR_H__ ) && defined( ERR_TIMEOUT )
+    #if ( ERR_TIMEOUT != -3 )
 
 /* Internal check to make sure that the later restore of lwIP's ERR_TIMEOUT
  * macro is set to the correct value. Note that it is highly improbable that
  * this value ever changes in lwIP. */
-#error ASF developers: check lwip err.h new value for ERR_TIMEOUT
-#endif
-#undef ERR_TIMEOUT
+        #error ASF developers: check lwip err.h new value for ERR_TIMEOUT
+    #endif
+    #undef ERR_TIMEOUT
 #endif
 
 /**
@@ -72,42 +73,44 @@
  * however, but make sure that any message string tables are updated
  * at the same time.
  */
-enum status_code {
-	STATUS_OK               =  0, //!< Success
-	STATUS_ERR_BUSY         =  0x19,
-	STATUS_ERR_DENIED       =  0x1C,
-	STATUS_ERR_TIMEOUT      =  0x12,
-	ERR_IO_ERROR            =  -1, //!< I/O error
-	ERR_FLUSHED             =  -2, //!< Request flushed from queue
-	ERR_TIMEOUT             =  -3, //!< Operation timed out
-	ERR_BAD_DATA            =  -4, //!< Data integrity check failed
-	ERR_PROTOCOL            =  -5, //!< Protocol error
-	ERR_UNSUPPORTED_DEV     =  -6, //!< Unsupported device
-	ERR_NO_MEMORY           =  -7, //!< Insufficient memory
-	ERR_INVALID_ARG         =  -8, //!< Invalid argument
-	ERR_BAD_ADDRESS         =  -9, //!< Bad address
-	ERR_BUSY                =  -10, //!< Resource is busy
-	ERR_BAD_FORMAT          =  -11, //!< Data format not recognized
-	ERR_NO_TIMER            =  -12, //!< No timer available
-	ERR_TIMER_ALREADY_RUNNING   =  -13, //!< Timer already running
-	ERR_TIMER_NOT_RUNNING   =  -14, //!< Timer not running
-	ERR_ABORTED             =  -15, //!< Operation aborted by user
-	/**
-	 * \brief Operation in progress
-	 *
-	 * This status code is for driver-internal use when an operation
-	 * is currently being performed.
-	 *
-	 * \note Drivers should never return this status code to any
-	 * callers. It is strictly for internal use.
-	 */
-	OPERATION_IN_PROGRESS	= -128,
+enum status_code
+{
+    STATUS_OK = 0, /*!< Success */
+    STATUS_ERR_BUSY = 0x19,
+    STATUS_ERR_DENIED = 0x1C,
+    STATUS_ERR_TIMEOUT = 0x12,
+    ERR_IO_ERROR = -1,               /*!< I/O error */
+    ERR_FLUSHED = -2,                /*!< Request flushed from queue */
+    ERR_TIMEOUT = -3,                /*!< Operation timed out */
+    ERR_BAD_DATA = -4,               /*!< Data integrity check failed */
+    ERR_PROTOCOL = -5,               /*!< Protocol error */
+    ERR_UNSUPPORTED_DEV = -6,        /*!< Unsupported device */
+    ERR_NO_MEMORY = -7,              /*!< Insufficient memory */
+    ERR_INVALID_ARG = -8,            /*!< Invalid argument */
+    ERR_BAD_ADDRESS = -9,            /*!< Bad address */
+    ERR_BUSY = -10,                  /*!< Resource is busy */
+    ERR_BAD_FORMAT = -11,            /*!< Data format not recognized */
+    ERR_NO_TIMER = -12,              /*!< No timer available */
+    ERR_TIMER_ALREADY_RUNNING = -13, /*!< Timer already running */
+    ERR_TIMER_NOT_RUNNING = -14,     /*!< Timer not running */
+    ERR_ABORTED = -15,               /*!< Operation aborted by user */
+
+    /**
+     * \brief Operation in progress
+     *
+     * This status code is for driver-internal use when an operation
+     * is currently being performed.
+     *
+     * \note Drivers should never return this status code to any
+     * callers. It is strictly for internal use.
+     */
+    OPERATION_IN_PROGRESS = -128,
 };
 
 typedef enum status_code status_code_t;
 
-#if defined(__LWIP_ERR_H__)
-#define ERR_TIMEOUT -3
+#if defined( __LWIP_ERR_H__ )
+    #define ERR_TIMEOUT    -3
 #endif
 
 #endif /* STATUS_CODES_H_INCLUDED */

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -27,12 +27,12 @@
  * ----------------------------------------------------------------------------
  */
 
-// core list
-//-------------------
-// arm7tdmi
-// arm926ej_s
-// arm1176jzf_s
-// cortexm3
+/* core list */
+/*------------------- */
+/* arm7tdmi */
+/* arm926ej_s */
+/* arm1176jzf_s */
+/* cortexm3 */
 
 #ifndef _CORE_H
 #define _CORE_H

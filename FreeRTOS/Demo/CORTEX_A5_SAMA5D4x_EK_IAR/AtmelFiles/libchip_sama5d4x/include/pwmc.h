@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -55,42 +55,52 @@
  */
 
 #ifndef _PWMC_
-#define _PWMC_
+    #define _PWMC_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern void PWMC_ConfigureClocks(Pwm* pPwm, uint32_t mode);
+    extern void PWMC_ConfigureClocks( Pwm * pPwm,
+                                      uint32_t mode );
 
-extern void PWMC_EnableChannel(Pwm* pPwm,uint8_t channel);
+    extern void PWMC_EnableChannel( Pwm * pPwm,
+                                    uint8_t channel );
 
-extern void PWMC_DisableChannel(Pwm* pPwm,uint8_t channel);
+    extern void PWMC_DisableChannel( Pwm * pPwm,
+                                     uint8_t channel );
 
-extern void PWMC_EnableChannelIt(Pwm* pPwm,uint8_t channel);
+    extern void PWMC_EnableChannelIt( Pwm * pPwm,
+                                      uint8_t channel );
 
-extern void PWMC_DisableChannelIt(Pwm* pPwm,uint8_t channel);
+    extern void PWMC_DisableChannelIt( Pwm * pPwm,
+                                       uint8_t channel );
 
-extern void PWMC_ConfigureChannel(Pwm* pPwm,uint8_t channel,uint32_t mode);
+    extern void PWMC_ConfigureChannel( Pwm * pPwm,
+                                       uint8_t channel,
+                                       uint32_t mode );
 
-extern void PWMC_SetPeriod( Pwm* pPwm, uint8_t channel, uint16_t period);
+    extern void PWMC_SetPeriod( Pwm * pPwm,
+                                uint8_t channel,
+                                uint16_t period );
 
-extern void PWMC_SetDutyCycle( Pwm* pPwm, uint8_t channel, uint16_t duty);
+    extern void PWMC_SetDutyCycle( Pwm * pPwm,
+                                   uint8_t channel,
+                                   uint16_t duty );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _PWMC_ */
-

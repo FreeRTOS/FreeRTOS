@@ -213,7 +213,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The name of the MQTT library used and its version, following an "@"
  * symbol.
  */
-#include "core_mqtt.h"     /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
+#include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
 #define democonfigMQTT_LIB               "core-mqtt@"MQTT_LIBRARY_VERSION
 
 /**

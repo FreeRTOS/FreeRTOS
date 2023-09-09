@@ -19,21 +19,22 @@
 *****************************************************************************/
 
 /** @file mec14xx_system.h
- *MEC14xx System header
+ * MEC14xx System header
  */
+
 /** @defgroup MEC14xx system
  */
 
-#ifndef __SYSTEM_MEC14xx_H 
-#define __SYSTEM_MEC14xx_H
+#ifndef __SYSTEM_MEC14xx_H
+    #define __SYSTEM_MEC14xx_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include "appcfg.h"
-#include "platform.h"
+    #include <stdint.h>
+    #include "appcfg.h"
+    #include "platform.h"
 
 /**
  * Initialize the system
@@ -44,21 +45,23 @@ extern "C" {
  * @brief  Setup the microcontroller system.
  *         Initialize the System and update the SystemCoreClock variable.
  */
-void SystemInit (void);
+    void SystemInit( void );
 
-uint32_t sys_code_sram_base(void);
-uint8_t sys_valid_sram_addr(void * const p);
-uint8_t sys_valid_sram_range(void * const p, const uint32_t byte_len);
-void sys_cpu_en_timer(uint32_t counts, uint8_t ien);
+    uint32_t sys_code_sram_base( void );
+    uint8_t sys_valid_sram_addr( void * const p );
+    uint8_t sys_valid_sram_range( void * const p,
+                                  const uint32_t byte_len );
+    void sys_cpu_en_timer( uint32_t counts,
+                           uint8_t ien );
 
-uint32_t cpu_microsecond_interval(uint32_t start_count);
-uint32_t cpu_microsecond_count(void);
-#define CPU_US_DELTA(x) cpu_microsecond_interval(x)
+    uint32_t cpu_microsecond_interval( uint32_t start_count );
+    uint32_t cpu_microsecond_count( void );
+    #define CPU_US_DELTA( x )    cpu_microsecond_interval( x )
 
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __SYSTEM_MEC14xx_H */
 

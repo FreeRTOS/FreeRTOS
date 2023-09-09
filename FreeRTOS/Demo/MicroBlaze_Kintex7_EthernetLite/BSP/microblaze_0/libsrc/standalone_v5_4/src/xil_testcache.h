@@ -30,34 +30,35 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xil_testcache.h
-*
-* This file contains utility functions to test cache.
-*
-* Ver    Who    Date    Changes
-* ----- ---- -------- -----------------------------------------------
-* 1.00a hbm  07/29/09 First release
-*
-******************************************************************************/
+ *
+ * @file xil_testcache.h
+ *
+ * This file contains utility functions to test cache.
+ *
+ * Ver    Who    Date    Changes
+ * ----- ---- -------- -----------------------------------------------
+ * 1.00a hbm  07/29/09 First release
+ *
+ ******************************************************************************/
 
-#ifndef XIL_TESTCACHE_H	/* prevent circular inclusions */
-#define XIL_TESTCACHE_H	/* by using protection macros */
+#ifndef XIL_TESTCACHE_H     /* prevent circular inclusions */
+    #define XIL_TESTCACHE_H /* by using protection macros */
 
-#include "xil_types.h"
+    #include "xil_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-extern s32 Xil_TestDCacheRange(void);
-extern s32 Xil_TestDCacheAll(void);
-extern s32 Xil_TestICacheRange(void);
-extern s32 Xil_TestICacheAll(void);
+    extern s32 Xil_TestDCacheRange( void );
+    extern s32 Xil_TestDCacheAll( void );
+    extern s32 Xil_TestICacheRange( void );
+    extern s32 Xil_TestICacheAll( void );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* end of protection macro */

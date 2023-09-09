@@ -15,18 +15,18 @@
  */
 
 /******************************************************************************
- * @file     csi_gcc.h
- * @brief    CSI Header File for GCC.
- * @version  V1.0
- * @date     02. June 2017
- ******************************************************************************/
+* @file     csi_gcc.h
+* @brief    CSI Header File for GCC.
+* @version  V1.0
+* @date     02. June 2017
+******************************************************************************/
 
 #ifndef _CSI_GCC_H_
 #define _CSI_GCC_H_
 
-#define __ASM            __asm                                      /*!< asm keyword for GNU Compiler */
-#define __INLINE         inline                                     /*!< inline keyword for GNU Compiler */
-#define __ALWAYS_INLINE  __attribute__((always_inline)) static inline
+#define __ASM              __asm                                    /*!< asm keyword for GNU Compiler */
+#define __INLINE           inline                                   /*!< inline keyword for GNU Compiler */
+#define __ALWAYS_INLINE    __attribute__( ( always_inline ) ) static inline
 
 #include <stdlib.h>
 #include "csi_reg.h"

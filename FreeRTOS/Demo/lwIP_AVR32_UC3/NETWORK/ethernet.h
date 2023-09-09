@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief ethernet headers for AVR32 UC3.
@@ -53,5 +54,3 @@ void vStartEthernetTask( unsigned portBASE_TYPE uxPriority );
 
 
 #endif
-
-

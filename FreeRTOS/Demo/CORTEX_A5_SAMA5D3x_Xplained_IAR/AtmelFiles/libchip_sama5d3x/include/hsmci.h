@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -70,7 +70,8 @@
  */
 
 #ifndef HSMCID_H
-#define HSMCID_H
+    #define HSMCID_H
+
 /** \addtogroup hsmci_module
  *@{
  */
@@ -79,74 +80,109 @@
  *         Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*----------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
+
 /** \addtogroup hsmci_functions HSMCI Functions
  *      @{
  */
 
-extern void HSMCI_Enable(Hsmci* pRMci);
-extern void HSMCI_Disable(Hsmci* pRMci);
-extern void HSMCI_Reset(Hsmci* pRMci, uint8_t bBackup);
+    extern void HSMCI_Enable( Hsmci * pRMci );
+    extern void HSMCI_Disable( Hsmci * pRMci );
+    extern void HSMCI_Reset( Hsmci * pRMci,
+                             uint8_t bBackup );
 
-extern void HSMCI_Select(Hsmci * pRMci,uint8_t bSlot,uint8_t bBusWidth);
-extern void HSMCI_SetSlot(Hsmci * pRMci,uint8_t bSlot);
-extern void HSMCI_SetBusWidth(Hsmci * pRMci,uint8_t bBusWidth);
-extern uint8_t HSMCI_GetBusWidth(Hsmci * pRMci);
+    extern void HSMCI_Select( Hsmci * pRMci,
+                              uint8_t bSlot,
+                              uint8_t bBusWidth );
+    extern void HSMCI_SetSlot( Hsmci * pRMci,
+                               uint8_t bSlot );
+    extern void HSMCI_SetBusWidth( Hsmci * pRMci,
+                                   uint8_t bBusWidth );
+    extern uint8_t HSMCI_GetBusWidth( Hsmci * pRMci );
 
-extern void HSMCI_ConfigureMode(Hsmci *pRMci, uint32_t dwMode);
-extern uint32_t HSMCI_GetMode(Hsmci *pRMci);
-extern void HSMCI_ProofEnable(Hsmci *pRMci, uint8_t bRdProof, uint8_t bWrProof);
-extern void HSMCI_PadvCtl(Hsmci *pRMci, uint8_t bPadv);
-extern void HSMCI_FByteEnable(Hsmci *pRMci, uint8_t bFByteEn);
-extern uint8_t HSMCI_IsFByteEnabled(Hsmci * pRMci);
-extern void HSMCI_DivCtrl(Hsmci *pRMci, uint32_t bClkDiv, uint8_t bPwsDiv);
+    extern void HSMCI_ConfigureMode( Hsmci * pRMci,
+                                     uint32_t dwMode );
+    extern uint32_t HSMCI_GetMode( Hsmci * pRMci );
+    extern void HSMCI_ProofEnable( Hsmci * pRMci,
+                                   uint8_t bRdProof,
+                                   uint8_t bWrProof );
+    extern void HSMCI_PadvCtl( Hsmci * pRMci,
+                               uint8_t bPadv );
+    extern void HSMCI_FByteEnable( Hsmci * pRMci,
+                                   uint8_t bFByteEn );
+    extern uint8_t HSMCI_IsFByteEnabled( Hsmci * pRMci );
+    extern void HSMCI_DivCtrl( Hsmci * pRMci,
+                               uint32_t bClkDiv,
+                               uint8_t bPwsDiv );
 
-extern void HSMCI_EnableIt(Hsmci *pRMci, uint32_t dwSources);
-extern void HSMCI_DisableIt(Hsmci *pRMci, uint32_t dwSources);
-extern uint32_t HSMCI_GetItMask(Hsmci *pRMci);
+    extern void HSMCI_EnableIt( Hsmci * pRMci,
+                                uint32_t dwSources );
+    extern void HSMCI_DisableIt( Hsmci * pRMci,
+                                 uint32_t dwSources );
+    extern uint32_t HSMCI_GetItMask( Hsmci * pRMci );
 
-extern void HSMCI_ConfigureTransfer(Hsmci * pRMci,uint16_t wBlkLen,uint16_t wCnt);
-extern void HSMCI_SetBlockLen(Hsmci * pRMci,uint16_t wBlkSize);
-extern void HSMCI_SetBlockCount(Hsmci * pRMci,uint16_t wBlkCnt);
+    extern void HSMCI_ConfigureTransfer( Hsmci * pRMci,
+                                         uint16_t wBlkLen,
+                                         uint16_t wCnt );
+    extern void HSMCI_SetBlockLen( Hsmci * pRMci,
+                                   uint16_t wBlkSize );
+    extern void HSMCI_SetBlockCount( Hsmci * pRMci,
+                                     uint16_t wBlkCnt );
 
-extern void HSMCI_ConfigureCompletionTO(Hsmci *pRMci, uint32_t dwConfigure);
-extern void HSMCI_ConfigureDataTO(Hsmci *pRMci, uint32_t dwConfigure);
+    extern void HSMCI_ConfigureCompletionTO( Hsmci * pRMci,
+                                             uint32_t dwConfigure );
+    extern void HSMCI_ConfigureDataTO( Hsmci * pRMci,
+                                       uint32_t dwConfigure );
 
-extern void HSMCI_SendCmd(Hsmci * pRMci,uint32_t dwCmd,uint32_t dwArg);
-extern uint32_t HSMCI_GetResponse(Hsmci *pRMci);
-extern uint32_t HSMCI_Read(Hsmci *pRMci);
-extern void HSMCI_ReadFifo(Hsmci *pRMci, uint8_t *pdwData, uint32_t dwSize);
-extern void HSMCI_Write(Hsmci *pRMci, uint32_t dwData);
-extern void HSMCI_WriteFifo(Hsmci *pRMci, uint8_t *pdwData, uint32_t dwSize);
+    extern void HSMCI_SendCmd( Hsmci * pRMci,
+                               uint32_t dwCmd,
+                               uint32_t dwArg );
+    extern uint32_t HSMCI_GetResponse( Hsmci * pRMci );
+    extern uint32_t HSMCI_Read( Hsmci * pRMci );
+    extern void HSMCI_ReadFifo( Hsmci * pRMci,
+                                uint8_t * pdwData,
+                                uint32_t dwSize );
+    extern void HSMCI_Write( Hsmci * pRMci,
+                             uint32_t dwData );
+    extern void HSMCI_WriteFifo( Hsmci * pRMci,
+                                 uint8_t * pdwData,
+                                 uint32_t dwSize );
 
-extern uint32_t HSMCI_GetStatus(Hsmci *pRMci);
+    extern uint32_t HSMCI_GetStatus( Hsmci * pRMci );
 
-extern void HSMCI_ConfigureDma(Hsmci *pRMci, uint32_t dwConfigure);
-extern void HSMCI_EnableDma(Hsmci * pRMci,uint8_t bEnable);
-extern void HSMCI_SetDmaOffset(Hsmci * pRMci,uint8_t bOffset);
+    extern void HSMCI_ConfigureDma( Hsmci * pRMci,
+                                    uint32_t dwConfigure );
+    extern void HSMCI_EnableDma( Hsmci * pRMci,
+                                 uint8_t bEnable );
+    extern void HSMCI_SetDmaOffset( Hsmci * pRMci,
+                                    uint8_t bOffset );
 
-extern void HSMCI_Configure(Hsmci *pRMci, uint32_t dwConfigure);
-extern void HSMCI_HsEnable(Hsmci *pRMci, uint8_t bHsEnable);
-extern uint8_t HSMCI_IsHsEnabled(Hsmci *pRMci);
+    extern void HSMCI_Configure( Hsmci * pRMci,
+                                 uint32_t dwConfigure );
+    extern void HSMCI_HsEnable( Hsmci * pRMci,
+                                uint8_t bHsEnable );
+    extern uint8_t HSMCI_IsHsEnabled( Hsmci * pRMci );
 
-extern void HSMCI_BusWidthCtl(Hsmci *pRMci, uint8_t bBusWidth);
-extern void HSMCI_SlotCtl(Hsmci *pRMci, uint8_t bSlot);
-extern uint8_t HSMCI_GetSlot(Hsmci *pRMci);
+    extern void HSMCI_BusWidthCtl( Hsmci * pRMci,
+                                   uint8_t bBusWidth );
+    extern void HSMCI_SlotCtl( Hsmci * pRMci,
+                               uint8_t bSlot );
+    extern uint8_t HSMCI_GetSlot( Hsmci * pRMci );
 
-extern void HSMCI_ConfigureWP(Hsmci *pRMci, uint32_t dwConfigure);
-extern uint32_t HSMCI_GetWPStatus(Hsmci *pRMci);
+    extern void HSMCI_ConfigureWP( Hsmci * pRMci,
+                                   uint32_t dwConfigure );
+    extern uint32_t HSMCI_GetWPStatus( Hsmci * pRMci );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 /**     @}*/
 /**@}*/
 #endif //#ifndef HSMCID_H
-

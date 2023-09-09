@@ -1,12 +1,13 @@
 /********************* (C) COPYRIGHT 2007 RAISONANCE S.A.S. *******************/
+
 /**
-*
-* @file     lcd.h
-* @brief    The header file for ST7637 driver.
-* @author   IB
-* @date     07/2007
-*
-**/
+ *
+ * @file     lcd.h
+ * @brief    The header file for ST7637 driver.
+ * @author   IB
+ * @date     07/2007
+ *
+ **/
 /******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -20,10 +21,10 @@
 
 /* Data lines configuration mode */
 typedef enum
-   {
-   Input,
-   Output
-   } DataConfigMode_TypeDef;
+{
+    Input,
+    Output
+} DataConfigMode_TypeDef;
 
 /* Constants -----------------------------------------------------------------*/
 
@@ -32,7 +33,7 @@ typedef enum
 #define CtrlPin_RD               GPIO_Pin_9
 #define CtrlPin_WR               GPIO_Pin_10
 #define CtrlPin_RST              GPIO_Pin_12
-#define LCD_CTRL_PINS            (CtrlPin_RS|CtrlPin_RD|CtrlPin_WR|CtrlPin_RST)
+#define LCD_CTRL_PINS            ( CtrlPin_RS | CtrlPin_RD | CtrlPin_WR | CtrlPin_RST )
 #define GPIOx_CTRL_LCD           GPIOC
 #define GPIO_LCD_CTRL_PERIPH     RCC_APB2Periph_GPIOC
 
@@ -48,7 +49,7 @@ typedef enum
 #define LCD_D5                   GPIO_Pin_5
 #define LCD_D6                   GPIO_Pin_6
 #define LCD_D7                   GPIO_Pin_7
-#define LCD_DATA_PINS            (LCD_D0|LCD_D1|LCD_D2|LCD_D3|LCD_D4|LCD_D5|LCD_D6|LCD_D7)
+#define LCD_DATA_PINS            ( LCD_D0 | LCD_D1 | LCD_D2 | LCD_D3 | LCD_D4 | LCD_D5 | LCD_D6 | LCD_D7 )
 #define GPIOx_D_LCD              GPIOC
 #define GPIO_LCD_D_PERIPH        RCC_APB2Periph_GPIOC
 
@@ -147,7 +148,7 @@ typedef enum
 #define ST7637_TEMPSEL           0xF4
 #define ST7637_THYS              0xF7
 #define ST7637_FRAMESET          0xF9
-                                 
+
 #define ST7637_MAXCOL            0x83
 #define ST7637_MAXPAG            0x83
 

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -64,7 +64,7 @@ typedef struct
     uint32_t nb_codec_ovf;
     /** upgrade for each Fifo Preview Overflow (statistics use) */
     uint32_t nb_prev_ovf;
-}ISI_Descriptors;
+} ISI_Descriptors;
 
 /** Frame Buffer Descriptors */
 typedef struct
@@ -75,24 +75,23 @@ typedef struct
     uint32_t Control;
     /** Address of the Next FrameBuffer */
     uint32_t Next;
-}ISI_FrameBufferDescriptors;
+} ISI_FrameBufferDescriptors;
 
 
 /*----------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
-extern void ISI_Enable(void);
-extern void ISI_Disable(void);
-extern void ISI_DmaChannelEnable(uint32_t channel);
-extern void ISI_DmaChannelDisable(uint32_t channel);
-extern void ISI_EnableInterrupt(uint32_t flag);
-extern void ISI_DisableInterrupt(uint32_t flag);
-extern void ISI_CodecPathFull(void);
-extern void ISI_SetFrame(uint32_t frate);
-extern uint8_t ISI_BytesForOnePixel(uint8_t bmpRgb);
-extern void ISI_Reset(void);
-extern void ISI_Init(pIsi_Video pVideo);
-extern uint32_t ISI_StatusRegister(void);
+extern void ISI_Enable( void );
+extern void ISI_Disable( void );
+extern void ISI_DmaChannelEnable( uint32_t channel );
+extern void ISI_DmaChannelDisable( uint32_t channel );
+extern void ISI_EnableInterrupt( uint32_t flag );
+extern void ISI_DisableInterrupt( uint32_t flag );
+extern void ISI_CodecPathFull( void );
+extern void ISI_SetFrame( uint32_t frate );
+extern uint8_t ISI_BytesForOnePixel( uint8_t bmpRgb );
+extern void ISI_Reset( void );
+extern void ISI_Init( pIsi_Video pVideo );
+extern uint32_t ISI_StatusRegister( void );
 
 #endif //#ifndef ISI_H
-

@@ -30,33 +30,34 @@
 #endif
 
 #ifndef WOLFSSL_MAX_HASH_SIZE
-    #define WOLFSSL_MAX_HASH_SIZE  64
+    #define WOLFSSL_MAX_HASH_SIZE    64
 #endif
 
 #define WOLFSSL_NO_HASH_RAW
 
-typedef struct {
-    byte   *msg;
+typedef struct
+{
+    byte * msg;
     word32 used;
     word32 len;
-    byte hash[WOLFSSL_MAX_HASH_SIZE];
+    byte hash[ WOLFSSL_MAX_HASH_SIZE ];
 } wolfssl_TI_Hash;
 
 
 #ifndef TI_HASH_TEST
 
-#if !defined(NO_MD5)
-    typedef wolfssl_TI_Hash wc_Md5;
-#endif
-#if !defined(NO_SHA)
-    typedef wolfssl_TI_Hash wc_Sha;
-#endif
-#if !defined(NO_SHA256)
-    typedef wolfssl_TI_Hash wc_Sha256;
-#endif
-#if defined(WOLFSSL_SHA224)
-    typedef wolfssl_TI_Hash wc_Sha224;
-#endif
+    #if !defined( NO_MD5 )
+        typedef wolfssl_TI_Hash   wc_Md5;
+    #endif
+    #if !defined( NO_SHA )
+        typedef wolfssl_TI_Hash   wc_Sha;
+    #endif
+    #if !defined( NO_SHA256 )
+        typedef wolfssl_TI_Hash   wc_Sha256;
+    #endif
+    #if defined( WOLFSSL_SHA224 )
+        typedef wolfssl_TI_Hash   wc_Sha224;
+    #endif
 
 #endif /* !TI_HASH_TEST */
 

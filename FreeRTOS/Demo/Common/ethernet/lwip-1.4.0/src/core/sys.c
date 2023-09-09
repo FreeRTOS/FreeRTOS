@@ -50,17 +50,19 @@
  *
  * @param ms number of milliseconds to sleep
  */
-void
-sys_msleep(u32_t ms)
-{
-  if (ms > 0) {
-    sys_sem_t delaysem;
-    err_t err = sys_sem_new(&delaysem, 0);
-    if (err == ERR_OK) {
-      sys_arch_sem_wait(&delaysem, ms);
-      sys_sem_free(&delaysem);
+    void sys_msleep( u32_t ms )
+    {
+        if( ms > 0 )
+        {
+            sys_sem_t delaysem;
+            err_t err = sys_sem_new( &delaysem, 0 );
+
+            if( err == ERR_OK )
+            {
+                sys_arch_sem_wait( &delaysem, ms );
+                sys_sem_free( &delaysem );
+            }
+        }
     }
-  }
-}
 
 #endif /* !NO_SYS */

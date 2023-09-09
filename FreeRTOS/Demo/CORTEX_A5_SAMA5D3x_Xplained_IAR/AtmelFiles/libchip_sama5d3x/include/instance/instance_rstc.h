@@ -31,14 +31,14 @@
 #define _SAMA5_RSTC_INSTANCE_
 
 /* ========== Register definition for RSTC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_RSTC_CR          (0xFFFFFE00U) /**< \brief (RSTC) Control Register */
-#define REG_RSTC_SR          (0xFFFFFE04U) /**< \brief (RSTC) Status Register */
-#define REG_RSTC_MR          (0xFFFFFE08U) /**< \brief (RSTC) Mode Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_RSTC_CR    ( 0xFFFFFE00U )              /**< \brief (RSTC) Control Register */
+    #define REG_RSTC_SR    ( 0xFFFFFE04U )              /**< \brief (RSTC) Status Register */
+    #define REG_RSTC_MR    ( 0xFFFFFE08U )              /**< \brief (RSTC) Mode Register */
 #else
-#define REG_RSTC_CR (*(WoReg*)0xFFFFFE00U) /**< \brief (RSTC) Control Register */
-#define REG_RSTC_SR (*(RoReg*)0xFFFFFE04U) /**< \brief (RSTC) Status Register */
-#define REG_RSTC_MR (*(RwReg*)0xFFFFFE08U) /**< \brief (RSTC) Mode Register */
+    #define REG_RSTC_CR    ( *( WoReg * ) 0xFFFFFE00U ) /**< \brief (RSTC) Control Register */
+    #define REG_RSTC_SR    ( *( RoReg * ) 0xFFFFFE04U ) /**< \brief (RSTC) Status Register */
+    #define REG_RSTC_MR    ( *( RwReg * ) 0xFFFFFE08U ) /**< \brief (RSTC) Mode Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_RSTC_INSTANCE_ */

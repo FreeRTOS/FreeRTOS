@@ -9,22 +9,21 @@
 #define __CRC_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- Cyclic Redundancy Check Controller -------------------------*/
+
 /**
-    @addtogroup CRC Cyclic Redundancy Check Controller(CRC)
-    Memory Mapped Structure for CRC Controller
-@{ */
+ *  @addtogroup CRC Cyclic Redundancy Check Controller(CRC)
+ *  Memory Mapped Structure for CRC Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var CRC_T::CTL
      * Offset: 0x00  CRC Control Register
@@ -98,50 +97,49 @@ typedef struct
      * |        |          |This field indicates the CRC checksum result.
      * |        |          |Note: The valid bits of CRC_CHECKSUM[31:0] is correlated to CRCMODE (CRC_CTL[31:30]).
      */
-    __IO uint32_t CTL;                   /*!< [0x0000] CRC Control Register                                             */
-    __IO uint32_t DAT;                   /*!< [0x0004] CRC Write Data Register                                          */
-    __IO uint32_t SEED;                  /*!< [0x0008] CRC Seed Register                                                */
-    __I  uint32_t CHECKSUM;              /*!< [0x000c] CRC Checksum Register                                            */
-
+    __IO uint32_t CTL;     /*!< [0x0000] CRC Control Register                                             */
+    __IO uint32_t DAT;     /*!< [0x0004] CRC Write Data Register                                          */
+    __IO uint32_t SEED;    /*!< [0x0008] CRC Seed Register                                                */
+    __I uint32_t CHECKSUM; /*!< [0x000c] CRC Checksum Register                                            */
 } CRC_T;
 
 /**
-    @addtogroup CRC_CONST CRC Bit Field Definition
-    Constant Definitions for CRC Controller
-@{ */
+ *  @addtogroup CRC_CONST CRC Bit Field Definition
+ *  Constant Definitions for CRC Controller
+ * @{ */
 
-#define CRC_CTL_CRCEN_Pos                (0)                                               /*!< CRC_T::CTL: CRCEN Position             */
-#define CRC_CTL_CRCEN_Msk                (0x1ul << CRC_CTL_CRCEN_Pos)                      /*!< CRC_T::CTL: CRCEN Mask                 */
+#define CRC_CTL_CRCEN_Pos            ( 0 )                                                 /*!< CRC_T::CTL: CRCEN Position             */
+#define CRC_CTL_CRCEN_Msk            ( 0x1ul << CRC_CTL_CRCEN_Pos )                        /*!< CRC_T::CTL: CRCEN Mask                 */
 
-#define CRC_CTL_CHKSINIT_Pos             (1)                                               /*!< CRC_T::CTL: CHKSINIT Position          */
-#define CRC_CTL_CHKSINIT_Msk             (0x1ul << CRC_CTL_CHKSINIT_Pos)                   /*!< CRC_T::CTL: CHKSINIT Mask              */
+#define CRC_CTL_CHKSINIT_Pos         ( 1 )                                                 /*!< CRC_T::CTL: CHKSINIT Position          */
+#define CRC_CTL_CHKSINIT_Msk         ( 0x1ul << CRC_CTL_CHKSINIT_Pos )                     /*!< CRC_T::CTL: CHKSINIT Mask              */
 
-#define CRC_CTL_DATREV_Pos               (24)                                              /*!< CRC_T::CTL: DATREV Position            */
-#define CRC_CTL_DATREV_Msk               (0x1ul << CRC_CTL_DATREV_Pos)                     /*!< CRC_T::CTL: DATREV Mask                */
+#define CRC_CTL_DATREV_Pos           ( 24 )                                                /*!< CRC_T::CTL: DATREV Position            */
+#define CRC_CTL_DATREV_Msk           ( 0x1ul << CRC_CTL_DATREV_Pos )                       /*!< CRC_T::CTL: DATREV Mask                */
 
-#define CRC_CTL_CHKSREV_Pos              (25)                                              /*!< CRC_T::CTL: CHKSREV Position           */
-#define CRC_CTL_CHKSREV_Msk              (0x1ul << CRC_CTL_CHKSREV_Pos)                    /*!< CRC_T::CTL: CHKSREV Mask               */
+#define CRC_CTL_CHKSREV_Pos          ( 25 )                                                /*!< CRC_T::CTL: CHKSREV Position           */
+#define CRC_CTL_CHKSREV_Msk          ( 0x1ul << CRC_CTL_CHKSREV_Pos )                      /*!< CRC_T::CTL: CHKSREV Mask               */
 
-#define CRC_CTL_DATFMT_Pos               (26)                                              /*!< CRC_T::CTL: DATFMT Position            */
-#define CRC_CTL_DATFMT_Msk               (0x1ul << CRC_CTL_DATFMT_Pos)                     /*!< CRC_T::CTL: DATFMT Mask                */
+#define CRC_CTL_DATFMT_Pos           ( 26 )                                                /*!< CRC_T::CTL: DATFMT Position            */
+#define CRC_CTL_DATFMT_Msk           ( 0x1ul << CRC_CTL_DATFMT_Pos )                       /*!< CRC_T::CTL: DATFMT Mask                */
 
-#define CRC_CTL_CHKSFMT_Pos              (27)                                              /*!< CRC_T::CTL: CHKSFMT Position           */
-#define CRC_CTL_CHKSFMT_Msk              (0x1ul << CRC_CTL_CHKSFMT_Pos)                    /*!< CRC_T::CTL: CHKSFMT Mask               */
+#define CRC_CTL_CHKSFMT_Pos          ( 27 )                                                /*!< CRC_T::CTL: CHKSFMT Position           */
+#define CRC_CTL_CHKSFMT_Msk          ( 0x1ul << CRC_CTL_CHKSFMT_Pos )                      /*!< CRC_T::CTL: CHKSFMT Mask               */
 
-#define CRC_CTL_DATLEN_Pos               (28)                                              /*!< CRC_T::CTL: DATLEN Position            */
-#define CRC_CTL_DATLEN_Msk               (0x3ul << CRC_CTL_DATLEN_Pos)                     /*!< CRC_T::CTL: DATLEN Mask                */
+#define CRC_CTL_DATLEN_Pos           ( 28 )                                                /*!< CRC_T::CTL: DATLEN Position            */
+#define CRC_CTL_DATLEN_Msk           ( 0x3ul << CRC_CTL_DATLEN_Pos )                       /*!< CRC_T::CTL: DATLEN Mask                */
 
-#define CRC_CTL_CRCMODE_Pos              (30)                                              /*!< CRC_T::CTL: CRCMODE Position           */
-#define CRC_CTL_CRCMODE_Msk              (0x3ul << CRC_CTL_CRCMODE_Pos)                    /*!< CRC_T::CTL: CRCMODE Mask               */
+#define CRC_CTL_CRCMODE_Pos          ( 30 )                                                /*!< CRC_T::CTL: CRCMODE Position           */
+#define CRC_CTL_CRCMODE_Msk          ( 0x3ul << CRC_CTL_CRCMODE_Pos )                      /*!< CRC_T::CTL: CRCMODE Mask               */
 
-#define CRC_DAT_DATA_Pos                 (0)                                               /*!< CRC_T::DAT: DATA Position              */
-#define CRC_DAT_DATA_Msk                 (0xfffffffful << CRC_DAT_DATA_Pos)                /*!< CRC_T::DAT: DATA Mask                  */
+#define CRC_DAT_DATA_Pos             ( 0 )                                                 /*!< CRC_T::DAT: DATA Position              */
+#define CRC_DAT_DATA_Msk             ( 0xfffffffful << CRC_DAT_DATA_Pos )                  /*!< CRC_T::DAT: DATA Mask                  */
 
-#define CRC_SEED_SEED_Pos                (0)                                               /*!< CRC_T::SEED: SEED Position             */
-#define CRC_SEED_SEED_Msk                (0xfffffffful << CRC_SEED_SEED_Pos)               /*!< CRC_T::SEED: SEED Mask                 */
+#define CRC_SEED_SEED_Pos            ( 0 )                                                 /*!< CRC_T::SEED: SEED Position             */
+#define CRC_SEED_SEED_Msk            ( 0xfffffffful << CRC_SEED_SEED_Pos )                 /*!< CRC_T::SEED: SEED Mask                 */
 
-#define CRC_CHECKSUM_CHECKSUM_Pos        (0)                                               /*!< CRC_T::CHECKSUM: CHECKSUM Position     */
-#define CRC_CHECKSUM_CHECKSUM_Msk        (0xfffffffful << CRC_CHECKSUM_CHECKSUM_Pos)       /*!< CRC_T::CHECKSUM: CHECKSUM Mask         */
+#define CRC_CHECKSUM_CHECKSUM_Pos    ( 0 )                                                 /*!< CRC_T::CHECKSUM: CHECKSUM Position     */
+#define CRC_CHECKSUM_CHECKSUM_Msk    ( 0xfffffffful << CRC_CHECKSUM_CHECKSUM_Pos )         /*!< CRC_T::CHECKSUM: CHECKSUM Mask         */
 
 /**@}*/ /* CRC_CONST */
 /**@}*/ /* end of CRC register group */

@@ -22,27 +22,29 @@
 /* conf.h for openSSL */
 
 #ifndef WOLFSSL_conf_H_
-#define WOLFSSL_conf_H_
+    #define WOLFSSL_conf_H_
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
     extern "C" {
-#endif
+    #endif
 
-struct WOLFSSL_CONF_VALUE {
-    char *section;
-    char *name;
-    char *value;
-};
+    struct WOLFSSL_CONF_VALUE
+    {
+        char * section;
+        char * name;
+        char * value;
+    };
 
-struct WOLFSSL_INIT_SETTINGS {
-    char* appname;
-};
+    struct WOLFSSL_INIT_SETTINGS
+    {
+        char * appname;
+    };
 
-typedef struct WOLFSSL_CONF_VALUE CONF_VALUE;
-typedef struct WOLFSSL_INIT_SETTINGS OPENSSL_INIT_SETTINGS;
+    typedef struct WOLFSSL_CONF_VALUE      CONF_VALUE;
+    typedef struct WOLFSSL_INIT_SETTINGS   OPENSSL_INIT_SETTINGS;
 
-#ifdef  __cplusplus
+    #ifdef  __cplusplus
 } /* extern "C" */
-#endif
+    #endif
 
 #endif /* WOLFSSL_conf_H_ */

@@ -38,26 +38,24 @@
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	/* This function is required as it is called from the standard demo 
-	application files.  All it does however is call the Processor Expert
-	created function. */
-	portENTER_CRITICAL();
-		Byte1_PutBit( uxLED, !xValue );
-	portEXIT_CRITICAL();
+    /* This function is required as it is called from the standard demo
+     * application files.  All it does however is call the Processor Expert
+     * created function. */
+    portENTER_CRITICAL();
+    Byte1_PutBit( uxLED, !xValue );
+    portEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	/* This function is required as it is called from the standard demo
-	application files.  All it does however is call the processor Expert
-	created function. */
-	portENTER_CRITICAL();
-		Byte1_NegBit( uxLED );
-	portEXIT_CRITICAL();
+    /* This function is required as it is called from the standard demo
+     * application files.  All it does however is call the processor Expert
+     * created function. */
+    portENTER_CRITICAL();
+    Byte1_NegBit( uxLED );
+    portEXIT_CRITICAL();
 }
-
-
-

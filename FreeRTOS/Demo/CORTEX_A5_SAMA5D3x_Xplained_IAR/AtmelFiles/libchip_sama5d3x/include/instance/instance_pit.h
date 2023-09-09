@@ -31,16 +31,16 @@
 #define _SAMA5_PIT_INSTANCE_
 
 /* ========== Register definition for PIT peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_PIT_MR            (0xFFFFFE30U) /**< \brief (PIT) Mode Register */
-#define REG_PIT_SR            (0xFFFFFE34U) /**< \brief (PIT) Status Register */
-#define REG_PIT_PIVR          (0xFFFFFE38U) /**< \brief (PIT) Periodic Interval Value Register */
-#define REG_PIT_PIIR          (0xFFFFFE3CU) /**< \brief (PIT) Periodic Interval Image Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_PIT_MR      ( 0xFFFFFE30U )              /**< \brief (PIT) Mode Register */
+    #define REG_PIT_SR      ( 0xFFFFFE34U )              /**< \brief (PIT) Status Register */
+    #define REG_PIT_PIVR    ( 0xFFFFFE38U )              /**< \brief (PIT) Periodic Interval Value Register */
+    #define REG_PIT_PIIR    ( 0xFFFFFE3CU )              /**< \brief (PIT) Periodic Interval Image Register */
 #else
-#define REG_PIT_MR   (*(RwReg*)0xFFFFFE30U) /**< \brief (PIT) Mode Register */
-#define REG_PIT_SR   (*(RoReg*)0xFFFFFE34U) /**< \brief (PIT) Status Register */
-#define REG_PIT_PIVR (*(RoReg*)0xFFFFFE38U) /**< \brief (PIT) Periodic Interval Value Register */
-#define REG_PIT_PIIR (*(RoReg*)0xFFFFFE3CU) /**< \brief (PIT) Periodic Interval Image Register */
+    #define REG_PIT_MR      ( *( RwReg * ) 0xFFFFFE30U ) /**< \brief (PIT) Mode Register */
+    #define REG_PIT_SR      ( *( RoReg * ) 0xFFFFFE34U ) /**< \brief (PIT) Status Register */
+    #define REG_PIT_PIVR    ( *( RoReg * ) 0xFFFFFE38U ) /**< \brief (PIT) Periodic Interval Value Register */
+    #define REG_PIT_PIIR    ( *( RoReg * ) 0xFFFFFE3CU ) /**< \brief (PIT) Periodic Interval Image Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_PIT_INSTANCE_ */

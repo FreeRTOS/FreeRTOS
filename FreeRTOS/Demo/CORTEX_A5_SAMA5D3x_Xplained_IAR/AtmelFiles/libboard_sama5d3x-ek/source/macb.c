@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -40,7 +40,7 @@
  *---------------------------------------------------------------------------*/
 
 /** Default max retry count */
-#define MACB_RETRY_MAX            1000000
+#define MACB_RETRY_MAX    1000000
 
 /*---------------------------------------------------------------------------
  *         Local functions
@@ -52,19 +52,26 @@
  * May be need to re-implemented to reduce CPU load.
  * \param retry: the retry times, 0 to wait forever until complete.
  */
-static uint8_t EMAC_WaitPhy( Emac *pHw, uint32_t retry )
+static uint8_t EMAC_WaitPhy( Emac * pHw,
+                             uint32_t retry )
 {
     volatile uint32_t retry_count = 0;
 
-    while (!EMAC_IsIdle(pHw))
+    while( !EMAC_IsIdle( pHw ) )
     {
-        if(retry == 0) continue;
-        retry_count ++;
-        if (retry_count >= retry)
+        if( retry == 0 )
+        {
+            continue;
+        }
+
+        retry_count++;
+
+        if( retry_count >= retry )
         {
             return 0;
         }
     }
+
     return 1;
 }
 
@@ -77,19 +84,21 @@ static uint8_t EMAC_WaitPhy( Emac *pHw, uint32_t retry )
  * \param pValue Pointer to a 32 bit location to store read data
  * \param retry The retry times, 0 to wait forever until complete.
  */
-static uint8_t EMAC_ReadPhy(Emac *pHw,
-                            uint8_t PhyAddress,
-                            uint8_t Address,
-                            uint32_t *pValue,
-                            uint32_t retry)
+static uint8_t EMAC_ReadPhy( Emac * pHw,
+                             uint8_t PhyAddress,
+                             uint8_t Address,
+                             uint32_t * pValue,
+                             uint32_t retry )
 {
-    EMAC_PHYMaintain(pHw, PhyAddress, Address, 1, 0);
-    if ( EMAC_WaitPhy(pHw, retry) == 0 )
+    EMAC_PHYMaintain( pHw, PhyAddress, Address, 1, 0 );
+
+    if( EMAC_WaitPhy( pHw, retry ) == 0 )
     {
-        TRACE_ERROR("TimeOut EMAC_ReadPhy\n\r");
+        TRACE_ERROR( "TimeOut EMAC_ReadPhy\n\r" );
         return 0;
     }
-    *pValue = EMAC_PHYData(pHw);
+
+    *pValue = EMAC_PHYData( pHw );
     return 1;
 }
 
@@ -102,18 +111,20 @@ static uint8_t EMAC_ReadPhy(Emac *pHw,
  * \param Value Data to write ( Actually 16 bit data )
  * \param retry The retry times, 0 to wait forever until complete.
  */
-static uint8_t EMAC_WritePhy(Emac *pHw,
-                             uint8_t PhyAddress,
-                             uint8_t Address,
-                             uint32_t  Value,
-                             uint32_t  retry)
+static uint8_t EMAC_WritePhy( Emac * pHw,
+                              uint8_t PhyAddress,
+                              uint8_t Address,
+                              uint32_t Value,
+                              uint32_t retry )
 {
-    EMAC_PHYMaintain(pHw, PhyAddress, Address, 0, Value);
-    if ( EMAC_WaitPhy(pHw, retry) == 0 )
+    EMAC_PHYMaintain( pHw, PhyAddress, Address, 0, Value );
+
+    if( EMAC_WaitPhy( pHw, retry ) == 0 )
     {
-        TRACE_ERROR("TimeOut EMAC_WritePhy\n\r");
+        TRACE_ERROR( "TimeOut EMAC_WritePhy\n\r" );
         return 0;
     }
+
     return 1;
 }
 
@@ -127,45 +138,52 @@ static uint8_t EMAC_WritePhy(Emac *pHw,
  * Return 0xFF when no valid PHY Address found.
  * \param pMacb Pointer to the MACB instance
  */
-uint8_t MACB_FindValidPhy(Macb *pMacb, uint8_t addrStart)
+uint8_t MACB_FindValidPhy( Macb * pMacb,
+                           uint8_t addrStart )
 {
-    sEmacd *pDrv = pMacb->pEmacd;
-    Emac *pHw = pDrv->pHw;
+    sEmacd * pDrv = pMacb->pEmacd;
+    Emac * pHw = pDrv->pHw;
 
-    uint32_t  retryMax;
-    uint32_t  value=0;
+    uint32_t retryMax;
+    uint32_t value = 0;
     uint8_t rc;
     uint8_t phyAddress;
     uint8_t cnt;
 
-    TRACE_DEBUG("MACB_FindValidPhy\n\r");
+    TRACE_DEBUG( "MACB_FindValidPhy\n\r" );
 
-    EMAC_ManagementEnable(pHw, 1);
+    EMAC_ManagementEnable( pHw, 1 );
 
     phyAddress = pMacb->phyAddress;
     retryMax = pMacb->retryMax;
 
     /* Check current phyAddress */
     rc = phyAddress;
-    if( EMAC_ReadPhy(pHw, phyAddress, MII_PHYID1, &value, retryMax) == 0 )
+
+    if( EMAC_ReadPhy( pHw, phyAddress, MII_PHYID1, &value, retryMax ) == 0 )
     {
-        TRACE_ERROR("MACB PROBLEM\n\r");
+        TRACE_ERROR( "MACB PROBLEM\n\r" );
     }
-    TRACE_DEBUG("_PHYID1  : 0x%X, addr: %d\n\r", value, phyAddress);
+
+    TRACE_DEBUG( "_PHYID1  : 0x%X, addr: %d\n\r", value, phyAddress );
 
     /* Find another one */
-    if (value != MII_OUI_MSB)
+    if( value != MII_OUI_MSB )
     {
         rc = 0xFF;
-        for(cnt = 0; cnt < 32; cnt ++)
+
+        for( cnt = 0; cnt < 32; cnt++ )
         {
-            phyAddress = (phyAddress + 1) & 0x1F;
-            if( EMAC_ReadPhy(pHw, phyAddress, MII_PHYID1, &value, retryMax) == 0 )
+            phyAddress = ( phyAddress + 1 ) & 0x1F;
+
+            if( EMAC_ReadPhy( pHw, phyAddress, MII_PHYID1, &value, retryMax ) == 0 )
             {
-                TRACE_ERROR("MACB PROBLEM\n\r");
+                TRACE_ERROR( "MACB PROBLEM\n\r" );
             }
-            TRACE_DEBUG("_PHYID1  : 0x%X, addr: %d\n\r", value, phyAddress);
-            if (value == MII_OUI_MSB)
+
+            TRACE_DEBUG( "_PHYID1  : 0x%X, addr: %d\n\r", value, phyAddress );
+
+            if( value == MII_OUI_MSB )
             {
                 rc = phyAddress;
                 break;
@@ -173,16 +191,15 @@ uint8_t MACB_FindValidPhy(Macb *pMacb, uint8_t addrStart)
         }
     }
 
-    EMAC_ManagementEnable(pHw, 0);
+    EMAC_ManagementEnable( pHw, 0 );
 
-    if (rc != 0xFF)
+    if( rc != 0xFF )
     {
-
-        printf("** Valid PHY Found: %d\n\r", rc);
-        EMAC_ReadPhy(pHw, phyAddress, MII_DSCSR, &value, retryMax);
-        TRACE_DEBUG("_DSCSR  : 0x%X, addr: %d\n\r", value, phyAddress);
-
+        printf( "** Valid PHY Found: %d\n\r", rc );
+        EMAC_ReadPhy( pHw, phyAddress, MII_DSCSR, &value, retryMax );
+        TRACE_DEBUG( "_DSCSR  : 0x%X, addr: %d\n\r", value, phyAddress );
     }
+
     return rc;
 }
 
@@ -190,56 +207,56 @@ uint8_t MACB_FindValidPhy(Macb *pMacb, uint8_t addrStart)
  * Dump all the useful registers
  * \param pMacb          Pointer to the MACB instance
  */
-void MACB_DumpRegisters(Macb *pMacb)
+void MACB_DumpRegisters( Macb * pMacb )
 {
-    sEmacd *pDrv = pMacb->pEmacd;
-    Emac *pHw = pDrv->pHw;
+    sEmacd * pDrv = pMacb->pEmacd;
+    Emac * pHw = pDrv->pHw;
 
     uint8_t phyAddress;
     uint32_t retryMax;
     uint32_t value;
 
-    TRACE_INFO("MACB_DumpRegisters\n\r");
+    TRACE_INFO( "MACB_DumpRegisters\n\r" );
 
-    EMAC_ManagementEnable(pHw, 1);
+    EMAC_ManagementEnable( pHw, 1 );
 
     phyAddress = pMacb->phyAddress;
     retryMax = pMacb->retryMax;
 
-    TRACE_INFO("%cMII MACB (@%d) Registers:\n\r",
-        pMacb->RMII ? 'R' : ' ',
-        phyAddress);
+    TRACE_INFO( "%cMII MACB (@%d) Registers:\n\r",
+                pMacb->RMII ? 'R' : ' ',
+                phyAddress );
 
-    EMAC_ReadPhy(pHw, phyAddress, MII_BMCR, &value, retryMax);
-    TRACE_INFO(" _BMCR   : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_BMSR, &value, retryMax);
-    TRACE_INFO(" _BMSR   : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_ANAR, &value, retryMax);
-    TRACE_INFO(" _ANAR   : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_ANLPAR, &value, retryMax);
-    TRACE_INFO(" _ANLPAR : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_ANER, &value, retryMax);
-    TRACE_INFO(" _ANER   : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_DSCR, &value, retryMax);
-    TRACE_INFO(" _DSCR   : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_DSCSR, &value, retryMax);
-    TRACE_INFO(" _DSCSR  : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_10BTCSR, &value, retryMax);
-    TRACE_INFO(" _10BTCSR: 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_PWDOR, &value, retryMax);
-    TRACE_INFO(" _PWDOR  : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_CONFIGR, &value, retryMax);
-    TRACE_INFO(" _CONFIGR: 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_MDINTR, &value, retryMax);
-    TRACE_INFO(" _MDINTR : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_RECR, &value, retryMax);
-    TRACE_INFO(" _RECR   : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_DISCR, &value, retryMax);
-    TRACE_INFO(" _DISCR  : 0x%X\n\r", value);
-    EMAC_ReadPhy(pHw, phyAddress, MII_RLSR, &value, retryMax);
-    TRACE_INFO(" _RLSR   : 0x%X\n\r", value);
+    EMAC_ReadPhy( pHw, phyAddress, MII_BMCR, &value, retryMax );
+    TRACE_INFO( " _BMCR   : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_BMSR, &value, retryMax );
+    TRACE_INFO( " _BMSR   : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_ANAR, &value, retryMax );
+    TRACE_INFO( " _ANAR   : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_ANLPAR, &value, retryMax );
+    TRACE_INFO( " _ANLPAR : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_ANER, &value, retryMax );
+    TRACE_INFO( " _ANER   : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_DSCR, &value, retryMax );
+    TRACE_INFO( " _DSCR   : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_DSCSR, &value, retryMax );
+    TRACE_INFO( " _DSCSR  : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_10BTCSR, &value, retryMax );
+    TRACE_INFO( " _10BTCSR: 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_PWDOR, &value, retryMax );
+    TRACE_INFO( " _PWDOR  : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_CONFIGR, &value, retryMax );
+    TRACE_INFO( " _CONFIGR: 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_MDINTR, &value, retryMax );
+    TRACE_INFO( " _MDINTR : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_RECR, &value, retryMax );
+    TRACE_INFO( " _RECR   : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_DISCR, &value, retryMax );
+    TRACE_INFO( " _DISCR  : 0x%X\n\r", value );
+    EMAC_ReadPhy( pHw, phyAddress, MII_RLSR, &value, retryMax );
+    TRACE_INFO( " _RLSR   : 0x%X\n\r", value );
 
-    EMAC_ManagementEnable(pHw, 0);
+    EMAC_ManagementEnable( pHw, 0 );
 }
 
 /**
@@ -247,7 +264,8 @@ void MACB_DumpRegisters(Macb *pMacb)
  * \param pMacb   Pointer to the MACB instance
  * \param toMax   Timeout maxmum count.
  */
-void MACB_SetupTimeout(Macb *pMacb, uint32_t toMax)
+void MACB_SetupTimeout( Macb * pMacb,
+                        uint32_t toMax )
 {
     pMacb->retryMax = toMax;
 }
@@ -259,7 +277,9 @@ void MACB_SetupTimeout(Macb *pMacb, uint32_t toMax)
  * \param phyAddress   The PHY address used to access the PHY
  *                     ( pre-defined by pin status on PHY reset )
  */
-void MACB_Init(Macb *pMacb, sEmacd *pEmacd, uint8_t phyAddress)
+void MACB_Init( Macb * pMacb,
+                sEmacd * pEmacd,
+                uint8_t phyAddress )
 {
     pMacb->pEmacd = pEmacd;
     pMacb->phyAddress = phyAddress;
@@ -272,10 +292,10 @@ void MACB_Init(Macb *pMacb, sEmacd *pEmacd, uint8_t phyAddress)
  * Return 1 if successfully, 0 if timeout.
  * \param pMacb   Pointer to the MACB instance
  */
-uint8_t MACB_ResetPhy(Macb *pMacb)
+uint8_t MACB_ResetPhy( Macb * pMacb )
 {
-    sEmacd *pDrv = pMacb->pEmacd;
-    Emac *pHw = pDrv->pHw;
+    sEmacd * pDrv = pMacb->pEmacd;
+    Emac * pHw = pDrv->pHw;
 
     uint32_t retryMax;
     uint32_t bmcr = MII_RESET;
@@ -283,25 +303,25 @@ uint8_t MACB_ResetPhy(Macb *pMacb)
     uint32_t timeout = 10;
     uint8_t ret = 1;
 
-    TRACE_INFO(" MACB_ResetPhy\n\r");
+    TRACE_INFO( " MACB_ResetPhy\n\r" );
 
     phyAddress = pMacb->phyAddress;
     retryMax = pMacb->retryMax;
 
-    EMAC_ManagementEnable(pHw, 1);
+    EMAC_ManagementEnable( pHw, 1 );
 
     bmcr = MII_RESET;
-    EMAC_WritePhy(pHw, phyAddress, MII_BMCR, bmcr, retryMax);
+    EMAC_WritePhy( pHw, phyAddress, MII_BMCR, bmcr, retryMax );
 
     do
     {
-        EMAC_ReadPhy(pHw, phyAddress, MII_BMCR, &bmcr, retryMax);
+        EMAC_ReadPhy( pHw, phyAddress, MII_BMCR, &bmcr, retryMax );
         timeout--;
-    } while ((bmcr & MII_RESET) && timeout);
+    } while( ( bmcr & MII_RESET ) && timeout );
 
-    EMAC_ManagementEnable(pHw, 0);
+    EMAC_ManagementEnable( pHw, 0 );
 
-    if (!timeout)
+    if( !timeout )
     {
         ret = 0;
     }
@@ -327,61 +347,67 @@ uint8_t MACB_ResetPhy(Macb *pMacb)
  * \param nbEmacPins  Number of PIO items that should be configured
  */
 
-uint8_t MACB_InitPhy(Macb         *pMacb,
-                     uint32_t      mck,
-                     const Pin    *pResetPins,
-                     uint32_t      nbResetPins,
-                     const Pin    *pEmacPins,
-                     uint32_t      nbEmacPins)
+uint8_t MACB_InitPhy( Macb * pMacb,
+                      uint32_t mck,
+                      const Pin * pResetPins,
+                      uint32_t nbResetPins,
+                      const Pin * pEmacPins,
+                      uint32_t nbEmacPins )
 {
-    sEmacd *pDrv = pMacb->pEmacd;
-    Emac *pHw = pDrv->pHw;
+    sEmacd * pDrv = pMacb->pEmacd;
+    Emac * pHw = pDrv->pHw;
 
     uint8_t rc = 1;
     uint8_t phy;
 
     /* Perform RESET */
-    TRACE_DEBUG("RESET PHY\n\r");
-    
-    if (pResetPins)
+    TRACE_DEBUG( "RESET PHY\n\r" );
+
+    if( pResetPins )
     {
         /* Configure PINS */
-        PIO_Configure(pResetPins, nbResetPins);
+        PIO_Configure( pResetPins, nbResetPins );
         /* Execute reset */
-        RSTC_SetExtResetLength(MACB_RESET_LENGTH);
+        RSTC_SetExtResetLength( MACB_RESET_LENGTH );
         RSTC_ExtReset();
+
         /* Get NRST level */
         /* Wait for end hardware reset */
-        while (!RSTC_GetNrstLevel());
-    }
-    /* Configure EMAC runtime pins */
-    if (rc)
-    {
-        PIO_Configure(pEmacPins, nbEmacPins);
-        rc = EMAC_SetClock( pHw, mck );
-        if (!rc)
+        while( !RSTC_GetNrstLevel() )
         {
-            TRACE_ERROR("No Valid MDC clock\n\r");
+        }
+    }
+
+    /* Configure EMAC runtime pins */
+    if( rc )
+    {
+        PIO_Configure( pEmacPins, nbEmacPins );
+        rc = EMAC_SetClock( pHw, mck );
+
+        if( !rc )
+        {
+            TRACE_ERROR( "No Valid MDC clock\n\r" );
             return 0;
         }
 
         /* Check PHY Address */
-        phy = MACB_FindValidPhy(pMacb, 0);
-        if (phy == 0xFF)
+        phy = MACB_FindValidPhy( pMacb, 0 );
+
+        if( phy == 0xFF )
         {
-            TRACE_ERROR("PHY Access fail\n\r");
+            TRACE_ERROR( "PHY Access fail\n\r" );
             return 0;
         }
-        if(phy != pMacb->phyAddress)
+
+        if( phy != pMacb->phyAddress )
         {
             pMacb->phyAddress = phy;
-            MACB_ResetPhy(pMacb);
+            MACB_ResetPhy( pMacb );
         }
-
     }
     else
     {
-        TRACE_ERROR("PHY Reset Timeout\n\r");
+        TRACE_ERROR( "PHY Reset Timeout\n\r" );
     }
 
     return rc;
@@ -392,16 +418,17 @@ uint8_t MACB_InitPhy(Macb         *pMacb,
  * Return 1 if successfully, 0 if timeout.
  * \param pMacb   Pointer to the MACB instance
  */
-uint8_t MACB_AutoNegotiate(Macb *pMacb, uint8_t rmiiMode)
+uint8_t MACB_AutoNegotiate( Macb * pMacb,
+                            uint8_t rmiiMode )
 {
-    sEmacd *pDrv = pMacb->pEmacd;
-    Emac *pHw = pDrv->pHw;
+    sEmacd * pDrv = pMacb->pEmacd;
+    Emac * pHw = pDrv->pHw;
 
     uint32_t retryMax;
     uint32_t value;
     uint32_t phyAnar;
     uint32_t phyAnalpar;
-    uint32_t retryCount= 0;
+    uint32_t retryCount = 0;
     uint8_t phyAddress;
     uint8_t bFD = 0;
     uint8_t bSP = 0;
@@ -412,108 +439,120 @@ uint8_t MACB_AutoNegotiate(Macb *pMacb, uint8_t rmiiMode)
     phyAddress = pMacb->phyAddress;
     retryMax = pMacb->retryMax;
 
-    EMAC_ManagementEnable(pHw, 1);
+    EMAC_ManagementEnable( pHw, 1 );
 
-    if (!EMAC_ReadPhy(pHw, phyAddress, MII_PHYID1, &value, retryMax))
+    if( !EMAC_ReadPhy( pHw, phyAddress, MII_PHYID1, &value, retryMax ) )
     {
-        TRACE_ERROR("Pb EMAC_ReadPhy Id1\n\r");
+        TRACE_ERROR( "Pb EMAC_ReadPhy Id1\n\r" );
         rc = 0;
         goto AutoNegotiateExit;
     }
-    TRACE_DEBUG("ReadPhy Id1 0x%X, addresse: %d\n\r", value, phyAddress);
-    if (!EMAC_ReadPhy(pHw, phyAddress, MII_PHYID2, &phyAnar, retryMax))
+
+    TRACE_DEBUG( "ReadPhy Id1 0x%X, addresse: %d\n\r", value, phyAddress );
+
+    if( !EMAC_ReadPhy( pHw, phyAddress, MII_PHYID2, &phyAnar, retryMax ) )
     {
-        TRACE_ERROR("Pb EMAC_ReadPhy Id2\n\r");
+        TRACE_ERROR( "Pb EMAC_ReadPhy Id2\n\r" );
         rc = 0;
         goto AutoNegotiateExit;
     }
-    TRACE_DEBUG("ReadPhy Id2 0x%X\n\r", phyAnar);
 
-    if( ( value == MII_OUI_MSB )
-     && ( ((phyAnar>>10)&MII_LSB_MASK) == MII_OUI_LSB ) )
+    TRACE_DEBUG( "ReadPhy Id2 0x%X\n\r", phyAnar );
+
+    if( ( value == MII_OUI_MSB ) &&
+        ( ( ( phyAnar >> 10 ) & MII_LSB_MASK ) == MII_OUI_LSB ) )
     {
-        TRACE_DEBUG("Vendor Number Model = 0x%X\n\r", ((phyAnar>>4)&0x3F));
-        TRACE_DEBUG("Model Revision Number = 0x%X\n\r", (phyAnar&0x7));
+        TRACE_DEBUG( "Vendor Number Model = 0x%X\n\r", ( ( phyAnar >> 4 ) & 0x3F ) );
+        TRACE_DEBUG( "Model Revision Number = 0x%X\n\r", ( phyAnar & 0x7 ) );
     }
     else
     {
-        TRACE_ERROR("Problem OUI value\n\r");
-    }        
+        TRACE_ERROR( "Problem OUI value\n\r" );
+    }
 
     /* Setup control register */
-    rc  = EMAC_ReadPhy(pHw, phyAddress, MII_BMCR, &value, retryMax);
-    if (rc == 0)
+    rc = EMAC_ReadPhy( pHw, phyAddress, MII_BMCR, &value, retryMax );
+
+    if( rc == 0 )
     {
         goto AutoNegotiateExit;
     }
 
-    value &= ~MII_AUTONEG;   /* Remove autonegotiation enable */
-    value &= ~(MII_LOOPBACK|MII_POWER_DOWN);
-    value |=  MII_ISOLATE;   /* Electrically isolate PHY */
-    rc = EMAC_WritePhy(pHw, phyAddress, MII_BMCR, value, retryMax);
-    if (rc == 0)
+    value &= ~MII_AUTONEG; /* Remove autonegotiation enable */
+    value &= ~( MII_LOOPBACK | MII_POWER_DOWN );
+    value |= MII_ISOLATE;  /* Electrically isolate PHY */
+    rc = EMAC_WritePhy( pHw, phyAddress, MII_BMCR, value, retryMax );
+
+    if( rc == 0 )
     {
         goto AutoNegotiateExit;
     }
 
     /* Set the Auto_negotiation Advertisement Register
-       MII advertising for Next page
-       100BaseTxFD and HD, 10BaseTFD and HD, IEEE 802.3 */
+     * MII advertising for Next page
+     * 100BaseTxFD and HD, 10BaseTFD and HD, IEEE 802.3 */
     phyAnar = MII_TX_FDX | MII_TX_HDX |
               MII_10_FDX | MII_10_HDX | MII_AN_IEEE_802_3;
-    rc = EMAC_WritePhy(pHw, phyAddress, MII_ANAR, phyAnar, retryMax);
-    if (rc == 0)
+    rc = EMAC_WritePhy( pHw, phyAddress, MII_ANAR, phyAnar, retryMax );
+
+    if( rc == 0 )
     {
         goto AutoNegotiateExit;
     }
 
     /* Read & modify control register */
-    rc  = EMAC_ReadPhy(pHw, phyAddress, MII_BMCR, &value, retryMax);
-    if (rc == 0)
+    rc = EMAC_ReadPhy( pHw, phyAddress, MII_BMCR, &value, retryMax );
+
+    if( rc == 0 )
     {
         goto AutoNegotiateExit;
     }
 
     value |= MII_SPEED_SELECT | MII_AUTONEG | MII_DUPLEX_MODE;
-    rc = EMAC_WritePhy(pHw, phyAddress, MII_BMCR, value, retryMax);
-    if (rc == 0)
+    rc = EMAC_WritePhy( pHw, phyAddress, MII_BMCR, value, retryMax );
+
+    if( rc == 0 )
     {
         goto AutoNegotiateExit;
     }
 
     /* Restart Auto_negotiation */
-    value |=  MII_RESTART_AUTONEG;
+    value |= MII_RESTART_AUTONEG;
     value &= ~MII_ISOLATE;
-    rc = EMAC_WritePhy(pHw, phyAddress, MII_BMCR, value, retryMax);
-    if (rc == 0)
+    rc = EMAC_WritePhy( pHw, phyAddress, MII_BMCR, value, retryMax );
+
+    if( rc == 0 )
     {
         goto AutoNegotiateExit;
     }
-    TRACE_DEBUG(" _BMCR: 0x%X\n\r", value);
+
+    TRACE_DEBUG( " _BMCR: 0x%X\n\r", value );
 
     /* Check AutoNegotiate complete */
-    while (1)
+    while( 1 )
     {
-        rc  = EMAC_ReadPhy(pHw, phyAddress, MII_BMSR, &value, retryMax);
-        if (rc == 0)
+        rc = EMAC_ReadPhy( pHw, phyAddress, MII_BMSR, &value, retryMax );
+
+        if( rc == 0 )
         {
-            TRACE_ERROR("_BMSR Rd err\n\r");
+            TRACE_ERROR( "_BMSR Rd err\n\r" );
             goto AutoNegotiateExit;
         }
+
         /* Done successfully */
-        if (value & MII_AUTONEG_COMP)
+        if( value & MII_AUTONEG_COMP )
         {
-            printf("AutoNegotiate complete\n\r");
+            printf( "AutoNegotiate complete\n\r" );
             break;
         }
 
         /* Timeout check */
-        if (retryMax)
+        if( retryMax )
         {
-            if (++ retryCount >= retryMax)
+            if( ++retryCount >= retryMax )
             {
-                MACB_DumpRegisters(pMacb);
-                TRACE_ERROR("TimeOut\n\r");
+                MACB_DumpRegisters( pMacb );
+                TRACE_ERROR( "TimeOut\n\r" );
                 rc = 0;
                 goto AutoNegotiateExit;
             }
@@ -521,41 +560,47 @@ uint8_t MACB_AutoNegotiate(Macb *pMacb, uint8_t rmiiMode)
     }
 
     /* Get the AutoNeg Link partner base page */
-    rc  = EMAC_ReadPhy(pHw, phyAddress, MII_ANLPAR, &phyAnalpar, retryMax);
-    if (rc == 0)
+    rc = EMAC_ReadPhy( pHw, phyAddress, MII_ANLPAR, &phyAnalpar, retryMax );
+
+    if( rc == 0 )
     {
         goto AutoNegotiateExit;
     }
 
     /* Setup the EMAC link speed */
-    if ((phyAnar & phyAnalpar) & MII_TX_FDX)
+    if( ( phyAnar & phyAnalpar ) & MII_TX_FDX )
     {
         /* set MII for 100BaseTX and Full Duplex */
-        bSP = 1; bFD = 1;
+        bSP = 1;
+        bFD = 1;
     }
-    else if ((phyAnar & phyAnalpar) & MII_10_FDX)
+    else if( ( phyAnar & phyAnalpar ) & MII_10_FDX )
     {
         /* set MII for 10BaseT and Full Duplex */
-        bSP = 0; bFD = 1;
+        bSP = 0;
+        bFD = 1;
     }
-    else if ((phyAnar & phyAnalpar) & MII_TX_HDX)
+    else if( ( phyAnar & phyAnalpar ) & MII_TX_HDX )
     {
-        // set MII for 100BaseTX and half Duplex
-        bSP = 1; bFD = 0;
+        /* set MII for 100BaseTX and half Duplex */
+        bSP = 1;
+        bFD = 0;
     }
-    else if ((phyAnar & phyAnalpar) & MII_10_HDX)
+    else if( ( phyAnar & phyAnalpar ) & MII_10_HDX )
     {
-        // set MII for 10BaseT and half Duplex
-        bSP = 0; bFD = 0;
+        /* set MII for 10BaseT and half Duplex */
+        bSP = 0;
+        bFD = 0;
     }
-    EMAC_SetSpeed(pHw, bSP);
-    EMAC_FullDuplexEnable(pHw, bFD);
 
-    EMAC_RMIIEnable(pHw, rmiiMode);
-    EMAC_TransceiverClockEnable(pHw, 1);
+    EMAC_SetSpeed( pHw, bSP );
+    EMAC_FullDuplexEnable( pHw, bFD );
+
+    EMAC_RMIIEnable( pHw, rmiiMode );
+    EMAC_TransceiverClockEnable( pHw, 1 );
 
 AutoNegotiateExit:
-    EMAC_ManagementEnable(pHw, 0);
+    EMAC_ManagementEnable( pHw, 0 );
     return rc;
 }
 
@@ -566,83 +611,92 @@ AutoNegotiateExit:
  * \param pMacb          Pointer to the MACB instance
  * \param applySetting Apply the settings to EMAC interface
  */
-uint8_t MACB_GetLinkSpeed(Macb *pMacb, uint8_t applySetting)
+uint8_t MACB_GetLinkSpeed( Macb * pMacb,
+                           uint8_t applySetting )
 {
-    sEmacd *pDrv = pMacb->pEmacd;
-    Emac *pHw = pDrv->pHw;
+    sEmacd * pDrv = pMacb->pEmacd;
+    Emac * pHw = pDrv->pHw;
 
     uint32_t retryMax;
     uint32_t stat1;
     uint32_t stat2;
     uint8_t phyAddress, bSP, bFD;
     uint8_t rc = 1;
-       
-    TRACE_DEBUG("MACB_GetLinkSpeed\n\r");
-    bSP = 0; bFD = 0;
-    EMAC_ManagementEnable(pHw, 1);
+
+    TRACE_DEBUG( "MACB_GetLinkSpeed\n\r" );
+    bSP = 0;
+    bFD = 0;
+    EMAC_ManagementEnable( pHw, 1 );
 
     phyAddress = pMacb->phyAddress;
     retryMax = pMacb->retryMax;
 
-    rc  = EMAC_ReadPhy(pHw, phyAddress, MII_BMSR, &stat1, retryMax);
-    if (rc == 0)
+    rc = EMAC_ReadPhy( pHw, phyAddress, MII_BMSR, &stat1, retryMax );
+
+    if( rc == 0 )
     {
         goto GetLinkSpeedExit;
     }
 
-    if ((stat1 & MII_LINK_STATUS) == 0)
+    if( ( stat1 & MII_LINK_STATUS ) == 0 )
     {
-        TRACE_ERROR("Pb: LinkStat: 0x%x\n\r", (unsigned int)stat1);
+        TRACE_ERROR( "Pb: LinkStat: 0x%x\n\r", ( unsigned int ) stat1 );
         rc = 0;
         goto GetLinkSpeedExit;
     }
 
-    if (applySetting == 0)
+    if( applySetting == 0 )
     {
-        TRACE_WARNING("Speed #%d not applied\n\r", applySetting);
-        bSP = 0; bFD = 0;
+        TRACE_WARNING( "Speed #%d not applied\n\r", applySetting );
+        bSP = 0;
+        bFD = 0;
         goto GetLinkSpeedExit;
     }
 
     /* Re-configure Link speed */
-    rc  = EMAC_ReadPhy(pHw, phyAddress, MII_DSCSR, &stat2, retryMax);
-    if (rc == 0)
+    rc = EMAC_ReadPhy( pHw, phyAddress, MII_DSCSR, &stat2, retryMax );
+
+    if( rc == 0 )
     {
-        TRACE_ERROR("Pb _DSCSR: rc 0x%x\n\r", rc);
+        TRACE_ERROR( "Pb _DSCSR: rc 0x%x\n\r", rc );
         goto GetLinkSpeedExit;
     }
 
-    if ((stat1 & MII_100BASE_TX_FD) && (stat2 & MII_100FDX))
+    if( ( stat1 & MII_100BASE_TX_FD ) && ( stat2 & MII_100FDX ) )
     {
         /* set Emac for 100BaseTX and Full Duplex */
-        bSP = 1; bFD = 1;
+        bSP = 1;
+        bFD = 1;
     }
 
-    if ((stat1 & MII_10BASE_T_FD) && (stat2 & MII_10FDX))
+    if( ( stat1 & MII_10BASE_T_FD ) && ( stat2 & MII_10FDX ) )
     {
         /* set MII for 10BaseT and Full Duplex */
-        bSP= 0; bFD = 1;
+        bSP = 0;
+        bFD = 1;
     }
 
-    if ((stat1 & MII_100BASE_T4_HD) && (stat2 & MII_100HDX))
+    if( ( stat1 & MII_100BASE_T4_HD ) && ( stat2 & MII_100HDX ) )
     {
         /* set MII for 100BaseTX and Half Duplex */
-        bSP = 1; bFD = 0;
+        bSP = 1;
+        bFD = 0;
     }
 
-    if ((stat1 & MII_10BASE_T_HD) && (stat2 & MII_10HDX))
+    if( ( stat1 & MII_10BASE_T_HD ) && ( stat2 & MII_10HDX ) )
     {
         /* set MII for 10BaseT and Half Duplex */
-        bSP = 0; bFD = 0;
+        bSP = 0;
+        bFD = 0;
     }
-    EMAC_SetSpeed(pHw, bSP);
-    EMAC_FullDuplexEnable(pHw, bFD);
+
+    EMAC_SetSpeed( pHw, bSP );
+    EMAC_FullDuplexEnable( pHw, bFD );
 
     /* Start the EMAC transfers */
-    TRACE_DEBUG("MACB_GetLinkSpeed passed\n\r");
+    TRACE_DEBUG( "MACB_GetLinkSpeed passed\n\r" );
 
 GetLinkSpeedExit:
-    EMAC_ManagementEnable(pHw, 0);
+    EMAC_ManagementEnable( pHw, 0 );
     return rc;
 }
-

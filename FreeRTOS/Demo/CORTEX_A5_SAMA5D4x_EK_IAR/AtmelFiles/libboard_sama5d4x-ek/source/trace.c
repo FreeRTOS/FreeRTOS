@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -40,8 +40,8 @@
  *------------------------------------------------------------------------------*/
 
 /** Trace level can be set at applet initialization */
-#if !defined(NOTRACE) && (DYN_TRACES == 1)
-    uint32_t dwTraceLevel = TRACE_LEVEL ;
+#if !defined( NOTRACE ) && ( DYN_TRACES == 1 )
+    uint32_t dwTraceLevel = TRACE_LEVEL;
 #endif
 
 /**
@@ -50,11 +50,12 @@
  *  \param dwBaudRate  U(S)ART baudrate.
  *  \param dwMCk  Master clock frequency.
  */
-extern void TRACE_CONFIGURE( uint32_t dwBaudRate, uint32_t dwMCk )
+extern void TRACE_CONFIGURE( uint32_t dwBaudRate,
+                             uint32_t dwMCk )
 {
-    const Pin pinsDBUG[] = { PINS_DBGU } ;
+    const Pin pinsDBUG[] = { PINS_DBGU };
 
-    PIO_Configure( pinsDBUG, PIO_LISTSIZE( pinsDBUG ) ) ;
+    PIO_Configure( pinsDBUG, PIO_LISTSIZE( pinsDBUG ) );
 
-    DBGU_Configure( dwBaudRate, dwMCk ) ;
+    DBGU_Configure( dwBaudRate, dwMCk );
 }

@@ -1,28 +1,30 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
 * Copyright (C) 2013-2020 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : r_gpio_rx_if.h
 * Description  : General Purpose I/O driver for RX MCUs. This interface file has everything the user needs to use this
 *                module.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
-* History : DD.MM.YYYY Version Description           
+* History : DD.MM.YYYY Version Description
 *         : 17.07.2013 1.00    First Release
 *         : 23.04.2014 1.20    Add support for RX63N, and RX110
 *         : 28.05.2014 1.30    Add support for RX64M
@@ -55,7 +57,7 @@
 #define GPIO_RX_INTERFACE_HEADER_FILE
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* Includes board and MCU related header files. */
 #include "platform.h"
@@ -63,52 +65,52 @@ Includes   <System Includes> , "Project Includes"
 #include "r_gpio_rx_config.h"
 
 /* Include specifics for chosen MCU. Go to the header file for your MCU to see available ports and pins. */
-#if defined(BSP_MCU_RX113)
+#if defined( BSP_MCU_RX113 )
     #include "./src/targets/rx113/r_gpio_rx113.h"
-#elif   defined(BSP_MCU_RX110)
+#elif   defined( BSP_MCU_RX110 )
     #include "./src/targets/rx110/r_gpio_rx110.h"
-#elif   defined(BSP_MCU_RX111)
+#elif   defined( BSP_MCU_RX111 )
     #include "./src/targets/rx111/r_gpio_rx111.h"
-#elif   defined(BSP_MCU_RX130)
+#elif   defined( BSP_MCU_RX130 )
     #include "./src/targets/rx130/r_gpio_rx130.h"
-#elif   defined(BSP_MCU_RX13T)
+#elif   defined( BSP_MCU_RX13T )
     #include "./src/targets/rx13t/r_gpio_rx13t.h"
-#elif defined(BSP_MCU_RX230)
+#elif defined( BSP_MCU_RX230 )
     #include "./src/targets/rx230/r_gpio_rx230.h"
-#elif defined(BSP_MCU_RX231)
+#elif defined( BSP_MCU_RX231 )
     #include "./src/targets/rx231/r_gpio_rx231.h"
-#elif defined(BSP_MCU_RX23T)
+#elif defined( BSP_MCU_RX23T )
     #include "./src/targets/rx23t/r_gpio_rx23t.h"
-#elif defined(BSP_MCU_RX23W)
+#elif defined( BSP_MCU_RX23W )
     #include "./src/targets/rx23w/r_gpio_rx23w.h"
-#elif defined(BSP_MCU_RX23E_A)
+#elif defined( BSP_MCU_RX23E_A )
     #include "./src/targets/rx23e-a/r_gpio_rx23e-a.h"
-#elif defined(BSP_MCU_RX24T)
+#elif defined( BSP_MCU_RX24T )
     #include "./src/targets/rx24t/r_gpio_rx24t.h"
-#elif defined(BSP_MCU_RX24U)
+#elif defined( BSP_MCU_RX24U )
     #include "./src/targets/rx24u/r_gpio_rx24u.h"
-#elif defined(BSP_MCU_RX64M)
+#elif defined( BSP_MCU_RX64M )
     #include "./src/targets/rx64m/r_gpio_rx64m.h"
-#elif defined(BSP_MCU_RX65N)
+#elif defined( BSP_MCU_RX65N )
     #include "./src/targets/rx65n/r_gpio_rx65n.h"
-#elif defined(BSP_MCU_RX66T)
+#elif defined( BSP_MCU_RX66T )
     #include "./src/targets/rx66t/r_gpio_rx66t.h"
-#elif defined(BSP_MCU_RX66N)
+#elif defined( BSP_MCU_RX66N )
     #include "./src/targets/rx66n/r_gpio_rx66n.h"
-#elif defined(BSP_MCU_RX71M)
+#elif defined( BSP_MCU_RX71M )
     #include "./src/targets/rx71m/r_gpio_rx71m.h"
-#elif defined(BSP_MCU_RX72T)
+#elif defined( BSP_MCU_RX72T )
     #include "./src/targets/rx72t/r_gpio_rx72t.h"
-#elif defined(BSP_MCU_RX72M)
+#elif defined( BSP_MCU_RX72M )
     #include "./src/targets/rx72m/r_gpio_rx72m.h"
-#elif defined(BSP_MCU_RX72N)
+#elif defined( BSP_MCU_RX72N )
     #include "./src/targets/rx72n/r_gpio_rx72n.h"
-#else
+#else  /* if defined( BSP_MCU_RX113 ) */
     #error "This MCU is not supported by the current r_gpio_rx module."
-#endif
+#endif /* if defined( BSP_MCU_RX113 ) */
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 
 #if R_BSP_VERSION_MAJOR < 5
@@ -116,12 +118,13 @@ Macro definitions
 #endif
 
 /* Version Number of API. */
-#define GPIO_RX_VERSION_MAJOR           (3)
-#define GPIO_RX_VERSION_MINOR           (50)
+#define GPIO_RX_VERSION_MAJOR    ( 3 )
+#define GPIO_RX_VERSION_MINOR    ( 50 )
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
+
 /* The gpio_port_t and gpio_port_pin_t enums are located in the 'targets' folder for each MCU. For example, to see
  * these enums for a RX111 look at the following file: r_gpio_rx/src/targets/rx111/r_gpio_rx111.h
  */
@@ -160,26 +163,30 @@ typedef enum
 typedef enum
 {
     GPIO_SUCCESS = 0,
-    GPIO_ERR_INVALID_MODE,  // The mode specified cannot be applied to this pin
-    GPIO_ERR_INVALID_CMD    // The input command is not supported
+    GPIO_ERR_INVALID_MODE, /* The mode specified cannot be applied to this pin */
+    GPIO_ERR_INVALID_CMD   /* The input command is not supported */
 } gpio_err_t;
 
 /***********************************************************************************************************************
-Exported global variables
+*  Exported global variables
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Exported global functions (to be accessed by other files)
+*  Exported global functions (to be accessed by other files)
 ***********************************************************************************************************************/
-void            R_GPIO_PortWrite(gpio_port_t port, uint8_t value);
-uint8_t         R_GPIO_PortRead(gpio_port_t port);
-void            R_GPIO_PortDirectionSet(gpio_port_t port, gpio_dir_t dir, uint8_t mask);
-void            R_GPIO_PinWrite(gpio_port_pin_t pin, gpio_level_t level);
-gpio_level_t    R_GPIO_PinRead(gpio_port_pin_t pin);
-void            R_GPIO_PinDirectionSet(gpio_port_pin_t pin, gpio_dir_t dir);
-gpio_err_t      R_GPIO_PinControl(gpio_port_pin_t pin, gpio_cmd_t cmd);
-uint32_t        R_GPIO_GetVersion(void);
+void R_GPIO_PortWrite( gpio_port_t port,
+                       uint8_t value );
+uint8_t R_GPIO_PortRead( gpio_port_t port );
+void R_GPIO_PortDirectionSet( gpio_port_t port,
+                              gpio_dir_t dir,
+                              uint8_t mask );
+void R_GPIO_PinWrite( gpio_port_pin_t pin,
+                      gpio_level_t level );
+gpio_level_t R_GPIO_PinRead( gpio_port_pin_t pin );
+void R_GPIO_PinDirectionSet( gpio_port_pin_t pin,
+                             gpio_dir_t dir );
+gpio_err_t R_GPIO_PinControl( gpio_port_pin_t pin,
+                              gpio_cmd_t cmd );
+uint32_t R_GPIO_GetVersion( void );
 
 #endif /* GPIO_RX_INTERFACE_HEADER_FILE */
-
-

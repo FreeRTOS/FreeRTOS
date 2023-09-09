@@ -54,14 +54,14 @@ LIBS= hw_include/libdriver.a
 #
 all: ${COMPILER}           \
      ${COMPILER}/RTOSDemo.axf \
-	 
+
 #
 # The rule to clean out all the build products
 #
 
 clean:
 	@rm -rf ${COMPILER} ${wildcard *.bin} RTOSDemo.axf
-	
+
 #
 # The rule to create the target directory
 #
@@ -79,7 +79,7 @@ ENTRY_RTOSDemo=ResetISR
 -include ${wildcard ${COMPILER}/*.d} __dummy__
 
 
-	 
+
 
 
 

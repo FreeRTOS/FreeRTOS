@@ -27,9 +27,9 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "lcdd.h"
 
@@ -41,103 +41,104 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// Initializes the LCD controller.
-/// \param pLcdBase   LCD base address.
-//------------------------------------------------------------------------------
-void LCDD_Initialize(void)
+/*------------------------------------------------------------------------------ */
+/*/ Initializes the LCD controller. */
+/*/ \param pLcdBase   LCD base address. */
+/*------------------------------------------------------------------------------ */
+void LCDD_Initialize( void )
 {
-    const Pin pPins[] = {BOARD_LCD_PINS};
+    const Pin pPins[] = { BOARD_LCD_PINS };
     AT91PS_HSMC4_CS pSMC = AT91C_BASE_HSMC4_CS2;
     unsigned int rMode;
 
-    // Enable pins
-    PIO_Configure(pPins, PIO_LISTSIZE(pPins));
+    /* Enable pins */
+    PIO_Configure( pPins, PIO_LISTSIZE( pPins ) );
 
-    // Enable peripheral clock
-    PMC_EnablePeripheral(AT91C_ID_HSMC4);
+    /* Enable peripheral clock */
+    PMC_EnablePeripheral( AT91C_ID_HSMC4 );
 
-    // EBI SMC Configuration
+    /* EBI SMC Configuration */
     pSMC->HSMC4_SETUP = 0
-                    | ((4 <<  0) & AT91C_HSMC4_NWE_SETUP)
-                    | ((2 <<  8) & AT91C_HSMC4_NCS_WR_SETUP)
-                    | ((4 << 16) & AT91C_HSMC4_NRD_SETUP)
-                    | ((2 << 24) & AT91C_HSMC4_NCS_RD_SETUP)
-                    ;
+                        | ( ( 4 << 0 ) & AT91C_HSMC4_NWE_SETUP )
+                        | ( ( 2 << 8 ) & AT91C_HSMC4_NCS_WR_SETUP )
+                        | ( ( 4 << 16 ) & AT91C_HSMC4_NRD_SETUP )
+                        | ( ( 2 << 24 ) & AT91C_HSMC4_NCS_RD_SETUP )
+    ;
 
     pSMC->HSMC4_PULSE = 0
-                    | (( 5 <<  0) & AT91C_HSMC4_NWE_PULSE)
-                    | (( 18 <<  8) & AT91C_HSMC4_NCS_WR_PULSE)
-                    | (( 5 << 16) & AT91C_HSMC4_NRD_PULSE)
-                    | (( 18 << 24) & AT91C_HSMC4_NCS_RD_PULSE)
-                    ;
+                        | ( ( 5 << 0 ) & AT91C_HSMC4_NWE_PULSE )
+                        | ( ( 18 << 8 ) & AT91C_HSMC4_NCS_WR_PULSE )
+                        | ( ( 5 << 16 ) & AT91C_HSMC4_NRD_PULSE )
+                        | ( ( 18 << 24 ) & AT91C_HSMC4_NCS_RD_PULSE )
+    ;
 
     pSMC->HSMC4_CYCLE = 0
-                  | ((22 <<  0) & AT91C_HSMC4_NWE_CYCLE)
-                  | ((22 << 16) & AT91C_HSMC4_NRD_CYCLE)
-                  ;
+                        | ( ( 22 << 0 ) & AT91C_HSMC4_NWE_CYCLE )
+                        | ( ( 22 << 16 ) & AT91C_HSMC4_NRD_CYCLE )
+    ;
 
     rMode = pSMC->HSMC4_MODE;
-    pSMC->HSMC4_MODE = (rMode & ~(AT91C_HSMC4_DBW | AT91C_HSMC4_READ_MODE
-                 | AT91C_HSMC4_WRITE_MODE | AT91C_HSMC4_PMEN))
-                 | (AT91C_HSMC4_READ_MODE)
-                 | (AT91C_HSMC4_WRITE_MODE)
-                 | (AT91C_HSMC4_DBW_WIDTH_SIXTEEN_BITS)
-                 ;
+    pSMC->HSMC4_MODE = ( rMode & ~( AT91C_HSMC4_DBW | AT91C_HSMC4_READ_MODE
+                                    | AT91C_HSMC4_WRITE_MODE | AT91C_HSMC4_PMEN ) )
+                       | ( AT91C_HSMC4_READ_MODE )
+                       | ( AT91C_HSMC4_WRITE_MODE )
+                       | ( AT91C_HSMC4_DBW_WIDTH_SIXTEEN_BITS )
+    ;
 
-    // Initialize LCD controller (HX8347)
-    LCD_Initialize((void *)BOARD_LCD_BASE);
+    /* Initialize LCD controller (HX8347) */
+    LCD_Initialize( ( void * ) BOARD_LCD_BASE );
 
-    // Set LCD backlight
-    LCDD_SetBacklight(25);
+    /* Set LCD backlight */
+    LCDD_SetBacklight( 25 );
 }
 
-//------------------------------------------------------------------------------
-/// Turn on the LCD
-//------------------------------------------------------------------------------
-void LCDD_Start(void)
+/*------------------------------------------------------------------------------ */
+/*/ Turn on the LCD */
+/*------------------------------------------------------------------------------ */
+void LCDD_Start( void )
 {
-    LCD_On((void *)BOARD_LCD_BASE);
+    LCD_On( ( void * ) BOARD_LCD_BASE );
 }
 
-//------------------------------------------------------------------------------
-/// Turn off the LCD
-//------------------------------------------------------------------------------
-void LCDD_Stop(void)
+/*------------------------------------------------------------------------------ */
+/*/ Turn off the LCD */
+/*------------------------------------------------------------------------------ */
+void LCDD_Stop( void )
 {
-    LCD_Off((void *)BOARD_LCD_BASE);
+    LCD_Off( ( void * ) BOARD_LCD_BASE );
 }
 
-//------------------------------------------------------------------------------
-/// Set the backlight of the LCD.
-/// \param level   Backlight brightness level [1..32], 32 is maximum level.
-//------------------------------------------------------------------------------
-void LCDD_SetBacklight (unsigned int level)
+/*------------------------------------------------------------------------------ */
+/*/ Set the backlight of the LCD. */
+/*/ \param level   Backlight brightness level [1..32], 32 is maximum level. */
+/*------------------------------------------------------------------------------ */
+void LCDD_SetBacklight( unsigned int level )
 {
     unsigned int i;
-    const Pin pPins[] = {BOARD_BACKLIGHT_PIN};
+    const Pin pPins[] = { BOARD_BACKLIGHT_PIN };
 
-    // Enable pins
-    PIO_Configure(pPins, PIO_LISTSIZE(pPins));
+    /* Enable pins */
+    PIO_Configure( pPins, PIO_LISTSIZE( pPins ) );
 
-    // Switch off backlight
-    PIO_Clear(pPins);
-	vTaskDelay( 2 );
+    /* Switch off backlight */
+    PIO_Clear( pPins );
+    vTaskDelay( 2 );
 
-    // Set new backlight level
-    for (i = 0; i < level; i++) {
+    /* Set new backlight level */
+    for( i = 0; i < level; i++ )
+    {
+        PIO_Set( pPins );
+        PIO_Set( pPins );
+        PIO_Set( pPins );
 
-        PIO_Set(pPins);
-        PIO_Set(pPins);
-        PIO_Set(pPins);
-
-        PIO_Clear(pPins);
-        PIO_Clear(pPins);
-        PIO_Clear(pPins);
+        PIO_Clear( pPins );
+        PIO_Clear( pPins );
+        PIO_Clear( pPins );
     }
-    PIO_Set(pPins);
+
+    PIO_Set( pPins );
 }

@@ -54,7 +54,7 @@ extern void vAssertCalled( const char * pcFileName,
     } while( 0 )
 
 #ifdef __PICOLIBC__
-    #define configUSE_PICOLIBC_TLS                       1
+    #define configUSE_PICOLIBC_TLS    1
 #endif /* __PICOLIBC__ */
 
 #ifdef __NEWLIB__

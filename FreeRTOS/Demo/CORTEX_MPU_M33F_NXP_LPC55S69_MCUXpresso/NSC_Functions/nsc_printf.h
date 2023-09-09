@@ -32,6 +32,6 @@
  *
  * @param str The string to print.
  */
-void NSC_Printf( char const *str );
+void NSC_Printf( char const * str );
 
 #endif /* NSC_PRINTF_H */

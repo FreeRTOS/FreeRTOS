@@ -35,10 +35,10 @@
 /* Demo includes. */
 #include "partest.h"
 
-#define partstNUM_LEDs	2
+#define partstNUM_LEDs    2
 
-#define LED0_MASK		( ( unsigned short ) 0x04 )
-#define LED1_MASK		( ( unsigned short ) 0x08 )
+#define LED0_MASK         ( ( unsigned short ) 0x04 )
+#define LED1_MASK         ( ( unsigned short ) 0x08 )
 
 static const unsigned short xLEDs[ partstNUM_LEDs ] = { LED0_MASK, LED1_MASK };
 
@@ -46,55 +46,55 @@ static const unsigned short xLEDs[ partstNUM_LEDs ] = { LED0_MASK, LED1_MASK };
 
 void vParTestInitialise( void )
 {
-	/* LED Port Initialization */
-	PMCM &= ~( LED0_MASK | LED1_MASK );
+    /* LED Port Initialization */
+    PMCM &= ~( LED0_MASK | LED1_MASK );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxLEDMask;
+    unsigned portBASE_TYPE uxLEDMask;
 
-	if( uxLED < partstNUM_LEDs )
-	{
-		uxLEDMask = xLEDs[ uxLED ];
-		
-		taskENTER_CRITICAL();
-		{
-			if( xValue )
-			{
-				PCM &= ~uxLEDMask;
-			}
-			else
-			{
-				PCM |= uxLEDMask;				
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDs )
+    {
+        uxLEDMask = xLEDs[ uxLED ];
+
+        taskENTER_CRITICAL();
+        {
+            if( xValue )
+            {
+                PCM &= ~uxLEDMask;
+            }
+            else
+            {
+                PCM |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned portBASE_TYPE uxLEDMask;
+    unsigned portBASE_TYPE uxLEDMask;
 
-	if( uxLED < partstNUM_LEDs )
-	{
-		uxLEDMask = xLEDs[ uxLED ];
-		
-		taskENTER_CRITICAL();
-		{
-			if( PCM & uxLEDMask )
-			{
-				PCM &= ~uxLEDMask;
-			}
-			else
-			{
-				PCM |= uxLEDMask;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDs )
+    {
+        uxLEDMask = xLEDs[ uxLED ];
+
+        taskENTER_CRITICAL();
+        {
+            if( PCM & uxLEDMask )
+            {
+                PCM &= ~uxLEDMask;
+            }
+            else
+            {
+                PCM |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-

@@ -37,33 +37,34 @@
 
 void vParTestInitialise( void )
 {
-	/* The TriBoard TC1782 v2.1 has 8 LEDs connected to GPIO5. */
-	P5_IOCR0.reg = 0xC0C0C0C0UL;
-	P5_IOCR4.reg = 0xC0C0C0C0UL;
-	P5_PDR.reg = 0x00000000UL;
-	P5_OMR.reg = 0x0000FFFFUL;
+    /* The TriBoard TC1782 v2.1 has 8 LEDs connected to GPIO5. */
+    P5_IOCR0.reg = 0xC0C0C0C0UL;
+    P5_IOCR4.reg = 0xC0C0C0C0UL;
+    P5_PDR.reg = 0x00000000UL;
+    P5_OMR.reg = 0x0000FFFFUL;
 }
 /*---------------------------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned long ulBitPattern = 1UL << uxLED;
+    unsigned long ulBitPattern = 1UL << uxLED;
 
-	if( xValue != 0 )
-	{
-		P5_OMR.reg = ulBitPattern;
-	}
-	else
-	{
-		P5_OMR.reg = ulBitPattern << 16UL;
-	}
+    if( xValue != 0 )
+    {
+        P5_OMR.reg = ulBitPattern;
+    }
+    else
+    {
+        P5_OMR.reg = ulBitPattern << 16UL;
+    }
 }
 /*---------------------------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned long ulBitPattern = 1UL << uxLED;
+    unsigned long ulBitPattern = 1UL << uxLED;
 
-	P5_OMR.reg = ( ulBitPattern << 16 ) | ulBitPattern;
+    P5_OMR.reg = ( ulBitPattern << 16 ) | ulBitPattern;
 }
 /*---------------------------------------------------------------------------*/

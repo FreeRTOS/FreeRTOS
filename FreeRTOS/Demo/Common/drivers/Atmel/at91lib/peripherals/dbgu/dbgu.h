@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,46 +27,45 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \dir
-/// !Purpose
-/// 
-/// This module provides definitions and functions for using the DBGU.
-///
-/// !Usage
-/// 
-/// -# Enable the DBGU pins (see pio.h).
-/// -# Configure the DBGU using DBGU_Configure.
-///
-/// \note Unless specified, all the functions defined here operate synchronously;
-/// i.e. they all wait the data is sent/received before returning.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \dir */
+/*/ !Purpose */
+/*/ */
+/*/ This module provides definitions and functions for using the DBGU. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Enable the DBGU pins (see pio.h). */
+/*/ -# Configure the DBGU using DBGU_Configure. */
+/*/ */
+/*/ \note Unless specified, all the functions defined here operate synchronously; */
+/*/ i.e. they all wait the data is sent/received before returning. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef DBGU_H
 #define DBGU_H
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// \page Modes
-/// This page lists several common operating modes for the DBGU.
-/// !Modes
-/// - DBGU_STANDARD
- 
-/// Standard operating mode (asynchronous, 8bit, no parity)
-#define DBGU_STANDARD           AT91C_US_PAR_NONE
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \page Modes */
+/*/ This page lists several common operating modes for the DBGU. */
+/*/ !Modes */
+/*/ - DBGU_STANDARD */
 
-//------------------------------------------------------------------------------
-//      Exported functions
-//------------------------------------------------------------------------------
-extern void DBGU_Configure(unsigned int mode,
-                           unsigned int baudrate,
-                           unsigned int mck);
+/*/ Standard operating mode (asynchronous, 8bit, no parity) */
+#define DBGU_STANDARD    AT91C_US_PAR_NONE
+/*------------------------------------------------------------------------------ */
+
+/*------------------------------------------------------------------------------ */
+/*      Exported functions */
+/*------------------------------------------------------------------------------ */
+extern void DBGU_Configure( unsigned int mode,
+                            unsigned int baudrate,
+                            unsigned int mck );
 
 extern unsigned char DBGU_GetChar();
 
 #endif //#ifndef DBGU_H
-

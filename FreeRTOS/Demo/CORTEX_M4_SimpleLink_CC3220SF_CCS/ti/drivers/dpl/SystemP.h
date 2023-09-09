@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ===========================================================================
  *  @file       SystemP.h
  *
@@ -40,20 +41,26 @@
  */
 
 #ifndef ti_dpl_SystemP__include
-#define ti_dpl_SystemP__include
+    #define ti_dpl_SystemP__include
 
-#include <stddef.h>
-#include <stdarg.h>
+    #include <stddef.h>
+    #include <stdarg.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-extern int SystemP_snprintf(char *buf, size_t n, const char *format,...);
-extern int SystemP_vsnprintf(char *buf, size_t n, const char *format, va_list va);
+    extern int SystemP_snprintf( char * buf,
+                                 size_t n,
+                                 const char * format,
+                                 ... );
+    extern int SystemP_vsnprintf( char * buf,
+                                  size_t n,
+                                  const char * format,
+                                  va_list va );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_dpl_SemaphoreP__include */

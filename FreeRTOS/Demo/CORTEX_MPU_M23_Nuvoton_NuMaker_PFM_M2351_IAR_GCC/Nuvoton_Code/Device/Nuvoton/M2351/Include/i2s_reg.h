@@ -9,21 +9,20 @@
 #define __I2S_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- I2S Interface Controller -------------------------*/
+
 /**
-    @addtogroup I2S I2S Interface Controller(I2S)
-    Memory Mapped Structure for I2S Controller
-@{ */
+ *  @addtogroup I2S I2S Interface Controller(I2S)
+ *  Memory Mapped Structure for I2S Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var I2S_T::CTL0
      * Offset: 0x00  I2S Control Register 0
@@ -455,241 +454,240 @@ typedef struct
      * |        |          |10000 = 16 words in receive FIFO.
      * |        |          |Others are reserved.
      */
-    __IO uint32_t CTL0;                  /*!< [0x0000] I2S Control Register 0                                           */
-    __IO uint32_t CLKDIV;                /*!< [0x0004] I2S Clock Divider Register                                       */
-    __IO uint32_t IEN;                   /*!< [0x0008] I2S Interrupt Enable Register                                    */
-    __IO uint32_t STATUS0;               /*!< [0x000c] I2S Status Register 0                                            */
-    __O  uint32_t TXFIFO;                /*!< [0x0010] I2S Transmit FIFO Register                                       */
-    __I  uint32_t RXFIFO;                /*!< [0x0014] I2S Receive FIFO Register                                        */
-    __I  uint32_t RESERVE0[2];
-    __IO uint32_t CTL1;                  /*!< [0x0020] I2S Control Register 1                                           */
-    __IO uint32_t STATUS1;               /*!< [0x0024] I2S Status Register 1                                            */
-
+    __IO uint32_t CTL0;    /*!< [0x0000] I2S Control Register 0                                           */
+    __IO uint32_t CLKDIV;  /*!< [0x0004] I2S Clock Divider Register                                       */
+    __IO uint32_t IEN;     /*!< [0x0008] I2S Interrupt Enable Register                                    */
+    __IO uint32_t STATUS0; /*!< [0x000c] I2S Status Register 0                                            */
+    __O uint32_t TXFIFO;   /*!< [0x0010] I2S Transmit FIFO Register                                       */
+    __I uint32_t RXFIFO;   /*!< [0x0014] I2S Receive FIFO Register                                        */
+    __I uint32_t RESERVE0[ 2 ];
+    __IO uint32_t CTL1;    /*!< [0x0020] I2S Control Register 1                                           */
+    __IO uint32_t STATUS1; /*!< [0x0024] I2S Status Register 1                                            */
 } I2S_T;
 
 /**
-    @addtogroup I2S_CONST I2S Bit Field Definition
-    Constant Definitions for I2S Controller
-@{ */
+ *  @addtogroup I2S_CONST I2S Bit Field Definition
+ *  Constant Definitions for I2S Controller
+ * @{ */
 
-#define I2S_CTL0_I2SEN_Pos               (0)                                               /*!< I2S_T::CTL0: I2SEN Position            */
-#define I2S_CTL0_I2SEN_Msk               (0x1ul << I2S_CTL0_I2SEN_Pos)                     /*!< I2S_T::CTL0: I2SEN Mask                */
+#define I2S_CTL0_I2SEN_Pos          ( 0 )                                                  /*!< I2S_T::CTL0: I2SEN Position            */
+#define I2S_CTL0_I2SEN_Msk          ( 0x1ul << I2S_CTL0_I2SEN_Pos )                        /*!< I2S_T::CTL0: I2SEN Mask                */
 
-#define I2S_CTL0_TXEN_Pos                (1)                                               /*!< I2S_T::CTL0: TXEN Position             */
-#define I2S_CTL0_TXEN_Msk                (0x1ul << I2S_CTL0_TXEN_Pos)                      /*!< I2S_T::CTL0: TXEN Mask                 */
+#define I2S_CTL0_TXEN_Pos           ( 1 )                                                  /*!< I2S_T::CTL0: TXEN Position             */
+#define I2S_CTL0_TXEN_Msk           ( 0x1ul << I2S_CTL0_TXEN_Pos )                         /*!< I2S_T::CTL0: TXEN Mask                 */
 
-#define I2S_CTL0_RXEN_Pos                (2)                                               /*!< I2S_T::CTL0: RXEN Position             */
-#define I2S_CTL0_RXEN_Msk                (0x1ul << I2S_CTL0_RXEN_Pos)                      /*!< I2S_T::CTL0: RXEN Mask                 */
+#define I2S_CTL0_RXEN_Pos           ( 2 )                                                  /*!< I2S_T::CTL0: RXEN Position             */
+#define I2S_CTL0_RXEN_Msk           ( 0x1ul << I2S_CTL0_RXEN_Pos )                         /*!< I2S_T::CTL0: RXEN Mask                 */
 
-#define I2S_CTL0_MUTE_Pos                (3)                                               /*!< I2S_T::CTL0: MUTE Position             */
-#define I2S_CTL0_MUTE_Msk                (0x1ul << I2S_CTL0_MUTE_Pos)                      /*!< I2S_T::CTL0: MUTE Mask                 */
+#define I2S_CTL0_MUTE_Pos           ( 3 )                                                  /*!< I2S_T::CTL0: MUTE Position             */
+#define I2S_CTL0_MUTE_Msk           ( 0x1ul << I2S_CTL0_MUTE_Pos )                         /*!< I2S_T::CTL0: MUTE Mask                 */
 
-#define I2S_CTL0_DATWIDTH_Pos            (4)                                               /*!< I2S_T::CTL0: DATWIDTH Position         */
-#define I2S_CTL0_DATWIDTH_Msk            (0x3ul << I2S_CTL0_DATWIDTH_Pos)                  /*!< I2S_T::CTL0: DATWIDTH Mask             */
+#define I2S_CTL0_DATWIDTH_Pos       ( 4 )                                                  /*!< I2S_T::CTL0: DATWIDTH Position         */
+#define I2S_CTL0_DATWIDTH_Msk       ( 0x3ul << I2S_CTL0_DATWIDTH_Pos )                     /*!< I2S_T::CTL0: DATWIDTH Mask             */
 
-#define I2S_CTL0_MONO_Pos                (6)                                               /*!< I2S_T::CTL0: MONO Position             */
-#define I2S_CTL0_MONO_Msk                (0x1ul << I2S_CTL0_MONO_Pos)                      /*!< I2S_T::CTL0: MONO Mask                 */
+#define I2S_CTL0_MONO_Pos           ( 6 )                                                  /*!< I2S_T::CTL0: MONO Position             */
+#define I2S_CTL0_MONO_Msk           ( 0x1ul << I2S_CTL0_MONO_Pos )                         /*!< I2S_T::CTL0: MONO Mask                 */
 
-#define I2S_CTL0_ORDER_Pos               (7)                                               /*!< I2S_T::CTL0: ORDER Position            */
-#define I2S_CTL0_ORDER_Msk               (0x1ul << I2S_CTL0_ORDER_Pos)                     /*!< I2S_T::CTL0: ORDER Mask                */
+#define I2S_CTL0_ORDER_Pos          ( 7 )                                                  /*!< I2S_T::CTL0: ORDER Position            */
+#define I2S_CTL0_ORDER_Msk          ( 0x1ul << I2S_CTL0_ORDER_Pos )                        /*!< I2S_T::CTL0: ORDER Mask                */
 
-#define I2S_CTL0_SLAVE_Pos               (8)                                               /*!< I2S_T::CTL0: SLAVE Position            */
-#define I2S_CTL0_SLAVE_Msk               (0x1ul << I2S_CTL0_SLAVE_Pos)                     /*!< I2S_T::CTL0: SLAVE Mask                */
+#define I2S_CTL0_SLAVE_Pos          ( 8 )                                                  /*!< I2S_T::CTL0: SLAVE Position            */
+#define I2S_CTL0_SLAVE_Msk          ( 0x1ul << I2S_CTL0_SLAVE_Pos )                        /*!< I2S_T::CTL0: SLAVE Mask                */
 
-#define I2S_CTL0_MCLKEN_Pos              (15)                                              /*!< I2S_T::CTL0: MCLKEN Position           */
-#define I2S_CTL0_MCLKEN_Msk              (0x1ul << I2S_CTL0_MCLKEN_Pos)                    /*!< I2S_T::CTL0: MCLKEN Mask               */
+#define I2S_CTL0_MCLKEN_Pos         ( 15 )                                                 /*!< I2S_T::CTL0: MCLKEN Position           */
+#define I2S_CTL0_MCLKEN_Msk         ( 0x1ul << I2S_CTL0_MCLKEN_Pos )                       /*!< I2S_T::CTL0: MCLKEN Mask               */
 
-#define I2S_CTL0_TXFBCLR_Pos             (18)                                              /*!< I2S_T::CTL0: TXFBCLR Position          */
-#define I2S_CTL0_TXFBCLR_Msk             (0x1ul << I2S_CTL0_TXFBCLR_Pos)                   /*!< I2S_T::CTL0: TXFBCLR Mask              */
+#define I2S_CTL0_TXFBCLR_Pos        ( 18 )                                                 /*!< I2S_T::CTL0: TXFBCLR Position          */
+#define I2S_CTL0_TXFBCLR_Msk        ( 0x1ul << I2S_CTL0_TXFBCLR_Pos )                      /*!< I2S_T::CTL0: TXFBCLR Mask              */
 
-#define I2S_CTL0_RXFBCLR_Pos             (19)                                              /*!< I2S_T::CTL0: RXFBCLR Position          */
-#define I2S_CTL0_RXFBCLR_Msk             (0x1ul << I2S_CTL0_RXFBCLR_Pos)                   /*!< I2S_T::CTL0: RXFBCLR Mask              */
+#define I2S_CTL0_RXFBCLR_Pos        ( 19 )                                                 /*!< I2S_T::CTL0: RXFBCLR Position          */
+#define I2S_CTL0_RXFBCLR_Msk        ( 0x1ul << I2S_CTL0_RXFBCLR_Pos )                      /*!< I2S_T::CTL0: RXFBCLR Mask              */
 
-#define I2S_CTL0_TXPDMAEN_Pos            (20)                                              /*!< I2S_T::CTL0: TXPDMAEN Position         */
-#define I2S_CTL0_TXPDMAEN_Msk            (0x1ul << I2S_CTL0_TXPDMAEN_Pos)                  /*!< I2S_T::CTL0: TXPDMAEN Mask             */
+#define I2S_CTL0_TXPDMAEN_Pos       ( 20 )                                                 /*!< I2S_T::CTL0: TXPDMAEN Position         */
+#define I2S_CTL0_TXPDMAEN_Msk       ( 0x1ul << I2S_CTL0_TXPDMAEN_Pos )                     /*!< I2S_T::CTL0: TXPDMAEN Mask             */
 
-#define I2S_CTL0_RXPDMAEN_Pos            (21)                                              /*!< I2S_T::CTL0: RXPDMAEN Position         */
-#define I2S_CTL0_RXPDMAEN_Msk            (0x1ul << I2S_CTL0_RXPDMAEN_Pos)                  /*!< I2S_T::CTL0: RXPDMAEN Mask             */
+#define I2S_CTL0_RXPDMAEN_Pos       ( 21 )                                                 /*!< I2S_T::CTL0: RXPDMAEN Position         */
+#define I2S_CTL0_RXPDMAEN_Msk       ( 0x1ul << I2S_CTL0_RXPDMAEN_Pos )                     /*!< I2S_T::CTL0: RXPDMAEN Mask             */
 
-#define I2S_CTL0_RXLCH_Pos               (23)                                              /*!< I2S_T::CTL0: RXLCH Position            */
-#define I2S_CTL0_RXLCH_Msk               (0x1ul << I2S_CTL0_RXLCH_Pos)                     /*!< I2S_T::CTL0: RXLCH Mask                */
+#define I2S_CTL0_RXLCH_Pos          ( 23 )                                                 /*!< I2S_T::CTL0: RXLCH Position            */
+#define I2S_CTL0_RXLCH_Msk          ( 0x1ul << I2S_CTL0_RXLCH_Pos )                        /*!< I2S_T::CTL0: RXLCH Mask                */
 
-#define I2S_CTL0_FORMAT_Pos              (24)                                              /*!< I2S_T::CTL0: FORMAT Position           */
-#define I2S_CTL0_FORMAT_Msk              (0x7ul << I2S_CTL0_FORMAT_Pos)                    /*!< I2S_T::CTL0: FORMAT Mask               */
+#define I2S_CTL0_FORMAT_Pos         ( 24 )                                                 /*!< I2S_T::CTL0: FORMAT Position           */
+#define I2S_CTL0_FORMAT_Msk         ( 0x7ul << I2S_CTL0_FORMAT_Pos )                       /*!< I2S_T::CTL0: FORMAT Mask               */
 
-#define I2S_CTL0_PCMSYNC_Pos             (27)                                              /*!< I2S_T::CTL0: PCMSYNC Position          */
-#define I2S_CTL0_PCMSYNC_Msk             (0x1ul << I2S_CTL0_PCMSYNC_Pos)                   /*!< I2S_T::CTL0: PCMSYNC Mask              */
+#define I2S_CTL0_PCMSYNC_Pos        ( 27 )                                                 /*!< I2S_T::CTL0: PCMSYNC Position          */
+#define I2S_CTL0_PCMSYNC_Msk        ( 0x1ul << I2S_CTL0_PCMSYNC_Pos )                      /*!< I2S_T::CTL0: PCMSYNC Mask              */
 
-#define I2S_CTL0_CHWIDTH_Pos             (28)                                              /*!< I2S_T::CTL0: CHWIDTH Position          */
-#define I2S_CTL0_CHWIDTH_Msk             (0x3ul << I2S_CTL0_CHWIDTH_Pos)                   /*!< I2S_T::CTL0: CHWIDTH Mask              */
+#define I2S_CTL0_CHWIDTH_Pos        ( 28 )                                                 /*!< I2S_T::CTL0: CHWIDTH Position          */
+#define I2S_CTL0_CHWIDTH_Msk        ( 0x3ul << I2S_CTL0_CHWIDTH_Pos )                      /*!< I2S_T::CTL0: CHWIDTH Mask              */
 
-#define I2S_CTL0_TDMCHNUM_Pos            (30)                                              /*!< I2S_T::CTL0: TDMCHNUM Position         */
-#define I2S_CTL0_TDMCHNUM_Msk            (0x3ul << I2S_CTL0_TDMCHNUM_Pos)                  /*!< I2S_T::CTL0: TDMCHNUM Mask             */
+#define I2S_CTL0_TDMCHNUM_Pos       ( 30 )                                                 /*!< I2S_T::CTL0: TDMCHNUM Position         */
+#define I2S_CTL0_TDMCHNUM_Msk       ( 0x3ul << I2S_CTL0_TDMCHNUM_Pos )                     /*!< I2S_T::CTL0: TDMCHNUM Mask             */
 
-#define I2S_CLKDIV_MCLKDIV_Pos           (0)                                               /*!< I2S_T::CLKDIV: MCLKDIV Position        */
-#define I2S_CLKDIV_MCLKDIV_Msk           (0x3ful << I2S_CLKDIV_MCLKDIV_Pos)                /*!< I2S_T::CLKDIV: MCLKDIV Mask            */
+#define I2S_CLKDIV_MCLKDIV_Pos      ( 0 )                                                  /*!< I2S_T::CLKDIV: MCLKDIV Position        */
+#define I2S_CLKDIV_MCLKDIV_Msk      ( 0x3ful << I2S_CLKDIV_MCLKDIV_Pos )                   /*!< I2S_T::CLKDIV: MCLKDIV Mask            */
 
-#define I2S_CLKDIV_BCLKDIV_Pos           (8)                                               /*!< I2S_T::CLKDIV: BCLKDIV Position        */
-#define I2S_CLKDIV_BCLKDIV_Msk           (0x1fful << I2S_CLKDIV_BCLKDIV_Pos)               /*!< I2S_T::CLKDIV: BCLKDIV Mask            */
+#define I2S_CLKDIV_BCLKDIV_Pos      ( 8 )                                                  /*!< I2S_T::CLKDIV: BCLKDIV Position        */
+#define I2S_CLKDIV_BCLKDIV_Msk      ( 0x1fful << I2S_CLKDIV_BCLKDIV_Pos )                  /*!< I2S_T::CLKDIV: BCLKDIV Mask            */
 
-#define I2S_IEN_RXUDFIEN_Pos             (0)                                               /*!< I2S_T::IEN: RXUDFIEN Position          */
-#define I2S_IEN_RXUDFIEN_Msk             (0x1ul << I2S_IEN_RXUDFIEN_Pos)                   /*!< I2S_T::IEN: RXUDFIEN Mask              */
+#define I2S_IEN_RXUDFIEN_Pos        ( 0 )                                                  /*!< I2S_T::IEN: RXUDFIEN Position          */
+#define I2S_IEN_RXUDFIEN_Msk        ( 0x1ul << I2S_IEN_RXUDFIEN_Pos )                      /*!< I2S_T::IEN: RXUDFIEN Mask              */
 
-#define I2S_IEN_RXOVFIEN_Pos             (1)                                               /*!< I2S_T::IEN: RXOVFIEN Position          */
-#define I2S_IEN_RXOVFIEN_Msk             (0x1ul << I2S_IEN_RXOVFIEN_Pos)                   /*!< I2S_T::IEN: RXOVFIEN Mask              */
+#define I2S_IEN_RXOVFIEN_Pos        ( 1 )                                                  /*!< I2S_T::IEN: RXOVFIEN Position          */
+#define I2S_IEN_RXOVFIEN_Msk        ( 0x1ul << I2S_IEN_RXOVFIEN_Pos )                      /*!< I2S_T::IEN: RXOVFIEN Mask              */
 
-#define I2S_IEN_RXTHIEN_Pos              (2)                                               /*!< I2S_T::IEN: RXTHIEN Position           */
-#define I2S_IEN_RXTHIEN_Msk              (0x1ul << I2S_IEN_RXTHIEN_Pos)                    /*!< I2S_T::IEN: RXTHIEN Mask               */
+#define I2S_IEN_RXTHIEN_Pos         ( 2 )                                                  /*!< I2S_T::IEN: RXTHIEN Position           */
+#define I2S_IEN_RXTHIEN_Msk         ( 0x1ul << I2S_IEN_RXTHIEN_Pos )                       /*!< I2S_T::IEN: RXTHIEN Mask               */
 
-#define I2S_IEN_TXUDFIEN_Pos             (8)                                               /*!< I2S_T::IEN: TXUDFIEN Position          */
-#define I2S_IEN_TXUDFIEN_Msk             (0x1ul << I2S_IEN_TXUDFIEN_Pos)                   /*!< I2S_T::IEN: TXUDFIEN Mask              */
+#define I2S_IEN_TXUDFIEN_Pos        ( 8 )                                                  /*!< I2S_T::IEN: TXUDFIEN Position          */
+#define I2S_IEN_TXUDFIEN_Msk        ( 0x1ul << I2S_IEN_TXUDFIEN_Pos )                      /*!< I2S_T::IEN: TXUDFIEN Mask              */
 
-#define I2S_IEN_TXOVFIEN_Pos             (9)                                               /*!< I2S_T::IEN: TXOVFIEN Position          */
-#define I2S_IEN_TXOVFIEN_Msk             (0x1ul << I2S_IEN_TXOVFIEN_Pos)                   /*!< I2S_T::IEN: TXOVFIEN Mask              */
+#define I2S_IEN_TXOVFIEN_Pos        ( 9 )                                                  /*!< I2S_T::IEN: TXOVFIEN Position          */
+#define I2S_IEN_TXOVFIEN_Msk        ( 0x1ul << I2S_IEN_TXOVFIEN_Pos )                      /*!< I2S_T::IEN: TXOVFIEN Mask              */
 
-#define I2S_IEN_TXTHIEN_Pos              (10)                                              /*!< I2S_T::IEN: TXTHIEN Position           */
-#define I2S_IEN_TXTHIEN_Msk              (0x1ul << I2S_IEN_TXTHIEN_Pos)                    /*!< I2S_T::IEN: TXTHIEN Mask               */
+#define I2S_IEN_TXTHIEN_Pos         ( 10 )                                                 /*!< I2S_T::IEN: TXTHIEN Position           */
+#define I2S_IEN_TXTHIEN_Msk         ( 0x1ul << I2S_IEN_TXTHIEN_Pos )                       /*!< I2S_T::IEN: TXTHIEN Mask               */
 
-#define I2S_IEN_CH0ZCIEN_Pos             (16)                                              /*!< I2S_T::IEN: CH0ZCIEN Position          */
-#define I2S_IEN_CH0ZCIEN_Msk             (0x1ul << I2S_IEN_CH0ZCIEN_Pos)                   /*!< I2S_T::IEN: CH0ZCIEN Mask              */
+#define I2S_IEN_CH0ZCIEN_Pos        ( 16 )                                                 /*!< I2S_T::IEN: CH0ZCIEN Position          */
+#define I2S_IEN_CH0ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH0ZCIEN_Pos )                      /*!< I2S_T::IEN: CH0ZCIEN Mask              */
 
-#define I2S_IEN_CH1ZCIEN_Pos             (17)                                              /*!< I2S_T::IEN: CH1ZCIEN Position          */
-#define I2S_IEN_CH1ZCIEN_Msk             (0x1ul << I2S_IEN_CH1ZCIEN_Pos)                   /*!< I2S_T::IEN: CH1ZCIEN Mask              */
+#define I2S_IEN_CH1ZCIEN_Pos        ( 17 )                                                 /*!< I2S_T::IEN: CH1ZCIEN Position          */
+#define I2S_IEN_CH1ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH1ZCIEN_Pos )                      /*!< I2S_T::IEN: CH1ZCIEN Mask              */
 
-#define I2S_IEN_CH2ZCIEN_Pos             (18)                                              /*!< I2S_T::IEN: CH2ZCIEN Position          */
-#define I2S_IEN_CH2ZCIEN_Msk             (0x1ul << I2S_IEN_CH2ZCIEN_Pos)                   /*!< I2S_T::IEN: CH2ZCIEN Mask              */
+#define I2S_IEN_CH2ZCIEN_Pos        ( 18 )                                                 /*!< I2S_T::IEN: CH2ZCIEN Position          */
+#define I2S_IEN_CH2ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH2ZCIEN_Pos )                      /*!< I2S_T::IEN: CH2ZCIEN Mask              */
 
-#define I2S_IEN_CH3ZCIEN_Pos             (19)                                              /*!< I2S_T::IEN: CH3ZCIEN Position          */
-#define I2S_IEN_CH3ZCIEN_Msk             (0x1ul << I2S_IEN_CH3ZCIEN_Pos)                   /*!< I2S_T::IEN: CH3ZCIEN Mask              */
+#define I2S_IEN_CH3ZCIEN_Pos        ( 19 )                                                 /*!< I2S_T::IEN: CH3ZCIEN Position          */
+#define I2S_IEN_CH3ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH3ZCIEN_Pos )                      /*!< I2S_T::IEN: CH3ZCIEN Mask              */
 
-#define I2S_IEN_CH4ZCIEN_Pos             (20)                                              /*!< I2S_T::IEN: CH4ZCIEN Position          */
-#define I2S_IEN_CH4ZCIEN_Msk             (0x1ul << I2S_IEN_CH4ZCIEN_Pos)                   /*!< I2S_T::IEN: CH4ZCIEN Mask              */
+#define I2S_IEN_CH4ZCIEN_Pos        ( 20 )                                                 /*!< I2S_T::IEN: CH4ZCIEN Position          */
+#define I2S_IEN_CH4ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH4ZCIEN_Pos )                      /*!< I2S_T::IEN: CH4ZCIEN Mask              */
 
-#define I2S_IEN_CH5ZCIEN_Pos             (21)                                              /*!< I2S_T::IEN: CH5ZCIEN Position          */
-#define I2S_IEN_CH5ZCIEN_Msk             (0x1ul << I2S_IEN_CH5ZCIEN_Pos)                   /*!< I2S_T::IEN: CH5ZCIEN Mask              */
+#define I2S_IEN_CH5ZCIEN_Pos        ( 21 )                                                 /*!< I2S_T::IEN: CH5ZCIEN Position          */
+#define I2S_IEN_CH5ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH5ZCIEN_Pos )                      /*!< I2S_T::IEN: CH5ZCIEN Mask              */
 
-#define I2S_IEN_CH6ZCIEN_Pos             (22)                                              /*!< I2S_T::IEN: CH6ZCIEN Position          */
-#define I2S_IEN_CH6ZCIEN_Msk             (0x1ul << I2S_IEN_CH6ZCIEN_Pos)                   /*!< I2S_T::IEN: CH6ZCIEN Mask              */
+#define I2S_IEN_CH6ZCIEN_Pos        ( 22 )                                                 /*!< I2S_T::IEN: CH6ZCIEN Position          */
+#define I2S_IEN_CH6ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH6ZCIEN_Pos )                      /*!< I2S_T::IEN: CH6ZCIEN Mask              */
 
-#define I2S_IEN_CH7ZCIEN_Pos             (23)                                              /*!< I2S_T::IEN: CH7ZCIEN Position          */
-#define I2S_IEN_CH7ZCIEN_Msk             (0x1ul << I2S_IEN_CH7ZCIEN_Pos)                   /*!< I2S_T::IEN: CH7ZCIEN Mask              */
+#define I2S_IEN_CH7ZCIEN_Pos        ( 23 )                                                 /*!< I2S_T::IEN: CH7ZCIEN Position          */
+#define I2S_IEN_CH7ZCIEN_Msk        ( 0x1ul << I2S_IEN_CH7ZCIEN_Pos )                      /*!< I2S_T::IEN: CH7ZCIEN Mask              */
 
-#define I2S_STATUS0_I2SINT_Pos           (0)                                               /*!< I2S_T::STATUS0: I2SINT Position        */
-#define I2S_STATUS0_I2SINT_Msk           (0x1ul << I2S_STATUS0_I2SINT_Pos)                 /*!< I2S_T::STATUS0: I2SINT Mask            */
+#define I2S_STATUS0_I2SINT_Pos      ( 0 )                                                  /*!< I2S_T::STATUS0: I2SINT Position        */
+#define I2S_STATUS0_I2SINT_Msk      ( 0x1ul << I2S_STATUS0_I2SINT_Pos )                    /*!< I2S_T::STATUS0: I2SINT Mask            */
 
-#define I2S_STATUS0_I2SRXINT_Pos         (1)                                               /*!< I2S_T::STATUS0: I2SRXINT Position      */
-#define I2S_STATUS0_I2SRXINT_Msk         (0x1ul << I2S_STATUS0_I2SRXINT_Pos)               /*!< I2S_T::STATUS0: I2SRXINT Mask          */
+#define I2S_STATUS0_I2SRXINT_Pos    ( 1 )                                                  /*!< I2S_T::STATUS0: I2SRXINT Position      */
+#define I2S_STATUS0_I2SRXINT_Msk    ( 0x1ul << I2S_STATUS0_I2SRXINT_Pos )                  /*!< I2S_T::STATUS0: I2SRXINT Mask          */
 
-#define I2S_STATUS0_I2STXINT_Pos         (2)                                               /*!< I2S_T::STATUS0: I2STXINT Position      */
-#define I2S_STATUS0_I2STXINT_Msk         (0x1ul << I2S_STATUS0_I2STXINT_Pos)               /*!< I2S_T::STATUS0: I2STXINT Mask          */
+#define I2S_STATUS0_I2STXINT_Pos    ( 2 )                                                  /*!< I2S_T::STATUS0: I2STXINT Position      */
+#define I2S_STATUS0_I2STXINT_Msk    ( 0x1ul << I2S_STATUS0_I2STXINT_Pos )                  /*!< I2S_T::STATUS0: I2STXINT Mask          */
 
-#define I2S_STATUS0_DATACH_Pos           (3)                                               /*!< I2S_T::STATUS0: DATACH Position        */
-#define I2S_STATUS0_DATACH_Msk           (0x7ul << I2S_STATUS0_DATACH_Pos)                 /*!< I2S_T::STATUS0: DATACH Mask            */
+#define I2S_STATUS0_DATACH_Pos      ( 3 )                                                  /*!< I2S_T::STATUS0: DATACH Position        */
+#define I2S_STATUS0_DATACH_Msk      ( 0x7ul << I2S_STATUS0_DATACH_Pos )                    /*!< I2S_T::STATUS0: DATACH Mask            */
 
-#define I2S_STATUS0_RXUDIF_Pos           (8)                                               /*!< I2S_T::STATUS0: RXUDIF Position        */
-#define I2S_STATUS0_RXUDIF_Msk           (0x1ul << I2S_STATUS0_RXUDIF_Pos)                 /*!< I2S_T::STATUS0: RXUDIF Mask            */
+#define I2S_STATUS0_RXUDIF_Pos      ( 8 )                                                  /*!< I2S_T::STATUS0: RXUDIF Position        */
+#define I2S_STATUS0_RXUDIF_Msk      ( 0x1ul << I2S_STATUS0_RXUDIF_Pos )                    /*!< I2S_T::STATUS0: RXUDIF Mask            */
 
-#define I2S_STATUS0_RXOVIF_Pos           (9)                                               /*!< I2S_T::STATUS0: RXOVIF Position        */
-#define I2S_STATUS0_RXOVIF_Msk           (0x1ul << I2S_STATUS0_RXOVIF_Pos)                 /*!< I2S_T::STATUS0: RXOVIF Mask            */
+#define I2S_STATUS0_RXOVIF_Pos      ( 9 )                                                  /*!< I2S_T::STATUS0: RXOVIF Position        */
+#define I2S_STATUS0_RXOVIF_Msk      ( 0x1ul << I2S_STATUS0_RXOVIF_Pos )                    /*!< I2S_T::STATUS0: RXOVIF Mask            */
 
-#define I2S_STATUS0_RXTHIF_Pos           (10)                                              /*!< I2S_T::STATUS0: RXTHIF Position        */
-#define I2S_STATUS0_RXTHIF_Msk           (0x1ul << I2S_STATUS0_RXTHIF_Pos)                 /*!< I2S_T::STATUS0: RXTHIF Mask            */
+#define I2S_STATUS0_RXTHIF_Pos      ( 10 )                                                 /*!< I2S_T::STATUS0: RXTHIF Position        */
+#define I2S_STATUS0_RXTHIF_Msk      ( 0x1ul << I2S_STATUS0_RXTHIF_Pos )                    /*!< I2S_T::STATUS0: RXTHIF Mask            */
 
-#define I2S_STATUS0_RXFULL_Pos           (11)                                              /*!< I2S_T::STATUS0: RXFULL Position        */
-#define I2S_STATUS0_RXFULL_Msk           (0x1ul << I2S_STATUS0_RXFULL_Pos)                 /*!< I2S_T::STATUS0: RXFULL Mask            */
+#define I2S_STATUS0_RXFULL_Pos      ( 11 )                                                 /*!< I2S_T::STATUS0: RXFULL Position        */
+#define I2S_STATUS0_RXFULL_Msk      ( 0x1ul << I2S_STATUS0_RXFULL_Pos )                    /*!< I2S_T::STATUS0: RXFULL Mask            */
 
-#define I2S_STATUS0_RXEMPTY_Pos          (12)                                              /*!< I2S_T::STATUS0: RXEMPTY Position       */
-#define I2S_STATUS0_RXEMPTY_Msk          (0x1ul << I2S_STATUS0_RXEMPTY_Pos)                /*!< I2S_T::STATUS0: RXEMPTY Mask           */
+#define I2S_STATUS0_RXEMPTY_Pos     ( 12 )                                                 /*!< I2S_T::STATUS0: RXEMPTY Position       */
+#define I2S_STATUS0_RXEMPTY_Msk     ( 0x1ul << I2S_STATUS0_RXEMPTY_Pos )                   /*!< I2S_T::STATUS0: RXEMPTY Mask           */
 
-#define I2S_STATUS0_TXUDIF_Pos           (16)                                              /*!< I2S_T::STATUS0: TXUDIF Position        */
-#define I2S_STATUS0_TXUDIF_Msk           (0x1ul << I2S_STATUS0_TXUDIF_Pos)                 /*!< I2S_T::STATUS0: TXUDIF Mask            */
+#define I2S_STATUS0_TXUDIF_Pos      ( 16 )                                                 /*!< I2S_T::STATUS0: TXUDIF Position        */
+#define I2S_STATUS0_TXUDIF_Msk      ( 0x1ul << I2S_STATUS0_TXUDIF_Pos )                    /*!< I2S_T::STATUS0: TXUDIF Mask            */
 
-#define I2S_STATUS0_TXOVIF_Pos           (17)                                              /*!< I2S_T::STATUS0: TXOVIF Position        */
-#define I2S_STATUS0_TXOVIF_Msk           (0x1ul << I2S_STATUS0_TXOVIF_Pos)                 /*!< I2S_T::STATUS0: TXOVIF Mask            */
+#define I2S_STATUS0_TXOVIF_Pos      ( 17 )                                                 /*!< I2S_T::STATUS0: TXOVIF Position        */
+#define I2S_STATUS0_TXOVIF_Msk      ( 0x1ul << I2S_STATUS0_TXOVIF_Pos )                    /*!< I2S_T::STATUS0: TXOVIF Mask            */
 
-#define I2S_STATUS0_TXTHIF_Pos           (18)                                              /*!< I2S_T::STATUS0: TXTHIF Position        */
-#define I2S_STATUS0_TXTHIF_Msk           (0x1ul << I2S_STATUS0_TXTHIF_Pos)                 /*!< I2S_T::STATUS0: TXTHIF Mask            */
+#define I2S_STATUS0_TXTHIF_Pos      ( 18 )                                                 /*!< I2S_T::STATUS0: TXTHIF Position        */
+#define I2S_STATUS0_TXTHIF_Msk      ( 0x1ul << I2S_STATUS0_TXTHIF_Pos )                    /*!< I2S_T::STATUS0: TXTHIF Mask            */
 
-#define I2S_STATUS0_TXFULL_Pos           (19)                                              /*!< I2S_T::STATUS0: TXFULL Position        */
-#define I2S_STATUS0_TXFULL_Msk           (0x1ul << I2S_STATUS0_TXFULL_Pos)                 /*!< I2S_T::STATUS0: TXFULL Mask            */
+#define I2S_STATUS0_TXFULL_Pos      ( 19 )                                                 /*!< I2S_T::STATUS0: TXFULL Position        */
+#define I2S_STATUS0_TXFULL_Msk      ( 0x1ul << I2S_STATUS0_TXFULL_Pos )                    /*!< I2S_T::STATUS0: TXFULL Mask            */
 
-#define I2S_STATUS0_TXEMPTY_Pos          (20)                                              /*!< I2S_T::STATUS0: TXEMPTY Position       */
-#define I2S_STATUS0_TXEMPTY_Msk          (0x1ul << I2S_STATUS0_TXEMPTY_Pos)                /*!< I2S_T::STATUS0: TXEMPTY Mask           */
+#define I2S_STATUS0_TXEMPTY_Pos     ( 20 )                                                 /*!< I2S_T::STATUS0: TXEMPTY Position       */
+#define I2S_STATUS0_TXEMPTY_Msk     ( 0x1ul << I2S_STATUS0_TXEMPTY_Pos )                   /*!< I2S_T::STATUS0: TXEMPTY Mask           */
 
-#define I2S_STATUS0_TXBUSY_Pos           (21)                                              /*!< I2S_T::STATUS0: TXBUSY Position        */
-#define I2S_STATUS0_TXBUSY_Msk           (0x1ul << I2S_STATUS0_TXBUSY_Pos)                 /*!< I2S_T::STATUS0: TXBUSY Mask            */
+#define I2S_STATUS0_TXBUSY_Pos      ( 21 )                                                 /*!< I2S_T::STATUS0: TXBUSY Position        */
+#define I2S_STATUS0_TXBUSY_Msk      ( 0x1ul << I2S_STATUS0_TXBUSY_Pos )                    /*!< I2S_T::STATUS0: TXBUSY Mask            */
 
-#define I2S_TXFIFO_TXFIFO_Pos            (0)                                               /*!< I2S_T::TXFIFO: TXFIFO Position         */
-#define I2S_TXFIFO_TXFIFO_Msk            (0xfffffffful << I2S_TXFIFO_TXFIFO_Pos)           /*!< I2S_T::TXFIFO: TXFIFO Mask             */
+#define I2S_TXFIFO_TXFIFO_Pos       ( 0 )                                                  /*!< I2S_T::TXFIFO: TXFIFO Position         */
+#define I2S_TXFIFO_TXFIFO_Msk       ( 0xfffffffful << I2S_TXFIFO_TXFIFO_Pos )              /*!< I2S_T::TXFIFO: TXFIFO Mask             */
 
-#define I2S_RXFIFO_RXFIFO_Pos            (0)                                               /*!< I2S_T::RXFIFO: RXFIFO Position         */
-#define I2S_RXFIFO_RXFIFO_Msk            (0xfffffffful << I2S_RXFIFO_RXFIFO_Pos)           /*!< I2S_T::RXFIFO: RXFIFO Mask             */
+#define I2S_RXFIFO_RXFIFO_Pos       ( 0 )                                                  /*!< I2S_T::RXFIFO: RXFIFO Position         */
+#define I2S_RXFIFO_RXFIFO_Msk       ( 0xfffffffful << I2S_RXFIFO_RXFIFO_Pos )              /*!< I2S_T::RXFIFO: RXFIFO Mask             */
 
-#define I2S_CTL1_CH0ZCEN_Pos             (0)                                               /*!< I2S_T::CTL1: CH0ZCEN Position          */
-#define I2S_CTL1_CH0ZCEN_Msk             (0x1ul << I2S_CTL1_CH0ZCEN_Pos)                   /*!< I2S_T::CTL1: CH0ZCEN Mask              */
+#define I2S_CTL1_CH0ZCEN_Pos        ( 0 )                                                  /*!< I2S_T::CTL1: CH0ZCEN Position          */
+#define I2S_CTL1_CH0ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH0ZCEN_Pos )                      /*!< I2S_T::CTL1: CH0ZCEN Mask              */
 
-#define I2S_CTL1_CH1ZCEN_Pos             (1)                                               /*!< I2S_T::CTL1: CH1ZCEN Position          */
-#define I2S_CTL1_CH1ZCEN_Msk             (0x1ul << I2S_CTL1_CH1ZCEN_Pos)                   /*!< I2S_T::CTL1: CH1ZCEN Mask              */
+#define I2S_CTL1_CH1ZCEN_Pos        ( 1 )                                                  /*!< I2S_T::CTL1: CH1ZCEN Position          */
+#define I2S_CTL1_CH1ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH1ZCEN_Pos )                      /*!< I2S_T::CTL1: CH1ZCEN Mask              */
 
-#define I2S_CTL1_CH2ZCEN_Pos             (2)                                               /*!< I2S_T::CTL1: CH2ZCEN Position          */
-#define I2S_CTL1_CH2ZCEN_Msk             (0x1ul << I2S_CTL1_CH2ZCEN_Pos)                   /*!< I2S_T::CTL1: CH2ZCEN Mask              */
+#define I2S_CTL1_CH2ZCEN_Pos        ( 2 )                                                  /*!< I2S_T::CTL1: CH2ZCEN Position          */
+#define I2S_CTL1_CH2ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH2ZCEN_Pos )                      /*!< I2S_T::CTL1: CH2ZCEN Mask              */
 
-#define I2S_CTL1_CH3ZCEN_Pos             (3)                                               /*!< I2S_T::CTL1: CH3ZCEN Position          */
-#define I2S_CTL1_CH3ZCEN_Msk             (0x1ul << I2S_CTL1_CH3ZCEN_Pos)                   /*!< I2S_T::CTL1: CH3ZCEN Mask              */
+#define I2S_CTL1_CH3ZCEN_Pos        ( 3 )                                                  /*!< I2S_T::CTL1: CH3ZCEN Position          */
+#define I2S_CTL1_CH3ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH3ZCEN_Pos )                      /*!< I2S_T::CTL1: CH3ZCEN Mask              */
 
-#define I2S_CTL1_CH4ZCEN_Pos             (4)                                               /*!< I2S_T::CTL1: CH4ZCEN Position          */
-#define I2S_CTL1_CH4ZCEN_Msk             (0x1ul << I2S_CTL1_CH4ZCEN_Pos)                   /*!< I2S_T::CTL1: CH4ZCEN Mask              */
+#define I2S_CTL1_CH4ZCEN_Pos        ( 4 )                                                  /*!< I2S_T::CTL1: CH4ZCEN Position          */
+#define I2S_CTL1_CH4ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH4ZCEN_Pos )                      /*!< I2S_T::CTL1: CH4ZCEN Mask              */
 
-#define I2S_CTL1_CH5ZCEN_Pos             (5)                                               /*!< I2S_T::CTL1: CH5ZCEN Position          */
-#define I2S_CTL1_CH5ZCEN_Msk             (0x1ul << I2S_CTL1_CH5ZCEN_Pos)                   /*!< I2S_T::CTL1: CH5ZCEN Mask              */
+#define I2S_CTL1_CH5ZCEN_Pos        ( 5 )                                                  /*!< I2S_T::CTL1: CH5ZCEN Position          */
+#define I2S_CTL1_CH5ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH5ZCEN_Pos )                      /*!< I2S_T::CTL1: CH5ZCEN Mask              */
 
-#define I2S_CTL1_CH6ZCEN_Pos             (6)                                               /*!< I2S_T::CTL1: CH6ZCEN Position          */
-#define I2S_CTL1_CH6ZCEN_Msk             (0x1ul << I2S_CTL1_CH6ZCEN_Pos)                   /*!< I2S_T::CTL1: CH6ZCEN Mask              */
+#define I2S_CTL1_CH6ZCEN_Pos        ( 6 )                                                  /*!< I2S_T::CTL1: CH6ZCEN Position          */
+#define I2S_CTL1_CH6ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH6ZCEN_Pos )                      /*!< I2S_T::CTL1: CH6ZCEN Mask              */
 
-#define I2S_CTL1_CH7ZCEN_Pos             (7)                                               /*!< I2S_T::CTL1: CH7ZCEN Position          */
-#define I2S_CTL1_CH7ZCEN_Msk             (0x1ul << I2S_CTL1_CH7ZCEN_Pos)                   /*!< I2S_T::CTL1: CH7ZCEN Mask              */
+#define I2S_CTL1_CH7ZCEN_Pos        ( 7 )                                                  /*!< I2S_T::CTL1: CH7ZCEN Position          */
+#define I2S_CTL1_CH7ZCEN_Msk        ( 0x1ul << I2S_CTL1_CH7ZCEN_Pos )                      /*!< I2S_T::CTL1: CH7ZCEN Mask              */
 
-#define I2S_CTL1_TXTH_Pos                (8)                                               /*!< I2S_T::CTL1: TXTH Position             */
-#define I2S_CTL1_TXTH_Msk                (0xful << I2S_CTL1_TXTH_Pos)                      /*!< I2S_T::CTL1: TXTH Mask                 */
+#define I2S_CTL1_TXTH_Pos           ( 8 )                                                  /*!< I2S_T::CTL1: TXTH Position             */
+#define I2S_CTL1_TXTH_Msk           ( 0xful << I2S_CTL1_TXTH_Pos )                         /*!< I2S_T::CTL1: TXTH Mask                 */
 
-#define I2S_CTL1_RXTH_Pos                (16)                                              /*!< I2S_T::CTL1: RXTH Position             */
-#define I2S_CTL1_RXTH_Msk                (0xful << I2S_CTL1_RXTH_Pos)                      /*!< I2S_T::CTL1: RXTH Mask                 */
+#define I2S_CTL1_RXTH_Pos           ( 16 )                                                 /*!< I2S_T::CTL1: RXTH Position             */
+#define I2S_CTL1_RXTH_Msk           ( 0xful << I2S_CTL1_RXTH_Pos )                         /*!< I2S_T::CTL1: RXTH Mask                 */
 
-#define I2S_CTL1_PBWIDTH_Pos             (24)                                              /*!< I2S_T::CTL1: PBWIDTH Position          */
-#define I2S_CTL1_PBWIDTH_Msk             (0x1ul << I2S_CTL1_PBWIDTH_Pos)                   /*!< I2S_T::CTL1: PBWIDTH Mask              */
+#define I2S_CTL1_PBWIDTH_Pos        ( 24 )                                                 /*!< I2S_T::CTL1: PBWIDTH Position          */
+#define I2S_CTL1_PBWIDTH_Msk        ( 0x1ul << I2S_CTL1_PBWIDTH_Pos )                      /*!< I2S_T::CTL1: PBWIDTH Mask              */
 
-#define I2S_CTL1_PB16ORD_Pos             (25)                                              /*!< I2S_T::CTL1: PB16ORD Position          */
-#define I2S_CTL1_PB16ORD_Msk             (0x1ul << I2S_CTL1_PB16ORD_Pos)                   /*!< I2S_T::CTL1: PB16ORD Mask              */
+#define I2S_CTL1_PB16ORD_Pos        ( 25 )                                                 /*!< I2S_T::CTL1: PB16ORD Position          */
+#define I2S_CTL1_PB16ORD_Msk        ( 0x1ul << I2S_CTL1_PB16ORD_Pos )                      /*!< I2S_T::CTL1: PB16ORD Mask              */
 
-#define I2S_STATUS1_CH0ZCIF_Pos          (0)                                               /*!< I2S_T::STATUS1: CH0ZCIF Position       */
-#define I2S_STATUS1_CH0ZCIF_Msk          (0x1ul << I2S_STATUS1_CH0ZCIF_Pos)                /*!< I2S_T::STATUS1: CH0ZCIF Mask           */
+#define I2S_STATUS1_CH0ZCIF_Pos     ( 0 )                                                  /*!< I2S_T::STATUS1: CH0ZCIF Position       */
+#define I2S_STATUS1_CH0ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH0ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH0ZCIF Mask           */
 
-#define I2S_STATUS1_CH1ZCIF_Pos          (1)                                               /*!< I2S_T::STATUS1: CH1ZCIF Position       */
-#define I2S_STATUS1_CH1ZCIF_Msk          (0x1ul << I2S_STATUS1_CH1ZCIF_Pos)                /*!< I2S_T::STATUS1: CH1ZCIF Mask           */
+#define I2S_STATUS1_CH1ZCIF_Pos     ( 1 )                                                  /*!< I2S_T::STATUS1: CH1ZCIF Position       */
+#define I2S_STATUS1_CH1ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH1ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH1ZCIF Mask           */
 
-#define I2S_STATUS1_CH2ZCIF_Pos          (2)                                               /*!< I2S_T::STATUS1: CH2ZCIF Position       */
-#define I2S_STATUS1_CH2ZCIF_Msk          (0x1ul << I2S_STATUS1_CH2ZCIF_Pos)                /*!< I2S_T::STATUS1: CH2ZCIF Mask           */
+#define I2S_STATUS1_CH2ZCIF_Pos     ( 2 )                                                  /*!< I2S_T::STATUS1: CH2ZCIF Position       */
+#define I2S_STATUS1_CH2ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH2ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH2ZCIF Mask           */
 
-#define I2S_STATUS1_CH3ZCIF_Pos          (3)                                               /*!< I2S_T::STATUS1: CH3ZCIF Position       */
-#define I2S_STATUS1_CH3ZCIF_Msk          (0x1ul << I2S_STATUS1_CH3ZCIF_Pos)                /*!< I2S_T::STATUS1: CH3ZCIF Mask           */
+#define I2S_STATUS1_CH3ZCIF_Pos     ( 3 )                                                  /*!< I2S_T::STATUS1: CH3ZCIF Position       */
+#define I2S_STATUS1_CH3ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH3ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH3ZCIF Mask           */
 
-#define I2S_STATUS1_CH4ZCIF_Pos          (4)                                               /*!< I2S_T::STATUS1: CH4ZCIF Position       */
-#define I2S_STATUS1_CH4ZCIF_Msk          (0x1ul << I2S_STATUS1_CH4ZCIF_Pos)                /*!< I2S_T::STATUS1: CH4ZCIF Mask           */
+#define I2S_STATUS1_CH4ZCIF_Pos     ( 4 )                                                  /*!< I2S_T::STATUS1: CH4ZCIF Position       */
+#define I2S_STATUS1_CH4ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH4ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH4ZCIF Mask           */
 
-#define I2S_STATUS1_CH5ZCIF_Pos          (5)                                               /*!< I2S_T::STATUS1: CH5ZCIF Position       */
-#define I2S_STATUS1_CH5ZCIF_Msk          (0x1ul << I2S_STATUS1_CH5ZCIF_Pos)                /*!< I2S_T::STATUS1: CH5ZCIF Mask           */
+#define I2S_STATUS1_CH5ZCIF_Pos     ( 5 )                                                  /*!< I2S_T::STATUS1: CH5ZCIF Position       */
+#define I2S_STATUS1_CH5ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH5ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH5ZCIF Mask           */
 
-#define I2S_STATUS1_CH6ZCIF_Pos          (6)                                               /*!< I2S_T::STATUS1: CH6ZCIF Position       */
-#define I2S_STATUS1_CH6ZCIF_Msk          (0x1ul << I2S_STATUS1_CH6ZCIF_Pos)                /*!< I2S_T::STATUS1: CH6ZCIF Mask           */
+#define I2S_STATUS1_CH6ZCIF_Pos     ( 6 )                                                  /*!< I2S_T::STATUS1: CH6ZCIF Position       */
+#define I2S_STATUS1_CH6ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH6ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH6ZCIF Mask           */
 
-#define I2S_STATUS1_CH7ZCIF_Pos          (7)                                               /*!< I2S_T::STATUS1: CH7ZCIF Position       */
-#define I2S_STATUS1_CH7ZCIF_Msk          (0x1ul << I2S_STATUS1_CH7ZCIF_Pos)                /*!< I2S_T::STATUS1: CH7ZCIF Mask           */
+#define I2S_STATUS1_CH7ZCIF_Pos     ( 7 )                                                  /*!< I2S_T::STATUS1: CH7ZCIF Position       */
+#define I2S_STATUS1_CH7ZCIF_Msk     ( 0x1ul << I2S_STATUS1_CH7ZCIF_Pos )                   /*!< I2S_T::STATUS1: CH7ZCIF Mask           */
 
-#define I2S_STATUS1_TXCNT_Pos            (8)                                               /*!< I2S_T::STATUS1: TXCNT Position         */
-#define I2S_STATUS1_TXCNT_Msk            (0x1ful << I2S_STATUS1_TXCNT_Pos)                 /*!< I2S_T::STATUS1: TXCNT Mask             */
+#define I2S_STATUS1_TXCNT_Pos       ( 8 )                                                  /*!< I2S_T::STATUS1: TXCNT Position         */
+#define I2S_STATUS1_TXCNT_Msk       ( 0x1ful << I2S_STATUS1_TXCNT_Pos )                    /*!< I2S_T::STATUS1: TXCNT Mask             */
 
-#define I2S_STATUS1_RXCNT_Pos            (16)                                              /*!< I2S_T::STATUS1: RXCNT Position         */
-#define I2S_STATUS1_RXCNT_Msk            (0x1ful << I2S_STATUS1_RXCNT_Pos)                 /*!< I2S_T::STATUS1: RXCNT Mask             */
+#define I2S_STATUS1_RXCNT_Pos       ( 16 )                                                 /*!< I2S_T::STATUS1: RXCNT Position         */
+#define I2S_STATUS1_RXCNT_Msk       ( 0x1ful << I2S_STATUS1_RXCNT_Pos )                    /*!< I2S_T::STATUS1: RXCNT Mask             */
 
 /**@}*/ /* I2S_CONST */
 /**@}*/ /* end of I2S register group */

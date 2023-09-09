@@ -24,22 +24,22 @@
  *
  */
 
- /**
-  * @file code_signature_verification.h
-  * @brief Interface for code signature verification functions.
-  *
-  */
+/**
+ * @file code_signature_verification.h
+ * @brief Interface for code signature verification functions.
+ *
+ */
 
 #ifndef CODE_SIGNATURE_VERIFICATION_H
 #define CODE_SIGNATURE_VERIFICATION_H
 
 #include "FreeRTOS.h"
- 
- /**
+
+/**
  * @brief Validate the integrity of the new image to be activated.
  * @param[in] pFileContext pointer to File context
  * @return OtaPalMainStatus_t , OtaPalSuccess if the signature of the image is valid.
  */
-OtaPalMainStatus_t xValidateImageSignature( OtaFileContext_t* const pFileContext );
+OtaPalMainStatus_t xValidateImageSignature( OtaFileContext_t * const pFileContext );
 
 #endif

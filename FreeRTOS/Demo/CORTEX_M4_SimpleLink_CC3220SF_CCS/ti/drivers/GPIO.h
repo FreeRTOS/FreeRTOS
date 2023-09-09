@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       GPIO.h
  *
@@ -218,13 +219,13 @@
  */
 
 #ifndef ti_drivers_GPIO__include
-#define ti_drivers_GPIO__include
+    #define ti_drivers_GPIO__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /**
  *  @name GPIO_STATUS_* macros are general status codes returned by GPIO driver APIs.
@@ -244,7 +245,7 @@ extern "C" {
  * #define GPIOTXYZ_STATUS_ERROR2    GPIO_STATUS_RESERVED - 2
  * @endcode
  */
-#define GPIO_STATUS_RESERVED        (-32)
+    #define GPIO_STATUS_RESERVED    ( -32 )
 
 /*!
  * @brief   Successful status code returned by GPI_setConfig().
@@ -252,7 +253,7 @@ extern "C" {
  * GPI_setConfig() returns GPIO_STATUS_SUCCESS if the API was executed
  * successfully.
  */
-#define GPIO_STATUS_SUCCESS         (0)
+    #define GPIO_STATUS_SUCCESS     ( 0 )
 
 /*!
  * @brief   Generic error status code returned by GPI_setConfig().
@@ -260,7 +261,7 @@ extern "C" {
  * GPI_setConfig() returns GPIO_STATUS_ERROR if the API was not executed
  * successfully.
  */
-#define GPIO_STATUS_ERROR           (-1)
+    #define GPIO_STATUS_ERROR       ( -1 )
 /** @}*/
 
 /*!
@@ -272,64 +273,65 @@ extern "C" {
  *  The lower 16 bits are reserved for device-specific
  *  port/pin identifications
  */
-typedef uint32_t GPIO_PinConfig;
+    typedef uint32_t GPIO_PinConfig;
 
 /*!
  *  @cond NODOC
  *  Internally used configuration bit access macros.
  */
-#define GPIO_CFG_IO_MASK           0x00ff0000
-#define GPIO_CFG_IO_LSB            16
-#define GPIO_CFG_OUT_TYPE_MASK     0x00060000
-#define GPIO_CFG_OUT_TYPE_LSB      17
-#define GPIO_CFG_IN_TYPE_MASK      0x00060000
-#define GPIO_CFG_IN_TYPE_LSB       17
-#define GPIO_CFG_OUT_STRENGTH_MASK 0x00f00000
-#define GPIO_CFG_OUT_STRENGTH_LSB  20
-#define GPIO_CFG_INT_MASK          0x07000000
-#define GPIO_CFG_INT_LSB           24
-#define GPIO_CFG_OUT_BIT           19
+    #define GPIO_CFG_IO_MASK              0x00ff0000
+    #define GPIO_CFG_IO_LSB               16
+    #define GPIO_CFG_OUT_TYPE_MASK        0x00060000
+    #define GPIO_CFG_OUT_TYPE_LSB         17
+    #define GPIO_CFG_IN_TYPE_MASK         0x00060000
+    #define GPIO_CFG_IN_TYPE_LSB          17
+    #define GPIO_CFG_OUT_STRENGTH_MASK    0x00f00000
+    #define GPIO_CFG_OUT_STRENGTH_LSB     20
+    #define GPIO_CFG_INT_MASK             0x07000000
+    #define GPIO_CFG_INT_LSB              24
+    #define GPIO_CFG_OUT_BIT              19
 /*! @endcond */
 
 /*!
  *  \defgroup GPIO_PinConfigSettings Macros used to configure GPIO pins
  *  @{
  */
+
 /** @name GPIO_PinConfig output pin configuration macros
  *  @{
  */
-#define GPIO_CFG_OUTPUT            (((uint32_t) 0) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Pin is an output. */
-#define GPIO_CFG_OUT_STD           (((uint32_t) 0) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Output pin is actively driven high and low */
-#define GPIO_CFG_OUT_OD_NOPULL     (((uint32_t) 2) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Output pin is Open Drain */
-#define GPIO_CFG_OUT_OD_PU         (((uint32_t) 4) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Output pin is Open Drain w/ pull up */
-#define GPIO_CFG_OUT_OD_PD         (((uint32_t) 6) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Output pin is Open Drain w/ pull dn */
+    #define GPIO_CFG_OUTPUT           ( ( ( uint32_t ) 0 ) << GPIO_CFG_IO_LSB )           /*!< @hideinitializer Pin is an output. */
+    #define GPIO_CFG_OUT_STD          ( ( ( uint32_t ) 0 ) << GPIO_CFG_IO_LSB )           /*!< @hideinitializer Output pin is actively driven high and low */
+    #define GPIO_CFG_OUT_OD_NOPULL    ( ( ( uint32_t ) 2 ) << GPIO_CFG_IO_LSB )           /*!< @hideinitializer Output pin is Open Drain */
+    #define GPIO_CFG_OUT_OD_PU        ( ( ( uint32_t ) 4 ) << GPIO_CFG_IO_LSB )           /*!< @hideinitializer Output pin is Open Drain w/ pull up */
+    #define GPIO_CFG_OUT_OD_PD        ( ( ( uint32_t ) 6 ) << GPIO_CFG_IO_LSB )           /*!< @hideinitializer Output pin is Open Drain w/ pull dn */
 
-#define GPIO_CFG_OUT_STR_LOW       (((uint32_t) 0) << GPIO_CFG_OUT_STRENGTH_LSB) /*!< @hideinitializer Set output pin strengh to low */
-#define GPIO_CFG_OUT_STR_MED       (((uint32_t) 1) << GPIO_CFG_OUT_STRENGTH_LSB) /*!< @hideinitializer Set output pin strengh to medium */
-#define GPIO_CFG_OUT_STR_HIGH      (((uint32_t) 2) << GPIO_CFG_OUT_STRENGTH_LSB) /*!< @hideinitializer Set output pin strengh to high */
+    #define GPIO_CFG_OUT_STR_LOW      ( ( ( uint32_t ) 0 ) << GPIO_CFG_OUT_STRENGTH_LSB ) /*!< @hideinitializer Set output pin strengh to low */
+    #define GPIO_CFG_OUT_STR_MED      ( ( ( uint32_t ) 1 ) << GPIO_CFG_OUT_STRENGTH_LSB ) /*!< @hideinitializer Set output pin strengh to medium */
+    #define GPIO_CFG_OUT_STR_HIGH     ( ( ( uint32_t ) 2 ) << GPIO_CFG_OUT_STRENGTH_LSB ) /*!< @hideinitializer Set output pin strengh to high */
 
-#define GPIO_CFG_OUT_HIGH          (((uint32_t) 1) << GPIO_CFG_OUT_BIT) /*!< @hideinitializer Set pin's output to 1. */
-#define GPIO_CFG_OUT_LOW           (((uint32_t) 0) << GPIO_CFG_OUT_BIT) /*!< @hideinitializer Set pin's output to 0. */
+    #define GPIO_CFG_OUT_HIGH         ( ( ( uint32_t ) 1 ) << GPIO_CFG_OUT_BIT )          /*!< @hideinitializer Set pin's output to 1. */
+    #define GPIO_CFG_OUT_LOW          ( ( ( uint32_t ) 0 ) << GPIO_CFG_OUT_BIT )          /*!< @hideinitializer Set pin's output to 0. */
 /** @} */
 
 /** @name GPIO_PinConfig input pin configuration macros
  *  @{
  */
-#define GPIO_CFG_INPUT             (((uint32_t) 1) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Pin is an input. */
-#define GPIO_CFG_IN_NOPULL         (((uint32_t) 1) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Input pin with no internal PU/PD */
-#define GPIO_CFG_IN_PU             (((uint32_t) 3) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Input pin with internal PU */
-#define GPIO_CFG_IN_PD             (((uint32_t) 5) << GPIO_CFG_IO_LSB) /*!< @hideinitializer Input pin with internal PD */
+    #define GPIO_CFG_INPUT        ( ( ( uint32_t ) 1 ) << GPIO_CFG_IO_LSB ) /*!< @hideinitializer Pin is an input. */
+    #define GPIO_CFG_IN_NOPULL    ( ( ( uint32_t ) 1 ) << GPIO_CFG_IO_LSB ) /*!< @hideinitializer Input pin with no internal PU/PD */
+    #define GPIO_CFG_IN_PU        ( ( ( uint32_t ) 3 ) << GPIO_CFG_IO_LSB ) /*!< @hideinitializer Input pin with internal PU */
+    #define GPIO_CFG_IN_PD        ( ( ( uint32_t ) 5 ) << GPIO_CFG_IO_LSB ) /*!< @hideinitializer Input pin with internal PD */
 /** @} */
 
 /** @name GPIO_PinConfig interrupt configuration macros
  *  @{
  */
-#define GPIO_CFG_IN_INT_NONE       (((uint32_t) 0) << GPIO_CFG_INT_LSB)    /*!< @hideinitializer No Interrupt */
-#define GPIO_CFG_IN_INT_FALLING    (((uint32_t) 1) << GPIO_CFG_INT_LSB)    /*!< @hideinitializer Interrupt on falling edge */
-#define GPIO_CFG_IN_INT_RISING     (((uint32_t) 2) << GPIO_CFG_INT_LSB)    /*!< @hideinitializer Interrupt on rising edge */
-#define GPIO_CFG_IN_INT_BOTH_EDGES (((uint32_t) 3) << GPIO_CFG_INT_LSB)    /*!< @hideinitializer Interrupt on both edges */
-#define GPIO_CFG_IN_INT_LOW        (((uint32_t) 4) << GPIO_CFG_INT_LSB)    /*!< @hideinitializer Interrupt on low level */
-#define GPIO_CFG_IN_INT_HIGH       (((uint32_t) 5) << GPIO_CFG_INT_LSB)    /*!< @hideinitializer Interrupt on high level */
+    #define GPIO_CFG_IN_INT_NONE          ( ( ( uint32_t ) 0 ) << GPIO_CFG_INT_LSB ) /*!< @hideinitializer No Interrupt */
+    #define GPIO_CFG_IN_INT_FALLING       ( ( ( uint32_t ) 1 ) << GPIO_CFG_INT_LSB ) /*!< @hideinitializer Interrupt on falling edge */
+    #define GPIO_CFG_IN_INT_RISING        ( ( ( uint32_t ) 2 ) << GPIO_CFG_INT_LSB ) /*!< @hideinitializer Interrupt on rising edge */
+    #define GPIO_CFG_IN_INT_BOTH_EDGES    ( ( ( uint32_t ) 3 ) << GPIO_CFG_INT_LSB ) /*!< @hideinitializer Interrupt on both edges */
+    #define GPIO_CFG_IN_INT_LOW           ( ( ( uint32_t ) 4 ) << GPIO_CFG_INT_LSB ) /*!< @hideinitializer Interrupt on low level */
+    #define GPIO_CFG_IN_INT_HIGH          ( ( ( uint32_t ) 5 ) << GPIO_CFG_INT_LSB ) /*!< @hideinitializer Interrupt on high level */
 /** @} */
 
 /** @name Special GPIO_PinConfig configuration macros
@@ -340,13 +342,13 @@ typedef uint32_t GPIO_PinConfig;
  *  @brief 'Or' in this @ref GPIO_PinConfig definition to inform GPIO_setConfig()
  *  to only configure the interrupt attributes of a GPIO input pin.
  */
-#define GPIO_CFG_IN_INT_ONLY       (((uint32_t) 1) << 27)                  /*!< @hideinitializer configure interrupt only */
+    #define GPIO_CFG_IN_INT_ONLY    ( ( ( uint32_t ) 1 ) << 27 )           /*!< @hideinitializer configure interrupt only */
 
 /*!
  *  @brief Use this @ref GPIO_PinConfig definition to inform GPIO_init()
  *  NOT to configure the corresponding pin
  */
-#define GPIO_DO_NOT_CONFIG         0x40000000                              /*!< @hideinitializer Do not configure this Pin */
+    #define GPIO_DO_NOT_CONFIG      0x40000000                             /*!< @hideinitializer Do not configure this Pin */
 
 /** @} */
 /** @} end of GPIO_PinConfigSettings group */
@@ -360,7 +362,7 @@ typedef uint32_t GPIO_PinConfig;
  *                          GPIO interrupts, by using the index to identify
  *                          the GPIO that caused the interrupt.
  */
-typedef void (*GPIO_CallbackFxn)(uint_least8_t index);
+    typedef void (* GPIO_CallbackFxn)( uint_least8_t index );
 
 /*!
  *  @brief      Clear a GPIO pin interrupt flag
@@ -372,7 +374,7 @@ typedef void (*GPIO_CallbackFxn)(uint_least8_t index);
  *
  *  @param      index       GPIO index
  */
-extern void GPIO_clearInt(uint_least8_t index);
+    extern void GPIO_clearInt( uint_least8_t index );
 
 /*!
  *  @brief      Disable a GPIO pin interrupt
@@ -381,7 +383,7 @@ extern void GPIO_clearInt(uint_least8_t index);
  *
  *  @param      index       GPIO index
  */
-extern void GPIO_disableInt(uint_least8_t index);
+    extern void GPIO_disableInt( uint_least8_t index );
 
 /*!
  *  @brief      Enable a GPIO pin interrupt
@@ -396,7 +398,7 @@ extern void GPIO_disableInt(uint_least8_t index);
  *
  *  @param      index       GPIO index
  */
-extern void GPIO_enableInt(uint_least8_t index);
+    extern void GPIO_enableInt( uint_least8_t index );
 
 /*!
  *  @brief      Get the current configuration for a gpio pin
@@ -409,7 +411,8 @@ extern void GPIO_enableInt(uint_least8_t index);
  *  @param      pinConfig   Location to store device specific pin
  *                          configuration settings
  */
-extern void GPIO_getConfig(uint_least8_t index, GPIO_PinConfig *pinConfig);
+    extern void GPIO_getConfig( uint_least8_t index,
+                                GPIO_PinConfig * pinConfig );
 
 /*!
  *  @brief  Initializes the GPIO module
@@ -421,7 +424,7 @@ extern void GPIO_getConfig(uint_least8_t index, GPIO_PinConfig *pinConfig);
  *          function can be called. This function must also be called before
  *          any other GPIO driver APIs.
  */
-extern void GPIO_init();
+    extern void GPIO_init();
 
 /*!
  *  @brief      Reads the value of a GPIO pin
@@ -433,7 +436,7 @@ extern void GPIO_init();
  *
  *  @return     0 or 1, depending on the state of the pin.
  */
-extern uint_fast8_t GPIO_read(uint_least8_t index);
+    extern uint_fast8_t GPIO_read( uint_least8_t index );
 
 /*!
  *  @brief      Bind a callback function to a GPIO pin interrupt
@@ -456,7 +459,8 @@ extern uint_fast8_t GPIO_read(uint_least8_t index);
  *  @param      index       GPIO index
  *  @param      callback    address of the callback function
  */
-extern void GPIO_setCallback(uint_least8_t index, GPIO_CallbackFxn callback);
+    extern void GPIO_setCallback( uint_least8_t index,
+                                  GPIO_CallbackFxn callback );
 
 /*!
  *  @brief      Configure the gpio pin
@@ -471,15 +475,15 @@ extern void GPIO_setCallback(uint_least8_t index, GPIO_CallbackFxn callback);
  *  @param      index       GPIO index
  *  @param      pinConfig   device specific pin configuration settings
  */
-extern int_fast16_t GPIO_setConfig(uint_least8_t index,
-    GPIO_PinConfig pinConfig);
+    extern int_fast16_t GPIO_setConfig( uint_least8_t index,
+                                        GPIO_PinConfig pinConfig );
 
 /*!
  *  @brief      Toggles the current state of a GPIO
  *
  *  @param      index  GPIO index
  */
-extern void GPIO_toggle(uint_least8_t index);
+    extern void GPIO_toggle( uint_least8_t index );
 
 /*!
  *  @brief     Writes the value to a GPIO pin
@@ -487,10 +491,11 @@ extern void GPIO_toggle(uint_least8_t index);
  *  @param      index    GPIO index
  *  @param      value    must be either 0 or 1
  */
-extern void GPIO_write(uint_least8_t index, unsigned int value);
+    extern void GPIO_write( uint_least8_t index,
+                            unsigned int value );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_GPIO__include */

@@ -24,6 +24,7 @@
 **********************************************************************/
 
 /* Library Configuration group ----------------------------------------------------------- */
+
 /** @defgroup LIBCFG_DEFAULT LIBCFG_DEFAULT
  * @ingroup LPC4300CMSIS_FwLib_Drivers
  * @{
@@ -37,15 +38,17 @@
 
 
 /* Public Macros -------------------------------------------------------------- */
+
 /** @defgroup LIBCFG_DEFAULT_Public_Macros LIBCFG_DEFAULT Public Macros
  * @{
  */
 
 /************************** DEBUG MODE DEFINITIONS *********************************/
-/* Un-comment the line below to compile the library in DEBUG mode, this will expanse
-   the "CHECK_PARAM" macro in the FW library code */
 
-//#define DEBUG
+/* Un-comment the line below to compile the library in DEBUG mode, this will expanse
+ * the "CHECK_PARAM" macro in the FW library code */
+
+/*#define DEBUG */
 
 
 /******************* PERIPHERAL FW LIBRARY CONFIGURATION DEFINITIONS ***********************/
@@ -145,18 +148,19 @@
 /************************** GLOBAL/PUBLIC MACRO DEFINITIONS *********************************/
 
 #ifdef  DEBUG
+
 /*******************************************************************************
 * @brief		The CHECK_PARAM macro is used for function's parameters check.
-* 				It is used only if the library is compiled in DEBUG mode.
+*               It is used only if the library is compiled in DEBUG mode.
 * @param[in]	expr - If expr is false, it calls check_failed() function
-*                    	which reports the name of the source file and the source
-*                    	line number of the call that failed.
+*                       which reports the name of the source file and the source
+*                       line number of the call that failed.
 *                    - If expr is true, it returns no value.
 * @return		None
 *******************************************************************************/
-#define CHECK_PARAM(expr) ((expr) ? (void)0 : check_failed((uint8_t *)__FILE__, __LINE__))
+    #define CHECK_PARAM( expr )    ( ( expr ) ? ( void ) 0 : check_failed( ( uint8_t * ) __FILE__, __LINE__ ) )
 #else
-#define CHECK_PARAM(expr)
+    #define CHECK_PARAM( expr )
 #endif /* DEBUG */
 
 /**
@@ -165,12 +169,14 @@
 
 
 /* Public Functions ----------------------------------------------------------- */
+
 /** @defgroup LIBCFG_DEFAULT_Public_Functions LIBCFG_DEFAULT Public Functions
  * @{
  */
 
 #ifdef  DEBUG
-void check_failed(uint8_t *file, uint32_t line);
+    void check_failed( uint8_t * file,
+                       uint32_t line );
 #endif
 
 /**

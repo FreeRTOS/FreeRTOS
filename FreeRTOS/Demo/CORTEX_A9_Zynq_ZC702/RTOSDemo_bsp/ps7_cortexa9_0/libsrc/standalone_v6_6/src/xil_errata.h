@@ -30,32 +30,33 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xil_errata.h
-*
-* @addtogroup a9_errata Cortex A9 Processor and pl310 Errata Support
-* @{
-* Various ARM errata are handled in the standalone BSP. The implementation for
-* errata handling follows ARM guidelines and is based on the open source Linux
-* support for these errata.
-*
-* @note
-* The errata handling is enabled by default. To disable handling of all the
-* errata globally, un-define the macro ENABLE_ARM_ERRATA in xil_errata.h. To
-* disable errata on a per-erratum basis, un-define relevant macros in
-* xil_errata.h.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -----------------------------------------------
-* 1.00a srt  04/18/13 First release
-* 6.6   mus  12/07/17 Removed errata 753970, It fixes CR#989132.
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xil_errata.h
+ *
+ * @addtogroup a9_errata Cortex A9 Processor and pl310 Errata Support
+ * @{
+ * Various ARM errata are handled in the standalone BSP. The implementation for
+ * errata handling follows ARM guidelines and is based on the open source Linux
+ * support for these errata.
+ *
+ * @note
+ * The errata handling is enabled by default. To disable handling of all the
+ * errata globally, un-define the macro ENABLE_ARM_ERRATA in xil_errata.h. To
+ * disable errata on a per-erratum basis, un-define relevant macros in
+ * xil_errata.h.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -----------------------------------------------
+ * 1.00a srt  04/18/13 First release
+ * 6.6   mus  12/07/17 Removed errata 753970, It fixes CR#989132.
+ * </pre>
+ *
+ ******************************************************************************/
 #ifndef XIL_ERRATA_H
 #define XIL_ERRATA_H
 
@@ -66,58 +67,59 @@
  * @{
  */
 
-#define ENABLE_ARM_ERRATA 1
+#define ENABLE_ARM_ERRATA    1
 
 #ifdef ENABLE_ARM_ERRATA
 
 /**
- *  Errata No: 	 742230
+ *  Errata No:   742230
  *  Description: DMB operation may be faulty
  */
-#define CONFIG_ARM_ERRATA_742230 1
+    #define CONFIG_ARM_ERRATA_742230    1
 
 /**
- *  Errata No: 	 743622
+ *  Errata No:   743622
  *  Description: Faulty hazard checking in the Store Buffer may lead
- *	         	 to data corruption.
+ *	             to data corruption.
  */
-#define CONFIG_ARM_ERRATA_743622 1
+    #define CONFIG_ARM_ERRATA_743622    1
 
 /**
- *  Errata No: 	 775420
+ *  Errata No:   775420
  *  Description: A data cache maintenance operation which aborts,
- *		 		 might lead to deadlock
+ *		         might lead to deadlock
  */
-#define CONFIG_ARM_ERRATA_775420 1
+    #define CONFIG_ARM_ERRATA_775420    1
 
 /**
- *  Errata No: 	 794073
+ *  Errata No:   794073
  *  Description: Speculative instruction fetches with MMU disabled
  *               might not comply with architectural requirements
  */
-#define CONFIG_ARM_ERRATA_794073 1
+    #define CONFIG_ARM_ERRATA_794073    1
 
 
 /** PL310 L2 Cache Errata */
 
 /**
- *  Errata No: 	 588369
+ *  Errata No:   588369
  *  Description: Clean & Invalidate maintenance operations do not
- *	   	 		 invalidate clean lines
+ *	             invalidate clean lines
  */
-#define CONFIG_PL310_ERRATA_588369 1
+    #define CONFIG_PL310_ERRATA_588369    1
 
 /**
- *  Errata No: 	 727915
+ *  Errata No:   727915
  *  Description: Background Clean and Invalidate by Way operation
  *		 can cause data corruption
  */
-#define CONFIG_PL310_ERRATA_727915 1
+    #define CONFIG_PL310_ERRATA_727915    1
 
 /*@}*/
-#endif  /* ENABLE_ARM_ERRATA */
+#endif /* ENABLE_ARM_ERRATA */
 
-#endif  /* XIL_ERRATA_H */
+#endif /* XIL_ERRATA_H */
+
 /**
-* @} End of "addtogroup a9_errata".
-*/
+ * @} End of "addtogroup a9_errata".
+ */

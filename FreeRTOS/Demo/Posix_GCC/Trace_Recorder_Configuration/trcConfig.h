@@ -10,11 +10,11 @@
  */
 
 #ifndef TRC_CONFIG_H
-#define TRC_CONFIG_H
+    #define TRC_CONFIG_H
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
     extern "C" {
-#endif
+    #endif
 
 /******************************************************************************
  * Include of processor header file
@@ -42,7 +42,7 @@
  * See trcHardwarePort.h for available ports and information on how to
  * define your own port, if not already present.
  */
-#define TRC_CFG_HARDWARE_PORT                 TRC_HARDWARE_PORT_Win32
+    #define TRC_CFG_HARDWARE_PORT                 TRC_HARDWARE_PORT_Win32
 
 /**
  * @def TRC_CFG_SCHEDULING_ONLY
@@ -53,7 +53,7 @@
  *
  * Default value is 0 (= include additional events).
  */
-#define TRC_CFG_SCHEDULING_ONLY               0
+    #define TRC_CFG_SCHEDULING_ONLY               0
 
 /**
  * @def TRC_CFG_INCLUDE_MEMMANG_EVENTS
@@ -64,7 +64,7 @@
  *
  * Default value is 1.
  */
-#define TRC_CFG_INCLUDE_MEMMANG_EVENTS        1
+    #define TRC_CFG_INCLUDE_MEMMANG_EVENTS        1
 
 /**
  * @def TRC_CFG_INCLUDE_USER_EVENTS
@@ -88,7 +88,7 @@
  *
  * Default value is 1.
  */
-#define TRC_CFG_INCLUDE_USER_EVENTS           1
+    #define TRC_CFG_INCLUDE_USER_EVENTS           1
 
 /**
  * @def TRC_CFG_INCLUDE_ISR_TRACING
@@ -109,7 +109,7 @@
  * Note: tracing ISRs requires that you insert calls to vTraceStoreISRBegin
  * and vTraceStoreISREnd in your interrupt handlers.
  */
-#define TRC_CFG_INCLUDE_ISR_TRACING           1
+    #define TRC_CFG_INCLUDE_ISR_TRACING           1
 
 /**
  * @def TRC_CFG_INCLUDE_READY_EVENTS
@@ -123,7 +123,7 @@
  *
  * Default value is 1.
  */
-#define TRC_CFG_INCLUDE_READY_EVENTS          1
+    #define TRC_CFG_INCLUDE_READY_EVENTS          1
 
 /**
  * @def TRC_CFG_INCLUDE_OSTICK_EVENTS
@@ -135,7 +135,7 @@
  *
  * Default value is 1.
  */
-#define TRC_CFG_INCLUDE_OSTICK_EVENTS         1
+    #define TRC_CFG_INCLUDE_OSTICK_EVENTS         1
 
 /**
  * @def TRC_CFG_ENABLE_STACK_MONITOR
@@ -146,7 +146,7 @@
  * In snapshot mode, the TzCtrl task is only used for stack monitoring and is
  * not created unless this is enabled.
  */
-#define TRC_CFG_ENABLE_STACK_MONITOR          1
+    #define TRC_CFG_ENABLE_STACK_MONITOR          1
 
 /**
  * @def TRC_CFG_STACK_MONITOR_MAX_TASKS
@@ -157,7 +157,7 @@
  *
  * Default value is 10.
  */
-#define TRC_CFG_STACK_MONITOR_MAX_TASKS       10
+    #define TRC_CFG_STACK_MONITOR_MAX_TASKS       10
 
 /**
  * @def TRC_CFG_STACK_MONITOR_MAX_REPORTS
@@ -177,7 +177,7 @@
  *
  * Default value is 1.
  */
-#define TRC_CFG_STACK_MONITOR_MAX_REPORTS     1
+    #define TRC_CFG_STACK_MONITOR_MAX_REPORTS     1
 
 /**
  * @def TRC_CFG_CTRL_TASK_PRIORITY
@@ -194,7 +194,7 @@
  * not created if stack monitoring is disabled. TRC_CFG_CTRL_TASK_PRIORITY should
  * be low, to avoid disturbing any time-sensitive tasks.
  */
-#define TRC_CFG_CTRL_TASK_PRIORITY            1
+    #define TRC_CFG_CTRL_TASK_PRIORITY            1
 
 /**
  * @def TRC_CFG_CTRL_TASK_DELAY
@@ -206,14 +206,14 @@
  * increases the CPU load of TzCtrl somewhat, but may improve the performance of
  * of the trace streaming, especially if the trace buffer is small.
  */
-#define TRC_CFG_CTRL_TASK_DELAY               2
+    #define TRC_CFG_CTRL_TASK_DELAY               2
 
 /**
  * @def TRC_CFG_CTRL_TASK_STACK_SIZE
  * @brief The stack size of the Tracealyzer Control (TzCtrl) task.
  * See TRC_CFG_CTRL_TASK_PRIORITY for further information about TzCtrl.
  */
-#define TRC_CFG_CTRL_TASK_STACK_SIZE          PTHREAD_STACK_MIN
+    #define TRC_CFG_CTRL_TASK_STACK_SIZE          PTHREAD_STACK_MIN
 
 /**
  * @def TRC_CFG_RECORDER_BUFFER_ALLOCATION
@@ -230,7 +230,7 @@
  * The custom mode allows you to control how and where the allocation is made,
  * for details see TRC_ALLOC_CUSTOM_BUFFER and vTraceSetRecorderDataBuffer().
  */
-#define TRC_CFG_RECORDER_BUFFER_ALLOCATION    TRC_RECORDER_BUFFER_ALLOCATION_STATIC
+    #define TRC_CFG_RECORDER_BUFFER_ALLOCATION    TRC_RECORDER_BUFFER_ALLOCATION_STATIC
 
 /**
  * @def TRC_CFG_MAX_ISR_NESTING
@@ -244,7 +244,7 @@
  *
  * Default value: 8
  */
-#define TRC_CFG_MAX_ISR_NESTING               8
+    #define TRC_CFG_MAX_ISR_NESTING               8
 
 /**
  * @def TRC_CFG_ISR_TAILCHAINING_THRESHOLD
@@ -268,7 +268,7 @@
  * Note: This setting has separate definitions in trcSnapshotConfig.h and
  * trcStreamingConfig.h, since it is affected by the recorder mode.
  */
-#define TRC_CFG_ISR_TAILCHAINING_THRESHOLD    0
+    #define TRC_CFG_ISR_TAILCHAINING_THRESHOLD    0
 
 /**
  * @def TRC_CFG_RECORDER_DATA_INIT
@@ -290,7 +290,7 @@
  *
  * Default value is 1.
  */
-#define TRC_CFG_RECORDER_DATA_INIT            1
+    #define TRC_CFG_RECORDER_DATA_INIT            1
 
 /**
  * @def TRC_CFG_RECORDER_DATA_ATTRIBUTE
@@ -304,17 +304,17 @@
  *
  * Default value is empty.
  */
-#define TRC_CFG_RECORDER_DATA_ATTRIBUTE
+    #define TRC_CFG_RECORDER_DATA_ATTRIBUTE
 
 /**
  * @def TRC_CFG_USE_TRACE_ASSERT
  * @brief Enable or disable debug asserts. Information regarding any assert that is
  * triggered will be in trcAssert.c.
  */
-#define TRC_CFG_USE_TRACE_ASSERT    0
+    #define TRC_CFG_USE_TRACE_ASSERT    0
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* _TRC_CONFIG_H */

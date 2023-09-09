@@ -43,59 +43,62 @@
  *        Types
  *----------------------------------------------------------------------------*/
 
-#define SPID_SUCCESS         (0)
-#define SPID_INVALID_ID      (1)
-#define SPID_INVALID_BITRATE (2)
-#define SPID_ERROR_LOCK      (3)
+#define SPID_SUCCESS            ( 0 )
+#define SPID_INVALID_ID         ( 1 )
+#define SPID_INVALID_BITRATE    ( 2 )
+#define SPID_ERROR_LOCK         ( 3 )
 
-#define SPID_NO_CALLBACK     ((spid_callback_t)0)
+#define SPID_NO_CALLBACK        ( ( spid_callback_t ) 0 )
 
 struct _spi_desc;
 
-typedef void (*spid_callback_t)(struct _spi_desc* spid, void* args);
+typedef void (* spid_callback_t)( struct _spi_desc * spid,
+                                  void * args );
 
 enum _spid_trans_mode
 {
-	SPID_MODE_POLLING,
-	SPID_MODE_FIFO,
-	SPID_MODE_DMA
+    SPID_MODE_POLLING,
+    SPID_MODE_FIFO,
+    SPID_MODE_DMA
 };
 
 struct _spi_desc
 {
-	Spi*            addr;
-	uint32_t        bitrate;
-	uint32_t        attributes;
-	uint8_t         dlybs;
-	uint8_t         dlybct;
-	uint8_t         chip_select;
-	uint8_t         spi_mode;
-	uint8_t         transfert_mode;
-	/* implicit internal padding is mandatory here */
-	spid_callback_t callback;
-	void*           cb_args;
-	mutex_t         mutex;
-	uint32_t        region_start;
-	uint32_t        region_end;
+    Spi * addr;
+    uint32_t bitrate;
+    uint32_t attributes;
+    uint8_t dlybs;
+    uint8_t dlybct;
+    uint8_t chip_select;
+    uint8_t spi_mode;
+    uint8_t transfert_mode;
+    /* implicit internal padding is mandatory here */
+    spid_callback_t callback;
+    void * cb_args;
+    mutex_t mutex;
+    uint32_t region_start;
+    uint32_t region_end;
 };
 
 /*------------------------------------------------------------------------------
  *        Functions
  *----------------------------------------------------------------------------*/
 
-extern void spid_configure(struct _spi_desc* desc);
+extern void spid_configure( struct _spi_desc * desc );
 
-extern void spid_begin_transfert(struct _spi_desc* desc);
+extern void spid_begin_transfert( struct _spi_desc * desc );
 
-extern uint32_t spid_transfert(struct _spi_desc* desc, struct _buffer* rx,
-			       struct _buffer* tx, spid_callback_t cb,
-			       void* user_args);
-extern void spid_finish_transfert(struct _spi_desc* desc);
-extern void spid_finish_transfert_callback(struct _spi_desc* desc,
-					   void* user_arg);
-extern void spid_close(const struct _spi_desc* desc);
+extern uint32_t spid_transfert( struct _spi_desc * desc,
+                                struct _buffer * rx,
+                                struct _buffer * tx,
+                                spid_callback_t cb,
+                                void * user_args );
+extern void spid_finish_transfert( struct _spi_desc * desc );
+extern void spid_finish_transfert_callback( struct _spi_desc * desc,
+                                            void * user_arg );
+extern void spid_close( const struct _spi_desc * desc );
 
-extern uint32_t spid_is_busy(const struct _spi_desc* desc);
-extern void spid_wait_transfert(const struct _spi_desc* desc);
+extern uint32_t spid_is_busy( const struct _spi_desc * desc );
+extern void spid_wait_transfert( const struct _spi_desc * desc );
 
 #endif /* SPID_HEADER__ */

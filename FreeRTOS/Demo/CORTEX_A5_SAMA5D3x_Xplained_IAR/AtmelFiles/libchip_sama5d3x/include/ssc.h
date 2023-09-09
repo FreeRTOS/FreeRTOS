@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -35,38 +35,46 @@
  */
 
 #ifndef _SSC_
-#define _SSC_
+    #define _SSC_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern void SSC_Configure(Ssc *ssc, uint32_t bitRate, uint32_t masterClock);
-extern void SSC_ConfigureTransmitter(Ssc *ssc, uint32_t tcmr, uint32_t tfmr);
-extern void SSC_ConfigureReceiver(Ssc *ssc, uint32_t rcmr, uint32_t rfmr);
-extern void SSC_EnableTransmitter(Ssc *ssc);
-extern void SSC_DisableTransmitter(Ssc *ssc);
-extern void SSC_EnableReceiver(Ssc *ssc);
-extern void SSC_DisableReceiver(Ssc *ssc );
-extern void SSC_EnableInterrupts(Ssc *ssc, uint32_t sources);
-extern void SSC_DisableInterrupts(Ssc *ssc, uint32_t sources);
-extern void SSC_Write(Ssc *ssc, uint32_t frame);
-extern uint32_t SSC_Read(Ssc *ssc );
-extern uint8_t SSC_IsRxReady(Ssc *ssc);
+    extern void SSC_Configure( Ssc * ssc,
+                               uint32_t bitRate,
+                               uint32_t masterClock );
+    extern void SSC_ConfigureTransmitter( Ssc * ssc,
+                                          uint32_t tcmr,
+                                          uint32_t tfmr );
+    extern void SSC_ConfigureReceiver( Ssc * ssc,
+                                       uint32_t rcmr,
+                                       uint32_t rfmr );
+    extern void SSC_EnableTransmitter( Ssc * ssc );
+    extern void SSC_DisableTransmitter( Ssc * ssc );
+    extern void SSC_EnableReceiver( Ssc * ssc );
+    extern void SSC_DisableReceiver( Ssc * ssc );
+    extern void SSC_EnableInterrupts( Ssc * ssc,
+                                      uint32_t sources );
+    extern void SSC_DisableInterrupts( Ssc * ssc,
+                                       uint32_t sources );
+    extern void SSC_Write( Ssc * ssc,
+                           uint32_t frame );
+    extern uint32_t SSC_Read( Ssc * ssc );
+    extern uint8_t SSC_IsRxReady( Ssc * ssc );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _SSC_ */
-

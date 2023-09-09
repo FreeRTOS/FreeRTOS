@@ -49,20 +49,20 @@
  */
 
 #ifndef _SYSTEM_LPC55S69_cm33_core0_H_
-#define _SYSTEM_LPC55S69_cm33_core0_H_           /**< Symbol preventing repeated inclusion */
+    #define _SYSTEM_LPC55S69_cm33_core0_H_       /**< Symbol preventing repeated inclusion */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#define DEFAULT_SYSTEM_CLOCK           12000000u           /* Default System clock value */
-#define CLK_RTC_32K_CLK                   32768u           /* RTC oscillator 32 kHz output (32k_clk */
-#define CLK_FRO_12MHZ                  12000000u           /* FRO 12 MHz (fro_12m) */
-#define CLK_FRO_48MHZ                  48000000u           /* FRO 48 MHz (fro_48m) */
-#define CLK_FRO_96MHZ                  96000000u           /* FRO 96 MHz (fro_96m) */
-#define CLK_CLK_IN                     16000000u           /* Default CLK_IN pin clock */
+    #define DEFAULT_SYSTEM_CLOCK    12000000u              /* Default System clock value */
+    #define CLK_RTC_32K_CLK         32768u                 /* RTC oscillator 32 kHz output (32k_clk */
+    #define CLK_FRO_12MHZ           12000000u              /* FRO 12 MHz (fro_12m) */
+    #define CLK_FRO_48MHZ           48000000u              /* FRO 48 MHz (fro_48m) */
+    #define CLK_FRO_96MHZ           96000000u              /* FRO 96 MHz (fro_96m) */
+    #define CLK_CLK_IN              16000000u              /* Default CLK_IN pin clock */
 
 
 /**
@@ -74,7 +74,7 @@ extern "C" {
  * query the frequency of the debug timer or configure the trace clock speed
  * SystemCoreClock is initialized with a correct predefined value.
  */
-extern uint32_t SystemCoreClock;
+    extern uint32_t SystemCoreClock;
 
 /**
  * @brief Setup the microcontroller system.
@@ -83,7 +83,7 @@ extern uint32_t SystemCoreClock;
  * microcontroller device. For systems with variable clock speed it also updates
  * the variable SystemCoreClock. SystemInit is called from startup_device file.
  */
-void SystemInit (void);
+    void SystemInit( void );
 
 /**
  * @brief Updates the SystemCoreClock variable.
@@ -92,7 +92,7 @@ void SystemInit (void);
  * execution. SystemCoreClockUpdate() evaluates the clock register settings and calculates
  * the current core clock.
  */
-void SystemCoreClockUpdate (void);
+    void SystemCoreClockUpdate( void );
 
 /**
  * @brief SystemInit function hook.
@@ -104,10 +104,10 @@ void SystemCoreClockUpdate (void);
  * NOTE: No global r/w variables can be used in this hook function because the
  * initialization of these variables happens after this function.
  */
-void SystemInitHook (void);
+    void SystemInitHook( void );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif  /* _SYSTEM_LPC55S69_cm33_core0_H_ */
+#endif /* _SYSTEM_LPC55S69_cm33_core0_H_ */

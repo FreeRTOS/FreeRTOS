@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -52,4 +53,4 @@
 #include "mrepeat.h"
 
 
-#endif  // _PREPROCESSOR_H_
+#endif // _PREPROCESSOR_H_

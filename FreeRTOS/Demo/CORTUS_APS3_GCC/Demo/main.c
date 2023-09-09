@@ -74,28 +74,28 @@
 /*-----------------------------------------------------------*/
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE	( ( unsigned long ) 115200 )
-#define mainCOM_TEST_LED		( 5 )
+#define mainCOM_TEST_BAUD_RATE       ( ( unsigned long ) 115200 )
+#define mainCOM_TEST_LED             ( 5 )
 
 /* Priorities for the demo application tasks. */
-#define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
-#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define main7SEG_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainLED_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3 )
+#define mainCOM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_POLL_PRIORITY      ( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + 4 )
+#define mainSEM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY         ( tskIDLE_PRIORITY + 2 )
+#define main7SEG_TASK_PRIORITY       ( tskIDLE_PRIORITY + 2 )
 
 /* The rate at which the on board LED will toggle when there is/is not an
-error. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS	)
-#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
-#define mainON_BOARD_LED_BIT		( ( unsigned long ) 7 )
+ * error. */
+#define mainNO_ERROR_FLASH_PERIOD    ( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
+#define mainERROR_FLASH_PERIOD       ( ( TickType_t ) 500 / portTICK_PERIOD_MS )
+#define mainON_BOARD_LED_BIT         ( ( unsigned long ) 7 )
 
 /* The size of the memory blocks allocated by the vMemCheckTask() task. */
-#define mainMEM_CHECK_SIZE_1		( ( size_t ) 51 )
-#define mainMEM_CHECK_SIZE_2		( ( size_t ) 52 )
-#define mainMEM_CHECK_SIZE_3		( ( size_t ) 151 )
+#define mainMEM_CHECK_SIZE_1         ( ( size_t ) 51 )
+#define mainMEM_CHECK_SIZE_2         ( ( size_t ) 52 )
+#define mainMEM_CHECK_SIZE_3         ( ( size_t ) 151 )
 
 /*-----------------------------------------------------------*/
 
@@ -110,7 +110,7 @@ static long prvCheckOtherTasksAreStillRunning( void );
  * prvCheckOtherTasksAreStillRunning().	 See the description at the top
  * of the file.
  */
-static void vErrorChecks( void *pvParameters );
+static void vErrorChecks( void * pvParameters );
 
 /*
  * Configure the processor for use with the Olimex demo board.	This includes
@@ -126,142 +126,151 @@ static void prvSetupHardware( void );
  */
 int main( void )
 {
-	/* Setup the hardware for use with the Xilinx evaluation board. */
-	prvSetupHardware();
+    /* Setup the hardware for use with the Xilinx evaluation board. */
+    prvSetupHardware();
 
-	/* Start the demo/test application tasks. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vStart7SegTasks( main7SEG_TASK_PRIORITY );
-	vStartRegTestTasks();
+    /* Start the demo/test application tasks. */
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+    vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartDynamicPriorityTasks();
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vStart7SegTasks( main7SEG_TASK_PRIORITY );
+    vStartRegTestTasks();
 
-	/* Start the check task - which is defined in this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Start the check task - which is defined in this file. */
+    xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Now all the tasks have been started - start the scheduler. */
-	vTaskStartScheduler();
+    /* Now all the tasks have been started - start the scheduler. */
+    vTaskStartScheduler();
 
-	/* Should never reach here! */
-	for( ;; );
+    /* Should never reach here! */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void vErrorChecks( void * pvParameters )
 {
-TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+    TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 
-	/* Just to stop compiler warnings. */
-	( void ) pvParameters;
+    /* Just to stop compiler warnings. */
+    ( void ) pvParameters;
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error.  If an error is detected then the delay period
-	is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
-	the on board LED flash rate will increase. */
+    /* Cycle for ever, delaying then checking all the other tasks are still
+     * operating without error.  If an error is detected then the delay period
+     * is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
+     * the on board LED flash rate will increase. */
 
-	for( ;; )
-	{
-		/* Delay until it is time to execute again. */
-		vTaskDelay( xDelayPeriod );
+    for( ; ; )
+    {
+        /* Delay until it is time to execute again. */
+        vTaskDelay( xDelayPeriod );
 
-		/* Check all the standard demo application tasks are executing without
-		error.	*/
-		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
-		{
-			/* An error has been detected in one of the tasks - flash faster. */
-			xDelayPeriod = mainERROR_FLASH_PERIOD;
-		}
+        /* Check all the standard demo application tasks are executing without
+         * error.	*/
+        if( prvCheckOtherTasksAreStillRunning() != pdPASS )
+        {
+            /* An error has been detected in one of the tasks - flash faster. */
+            xDelayPeriod = mainERROR_FLASH_PERIOD;
+        }
 
-		/* The toggle rate of the LED depends on how long this task delays for.
-		An error reduces the delay period and so increases the toggle rate. */
-		vParTestToggleLED( mainON_BOARD_LED_BIT );
-	}
+        /* The toggle rate of the LED depends on how long this task delays for.
+         * An error reduces the delay period and so increases the toggle rate. */
+        vParTestToggleLED( mainON_BOARD_LED_BIT );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	/* Initialise LED outputs. */
-	vParTestInitialise();
+    /* Initialise LED outputs. */
+    vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
 static long prvCheckOtherTasksAreStillRunning( void )
 {
-long lReturn = pdPASS;
+    long lReturn = pdPASS;
 
-	/* Check all the demo tasks (other than the flash tasks) to ensure
-	that they are all still running, and that none of them have detected
-	an error. */
+    /* Check all the demo tasks (other than the flash tasks) to ensure
+     * that they are all still running, and that none of them have detected
+     * an error. */
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
+    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+    {
+        lReturn = pdFAIL;
+    }
 
-	if( xAreComTestTasksStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
+    if( xAreComTestTasksStillRunning() != pdTRUE )
+    {
+        lReturn = pdFAIL;
+    }
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        lReturn = pdFAIL;
+    }
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
+    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        lReturn = pdFAIL;
+    }
 
-	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
+    if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+    {
+        lReturn = pdFAIL;
+    }
 
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
+    if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    {
+        lReturn = pdFAIL;
+    }
 
-	if( xAreRegTestTasksStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
+    if( xAreRegTestTasksStillRunning() != pdTRUE )
+    {
+        lReturn = pdFAIL;
+    }
 
-	return lReturn;
+    return lReturn;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	/* This function will be called if a task overflows its stack.  Inspect
-	pxCurrentTCB to find the offending task if the overflow was sever enough
-	to corrupt the pcTaskName parameter. */
-	vParTestSetLED( 4, 1 );
-	for( ;; );
+    /* This function will be called if a task overflows its stack.  Inspect
+     * pxCurrentTCB to find the offending task if the overflow was sever enough
+     * to corrupt the pcTaskName parameter. */
+    vParTestSetLED( 4, 1 );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* This function will be called if a call to pvPortMalloc() fails to return
-	the requested memory.  pvPortMalloc() is called internally by the scheduler
-	whenever a task, queue or semaphore is created. */
-	vParTestSetLED( 4, 1 );
-	for( ;; );
+    /* This function will be called if a call to pvPortMalloc() fails to return
+     * the requested memory.  pvPortMalloc() is called internally by the scheduler
+     * whenever a task, queue or semaphore is created. */
+    vParTestSetLED( 4, 1 );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 /* Provide an exit function to prevent a whole load of standard library functions
-being brought into the build. */
+ * being brought into the build. */
 void exit( int status )
 {
-	for( ;; );
+    for( ; ; )
+    {
+    }
 }
-
-

@@ -57,9 +57,10 @@
 
 struct _timeout
 {
-	uint32_t start;
-	uint32_t count;
+    uint32_t start;
+    uint32_t count;
 };
+
 /*----------------------------------------------------------------------------
  *         Global functions
  *----------------------------------------------------------------------------*/
@@ -75,34 +76,35 @@ struct _timeout
  *
  *  \param resolution initialize PIT resolution (in nano seconds)
  */
-extern uint32_t timer_configure(uint32_t resolution);
+extern uint32_t timer_configure( uint32_t resolution );
 
 /**
  *  \brief Sync wait for count times resoltion
  */
-extern void timer_wait(uint32_t count);
+extern void timer_wait( uint32_t count );
 
 /**
  * \brief Retrieve current timer resolution.
  *
  * \return Current timer resolution (0 if not already set)
  */
-extern uint32_t timer_get_resolution(void);
+extern uint32_t timer_get_resolution( void );
 
 /**
  *  \brief Sync sleep for count times resolution
  */
-extern void timer_sleep(uint32_t count);
+extern void timer_sleep( uint32_t count );
 
 /**
  *  \brief Initialize a timeout
  */
-extern void timer_start_timeout(struct _timeout* timeout, uint32_t count);
+extern void timer_start_timeout( struct _timeout * timeout,
+                                 uint32_t count );
 
 /**
  *  \brief Tells if the timeout as been reached
  */
-extern uint8_t timer_timeout_reached(struct _timeout* timeout);
+extern uint8_t timer_timeout_reached( struct _timeout * timeout );
 
 /**
  * \brief Compute elapsed number of ticks between start and end with
@@ -111,11 +113,12 @@ extern uint8_t timer_timeout_reached(struct _timeout* timeout);
  * \param start Start tick point.
  * \param end End tick point.
  */
-extern uint32_t timer_get_interval(uint32_t start, uint32_t end);
+extern uint32_t timer_get_interval( uint32_t start,
+                                    uint32_t end );
 
 /**
  * \brief Returns the current number of ticks
  */
-extern uint32_t timer_get_tick(void);
+extern uint32_t timer_get_tick( void );
 
 #endif /* TIMER_HEADER_ */

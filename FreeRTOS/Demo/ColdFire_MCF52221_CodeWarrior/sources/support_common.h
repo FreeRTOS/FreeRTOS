@@ -1,5 +1,5 @@
 /*
-* File:		support_common.h
+ * File:		support_common.h
  * Purpose:		Various project configurations.
  *
  * Notes:
@@ -9,15 +9,15 @@
 #define _SUPPORT_COMMON_H_
 
 /* Enable UART Support. */
-#define ENABLE_UART_SUPPORT  0
+#define ENABLE_UART_SUPPORT    0
 
 
-#define MEMORY_INIT \
-	/* Initialize RAMBAR: locate SRAM and validate it */ \
-	move.l	%#__RAMBAR + 0x21,d0; \
-	movec	d0,RAMBAR;
+#define MEMORY_INIT                                      \
+    /* Initialize RAMBAR: locate SRAM and validate it */ \
+    move.l %# __RAMBAR + 0x21, d0;                       \
+    movec d0, RAMBAR;
 
-#define SUPPORT_ROM_TO_RAM 1
+#define SUPPORT_ROM_TO_RAM    1
 
 /*
  * Include the derivative header files
@@ -32,4 +32,3 @@
 /********************************************************************/
 
 #endif /* _SUPPORT_COMMON_H_ */
-

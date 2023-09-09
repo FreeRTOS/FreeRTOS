@@ -35,103 +35,100 @@
 /* Demo includes. */
 #include "partest.h"
 
-#define partstTOTAL_NUM_LEDs		16
-#define partstNUM_LEDs_PER_DISPLAY	8
+#define partstTOTAL_NUM_LEDs          16
+#define partstNUM_LEDs_PER_DISPLAY    8
 
-volatile unsigned char *pucDisplayOutput[ 2 ] = { ( unsigned char * ) 3, ( unsigned char * ) 5 };
+volatile unsigned char * pucDisplayOutput[ 2 ] = { ( unsigned char * ) 3, ( unsigned char * ) 5 };
 
 void vParTestInitialise( void )
 {
-	/* In this case all the initialisation is performed in prvSetupHardware()
-	in main.c. */	
+    /* In this case all the initialisation is performed in prvSetupHardware()
+     * in main.c. */
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxLEDMask = 0x01;
+    unsigned portBASE_TYPE uxLEDMask = 0x01;
 
-	if( uxLED < partstNUM_LEDs_PER_DISPLAY )
-	{
-		uxLEDMask <<= uxLED;
-		
-		taskENTER_CRITICAL();
-		{
-			if( xValue )
-			{
-				*pucDisplayOutput[ 0 ] &= ~uxLEDMask;
-			}
-			else
-			{
-				*pucDisplayOutput[ 0 ] |= uxLEDMask;				
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
-	else if( uxLED < partstTOTAL_NUM_LEDs )
-	{
-		uxLED -= partstNUM_LEDs_PER_DISPLAY;
+    if( uxLED < partstNUM_LEDs_PER_DISPLAY )
+    {
+        uxLEDMask <<= uxLED;
 
-		uxLEDMask <<= uxLED;
-		
-		taskENTER_CRITICAL();
-		{
-			if( xValue )
-			{
-				*pucDisplayOutput[ 1 ] &= ~uxLEDMask;
-			}
-			else
-			{
-				*pucDisplayOutput[ 1 ] |= uxLEDMask;				
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+        taskENTER_CRITICAL();
+        {
+            if( xValue )
+            {
+                *pucDisplayOutput[ 0 ] &= ~uxLEDMask;
+            }
+            else
+            {
+                *pucDisplayOutput[ 0 ] |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
+    else if( uxLED < partstTOTAL_NUM_LEDs )
+    {
+        uxLED -= partstNUM_LEDs_PER_DISPLAY;
+
+        uxLEDMask <<= uxLED;
+
+        taskENTER_CRITICAL();
+        {
+            if( xValue )
+            {
+                *pucDisplayOutput[ 1 ] &= ~uxLEDMask;
+            }
+            else
+            {
+                *pucDisplayOutput[ 1 ] |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned portBASE_TYPE uxLEDMask = 0x01;
+    unsigned portBASE_TYPE uxLEDMask = 0x01;
 
-	if( uxLED < partstNUM_LEDs_PER_DISPLAY )
-	{
-		uxLEDMask <<= uxLED;
-		
-		taskENTER_CRITICAL();
-		{
-			if( *pucDisplayOutput[ 0 ] & uxLEDMask )
-			{
-				*pucDisplayOutput[ 0 ] &= ~uxLEDMask;
-			}
-			else
-			{
-				*pucDisplayOutput[ 0 ] |= uxLEDMask;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
-	else if( uxLED < partstTOTAL_NUM_LEDs )
-	{
-		uxLED -= partstNUM_LEDs_PER_DISPLAY;
+    if( uxLED < partstNUM_LEDs_PER_DISPLAY )
+    {
+        uxLEDMask <<= uxLED;
 
-		uxLEDMask <<= uxLED;
-		
-		taskENTER_CRITICAL();
-		{
-			if( *pucDisplayOutput[ 1 ] & uxLEDMask )
-			{
-				*pucDisplayOutput[ 1 ] &= ~uxLEDMask;
-			}
-			else
-			{
-				*pucDisplayOutput[ 1 ] |= uxLEDMask;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+        taskENTER_CRITICAL();
+        {
+            if( *pucDisplayOutput[ 0 ] & uxLEDMask )
+            {
+                *pucDisplayOutput[ 0 ] &= ~uxLEDMask;
+            }
+            else
+            {
+                *pucDisplayOutput[ 0 ] |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
+    else if( uxLED < partstTOTAL_NUM_LEDs )
+    {
+        uxLED -= partstNUM_LEDs_PER_DISPLAY;
+
+        uxLEDMask <<= uxLED;
+
+        taskENTER_CRITICAL();
+        {
+            if( *pucDisplayOutput[ 1 ] & uxLEDMask )
+            {
+                *pucDisplayOutput[ 1 ] &= ~uxLEDMask;
+            }
+            else
+            {
+                *pucDisplayOutput[ 1 ] |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-
-
-
-

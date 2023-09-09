@@ -31,28 +31,28 @@
 #define _SAMA5_SFR_INSTANCE_
 
 /* ========== Register definition for SFR peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_SFR_OHCIICR             (0xF0038010U) /**< \brief (SFR) OHCI Interrupt Configuration Register */
-#define REG_SFR_OHCIISR             (0xF0038014U) /**< \brief (SFR) OHCI Interrupt Status Register */
-#define REG_SFR_AHB                 (0xF0038020U) /**< \brief (SFR) AHB Configuration Register */
-#define REG_SFR_BRIDGE              (0xF0038024U) /**< \brief (SFR) Bridge Configuration Register */
-#define REG_SFR_SECURE              (0xF0038028U) /**< \brief (SFR) Security Configuration Register */
-#define REG_SFR_UTMICKTRIM          (0xF0038030U) /**< \brief (SFR) UTMI Clock Trimming Register */
-#define REG_SFR_UTMIHSTRIM          (0xF0038034U) /**< \brief (SFR) UTMI High Speed Trimming Register */
-#define REG_SFR_UTMIFSTRIM          (0xF0038038U) /**< \brief (SFR) UTMI Full Speed Trimming Register */
-#define REG_SFR_UTMISWAP            (0xF003803CU) /**< \brief (SFR) UTMI DP/DM Pin Swapping Register */
-#define REG_SFR_EBICFG              (0xF0038040U) /**< \brief (SFR) EBI Configuration Register */
-#else
-#define REG_SFR_OHCIICR    (*(RwReg*)0xF0038010U) /**< \brief (SFR) OHCI Interrupt Configuration Register */
-#define REG_SFR_OHCIISR    (*(RoReg*)0xF0038014U) /**< \brief (SFR) OHCI Interrupt Status Register */
-#define REG_SFR_AHB        (*(RwReg*)0xF0038020U) /**< \brief (SFR) AHB Configuration Register */
-#define REG_SFR_BRIDGE     (*(RwReg*)0xF0038024U) /**< \brief (SFR) Bridge Configuration Register */
-#define REG_SFR_SECURE     (*(RwReg*)0xF0038028U) /**< \brief (SFR) Security Configuration Register */
-#define REG_SFR_UTMICKTRIM (*(RwReg*)0xF0038030U) /**< \brief (SFR) UTMI Clock Trimming Register */
-#define REG_SFR_UTMIHSTRIM (*(RwReg*)0xF0038034U) /**< \brief (SFR) UTMI High Speed Trimming Register */
-#define REG_SFR_UTMIFSTRIM (*(RwReg*)0xF0038038U) /**< \brief (SFR) UTMI Full Speed Trimming Register */
-#define REG_SFR_UTMISWAP   (*(RwReg*)0xF003803CU) /**< \brief (SFR) UTMI DP/DM Pin Swapping Register */
-#define REG_SFR_EBICFG     (*(RwReg*)0xF0038040U) /**< \brief (SFR) EBI Configuration Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_SFR_OHCIICR       ( 0xF0038010U )              /**< \brief (SFR) OHCI Interrupt Configuration Register */
+    #define REG_SFR_OHCIISR       ( 0xF0038014U )              /**< \brief (SFR) OHCI Interrupt Status Register */
+    #define REG_SFR_AHB           ( 0xF0038020U )              /**< \brief (SFR) AHB Configuration Register */
+    #define REG_SFR_BRIDGE        ( 0xF0038024U )              /**< \brief (SFR) Bridge Configuration Register */
+    #define REG_SFR_SECURE        ( 0xF0038028U )              /**< \brief (SFR) Security Configuration Register */
+    #define REG_SFR_UTMICKTRIM    ( 0xF0038030U )              /**< \brief (SFR) UTMI Clock Trimming Register */
+    #define REG_SFR_UTMIHSTRIM    ( 0xF0038034U )              /**< \brief (SFR) UTMI High Speed Trimming Register */
+    #define REG_SFR_UTMIFSTRIM    ( 0xF0038038U )              /**< \brief (SFR) UTMI Full Speed Trimming Register */
+    #define REG_SFR_UTMISWAP      ( 0xF003803CU )              /**< \brief (SFR) UTMI DP/DM Pin Swapping Register */
+    #define REG_SFR_EBICFG        ( 0xF0038040U )              /**< \brief (SFR) EBI Configuration Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_SFR_OHCIICR       ( *( RwReg * ) 0xF0038010U ) /**< \brief (SFR) OHCI Interrupt Configuration Register */
+    #define REG_SFR_OHCIISR       ( *( RoReg * ) 0xF0038014U ) /**< \brief (SFR) OHCI Interrupt Status Register */
+    #define REG_SFR_AHB           ( *( RwReg * ) 0xF0038020U ) /**< \brief (SFR) AHB Configuration Register */
+    #define REG_SFR_BRIDGE        ( *( RwReg * ) 0xF0038024U ) /**< \brief (SFR) Bridge Configuration Register */
+    #define REG_SFR_SECURE        ( *( RwReg * ) 0xF0038028U ) /**< \brief (SFR) Security Configuration Register */
+    #define REG_SFR_UTMICKTRIM    ( *( RwReg * ) 0xF0038030U ) /**< \brief (SFR) UTMI Clock Trimming Register */
+    #define REG_SFR_UTMIHSTRIM    ( *( RwReg * ) 0xF0038034U ) /**< \brief (SFR) UTMI High Speed Trimming Register */
+    #define REG_SFR_UTMIFSTRIM    ( *( RwReg * ) 0xF0038038U ) /**< \brief (SFR) UTMI Full Speed Trimming Register */
+    #define REG_SFR_UTMISWAP      ( *( RwReg * ) 0xF003803CU ) /**< \brief (SFR) UTMI DP/DM Pin Swapping Register */
+    #define REG_SFR_EBICFG        ( *( RwReg * ) 0xF0038040U ) /**< \brief (SFR) EBI Configuration Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_SFR_INSTANCE_ */

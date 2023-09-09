@@ -43,5 +43,5 @@
 
 #include "interrupt_sam_nvic.h"
 
-//! Global NVIC interrupt enable status (by default it's enabled)
+/*! Global NVIC interrupt enable status (by default it's enabled) */
 volatile bool g_interrupt_enabled = true;

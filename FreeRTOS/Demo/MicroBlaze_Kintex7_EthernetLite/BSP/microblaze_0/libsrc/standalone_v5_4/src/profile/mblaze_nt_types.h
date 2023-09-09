@@ -32,23 +32,23 @@
 
 
 #ifndef _MBLAZE_NT_TYPES_H
-#define _MBLAZE_NT_TYPES_H
+    #define _MBLAZE_NT_TYPES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-typedef char            byte;
-typedef short           half;
-typedef int             word;
-typedef unsigned char   ubyte;
-typedef unsigned short  uhalf;
-typedef unsigned int    uword;
-typedef ubyte           boolean;
+    typedef char             byte;
+    typedef short            half;
+    typedef int              word;
+    typedef unsigned char    ubyte;
+    typedef unsigned short   uhalf;
+    typedef unsigned int     uword;
+    typedef ubyte            boolean;
 
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif
+#endif /* ifndef _MBLAZE_NT_TYPES_H */

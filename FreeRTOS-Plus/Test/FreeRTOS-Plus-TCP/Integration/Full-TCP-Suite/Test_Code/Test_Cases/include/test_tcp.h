@@ -26,22 +26,22 @@
 #ifndef TEST_TCP_H
 #define TEST_TCP_H
 
- /* Non-Encrypted Echo Server.
-  * Update tcptestECHO_SERVER_ADDR# and
-  * tcptestECHO_PORT with IP address
-  * and port of unencrypted TCP echo server. */
+/* Non-Encrypted Echo Server.
+ * Update tcptestECHO_SERVER_ADDR# and
+ * tcptestECHO_PORT with IP address
+ * and port of unencrypted TCP echo server. */
 
-  /* You can find the code to setup an echo server in the Repo */
+/* You can find the code to setup an echo server in the Repo */
 
-  /* Assume ECHO server IP-address A.B.C.D  And   Port Z*/
-#define tcptestECHO_SERVER_ADDR0         ( 255 )    /* Replace with Your Echo Server Addr First Byte  i.e. A */
-#define tcptestECHO_SERVER_ADDR1         ( 255 )    /* Replace with Your Echo Server Addr Second Byte i.e. B */
-#define tcptestECHO_SERVER_ADDR2         ( 255 )    /* Replace with Your Echo Server Addr Third Byte  i.e. C */
-#define tcptestECHO_SERVER_ADDR3         ( 255 )    /* Replace with Your Echo Server Addr Fourth Byte i.e. D */
-#define tcptestECHO_PORT                 ( 0 )      /* Replace with Your Echo Server Port Number i.e. Z */
+/* Assume ECHO server IP-address A.B.C.D  And   Port Z*/
+#define tcptestECHO_SERVER_ADDR0    ( 255 )         /* Replace with Your Echo Server Addr First Byte  i.e. A */
+#define tcptestECHO_SERVER_ADDR1    ( 255 )         /* Replace with Your Echo Server Addr Second Byte i.e. B */
+#define tcptestECHO_SERVER_ADDR2    ( 255 )         /* Replace with Your Echo Server Addr Third Byte  i.e. C */
+#define tcptestECHO_SERVER_ADDR3    ( 255 )         /* Replace with Your Echo Server Addr Fourth Byte i.e. D */
+#define tcptestECHO_PORT            ( 0 )           /* Replace with Your Echo Server Port Number i.e. Z */
 
 #if tcptestECHO_PORT == 0
-#error "Use Correct Port number and Correct IP address by setting tcptestECHO_SERVER_ADDR[0-3] and tcptestECHO_PORT in test_tcp.h"
+    #error "Use Correct Port number and Correct IP address by setting tcptestECHO_SERVER_ADDR[0-3] and tcptestECHO_PORT in test_tcp.h"
 #endif
 /* Number of times to retry a connection if it fails. */
 #define tcptestRETRY_CONNECTION_TIMES    6

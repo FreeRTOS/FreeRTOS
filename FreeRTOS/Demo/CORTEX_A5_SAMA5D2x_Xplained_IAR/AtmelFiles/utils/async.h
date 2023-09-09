@@ -35,42 +35,43 @@
  */
 
 #ifndef _ASYNC_
-#define _ASYNC_
+    #define _ASYNC_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include <stdint.h>
+    #include <stdint.h>
 
 /*----------------------------------------------------------------------------
  *        Definition
  *----------------------------------------------------------------------------*/
 /** Transfer is still pending.*/
-#define ASYNC_STATUS_PENDING        0xFF
+    #define ASYNC_STATUS_PENDING    0xFF
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Type
  *----------------------------------------------------------------------------*/
 /** \brief Asynchronous transfer descriptor. */
-struct _async {
-	/** Asynchronous transfer status.*/
-	volatile uint32_t status;
-	/** Callback function to invoke when transfer completes or fails.*/
-	void *callback;
-	/** Driver storage area; do not use.*/
-	uint8_t pStorage[12];
-} ;
+    struct _async
+    {
+        /** Asynchronous transfer status.*/
+        volatile uint32_t status;
+        /** Callback function to invoke when transfer completes or fails.*/
+        void * callback;
+        /** Driver storage area; do not use.*/
+        uint8_t pStorage[ 12 ];
+    };
 
 /*----------------------------------------------------------------------------
  *        Global functions
  *----------------------------------------------------------------------------*/
-extern uint32_t async_is_finished(struct _async * pAsync);
+    extern uint32_t async_is_finished( struct _async * pAsync );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
-#endif				/* #ifndef _ASYNC_ */
+    #endif
+#endif /* #ifndef _ASYNC_ */

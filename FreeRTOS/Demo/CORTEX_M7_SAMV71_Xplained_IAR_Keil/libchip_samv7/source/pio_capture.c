@@ -74,6 +74,7 @@
  */
 /*@{*/
 /*@}*/
+
 /**
  * \file
  *
@@ -93,13 +94,14 @@
  *        Local Functions
  *----------------------------------------------------------------------------*/
 /** Copy the API structure for interrupt handler */
-static SpioCaptureInit* _PioCaptureCopy;
+static SpioCaptureInit * _PioCaptureCopy;
 
 /*----------------------------------------------------------------------------
  *        Global Functions
  *----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
+
 /**
  * \brief The PIO_CaptureHandler must be called by the PIO Capture Interrupt
  * Service Routine with the corresponding PIO Capture instance.
@@ -111,64 +113,65 @@ extern void PIO_CaptureHandler( void )
     uint32_t k;
 
     /* Read the status register*/
-    pio_captureSr = PIOA->PIO_PCISR ;
+    pio_captureSr = PIOA->PIO_PCISR;
     k = pio_captureSr;
-    pio_captureSr = k & PIOA->PIO_PCIMR ;
+    pio_captureSr = k & PIOA->PIO_PCIMR;
 
-    if (pio_captureSr & PIO_PCISR_DRDY)
+    if( pio_captureSr & PIO_PCISR_DRDY )
     {
         /* Parallel Capture Mode Data Ready */
-        if ( _PioCaptureCopy->CbkDataReady != NULL )
+        if( _PioCaptureCopy->CbkDataReady != NULL )
         {
             _PioCaptureCopy->CbkDataReady( _PioCaptureCopy );
         }
         else
         {
-            TRACE_DEBUG("IT PIO Capture Data Ready received (no callback)\n\r");
+            TRACE_DEBUG( "IT PIO Capture Data Ready received (no callback)\n\r" );
         }
     }
 
-    if (pio_captureSr & PIO_PCISR_OVRE)
+    if( pio_captureSr & PIO_PCISR_OVRE )
     {
         /* Parallel Capture Mode Overrun Error */
-        if ( _PioCaptureCopy->CbkOverrun != NULL )
+        if( _PioCaptureCopy->CbkOverrun != NULL )
         {
             _PioCaptureCopy->CbkOverrun( _PioCaptureCopy );
         }
         else
         {
-            TRACE_DEBUG("IT PIO Capture Overrun Error received (no callback)\n\r");
+            TRACE_DEBUG( "IT PIO Capture Overrun Error received (no callback)\n\r" );
         }
     }
 
-    if (pio_captureSr & PIO_PCISR_RXBUFF)
+    if( pio_captureSr & PIO_PCISR_RXBUFF )
     {
         /* Reception Buffer Full */
-        if ( _PioCaptureCopy->CbkBuffFull != NULL )
+        if( _PioCaptureCopy->CbkBuffFull != NULL )
         {
             _PioCaptureCopy->CbkBuffFull( _PioCaptureCopy );
         }
         else
         {
-            TRACE_DEBUG("IT PIO Capture Reception Buffer Full received (no callback)\n\r");
+            TRACE_DEBUG( "IT PIO Capture Reception Buffer Full received (no callback)\n\r" );
         }
     }
 
-    if (pio_captureSr & PIO_PCISR_ENDRX)
+    if( pio_captureSr & PIO_PCISR_ENDRX )
     {
         /* End of Reception Transfer */
-        if ( _PioCaptureCopy->CbkEndReception != NULL )
+        if( _PioCaptureCopy->CbkEndReception != NULL )
         {
             _PioCaptureCopy->CbkEndReception( _PioCaptureCopy );
         }
         else
         {
-            TRACE_DEBUG("IT PIO Capture End of Reception Transfer received (no callback)\n\r");
+            TRACE_DEBUG( "IT PIO Capture End of Reception Transfer received (no callback)\n\r" );
         }
     }
 }
 
 /*----------------------------------------------------------------------------*/
+
 /**
  * \brief Disable Interupt of the PIO Capture
  * \param itToDisable : Interrupt to disable
@@ -181,6 +184,7 @@ void PIO_CaptureDisableIt( uint32_t itToDisable )
 }
 
 /*----------------------------------------------------------------------------*/
+
 /**
  * \brief Enable Interupt of the PIO Capture
  * \param itToEnable : Interrupt to enable
@@ -193,6 +197,7 @@ void PIO_CaptureEnableIt( uint32_t itToEnable )
 }
 
 /*----------------------------------------------------------------------------*/
+
 /**
  * \brief Enable the PIO Capture
  */
@@ -200,16 +205,17 @@ void PIO_CaptureEnableIt( uint32_t itToEnable )
 void PIO_CaptureEnable( void )
 {
     /* PDC: Receive Pointer Register */
-//    PIOA->PIO_RPR = (uint32_t)_PioCaptureCopy->pData ;
-//    /* PDC: Receive Counter Register */
-//    /* Starts peripheral data transfer if corresponding channel is active */
-//    PIOA->PIO_RCR = PIO_RCR_RXCTR(_PioCaptureCopy->dPDCsize) ;
+/*    PIOA->PIO_RPR = (uint32_t)_PioCaptureCopy->pData ; */
+/*    / * PDC: Receive Counter Register * / */
+/*    / * Starts peripheral data transfer if corresponding channel is active * / */
+/*    PIOA->PIO_RCR = PIO_RCR_RXCTR(_PioCaptureCopy->dPDCsize) ; */
 
     /* Parallel capture mode is enabled */
-    PIOA->PIO_PCMR |= PIO_PCMR_PCEN ;
+    PIOA->PIO_PCMR |= PIO_PCMR_PCEN;
 }
 
 /*----------------------------------------------------------------------------*/
+
 /**
  * \brief Disable the PIO Capture
  */
@@ -217,10 +223,11 @@ void PIO_CaptureEnable( void )
 void PIO_CaptureDisable( void )
 {
     /* Parallel capture mode is disabled */
-    PIOA->PIO_PCMR &= (uint32_t)(~PIO_PCMR_PCEN) ;
+    PIOA->PIO_PCMR &= ( uint32_t ) ( ~PIO_PCMR_PCEN );
 }
 
 /*----------------------------------------------------------------------------*/
+
 /**
  * \brief Initialize the PIO Capture
  * Be careful to configure the PDC before enable interrupt on pio capture.
@@ -242,60 +249,59 @@ void PIO_CaptureDisable( void )
  * 1 = Only data with an odd index are sampled.
  */
 /*----------------------------------------------------------------------------*/
-void PIO_CaptureInit( SpioCaptureInit *pInit )
+void PIO_CaptureInit( SpioCaptureInit * pInit )
 {
     PMC_EnablePeripheral( ID_PIOA );
 
-    assert( (pInit->dsize < 0x4) ) ;
-    assert( (pInit->alwaysSampling < 2)  );
-    assert( (pInit->halfSampling < 2) );
-    assert( (pInit->modeFirstSample < 2) );
+    assert( ( pInit->dsize < 0x4 ) );
+    assert( ( pInit->alwaysSampling < 2 ) );
+    assert( ( pInit->halfSampling < 2 ) );
+    assert( ( pInit->modeFirstSample < 2 ) );
 
     /* PDC: Transfer Control Register */
     /* Disables the PDC transmitter channel requests */
-//    PIOA->PIO_PTCR = PIO_PTCR_RXTDIS;
+/*    PIOA->PIO_PTCR = PIO_PTCR_RXTDIS; */
     /* PDC: Receive Pointer Register */
-//    PIOA->PIO_RPR = (uint32_t)pInit->pData;
+/*    PIOA->PIO_RPR = (uint32_t)pInit->pData; */
     /* PDC: Receive Counter Register */
     /* Starts peripheral data transfer if corresponding channel is active */
-//    PIOA->PIO_RCR = PIO_RCR_RXCTR(pInit->dPDCsize);
+/*    PIOA->PIO_RCR = PIO_RCR_RXCTR(pInit->dPDCsize); */
 
     /* PDC: Transfer Control Register */
     /* Enables PDC receiver channel requests if RXTDIS is not set */
-//    PIOA->PIO_PTCR = PIO_PTCR_RXTEN ;
+/*    PIOA->PIO_PTCR = PIO_PTCR_RXTEN ; */
 
 
     /* Copy the API structure for interrupt handler */
     _PioCaptureCopy = pInit;
     /* PIO Parallel Capture Mode */
-//    PIOA->PIO_PCMR =  PIO_PCMR_DSIZE(pInit->dsize)
-//                    | ((pInit->alwaysSampling<<9) & PIO_PCMR_ALWYS)
-//                    | ((pInit->halfSampling<<10) & PIO_PCMR_HALFS)
-//                    | ((pInit->modeFirstSample<<11) & PIO_PCMR_FRSTS);
+/*    PIOA->PIO_PCMR =  PIO_PCMR_DSIZE(pInit->dsize) */
+/*                    | ((pInit->alwaysSampling<<9) & PIO_PCMR_ALWYS) */
+/*                    | ((pInit->halfSampling<<10) & PIO_PCMR_HALFS) */
+/*                    | ((pInit->modeFirstSample<<11) & PIO_PCMR_FRSTS); */
 
-    if ( pInit->CbkDataReady != NULL )
+    if( pInit->CbkDataReady != NULL )
     {
         PIOA->PIO_PCIER = PIO_PCISR_DRDY;
     }
 
-    if ( pInit->CbkOverrun != NULL )
+    if( pInit->CbkOverrun != NULL )
     {
         PIOA->PIO_PCIER = PIO_PCISR_OVRE;
     }
 
-    if ( pInit->CbkEndReception != NULL )
+    if( pInit->CbkEndReception != NULL )
     {
         PIOA->PIO_PCIER = PIO_PCISR_ENDRX;
     }
 
-    if ( pInit->CbkBuffFull != NULL )
+    if( pInit->CbkBuffFull != NULL )
     {
         PIOA->PIO_PCIER = PIO_PCISR_RXBUFF;
     }
-//    else
-//    {
-//        TRACE_INFO("No interruption, no callback\n\r");
-//    }
 
+/*    else */
+/*    { */
+/*        TRACE_INFO("No interruption, no callback\n\r"); */
+/*    } */
 }
-

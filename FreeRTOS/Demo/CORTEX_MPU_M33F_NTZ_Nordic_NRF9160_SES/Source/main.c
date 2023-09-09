@@ -49,14 +49,14 @@ extern uint32_t __FLASH_NS_UNPRIV_segment_end__[];
 extern uint32_t __RAM_NS_PRIV_segment_start__[];
 extern uint32_t __RAM_NS_PRIV_segment_end__[];
 
-uint32_t * __privileged_functions_start__   = __FLASH_NS_PRIV_segment_start__;
-uint32_t * __privileged_functions_end__     = ( uint32_t * )( ( uint32_t )__FLASH_NS_PRIV_segment_end__ - ( uint32_t ) 1 );
-uint32_t * __syscalls_flash_start__         = __FLASH_NS_SYSCALLS_segment_start__;
-uint32_t * __syscalls_flash_end__           = ( uint32_t * )( ( uint32_t )__FLASH_NS_SYSCALLS_segment_end__ - ( uint32_t ) 1 );
-uint32_t * __unprivileged_flash_start__     = __FLASH_NS_UNPRIV_segment_start__;
-uint32_t * __unprivileged_flash_end__       = ( uint32_t * )( ( uint32_t )__FLASH_NS_UNPRIV_segment_end__ - ( uint32_t ) 1 );
-uint32_t * __privileged_sram_start__        = __RAM_NS_PRIV_segment_start__;
-uint32_t * __privileged_sram_end__          = ( uint32_t * )( ( uint32_t )__RAM_NS_PRIV_segment_end__ - ( uint32_t ) 1 );
+uint32_t * __privileged_functions_start__ = __FLASH_NS_PRIV_segment_start__;
+uint32_t * __privileged_functions_end__ = ( uint32_t * ) ( ( uint32_t ) __FLASH_NS_PRIV_segment_end__ - ( uint32_t ) 1 );
+uint32_t * __syscalls_flash_start__ = __FLASH_NS_SYSCALLS_segment_start__;
+uint32_t * __syscalls_flash_end__ = ( uint32_t * ) ( ( uint32_t ) __FLASH_NS_SYSCALLS_segment_end__ - ( uint32_t ) 1 );
+uint32_t * __unprivileged_flash_start__ = __FLASH_NS_UNPRIV_segment_start__;
+uint32_t * __unprivileged_flash_end__ = ( uint32_t * ) ( ( uint32_t ) __FLASH_NS_UNPRIV_segment_end__ - ( uint32_t ) 1 );
+uint32_t * __privileged_sram_start__ = __RAM_NS_PRIV_segment_start__;
+uint32_t * __privileged_sram_end__ = ( uint32_t * ) ( ( uint32_t ) __RAM_NS_PRIV_segment_end__ - ( uint32_t ) 1 );
 /*-----------------------------------------------------------*/
 
 /**
@@ -64,7 +64,7 @@ uint32_t * __privileged_sram_end__          = ( uint32_t * )( ( uint32_t )__RAM_
  *
  * It calls a function called vHandleMemoryFault.
  */
-void MemManage_Handler( void ) __attribute__ ( ( naked ) );
+void MemManage_Handler( void ) __attribute__( ( naked ) );
 
 /**
  * @brief Initializes the privileged_data section.
@@ -87,8 +87,8 @@ int main( void )
     vTaskStartScheduler();
 
     /* Will not get here if the scheduler starts successfully.  If you do end up
-    here then there wasn't enough heap memory available to start either the idle
-    task or the timer/daemon task.  https://www.freertos.org/a00111.html */
+     * here then there wasn't enough heap memory available to start either the idle
+     * task or the timer/daemon task.  https://www.freertos.org/a00111.html */
 
     for( ; ; )
     {
@@ -109,7 +109,8 @@ void InitializeUserMemorySections( void )
 /*-----------------------------------------------------------*/
 
 /* Stack overflow hook. */
-void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                    char * pcTaskName )
 {
     /* Force an assert. */
     configASSERT( pcTaskName == 0 );

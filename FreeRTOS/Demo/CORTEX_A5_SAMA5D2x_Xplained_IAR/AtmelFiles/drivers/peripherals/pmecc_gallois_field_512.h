@@ -39,14 +39,14 @@
  *        Definitions
  *----------------------------------------------------------------------------*/
 
-#define PMECC_GF_512_SIZE (0x2000)
+#define PMECC_GF_512_SIZE    ( 0x2000 )
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
 /** \brief Get the addresses of Gallois Field tables for 512 bytes sectors */
-void pmecc_get_gf_512_tables(const int16_t **alpha_to, const int16_t **index_of);
+void pmecc_get_gf_512_tables( const int16_t ** alpha_to,
+                              const int16_t ** index_of );
 
 #endif /* PMECC_TABLES_512_H */
-

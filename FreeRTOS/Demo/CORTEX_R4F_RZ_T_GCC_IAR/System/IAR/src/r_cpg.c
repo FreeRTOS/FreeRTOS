@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_cpg.c
@@ -33,13 +34,14 @@
 * Description  : CPG setting API of RZ/T1
 * Limitation   : none
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
 *******************************************************************************/
 
 /*******************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 *******************************************************************************/
 #include <stdint.h>
 #include <Renesas/ior7s910017.h>
@@ -49,36 +51,36 @@ Includes <System Includes> , "Project Includes"
 #include "r_icu_init.h"
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
-#define CPG_WRITE_ENABLE (0x0000A501)
-#define CPG_WRITE_DISABLE (0x0000A500)
+#define CPG_WRITE_ENABLE           ( 0x0000A501 )
+#define CPG_WRITE_DISABLE          ( 0x0000A500 )
 
-#define CPG_CMT0_CLOCK_PCLKD_32 (1)
-#define CPG_CMT0_CMI0_ENABLE    (1)
-#define CPG_CMT0_CONST_100_us   (0xEA)
-#define CPG_CMT0_START          (1)
-#define CPG_CMT0_STOP           (0)
+#define CPG_CMT0_CLOCK_PCLKD_32    ( 1 )
+#define CPG_CMT0_CMI0_ENABLE       ( 1 )
+#define CPG_CMT0_CONST_100_us      ( 0xEA )
+#define CPG_CMT0_START             ( 1 )
+#define CPG_CMT0_STOP              ( 0 )
 
-#define CPG_CMT_REG_CLEAR (0x0000)
+#define CPG_CMT_REG_CLEAR          ( 0x0000 )
 
 /*******************************************************************************
-Typedef definitions
-*******************************************************************************/
-
-
-/*******************************************************************************
-Imported global variables and functions (from other files)
+*  Typedef definitions
 *******************************************************************************/
 
 
 /*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Imported global variables and functions (from other files)
 *******************************************************************************/
 
 
 /*******************************************************************************
-Private variables and functions
+*  Exported global variables and functions (to be accessed by other files)
+*******************************************************************************/
+
+
+/*******************************************************************************
+*  Private variables and functions
 *******************************************************************************/
 
 
@@ -88,39 +90,38 @@ Private variables and functions
 * Arguments    : none
 * Return Value : none
 *******************************************************************************/
-void R_CPG_PLL_Wait(void)
+void R_CPG_PLL_Wait( void )
 {
-
     /* Enables writing to the registers related to Reset and Low-Power function */
     r_rst_write_enable();
 
     /* Release from the CMT0 module-stop state  */
-    MSTP(CMT0) = 0;
+    MSTP( CMT0 ) = 0;
 
     /* Disables writing to the registers related to Reset and Low-Power function */
     r_rst_write_disable();
 
     /* Set CMT0 to 100us interval operation */
-    CMT0.CMCR.BIT.CKS = CPG_CMT0_CLOCK_PCLKD_32;  // Count clock = PCLKD/32
-    CMT0.CMCR.BIT.CMIE = CPG_CMT0_CMI0_ENABLE;    // Enable CMI0 interrupt
-    CMT0.CMCNT = CPG_CMT_REG_CLEAR;              // Clear CMCNT counter
-    CMT0.CMCOR = CPG_CMT0_CONST_100_us;           // Set constant value for 100us
+    CMT0.CMCR.BIT.CKS = CPG_CMT0_CLOCK_PCLKD_32; /* Count clock = PCLKD/32 */
+    CMT0.CMCR.BIT.CMIE = CPG_CMT0_CMI0_ENABLE;   /* Enable CMI0 interrupt */
+    CMT0.CMCNT = CPG_CMT_REG_CLEAR;              /* Clear CMCNT counter */
+    CMT0.CMCOR = CPG_CMT0_CONST_100_us;          /* Set constant value for 100us */
 
 
     /* Set IRQ21(CMI0) for polloing sequence */
-    VIC.IEC0.BIT.IEC21 = ICU_IEC_MASK_SET;    // Mask IRQ21 interrupt
-    VIC.PLS0.BIT.PLS21 = ICU_TYPE_EDGE;       // Set EDGE type interrupt
-    VIC.PIC0.BIT.PIC21 = ICU_PIC_EDGE_CLEAR;  // Clear interrupt detection edge
+    VIC.IEC0.BIT.IEC21 = ICU_IEC_MASK_SET;   /* Mask IRQ21 interrupt */
+    VIC.PLS0.BIT.PLS21 = ICU_TYPE_EDGE;      /* Set EDGE type interrupt */
+    VIC.PIC0.BIT.PIC21 = ICU_PIC_EDGE_CLEAR; /* Clear interrupt detection edge */
 
     /* Enable IRQ interrupt (Clear CPSR.I bit to 0) */
-    asm("cpsie i");   // Clear CPSR.I bit to 0
-    asm("isb");       // Ensuring Context-changing
+    asm ( "cpsie i" ); /* Clear CPSR.I bit to 0 */
+    asm ( "isb" );     /* Ensuring Context-changing */
 
     /* Start CMT0 count */
     CMT.CMSTR0.BIT.STR0 = CPG_CMT0_START;
 
     /* Wait for 100us (IRQ21 is generated) */
-    while ( !(VIC.RAIS0.BIT.RAI21) )
+    while( !( VIC.RAIS0.BIT.RAI21 ) )
     {
         /* Wait */
     }
@@ -134,29 +135,25 @@ void R_CPG_PLL_Wait(void)
     CMT0.CMCOR = CPG_CMT_REG_CLEAR;
     CMT.CMSTR0.WORD = CPG_CMT_REG_CLEAR;
 
-    VIC.PIC0.BIT.PIC21 = ICU_PIC_EDGE_CLEAR;  // Clear interrupt detection edge
+    VIC.PIC0.BIT.PIC21 = ICU_PIC_EDGE_CLEAR; /* Clear interrupt detection edge */
 
 
     /* Disable IRQ interrupt (Set CPSR.I bit to 1) */
-    asm("cpsid i");
-    asm("isb");
+    asm ( "cpsid i" );
+    asm ( "isb" );
 
     /* Enables writing to the registers related to Reset and Low-Power function */
     r_rst_write_enable();
 
     /* Set CMT0 to module-stop state */
-    MSTP(CMT0) = 1;
+    MSTP( CMT0 ) = 1;
 
     /* Disables writing to the registers related to Reset and Low-Power function */
     r_rst_write_disable();
-
-
 }
 
 /*******************************************************************************
- End of function R_CPG_PLL_Wait
+*  End of function R_CPG_PLL_Wait
 *******************************************************************************/
 
 /* End of File */
-
-

@@ -48,7 +48,7 @@
  * Related files :\n
  * \ref pio.c\n
  * \ref pio3.h\n
-*/
+ */
 /*@{*/
 /*@}*/
 
@@ -58,6 +58,7 @@
  * Implementation of PIO V3 (Parallel Input/Output) controller.
  *
  */
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -79,30 +80,32 @@
  *        Local types
  *----------------------------------------------------------------------------*/
 
-struct _bitfield_pio_cfgr_func {
-	uint32_t
-	func            : 3,
-	rfu3_7          : 5,
-	dir             : 1,
-	puen            : 1,
-	pden            : 1,
-	rfu11           : 1,
-	ifen            : 1,
-	ifscen          : 1,
-	opd             : 1,
-	schmitt         : 1,
-	drvstr          : 2,
-	rfu18_23        : 6,
-	evtsel          : 3,
-	rfu27_28        : 2,
-	pcfs            : 1,
-	icfs            : 1,
-	tampen          : 1;
+struct _bitfield_pio_cfgr_func
+{
+    uint32_t
+        func            : 3,
+        rfu3_7          : 5,
+        dir             : 1,
+        puen            : 1,
+        pden            : 1,
+        rfu11           : 1,
+        ifen            : 1,
+        ifscen          : 1,
+        opd             : 1,
+        schmitt         : 1,
+        drvstr          : 2,
+        rfu18_23        : 6,
+        evtsel          : 3,
+        rfu27_28        : 2,
+        pcfs            : 1,
+        icfs            : 1,
+        tampen          : 1;
 };
 
-union _pio_cfg {
-	struct _bitfield_pio_cfgr_func bitfield;
-	uint32_t uint32_value;
+union _pio_cfg
+{
+    struct _bitfield_pio_cfgr_func bitfield;
+    uint32_t uint32_value;
 };
 
 /*----------------------------------------------------------------------------
@@ -110,168 +113,214 @@ union _pio_cfg {
  *----------------------------------------------------------------------------*/
 
 #ifdef ID_PIOA
-static void _pioa_handler(void);
+    static void _pioa_handler( void );
 #endif
 #ifdef ID_PIOB
-static void _piob_handler(void);
+    static void _piob_handler( void );
 #endif
 #ifdef ID_PIOC
-static void _pioc_handler(void);
+    static void _pioc_handler( void );
 #endif
 #ifdef ID_PIOD
-static void _piod_handler(void);
+    static void _piod_handler( void );
 #endif
 
 /*----------------------------------------------------------------------------
  *        Local variables
  *----------------------------------------------------------------------------*/
-struct _handler {
-	uint32_t mask;
-	pio_handler_t handler;
-	void *user_arg;
+struct _handler
+{
+    uint32_t mask;
+    pio_handler_t handler;
+    void * user_arg;
 };
-static struct _handler _handlers[IRQ_PIO_HANDLERS_SIZE];
+static struct _handler _handlers[ IRQ_PIO_HANDLERS_SIZE ];
 
-static const aic_handler_t _generic_handlers[PIO_GROUP_LENGTH] = {
-#ifdef ID_PIOA
-	_pioa_handler,
-#endif
-#ifdef ID_PIOB
-	_piob_handler,
-#endif
-#ifdef ID_PIOC
-	_pioc_handler,
-#endif
-#ifdef ID_PIOD
-	_piod_handler,
-#endif
+static const aic_handler_t _generic_handlers[ PIO_GROUP_LENGTH ] =
+{
+    #ifdef ID_PIOA
+        _pioa_handler,
+    #endif
+    #ifdef ID_PIOB
+        _piob_handler,
+    #endif
+    #ifdef ID_PIOC
+        _pioc_handler,
+    #endif
+    #ifdef ID_PIOD
+        _piod_handler,
+    #endif
 };
 
 /*----------------------------------------------------------------------------
  *        Local functions definitions
  *----------------------------------------------------------------------------*/
 
-static void _handler_push(void (*handler)(uint32_t, uint32_t, void*),
-		uint32_t mask, void* user_arg)
+static void _handler_push( void ( * handler )( uint32_t, uint32_t, void * ),
+                           uint32_t mask,
+                           void * user_arg )
 {
-	static int i = 0;
-	_handlers[i].mask = mask;
-	_handlers[i].handler = handler;
-	_handlers[i].user_arg = user_arg;
-	++i;
-	assert(i < ARRAY_SIZE(_handlers));
+    static int i = 0;
+
+    _handlers[ i ].mask = mask;
+    _handlers[ i ].handler = handler;
+    _handlers[ i ].user_arg = user_arg;
+    ++i;
+    assert( i < ARRAY_SIZE( _handlers ) );
 }
 
 #ifdef ID_PIOA
-static void _pioa_handler(void)
-{
-	uint32_t status = 0;
-	unsigned int i = 0;
-	if (matrix_is_peripheral_secured(MATRIX1, ID_PIOA))
-		status = PIOA->PIO_PIO_[PIO_GROUP_A].S_PIO_ISR;
-	else
-		status = PIOA->PIO_IO_GROUP[PIO_GROUP_A].PIO_ISR;
+    static void _pioa_handler( void )
+    {
+        uint32_t status = 0;
+        unsigned int i = 0;
 
-	for (i = 0; i < ARRAY_SIZE(_handlers); ++i) {
-		if (_handlers[i].mask & status) {
-			_handlers[i].handler(PIO_GROUP_A, status,
-					_handlers[i].user_arg);
-		}
-	}
-}
-#endif
+        if( matrix_is_peripheral_secured( MATRIX1, ID_PIOA ) )
+        {
+            status = PIOA->PIO_PIO_[ PIO_GROUP_A ].S_PIO_ISR;
+        }
+        else
+        {
+            status = PIOA->PIO_IO_GROUP[ PIO_GROUP_A ].PIO_ISR;
+        }
+
+        for( i = 0; i < ARRAY_SIZE( _handlers ); ++i )
+        {
+            if( _handlers[ i ].mask & status )
+            {
+                _handlers[ i ].handler( PIO_GROUP_A, status,
+                                        _handlers[ i ].user_arg );
+            }
+        }
+    }
+#endif /* ifdef ID_PIOA */
 #ifdef ID_PIOB
-static void _piob_handler(void)
-{
-	uint32_t status = 0;
-	unsigned int i = 0;
-	if (matrix_is_peripheral_secured(MATRIX1, ID_PIOB))
-		status = PIOA->PIO_PIO_[PIO_GROUP_B].S_PIO_ISR;
-	else
-		status = PIOA->PIO_IO_GROUP[PIO_GROUP_B].PIO_ISR;
+    static void _piob_handler( void )
+    {
+        uint32_t status = 0;
+        unsigned int i = 0;
 
-	for (i = 0; i < ARRAY_SIZE(_handlers); ++i) {
-		if (_handlers[i].mask & status) {
-			_handlers[i].handler(PIO_GROUP_B, status,
-					_handlers[i].user_arg);
-		}
-	}
+        if( matrix_is_peripheral_secured( MATRIX1, ID_PIOB ) )
+        {
+            status = PIOA->PIO_PIO_[ PIO_GROUP_B ].S_PIO_ISR;
+        }
+        else
+        {
+            status = PIOA->PIO_IO_GROUP[ PIO_GROUP_B ].PIO_ISR;
+        }
 
-}
-#endif
+        for( i = 0; i < ARRAY_SIZE( _handlers ); ++i )
+        {
+            if( _handlers[ i ].mask & status )
+            {
+                _handlers[ i ].handler( PIO_GROUP_B, status,
+                                        _handlers[ i ].user_arg );
+            }
+        }
+    }
+#endif /* ifdef ID_PIOB */
 #ifdef ID_PIOC
-static void _pioc_handler(void)
-{
-	uint32_t status = 0;
-	unsigned int i = 0;
-	if (matrix_is_peripheral_secured(MATRIX1, ID_PIOC))
-		status = PIOA->PIO_PIO_[PIO_GROUP_C].S_PIO_ISR;
-	else
-		status = PIOA->PIO_IO_GROUP[PIO_GROUP_C].PIO_ISR;
+    static void _pioc_handler( void )
+    {
+        uint32_t status = 0;
+        unsigned int i = 0;
 
-	for (i = 0; i < ARRAY_SIZE(_handlers); ++i) {
-		if (_handlers[i].mask & status) {
-			_handlers[i].handler(PIO_GROUP_C, status,
-					_handlers[i].user_arg);
-		}
-	}
-}
-#endif
+        if( matrix_is_peripheral_secured( MATRIX1, ID_PIOC ) )
+        {
+            status = PIOA->PIO_PIO_[ PIO_GROUP_C ].S_PIO_ISR;
+        }
+        else
+        {
+            status = PIOA->PIO_IO_GROUP[ PIO_GROUP_C ].PIO_ISR;
+        }
+
+        for( i = 0; i < ARRAY_SIZE( _handlers ); ++i )
+        {
+            if( _handlers[ i ].mask & status )
+            {
+                _handlers[ i ].handler( PIO_GROUP_C, status,
+                                        _handlers[ i ].user_arg );
+            }
+        }
+    }
+#endif /* ifdef ID_PIOC */
 #ifdef ID_PIOD
-static void _piod_handler(void)
-{
-	uint32_t status = 0;
-	unsigned int i = 0;
-	if (matrix_is_peripheral_secured(MATRIX1, ID_PIOD))
-		status = PIOA->PIO_PIO_[PIO_GROUP_D].S_PIO_ISR;
-	else
-		status = PIOA->PIO_IO_GROUP[PIO_GROUP_D].PIO_ISR;
+    static void _piod_handler( void )
+    {
+        uint32_t status = 0;
+        unsigned int i = 0;
 
-	for (i = 0; i < ARRAY_SIZE(_handlers); ++i) {
-		if (_handlers[i].mask & status) {
-			_handlers[i].handler(PIO_GROUP_D, status,
-					_handlers[i].user_arg);
-		}
-	}
-}
-#endif
+        if( matrix_is_peripheral_secured( MATRIX1, ID_PIOD ) )
+        {
+            status = PIOA->PIO_PIO_[ PIO_GROUP_D ].S_PIO_ISR;
+        }
+        else
+        {
+            status = PIOA->PIO_IO_GROUP[ PIO_GROUP_D ].PIO_ISR;
+        }
 
-static inline uint32_t _pio_group_to_id(int group)
+        for( i = 0; i < ARRAY_SIZE( _handlers ); ++i )
+        {
+            if( _handlers[ i ].mask & status )
+            {
+                _handlers[ i ].handler( PIO_GROUP_D, status,
+                                        _handlers[ i ].user_arg );
+            }
+        }
+    }
+#endif /* ifdef ID_PIOD */
+
+static inline uint32_t _pio_group_to_id( int group )
 {
-	switch(group) {
-	case PIO_GROUP_A:
-		return ID_PIOA;
-	case PIO_GROUP_B:
-		return ID_PIOB;
-	case PIO_GROUP_C:
-		return ID_PIOC;
-	case PIO_GROUP_D:
-		return ID_PIOD;
-	default:
-		return (unsigned int)-1;
-	};
+    switch( group )
+    {
+        case PIO_GROUP_A:
+            return ID_PIOA;
+
+        case PIO_GROUP_B:
+            return ID_PIOB;
+
+        case PIO_GROUP_C:
+            return ID_PIOC;
+
+        case PIO_GROUP_D:
+            return ID_PIOD;
+
+        default:
+            return ( unsigned int ) -1;
+    }
 }
 
-static void* _pio_configure_pins(const struct _pin *pin, uint32_t periph_id)
+static void * _pio_configure_pins( const struct _pin * pin,
+                                   uint32_t periph_id )
 {
-	PioPio_* piogroup = &PIOA->PIO_PIO_[pin->group];
-	if (!matrix_is_peripheral_secured(MATRIX1, periph_id)) {
-		piogroup->S_PIO_SIONR = pin->mask;
-		return (void*) &PIOA->PIO_IO_GROUP[pin->group];
-	} else {
-		piogroup->S_PIO_SIOSR = pin->mask;
-		return (void*) piogroup;
-	}
+    PioPio_ * piogroup = &PIOA->PIO_PIO_[ pin->group ];
+
+    if( !matrix_is_peripheral_secured( MATRIX1, periph_id ) )
+    {
+        piogroup->S_PIO_SIONR = pin->mask;
+        return ( void * ) &PIOA->PIO_IO_GROUP[ pin->group ];
+    }
+    else
+    {
+        piogroup->S_PIO_SIOSR = pin->mask;
+        return ( void * ) piogroup;
+    }
 }
 
-static void* _pio_retrive_group(const struct _pin *pin, uint32_t periph_id)
+static void * _pio_retrive_group( const struct _pin * pin,
+                                  uint32_t periph_id )
 {
-	if (!matrix_is_peripheral_secured(MATRIX1, periph_id)) {
-		return (void*) &PIOA->PIO_IO_GROUP[pin->group];
-	} else {
-		return (void*) &PIOA->PIO_PIO_[pin->group];
-	}
+    if( !matrix_is_peripheral_secured( MATRIX1, periph_id ) )
+    {
+        return ( void * ) &PIOA->PIO_IO_GROUP[ pin->group ];
+    }
+    else
+    {
+        return ( void * ) &PIOA->PIO_PIO_[ pin->group ];
+    }
 }
+
 /*----------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
@@ -288,109 +337,126 @@ static void* _pio_retrive_group(const struct _pin *pin, uint32_t periph_id)
  *
  * \return 1 if the pins have been configured properly; otherwise 0.
  */
-uint8_t pio_configure(const struct _pin *pin_list, uint32_t size)
+uint8_t pio_configure( const struct _pin * pin_list,
+                       uint32_t size )
 {
-	union _pio_cfg cfg;
-	PioIo_group* pioiog;
+    union _pio_cfg cfg;
+    PioIo_group * pioiog;
 
-	/* Configure pins */
-	while (size--)
-	{
-		/* Enable the PIO group if needed */
-		uint32_t periph_id = _pio_group_to_id(pin_list->group);
+    /* Configure pins */
+    while( size-- )
+    {
+        /* Enable the PIO group if needed */
+        uint32_t periph_id = _pio_group_to_id( pin_list->group );
 
-		assert(pin_list->group < PIO_GROUP_LENGTH);
-		cfg.uint32_value = 0;
-		pioiog = (PioIo_group*) _pio_configure_pins(pin_list, periph_id);
+        assert( pin_list->group < PIO_GROUP_LENGTH );
+        cfg.uint32_value = 0;
+        pioiog = ( PioIo_group * ) _pio_configure_pins( pin_list, periph_id );
 
-		if ( pin_list->attribute != PIO_DEFAULT) {
-			cfg.bitfield.puen = (pin_list->attribute & PIO_PULLUP)? 1:0;
-			cfg.bitfield.pden = (pin_list->attribute & PIO_PULLDOWN)? 1:0;
-			cfg.bitfield.ifen = (pin_list->attribute & PIO_DEGLITCH)? 1:0;
-			cfg.bitfield.ifscen = (pin_list->attribute & PIO_DEBOUNCE)? 1:0;
-			cfg.bitfield.opd = (pin_list->attribute & PIO_OPENDRAIN)? 1:0;
-			cfg.bitfield.schmitt =(pin_list->attribute & PIO_TRIGGER_DIS)? 1:0;
+        if( pin_list->attribute != PIO_DEFAULT )
+        {
+            cfg.bitfield.puen = ( pin_list->attribute & PIO_PULLUP ) ? 1 : 0;
+            cfg.bitfield.pden = ( pin_list->attribute & PIO_PULLDOWN ) ? 1 : 0;
+            cfg.bitfield.ifen = ( pin_list->attribute & PIO_DEGLITCH ) ? 1 : 0;
+            cfg.bitfield.ifscen = ( pin_list->attribute & PIO_DEBOUNCE ) ? 1 : 0;
+            cfg.bitfield.opd = ( pin_list->attribute & PIO_OPENDRAIN ) ? 1 : 0;
+            cfg.bitfield.schmitt = ( pin_list->attribute & PIO_TRIGGER_DIS ) ? 1 : 0;
 
-			switch (pin_list->attribute & PIO_DRVSTR_Msk) {
-			case PIO_DRVSTR_HI:
-				cfg.bitfield.drvstr = PIO_CFGR_DRVSTR_HI >> PIO_CFGR_DRVSTR_Pos;
-				break;
-			case PIO_DRVSTR_ME:
-				cfg.bitfield.drvstr = PIO_CFGR_DRVSTR_ME >> PIO_CFGR_DRVSTR_Pos;
-				break;
-			case PIO_DRVSTR_LO:
-			default:
-				cfg.bitfield.drvstr = PIO_CFGR_DRVSTR_LO >> PIO_CFGR_DRVSTR_Pos;
-				break;
-			}
+            switch( pin_list->attribute & PIO_DRVSTR_Msk )
+            {
+                case PIO_DRVSTR_HI:
+                    cfg.bitfield.drvstr = PIO_CFGR_DRVSTR_HI >> PIO_CFGR_DRVSTR_Pos;
+                    break;
 
-			switch (pin_list->attribute & PIO_EVTSEL_Msk) {
-			case PIO_IT_HIGH_LEVEL:
-				cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_HIGH >> PIO_CFGR_EVTSEL_Pos;
-				break;
-			case PIO_IT_LOW_LEVEL:
-				cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_LOW >> PIO_CFGR_EVTSEL_Pos;
-				break;
-			case PIO_IT_BOTH_EDGE:
-				cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_BOTH >> PIO_CFGR_EVTSEL_Pos;
-				break;
-			case PIO_IT_RISE_EDGE:
-				cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_RISING >> PIO_CFGR_EVTSEL_Pos;
-				break;
-			case PIO_IT_FALL_EDGE:
-			default:
-				cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_FALLING >> PIO_CFGR_EVTSEL_Pos;
-				break;
-			}
-		}
+                case PIO_DRVSTR_ME:
+                    cfg.bitfield.drvstr = PIO_CFGR_DRVSTR_ME >> PIO_CFGR_DRVSTR_Pos;
+                    break;
 
-		switch (pin_list->type){
+                case PIO_DRVSTR_LO:
+                default:
+                    cfg.bitfield.drvstr = PIO_CFGR_DRVSTR_LO >> PIO_CFGR_DRVSTR_Pos;
+                    break;
+            }
 
-		case PIO_PERIPH_A:
-			cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_A >> PIO_CFGR_FUNC_Pos;
-			break;
-		case PIO_PERIPH_B:
-			cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_B >> PIO_CFGR_FUNC_Pos;
-			break;
-		case PIO_PERIPH_C:
-			cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_C >> PIO_CFGR_FUNC_Pos;
-			break;
-		case PIO_PERIPH_D:
-			cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_D >> PIO_CFGR_FUNC_Pos;
-			break;
-		case PIO_PERIPH_E:
-			cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_E >> PIO_CFGR_FUNC_Pos;
-			break;
-		case PIO_PERIPH_F:
-			cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_F >> PIO_CFGR_FUNC_Pos;
-			break;
-		case PIO_GENERIC:
-		case PIO_INPUT:
-			cfg.bitfield.dir = 0;
-			break;
+            switch( pin_list->attribute & PIO_EVTSEL_Msk )
+            {
+                case PIO_IT_HIGH_LEVEL:
+                    cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_HIGH >> PIO_CFGR_EVTSEL_Pos;
+                    break;
 
-		case PIO_OUTPUT_0:
-			cfg.bitfield.dir = 1;
-			pio_clear(pin_list);
-			break;
+                case PIO_IT_LOW_LEVEL:
+                    cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_LOW >> PIO_CFGR_EVTSEL_Pos;
+                    break;
 
-		case PIO_OUTPUT_1:
-			cfg.bitfield.dir = 1;
-			pio_set(pin_list);
-			break;
+                case PIO_IT_BOTH_EDGE:
+                    cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_BOTH >> PIO_CFGR_EVTSEL_Pos;
+                    break;
 
-		default:
-		case PIO_PERIPH_G:
-			return 0;
-		}
+                case PIO_IT_RISE_EDGE:
+                    cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_RISING >> PIO_CFGR_EVTSEL_Pos;
+                    break;
 
-		pioiog->PIO_MSKR = pin_list->mask;
-		pioiog->PIO_CFGR = cfg.uint32_value;
-		pmc_enable_peripheral(periph_id);
+                case PIO_IT_FALL_EDGE:
+                default:
+                    cfg.bitfield.evtsel = PIO_CFGR_EVTSEL_FALLING >> PIO_CFGR_EVTSEL_Pos;
+                    break;
+            }
+        }
 
-		++pin_list;
-	}
-	return 1;
+        switch( pin_list->type )
+        {
+            case PIO_PERIPH_A:
+                cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_A >> PIO_CFGR_FUNC_Pos;
+                break;
+
+            case PIO_PERIPH_B:
+                cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_B >> PIO_CFGR_FUNC_Pos;
+                break;
+
+            case PIO_PERIPH_C:
+                cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_C >> PIO_CFGR_FUNC_Pos;
+                break;
+
+            case PIO_PERIPH_D:
+                cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_D >> PIO_CFGR_FUNC_Pos;
+                break;
+
+            case PIO_PERIPH_E:
+                cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_E >> PIO_CFGR_FUNC_Pos;
+                break;
+
+            case PIO_PERIPH_F:
+                cfg.bitfield.func = PIO_CFGR_FUNC_PERIPH_F >> PIO_CFGR_FUNC_Pos;
+                break;
+
+            case PIO_GENERIC:
+            case PIO_INPUT:
+                cfg.bitfield.dir = 0;
+                break;
+
+            case PIO_OUTPUT_0:
+                cfg.bitfield.dir = 1;
+                pio_clear( pin_list );
+                break;
+
+            case PIO_OUTPUT_1:
+                cfg.bitfield.dir = 1;
+                pio_set( pin_list );
+                break;
+
+            default:
+            case PIO_PERIPH_G:
+                return 0;
+        }
+
+        pioiog->PIO_MSKR = pin_list->mask;
+        pioiog->PIO_CFGR = cfg.uint32_value;
+        pmc_enable_peripheral( periph_id );
+
+        ++pin_list;
+    }
+
+    return 1;
 }
 
 /**
@@ -401,12 +467,12 @@ uint8_t pio_configure(const struct _pin *pin_list, uint32_t size)
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-void pio_set(const struct _pin *pin)
+void pio_set( const struct _pin * pin )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	uint32_t periph_id = _pio_group_to_id(pin->group);
-	PioIo_group* pioiog = (PioIo_group*) _pio_retrive_group(pin, periph_id);
-	pioiog->PIO_SODR = pin->mask;
+    assert( pin->group < PIO_GROUP_LENGTH );
+    uint32_t periph_id = _pio_group_to_id( pin->group );
+    PioIo_group * pioiog = ( PioIo_group * ) _pio_retrive_group( pin, periph_id );
+    pioiog->PIO_SODR = pin->mask;
 }
 
 /**
@@ -417,12 +483,12 @@ void pio_set(const struct _pin *pin)
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-void pio_clear(const struct _pin *pin)
+void pio_clear( const struct _pin * pin )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	uint32_t periph_id = _pio_group_to_id(pin->group);
-	PioIo_group* pioiog = (PioIo_group*) _pio_retrive_group(pin, periph_id);
-	pioiog->PIO_CODR = pin->mask;
+    assert( pin->group < PIO_GROUP_LENGTH );
+    uint32_t periph_id = _pio_group_to_id( pin->group );
+    PioIo_group * pioiog = ( PioIo_group * ) _pio_retrive_group( pin, periph_id );
+    pioiog->PIO_CODR = pin->mask;
 }
 
 /**
@@ -436,25 +502,30 @@ void pio_clear(const struct _pin *pin)
  * \return 1 if the Pin instance contains at least one PIO that currently has
  * a high level; otherwise 0.
  */
-uint8_t pio_get(const struct _pin *pin)
+uint8_t pio_get( const struct _pin * pin )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	uint32_t reg ;
-	uint32_t periph_id = _pio_group_to_id(pin->group);
-	PioIo_group* pioiog = (PioIo_group*) _pio_retrive_group(pin, periph_id);
+    assert( pin->group < PIO_GROUP_LENGTH );
+    uint32_t reg;
+    uint32_t periph_id = _pio_group_to_id( pin->group );
+    PioIo_group * pioiog = ( PioIo_group * ) _pio_retrive_group( pin, periph_id );
 
-	if ((pin->type == PIO_OUTPUT_0) || (pin->type == PIO_OUTPUT_1)) {
-		reg = pioiog->PIO_ODSR ;
-	}
-	else {
-		reg = pioiog->PIO_PDSR ;
-	}
-	if ( (reg & pin->mask) == 0 ) {
-		return 0 ;
-	}
-	else {
-		return 1 ;
-	}
+    if( ( pin->type == PIO_OUTPUT_0 ) || ( pin->type == PIO_OUTPUT_1 ) )
+    {
+        reg = pioiog->PIO_ODSR;
+    }
+    else
+    {
+        reg = pioiog->PIO_PDSR;
+    }
+
+    if( ( reg & pin->mask ) == 0 )
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 /**
@@ -467,18 +538,20 @@ uint8_t pio_get(const struct _pin *pin)
  * \return 1 if the Pin instance contains at least one PIO that is configured
  * to output a high level; otherwise 0.
  */
-uint8_t pio_get_output_data_status(const struct _pin *pin)
+uint8_t pio_get_output_data_status( const struct _pin * pin )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	uint32_t periph_id = _pio_group_to_id(pin->group);
-	PioIo_group* pioiog = (PioIo_group*) _pio_retrive_group(pin, periph_id);
+    assert( pin->group < PIO_GROUP_LENGTH );
+    uint32_t periph_id = _pio_group_to_id( pin->group );
+    PioIo_group * pioiog = ( PioIo_group * ) _pio_retrive_group( pin, periph_id );
 
-	if ((pioiog->PIO_ODSR & pin->mask) == 0) {
-		return 0;
-	}
-	else {
-		return 1;
-	}
+    if( ( pioiog->PIO_ODSR & pin->mask ) == 0 )
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 /**
@@ -487,17 +560,21 @@ uint8_t pio_get_output_data_status(const struct _pin *pin)
  * \param pin  Pointer to a Pin instance describing one or more pins.
  * \param cuttoff  Cutt off frequency for debounce filter.
  */
-void pio_set_debounce_filter(const struct _pin *pin, uint32_t cuttoff)
+void pio_set_debounce_filter( const struct _pin * pin,
+                              uint32_t cuttoff )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	if (cuttoff == 0) {
-	   PIOA->S_PIO_SCDR = 0;
-	}
-	else {
-		/* the lowest 14 bits work */
-		PIOA->S_PIO_SCDR =
-			((pmc_get_slow_clock()/(2*(cuttoff))) - 1) & 0x3FFF;
-	}
+    assert( pin->group < PIO_GROUP_LENGTH );
+
+    if( cuttoff == 0 )
+    {
+        PIOA->S_PIO_SCDR = 0;
+    }
+    else
+    {
+        /* the lowest 14 bits work */
+        PIOA->S_PIO_SCDR =
+            ( ( pmc_get_slow_clock() / ( 2 * ( cuttoff ) ) ) - 1 ) & 0x3FFF;
+    }
 }
 
 /**
@@ -505,10 +582,10 @@ void pio_set_debounce_filter(const struct _pin *pin, uint32_t cuttoff)
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-void pio_enable_write_protect(const struct _pin *pin)
+void pio_enable_write_protect( const struct _pin * pin )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	PIOA->PIO_WPMR = (PIO_WPMR_WPKEY_VALID | PIO_WPMR_WPEN_EN  );
+    assert( pin->group < PIO_GROUP_LENGTH );
+    PIOA->PIO_WPMR = ( PIO_WPMR_WPKEY_VALID | PIO_WPMR_WPEN_EN );
 }
 
 /**
@@ -516,10 +593,10 @@ void pio_enable_write_protect(const struct _pin *pin)
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-void pio_disable_write_protect(const struct _pin *pin)
+void pio_disable_write_protect( const struct _pin * pin )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	PIOA->PIO_WPMR = (PIO_WPMR_WPKEY_VALID | PIO_WPMR_WPEN_DIS );
+    assert( pin->group < PIO_GROUP_LENGTH );
+    PIOA->PIO_WPMR = ( PIO_WPMR_WPKEY_VALID | PIO_WPMR_WPEN_DIS );
 }
 
 /**
@@ -527,32 +604,36 @@ void pio_disable_write_protect(const struct _pin *pin)
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-uint32_t pio_get_write_protect_violation_info(const struct _pin * pin)
+uint32_t pio_get_write_protect_violation_info( const struct _pin * pin )
 {
-	assert(pin->group < PIO_GROUP_LENGTH);
-	return PIOA->PIO_WPSR;
+    assert( pin->group < PIO_GROUP_LENGTH );
+    return PIOA->PIO_WPSR;
 }
 
-void pio_add_handler_to_group(uint32_t group, uint32_t mask,
-			      pio_handler_t handler, void* user_arg)
+void pio_add_handler_to_group( uint32_t group,
+                               uint32_t mask,
+                               pio_handler_t handler,
+                               void * user_arg )
 {
-	trace_debug("Enter in pio_add_handler_to_group()\n\r");
-	assert(group <
-	       (sizeof(_generic_handlers)/sizeof(_generic_handlers[0])));
-	_handler_push(handler, mask, user_arg);
-	uint32_t id = _pio_group_to_id(group);
-	aic_set_source_vector(id,
-			(aic_handler_t)_generic_handlers[group]);
-	aic_enable(id);
+    trace_debug( "Enter in pio_add_handler_to_group()\n\r" );
+    assert( group <
+            ( sizeof( _generic_handlers ) / sizeof( _generic_handlers[ 0 ] ) ) );
+    _handler_push( handler, mask, user_arg );
+    uint32_t id = _pio_group_to_id( group );
+    aic_set_source_vector( id,
+                           ( aic_handler_t ) _generic_handlers[ group ] );
+    aic_enable( id );
 }
 
-void pio_reset_all_it(void)
+void pio_reset_all_it( void )
 {
-	int i = 0;
-	for (i = 0; i < PIO_GROUP_LENGTH; ++i) {
-		PIOA->PIO_IO_GROUP[i].PIO_ISR;
-		PIOA->PIO_IO_GROUP[i].PIO_IDR = ~0UL;
-	}
+    int i = 0;
+
+    for( i = 0; i < PIO_GROUP_LENGTH; ++i )
+    {
+        PIOA->PIO_IO_GROUP[ i ].PIO_ISR;
+        PIOA->PIO_IO_GROUP[ i ].PIO_IDR = ~0UL;
+    }
 }
 
 /**
@@ -562,10 +643,10 @@ void pio_reset_all_it(void)
  * handler).
  * \param pin  Pointer to a _pin instance.
  */
-void pio_configure_it(const struct _pin *pin)
+void pio_configure_it( const struct _pin * pin )
 {
-	trace_debug("Enter in pio_configure_it()\n\r");
-	assert(pin != NULL);
+    trace_debug( "Enter in pio_configure_it()\n\r" );
+    assert( pin != NULL );
 }
 
 /**
@@ -574,16 +655,16 @@ void pio_configure_it(const struct _pin *pin)
  * the interrupt.
  * \param pin  Interrupt source to enable.
  */
-void pio_enable_it(const struct _pin *pin)
+void pio_enable_it( const struct _pin * pin )
 {
-	trace_debug("pio_enable_it() \n\r");
-	assert(pin != NULL);
-	uint32_t periph_id = _pio_group_to_id(pin->group);
-	PioIo_group* pioiog = (PioIo_group*) _pio_retrive_group(pin, periph_id);
+    trace_debug( "pio_enable_it() \n\r" );
+    assert( pin != NULL );
+    uint32_t periph_id = _pio_group_to_id( pin->group );
+    PioIo_group * pioiog = ( PioIo_group * ) _pio_retrive_group( pin, periph_id );
 
-	pioiog->PIO_ISR;
-	/* Configure interrupt enable register */
-	pioiog->PIO_IER = pin->mask;	/* enable interrupt register */
+    pioiog->PIO_ISR;
+    /* Configure interrupt enable register */
+    pioiog->PIO_IER = pin->mask; /* enable interrupt register */
 }
 
 /**
@@ -591,11 +672,11 @@ void pio_enable_it(const struct _pin *pin)
  *
  * \param pin  Interrupt source to disable.
  */
-void pio_disable_it(const struct _pin *pin)
+void pio_disable_it( const struct _pin * pin )
 {
-	trace_debug("pio_enable_it()\n\r");
-	assert(pin != NULL);
-	uint32_t periph_id = _pio_group_to_id(pin->group);
-	PioIo_group* pioiog = (PioIo_group*) _pio_retrive_group(pin, periph_id);
-	pioiog->PIO_IDR = pin->mask;
+    trace_debug( "pio_enable_it()\n\r" );
+    assert( pin != NULL );
+    uint32_t periph_id = _pio_group_to_id( pin->group );
+    PioIo_group * pioiog = ( PioIo_group * ) _pio_retrive_group( pin, periph_id );
+    pioiog->PIO_IDR = pin->mask;
 }

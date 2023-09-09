@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -33,11 +33,11 @@
  * \section Usage
  *
  * <ul>
- * <li> SPID_Configure() initializes and configures the SPI peripheral and xDMA 
+ * <li> SPID_Configure() initializes and configures the SPI peripheral and xDMA
  * for data transfer.</li>
- * <li> Configures the parameters for the device corresponding to the cs value 
+ * <li> Configures the parameters for the device corresponding to the cs value
  * by SPID_ConfigureCS(). </li>
- * <li> Starts a SPI master transfer. This is a non blocking function 
+ * <li> Starts a SPI master transfer. This is a non blocking function
  * SPID_SendCommand(). It will
  * return as soon as the transfer is started..</li>
  * </ul>
@@ -66,7 +66,7 @@
 #define USE_SPI_DMA
 
 /** xDMA Link List size for SPI transmission*/
-#define DMA_SPI_LLI     2
+#define DMA_SPI_LLI    2
 
 /*----------------------------------------------------------------------------
  *        Macros
@@ -89,43 +89,48 @@ static uint32_t spiDmaRxChannel;
  * \brief SPI xDMA Rx callback
  * Invoked on SPi DMA reception done.
  * \param channel DMA channel.
- * \param pArg Pointer to callback argument - Pointer to Spid instance.   
- */ 
-static void SPID_Rx_Cb(uint32_t channel, Spid* pArg)
+ * \param pArg Pointer to callback argument - Pointer to Spid instance.
+ */
+static void SPID_Rx_Cb( uint32_t channel,
+                        Spid * pArg )
 {
-	SpidCmd *pSpidCmd = pArg->pCurrentCommand;
-	Spi *pSpiHw = pArg->pSpiHw;
-	if (channel != spiDmaRxChannel)
-		return;
+    SpidCmd * pSpidCmd = pArg->pCurrentCommand;
+    Spi * pSpiHw = pArg->pSpiHw;
 
-	/* Disable the SPI TX & RX */
-	SPI_Disable ( pSpiHw );
-	TRACE_INFO("SPI Rx DMA Callback has been called %d bytes received\n\r",
-			pArg->pCurrentCommand->RxSize);
-	/* Configure and enable interrupt on RC compare */    
-	NVIC_ClearPendingIRQ(XDMAC_IRQn);
-	NVIC_DisableIRQ(XDMAC_IRQn);
+    if( channel != spiDmaRxChannel )
+    {
+        return;
+    }
 
-	/* Disable the SPI Peripheral */
-	PMC_DisablePeripheral ( pArg->spiId );
+    /* Disable the SPI TX & RX */
+    SPI_Disable( pSpiHw );
+    TRACE_INFO( "SPI Rx DMA Callback has been called %d bytes received\n\r",
+                pArg->pCurrentCommand->RxSize );
+    /* Configure and enable interrupt on RC compare */
+    NVIC_ClearPendingIRQ( XDMAC_IRQn );
+    NVIC_DisableIRQ( XDMAC_IRQn );
 
-	/* Release CS */
-	SPI_ReleaseCS(pSpiHw);
+    /* Disable the SPI Peripheral */
+    PMC_DisablePeripheral( pArg->spiId );
 
-	/* Release the DMA channels */
-	XDMAD_FreeChannel(pArg->pXdmad, spiDmaRxChannel);
-	XDMAD_FreeChannel(pArg->pXdmad, spiDmaTxChannel);
-	SCB_CleanInvalidateDCache();
-	/* Release the dataflash semaphore */
-	pArg->semaphore++;
-	
-	printf(" %s\n\r",pArg->pCurrentCommand->pRxBuff);
+    /* Release CS */
+    SPI_ReleaseCS( pSpiHw );
 
-	/* Invoke the callback associated with the current command */
-	if (pSpidCmd && pSpidCmd->callback) {
-		//printf("p %d", pArg->semaphore);
-		pSpidCmd->callback(0, pSpidCmd->pArgument);
-	}
+    /* Release the DMA channels */
+    XDMAD_FreeChannel( pArg->pXdmad, spiDmaRxChannel );
+    XDMAD_FreeChannel( pArg->pXdmad, spiDmaTxChannel );
+    SCB_CleanInvalidateDCache();
+    /* Release the dataflash semaphore */
+    pArg->semaphore++;
+
+    printf( " %s\n\r", pArg->pCurrentCommand->pRxBuff );
+
+    /* Invoke the callback associated with the current command */
+    if( pSpidCmd && pSpidCmd->callback )
+    {
+        /*printf("p %d", pArg->semaphore); */
+        pSpidCmd->callback( 0, pSpidCmd->pArgument );
+    }
 }
 
 /**
@@ -134,128 +139,156 @@ static void SPID_Rx_Cb(uint32_t channel, Spid* pArg)
  * \returns 0 if the dma channel configuration successfully; otherwise returns
  * SPID_ERROR_XXX.
  */
-static uint8_t _spid_configureDmaChannels( Spid* pSpid )
+static uint8_t _spid_configureDmaChannels( Spid * pSpid )
 {
-	/* Driver initialize */
-	XDMAD_Initialize(  pSpid->pXdmad, 0 );
+    /* Driver initialize */
+    XDMAD_Initialize( pSpid->pXdmad, 0 );
 
-	XDMAD_FreeChannel( pSpid->pXdmad, spiDmaTxChannel);
-	XDMAD_FreeChannel( pSpid->pXdmad, spiDmaRxChannel);
+    XDMAD_FreeChannel( pSpid->pXdmad, spiDmaTxChannel );
+    XDMAD_FreeChannel( pSpid->pXdmad, spiDmaRxChannel );
 
-	/* Allocate a DMA channel for SPI0/1 TX. */
-	spiDmaTxChannel = XDMAD_AllocateChannel( pSpid->pXdmad, 
-			XDMAD_TRANSFER_MEMORY, pSpid->spiId);
-	if ( spiDmaTxChannel == XDMAD_ALLOC_FAILED ) {
-		return SPID_ERROR;
-	}
-	/* Allocate a DMA channel for SPI0/1 RX. */
-	spiDmaRxChannel = 
-		XDMAD_AllocateChannel( pSpid->pXdmad, pSpid->spiId, XDMAD_TRANSFER_MEMORY);
-	if ( spiDmaRxChannel == XDMAD_ALLOC_FAILED ) {
-		return SPID_ERROR;
-	}
-	
-	/* Setup callbacks for SPI0/1 RX */
-	XDMAD_SetCallback(pSpid->pXdmad, spiDmaRxChannel, 
-		(XdmadTransferCallback)SPID_Rx_Cb, pSpid);
-	if (XDMAD_PrepareChannel( pSpid->pXdmad, spiDmaRxChannel ))
-		return SPID_ERROR;
+    /* Allocate a DMA channel for SPI0/1 TX. */
+    spiDmaTxChannel = XDMAD_AllocateChannel( pSpid->pXdmad,
+                                             XDMAD_TRANSFER_MEMORY, pSpid->spiId );
 
-	/* Setup callbacks for SPI0/1 TX (ignored) */
-	XDMAD_SetCallback(pSpid->pXdmad, spiDmaTxChannel, NULL, NULL);
-	if ( XDMAD_PrepareChannel( pSpid->pXdmad, spiDmaTxChannel ))
-		return SPID_ERROR;
-	return 0;
+    if( spiDmaTxChannel == XDMAD_ALLOC_FAILED )
+    {
+        return SPID_ERROR;
+    }
+
+    /* Allocate a DMA channel for SPI0/1 RX. */
+    spiDmaRxChannel =
+        XDMAD_AllocateChannel( pSpid->pXdmad, pSpid->spiId, XDMAD_TRANSFER_MEMORY );
+
+    if( spiDmaRxChannel == XDMAD_ALLOC_FAILED )
+    {
+        return SPID_ERROR;
+    }
+
+    /* Setup callbacks for SPI0/1 RX */
+    XDMAD_SetCallback( pSpid->pXdmad, spiDmaRxChannel,
+                       ( XdmadTransferCallback ) SPID_Rx_Cb, pSpid );
+
+    if( XDMAD_PrepareChannel( pSpid->pXdmad, spiDmaRxChannel ) )
+    {
+        return SPID_ERROR;
+    }
+
+    /* Setup callbacks for SPI0/1 TX (ignored) */
+    XDMAD_SetCallback( pSpid->pXdmad, spiDmaTxChannel, NULL, NULL );
+
+    if( XDMAD_PrepareChannel( pSpid->pXdmad, spiDmaTxChannel ) )
+    {
+        return SPID_ERROR;
+    }
+
+    return 0;
 }
 
 /**
  * \brief Configure the DMA source and destination with Linker List mode.
  *
  * \param pCommand Pointer to command
- * \returns 0 if the dma multibuffer configuration successfully; otherwise 
+ * \returns 0 if the dma multibuffer configuration successfully; otherwise
  * returns SPID_ERROR_XXX.
  */
-static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pCommand)
+static uint8_t _spid_configureLinkList( Spi * pSpiHw,
+                                        void * pXdmad,
+                                        SpidCmd * pCommand )
 {
-	sXdmadCfg xdmadRxCfg,xdmadTxCfg;
-	uint32_t xdmaCndc, xdmaInt;
-	uint32_t spiId;
-	if ((unsigned int)pSpiHw == (unsigned int)SPI0 ) spiId = ID_SPI0;
-	if ((unsigned int)pSpiHw == (unsigned int)SPI1 ) spiId = ID_SPI1;
+    sXdmadCfg xdmadRxCfg, xdmadTxCfg;
+    uint32_t xdmaCndc, xdmaInt;
+    uint32_t spiId;
 
-	/* Setup TX  */ 
+    if( ( unsigned int ) pSpiHw == ( unsigned int ) SPI0 )
+    {
+        spiId = ID_SPI0;
+    }
 
-	xdmadTxCfg.mbr_sa = (uint32_t)pCommand->pTxBuff;    
+    if( ( unsigned int ) pSpiHw == ( unsigned int ) SPI1 )
+    {
+        spiId = ID_SPI1;
+    }
 
-	xdmadTxCfg.mbr_da = (uint32_t)&pSpiHw->SPI_TDR;
+    /* Setup TX  */
 
-	xdmadTxCfg.mbr_ubc =  XDMA_UBC_NVIEW_NDV0 |
-		XDMA_UBC_NDE_FETCH_DIS|
-		XDMA_UBC_NSEN_UPDATED | pCommand->TxSize;
+    xdmadTxCfg.mbr_sa = ( uint32_t ) pCommand->pTxBuff;
 
-	xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
-		XDMAC_CC_MBSIZE_SINGLE |
-		XDMAC_CC_DSYNC_MEM2PER |
-		XDMAC_CC_CSIZE_CHK_1 |
-		XDMAC_CC_DWIDTH_BYTE|
-		XDMAC_CC_SIF_AHB_IF0 |
-		XDMAC_CC_DIF_AHB_IF1 |
-		XDMAC_CC_SAM_INCREMENTED_AM |
-		XDMAC_CC_DAM_FIXED_AM |
-		XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(  spiId, XDMAD_TRANSFER_TX ));
+    xdmadTxCfg.mbr_da = ( uint32_t ) &pSpiHw->SPI_TDR;
 
+    xdmadTxCfg.mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
+                         XDMA_UBC_NDE_FETCH_DIS |
+                         XDMA_UBC_NSEN_UPDATED | pCommand->TxSize;
 
-	xdmadTxCfg.mbr_bc = 0;
-	xdmadTxCfg.mbr_sus = 0;
-	xdmadTxCfg.mbr_dus =0;
-
-	/* Setup RX Link List */
-
-	xdmadRxCfg.mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
-		XDMA_UBC_NDE_FETCH_DIS|
-		XDMA_UBC_NDEN_UPDATED | pCommand->RxSize;
-
-	xdmadRxCfg.mbr_da = (uint32_t)pCommand->pRxBuff;
-
-	xdmadRxCfg.mbr_sa = (uint32_t)&pSpiHw->SPI_RDR;
-	xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
-		XDMAC_CC_MBSIZE_SINGLE |
-		XDMAC_CC_DSYNC_PER2MEM |
-		XDMAC_CC_CSIZE_CHK_1 |
-		XDMAC_CC_DWIDTH_BYTE|
-		XDMAC_CC_SIF_AHB_IF1 |
-		XDMAC_CC_DIF_AHB_IF0 |
-		XDMAC_CC_SAM_FIXED_AM |
-		XDMAC_CC_DAM_INCREMENTED_AM |
-		XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(  spiId, XDMAD_TRANSFER_RX ));
+    xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
+                         XDMAC_CC_MBSIZE_SINGLE |
+                         XDMAC_CC_DSYNC_MEM2PER |
+                         XDMAC_CC_CSIZE_CHK_1 |
+                         XDMAC_CC_DWIDTH_BYTE |
+                         XDMAC_CC_SIF_AHB_IF0 |
+                         XDMAC_CC_DIF_AHB_IF1 |
+                         XDMAC_CC_SAM_INCREMENTED_AM |
+                         XDMAC_CC_DAM_FIXED_AM |
+                         XDMAC_CC_PERID( XDMAIF_Get_ChannelNumber( spiId, XDMAD_TRANSFER_TX ) );
 
 
-	xdmadRxCfg.mbr_bc = 0;
-	xdmadRxCfg.mbr_sus = 0;
-	xdmadRxCfg.mbr_dus =0;
+    xdmadTxCfg.mbr_bc = 0;
+    xdmadTxCfg.mbr_sus = 0;
+    xdmadTxCfg.mbr_dus = 0;
 
-	xdmaCndc = 0;
+    /* Setup RX Link List */
 
-	/* Put all interrupts on for non LLI list setup of DMA */
-	  xdmaInt =  (XDMAC_CIE_BIE   |
-				   XDMAC_CIE_DIE   |
-				   XDMAC_CIE_FIE   |
-				   XDMAC_CIE_RBIE  |
-				   XDMAC_CIE_WBIE  |
-				   XDMAC_CIE_ROIE);
-	  
-	if (XDMAD_ConfigureTransfer( pXdmad, spiDmaRxChannel, &xdmadRxCfg, xdmaCndc, 0, xdmaInt))
-		return SPID_ERROR;
+    xdmadRxCfg.mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
+                         XDMA_UBC_NDE_FETCH_DIS |
+                         XDMA_UBC_NDEN_UPDATED | pCommand->RxSize;
 
-	if (XDMAD_ConfigureTransfer( pXdmad, spiDmaTxChannel, &xdmadTxCfg, xdmaCndc, 0, xdmaInt))
-		return SPID_ERROR;
-	return 0;
+    xdmadRxCfg.mbr_da = ( uint32_t ) pCommand->pRxBuff;
+
+    xdmadRxCfg.mbr_sa = ( uint32_t ) &pSpiHw->SPI_RDR;
+    xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
+                         XDMAC_CC_MBSIZE_SINGLE |
+                         XDMAC_CC_DSYNC_PER2MEM |
+                         XDMAC_CC_CSIZE_CHK_1 |
+                         XDMAC_CC_DWIDTH_BYTE |
+                         XDMAC_CC_SIF_AHB_IF1 |
+                         XDMAC_CC_DIF_AHB_IF0 |
+                         XDMAC_CC_SAM_FIXED_AM |
+                         XDMAC_CC_DAM_INCREMENTED_AM |
+                         XDMAC_CC_PERID( XDMAIF_Get_ChannelNumber( spiId, XDMAD_TRANSFER_RX ) );
+
+
+    xdmadRxCfg.mbr_bc = 0;
+    xdmadRxCfg.mbr_sus = 0;
+    xdmadRxCfg.mbr_dus = 0;
+
+    xdmaCndc = 0;
+
+    /* Put all interrupts on for non LLI list setup of DMA */
+    xdmaInt = ( XDMAC_CIE_BIE |
+                XDMAC_CIE_DIE |
+                XDMAC_CIE_FIE |
+                XDMAC_CIE_RBIE |
+                XDMAC_CIE_WBIE |
+                XDMAC_CIE_ROIE );
+
+    if( XDMAD_ConfigureTransfer( pXdmad, spiDmaRxChannel, &xdmadRxCfg, xdmaCndc, 0, xdmaInt ) )
+    {
+        return SPID_ERROR;
+    }
+
+    if( XDMAD_ConfigureTransfer( pXdmad, spiDmaTxChannel, &xdmadTxCfg, xdmaCndc, 0, xdmaInt ) )
+    {
+        return SPID_ERROR;
+    }
+
+    return 0;
 }
 
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
+
 /**
  * \brief Initializes the Spid structure and the corresponding SPI & DMA hardware.
  * select value.
@@ -265,26 +298,26 @@ static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pComm
  * \param pSpid  Pointer to a Spid instance.
  * \param pSpiHw Associated SPI peripheral.
  * \param spiId  SPI peripheral identifier.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
-uint32_t SPID_Configure( Spid *pSpid ,
-		Spi *pSpiHw , 
-		uint8_t spiId,
-		uint32_t spiMode,
-		sXdmad *pXdmad )
+uint32_t SPID_Configure( Spid * pSpid,
+                         Spi * pSpiHw,
+                         uint8_t spiId,
+                         uint32_t spiMode,
+                         sXdmad * pXdmad )
 {
-	/* Initialize the SPI structure */
-	pSpid->pSpiHw = pSpiHw;
-	pSpid->spiId  = spiId;
-	pSpid->semaphore = 1;
-	pSpid->pCurrentCommand = 0;
-	pSpid->pXdmad = pXdmad;
+    /* Initialize the SPI structure */
+    pSpid->pSpiHw = pSpiHw;
+    pSpid->spiId = spiId;
+    pSpid->semaphore = 1;
+    pSpid->pCurrentCommand = 0;
+    pSpid->pXdmad = pXdmad;
 
-	/* Enable the SPI Peripheral ,Execute a software reset of the SPI, 
-		Configure SPI in Master Mode*/
-	SPI_Configure ( pSpiHw, pSpid->spiId, spiMode );
+    /* Enable the SPI Peripheral ,Execute a software reset of the SPI,
+     *  Configure SPI in Master Mode*/
+    SPI_Configure( pSpiHw, pSpid->spiId, spiMode );
 
-	return 0;
+    return 0;
 }
 
 /**
@@ -294,20 +327,19 @@ uint32_t SPID_Configure( Spid *pSpid ,
  * \param cs number corresponding to the SPI chip select.
  * \param csr SPI_CSR value to setup.
  */
-void SPID_ConfigureCS( Spid *pSpid, 
-		uint32_t dwCS, 
-		uint32_t dwCsr)
+void SPID_ConfigureCS( Spid * pSpid,
+                       uint32_t dwCS,
+                       uint32_t dwCsr )
 {
-	Spi *pSpiHw = pSpid->pSpiHw;
+    Spi * pSpiHw = pSpid->pSpiHw;
 
-	/* Enable the SPI Peripheral */
-	PMC_EnablePeripheral (pSpid->spiId );
-	/* Configure SPI Chip Select Register */
-	SPI_ConfigureNPCS( pSpiHw, dwCS, dwCsr );
+    /* Enable the SPI Peripheral */
+    PMC_EnablePeripheral( pSpid->spiId );
+    /* Configure SPI Chip Select Register */
+    SPI_ConfigureNPCS( pSpiHw, dwCS, dwCsr );
 
-	/* Disable the SPI Peripheral */
-	PMC_DisablePeripheral (pSpid->spiId );
-
+    /* Disable the SPI Peripheral */
+    PMC_DisablePeripheral( pSpid->spiId );
 }
 
 /**
@@ -320,48 +352,60 @@ void SPID_ConfigureCS( Spid *pSpid,
  * SPID_ERROR_LOCK is the driver is in use, or SPID_ERROR if the command is not
  * valid.
  */
-uint32_t SPID_SendCommand( Spid *pSpid, SpidCmd *pCommand)
+uint32_t SPID_SendCommand( Spid * pSpid,
+                           SpidCmd * pCommand )
 {
-	Spi *pSpiHw = pSpid->pSpiHw;
+    Spi * pSpiHw = pSpid->pSpiHw;
 
-	/* Try to get the dataflash semaphore */
-	if (pSpid->semaphore == 0) {
-		return SPID_ERROR_LOCK;
-	}
-	pSpid->semaphore--;
+    /* Try to get the dataflash semaphore */
+    if( pSpid->semaphore == 0 )
+    {
+        return SPID_ERROR_LOCK;
+    }
 
-	/* Enable the SPI Peripheral */
-	PMC_EnablePeripheral (pSpid->spiId );
+    pSpid->semaphore--;
 
-	/* SPI chip select */
-	SPI_ChipSelect (pSpiHw, 1 << pCommand->spiCs);
+    /* Enable the SPI Peripheral */
+    PMC_EnablePeripheral( pSpid->spiId );
 
-	// Initialize the callback
-	pSpid->pCurrentCommand = pCommand;
+    /* SPI chip select */
+    SPI_ChipSelect( pSpiHw, 1 << pCommand->spiCs );
 
-	/* Initialize DMA controller using channel 0 for RX, 1 for TX. */
-	if (_spid_configureDmaChannels(pSpid) )
-		return SPID_ERROR_LOCK;
+    /* Initialize the callback */
+    pSpid->pCurrentCommand = pCommand;
 
-	/* Configure and enable interrupt on RC compare */    
-	NVIC_ClearPendingIRQ(XDMAC_IRQn);
-	NVIC_SetPriority( XDMAC_IRQn ,1);
-	NVIC_EnableIRQ(XDMAC_IRQn);
+    /* Initialize DMA controller using channel 0 for RX, 1 for TX. */
+    if( _spid_configureDmaChannels( pSpid ) )
+    {
+        return SPID_ERROR_LOCK;
+    }
 
+    /* Configure and enable interrupt on RC compare */
+    NVIC_ClearPendingIRQ( XDMAC_IRQn );
+    NVIC_SetPriority( XDMAC_IRQn, 1 );
+    NVIC_EnableIRQ( XDMAC_IRQn );
 
-	if (_spid_configureLinkList(pSpiHw, pSpid->pXdmad, pCommand))
-		return SPID_ERROR_LOCK;
+    if( _spid_configureLinkList( pSpiHw, pSpid->pXdmad, pCommand ) )
+    {
+        return SPID_ERROR_LOCK;
+    }
 
-	/* Enables the SPI to transfer and receive data. */
-	SPI_Enable (pSpiHw );
-	SCB_CleanInvalidateDCache();
-	/* Start DMA 0(RX) && 1(TX) */
-	if (XDMAD_StartTransfer( pSpid->pXdmad, spiDmaRxChannel )) 
-		return SPID_ERROR_LOCK;
-	if (XDMAD_StartTransfer( pSpid->pXdmad, spiDmaTxChannel )) 
-		return SPID_ERROR_LOCK;
+    /* Enables the SPI to transfer and receive data. */
+    SPI_Enable( pSpiHw );
+    SCB_CleanInvalidateDCache();
 
-	return 0;
+    /* Start DMA 0(RX) && 1(TX) */
+    if( XDMAD_StartTransfer( pSpid->pXdmad, spiDmaRxChannel ) )
+    {
+        return SPID_ERROR_LOCK;
+    }
+
+    if( XDMAD_StartTransfer( pSpid->pXdmad, spiDmaTxChannel ) )
+    {
+        return SPID_ERROR_LOCK;
+    }
+
+    return 0;
 }
 
 /**
@@ -370,11 +414,14 @@ uint32_t SPID_SendCommand( Spid *pSpid, SpidCmd *pCommand)
  * \param pSpid  Pointer to a Spid instance.
  * \returns 1 if the SPI driver is currently busy executing a command; otherwise
  */
-uint32_t SPID_IsBusy(const Spid *pSpid)
+uint32_t SPID_IsBusy( const Spid * pSpid )
 {
-	if (pSpid->semaphore == 0) {
-		return 1;
-	} else {
-		return 0;
-	}
+    if( pSpid->semaphore == 0 )
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }

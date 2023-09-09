@@ -30,23 +30,24 @@
 *
 ******************************************************************************/
 /****************************************************************************/
+
 /**
-*
-* @file xrtcpsu_selftest.c
-* @addtogroup rtcpsu_v1_5
-* @{
-*
-* This file contains the self-test functions for the XRtcPsu driver.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who    Date	Changes
-* ----- ------ -------- -----------------------------------------------
-* 1.00  kvn    04/21/15 First release.
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xrtcpsu_selftest.c
+ * @addtogroup rtcpsu_v1_5
+ * @{
+ *
+ * This file contains the self-test functions for the XRtcPsu driver.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who    Date	Changes
+ * ----- ------ -------- -----------------------------------------------
+ * 1.00  kvn    04/21/15 First release.
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -69,44 +70,46 @@
 
 
 /****************************************************************************/
+
 /**
-*
-* This function runs a self-test on the driver and hardware device. This self
-* test writes reset value into safety check register and read backs the same.
-* If mismatch offers, returns the failure.
-*
-* @param	InstancePtr is a pointer to the XRtcPsu instance
-*
-* @return
-*		 - XST_SUCCESS if the test was successful
-*
-* @note
-*
-* This function can hang if the hardware is not functioning properly.
-*
-******************************************************************************/
-s32 XRtcPsu_SelfTest(XRtcPsu *InstancePtr)
+ *
+ * This function runs a self-test on the driver and hardware device. This self
+ * test writes reset value into safety check register and read backs the same.
+ * If mismatch offers, returns the failure.
+ *
+ * @param	InstancePtr is a pointer to the XRtcPsu instance
+ *
+ * @return
+ *		 - XST_SUCCESS if the test was successful
+ *
+ * @note
+ *
+ * This function can hang if the hardware is not functioning properly.
+ *
+ ******************************************************************************/
+s32 XRtcPsu_SelfTest( XRtcPsu * InstancePtr )
 {
-	s32 Status = XST_SUCCESS;
-	u32 SafetyCheck;
+    s32 Status = XST_SUCCESS;
+    u32 SafetyCheck;
 
-	/* Assert validates the input arguments */
-	Xil_AssertNonvoid(InstancePtr != NULL);
-	Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
+    /* Assert validates the input arguments */
+    Xil_AssertNonvoid( InstancePtr != NULL );
+    Xil_AssertNonvoid( InstancePtr->IsReady == XIL_COMPONENT_IS_READY );
 
-	/*
-	 * Write the reset value in safety check register and
-	 * try reading back. If mismatch happens, return failure.
-	 */
-	XRtcPsu_WriteReg(InstancePtr->RtcConfig.BaseAddr + XRTC_SFTY_CHK_OFFSET,
-			XRTC_SFTY_CHK_RSTVAL);
-	SafetyCheck = XRtcPsu_ReadReg(InstancePtr->RtcConfig.BaseAddr +
-			XRTC_SFTY_CHK_OFFSET);
+    /*
+     * Write the reset value in safety check register and
+     * try reading back. If mismatch happens, return failure.
+     */
+    XRtcPsu_WriteReg( InstancePtr->RtcConfig.BaseAddr + XRTC_SFTY_CHK_OFFSET,
+                      XRTC_SFTY_CHK_RSTVAL );
+    SafetyCheck = XRtcPsu_ReadReg( InstancePtr->RtcConfig.BaseAddr +
+                                   XRTC_SFTY_CHK_OFFSET );
 
-	if (SafetyCheck != XRTC_SFTY_CHK_RSTVAL) {
-		Status = XST_FAILURE;
-	}
+    if( SafetyCheck != XRTC_SFTY_CHK_RSTVAL )
+    {
+        Status = XST_FAILURE;
+    }
 
-	return Status;
+    return Status;
 }
 /** @} */

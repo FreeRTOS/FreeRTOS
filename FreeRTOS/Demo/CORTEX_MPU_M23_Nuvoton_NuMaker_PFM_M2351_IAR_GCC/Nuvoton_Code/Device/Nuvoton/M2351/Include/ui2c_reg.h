@@ -9,21 +9,20 @@
 #define __UI2C_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- I2C Mode of USCI Controller -------------------------*/
+
 /**
-    @addtogroup UI2C I2C Mode of USCI Controller(UI2C)
-    Memory Mapped Structure for UI2C Controller
-@{ */
+ *  @addtogroup UI2C I2C Mode of USCI Controller(UI2C)
+ *  Memory Mapped Structure for UI2C Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var UI2C_T::CTL
      * Offset: 0x00  USCI Control Register
@@ -365,198 +364,197 @@ typedef struct
      * |        |          |transmission mode.
      * |        |          |The delay hold time is numbers of peripheral clock = HTCTL x fPCLK.
      */
-    __IO uint32_t CTL;                   /*!< [0x0000] USCI Control Register                                            */
-    __I  uint32_t RESERVE0[1];
-    __IO uint32_t BRGEN;                 /*!< [0x0008] USCI Baud Rate Generator Register                                */
-    __I  uint32_t RESERVE1[8];
-    __IO uint32_t LINECTL;               /*!< [0x002c] USCI Line Control Register                                       */
-    __O  uint32_t TXDAT;                 /*!< [0x0030] USCI Transmit Data Register                                      */
-    __I  uint32_t RXDAT;                 /*!< [0x0034] USCI Receive Data Register                                       */
-    __I  uint32_t RESERVE2[3];
-    __IO uint32_t DEVADDR0;              /*!< [0x0044] USCI Device Address Register 0                                   */
-    __IO uint32_t DEVADDR1;              /*!< [0x0048] USCI Device Address Register 1                                   */
-    __IO uint32_t ADDRMSK0;              /*!< [0x004c] USCI Device Address Mask Register 0                              */
-    __IO uint32_t ADDRMSK1;              /*!< [0x0050] USCI Device Address Mask Register 1                              */
-    __IO uint32_t WKCTL;                 /*!< [0x0054] USCI Wake-up Control Register                                    */
-    __IO uint32_t WKSTS;                 /*!< [0x0058] USCI Wake-up Status Register                                     */
-    __IO uint32_t PROTCTL;               /*!< [0x005c] USCI Protocol Control Register                                   */
-    __IO uint32_t PROTIEN;               /*!< [0x0060] USCI Protocol Interrupt Enable Register                          */
-    __IO uint32_t PROTSTS;               /*!< [0x0064] USCI Protocol Status Register                                    */
-    __I  uint32_t RESERVE3[8];
-    __IO uint32_t ADMAT;                 /*!< [0x0088] I2C Slave Match Address Register                                 */
-    __IO uint32_t TMCTL;                 /*!< [0x008c] I2C Timing Configure Control Register                            */
-
+    __IO uint32_t CTL;      /*!< [0x0000] USCI Control Register                                            */
+    __I uint32_t RESERVE0[ 1 ];
+    __IO uint32_t BRGEN;    /*!< [0x0008] USCI Baud Rate Generator Register                                */
+    __I uint32_t RESERVE1[ 8 ];
+    __IO uint32_t LINECTL;  /*!< [0x002c] USCI Line Control Register                                       */
+    __O uint32_t TXDAT;     /*!< [0x0030] USCI Transmit Data Register                                      */
+    __I uint32_t RXDAT;     /*!< [0x0034] USCI Receive Data Register                                       */
+    __I uint32_t RESERVE2[ 3 ];
+    __IO uint32_t DEVADDR0; /*!< [0x0044] USCI Device Address Register 0                                   */
+    __IO uint32_t DEVADDR1; /*!< [0x0048] USCI Device Address Register 1                                   */
+    __IO uint32_t ADDRMSK0; /*!< [0x004c] USCI Device Address Mask Register 0                              */
+    __IO uint32_t ADDRMSK1; /*!< [0x0050] USCI Device Address Mask Register 1                              */
+    __IO uint32_t WKCTL;    /*!< [0x0054] USCI Wake-up Control Register                                    */
+    __IO uint32_t WKSTS;    /*!< [0x0058] USCI Wake-up Status Register                                     */
+    __IO uint32_t PROTCTL;  /*!< [0x005c] USCI Protocol Control Register                                   */
+    __IO uint32_t PROTIEN;  /*!< [0x0060] USCI Protocol Interrupt Enable Register                          */
+    __IO uint32_t PROTSTS;  /*!< [0x0064] USCI Protocol Status Register                                    */
+    __I uint32_t RESERVE3[ 8 ];
+    __IO uint32_t ADMAT;    /*!< [0x0088] I2C Slave Match Address Register                                 */
+    __IO uint32_t TMCTL;    /*!< [0x008c] I2C Timing Configure Control Register                            */
 } UI2C_T;
 
 /**
-    @addtogroup UI2C_CONST UI2C Bit Field Definition
-    Constant Definitions for UI2C Controller
-@{ */
+ *  @addtogroup UI2C_CONST UI2C Bit Field Definition
+ *  Constant Definitions for UI2C Controller
+ * @{ */
 
-#define UI2C_CTL_FUNMODE_Pos             (0)                                               /*!< UI2C_T::CTL: FUNMODE Position          */
-#define UI2C_CTL_FUNMODE_Msk             (0x7ul << UI2C_CTL_FUNMODE_Pos)                   /*!< UI2C_T::CTL: FUNMODE Mask              */
+#define UI2C_CTL_FUNMODE_Pos         ( 0 )                                                 /*!< UI2C_T::CTL: FUNMODE Position          */
+#define UI2C_CTL_FUNMODE_Msk         ( 0x7ul << UI2C_CTL_FUNMODE_Pos )                     /*!< UI2C_T::CTL: FUNMODE Mask              */
 
-#define UI2C_BRGEN_RCLKSEL_Pos           (0)                                               /*!< UI2C_T::BRGEN: RCLKSEL Position        */
-#define UI2C_BRGEN_RCLKSEL_Msk           (0x1ul << UI2C_BRGEN_RCLKSEL_Pos)                 /*!< UI2C_T::BRGEN: RCLKSEL Mask            */
+#define UI2C_BRGEN_RCLKSEL_Pos       ( 0 )                                                 /*!< UI2C_T::BRGEN: RCLKSEL Position        */
+#define UI2C_BRGEN_RCLKSEL_Msk       ( 0x1ul << UI2C_BRGEN_RCLKSEL_Pos )                   /*!< UI2C_T::BRGEN: RCLKSEL Mask            */
 
-#define UI2C_BRGEN_PTCLKSEL_Pos          (1)                                               /*!< UI2C_T::BRGEN: PTCLKSEL Position       */
-#define UI2C_BRGEN_PTCLKSEL_Msk          (0x1ul << UI2C_BRGEN_PTCLKSEL_Pos)                /*!< UI2C_T::BRGEN: PTCLKSEL Mask           */
+#define UI2C_BRGEN_PTCLKSEL_Pos      ( 1 )                                                 /*!< UI2C_T::BRGEN: PTCLKSEL Position       */
+#define UI2C_BRGEN_PTCLKSEL_Msk      ( 0x1ul << UI2C_BRGEN_PTCLKSEL_Pos )                  /*!< UI2C_T::BRGEN: PTCLKSEL Mask           */
 
-#define UI2C_BRGEN_SPCLKSEL_Pos          (2)                                               /*!< UI2C_T::BRGEN: SPCLKSEL Position       */
-#define UI2C_BRGEN_SPCLKSEL_Msk          (0x3ul << UI2C_BRGEN_SPCLKSEL_Pos)                /*!< UI2C_T::BRGEN: SPCLKSEL Mask           */
+#define UI2C_BRGEN_SPCLKSEL_Pos      ( 2 )                                                 /*!< UI2C_T::BRGEN: SPCLKSEL Position       */
+#define UI2C_BRGEN_SPCLKSEL_Msk      ( 0x3ul << UI2C_BRGEN_SPCLKSEL_Pos )                  /*!< UI2C_T::BRGEN: SPCLKSEL Mask           */
 
-#define UI2C_BRGEN_TMCNTEN_Pos           (4)                                               /*!< UI2C_T::BRGEN: TMCNTEN Position        */
-#define UI2C_BRGEN_TMCNTEN_Msk           (0x1ul << UI2C_BRGEN_TMCNTEN_Pos)                 /*!< UI2C_T::BRGEN: TMCNTEN Mask            */
+#define UI2C_BRGEN_TMCNTEN_Pos       ( 4 )                                                 /*!< UI2C_T::BRGEN: TMCNTEN Position        */
+#define UI2C_BRGEN_TMCNTEN_Msk       ( 0x1ul << UI2C_BRGEN_TMCNTEN_Pos )                   /*!< UI2C_T::BRGEN: TMCNTEN Mask            */
 
-#define UI2C_BRGEN_TMCNTSRC_Pos          (5)                                               /*!< UI2C_T::BRGEN: TMCNTSRC Position       */
-#define UI2C_BRGEN_TMCNTSRC_Msk          (0x1ul << UI2C_BRGEN_TMCNTSRC_Pos)                /*!< UI2C_T::BRGEN: TMCNTSRC Mask           */
+#define UI2C_BRGEN_TMCNTSRC_Pos      ( 5 )                                                 /*!< UI2C_T::BRGEN: TMCNTSRC Position       */
+#define UI2C_BRGEN_TMCNTSRC_Msk      ( 0x1ul << UI2C_BRGEN_TMCNTSRC_Pos )                  /*!< UI2C_T::BRGEN: TMCNTSRC Mask           */
 
-#define UI2C_BRGEN_PDSCNT_Pos            (8)                                               /*!< UI2C_T::BRGEN: PDSCNT Position         */
-#define UI2C_BRGEN_PDSCNT_Msk            (0x3ul << UI2C_BRGEN_PDSCNT_Pos)                  /*!< UI2C_T::BRGEN: PDSCNT Mask             */
+#define UI2C_BRGEN_PDSCNT_Pos        ( 8 )                                                 /*!< UI2C_T::BRGEN: PDSCNT Position         */
+#define UI2C_BRGEN_PDSCNT_Msk        ( 0x3ul << UI2C_BRGEN_PDSCNT_Pos )                    /*!< UI2C_T::BRGEN: PDSCNT Mask             */
 
-#define UI2C_BRGEN_DSCNT_Pos             (10)                                              /*!< UI2C_T::BRGEN: DSCNT Position          */
-#define UI2C_BRGEN_DSCNT_Msk             (0x1ful << UI2C_BRGEN_DSCNT_Pos)                  /*!< UI2C_T::BRGEN: DSCNT Mask              */
+#define UI2C_BRGEN_DSCNT_Pos         ( 10 )                                                /*!< UI2C_T::BRGEN: DSCNT Position          */
+#define UI2C_BRGEN_DSCNT_Msk         ( 0x1ful << UI2C_BRGEN_DSCNT_Pos )                    /*!< UI2C_T::BRGEN: DSCNT Mask              */
 
-#define UI2C_BRGEN_CLKDIV_Pos            (16)                                              /*!< UI2C_T::BRGEN: CLKDIV Position         */
-#define UI2C_BRGEN_CLKDIV_Msk            (0x3fful << UI2C_BRGEN_CLKDIV_Pos)                /*!< UI2C_T::BRGEN: CLKDIV Mask             */
+#define UI2C_BRGEN_CLKDIV_Pos        ( 16 )                                                /*!< UI2C_T::BRGEN: CLKDIV Position         */
+#define UI2C_BRGEN_CLKDIV_Msk        ( 0x3fful << UI2C_BRGEN_CLKDIV_Pos )                  /*!< UI2C_T::BRGEN: CLKDIV Mask             */
 
-#define UI2C_LINECTL_LSB_Pos             (0)                                               /*!< UI2C_T::LINECTL: LSB Position          */
-#define UI2C_LINECTL_LSB_Msk             (0x1ul << UI2C_LINECTL_LSB_Pos)                   /*!< UI2C_T::LINECTL: LSB Mask              */
+#define UI2C_LINECTL_LSB_Pos         ( 0 )                                                 /*!< UI2C_T::LINECTL: LSB Position          */
+#define UI2C_LINECTL_LSB_Msk         ( 0x1ul << UI2C_LINECTL_LSB_Pos )                     /*!< UI2C_T::LINECTL: LSB Mask              */
 
-#define UI2C_LINECTL_DWIDTH_Pos          (8)                                               /*!< UI2C_T::LINECTL: DWIDTH Position       */
-#define UI2C_LINECTL_DWIDTH_Msk          (0xful << UI2C_LINECTL_DWIDTH_Pos)                /*!< UI2C_T::LINECTL: DWIDTH Mask           */
+#define UI2C_LINECTL_DWIDTH_Pos      ( 8 )                                                 /*!< UI2C_T::LINECTL: DWIDTH Position       */
+#define UI2C_LINECTL_DWIDTH_Msk      ( 0xful << UI2C_LINECTL_DWIDTH_Pos )                  /*!< UI2C_T::LINECTL: DWIDTH Mask           */
 
-#define UI2C_TXDAT_TXDAT_Pos             (0)                                               /*!< UI2C_T::TXDAT: TXDAT Position          */
-#define UI2C_TXDAT_TXDAT_Msk             (0xfffful << UI2C_TXDAT_TXDAT_Pos)                /*!< UI2C_T::TXDAT: TXDAT Mask              */
+#define UI2C_TXDAT_TXDAT_Pos         ( 0 )                                                 /*!< UI2C_T::TXDAT: TXDAT Position          */
+#define UI2C_TXDAT_TXDAT_Msk         ( 0xfffful << UI2C_TXDAT_TXDAT_Pos )                  /*!< UI2C_T::TXDAT: TXDAT Mask              */
 
-#define UI2C_RXDAT_RXDAT_Pos             (0)                                               /*!< UI2C_T::RXDAT: RXDAT Position          */
-#define UI2C_RXDAT_RXDAT_Msk             (0xfffful << UI2C_RXDAT_RXDAT_Pos)                /*!< UI2C_T::RXDAT: RXDAT Mask              */
+#define UI2C_RXDAT_RXDAT_Pos         ( 0 )                                                 /*!< UI2C_T::RXDAT: RXDAT Position          */
+#define UI2C_RXDAT_RXDAT_Msk         ( 0xfffful << UI2C_RXDAT_RXDAT_Pos )                  /*!< UI2C_T::RXDAT: RXDAT Mask              */
 
-#define UI2C_DEVADDR0_DEVADDR_Pos        (0)                                               /*!< UI2C_T::DEVADDR0: DEVADDR Position     */
-#define UI2C_DEVADDR0_DEVADDR_Msk        (0x3fful << UI2C_DEVADDR0_DEVADDR_Pos)            /*!< UI2C_T::DEVADDR0: DEVADDR Mask         */
+#define UI2C_DEVADDR0_DEVADDR_Pos    ( 0 )                                                 /*!< UI2C_T::DEVADDR0: DEVADDR Position     */
+#define UI2C_DEVADDR0_DEVADDR_Msk    ( 0x3fful << UI2C_DEVADDR0_DEVADDR_Pos )              /*!< UI2C_T::DEVADDR0: DEVADDR Mask         */
 
-#define UI2C_DEVADDR1_DEVADDR_Pos        (0)                                               /*!< UI2C_T::DEVADDR1: DEVADDR Position     */
-#define UI2C_DEVADDR1_DEVADDR_Msk        (0x3fful << UI2C_DEVADDR1_DEVADDR_Pos)            /*!< UI2C_T::DEVADDR1: DEVADDR Mask         */
+#define UI2C_DEVADDR1_DEVADDR_Pos    ( 0 )                                                 /*!< UI2C_T::DEVADDR1: DEVADDR Position     */
+#define UI2C_DEVADDR1_DEVADDR_Msk    ( 0x3fful << UI2C_DEVADDR1_DEVADDR_Pos )              /*!< UI2C_T::DEVADDR1: DEVADDR Mask         */
 
-#define UI2C_ADDRMSK0_ADDRMSK_Pos        (0)                                               /*!< UI2C_T::ADDRMSK0: ADDRMSK Position     */
-#define UI2C_ADDRMSK0_ADDRMSK_Msk        (0x3fful << UI2C_ADDRMSK0_ADDRMSK_Pos)            /*!< UI2C_T::ADDRMSK0: ADDRMSK Mask         */
+#define UI2C_ADDRMSK0_ADDRMSK_Pos    ( 0 )                                                 /*!< UI2C_T::ADDRMSK0: ADDRMSK Position     */
+#define UI2C_ADDRMSK0_ADDRMSK_Msk    ( 0x3fful << UI2C_ADDRMSK0_ADDRMSK_Pos )              /*!< UI2C_T::ADDRMSK0: ADDRMSK Mask         */
 
-#define UI2C_ADDRMSK1_ADDRMSK_Pos        (0)                                               /*!< UI2C_T::ADDRMSK1: ADDRMSK Position     */
-#define UI2C_ADDRMSK1_ADDRMSK_Msk        (0x3fful << UI2C_ADDRMSK1_ADDRMSK_Pos)            /*!< UI2C_T::ADDRMSK1: ADDRMSK Mask         */
+#define UI2C_ADDRMSK1_ADDRMSK_Pos    ( 0 )                                                 /*!< UI2C_T::ADDRMSK1: ADDRMSK Position     */
+#define UI2C_ADDRMSK1_ADDRMSK_Msk    ( 0x3fful << UI2C_ADDRMSK1_ADDRMSK_Pos )              /*!< UI2C_T::ADDRMSK1: ADDRMSK Mask         */
 
-#define UI2C_WKCTL_WKEN_Pos              (0)                                               /*!< UI2C_T::WKCTL: WKEN Position           */
-#define UI2C_WKCTL_WKEN_Msk              (0x1ul << UI2C_WKCTL_WKEN_Pos)                    /*!< UI2C_T::WKCTL: WKEN Mask               */
+#define UI2C_WKCTL_WKEN_Pos          ( 0 )                                                 /*!< UI2C_T::WKCTL: WKEN Position           */
+#define UI2C_WKCTL_WKEN_Msk          ( 0x1ul << UI2C_WKCTL_WKEN_Pos )                      /*!< UI2C_T::WKCTL: WKEN Mask               */
 
-#define UI2C_WKCTL_WKADDREN_Pos          (1)                                               /*!< UI2C_T::WKCTL: WKADDREN Position       */
-#define UI2C_WKCTL_WKADDREN_Msk          (0x1ul << UI2C_WKCTL_WKADDREN_Pos)                /*!< UI2C_T::WKCTL: WKADDREN Mask           */
+#define UI2C_WKCTL_WKADDREN_Pos      ( 1 )                                                 /*!< UI2C_T::WKCTL: WKADDREN Position       */
+#define UI2C_WKCTL_WKADDREN_Msk      ( 0x1ul << UI2C_WKCTL_WKADDREN_Pos )                  /*!< UI2C_T::WKCTL: WKADDREN Mask           */
 
-#define UI2C_WKSTS_WKF_Pos               (0)                                               /*!< UI2C_T::WKSTS: WKF Position            */
-#define UI2C_WKSTS_WKF_Msk               (0x1ul << UI2C_WKSTS_WKF_Pos)                     /*!< UI2C_T::WKSTS: WKF Mask                */
+#define UI2C_WKSTS_WKF_Pos           ( 0 )                                                 /*!< UI2C_T::WKSTS: WKF Position            */
+#define UI2C_WKSTS_WKF_Msk           ( 0x1ul << UI2C_WKSTS_WKF_Pos )                       /*!< UI2C_T::WKSTS: WKF Mask                */
 
-#define UI2C_PROTCTL_GCFUNC_Pos          (0)                                               /*!< UI2C_T::PROTCTL: GCFUNC Position       */
-#define UI2C_PROTCTL_GCFUNC_Msk          (0x1ul << UI2C_PROTCTL_GCFUNC_Pos)                /*!< UI2C_T::PROTCTL: GCFUNC Mask           */
+#define UI2C_PROTCTL_GCFUNC_Pos      ( 0 )                                                 /*!< UI2C_T::PROTCTL: GCFUNC Position       */
+#define UI2C_PROTCTL_GCFUNC_Msk      ( 0x1ul << UI2C_PROTCTL_GCFUNC_Pos )                  /*!< UI2C_T::PROTCTL: GCFUNC Mask           */
 
-#define UI2C_PROTCTL_AA_Pos              (1)                                               /*!< UI2C_T::PROTCTL: AA Position           */
-#define UI2C_PROTCTL_AA_Msk              (0x1ul << UI2C_PROTCTL_AA_Pos)                    /*!< UI2C_T::PROTCTL: AA Mask               */
+#define UI2C_PROTCTL_AA_Pos          ( 1 )                                                 /*!< UI2C_T::PROTCTL: AA Position           */
+#define UI2C_PROTCTL_AA_Msk          ( 0x1ul << UI2C_PROTCTL_AA_Pos )                      /*!< UI2C_T::PROTCTL: AA Mask               */
 
-#define UI2C_PROTCTL_STO_Pos             (2)                                               /*!< UI2C_T::PROTCTL: STO Position          */
-#define UI2C_PROTCTL_STO_Msk             (0x1ul << UI2C_PROTCTL_STO_Pos)                   /*!< UI2C_T::PROTCTL: STO Mask              */
+#define UI2C_PROTCTL_STO_Pos         ( 2 )                                                 /*!< UI2C_T::PROTCTL: STO Position          */
+#define UI2C_PROTCTL_STO_Msk         ( 0x1ul << UI2C_PROTCTL_STO_Pos )                     /*!< UI2C_T::PROTCTL: STO Mask              */
 
-#define UI2C_PROTCTL_STA_Pos             (3)                                               /*!< UI2C_T::PROTCTL: STA Position          */
-#define UI2C_PROTCTL_STA_Msk             (0x1ul << UI2C_PROTCTL_STA_Pos)                   /*!< UI2C_T::PROTCTL: STA Mask              */
+#define UI2C_PROTCTL_STA_Pos         ( 3 )                                                 /*!< UI2C_T::PROTCTL: STA Position          */
+#define UI2C_PROTCTL_STA_Msk         ( 0x1ul << UI2C_PROTCTL_STA_Pos )                     /*!< UI2C_T::PROTCTL: STA Mask              */
 
-#define UI2C_PROTCTL_ADDR10EN_Pos        (4)                                               /*!< UI2C_T::PROTCTL: ADDR10EN Position     */
-#define UI2C_PROTCTL_ADDR10EN_Msk        (0x1ul << UI2C_PROTCTL_ADDR10EN_Pos)              /*!< UI2C_T::PROTCTL: ADDR10EN Mask         */
+#define UI2C_PROTCTL_ADDR10EN_Pos    ( 4 )                                                 /*!< UI2C_T::PROTCTL: ADDR10EN Position     */
+#define UI2C_PROTCTL_ADDR10EN_Msk    ( 0x1ul << UI2C_PROTCTL_ADDR10EN_Pos )                /*!< UI2C_T::PROTCTL: ADDR10EN Mask         */
 
-#define UI2C_PROTCTL_PTRG_Pos            (5)                                               /*!< UI2C_T::PROTCTL: PTRG Position         */
-#define UI2C_PROTCTL_PTRG_Msk            (0x1ul << UI2C_PROTCTL_PTRG_Pos)                  /*!< UI2C_T::PROTCTL: PTRG Mask             */
+#define UI2C_PROTCTL_PTRG_Pos        ( 5 )                                                 /*!< UI2C_T::PROTCTL: PTRG Position         */
+#define UI2C_PROTCTL_PTRG_Msk        ( 0x1ul << UI2C_PROTCTL_PTRG_Pos )                    /*!< UI2C_T::PROTCTL: PTRG Mask             */
 
-#define UI2C_PROTCTL_SCLOUTEN_Pos        (8)                                               /*!< UI2C_T::PROTCTL: SCLOUTEN Position     */
-#define UI2C_PROTCTL_SCLOUTEN_Msk        (0x1ul << UI2C_PROTCTL_SCLOUTEN_Pos)              /*!< UI2C_T::PROTCTL: SCLOUTEN Mask         */
+#define UI2C_PROTCTL_SCLOUTEN_Pos    ( 8 )                                                 /*!< UI2C_T::PROTCTL: SCLOUTEN Position     */
+#define UI2C_PROTCTL_SCLOUTEN_Msk    ( 0x1ul << UI2C_PROTCTL_SCLOUTEN_Pos )                /*!< UI2C_T::PROTCTL: SCLOUTEN Mask         */
 
-#define UI2C_PROTCTL_MONEN_Pos           (9)                                               /*!< UI2C_T::PROTCTL: MONEN Position        */
-#define UI2C_PROTCTL_MONEN_Msk           (0x1ul << UI2C_PROTCTL_MONEN_Pos)                 /*!< UI2C_T::PROTCTL: MONEN Mask            */
+#define UI2C_PROTCTL_MONEN_Pos       ( 9 )                                                 /*!< UI2C_T::PROTCTL: MONEN Position        */
+#define UI2C_PROTCTL_MONEN_Msk       ( 0x1ul << UI2C_PROTCTL_MONEN_Pos )                   /*!< UI2C_T::PROTCTL: MONEN Mask            */
 
-#define UI2C_PROTCTL_TOCNT_Pos           (16)                                              /*!< UI2C_T::PROTCTL: TOCNT Position        */
-#define UI2C_PROTCTL_TOCNT_Msk           (0x3fful << UI2C_PROTCTL_TOCNT_Pos)               /*!< UI2C_T::PROTCTL: TOCNT Mask            */
+#define UI2C_PROTCTL_TOCNT_Pos       ( 16 )                                                /*!< UI2C_T::PROTCTL: TOCNT Position        */
+#define UI2C_PROTCTL_TOCNT_Msk       ( 0x3fful << UI2C_PROTCTL_TOCNT_Pos )                 /*!< UI2C_T::PROTCTL: TOCNT Mask            */
 
-#define UI2C_PROTCTL_PROTEN_Pos          (31)                                              /*!< UI2C_T::PROTCTL: PROTEN Position       */
-#define UI2C_PROTCTL_PROTEN_Msk          (0x1ul << UI2C_PROTCTL_PROTEN_Pos)                /*!< UI2C_T::PROTCTL: PROTEN Mask           */
+#define UI2C_PROTCTL_PROTEN_Pos      ( 31 )                                                /*!< UI2C_T::PROTCTL: PROTEN Position       */
+#define UI2C_PROTCTL_PROTEN_Msk      ( 0x1ul << UI2C_PROTCTL_PROTEN_Pos )                  /*!< UI2C_T::PROTCTL: PROTEN Mask           */
 
-#define UI2C_PROTIEN_TOIEN_Pos           (0)                                               /*!< UI2C_T::PROTIEN: TOIEN Position        */
-#define UI2C_PROTIEN_TOIEN_Msk           (0x1ul << UI2C_PROTIEN_TOIEN_Pos)                 /*!< UI2C_T::PROTIEN: TOIEN Mask            */
+#define UI2C_PROTIEN_TOIEN_Pos       ( 0 )                                                 /*!< UI2C_T::PROTIEN: TOIEN Position        */
+#define UI2C_PROTIEN_TOIEN_Msk       ( 0x1ul << UI2C_PROTIEN_TOIEN_Pos )                   /*!< UI2C_T::PROTIEN: TOIEN Mask            */
 
-#define UI2C_PROTIEN_STARIEN_Pos         (1)                                               /*!< UI2C_T::PROTIEN: STARIEN Position      */
-#define UI2C_PROTIEN_STARIEN_Msk         (0x1ul << UI2C_PROTIEN_STARIEN_Pos)               /*!< UI2C_T::PROTIEN: STARIEN Mask          */
+#define UI2C_PROTIEN_STARIEN_Pos     ( 1 )                                                 /*!< UI2C_T::PROTIEN: STARIEN Position      */
+#define UI2C_PROTIEN_STARIEN_Msk     ( 0x1ul << UI2C_PROTIEN_STARIEN_Pos )                 /*!< UI2C_T::PROTIEN: STARIEN Mask          */
 
-#define UI2C_PROTIEN_STORIEN_Pos         (2)                                               /*!< UI2C_T::PROTIEN: STORIEN Position      */
-#define UI2C_PROTIEN_STORIEN_Msk         (0x1ul << UI2C_PROTIEN_STORIEN_Pos)               /*!< UI2C_T::PROTIEN: STORIEN Mask          */
+#define UI2C_PROTIEN_STORIEN_Pos     ( 2 )                                                 /*!< UI2C_T::PROTIEN: STORIEN Position      */
+#define UI2C_PROTIEN_STORIEN_Msk     ( 0x1ul << UI2C_PROTIEN_STORIEN_Pos )                 /*!< UI2C_T::PROTIEN: STORIEN Mask          */
 
-#define UI2C_PROTIEN_NACKIEN_Pos         (3)                                               /*!< UI2C_T::PROTIEN: NACKIEN Position      */
-#define UI2C_PROTIEN_NACKIEN_Msk         (0x1ul << UI2C_PROTIEN_NACKIEN_Pos)               /*!< UI2C_T::PROTIEN: NACKIEN Mask          */
+#define UI2C_PROTIEN_NACKIEN_Pos     ( 3 )                                                 /*!< UI2C_T::PROTIEN: NACKIEN Position      */
+#define UI2C_PROTIEN_NACKIEN_Msk     ( 0x1ul << UI2C_PROTIEN_NACKIEN_Pos )                 /*!< UI2C_T::PROTIEN: NACKIEN Mask          */
 
-#define UI2C_PROTIEN_ARBLOIEN_Pos        (4)                                               /*!< UI2C_T::PROTIEN: ARBLOIEN Position     */
-#define UI2C_PROTIEN_ARBLOIEN_Msk        (0x1ul << UI2C_PROTIEN_ARBLOIEN_Pos)              /*!< UI2C_T::PROTIEN: ARBLOIEN Mask         */
+#define UI2C_PROTIEN_ARBLOIEN_Pos    ( 4 )                                                 /*!< UI2C_T::PROTIEN: ARBLOIEN Position     */
+#define UI2C_PROTIEN_ARBLOIEN_Msk    ( 0x1ul << UI2C_PROTIEN_ARBLOIEN_Pos )                /*!< UI2C_T::PROTIEN: ARBLOIEN Mask         */
 
-#define UI2C_PROTIEN_ERRIEN_Pos          (5)                                               /*!< UI2C_T::PROTIEN: ERRIEN Position       */
-#define UI2C_PROTIEN_ERRIEN_Msk          (0x1ul << UI2C_PROTIEN_ERRIEN_Pos)                /*!< UI2C_T::PROTIEN: ERRIEN Mask           */
+#define UI2C_PROTIEN_ERRIEN_Pos      ( 5 )                                                 /*!< UI2C_T::PROTIEN: ERRIEN Position       */
+#define UI2C_PROTIEN_ERRIEN_Msk      ( 0x1ul << UI2C_PROTIEN_ERRIEN_Pos )                  /*!< UI2C_T::PROTIEN: ERRIEN Mask           */
 
-#define UI2C_PROTIEN_ACKIEN_Pos          (6)                                               /*!< UI2C_T::PROTIEN: ACKIEN Position       */
-#define UI2C_PROTIEN_ACKIEN_Msk          (0x1ul << UI2C_PROTIEN_ACKIEN_Pos)                /*!< UI2C_T::PROTIEN: ACKIEN Mask           */
+#define UI2C_PROTIEN_ACKIEN_Pos      ( 6 )                                                 /*!< UI2C_T::PROTIEN: ACKIEN Position       */
+#define UI2C_PROTIEN_ACKIEN_Msk      ( 0x1ul << UI2C_PROTIEN_ACKIEN_Pos )                  /*!< UI2C_T::PROTIEN: ACKIEN Mask           */
 
-#define UI2C_PROTSTS_TOIF_Pos            (5)                                               /*!< UI2C_T::PROTSTS: TOIF Position         */
-#define UI2C_PROTSTS_TOIF_Msk            (0x1ul << UI2C_PROTSTS_TOIF_Pos)                  /*!< UI2C_T::PROTSTS: TOIF Mask             */
+#define UI2C_PROTSTS_TOIF_Pos        ( 5 )                                                 /*!< UI2C_T::PROTSTS: TOIF Position         */
+#define UI2C_PROTSTS_TOIF_Msk        ( 0x1ul << UI2C_PROTSTS_TOIF_Pos )                    /*!< UI2C_T::PROTSTS: TOIF Mask             */
 
-#define UI2C_PROTSTS_ONBUSY_Pos          (6)                                               /*!< UI2C_T::PROTSTS: ONBUSY Position       */
-#define UI2C_PROTSTS_ONBUSY_Msk          (0x1ul << UI2C_PROTSTS_ONBUSY_Pos)                /*!< UI2C_T::PROTSTS: ONBUSY Mask           */
+#define UI2C_PROTSTS_ONBUSY_Pos      ( 6 )                                                 /*!< UI2C_T::PROTSTS: ONBUSY Position       */
+#define UI2C_PROTSTS_ONBUSY_Msk      ( 0x1ul << UI2C_PROTSTS_ONBUSY_Pos )                  /*!< UI2C_T::PROTSTS: ONBUSY Mask           */
 
-#define UI2C_PROTSTS_STARIF_Pos          (8)                                               /*!< UI2C_T::PROTSTS: STARIF Position       */
-#define UI2C_PROTSTS_STARIF_Msk          (0x1ul << UI2C_PROTSTS_STARIF_Pos)                /*!< UI2C_T::PROTSTS: STARIF Mask           */
+#define UI2C_PROTSTS_STARIF_Pos      ( 8 )                                                 /*!< UI2C_T::PROTSTS: STARIF Position       */
+#define UI2C_PROTSTS_STARIF_Msk      ( 0x1ul << UI2C_PROTSTS_STARIF_Pos )                  /*!< UI2C_T::PROTSTS: STARIF Mask           */
 
-#define UI2C_PROTSTS_STORIF_Pos          (9)                                               /*!< UI2C_T::PROTSTS: STORIF Position       */
-#define UI2C_PROTSTS_STORIF_Msk          (0x1ul << UI2C_PROTSTS_STORIF_Pos)                /*!< UI2C_T::PROTSTS: STORIF Mask           */
+#define UI2C_PROTSTS_STORIF_Pos      ( 9 )                                                 /*!< UI2C_T::PROTSTS: STORIF Position       */
+#define UI2C_PROTSTS_STORIF_Msk      ( 0x1ul << UI2C_PROTSTS_STORIF_Pos )                  /*!< UI2C_T::PROTSTS: STORIF Mask           */
 
-#define UI2C_PROTSTS_NACKIF_Pos          (10)                                              /*!< UI2C_T::PROTSTS: NACKIF Position       */
-#define UI2C_PROTSTS_NACKIF_Msk          (0x1ul << UI2C_PROTSTS_NACKIF_Pos)                /*!< UI2C_T::PROTSTS: NACKIF Mask           */
+#define UI2C_PROTSTS_NACKIF_Pos      ( 10 )                                                /*!< UI2C_T::PROTSTS: NACKIF Position       */
+#define UI2C_PROTSTS_NACKIF_Msk      ( 0x1ul << UI2C_PROTSTS_NACKIF_Pos )                  /*!< UI2C_T::PROTSTS: NACKIF Mask           */
 
-#define UI2C_PROTSTS_ARBLOIF_Pos         (11)                                              /*!< UI2C_T::PROTSTS: ARBLOIF Position      */
-#define UI2C_PROTSTS_ARBLOIF_Msk         (0x1ul << UI2C_PROTSTS_ARBLOIF_Pos)               /*!< UI2C_T::PROTSTS: ARBLOIF Mask          */
+#define UI2C_PROTSTS_ARBLOIF_Pos     ( 11 )                                                /*!< UI2C_T::PROTSTS: ARBLOIF Position      */
+#define UI2C_PROTSTS_ARBLOIF_Msk     ( 0x1ul << UI2C_PROTSTS_ARBLOIF_Pos )                 /*!< UI2C_T::PROTSTS: ARBLOIF Mask          */
 
-#define UI2C_PROTSTS_ERRIF_Pos           (12)                                              /*!< UI2C_T::PROTSTS: ERRIF Position        */
-#define UI2C_PROTSTS_ERRIF_Msk           (0x1ul << UI2C_PROTSTS_ERRIF_Pos)                 /*!< UI2C_T::PROTSTS: ERRIF Mask            */
+#define UI2C_PROTSTS_ERRIF_Pos       ( 12 )                                                /*!< UI2C_T::PROTSTS: ERRIF Position        */
+#define UI2C_PROTSTS_ERRIF_Msk       ( 0x1ul << UI2C_PROTSTS_ERRIF_Pos )                   /*!< UI2C_T::PROTSTS: ERRIF Mask            */
 
-#define UI2C_PROTSTS_ACKIF_Pos           (13)                                              /*!< UI2C_T::PROTSTS: ACKIF Position        */
-#define UI2C_PROTSTS_ACKIF_Msk           (0x1ul << UI2C_PROTSTS_ACKIF_Pos)                 /*!< UI2C_T::PROTSTS: ACKIF Mask            */
+#define UI2C_PROTSTS_ACKIF_Pos       ( 13 )                                                /*!< UI2C_T::PROTSTS: ACKIF Position        */
+#define UI2C_PROTSTS_ACKIF_Msk       ( 0x1ul << UI2C_PROTSTS_ACKIF_Pos )                   /*!< UI2C_T::PROTSTS: ACKIF Mask            */
 
-#define UI2C_PROTSTS_SLASEL_Pos          (14)                                              /*!< UI2C_T::PROTSTS: SLASEL Position       */
-#define UI2C_PROTSTS_SLASEL_Msk          (0x1ul << UI2C_PROTSTS_SLASEL_Pos)                /*!< UI2C_T::PROTSTS: SLASEL Mask           */
+#define UI2C_PROTSTS_SLASEL_Pos      ( 14 )                                                /*!< UI2C_T::PROTSTS: SLASEL Position       */
+#define UI2C_PROTSTS_SLASEL_Msk      ( 0x1ul << UI2C_PROTSTS_SLASEL_Pos )                  /*!< UI2C_T::PROTSTS: SLASEL Mask           */
 
-#define UI2C_PROTSTS_SLAREAD_Pos         (15)                                              /*!< UI2C_T::PROTSTS: SLAREAD Position      */
-#define UI2C_PROTSTS_SLAREAD_Msk         (0x1ul << UI2C_PROTSTS_SLAREAD_Pos)               /*!< UI2C_T::PROTSTS: SLAREAD Mask          */
+#define UI2C_PROTSTS_SLAREAD_Pos     ( 15 )                                                /*!< UI2C_T::PROTSTS: SLAREAD Position      */
+#define UI2C_PROTSTS_SLAREAD_Msk     ( 0x1ul << UI2C_PROTSTS_SLAREAD_Pos )                 /*!< UI2C_T::PROTSTS: SLAREAD Mask          */
 
-#define UI2C_PROTSTS_WKAKDONE_Pos        (16)                                              /*!< UI2C_T::PROTSTS: WKAKDONE Position     */
-#define UI2C_PROTSTS_WKAKDONE_Msk        (0x1ul << UI2C_PROTSTS_WKAKDONE_Pos)              /*!< UI2C_T::PROTSTS: WKAKDONE Mask         */
+#define UI2C_PROTSTS_WKAKDONE_Pos    ( 16 )                                                /*!< UI2C_T::PROTSTS: WKAKDONE Position     */
+#define UI2C_PROTSTS_WKAKDONE_Msk    ( 0x1ul << UI2C_PROTSTS_WKAKDONE_Pos )                /*!< UI2C_T::PROTSTS: WKAKDONE Mask         */
 
-#define UI2C_PROTSTS_WRSTSWK_Pos         (17)                                              /*!< UI2C_T::PROTSTS: WRSTSWK Position      */
-#define UI2C_PROTSTS_WRSTSWK_Msk         (0x1ul << UI2C_PROTSTS_WRSTSWK_Pos)               /*!< UI2C_T::PROTSTS: WRSTSWK Mask          */
+#define UI2C_PROTSTS_WRSTSWK_Pos     ( 17 )                                                /*!< UI2C_T::PROTSTS: WRSTSWK Position      */
+#define UI2C_PROTSTS_WRSTSWK_Msk     ( 0x1ul << UI2C_PROTSTS_WRSTSWK_Pos )                 /*!< UI2C_T::PROTSTS: WRSTSWK Mask          */
 
-#define UI2C_PROTSTS_BUSHANG_Pos         (18)                                              /*!< UI2C_T::PROTSTS: BUSHANG Position      */
-#define UI2C_PROTSTS_BUSHANG_Msk         (0x1ul << UI2C_PROTSTS_BUSHANG_Pos)               /*!< UI2C_T::PROTSTS: BUSHANG Mask          */
+#define UI2C_PROTSTS_BUSHANG_Pos     ( 18 )                                                /*!< UI2C_T::PROTSTS: BUSHANG Position      */
+#define UI2C_PROTSTS_BUSHANG_Msk     ( 0x1ul << UI2C_PROTSTS_BUSHANG_Pos )                 /*!< UI2C_T::PROTSTS: BUSHANG Mask          */
 
-#define UI2C_PROTSTS_ERRARBLO_Pos        (19)                                              /*!< UI2C_T::PROTSTS: ERRARBLO Position     */
-#define UI2C_PROTSTS_ERRARBLO_Msk        (0x1ul << UI2C_PROTSTS_ERRARBLO_Pos)              /*!< UI2C_T::PROTSTS: ERRARBLO Mask         */
+#define UI2C_PROTSTS_ERRARBLO_Pos    ( 19 )                                                /*!< UI2C_T::PROTSTS: ERRARBLO Position     */
+#define UI2C_PROTSTS_ERRARBLO_Msk    ( 0x1ul << UI2C_PROTSTS_ERRARBLO_Pos )                /*!< UI2C_T::PROTSTS: ERRARBLO Mask         */
 
-#define UI2C_ADMAT_ADMAT0_Pos            (0)                                               /*!< UI2C_T::ADMAT: ADMAT0 Position         */
-#define UI2C_ADMAT_ADMAT0_Msk            (0x1ul << UI2C_ADMAT_ADMAT0_Pos)                  /*!< UI2C_T::ADMAT: ADMAT0 Mask             */
+#define UI2C_ADMAT_ADMAT0_Pos        ( 0 )                                                 /*!< UI2C_T::ADMAT: ADMAT0 Position         */
+#define UI2C_ADMAT_ADMAT0_Msk        ( 0x1ul << UI2C_ADMAT_ADMAT0_Pos )                    /*!< UI2C_T::ADMAT: ADMAT0 Mask             */
 
-#define UI2C_ADMAT_ADMAT1_Pos            (1)                                               /*!< UI2C_T::ADMAT: ADMAT1 Position         */
-#define UI2C_ADMAT_ADMAT1_Msk            (0x1ul << UI2C_ADMAT_ADMAT1_Pos)                  /*!< UI2C_T::ADMAT: ADMAT1 Mask             */
+#define UI2C_ADMAT_ADMAT1_Pos        ( 1 )                                                 /*!< UI2C_T::ADMAT: ADMAT1 Position         */
+#define UI2C_ADMAT_ADMAT1_Msk        ( 0x1ul << UI2C_ADMAT_ADMAT1_Pos )                    /*!< UI2C_T::ADMAT: ADMAT1 Mask             */
 
-#define UI2C_TMCTL_STCTL_Pos             (0)                                               /*!< UI2C_T::TMCTL: STCTL Position          */
-#define UI2C_TMCTL_STCTL_Msk             (0x1fful << UI2C_TMCTL_STCTL_Pos)                 /*!< UI2C_T::TMCTL: STCTL Mask              */
+#define UI2C_TMCTL_STCTL_Pos         ( 0 )                                                 /*!< UI2C_T::TMCTL: STCTL Position          */
+#define UI2C_TMCTL_STCTL_Msk         ( 0x1fful << UI2C_TMCTL_STCTL_Pos )                   /*!< UI2C_T::TMCTL: STCTL Mask              */
 
-#define UI2C_TMCTL_HTCTL_Pos             (16)                                              /*!< UI2C_T::TMCTL: HTCTL Position          */
-#define UI2C_TMCTL_HTCTL_Msk             (0x1fful << UI2C_TMCTL_HTCTL_Pos)                 /*!< UI2C_T::TMCTL: HTCTL Mask              */
+#define UI2C_TMCTL_HTCTL_Pos         ( 16 )                                                /*!< UI2C_T::TMCTL: HTCTL Position          */
+#define UI2C_TMCTL_HTCTL_Msk         ( 0x1fful << UI2C_TMCTL_HTCTL_Pos )                   /*!< UI2C_T::TMCTL: HTCTL Mask              */
 
 /**@}*/ /* UI2C_CONST */
 /**@}*/ /* end of UI2C register group */

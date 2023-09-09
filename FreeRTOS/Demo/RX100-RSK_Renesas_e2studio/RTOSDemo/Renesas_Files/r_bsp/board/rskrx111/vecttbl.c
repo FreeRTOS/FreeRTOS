@@ -16,18 +16,20 @@
 *
 * Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name	   : vecttbl.c
 * Device(s)    : RX11x
 * Description  : Definition of the fixed vector table and option setting memory.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 08.11.2012 0.01     Beta Release
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* Fixed size integers. */
 #include <stdint.h>
@@ -44,7 +46,7 @@ Includes   <System Includes> , "Project Includes"
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-extern void PowerON_Reset_PC(void);
+extern void PowerON_Reset_PC( void );
 
 /***********************************************************************************************************************
 * Function name: excep_supervisor_inst_isr
@@ -53,20 +55,20 @@ extern void PowerON_Reset_PC(void);
 * Return Value : none
 ***********************************************************************************************************************/
 #pragma interrupt (excep_supervisor_inst_isr)
-void excep_supervisor_inst_isr(void)
+void excep_supervisor_inst_isr( void )
 {
     /* If the user defined a callback function in r_bsp_config.h then it will be called here. */
-#if defined(EXCEP_SUPERVISOR_ISR_CALLBACK)
-    EXCEP_SUPERVISOR_ISR_CALLBACK();
+    #if defined( EXCEP_SUPERVISOR_ISR_CALLBACK )
+        EXCEP_SUPERVISOR_ISR_CALLBACK();
 
-    /* If you do not put the MCU in Supervisor mode before returning then it will just execute the same violating
-       instruction again and come back in here. Since the PSW is restored from the stack when returning from the
-       exception, you would need to alter the saved PSW on the stack to change to Supervisor mode. We do not do this
-       here because the only 'safe' way to do this would be to write this function in assembly. Even then most users
-       would probably want to handle this someway instead of just going back to the application. */
-#else
-    brk();
-#endif
+        /* If you do not put the MCU in Supervisor mode before returning then it will just execute the same violating
+         * instruction again and come back in here. Since the PSW is restored from the stack when returning from the
+         * exception, you would need to alter the saved PSW on the stack to change to Supervisor mode. We do not do this
+         * here because the only 'safe' way to do this would be to write this function in assembly. Even then most users
+         * would probably want to handle this someway instead of just going back to the application. */
+    #else
+        brk();
+    #endif
 }
 
 /***********************************************************************************************************************
@@ -76,14 +78,14 @@ void excep_supervisor_inst_isr(void)
 * Return Value : none
 ***********************************************************************************************************************/
 #pragma interrupt (excep_undefined_inst_isr)
-void excep_undefined_inst_isr(void)
+void excep_undefined_inst_isr( void )
 {
     /* If the user defined a callback function in r_bsp_config.h then it will be called here. */
-#if defined(EXCEP_UNDEFINED_INSTR_ISR_CALLBACK)
-    EXCEP_UNDEFINED_INSTR_ISR_CALLBACK();
-#else
-    brk();
-#endif
+    #if defined( EXCEP_UNDEFINED_INSTR_ISR_CALLBACK )
+        EXCEP_UNDEFINED_INSTR_ISR_CALLBACK();
+    #else
+        brk();
+    #endif
 }
 
 /***********************************************************************************************************************
@@ -93,17 +95,17 @@ void excep_undefined_inst_isr(void)
 * Return Value : none
 ***********************************************************************************************************************/
 #pragma interrupt (non_maskable_isr)
-void non_maskable_isr(void)
+void non_maskable_isr( void )
 {
     /* If the user defined a callback function in r_bsp_config.h then it will be called here. */
-#if defined(NMI_ISR_CALLBACK)
-    NMI_ISR_CALLBACK();
+    #if defined( NMI_ISR_CALLBACK )
+        NMI_ISR_CALLBACK();
 
-    /* Clear NMI flag. */
-    ICU.NMICLR.BIT.NMICLR = 1;
-#else
-    brk();
-#endif
+        /* Clear NMI flag. */
+        ICU.NMICLR.BIT.NMICLR = 1;
+    #else
+        brk();
+    #endif
 }
 
 /***********************************************************************************************************************
@@ -114,14 +116,14 @@ void non_maskable_isr(void)
 * Return Value : none
 ***********************************************************************************************************************/
 #pragma interrupt (undefined_interrupt_source_isr)
-void undefined_interrupt_source_isr(void)
+void undefined_interrupt_source_isr( void )
 {
     /* If the user defined a callback function in r_bsp_config.h then it will be called here. */
-#if defined(UNDEFINED_INT_ISR_CALLBACK)
-    UNDEFINED_INT_ISR_CALLBACK();
-#else
-    brk();
-#endif
+    #if defined( UNDEFINED_INT_ISR_CALLBACK )
+        UNDEFINED_INT_ISR_CALLBACK();
+    #else
+        brk();
+    #endif
 }
 
 /***********************************************************************************************************************
@@ -135,27 +137,27 @@ void undefined_interrupt_source_isr(void)
 * Return value : none
 ***********************************************************************************************************************/
 #pragma interrupt (bus_error_isr(vect=VECT(BSC,BUSERR)))
-void bus_error_isr (void)
+void bus_error_isr( void )
 {
     /* Clear the bus error */
     BSC.BERCLR.BIT.STSCLR = 1;
 
     /*
-        To find the address that was accessed when the bus error occurred, read the register BSC.BERSR2.WORD.  The upper
-        13 bits of this register contain the upper 13-bits of the offending address (in 512K byte units)
-    */
+     *  To find the address that was accessed when the bus error occurred, read the register BSC.BERSR2.WORD.  The upper
+     *  13 bits of this register contain the upper 13-bits of the offending address (in 512K byte units)
+     */
 
     /* If the user defined a callback function in r_bsp_config.h then it will be called here. */
-#if defined(BUS_ERROR_ISR_CALLBACK)
-    BUS_ERROR_ISR_CALLBACK();
-#else
-    nop();
-#endif
+    #if defined( BUS_ERROR_ISR_CALLBACK )
+        BUS_ERROR_ISR_CALLBACK();
+    #else
+        nop();
+    #endif
 }
 
 void Dummy( void )
 {
-	brk();
+    brk();
 }
 
 /***********************************************************************************************************************
@@ -164,43 +166,40 @@ void Dummy( void )
 ***********************************************************************************************************************/
 #pragma section C FIXEDVECT
 
-void (*const Fixed_Vectors[])(void) = {
-//;0xffffffd0  Exception(Supervisor Instruction)
-	excep_supervisor_inst_isr,
-//;0xffffffd4  Reserved
+void( *const Fixed_Vectors[] )( void ) =
+{
+/*;0xffffffd0  Exception(Supervisor Instruction) */
+    excep_supervisor_inst_isr,
+/*;0xffffffd4  Reserved */
     Dummy,
-//;0xffffffd8  Reserved
+/*;0xffffffd8  Reserved */
     Dummy,
-//;0xffffffdc  Exception(Undefined Instruction)
+/*;0xffffffdc  Exception(Undefined Instruction) */
     undefined_interrupt_source_isr,
-//;0xffffffe0  Reserved
+/*;0xffffffe0  Reserved */
     Dummy,
-//;0xffffffe4  Reserved
+/*;0xffffffe4  Reserved */
     Dummy,
-//;0xffffffe8  Reserved
+/*;0xffffffe8  Reserved */
     Dummy,
-//;0xffffffec  Reserved
+/*;0xffffffec  Reserved */
     Dummy,
-//;0xfffffff0  Reserved
+/*;0xfffffff0  Reserved */
     Dummy,
-//;0xfffffff4  Reserved
+/*;0xfffffff4  Reserved */
     Dummy,
-//;0xfffffff8  NMI
+/*;0xfffffff8  NMI */
     non_maskable_isr,
-//;0xfffffffc  RESET
-//;<<VECTOR DATA START (POWER ON RESET)>>
-//;Power On Reset PC
-PowerON_Reset_PC
-//;<<VECTOR DATA END (POWER ON RESET)>>
+/*;0xfffffffc  RESET */
+/*;<<VECTOR DATA START (POWER ON RESET)>> */
+/*;Power On Reset PC */
+    PowerON_Reset_PC
+/*;<<VECTOR DATA END (POWER ON RESET)>> */
 };
 
-#pragma address _MDEreg=0xffffff80 // MDE register (Single Chip Mode)
+#pragma address _MDEreg=0xffffff80            /* MDE register (Single Chip Mode) */
 #ifdef __BIG
-	const unsigned long _MDEreg = 0xfffffff8; // big
+    const unsigned long _MDEreg = 0xfffffff8; /* big */
 #else
-	const unsigned long _MDEreg = 0xffffffff; // little
+    const unsigned long _MDEreg = 0xffffffff; /* little */
 #endif
-
-
-
-

@@ -23,45 +23,45 @@
  * https://www.FreeRTOS.org
  */
 #ifndef FREERTOS_HTTP_COMMANDS_H
-#define	FREERTOS_HTTP_COMMANDS_H
+#define FREERTOS_HTTP_COMMANDS_H
 
-enum {
-	WEB_REPLY_OK = 200,
-	WEB_NO_CONTENT = 204,
-	WEB_BAD_REQUEST = 400,
-	WEB_UNAUTHORIZED = 401,
-	WEB_NOT_FOUND = 404,
-	WEB_GONE = 410,
-	WEB_PRECONDITION_FAILED = 412,
-	WEB_INTERNAL_SERVER_ERROR = 500,
+enum
+{
+    WEB_REPLY_OK = 200,
+    WEB_NO_CONTENT = 204,
+    WEB_BAD_REQUEST = 400,
+    WEB_UNAUTHORIZED = 401,
+    WEB_NOT_FOUND = 404,
+    WEB_GONE = 410,
+    WEB_PRECONDITION_FAILED = 412,
+    WEB_INTERNAL_SERVER_ERROR = 500,
 };
 
-enum EWebCommand {
-	ECMD_GET,
-	ECMD_HEAD,
-	ECMD_POST,
-	ECMD_PUT,
-	ECMD_DELETE,
-	ECMD_TRACE,
-	ECMD_OPTIONS,
-	ECMD_CONNECT,
-	ECMD_PATCH,
-	ECMD_UNK,
+enum EWebCommand
+{
+    ECMD_GET,
+    ECMD_HEAD,
+    ECMD_POST,
+    ECMD_PUT,
+    ECMD_DELETE,
+    ECMD_TRACE,
+    ECMD_OPTIONS,
+    ECMD_CONNECT,
+    ECMD_PATCH,
+    ECMD_UNK,
 };
 
 struct xWEB_COMMAND
 {
-	BaseType_t xCommandLength;
-	const char *pcCommandName;
-	const unsigned char ucCommandType;
+    BaseType_t xCommandLength;
+    const char * pcCommandName;
+    const unsigned char ucCommandType;
 };
 
-#define	WEB_CMD_COUNT	(ECMD_UNK+1)
+#define WEB_CMD_COUNT    ( ECMD_UNK + 1 )
 
-extern const struct xWEB_COMMAND xWebCommands[WEB_CMD_COUNT];
+extern const struct xWEB_COMMAND xWebCommands[ WEB_CMD_COUNT ];
 
-extern const char *webCodename (int aCode);
+extern const char * webCodename( int aCode );
 
-#endif	/* FREERTOS_HTTP_COMMANDS_H */
-
-
+#endif /* FREERTOS_HTTP_COMMANDS_H */

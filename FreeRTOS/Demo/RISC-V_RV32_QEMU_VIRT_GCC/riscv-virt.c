@@ -33,32 +33,35 @@
 
 int xGetCoreID( void )
 {
-int id;
+    int id;
 
-	__asm ("csrr %0, mhartid" : "=r" ( id ) );
+    __asm( "csrr %0, mhartid" : "=r" ( id ) );
 
-	return id;
+    return id;
 }
 
-void vSendString( const char *s )
+void vSendString( const char * s )
 {
-struct device dev;
-size_t i;
+    struct device dev;
+    size_t i;
 
-	dev.addr = NS16550_ADDR;
+    dev.addr = NS16550_ADDR;
 
-	portENTER_CRITICAL();
+    portENTER_CRITICAL();
 
-	for (i = 0; i < strlen(s); i++) {
-		vOutNS16550( &dev, s[i] );
-	}
-	vOutNS16550( &dev, '\n' );
+    for( i = 0; i < strlen( s ); i++ )
+    {
+        vOutNS16550( &dev, s[ i ] );
+    }
 
-	portEXIT_CRITICAL();
+    vOutNS16550( &dev, '\n' );
+
+    portEXIT_CRITICAL();
 }
 
-void handle_trap(void)
+void handle_trap( void )
 {
-	while (1)
-		;
+    while( 1 )
+    {
+    }
 }

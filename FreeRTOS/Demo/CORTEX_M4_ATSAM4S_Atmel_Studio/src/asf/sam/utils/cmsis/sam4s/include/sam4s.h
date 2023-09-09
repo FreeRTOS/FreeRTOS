@@ -41,15 +41,15 @@
 #define _SAM4S_
 
 #if defined __SAM4S8B__
-  #include "sam4s8b.h"
+    #include "sam4s8b.h"
 #elif defined __SAM4S8C__
-  #include "sam4s8c.h"
+    #include "sam4s8c.h"
 #elif defined __SAM4S16B__
-  #include "sam4s16b.h"
+    #include "sam4s16b.h"
 #elif defined __SAM4S16C__
-  #include "sam4s16c.h"
+    #include "sam4s16c.h"
 #else
-  #error Library does not support the specified device.
+    #error Library does not support the specified device.
 #endif
 
 #endif /* _SAM4S_ */

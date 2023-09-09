@@ -1,19 +1,20 @@
 /*This file is prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
- *
- * \brief USART driver for AVR32 UC3.
- *
- * This file contains basic functions for the AVR32 USART, with support for all
- * modes, settings and clock speeds.
- *
- * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
- * - Supported devices:  All AVR32 devices with a USART module can be used.
- * - AppNote:
- *
- * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support and FAQ: http://support.atmel.no/
- *
- ******************************************************************************/
+*
+* \brief USART driver for AVR32 UC3.
+*
+* This file contains basic functions for the AVR32 USART, with support for all
+* modes, settings and clock speeds.
+*
+* - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+* - Supported devices:  All AVR32 devices with a USART module can be used.
+* - AppNote:
+*
+* \author               Atmel Corporation: http://www.atmel.com \n
+*                       Support and FAQ: http://support.atmel.no/
+*
+******************************************************************************/
 
 /* Copyright (c) 2007, Atmel Corporation All rights reserved.
  *
@@ -52,150 +53,149 @@
 
 /*! \name Return Values
  */
-//! @{
-#define USART_SUCCESS           0 //!< Successful completion.
-#define USART_FAILURE          -1 //!< Failure because of some unspecified reason.
-#define USART_INVALID_INPUT     1 //!< Input value out of range.
-#define USART_INVALID_ARGUMENT -1 //!< Argument value out of range.
-#define USART_TX_BUSY           2 //!< Transmitter was busy.
-#define USART_RX_EMPTY          3 //!< Nothing was received.
-#define USART_RX_ERROR          4 //!< Transmission error occurred.
-#define USART_MODE_FAULT        5 //!< USART not in the appropriate mode.
-//! @}
+/*! @{ */
+#define USART_SUCCESS             0  /*!< Successful completion. */
+#define USART_FAILURE             -1 /*!< Failure because of some unspecified reason. */
+#define USART_INVALID_INPUT       1  /*!< Input value out of range. */
+#define USART_INVALID_ARGUMENT    -1 /*!< Argument value out of range. */
+#define USART_TX_BUSY             2  /*!< Transmitter was busy. */
+#define USART_RX_EMPTY            3  /*!< Nothing was received. */
+#define USART_RX_ERROR            4  /*!< Transmission error occurred. */
+#define USART_MODE_FAULT          5  /*!< USART not in the appropriate mode. */
+/*! @} */
 
-//! Default time-out value (number of attempts).
-#define USART_DEFAULT_TIMEOUT   10000
+/*! Default time-out value (number of attempts). */
+#define USART_DEFAULT_TIMEOUT    10000
 
 /*! \name Parity Settings
  */
-//! @{
-#define USART_EVEN_PARITY       AVR32_USART_MR_PAR_EVEN   //!< Use even parity on character transmission.
-#define USART_ODD_PARITY        AVR32_USART_MR_PAR_ODD    //!< Use odd parity on character transmission.
-#define USART_SPACE_PARITY      AVR32_USART_MR_PAR_SPACE  //!< Use a space as parity bit.
-#define USART_MARK_PARITY       AVR32_USART_MR_PAR_MARK   //!< Use a mark as parity bit.
-#define USART_NO_PARITY         AVR32_USART_MR_PAR_NONE   //!< Don't use a parity bit.
-#define USART_MULTIDROP_PARITY  AVR32_USART_MR_PAR_MULTI  //!< Parity bit is used to flag address characters.
-//! @}
+/*! @{ */
+#define USART_EVEN_PARITY         AVR32_USART_MR_PAR_EVEN  /*!< Use even parity on character transmission. */
+#define USART_ODD_PARITY          AVR32_USART_MR_PAR_ODD   /*!< Use odd parity on character transmission. */
+#define USART_SPACE_PARITY        AVR32_USART_MR_PAR_SPACE /*!< Use a space as parity bit. */
+#define USART_MARK_PARITY         AVR32_USART_MR_PAR_MARK  /*!< Use a mark as parity bit. */
+#define USART_NO_PARITY           AVR32_USART_MR_PAR_NONE  /*!< Don't use a parity bit. */
+#define USART_MULTIDROP_PARITY    AVR32_USART_MR_PAR_MULTI /*!< Parity bit is used to flag address characters. */
+/*! @} */
 
 /*! \name Operating Modes
  */
-//! @{
-#define USART_MODE_NORMAL       AVR32_USART_MR_MODE_NORMAL      //!< Normal RS232 mode.
-#define USART_MODE_RS485        AVR32_USART_MR_MODE_RS485       //!< RS485 mode.
-#define USART_MODE_HW_HSH       AVR32_USART_MR_MODE_HARDWARE    //!< RS232 mode with hardware handshaking.
-#define USART_MODE_MODEM        AVR32_USART_MR_MODE_MODEM       //!< Modem mode.
-#define USART_MODE_ISO7816_T0   AVR32_USART_MR_MODE_ISO7816_T0  //!< ISO7816, T = 0 mode.
-#define USART_MODE_ISO7816_T1   AVR32_USART_MR_MODE_ISO7816_T1  //!< ISO7816, T = 1 mode.
-#define USART_MODE_IRDA         AVR32_USART_MR_MODE_IRDA        //!< IrDA mode.
-#define USART_MODE_SW_HSH       AVR32_USART_MR_MODE_SOFTWARE    //!< RS232 mode with software handshaking.
-//! @}
+/*! @{ */
+#define USART_MODE_NORMAL        AVR32_USART_MR_MODE_NORMAL     /*!< Normal RS232 mode. */
+#define USART_MODE_RS485         AVR32_USART_MR_MODE_RS485      /*!< RS485 mode. */
+#define USART_MODE_HW_HSH        AVR32_USART_MR_MODE_HARDWARE   /*!< RS232 mode with hardware handshaking. */
+#define USART_MODE_MODEM         AVR32_USART_MR_MODE_MODEM      /*!< Modem mode. */
+#define USART_MODE_ISO7816_T0    AVR32_USART_MR_MODE_ISO7816_T0 /*!< ISO7816, T = 0 mode. */
+#define USART_MODE_ISO7816_T1    AVR32_USART_MR_MODE_ISO7816_T1 /*!< ISO7816, T = 1 mode. */
+#define USART_MODE_IRDA          AVR32_USART_MR_MODE_IRDA       /*!< IrDA mode. */
+#define USART_MODE_SW_HSH        AVR32_USART_MR_MODE_SOFTWARE   /*!< RS232 mode with software handshaking. */
+/*! @} */
 
 
 /*! \name Channel Modes
  */
-//! @{
-#define USART_NORMAL_CHMODE     AVR32_USART_MR_CHMODE_NORMAL      //!< Normal communication.
-#define USART_AUTO_ECHO         AVR32_USART_MR_CHMODE_ECHO        //!< Echo data.
-#define USART_LOCAL_LOOPBACK    AVR32_USART_MR_CHMODE_LOCAL_LOOP  //!< Local loopback.
-#define USART_REMOTE_LOOPBACK   AVR32_USART_MR_CHMODE_REMOTE_LOOP //!< Remote loopback.
-//! @}
+/*! @{ */
+#define USART_NORMAL_CHMODE      AVR32_USART_MR_CHMODE_NORMAL      /*!< Normal communication. */
+#define USART_AUTO_ECHO          AVR32_USART_MR_CHMODE_ECHO        /*!< Echo data. */
+#define USART_LOCAL_LOOPBACK     AVR32_USART_MR_CHMODE_LOCAL_LOOP  /*!< Local loopback. */
+#define USART_REMOTE_LOOPBACK    AVR32_USART_MR_CHMODE_REMOTE_LOOP /*!< Remote loopback. */
+/*! @} */
 
 /*! \name Stop Bits Settings
  */
-//! @{
-#define USART_1_STOPBIT         AVR32_USART_MR_NBSTOP_1   //!< Use 1 stop bit.
-#define USART_1_5_STOPBITS      AVR32_USART_MR_NBSTOP_1_5 //!< Use 1.5 stop bits.
-#define USART_2_STOPBITS        AVR32_USART_MR_NBSTOP_2   //!< Use 2 stop bits (for more, just give the number of bits).
-//! @}
+/*! @{ */
+#define USART_1_STOPBIT       AVR32_USART_MR_NBSTOP_1     /*!< Use 1 stop bit. */
+#define USART_1_5_STOPBITS    AVR32_USART_MR_NBSTOP_1_5   /*!< Use 1.5 stop bits. */
+#define USART_2_STOPBITS      AVR32_USART_MR_NBSTOP_2     /*!< Use 2 stop bits (for more, just give the number of bits). */
+/*! @} */
 
 
-//! Input parameters when initializing RS232 and similar modes.
+/*! Input parameters when initializing RS232 and similar modes. */
 typedef struct
 {
-  //! Set baudrate of the USART.
-  unsigned long baudrate;
+    /*! Set baudrate of the USART. */
+    unsigned long baudrate;
 
-  //! Number of bits to transmit as a character (5 to 9).
-  unsigned char charlength;
+    /*! Number of bits to transmit as a character (5 to 9). */
+    unsigned char charlength;
 
-  //! How to calculate the parity bit: \ref USART_EVEN_PARITY, \ref USART_ODD_PARITY,
-  //! \ref USART_SPACE_PARITY, \ref USART_MARK_PARITY, \ref USART_NO_PARITY or
-  //! \ref USART_MULTIDROP_PARITY.
-  unsigned char paritytype;
+    /*! How to calculate the parity bit: \ref USART_EVEN_PARITY, \ref USART_ODD_PARITY, */
+    /*! \ref USART_SPACE_PARITY, \ref USART_MARK_PARITY, \ref USART_NO_PARITY or */
+    /*! \ref USART_MULTIDROP_PARITY. */
+    unsigned char paritytype;
 
-  //! Number of stop bits between two characters: \ref USART_1_STOPBIT,
-  //! \ref USART_1_5_STOPBITS, \ref USART_2_STOPBITS or any number from 3 to 257
-  //! which will result in a time guard period of that length between characters.
-  unsigned short stopbits;
+    /*! Number of stop bits between two characters: \ref USART_1_STOPBIT, */
+    /*! \ref USART_1_5_STOPBITS, \ref USART_2_STOPBITS or any number from 3 to 257 */
+    /*! which will result in a time guard period of that length between characters. */
+    unsigned short stopbits;
 
-  //! Run the channel in testmode: \ref USART_NORMAL_CHMODE, \ref USART_AUTO_ECHO,
-  //! \ref USART_LOCAL_LOOPBACK or \ref USART_REMOTE_LOOPBACK.
-  unsigned char channelmode;
+    /*! Run the channel in testmode: \ref USART_NORMAL_CHMODE, \ref USART_AUTO_ECHO, */
+    /*! \ref USART_LOCAL_LOOPBACK or \ref USART_REMOTE_LOOPBACK. */
+    unsigned char channelmode;
 } usart_options_t;
 
-//! Input parameters when initializing ISO7816 modes.
+/*! Input parameters when initializing ISO7816 modes. */
 typedef struct
 {
-  //! Set the frequency of the ISO7816 clock.
-  unsigned long iso7816_hz;
+    /*! Set the frequency of the ISO7816 clock. */
+    unsigned long iso7816_hz;
 
-  //! The number of ISO7816 clock ticks in every bit period (1 to 2047, 0 = disable clock).
-  //! Bit rate = \ref iso7816_hz / \ref fidi_ratio.
-  unsigned short fidi_ratio;
+    /*! The number of ISO7816 clock ticks in every bit period (1 to 2047, 0 = disable clock). */
+    /*! Bit rate = \ref iso7816_hz / \ref fidi_ratio. */
+    unsigned short fidi_ratio;
 
-  //! Inhibit Non Acknowledge:\n
-  //!   - 0: the NACK is generated;\n
-  //!   - 1: the NACK is not generated.
-  //!
-  //! \note This bit will be used only in ISO7816 mode, protocol T = 0 receiver.
-  int inhibit_nack;
+    /*! Inhibit Non Acknowledge:\n */
+    /*!   - 0: the NACK is generated;\n */
+    /*!   - 1: the NACK is not generated. */
+    /*! */
+    /*! \note This bit will be used only in ISO7816 mode, protocol T = 0 receiver. */
+    int inhibit_nack;
 
-  //! Disable successive NACKs.
-  //! Successive parity errors are counted up to the value in the \ref max_iterations field.
-  //! These parity errors generate a NACK on the ISO line. As soon as this value is reached,
-  //! no addititional NACK is sent on the ISO line. The ITERATION flag is asserted.
-  int dis_suc_nack;
+    /*! Disable successive NACKs. */
+    /*! Successive parity errors are counted up to the value in the \ref max_iterations field. */
+    /*! These parity errors generate a NACK on the ISO line. As soon as this value is reached, */
+    /*! no addititional NACK is sent on the ISO line. The ITERATION flag is asserted. */
+    int dis_suc_nack;
 
-  //! Max number of repetitions (0 to 7).
-  unsigned char max_iterations;
+    /*! Max number of repetitions (0 to 7). */
+    unsigned char max_iterations;
 
-  //! Bit order in transmitted characters:\n
-  //!   - 0: LSB first;\n
-  //!   - 1: MSB first.
-  int bit_order;
+    /*! Bit order in transmitted characters:\n */
+    /*!   - 0: LSB first;\n */
+    /*!   - 1: MSB first. */
+    int bit_order;
 } iso7816_options_t;
 
-//! Input parameters when initializing ISO7816 modes.
+/*! Input parameters when initializing ISO7816 modes. */
 typedef struct
 {
-  //! Set the frequency of the SPI clock.
-  unsigned long baudrate;
+    /*! Set the frequency of the SPI clock. */
+    unsigned long baudrate;
 
-  //! Number of bits to transmit as a character (5 to 9).
-  unsigned char charlength;
+    /*! Number of bits to transmit as a character (5 to 9). */
+    unsigned char charlength;
 
-  //! Run the channel in testmode: \ref USART_NORMAL_CHMODE, \ref USART_AUTO_ECHO,
-  //! \ref USART_LOCAL_LOOPBACK or \ref USART_REMOTE_LOOPBACK.
-  unsigned char channelmode;  
-  
-  //! Which SPI mode to use when transmitting.
-  unsigned char spimode;
+    /*! Run the channel in testmode: \ref USART_NORMAL_CHMODE, \ref USART_AUTO_ECHO, */
+    /*! \ref USART_LOCAL_LOOPBACK or \ref USART_REMOTE_LOOPBACK. */
+    unsigned char channelmode;
+
+    /*! Which SPI mode to use when transmitting. */
+    unsigned char spimode;
 } usart_spi_options_t;
-  
-  
 
 
 
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+
 /*! \name Initialization Functions
  */
-//! @{
+/*! @{ */
 
 /*! \brief Resets the USART and disables TX and RX.
  *
  * \param usart Base address of the USART instance.
  */
-extern void usart_reset(volatile avr32_usart_t *usart);
+extern void usart_reset( volatile avr32_usart_t * usart );
 
 /*! \brief Sets up the USART to use the standard RS232 protocol.
  *
@@ -206,7 +206,9 @@ extern void usart_reset(volatile avr32_usart_t *usart);
  * \retval USART_SUCCESS        Mode successfully initialized.
  * \retval USART_INVALID_INPUT  One or more of the arguments is out of valid range.
  */
-extern int usart_init_rs232(volatile avr32_usart_t *usart, const usart_options_t *opt, long pba_hz);
+extern int usart_init_rs232( volatile avr32_usart_t * usart,
+                             const usart_options_t * opt,
+                             long pba_hz );
 
 /*! \brief Sets up the USART to use hardware handshaking.
  *
@@ -219,7 +221,9 @@ extern int usart_init_rs232(volatile avr32_usart_t *usart, const usart_options_t
  *
  * \note \ref usart_init_rs232 does not need to be invoked before this function.
  */
-extern int usart_init_hw_handshaking(volatile avr32_usart_t *usart, const usart_options_t *opt, long pba_hz);
+extern int usart_init_hw_handshaking( volatile avr32_usart_t * usart,
+                                      const usart_options_t * opt,
+                                      long pba_hz );
 
 /*! \brief Sets up the USART to use the IrDA protocol.
  *
@@ -231,8 +235,10 @@ extern int usart_init_hw_handshaking(volatile avr32_usart_t *usart, const usart_
  * \retval USART_SUCCESS        Mode successfully initialized.
  * \retval USART_INVALID_INPUT  One or more of the arguments is out of valid range.
  */
-extern int usart_init_IrDA(volatile avr32_usart_t *usart, const usart_options_t *opt,
-                           long pba_hz, unsigned char irda_filter);
+extern int usart_init_IrDA( volatile avr32_usart_t * usart,
+                            const usart_options_t * opt,
+                            long pba_hz,
+                            unsigned char irda_filter );
 
 /*! \brief Sets up the USART to use the modem protocol, activating dedicated inputs/outputs.
  *
@@ -243,7 +249,9 @@ extern int usart_init_IrDA(volatile avr32_usart_t *usart, const usart_options_t 
  * \retval USART_SUCCESS        Mode successfully initialized.
  * \retval USART_INVALID_INPUT  One or more of the arguments is out of valid range.
  */
-extern int usart_init_modem(volatile avr32_usart_t *usart, const usart_options_t *opt, long pba_hz);
+extern int usart_init_modem( volatile avr32_usart_t * usart,
+                             const usart_options_t * opt,
+                             long pba_hz );
 
 /*! \brief Sets up the USART to use the RS485 protocol.
  *
@@ -254,7 +262,9 @@ extern int usart_init_modem(volatile avr32_usart_t *usart, const usart_options_t
  * \retval USART_SUCCESS        Mode successfully initialized.
  * \retval USART_INVALID_INPUT  One or more of the arguments is out of valid range.
  */
-extern int usart_init_rs485(volatile avr32_usart_t *usart, const usart_options_t *opt, long pba_hz);
+extern int usart_init_rs485( volatile avr32_usart_t * usart,
+                             const usart_options_t * opt,
+                             long pba_hz );
 
 /*! \brief Sets up the USART to use the ISO7816 T=0 or T=1 smartcard protocols.
  *
@@ -266,7 +276,10 @@ extern int usart_init_rs485(volatile avr32_usart_t *usart, const usart_options_t
  * \retval USART_SUCCESS        Mode successfully initialized.
  * \retval USART_INVALID_INPUT  One or more of the arguments is out of valid range.
  */
-extern int usart_init_iso7816(volatile avr32_usart_t *usart, const iso7816_options_t *opt, int t, long pba_hz);
+extern int usart_init_iso7816( volatile avr32_usart_t * usart,
+                               const iso7816_options_t * opt,
+                               int t,
+                               long pba_hz );
 
 /*! \brief Sets up the USART to use the SPI mode as master.
  *
@@ -277,7 +290,9 @@ extern int usart_init_iso7816(volatile avr32_usart_t *usart, const iso7816_optio
  * \retval USART_SUCCESS        Mode successfully initialized.
  * \retval USART_INVALID_INPUT  One or more of the arguments is out of valid range.
  */
-extern int usart_init_spi_master(volatile avr32_usart_t *usart, const usart_spi_options_t *opt, long pba_hz);
+extern int usart_init_spi_master( volatile avr32_usart_t * usart,
+                                  const usart_spi_options_t * opt,
+                                  long pba_hz );
 
 
 /*! \brief Sets up the USART to use the SPI mode as slave.
@@ -289,11 +304,14 @@ extern int usart_init_spi_master(volatile avr32_usart_t *usart, const usart_spi_
  * \retval USART_SUCCESS        Mode successfully initialized.
  * \retval USART_INVALID_INPUT  One or more of the arguments is out of valid range.
  */
-extern int usart_init_spi_slave(volatile avr32_usart_t *usart, const usart_spi_options_t *opt, long pba_hz);
+extern int usart_init_spi_slave( volatile avr32_usart_t * usart,
+                                 const usart_spi_options_t * opt,
+                                 long pba_hz );
 
-//! @}
+/*! @} */
 
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+
 /*! \brief Selects slave chip.
  *
  * \param usart   Base address of the USART instance.
@@ -301,7 +319,7 @@ extern int usart_init_spi_slave(volatile avr32_usart_t *usart, const usart_spi_o
  * \return Status.
  *   \retval USART_SUCCESS             Success.
  */
-extern int usart_spi_selectChip(volatile avr32_usart_t *usart);
+extern int usart_spi_selectChip( volatile avr32_usart_t * usart );
 
 /*! \brief Unselects slave chip.
  *
@@ -311,12 +329,13 @@ extern int usart_spi_selectChip(volatile avr32_usart_t *usart);
  *   \retval USART_SUCCESS             Success.
  *   \retval USART_FAILURE             Time out.
  */
-extern int usart_spi_unselectChip(volatile avr32_usart_t *usart);
+extern int usart_spi_unselectChip( volatile avr32_usart_t * usart );
 
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+
 /*! \name Read and Reset Error Status Bits
  */
-//! @{
+/*! @{ */
 
 /*! \brief Resets the error status.
  *
@@ -327,11 +346,11 @@ extern int usart_spi_unselectChip(volatile avr32_usart_t *usart);
  * \param usart Base address of the USART instance.
  */
 #if __GNUC__
-__attribute__((__always_inline__))
+    __attribute__( ( __always_inline__ ) )
 #endif
-extern __inline__ void usart_reset_status(volatile avr32_usart_t *usart)
+extern __inline__ void usart_reset_status( volatile avr32_usart_t * usart )
 {
-  usart->cr |= AVR32_USART_CR_RSTSTA_MASK;
+    usart->cr |= AVR32_USART_CR_RSTSTA_MASK;
 }
 
 /*! \brief Checks if a parity error has occurred since last status reset.
@@ -341,11 +360,11 @@ extern __inline__ void usart_reset_status(volatile avr32_usart_t *usart)
  * \return \c 1 if a parity error has been detected, otherwise \c 0.
  */
 #if __GNUC__
-__attribute__((__always_inline__))
+    __attribute__( ( __always_inline__ ) )
 #endif
-extern __inline__ int usart_parity_error(volatile avr32_usart_t *usart)
+extern __inline__ int usart_parity_error( volatile avr32_usart_t * usart )
 {
-  return (usart->csr & AVR32_USART_CSR_PARE_MASK) != 0;
+    return ( usart->csr & AVR32_USART_CSR_PARE_MASK ) != 0;
 }
 
 /*! \brief Checks if a framing error has occurred since last status reset.
@@ -355,11 +374,11 @@ extern __inline__ int usart_parity_error(volatile avr32_usart_t *usart)
  * \return \c 1 if a framing error has been detected, otherwise \c 0.
  */
 #if __GNUC__
-__attribute__((__always_inline__))
+    __attribute__( ( __always_inline__ ) )
 #endif
-extern __inline__ int usart_framing_error(volatile avr32_usart_t *usart)
+extern __inline__ int usart_framing_error( volatile avr32_usart_t * usart )
 {
-  return (usart->csr & AVR32_USART_CSR_FRAME_MASK) != 0;
+    return ( usart->csr & AVR32_USART_CSR_FRAME_MASK ) != 0;
 }
 
 /*! \brief Checks if an overrun error has occurred since last status reset.
@@ -369,20 +388,21 @@ extern __inline__ int usart_framing_error(volatile avr32_usart_t *usart)
  * \return \c 1 if a overrun error has been detected, otherwise \c 0.
  */
 #if __GNUC__
-__attribute__((__always_inline__))
+    __attribute__( ( __always_inline__ ) )
 #endif
-extern __inline__ int usart_overrun_error(volatile avr32_usart_t *usart)
+extern __inline__ int usart_overrun_error( volatile avr32_usart_t * usart )
 {
-  return (usart->csr & AVR32_USART_CSR_OVRE_MASK) != 0;
+    return ( usart->csr & AVR32_USART_CSR_OVRE_MASK ) != 0;
 }
 
-//! @}
+/*! @} */
 
 
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+
 /*! \name Transmit/Receive Functions
  */
-//! @{
+/*! @{ */
 
 /*! \brief Addresses a receiver.
  *
@@ -397,7 +417,8 @@ extern __inline__ int usart_overrun_error(volatile avr32_usart_t *usart)
  * \retval USART_SUCCESS    Address successfully sent (if current mode is RS485).
  * \retval USART_MODE_FAULT Wrong operating mode.
  */
-extern int usart_send_address(volatile avr32_usart_t *usart, int address);
+extern int usart_send_address( volatile avr32_usart_t * usart,
+                               int address );
 
 /*! \brief Writes the given character to the TX buffer if the transmitter is ready.
  *
@@ -407,7 +428,8 @@ extern int usart_send_address(volatile avr32_usart_t *usart, int address);
  * \retval USART_SUCCESS  The transmitter was ready.
  * \retval USART_TX_BUSY  The transmitter was busy.
  */
-extern int usart_write_char(volatile avr32_usart_t *usart, int c);
+extern int usart_write_char( volatile avr32_usart_t * usart,
+                             int c );
 
 /*! \brief An active wait writing a character to the USART.
  *
@@ -415,11 +437,14 @@ extern int usart_write_char(volatile avr32_usart_t *usart, int c);
  * \param c     The character (up to 9 bits) to transmit.
  */
 #if __GNUC__
-__attribute__((__always_inline__))
+    __attribute__( ( __always_inline__ ) )
 #endif
-extern __inline__ void usart_bw_write_char(volatile avr32_usart_t *usart, int c)
+extern __inline__ void usart_bw_write_char( volatile avr32_usart_t * usart,
+                                            int c )
 {
-  while (usart_write_char(usart, c) != USART_SUCCESS);
+    while( usart_write_char( usart, c ) != USART_SUCCESS )
+    {
+    }
 }
 
 /*! \brief Sends a character with the USART.
@@ -430,7 +455,8 @@ extern __inline__ void usart_bw_write_char(volatile avr32_usart_t *usart, int c)
  * \retval USART_SUCCESS  The character was written.
  * \retval USART_FAILURE  The function timed out before the USART transmitter became ready to send.
  */
-extern int usart_putchar(volatile avr32_usart_t *usart, int c);
+extern int usart_putchar( volatile avr32_usart_t * usart,
+                          int c );
 
 /*! \brief Checks the RX buffer for a received character, and stores it at the
  *         given memory location.
@@ -443,7 +469,8 @@ extern int usart_putchar(volatile avr32_usart_t *usart, int c);
  * \retval USART_RX_EMPTY The RX buffer was empty.
  * \retval USART_RX_ERROR An error was deteceted.
  */
-extern int usart_read_char(volatile avr32_usart_t *usart, int *c);
+extern int usart_read_char( volatile avr32_usart_t * usart,
+                            int * c );
 
 /*! \brief Waits until a character is received, and returns it.
  *
@@ -451,14 +478,15 @@ extern int usart_read_char(volatile avr32_usart_t *usart, int *c);
  *
  * \return The received character, or \ref USART_FAILURE upon error.
  */
-extern int usart_getchar(volatile avr32_usart_t *usart);
+extern int usart_getchar( volatile avr32_usart_t * usart );
 
 /*! \brief Writes one character string to the USART.
  *
  * \param usart   Base address of the USART instance.
  * \param string  String to be written.
  */
-extern void usart_write_line(volatile avr32_usart_t *usart, const char *string);
+extern void usart_write_line( volatile avr32_usart_t * usart,
+                              const char * string );
 
 /*! \brief Gets and echoes characters until end of line.
  *
@@ -467,9 +495,9 @@ extern void usart_write_line(volatile avr32_usart_t *usart, const char *string);
  * \retval USART_SUCCESS  Success.
  * \retval USART_FAILURE  ETX character received.
  */
-extern int usart_get_echo_line(volatile avr32_usart_t *usart);
+extern int usart_get_echo_line( volatile avr32_usart_t * usart );
 
-//! @}
+/*! @} */
 
 
-#endif  // _USART_H_
+#endif // _USART_H_

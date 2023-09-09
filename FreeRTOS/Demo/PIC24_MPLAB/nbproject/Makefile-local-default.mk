@@ -3,7 +3,7 @@
 #
 #
 # This file contains information about the location of compilers and other tools.
-# If you commmit this file into your revision control server, you will be able to 
+# If you commmit this file into your revision control server, you will be able to
 # to checkout the project and build it from the command line with make. However,
 # if more than one person works on the same project, then this file might show
 # conflicts since different users are bound to have compilers in different places.
@@ -12,7 +12,7 @@
 # least once so the file gets created and the project can be built. Finally, you can also
 # avoid using this file at all if you are only building from the command line with make.
 # You can invoke make with the values of the macros:
-# $ makeMP_CC="/opt/microchip/mplabc30/v3.30c/bin/pic30-gcc" ...  
+# $ makeMP_CC="/opt/microchip/mplabc30/v3.30c/bin/pic30-gcc" ...
 #
 SHELL=cmd.exe
 PATH_TO_IDE_BIN=C:/DevTools/Microchip/MPLABX/v3.10/mplab_ide/mplab_ide/modules/../../bin/

@@ -27,12 +27,12 @@
 #ifndef AWS_TEST_RUNNER_CONFIG_H
 #define AWS_TEST_RUNNER_CONFIG_H
 
- /* Uncomment this line if you want to run DQP_FR tests only. */
- /* #define testrunnerAFQP_ENABLED */
+/* Uncomment this line if you want to run DQP_FR tests only. */
+/* #define testrunnerAFQP_ENABLED */
 
 #define testrunnerUNSUPPORTED                         0
 
-#define FREERTOS_ENABLE_UNIT_TESTS             1
+#define FREERTOS_ENABLE_UNIT_TESTS                    1
 
 /* Unsupported tests. */
 #define testrunnerFULL_WIFI_ENABLED                   testrunnerUNSUPPORTED
@@ -69,8 +69,8 @@
 /* On systems using FreeRTOS+TCP (such as this one) the TCP segments must be
  * cleaned up before running the memory leak check. */
 #if ( testrunnerFULL_MEMORYLEAK_ENABLED == 1 )
-extern void vTCPSegmentCleanup();
-#define testrunnerMEMORYLEAK_CLEANUP()    vTCPSegmentCleanup()
+    extern void vTCPSegmentCleanup();
+    #define testrunnerMEMORYLEAK_CLEANUP()    vTCPSegmentCleanup()
 #endif
 
 #endif /* AWS_TEST_RUNNER_CONFIG_H */

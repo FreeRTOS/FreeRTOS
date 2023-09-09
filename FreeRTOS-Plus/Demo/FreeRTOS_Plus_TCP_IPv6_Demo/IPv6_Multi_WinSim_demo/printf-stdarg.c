@@ -117,7 +117,7 @@ struct SStringBuf
         ucBytes : { 0, 1, 2, 3 }
     };
 #else
-    const static _U32 u32 = { 0, 1, 2, 3 };
+const static _U32 u32 = { 0, 1, 2, 3 };
 #endif
 
 static void strbuf_init( struct SStringBuf * apStr,

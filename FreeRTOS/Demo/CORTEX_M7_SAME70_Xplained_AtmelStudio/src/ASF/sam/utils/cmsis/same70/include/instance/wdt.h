@@ -38,6 +38,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -46,14 +47,14 @@
 #define _SAME70_WDT_INSTANCE_
 
 /* ========== Register definition for WDT peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_WDT_CR                  (0x400E1850U) /**< \brief (WDT) Control Register */
-  #define REG_WDT_MR                  (0x400E1854U) /**< \brief (WDT) Mode Register */
-  #define REG_WDT_SR                  (0x400E1858U) /**< \brief (WDT) Status Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_WDT_CR    ( 0x400E1850U )                      /**< \brief (WDT) Control Register */
+    #define REG_WDT_MR    ( 0x400E1854U )                      /**< \brief (WDT) Mode Register */
+    #define REG_WDT_SR    ( 0x400E1858U )                      /**< \brief (WDT) Status Register */
 #else
-  #define REG_WDT_CR (*(__O  uint32_t*)0x400E1850U) /**< \brief (WDT) Control Register */
-  #define REG_WDT_MR (*(__IO uint32_t*)0x400E1854U) /**< \brief (WDT) Mode Register */
-  #define REG_WDT_SR (*(__I  uint32_t*)0x400E1858U) /**< \brief (WDT) Status Register */
+    #define REG_WDT_CR    ( *( __O uint32_t * ) 0x400E1850U )  /**< \brief (WDT) Control Register */
+    #define REG_WDT_MR    ( *( __IO uint32_t * ) 0x400E1854U ) /**< \brief (WDT) Mode Register */
+    #define REG_WDT_SR    ( *( __I uint32_t * ) 0x400E1858U )  /**< \brief (WDT) Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAME70_WDT_INSTANCE_ */

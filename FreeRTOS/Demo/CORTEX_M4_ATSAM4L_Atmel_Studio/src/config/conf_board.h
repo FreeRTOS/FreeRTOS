@@ -52,4 +52,4 @@
 
 #define CONF_BOARD_EIC
 
-#endif  /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

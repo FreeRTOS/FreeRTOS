@@ -38,7 +38,9 @@
 
 #ifdef __cplusplus
 extern "C" {
-	__attribute__((weak)) s32 _read (s32 fd, char8* buf, s32 nbytes);
+__attribute__( ( weak ) ) s32 _read( s32 fd,
+                                     char8 * buf,
+                                     s32 nbytes );
 }
 #endif
 
@@ -46,59 +48,71 @@ extern "C" {
  * read  -- read bytes from the serial port. Ignore fd, since
  *          we only have stdin.
  */
-__attribute__((weak)) s32
-read (s32 fd, char8* buf, s32 nbytes)
+__attribute__( ( weak ) ) s32 read( s32 fd,
+                                    char8 * buf,
+                                    s32 nbytes )
 {
-#ifdef STDIN_BASEADDRESS
-  s32 i;
-  s32 numbytes = 0;
-  char8* LocalBuf = buf;
+    #ifdef STDIN_BASEADDRESS
+        s32 i;
+        s32 numbytes = 0;
+        char8 * LocalBuf = buf;
 
-  (void)fd;
-  if(LocalBuf != NULL) {
-	for (i = 0; i < nbytes; i++) {
-		numbytes++;
-		*(LocalBuf + i) = inbyte();
-		if ((*(LocalBuf + i) == '\n' )|| (*(LocalBuf + i) == '\r')) {
-			break;
-		}
-	}
-  }
+        ( void ) fd;
 
-  return numbytes;
-#else
-  (void)fd;
-  (void)buf;
-  (void)nbytes;
-  return 0;
-#endif
+        if( LocalBuf != NULL )
+        {
+            for( i = 0; i < nbytes; i++ )
+            {
+                numbytes++;
+                *( LocalBuf + i ) = inbyte();
+
+                if( ( *( LocalBuf + i ) == '\n' ) || ( *( LocalBuf + i ) == '\r' ) )
+                {
+                    break;
+                }
+            }
+        }
+
+        return numbytes;
+    #else  /* ifdef STDIN_BASEADDRESS */
+        ( void ) fd;
+        ( void ) buf;
+        ( void ) nbytes;
+        return 0;
+    #endif /* ifdef STDIN_BASEADDRESS */
 }
 
-__attribute__((weak)) s32
-_read (s32 fd, char8* buf, s32 nbytes)
+__attribute__( ( weak ) ) s32 _read( s32 fd,
+                                     char8 * buf,
+                                     s32 nbytes )
 {
-#ifdef STDIN_BASEADDRESS
-  s32 i;
-  s32 numbytes = 0;
-  char8* LocalBuf = buf;
+    #ifdef STDIN_BASEADDRESS
+        s32 i;
+        s32 numbytes = 0;
+        char8 * LocalBuf = buf;
 
-  (void)fd;
-  if(LocalBuf != NULL) {
-	for (i = 0; i < nbytes; i++) {
-		numbytes++;
-		*(LocalBuf + i) = inbyte();
-		if ((*(LocalBuf + i) == '\n' )|| (*(LocalBuf + i) == '\r')) {
-			break;
-		}
-	}
-  }
+        ( void ) fd;
 
-  return numbytes;
-#else
-  (void)fd;
-  (void)buf;
-  (void)nbytes;
-  return 0;
-#endif
+        if( LocalBuf != NULL )
+        {
+            for( i = 0; i < nbytes; i++ )
+            {
+                numbytes++;
+                *( LocalBuf + i ) = inbyte();
+
+                if( ( *( LocalBuf + i ) == '\n' ) || ( *( LocalBuf + i ) == '\r' ) )
+                {
+                    break;
+                }
+            }
+        }
+
+        return numbytes;
+    #else  /* ifdef STDIN_BASEADDRESS */
+        ( void ) fd;
+        ( void ) buf;
+        ( void ) nbytes;
+        return 0;
+    #endif /* ifdef STDIN_BASEADDRESS */
 }
-#endif
+#endif /* ifndef UNDEFINE_FILE_OPS */

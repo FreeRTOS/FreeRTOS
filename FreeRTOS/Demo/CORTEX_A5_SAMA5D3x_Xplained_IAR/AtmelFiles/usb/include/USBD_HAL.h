@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2009, Atmel Corporation
  *
@@ -61,7 +61,7 @@
  *----------------------------------------------------------------------------*/
 
 /** Get bitmap for an endpoint */
-#define bmEP(bEP)   (1 << (bEP))
+#define bmEP( bEP )    ( 1 << ( bEP ) )
 
 /*----------------------------------------------------------------------------
  *        Types
@@ -71,41 +71,46 @@
  *        Exported functoins
  *----------------------------------------------------------------------------*/
 
-extern void USBD_HAL_Init(void);
-extern void USBD_HAL_Connect(void);
-extern void USBD_HAL_Disconnect(void);
+extern void USBD_HAL_Init( void );
+extern void USBD_HAL_Connect( void );
+extern void USBD_HAL_Disconnect( void );
 
-extern void USBD_HAL_RemoteWakeUp(void);
-extern void USBD_HAL_SetConfiguration(uint8_t cfgnum);
-extern void USBD_HAL_SetAddress(uint8_t address);
-extern uint8_t USBD_HAL_IsHighSpeed(void);
+extern void USBD_HAL_RemoteWakeUp( void );
+extern void USBD_HAL_SetConfiguration( uint8_t cfgnum );
+extern void USBD_HAL_SetAddress( uint8_t address );
+extern uint8_t USBD_HAL_IsHighSpeed( void );
 
-extern void USBD_HAL_Suspend(void);
-extern void USBD_HAL_Activate(void);
+extern void USBD_HAL_Suspend( void );
+extern void USBD_HAL_Activate( void );
 
-extern void USBD_HAL_ResetEPs(uint32_t bmEPs,uint8_t bStatus, uint8_t bKeepCfg);
-extern void USBD_HAL_CancelIo(uint32_t bmEPs);
-extern uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor * pDescriptor);
+extern void USBD_HAL_ResetEPs( uint32_t bmEPs,
+                               uint8_t bStatus,
+                               uint8_t bKeepCfg );
+extern void USBD_HAL_CancelIo( uint32_t bmEPs );
+extern uint8_t USBD_HAL_ConfigureEP( const USBEndpointDescriptor * pDescriptor );
 
-extern uint8_t USBD_HAL_SetTransferCallback(uint8_t bEP,
-                                            TransferCallback fCallback,
-                                            void * pCbData);
-extern uint8_t USBD_HAL_SetupMblTransfer(uint8_t bEndpoint,
-                                         USBDTransferBuffer * pMbList,
-                                         uint16_t mblSize,
-                                         uint16_t startOffset);
-extern uint8_t USBD_HAL_Write(uint8_t bEndpoint,
-                              const void * pData,
-                              uint32_t dLength);
-extern uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
-                                  const void * pHdr, uint8_t bHdrLen,
-                                  const void * pData, uint32_t dLength);
-extern uint8_t USBD_HAL_Read(uint8_t bEndpoint,
-                             void * pData,
-                             uint32_t dLength);
-extern uint8_t USBD_HAL_Stall(uint8_t bEP);
-extern uint8_t USBD_HAL_Halt(uint8_t bEndpoint,uint8_t ctl);
-extern void USBD_HAL_Test(uint8_t bIndex);
+extern uint8_t USBD_HAL_SetTransferCallback( uint8_t bEP,
+                                             TransferCallback fCallback,
+                                             void * pCbData );
+extern uint8_t USBD_HAL_SetupMblTransfer( uint8_t bEndpoint,
+                                          USBDTransferBuffer * pMbList,
+                                          uint16_t mblSize,
+                                          uint16_t startOffset );
+extern uint8_t USBD_HAL_Write( uint8_t bEndpoint,
+                               const void * pData,
+                               uint32_t dLength );
+extern uint8_t USBD_HAL_WrWithHdr( uint8_t bEndpoint,
+                                   const void * pHdr,
+                                   uint8_t bHdrLen,
+                                   const void * pData,
+                                   uint32_t dLength );
+extern uint8_t USBD_HAL_Read( uint8_t bEndpoint,
+                              void * pData,
+                              uint32_t dLength );
+extern uint8_t USBD_HAL_Stall( uint8_t bEP );
+extern uint8_t USBD_HAL_Halt( uint8_t bEndpoint,
+                              uint8_t ctl );
+extern void USBD_HAL_Test( uint8_t bIndex );
 /**@}*/
 
 #endif // #define USBD_HAL_H

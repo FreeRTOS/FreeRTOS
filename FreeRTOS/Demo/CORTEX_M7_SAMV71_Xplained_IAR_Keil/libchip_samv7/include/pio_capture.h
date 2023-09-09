@@ -38,14 +38,14 @@
  *
  * At the end of the transfer, the callback is invoked by the interrupt handler.
  */
-typedef struct _SpioCaptureInit {
-
+typedef struct _SpioCaptureInit
+{
     /** PIO_PCRHR register is a BYTE, HALF-WORD or WORD */
     uint8_t dsize;
     /** PDC size, data to be received */
     uint16_t dPDCsize;
     /** Data to be received */
-    uint32_t *pData;
+    uint32_t * pData;
     /** Parallel Capture Mode Always Sampling */
     uint8_t alwaysSampling;
     /** Parallel Capture Mode Half Sampling */
@@ -53,27 +53,25 @@ typedef struct _SpioCaptureInit {
     /** Parallel Capture Mode First Sample */
     uint8_t modeFirstSample;
     /** Callback function invoked at Mode Data Ready */
-    void (*CbkDataReady)( struct _SpioCaptureInit* );
+    void ( * CbkDataReady )( struct _SpioCaptureInit * );
     /** Callback function invoked at Mode Overrun Error */
-    void (*CbkOverrun)( struct _SpioCaptureInit* );
+    void ( * CbkOverrun )( struct _SpioCaptureInit * );
     /** Callback function invoked at End of Reception Transfer */
-    void (*CbkEndReception)( struct _SpioCaptureInit* );
+    void ( * CbkEndReception )( struct _SpioCaptureInit * );
     /** Callback function invoked at Reception Buffer Full */
-    void (*CbkBuffFull)( struct _SpioCaptureInit* );
+    void ( * CbkBuffFull )( struct _SpioCaptureInit * );
     /** Callback arguments.*/
-    void *pParam;
-
-} SpioCaptureInit ;
+    void * pParam;
+} SpioCaptureInit;
 
 
 /*----------------------------------------------------------------------------
  *        Global Functions
  *----------------------------------------------------------------------------*/
-extern void PIO_CaptureDisableIt( uint32_t itToDisable ) ;
-extern void PIO_CaptureEnableIt( uint32_t itToEnable ) ;
-extern void PIO_CaptureEnable( void ) ;
-extern void PIO_CaptureDisable( void ) ;
-extern void PIO_CaptureInit( SpioCaptureInit* pInit ) ;
+extern void PIO_CaptureDisableIt( uint32_t itToDisable );
+extern void PIO_CaptureEnableIt( uint32_t itToEnable );
+extern void PIO_CaptureEnable( void );
+extern void PIO_CaptureDisable( void );
+extern void PIO_CaptureInit( SpioCaptureInit * pInit );
 
 #endif /* #ifndef PIO_CAPTURE_H */
-

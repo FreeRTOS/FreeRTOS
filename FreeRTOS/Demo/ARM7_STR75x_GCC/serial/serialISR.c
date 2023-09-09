@@ -25,10 +25,10 @@
  */
 
 /*-----------------------------------------------------------
- * Components that can be compiled to either ARM or THUMB mode are
- * contained in serial.c  The ISR routines, which can only be compiled
- * to ARM mode, are contained in this file.
- *----------------------------------------------------------*/
+* Components that can be compiled to either ARM or THUMB mode are
+* contained in serial.c  The ISR routines, which can only be compiled
+* to ARM mode, are contained in this file.
+*----------------------------------------------------------*/
 
 
 
@@ -41,55 +41,55 @@
 
 static QueueHandle_t xRxedChars;
 static QueueHandle_t xCharsForTx;
-static portBASE_TYPE volatile *pxQueueEmpty;
+static portBASE_TYPE volatile * pxQueueEmpty;
 
-void vConfigureQueues( QueueHandle_t xQForRx, QueueHandle_t xQForTx, portBASE_TYPE volatile *pxEmptyFlag )
+void vConfigureQueues( QueueHandle_t xQForRx,
+                       QueueHandle_t xQForTx,
+                       portBASE_TYPE volatile * pxEmptyFlag )
 {
-	xRxedChars = xQForRx;
-	xCharsForTx = xQForTx;
-	pxQueueEmpty = pxEmptyFlag;
+    xRxedChars = xQForRx;
+    xCharsForTx = xQForTx;
+    pxQueueEmpty = pxEmptyFlag;
 }
 /*-----------------------------------------------------------*/
 
 void vSerialISR( void )
 {
-signed char cChar;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    signed char cChar;
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	do
-	{
-		if( UART0->MIS & UART_IT_Transmit )
-		{
-			/* The interrupt was caused by the THR becoming empty.  Are there any
-			more characters to transmit? */
-			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
-			{
-				/* A character was retrieved from the queue so can be sent to the
-				THR now. */
-				UART0->DR = cChar;
-			}
-			else
-			{
-				*pxQueueEmpty = pdTRUE;		
-			}		
+    do
+    {
+        if( UART0->MIS & UART_IT_Transmit )
+        {
+            /* The interrupt was caused by the THR becoming empty.  Are there any
+             * more characters to transmit? */
+            if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
+            {
+                /* A character was retrieved from the queue so can be sent to the
+                 * THR now. */
+                UART0->DR = cChar;
+            }
+            else
+            {
+                *pxQueueEmpty = pdTRUE;
+            }
 
-			UART_ClearITPendingBit( UART0, UART_IT_Transmit );
-		}
-	
-		if( UART0->MIS & UART_IT_Receive )
-		{
-			/* The interrupt was caused by a character being received.  Grab the
-			character from the RHR and place it in the queue of received
-			characters. */
-			cChar = UART0->DR;
-			xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-			UART_ClearITPendingBit( UART0, UART_IT_Receive );
-		}
-	} while( UART0->MIS );
+            UART_ClearITPendingBit( UART0, UART_IT_Transmit );
+        }
 
-	/* If a task was woken by either a character being received or a character
-	being transmitted then we may need to switch to another task. */
-	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+        if( UART0->MIS & UART_IT_Receive )
+        {
+            /* The interrupt was caused by a character being received.  Grab the
+             * character from the RHR and place it in the queue of received
+             * characters. */
+            cChar = UART0->DR;
+            xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+            UART_ClearITPendingBit( UART0, UART_IT_Receive );
+        }
+    } while( UART0->MIS );
+
+    /* If a task was woken by either a character being received or a character
+     * being transmitted then we may need to switch to another task. */
+    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
-
-

@@ -2,15 +2,15 @@
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
 * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws. 
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
 * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
 * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
 * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
 * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
-* of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability
+* of this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_tpu.h"
@@ -42,7 +42,7 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
@@ -53,17 +53,17 @@ Global variables and functions
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_TPU_Create(void)
+void R_TPU_Create( void )
 {
     /* Cancel TPU stop state in LPC */
-    MSTP(TPU1) = 0U;
+    MSTP( TPU1 ) = 0U;
 
     /* Stop all channels */
     TPUA.TSTRB.BYTE = 0x00U;
 
     /* Channel 9 is used as normal mode */
     TPU9.TCR.BYTE = _TPU_PCLKD_4096 | _TPU_CKEG_IT_R | _TPU_CKCL_DIS;
-    TPU9.TIER.BYTE |= _TPU_TGIEA_DISABLE | _TPU_TGIEB_DISABLE | _TPU_TGIEC_DISABLE | _TPU_TGIED_DISABLE | 
+    TPU9.TIER.BYTE |= _TPU_TGIEA_DISABLE | _TPU_TGIEB_DISABLE | _TPU_TGIEC_DISABLE | _TPU_TGIED_DISABLE |
                       _TPU_TCIEV_DISABLE | _TPU_TTGE_DISABLE;
     TPU9.TIORH.BYTE = _TPU_IOB_IR | _TPU_IOA_DISABLE;
     TPU9.TIORL.BYTE = _TPU_IOD_IR | _TPU_IOC_IR;
@@ -73,23 +73,25 @@ void R_TPU_Create(void)
     /* Internal PWM feedback function status */
     TPUSL.PWMFBSLR.LONG = _TPU_TPU0EN_DISABLE | _TPU_TPU1EN_DISABLE;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_TPU9_Start
 * Description  : This function starts TPU channel 9 counter.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_TPU9_Start(void)
+void R_TPU9_Start( void )
 {
     TPUA.TSTRB.BIT.CST3 = 1U;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_TPU9_Stop
 * Description  : This function stops TPU channel 9 counter.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_TPU9_Stop(void)
+void R_TPU9_Stop( void )
 {
     TPUA.TSTRB.BIT.CST3 = 0U;
 }

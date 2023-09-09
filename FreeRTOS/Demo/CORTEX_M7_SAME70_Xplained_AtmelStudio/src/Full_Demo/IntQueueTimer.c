@@ -47,74 +47,74 @@
 #include "asf.h"
 
 /* The frequency at which the int queue timer executes. */
-#define tmrTIMER_0_FREQUENCY	( 2030UL )
+#define tmrTIMER_0_FREQUENCY    ( 2030UL )
 
 /* The genuine timer interrupt executes at the lower priority.  The manually
-pended timer interrupt executes at the higher priority to ensure it always nests
-with the lower priority (which in turn will occasionally nest with the tick
-interrupt - creating a maximum interrupt nesting depth of 3). */
-#define tmrLOWER_PRIORITY		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
-#define tmrHIGHER_PRIORITY		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY )
+ * pended timer interrupt executes at the higher priority to ensure it always nests
+ * with the lower priority (which in turn will occasionally nest with the tick
+ * interrupt - creating a maximum interrupt nesting depth of 3). */
+#define tmrLOWER_PRIORITY       ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
+#define tmrHIGHER_PRIORITY      ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY )
 
 /*-----------------------------------------------------------*/
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-uint32_t ulDivider, ulTCCLKS;
+    uint32_t ulDivider, ulTCCLKS;
 
-	/* Configure PMC for TC0. */
-	pmc_enable_periph_clk( ID_TC0 );
+    /* Configure PMC for TC0. */
+    pmc_enable_periph_clk( ID_TC0 );
 
-	/* Configure TC0 channel 0 for interrupts at tmrTIMER_0_FREQUENCY. */
-	tc_find_mck_divisor( tmrTIMER_0_FREQUENCY, configCPU_CLOCK_HZ, &ulDivider, &ulTCCLKS, configCPU_CLOCK_HZ );
-	tc_init( TC0, 0, ulTCCLKS | TC_CMR_CPCTRG );
-	ulDivider <<= 1UL;
-	tc_write_rc( TC0, 0, ( configCPU_CLOCK_HZ / ulDivider ) / tmrTIMER_0_FREQUENCY );
-	tc_enable_interrupt( TC0, 0, TC_IER_CPCS );
+    /* Configure TC0 channel 0 for interrupts at tmrTIMER_0_FREQUENCY. */
+    tc_find_mck_divisor( tmrTIMER_0_FREQUENCY, configCPU_CLOCK_HZ, &ulDivider, &ulTCCLKS, configCPU_CLOCK_HZ );
+    tc_init( TC0, 0, ulTCCLKS | TC_CMR_CPCTRG );
+    ulDivider <<= 1UL;
+    tc_write_rc( TC0, 0, ( configCPU_CLOCK_HZ / ulDivider ) / tmrTIMER_0_FREQUENCY );
+    tc_enable_interrupt( TC0, 0, TC_IER_CPCS );
 
-	/* Configure and enable interrupts for both TC0 and TC1, as TC1 interrupts
-	are manually pended from within the TC0 interrupt handler (see the notes at
-	the top of this file). */
-	NVIC_ClearPendingIRQ( TC0_IRQn );
-	NVIC_ClearPendingIRQ( TC1_IRQn );
-	NVIC_SetPriority( TC0_IRQn, tmrLOWER_PRIORITY );
-	NVIC_SetPriority( TC1_IRQn, tmrHIGHER_PRIORITY );
-	NVIC_EnableIRQ( TC0_IRQn );
-	NVIC_EnableIRQ( TC1_IRQn );
+    /* Configure and enable interrupts for both TC0 and TC1, as TC1 interrupts
+     * are manually pended from within the TC0 interrupt handler (see the notes at
+     * the top of this file). */
+    NVIC_ClearPendingIRQ( TC0_IRQn );
+    NVIC_ClearPendingIRQ( TC1_IRQn );
+    NVIC_SetPriority( TC0_IRQn, tmrLOWER_PRIORITY );
+    NVIC_SetPriority( TC1_IRQn, tmrHIGHER_PRIORITY );
+    NVIC_EnableIRQ( TC0_IRQn );
+    NVIC_EnableIRQ( TC1_IRQn );
 
-	/* Start the timer last of all. */
-	tc_start( TC0, 0 );
+    /* Start the timer last of all. */
+    tc_start( TC0, 0 );
 }
 /*-----------------------------------------------------------*/
 
 void TC0_Handler( void )
 {
-static uint32_t ulISRCount = 0;
+    static uint32_t ulISRCount = 0;
 
-	/* Clear the interrupt. */
-	if( tc_get_status( TC0, 0 ) != 0 )
-	{
-		/* As noted in the comments above, manually pend the TC1 interrupt from
-		the TC0 interrupt handler.  This is not done on each occurrence of the
-		TC0 interrupt though, to make sure interrupts don't nest in every single
-		case. */
-		ulISRCount++;
-		if( ( ulISRCount & 0x07 ) != 0x07 )
-		{
-			/* Pend an interrupt that will nest with this interrupt. */
-			NVIC_SetPendingIRQ( TC1_IRQn );
-		}
+    /* Clear the interrupt. */
+    if( tc_get_status( TC0, 0 ) != 0 )
+    {
+        /* As noted in the comments above, manually pend the TC1 interrupt from
+         * the TC0 interrupt handler.  This is not done on each occurrence of the
+         * TC0 interrupt though, to make sure interrupts don't nest in every single
+         * case. */
+        ulISRCount++;
 
-		/* Call the IntQ test function for this channel. */
-		portYIELD_FROM_ISR( xFirstTimerHandler() );
-	}
+        if( ( ulISRCount & 0x07 ) != 0x07 )
+        {
+            /* Pend an interrupt that will nest with this interrupt. */
+            NVIC_SetPendingIRQ( TC1_IRQn );
+        }
+
+        /* Call the IntQ test function for this channel. */
+        portYIELD_FROM_ISR( xFirstTimerHandler() );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void TC1_Handler( void )
 {
-	/* Call the IntQ test function that would normally get called from a second
-	and independent timer. */
-	portYIELD_FROM_ISR( xSecondTimerHandler() );
+    /* Call the IntQ test function that would normally get called from a second
+     * and independent timer. */
+    portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-

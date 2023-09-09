@@ -47,19 +47,19 @@
  */
 
 #ifndef _PWMC_
-#define _PWMC_
+    #define _PWMC_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -70,7 +70,8 @@ extern "C" {
  * \param p_pwm  Pointer to a Pwm instance
  * \param mode  PWM clock source selection and divide factor.
  */
-extern void pwmc_configure_clocks(Pwm * p_pwm, uint32_t mode);
+    extern void pwmc_configure_clocks( Pwm * p_pwm,
+                                       uint32_t mode );
 
 /**
  * \brief Enables the given PWM channel.
@@ -81,7 +82,8 @@ extern void pwmc_configure_clocks(Pwm * p_pwm, uint32_t mode);
  * \param p_pwm  Pointer to a Pwm instance
  * \param channel  Channel number.
  */
-extern void pwmc_enable_channel(Pwm * p_pwm, uint8_t channel);
+    extern void pwmc_enable_channel( Pwm * p_pwm,
+                                     uint8_t channel );
 
 /**
  * \brief Disables the given PWM channel.
@@ -90,26 +92,29 @@ extern void pwmc_enable_channel(Pwm * p_pwm, uint8_t channel);
  * period.
  * Applications may check whether the channel is disabled using the following
  * wait loop:
- * 	while ((PWM->PWM_SR & (1 << channel)) != 0) {};
+ *  while ((PWM->PWM_SR & (1 << channel)) != 0) {};
  *
  * \param p_pwm  Pointer to a Pwm instance
  * \param channel  Channel number.
  */
-extern void pwmc_disable_channel(Pwm * p_pwm, uint8_t channel);
+    extern void pwmc_disable_channel( Pwm * p_pwm,
+                                      uint8_t channel );
 
 /**
  * \brief Enables the selected interrupts sources on a PWMC peripheral.
  * \param p_pwm  Pointer to a Pwm instance
  * \param channel  Channel number.
  */
-extern void pwmc_enable_channel_it(Pwm * p_pwm, uint8_t channel);
+    extern void pwmc_enable_channel_it( Pwm * p_pwm,
+                                        uint8_t channel );
 
 /**
  * \brief Disables the selected interrupts sources on a PWMC peripheral.
  * \param p_pwm  Pointer to a Pwm instance
  * \param channel  Channel number.
  */
-extern void pwmc_disable_channel_it(Pwm * p_pwm, uint8_t channel);
+    extern void pwmc_disable_channel_it( Pwm * p_pwm,
+                                         uint8_t channel );
 
 /**
  * \brief Configures a PWM channel with the given parameters, basic configure
@@ -124,7 +129,9 @@ extern void pwmc_disable_channel_it(Pwm * p_pwm, uint8_t channel);
  * \param channel  Channel number.
  * \param mode  Channel mode.
  */
-extern void pwmc_configure_channel(Pwm * p_pwm, uint8_t channel, uint32_t mode);
+    extern void pwmc_configure_channel( Pwm * p_pwm,
+                                        uint8_t channel,
+                                        uint32_t mode );
 
 /**
  * \brief Sets the period value used by a PWM channel.
@@ -136,7 +143,9 @@ extern void pwmc_configure_channel(Pwm * p_pwm, uint8_t channel, uint32_t mode);
  * \param channel  Channel number.
  * \param period  Period value.
  */
-extern void pwmc_set_period(Pwm * p_pwm, uint8_t channel, uint16_t period);
+    extern void pwmc_set_period( Pwm * p_pwm,
+                                 uint8_t channel,
+                                 uint16_t period );
 
 /**
  * \brief Sets the duty cycle used by a PWM channel.
@@ -149,9 +158,11 @@ extern void pwmc_set_period(Pwm * p_pwm, uint8_t channel, uint16_t period);
  * \param channel  Channel number.
  * \param duty  Duty cycle value.
  */
-extern void pwmc_set_duty_cycle(Pwm * p_pwm, uint8_t channel, uint16_t duty);
+    extern void pwmc_set_duty_cycle( Pwm * p_pwm,
+                                     uint8_t channel,
+                                     uint16_t duty );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
-#endif				/* #ifndef _PWMC_ */
+    #endif
+#endif /* #ifndef _PWMC_ */

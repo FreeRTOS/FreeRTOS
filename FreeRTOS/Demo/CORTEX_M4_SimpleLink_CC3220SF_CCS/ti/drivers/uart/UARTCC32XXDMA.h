@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       UARTCC32XXDMA.h
  *
@@ -62,42 +63,42 @@
  */
 
 #ifndef ti_drivers_uart_UARTCC32XXDMA__include
-#define ti_drivers_uart_UARTCC32XXDMA__include
+    #define ti_drivers_uart_UARTCC32XXDMA__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
+    #include <stdint.h>
+    #include <stdbool.h>
 
-#include <ti/drivers/dpl/ClockP.h>
-#include <ti/drivers/dpl/HwiP.h>
+    #include <ti/drivers/dpl/ClockP.h>
+    #include <ti/drivers/dpl/HwiP.h>
 
-#include <ti/drivers/dpl/SemaphoreP.h>
-#include <ti/drivers/Power.h>
-#include <ti/drivers/UART.h>
-#include <ti/drivers/dma/UDMACC32XX.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
+    #include <ti/drivers/Power.h>
+    #include <ti/drivers/UART.h>
+    #include <ti/drivers/dma/UDMACC32XX.h>
 
 
-#define UARTCC32XXDMA_PIN_01_UART1_TX  0x700
-#define UARTCC32XXDMA_PIN_02_UART1_RX  0x701
-#define UARTCC32XXDMA_PIN_03_UART0_TX  0x702
-#define UARTCC32XXDMA_PIN_04_UART0_RX  0x703
-#define UARTCC32XXDMA_PIN_07_UART1_TX  0x506
-#define UARTCC32XXDMA_PIN_08_UART1_RX  0x507
-#define UARTCC32XXDMA_PIN_16_UART1_TX  0x20F
-#define UARTCC32XXDMA_PIN_17_UART1_RX  0x210
-#define UARTCC32XXDMA_PIN_45_UART0_RX  0x92C
-#define UARTCC32XXDMA_PIN_45_UART1_RX  0x22C
-#define UARTCC32XXDMA_PIN_53_UART0_TX  0x934
-#define UARTCC32XXDMA_PIN_55_UART0_TX  0x336
-#define UARTCC32XXDMA_PIN_55_UART1_TX  0x636
-#define UARTCC32XXDMA_PIN_57_UART0_RX  0x338
-#define UARTCC32XXDMA_PIN_57_UART1_RX  0x638
-#define UARTCC32XXDMA_PIN_58_UART1_TX  0x639
-#define UARTCC32XXDMA_PIN_59_UART1_RX  0x63A
-#define UARTCC32XXDMA_PIN_62_UART0_TX  0xB3D
+    #define UARTCC32XXDMA_PIN_01_UART1_TX    0x700
+    #define UARTCC32XXDMA_PIN_02_UART1_RX    0x701
+    #define UARTCC32XXDMA_PIN_03_UART0_TX    0x702
+    #define UARTCC32XXDMA_PIN_04_UART0_RX    0x703
+    #define UARTCC32XXDMA_PIN_07_UART1_TX    0x506
+    #define UARTCC32XXDMA_PIN_08_UART1_RX    0x507
+    #define UARTCC32XXDMA_PIN_16_UART1_TX    0x20F
+    #define UARTCC32XXDMA_PIN_17_UART1_RX    0x210
+    #define UARTCC32XXDMA_PIN_45_UART0_RX    0x92C
+    #define UARTCC32XXDMA_PIN_45_UART1_RX    0x22C
+    #define UARTCC32XXDMA_PIN_53_UART0_TX    0x934
+    #define UARTCC32XXDMA_PIN_55_UART0_TX    0x336
+    #define UARTCC32XXDMA_PIN_55_UART1_TX    0x636
+    #define UARTCC32XXDMA_PIN_57_UART0_RX    0x338
+    #define UARTCC32XXDMA_PIN_57_UART1_RX    0x638
+    #define UARTCC32XXDMA_PIN_58_UART1_TX    0x639
+    #define UARTCC32XXDMA_PIN_59_UART1_RX    0x63A
+    #define UARTCC32XXDMA_PIN_62_UART0_TX    0xB3D
 
 
 /**
@@ -132,7 +133,7 @@ extern "C" {
  * @b *arg contains @c true if the UART is transmitting,
  * else @c false if all transmissions are complete.
  */
-#define UARTCC32XXDMA_CMD_IS_BUSY                       (UART_CMD_RESERVED + 0)
+    #define UARTCC32XXDMA_CMD_IS_BUSY    ( UART_CMD_RESERVED + 0 )
 
 
 /*!
@@ -143,7 +144,7 @@ extern "C" {
  * @b *arg contains @c true if there is data in the receive FIFO,
  * or @c false if there is no data in the receive FIFO.
  */
-#define UARTCC32XXDMA_CMD_IS_RX_DATA_AVAILABLE          (UART_CMD_RESERVED + 1)
+    #define UARTCC32XXDMA_CMD_IS_RX_DATA_AVAILABLE    ( UART_CMD_RESERVED + 1 )
 
 
 /*!
@@ -154,13 +155,13 @@ extern "C" {
  * @b *arg contains @c true if there is space available in the transmit FIFO,
  * or @c false if there is no space available in the transmit FIFO.
  */
-#define UARTCC32XXDMA_CMD_IS_TX_SPACE_AVAILABLE         (UART_CMD_RESERVED + 2)
+    #define UARTCC32XXDMA_CMD_IS_TX_SPACE_AVAILABLE    ( UART_CMD_RESERVED + 2 )
 
 
 /** @}*/
 
 /* UART function table pointer */
-extern const UART_FxnTable UARTCC32XXDMA_fxnTable;
+    extern const UART_FxnTable UARTCC32XXDMA_fxnTable;
 
 /*!
  *  @brief      UARTCC32XXDMA Hardware attributes
@@ -205,73 +206,75 @@ extern const UART_FxnTable UARTCC32XXDMA_fxnTable;
  *  };
  *  @endcode
  */
-typedef struct UARTCC32XXDMA_HWAttrsV1 {
-    /*! UART Peripheral's base address */
-    unsigned int baseAddr;
-    /*! UART Peripheral's interrupt vector */
-    unsigned int intNum;
-    /*! UART Peripheral's interrupt priority */
-    unsigned int intPriority;
-    /*! uDMA controlTable receive channel index */
-    unsigned long rxChannelIndex;
-    /*! uDMA controlTable transmit channel index */
-    unsigned long txChannelIndex;
-    /*! UART RX pin assignment */
-    uint16_t        rxPin;
-    /*! UART TX pin assignment */
-    uint16_t        txPin;
-} UARTCC32XXDMA_HWAttrsV1;
+    typedef struct UARTCC32XXDMA_HWAttrsV1
+    {
+        /*! UART Peripheral's base address */
+        unsigned int baseAddr;
+        /*! UART Peripheral's interrupt vector */
+        unsigned int intNum;
+        /*! UART Peripheral's interrupt priority */
+        unsigned int intPriority;
+        /*! uDMA controlTable receive channel index */
+        unsigned long rxChannelIndex;
+        /*! uDMA controlTable transmit channel index */
+        unsigned long txChannelIndex;
+        /*! UART RX pin assignment */
+        uint16_t rxPin;
+        /*! UART TX pin assignment */
+        uint16_t txPin;
+    } UARTCC32XXDMA_HWAttrsV1;
 
 /*!
  *  @brief      UARTCC32XXDMA Object
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct UARTCC32XXDMA_Object {
-    /* UART control variables */
-    bool                 opened;           /* Has the obj been opened */
-    UART_Mode            readMode;         /* Mode for all read calls */
-    UART_Mode            writeMode;        /* Mode for all write calls */
-    unsigned int         readTimeout;      /* Timeout for read semaphore */
-    unsigned int         writeTimeout;     /* Timeout for write semaphore */
-    UART_Callback        readCallback;     /* Pointer to read callback */
-    UART_Callback        writeCallback;    /* Pointer to write callback */
-    UART_ReturnMode      readReturnMode;   /* Receive return mode */
-    UART_DataMode        readDataMode;     /* Type of data being read */
-    UART_DataMode        writeDataMode;    /* Type of data being written */
-    uint32_t             baudRate;         /* Baud rate for UART */
-    UART_LEN             dataLength;       /* Data length for UART */
-    UART_STOP            stopBits;         /* Stop bits for UART */
-    UART_PAR             parityType;       /* Parity bit type for UART */
-    UART_Echo            readEcho;         /* Echo received data back */
+    typedef struct UARTCC32XXDMA_Object
+    {
+        /* UART control variables */
+        bool opened;                       /* Has the obj been opened */
+        UART_Mode readMode;                /* Mode for all read calls */
+        UART_Mode writeMode;               /* Mode for all write calls */
+        unsigned int readTimeout;          /* Timeout for read semaphore */
+        unsigned int writeTimeout;         /* Timeout for write semaphore */
+        UART_Callback readCallback;        /* Pointer to read callback */
+        UART_Callback writeCallback;       /* Pointer to write callback */
+        UART_ReturnMode readReturnMode;    /* Receive return mode */
+        UART_DataMode readDataMode;        /* Type of data being read */
+        UART_DataMode writeDataMode;       /* Type of data being written */
+        uint32_t baudRate;                 /* Baud rate for UART */
+        UART_LEN dataLength;               /* Data length for UART */
+        UART_STOP stopBits;                /* Stop bits for UART */
+        UART_PAR parityType;               /* Parity bit type for UART */
+        UART_Echo readEcho;                /* Echo received data back */
 
-    /* UART write variables */
-    const void          *writeBuf;         /* Buffer data pointer */
-    size_t               writeCount;       /* Number of Chars sent */
-    size_t               writeSize;        /* Chars remaining in buffer */
+        /* UART write variables */
+        const void * writeBuf;             /* Buffer data pointer */
+        size_t writeCount;                 /* Number of Chars sent */
+        size_t writeSize;                  /* Chars remaining in buffer */
 
-    /* UART receive variables */
-    void                *readBuf;          /* Buffer data pointer */
-    size_t               readCount;        /* Number of Chars read */
-    size_t               readSize;         /* Chars remaining in buffer */
+        /* UART receive variables */
+        void * readBuf;                    /* Buffer data pointer */
+        size_t readCount;                  /* Number of Chars read */
+        size_t readSize;                   /* Chars remaining in buffer */
 
-    /* Semaphores for blocking mode */
-    SemaphoreP_Handle    writeSem;         /* UART write semaphore */
-    SemaphoreP_Handle    readSem;          /* UART read semaphore */
+        /* Semaphores for blocking mode */
+        SemaphoreP_Handle writeSem;        /* UART write semaphore */
+        SemaphoreP_Handle readSem;         /* UART read semaphore */
 
-    HwiP_Handle    hwiHandle;
+        HwiP_Handle hwiHandle;
 
-    /* For Power management */
-    ClockP_Handle        txFifoEmptyClk;   /* UART TX FIFO empty clock */
-    Power_NotifyObj      postNotify;       /* LPDS wake-up notify object */
-    unsigned int         powerMgrId;       /* Determined from base address */
+        /* For Power management */
+        ClockP_Handle txFifoEmptyClk;      /* UART TX FIFO empty clock */
+        Power_NotifyObj postNotify;        /* LPDS wake-up notify object */
+        unsigned int powerMgrId;           /* Determined from base address */
 
-    /* UDMA */
-    UDMACC32XX_Handle    dmaHandle;
-} UARTCC32XXDMA_Object, *UARTCC32XXDMA_Handle;
+        /* UDMA */
+        UDMACC32XX_Handle dmaHandle;
+    } UARTCC32XXDMA_Object, * UARTCC32XXDMA_Handle;
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_uart_UARTCC32XXDMA__include */

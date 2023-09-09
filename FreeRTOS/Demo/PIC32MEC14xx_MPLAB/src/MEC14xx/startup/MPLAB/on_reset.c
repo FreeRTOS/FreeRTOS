@@ -19,8 +19,9 @@
 *****************************************************************************/
 
 /** @file on_reset.c
- *MEC14xx XC32 M14K Startup code _on_reset handler
+ * MEC14xx XC32 M14K Startup code _on_reset handler
  */
+
 /** @defgroup MEC14xx Startup
  *  @{
  */
@@ -40,12 +41,12 @@ extern uint32_t _ebase_address[];
 /** _on_reset - Very early HW initialization.
  * @note XC32 startup code has initialized SP & GP. No other
  * C features have been initialized (before .bss clear and
- * global data init.) NOTE: MIPS M14K is still in Boot-Strap 
- * mode and EBASE has not been programmed. Any exception or 
- * interrupts will vector to the BEV Exception handler! 
+ * global data init.) NOTE: MIPS M14K is still in Boot-Strap
+ * mode and EBASE has not been programmed. Any exception or
+ * interrupts will vector to the BEV Exception handler!
  */
 void
-__attribute__((nomips16)) _on_reset (void)
+__attribute__( ( nomips16 ) ) _on_reset( void )
 {
     /* Enable JTAG */
     ECS_REG->JTAG_ENABLE |= 1u;
@@ -57,7 +58,4 @@ __attribute__((nomips16)) _on_reset (void)
     PCR->PROC_CLOCK_CNTRL = ( PCR_CLOCK_DIVIDER );
     __EHB();
     CPU_NOP();
-
 }
-
-

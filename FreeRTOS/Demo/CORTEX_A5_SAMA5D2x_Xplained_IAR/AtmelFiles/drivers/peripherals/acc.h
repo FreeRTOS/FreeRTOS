@@ -28,11 +28,11 @@
  */
 
 /**
-* \file
-*
-* Implementation of Analog Comparator Controller (ACC).
-*
-*/
+ * \file
+ *
+ * Implementation of Analog Comparator Controller (ACC).
+ *
+ */
 
 #ifndef _ACC_H
 #define _ACC_H
@@ -58,26 +58,29 @@
  * Use pattern defined in the device header file.
  * \param invert  Invert comparator output.
  */
-extern void acc_init(Acc *p_acc, uint32_t select_plus, uint32_t select_minus,
-                     uint32_t edge_type, uint32_t invert);
+extern void acc_init( Acc * p_acc,
+                      uint32_t select_plus,
+                      uint32_t select_minus,
+                      uint32_t edge_type,
+                      uint32_t invert );
 
 /**
  * \brief Enable the ACC.
  * \param p_acc  Pointer to ACC registers set instance.
  */
-extern void acc_enable(Acc *p_acc);
+extern void acc_enable( Acc * p_acc );
 
 /**
  * \brief Disable the ACC.
  * \param p_acc  Pointer to ACC registers set instance.
  */
-extern void acc_disable(Acc *p_acc);
+extern void acc_disable( Acc * p_acc );
 
 /**
  * \brief Reset the ACC.
  * \param p_acc  Pointer to ACC registers set instance.
  */
-extern void acc_reset(Acc *p_acc);
+extern void acc_reset( Acc * p_acc );
 
 /**
  * \brief Set the input source.
@@ -85,8 +88,9 @@ extern void acc_reset(Acc *p_acc);
  * \param select_minus  Selection for minus comparator input.
  * \param select_plus  Selection for plus comparator input.
  */
-extern void acc_set_input(Acc *p_acc, uint32_t select_minus,
-                          uint32_t select_plus);
+extern void acc_set_input( Acc * p_acc,
+                           uint32_t select_minus,
+                           uint32_t select_plus );
 
 /**
  * \brief Set the output of the ACC.
@@ -95,41 +99,44 @@ extern void acc_set_input(Acc *p_acc, uint32_t select_minus,
  * \param fault_enable  Fault enable, 0 for disable, 1 for enable.
  * \param fault_source  Selection of fault source, 0 for CF, 1 for output.
  */
-extern void acc_set_output(Acc *p_acc, uint32_t invert, uint32_t fault_enable,
-                           uint32_t fault_source);
+extern void acc_set_output( Acc * p_acc,
+                            uint32_t invert,
+                            uint32_t fault_enable,
+                            uint32_t fault_source );
 
 /**
  * \brief Get the comparison result.
  * \param p_acc  Pointer to ACC registers set instance.
  * \return Result of the comparison, 0 for inn > inp, 1 for inp > inn.
  */
-extern uint32_t acc_get_comparison_result(Acc *p_acc);
+extern uint32_t acc_get_comparison_result( Acc * p_acc );
 
 /**
  * \brief Enable the interrupt.
  * \param p_acc  Pointer to ACC registers set instance.
  */
-extern void acc_enable_interrupt(Acc *p_acc);
+extern void acc_enable_interrupt( Acc * p_acc );
 
 /**
  * \brief Disable the interrupt.
  * \param p_acc  Pointer to ACC registers set instance.
  */
-extern void acc_disable_interrupt(Acc *p_acc);
+extern void acc_disable_interrupt( Acc * p_acc );
 
 /**
  * \brief Get the interrupt status.
  * \param p_acc  Pointer to ACC registers set instance.
  * \return Contents of the Interrupt Status Register.
  */
-extern uint32_t acc_get_interrupt_status(Acc *p_acc);
+extern uint32_t acc_get_interrupt_status( Acc * p_acc );
 
 /**
  * \brief Write-protect the Mode Register and the Analog Control Register.
  * \param p_acc  Pointer to ACC registers set instance.
  * \param enable  1 to enable, 0 to disable.
  */
-extern void acc_set_write_protect(Acc *p_acc, uint32_t enable);
+extern void acc_set_write_protect( Acc * p_acc,
+                                   uint32_t enable );
 
 /**
  * \brief Return write protect status.
@@ -138,6 +145,6 @@ extern void acc_set_write_protect(Acc *p_acc, uint32_t enable);
  * \retval 1 At least one write attempt to a write-protected register has been
  * detected, since the previous call to this function.
  */
-extern uint32_t acc_get_write_protect_status(Acc *p_acc);
+extern uint32_t acc_get_write_protect_status( Acc * p_acc );
 
 #endif /* _ACC_H */

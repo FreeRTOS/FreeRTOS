@@ -26,13 +26,14 @@
 
 #ifndef USER_SETTINGS_H_
 #define USER_SETTINGS_H_
+
 /*-- Cipher related definitions  -----------------------------------------------
  *
  *
  *----------------------------------------------------------------------------*/
 
 #define HAVE_FIPS
-#define HAVE_FIPS_VERSION 3
+#define HAVE_FIPS_VERSION    3
 #define WOLFSSL_TLS13
 #define HAVE_TLS_EXTENSIONS
 
@@ -40,8 +41,8 @@
 #define HAVE_FFDHE_2048
 
 #ifndef WOLFSSL_OPTIONS_IGNORE_SYS
-#undef  _POSIX_THREADS
-#define _POSIX_THREADS
+    #undef  _POSIX_THREADS
+    #define _POSIX_THREADS
 #endif
 
 #define HAVE_THREAD_LS
@@ -90,7 +91,7 @@
 #define WOLFSSL_X86_64_BUILD
 #define WC_NO_ASYNC_THREADING
 #define HAVE_DH_DEFAULT_PARAMS
-#define HAVE___UINT128_T 1
+#define HAVE___UINT128_T    1
 
 
 
@@ -103,6 +104,6 @@
 /*#define DEBUG_WOLFSSL*/
 
 /* The TCP port used by both the secure client and the secure server. */
-#define configTCP_PORT_NUMBER	5001
+#define configTCP_PORT_NUMBER    5001
 
 #endif /* ifndef USER_SETTINGS_H_ */

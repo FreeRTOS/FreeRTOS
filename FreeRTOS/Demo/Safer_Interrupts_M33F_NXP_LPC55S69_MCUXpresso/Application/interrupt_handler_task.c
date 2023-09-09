@@ -26,7 +26,7 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include"queue.h"
+#include "queue.h"
 
 /* Interface includes. */
 #include "interrupt_handler_task.h"
@@ -34,7 +34,7 @@
 /**
  * @brief Time to block while waiting for a interrupt request on the interrupt queue.
  */
-#define USER_IRQ_RECEIVE_TIMEOUT ( pdMS_TO_TICKS( 1000 ) )
+#define USER_IRQ_RECEIVE_TIMEOUT    ( pdMS_TO_TICKS( 1000 ) )
 
 void vInterruptHandlerTask( void * pvParams )
 {
@@ -42,12 +42,13 @@ void vInterruptHandlerTask( void * pvParams )
     UserIrqRequest_t xIrqRequest;
     QueueHandle_t xInterruptQueueHandle = ( QueueHandle_t ) pvParams;
 
-    for( ;; )
+    for( ; ; )
     {
         xStatus = xQueueReceive( xInterruptQueueHandle,
                                  &( xIrqRequest ),
                                  USER_IRQ_RECEIVE_TIMEOUT );
-        if ( xStatus != pdTRUE )
+
+        if( xStatus != pdTRUE )
         {
             continue;
         }

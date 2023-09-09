@@ -2,9 +2,9 @@
 * Copyright (C) 2010-20134 ARM Limited. All rights reserved.
 *
 * $Date:        12. March 2014
-* $Revision: 	V1.4.3
+* $Revision:    V1.4.3
 *
-* Project: 	    CMSIS DSP Library
+* Project:      CMSIS DSP Library
 * Title:	    arm_const_structs.h
 *
 * Description:	This file has constant structs that are initialized for
@@ -46,14 +46,14 @@
 #include "arm_math.h"
 #include "arm_common_tables.h"
 
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len16;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len32;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len64;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len128;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len256;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len512;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len1024;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len2048;
-   extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len4096;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len16;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len32;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len64;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len128;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len256;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len512;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len1024;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len2048;
+extern const arm_cfft_instance_f32 arm_cfft_sR_f32_len4096;
 
-#endif
+#endif /* ifndef _ARM_CONST_STRUCTS_H */

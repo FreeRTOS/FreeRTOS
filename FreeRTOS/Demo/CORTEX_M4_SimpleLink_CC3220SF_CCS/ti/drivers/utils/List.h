@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       List.h
  *
@@ -113,25 +114,27 @@
  */
 
 #ifndef ti_drivers_utils_List__include
-#define ti_drivers_utils_List__include
+    #define ti_drivers_utils_List__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <stddef.h>
 
-typedef struct List_Elem {
-    struct List_Elem *next;
-    struct List_Elem *prev;
-} List_Elem;
+    typedef struct List_Elem
+    {
+        struct List_Elem * next;
+        struct List_Elem * prev;
+    } List_Elem;
 
-typedef struct List_List {
-    List_Elem *head;
-    List_Elem *tail;
-} List_List;
+    typedef struct List_List
+    {
+        List_Elem * head;
+        List_Elem * tail;
+    } List_List;
 
 /*!
  *  @brief  Function to initialize the contents of a List_List
@@ -139,7 +142,7 @@ typedef struct List_List {
  *  @param  list Pointer to a List_List structure that will be used to
  *               maintain a linked list
  */
-extern void List_clearList(List_List *list);
+    extern void List_clearList( List_List * list );
 
 /*!
  *  @brief  Function to test whether a linked list is empty
@@ -148,7 +151,7 @@ extern void List_clearList(List_List *list);
  *
  *  @return true if empty, false if not empty
  */
-extern bool List_empty(List_List *list);
+    extern bool List_empty( List_List * list );
 
 /*!
  *  @brief  Function to atomically get the first elem in a linked list
@@ -157,7 +160,7 @@ extern bool List_empty(List_List *list);
  *
  *  @return Pointer the first elem in the linked list or NULL if empty
  */
-extern List_Elem *List_get(List_List *list);
+    extern List_Elem * List_get( List_List * list );
 
 /*!
  *  @brief  Function to return the head of a linked list
@@ -169,7 +172,7 @@ extern List_Elem *List_get(List_List *list);
  *
  *  @return Pointer to the first elem in the linked list or NULL if empty
  */
-extern List_Elem *List_head(List_List *list);
+    extern List_Elem * List_head( List_List * list );
 
 /*!
  *  @brief  Function to insert an elem into a linked list
@@ -181,8 +184,9 @@ extern List_Elem *List_head(List_List *list);
  *  @param  curElem Elem to insert the newElem in front of.
  *          This value cannot be NULL.
  */
-extern void List_insert(List_List *list, List_Elem *newElem,
-                         List_Elem *curElem);
+    extern void List_insert( List_List * list,
+                             List_Elem * newElem,
+                             List_Elem * curElem );
 
 /*!
  *  @brief  Function to return the next elem in a linked list
@@ -194,7 +198,7 @@ extern void List_insert(List_List *list, List_Elem *newElem,
  *
  *  @return Pointer to the next elem in linked list or NULL if at the end
  */
-extern List_Elem *List_next(List_Elem *elem);
+    extern List_Elem * List_next( List_Elem * elem );
 
 /*!
  *  @brief  Function to return the prev elem in a linked list
@@ -206,7 +210,7 @@ extern List_Elem *List_next(List_Elem *elem);
  *
  *  @return Pointer to the prev elem in linked list or NULL if at the beginning
  */
-extern List_Elem *List_prev(List_Elem *elem);
+    extern List_Elem * List_prev( List_Elem * elem );
 
 /*!
  *  @brief  Function to atomically put an elem onto the end of a linked list
@@ -215,7 +219,8 @@ extern List_Elem *List_prev(List_Elem *elem);
  *
  *  @param  elem Element to place onto the end of the linked list
  */
-extern void List_put(List_List *list, List_Elem *elem);
+    extern void List_put( List_List * list,
+                          List_Elem * elem );
 
 /*!
  *  @brief  Function to atomically put an elem onto the head of a linked list
@@ -224,7 +229,8 @@ extern void List_put(List_List *list, List_Elem *elem);
  *
  *  @param  elem Element to place onto the beginning of the linked list
  */
-extern void List_putHead(List_List *list, List_Elem *elem);
+    extern void List_putHead( List_List * list,
+                              List_Elem * elem );
 
 /*!
  *  @brief  Function to remove an elem from a linked list
@@ -233,7 +239,8 @@ extern void List_putHead(List_List *list, List_Elem *elem);
  *
  *  @param  elem Element to be removed from a linked list
  */
-extern void List_remove(List_List *list, List_Elem *elem);
+    extern void List_remove( List_List * list,
+                             List_Elem * elem );
 
 /*!
  *  @brief  Function to return the tail of a linked list
@@ -245,11 +252,11 @@ extern void List_remove(List_List *list, List_Elem *elem);
  *
  *  @return Pointer to the last elem in the linked list or NULL if empty
  */
-extern List_Elem *List_tail(List_List *list);
+    extern List_Elem * List_tail( List_List * list );
 
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_utils_List__include */

@@ -45,42 +45,42 @@
 #define _SAMD20_AC_INSTANCE_
 
 /* ========== Register definition for AC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_AC_CTRLA               (0x42004400U) /**< \brief (AC) Control A Register */
-#define REG_AC_CTRLB               (0x42004401U) /**< \brief (AC) Control B Register */
-#define REG_AC_EVCTRL              (0x42004402U) /**< \brief (AC) Event Control Register */
-#define REG_AC_INTENCLR            (0x42004404U) /**< \brief (AC) Interrupt Enable Clear Register */
-#define REG_AC_INTENSET            (0x42004405U) /**< \brief (AC) Interrupt Enable Set Register */
-#define REG_AC_INTFLAG             (0x42004406U) /**< \brief (AC) Interrupt Flag Status and Clear Register */
-#define REG_AC_STATUSA             (0x42004408U) /**< \brief (AC) Status A Register */
-#define REG_AC_STATUSB             (0x42004409U) /**< \brief (AC) Status B Register */
-#define REG_AC_STATUSC             (0x4200440AU) /**< \brief (AC) Status C Register */
-#define REG_AC_WINCTRL             (0x4200440CU) /**< \brief (AC) Window Control Register */
-#define REG_AC_COMPCTRL0           (0x42004410U) /**< \brief (AC) Comparator Control Register 0 */
-#define REG_AC_COMPCTRL1           (0x42004414U) /**< \brief (AC) Comparator Control Register 1 */
-#define REG_AC_SCALER0             (0x42004420U) /**< \brief (AC) Scaler Register 0 */
-#define REG_AC_SCALER1             (0x42004421U) /**< \brief (AC) Scaler Register 1 */
-#else
-#define REG_AC_CTRLA               (*(RwReg8 *)0x42004400U) /**< \brief (AC) Control A Register */
-#define REG_AC_CTRLB               (*(WoReg8 *)0x42004401U) /**< \brief (AC) Control B Register */
-#define REG_AC_EVCTRL              (*(RwReg16*)0x42004402U) /**< \brief (AC) Event Control Register */
-#define REG_AC_INTENCLR            (*(RwReg8 *)0x42004404U) /**< \brief (AC) Interrupt Enable Clear Register */
-#define REG_AC_INTENSET            (*(RwReg8 *)0x42004405U) /**< \brief (AC) Interrupt Enable Set Register */
-#define REG_AC_INTFLAG             (*(RwReg8 *)0x42004406U) /**< \brief (AC) Interrupt Flag Status and Clear Register */
-#define REG_AC_STATUSA             (*(RoReg8 *)0x42004408U) /**< \brief (AC) Status A Register */
-#define REG_AC_STATUSB             (*(RoReg8 *)0x42004409U) /**< \brief (AC) Status B Register */
-#define REG_AC_STATUSC             (*(RoReg8 *)0x4200440AU) /**< \brief (AC) Status C Register */
-#define REG_AC_WINCTRL             (*(RwReg8 *)0x4200440CU) /**< \brief (AC) Window Control Register */
-#define REG_AC_COMPCTRL0           (*(RwReg  *)0x42004410U) /**< \brief (AC) Comparator Control Register 0 */
-#define REG_AC_COMPCTRL1           (*(RwReg  *)0x42004414U) /**< \brief (AC) Comparator Control Register 1 */
-#define REG_AC_SCALER0             (*(RwReg8 *)0x42004420U) /**< \brief (AC) Scaler Register 0 */
-#define REG_AC_SCALER1             (*(RwReg8 *)0x42004421U) /**< \brief (AC) Scaler Register 1 */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_AC_CTRLA        ( 0x42004400U )                /**< \brief (AC) Control A Register */
+    #define REG_AC_CTRLB        ( 0x42004401U )                /**< \brief (AC) Control B Register */
+    #define REG_AC_EVCTRL       ( 0x42004402U )                /**< \brief (AC) Event Control Register */
+    #define REG_AC_INTENCLR     ( 0x42004404U )                /**< \brief (AC) Interrupt Enable Clear Register */
+    #define REG_AC_INTENSET     ( 0x42004405U )                /**< \brief (AC) Interrupt Enable Set Register */
+    #define REG_AC_INTFLAG      ( 0x42004406U )                /**< \brief (AC) Interrupt Flag Status and Clear Register */
+    #define REG_AC_STATUSA      ( 0x42004408U )                /**< \brief (AC) Status A Register */
+    #define REG_AC_STATUSB      ( 0x42004409U )                /**< \brief (AC) Status B Register */
+    #define REG_AC_STATUSC      ( 0x4200440AU )                /**< \brief (AC) Status C Register */
+    #define REG_AC_WINCTRL      ( 0x4200440CU )                /**< \brief (AC) Window Control Register */
+    #define REG_AC_COMPCTRL0    ( 0x42004410U )                /**< \brief (AC) Comparator Control Register 0 */
+    #define REG_AC_COMPCTRL1    ( 0x42004414U )                /**< \brief (AC) Comparator Control Register 1 */
+    #define REG_AC_SCALER0      ( 0x42004420U )                /**< \brief (AC) Scaler Register 0 */
+    #define REG_AC_SCALER1      ( 0x42004421U )                /**< \brief (AC) Scaler Register 1 */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_AC_CTRLA        ( *( RwReg8 * ) 0x42004400U )  /**< \brief (AC) Control A Register */
+    #define REG_AC_CTRLB        ( *( WoReg8 * ) 0x42004401U )  /**< \brief (AC) Control B Register */
+    #define REG_AC_EVCTRL       ( *( RwReg16 * ) 0x42004402U ) /**< \brief (AC) Event Control Register */
+    #define REG_AC_INTENCLR     ( *( RwReg8 * ) 0x42004404U )  /**< \brief (AC) Interrupt Enable Clear Register */
+    #define REG_AC_INTENSET     ( *( RwReg8 * ) 0x42004405U )  /**< \brief (AC) Interrupt Enable Set Register */
+    #define REG_AC_INTFLAG      ( *( RwReg8 * ) 0x42004406U )  /**< \brief (AC) Interrupt Flag Status and Clear Register */
+    #define REG_AC_STATUSA      ( *( RoReg8 * ) 0x42004408U )  /**< \brief (AC) Status A Register */
+    #define REG_AC_STATUSB      ( *( RoReg8 * ) 0x42004409U )  /**< \brief (AC) Status B Register */
+    #define REG_AC_STATUSC      ( *( RoReg8 * ) 0x4200440AU )  /**< \brief (AC) Status C Register */
+    #define REG_AC_WINCTRL      ( *( RwReg8 * ) 0x4200440CU )  /**< \brief (AC) Window Control Register */
+    #define REG_AC_COMPCTRL0    ( *( RwReg * ) 0x42004410U )   /**< \brief (AC) Comparator Control Register 0 */
+    #define REG_AC_COMPCTRL1    ( *( RwReg * ) 0x42004414U )   /**< \brief (AC) Comparator Control Register 1 */
+    #define REG_AC_SCALER0      ( *( RwReg8 * ) 0x42004420U )  /**< \brief (AC) Scaler Register 0 */
+    #define REG_AC_SCALER1      ( *( RwReg8 * ) 0x42004421U )  /**< \brief (AC) Scaler Register 1 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for AC peripheral ========== */
-#define AC_GCLK_ID_ANA              25
-#define AC_GCLK_ID_DIG              24
-#define AC_NUM_CMP                  2
-#define AC_PAIRS                    1
+#define AC_GCLK_ID_ANA    25
+#define AC_GCLK_ID_DIG    24
+#define AC_NUM_CMP        2
+#define AC_PAIRS          1
 
 #endif /* _SAMD20_AC_INSTANCE_ */

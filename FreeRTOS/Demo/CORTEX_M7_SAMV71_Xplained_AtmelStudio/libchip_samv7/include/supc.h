@@ -28,12 +28,12 @@
  */
 
 #ifndef _SUPC_H_
-#define _SUPC_H_
+    #define _SUPC_H_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include <stdint.h>
+    #include <stdint.h>
 
 
 /*----------------------------------------------------------------------------
@@ -46,30 +46,31 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 
 
-void SUPC_SelectExtCrystal32K(void);
-uint8_t SUPC_IsSlowClkExtCrystal32K(void);
-uint8_t SUPC_Read_Status(uint32_t status);
-void SUPC_DisableSupplyMonitor(void);
-void SUPC_DisableVoltageReg(void);
-void SUPC_ConfigSupplyMonitor(uint32_t Config);
-void SUPC_BrownoutDetectEnable(uint8_t enable);
-void SUPC_BrownoutResetEnable(void);
-void SUPC_SramBackupMode(uint8_t enable);
-void SUPC_BypassXtal32KOsc(void);
-void SUPC_EnablesWakeupInput(uint32_t Input, uint8_t enable);
-void SUPC_SetLowPowerDebounce(uint8_t period);
-void SUPC_SetWakeupDebounce(uint8_t period);
-void SUPC_EnablesWakeupMode(uint32_t Regs, uint8_t enable);
+    void SUPC_SelectExtCrystal32K( void );
+    uint8_t SUPC_IsSlowClkExtCrystal32K( void );
+    uint8_t SUPC_Read_Status( uint32_t status );
+    void SUPC_DisableSupplyMonitor( void );
+    void SUPC_DisableVoltageReg( void );
+    void SUPC_ConfigSupplyMonitor( uint32_t Config );
+    void SUPC_BrownoutDetectEnable( uint8_t enable );
+    void SUPC_BrownoutResetEnable( void );
+    void SUPC_SramBackupMode( uint8_t enable );
+    void SUPC_BypassXtal32KOsc( void );
+    void SUPC_EnablesWakeupInput( uint32_t Input,
+                                  uint8_t enable );
+    void SUPC_SetLowPowerDebounce( uint8_t period );
+    void SUPC_SetWakeupDebounce( uint8_t period );
+    void SUPC_EnablesWakeupMode( uint32_t Regs,
+                                 uint8_t enable );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _PMC_ */
-

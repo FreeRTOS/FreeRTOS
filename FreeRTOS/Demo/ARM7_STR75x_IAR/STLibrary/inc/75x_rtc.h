@@ -27,9 +27,9 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* RTC interrupts define */
-#define RTC_IT_Overflow    0x0004  /* Overflow interrupt */
-#define RTC_IT_Alarm       0x0002  /* Alarm interrupt */
-#define RTC_IT_Second      0x0001  /* Second interrupt */
+#define RTC_IT_Overflow      0x0004 /* Overflow interrupt */
+#define RTC_IT_Alarm         0x0002 /* Alarm interrupt */
+#define RTC_IT_Second        0x0001 /* Second interrupt */
 
 /* RTC interrupts flags */
 #define RTC_FLAG_RTOFF       0x0020  /* RTC Operation OFF flag */
@@ -41,22 +41,23 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-void RTC_DeInit(void);
-void RTC_ITConfig(u16 RTC_IT, FunctionalState NewState);
-void RTC_EnterConfigMode(void);
-void RTC_ExitConfigMode(void);
-u32  RTC_GetCounter(void);
-void RTC_SetCounter(u32 CounterValue);
-void RTC_SetPrescaler(u32 PrescalerValue);
-u32  RTC_GetPrescaler(void);
-void RTC_SetAlarm(u32 AlarmValue);
-u32  RTC_GetDivider(void);
-void RTC_WaitForLastTask(void);
-void RTC_WaitForSynchro(void);
-FlagStatus RTC_GetFlagStatus(u16 RTC_FLAG);
-void RTC_ClearFlag(u16 RTC_FLAG);
-ITStatus RTC_GetITStatus(u16 RTC_IT);
-void RTC_ClearITPendingBit(u16 RTC_IT);
+void RTC_DeInit( void );
+void RTC_ITConfig( u16 RTC_IT,
+                   FunctionalState NewState );
+void RTC_EnterConfigMode( void );
+void RTC_ExitConfigMode( void );
+u32 RTC_GetCounter( void );
+void RTC_SetCounter( u32 CounterValue );
+void RTC_SetPrescaler( u32 PrescalerValue );
+u32 RTC_GetPrescaler( void );
+void RTC_SetAlarm( u32 AlarmValue );
+u32 RTC_GetDivider( void );
+void RTC_WaitForLastTask( void );
+void RTC_WaitForSynchro( void );
+FlagStatus RTC_GetFlagStatus( u16 RTC_FLAG );
+void RTC_ClearFlag( u16 RTC_FLAG );
+ITStatus RTC_GetITStatus( u16 RTC_IT );
+void RTC_ClearITPendingBit( u16 RTC_IT );
 
 #endif /* __75x_RTC_H */
 

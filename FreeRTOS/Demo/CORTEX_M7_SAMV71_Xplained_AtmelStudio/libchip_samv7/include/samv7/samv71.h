@@ -31,25 +31,25 @@
 #define _SAMV71_
 
 #if defined __SAMV71J19__
-  #include "samv71j19.h"
+    #include "samv71j19.h"
 #elif defined __SAMV71J20__
-  #include "samv71j20.h"
+    #include "samv71j20.h"
 #elif defined __SAMV71J21__
-  #include "samv71j21.h"
+    #include "samv71j21.h"
 #elif defined __SAMV71N19__
-  #include "samv71n19.h"
+    #include "samv71n19.h"
 #elif defined __SAMV71N20__
-  #include "samv71n20.h"
+    #include "samv71n20.h"
 #elif defined __SAMV71N21__
-  #include "samv71n21.h"
+    #include "samv71n21.h"
 #elif defined __SAMV71Q19__
-  #include "samv71q19.h"
+    #include "samv71q19.h"
 #elif defined __SAMV71Q20__
-  #include "samv71q20.h"
+    #include "samv71q20.h"
 #elif defined __SAMV71Q21__
-  #include "samv71q21.h"
-#else
-  #error Library does not support the specified device.
-#endif
+    #include "samv71q21.h"
+#else  /* if defined __SAMV71J19__ */
+    #error Library does not support the specified device.
+#endif /* if defined __SAMV71J19__ */
 
 #endif /* _SAMV71_ */

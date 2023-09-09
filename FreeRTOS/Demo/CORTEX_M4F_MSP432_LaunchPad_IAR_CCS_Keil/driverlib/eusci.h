@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -39,7 +39,7 @@
 
 #include <msp.h>
 
-#define EUSCI_A_CMSIS(x) ((EUSCI_A_Type *) x)
-#define EUSCI_B_CMSIS(x) ((EUSCI_B_Type *) x)
+#define EUSCI_A_CMSIS( x )    ( ( EUSCI_A_Type * ) x )
+#define EUSCI_B_CMSIS( x )    ( ( EUSCI_B_Type * ) x )
 
 #endif /* EUSCI_H_ */

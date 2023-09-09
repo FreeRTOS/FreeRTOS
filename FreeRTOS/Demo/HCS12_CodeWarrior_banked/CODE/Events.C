@@ -51,9 +51,9 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-void TickTimer_OnInterrupt(void)
+void TickTimer_OnInterrupt( void )
 {
-  /* Write your code here ... */
+    /* Write your code here ... */
 }
 
 
@@ -70,9 +70,9 @@ void TickTimer_OnInterrupt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void COM0_OnError(void)
+void COM0_OnError( void )
 {
-  /* Write your code here ... */
+    /* Write your code here ... */
 }
 
 /*
@@ -87,9 +87,9 @@ void COM0_OnError(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void COM0_OnRxChar(void)
+void COM0_OnRxChar( void )
 {
-  /* Write your code here ... */
+    /* Write your code here ... */
 }
 
 /*
@@ -103,9 +103,9 @@ void COM0_OnRxChar(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void COM0_OnTxChar(void)
+void COM0_OnTxChar( void )
 {
-  /* Write your code here ... */
+    /* Write your code here ... */
 }
 
 /*
@@ -119,9 +119,9 @@ void COM0_OnTxChar(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void COM0_OnFullRxBuf(void)
+void COM0_OnFullRxBuf( void )
 {
-  /* Write your code here ... */
+    /* Write your code here ... */
 }
 
 /*
@@ -136,9 +136,9 @@ void COM0_OnFullRxBuf(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void COM0_OnFreeTxBuf(void)
+void COM0_OnFreeTxBuf( void )
 {
-  /* Write your code here ... */
+    /* Write your code here ... */
 }
 
 /* END Events */
@@ -146,7 +146,7 @@ void COM0_OnFreeTxBuf(void)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

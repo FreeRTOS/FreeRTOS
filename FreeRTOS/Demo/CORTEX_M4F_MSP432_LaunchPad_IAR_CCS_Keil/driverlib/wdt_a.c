@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -42,78 +42,76 @@
 #include <debug.h>
 #include <interrupt.h>
 
-void WDT_A_holdTimer(void)
+void WDT_A_holdTimer( void )
 {
-    //Set Hold bit
-    uint8_t newWDTStatus = (WDT_A->CTL | WDT_A_CTL_HOLD);
+    /*Set Hold bit */
+    uint8_t newWDTStatus = ( WDT_A->CTL | WDT_A_CTL_HOLD );
 
     WDT_A->CTL = WDT_A_CTL_PW + newWDTStatus;
 }
 
-void WDT_A_startTimer(void)
+void WDT_A_startTimer( void )
 {
-    //Reset Hold bit
-    uint8_t newWDTStatus = (WDT_A->CTL & ~(WDT_A_CTL_HOLD));
+    /*Reset Hold bit */
+    uint8_t newWDTStatus = ( WDT_A->CTL & ~( WDT_A_CTL_HOLD ) );
 
     WDT_A->CTL = WDT_A_CTL_PW + newWDTStatus;
 }
 
-void WDT_A_clearTimer(void)
+void WDT_A_clearTimer( void )
 {
-    //Set Counter Clear bit
-    uint8_t newWDTStatus = (WDT_A->CTL | WDT_A_CTL_CNTCL);
+    /*Set Counter Clear bit */
+    uint8_t newWDTStatus = ( WDT_A->CTL | WDT_A_CTL_CNTCL );
 
     WDT_A->CTL = WDT_A_CTL_PW + newWDTStatus;
 }
 
-void WDT_A_initWatchdogTimer(uint_fast8_t clockSelect,
-        uint_fast8_t clockIterations)
+void WDT_A_initWatchdogTimer( uint_fast8_t clockSelect,
+                              uint_fast8_t clockIterations )
 {
     WDT_A->CTL = WDT_A_CTL_PW + WDT_A_CTL_CNTCL + WDT_A_CTL_HOLD +
-            clockSelect + clockIterations;
+                 clockSelect + clockIterations;
 }
 
-void WDT_A_initIntervalTimer(uint_fast8_t clockSelect,
-        uint_fast8_t clockIterations)
+void WDT_A_initIntervalTimer( uint_fast8_t clockSelect,
+                              uint_fast8_t clockIterations )
 {
-
     WDT_A->CTL = WDT_A_CTL_PW + WDT_A_CTL_CNTCL + WDT_A_CTL_HOLD + WDT_A_CTL_TMSEL
-            + clockSelect + clockIterations;
+                 + clockSelect + clockIterations;
 }
 
-void WDT_A_setPasswordViolationReset(uint_fast8_t resetType)
+void WDT_A_setPasswordViolationReset( uint_fast8_t resetType )
 {
-    SysCtl_setWDTPasswordViolationResetType(resetType);
+    SysCtl_setWDTPasswordViolationResetType( resetType );
 }
 
-void WDT_A_setTimeoutReset(uint_fast8_t resetType)
+void WDT_A_setTimeoutReset( uint_fast8_t resetType )
 {
-    SysCtl_setWDTTimeoutResetType(resetType);
+    SysCtl_setWDTTimeoutResetType( resetType );
 }
 
-void WDT_A_registerInterrupt(void (*intHandler)(void))
+void WDT_A_registerInterrupt( void ( * intHandler )( void ) )
 {
-    //
-    // Register the interrupt handler, returning an error if an error occurs.
-    //
-    Interrupt_registerInterrupt(INT_WDT_A, intHandler);
+    /* */
+    /* Register the interrupt handler, returning an error if an error occurs. */
+    /* */
+    Interrupt_registerInterrupt( INT_WDT_A, intHandler );
 
-    //
-    // Enable the system control interrupt.
-    //
-    Interrupt_enableInterrupt (INT_WDT_A);
+    /* */
+    /* Enable the system control interrupt. */
+    /* */
+    Interrupt_enableInterrupt( INT_WDT_A );
 }
 
-void WDT_A_unregisterInterrupt(void)
+void WDT_A_unregisterInterrupt( void )
 {
-    //
-    // Disable the interrupt.
-    //
-    Interrupt_disableInterrupt (INT_WDT_A);
+    /* */
+    /* Disable the interrupt. */
+    /* */
+    Interrupt_disableInterrupt( INT_WDT_A );
 
-    //
-    // Unregister the interrupt handler.
-    //
-    Interrupt_unregisterInterrupt(INT_WDT_A);
+    /* */
+    /* Unregister the interrupt handler. */
+    /* */
+    Interrupt_unregisterInterrupt( INT_WDT_A );
 }
-

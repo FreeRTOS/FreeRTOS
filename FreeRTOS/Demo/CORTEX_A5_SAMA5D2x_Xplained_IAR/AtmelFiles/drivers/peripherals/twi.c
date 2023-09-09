@@ -64,7 +64,7 @@
  * Related files :\n
  * \ref twi.c\n
  * \ref twi.h.\n
-*/
+ */
 /*@{*/
 /*@}*/
 
@@ -100,58 +100,67 @@
  * \param twi  Pointer to an Twi instance.
  * \param twi_clock  Desired TWI clock frequency.
  */
-void twi_configure_master(Twi * pTwi, uint32_t twi_clock)
+void twi_configure_master( Twi * pTwi,
+                           uint32_t twi_clock )
 {
-	uint32_t ck_div, cl_div, hold, ok, clock;
-	uint32_t id = get_twi_id_from_addr(pTwi);
+    uint32_t ck_div, cl_div, hold, ok, clock;
+    uint32_t id = get_twi_id_from_addr( pTwi );
 
-	trace_debug("twi_configure_master(%u)\n\r", (unsigned)twi_clock);
-	assert(pTwi);
-	assert(id < ID_PERIPH_COUNT);
+    trace_debug( "twi_configure_master(%u)\n\r", ( unsigned ) twi_clock );
+    assert( pTwi );
+    assert( id < ID_PERIPH_COUNT );
 
-	/* SVEN: TWI Slave Mode Enabled */
-	pTwi->TWI_CR = TWI_CR_SVEN;
+    /* SVEN: TWI Slave Mode Enabled */
+    pTwi->TWI_CR = TWI_CR_SVEN;
 
-	/* Reset the TWI */
-	pTwi->TWI_CR = TWI_CR_SWRST;
-	pTwi->TWI_RHR;
-	timer_sleep(10);
+    /* Reset the TWI */
+    pTwi->TWI_CR = TWI_CR_SWRST;
+    pTwi->TWI_RHR;
+    timer_sleep( 10 );
 
-	/* TWI Slave Mode Disabled, TWI Master Mode Disabled. */
-	pTwi->TWI_MMR = 0;
-	pTwi->TWI_CR = TWI_CR_SVDIS;
-	pTwi->TWI_CR = TWI_CR_MSDIS;
-	clock = pmc_get_peripheral_clock(id);
+    /* TWI Slave Mode Disabled, TWI Master Mode Disabled. */
+    pTwi->TWI_MMR = 0;
+    pTwi->TWI_CR = TWI_CR_SVDIS;
+    pTwi->TWI_CR = TWI_CR_MSDIS;
+    clock = pmc_get_peripheral_clock( id );
 
-	/* Compute clock */
-	ck_div = 0; ok = 0;
-	while (!ok) {
-		cl_div = ((clock / (2 * twi_clock)) - 3) >> ck_div;
-		if (cl_div <= 255)
-			ok = 1;
-		else
-			ck_div++;
-	}
-	twi_clock = ROUND_INT_DIV(clock, (((cl_div * 2) << ck_div) + 3));
-	assert(ck_div < 8);
-	trace_debug("twi: CKDIV=%u CLDIV=CHDIV=%u -> TWI Clock %uHz\n\r",
-		    (unsigned)ck_div, (unsigned)cl_div, (unsigned)twi_clock);
+    /* Compute clock */
+    ck_div = 0;
+    ok = 0;
 
-	/* Compute holding time (I2C spec requires 300ns) */
-	hold = ROUND_INT_DIV((uint32_t)(0.3 * clock), 1000000) - 3;
-	trace_debug("twi: HOLD=%u -> Holding Time %uns\n\r",
-		    (unsigned)hold, (unsigned)((1000000 * (hold + 3)) / (clock / 1000)));
+    while( !ok )
+    {
+        cl_div = ( ( clock / ( 2 * twi_clock ) ) - 3 ) >> ck_div;
 
-	/* Configure clock */
-	pTwi->TWI_CWGR = 0;
-	pTwi->TWI_CWGR = TWI_CWGR_CKDIV(ck_div) | TWI_CWGR_CHDIV(cl_div) |
-		TWI_CWGR_CLDIV(cl_div) | TWI_CWGR_HOLD(hold);
+        if( cl_div <= 255 )
+        {
+            ok = 1;
+        }
+        else
+        {
+            ck_div++;
+        }
+    }
 
-	/* Set master mode */
-	pTwi->TWI_CR = TWI_CR_MSEN;
-	timer_sleep(10);
-	assert((pTwi->TWI_CR & TWI_CR_SVDIS) != TWI_CR_MSDIS);
+    twi_clock = ROUND_INT_DIV( clock, ( ( ( cl_div * 2 ) << ck_div ) + 3 ) );
+    assert( ck_div < 8 );
+    trace_debug( "twi: CKDIV=%u CLDIV=CHDIV=%u -> TWI Clock %uHz\n\r",
+                 ( unsigned ) ck_div, ( unsigned ) cl_div, ( unsigned ) twi_clock );
 
+    /* Compute holding time (I2C spec requires 300ns) */
+    hold = ROUND_INT_DIV( ( uint32_t ) ( 0.3 * clock ), 1000000 ) - 3;
+    trace_debug( "twi: HOLD=%u -> Holding Time %uns\n\r",
+                 ( unsigned ) hold, ( unsigned ) ( ( 1000000 * ( hold + 3 ) ) / ( clock / 1000 ) ) );
+
+    /* Configure clock */
+    pTwi->TWI_CWGR = 0;
+    pTwi->TWI_CWGR = TWI_CWGR_CKDIV( ck_div ) | TWI_CWGR_CHDIV( cl_div ) |
+                     TWI_CWGR_CLDIV( cl_div ) | TWI_CWGR_HOLD( hold );
+
+    /* Set master mode */
+    pTwi->TWI_CR = TWI_CR_MSEN;
+    timer_sleep( 10 );
+    assert( ( pTwi->TWI_CR & TWI_CR_SVDIS ) != TWI_CR_MSDIS );
 }
 
 /**
@@ -159,35 +168,36 @@ void twi_configure_master(Twi * pTwi, uint32_t twi_clock)
  * \param twi  Pointer to an Twi instance.
  * \param slaveAddress Slave address.
  */
-void twi_configure_slave(Twi * pTwi, uint8_t slave_address)
+void twi_configure_slave( Twi * pTwi,
+                          uint8_t slave_address )
 {
-	trace_debug("twi_configure_slave()\n\r");
-	assert(pTwi);
-	/* TWI software reset */
-	pTwi->TWI_CR = TWI_CR_SWRST;
-	pTwi->TWI_RHR;
-	/* Wait at least 10 ms */
-	timer_sleep(10);
-	/* TWI Slave Mode Disabled, TWI Master Mode Disabled */
-	pTwi->TWI_CR = TWI_CR_SVDIS | TWI_CR_MSDIS;
-	/* Configure slave address. */
-	pTwi->TWI_SMR = 0;
-	pTwi->TWI_SMR = TWI_SMR_SADR(slave_address);
-	/* SVEN: TWI Slave Mode Enabled */
-	pTwi->TWI_CR = TWI_CR_SVEN;
-	/* Wait at least 10 ms */
-	timer_sleep(10);
-	assert((pTwi->TWI_CR & TWI_CR_SVDIS) != TWI_CR_SVDIS);
+    trace_debug( "twi_configure_slave()\n\r" );
+    assert( pTwi );
+    /* TWI software reset */
+    pTwi->TWI_CR = TWI_CR_SWRST;
+    pTwi->TWI_RHR;
+    /* Wait at least 10 ms */
+    timer_sleep( 10 );
+    /* TWI Slave Mode Disabled, TWI Master Mode Disabled */
+    pTwi->TWI_CR = TWI_CR_SVDIS | TWI_CR_MSDIS;
+    /* Configure slave address. */
+    pTwi->TWI_SMR = 0;
+    pTwi->TWI_SMR = TWI_SMR_SADR( slave_address );
+    /* SVEN: TWI Slave Mode Enabled */
+    pTwi->TWI_CR = TWI_CR_SVEN;
+    /* Wait at least 10 ms */
+    timer_sleep( 10 );
+    assert( ( pTwi->TWI_CR & TWI_CR_SVDIS ) != TWI_CR_SVDIS );
 }
 
 /**
  * \brief Sends a STOP condition on the TWI.
  * \param twi  Pointer to an Twi instance.
  */
-void twi_stop(Twi * pTwi)
+void twi_stop( Twi * pTwi )
 {
-	assert(pTwi != NULL);
-	pTwi->TWI_CR = TWI_CR_STOP;
+    assert( pTwi != NULL );
+    pTwi->TWI_CR = TWI_CR_STOP;
 }
 
 /**
@@ -199,21 +209,23 @@ void twi_stop(Twi * pTwi)
  * \param iaddress  Optional internal address bytes.
  * \param isize  Number of internal address bytes.
  */
-void twi_start_read(Twi * pTwi, uint8_t address,
-		    uint32_t iaddress, uint8_t isize)
+void twi_start_read( Twi * pTwi,
+                     uint8_t address,
+                     uint32_t iaddress,
+                     uint8_t isize )
 {
-	assert(pTwi != NULL);
-	assert((address & 0x80) == 0);
-	assert((iaddress & 0xFF000000) == 0);
-	assert(isize < 4);
-	/* Set slave address and number of internal address bytes. */
-	pTwi->TWI_MMR = 0;
-	pTwi->TWI_MMR = (isize << 8) | TWI_MMR_MREAD | (address << 16);
-	/* Set internal address bytes */
-	pTwi->TWI_IADR = 0;
-	pTwi->TWI_IADR = iaddress;
-	/* Send START condition */
-	pTwi->TWI_CR = TWI_CR_START;
+    assert( pTwi != NULL );
+    assert( ( address & 0x80 ) == 0 );
+    assert( ( iaddress & 0xFF000000 ) == 0 );
+    assert( isize < 4 );
+    /* Set slave address and number of internal address bytes. */
+    pTwi->TWI_MMR = 0;
+    pTwi->TWI_MMR = ( isize << 8 ) | TWI_MMR_MREAD | ( address << 16 );
+    /* Set internal address bytes */
+    pTwi->TWI_IADR = 0;
+    pTwi->TWI_IADR = iaddress;
+    /* Send START condition */
+    pTwi->TWI_CR = TWI_CR_START;
 }
 
 /**
@@ -222,12 +234,12 @@ void twi_start_read(Twi * pTwi, uint8_t address,
  * \param twi  Pointer to an Twi instance.
  * \return byte read.
  */
-uint8_t twi_read_byte(Twi * twi)
+uint8_t twi_read_byte( Twi * twi )
 {
-	assert(twi != NULL);
-	uint8_t value;
-	readb(&twi->TWI_RHR, &value);
-	return value;
+    assert( twi != NULL );
+    uint8_t value;
+    readb( &twi->TWI_RHR, &value );
+    return value;
 }
 
 /**
@@ -238,10 +250,11 @@ uint8_t twi_read_byte(Twi * twi)
  * \param twi  Pointer to an Twi instance.
  * \param byte  Byte to send.
  */
-void twi_write_byte(Twi * twi, uint8_t byte)
+void twi_write_byte( Twi * twi,
+                     uint8_t byte )
 {
-	assert(twi != NULL);
-	writeb(&twi->TWI_THR, byte);
+    assert( twi != NULL );
+    writeb( &twi->TWI_THR, byte );
 }
 
 /**
@@ -255,21 +268,24 @@ void twi_write_byte(Twi * twi, uint8_t byte)
  * \param isize  Number of internal address bytes.
  * \param byte  First byte to send.
  */
-void twi_start_write(Twi * pTwi, uint8_t address, uint32_t iaddress,
-		     uint8_t isize, uint8_t byte)
+void twi_start_write( Twi * pTwi,
+                      uint8_t address,
+                      uint32_t iaddress,
+                      uint8_t isize,
+                      uint8_t byte )
 {
-	assert(pTwi != NULL);
-	assert((address & 0x80) == 0);
-	assert((iaddress & 0xFF000000) == 0);
-	assert(isize < 4);
-	/* Set slave address and number of internal address bytes. */
-	pTwi->TWI_MMR = 0;
-	pTwi->TWI_MMR = (isize << 8) | (address << 16);
-	/* Set internal address bytes. */
-	pTwi->TWI_IADR = 0;
-	pTwi->TWI_IADR = iaddress;
-	/* Write first byte to send. */
-	twi_write_byte(pTwi, byte);
+    assert( pTwi != NULL );
+    assert( ( address & 0x80 ) == 0 );
+    assert( ( iaddress & 0xFF000000 ) == 0 );
+    assert( isize < 4 );
+    /* Set slave address and number of internal address bytes. */
+    pTwi->TWI_MMR = 0;
+    pTwi->TWI_MMR = ( isize << 8 ) | ( address << 16 );
+    /* Set internal address bytes. */
+    pTwi->TWI_IADR = 0;
+    pTwi->TWI_IADR = iaddress;
+    /* Write first byte to send. */
+    twi_write_byte( pTwi, byte );
 }
 
 /**
@@ -278,10 +294,10 @@ void twi_start_write(Twi * pTwi, uint8_t address, uint32_t iaddress,
  * \return 1 if a byte has been received and can be read on the given TWI
  * peripheral; otherwise, returns 0. This function resets the status register.
  */
-uint8_t twi_is_byte_received(Twi * pTwi)
+uint8_t twi_is_byte_received( Twi * pTwi )
 {
-	assert(pTwi != NULL);
-	return ((pTwi->TWI_SR & TWI_SR_RXRDY) == TWI_SR_RXRDY);
+    assert( pTwi != NULL );
+    return( ( pTwi->TWI_SR & TWI_SR_RXRDY ) == TWI_SR_RXRDY );
 }
 
 /**
@@ -290,10 +306,10 @@ uint8_t twi_is_byte_received(Twi * pTwi)
  * \return 1 if a byte has been sent  so another one can be stored for
  * transmission; otherwise returns 0. This function clears the status register.
  */
-uint8_t twi_byte_sent(Twi * pTwi)
+uint8_t twi_byte_sent( Twi * pTwi )
 {
-	assert(pTwi != NULL);
-	return ((pTwi->TWI_SR & TWI_SR_TXRDY) == TWI_SR_TXRDY);
+    assert( pTwi != NULL );
+    return( ( pTwi->TWI_SR & TWI_SR_TXRDY ) == TWI_SR_TXRDY );
 }
 
 /**
@@ -302,10 +318,10 @@ uint8_t twi_byte_sent(Twi * pTwi)
  * \return  1 if the current transmission is complete (the STOP has been sent);
  * otherwise returns 0.
  */
-uint8_t twi_is_transfer_complete(Twi * pTwi)
+uint8_t twi_is_transfer_complete( Twi * pTwi )
 {
-	assert(pTwi != NULL);
-	return ((pTwi->TWI_SR & TWI_SR_TXCOMP) == TWI_SR_TXCOMP);
+    assert( pTwi != NULL );
+    return( ( pTwi->TWI_SR & TWI_SR_TXCOMP ) == TWI_SR_TXCOMP );
 }
 
 /**
@@ -313,10 +329,11 @@ uint8_t twi_is_transfer_complete(Twi * pTwi)
  * \param twi  Pointer to an Twi instance.
  * \param sources  Bitwise OR of selected interrupt sources.
  */
-void twi_enable_it(Twi * pTwi, uint32_t sources)
+void twi_enable_it( Twi * pTwi,
+                    uint32_t sources )
 {
-	assert(pTwi != NULL);
-	pTwi->TWI_IER = sources;
+    assert( pTwi != NULL );
+    pTwi->TWI_IER = sources;
 }
 
 /**
@@ -324,10 +341,11 @@ void twi_enable_it(Twi * pTwi, uint32_t sources)
  * \param twi  Pointer to an Twi instance.
  * \param sources  Bitwise OR of selected interrupt sources.
  */
-void twi_disable_it(Twi * pTwi, uint32_t sources)
+void twi_disable_it( Twi * pTwi,
+                     uint32_t sources )
 {
-	assert(pTwi != NULL);
-	pTwi->TWI_IDR = sources;
+    assert( pTwi != NULL );
+    pTwi->TWI_IDR = sources;
 }
 
 /**
@@ -337,10 +355,10 @@ void twi_disable_it(Twi * pTwi, uint32_t sources)
  * \param twi  Pointer to an Twi instance.
  * \return  TWI status register.
  */
-uint32_t twi_get_status(Twi * pTwi)
+uint32_t twi_get_status( Twi * pTwi )
 {
-	assert(pTwi != NULL);
-	return pTwi->TWI_SR;
+    assert( pTwi != NULL );
+    return pTwi->TWI_SR;
 }
 
 /**
@@ -350,13 +368,14 @@ uint32_t twi_get_status(Twi * pTwi)
  * read may yield different values.
  * \param twi  Pointer to an Twi instance.
  */
-uint32_t twi_get_masked_status(Twi * pTwi)
+uint32_t twi_get_masked_status( Twi * pTwi )
 {
-	uint32_t status;
-	assert(pTwi != NULL);
-	status = pTwi->TWI_SR;
-	status &= pTwi->TWI_IMR;
-	return status;
+    uint32_t status;
+
+    assert( pTwi != NULL );
+    status = pTwi->TWI_SR;
+    status &= pTwi->TWI_IMR;
+    return status;
 }
 
 /**
@@ -364,137 +383,177 @@ uint32_t twi_get_masked_status(Twi * pTwi)
  *  the current byte transmission in master read mode.
  * \param twi  Pointer to an Twi instance.
  */
-void twi_send_stop_condition(Twi * pTwi)
+void twi_send_stop_condition( Twi * pTwi )
 {
-	assert(pTwi != NULL);
-	pTwi->TWI_CR |= TWI_CR_STOP;
+    assert( pTwi != NULL );
+    pTwi->TWI_CR |= TWI_CR_STOP;
 }
 
 #ifdef CONFIG_HAVE_TWI_ALTERNATE_CMD
-void twi_init_write_transfert(Twi * twi, uint8_t addr, uint32_t iaddress,
-		     uint8_t isize, uint8_t len)
-{
-	twi->TWI_RHR;
-	twi->TWI_CR = TWI_CR_MSDIS;
-	twi->TWI_CR = TWI_CR_MSEN;
-	twi->TWI_CR = TWI_CR_MSEN | TWI_CR_SVDIS | TWI_CR_ACMEN;
-	twi->TWI_ACR = 0;
-	twi->TWI_ACR = TWI_ACR_DATAL(len);
-	twi->TWI_MMR = 0;
-	twi->TWI_MMR = TWI_MMR_DADR(addr) | TWI_MMR_IADRSZ(isize);
-	/* Set internal address bytes. */
-	twi->TWI_IADR = 0;
-	twi->TWI_IADR = iaddress;
-}
+    void twi_init_write_transfert( Twi * twi,
+                                   uint8_t addr,
+                                   uint32_t iaddress,
+                                   uint8_t isize,
+                                   uint8_t len )
+    {
+        twi->TWI_RHR;
+        twi->TWI_CR = TWI_CR_MSDIS;
+        twi->TWI_CR = TWI_CR_MSEN;
+        twi->TWI_CR = TWI_CR_MSEN | TWI_CR_SVDIS | TWI_CR_ACMEN;
+        twi->TWI_ACR = 0;
+        twi->TWI_ACR = TWI_ACR_DATAL( len );
+        twi->TWI_MMR = 0;
+        twi->TWI_MMR = TWI_MMR_DADR( addr ) | TWI_MMR_IADRSZ( isize );
+        /* Set internal address bytes. */
+        twi->TWI_IADR = 0;
+        twi->TWI_IADR = iaddress;
+    }
 
-void twi_init_read_transfert(Twi * twi, uint8_t addr, uint32_t iaddress,
-		     uint8_t isize, uint8_t len)
-{
-	twi->TWI_RHR;
-	twi->TWI_CR = TWI_CR_MSEN | TWI_CR_SVDIS | TWI_CR_ACMEN;
-	twi->TWI_ACR = 0;
-	twi->TWI_ACR = TWI_ACR_DATAL(len) | TWI_ACR_DIR;
-	twi->TWI_MMR = 0;
-	twi->TWI_MMR = TWI_MMR_DADR(addr) | TWI_MMR_MREAD
-		| TWI_MMR_IADRSZ(isize);
-	/* Set internal address bytes. */
-	twi->TWI_IADR = 0;
-	twi->TWI_IADR = iaddress;
-	twi->TWI_CR = TWI_CR_START;
-	while(twi->TWI_SR & TWI_SR_TXCOMP);
-}
-#endif
+    void twi_init_read_transfert( Twi * twi,
+                                  uint8_t addr,
+                                  uint32_t iaddress,
+                                  uint8_t isize,
+                                  uint8_t len )
+    {
+        twi->TWI_RHR;
+        twi->TWI_CR = TWI_CR_MSEN | TWI_CR_SVDIS | TWI_CR_ACMEN;
+        twi->TWI_ACR = 0;
+        twi->TWI_ACR = TWI_ACR_DATAL( len ) | TWI_ACR_DIR;
+        twi->TWI_MMR = 0;
+        twi->TWI_MMR = TWI_MMR_DADR( addr ) | TWI_MMR_MREAD
+                       | TWI_MMR_IADRSZ( isize );
+        /* Set internal address bytes. */
+        twi->TWI_IADR = 0;
+        twi->TWI_IADR = iaddress;
+        twi->TWI_CR = TWI_CR_START;
+
+        while( twi->TWI_SR & TWI_SR_TXCOMP )
+        {
+        }
+    }
+#endif /* ifdef CONFIG_HAVE_TWI_ALTERNATE_CMD */
 
 #ifdef CONFIG_HAVE_TWI_FIFO
-void twi_fifo_configure(Twi* twi, uint8_t tx_thres,
-			uint8_t rx_thres,
-			uint32_t ready_modes)
-{
-	/* Disable TWI master and slave mode and activate FIFO */
-	twi->TWI_CR = TWI_CR_MSDIS | TWI_CR_SVDIS | TWI_CR_FIFOEN;
+    void twi_fifo_configure( Twi * twi,
+                             uint8_t tx_thres,
+                             uint8_t rx_thres,
+                             uint32_t ready_modes )
+    {
+        /* Disable TWI master and slave mode and activate FIFO */
+        twi->TWI_CR = TWI_CR_MSDIS | TWI_CR_SVDIS | TWI_CR_FIFOEN;
 
-	/* Configure FIFO */
-	twi->TWI_FMR = TWI_FMR_TXFTHRES(tx_thres) | TWI_FMR_RXFTHRES(rx_thres)
-		| ready_modes;
-}
+        /* Configure FIFO */
+        twi->TWI_FMR = TWI_FMR_TXFTHRES( tx_thres ) | TWI_FMR_RXFTHRES( rx_thres )
+                       | ready_modes;
+    }
 
-uint32_t twi_fifo_rx_size(Twi *twi)
-{
-	return (twi->TWI_FLR & TWI_FLR_RXFL_Msk) >> TWI_FLR_RXFL_Pos;
-}
+    uint32_t twi_fifo_rx_size( Twi * twi )
+    {
+        return ( twi->TWI_FLR & TWI_FLR_RXFL_Msk ) >> TWI_FLR_RXFL_Pos;
+    }
 
-uint32_t twi_fifo_tx_size(Twi *twi)
-{
-	return (twi->TWI_FLR & TWI_FLR_TXFL_Msk) >> TWI_FLR_TXFL_Pos;
-}
+    uint32_t twi_fifo_tx_size( Twi * twi )
+    {
+        return ( twi->TWI_FLR & TWI_FLR_TXFL_Msk ) >> TWI_FLR_TXFL_Pos;
+    }
 
-uint32_t twi_read_stream(Twi *twi, uint32_t addr, uint32_t iaddr,
-			  uint32_t isize, const void *stream, uint8_t len)
-{
-	const uint8_t* buffer = stream;
-	uint8_t left = len;
+    uint32_t twi_read_stream( Twi * twi,
+                              uint32_t addr,
+                              uint32_t iaddr,
+                              uint32_t isize,
+                              const void * stream,
+                              uint8_t len )
+    {
+        const uint8_t * buffer = stream;
+        uint8_t left = len;
 
-	twi_init_read_transfert(twi, addr, iaddr, isize, len);
-	if (twi_get_status(twi) & TWI_SR_NACK) {
-		trace_error("twid2: command NACK!\r\n");
-		return 0;
-	}
+        twi_init_read_transfert( twi, addr, iaddr, isize, len );
 
-	while (left > 0) {
-		if ((twi->TWI_SR & TWI_SR_RXRDY) == 0) continue;
+        if( twi_get_status( twi ) & TWI_SR_NACK )
+        {
+            trace_error( "twid2: command NACK!\r\n" );
+            return 0;
+        }
 
-		/* Get FIFO free size (int octet) and clamp it */
-		uint32_t buf_size = twi_fifo_rx_size(twi);
-		buf_size = buf_size > left ? left : buf_size;
+        while( left > 0 )
+        {
+            if( ( twi->TWI_SR & TWI_SR_RXRDY ) == 0 )
+            {
+                continue;
+            }
 
-		/* Fill the FIFO as must as possible */
-		while (buf_size > sizeof(uint32_t)) {
-			*(uint32_t*)buffer = twi->TWI_RHR;
-			buffer += sizeof(uint32_t);
-			left -= sizeof(uint32_t);
-			buf_size -= sizeof(uint32_t);
-		}
-		while (buf_size >= sizeof(uint8_t)) {
-			readb(&twi->TWI_RHR, (uint8_t*)buffer);
-			buffer += sizeof(uint8_t);
-			left -= sizeof(uint8_t);
-			buf_size -= sizeof(uint8_t);
-		}
-	}
-	return len - left;
-}
+            /* Get FIFO free size (int octet) and clamp it */
+            uint32_t buf_size = twi_fifo_rx_size( twi );
+            buf_size = buf_size > left ? left : buf_size;
 
-uint32_t twi_write_stream(Twi *twi, uint32_t addr, uint32_t iaddr,
-			  uint32_t isize, const void *stream, uint8_t len)
-{
-	const uint8_t* buffer = stream;
-	uint8_t left = len;
+            /* Fill the FIFO as must as possible */
+            while( buf_size > sizeof( uint32_t ) )
+            {
+                *( uint32_t * ) buffer = twi->TWI_RHR;
+                buffer += sizeof( uint32_t );
+                left -= sizeof( uint32_t );
+                buf_size -= sizeof( uint32_t );
+            }
 
-	int32_t fifo_size = get_peripheral_fifo_depth(twi);
-	if (fifo_size < 0)
-		return 0;
+            while( buf_size >= sizeof( uint8_t ) )
+            {
+                readb( &twi->TWI_RHR, ( uint8_t * ) buffer );
+                buffer += sizeof( uint8_t );
+                left -= sizeof( uint8_t );
+                buf_size -= sizeof( uint8_t );
+            }
+        }
 
-	twi_init_write_transfert(twi, addr, iaddr, isize, len);
-	if (twi_get_status(twi) & TWI_SR_NACK) {
-		trace_error("twid2: command NACK!\r\n");
-		return 0;
-	}
-	while (left > 0) {
-		if ((twi->TWI_SR & TWI_SR_TXRDY) == 0) continue;
+        return len - left;
+    }
 
-		/* Get FIFO free size (int octet) and clamp it */
-		uint32_t buf_size = fifo_size - twi_fifo_tx_size(twi);
-		buf_size = buf_size > left ? left : buf_size;
+    uint32_t twi_write_stream( Twi * twi,
+                               uint32_t addr,
+                               uint32_t iaddr,
+                               uint32_t isize,
+                               const void * stream,
+                               uint8_t len )
+    {
+        const uint8_t * buffer = stream;
+        uint8_t left = len;
 
-		/* /\* Fill the FIFO as must as possible *\/ */
-		while (buf_size >= sizeof(uint8_t)) {
-			writeb(&twi->TWI_THR,*buffer);
-			buffer += sizeof(uint8_t);
-			left -= sizeof(uint8_t);
-			buf_size -= sizeof(uint8_t);
-		}
-	}
-	return len - left;
-}
+        int32_t fifo_size = get_peripheral_fifo_depth( twi );
 
-#endif
+        if( fifo_size < 0 )
+        {
+            return 0;
+        }
+
+        twi_init_write_transfert( twi, addr, iaddr, isize, len );
+
+        if( twi_get_status( twi ) & TWI_SR_NACK )
+        {
+            trace_error( "twid2: command NACK!\r\n" );
+            return 0;
+        }
+
+        while( left > 0 )
+        {
+            if( ( twi->TWI_SR & TWI_SR_TXRDY ) == 0 )
+            {
+                continue;
+            }
+
+            /* Get FIFO free size (int octet) and clamp it */
+            uint32_t buf_size = fifo_size - twi_fifo_tx_size( twi );
+            buf_size = buf_size > left ? left : buf_size;
+
+            /* /\* Fill the FIFO as must as possible *\/ */
+            while( buf_size >= sizeof( uint8_t ) )
+            {
+                writeb( &twi->TWI_THR, *buffer );
+                buffer += sizeof( uint8_t );
+                left -= sizeof( uint8_t );
+                buf_size -= sizeof( uint8_t );
+            }
+        }
+
+        return len - left;
+    }
+
+#endif /* ifdef CONFIG_HAVE_TWI_FIFO */

@@ -45,7 +45,7 @@
  *------------------------------------------------------------------------------*/
 
 /* These headers were introduced in C99
-   by working group ISO/IEC JTC1/SC22/WG14. */
+ * by working group ISO/IEC JTC1/SC22/WG14. */
 #include <stdint.h>
 
 #include <USBRequests.h>
@@ -65,42 +65,37 @@
  *      Exported functions
  *------------------------------------------------------------------------------*/
 
-extern void CDCDSerial_Initialize(
-    USBDDriver * pUsbd, uint8_t bInterfaceNb);
+extern void CDCDSerial_Initialize( USBDDriver * pUsbd,
+                                   uint8_t bInterfaceNb );
 
-extern uint32_t CDCDSerial_RequestHandler(
-    const USBGenericRequest *request);
+extern uint32_t CDCDSerial_RequestHandler( const USBGenericRequest * request );
 
-extern void CDCDSerial_ConfigureFunction(
-    USBGenericDescriptor * pDescriptors, uint16_t wLength);
+extern void CDCDSerial_ConfigureFunction( USBGenericDescriptor * pDescriptors,
+                                          uint16_t wLength );
 
-extern uint32_t CDCDSerial_Write(
-    void *data,
-    uint32_t size,
-    TransferCallback callback,
-    void *argument);
+extern uint32_t CDCDSerial_Write( void * data,
+                                  uint32_t size,
+                                  TransferCallback callback,
+                                  void * argument );
 
-extern uint32_t CDCDSerial_Read(
-    void *data,
-    uint32_t size,
-    TransferCallback callback,
-    void *argument);
+extern uint32_t CDCDSerial_Read( void * data,
+                                 uint32_t size,
+                                 TransferCallback callback,
+                                 void * argument );
 
-extern void CDCDSerial_GetLineCoding(CDCLineCoding * pLineCoding);
+extern void CDCDSerial_GetLineCoding( CDCLineCoding * pLineCoding );
 
-extern uint8_t CDCDSerial_GetControlLineState(void);
+extern uint8_t CDCDSerial_GetControlLineState( void );
 
-extern uint16_t CDCDSerial_GetSerialState(void);
+extern uint16_t CDCDSerial_GetSerialState( void );
 
-extern void CDCDSerial_SetSerialState(uint16_t serialState);
+extern void CDCDSerial_SetSerialState( uint16_t serialState );
 
-extern uint8_t CDCDSerial_LineCodingIsToChange(
-    CDCLineCoding * pLineCoding);
+extern uint8_t CDCDSerial_LineCodingIsToChange( CDCLineCoding * pLineCoding );
 
-extern void CDCDSerial_ControlLineStateChanged(
-    uint8_t DTR,uint8_t RTS);
+extern void CDCDSerial_ControlLineStateChanged( uint8_t DTR,
+                                                uint8_t RTS );
 
 /**@}*/
 
 #endif /*#ifndef CDCSERIAL_H*/
-

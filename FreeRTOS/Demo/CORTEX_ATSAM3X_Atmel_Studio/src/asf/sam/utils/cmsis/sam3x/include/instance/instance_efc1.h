@@ -43,16 +43,16 @@
 #define _SAM3XA_EFC1_INSTANCE_
 
 /* ========== Register definition for EFC1 peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_EFC1_FMR           (0x400E0C00U) /**< \brief (EFC1) EEFC Flash Mode Register */
-#define REG_EFC1_FCR           (0x400E0C04U) /**< \brief (EFC1) EEFC Flash Command Register */
-#define REG_EFC1_FSR           (0x400E0C08U) /**< \brief (EFC1) EEFC Flash Status Register */
-#define REG_EFC1_FRR           (0x400E0C0CU) /**< \brief (EFC1) EEFC Flash Result Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_EFC1_FMR    ( 0x400E0C00U )              /**< \brief (EFC1) EEFC Flash Mode Register */
+    #define REG_EFC1_FCR    ( 0x400E0C04U )              /**< \brief (EFC1) EEFC Flash Command Register */
+    #define REG_EFC1_FSR    ( 0x400E0C08U )              /**< \brief (EFC1) EEFC Flash Status Register */
+    #define REG_EFC1_FRR    ( 0x400E0C0CU )              /**< \brief (EFC1) EEFC Flash Result Register */
 #else
-#define REG_EFC1_FMR  (*(RwReg*)0x400E0C00U) /**< \brief (EFC1) EEFC Flash Mode Register */
-#define REG_EFC1_FCR  (*(WoReg*)0x400E0C04U) /**< \brief (EFC1) EEFC Flash Command Register */
-#define REG_EFC1_FSR  (*(RoReg*)0x400E0C08U) /**< \brief (EFC1) EEFC Flash Status Register */
-#define REG_EFC1_FRR  (*(RoReg*)0x400E0C0CU) /**< \brief (EFC1) EEFC Flash Result Register */
+    #define REG_EFC1_FMR    ( *( RwReg * ) 0x400E0C00U ) /**< \brief (EFC1) EEFC Flash Mode Register */
+    #define REG_EFC1_FCR    ( *( WoReg * ) 0x400E0C04U ) /**< \brief (EFC1) EEFC Flash Command Register */
+    #define REG_EFC1_FSR    ( *( RoReg * ) 0x400E0C08U ) /**< \brief (EFC1) EEFC Flash Status Register */
+    #define REG_EFC1_FRR    ( *( RoReg * ) 0x400E0C0CU ) /**< \brief (EFC1) EEFC Flash Result Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAM3XA_EFC1_INSTANCE_ */

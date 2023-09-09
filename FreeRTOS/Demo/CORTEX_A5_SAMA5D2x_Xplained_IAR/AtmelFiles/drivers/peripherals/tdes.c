@@ -74,6 +74,7 @@
  */
 /*@{*/
 /*@}*/
+
 /**
  * \file
  *
@@ -92,73 +93,79 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void tdes_start(void)
+void tdes_start( void )
 {
-	TDES->TDES_CR = TDES_CR_START;
+    TDES->TDES_CR = TDES_CR_START;
 }
 
-void tdes_soft_reset(void)
+void tdes_soft_reset( void )
 {
-	TDES->TDES_CR = TDES_CR_SWRST;
+    TDES->TDES_CR = TDES_CR_SWRST;
 }
 
-void tdes_configure(uint32_t mode)
+void tdes_configure( uint32_t mode )
 {
-	TDES->TDES_MR = mode;
+    TDES->TDES_MR = mode;
 }
 
-void tdes_enable_it(uint32_t sources)
+void tdes_enable_it( uint32_t sources )
 {
-	TDES->TDES_IER = sources;
+    TDES->TDES_IER = sources;
 }
 
-void tdes_disable_it(uint32_t sources)
+void tdes_disable_it( uint32_t sources )
 {
-	TDES->TDES_IDR = sources;
+    TDES->TDES_IDR = sources;
 }
 
-uint32_t tdes_get_status(void)
+uint32_t tdes_get_status( void )
 {
-	return TDES->TDES_ISR;
+    return TDES->TDES_ISR;
 }
 
-void tdes_write_key1(uint32_t key_word0, uint32_t key_word1)
+void tdes_write_key1( uint32_t key_word0,
+                      uint32_t key_word1 )
 {
-	TDES->TDES_KEY1WR[0] = key_word0;
-	TDES->TDES_KEY1WR[1] = key_word1;
+    TDES->TDES_KEY1WR[ 0 ] = key_word0;
+    TDES->TDES_KEY1WR[ 1 ] = key_word1;
 }
 
-void tdes_write_key2(uint32_t key_word0, uint32_t key_word1)
+void tdes_write_key2( uint32_t key_word0,
+                      uint32_t key_word1 )
 {
-	TDES->TDES_KEY2WR[0] = key_word0;
-	TDES->TDES_KEY2WR[1] = key_word1;
+    TDES->TDES_KEY2WR[ 0 ] = key_word0;
+    TDES->TDES_KEY2WR[ 1 ] = key_word1;
 }
 
-void tdes_write_key3(uint32_t key_word0, uint32_t key_word1)
+void tdes_write_key3( uint32_t key_word0,
+                      uint32_t key_word1 )
 {
-	TDES->TDES_KEY3WR[0] = key_word0;
-	TDES->TDES_KEY3WR[1] = key_word1;
+    TDES->TDES_KEY3WR[ 0 ] = key_word0;
+    TDES->TDES_KEY3WR[ 1 ] = key_word1;
 }
 
-void tdes_set_input(uint32_t data0, uint32_t data1)
+void tdes_set_input( uint32_t data0,
+                     uint32_t data1 )
 {
-	TDES->TDES_IDATAR[0] = data0;
-	TDES->TDES_IDATAR[1] = data1;
+    TDES->TDES_IDATAR[ 0 ] = data0;
+    TDES->TDES_IDATAR[ 1 ] = data1;
 }
 
-void tdes_get_output(uint32_t *data0, uint32_t *data1)
+void tdes_get_output( uint32_t * data0,
+                      uint32_t * data1 )
 {
-	*data0 = TDES->TDES_ODATAR[0];
-	*data1 = TDES->TDES_ODATAR[1];
+    *data0 = TDES->TDES_ODATAR[ 0 ];
+    *data1 = TDES->TDES_ODATAR[ 1 ];
 }
 
-void tdes_set_vector(uint32_t v0, uint32_t v1)
+void tdes_set_vector( uint32_t v0,
+                      uint32_t v1 )
 {
-	TDES->TDES_IVR[0] = v0;
-	TDES->TDES_IVR[1] = v1;
+    TDES->TDES_IVR[ 0 ] = v0;
+    TDES->TDES_IVR[ 1 ] = v1;
 }
 
-void tdes_set_xtea_rounds(uint32_t rounds)
+void tdes_set_xtea_rounds( uint32_t rounds )
 {
-	TDES->TDES_XTEA_RNDR = TDES_XTEA_RNDR_XTEA_RNDS(rounds);
+    TDES->TDES_XTEA_RNDR = TDES_XTEA_RNDR_XTEA_RNDS( rounds );
 }

@@ -40,29 +40,30 @@
 /*------------------------------------------------------------------------------*/
 /*         Definition                                                           */
 /*------------------------------------------------------------------------------*/
-#define AES_MR_CIPHER_ENCRYPT 1
-#define AES_MR_CIPHER_DECRYPT 0
+#define AES_MR_CIPHER_ENCRYPT    1
+#define AES_MR_CIPHER_DECRYPT    0
 /*------------------------------------------------------------------------------*/
 /*         Exported functions                                                   */
 /*------------------------------------------------------------------------------*/
 
-extern void AES_Start(void);
-extern void AES_SoftReset(void);
-extern void AES_Recount(void);
-extern void AES_Configure(uint32_t mode);
-extern void AES_EnableIt(uint32_t sources);
-extern void AES_DisableIt(uint32_t sources);
-extern uint32_t AES_GetStatus(void);
-extern void AES_WriteKey(const uint32_t *pKey, uint32_t keyLength);
-extern void AES_SetInput(uint32_t *data);
-extern void AES_GetOutput(uint32_t *data);
-extern void AES_SetVector(const uint32_t *pVector);
-extern void AES_SetAadLen(uint32_t len);
-extern void AES_SetDataLen(uint32_t len);
-extern void AES_SetGcmHash(uint32_t * hash);
-extern void AES_GetGcmTag(uint32_t * tag);
-extern void AES_GetGcmCounter(uint32_t * counter);
-extern void AES_GetGcmH(uint32_t *h);
+extern void AES_Start( void );
+extern void AES_SoftReset( void );
+extern void AES_Recount( void );
+extern void AES_Configure( uint32_t mode );
+extern void AES_EnableIt( uint32_t sources );
+extern void AES_DisableIt( uint32_t sources );
+extern uint32_t AES_GetStatus( void );
+extern void AES_WriteKey( const uint32_t * pKey,
+                          uint32_t keyLength );
+extern void AES_SetInput( uint32_t * data );
+extern void AES_GetOutput( uint32_t * data );
+extern void AES_SetVector( const uint32_t * pVector );
+extern void AES_SetAadLen( uint32_t len );
+extern void AES_SetDataLen( uint32_t len );
+extern void AES_SetGcmHash( uint32_t * hash );
+extern void AES_GetGcmTag( uint32_t * tag );
+extern void AES_GetGcmCounter( uint32_t * counter );
+extern void AES_GetGcmH( uint32_t * h );
 
 
 #endif /* #ifndef _AES_ */

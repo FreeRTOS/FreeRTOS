@@ -6,6 +6,7 @@
 
 #define NTPDEMO_H
 
-void vStartNTPTask( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority );
+void vStartNTPTask( uint16_t usTaskStackSize,
+                    UBaseType_t uxTaskPriority );
 
 #endif

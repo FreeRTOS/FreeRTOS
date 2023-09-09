@@ -23,7 +23,7 @@ The demo project includes multiple _build configurations_. Each _build configura
 [url-rskrl78l13]:     https://www.renesas.com/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus/rl78-l13-starter-kit-renesas-starter-kit-rl78l13
 [url-rskrl78l1c]:     https://www.renesas.com/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus/rl78-l1c-starter-kit-renesas-starter-kit-rl78l1c
 [url-qb-r5f10ele-tb]: https://renesas.com/qb-r5f10ele-tb
-                
+
 >:warning: This demo project requires __IAR Embedded Workbench for Renesas RL78__ (EWRL78) version __3.10.1 or later__.
 
 
@@ -97,7 +97,7 @@ Each port defines `BaseType_t` to equal the most efficient data type for that pr
 >:warning: `vPortEndScheduler()` has not been implemented.
 
 ### Memory models
-The FreeRTOS port will automatically switch between the __near__ and __far__ memory models, depending on the settings in the IAR project options. 
+The FreeRTOS port will automatically switch between the __near__ and __far__ memory models, depending on the settings in the IAR project options.
 
 This port has been tested with 2 memory model combinations, which are:
 | __Combination__ | __Code Model__ | __Data Model__ |
@@ -167,9 +167,9 @@ The C portion of the example interrupt handler.
 
 
 ### Resources used by the RTOS kernel
-By default the RTOS kernel uses the RL78 Interval Timer peripheral to generate the RTOS tick. The application writer can modify the `vApplicationSetupTimerInterrupt()` in the [main.c]() such that their own tick interrupt configuration is used in place of the default. 
+By default the RTOS kernel uses the RL78 Interval Timer peripheral to generate the RTOS tick. The application writer can modify the `vApplicationSetupTimerInterrupt()` in the [main.c]() such that their own tick interrupt configuration is used in place of the default.
 
->:warning: `vPortTickISR()` must be installed as the handler for which ever interrupt is used to generate the RTOS tick. 
+>:warning: `vPortTickISR()` must be installed as the handler for which ever interrupt is used to generate the RTOS tick.
 
 >:warning: The RTOS kernel also requires __exclusive__ use of the __BRK software interrupt__ instruction.
 

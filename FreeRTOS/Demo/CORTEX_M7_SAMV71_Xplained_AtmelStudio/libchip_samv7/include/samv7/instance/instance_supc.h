@@ -31,20 +31,20 @@
 #define _SAMV71_SUPC_INSTANCE_
 
 /* ========== Register definition for SUPC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_SUPC_CR                    (0x400E1810U) /**< \brief (SUPC) Supply Controller Control Register */
-  #define REG_SUPC_SMMR                  (0x400E1814U) /**< \brief (SUPC) Supply Controller Supply Monitor Mode Register */
-  #define REG_SUPC_MR                    (0x400E1818U) /**< \brief (SUPC) Supply Controller Mode Register */
-  #define REG_SUPC_WUMR                  (0x400E181CU) /**< \brief (SUPC) Supply Controller Wake-up Mode Register */
-  #define REG_SUPC_WUIR                  (0x400E1820U) /**< \brief (SUPC) Supply Controller Wake-up Inputs Register */
-  #define REG_SUPC_SR                    (0x400E1824U) /**< \brief (SUPC) Supply Controller Status Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_SUPC_CR      ( 0x400E1810U )                      /**< \brief (SUPC) Supply Controller Control Register */
+    #define REG_SUPC_SMMR    ( 0x400E1814U )                      /**< \brief (SUPC) Supply Controller Supply Monitor Mode Register */
+    #define REG_SUPC_MR      ( 0x400E1818U )                      /**< \brief (SUPC) Supply Controller Mode Register */
+    #define REG_SUPC_WUMR    ( 0x400E181CU )                      /**< \brief (SUPC) Supply Controller Wake-up Mode Register */
+    #define REG_SUPC_WUIR    ( 0x400E1820U )                      /**< \brief (SUPC) Supply Controller Wake-up Inputs Register */
+    #define REG_SUPC_SR      ( 0x400E1824U )                      /**< \brief (SUPC) Supply Controller Status Register */
 #else
-  #define REG_SUPC_CR   (*(__O  uint32_t*)0x400E1810U) /**< \brief (SUPC) Supply Controller Control Register */
-  #define REG_SUPC_SMMR (*(__IO uint32_t*)0x400E1814U) /**< \brief (SUPC) Supply Controller Supply Monitor Mode Register */
-  #define REG_SUPC_MR   (*(__IO uint32_t*)0x400E1818U) /**< \brief (SUPC) Supply Controller Mode Register */
-  #define REG_SUPC_WUMR (*(__IO uint32_t*)0x400E181CU) /**< \brief (SUPC) Supply Controller Wake-up Mode Register */
-  #define REG_SUPC_WUIR (*(__IO uint32_t*)0x400E1820U) /**< \brief (SUPC) Supply Controller Wake-up Inputs Register */
-  #define REG_SUPC_SR   (*(__I  uint32_t*)0x400E1824U) /**< \brief (SUPC) Supply Controller Status Register */
+    #define REG_SUPC_CR      ( *( __O uint32_t * ) 0x400E1810U )  /**< \brief (SUPC) Supply Controller Control Register */
+    #define REG_SUPC_SMMR    ( *( __IO uint32_t * ) 0x400E1814U ) /**< \brief (SUPC) Supply Controller Supply Monitor Mode Register */
+    #define REG_SUPC_MR      ( *( __IO uint32_t * ) 0x400E1818U ) /**< \brief (SUPC) Supply Controller Mode Register */
+    #define REG_SUPC_WUMR    ( *( __IO uint32_t * ) 0x400E181CU ) /**< \brief (SUPC) Supply Controller Wake-up Mode Register */
+    #define REG_SUPC_WUIR    ( *( __IO uint32_t * ) 0x400E1820U ) /**< \brief (SUPC) Supply Controller Wake-up Inputs Register */
+    #define REG_SUPC_SR      ( *( __I uint32_t * ) 0x400E1824U )  /**< \brief (SUPC) Supply Controller Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMV71_SUPC_INSTANCE_ */

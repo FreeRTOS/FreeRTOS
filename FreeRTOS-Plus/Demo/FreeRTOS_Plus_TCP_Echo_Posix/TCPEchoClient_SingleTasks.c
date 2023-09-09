@@ -159,9 +159,9 @@
         #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         {
             xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-                                                                    configECHO_SERVER_ADDR1,
-                                                                    configECHO_SERVER_ADDR2,
-                                                                    configECHO_SERVER_ADDR3 );
+                                                                                 configECHO_SERVER_ADDR1,
+                                                                                 configECHO_SERVER_ADDR2,
+                                                                                 configECHO_SERVER_ADDR3 );
         }
         #else
         {
@@ -416,5 +416,5 @@
         return eDHCPContinue;
     }
 
-#endif
+#endif /* if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) ) */
 /*-----------------------------------------------------------*/

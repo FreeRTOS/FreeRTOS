@@ -42,60 +42,58 @@
 #include "alt_address_space.h"
 
 
-#define partstNUM_LEDS	4
+#define partstNUM_LEDS    4
 
 /*-----------------------------------------------------------*/
 
 const uint32_t ulLEDs[ partstNUM_LEDS ] = { ALT_GPIO_BIT12, ALT_GPIO_BIT13, ALT_GPIO_BIT14, ALT_GPIO_BIT15 };
 const uint32_t ulAllLEDs = ALT_GPIO_BIT12 | ALT_GPIO_BIT13 | ALT_GPIO_BIT14 | ALT_GPIO_BIT15;
-const uint32_t *pulPortBData = ALT_GPIO1_SWPORTA_DR_ADDR;
+const uint32_t * pulPortBData = ALT_GPIO1_SWPORTA_DR_ADDR;
 static uint32_t ulPortValue;
 
 void vParTestInitialise( void )
 {
-	/* Set GPIO direction. */
-	alt_gpio_port_datadir_set( ALT_GPIO_PORTB, ulAllLEDs, ulAllLEDs );
+    /* Set GPIO direction. */
+    alt_gpio_port_datadir_set( ALT_GPIO_PORTB, ulAllLEDs, ulAllLEDs );
 
-	/* Start with all LEDs off. */
-	alt_gpio_port_data_write( ALT_GPIO_PORTB, ulAllLEDs, ulAllLEDs );
-	ulPortValue = ulAllLEDs;
+    /* Start with all LEDs off. */
+    alt_gpio_port_data_write( ALT_GPIO_PORTB, ulAllLEDs, ulAllLEDs );
+    ulPortValue = ulAllLEDs;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
+void vParTestSetLED( UBaseType_t uxLED,
+                     BaseType_t xValue )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			if( xValue == pdFALSE )
-			{
-				ulPortValue |= ulLEDs[ uxLED ];
-			}
-			else
-			{
-				ulPortValue &= ~ulLEDs[ uxLED ];
-			}
+    if( uxLED < partstNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            if( xValue == pdFALSE )
+            {
+                ulPortValue |= ulLEDs[ uxLED ];
+            }
+            else
+            {
+                ulPortValue &= ~ulLEDs[ uxLED ];
+            }
 
-			alt_replbits_word( pulPortBData, ulAllLEDs, ulPortValue );
-		}
-		taskEXIT_CRITICAL();
-	}
+            alt_replbits_word( pulPortBData, ulAllLEDs, ulPortValue );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			ulPortValue ^= ulLEDs[ uxLED ];
-			alt_replbits_word( pulPortBData, ulAllLEDs, ulPortValue );
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            ulPortValue ^= ulLEDs[ uxLED ];
+            alt_replbits_word( pulPortBData, ulAllLEDs, ulPortValue );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-
-
-

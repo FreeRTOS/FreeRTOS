@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,58 +27,57 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-/// 
-/// Methods to manage the Coprocessor 15. Coprocessor 15, or System Control 
-/// Coprocessor CP15, is used to configure and control all the items in the 
-/// list below:
-/// • ARM core
-/// • Caches (ICache, DCache and write buffer)
-/// • TCM
-/// • MMU
-/// • Other system options
-/// 
-/// !Usage
-///
-/// -# Enable or disable D cache with Enable_D_Cache and Disable_D_Cache
-/// -# Enable or disable I cache with Enable_I_Cache and Disable_I_Cache
-///
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Methods to manage the Coprocessor 15. Coprocessor 15, or System Control */
+/*/ Coprocessor CP15, is used to configure and control all the items in the */
+/*/ list below: */
+/*/ • ARM core */
+/*/ • Caches (ICache, DCache and write buffer) */
+/*/ • TCM */
+/*/ • MMU */
+/*/ • Other system options */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Enable or disable D cache with Enable_D_Cache and Disable_D_Cache */
+/*/ -# Enable or disable I cache with Enable_I_Cache and Disable_I_Cache */
+/*/ */
+/*------------------------------------------------------------------------------ */
 
 #ifndef _CP15_H
 #define _CP15_H
 
 #ifdef CP15_PRESENT
 
-//-----------------------------------------------------------------------------
-//         Exported functions
-//-----------------------------------------------------------------------------
-extern void CP15_Enable_I_Cache(void);
-extern unsigned int CP15_Is_I_CacheEnabled(void);
-extern void CP15_Enable_I_Cache(void);
-extern void CP15_Disable_I_Cache(void);
-extern unsigned int CP15_Is_MMUEnabled(void);
-extern void CP15_EnableMMU(void);
-extern void CP15_DisableMMU(void);
-extern unsigned int CP15_Is_DCacheEnabled(void);
-extern void CP15_Enable_D_Cache(void);
-extern void CP15_Disable_D_Cache(void);
+/*----------------------------------------------------------------------------- */
+/*         Exported functions */
+/*----------------------------------------------------------------------------- */
+    extern void CP15_Enable_I_Cache( void );
+    extern unsigned int CP15_Is_I_CacheEnabled( void );
+    extern void CP15_Enable_I_Cache( void );
+    extern void CP15_Disable_I_Cache( void );
+    extern unsigned int CP15_Is_MMUEnabled( void );
+    extern void CP15_EnableMMU( void );
+    extern void CP15_DisableMMU( void );
+    extern unsigned int CP15_Is_DCacheEnabled( void );
+    extern void CP15_Enable_D_Cache( void );
+    extern void CP15_Disable_D_Cache( void );
 
-//-----------------------------------------------------------------------------
-//         External functions defined in cp15.S
-//-----------------------------------------------------------------------------
-extern unsigned int _readControlRegister(void);
-extern void _writeControlRegister(unsigned int value);
-extern void _waitForInterrupt(void);
-extern void _writeTTB(unsigned int value);
-extern void _writeDomain(unsigned int value);
-extern void _writeITLBLockdown(unsigned int value);
-extern void _prefetchICacheLine(unsigned int value);
+/*----------------------------------------------------------------------------- */
+/*         External functions defined in cp15.S */
+/*----------------------------------------------------------------------------- */
+    extern unsigned int _readControlRegister( void );
+    extern void _writeControlRegister( unsigned int value );
+    extern void _waitForInterrupt( void );
+    extern void _writeTTB( unsigned int value );
+    extern void _writeDomain( unsigned int value );
+    extern void _writeITLBLockdown( unsigned int value );
+    extern void _prefetchICacheLine( unsigned int value );
 
 #endif // CP15_PRESENT
 
 #endif // #ifndef _CP15_H
-

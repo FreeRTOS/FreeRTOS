@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*! ============================================================================
  *  @file       GPIOCC32XX.h
  *
@@ -137,14 +138,14 @@
  */
 
 #ifndef ti_drivers_GPIOCC32XX__include
-#define ti_drivers_GPIOCC32XX__include
+    #define ti_drivers_GPIOCC32XX__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <ti/drivers/GPIO.h>
+    #include <stdint.h>
+    #include <ti/drivers/GPIO.h>
 
 /*!
  *  @brief  GPIO device specific driver configuration structure
@@ -170,95 +171,97 @@ extern "C" {
  *  };
  *  @endcode
  */
-typedef struct GPIOCC32XX_Config {
-    /*! Pointer to the board's GPIO_PinConfig array */
-    GPIO_PinConfig  *pinConfigs;
+    typedef struct GPIOCC32XX_Config
+    {
+        /*! Pointer to the board's GPIO_PinConfig array */
+        GPIO_PinConfig * pinConfigs;
 
-    /*! Pointer to the board's GPIO_CallbackFxn array */
-    GPIO_CallbackFxn  *callbacks;
+        /*! Pointer to the board's GPIO_CallbackFxn array */
+        GPIO_CallbackFxn * callbacks;
 
-    /*! Number of GPIO_PinConfigs defined */
-    uint32_t numberOfPinConfigs;
+        /*! Number of GPIO_PinConfigs defined */
+        uint32_t numberOfPinConfigs;
 
-    /*! Number of GPIO_Callbacks defined */
-    uint32_t numberOfCallbacks;
+        /*! Number of GPIO_Callbacks defined */
+        uint32_t numberOfCallbacks;
 
-    /*!
-     *  Interrupt priority used for call back interrupts.
-     *
-     *  intPriority is the interrupt priority, as defined by the
-     *  underlying OS.  It is passed unmodified to the underlying OS's
-     *  interrupt handler creation code, so you need to refer to the OS
-     *  documentation for usage.  For example, for SYS/BIOS applications,
-     *  refer to the ti.sysbios.family.arm.m3.Hwi documentation for SYS/BIOS
-     *  usage of interrupt priorities.  If the driver uses the ti.dpl
-     *  interface instead of making OS calls directly, then the HwiP port
-     *  handles the interrupt priority in an OS specific way.  In the case
-     *  of the SYS/BIOS port, intPriority is passed unmodified to Hwi_create().
-     *
-     *  Setting ~0 will configure the lowest possible priority
-     */
-    uint32_t intPriority;
-} GPIOCC32XX_Config;
+        /*!
+         *  Interrupt priority used for call back interrupts.
+         *
+         *  intPriority is the interrupt priority, as defined by the
+         *  underlying OS.  It is passed unmodified to the underlying OS's
+         *  interrupt handler creation code, so you need to refer to the OS
+         *  documentation for usage.  For example, for SYS/BIOS applications,
+         *  refer to the ti.sysbios.family.arm.m3.Hwi documentation for SYS/BIOS
+         *  usage of interrupt priorities.  If the driver uses the ti.dpl
+         *  interface instead of making OS calls directly, then the HwiP port
+         *  handles the interrupt priority in an OS specific way.  In the case
+         *  of the SYS/BIOS port, intPriority is passed unmodified to Hwi_create().
+         *
+         *  Setting ~0 will configure the lowest possible priority
+         */
+        uint32_t intPriority;
+    } GPIOCC32XX_Config;
 
 /*!
  *  \defgroup GPIOCC32XX_PinConfigIds GPIO pin identification macros used to configure GPIO pins
  *  @{
  */
+
 /**
  *  @name Device specific GPIO port/pin identifiers to be used within the board's GPIO_PinConfig table.
  *  @{
-*/
-#define GPIOCC32XX_EMPTY_PIN  0x0000    /*!< @hideinitializer */
+ */
+    #define GPIOCC32XX_EMPTY_PIN    0x0000 /*!< @hideinitializer */
 
-#define GPIOCC32XX_GPIO_00    0x0001    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_01    0x0002    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_02    0x0004    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_03    0x0008    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_04    0x0010    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_05    0x0020    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_06    0x0040    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_07    0x0080    /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_00      0x0001 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_01      0x0002 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_02      0x0004 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_03      0x0008 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_04      0x0010 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_05      0x0020 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_06      0x0040 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_07      0x0080 /*!< @hideinitializer */
 
-#define GPIOCC32XX_GPIO_08    0x0101    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_09    0x0102    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_10    0x0104    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_11    0x0108    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_12    0x0110    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_13    0x0120    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_14    0x0140    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_15    0x0180    /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_08      0x0101 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_09      0x0102 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_10      0x0104 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_11      0x0108 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_12      0x0110 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_13      0x0120 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_14      0x0140 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_15      0x0180 /*!< @hideinitializer */
 
-#define GPIOCC32XX_GPIO_16    0x0201    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_17    0x0202    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_18    0x0204    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_19    0x0208    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_20    0x0210    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_21    0x0220    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_22    0x0240    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_23    0x0280    /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_16      0x0201 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_17      0x0202 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_18      0x0204 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_19      0x0208 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_20      0x0210 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_21      0x0220 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_22      0x0240 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_23      0x0280 /*!< @hideinitializer */
 
-#define GPIOCC32XX_GPIO_24    0x0301    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_25    0x0302    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_26    0x0304    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_27    0x0308    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_28    0x0310    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_29    0x0320    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_30    0x0340    /*!< @hideinitializer */
-#define GPIOCC32XX_GPIO_31    0x0380    /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_24      0x0301 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_25      0x0302 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_26      0x0304 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_27      0x0308 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_28      0x0310 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_29      0x0320 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_30      0x0340 /*!< @hideinitializer */
+    #define GPIOCC32XX_GPIO_31      0x0380 /*!< @hideinitializer */
 /** @} */
 
 /**
  *  @name CC32xx device specific GPIO_PinConfig macros
  *  @{
  */
-#define GPIOCC32XX_USE_STATIC 0x8000    /*!< @hideinitializer use statically-defined parking state */
+    #define GPIOCC32XX_USE_STATIC    0x8000/*!< @hideinitializer use statically-defined parking state */
 /** @} */
 
 /** @} end of GPIOCC32XX_PinConfigIds group */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_GPIOCC32XX__include */

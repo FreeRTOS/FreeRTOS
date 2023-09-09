@@ -56,13 +56,13 @@
  * of FreeRTOS.
  * The function prints to the console before the network is connected;
  * then a UDP port after the network has connected. */
-extern void vLoggingPrintf(const char* pcFormatString,
-    ...);
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
 
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
 #ifndef SdkLog
-#define SdkLog( message )    vLoggingPrintf message
+    #define SdkLog( message )    vLoggingPrintf message
 #endif
 
 #include "logging_stack.h"
@@ -122,7 +122,7 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * #define democonfigCREDENTIALS_IN_BUFFER
  */
 
- /**
+/**
  * @brief Server's root CA certificate.
  *
  * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT

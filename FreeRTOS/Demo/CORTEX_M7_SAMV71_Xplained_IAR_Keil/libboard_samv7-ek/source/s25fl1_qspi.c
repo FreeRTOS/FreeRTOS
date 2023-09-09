@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -28,14 +28,14 @@
  */
 
 
-/** 
+/**
  * \addtogroup at25_spi_module S25FL1 SPI driver
  * \ingroup lib_spiflash
  *
  * The S25FL1 serial firmware dataflash driver is based on top of the
  * corresponding Spi driver. A Dataflash structure instance has to be
- * initialized using the S25FL1_Configure() function. Then a command can be send 
- * to the serial flash using the SPI_SendCommand() function. 
+ * initialized using the S25FL1_Configure() function. Then a command can be send
+ * to the serial flash using the SPI_SendCommand() function.
  *
  * \section Usage
  * <ul>
@@ -82,7 +82,7 @@
  *        Headers
  *----------------------------------------------------------------------------*/
 #include <board.h>
-//#include <libspiflash.h>
+/*#include <libspiflash.h> */
 #include <assert.h>
 
 /*----------------------------------------------------------------------------
@@ -104,12 +104,14 @@
  * \param cs  Chip select value to communicate with the serial flash.
  * \param polling Uses polling mode instead of IRQ trigger.
  */
-void S25FL1_Configure(S25fl1 *pS25fl1, Qspid *pQspid, uint8_t polling)
+void S25FL1_Configure( S25fl1 * pS25fl1,
+                       Qspid * pQspid,
+                       uint8_t polling )
 {
-    SpidCmd *pCommand;
+    SpidCmd * pCommand;
 
-    assert(pS25fl1);
-    assert(pQSpid);
+    assert( pS25fl1 );
+    assert( pQSpid );
 
 
     /* Initialize the S25FL1 fields */
@@ -118,8 +120,8 @@ void S25FL1_Configure(S25fl1 *pS25fl1, Qspid *pQspid, uint8_t polling)
     pS25fl1->pollingMode = polling;
 
     /* Initialize the command structure */
-    pCommand = &(pS25fl1->command);
-    pCommand->pCmd = (uint8_t *) pS25fl1->CmdBuffer;
+    pCommand = &( pS25fl1->command );
+    pCommand->pCmd = ( uint8_t * ) pS25fl1->CmdBuffer;
     pCommand->callback = 0;
     pCommand->pArgument = 0;
 }
@@ -132,14 +134,15 @@ void S25FL1_Configure(S25fl1 *pS25fl1, Qspid *pQspid, uint8_t polling)
  * \return 1 if the serial flash driver is currently busy executing a command;
  * otherwise returns 0.
  */
-uint8_t S25FL1_IsBusy(S25fl1 *pS25fl1)
+uint8_t S25FL1_IsBusy( S25fl1 * pS25fl1 )
 {
-    if (pS25fl1->pollingMode)
+    if( pS25fl1->pollingMode )
     {
-        SPID_Handler(pS25fl1->pSpid);
-        SPID_DmaHandler(pS25fl1->pSpid);
+        SPID_Handler( pS25fl1->pSpid );
+        SPID_DmaHandler( pS25fl1->pSpid );
     }
-    return SPID_IsBusy(pS25fl1->pSpid);
+
+    return SPID_IsBusy( pS25fl1->pSpid );
 }
 
 /**
@@ -162,11 +165,12 @@ uint8_t S25FL1_IsBusy(S25fl1 *pS25fl1)
  * driver is currently executing a command, or S25FL1_ERROR_SPI if the command
  * cannot be sent because of a SPI error.
  */
-uint8_t S25FL1_SendCommand(uint8_t Instr, uint8_t ReadWrite)
+uint8_t S25FL1_SendCommand( uint8_t Instr,
+                            uint8_t ReadWrite )
 
-{  
-    pDev->Instruction = Instr; 
-    QSPI_SendFrame(QSPI, pDev, ReadWrite);
+{
+    pDev->Instruction = Instr;
+    QSPI_SendFrame( QSPI, pDev, ReadWrite );
 }
 
 /**
@@ -178,19 +182,21 @@ uint8_t S25FL1_SendCommand(uint8_t Instr, uint8_t ReadWrite)
  *
  * \return the corresponding S25FL1 descriptor if found; otherwise returns 0.
  */
-const S25fl1Desc * S25FL1_FindDevice(S25fl1 *pS25fl1, uint32_t jedecId)
+const S25fl1Desc * S25FL1_FindDevice( S25fl1 * pS25fl1,
+                                      uint32_t jedecId )
 {
     uint32_t i = 0;
 
-    assert(pS25fl1);
+    assert( pS25fl1 );
 
     /* Search if device is recognized */
     pS25fl1->pDesc = 0;
-    while ((i < NUMDATAFLASH) && !(pS25fl1->pDesc)) {
 
-        if ((jedecId & 0xFF00FFFF) == (at25Devices[i].jedecId & 0xFF00FFFF)) {
-
-            pS25fl1->pDesc = &(at25Devices[i]);
+    while( ( i < NUMDATAFLASH ) && !( pS25fl1->pDesc ) )
+    {
+        if( ( jedecId & 0xFF00FFFF ) == ( at25Devices[ i ].jedecId & 0xFF00FFFF ) )
+        {
+            pS25fl1->pDesc = &( at25Devices[ i ] );
         }
 
         i++;

@@ -9,23 +9,35 @@
 #include "stub.h"
 #include "weak_under_alias.h"
 
-ssize_t __wrap_write(int fd, const void* ptr, size_t len)
+ssize_t __wrap_write( int fd,
+                      const void * ptr,
+                      size_t len )
 {
-  const uint8_t * current = (const uint8_t *)ptr;
+    const uint8_t * current = ( const uint8_t * ) ptr;
 
-  if (isatty(fd)) {
-    for (size_t jj = 0; jj < len; jj++) {
-      while (UART0_REG(UART_REG_TXFIFO) & 0x80000000) ;
-      UART0_REG(UART_REG_TXFIFO) = current[jj];
+    if( isatty( fd ) )
+    {
+        for( size_t jj = 0; jj < len; jj++ )
+        {
+            while( UART0_REG( UART_REG_TXFIFO ) & 0x80000000 )
+            {
+            }
 
-      if (current[jj] == '\n') {
-        while (UART0_REG(UART_REG_TXFIFO) & 0x80000000) ;
-        UART0_REG(UART_REG_TXFIFO) = '\r';
-      }
+            UART0_REG( UART_REG_TXFIFO ) = current[ jj ];
+
+            if( current[ jj ] == '\n' )
+            {
+                while( UART0_REG( UART_REG_TXFIFO ) & 0x80000000 )
+                {
+                }
+
+                UART0_REG( UART_REG_TXFIFO ) = '\r';
+            }
+        }
+
+        return len;
     }
-    return len;
-  }
 
-  return _stub(EBADF);
+    return _stub( EBADF );
 }
-weak_under_alias(write);
+weak_under_alias( write );

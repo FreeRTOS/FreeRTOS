@@ -111,7 +111,7 @@
         BaseType_t x;
 
         /* Set Ethernet interrupt priority to configMAC_INTERRUPT_PRIORITY. */
-        NVIC_SetPriority( ETHERNET_IRQn , configMAC_INTERRUPT_PRIORITY );
+        NVIC_SetPriority( ETHERNET_IRQn, configMAC_INTERRUPT_PRIORITY );
 
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
@@ -163,9 +163,9 @@
         #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         {
             xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-                                                                    configECHO_SERVER_ADDR1,
-                                                                    configECHO_SERVER_ADDR2,
-                                                                    configECHO_SERVER_ADDR3 );
+                                                                                 configECHO_SERVER_ADDR1,
+                                                                                 configECHO_SERVER_ADDR2,
+                                                                                 configECHO_SERVER_ADDR3 );
         }
         #else
         {

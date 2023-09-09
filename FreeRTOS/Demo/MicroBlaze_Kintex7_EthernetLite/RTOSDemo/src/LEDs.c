@@ -40,7 +40,7 @@
 #include "xgpio.h"
 
 
-#define partstNUM_LEDS	8
+#define partstNUM_LEDS    8
 
 /*-----------------------------------------------------------*/
 
@@ -51,64 +51,65 @@ static XGpio xOutputGPIOInstance;
 static volatile UBaseType_t uxGPIOState = 0U;
 
 /* Constant required by the Xilinx peripheral driver API functions that are
-relevant to the particular hardware set up. */
+ * relevant to the particular hardware set up. */
 static const unsigned long ulGPIOOutputChannel = 1UL;
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-portBASE_TYPE xStatus;
-const unsigned char ucSetToOutput = 0U;
+    portBASE_TYPE xStatus;
+    const unsigned char ucSetToOutput = 0U;
 
-	/* Initialize the GPIO for the LEDs. */
-	xStatus = XGpio_Initialize( &xOutputGPIOInstance, XPAR_AXI_GPIO_0_DEVICE_ID );
-	if( xStatus == XST_SUCCESS )
-	{
-		/* All bits on this channel are going to be outputs (LEDs). */
-		XGpio_SetDataDirection( &xOutputGPIOInstance, ulGPIOOutputChannel, ucSetToOutput );
+    /* Initialize the GPIO for the LEDs. */
+    xStatus = XGpio_Initialize( &xOutputGPIOInstance, XPAR_AXI_GPIO_0_DEVICE_ID );
 
-		/* Start with all LEDs off. */
-		uxGPIOState = 0U;
-		XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ( uint8_t ) uxGPIOState );
-	}
+    if( xStatus == XST_SUCCESS )
+    {
+        /* All bits on this channel are going to be outputs (LEDs). */
+        XGpio_SetDataDirection( &xOutputGPIOInstance, ulGPIOOutputChannel, ucSetToOutput );
 
-	configASSERT( ( xStatus == XST_SUCCESS ) );
+        /* Start with all LEDs off. */
+        uxGPIOState = 0U;
+        XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ( uint8_t ) uxGPIOState );
+    }
+
+    configASSERT( ( xStatus == XST_SUCCESS ) );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
+void vParTestSetLED( UBaseType_t uxLED,
+                     BaseType_t xValue )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			if( xValue != pdFALSE )
-			{
-				uxGPIOState |= ( 1UL << uxLED );
-			}
-			else
-			{
-				uxGPIOState &= ~( 1UL << uxLED );
-			}
+    if( uxLED < partstNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            if( xValue != pdFALSE )
+            {
+                uxGPIOState |= ( 1UL << uxLED );
+            }
+            else
+            {
+                uxGPIOState &= ~( 1UL << uxLED );
+            }
 
-			XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ( uint8_t ) uxGPIOState );
-		}
-		taskEXIT_CRITICAL();
-	}
+            XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ( uint8_t ) uxGPIOState );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			uxGPIOState ^= ( 1UL << uxLED );
-			XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ( uint8_t ) uxGPIOState );
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            uxGPIOState ^= ( 1UL << uxLED );
+            XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ( uint8_t ) uxGPIOState );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-

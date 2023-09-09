@@ -9,22 +9,21 @@
 #define __SCU_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- Secure configuration Unit -------------------------*/
+
 /**
-    @addtogroup SCU Secure configuration Unit(SCU)
-    Memory Mapped Structure for SCU Controller
-@{ */
+ *  @addtogroup SCU Secure configuration Unit(SCU)
+ *  Memory Mapped Structure for SCU Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var SCU_T::PNSSET[0]
      * Offset: 0x00  Peripheral Non-secure Attribution Set Register0 (0x4000_0000~0x4001_FFFF)
@@ -803,439 +802,438 @@ typedef struct
      * |        |          |1 = Counter counts down to 0.
      * |        |          |Note: This bit is cleared by writing 1.
      */
-    __IO uint32_t PNSSET[7];             /*!< [0x0000~0X0018] Peripheral Non-secure Attribution Set Register0 (0x4000_0000~0x4001_FFFF) */
-    __I  uint32_t RESERVE0[1];
-    __IO uint32_t IONSSET;               /*!< [0x0020] IO Non-secure Attribution Set Register                           */
-    __IO uint32_t SRAMNSSET;             /*!< [0x0024] SRAM Non-secure Attribution Set Register                         */
-    __I  uint32_t FNSADDR;               /*!< [0x0028] Flash Non-secure Boundary Address Register                       */
-    __IO uint32_t SVIOIEN;               /*!< [0x002c] Security Violation Interrupt Enable Register                     */
-    __IO uint32_t SVINTSTS;              /*!< [0x0030] Security Violation Interrupt Status Register                     */
-    __I  uint32_t APB0VSRC;              /*!< [0x0034] APB0 Security Policy Violation Source                            */
-    __I  uint32_t APB0VA;                /*!< [0x0038] APB0 Violation Address                                           */
-    __I  uint32_t APB1VSRC;              /*!< [0x003c] APB1 Security Policy Violation Source                            */
-    __I  uint32_t APB1VA;                /*!< [0x0040] APB1 Violation Address                                           */
-    __I  uint32_t GPIOVSRC;              /*!< [0x0044] GPIO Security Policy Violation Source                            */
-    __I  uint32_t GPIOVA;                /*!< [0x0048] GPIO Violation Address                                           */
-    __I  uint32_t EBIVSRC;               /*!< [0x004c] EBI Security Policy Violation Source                             */
-    __I  uint32_t EBIVA;                 /*!< [0x0050] EBI Violation Address                                            */
-    __I  uint32_t USBHVSRC;              /*!< [0x0054] USBH Security Policy Violation Source                            */
-    __I  uint32_t USBHVA;                /*!< [0x0058] USBH Violation Address                                           */
-    __I  uint32_t CRCVSRC;               /*!< [0x005c] CRC Security Policy Violation Source                             */
-    __I  uint32_t CRCVA;                 /*!< [0x0060] CRC Violation Address                                            */
-    __I  uint32_t SD0VSRC;               /*!< [0x0064] SDH0 Security Policy Violation Source                            */
-    __I  uint32_t SD0VA;                 /*!< [0x0068] SDH0 Violation Address                                           */
-    __I  uint32_t RESERVE1[2];
-    __I  uint32_t PDMA0VSRC;             /*!< [0x0074] PDMA0 Security Policy Violation Source                           */
-    __I  uint32_t PDMA0VA;               /*!< [0x0078] PDMA0 Violation Address                                          */
-    __I  uint32_t PDMA1VSRC;             /*!< [0x007c] PDMA1 Security Policy Violation Source                           */
-    __I  uint32_t PDMA1VA;               /*!< [0x0080] PDMA1 Violation Address                                          */
-    __I  uint32_t SRAM0VSRC;             /*!< [0x0084] SRAM0 Security Policy Violation Source                           */
-    __I  uint32_t SRAM0VA;               /*!< [0x0088] SRAM0 Violation Address                                          */
-    __I  uint32_t SRAM1VSRC;             /*!< [0x008c] SRAM1 Security Policy Violation Source                           */
-    __I  uint32_t SRAM1VA;               /*!< [0x0090] SRAM1 Violation Address                                          */
-    __I  uint32_t FMCVSRC;               /*!< [0x0094] FMC Security Policy Violation Source                             */
-    __I  uint32_t FMCVA;                 /*!< [0x0098] FMC Violation Address                                            */
-    __I  uint32_t FLASHVSRC;             /*!< [0x009c] Flash Security Policy Violation Source                           */
-    __I  uint32_t FLASHVA;               /*!< [0x00a0] Flash Violation Address                                          */
-    __I  uint32_t SCUVSRC;               /*!< [0x00a4] SCU Security Policy Violation Source                             */
-    __I  uint32_t SCUVA;                 /*!< [0x00a8] SCU Violation Address                                            */
-    __I  uint32_t SYSVSRC;               /*!< [0x00ac] System Security Policy Violation Source                          */
-    __I  uint32_t SYSVA;                 /*!< [0x00b0] System Violation Address                                         */
-    __I  uint32_t CRPTVSRC;              /*!< [0x00b4] Crypto Security Policy Violation Source                          */
-    __I  uint32_t CRPTVA;                /*!< [0x00b8] Crypto Violation Address                                         */
-    __I  uint32_t RESERVE2[81];
-    __IO uint32_t NSMCTL;                /*!< [0x0200] Non-secure State Monitor Control Register                        */
-    __IO uint32_t NSMLOAD;               /*!< [0x0204] Non-secure State Monitor Reload Value Register                   */
-    __IO uint32_t NSMVAL;                /*!< [0x0208] Non-secure State Monitor Counter Value Register                  */
-    __IO uint32_t NSMSTS;                /*!< [0x020c] Non-secure State Monitor Status Register                         */
-
+    __IO uint32_t PNSSET[ 7 ]; /*!< [0x0000~0X0018] Peripheral Non-secure Attribution Set Register0 (0x4000_0000~0x4001_FFFF) */
+    __I uint32_t RESERVE0[ 1 ];
+    __IO uint32_t IONSSET;     /*!< [0x0020] IO Non-secure Attribution Set Register                           */
+    __IO uint32_t SRAMNSSET;   /*!< [0x0024] SRAM Non-secure Attribution Set Register                         */
+    __I uint32_t FNSADDR;      /*!< [0x0028] Flash Non-secure Boundary Address Register                       */
+    __IO uint32_t SVIOIEN;     /*!< [0x002c] Security Violation Interrupt Enable Register                     */
+    __IO uint32_t SVINTSTS;    /*!< [0x0030] Security Violation Interrupt Status Register                     */
+    __I uint32_t APB0VSRC;     /*!< [0x0034] APB0 Security Policy Violation Source                            */
+    __I uint32_t APB0VA;       /*!< [0x0038] APB0 Violation Address                                           */
+    __I uint32_t APB1VSRC;     /*!< [0x003c] APB1 Security Policy Violation Source                            */
+    __I uint32_t APB1VA;       /*!< [0x0040] APB1 Violation Address                                           */
+    __I uint32_t GPIOVSRC;     /*!< [0x0044] GPIO Security Policy Violation Source                            */
+    __I uint32_t GPIOVA;       /*!< [0x0048] GPIO Violation Address                                           */
+    __I uint32_t EBIVSRC;      /*!< [0x004c] EBI Security Policy Violation Source                             */
+    __I uint32_t EBIVA;        /*!< [0x0050] EBI Violation Address                                            */
+    __I uint32_t USBHVSRC;     /*!< [0x0054] USBH Security Policy Violation Source                            */
+    __I uint32_t USBHVA;       /*!< [0x0058] USBH Violation Address                                           */
+    __I uint32_t CRCVSRC;      /*!< [0x005c] CRC Security Policy Violation Source                             */
+    __I uint32_t CRCVA;        /*!< [0x0060] CRC Violation Address                                            */
+    __I uint32_t SD0VSRC;      /*!< [0x0064] SDH0 Security Policy Violation Source                            */
+    __I uint32_t SD0VA;        /*!< [0x0068] SDH0 Violation Address                                           */
+    __I uint32_t RESERVE1[ 2 ];
+    __I uint32_t PDMA0VSRC;    /*!< [0x0074] PDMA0 Security Policy Violation Source                           */
+    __I uint32_t PDMA0VA;      /*!< [0x0078] PDMA0 Violation Address                                          */
+    __I uint32_t PDMA1VSRC;    /*!< [0x007c] PDMA1 Security Policy Violation Source                           */
+    __I uint32_t PDMA1VA;      /*!< [0x0080] PDMA1 Violation Address                                          */
+    __I uint32_t SRAM0VSRC;    /*!< [0x0084] SRAM0 Security Policy Violation Source                           */
+    __I uint32_t SRAM0VA;      /*!< [0x0088] SRAM0 Violation Address                                          */
+    __I uint32_t SRAM1VSRC;    /*!< [0x008c] SRAM1 Security Policy Violation Source                           */
+    __I uint32_t SRAM1VA;      /*!< [0x0090] SRAM1 Violation Address                                          */
+    __I uint32_t FMCVSRC;      /*!< [0x0094] FMC Security Policy Violation Source                             */
+    __I uint32_t FMCVA;        /*!< [0x0098] FMC Violation Address                                            */
+    __I uint32_t FLASHVSRC;    /*!< [0x009c] Flash Security Policy Violation Source                           */
+    __I uint32_t FLASHVA;      /*!< [0x00a0] Flash Violation Address                                          */
+    __I uint32_t SCUVSRC;      /*!< [0x00a4] SCU Security Policy Violation Source                             */
+    __I uint32_t SCUVA;        /*!< [0x00a8] SCU Violation Address                                            */
+    __I uint32_t SYSVSRC;      /*!< [0x00ac] System Security Policy Violation Source                          */
+    __I uint32_t SYSVA;        /*!< [0x00b0] System Violation Address                                         */
+    __I uint32_t CRPTVSRC;     /*!< [0x00b4] Crypto Security Policy Violation Source                          */
+    __I uint32_t CRPTVA;       /*!< [0x00b8] Crypto Violation Address                                         */
+    __I uint32_t RESERVE2[ 81 ];
+    __IO uint32_t NSMCTL;      /*!< [0x0200] Non-secure State Monitor Control Register                        */
+    __IO uint32_t NSMLOAD;     /*!< [0x0204] Non-secure State Monitor Reload Value Register                   */
+    __IO uint32_t NSMVAL;      /*!< [0x0208] Non-secure State Monitor Counter Value Register                  */
+    __IO uint32_t NSMSTS;      /*!< [0x020c] Non-secure State Monitor Status Register                         */
 } SCU_T;
 
 /**
-    @addtogroup SCU_CONST SCU Bit Field Definition
-    Constant Definitions for SCU Controller
-@{ */
+ *  @addtogroup SCU_CONST SCU Bit Field Definition
+ *  Constant Definitions for SCU Controller
+ * @{ */
 
-#define SCU_PNSSET0_USBH_Pos             (9)                                               /*!< SCU_T::PNSSET0: USBH Position          */
-#define SCU_PNSSET0_USBH_Msk             (0x1ul << SCU_PNSSET0_USBH_Pos)                   /*!< SCU_T::PNSSET0: USBH Mask              */
+#define SCU_PNSSET0_USBH_Pos        ( 9 )                                                  /*!< SCU_T::PNSSET0: USBH Position          */
+#define SCU_PNSSET0_USBH_Msk        ( 0x1ul << SCU_PNSSET0_USBH_Pos )                      /*!< SCU_T::PNSSET0: USBH Mask              */
 
-#define SCU_PNSSET0_SDH0_Pos             (13)                                              /*!< SCU_T::PNSSET0: SDH0 Position          */
-#define SCU_PNSSET0_SDH0_Msk             (0x1ul << SCU_PNSSET0_SDH0_Pos)                   /*!< SCU_T::PNSSET0: SDH0 Mask              */
+#define SCU_PNSSET0_SDH0_Pos        ( 13 )                                                 /*!< SCU_T::PNSSET0: SDH0 Position          */
+#define SCU_PNSSET0_SDH0_Msk        ( 0x1ul << SCU_PNSSET0_SDH0_Pos )                      /*!< SCU_T::PNSSET0: SDH0 Mask              */
 
-#define SCU_PNSSET0_EBI_Pos              (16)                                              /*!< SCU_T::PNSSET0: EBI Position           */
-#define SCU_PNSSET0_EBI_Msk              (0x1ul << SCU_PNSSET0_EBI_Pos)                    /*!< SCU_T::PNSSET0: EBI Mask               */
+#define SCU_PNSSET0_EBI_Pos         ( 16 )                                                 /*!< SCU_T::PNSSET0: EBI Position           */
+#define SCU_PNSSET0_EBI_Msk         ( 0x1ul << SCU_PNSSET0_EBI_Pos )                       /*!< SCU_T::PNSSET0: EBI Mask               */
 
-#define SCU_PNSSET0_PDMA1_Pos            (24)                                              /*!< SCU_T::PNSSET0: PDMA1 Position         */
-#define SCU_PNSSET0_PDMA1_Msk            (0x1ul << SCU_PNSSET0_PDMA1_Pos)                  /*!< SCU_T::PNSSET0: PDMA1 Mask             */
+#define SCU_PNSSET0_PDMA1_Pos       ( 24 )                                                 /*!< SCU_T::PNSSET0: PDMA1 Position         */
+#define SCU_PNSSET0_PDMA1_Msk       ( 0x1ul << SCU_PNSSET0_PDMA1_Pos )                     /*!< SCU_T::PNSSET0: PDMA1 Mask             */
 
-#define SCU_PNSSET1_CRC_Pos              (17)                                              /*!< SCU_T::PNSSET1: CRC Position           */
-#define SCU_PNSSET1_CRC_Msk              (0x1ul << SCU_PNSSET1_CRC_Pos)                    /*!< SCU_T::PNSSET1: CRC Mask               */
+#define SCU_PNSSET1_CRC_Pos         ( 17 )                                                 /*!< SCU_T::PNSSET1: CRC Position           */
+#define SCU_PNSSET1_CRC_Msk         ( 0x1ul << SCU_PNSSET1_CRC_Pos )                       /*!< SCU_T::PNSSET1: CRC Mask               */
 
-#define SCU_PNSSET1_CRPT_Pos             (18)                                              /*!< SCU_T::PNSSET1: CRPT Position          */
-#define SCU_PNSSET1_CRPT_Msk             (0x1ul << SCU_PNSSET1_CRPT_Pos)                   /*!< SCU_T::PNSSET1: CRPT Mask              */
+#define SCU_PNSSET1_CRPT_Pos        ( 18 )                                                 /*!< SCU_T::PNSSET1: CRPT Position          */
+#define SCU_PNSSET1_CRPT_Msk        ( 0x1ul << SCU_PNSSET1_CRPT_Pos )                      /*!< SCU_T::PNSSET1: CRPT Mask              */
 
-#define SCU_PNSSET2_RTC_Pos              (1)                                               /*!< SCU_T::PNSSET2: RTC Position           */
-#define SCU_PNSSET2_RTC_Msk              (0x1ul << SCU_PNSSET2_RTC_Pos)                    /*!< SCU_T::PNSSET2: RTC Mask               */
+#define SCU_PNSSET2_RTC_Pos         ( 1 )                                                  /*!< SCU_T::PNSSET2: RTC Position           */
+#define SCU_PNSSET2_RTC_Msk         ( 0x1ul << SCU_PNSSET2_RTC_Pos )                       /*!< SCU_T::PNSSET2: RTC Mask               */
 
-#define SCU_PNSSET2_EADC_Pos             (3)                                               /*!< SCU_T::PNSSET2: EADC Position          */
-#define SCU_PNSSET2_EADC_Msk             (0x1ul << SCU_PNSSET2_EADC_Pos)                   /*!< SCU_T::PNSSET2: EADC Mask              */
+#define SCU_PNSSET2_EADC_Pos        ( 3 )                                                  /*!< SCU_T::PNSSET2: EADC Position          */
+#define SCU_PNSSET2_EADC_Msk        ( 0x1ul << SCU_PNSSET2_EADC_Pos )                      /*!< SCU_T::PNSSET2: EADC Mask              */
 
-#define SCU_PNSSET2_ACMP01_Pos           (5)                                               /*!< SCU_T::PNSSET2: ACMP01 Position        */
-#define SCU_PNSSET2_ACMP01_Msk           (0x1ul << SCU_PNSSET2_ACMP01_Pos)                 /*!< SCU_T::PNSSET2: ACMP01 Mask            */
+#define SCU_PNSSET2_ACMP01_Pos      ( 5 )                                                  /*!< SCU_T::PNSSET2: ACMP01 Position        */
+#define SCU_PNSSET2_ACMP01_Msk      ( 0x1ul << SCU_PNSSET2_ACMP01_Pos )                    /*!< SCU_T::PNSSET2: ACMP01 Mask            */
 
-#define SCU_PNSSET2_DAC_Pos              (7)                                               /*!< SCU_T::PNSSET2: DAC Position           */
-#define SCU_PNSSET2_DAC_Msk              (0x1ul << SCU_PNSSET2_DAC_Pos)                    /*!< SCU_T::PNSSET2: DAC Mask               */
+#define SCU_PNSSET2_DAC_Pos         ( 7 )                                                  /*!< SCU_T::PNSSET2: DAC Position           */
+#define SCU_PNSSET2_DAC_Msk         ( 0x1ul << SCU_PNSSET2_DAC_Pos )                       /*!< SCU_T::PNSSET2: DAC Mask               */
 
-#define SCU_PNSSET2_I2S0_Pos             (8)                                               /*!< SCU_T::PNSSET2: I2S0 Position          */
-#define SCU_PNSSET2_I2S0_Msk             (0x1ul << SCU_PNSSET2_I2S0_Pos)                   /*!< SCU_T::PNSSET2: I2S0 Mask              */
+#define SCU_PNSSET2_I2S0_Pos        ( 8 )                                                  /*!< SCU_T::PNSSET2: I2S0 Position          */
+#define SCU_PNSSET2_I2S0_Msk        ( 0x1ul << SCU_PNSSET2_I2S0_Pos )                      /*!< SCU_T::PNSSET2: I2S0 Mask              */
 
-#define SCU_PNSSET2_OTG_Pos              (13)                                              /*!< SCU_T::PNSSET2: OTG Position           */
-#define SCU_PNSSET2_OTG_Msk              (0x1ul << SCU_PNSSET2_OTG_Pos)                    /*!< SCU_T::PNSSET2: OTG Mask               */
+#define SCU_PNSSET2_OTG_Pos         ( 13 )                                                 /*!< SCU_T::PNSSET2: OTG Position           */
+#define SCU_PNSSET2_OTG_Msk         ( 0x1ul << SCU_PNSSET2_OTG_Pos )                       /*!< SCU_T::PNSSET2: OTG Mask               */
 
-#define SCU_PNSSET2_TMR23_Pos            (17)                                              /*!< SCU_T::PNSSET2: TMR23 Position         */
-#define SCU_PNSSET2_TMR23_Msk            (0x1ul << SCU_PNSSET2_TMR23_Pos)                  /*!< SCU_T::PNSSET2: TMR23 Mask             */
+#define SCU_PNSSET2_TMR23_Pos       ( 17 )                                                 /*!< SCU_T::PNSSET2: TMR23 Position         */
+#define SCU_PNSSET2_TMR23_Msk       ( 0x1ul << SCU_PNSSET2_TMR23_Pos )                     /*!< SCU_T::PNSSET2: TMR23 Mask             */
 
-#define SCU_PNSSET2_EPWM0_Pos            (24)                                              /*!< SCU_T::PNSSET2: EPWM0 Position         */
-#define SCU_PNSSET2_EPWM0_Msk            (0x1ul << SCU_PNSSET2_EPWM0_Pos)                  /*!< SCU_T::PNSSET2: EPWM0 Mask             */
+#define SCU_PNSSET2_EPWM0_Pos       ( 24 )                                                 /*!< SCU_T::PNSSET2: EPWM0 Position         */
+#define SCU_PNSSET2_EPWM0_Msk       ( 0x1ul << SCU_PNSSET2_EPWM0_Pos )                     /*!< SCU_T::PNSSET2: EPWM0 Mask             */
 
-#define SCU_PNSSET2_EPWM1_Pos            (25)                                              /*!< SCU_T::PNSSET2: EPWM1 Position         */
-#define SCU_PNSSET2_EPWM1_Msk            (0x1ul << SCU_PNSSET2_EPWM1_Pos)                  /*!< SCU_T::PNSSET2: EPWM1 Mask             */
+#define SCU_PNSSET2_EPWM1_Pos       ( 25 )                                                 /*!< SCU_T::PNSSET2: EPWM1 Position         */
+#define SCU_PNSSET2_EPWM1_Msk       ( 0x1ul << SCU_PNSSET2_EPWM1_Pos )                     /*!< SCU_T::PNSSET2: EPWM1 Mask             */
 
-#define SCU_PNSSET2_BPWM0_Pos            (26)                                              /*!< SCU_T::PNSSET2: BPWM0 Position         */
-#define SCU_PNSSET2_BPWM0_Msk            (0x1ul << SCU_PNSSET2_BPWM0_Pos)                  /*!< SCU_T::PNSSET2: BPWM0 Mask             */
+#define SCU_PNSSET2_BPWM0_Pos       ( 26 )                                                 /*!< SCU_T::PNSSET2: BPWM0 Position         */
+#define SCU_PNSSET2_BPWM0_Msk       ( 0x1ul << SCU_PNSSET2_BPWM0_Pos )                     /*!< SCU_T::PNSSET2: BPWM0 Mask             */
 
-#define SCU_PNSSET2_BPWM1_Pos            (27)                                              /*!< SCU_T::PNSSET2: BPWM1 Position         */
-#define SCU_PNSSET2_BPWM1_Msk            (0x1ul << SCU_PNSSET2_BPWM1_Pos)                  /*!< SCU_T::PNSSET2: BPWM1 Mask             */
+#define SCU_PNSSET2_BPWM1_Pos       ( 27 )                                                 /*!< SCU_T::PNSSET2: BPWM1 Position         */
+#define SCU_PNSSET2_BPWM1_Msk       ( 0x1ul << SCU_PNSSET2_BPWM1_Pos )                     /*!< SCU_T::PNSSET2: BPWM1 Mask             */
 
-#define SCU_PNSSET3_QSPI0_Pos            (0)                                               /*!< SCU_T::PNSSET3: QSPI0 Position         */
-#define SCU_PNSSET3_QSPI0_Msk            (0x1ul << SCU_PNSSET3_QSPI0_Pos)                  /*!< SCU_T::PNSSET3: QSPI0 Mask             */
+#define SCU_PNSSET3_QSPI0_Pos       ( 0 )                                                  /*!< SCU_T::PNSSET3: QSPI0 Position         */
+#define SCU_PNSSET3_QSPI0_Msk       ( 0x1ul << SCU_PNSSET3_QSPI0_Pos )                     /*!< SCU_T::PNSSET3: QSPI0 Mask             */
 
-#define SCU_PNSSET3_SPI0_Pos             (1)                                               /*!< SCU_T::PNSSET3: SPI0 Position          */
-#define SCU_PNSSET3_SPI0_Msk             (0x1ul << SCU_PNSSET3_SPI0_Pos)                   /*!< SCU_T::PNSSET3: SPI0 Mask              */
+#define SCU_PNSSET3_SPI0_Pos        ( 1 )                                                  /*!< SCU_T::PNSSET3: SPI0 Position          */
+#define SCU_PNSSET3_SPI0_Msk        ( 0x1ul << SCU_PNSSET3_SPI0_Pos )                      /*!< SCU_T::PNSSET3: SPI0 Mask              */
 
-#define SCU_PNSSET3_SPI1_Pos             (2)                                               /*!< SCU_T::PNSSET3: SPI1 Position          */
-#define SCU_PNSSET3_SPI1_Msk             (0x1ul << SCU_PNSSET3_SPI1_Pos)                   /*!< SCU_T::PNSSET3: SPI1 Mask              */
+#define SCU_PNSSET3_SPI1_Pos        ( 2 )                                                  /*!< SCU_T::PNSSET3: SPI1 Position          */
+#define SCU_PNSSET3_SPI1_Msk        ( 0x1ul << SCU_PNSSET3_SPI1_Pos )                      /*!< SCU_T::PNSSET3: SPI1 Mask              */
 
-#define SCU_PNSSET3_SPI2_Pos             (3)                                               /*!< SCU_T::PNSSET3: SPI2 Position          */
-#define SCU_PNSSET3_SPI2_Msk             (0x1ul << SCU_PNSSET3_SPI2_Pos)                   /*!< SCU_T::PNSSET3: SPI2 Mask              */
+#define SCU_PNSSET3_SPI2_Pos        ( 3 )                                                  /*!< SCU_T::PNSSET3: SPI2 Position          */
+#define SCU_PNSSET3_SPI2_Msk        ( 0x1ul << SCU_PNSSET3_SPI2_Pos )                      /*!< SCU_T::PNSSET3: SPI2 Mask              */
 
-#define SCU_PNSSET3_SPI3_Pos             (4)                                               /*!< SCU_T::PNSSET3: SPI3 Position          */
-#define SCU_PNSSET3_SPI3_Msk             (0x1ul << SCU_PNSSET3_SPI3_Pos)                   /*!< SCU_T::PNSSET3: SPI3 Mask              */
+#define SCU_PNSSET3_SPI3_Pos        ( 4 )                                                  /*!< SCU_T::PNSSET3: SPI3 Position          */
+#define SCU_PNSSET3_SPI3_Msk        ( 0x1ul << SCU_PNSSET3_SPI3_Pos )                      /*!< SCU_T::PNSSET3: SPI3 Mask              */
 
-#define SCU_PNSSET3_UART0_Pos            (16)                                              /*!< SCU_T::PNSSET3: UART0 Position         */
-#define SCU_PNSSET3_UART0_Msk            (0x1ul << SCU_PNSSET3_UART0_Pos)                  /*!< SCU_T::PNSSET3: UART0 Mask             */
+#define SCU_PNSSET3_UART0_Pos       ( 16 )                                                 /*!< SCU_T::PNSSET3: UART0 Position         */
+#define SCU_PNSSET3_UART0_Msk       ( 0x1ul << SCU_PNSSET3_UART0_Pos )                     /*!< SCU_T::PNSSET3: UART0 Mask             */
 
-#define SCU_PNSSET3_UART1_Pos            (17)                                              /*!< SCU_T::PNSSET3: UART1 Position         */
-#define SCU_PNSSET3_UART1_Msk            (0x1ul << SCU_PNSSET3_UART1_Pos)                  /*!< SCU_T::PNSSET3: UART1 Mask             */
+#define SCU_PNSSET3_UART1_Pos       ( 17 )                                                 /*!< SCU_T::PNSSET3: UART1 Position         */
+#define SCU_PNSSET3_UART1_Msk       ( 0x1ul << SCU_PNSSET3_UART1_Pos )                     /*!< SCU_T::PNSSET3: UART1 Mask             */
 
-#define SCU_PNSSET3_UART2_Pos            (18)                                              /*!< SCU_T::PNSSET3: UART2 Position         */
-#define SCU_PNSSET3_UART2_Msk            (0x1ul << SCU_PNSSET3_UART2_Pos)                  /*!< SCU_T::PNSSET3: UART2 Mask             */
+#define SCU_PNSSET3_UART2_Pos       ( 18 )                                                 /*!< SCU_T::PNSSET3: UART2 Position         */
+#define SCU_PNSSET3_UART2_Msk       ( 0x1ul << SCU_PNSSET3_UART2_Pos )                     /*!< SCU_T::PNSSET3: UART2 Mask             */
 
-#define SCU_PNSSET3_UART3_Pos            (19)                                              /*!< SCU_T::PNSSET3: UART3 Position         */
-#define SCU_PNSSET3_UART3_Msk            (0x1ul << SCU_PNSSET3_UART3_Pos)                  /*!< SCU_T::PNSSET3: UART3 Mask             */
+#define SCU_PNSSET3_UART3_Pos       ( 19 )                                                 /*!< SCU_T::PNSSET3: UART3 Position         */
+#define SCU_PNSSET3_UART3_Msk       ( 0x1ul << SCU_PNSSET3_UART3_Pos )                     /*!< SCU_T::PNSSET3: UART3 Mask             */
 
-#define SCU_PNSSET3_UART4_Pos            (20)                                              /*!< SCU_T::PNSSET3: UART4 Position         */
-#define SCU_PNSSET3_UART4_Msk            (0x1ul << SCU_PNSSET3_UART4_Pos)                  /*!< SCU_T::PNSSET3: UART4 Mask             */
+#define SCU_PNSSET3_UART4_Pos       ( 20 )                                                 /*!< SCU_T::PNSSET3: UART4 Position         */
+#define SCU_PNSSET3_UART4_Msk       ( 0x1ul << SCU_PNSSET3_UART4_Pos )                     /*!< SCU_T::PNSSET3: UART4 Mask             */
 
-#define SCU_PNSSET3_UART5_Pos            (21)                                              /*!< SCU_T::PNSSET3: UART5 Position         */
-#define SCU_PNSSET3_UART5_Msk            (0x1ul << SCU_PNSSET3_UART5_Pos)                  /*!< SCU_T::PNSSET3: UART5 Mask             */
+#define SCU_PNSSET3_UART5_Pos       ( 21 )                                                 /*!< SCU_T::PNSSET3: UART5 Position         */
+#define SCU_PNSSET3_UART5_Msk       ( 0x1ul << SCU_PNSSET3_UART5_Pos )                     /*!< SCU_T::PNSSET3: UART5 Mask             */
 
-#define SCU_PNSSET4_I2C0_Pos             (0)                                               /*!< SCU_T::PNSSET4: I2C0 Position          */
-#define SCU_PNSSET4_I2C0_Msk             (0x1ul << SCU_PNSSET4_I2C0_Pos)                   /*!< SCU_T::PNSSET4: I2C0 Mask              */
+#define SCU_PNSSET4_I2C0_Pos        ( 0 )                                                  /*!< SCU_T::PNSSET4: I2C0 Position          */
+#define SCU_PNSSET4_I2C0_Msk        ( 0x1ul << SCU_PNSSET4_I2C0_Pos )                      /*!< SCU_T::PNSSET4: I2C0 Mask              */
 
-#define SCU_PNSSET4_I2C1_Pos             (1)                                               /*!< SCU_T::PNSSET4: I2C1 Position          */
-#define SCU_PNSSET4_I2C1_Msk             (0x1ul << SCU_PNSSET4_I2C1_Pos)                   /*!< SCU_T::PNSSET4: I2C1 Mask              */
+#define SCU_PNSSET4_I2C1_Pos        ( 1 )                                                  /*!< SCU_T::PNSSET4: I2C1 Position          */
+#define SCU_PNSSET4_I2C1_Msk        ( 0x1ul << SCU_PNSSET4_I2C1_Pos )                      /*!< SCU_T::PNSSET4: I2C1 Mask              */
 
-#define SCU_PNSSET4_I2C2_Pos             (2)                                               /*!< SCU_T::PNSSET4: I2C2 Position          */
-#define SCU_PNSSET4_I2C2_Msk             (0x1ul << SCU_PNSSET4_I2C2_Pos)                   /*!< SCU_T::PNSSET4: I2C2 Mask              */
+#define SCU_PNSSET4_I2C2_Pos        ( 2 )                                                  /*!< SCU_T::PNSSET4: I2C2 Position          */
+#define SCU_PNSSET4_I2C2_Msk        ( 0x1ul << SCU_PNSSET4_I2C2_Pos )                      /*!< SCU_T::PNSSET4: I2C2 Mask              */
 
-#define SCU_PNSSET4_SC0_Pos              (16)                                              /*!< SCU_T::PNSSET4: SC0 Position           */
-#define SCU_PNSSET4_SC0_Msk              (0x1ul << SCU_PNSSET4_SC0_Pos)                    /*!< SCU_T::PNSSET4: SC0 Mask               */
+#define SCU_PNSSET4_SC0_Pos         ( 16 )                                                 /*!< SCU_T::PNSSET4: SC0 Position           */
+#define SCU_PNSSET4_SC0_Msk         ( 0x1ul << SCU_PNSSET4_SC0_Pos )                       /*!< SCU_T::PNSSET4: SC0 Mask               */
 
-#define SCU_PNSSET4_SC1_Pos              (17)                                              /*!< SCU_T::PNSSET4: SC1 Position           */
-#define SCU_PNSSET4_SC1_Msk              (0x1ul << SCU_PNSSET4_SC1_Pos)                    /*!< SCU_T::PNSSET4: SC1 Mask               */
+#define SCU_PNSSET4_SC1_Pos         ( 17 )                                                 /*!< SCU_T::PNSSET4: SC1 Position           */
+#define SCU_PNSSET4_SC1_Msk         ( 0x1ul << SCU_PNSSET4_SC1_Pos )                       /*!< SCU_T::PNSSET4: SC1 Mask               */
 
-#define SCU_PNSSET4_SC2_Pos              (18)                                              /*!< SCU_T::PNSSET4: SC2 Position           */
-#define SCU_PNSSET4_SC2_Msk              (0x1ul << SCU_PNSSET4_SC2_Pos)                    /*!< SCU_T::PNSSET4: SC2 Mask               */
+#define SCU_PNSSET4_SC2_Pos         ( 18 )                                                 /*!< SCU_T::PNSSET4: SC2 Position           */
+#define SCU_PNSSET4_SC2_Msk         ( 0x1ul << SCU_PNSSET4_SC2_Pos )                       /*!< SCU_T::PNSSET4: SC2 Mask               */
 
-#define SCU_PNSSET5_CAN0_Pos             (0)                                               /*!< SCU_T::PNSSET5: CAN0 Position          */
-#define SCU_PNSSET5_CAN0_Msk             (0x1ul << SCU_PNSSET5_CAN0_Pos)                   /*!< SCU_T::PNSSET5: CAN0 Mask              */
+#define SCU_PNSSET5_CAN0_Pos        ( 0 )                                                  /*!< SCU_T::PNSSET5: CAN0 Position          */
+#define SCU_PNSSET5_CAN0_Msk        ( 0x1ul << SCU_PNSSET5_CAN0_Pos )                      /*!< SCU_T::PNSSET5: CAN0 Mask              */
 
-#define SCU_PNSSET5_QEI0_Pos             (16)                                              /*!< SCU_T::PNSSET5: QEI0 Position          */
-#define SCU_PNSSET5_QEI0_Msk             (0x1ul << SCU_PNSSET5_QEI0_Pos)                   /*!< SCU_T::PNSSET5: QEI0 Mask              */
+#define SCU_PNSSET5_QEI0_Pos        ( 16 )                                                 /*!< SCU_T::PNSSET5: QEI0 Position          */
+#define SCU_PNSSET5_QEI0_Msk        ( 0x1ul << SCU_PNSSET5_QEI0_Pos )                      /*!< SCU_T::PNSSET5: QEI0 Mask              */
 
-#define SCU_PNSSET5_QEI1_Pos             (17)                                              /*!< SCU_T::PNSSET5: QEI1 Position          */
-#define SCU_PNSSET5_QEI1_Msk             (0x1ul << SCU_PNSSET5_QEI1_Pos)                   /*!< SCU_T::PNSSET5: QEI1 Mask              */
+#define SCU_PNSSET5_QEI1_Pos        ( 17 )                                                 /*!< SCU_T::PNSSET5: QEI1 Position          */
+#define SCU_PNSSET5_QEI1_Msk        ( 0x1ul << SCU_PNSSET5_QEI1_Pos )                      /*!< SCU_T::PNSSET5: QEI1 Mask              */
 
-#define SCU_PNSSET5_ECAP0_Pos            (20)                                              /*!< SCU_T::PNSSET5: ECAP0 Position         */
-#define SCU_PNSSET5_ECAP0_Msk            (0x1ul << SCU_PNSSET5_ECAP0_Pos)                  /*!< SCU_T::PNSSET5: ECAP0 Mask             */
+#define SCU_PNSSET5_ECAP0_Pos       ( 20 )                                                 /*!< SCU_T::PNSSET5: ECAP0 Position         */
+#define SCU_PNSSET5_ECAP0_Msk       ( 0x1ul << SCU_PNSSET5_ECAP0_Pos )                     /*!< SCU_T::PNSSET5: ECAP0 Mask             */
 
-#define SCU_PNSSET5_ECAP1_Pos            (21)                                              /*!< SCU_T::PNSSET5: ECAP1 Position         */
-#define SCU_PNSSET5_ECAP1_Msk            (0x1ul << SCU_PNSSET5_ECAP1_Pos)                  /*!< SCU_T::PNSSET5: ECAP1 Mask             */
+#define SCU_PNSSET5_ECAP1_Pos       ( 21 )                                                 /*!< SCU_T::PNSSET5: ECAP1 Position         */
+#define SCU_PNSSET5_ECAP1_Msk       ( 0x1ul << SCU_PNSSET5_ECAP1_Pos )                     /*!< SCU_T::PNSSET5: ECAP1 Mask             */
 
-#define SCU_PNSSET5_TRNG_Pos             (25)                                              /*!< SCU_T::PNSSET5: TRNG Position          */
-#define SCU_PNSSET5_TRNG_Msk             (0x1ul << SCU_PNSSET5_TRNG_Pos)                   /*!< SCU_T::PNSSET5: TRNG Mask              */
+#define SCU_PNSSET5_TRNG_Pos        ( 25 )                                                 /*!< SCU_T::PNSSET5: TRNG Position          */
+#define SCU_PNSSET5_TRNG_Msk        ( 0x1ul << SCU_PNSSET5_TRNG_Pos )                      /*!< SCU_T::PNSSET5: TRNG Mask              */
 
-#define SCU_PNSSET6_USBD_Pos             (0)                                               /*!< SCU_T::PNSSET6: USBD Position          */
-#define SCU_PNSSET6_USBD_Msk             (0x1ul << SCU_PNSSET6_USBD_Pos)                   /*!< SCU_T::PNSSET6: USBD Mask              */
+#define SCU_PNSSET6_USBD_Pos        ( 0 )                                                  /*!< SCU_T::PNSSET6: USBD Position          */
+#define SCU_PNSSET6_USBD_Msk        ( 0x1ul << SCU_PNSSET6_USBD_Pos )                      /*!< SCU_T::PNSSET6: USBD Mask              */
 
-#define SCU_PNSSET6_USCI0_Pos            (16)                                              /*!< SCU_T::PNSSET6: USCI0 Position         */
-#define SCU_PNSSET6_USCI0_Msk            (0x1ul << SCU_PNSSET6_USCI0_Pos)                  /*!< SCU_T::PNSSET6: USCI0 Mask             */
+#define SCU_PNSSET6_USCI0_Pos       ( 16 )                                                 /*!< SCU_T::PNSSET6: USCI0 Position         */
+#define SCU_PNSSET6_USCI0_Msk       ( 0x1ul << SCU_PNSSET6_USCI0_Pos )                     /*!< SCU_T::PNSSET6: USCI0 Mask             */
 
-#define SCU_PNSSET6_USCI1_Pos            (17)                                              /*!< SCU_T::PNSSET6: USCI1 Position         */
-#define SCU_PNSSET6_USCI1_Msk            (0x1ul << SCU_PNSSET6_USCI1_Pos)                  /*!< SCU_T::PNSSET6: USCI1 Mask             */
+#define SCU_PNSSET6_USCI1_Pos       ( 17 )                                                 /*!< SCU_T::PNSSET6: USCI1 Position         */
+#define SCU_PNSSET6_USCI1_Msk       ( 0x1ul << SCU_PNSSET6_USCI1_Pos )                     /*!< SCU_T::PNSSET6: USCI1 Mask             */
 
-#define SCU_IONSSET_PA_Pos               (0)                                               /*!< SCU_T::IONSSET: PA Position            */
-#define SCU_IONSSET_PA_Msk               (0x1ul << SCU_IONSSET_PA_Pos)                     /*!< SCU_T::IONSSET: PA Mask                */
+#define SCU_IONSSET_PA_Pos          ( 0 )                                                  /*!< SCU_T::IONSSET: PA Position            */
+#define SCU_IONSSET_PA_Msk          ( 0x1ul << SCU_IONSSET_PA_Pos )                        /*!< SCU_T::IONSSET: PA Mask                */
 
-#define SCU_IONSSET_PB_Pos               (1)                                               /*!< SCU_T::IONSSET: PB Position            */
-#define SCU_IONSSET_PB_Msk               (0x1ul << SCU_IONSSET_PB_Pos)                     /*!< SCU_T::IONSSET: PB Mask                */
+#define SCU_IONSSET_PB_Pos          ( 1 )                                                  /*!< SCU_T::IONSSET: PB Position            */
+#define SCU_IONSSET_PB_Msk          ( 0x1ul << SCU_IONSSET_PB_Pos )                        /*!< SCU_T::IONSSET: PB Mask                */
 
-#define SCU_IONSSET_PC_Pos               (2)                                               /*!< SCU_T::IONSSET: PC Position            */
-#define SCU_IONSSET_PC_Msk               (0x1ul << SCU_IONSSET_PC_Pos)                     /*!< SCU_T::IONSSET: PC Mask                */
+#define SCU_IONSSET_PC_Pos          ( 2 )                                                  /*!< SCU_T::IONSSET: PC Position            */
+#define SCU_IONSSET_PC_Msk          ( 0x1ul << SCU_IONSSET_PC_Pos )                        /*!< SCU_T::IONSSET: PC Mask                */
 
-#define SCU_IONSSET_PD_Pos               (3)                                               /*!< SCU_T::IONSSET: PD Position            */
-#define SCU_IONSSET_PD_Msk               (0x1ul << SCU_IONSSET_PD_Pos)                     /*!< SCU_T::IONSSET: PD Mask                */
+#define SCU_IONSSET_PD_Pos          ( 3 )                                                  /*!< SCU_T::IONSSET: PD Position            */
+#define SCU_IONSSET_PD_Msk          ( 0x1ul << SCU_IONSSET_PD_Pos )                        /*!< SCU_T::IONSSET: PD Mask                */
 
-#define SCU_IONSSET_PE_Pos               (4)                                               /*!< SCU_T::IONSSET: PE Position            */
-#define SCU_IONSSET_PE_Msk               (0x1ul << SCU_IONSSET_PE_Pos)                     /*!< SCU_T::IONSSET: PE Mask                */
+#define SCU_IONSSET_PE_Pos          ( 4 )                                                  /*!< SCU_T::IONSSET: PE Position            */
+#define SCU_IONSSET_PE_Msk          ( 0x1ul << SCU_IONSSET_PE_Pos )                        /*!< SCU_T::IONSSET: PE Mask                */
 
-#define SCU_IONSSET_PF_Pos               (5)                                               /*!< SCU_T::IONSSET: PF Position            */
-#define SCU_IONSSET_PF_Msk               (0x1ul << SCU_IONSSET_PF_Pos)                     /*!< SCU_T::IONSSET: PF Mask                */
+#define SCU_IONSSET_PF_Pos          ( 5 )                                                  /*!< SCU_T::IONSSET: PF Position            */
+#define SCU_IONSSET_PF_Msk          ( 0x1ul << SCU_IONSSET_PF_Pos )                        /*!< SCU_T::IONSSET: PF Mask                */
 
-#define SCU_IONSSET_PG_Pos               (6)                                               /*!< SCU_T::IONSSET: PG Position            */
-#define SCU_IONSSET_PG_Msk               (0x1ul << SCU_IONSSET_PG_Pos)                     /*!< SCU_T::IONSSET: PG Mask                */
+#define SCU_IONSSET_PG_Pos          ( 6 )                                                  /*!< SCU_T::IONSSET: PG Position            */
+#define SCU_IONSSET_PG_Msk          ( 0x1ul << SCU_IONSSET_PG_Pos )                        /*!< SCU_T::IONSSET: PG Mask                */
 
-#define SCU_IONSSET_PH_Pos               (7)                                               /*!< SCU_T::IONSSET: PH Position            */
-#define SCU_IONSSET_PH_Msk               (0x1ul << SCU_IONSSET_PH_Pos)                     /*!< SCU_T::IONSSET: PH Mask                */
+#define SCU_IONSSET_PH_Pos          ( 7 )                                                  /*!< SCU_T::IONSSET: PH Position            */
+#define SCU_IONSSET_PH_Msk          ( 0x1ul << SCU_IONSSET_PH_Pos )                        /*!< SCU_T::IONSSET: PH Mask                */
 
-#define SCU_SRAMNSSET_SECn_Pos           (0)                                               /*!< SCU_T::SRAMNSSET: SECn Position        */
-#define SCU_SRAMNSSET_SECn_Msk           (0xffful << SCU_SRAMNSSET_SECn_Pos)               /*!< SCU_T::SRAMNSSET: SECn Mask            */
+#define SCU_SRAMNSSET_SECn_Pos      ( 0 )                                                  /*!< SCU_T::SRAMNSSET: SECn Position        */
+#define SCU_SRAMNSSET_SECn_Msk      ( 0xffful << SCU_SRAMNSSET_SECn_Pos )                  /*!< SCU_T::SRAMNSSET: SECn Mask            */
 
-#define SCU_FNSADDR_FNSADDR_Pos          (0)                                               /*!< SCU_T::FNSADDR: FNSADDR Position       */
-#define SCU_FNSADDR_FNSADDR_Msk          (0xfffffffful << SCU_FNSADDR_FNSADDR_Pos)         /*!< SCU_T::FNSADDR: FNSADDR Mask           */
+#define SCU_FNSADDR_FNSADDR_Pos     ( 0 )                                                  /*!< SCU_T::FNSADDR: FNSADDR Position       */
+#define SCU_FNSADDR_FNSADDR_Msk     ( 0xfffffffful << SCU_FNSADDR_FNSADDR_Pos )            /*!< SCU_T::FNSADDR: FNSADDR Mask           */
 
-#define SCU_SVIOIEN_APB0IEN_Pos          (0)                                               /*!< SCU_T::SVIOIEN: APB0IEN Position       */
-#define SCU_SVIOIEN_APB0IEN_Msk          (0x1ul << SCU_SVIOIEN_APB0IEN_Pos)                /*!< SCU_T::SVIOIEN: APB0IEN Mask           */
+#define SCU_SVIOIEN_APB0IEN_Pos     ( 0 )                                                  /*!< SCU_T::SVIOIEN: APB0IEN Position       */
+#define SCU_SVIOIEN_APB0IEN_Msk     ( 0x1ul << SCU_SVIOIEN_APB0IEN_Pos )                   /*!< SCU_T::SVIOIEN: APB0IEN Mask           */
 
-#define SCU_SVIOIEN_APB1IEN_Pos          (1)                                               /*!< SCU_T::SVIOIEN: APB1IEN Position       */
-#define SCU_SVIOIEN_APB1IEN_Msk          (0x1ul << SCU_SVIOIEN_APB1IEN_Pos)                /*!< SCU_T::SVIOIEN: APB1IEN Mask           */
+#define SCU_SVIOIEN_APB1IEN_Pos     ( 1 )                                                  /*!< SCU_T::SVIOIEN: APB1IEN Position       */
+#define SCU_SVIOIEN_APB1IEN_Msk     ( 0x1ul << SCU_SVIOIEN_APB1IEN_Pos )                   /*!< SCU_T::SVIOIEN: APB1IEN Mask           */
 
-#define SCU_SVIOIEN_GPIOIEN_Pos          (4)                                               /*!< SCU_T::SVIOIEN: GPIOIEN Position       */
-#define SCU_SVIOIEN_GPIOIEN_Msk          (0x1ul << SCU_SVIOIEN_GPIOIEN_Pos)                /*!< SCU_T::SVIOIEN: GPIOIEN Mask           */
+#define SCU_SVIOIEN_GPIOIEN_Pos     ( 4 )                                                  /*!< SCU_T::SVIOIEN: GPIOIEN Position       */
+#define SCU_SVIOIEN_GPIOIEN_Msk     ( 0x1ul << SCU_SVIOIEN_GPIOIEN_Pos )                   /*!< SCU_T::SVIOIEN: GPIOIEN Mask           */
 
-#define SCU_SVIOIEN_EBIIEN_Pos           (5)                                               /*!< SCU_T::SVIOIEN: EBIIEN Position        */
-#define SCU_SVIOIEN_EBIIEN_Msk           (0x1ul << SCU_SVIOIEN_EBIIEN_Pos)                 /*!< SCU_T::SVIOIEN: EBIIEN Mask            */
+#define SCU_SVIOIEN_EBIIEN_Pos      ( 5 )                                                  /*!< SCU_T::SVIOIEN: EBIIEN Position        */
+#define SCU_SVIOIEN_EBIIEN_Msk      ( 0x1ul << SCU_SVIOIEN_EBIIEN_Pos )                    /*!< SCU_T::SVIOIEN: EBIIEN Mask            */
 
-#define SCU_SVIOIEN_USBHIEN_Pos          (6)                                               /*!< SCU_T::SVIOIEN: USBHIEN Position       */
-#define SCU_SVIOIEN_USBHIEN_Msk          (0x1ul << SCU_SVIOIEN_USBHIEN_Pos)                /*!< SCU_T::SVIOIEN: USBHIEN Mask           */
+#define SCU_SVIOIEN_USBHIEN_Pos     ( 6 )                                                  /*!< SCU_T::SVIOIEN: USBHIEN Position       */
+#define SCU_SVIOIEN_USBHIEN_Msk     ( 0x1ul << SCU_SVIOIEN_USBHIEN_Pos )                   /*!< SCU_T::SVIOIEN: USBHIEN Mask           */
 
-#define SCU_SVIOIEN_CRCIEN_Pos           (7)                                               /*!< SCU_T::SVIOIEN: CRCIEN Position        */
-#define SCU_SVIOIEN_CRCIEN_Msk           (0x1ul << SCU_SVIOIEN_CRCIEN_Pos)                 /*!< SCU_T::SVIOIEN: CRCIEN Mask            */
+#define SCU_SVIOIEN_CRCIEN_Pos      ( 7 )                                                  /*!< SCU_T::SVIOIEN: CRCIEN Position        */
+#define SCU_SVIOIEN_CRCIEN_Msk      ( 0x1ul << SCU_SVIOIEN_CRCIEN_Pos )                    /*!< SCU_T::SVIOIEN: CRCIEN Mask            */
 
-#define SCU_SVIOIEN_SDH0IEN_Pos          (8)                                               /*!< SCU_T::SVIOIEN: SDH0IEN Position       */
-#define SCU_SVIOIEN_SDH0IEN_Msk          (0x1ul << SCU_SVIOIEN_SDH0IEN_Pos)                /*!< SCU_T::SVIOIEN: SDH0IEN Mask           */
+#define SCU_SVIOIEN_SDH0IEN_Pos     ( 8 )                                                  /*!< SCU_T::SVIOIEN: SDH0IEN Position       */
+#define SCU_SVIOIEN_SDH0IEN_Msk     ( 0x1ul << SCU_SVIOIEN_SDH0IEN_Pos )                   /*!< SCU_T::SVIOIEN: SDH0IEN Mask           */
 
-#define SCU_SVIOIEN_PDMA0IEN_Pos         (10)                                              /*!< SCU_T::SVIOIEN: PDMA0IEN Position      */
-#define SCU_SVIOIEN_PDMA0IEN_Msk         (0x1ul << SCU_SVIOIEN_PDMA0IEN_Pos)               /*!< SCU_T::SVIOIEN: PDMA0IEN Mask          */
+#define SCU_SVIOIEN_PDMA0IEN_Pos    ( 10 )                                                 /*!< SCU_T::SVIOIEN: PDMA0IEN Position      */
+#define SCU_SVIOIEN_PDMA0IEN_Msk    ( 0x1ul << SCU_SVIOIEN_PDMA0IEN_Pos )                  /*!< SCU_T::SVIOIEN: PDMA0IEN Mask          */
 
-#define SCU_SVIOIEN_PDMA1IEN_Pos         (11)                                              /*!< SCU_T::SVIOIEN: PDMA1IEN Position      */
-#define SCU_SVIOIEN_PDMA1IEN_Msk         (0x1ul << SCU_SVIOIEN_PDMA1IEN_Pos)               /*!< SCU_T::SVIOIEN: PDMA1IEN Mask          */
+#define SCU_SVIOIEN_PDMA1IEN_Pos    ( 11 )                                                 /*!< SCU_T::SVIOIEN: PDMA1IEN Position      */
+#define SCU_SVIOIEN_PDMA1IEN_Msk    ( 0x1ul << SCU_SVIOIEN_PDMA1IEN_Pos )                  /*!< SCU_T::SVIOIEN: PDMA1IEN Mask          */
 
-#define SCU_SVIOIEN_SRAM0IEN_Pos         (12)                                              /*!< SCU_T::SVIOIEN: SRAM0IEN Position      */
-#define SCU_SVIOIEN_SRAM0IEN_Msk         (0x1ul << SCU_SVIOIEN_SRAM0IEN_Pos)               /*!< SCU_T::SVIOIEN: SRAM0IEN Mask          */
+#define SCU_SVIOIEN_SRAM0IEN_Pos    ( 12 )                                                 /*!< SCU_T::SVIOIEN: SRAM0IEN Position      */
+#define SCU_SVIOIEN_SRAM0IEN_Msk    ( 0x1ul << SCU_SVIOIEN_SRAM0IEN_Pos )                  /*!< SCU_T::SVIOIEN: SRAM0IEN Mask          */
 
-#define SCU_SVIOIEN_SRAM1IEN_Pos         (13)                                              /*!< SCU_T::SVIOIEN: SRAM1IEN Position      */
-#define SCU_SVIOIEN_SRAM1IEN_Msk         (0x1ul << SCU_SVIOIEN_SRAM1IEN_Pos)               /*!< SCU_T::SVIOIEN: SRAM1IEN Mask          */
+#define SCU_SVIOIEN_SRAM1IEN_Pos    ( 13 )                                                 /*!< SCU_T::SVIOIEN: SRAM1IEN Position      */
+#define SCU_SVIOIEN_SRAM1IEN_Msk    ( 0x1ul << SCU_SVIOIEN_SRAM1IEN_Pos )                  /*!< SCU_T::SVIOIEN: SRAM1IEN Mask          */
 
-#define SCU_SVIOIEN_FMCIEN_Pos           (14)                                              /*!< SCU_T::SVIOIEN: FMCIEN Position        */
-#define SCU_SVIOIEN_FMCIEN_Msk           (0x1ul << SCU_SVIOIEN_FMCIEN_Pos)                 /*!< SCU_T::SVIOIEN: FMCIEN Mask            */
+#define SCU_SVIOIEN_FMCIEN_Pos      ( 14 )                                                 /*!< SCU_T::SVIOIEN: FMCIEN Position        */
+#define SCU_SVIOIEN_FMCIEN_Msk      ( 0x1ul << SCU_SVIOIEN_FMCIEN_Pos )                    /*!< SCU_T::SVIOIEN: FMCIEN Mask            */
 
-#define SCU_SVIOIEN_FLASHIEN_Pos         (15)                                              /*!< SCU_T::SVIOIEN: FLASHIEN Position      */
-#define SCU_SVIOIEN_FLASHIEN_Msk         (0x1ul << SCU_SVIOIEN_FLASHIEN_Pos)               /*!< SCU_T::SVIOIEN: FLASHIEN Mask          */
+#define SCU_SVIOIEN_FLASHIEN_Pos    ( 15 )                                                 /*!< SCU_T::SVIOIEN: FLASHIEN Position      */
+#define SCU_SVIOIEN_FLASHIEN_Msk    ( 0x1ul << SCU_SVIOIEN_FLASHIEN_Pos )                  /*!< SCU_T::SVIOIEN: FLASHIEN Mask          */
 
-#define SCU_SVIOIEN_SCUIEN_Pos           (16)                                              /*!< SCU_T::SVIOIEN: SCUIEN Position        */
-#define SCU_SVIOIEN_SCUIEN_Msk           (0x1ul << SCU_SVIOIEN_SCUIEN_Pos)                 /*!< SCU_T::SVIOIEN: SCUIEN Mask            */
+#define SCU_SVIOIEN_SCUIEN_Pos      ( 16 )                                                 /*!< SCU_T::SVIOIEN: SCUIEN Position        */
+#define SCU_SVIOIEN_SCUIEN_Msk      ( 0x1ul << SCU_SVIOIEN_SCUIEN_Pos )                    /*!< SCU_T::SVIOIEN: SCUIEN Mask            */
 
-#define SCU_SVIOIEN_SYSIEN_Pos           (17)                                              /*!< SCU_T::SVIOIEN: SYSIEN Position        */
-#define SCU_SVIOIEN_SYSIEN_Msk           (0x1ul << SCU_SVIOIEN_SYSIEN_Pos)                 /*!< SCU_T::SVIOIEN: SYSIEN Mask            */
+#define SCU_SVIOIEN_SYSIEN_Pos      ( 17 )                                                 /*!< SCU_T::SVIOIEN: SYSIEN Position        */
+#define SCU_SVIOIEN_SYSIEN_Msk      ( 0x1ul << SCU_SVIOIEN_SYSIEN_Pos )                    /*!< SCU_T::SVIOIEN: SYSIEN Mask            */
 
-#define SCU_SVIOIEN_CRPTIEN_Pos          (18)                                              /*!< SCU_T::SVIOIEN: CRPTIEN Position       */
-#define SCU_SVIOIEN_CRPTIEN_Msk          (0x1ul << SCU_SVIOIEN_CRPTIEN_Pos)                /*!< SCU_T::SVIOIEN: CRPTIEN Mask           */
+#define SCU_SVIOIEN_CRPTIEN_Pos     ( 18 )                                                 /*!< SCU_T::SVIOIEN: CRPTIEN Position       */
+#define SCU_SVIOIEN_CRPTIEN_Msk     ( 0x1ul << SCU_SVIOIEN_CRPTIEN_Pos )                   /*!< SCU_T::SVIOIEN: CRPTIEN Mask           */
 
-#define SCU_SVINTSTS_APB0IF_Pos          (0)                                               /*!< SCU_T::SVINTSTS: APB0IF Position       */
-#define SCU_SVINTSTS_APB0IF_Msk          (0x1ul << SCU_SVINTSTS_APB0IF_Pos)                /*!< SCU_T::SVINTSTS: APB0IF Mask           */
+#define SCU_SVINTSTS_APB0IF_Pos     ( 0 )                                                  /*!< SCU_T::SVINTSTS: APB0IF Position       */
+#define SCU_SVINTSTS_APB0IF_Msk     ( 0x1ul << SCU_SVINTSTS_APB0IF_Pos )                   /*!< SCU_T::SVINTSTS: APB0IF Mask           */
 
-#define SCU_SVINTSTS_APB1IF_Pos          (1)                                               /*!< SCU_T::SVINTSTS: APB1IF Position       */
-#define SCU_SVINTSTS_APB1IF_Msk          (0x1ul << SCU_SVINTSTS_APB1IF_Pos)                /*!< SCU_T::SVINTSTS: APB1IF Mask           */
+#define SCU_SVINTSTS_APB1IF_Pos     ( 1 )                                                  /*!< SCU_T::SVINTSTS: APB1IF Position       */
+#define SCU_SVINTSTS_APB1IF_Msk     ( 0x1ul << SCU_SVINTSTS_APB1IF_Pos )                   /*!< SCU_T::SVINTSTS: APB1IF Mask           */
 
-#define SCU_SVINTSTS_GPIOIF_Pos          (4)                                               /*!< SCU_T::SVINTSTS: GPIOIF Position       */
-#define SCU_SVINTSTS_GPIOIF_Msk          (0x1ul << SCU_SVINTSTS_GPIOIF_Pos)                /*!< SCU_T::SVINTSTS: GPIOIF Mask           */
+#define SCU_SVINTSTS_GPIOIF_Pos     ( 4 )                                                  /*!< SCU_T::SVINTSTS: GPIOIF Position       */
+#define SCU_SVINTSTS_GPIOIF_Msk     ( 0x1ul << SCU_SVINTSTS_GPIOIF_Pos )                   /*!< SCU_T::SVINTSTS: GPIOIF Mask           */
 
-#define SCU_SVINTSTS_EBIIF_Pos           (5)                                               /*!< SCU_T::SVINTSTS: EBIIF Position        */
-#define SCU_SVINTSTS_EBIIF_Msk           (0x1ul << SCU_SVINTSTS_EBIIF_Pos)                 /*!< SCU_T::SVINTSTS: EBIIF Mask            */
+#define SCU_SVINTSTS_EBIIF_Pos      ( 5 )                                                  /*!< SCU_T::SVINTSTS: EBIIF Position        */
+#define SCU_SVINTSTS_EBIIF_Msk      ( 0x1ul << SCU_SVINTSTS_EBIIF_Pos )                    /*!< SCU_T::SVINTSTS: EBIIF Mask            */
 
-#define SCU_SVINTSTS_USBHIF_Pos          (6)                                               /*!< SCU_T::SVINTSTS: USBHIF Position       */
-#define SCU_SVINTSTS_USBHIF_Msk          (0x1ul << SCU_SVINTSTS_USBHIF_Pos)                /*!< SCU_T::SVINTSTS: USBHIF Mask           */
+#define SCU_SVINTSTS_USBHIF_Pos     ( 6 )                                                  /*!< SCU_T::SVINTSTS: USBHIF Position       */
+#define SCU_SVINTSTS_USBHIF_Msk     ( 0x1ul << SCU_SVINTSTS_USBHIF_Pos )                   /*!< SCU_T::SVINTSTS: USBHIF Mask           */
 
-#define SCU_SVINTSTS_CRCIF_Pos           (7)                                               /*!< SCU_T::SVINTSTS: CRCIF Position        */
-#define SCU_SVINTSTS_CRCIF_Msk           (0x1ul << SCU_SVINTSTS_CRCIF_Pos)                 /*!< SCU_T::SVINTSTS: CRCIF Mask            */
+#define SCU_SVINTSTS_CRCIF_Pos      ( 7 )                                                  /*!< SCU_T::SVINTSTS: CRCIF Position        */
+#define SCU_SVINTSTS_CRCIF_Msk      ( 0x1ul << SCU_SVINTSTS_CRCIF_Pos )                    /*!< SCU_T::SVINTSTS: CRCIF Mask            */
 
-#define SCU_SVINTSTS_SDH0IF_Pos          (8)                                               /*!< SCU_T::SVINTSTS: SDH0IF Position       */
-#define SCU_SVINTSTS_SDH0IF_Msk          (0x1ul << SCU_SVINTSTS_SDH0IF_Pos)                /*!< SCU_T::SVINTSTS: SDH0IF Mask           */
+#define SCU_SVINTSTS_SDH0IF_Pos     ( 8 )                                                  /*!< SCU_T::SVINTSTS: SDH0IF Position       */
+#define SCU_SVINTSTS_SDH0IF_Msk     ( 0x1ul << SCU_SVINTSTS_SDH0IF_Pos )                   /*!< SCU_T::SVINTSTS: SDH0IF Mask           */
 
-#define SCU_SVINTSTS_PDMA0IF_Pos         (10)                                              /*!< SCU_T::SVINTSTS: PDMA0IF Position      */
-#define SCU_SVINTSTS_PDMA0IF_Msk         (0x1ul << SCU_SVINTSTS_PDMA0IF_Pos)               /*!< SCU_T::SVINTSTS: PDMA0IF Mask          */
+#define SCU_SVINTSTS_PDMA0IF_Pos    ( 10 )                                                 /*!< SCU_T::SVINTSTS: PDMA0IF Position      */
+#define SCU_SVINTSTS_PDMA0IF_Msk    ( 0x1ul << SCU_SVINTSTS_PDMA0IF_Pos )                  /*!< SCU_T::SVINTSTS: PDMA0IF Mask          */
 
-#define SCU_SVINTSTS_PDMA1IF_Pos         (11)                                              /*!< SCU_T::SVINTSTS: PDMA1IF Position      */
-#define SCU_SVINTSTS_PDMA1IF_Msk         (0x1ul << SCU_SVINTSTS_PDMA1IF_Pos)               /*!< SCU_T::SVINTSTS: PDMA1IF Mask          */
+#define SCU_SVINTSTS_PDMA1IF_Pos    ( 11 )                                                 /*!< SCU_T::SVINTSTS: PDMA1IF Position      */
+#define SCU_SVINTSTS_PDMA1IF_Msk    ( 0x1ul << SCU_SVINTSTS_PDMA1IF_Pos )                  /*!< SCU_T::SVINTSTS: PDMA1IF Mask          */
 
-#define SCU_SVINTSTS_SRAM0IF_Pos         (12)                                              /*!< SCU_T::SVINTSTS: SRAM0IF Position      */
-#define SCU_SVINTSTS_SRAM0IF_Msk         (0x1ul << SCU_SVINTSTS_SRAM0IF_Pos)               /*!< SCU_T::SVINTSTS: SRAM0IF Mask          */
+#define SCU_SVINTSTS_SRAM0IF_Pos    ( 12 )                                                 /*!< SCU_T::SVINTSTS: SRAM0IF Position      */
+#define SCU_SVINTSTS_SRAM0IF_Msk    ( 0x1ul << SCU_SVINTSTS_SRAM0IF_Pos )                  /*!< SCU_T::SVINTSTS: SRAM0IF Mask          */
 
-#define SCU_SVINTSTS_SRAM1IF_Pos         (13)                                              /*!< SCU_T::SVINTSTS: SRAM1IF Position      */
-#define SCU_SVINTSTS_SRAM1IF_Msk         (0x1ul << SCU_SVINTSTS_SRAM1IF_Pos)               /*!< SCU_T::SVINTSTS: SRAM1IF Mask          */
+#define SCU_SVINTSTS_SRAM1IF_Pos    ( 13 )                                                 /*!< SCU_T::SVINTSTS: SRAM1IF Position      */
+#define SCU_SVINTSTS_SRAM1IF_Msk    ( 0x1ul << SCU_SVINTSTS_SRAM1IF_Pos )                  /*!< SCU_T::SVINTSTS: SRAM1IF Mask          */
 
-#define SCU_SVINTSTS_FMCIF_Pos           (14)                                              /*!< SCU_T::SVINTSTS: FMCIF Position        */
-#define SCU_SVINTSTS_FMCIF_Msk           (0x1ul << SCU_SVINTSTS_FMCIF_Pos)                 /*!< SCU_T::SVINTSTS: FMCIF Mask            */
+#define SCU_SVINTSTS_FMCIF_Pos      ( 14 )                                                 /*!< SCU_T::SVINTSTS: FMCIF Position        */
+#define SCU_SVINTSTS_FMCIF_Msk      ( 0x1ul << SCU_SVINTSTS_FMCIF_Pos )                    /*!< SCU_T::SVINTSTS: FMCIF Mask            */
 
-#define SCU_SVINTSTS_FLASHIF_Pos         (15)                                              /*!< SCU_T::SVINTSTS: FLASHIF Position      */
-#define SCU_SVINTSTS_FLASHIF_Msk         (0x1ul << SCU_SVINTSTS_FLASHIF_Pos)               /*!< SCU_T::SVINTSTS: FLASHIF Mask          */
+#define SCU_SVINTSTS_FLASHIF_Pos    ( 15 )                                                 /*!< SCU_T::SVINTSTS: FLASHIF Position      */
+#define SCU_SVINTSTS_FLASHIF_Msk    ( 0x1ul << SCU_SVINTSTS_FLASHIF_Pos )                  /*!< SCU_T::SVINTSTS: FLASHIF Mask          */
 
-#define SCU_SVINTSTS_SCUIF_Pos           (16)                                              /*!< SCU_T::SVINTSTS: SCUIF Position        */
-#define SCU_SVINTSTS_SCUIF_Msk           (0x1ul << SCU_SVINTSTS_SCUIF_Pos)                 /*!< SCU_T::SVINTSTS: SCUIF Mask            */
+#define SCU_SVINTSTS_SCUIF_Pos      ( 16 )                                                 /*!< SCU_T::SVINTSTS: SCUIF Position        */
+#define SCU_SVINTSTS_SCUIF_Msk      ( 0x1ul << SCU_SVINTSTS_SCUIF_Pos )                    /*!< SCU_T::SVINTSTS: SCUIF Mask            */
 
-#define SCU_SVINTSTS_SYSIF_Pos           (17)                                              /*!< SCU_T::SVINTSTS: SYSIF Position        */
-#define SCU_SVINTSTS_SYSIF_Msk           (0x1ul << SCU_SVINTSTS_SYSIF_Pos)                 /*!< SCU_T::SVINTSTS: SYSIF Mask            */
+#define SCU_SVINTSTS_SYSIF_Pos      ( 17 )                                                 /*!< SCU_T::SVINTSTS: SYSIF Position        */
+#define SCU_SVINTSTS_SYSIF_Msk      ( 0x1ul << SCU_SVINTSTS_SYSIF_Pos )                    /*!< SCU_T::SVINTSTS: SYSIF Mask            */
 
-#define SCU_SVINTSTS_CRPTIF_Pos          (18)                                              /*!< SCU_T::SVINTSTS: CRPTIF Position       */
-#define SCU_SVINTSTS_CRPTIF_Msk          (0x1ul << SCU_SVINTSTS_CRPTIF_Pos)                /*!< SCU_T::SVINTSTS: CRPTIF Mask           */
+#define SCU_SVINTSTS_CRPTIF_Pos     ( 18 )                                                 /*!< SCU_T::SVINTSTS: CRPTIF Position       */
+#define SCU_SVINTSTS_CRPTIF_Msk     ( 0x1ul << SCU_SVINTSTS_CRPTIF_Pos )                   /*!< SCU_T::SVINTSTS: CRPTIF Mask           */
 
-#define SCU_APB0VSRC_MASTER_Pos          (0)                                               /*!< SCU_T::APB0VSRC: MASTER Position       */
-#define SCU_APB0VSRC_MASTER_Msk          (0xful << SCU_APB0VSRC_MASTER_Pos)                /*!< SCU_T::APB0VSRC: MASTER Mask           */
+#define SCU_APB0VSRC_MASTER_Pos     ( 0 )                                                  /*!< SCU_T::APB0VSRC: MASTER Position       */
+#define SCU_APB0VSRC_MASTER_Msk     ( 0xful << SCU_APB0VSRC_MASTER_Pos )                   /*!< SCU_T::APB0VSRC: MASTER Mask           */
 
-#define SCU_APB0VA_VIOADDR_Pos           (0)                                               /*!< SCU_T::APB0VA: VIOADDR Position        */
-#define SCU_APB0VA_VIOADDR_Msk           (0xfffffffful << SCU_APB0VA_VIOADDR_Pos)          /*!< SCU_T::APB0VA: VIOADDR Mask            */
+#define SCU_APB0VA_VIOADDR_Pos      ( 0 )                                                  /*!< SCU_T::APB0VA: VIOADDR Position        */
+#define SCU_APB0VA_VIOADDR_Msk      ( 0xfffffffful << SCU_APB0VA_VIOADDR_Pos )             /*!< SCU_T::APB0VA: VIOADDR Mask            */
 
-#define SCU_APB1VSRC_MASTER_Pos          (0)                                               /*!< SCU_T::APB1VSRC: MASTER Position       */
-#define SCU_APB1VSRC_MASTER_Msk          (0xful << SCU_APB1VSRC_MASTER_Pos)                /*!< SCU_T::APB1VSRC: MASTER Mask           */
+#define SCU_APB1VSRC_MASTER_Pos     ( 0 )                                                  /*!< SCU_T::APB1VSRC: MASTER Position       */
+#define SCU_APB1VSRC_MASTER_Msk     ( 0xful << SCU_APB1VSRC_MASTER_Pos )                   /*!< SCU_T::APB1VSRC: MASTER Mask           */
 
-#define SCU_APB1VA_VIOADDR_Pos           (0)                                               /*!< SCU_T::APB1VA: VIOADDR Position        */
-#define SCU_APB1VA_VIOADDR_Msk           (0xfffffffful << SCU_APB1VA_VIOADDR_Pos)          /*!< SCU_T::APB1VA: VIOADDR Mask            */
+#define SCU_APB1VA_VIOADDR_Pos      ( 0 )                                                  /*!< SCU_T::APB1VA: VIOADDR Position        */
+#define SCU_APB1VA_VIOADDR_Msk      ( 0xfffffffful << SCU_APB1VA_VIOADDR_Pos )             /*!< SCU_T::APB1VA: VIOADDR Mask            */
 
-#define SCU_GPIOVSRC_MASTER_Pos          (0)                                               /*!< SCU_T::GPIOVSRC: MASTER Position       */
-#define SCU_GPIOVSRC_MASTER_Msk          (0xful << SCU_GPIOVSRC_MASTER_Pos)                /*!< SCU_T::GPIOVSRC: MASTER Mask           */
+#define SCU_GPIOVSRC_MASTER_Pos     ( 0 )                                                  /*!< SCU_T::GPIOVSRC: MASTER Position       */
+#define SCU_GPIOVSRC_MASTER_Msk     ( 0xful << SCU_GPIOVSRC_MASTER_Pos )                   /*!< SCU_T::GPIOVSRC: MASTER Mask           */
 
-#define SCU_GPIOVA_VIOADDR_Pos           (0)                                               /*!< SCU_T::GPIOVA: VIOADDR Position        */
-#define SCU_GPIOVA_VIOADDR_Msk           (0xfffffffful << SCU_GPIOVA_VIOADDR_Pos)          /*!< SCU_T::GPIOVA: VIOADDR Mask            */
+#define SCU_GPIOVA_VIOADDR_Pos      ( 0 )                                                  /*!< SCU_T::GPIOVA: VIOADDR Position        */
+#define SCU_GPIOVA_VIOADDR_Msk      ( 0xfffffffful << SCU_GPIOVA_VIOADDR_Pos )             /*!< SCU_T::GPIOVA: VIOADDR Mask            */
 
-#define SCU_EBIVSRC_MASTER_Pos           (0)                                               /*!< SCU_T::EBIVSRC: MASTER Position        */
-#define SCU_EBIVSRC_MASTER_Msk           (0xful << SCU_EBIVSRC_MASTER_Pos)                 /*!< SCU_T::EBIVSRC: MASTER Mask            */
+#define SCU_EBIVSRC_MASTER_Pos      ( 0 )                                                  /*!< SCU_T::EBIVSRC: MASTER Position        */
+#define SCU_EBIVSRC_MASTER_Msk      ( 0xful << SCU_EBIVSRC_MASTER_Pos )                    /*!< SCU_T::EBIVSRC: MASTER Mask            */
 
-#define SCU_EBIVA_VIOADDR_Pos            (0)                                               /*!< SCU_T::EBIVA: VIOADDR Position         */
-#define SCU_EBIVA_VIOADDR_Msk            (0xfffffffful << SCU_EBIVA_VIOADDR_Pos)           /*!< SCU_T::EBIVA: VIOADDR Mask             */
+#define SCU_EBIVA_VIOADDR_Pos       ( 0 )                                                  /*!< SCU_T::EBIVA: VIOADDR Position         */
+#define SCU_EBIVA_VIOADDR_Msk       ( 0xfffffffful << SCU_EBIVA_VIOADDR_Pos )              /*!< SCU_T::EBIVA: VIOADDR Mask             */
 
-#define SCU_USBHVSRC_MASTER_Pos          (0)                                               /*!< SCU_T::USBHVSRC: MASTER Position       */
-#define SCU_USBHVSRC_MASTER_Msk          (0xful << SCU_USBHVSRC_MASTER_Pos)                /*!< SCU_T::USBHVSRC: MASTER Mask           */
+#define SCU_USBHVSRC_MASTER_Pos     ( 0 )                                                  /*!< SCU_T::USBHVSRC: MASTER Position       */
+#define SCU_USBHVSRC_MASTER_Msk     ( 0xful << SCU_USBHVSRC_MASTER_Pos )                   /*!< SCU_T::USBHVSRC: MASTER Mask           */
 
-#define SCU_USBHVA_VIOADDR_Pos           (0)                                               /*!< SCU_T::USBHVA: VIOADDR Position        */
-#define SCU_USBHVA_VIOADDR_Msk           (0xfffffffful << SCU_USBHVA_VIOADDR_Pos)          /*!< SCU_T::USBHVA: VIOADDR Mask            */
+#define SCU_USBHVA_VIOADDR_Pos      ( 0 )                                                  /*!< SCU_T::USBHVA: VIOADDR Position        */
+#define SCU_USBHVA_VIOADDR_Msk      ( 0xfffffffful << SCU_USBHVA_VIOADDR_Pos )             /*!< SCU_T::USBHVA: VIOADDR Mask            */
 
-#define SCU_CRCVSRC_MASTER_Pos           (0)                                               /*!< SCU_T::CRCVSRC: MASTER Position        */
-#define SCU_CRCVSRC_MASTER_Msk           (0xful << SCU_CRCVSRC_MASTER_Pos)                 /*!< SCU_T::CRCVSRC: MASTER Mask            */
+#define SCU_CRCVSRC_MASTER_Pos      ( 0 )                                                  /*!< SCU_T::CRCVSRC: MASTER Position        */
+#define SCU_CRCVSRC_MASTER_Msk      ( 0xful << SCU_CRCVSRC_MASTER_Pos )                    /*!< SCU_T::CRCVSRC: MASTER Mask            */
 
-#define SCU_CRCVA_VIOADDR_Pos            (0)                                               /*!< SCU_T::CRCVA: VIOADDR Position         */
-#define SCU_CRCVA_VIOADDR_Msk            (0xfffffffful << SCU_CRCVA_VIOADDR_Pos)           /*!< SCU_T::CRCVA: VIOADDR Mask             */
+#define SCU_CRCVA_VIOADDR_Pos       ( 0 )                                                  /*!< SCU_T::CRCVA: VIOADDR Position         */
+#define SCU_CRCVA_VIOADDR_Msk       ( 0xfffffffful << SCU_CRCVA_VIOADDR_Pos )              /*!< SCU_T::CRCVA: VIOADDR Mask             */
 
-#define SCU_SD0VSRC_MASTER_Pos           (0)                                               /*!< SCU_T::SD0VSRC: MASTER Position        */
-#define SCU_SD0VSRC_MASTER_Msk           (0xful << SCU_SD0VSRC_MASTER_Pos)                 /*!< SCU_T::SD0VSRC: MASTER Mask            */
+#define SCU_SD0VSRC_MASTER_Pos      ( 0 )                                                  /*!< SCU_T::SD0VSRC: MASTER Position        */
+#define SCU_SD0VSRC_MASTER_Msk      ( 0xful << SCU_SD0VSRC_MASTER_Pos )                    /*!< SCU_T::SD0VSRC: MASTER Mask            */
 
-#define SCU_SD0VA_VIOADDR_Pos            (0)                                               /*!< SCU_T::SD0VA: VIOADDR Position         */
-#define SCU_SD0VA_VIOADDR_Msk            (0xfffffffful << SCU_SD0VA_VIOADDR_Pos)           /*!< SCU_T::SD0VA: VIOADDR Mask             */
+#define SCU_SD0VA_VIOADDR_Pos       ( 0 )                                                  /*!< SCU_T::SD0VA: VIOADDR Position         */
+#define SCU_SD0VA_VIOADDR_Msk       ( 0xfffffffful << SCU_SD0VA_VIOADDR_Pos )              /*!< SCU_T::SD0VA: VIOADDR Mask             */
 
-#define SCU_PDMA0VSRC_MASTER_Pos         (0)                                               /*!< SCU_T::PDMA0VSRC: MASTER Position      */
-#define SCU_PDMA0VSRC_MASTER_Msk         (0xful << SCU_PDMA0VSRC_MASTER_Pos)               /*!< SCU_T::PDMA0VSRC: MASTER Mask          */
+#define SCU_PDMA0VSRC_MASTER_Pos    ( 0 )                                                  /*!< SCU_T::PDMA0VSRC: MASTER Position      */
+#define SCU_PDMA0VSRC_MASTER_Msk    ( 0xful << SCU_PDMA0VSRC_MASTER_Pos )                  /*!< SCU_T::PDMA0VSRC: MASTER Mask          */
 
-#define SCU_PDMA0VA_VIOADDR_Pos          (0)                                               /*!< SCU_T::PDMA0VA: VIOADDR Position       */
-#define SCU_PDMA0VA_VIOADDR_Msk          (0xfffffffful << SCU_PDMA0VA_VIOADDR_Pos)         /*!< SCU_T::PDMA0VA: VIOADDR Mask           */
+#define SCU_PDMA0VA_VIOADDR_Pos     ( 0 )                                                  /*!< SCU_T::PDMA0VA: VIOADDR Position       */
+#define SCU_PDMA0VA_VIOADDR_Msk     ( 0xfffffffful << SCU_PDMA0VA_VIOADDR_Pos )            /*!< SCU_T::PDMA0VA: VIOADDR Mask           */
 
-#define SCU_PDMA1VSRC_MASTER_Pos         (0)                                               /*!< SCU_T::PDMA1VSRC: MASTER Position      */
-#define SCU_PDMA1VSRC_MASTER_Msk         (0xful << SCU_PDMA1VSRC_MASTER_Pos)               /*!< SCU_T::PDMA1VSRC: MASTER Mask          */
+#define SCU_PDMA1VSRC_MASTER_Pos    ( 0 )                                                  /*!< SCU_T::PDMA1VSRC: MASTER Position      */
+#define SCU_PDMA1VSRC_MASTER_Msk    ( 0xful << SCU_PDMA1VSRC_MASTER_Pos )                  /*!< SCU_T::PDMA1VSRC: MASTER Mask          */
 
-#define SCU_PDMA1VA_VIOADDR_Pos          (0)                                               /*!< SCU_T::PDMA1VA: VIOADDR Position       */
-#define SCU_PDMA1VA_VIOADDR_Msk          (0xfffffffful << SCU_PDMA1VA_VIOADDR_Pos)         /*!< SCU_T::PDMA1VA: VIOADDR Mask           */
+#define SCU_PDMA1VA_VIOADDR_Pos     ( 0 )                                                  /*!< SCU_T::PDMA1VA: VIOADDR Position       */
+#define SCU_PDMA1VA_VIOADDR_Msk     ( 0xfffffffful << SCU_PDMA1VA_VIOADDR_Pos )            /*!< SCU_T::PDMA1VA: VIOADDR Mask           */
 
-#define SCU_SRAM0VSRC_MASTER_Pos         (0)                                               /*!< SCU_T::SRAM0VSRC: MASTER Position      */
-#define SCU_SRAM0VSRC_MASTER_Msk         (0xful << SCU_SRAM0VSRC_MASTER_Pos)               /*!< SCU_T::SRAM0VSRC: MASTER Mask          */
+#define SCU_SRAM0VSRC_MASTER_Pos    ( 0 )                                                  /*!< SCU_T::SRAM0VSRC: MASTER Position      */
+#define SCU_SRAM0VSRC_MASTER_Msk    ( 0xful << SCU_SRAM0VSRC_MASTER_Pos )                  /*!< SCU_T::SRAM0VSRC: MASTER Mask          */
 
-#define SCU_SRAM0VA_VIOADDR_Pos          (0)                                               /*!< SCU_T::SRAM0VA: VIOADDR Position       */
-#define SCU_SRAM0VA_VIOADDR_Msk          (0xfffffffful << SCU_SRAM0VA_VIOADDR_Pos)         /*!< SCU_T::SRAM0VA: VIOADDR Mask           */
+#define SCU_SRAM0VA_VIOADDR_Pos     ( 0 )                                                  /*!< SCU_T::SRAM0VA: VIOADDR Position       */
+#define SCU_SRAM0VA_VIOADDR_Msk     ( 0xfffffffful << SCU_SRAM0VA_VIOADDR_Pos )            /*!< SCU_T::SRAM0VA: VIOADDR Mask           */
 
-#define SCU_SRAM1VSRC_MASTER_Pos         (0)                                               /*!< SCU_T::SRAM1VSRC: MASTER Position      */
-#define SCU_SRAM1VSRC_MASTER_Msk         (0xful << SCU_SRAM1VSRC_MASTER_Pos)               /*!< SCU_T::SRAM1VSRC: MASTER Mask          */
+#define SCU_SRAM1VSRC_MASTER_Pos    ( 0 )                                                  /*!< SCU_T::SRAM1VSRC: MASTER Position      */
+#define SCU_SRAM1VSRC_MASTER_Msk    ( 0xful << SCU_SRAM1VSRC_MASTER_Pos )                  /*!< SCU_T::SRAM1VSRC: MASTER Mask          */
 
-#define SCU_SRAM1VA_VIOADDR_Pos          (0)                                               /*!< SCU_T::SRAM1VA: VIOADDR Position       */
-#define SCU_SRAM1VA_VIOADDR_Msk          (0xfffffffful << SCU_SRAM1VA_VIOADDR_Pos)         /*!< SCU_T::SRAM1VA: VIOADDR Mask           */
+#define SCU_SRAM1VA_VIOADDR_Pos     ( 0 )                                                  /*!< SCU_T::SRAM1VA: VIOADDR Position       */
+#define SCU_SRAM1VA_VIOADDR_Msk     ( 0xfffffffful << SCU_SRAM1VA_VIOADDR_Pos )            /*!< SCU_T::SRAM1VA: VIOADDR Mask           */
 
-#define SCU_FMCVSRC_MASTER_Pos           (0)                                               /*!< SCU_T::FMCVSRC: MASTER Position        */
-#define SCU_FMCVSRC_MASTER_Msk           (0xful << SCU_FMCVSRC_MASTER_Pos)                 /*!< SCU_T::FMCVSRC: MASTER Mask            */
+#define SCU_FMCVSRC_MASTER_Pos      ( 0 )                                                  /*!< SCU_T::FMCVSRC: MASTER Position        */
+#define SCU_FMCVSRC_MASTER_Msk      ( 0xful << SCU_FMCVSRC_MASTER_Pos )                    /*!< SCU_T::FMCVSRC: MASTER Mask            */
 
-#define SCU_FMCVA_VIOADDR_Pos            (0)                                               /*!< SCU_T::FMCVA: VIOADDR Position         */
-#define SCU_FMCVA_VIOADDR_Msk            (0xfffffffful << SCU_FMCVA_VIOADDR_Pos)           /*!< SCU_T::FMCVA: VIOADDR Mask             */
+#define SCU_FMCVA_VIOADDR_Pos       ( 0 )                                                  /*!< SCU_T::FMCVA: VIOADDR Position         */
+#define SCU_FMCVA_VIOADDR_Msk       ( 0xfffffffful << SCU_FMCVA_VIOADDR_Pos )              /*!< SCU_T::FMCVA: VIOADDR Mask             */
 
-#define SCU_FLASHVSRC_MASTER_Pos         (0)                                               /*!< SCU_T::FLASHVSRC: MASTER Position      */
-#define SCU_FLASHVSRC_MASTER_Msk         (0xful << SCU_FLASHVSRC_MASTER_Pos)               /*!< SCU_T::FLASHVSRC: MASTER Mask          */
+#define SCU_FLASHVSRC_MASTER_Pos    ( 0 )                                                  /*!< SCU_T::FLASHVSRC: MASTER Position      */
+#define SCU_FLASHVSRC_MASTER_Msk    ( 0xful << SCU_FLASHVSRC_MASTER_Pos )                  /*!< SCU_T::FLASHVSRC: MASTER Mask          */
 
-#define SCU_FLASHVA_VIOADDR_Pos          (0)                                               /*!< SCU_T::FLASHVA: VIOADDR Position       */
-#define SCU_FLASHVA_VIOADDR_Msk          (0xfffffffful << SCU_FLASHVA_VIOADDR_Pos)         /*!< SCU_T::FLASHVA: VIOADDR Mask           */
+#define SCU_FLASHVA_VIOADDR_Pos     ( 0 )                                                  /*!< SCU_T::FLASHVA: VIOADDR Position       */
+#define SCU_FLASHVA_VIOADDR_Msk     ( 0xfffffffful << SCU_FLASHVA_VIOADDR_Pos )            /*!< SCU_T::FLASHVA: VIOADDR Mask           */
 
-#define SCU_SCUVSRC_MASTER_Pos           (0)                                               /*!< SCU_T::SCUVSRC: MASTER Position        */
-#define SCU_SCUVSRC_MASTER_Msk           (0xful << SCU_SCUVSRC_MASTER_Pos)                 /*!< SCU_T::SCUVSRC: MASTER Mask            */
+#define SCU_SCUVSRC_MASTER_Pos      ( 0 )                                                  /*!< SCU_T::SCUVSRC: MASTER Position        */
+#define SCU_SCUVSRC_MASTER_Msk      ( 0xful << SCU_SCUVSRC_MASTER_Pos )                    /*!< SCU_T::SCUVSRC: MASTER Mask            */
 
-#define SCU_SCUVA_VIOADDR_Pos            (0)                                               /*!< SCU_T::SCUVA: VIOADDR Position         */
-#define SCU_SCUVA_VIOADDR_Msk            (0xfffffffful << SCU_SCUVA_VIOADDR_Pos)           /*!< SCU_T::SCUVA: VIOADDR Mask             */
+#define SCU_SCUVA_VIOADDR_Pos       ( 0 )                                                  /*!< SCU_T::SCUVA: VIOADDR Position         */
+#define SCU_SCUVA_VIOADDR_Msk       ( 0xfffffffful << SCU_SCUVA_VIOADDR_Pos )              /*!< SCU_T::SCUVA: VIOADDR Mask             */
 
-#define SCU_SYSVSRC_MASTER_Pos           (0)                                               /*!< SCU_T::SYSVSRC: MASTER Position        */
-#define SCU_SYSVSRC_MASTER_Msk           (0xful << SCU_SYSVSRC_MASTER_Pos)                 /*!< SCU_T::SYSVSRC: MASTER Mask            */
+#define SCU_SYSVSRC_MASTER_Pos      ( 0 )                                                  /*!< SCU_T::SYSVSRC: MASTER Position        */
+#define SCU_SYSVSRC_MASTER_Msk      ( 0xful << SCU_SYSVSRC_MASTER_Pos )                    /*!< SCU_T::SYSVSRC: MASTER Mask            */
 
-#define SCU_SYSVA_VIOADDR_Pos            (0)                                               /*!< SCU_T::SYSVA: VIOADDR Position         */
-#define SCU_SYSVA_VIOADDR_Msk            (0xfffffffful << SCU_SYSVA_VIOADDR_Pos)           /*!< SCU_T::SYSVA: VIOADDR Mask             */
+#define SCU_SYSVA_VIOADDR_Pos       ( 0 )                                                  /*!< SCU_T::SYSVA: VIOADDR Position         */
+#define SCU_SYSVA_VIOADDR_Msk       ( 0xfffffffful << SCU_SYSVA_VIOADDR_Pos )              /*!< SCU_T::SYSVA: VIOADDR Mask             */
 
-#define SCU_CRPTVSRC_MASTER_Pos          (0)                                               /*!< SCU_T::CRPTVSRC: MASTER Position       */
-#define SCU_CRPTVSRC_MASTER_Msk          (0xful << SCU_CRPTVSRC_MASTER_Pos)                /*!< SCU_T::CRPTVSRC: MASTER Mask           */
+#define SCU_CRPTVSRC_MASTER_Pos     ( 0 )                                                  /*!< SCU_T::CRPTVSRC: MASTER Position       */
+#define SCU_CRPTVSRC_MASTER_Msk     ( 0xful << SCU_CRPTVSRC_MASTER_Pos )                   /*!< SCU_T::CRPTVSRC: MASTER Mask           */
 
-#define SCU_CRPTVA_VIOADDR_Pos           (0)                                               /*!< SCU_T::CRPTVA: VIOADDR Position        */
-#define SCU_CRPTVA_VIOADDR_Msk           (0xfffffffful << SCU_CRPTVA_VIOADDR_Pos)          /*!< SCU_T::CRPTVA: VIOADDR Mask            */
+#define SCU_CRPTVA_VIOADDR_Pos      ( 0 )                                                  /*!< SCU_T::CRPTVA: VIOADDR Position        */
+#define SCU_CRPTVA_VIOADDR_Msk      ( 0xfffffffful << SCU_CRPTVA_VIOADDR_Pos )             /*!< SCU_T::CRPTVA: VIOADDR Mask            */
 
-#define SCU_NSMCTL_PRESCALE_Pos          (0)                                               /*!< SCU_T::NSMCTL: PRESCALE Position       */
-#define SCU_NSMCTL_PRESCALE_Msk          (0xfful << SCU_NSMCTL_PRESCALE_Pos)               /*!< SCU_T::NSMCTL: PRESCALE Mask           */
+#define SCU_NSMCTL_PRESCALE_Pos     ( 0 )                                                  /*!< SCU_T::NSMCTL: PRESCALE Position       */
+#define SCU_NSMCTL_PRESCALE_Msk     ( 0xfful << SCU_NSMCTL_PRESCALE_Pos )                  /*!< SCU_T::NSMCTL: PRESCALE Mask           */
 
-#define SCU_NSMCTL_NSMIEN_Pos            (8)                                               /*!< SCU_T::NSMCTL: NSMIEN Position         */
-#define SCU_NSMCTL_NSMIEN_Msk            (0x1ul << SCU_NSMCTL_NSMIEN_Pos)                  /*!< SCU_T::NSMCTL: NSMIEN Mask             */
+#define SCU_NSMCTL_NSMIEN_Pos       ( 8 )                                                  /*!< SCU_T::NSMCTL: NSMIEN Position         */
+#define SCU_NSMCTL_NSMIEN_Msk       ( 0x1ul << SCU_NSMCTL_NSMIEN_Pos )                     /*!< SCU_T::NSMCTL: NSMIEN Mask             */
 
-#define SCU_NSMCTL_AUTORLD_Pos           (9)                                               /*!< SCU_T::NSMCTL: AUTORLD Position        */
-#define SCU_NSMCTL_AUTORLD_Msk           (0x1ul << SCU_NSMCTL_AUTORLD_Pos)                 /*!< SCU_T::NSMCTL: AUTORLD Mask            */
+#define SCU_NSMCTL_AUTORLD_Pos      ( 9 )                                                  /*!< SCU_T::NSMCTL: AUTORLD Position        */
+#define SCU_NSMCTL_AUTORLD_Msk      ( 0x1ul << SCU_NSMCTL_AUTORLD_Pos )                    /*!< SCU_T::NSMCTL: AUTORLD Mask            */
 
-#define SCU_NSMCTL_TMRMOD_Pos            (10)                                              /*!< SCU_T::NSMCTL: TMRMOD Position         */
-#define SCU_NSMCTL_TMRMOD_Msk            (0x1ul << SCU_NSMCTL_TMRMOD_Pos)                  /*!< SCU_T::NSMCTL: TMRMOD Mask             */
+#define SCU_NSMCTL_TMRMOD_Pos       ( 10 )                                                 /*!< SCU_T::NSMCTL: TMRMOD Position         */
+#define SCU_NSMCTL_TMRMOD_Msk       ( 0x1ul << SCU_NSMCTL_TMRMOD_Pos )                     /*!< SCU_T::NSMCTL: TMRMOD Mask             */
 
-#define SCU_NSMCTL_IDLEON_Pos            (12)                                              /*!< SCU_T::NSMCTL: IDLEON Position         */
-#define SCU_NSMCTL_IDLEON_Msk            (0x1ul << SCU_NSMCTL_IDLEON_Pos)                  /*!< SCU_T::NSMCTL: IDLEON Mask             */
+#define SCU_NSMCTL_IDLEON_Pos       ( 12 )                                                 /*!< SCU_T::NSMCTL: IDLEON Position         */
+#define SCU_NSMCTL_IDLEON_Msk       ( 0x1ul << SCU_NSMCTL_IDLEON_Pos )                     /*!< SCU_T::NSMCTL: IDLEON Mask             */
 
-#define SCU_NSMCTL_DBGON_Pos             (13)                                              /*!< SCU_T::NSMCTL: DBGON Position          */
-#define SCU_NSMCTL_DBGON_Msk             (0x1ul << SCU_NSMCTL_DBGON_Pos)                   /*!< SCU_T::NSMCTL: DBGON Mask              */
+#define SCU_NSMCTL_DBGON_Pos        ( 13 )                                                 /*!< SCU_T::NSMCTL: DBGON Position          */
+#define SCU_NSMCTL_DBGON_Msk        ( 0x1ul << SCU_NSMCTL_DBGON_Pos )                      /*!< SCU_T::NSMCTL: DBGON Mask              */
 
-#define SCU_NSMLOAD_RELOAD_Pos           (0)                                               /*!< SCU_T::NSMLOAD: RELOAD Position        */
-#define SCU_NSMLOAD_RELOAD_Msk           (0xfffffful << SCU_NSMLOAD_RELOAD_Pos)            /*!< SCU_T::NSMLOAD: RELOAD Mask            */
+#define SCU_NSMLOAD_RELOAD_Pos      ( 0 )                                                  /*!< SCU_T::NSMLOAD: RELOAD Position        */
+#define SCU_NSMLOAD_RELOAD_Msk      ( 0xfffffful << SCU_NSMLOAD_RELOAD_Pos )               /*!< SCU_T::NSMLOAD: RELOAD Mask            */
 
-#define SCU_NSMVAL_VALUE_Pos             (0)                                               /*!< SCU_T::NSMVAL: VALUE Position          */
-#define SCU_NSMVAL_VALUE_Msk             (0xfffffful << SCU_NSMVAL_VALUE_Pos)              /*!< SCU_T::NSMVAL: VALUE Mask              */
+#define SCU_NSMVAL_VALUE_Pos        ( 0 )                                                  /*!< SCU_T::NSMVAL: VALUE Position          */
+#define SCU_NSMVAL_VALUE_Msk        ( 0xfffffful << SCU_NSMVAL_VALUE_Pos )                 /*!< SCU_T::NSMVAL: VALUE Mask              */
 
-#define SCU_NSMSTS_CURRNS_Pos            (0)                                               /*!< SCU_T::NSMSTS: CURRNS Position         */
-#define SCU_NSMSTS_CURRNS_Msk            (0x1ul << SCU_NSMSTS_CURRNS_Pos)                  /*!< SCU_T::NSMSTS: CURRNS Mask             */
+#define SCU_NSMSTS_CURRNS_Pos       ( 0 )                                                  /*!< SCU_T::NSMSTS: CURRNS Position         */
+#define SCU_NSMSTS_CURRNS_Msk       ( 0x1ul << SCU_NSMSTS_CURRNS_Pos )                     /*!< SCU_T::NSMSTS: CURRNS Mask             */
 
-#define SCU_NSMSTS_NSMIF_Pos             (1)                                               /*!< SCU_T::NSMSTS: NSMIF Position          */
-#define SCU_NSMSTS_NSMIF_Msk             (0x1ul << SCU_NSMSTS_NSMIF_Pos)                   /*!< SCU_T::NSMSTS: NSMIF Mask              */
+#define SCU_NSMSTS_NSMIF_Pos        ( 1 )                                                  /*!< SCU_T::NSMSTS: NSMIF Position          */
+#define SCU_NSMSTS_NSMIF_Msk        ( 0x1ul << SCU_NSMSTS_NSMIF_Pos )                      /*!< SCU_T::NSMSTS: NSMIF Mask              */
 
 /**@}*/ /* SCU_CONST */
 /**@}*/ /* end of SCU register group */

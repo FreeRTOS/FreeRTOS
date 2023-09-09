@@ -31,26 +31,26 @@
 #define _SAMA5_UART1_INSTANCE_
 
 /* ========== Register definition for UART1 peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_UART1_CR            (0xF8028000U) /**< \brief (UART1) Control Register */
-#define REG_UART1_MR            (0xF8028004U) /**< \brief (UART1) Mode Register */
-#define REG_UART1_IER           (0xF8028008U) /**< \brief (UART1) Interrupt Enable Register */
-#define REG_UART1_IDR           (0xF802800CU) /**< \brief (UART1) Interrupt Disable Register */
-#define REG_UART1_IMR           (0xF8028010U) /**< \brief (UART1) Interrupt Mask Register */
-#define REG_UART1_SR            (0xF8028014U) /**< \brief (UART1) Status Register */
-#define REG_UART1_RHR           (0xF8028018U) /**< \brief (UART1) Receive Holding Register */
-#define REG_UART1_THR           (0xF802801CU) /**< \brief (UART1) Transmit Holding Register */
-#define REG_UART1_BRGR          (0xF8028020U) /**< \brief (UART1) Baud Rate Generator Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_UART1_CR      ( 0xF8028000U )              /**< \brief (UART1) Control Register */
+    #define REG_UART1_MR      ( 0xF8028004U )              /**< \brief (UART1) Mode Register */
+    #define REG_UART1_IER     ( 0xF8028008U )              /**< \brief (UART1) Interrupt Enable Register */
+    #define REG_UART1_IDR     ( 0xF802800CU )              /**< \brief (UART1) Interrupt Disable Register */
+    #define REG_UART1_IMR     ( 0xF8028010U )              /**< \brief (UART1) Interrupt Mask Register */
+    #define REG_UART1_SR      ( 0xF8028014U )              /**< \brief (UART1) Status Register */
+    #define REG_UART1_RHR     ( 0xF8028018U )              /**< \brief (UART1) Receive Holding Register */
+    #define REG_UART1_THR     ( 0xF802801CU )              /**< \brief (UART1) Transmit Holding Register */
+    #define REG_UART1_BRGR    ( 0xF8028020U )              /**< \brief (UART1) Baud Rate Generator Register */
 #else
-#define REG_UART1_CR   (*(WoReg*)0xF8028000U) /**< \brief (UART1) Control Register */
-#define REG_UART1_MR   (*(RwReg*)0xF8028004U) /**< \brief (UART1) Mode Register */
-#define REG_UART1_IER  (*(WoReg*)0xF8028008U) /**< \brief (UART1) Interrupt Enable Register */
-#define REG_UART1_IDR  (*(WoReg*)0xF802800CU) /**< \brief (UART1) Interrupt Disable Register */
-#define REG_UART1_IMR  (*(RoReg*)0xF8028010U) /**< \brief (UART1) Interrupt Mask Register */
-#define REG_UART1_SR   (*(RoReg*)0xF8028014U) /**< \brief (UART1) Status Register */
-#define REG_UART1_RHR  (*(RoReg*)0xF8028018U) /**< \brief (UART1) Receive Holding Register */
-#define REG_UART1_THR  (*(WoReg*)0xF802801CU) /**< \brief (UART1) Transmit Holding Register */
-#define REG_UART1_BRGR (*(RwReg*)0xF8028020U) /**< \brief (UART1) Baud Rate Generator Register */
+    #define REG_UART1_CR      ( *( WoReg * ) 0xF8028000U ) /**< \brief (UART1) Control Register */
+    #define REG_UART1_MR      ( *( RwReg * ) 0xF8028004U ) /**< \brief (UART1) Mode Register */
+    #define REG_UART1_IER     ( *( WoReg * ) 0xF8028008U ) /**< \brief (UART1) Interrupt Enable Register */
+    #define REG_UART1_IDR     ( *( WoReg * ) 0xF802800CU ) /**< \brief (UART1) Interrupt Disable Register */
+    #define REG_UART1_IMR     ( *( RoReg * ) 0xF8028010U ) /**< \brief (UART1) Interrupt Mask Register */
+    #define REG_UART1_SR      ( *( RoReg * ) 0xF8028014U ) /**< \brief (UART1) Status Register */
+    #define REG_UART1_RHR     ( *( RoReg * ) 0xF8028018U ) /**< \brief (UART1) Receive Holding Register */
+    #define REG_UART1_THR     ( *( WoReg * ) 0xF802801CU ) /**< \brief (UART1) Transmit Holding Register */
+    #define REG_UART1_BRGR    ( *( RwReg * ) 0xF8028020U ) /**< \brief (UART1) Baud Rate Generator Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_UART1_INSTANCE_ */

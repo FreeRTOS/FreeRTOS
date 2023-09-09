@@ -85,9 +85,10 @@
  *
  * \param dwMode   WDT mode to be set
  */
-extern void WDT_Enable( Wdt* pWDT, uint32_t dwMode )
+extern void WDT_Enable( Wdt * pWDT,
+                        uint32_t dwMode )
 {
-    pWDT->WDT_MR = dwMode ;
+    pWDT->WDT_MR = dwMode;
 }
 
 /**
@@ -96,7 +97,7 @@ extern void WDT_Enable( Wdt* pWDT, uint32_t dwMode )
  * \note The Watchdog Mode Register (WDT_MR) can be written only once.
  * Only a processor reset resets it.
  */
-extern void WDT_Disable( Wdt* pWDT )
+extern void WDT_Disable( Wdt * pWDT )
 {
     pWDT->WDT_MR = WDT_MR_WDDIS;
 }
@@ -104,7 +105,7 @@ extern void WDT_Disable( Wdt* pWDT )
 /**
  * \brief Watchdog restart.
  */
-extern void WDT_Restart( Wdt* pWDT )
+extern void WDT_Restart( Wdt * pWDT )
 {
     pWDT->WDT_CR = 0xA5000001;
 }
@@ -112,9 +113,9 @@ extern void WDT_Restart( Wdt* pWDT )
 /**
  * \brief Watchdog get status.
  */
-extern uint32_t WDT_GetStatus( Wdt* pWDT )
+extern uint32_t WDT_GetStatus( Wdt * pWDT )
 {
-    return (pWDT->WDT_SR & 0x3) ;
+    return( pWDT->WDT_SR & 0x3 );
 }
 
 /**
@@ -124,9 +125,10 @@ extern uint32_t WDT_GetStatus( Wdt* pWDT )
  */
 extern uint32_t WDT_GetPeriod( uint32_t dwMs )
 {
-    if ( (dwMs < 4) || (dwMs > 16000) )
+    if( ( dwMs < 4 ) || ( dwMs > 16000 ) )
     {
-        return 0 ;
+        return 0;
     }
-    return ((dwMs << 8) / 1000) ;
+
+    return( ( dwMs << 8 ) / 1000 );
 }

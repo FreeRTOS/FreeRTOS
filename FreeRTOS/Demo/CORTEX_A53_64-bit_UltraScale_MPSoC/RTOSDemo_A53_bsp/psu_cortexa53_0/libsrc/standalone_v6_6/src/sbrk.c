@@ -34,7 +34,7 @@
 #include "xil_types.h"
 #ifdef __cplusplus
 extern "C" {
-	__attribute__((weak)) char8 *sbrk (s32 nbytes);
+__attribute__( ( weak ) ) char8 * sbrk( s32 nbytes );
 }
 #endif
 
@@ -45,17 +45,21 @@ extern char8 HeapLimit[];
 
 
 
-__attribute__((weak)) char8 *sbrk (s32 nbytes)
+__attribute__( ( weak ) ) char8 * sbrk( s32 nbytes )
 {
-  char8 *base;
-  static char8 *heap_ptr = HeapBase;
+    char8 * base;
+    static char8 * heap_ptr = HeapBase;
 
-  base = heap_ptr;
-	if((heap_ptr != NULL) && (heap_ptr + nbytes <= (char8 *)&HeapLimit + 1)) {
-	heap_ptr += nbytes;
-    return base;
-  }	else {
-    errno = ENOMEM;
-    return ((char8 *)-1);
-  }
+    base = heap_ptr;
+
+    if( ( heap_ptr != NULL ) && ( heap_ptr + nbytes <= ( char8 * ) &HeapLimit + 1 ) )
+    {
+        heap_ptr += nbytes;
+        return base;
+    }
+    else
+    {
+        errno = ENOMEM;
+        return( ( char8 * ) -1 );
+    }
 }

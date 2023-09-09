@@ -30,25 +30,24 @@
 
 #ifdef HAVE_FIPS
 
-#ifdef USE_WINDOWS_API
-    #pragma code_seg(".fipsA$q")
-    #pragma const_seg(".fipsB$q")
-#endif
+    #ifdef USE_WINDOWS_API
+        #pragma code_seg(".fipsA$q")
+        #pragma const_seg(".fipsB$q")
+    #endif
 
 
 /* last function of text/code segment */
 /* this function needs to be different than wolfCrypt_FIPS_first() */
-int wolfCrypt_FIPS_last(void);
-int wolfCrypt_FIPS_last(void)
-{
-    return 1;
-}
+    int wolfCrypt_FIPS_last( void );
+    int wolfCrypt_FIPS_last( void )
+    {
+        return 1;
+    }
 
 
 /* read only end address */
-const unsigned int wolfCrypt_FIPS_ro_end[] =
-{ 0x1a2b3c4d, 0xffffffff };
+    const unsigned int wolfCrypt_FIPS_ro_end[] =
+    { 0x1a2b3c4d, 0xffffffff };
 
 
 #endif /* HAVE_FIPS */
-

@@ -7,15 +7,17 @@
 #include <metal/compiler.h>
 #include <metal/drivers/riscv_cpu.h>
 
-struct __metal_driver_vtable_sifive_global_external_interrupts0 {
+struct __metal_driver_vtable_sifive_global_external_interrupts0
+{
     struct metal_interrupt_vtable global0_vtable;
 };
 
-__METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_global_external_interrupts0)
+__METAL_DECLARE_VTABLE( __metal_driver_vtable_sifive_global_external_interrupts0 )
 
-struct __metal_driver_sifive_global_external_interrupts0 {
+struct __metal_driver_sifive_global_external_interrupts0
+{
     struct metal_interrupt irc;
     int init_done;
 };
 
-#endif
+#endif /* ifndef METAL__DRIVERS__SIFIVE_GLOBAL_EXTERNAL_INTERRUPTS0_H */

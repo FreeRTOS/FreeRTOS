@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,29 +30,29 @@
 #ifndef _RSTC_H
 #define _RSTC_H
 
-//-----------------------------------------------------------------------------
-//         Exported functions
-//-----------------------------------------------------------------------------
+/*----------------------------------------------------------------------------- */
+/*         Exported functions */
+/*----------------------------------------------------------------------------- */
 
-extern void RSTC_ConfigureMode(unsigned int rmr);
+extern void RSTC_ConfigureMode( unsigned int rmr );
 
-extern void RSTC_SetUserResetEnable(unsigned char enable);
+extern void RSTC_SetUserResetEnable( unsigned char enable );
 
-extern void RSTC_SetUserResetInterruptEnable(unsigned char enable);
+extern void RSTC_SetUserResetInterruptEnable( unsigned char enable );
 
-extern void RSTC_SetExtResetLength(unsigned char powl);
+extern void RSTC_SetExtResetLength( unsigned char powl );
 
-extern void RSTC_ProcessorReset(void);
+extern void RSTC_ProcessorReset( void );
 
-extern void RSTC_PeripheralReset(void);
+extern void RSTC_PeripheralReset( void );
 
-extern void RSTC_ExtReset(void);
+extern void RSTC_ExtReset( void );
 
-extern unsigned char RSTC_GetNrstLevel(void);
+extern unsigned char RSTC_GetNrstLevel( void );
 
-extern unsigned char RSTC_IsUserResetDetected(void);
+extern unsigned char RSTC_IsUserResetDetected( void );
 
-extern unsigned char RSTC_IsBusy(void);
+extern unsigned char RSTC_IsBusy( void );
 
 
 #endif // #ifndef _RSTC_H

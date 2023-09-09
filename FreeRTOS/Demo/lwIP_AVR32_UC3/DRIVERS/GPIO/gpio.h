@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief GPIO header for AVR32 UC3.
@@ -50,26 +51,26 @@
 
 /*! \name Return Values of the GPIO API
  */
-//! @{
-#define GPIO_SUCCESS            0 //!< Function successfully completed.
-#define GPIO_INVALID_ARGUMENT   1 //!< Input parameters are out of range.
-//! @}
+/*! @{ */
+#define GPIO_SUCCESS             0 /*!< Function successfully completed. */
+#define GPIO_INVALID_ARGUMENT    1 /*!< Input parameters are out of range. */
+/*! @} */
 
 
 /*! \name Interrupt Trigger Modes
  */
-//! @{
-#define GPIO_PIN_CHANGE         0 //!< Interrupt triggered upon pin change.
-#define GPIO_RISING_EDGE        1 //!< Interrupt triggered upon rising edge.
-#define GPIO_FALLING_EDGE       2 //!< Interrupt triggered upon falling edge.
-//! @}
+/*! @{ */
+#define GPIO_PIN_CHANGE      0    /*!< Interrupt triggered upon pin change. */
+#define GPIO_RISING_EDGE     1    /*!< Interrupt triggered upon rising edge. */
+#define GPIO_FALLING_EDGE    2    /*!< Interrupt triggered upon falling edge. */
+/*! @} */
 
 
-//! A type definition of pins and modules connectivity.
+/*! A type definition of pins and modules connectivity. */
 typedef struct
 {
-  unsigned char pin;              //!< Module pin.
-  unsigned char function;         //!< Module function.
+    unsigned char pin;            /*!< Module pin. */
+    unsigned char function;       /*!< Module function. */
 } gpio_map_t[];
 
 
@@ -80,7 +81,8 @@ typedef struct
  *
  * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT.
  */
-extern int gpio_enable_module(const gpio_map_t gpiomap, unsigned int size);
+extern int gpio_enable_module( const gpio_map_t gpiomap,
+                               unsigned int size );
 
 /*! \brief Enables a specific module mode for a pin.
  *
@@ -97,14 +99,16 @@ extern int gpio_enable_module(const gpio_map_t gpiomap, unsigned int size);
  *
  * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT.
  */
-extern int gpio_enable_module_pin(unsigned int pin, unsigned int function);
+extern int gpio_enable_module_pin( unsigned int pin,
+                                   unsigned int function );
 
 /*! \brief Enables the GPIO mode of a set of pins.
  *
  * \param gpiomap The pin map.
  * \param size The number of pins in \a gpiomap.
  */
-extern void gpio_enable_gpio(const gpio_map_t gpiomap, unsigned int size);
+extern void gpio_enable_gpio( const gpio_map_t gpiomap,
+                              unsigned int size );
 
 /*! \brief Enables the GPIO mode of a pin.
  *
@@ -115,31 +119,31 @@ extern void gpio_enable_gpio(const gpio_map_t gpiomap, unsigned int size);
  *            AVR32_PWM_PWM_3_PIN for PWM channel 3 can also be used to release
  *            module pins for GPIO.
  */
-extern void gpio_enable_gpio_pin(unsigned int pin);
+extern void gpio_enable_gpio_pin( unsigned int pin );
 
 /*! \brief Enables the open-drain mode of a pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_enable_pin_open_drain(unsigned int pin);
+extern void gpio_enable_pin_open_drain( unsigned int pin );
 
 /*! \brief Disables the open-drain mode of a pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_disable_pin_open_drain(unsigned int pin);
+extern void gpio_disable_pin_open_drain( unsigned int pin );
 
 /*! \brief Enables the pull-up resistor of a pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_enable_pin_pull_up(unsigned int pin);
+extern void gpio_enable_pin_pull_up( unsigned int pin );
 
 /*! \brief Disables the pull-up resistor of a pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_disable_pin_pull_up(unsigned int pin);
+extern void gpio_disable_pin_pull_up( unsigned int pin );
 
 /*! \brief Returns the value of a pin.
  *
@@ -147,7 +151,7 @@ extern void gpio_disable_pin_pull_up(unsigned int pin);
  *
  * \return The pin value.
  */
-extern int gpio_get_pin_value(unsigned int pin);
+extern int gpio_get_pin_value( unsigned int pin );
 
 /*! \brief Returns the output value set for a GPIO pin.
  *
@@ -155,25 +159,25 @@ extern int gpio_get_pin_value(unsigned int pin);
  *
  * \return The pin output value.
  */
-extern int gpio_get_gpio_pin_output_value(unsigned int pin);
+extern int gpio_get_gpio_pin_output_value( unsigned int pin );
 
 /*! \brief Drives a GPIO pin to 1.
  *
  * \param pin The pin number.
  */
-extern void gpio_set_gpio_pin(unsigned int pin);
+extern void gpio_set_gpio_pin( unsigned int pin );
 
 /*! \brief Drives a GPIO pin to 0.
  *
  * \param pin The pin number.
  */
-extern void gpio_clr_gpio_pin(unsigned int pin);
+extern void gpio_clr_gpio_pin( unsigned int pin );
 
 /*! \brief Toggles a GPIO pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_tgl_gpio_pin(unsigned int pin);
+extern void gpio_tgl_gpio_pin( unsigned int pin );
 
 /*! \brief Enables the glitch filter of a pin.
  *
@@ -188,13 +192,13 @@ extern void gpio_tgl_gpio_pin(unsigned int pin);
  *
  * \param pin The pin number.
  */
-extern void gpio_enable_pin_glitch_filter(unsigned int pin);
+extern void gpio_enable_pin_glitch_filter( unsigned int pin );
 
 /*! \brief Disables the glitch filter of a pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_disable_pin_glitch_filter(unsigned int pin);
+extern void gpio_disable_pin_glitch_filter( unsigned int pin );
 
 /*! \brief Enables the interrupt of a pin with the specified settings.
  *
@@ -204,13 +208,14 @@ extern void gpio_disable_pin_glitch_filter(unsigned int pin);
  *
  * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT.
  */
-extern int gpio_enable_pin_interrupt(unsigned int pin, unsigned int mode);
+extern int gpio_enable_pin_interrupt( unsigned int pin,
+                                      unsigned int mode );
 
 /*! \brief Disables the interrupt of a pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_disable_pin_interrupt(unsigned int pin);
+extern void gpio_disable_pin_interrupt( unsigned int pin );
 
 /*! \brief Gets the interrupt flag of a pin.
  *
@@ -218,13 +223,13 @@ extern void gpio_disable_pin_interrupt(unsigned int pin);
  *
  * \return The pin interrupt flag.
  */
-extern int gpio_get_pin_interrupt_flag(unsigned int pin);
+extern int gpio_get_pin_interrupt_flag( unsigned int pin );
 
 /*! \brief Clears the interrupt flag of a pin.
  *
  * \param pin The pin number.
  */
-extern void gpio_clear_pin_interrupt_flag(unsigned int pin);
+extern void gpio_clear_pin_interrupt_flag( unsigned int pin );
 
 
-#endif  // _GPIO_H_
+#endif // _GPIO_H_

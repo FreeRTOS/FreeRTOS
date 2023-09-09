@@ -33,19 +33,20 @@
 ******************************************************************************/
 
 #ifndef __ALT_GBLTMR_H__
-#define __ALT_GBLTMR_H__
+    #define __ALT_GBLTMR_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "hwlib.h"
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include "hwlib.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif  /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 
 /******************************************************************************/
+
 /*! \addtogroup GBLTMR_MGR The Global Timer Manager API
  *
  * This functional group handles setting and reading various parameters of the
@@ -57,18 +58,21 @@ extern "C"
  * @{
  */
 /******************************************************************************/
+
 /*! Uninitialize the Global timer module
  *
  */
-ALT_STATUS_CODE alt_globaltmr_uninit(void);
+    ALT_STATUS_CODE alt_globaltmr_uninit( void );
 
 /******************************************************************************/
+
 /*! Initialize the Global timer module
  *
  */
-ALT_STATUS_CODE alt_globaltmr_init(void);
+    ALT_STATUS_CODE alt_globaltmr_init( void );
 
 /******************************************************************************/
+
 /*!
  * Stops the global timer counter compare function for this CPU and disables
  * its interrupt. It does
@@ -80,9 +84,10 @@ ALT_STATUS_CODE alt_globaltmr_init(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_globaltmr_stop(void);
+    ALT_STATUS_CODE alt_globaltmr_stop( void );
 
 /******************************************************************************/
+
 /*!
  * Starts the global timer compare function for this CPU, enables its interrupt
  * function and, if free-running mode is selected also enables its
@@ -95,9 +100,10 @@ ALT_STATUS_CODE alt_globaltmr_stop(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_globaltmr_start(void);
+    ALT_STATUS_CODE alt_globaltmr_start( void );
 
 /******************************************************************************/
+
 /*!
  * Returns the current counter value of the 64-bit global timer.
  *
@@ -114,9 +120,11 @@ ALT_STATUS_CODE alt_globaltmr_start(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_get(uint32_t* highword, uint32_t* lowword);
+    ALT_STATUS_CODE alt_globaltmr_get( uint32_t * highword,
+                                       uint32_t * lowword );
 
 /******************************************************************************/
+
 /*!
  * Returns the current counter value of the 64-bit global timer. This function
  * is identical to alt_globaltmr_get() except that the value is returned as a
@@ -127,9 +135,10 @@ ALT_STATUS_CODE alt_globaltmr_get(uint32_t* highword, uint32_t* lowword);
  * \retval      uint64_t
  *              The current value of the 64-bit counter.
  */
-uint64_t alt_globaltmr_get64(void);
+    uint64_t alt_globaltmr_get64( void );
 
 /******************************************************************************/
+
 /*!
  * Returns the 32 low-order bits of the global timer. This
  * is identical to calling \b alt_gpt_counter_get() with a tmr_id equal
@@ -140,9 +149,10 @@ uint64_t alt_globaltmr_get64(void);
  *
  * \retval      uint32_t The current 32-bit counter value.
  */
-uint32_t alt_globaltmr_counter_get_low32(void);
+    uint32_t alt_globaltmr_counter_get_low32( void );
 
 /******************************************************************************/
+
 /*!
  * Returns the 32 higher-order bits of the global timer. Use alt_globaltmr_get()
  * or alt_globaltmr_get64() to obtain the full 64-bit timer value.
@@ -151,9 +161,10 @@ uint32_t alt_globaltmr_counter_get_low32(void);
  *
  * \retval      uint32_t The current 32-bit counter value.
  */
-uint32_t alt_globaltmr_counter_get_hi32(void);
+    uint32_t alt_globaltmr_counter_get_hi32( void );
 
 /******************************************************************************/
+
 /*!
  * Sets the value of the 64-bit global timer comparator for this CPU. The
  * global timer increments its count and when it reaches this value or above,
@@ -172,9 +183,11 @@ uint32_t alt_globaltmr_counter_get_hi32(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_comp_set(uint32_t highword, uint32_t loword);
+    ALT_STATUS_CODE alt_globaltmr_comp_set( uint32_t highword,
+                                            uint32_t loword );
 
 /******************************************************************************/
+
 /*!
  * Sets the value of the 64-bit global timer comparator for this CPU. The
  * global timer increments its count and when it reaches this value or above,
@@ -191,9 +204,10 @@ ALT_STATUS_CODE alt_globaltmr_comp_set(uint32_t highword, uint32_t loword);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_comp_set64(uint64_t compval);
+    ALT_STATUS_CODE alt_globaltmr_comp_set64( uint64_t compval );
 
 /******************************************************************************/
+
 /*!
  * Returns the current 64-bit global timer comparator value  for this CPU. The
  * global timer increments its count and when it reaches this value or above,
@@ -214,9 +228,11 @@ ALT_STATUS_CODE alt_globaltmr_comp_set64(uint64_t compval);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_comp_get(uint32_t *highword, uint32_t *lowword);
+    ALT_STATUS_CODE alt_globaltmr_comp_get( uint32_t * highword,
+                                            uint32_t * lowword );
 
 /******************************************************************************/
+
 /*!
  * Returns the current 64-bit global timer comparator value  for this CPU. The
  * global timer increments its count and when it reaches this value or above,
@@ -233,10 +249,11 @@ ALT_STATUS_CODE alt_globaltmr_comp_get(uint32_t *highword, uint32_t *lowword);
  * \retval      uint64_t
  *              The 64-bit value of the global timer comparator.
  */
-uint64_t alt_globaltmr_comp_get64(void);
+    uint64_t alt_globaltmr_comp_get64( void );
 
 
 /******************************************************************************/
+
 /*!
  * Enables the comparison function of the global timer for this CPU.
  *
@@ -245,9 +262,10 @@ uint64_t alt_globaltmr_comp_get64(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_comp_mode_start(void);
+    ALT_STATUS_CODE alt_globaltmr_comp_mode_start( void );
 
 /******************************************************************************/
+
 /*!
  * Disables the comparison function of the global timer for this CPU.
  *
@@ -256,9 +274,10 @@ ALT_STATUS_CODE alt_globaltmr_comp_mode_start(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_comp_mode_stop(void);
+    ALT_STATUS_CODE alt_globaltmr_comp_mode_stop( void );
 
 /******************************************************************************/
+
 /*!
  * Returns the comparison mode selection of the global
  * timer for this CPU.
@@ -267,10 +286,11 @@ ALT_STATUS_CODE alt_globaltmr_comp_mode_stop(void);
  * \retval      FALSE           Comparison mode is not enabled.
  * \retval      TRUE            Comparison mode is enabled.
  */
-bool alt_globaltmr_is_comp_mode(void);
+    bool alt_globaltmr_is_comp_mode( void );
 
 
 /******************************************************************************/
+
 /*!
  * Returns the clock prescaler value of the global timer.
  *
@@ -278,10 +298,11 @@ bool alt_globaltmr_is_comp_mode(void);
  * \retval      uint32_t    The prescaler value. Valid range is 0-255.
  *                          Actual clock divisor ratio is this number plus one.
  */
-uint32_t alt_globaltmr_prescaler_get(void);
+    uint32_t alt_globaltmr_prescaler_get( void );
 
 
 /******************************************************************************/
+
 /*!
  * Sets the clock prescaler value of the global timer.
  *
@@ -294,9 +315,10 @@ uint32_t alt_globaltmr_prescaler_get(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_prescaler_set(uint32_t val);
+    ALT_STATUS_CODE alt_globaltmr_prescaler_set( uint32_t val );
 
 /******************************************************************************/
+
 /*!
  * Sets a 32-bit global timer auto-increment value in the global
  * timer block for this CPU. The global timer continually increments its count
@@ -314,9 +336,10 @@ ALT_STATUS_CODE alt_globaltmr_prescaler_set(uint32_t val);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_autoinc_set(uint32_t inc);
+    ALT_STATUS_CODE alt_globaltmr_autoinc_set( uint32_t inc );
 
 /******************************************************************************/
+
 /*!
  * Returns the global timer auto-increment value for this CPU. When the global
  * timer reaches the comparator value, if both comparison and free-run modes
@@ -327,9 +350,10 @@ ALT_STATUS_CODE alt_globaltmr_autoinc_set(uint32_t inc);
  * \retval      uint32_t
  *              The current comparator auto-increment value.
  */
-uint32_t alt_globaltmr_autoinc_get(void);
+    uint32_t alt_globaltmr_autoinc_get( void );
 
 /******************************************************************************/
+
 /*!
  * Enables the auto-increment function of the global timer for this CPU.
  *
@@ -338,9 +362,10 @@ uint32_t alt_globaltmr_autoinc_get(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_autoinc_mode_start(void);
+    ALT_STATUS_CODE alt_globaltmr_autoinc_mode_start( void );
 
 /******************************************************************************/
+
 /*!
  * Disables the auto-increment function of the global timer for this CPU.
  *
@@ -349,9 +374,10 @@ ALT_STATUS_CODE alt_globaltmr_autoinc_mode_start(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_autoinc_mode_stop(void);
+    ALT_STATUS_CODE alt_globaltmr_autoinc_mode_stop( void );
 
 /******************************************************************************/
+
 /*!
  * Returns the auto-increment selection of the global timer for this CPU.
  *
@@ -359,9 +385,10 @@ ALT_STATUS_CODE alt_globaltmr_autoinc_mode_stop(void);
  * \retval      FALSE           Auto-increment mode is not enabled.
  * \retval      TRUE            Auto-increment mode is enabled.
  */
-bool alt_globaltmr_is_autoinc_mode(void);
+    bool alt_globaltmr_is_autoinc_mode( void );
 
 /******************************************************************************/
+
 /*!
  * Returns the maximum counter value available for \b CPU_GLOBAL_TMR. \n
  * The value returned does not factor in the value of the clock prescaler.
@@ -373,9 +400,10 @@ bool alt_globaltmr_is_autoinc_mode(void);
  * \retval      0           An error occurred.
  *
  */
-uint32_t alt_globaltmr_maxcounter_get(void);
+    uint32_t alt_globaltmr_maxcounter_get( void );
 
 /******************************************************************************/
+
 /*!
  * Disables the interrupt from the global timer module. Identical to calling
  * alt_gpt_int_disable() with tmr_id of \b CPU_GLOBAL_TMR.
@@ -385,11 +413,12 @@ uint32_t alt_globaltmr_maxcounter_get(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_int_disable(void);
+    ALT_STATUS_CODE alt_globaltmr_int_disable( void );
 
 /******************************************************************************/
 
-#if 0
+    #if 0
+
 /*!
  *
  * Enables the interrupt of the global timer
@@ -401,9 +430,10 @@ ALT_STATUS_CODE alt_globaltmr_int_disable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_globaltmr_int_enable(void);
+        ALT_STATUS_CODE alt_globaltmr_int_enable( void );
 
-#else
+    #else
+
 /*!
  *
  * Enables the interrupt of the global timer
@@ -416,11 +446,12 @@ ALT_STATUS_CODE alt_globaltmr_int_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_globaltmr_int_enable(void);
+        ALT_STATUS_CODE alt_globaltmr_int_enable( void );
 
-#endif
+    #endif
 
 /******************************************************************************/
+
 /*!
  * Return \b TRUE if the interrupt of the global timer module is enabled
  * and \b FALSE if the interrupt is disabled or masked. Identical to calling
@@ -435,9 +466,10 @@ ALT_STATUS_CODE alt_globaltmr_int_enable(void);
  * \retval      TRUE            The timer interrupt is currently enabled.
  * \retval      FALSE           The timer interrupt is currently disabled.
  */
-bool alt_globaltmr_int_is_enabled(void);
+    bool alt_globaltmr_int_is_enabled( void );
 
 /******************************************************************************/
+
 /*!
  * Clear the pending interrupt status of the global timer module. Identical to
  * calling alt_gpt_int_clear_pending() with tmr_id of
@@ -448,9 +480,10 @@ bool alt_globaltmr_int_is_enabled(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_globaltmr_int_clear_pending(void);
+    ALT_STATUS_CODE alt_globaltmr_int_clear_pending( void );
 
 /******************************************************************************/
+
 /*!
  * Read the state (pending or not) of the interrupt of the global timer
  * module without changing the interrupt state. Identical to
@@ -462,9 +495,10 @@ ALT_STATUS_CODE alt_globaltmr_int_clear_pending(void);
  * \retval      TRUE            The timer interrupt is currently pending.
  * \retval      FALSE           The timer interrupt is not currently pending.
  */
-bool alt_globaltmr_int_is_pending(void);
+    bool alt_globaltmr_int_is_pending( void );
 
 /******************************************************************************/
+
 /*!
  * Read the state of the interrupt of the global timer
  * module and if the interrupt is set, clear it. Identical to
@@ -476,13 +510,13 @@ bool alt_globaltmr_int_is_pending(void);
  * \retval      TRUE            The timer interrupt was pending.
  * \retval      FALSE           The timer interrupt was not pending.
  */
-bool alt_globaltmr_int_if_pending_clear(void);
+    bool alt_globaltmr_int_if_pending_clear( void );
 
 /*! @} */
 /*! @} */
 /*! @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
-#endif  /* __ALT_GBLTMR_H__ */
+    #endif /* __cplusplus */
+#endif /* __ALT_GBLTMR_H__ */

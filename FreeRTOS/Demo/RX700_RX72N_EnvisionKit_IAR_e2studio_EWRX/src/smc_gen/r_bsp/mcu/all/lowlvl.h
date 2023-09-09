@@ -16,10 +16,12 @@
 *
 * Copyright (C) 2019 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : lowlvl.h
 * Description  : Functions to support stream I/O
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 28.02.2019 1.00     First Release
@@ -30,29 +32,28 @@
 #define LOWLVL_H
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Exported global variables
+*  Exported global variables
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Exported global functions (to be accessed by other files)
+*  Exported global functions (to be accessed by other files)
 ***********************************************************************************************************************/
 /* Output one character to standard output (the E1 Virtual Console or a serial port via user own charput function) */
-void charput (char output_char);
+void charput( char output_char );
 
 /* Input one character from standard input (the E1 Virtual Console or a serial port via user own charget function) */
-char charget (void);
+char charget( void );
 
-#endif  /* End of multiple inclusion prevention macro */
-
+#endif /* End of multiple inclusion prevention macro */

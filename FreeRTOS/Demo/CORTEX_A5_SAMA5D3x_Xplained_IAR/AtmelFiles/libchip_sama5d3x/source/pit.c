@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -27,22 +27,22 @@
  * ----------------------------------------------------------------------------
  */
 
- 
+
 /** \addtogroup pit_module Working with PIT
- * The PIT driver provides the Interface for configuration the Periodic 
+ * The PIT driver provides the Interface for configuration the Periodic
  *  Interval Timer (PIT) peripheral.
  *
  * <ul>
  * <li>  Initialize the PIT with the desired period using PIT_Init().
  *    Alternatively, the Periodic Interval Value (PIV) can be configured
- *    manually using PIT_SetPIV(). </li> 
+ *    manually using PIT_SetPIV(). </li>
  * <li>  Start the PIT counting using PIT_Enable().
  * <li>  Enable & disable the PIT interrupt using PIT_EnableIT() and
- *    PIT_DisableIT(). </li> 
- * <li>  Retrieve the current status of the PIT using PIT_GetStatus(). </li> 
+ *    PIT_DisableIT(). </li>
+ * <li>  Retrieve the current status of the PIT using PIT_GetStatus(). </li>
  * <li>  To get the current value of the internal counter and the number of ticks
  *    that have occurred, use either PIT_GetPIVR() or PIT_GetPIIR() depending
- *    on whether you want the values to be cleared or not. </li> 
+ *    on whether you want the values to be cleared or not. </li>
  *
  * </ul>
  * For more accurate information, please look at the PIT section of the
@@ -51,7 +51,7 @@
  * Related files :\n
  * \ref pit.c\n
  * \ref pit.h.\n
-*/
+ */
 /*@{*/
 /*@}*/
 
@@ -61,6 +61,7 @@
  * Implementation of PIT (Periodic Interval Timer) controller.
  *
  */
+
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
@@ -70,17 +71,18 @@
  *         Exported functions
  *------------------------------------------------------------------------------*/
 
- /**
- * \brief Initialize the Periodic Interval Timer to generate a tick at the 
+/**
+ * \brief Initialize the Periodic Interval Timer to generate a tick at the
  * specified period, given the current master clock frequency.
  *
  *  \param uperiod  Period in uSecond.
  *  \param pit_frequency  Master clock frequency in MHz.
  */
 
-void PIT_Init(uint32_t period, uint32_t pit_frequency)
+void PIT_Init( uint32_t period,
+               uint32_t pit_frequency )
 {
-    PIT->PIT_MR = period? (period * pit_frequency + 8) >> 4 : 0;
+    PIT->PIT_MR = period ? ( period * pit_frequency + 8 ) >> 4 : 0;
     PIT->PIT_MR |= PIT_MR_PITEN;
 }
 
@@ -89,17 +91,18 @@ void PIT_Init(uint32_t period, uint32_t pit_frequency)
  *
  *  \param piv  PIV value to set.
  */
-void PIT_SetPIV(uint32_t piv)
+void PIT_SetPIV( uint32_t piv )
 {
-    uint32_t dwMr = PIT->PIT_MR & (~PIT_MR_PIV_Msk);
-    PIT->PIT_MR = dwMr | PIT_MR_PIV(piv);
+    uint32_t dwMr = PIT->PIT_MR & ( ~PIT_MR_PIV_Msk );
+
+    PIT->PIT_MR = dwMr | PIT_MR_PIV( piv );
 }
 
 /**
  * \brief Enables the PIT if this is not already the case.
  *
  */
-void PIT_Enable(void)
+void PIT_Enable( void )
 {
     PIT->PIT_MR |= PIT_MR_PITEN;
 }
@@ -108,7 +111,7 @@ void PIT_Enable(void)
  * \brief Disnables the PIT when PIV value is reached.
  *
  */
-void PIT_Disable(void)
+void PIT_Disable( void )
 {
     PIT->PIT_MR &= ~PIT_MR_PITEN;
 }
@@ -117,7 +120,7 @@ void PIT_Disable(void)
  * \brief Enable the PIT periodic interrupt.
  *
  */
-void PIT_EnableIT(void) 
+void PIT_EnableIT( void )
 {
     PIT->PIT_MR |= PIT_MR_PITIEN;
 }
@@ -126,7 +129,7 @@ void PIT_EnableIT(void)
  * \brief Disables the PIT periodic interrupt.
  *
  */
-void PIT_DisableIT(void)
+void PIT_DisableIT( void )
 {
     PIT->PIT_MR &= ~PIT_MR_PITIEN;
 }
@@ -136,7 +139,7 @@ void PIT_DisableIT(void)
  *
  * \return PIT_MR value.
  */
-uint32_t PIT_GetMode(void)
+uint32_t PIT_GetMode( void )
 {
     return PIT->PIT_MR;
 }
@@ -146,7 +149,7 @@ uint32_t PIT_GetMode(void)
  *
  * \return PIT_SR value.
  */
-uint32_t PIT_GetStatus(void)
+uint32_t PIT_GetStatus( void )
 {
     return PIT->PIT_SR;
 }
@@ -154,21 +157,20 @@ uint32_t PIT_GetStatus(void)
 /**
  * \brief Returns the value of the PIT Image Register, to read PICNT and CPIV without
  *  clearing the current values.
- * 
+ *
  * \return PIT_PIIR value.
  */
-uint32_t PIT_GetPIIR(void)
+uint32_t PIT_GetPIIR( void )
 {
     return PIT->PIT_PIIR;
 }
 
 /**
  * \brief Returns the value of the PIT Value Register, clearing it as a side effect.
- * 
+ *
  * \return PITC_PIVR value.
  */
-uint32_t PIT_GetPIVR(void)
+uint32_t PIT_GetPIVR( void )
 {
     return PIT->PIT_PIVR;
 }
-

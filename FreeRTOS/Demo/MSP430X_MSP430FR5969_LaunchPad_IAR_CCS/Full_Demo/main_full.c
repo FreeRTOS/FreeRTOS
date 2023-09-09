@@ -84,29 +84,29 @@
 #include "TaskNotify.h"
 
 /* Priorities for the check task, as described at the top of this file. */
-#define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
+#define mainCHECK_TASK_PRIORITY              ( configMAX_PRIORITIES - 1 )
 
 /* Parameters for the task that handles the UART command console. */
-#define mainCOMMAND_CONSOLE_TASK_PRIORITY	( tskIDLE_PRIORITY )
-#define mainCOMMAND_CONSOLE_STACK_SIZE		( configMINIMAL_STACK_SIZE * 2 )
+#define mainCOMMAND_CONSOLE_TASK_PRIORITY    ( tskIDLE_PRIORITY )
+#define mainCOMMAND_CONSOLE_STACK_SIZE       ( configMINIMAL_STACK_SIZE * 2 )
 
 /* The LED used by the check timer as described at the top of this file. */
-#define mainCHECK_LED						( 0 )
+#define mainCHECK_LED                        ( 0 )
 
 /* The period after which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the pdMS_TO_TICKS() macro. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 3000 )
+ * have been reported by any of the standard demo tasks.  ms are converted to the
+ * equivalent in ticks using the pdMS_TO_TICKS() macro. */
+#define mainNO_ERROR_CHECK_TASK_PERIOD       pdMS_TO_TICKS( 3000 )
 
 /* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the pdMS_TO_TICKS() macro. */
-#define mainERROR_CHECK_TASK_PERIOD 		pdMS_TO_TICKS( 200 )
+ * reported in one of the standard demo tasks.  ms are converted to the equivalent
+ * in ticks using the pdMS_TO_TICKS() macro. */
+#define mainERROR_CHECK_TASK_PERIOD          pdMS_TO_TICKS( 200 )
 
 /* Parameters that are passed into the register check tasks solely for the
-purpose of ensuring parameters are passed into tasks correctly. */
-#define mainREG_TEST_TASK_1_PARAMETER		( ( void * ) 0x1234 )
-#define mainREG_TEST_TASK_2_PARAMETER		( ( void * ) 0x8765 )
+ * purpose of ensuring parameters are passed into tasks correctly. */
+#define mainREG_TEST_TASK_1_PARAMETER        ( ( void * ) 0x1234 )
+#define mainREG_TEST_TASK_2_PARAMETER        ( ( void * ) 0x8765 )
 
 /*-----------------------------------------------------------*/
 
@@ -119,7 +119,7 @@ void main_full( void );
 /*
  * The check task, as described at the top of this file.
  */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /*
  * Register check tasks, as described at the top of this file.  The nature of
@@ -127,35 +127,36 @@ static void prvCheckTask( void *pvParameters );
  * entry points are kept in the C file for the convenience of checking the task
  * parameter.
  */
-static void prvRegTestTaskEntry1( void *pvParameters );
+static void prvRegTestTaskEntry1( void * pvParameters );
 extern void vRegTest1Implementation( void );
-static void prvRegTestTaskEntry2( void *pvParameters );
+static void prvRegTestTaskEntry2( void * pvParameters );
 extern void vRegTest2Implementation( void );
 
 /* Starts the 'standard' UART command console task.  UART 0 is used at 19200
-baud. */
-extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
+ * baud. */
+extern void vUARTCommandConsoleStart( uint16_t usStackSize,
+                                      UBaseType_t uxPriority );
 
 /* Registers a set of example commands that can be used in the command
-console. */
+ * console. */
 void vRegisterSampleCLICommands( void );
 
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
-register check tasks to the check task.  If the variables keep incrementing,
-then the register check tasks have not discovered any errors.  If a variable
-stops incrementing, then an error has been found. */
+ * register check tasks to the check task.  If the variables keep incrementing,
+ * then the register check tasks have not discovered any errors.  If a variable
+ * stops incrementing, then an error has been found. */
 volatile uint16_t usRegTest1LoopCounter = 0UL, usRegTest2LoopCounter = 0UL;
 
 /* cOutputBuffer is used by FreeRTOS+CLI.  It is declared here so the
-persistent qualifier can be used.  For the buffer to be declared here, rather
-than in FreeRTOS_CLI.c, configAPPLICATION_PROVIDES_cOutputBuffer must be set to
-1 in FreeRTOSConfig.h. */
+ * persistent qualifier can be used.  For the buffer to be declared here, rather
+ * than in FreeRTOS_CLI.c, configAPPLICATION_PROVIDES_cOutputBuffer must be set to
+ * 1 in FreeRTOSConfig.h. */
 #ifdef __ICC430__
-	__persistent 							/* IAR version. */
+    __persistent                        /* IAR version. */
 #else
-	#pragma PERSISTENT( cOutputBuffer ) 	/* CCS version. */
+    #pragma PERSISTENT( cOutputBuffer ) /* CCS version. */
 #endif
 char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ] = { 0 };
 
@@ -166,204 +167,204 @@ volatile uint32_t ulRunTimeCounterOverflows = 0;
 
 void main_full( void )
 {
-	/* Start all the standard demo/test tasks.  They have no particular
-	functionality, but do demonstrate how to use the FreeRTOS API and test the
-	kernel port. */
-	vStartDynamicPriorityTasks();
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vStartEventGroupTasks();
-	vStartTaskNotifyTask();
+    /* Start all the standard demo/test tasks.  They have no particular
+     * functionality, but do demonstrate how to use the FreeRTOS API and test the
+     * kernel port. */
+    vStartDynamicPriorityTasks();
+    vCreateBlockTimeTasks();
+    vStartCountingSemaphoreTasks();
+    vStartGenericQueueTasks( tskIDLE_PRIORITY );
+    vStartRecursiveMutexTasks();
+    vStartEventGroupTasks();
+    vStartTaskNotifyTask();
 
-	/* Create the register check tasks, as described at the top of this	file */
-	xTaskCreate( prvRegTestTaskEntry1, 			/* Task entry point. */
-				 "Reg1", 						/* Text name for the task - not used by the kernel. */
-				 configMINIMAL_STACK_SIZE, 		/* Stack to allocate to the task - in words not bytes! */
-				 mainREG_TEST_TASK_1_PARAMETER, /* The parameter passed into the task. */
-				 tskIDLE_PRIORITY, 				/* The task's priority. */
-				 NULL );						/* Task handle is not needed, so NULL is passed. */
+    /* Create the register check tasks, as described at the top of this	file */
+    xTaskCreate( prvRegTestTaskEntry1,          /* Task entry point. */
+                 "Reg1",                        /* Text name for the task - not used by the kernel. */
+                 configMINIMAL_STACK_SIZE,      /* Stack to allocate to the task - in words not bytes! */
+                 mainREG_TEST_TASK_1_PARAMETER, /* The parameter passed into the task. */
+                 tskIDLE_PRIORITY,              /* The task's priority. */
+                 NULL );                        /* Task handle is not needed, so NULL is passed. */
 
-	xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
-	/* Create the task that performs the 'check' functionality, as described at
-	the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Create the task that performs the 'check' functionality, as described at
+     * the top of this file. */
+    xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Register an example set of CLI commands, then start the task that manages
-	the CLI using a UART for input and output. */
-	vRegisterSampleCLICommands();
-	vUARTCommandConsoleStart( mainCOMMAND_CONSOLE_STACK_SIZE, mainCOMMAND_CONSOLE_TASK_PRIORITY );
+    /* Register an example set of CLI commands, then start the task that manages
+     * the CLI using a UART for input and output. */
+    vRegisterSampleCLICommands();
+    vUARTCommandConsoleStart( mainCOMMAND_CONSOLE_STACK_SIZE, mainCOMMAND_CONSOLE_TASK_PRIORITY );
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was either insufficient FreeRTOS heap memory available for the idle
-	and/or timer tasks to be created.  See the memory management section on the
-	FreeRTOS web site for more details on the FreeRTOS heap
-	http://www.freertos.org/a00111.html. */
-	for( ;; );
+    /* If all is well, the scheduler will now be running, and the following
+     * line will never be reached.  If the following line does execute, then
+     * there was either insufficient FreeRTOS heap memory available for the idle
+     * and/or timer tasks to be created.  See the memory management section on the
+     * FreeRTOS web site for more details on the FreeRTOS heap
+     * http://www.freertos.org/a00111.html. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTask( void * pvParameters )
 {
-TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
-TickType_t xLastExecutionTime;
-static uint16_t usLastRegTest1Value = 0, usLastRegTest2Value = 0;
-uint16_t usErrorFound = pdFALSE;
+    TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
+    TickType_t xLastExecutionTime;
+    static uint16_t usLastRegTest1Value = 0, usLastRegTest2Value = 0;
+    uint16_t usErrorFound = pdFALSE;
 
-	/* Just to stop compiler warnings. */
-	( void ) pvParameters;
+    /* Just to stop compiler warnings. */
+    ( void ) pvParameters;
 
-	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
-	works correctly. */
-	xLastExecutionTime = xTaskGetTickCount();
+    /* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
+     * works correctly. */
+    xLastExecutionTime = xTaskGetTickCount();
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error.  An on-board LED is toggled on each iteration.
-	If an error is detected then the delay period is decreased from
-	mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has the
-	effect of increasing the rate at which the on-board LED toggles, and in so
-	doing gives visual feedback of the system status. */
-	for( ;; )
-	{
-		/* Delay until it is time to execute again. */
-		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
+    /* Cycle for ever, delaying then checking all the other tasks are still
+     * operating without error.  An on-board LED is toggled on each iteration.
+     * If an error is detected then the delay period is decreased from
+     * mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has the
+     * effect of increasing the rate at which the on-board LED toggles, and in so
+     * doing gives visual feedback of the system status. */
+    for( ; ; )
+    {
+        /* Delay until it is time to execute again. */
+        vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
-		/* Check all the demo tasks to ensure they are all still running, and
-		that none have detected an error. */
-		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-		{
-			usErrorFound = 1UL << 0UL;
-		}
+        /* Check all the demo tasks to ensure they are all still running, and
+         * that none have detected an error. */
+        if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+        {
+            usErrorFound = 1UL << 0UL;
+        }
 
-		if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			usErrorFound = 1UL << 1UL;
-		}
+        if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+        {
+            usErrorFound = 1UL << 1UL;
+        }
 
-		if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			usErrorFound = 1UL << 2UL;
-		}
+        if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+        {
+            usErrorFound = 1UL << 2UL;
+        }
 
-		if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			usErrorFound = 1UL << 3UL;
-		}
+        if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+        {
+            usErrorFound = 1UL << 3UL;
+        }
 
-		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			usErrorFound = 1UL << 4UL;
-		}
+        if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            usErrorFound = 1UL << 4UL;
+        }
 
-		if( xAreEventGroupTasksStillRunning() != pdPASS )
-		{
-			usErrorFound = 1UL << 5UL;
-		}
+        if( xAreEventGroupTasksStillRunning() != pdPASS )
+        {
+            usErrorFound = 1UL << 5UL;
+        }
 
-		if( xAreTaskNotificationTasksStillRunning() != pdPASS )
-		{
-			usErrorFound = 1UL << 6UL;
-		}
+        if( xAreTaskNotificationTasksStillRunning() != pdPASS )
+        {
+            usErrorFound = 1UL << 6UL;
+        }
 
-		/* Check that the register test 1 task is still running. */
-		if( usLastRegTest1Value == usRegTest1LoopCounter )
-		{
-			usErrorFound = 1UL << 7UL;
-		}
-		usLastRegTest1Value = usRegTest1LoopCounter;
+        /* Check that the register test 1 task is still running. */
+        if( usLastRegTest1Value == usRegTest1LoopCounter )
+        {
+            usErrorFound = 1UL << 7UL;
+        }
 
-		/* Check that the register test 2 task is still running. */
-		if( usLastRegTest2Value == usRegTest2LoopCounter )
-		{
-			usErrorFound = 1UL << 8UL;
-		}
-		usLastRegTest2Value = usRegTest2LoopCounter;
+        usLastRegTest1Value = usRegTest1LoopCounter;
 
-		/* Toggle the check LED to give an indication of the system status.  If
-		the LED toggles every mainNO_ERROR_CHECK_TASK_PERIOD milliseconds then
-		everything is ok.  A faster toggle indicates an error. */
-		vParTestToggleLED( mainCHECK_LED );
+        /* Check that the register test 2 task is still running. */
+        if( usLastRegTest2Value == usRegTest2LoopCounter )
+        {
+            usErrorFound = 1UL << 8UL;
+        }
 
-		if( usErrorFound != pdFALSE )
-		{
-			/* An error has been detected in one of the tasks - flash the LED
-			at a higher frequency to give visible feedback that something has
-			gone wrong (it might just be that the loop back connector required
-			by the comtest tasks has not been fitted). */
-			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
-		}
-	}
+        usLastRegTest2Value = usRegTest2LoopCounter;
+
+        /* Toggle the check LED to give an indication of the system status.  If
+         * the LED toggles every mainNO_ERROR_CHECK_TASK_PERIOD milliseconds then
+         * everything is ok.  A faster toggle indicates an error. */
+        vParTestToggleLED( mainCHECK_LED );
+
+        if( usErrorFound != pdFALSE )
+        {
+            /* An error has been detected in one of the tasks - flash the LED
+             * at a higher frequency to give visible feedback that something has
+             * gone wrong (it might just be that the loop back connector required
+             * by the comtest tasks has not been fitted). */
+            xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTestTaskEntry1( void *pvParameters )
+static void prvRegTestTaskEntry1( void * pvParameters )
 {
-	/* Although the regtest task is written in assembler, its entry point is
-	written in C for convenience of checking the task parameter is being passed
-	in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembler. */
-		vRegTest1Implementation();
-	}
+    /* Although the regtest task is written in assembler, its entry point is
+     * written in C for convenience of checking the task parameter is being passed
+     * in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest1Implementation();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check task will detect that the regtest loop counter is
-	not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+     * be incorrect.  The check task will detect that the regtest loop counter is
+     * not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTestTaskEntry2( void *pvParameters )
+static void prvRegTestTaskEntry2( void * pvParameters )
 {
-	/* Although the regtest task is written in assembler, its entry point is
-	written in C for convenience of checking the task parameter is being passed
-	in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembler. */
-		vRegTest2Implementation();
-	}
+    /* Although the regtest task is written in assembler, its entry point is
+     * written in C for convenience of checking the task parameter is being passed
+     * in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest2Implementation();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check task will detect that the regtest loop counter is
-	not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+     * be incorrect.  The check task will detect that the regtest loop counter is
+     * not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
 void vConfigureTimerForRunTimeStats( void )
 {
-	/* Configure a timer that is used as the time base for run time stats.  See
-	http://www.freertos.org/rtos-run-time-stats.html */
+    /* Configure a timer that is used as the time base for run time stats.  See
+     * http://www.freertos.org/rtos-run-time-stats.html */
 
-	/* Ensure the timer is stopped. */
-	TA1CTL = 0;
+    /* Ensure the timer is stopped. */
+    TA1CTL = 0;
 
-	/* Start up clean. */
-	TA1CTL |= TACLR;
+    /* Start up clean. */
+    TA1CTL |= TACLR;
 
-	/* Run the timer from the ACLK/8, continuous mode, interrupt enable. */
-	TA1CTL = TASSEL_1 | ID__8 | MC__CONTINUOUS | TAIE;
+    /* Run the timer from the ACLK/8, continuous mode, interrupt enable. */
+    TA1CTL = TASSEL_1 | ID__8 | MC__CONTINUOUS | TAIE;
 }
 /*-----------------------------------------------------------*/
 
 #pragma vector=TIMER1_A1_VECTOR
 __interrupt void v4RunTimeStatsTimerOverflow( void )
 {
-	TA1CTL &= ~TAIFG;
-	
-	/* 16-bit overflow, so add 17th bit. */
-	ulRunTimeCounterOverflows += 0x10000;
-	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
+    TA1CTL &= ~TAIFG;
+
+    /* 16-bit overflow, so add 17th bit. */
+    ulRunTimeCounterOverflows += 0x10000;
+    __bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 }
-
-
-
-

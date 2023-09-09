@@ -45,7 +45,7 @@
 /**
  * \brief Configure the Shutdown Mode Register
  */
-extern void shdwc_configure_wakeup_mode(uint32_t config);
+extern void shdwc_configure_wakeup_mode( uint32_t config );
 
 /**
  * \brief Configure the Shutdown Wake-up Input Register
@@ -55,18 +55,18 @@ extern void shdwc_configure_wakeup_mode(uint32_t config);
  * \param input_type, WKUPT0-WKUPT15: define falling or rising edge
  * on wake-up input.
  */
-extern void shdwc_set_wakeup_input(uint32_t input_enable,
-                                   uint32_t input_type);
+extern void shdwc_set_wakeup_input( uint32_t input_enable,
+                                    uint32_t input_type );
 
 /**
  * \brief Launch the ShutDown
  */
-extern void shdwc_do_shutdown(void);
+extern void shdwc_do_shutdown( void );
 
 /**
  * \brief Get Status
  * \return Contents of the Shutdown Status Register
  */
-extern uint32_t shdwc_get_status(void);
+extern uint32_t shdwc_get_status( void );
 
 #endif //#ifndef _SHDWC_H

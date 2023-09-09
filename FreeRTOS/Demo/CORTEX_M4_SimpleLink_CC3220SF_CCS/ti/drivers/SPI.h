@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*!*****************************************************************************
  *  @file       SPI.h
  *
@@ -400,15 +401,15 @@
  */
 
 #ifndef ti_drivers_SPI__include
-#define ti_drivers_SPI__include
+    #define ti_drivers_SPI__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <stddef.h>
 
 /**
  *  @defgroup SPI_CONTROL SPI_control command and status codes
@@ -427,7 +428,7 @@ extern "C" {
  * #define SPIXYZ_CMD_COMMAND1     SPI_CMD_RESERVED + 1
  * @endcode
  */
-#define SPI_CMD_RESERVED           (32)
+    #define SPI_CMD_RESERVED       ( 32 )
 
 /*!
  * Common SPI_control status code reservation offset.
@@ -441,7 +442,7 @@ extern "C" {
  * #define SPIXYZ_STATUS_ERROR2    SPI_STATUS_RESERVED - 2
  * @endcode
  */
-#define SPI_STATUS_RESERVED        (-32)
+    #define SPI_STATUS_RESERVED    ( -32 )
 
 /**
  *  @defgroup SPI_STATUS Status Codes
@@ -456,7 +457,7 @@ extern "C" {
  * SPI_control() returns SPI_STATUS_SUCCESS if the control code was executed
  * successfully.
  */
-#define SPI_STATUS_SUCCESS         (0)
+    #define SPI_STATUS_SUCCESS         ( 0 )
 
 /*!
  * @brief   Generic error status code returned by SPI_control().
@@ -464,7 +465,7 @@ extern "C" {
  * SPI_control() returns SPI_STATUS_ERROR if the control code was not executed
  * successfully.
  */
-#define SPI_STATUS_ERROR           (-1)
+    #define SPI_STATUS_ERROR           ( -1 )
 
 /*!
  * @brief   An error status code returned by SPI_control() for undefined
@@ -473,7 +474,7 @@ extern "C" {
  * SPI_control() returns SPI_STATUS_UNDEFINEDCMD if the control code is not
  * recognized by the driver implementation.
  */
-#define SPI_STATUS_UNDEFINEDCMD    (-2)
+    #define SPI_STATUS_UNDEFINEDCMD    ( -2 )
 /** @}*/
 
 /**
@@ -493,23 +494,24 @@ extern "C" {
 /*!
  *  @brief    Wait forever define
  */
-#define SPI_WAIT_FOREVER           (~(0U))
+    #define SPI_WAIT_FOREVER    ( ~( 0U ) )
 
 /*!
  *  @brief      A handle that is returned from a SPI_open() call.
  */
-typedef struct SPI_Config_    *SPI_Handle;
+    typedef struct SPI_Config_ * SPI_Handle;
 
 /*!
  *  @brief      Status codes that are set by the SPI driver.
  */
-typedef enum SPI_Status_ {
-    SPI_TRANSFER_COMPLETED = 0,
-    SPI_TRANSFER_STARTED,
-    SPI_TRANSFER_CANCELED,
-    SPI_TRANSFER_FAILED,
-    SPI_TRANSFER_CSN_DEASSERT
-} SPI_Status;
+    typedef enum SPI_Status_
+    {
+        SPI_TRANSFER_COMPLETED = 0,
+        SPI_TRANSFER_STARTED,
+        SPI_TRANSFER_CANCELED,
+        SPI_TRANSFER_FAILED,
+        SPI_TRANSFER_CSN_DEASSERT
+    } SPI_Status;
 
 /*!
  *  @brief
@@ -519,16 +521,17 @@ typedef enum SPI_Status_ {
  *  The arg variable is an user-definable argument which gets passed to the
  *  ::SPI_CallbackFxn when the SPI driver is in ::SPI_MODE_CALLBACK.
  */
-typedef struct SPI_Transaction_ {
-    /* User input (write-only) fields */
-    size_t     count;       /*!< Number of frames for this transaction */
-    void      *txBuf;       /*!< void * to a buffer with data to be transmitted */
-    void      *rxBuf;       /*!< void * to a buffer to receive data */
-    void      *arg;         /*!< Argument to be passed to the callback function */
+    typedef struct SPI_Transaction_
+    {
+        /* User input (write-only) fields */
+        size_t count;       /*!< Number of frames for this transaction */
+        void * txBuf;       /*!< void * to a buffer with data to be transmitted */
+        void * rxBuf;       /*!< void * to a buffer to receive data */
+        void * arg;         /*!< Argument to be passed to the callback function */
 
-    /* User output (read-only) fields */
-    SPI_Status status;     /*!< Status code set by SPI_transfer */
-} SPI_Transaction;
+        /* User output (read-only) fields */
+        SPI_Status status; /*!< Status code set by SPI_transfer */
+    } SPI_Transaction;
 
 /*!
  *  @brief      The definition of a callback function used by the SPI driver
@@ -537,29 +540,32 @@ typedef struct SPI_Transaction_ {
  *  @param      SPI_Handle          SPI_Handle
  *  @param      SPI_Transaction*    SPI_Transaction*
  */
-typedef void (*SPI_CallbackFxn) (SPI_Handle handle,
-    SPI_Transaction *transaction);
+    typedef void (* SPI_CallbackFxn) ( SPI_Handle handle,
+                                       SPI_Transaction * transaction );
+
 /*!
  *  @brief
  *  Definitions for various SPI modes of operation.
  */
-typedef enum SPI_Mode_ {
-    SPI_MASTER = 0,    /*!< SPI in master mode */
-    SPI_SLAVE  = 1     /*!< SPI in slave mode */
-} SPI_Mode;
+    typedef enum SPI_Mode_
+    {
+        SPI_MASTER = 0, /*!< SPI in master mode */
+        SPI_SLAVE = 1   /*!< SPI in slave mode */
+    } SPI_Mode;
 
 /*!
  *  @brief
  *  Definitions for various SPI data frame formats.
  */
-typedef enum SPI_FrameFormat_ {
-    SPI_POL0_PHA0 = 0,    /*!< SPI mode Polarity 0 Phase 0 */
-    SPI_POL0_PHA1 = 1,    /*!< SPI mode Polarity 0 Phase 1 */
-    SPI_POL1_PHA0 = 2,    /*!< SPI mode Polarity 1 Phase 0 */
-    SPI_POL1_PHA1 = 3,    /*!< SPI mode Polarity 1 Phase 1 */
-    SPI_TI        = 4,    /*!< TI mode */
-    SPI_MW        = 5     /*!< Micro-wire mode */
-} SPI_FrameFormat;
+    typedef enum SPI_FrameFormat_
+    {
+        SPI_POL0_PHA0 = 0, /*!< SPI mode Polarity 0 Phase 0 */
+        SPI_POL0_PHA1 = 1, /*!< SPI mode Polarity 0 Phase 1 */
+        SPI_POL1_PHA0 = 2, /*!< SPI mode Polarity 1 Phase 0 */
+        SPI_POL1_PHA1 = 3, /*!< SPI mode Polarity 1 Phase 1 */
+        SPI_TI = 4,        /*!< TI mode */
+        SPI_MW = 5         /*!< Micro-wire mode */
+    } SPI_FrameFormat;
 
 /*!
  *  @brief
@@ -571,18 +577,20 @@ typedef enum SPI_FrameFormat_ {
  *  calls a ::SPI_CallbackFxn callback function when the transaction has
  *  completed.
  */
-typedef enum SPI_TransferMode_ {
-    /*!
-     * SPI_transfer() blocks execution. This mode can only be used when called
-     * within a Task context
-     */
-    SPI_MODE_BLOCKING,
-    /*!
-     * SPI_transfer() does not block code execution and will call a
-     * ::SPI_CallbackFxn. This mode can be used in a Task, Swi, or Hwi context.
-     */
-    SPI_MODE_CALLBACK
-} SPI_TransferMode;
+    typedef enum SPI_TransferMode_
+    {
+        /*!
+         * SPI_transfer() blocks execution. This mode can only be used when called
+         * within a Task context
+         */
+        SPI_MODE_BLOCKING,
+
+        /*!
+         * SPI_transfer() does not block code execution and will call a
+         * ::SPI_CallbackFxn. This mode can be used in a Task, Swi, or Hwi context.
+         */
+        SPI_MODE_CALLBACK
+    } SPI_TransferMode;
 
 /*!
  *  @brief SPI Parameters
@@ -592,82 +600,86 @@ typedef enum SPI_TransferMode_ {
  *
  *  @sa         SPI_Params_init()
  */
-typedef struct SPI_Params_ {
-    SPI_TransferMode transferMode;       /*!< Blocking or Callback mode */
-    uint32_t         transferTimeout;    /*!< Transfer timeout in system
-                                              ticks (Not supported with all
-                                              implementations */
-    SPI_CallbackFxn  transferCallbackFxn;/*!< Callback function pointer */
-    SPI_Mode         mode;               /*!< Master or Slave mode */
-    uint32_t         bitRate;            /*!< SPI bit rate in Hz */
-    uint32_t         dataSize;           /*!< SPI data frame size in bits */
-    SPI_FrameFormat  frameFormat;        /*!< SPI frame format */
-    void            *custom;             /*!< Custom argument used by driver
-                                              implementation */
-} SPI_Params;
+    typedef struct SPI_Params_
+    {
+        SPI_TransferMode transferMode;       /*!< Blocking or Callback mode */
+        uint32_t transferTimeout;            /*!< Transfer timeout in system
+                                              *   ticks (Not supported with all
+                                              *   implementations */
+        SPI_CallbackFxn transferCallbackFxn; /*!< Callback function pointer */
+        SPI_Mode mode;                       /*!< Master or Slave mode */
+        uint32_t bitRate;                    /*!< SPI bit rate in Hz */
+        uint32_t dataSize;                   /*!< SPI data frame size in bits */
+        SPI_FrameFormat frameFormat;         /*!< SPI frame format */
+        void * custom;                       /*!< Custom argument used by driver
+                                              *   implementation */
+    } SPI_Params;
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SPI_close().
  */
-typedef void (*SPI_CloseFxn) (SPI_Handle handle);
+    typedef void (* SPI_CloseFxn) ( SPI_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SPI_control().
  */
-typedef int_fast16_t (*SPI_ControlFxn) (SPI_Handle handle, uint_fast16_t cmd,
-    void *arg);
+    typedef int_fast16_t (* SPI_ControlFxn) ( SPI_Handle handle,
+                                              uint_fast16_t cmd,
+                                              void * arg );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SPI_init().
  */
-typedef void (*SPI_InitFxn) (SPI_Handle handle);
+    typedef void (* SPI_InitFxn) ( SPI_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SPI_open().
  */
-typedef SPI_Handle (*SPI_OpenFxn) (SPI_Handle handle, SPI_Params *params);
+    typedef SPI_Handle (* SPI_OpenFxn) ( SPI_Handle handle,
+                                         SPI_Params * params );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SPI_transfer().
  */
-typedef bool (*SPI_TransferFxn) (SPI_Handle handle,
-    SPI_Transaction *transaction);
+    typedef bool (* SPI_TransferFxn) ( SPI_Handle handle,
+                                       SPI_Transaction * transaction );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              SPI_transferCancel().
  */
-typedef void (*SPI_TransferCancelFxn) (SPI_Handle handle);
+    typedef void (* SPI_TransferCancelFxn) ( SPI_Handle handle );
 
 /*!
  *  @brief      The definition of a SPI function table that contains the
  *              required set of functions to control a specific SPI driver
  *              implementation.
  */
-typedef struct SPI_FxnTable_ {
-    /*! Function to close the specified peripheral */
-    SPI_CloseFxn          closeFxn;
+    typedef struct SPI_FxnTable_
+    {
+        /*! Function to close the specified peripheral */
+        SPI_CloseFxn closeFxn;
 
-    /*! Function to implementation specific control function */
-    SPI_ControlFxn        controlFxn;
+        /*! Function to implementation specific control function */
+        SPI_ControlFxn controlFxn;
 
-    /*! Function to initialize the given data object */
-    SPI_InitFxn           initFxn;
+        /*! Function to initialize the given data object */
+        SPI_InitFxn initFxn;
 
-    /*! Function to open the specified peripheral */
-    SPI_OpenFxn           openFxn;
+        /*! Function to open the specified peripheral */
+        SPI_OpenFxn openFxn;
 
-    /*! Function to initiate a SPI data transfer */
-    SPI_TransferFxn       transferFxn;
+        /*! Function to initiate a SPI data transfer */
+        SPI_TransferFxn transferFxn;
 
-    /*! Function to cancel SPI data transfer */
-    SPI_TransferCancelFxn transferCancelFxn;
-} SPI_FxnTable;
+        /*! Function to cancel SPI data transfer */
+        SPI_TransferCancelFxn transferCancelFxn;
+    } SPI_FxnTable;
 
 /*!
  *  @brief SPI Global configuration
@@ -680,16 +692,17 @@ typedef struct SPI_FxnTable_ {
  *
  *  @sa     SPI_init()
  */
-typedef struct SPI_Config_ {
-    /*! Pointer to a table of driver-specific implementations of SPI APIs */
-    SPI_FxnTable const *fxnTablePtr;
+    typedef struct SPI_Config_
+    {
+        /*! Pointer to a table of driver-specific implementations of SPI APIs */
+        SPI_FxnTable const * fxnTablePtr;
 
-    /*! Pointer to a driver specific data object */
-    void               *object;
+        /*! Pointer to a driver specific data object */
+        void * object;
 
-    /*! Pointer to a driver specific hardware attributes structure */
-    void         const *hwAttrs;
-} SPI_Config;
+        /*! Pointer to a driver specific hardware attributes structure */
+        void const * hwAttrs;
+    } SPI_Config;
 
 /*!
  *  @brief  Function to close a SPI peripheral specified by the SPI handle
@@ -700,7 +713,7 @@ typedef struct SPI_Config_ {
  *
  *  @sa     SPI_open()
  */
-extern void SPI_close(SPI_Handle handle);
+    extern void SPI_close( SPI_Handle handle );
 
 /*!
  *  @brief  Function performs implementation specific features on a given
@@ -739,8 +752,9 @@ extern void SPI_close(SPI_Handle handle);
  *
  *  @sa     SPI_open()
  */
-extern int_fast16_t SPI_control(SPI_Handle handle, uint_fast16_t cmd,
-    void *controlArg);
+    extern int_fast16_t SPI_control( SPI_Handle handle,
+                                     uint_fast16_t cmd,
+                                     void * controlArg );
 
 /*!
  *  @brief  This function initializes the SPI module.
@@ -750,7 +764,7 @@ extern int_fast16_t SPI_control(SPI_Handle handle, uint_fast16_t cmd,
  *          any other SPI driver APIs. This function call does not modify any
  *          peripheral registers.
  */
-extern void SPI_init(void);
+    extern void SPI_init( void );
 
 /*!
  *  @brief  This function opens a given SPI peripheral.
@@ -770,7 +784,8 @@ extern void SPI_init(void);
  *  @sa     SPI_init()
  *  @sa     SPI_close()
  */
-extern SPI_Handle SPI_open(uint_least8_t index, SPI_Params *params);
+    extern SPI_Handle SPI_open( uint_least8_t index,
+                                SPI_Params * params );
 
 /*!
  *  @brief  Function to initialize the SPI_Params struct to its defaults
@@ -787,7 +802,7 @@ extern SPI_Handle SPI_open(uint_least8_t index, SPI_Params *params);
  *      dataSize            = 8 (bits)
  *      frameFormat         = SPI_POL0_PHA0
  */
-extern void SPI_Params_init(SPI_Params *params);
+    extern void SPI_Params_init( SPI_Params * params );
 
 /*!
  *  @brief  Function to perform SPI transactions
@@ -818,7 +833,8 @@ extern void SPI_Params_init(SPI_Params *params);
  *  @sa     SPI_open
  *  @sa     SPI_transferCancel
  */
-extern bool SPI_transfer(SPI_Handle handle, SPI_Transaction *transaction);
+    extern bool SPI_transfer( SPI_Handle handle,
+                              SPI_Transaction * transaction );
 
 /*!
  *  @brief  Function to cancel SPI transactions
@@ -837,10 +853,10 @@ extern bool SPI_transfer(SPI_Handle handle, SPI_Transaction *transaction);
  *  @sa     SPI_open
  *  @sa     SPI_transfer
  */
-extern void SPI_transferCancel(SPI_Handle handle);
+    extern void SPI_transferCancel( SPI_Handle handle );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_SPI__include */

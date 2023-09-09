@@ -1,26 +1,28 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
 * Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : platform.h
 * Description  : The user chooses which MCU and board they are developing for in this file. If the board you are using
 *                is not listed below, please add your own or use the default 'User Board'.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 30.11.2011 1.00     First Release
@@ -35,7 +37,7 @@
 *                               its part number in r_bsp_config.h. Moved mcu_info.h to the 'mcu' folder. Made an effort
 *                               to remove any extra files that the user would need to touch. Removed the flash_options.c
 *                               file and put its contents in vecttbl.c.
-*         : 17.07.2012 1.50     Fixed bug with exception callback function names. Added BCLK_OUTPUT and SDCLK_OUTPUT 
+*         : 17.07.2012 1.50     Fixed bug with exception callback function names. Added BCLK_OUTPUT and SDCLK_OUTPUT
 *                               macro options in r_bsp_config.h. Added some extra code to handle exceptions in
 *                               vecttbl.c. Added vecttbl.h so that user has prototypes for exception callbacks.
 *         : 09.08.2012 1.60     Added IO_LIB_ENABLE macro to r_bsp_config_reference.h.
@@ -62,7 +64,7 @@
 *                               preliminary version of the r_bsp User's Manual. For RX210, the ability to choose chip
 *                               version C was added to its r_bsp_config.h file.
 *         : 01.07.2013 2.30     Removed RSPI pin setup in RSKRX111 which caused excess current draw in low power
-*                               modes. Changed FIT_NO_PTR and FIT_NO_FUNC macros to 0x10000000 which works for all 
+*                               modes. Changed FIT_NO_PTR and FIT_NO_FUNC macros to 0x10000000 which works for all
 *                               RX MCUs. Added ability for user to use 1 or 2 stacks for RX MCUs. Added new interrupt
 *                               handling features which allows for interrupt callback registration. This feature allows
 *                               all interrupts that map to the NMI vector to be used and replaces the static callback
@@ -74,8 +76,8 @@
 *                               '(void *)' cast to FIT_NO_PTR to remove compiler warnings. All r_bsp.h files now include
 *                               r_bsp_common.h which has common includes (stdint.h, stddef.h, & stdbool.h) and uses
 *                               r_typedefs.h when C99 is not available. RX111 and RX210 MCUs have the option of using
-*                               the r_cgc_rx module for clock management. When this is used, the clock info macros in 
-*                               mcu_info.h (e.g. BSP_ICLK_HZ) will now make calls to the r_cgc_rx module instead of 
+*                               the r_cgc_rx module for clock management. When this is used, the clock info macros in
+*                               mcu_info.h (e.g. BSP_ICLK_HZ) will now make calls to the r_cgc_rx module instead of
 *                               providing static info. For debug console output, lowlvl.src was replaced by lowlvl.c
 *                               (assembly converted to C source).
 *         : 10.02.2014 2.40     Added support for the RSKRX110, RPBRX111, RSKRX220, and HSBRX21AP. Made sure
@@ -89,7 +91,7 @@
 *                               platform is chosen by default (used to be the RSKRX111). This makes it easier to
 *                               understand the problem when you build a new project and have not selected your platform.
 *         : 24.03.2014 2.50     Added support for the RSKRX64M.
-*         : 16.06.2014 2.60     Added version control for r_bsp_config.h Two user callback functions may now be 
+*         : 16.06.2014 2.60     Added version control for r_bsp_config.h Two user callback functions may now be
 *                               configured allowing callbacks from PowerON_Reset_PC() for warm start detection.
 *                               Stdio charget() and charput() functions may now be redirected to user defined functions.
 *                               Added support for RSKRX631 and RDKRX631.
@@ -123,13 +125,13 @@
 *                               Added support for TARGETBOARDRX231.
 *                               Added support for TARGETBOARDRX130.
 *         : 27.07.2018 3.90     Added support for GENERIC_RX66T.
-*                               Deleted the below board folders, since other boards can all be substituted with 
+*                               Deleted the below board folders, since other boards can all be substituted with
 *                               GENERIC_RXxxx.
-*                               - RSKRX64M, RSKRX65N, RSKRX65N_2MB, TARGETBOARDRX65N, ENVISIONRX65N, RSKRX71M, 
-*                                 RSKRX230, RSKRX231, TARGETBOARDRX231, RSKRX110, RSKRX111, RPBRX111, RSKRX113, 
+*                               - RSKRX64M, RSKRX65N, RSKRX65N_2MB, TARGETBOARDRX65N, ENVISIONRX65N, RSKRX71M,
+*                                 RSKRX230, RSKRX231, TARGETBOARDRX231, RSKRX110, RSKRX111, RPBRX111, RSKRX113,
 *                                 RSKRX130, RSKRX130_512KB, and TARGETBOARDRX130
 *         : 31.10.2018 4.00     Added support for GENERIC_RX72T.
-*                               Deleted the below board folders, since other boards can all be substituted with 
+*                               Deleted the below board folders, since other boards can all be substituted with
 *                               GENERIC_RXxxx.
 *                               - RSSKRX23T, RSKRX23T, RSKRX24T, and RSKRX24U
 *         : 28.02.2019 5.00     Deleted the below board folders.
@@ -148,77 +150,76 @@
 #define PLATFORM_H
 
 /***********************************************************************************************************************
-DEFINE YOUR SYSTEM - UNCOMMENT THE INCLUDE PATH FOR THE PLATFORM YOU ARE USING.
+*  DEFINE YOUR SYSTEM - UNCOMMENT THE INCLUDE PATH FOR THE PLATFORM YOU ARE USING.
 ***********************************************************************************************************************/
 /* GENERIC_RX64M */
-//#include "./board/generic_rx64m/r_bsp.h"
+/*#include "./board/generic_rx64m/r_bsp.h" */
 
 /* GENERIC_RX65N */
-//#include "./board/generic_rx65n/r_bsp.h"
+/*#include "./board/generic_rx65n/r_bsp.h" */
 
 /* GENERIC_RX66N */
-//#include "./board/generic_rx66n/r_bsp.h"
+/*#include "./board/generic_rx66n/r_bsp.h" */
 
 /* GENERIC_RX66T */
-//#include "./board/generic_rx66t/r_bsp.h"
+/*#include "./board/generic_rx66t/r_bsp.h" */
 
 /* GENERIC_RX71M */
-//#include "./board/generic_rx71m/r_bsp.h"
+/*#include "./board/generic_rx71m/r_bsp.h" */
 
 /* GENERIC_RX72M */
-//#include "./board/generic_rx72m/r_bsp.h"
+/*#include "./board/generic_rx72m/r_bsp.h" */
 
 /* GENERIC_RX72N */
 #include "./board/generic_rx72n/r_bsp.h"
 
 /* GENERIC_RX72T */
-//#include "./board/generic_rx72t/r_bsp.h"
+/*#include "./board/generic_rx72t/r_bsp.h" */
 
 /* GENERIC_RX230 */
-//#include "./board/generic_rx230/r_bsp.h"
+/*#include "./board/generic_rx230/r_bsp.h" */
 
 /* GENERIC_RX231 */
-//#include "./board/generic_rx231/r_bsp.h"
+/*#include "./board/generic_rx231/r_bsp.h" */
 
 /* GENERIC_RX23E-A */
-//#include "./board/generic_rx23e-a/r_bsp.h"
+/*#include "./board/generic_rx23e-a/r_bsp.h" */
 
 /* GENERIC_RX23T */
-//#include "./board/generic_rx23t/r_bsp.h"
+/*#include "./board/generic_rx23t/r_bsp.h" */
 
 /* GENERIC_RX23W */
-//#include "./board/generic_rx23w/r_bsp.h"
+/*#include "./board/generic_rx23w/r_bsp.h" */
 
 /* GENERIC_RX24T */
-//#include "./board/generic_rx24t/r_bsp.h"
+/*#include "./board/generic_rx24t/r_bsp.h" */
 
 /* GENERIC_RX24U */
-//#include "./board/generic_rx24u/r_bsp.h"
+/*#include "./board/generic_rx24u/r_bsp.h" */
 
 /* GENERIC_RX111 */
-//#include "./board/generic_rx111/r_bsp.h"
+/*#include "./board/generic_rx111/r_bsp.h" */
 
 /* GENERIC_RX110 */
-//#include "./board/generic_rx110/r_bsp.h"
+/*#include "./board/generic_rx110/r_bsp.h" */
 
 /* GENERIC_RX113 */
-//#include "./board/generic_rx113/r_bsp.h"
+/*#include "./board/generic_rx113/r_bsp.h" */
 
 /* GENERIC_RX130 */
-//#include "./board/generic_rx130/r_bsp.h"
+/*#include "./board/generic_rx130/r_bsp.h" */
 
 /* GENERIC_RX13T */
-//#include "./board/generic_rx13t/r_bsp.h"
+/*#include "./board/generic_rx13t/r_bsp.h" */
 
 /* User Board - Define your own board here. */
-//#include "./board/user/r_bsp.h"
+/*#include "./board/user/r_bsp.h" */
 
 /***********************************************************************************************************************
-MAKE SURE AT LEAST ONE PLATFORM WAS DEFINED - DO NOT EDIT BELOW THIS POINT
+*  MAKE SURE AT LEAST ONE PLATFORM WAS DEFINED - DO NOT EDIT BELOW THIS POINT
 ***********************************************************************************************************************/
 #ifndef PLATFORM_DEFINED
-#error  "Error - No platform defined in platform.h!"
+    #error  "Error - No platform defined in platform.h!"
 #endif
 
 #endif /* PLATFORM_H */
-

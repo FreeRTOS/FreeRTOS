@@ -30,39 +30,40 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file microblaze_sleep.h
-*
-* Contains microblaze sleep function API.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -------------------------------------------------------
-* 4.1   asa  04/18/14 Add sleep function - first release.
-*
-* </pre>
-*
-* @note
-*
-* This file may contain architecture-dependent items.
-*
-******************************************************************************/
+ *
+ * @file microblaze_sleep.h
+ *
+ * Contains microblaze sleep function API.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 4.1   asa  04/18/14 Add sleep function - first release.
+ *
+ * </pre>
+ *
+ * @note
+ *
+ * This file may contain architecture-dependent items.
+ *
+ ******************************************************************************/
 
-#ifndef MICROBLAZE_SLEEP_H		/* prevent circular inclusions */
-#define MICROBLAZE_SLEEP_H		/* by using protection macros */
+#ifndef MICROBLAZE_SLEEP_H     /* prevent circular inclusions */
+    #define MICROBLAZE_SLEEP_H /* by using protection macros */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /***************************** Include Files *********************************/
 
-#include "xil_types.h"
-#include "mb_interface.h"
-#include "xparameters.h"
+    #include "xil_types.h"
+    #include "mb_interface.h"
+    #include "xparameters.h"
 
 /************************** Constant Definitions *****************************/
 
@@ -70,14 +71,14 @@ extern "C" {
 
 /***************** Macros (Inline Functions) Definitions *********************/
 
-#define ITERS_PER_MSEC   ((XPAR_CPU_CORE_CLOCK_FREQ_HZ / 1000) / 6)
+    #define ITERS_PER_MSEC    ( ( XPAR_CPU_CORE_CLOCK_FREQ_HZ / 1000 ) / 6 )
 
 /************************** Function Prototypes ******************************/
 
-void MB_Sleep(u32 MilliSeconds);
+    void MB_Sleep( u32 MilliSeconds );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* end of protection macro */

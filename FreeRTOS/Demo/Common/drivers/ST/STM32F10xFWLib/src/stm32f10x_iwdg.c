@@ -24,8 +24,8 @@
 /* Private define ------------------------------------------------------------*/
 /* ---------------------- IWDG registers bit mask ------------------------ */
 /* KR register bit mask */
-#define KR_Reload    ((u16)0xAAAA)
-#define KR_Enable    ((u16)0xCCCC)
+#define KR_Reload    ( ( u16 ) 0xAAAA )
+#define KR_Enable    ( ( u16 ) 0xCCCC )
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -39,19 +39,19 @@
 * Input          : - IWDG_WriteAccess: new state of write access to IWDG_PR and
 *                    IWDG_RLR registers.
 *                    This parameter can be one of the following values:
-*                       - IWDG_WriteAccess_Enable: Enable write access to 
+*                       - IWDG_WriteAccess_Enable: Enable write access to
 *                         IWDG_PR and IWDG_RLR registers
 *                       - IWDG_WriteAccess_Disable: Disable write access to
 *                         IWDG_PR and IWDG_RLR registers
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void IWDG_WriteAccessCmd(u16 IWDG_WriteAccess)
+void IWDG_WriteAccessCmd( u16 IWDG_WriteAccess )
 {
-  /* Check the parameters */
-  assert(IS_IWDG_WRITE_ACCESS(IWDG_WriteAccess));
+    /* Check the parameters */
+    assert( IS_IWDG_WRITE_ACCESS( IWDG_WriteAccess ) );
 
-  IWDG->KR = IWDG_WriteAccess;
+    IWDG->KR = IWDG_WriteAccess;
 }
 
 /*******************************************************************************
@@ -69,12 +69,12 @@ void IWDG_WriteAccessCmd(u16 IWDG_WriteAccess)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void IWDG_SetPrescaler(u8 IWDG_Prescaler)
+void IWDG_SetPrescaler( u8 IWDG_Prescaler )
 {
-  /* Check the parameters */
-  assert(IS_IWDG_PRESCALER(IWDG_Prescaler));
+    /* Check the parameters */
+    assert( IS_IWDG_PRESCALER( IWDG_Prescaler ) );
 
-  IWDG->PR = IWDG_Prescaler;
+    IWDG->PR = IWDG_Prescaler;
 }
 
 /*******************************************************************************
@@ -85,12 +85,12 @@ void IWDG_SetPrescaler(u8 IWDG_Prescaler)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void IWDG_SetReload(u16 Reload)
+void IWDG_SetReload( u16 Reload )
 {
-  /* Check the parameters */
-  assert(IS_IWDG_RELOAD(Reload));
+    /* Check the parameters */
+    assert( IS_IWDG_RELOAD( Reload ) );
 
-  IWDG->RLR = Reload;
+    IWDG->RLR = Reload;
 }
 
 /*******************************************************************************
@@ -101,9 +101,9 @@ void IWDG_SetReload(u16 Reload)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void IWDG_ReloadCounter(void)
+void IWDG_ReloadCounter( void )
 {
-  IWDG->KR = KR_Reload;
+    IWDG->KR = KR_Reload;
 }
 
 /*******************************************************************************
@@ -114,9 +114,9 @@ void IWDG_ReloadCounter(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void IWDG_Enable(void)
+void IWDG_Enable( void )
 {
-  IWDG->KR = KR_Enable;
+    IWDG->KR = KR_Enable;
 }
 
 /*******************************************************************************
@@ -129,24 +129,24 @@ void IWDG_Enable(void)
 * Output         : None
 * Return         : The new state of IWDG_FLAG (SET or RESET).
 *******************************************************************************/
-FlagStatus IWDG_GetFlagStatus(u16 IWDG_FLAG)
+FlagStatus IWDG_GetFlagStatus( u16 IWDG_FLAG )
 {
-  FlagStatus bitstatus = RESET;
+    FlagStatus bitstatus = RESET;
 
-  /* Check the parameters */
-  assert(IS_IWDG_FLAG(IWDG_FLAG));
+    /* Check the parameters */
+    assert( IS_IWDG_FLAG( IWDG_FLAG ) );
 
-  if ((IWDG->SR & IWDG_FLAG) != (u32)RESET)
-  {
-    bitstatus = SET;
-  }
-  else
-  {
-    bitstatus = RESET;
-  }
+    if( ( IWDG->SR & IWDG_FLAG ) != ( u32 ) RESET )
+    {
+        bitstatus = SET;
+    }
+    else
+    {
+        bitstatus = RESET;
+    }
 
-  /* Return the flag status */
-  return bitstatus;
+    /* Return the flag status */
+    return bitstatus;
 }
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

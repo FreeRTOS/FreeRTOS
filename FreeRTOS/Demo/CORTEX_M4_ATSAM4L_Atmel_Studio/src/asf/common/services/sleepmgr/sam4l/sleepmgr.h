@@ -42,83 +42,84 @@
  */
 
 #ifndef SAM_SLEEPMGR_INCLUDED
-#define SAM_SLEEPMGR_INCLUDED
+    #define SAM_SLEEPMGR_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <compiler.h>
-#include <conf_sleepmgr.h>
-#include <interrupt.h>
-#include "bpm.h"
-#include "sleep.h"
+    #include <compiler.h>
+    #include <conf_sleepmgr.h>
+    #include <interrupt.h>
+    #include "bpm.h"
+    #include "sleep.h"
 
 /**
  * \weakgroup sleepmgr_group
  * @{
  */
 
-enum sleepmgr_mode {
-	/** Active mode. */
-	SLEEPMGR_ACTIVE = 0,
+    enum sleepmgr_mode
+    {
+        /** Active mode. */
+        SLEEPMGR_ACTIVE = 0,
 
-	/**
-	 *  Sleep mode.
-	 *  Potential Wake Up sources: fast startup events and interrupt.
-	 */
-	SLEEPMGR_SLEEP_0,
-	SLEEPMGR_SLEEP_1,
-	SLEEPMGR_SLEEP_2,
-	SLEEPMGR_SLEEP_3,
+        /**
+         *  Sleep mode.
+         *  Potential Wake Up sources: fast startup events and interrupt.
+         */
+        SLEEPMGR_SLEEP_0,
+        SLEEPMGR_SLEEP_1,
+        SLEEPMGR_SLEEP_2,
+        SLEEPMGR_SLEEP_3,
 
-	/**
-	 *  Wait mode.
-	 *  Potential Wake Up sources: fast startup events
-	 */
-	SLEEPMGR_WAIT,
+        /**
+         *  Wait mode.
+         *  Potential Wake Up sources: fast startup events
+         */
+        SLEEPMGR_WAIT,
 
-	/**
-	 *  Retention mode.
-	 *  Potential Wake Up sources: fast startup events
-	 */
-	SLEEPMGR_RET,
+        /**
+         *  Retention mode.
+         *  Potential Wake Up sources: fast startup events
+         */
+        SLEEPMGR_RET,
 
-	/** Backup mode. Potential Wake Up sources: WKUPs, SM, RTT, RTC. */
-	SLEEPMGR_BACKUP,
+        /** Backup mode. Potential Wake Up sources: WKUPs, SM, RTT, RTC. */
+        SLEEPMGR_BACKUP,
 
-	SLEEPMGR_NR_OF_MODES,
-};
+        SLEEPMGR_NR_OF_MODES,
+    };
 
 /**
  * \internal
  * \name Internal arrays
  * @{
  */
-#if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
+    #if defined( CONFIG_SLEEPMGR_ENABLE ) || defined( __DOXYGEN__ )
 /** Sleep mode lock counters */
-extern uint8_t sleepmgr_locks[];
-#endif /* CONFIG_SLEEPMGR_ENABLE */
+        extern uint8_t sleepmgr_locks[];
+    #endif /* CONFIG_SLEEPMGR_ENABLE */
 /** @} */
 
-static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
-{
-	Assert(sleep_mode != SLEEPMGR_ACTIVE);
-#ifdef CONFIG_SLEEPMGR_ENABLE
-	cpu_irq_disable();
+    static inline void sleepmgr_sleep( const enum sleepmgr_mode sleep_mode )
+    {
+        Assert( sleep_mode != SLEEPMGR_ACTIVE );
+        #ifdef CONFIG_SLEEPMGR_ENABLE
+            cpu_irq_disable();
 
-	/* Enter the sleep mode. */
-	bpm_sleep(BPM, sleep_mode);
-#else
-	UNUSED(sleep_mode);
-	cpu_irq_enable();
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-}
+            /* Enter the sleep mode. */
+            bpm_sleep( BPM, sleep_mode );
+        #else
+            UNUSED( sleep_mode );
+            cpu_irq_enable();
+        #endif /* CONFIG_SLEEPMGR_ENABLE */
+    }
 
 /** @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* SAM_SLEEPMGR_INCLUDED */

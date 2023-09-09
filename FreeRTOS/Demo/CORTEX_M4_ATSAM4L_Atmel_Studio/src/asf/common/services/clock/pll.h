@@ -47,36 +47,36 @@
 #include "conf_clock.h"
 
 #if SAM3S
-# include "sam3s/pll.h"
+    #include "sam3s/pll.h"
 #elif SAM3XA
-# include "sam3x/pll.h"
+    #include "sam3x/pll.h"
 #elif SAM3U
-# include "sam3u/pll.h"
+    #include "sam3u/pll.h"
 #elif SAM3N
-# include "sam3n/pll.h"
+    #include "sam3n/pll.h"
 #elif SAM4S
-# include "sam4s/pll.h"
+    #include "sam4s/pll.h"
 #elif SAM4E
-# include "sam4e/pll.h"
+    #include "sam4e/pll.h"
 #elif SAM4L
-# include "sam4l/pll.h"
-#elif (UC3A0 || UC3A1)
-# include "uc3a0_a1/pll.h"
+    #include "sam4l/pll.h"
+#elif ( UC3A0 || UC3A1 )
+    #include "uc3a0_a1/pll.h"
 #elif UC3A3
-# include "uc3a3_a4/pll.h"
+    #include "uc3a3_a4/pll.h"
 #elif UC3B
-# include "uc3b0_b1/pll.h"
+    #include "uc3b0_b1/pll.h"
 #elif UC3C
-# include "uc3c/pll.h"
+    #include "uc3c/pll.h"
 #elif UC3D
-# include "uc3d/pll.h"
-#elif (UC3L0128 || UC3L0256 || UC3L3_L4)
-# include "uc3l/pll.h"
+    #include "uc3d/pll.h"
+#elif ( UC3L0128 || UC3L0256 || UC3L3_L4 )
+    #include "uc3l/pll.h"
 #elif XMEGA
-# include "xmega/pll.h"
-#else
-# error Unsupported chip type
-#endif
+    #include "xmega/pll.h"
+#else  /* if SAM3S */
+    #error Unsupported chip type
+#endif /* if SAM3S */
 
 /**
  * \ingroup clk_group
@@ -99,21 +99,21 @@
  * the default parameters specified using the configuration symbols
  * listed above.
  * \code
-	pll_enable_config_defaults(0); \endcode
+ *  pll_enable_config_defaults(0); \endcode
  *
  * To configure, enable PLL0 using the default parameters and to disable
  * a specific feature like Wide Bandwidth Mode (a UC3A3-specific
  * PLL option.), you can use this initialization process.
  * \code
-	struct pll_config pllcfg;
-	if (pll_is_locked(pll_id)) {
-		return; // Pll already running
-	}
-	pll_enable_source(CONFIG_PLL0_SOURCE);
-	pll_config_defaults(&pllcfg, 0);
-	pll_config_set_option(&pllcfg, PLL_OPT_WBM_DISABLE);
-	pll_enable(&pllcfg, 0);
-	pll_wait_for_lock(0); \endcode
+ *  struct pll_config pllcfg;
+ *  if (pll_is_locked(pll_id)) {
+ *      return; // Pll already running
+ *  }
+ *  pll_enable_source(CONFIG_PLL0_SOURCE);
+ *  pll_config_defaults(&pllcfg, 0);
+ *  pll_config_set_option(&pllcfg, PLL_OPT_WBM_DISABLE);
+ *  pll_enable(&pllcfg, 0);
+ *  pll_wait_for_lock(0); \endcode
  *
  * When the last function call returns, PLL0 is ready to be used as the
  * main system clock source.
@@ -135,12 +135,14 @@
  * @{
  */
 
-//! \name Chip-specific PLL characteristics
-//@{
+/*! \name Chip-specific PLL characteristics */
+/*@{ */
+
 /**
  * \def PLL_MAX_STARTUP_CYCLES
  * \brief Maximum PLL startup time in number of slow clock cycles
  */
+
 /**
  * \def NR_PLLS
  * \brief Number of on-chip PLLs
@@ -150,23 +152,25 @@
  * \def PLL_MIN_HZ
  * \brief Minimum frequency that the PLL can generate
  */
+
 /**
  * \def PLL_MAX_HZ
  * \brief Maximum frequency that the PLL can generate
  */
+
 /**
  * \def PLL_NR_OPTIONS
  * \brief Number of PLL option bits
  */
-//@}
+/*@} */
 
 /**
  * \enum pll_source
  * \brief PLL clock source
  */
 
-//! \name PLL configuration
-//@{
+/*! \name PLL configuration */
+/*@{ */
 
 /**
  * \struct pll_config
@@ -196,6 +200,7 @@
  * \return A configuration which will make the PLL run at
  * (\a mul / \a div) times the frequency of \a src
  */
+
 /**
  * \def pll_config_defaults(cfg, pll_id)
  * \brief Initialize PLL configuration using default parameters.
@@ -207,10 +212,12 @@
  * \param cfg The PLL configuration to be initialized.
  * \param pll_id Use defaults for this PLL.
  */
+
 /**
  * \def pll_get_default_rate(pll_id)
  * \brief Get the default rate in Hz of \a pll_id
  */
+
 /**
  * \fn void pll_config_set_option(struct pll_config *cfg,
  *              unsigned int option)
@@ -219,6 +226,7 @@
  * \param cfg The PLL configuration to be changed.
  * \param option The PLL option bit to be set.
  */
+
 /**
  * \fn void pll_config_clear_option(struct pll_config *cfg,
  *              unsigned int option)
@@ -227,6 +235,7 @@
  * \param cfg The PLL configuration to be changed.
  * \param option The PLL option bit to be cleared.
  */
+
 /**
  * \fn void pll_config_read(struct pll_config *cfg, unsigned int pll_id)
  * \brief Read the currently active configuration of \a pll_id.
@@ -235,6 +244,7 @@
  * active configuration.
  * \param pll_id The ID of the PLL to be accessed.
  */
+
 /**
  * \fn void pll_config_write(const struct pll_config *cfg,
  *              unsigned int pll_id)
@@ -245,10 +255,11 @@
  * \param pll_id The ID of the PLL to be updated.
  */
 
-//@}
+/*@} */
 
-//! \name Interaction with the PLL hardware
-//@{
+/*! \name Interaction with the PLL hardware */
+/*@{ */
+
 /**
  * \fn void pll_enable(const struct pll_config *cfg,
  *              unsigned int pll_id)
@@ -257,6 +268,7 @@
  * \param cfg The PLL configuration to be activated.
  * \param pll_id The ID of the PLL to be enabled.
  */
+
 /**
  * \fn void pll_disable(unsigned int pll_id)
  * \brief Disable the PLL identified by \a pll_id.
@@ -269,6 +281,7 @@
  *
  * \param pll_id The ID of the PLL to be disabled.
  */
+
 /**
  * \fn bool pll_is_locked(unsigned int pll_id)
  * \brief Determine whether the PLL is locked or not.
@@ -278,6 +291,7 @@
  * \retval true The PLL is locked and ready to use as a clock source
  * \retval false The PLL is not yet locked, or has not been enabled.
  */
+
 /**
  * \fn void pll_enable_source(enum pll_source src)
  * \brief Enable the source of the pll.
@@ -285,6 +299,7 @@
  *
  * \param src The ID of the PLL source to enable.
  */
+
 /**
  * \fn void pll_enable_config_defaults(unsigned int pll_id)
  * \brief Enable the pll with the default configuration.
@@ -303,18 +318,19 @@
  * \retval STATUS_OK The PLL is now locked.
  * \retval ERR_TIMEOUT Timed out waiting for PLL to become locked.
  */
-static inline int pll_wait_for_lock(unsigned int pll_id)
+static inline int pll_wait_for_lock( unsigned int pll_id )
 {
-	Assert(pll_id < NR_PLLS);
+    Assert( pll_id < NR_PLLS );
 
-	while (!pll_is_locked(pll_id)) {
-		/* Do nothing */
-	}
+    while( !pll_is_locked( pll_id ) )
+    {
+        /* Do nothing */
+    }
 
-	return 0;
+    return 0;
 }
 
-//@}
-//! @}
+/*@} */
+/*! @} */
 
 #endif /* CLK_PLL_H_INCLUDED */

@@ -100,9 +100,9 @@ The demo also demonstrates a IPv4/IPv6 UDP echo client which can be enabled by
 setting the `mainCREATE_UDP_ECHO_TASKS_SINGLE` macro to 1 in the main file.
 
 The UDP Echo Client creates a task and sends messages to the IP address and port
-defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address) 
+defined as `configECHO_SERVER_ADDR_STRING` (either v4 or v6 address)
 and configECHO_SERVER_PORT respectively in the FreeRTOSConfig.h file and expect to
-get echo of the messages back. There should be a UDP echo server running in the 
+get echo of the messages back. There should be a UDP echo server running in the
 given IP and port.
 
 These RTOS tasks are self checking and will trigger a configASSERT() failure if they
@@ -148,7 +148,7 @@ an asynchronous DNS lookup, and “c” to clear all caches before starting the 
 #### Sample UDP server in Go:
 ``` go
 
-// Filename: echo_server.go 
+// Filename: echo_server.go
 // Run: go run echo_server.go <ip_address>:<port>
 // Example IPv4:  go run echo_server.go 192.168.1.2:9000
 // Example IPv6:  go run echo_server.go [fe80::1b99:a6bd:a344:b09d]:9000
@@ -184,7 +184,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Read from UDP listener 
+	// Read from UDP listener
 	for {
 		var buf [1024]byte
 		_, addr, err := conn.ReadFromUDP(buf[0:])

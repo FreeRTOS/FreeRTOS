@@ -38,9 +38,9 @@
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
- 
+
 /* These headers were introduced in C99
-   by working group ISO/IEC JTC1/SC22/WG14. */
+ * by working group ISO/IEC JTC1/SC22/WG14. */
 #include <stdint.h>
 
 #include <USBRequests.h>
@@ -48,6 +48,7 @@
 #include <CDCNotifications.h>
 #include "USBD.h"
 #include <USBDDriver.h>
+
 /** \addtogroup usbd_cdc
  *@{
  */
@@ -60,24 +61,24 @@
  *      @{
  */
 /** Default CDC interrupt endpoints max packat size (8). */
-#define CDCDSerialPort_INTERRUPT_MAXPACKETSIZE          8
+#define CDCDSerialPort_INTERRUPT_MAXPACKETSIZE    8
 /** Default CDC interrupt endpoint polling rate of High Speed (16ms). */
-#define CDCDSerialPort_INTERRUPT_INTERVAL_HS            8
+#define CDCDSerialPort_INTERRUPT_INTERVAL_HS      8
 /** Default CDC interrupt endpoint polling rate of Full Speed (16ms). */
-#define CDCDSerialPort_INTERRUPT_INTERVAL_FS            16
+#define CDCDSerialPort_INTERRUPT_INTERVAL_FS      16
 /** Default CDC bulk endpoints max packat size (512, for HS actually). */
-#define CDCDSerialPort_BULK_MAXPACKETSIZE_HS            512
+#define CDCDSerialPort_BULK_MAXPACKETSIZE_HS      512
 /** Default CDC bulk endpoints max packat size (64, for FS actually). */
-#define CDCDSerialPort_BULK_MAXPACKETSIZE_FS            64
+#define CDCDSerialPort_BULK_MAXPACKETSIZE_FS      64
 /**     @}*/
 
 /** \addtogroup usbd_cdc_serial_events USB Device Serial Port Events
  *      @{
  */
 /** SetControlLineState event, value is changed */
-#define CDCDSerialPortEvent_SETCONTROLLINESTATE         0
+#define CDCDSerialPortEvent_SETCONTROLLINESTATE    0
 /** SetLineCoding event, value is to changed according to return value */
-#define CDCDSerialPortEvent_SETLINECODING               1
+#define CDCDSerialPortEvent_SETLINECODING          1
 /**     @}*/
 
 /*------------------------------------------------------------------------------
@@ -85,20 +86,21 @@
  *------------------------------------------------------------------------------*/
 
 /** Callback function for serial port events */
-typedef uint32_t (*CDCDSerialPortEventHandler)(uint32_t dwEvent,
-                                               uint32_t dwParam,
-                                               void * pArguments);
+typedef uint32_t (* CDCDSerialPortEventHandler)( uint32_t dwEvent,
+                                                 uint32_t dwParam,
+                                                 void * pArguments );
 
 /**
  * Struct for USB CDC virtual COM serial port function.
  */
-typedef struct _CDCDSerialPort {
+typedef struct _CDCDSerialPort
+{
     /** USB Driver for the %device */
-    USBDDriver *pUsbd;
+    USBDDriver * pUsbd;
     /** Callback for serial port events */
     CDCDSerialPortEventHandler fEventHandler;
     /** Callback arguments */
-    void *pArg;
+    void * pArg;
     /** USB starting interface index */
     uint8_t bInterfaceNdx;
     /** USB number of interfaces */
@@ -111,57 +113,54 @@ typedef struct _CDCDSerialPort {
     uint8_t bBulkOutPIPE;
 
     /** Serial port ControlLineState */
-    uint8_t        bControlLineState;
+    uint8_t bControlLineState;
     /** Serial port SerialState */
-    uint16_t       wSerialState;
+    uint16_t wSerialState;
     /** Serial port linecoding */
-    CDCLineCoding  lineCoding;
+    CDCLineCoding lineCoding;
 
-    uint8_t  bReserved;
+    uint8_t bReserved;
 } CDCDSerialPort;
 
 /*------------------------------------------------------------------------------
  *         Functions
  *------------------------------------------------------------------------------*/
 
-extern void CDCDSerialPort_Initialize(CDCDSerialPort *pCdcd,
-                                      USBDDriver *pUsbd,
-                                      CDCDSerialPortEventHandler fCallback,
-                                      void *pArg,
-                                      uint8_t firstInterface,
-                                      uint8_t numInterface);
+extern void CDCDSerialPort_Initialize( CDCDSerialPort * pCdcd,
+                                       USBDDriver * pUsbd,
+                                       CDCDSerialPortEventHandler fCallback,
+                                       void * pArg,
+                                       uint8_t firstInterface,
+                                       uint8_t numInterface );
 
-extern USBGenericDescriptor * CDCDSerialPort_ParseInterfaces(
-    CDCDSerialPort * pCdcd,
-    USBGenericDescriptor * pDescriptors, uint32_t dwLength);
+extern USBGenericDescriptor * CDCDSerialPort_ParseInterfaces( CDCDSerialPort * pCdcd,
+                                                              USBGenericDescriptor * pDescriptors,
+                                                              uint32_t dwLength );
 
-extern uint32_t CDCDSerialPort_RequestHandler(
-    CDCDSerialPort *pCdcd,
-    const USBGenericRequest *pRequest);
+extern uint32_t CDCDSerialPort_RequestHandler( CDCDSerialPort * pCdcd,
+                                               const USBGenericRequest * pRequest );
 
-extern uint32_t CDCDSerialPort_Write(
-    const CDCDSerialPort *pCdcd,
-    void *pData, uint32_t dwSize,
-    TransferCallback fCallback, void* pArg);
+extern uint32_t CDCDSerialPort_Write( const CDCDSerialPort * pCdcd,
+                                      void * pData,
+                                      uint32_t dwSize,
+                                      TransferCallback fCallback,
+                                      void * pArg );
 
-extern uint32_t CDCDSerialPort_Read(
-    const CDCDSerialPort *pCdcd,
-    void *pData, uint32_t dwSize,
-    TransferCallback fCallback, void* pArg);
+extern uint32_t CDCDSerialPort_Read( const CDCDSerialPort * pCdcd,
+                                     void * pData,
+                                     uint32_t dwSize,
+                                     TransferCallback fCallback,
+                                     void * pArg );
 
-extern uint16_t CDCDSerialPort_GetSerialState(
-    const CDCDSerialPort *pCdcd);
+extern uint16_t CDCDSerialPort_GetSerialState( const CDCDSerialPort * pCdcd );
 
-extern void CDCDSerialPort_SetSerialState(
-    CDCDSerialPort *pCdcd,
-    uint16_t wSerialState);
+extern void CDCDSerialPort_SetSerialState( CDCDSerialPort * pCdcd,
+                                           uint16_t wSerialState );
 
-extern uint8_t CDCDSerialPort_GetControlLineState(
-    const CDCDSerialPort * pCdcd);
+extern uint8_t CDCDSerialPort_GetControlLineState( const CDCDSerialPort * pCdcd );
 
-extern void CDCDSerialPort_GetLineCoding(
-    const CDCDSerialPort * pCdcd,
-    CDCLineCoding * pLineCoding);
+extern void CDCDSerialPort_GetLineCoding( const CDCDSerialPort * pCdcd,
+                                          CDCLineCoding * pLineCoding );
 
 /**@}*/
 #endif /* #ifndef _CDCDSERIALPORT_H_ */

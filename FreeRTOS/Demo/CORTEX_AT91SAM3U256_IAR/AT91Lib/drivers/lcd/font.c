@@ -27,59 +27,59 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-//     Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*     Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "font.h"
 #include "draw.h"
 #include "font10x14.h"
 #include <utility/assert.h>
 
-//------------------------------------------------------------------------------
-//     Local variables
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*     Local variables */
+/*------------------------------------------------------------------------------ */
 
-/// Global variable describing the font being instancied.
-const Font gFont = {10, 14};
+/*/ Global variable describing the font being instancied. */
+const Font gFont = { 10, 14 };
 
-//------------------------------------------------------------------------------
-//     Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*     Global functions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// Draws an ASCII character on the given LCD buffer.
-/// \param pBuffer  Buffer to write on.
-/// \param x  X-coordinate of character upper-left corner.
-/// \param y  Y-coordinate of character upper-left corner.
-/// \param c  Character to output.
-/// \param color  Character color.
-//------------------------------------------------------------------------------
-void LCDD_DrawChar(
-    void *pBuffer,
-    unsigned int x,
-    unsigned int y,
-    char c,
-    unsigned int color)
+/*------------------------------------------------------------------------------ */
+/*/ Draws an ASCII character on the given LCD buffer. */
+/*/ \param pBuffer  Buffer to write on. */
+/*/ \param x  X-coordinate of character upper-left corner. */
+/*/ \param y  Y-coordinate of character upper-left corner. */
+/*/ \param c  Character to output. */
+/*/ \param color  Character color. */
+/*------------------------------------------------------------------------------ */
+void LCDD_DrawChar( void * pBuffer,
+                    unsigned int x,
+                    unsigned int y,
+                    char c,
+                    unsigned int color )
 {
     unsigned int row, col;
 
-    SANITY_CHECK((c >= 0x20) && (c <= 0x7F));
+    SANITY_CHECK( ( c >= 0x20 ) && ( c <= 0x7F ) );
 
-    for (col = 0; col < 10; col++) {
-
-        for (row = 0; row < 8; row++) {
-
-            if ((pCharset10x14[((c - 0x20) * 20) + col * 2] >> (7 - row)) & 0x1) {
-
-                LCDD_DrawPixel(pBuffer, x+col, y+row, color);
+    for( col = 0; col < 10; col++ )
+    {
+        for( row = 0; row < 8; row++ )
+        {
+            if( ( pCharset10x14[ ( ( c - 0x20 ) * 20 ) + col * 2 ] >> ( 7 - row ) ) & 0x1 )
+            {
+                LCDD_DrawPixel( pBuffer, x + col, y + row, color );
             }
         }
-        for (row = 0; row < 6; row++) {
 
-            if ((pCharset10x14[((c - 0x20) * 20) + col * 2 + 1] >> (7 - row)) & 0x1) {
-
-                LCDD_DrawPixel(pBuffer, x+col, y+row+8, color);
+        for( row = 0; row < 6; row++ )
+        {
+            if( ( pCharset10x14[ ( ( c - 0x20 ) * 20 ) + col * 2 + 1 ] >> ( 7 - row ) ) & 0x1 )
+            {
+                LCDD_DrawPixel( pBuffer, x + col, y + row + 8, color );
             }
         }
     }

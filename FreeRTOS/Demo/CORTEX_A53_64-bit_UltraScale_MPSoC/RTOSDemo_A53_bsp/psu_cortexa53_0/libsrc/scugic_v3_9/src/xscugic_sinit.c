@@ -30,26 +30,27 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xscugic_sinit.c
-* @addtogroup scugic_v3_8
-* @{
-*
-* Contains static init functions for the XScuGic driver for the Interrupt
-* Controller. See xscugic.h for a detailed description of the driver.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- --------------------------------------------------------
-* 1.00a drg  01/19/10 First release
-* 3.00  kvn  02/13/15 Modified code for MISRA-C:2012 compliance.
-*
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xscugic_sinit.c
+ * @addtogroup scugic_v3_8
+ * @{
+ *
+ * Contains static init functions for the XScuGic driver for the Interrupt
+ * Controller. See xscugic.h for a detailed description of the driver.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- --------------------------------------------------------
+ * 1.00a drg  01/19/10 First release
+ * 3.00  kvn  02/13/15 Modified code for MISRA-C:2012 compliance.
+ *
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -68,36 +69,39 @@
 
 /************************** Variable Definitions *****************************/
 
-extern XScuGic_Config XScuGic_ConfigTable[XPAR_SCUGIC_NUM_INSTANCES];
+extern XScuGic_Config XScuGic_ConfigTable[ XPAR_SCUGIC_NUM_INSTANCES ];
 
 /************************** Function Prototypes ******************************/
 
 /*****************************************************************************/
+
 /**
-*
-* Looks up the device configuration based on the unique device ID. A table
-* contains the configuration info for each device in the system.
-*
-* @param	DeviceId is the unique identifier for a device.
-*
-* @return	A pointer to the XScuGic configuration structure for the
-*		specified device, or NULL if the device was not found.
-*
-* @note		None.
-*
-******************************************************************************/
-XScuGic_Config *XScuGic_LookupConfig(u16 DeviceId)
+ *
+ * Looks up the device configuration based on the unique device ID. A table
+ * contains the configuration info for each device in the system.
+ *
+ * @param	DeviceId is the unique identifier for a device.
+ *
+ * @return	A pointer to the XScuGic configuration structure for the
+ *		specified device, or NULL if the device was not found.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+XScuGic_Config * XScuGic_LookupConfig( u16 DeviceId )
 {
-	XScuGic_Config *CfgPtr = NULL;
-	u32 Index;
+    XScuGic_Config * CfgPtr = NULL;
+    u32 Index;
 
-	for (Index=0U; Index < (u32)XPAR_SCUGIC_NUM_INSTANCES; Index++) {
-		if (XScuGic_ConfigTable[Index].DeviceId == DeviceId) {
-			CfgPtr = &XScuGic_ConfigTable[Index];
-			break;
-		}
-	}
+    for( Index = 0U; Index < ( u32 ) XPAR_SCUGIC_NUM_INSTANCES; Index++ )
+    {
+        if( XScuGic_ConfigTable[ Index ].DeviceId == DeviceId )
+        {
+            CfgPtr = &XScuGic_ConfigTable[ Index ];
+            break;
+        }
+    }
 
-	return (XScuGic_Config *)CfgPtr;
+    return ( XScuGic_Config * ) CfgPtr;
 }
 /** @} */

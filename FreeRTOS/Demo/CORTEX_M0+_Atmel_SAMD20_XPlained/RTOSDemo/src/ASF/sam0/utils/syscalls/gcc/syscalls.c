@@ -54,73 +54,86 @@ extern "C" {
 extern int errno;
 extern int _end;
 
-extern caddr_t _sbrk(int incr);
-extern int link(char *old, char *new);
-extern int _close(int file);
-extern int _fstat(int file, struct stat *st);
-extern int _isatty(int file);
-extern int _lseek(int file, int ptr, int dir);
-extern void _exit(int status);
-extern void _kill(int pid, int sig);
-extern int _getpid(void);
+extern caddr_t _sbrk( int incr );
+extern int link( char * old,
+                 char * new );
+extern int _close( int file );
+extern int _fstat( int file,
+                   struct stat * st );
+extern int _isatty( int file );
+extern int _lseek( int file,
+                   int ptr,
+                   int dir );
+extern void _exit( int status );
+extern void _kill( int pid,
+                   int sig );
+extern int _getpid( void );
 
-extern caddr_t _sbrk(int incr)
+extern caddr_t _sbrk( int incr )
 {
-	static unsigned char *heap = NULL;
-	unsigned char *prev_heap;
+    static unsigned char * heap = NULL;
+    unsigned char * prev_heap;
 
-	if (heap == NULL) {
-		heap = (unsigned char *)&_end;
-	}
-	prev_heap = heap;
+    if( heap == NULL )
+    {
+        heap = ( unsigned char * ) &_end;
+    }
 
-	heap += incr;
+    prev_heap = heap;
 
-	return (caddr_t) prev_heap;
+    heap += incr;
+
+    return ( caddr_t ) prev_heap;
 }
 
-extern int link(char *old, char *new)
+extern int link( char * old,
+                 char * new )
 {
-	return -1;
+    return -1;
 }
 
-extern int _close(int file)
+extern int _close( int file )
 {
-	return -1;
+    return -1;
 }
 
-extern int _fstat(int file, struct stat *st)
+extern int _fstat( int file,
+                   struct stat * st )
 {
-	st->st_mode = S_IFCHR;
+    st->st_mode = S_IFCHR;
 
-	return 0;
+    return 0;
 }
 
-extern int _isatty(int file)
+extern int _isatty( int file )
 {
-	return 1;
+    return 1;
 }
 
-extern int _lseek(int file, int ptr, int dir)
+extern int _lseek( int file,
+                   int ptr,
+                   int dir )
 {
-	return 0;
+    return 0;
 }
 
-extern void _exit(int status)
+extern void _exit( int status )
 {
-	printf("Exiting with status %d.\n", status);
+    printf( "Exiting with status %d.\n", status );
 
-	for (;;);
+    for( ; ; )
+    {
+    }
 }
 
-extern void _kill(int pid, int sig)
+extern void _kill( int pid,
+                   int sig )
 {
-	return;
 }
 
-extern int _getpid(void)
+extern int _getpid( void )
 {
-	return -1;
+    return -1;
 }
 
 #ifdef __cplusplus

@@ -30,6 +30,7 @@
 *
 ******************************************************************************/
 /******************************************************************************/
+
 /**
  *
  * @file xavbuf_clk.h
@@ -48,7 +49,7 @@
  * 2.1   tu  12/29/17 LPD and FPD offsets adjusted
  * </pre>
  *
-*******************************************************************************/
+ *******************************************************************************/
 
 #ifndef XAVBUF_CLK_H_
 #define XAVBUF_CLK_H_
@@ -59,39 +60,42 @@
 #include "sleep.h"
 
 /****************************** Type Definitions ******************************/
+
 /**
  * This enum enumerates various PLL
  */
-enum PLL{
-	APLL  = 0,
-	DPLL  = 1,
-	VPLL  = 2,
-	IOPLL = 3,
-	RPLL  = 4
+enum PLL
+{
+    APLL = 0,
+    DPLL = 1,
+    VPLL = 2,
+    IOPLL = 3,
+    RPLL = 4
 };
 
 /**
  * This typedef enumerates various variables used to configure Pll
  */
-typedef struct {
-	u64 BaseAddress;
-	u64 Fractional;
-	u64 RefClkFreqhz;
-	u32 Divider;
-	u8 Offset;
-	u8 ClkDividBy2;
-	u8 ExtDivider0;
-	u8 ExtDivider1;
-	u8 ExtDividerCnt;
-	u8 DomainSwitchDiv;
-	u8 FracIntegerFBDIV;
-	u8 IntegerFBDIV;
-	u8 InputRefClk;
-	u8 Fpd;
-	u8 Pll;
-}XAVBuf_Pll;
+typedef struct
+{
+    u64 BaseAddress;
+    u64 Fractional;
+    u64 RefClkFreqhz;
+    u32 Divider;
+    u8 Offset;
+    u8 ClkDividBy2;
+    u8 ExtDivider0;
+    u8 ExtDivider1;
+    u8 ExtDividerCnt;
+    u8 DomainSwitchDiv;
+    u8 FracIntegerFBDIV;
+    u8 IntegerFBDIV;
+    u8 InputRefClk;
+    u8 Fpd;
+    u8 Pll;
+} XAVBuf_Pll;
 
 /**************************** Function Prototypes *****************************/
-int XAVBuf_SetPixelClock(u64 FreqHz);
-int XAVBuf_SetAudioClock(u64 FreqHz);
+int XAVBuf_SetPixelClock( u64 FreqHz );
+int XAVBuf_SetAudioClock( u64 FreqHz );
 #endif /* XAVBUF_CLK_H_ */

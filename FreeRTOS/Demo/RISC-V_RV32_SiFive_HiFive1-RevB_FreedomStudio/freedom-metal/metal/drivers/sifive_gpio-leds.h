@@ -8,14 +8,16 @@
 #include <metal/drivers/sifive_gpio0.h>
 #include <metal/led.h>
 
-struct __metal_driver_vtable_sifive_led {
+struct __metal_driver_vtable_sifive_led
+{
     struct metal_led_vtable led_vtable;
 };
 
-__METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_led)
+__METAL_DECLARE_VTABLE( __metal_driver_vtable_sifive_led )
 
-struct __metal_driver_sifive_gpio_led {
+struct __metal_driver_sifive_gpio_led
+{
     struct metal_led led;
 };
 
-#endif
+#endif /* ifndef METAL__DRIVERS__SIFIVE_GPIO_LEDS_H */

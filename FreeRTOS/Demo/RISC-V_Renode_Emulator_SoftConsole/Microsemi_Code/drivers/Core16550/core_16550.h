@@ -7,154 +7,155 @@
  * SVN $Revision: 7963 $
  * SVN $Date: 2015-10-09 17:58:21 +0530 (Fri, 09 Oct 2015) $
  */
+
 /*=========================================================================*//**
-  @mainpage Core16550 Bare Metal Driver.
-
-  @section intro_sec Introduction
-  The Core16550 is an implementation of the Universal Asynchronous
-  Receiver/Transmitter aimed at complete compliance to standard 16550 UART.
-  The Core16550 bare metal software driver is designed for use in systems
-  with no operating system.
-
-  The Core16550 driver provides functions for polled and interrupt driven
-  transmitting and receiving. It also provides functions for reading the
-  values from different status registers, enabling and disabling interrupts
-  at Core16550 level. The Core16550 driver is provided as C source code.
-
-  @section driver_configuration Driver Configuration
-  Your application software should configure the Core16550 driver through
-  calls to the UART_16550_init() function for each Core16550 instance in
-  the hardware design. The configuration parameters include the Core16550
-  hardware instance base address and other runtime parameters, such as baud
-  value, bit width, and parity.
-
-  No Core16550 hardware configuration parameters are needed by the driver,
-  apart from the Core16550 hardware instance base address. Hence, no
-  additional configuration files are required to use the driver.
-
-  @section theory_op Theory of Operation
-  The Core16550 software driver is designed to allow the control of multiple
-  instances of Core16550. Each instance of Core16550 in the hardware design
-  is associated with a single instance of the uart_16550_instance_t structure
-  in the software. You need to allocate memory for one unique
-  uart_16550_instance_t structure instance for each Core16550 hardware instance.
-  The contents of these data structures are initialized during calls to
-  function UART_16550_init(). A pointer to the structure is passed to
-  subsequent driver functions in order to identify the Core16550 hardware
-  instance you wish to perform the requested operation on.
-
-  Note:     Do not attempt to directly manipulate the content of
-  uart_16550_instance_t structures. This structure is only intended to be
-  modified by the driver function.
-
-  Initialization
-  The Core16550 driver is initialized through a call to the UART_16550_init()
-  function. This function takes the UART’s configuration as parameters.
-  The UART_16550_init() function must be called before any other Core16550
-  driver functions can be called.
-
-  Polled Transmission and Reception
-  The driver can be used to transmit and receive data once initialized. Polled
-  operations where the driver constantly polls the state of the UART registers
-  in order to control data transmit or data receive are performed using these
-  functions:
-         •  UART_16550_polled_tx()
-         •  UART_16550_polled_tx_string
-         •  UART_16550_fill_tx_fifo()
-         •  UART_16550_get_rx()
-
-  Data is transmitted using the UART_16550_polled_tx() function. This function
-  is blocking, meaning that it will only return once the data passed to the
-  function has been sent to the Core16550 hardware. Data received by the
-  Core16550 hardware can be read by the UART_16550_get_rx() function.
-
-  The UART_16550_polled_tx_string() function is provided to transmit a NULL (‘\0’)
-  terminated string in polled mode. This function is blocking, meaning that it
-  will only return once the data passed to the function has been sent to the
-  Core16550 hardware.
-
-  The UART_16550_fill_tx_fifo() function fills the Core16550 hardware transmit
-  FIFO with data from a buffer passed as a parameter and returns the number of
-  bytes transferred to the FIFO. If the transmit FIFO is not empty when the
-  UART_16550_fill_tx_fifo() function is called it returns immediately without
-  transferring any data to the FIFO.
-
-  Interrupt Driven Operations
-  The driver can also transmit or receive data under interrupt control, freeing
-  your application to perform other tasks until an interrupt occurs indicating
-  that the driver’s attention is required. Interrupt controlled UART operations
-  are performed using these functions:
-        •   UART_16550_isr()
-        •   UART_16550_irq_tx()
-        •   UART_16550_tx_complete()
-        •   UART_16550_set_tx_handler()
-        •   UART_16550_set_rx_handler()
-        •   UART_16550_set_rxstatus_handler()
-        •   UART_16550_set_modemstatus_handler()
-        •   UART_16550_enable_irq()
-        •   UART_16550_disable_irq()
-
-  Interrupt Handlers
-  The UART_16550_isr() function is the top level interrupt handler function for
-  the Core16550 driver. You must call it from the system level
-  (CoreInterrupt and NVIC level) interrupt service routine (ISR) assigned to the
-  interrupt triggered by the Core16550 INTR signal. The UART_16550_isr() function
-  identifies the source of the Core16550 interrupt and calls the corresponding
-  handler function previously registered with the driver through calls to the
-  UART_16550_set_rx_handler(), UART_16550_set_tx_handler(),
-  UART_16550_set_rxstatus_handler(), and UART_16550_set_modemstatus_handler()
-  functions. You are responsible for creating these lower level interrupt handlers
-  as part of your application program and registering them with the driver.
-  The UART_16550_enable_irq() and UART_16550_disable_irq() functions are used to
-  enable or disable the received line status, received data available/character
-  timeout, transmit holding register empty and modem status interrupts at the
-  Core16550 level.
-
-  Transmitting Data
-  Interrupt-driven transmit is initiated by a call to UART_16550_irq_tx(),
-  specifying the block of data to transmit. Your application is then free to
-  perform other tasks and inquire later whether transmit has completed by calling
-  the UART_16550_tx_complete() function. The UART_16550_irq_tx() function enables
-  the UART’s transmit holding register empty (THRE) interrupt and then, when the
-  interrupt goes active, the driver’s default THRE interrupt handler transfers
-  the data block to the UART until the entire block is transmitted.
-
-  Note:     You can use the UART_16550_set_tx_handler() function to assign an
-  alternative handler to the THRE interrupt. In this case, you must not use the
-  UART_16550_irq_tx() function to initiate the transmit, as this will re-assign
-  the driver’s default THRE interrupt handler to the THRE interrupt. Instead,
-  your alternative THRE interrupt handler must include a call to the
-  UART_16550_fill_tx_fifo() function to transfer the data to the UART.
-
-  Receiving Data
-  Interrupt-driven receive is performed by first calling UART_16550_set_rx_handler()
-  to register a receive handler function that will be called by the driver whenever
-  receive data is available. You must provide this receive handler function which
-  must include a call to the UART_16550_get_rx() function to actually read the
-  received data.
-
-  UART Status
-  The function UART_16550_get_rx_status() is used to read the receiver error status.
-  This function returns the overrun, parity, framing, break, and FIFO error status
-  of the receiver.
-  The function UART_16550_get_tx_status() is used to read the transmitter status.
-  This function returns the transmit empty (TEMT) and transmit holding register
-  empty (THRE) status of the transmitter.
-  The function UART_16550_get_modem_status() is used to read the modem status flags.
-  This function returns the current value of the modem status register.
-
-  Loopback
-  The function UART_16550_set_loopback() is used to enable or disable loopback
-  between Tx and Rx lines internal to Core16550.
-*//*=========================================================================*/
+ * @mainpage Core16550 Bare Metal Driver.
+ *
+ * @section intro_sec Introduction
+ * The Core16550 is an implementation of the Universal Asynchronous
+ * Receiver/Transmitter aimed at complete compliance to standard 16550 UART.
+ * The Core16550 bare metal software driver is designed for use in systems
+ * with no operating system.
+ *
+ * The Core16550 driver provides functions for polled and interrupt driven
+ * transmitting and receiving. It also provides functions for reading the
+ * values from different status registers, enabling and disabling interrupts
+ * at Core16550 level. The Core16550 driver is provided as C source code.
+ *
+ * @section driver_configuration Driver Configuration
+ * Your application software should configure the Core16550 driver through
+ * calls to the UART_16550_init() function for each Core16550 instance in
+ * the hardware design. The configuration parameters include the Core16550
+ * hardware instance base address and other runtime parameters, such as baud
+ * value, bit width, and parity.
+ *
+ * No Core16550 hardware configuration parameters are needed by the driver,
+ * apart from the Core16550 hardware instance base address. Hence, no
+ * additional configuration files are required to use the driver.
+ *
+ * @section theory_op Theory of Operation
+ * The Core16550 software driver is designed to allow the control of multiple
+ * instances of Core16550. Each instance of Core16550 in the hardware design
+ * is associated with a single instance of the uart_16550_instance_t structure
+ * in the software. You need to allocate memory for one unique
+ * uart_16550_instance_t structure instance for each Core16550 hardware instance.
+ * The contents of these data structures are initialized during calls to
+ * function UART_16550_init(). A pointer to the structure is passed to
+ * subsequent driver functions in order to identify the Core16550 hardware
+ * instance you wish to perform the requested operation on.
+ *
+ * Note:     Do not attempt to directly manipulate the content of
+ * uart_16550_instance_t structures. This structure is only intended to be
+ * modified by the driver function.
+ *
+ * Initialization
+ * The Core16550 driver is initialized through a call to the UART_16550_init()
+ * function. This function takes the UART’s configuration as parameters.
+ * The UART_16550_init() function must be called before any other Core16550
+ * driver functions can be called.
+ *
+ * Polled Transmission and Reception
+ * The driver can be used to transmit and receive data once initialized. Polled
+ * operations where the driver constantly polls the state of the UART registers
+ * in order to control data transmit or data receive are performed using these
+ * functions:
+ *       •  UART_16550_polled_tx()
+ *       •  UART_16550_polled_tx_string
+ *       •  UART_16550_fill_tx_fifo()
+ *       •  UART_16550_get_rx()
+ *
+ * Data is transmitted using the UART_16550_polled_tx() function. This function
+ * is blocking, meaning that it will only return once the data passed to the
+ * function has been sent to the Core16550 hardware. Data received by the
+ * Core16550 hardware can be read by the UART_16550_get_rx() function.
+ *
+ * The UART_16550_polled_tx_string() function is provided to transmit a NULL (‘\0’)
+ * terminated string in polled mode. This function is blocking, meaning that it
+ * will only return once the data passed to the function has been sent to the
+ * Core16550 hardware.
+ *
+ * The UART_16550_fill_tx_fifo() function fills the Core16550 hardware transmit
+ * FIFO with data from a buffer passed as a parameter and returns the number of
+ * bytes transferred to the FIFO. If the transmit FIFO is not empty when the
+ * UART_16550_fill_tx_fifo() function is called it returns immediately without
+ * transferring any data to the FIFO.
+ *
+ * Interrupt Driven Operations
+ * The driver can also transmit or receive data under interrupt control, freeing
+ * your application to perform other tasks until an interrupt occurs indicating
+ * that the driver’s attention is required. Interrupt controlled UART operations
+ * are performed using these functions:
+ *      •   UART_16550_isr()
+ *      •   UART_16550_irq_tx()
+ *      •   UART_16550_tx_complete()
+ *      •   UART_16550_set_tx_handler()
+ *      •   UART_16550_set_rx_handler()
+ *      •   UART_16550_set_rxstatus_handler()
+ *      •   UART_16550_set_modemstatus_handler()
+ *      •   UART_16550_enable_irq()
+ *      •   UART_16550_disable_irq()
+ *
+ * Interrupt Handlers
+ * The UART_16550_isr() function is the top level interrupt handler function for
+ * the Core16550 driver. You must call it from the system level
+ * (CoreInterrupt and NVIC level) interrupt service routine (ISR) assigned to the
+ * interrupt triggered by the Core16550 INTR signal. The UART_16550_isr() function
+ * identifies the source of the Core16550 interrupt and calls the corresponding
+ * handler function previously registered with the driver through calls to the
+ * UART_16550_set_rx_handler(), UART_16550_set_tx_handler(),
+ * UART_16550_set_rxstatus_handler(), and UART_16550_set_modemstatus_handler()
+ * functions. You are responsible for creating these lower level interrupt handlers
+ * as part of your application program and registering them with the driver.
+ * The UART_16550_enable_irq() and UART_16550_disable_irq() functions are used to
+ * enable or disable the received line status, received data available/character
+ * timeout, transmit holding register empty and modem status interrupts at the
+ * Core16550 level.
+ *
+ * Transmitting Data
+ * Interrupt-driven transmit is initiated by a call to UART_16550_irq_tx(),
+ * specifying the block of data to transmit. Your application is then free to
+ * perform other tasks and inquire later whether transmit has completed by calling
+ * the UART_16550_tx_complete() function. The UART_16550_irq_tx() function enables
+ * the UART’s transmit holding register empty (THRE) interrupt and then, when the
+ * interrupt goes active, the driver’s default THRE interrupt handler transfers
+ * the data block to the UART until the entire block is transmitted.
+ *
+ * Note:     You can use the UART_16550_set_tx_handler() function to assign an
+ * alternative handler to the THRE interrupt. In this case, you must not use the
+ * UART_16550_irq_tx() function to initiate the transmit, as this will re-assign
+ * the driver’s default THRE interrupt handler to the THRE interrupt. Instead,
+ * your alternative THRE interrupt handler must include a call to the
+ * UART_16550_fill_tx_fifo() function to transfer the data to the UART.
+ *
+ * Receiving Data
+ * Interrupt-driven receive is performed by first calling UART_16550_set_rx_handler()
+ * to register a receive handler function that will be called by the driver whenever
+ * receive data is available. You must provide this receive handler function which
+ * must include a call to the UART_16550_get_rx() function to actually read the
+ * received data.
+ *
+ * UART Status
+ * The function UART_16550_get_rx_status() is used to read the receiver error status.
+ * This function returns the overrun, parity, framing, break, and FIFO error status
+ * of the receiver.
+ * The function UART_16550_get_tx_status() is used to read the transmitter status.
+ * This function returns the transmit empty (TEMT) and transmit holding register
+ * empty (THRE) status of the transmitter.
+ * The function UART_16550_get_modem_status() is used to read the modem status flags.
+ * This function returns the current value of the modem status register.
+ *
+ * Loopback
+ * The function UART_16550_set_loopback() is used to enable or disable loopback
+ * between Tx and Rx lines internal to Core16550.
+ *//*=========================================================================*/
 #ifndef __CORE_16550_H
-#define __CORE_16550_H 1
+    #define __CORE_16550_H    1
 
-#include "cpu_types.h"
+    #include "cpu_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /***************************************************************************//**
  * Receiver Error Status
@@ -163,13 +164,13 @@ extern "C" {
  * UART_16550_get_rx_status() function to find out if any errors occurred
  * while receiving data.
  */
-#define UART_16550_NO_ERROR         ( (uint8_t) 0x00 )
-#define UART_16550_OVERRUN_ERROR    ( (uint8_t) 0x02 )
-#define UART_16550_PARITY_ERROR     ( (uint8_t) 0x04 )
-#define UART_16550_FRAMING_ERROR    ( (uint8_t) 0x08 )
-#define UART_16550_BREAK_ERROR      ( (uint8_t) 0x10 )
-#define UART_16550_FIFO_ERROR       ( (uint8_t) 0x80 )
-#define UART_16550_INVALID_PARAM    ( (uint8_t) 0xFF )
+    #define UART_16550_NO_ERROR            ( ( uint8_t ) 0x00 )
+    #define UART_16550_OVERRUN_ERROR       ( ( uint8_t ) 0x02 )
+    #define UART_16550_PARITY_ERROR        ( ( uint8_t ) 0x04 )
+    #define UART_16550_FRAMING_ERROR       ( ( uint8_t ) 0x08 )
+    #define UART_16550_BREAK_ERROR         ( ( uint8_t ) 0x10 )
+    #define UART_16550_FIFO_ERROR          ( ( uint8_t ) 0x80 )
+    #define UART_16550_INVALID_PARAM       ( ( uint8_t ) 0xFF )
 
 /***************************************************************************//**
  * Modem Status
@@ -178,14 +179,14 @@ extern "C" {
  * UART_16550_get_modem_status() function to find out the modem status of
  * the UART.
  */
-#define UART_16550_DCTS             ( (uint8_t) 0x01 )
-#define UART_16550_DDSR             ( (uint8_t) 0x02 )
-#define UART_16550_TERI             ( (uint8_t) 0x04 )
-#define UART_16550_DDCD             ( (uint8_t) 0x08 )
-#define UART_16550_CTS              ( (uint8_t) 0x10 )
-#define UART_16550_DSR              ( (uint8_t) 0x20 )
-#define UART_16550_RI               ( (uint8_t) 0x40 )
-#define UART_16550_DCD              ( (uint8_t) 0x80 )
+    #define UART_16550_DCTS                ( ( uint8_t ) 0x01 )
+    #define UART_16550_DDSR                ( ( uint8_t ) 0x02 )
+    #define UART_16550_TERI                ( ( uint8_t ) 0x04 )
+    #define UART_16550_DDCD                ( ( uint8_t ) 0x08 )
+    #define UART_16550_CTS                 ( ( uint8_t ) 0x10 )
+    #define UART_16550_DSR                 ( ( uint8_t ) 0x20 )
+    #define UART_16550_RI                  ( ( uint8_t ) 0x40 )
+    #define UART_16550_DCD                 ( ( uint8_t ) 0x80 )
 
 /***************************************************************************//**
  * Transmitter Status
@@ -194,9 +195,9 @@ extern "C" {
  * UART_16550_get_tx_status() function to find out the status of the
  * transmitter.
  */
-#define UART_16550_TX_BUSY          ( (uint8_t) 0x00 )
-#define UART_16550_THRE             ( (uint8_t) 0x20 )
-#define UART_16550_TEMT             ( (uint8_t) 0x40 )
+    #define UART_16550_TX_BUSY             ( ( uint8_t ) 0x00 )
+    #define UART_16550_THRE                ( ( uint8_t ) 0x20 )
+    #define UART_16550_TEMT                ( ( uint8_t ) 0x40 )
 
 /***************************************************************************//**
  * Core16550 Interrupts
@@ -205,118 +206,121 @@ extern "C" {
  * UART_16550_enable_irq() and UART_16550_disable_irq() functions. A bitwise
  * OR of these constants is used to enable or disable multiple interrupts.
  */
-#define UART_16550_RBF_IRQ          ( (uint8_t) 0x01 )
-#define UART_16550_TBE_IRQ          ( (uint8_t) 0x02 )
-#define UART_16550_LS_IRQ           ( (uint8_t) 0x04 )
-#define UART_16550_MS_IRQ           ( (uint8_t) 0x08 )
+    #define UART_16550_RBF_IRQ             ( ( uint8_t ) 0x01 )
+    #define UART_16550_TBE_IRQ             ( ( uint8_t ) 0x02 )
+    #define UART_16550_LS_IRQ              ( ( uint8_t ) 0x04 )
+    #define UART_16550_MS_IRQ              ( ( uint8_t ) 0x08 )
 
 /***************************************************************************//**
  * Data Width
  * The following defines are used to build the value of the UART_16550_init()
  * function line_config parameter.
  */
-#define UART_16550_DATA_5_BITS      ( (uint8_t) 0x00 )
-#define UART_16550_DATA_6_BITS      ( (uint8_t) 0x01 )
-#define UART_16550_DATA_7_BITS      ( (uint8_t) 0x02 )
-#define UART_16550_DATA_8_BITS      ( (uint8_t) 0x03 )
+    #define UART_16550_DATA_5_BITS         ( ( uint8_t ) 0x00 )
+    #define UART_16550_DATA_6_BITS         ( ( uint8_t ) 0x01 )
+    #define UART_16550_DATA_7_BITS         ( ( uint8_t ) 0x02 )
+    #define UART_16550_DATA_8_BITS         ( ( uint8_t ) 0x03 )
 
 /***************************************************************************//**
  * Parity Control
  * The following defines are used to build the value of the UART_16550_init()
  * function line_config parameter.
  */
-#define UART_16550_NO_PARITY            ( (uint8_t) 0x00 )
-#define UART_16550_ODD_PARITY           ( (uint8_t) 0x08 )
-#define UART_16550_EVEN_PARITY          ( (uint8_t) 0x18 )
-#define UART_16550_STICK_PARITY_1       ( (uint8_t) 0x28 )
-#define UART_16550_STICK_PARITY_0       ( (uint8_t) 0x38 )
+    #define UART_16550_NO_PARITY           ( ( uint8_t ) 0x00 )
+    #define UART_16550_ODD_PARITY          ( ( uint8_t ) 0x08 )
+    #define UART_16550_EVEN_PARITY         ( ( uint8_t ) 0x18 )
+    #define UART_16550_STICK_PARITY_1      ( ( uint8_t ) 0x28 )
+    #define UART_16550_STICK_PARITY_0      ( ( uint8_t ) 0x38 )
 
 /***************************************************************************//**
  * Number of Stop Bits
  * The following defines are used to build the value of the UART_16550_init()
  * function line_config parameter.
  */
-#define UART_16550_ONE_STOP_BIT     ( (uint8_t) 0x00 )
+    #define UART_16550_ONE_STOP_BIT        ( ( uint8_t ) 0x00 )
 /*only when data bits is 5*/
-#define UART_16550_ONEHALF_STOP_BIT ( (uint8_t) 0x04 )
+    #define UART_16550_ONEHALF_STOP_BIT    ( ( uint8_t ) 0x04 )
 /*only when data bits is not 5*/
-#define UART_16550_TWO_STOP_BITS    ( (uint8_t) 0x04 )
+    #define UART_16550_TWO_STOP_BITS       ( ( uint8_t ) 0x04 )
 
 /***************************************************************************//**
-  This enumeration specifies the receiver FIFO trigger level. This is the number
-  of bytes that must be received before the UART generates a receive data
-  available interrupt. It provides the allowed values for the
-  UART_16550_set_rx_handler() function’s trigger_level parameter.
+ * This enumeration specifies the receiver FIFO trigger level. This is the number
+ * of bytes that must be received before the UART generates a receive data
+ * available interrupt. It provides the allowed values for the
+ * UART_16550_set_rx_handler() function’s trigger_level parameter.
  */
-typedef enum {
-    UART_16550_FIFO_SINGLE_BYTE    = 0,
-    UART_16550_FIFO_FOUR_BYTES     = 1,
-    UART_16550_FIFO_EIGHT_BYTES    = 2,
-    UART_16550_FIFO_FOURTEEN_BYTES = 3,
-    UART_16550_FIFO_INVALID_TRIG_LEVEL
-} uart_16550_rx_trig_level_t;
+    typedef enum
+    {
+        UART_16550_FIFO_SINGLE_BYTE = 0,
+        UART_16550_FIFO_FOUR_BYTES = 1,
+        UART_16550_FIFO_EIGHT_BYTES = 2,
+        UART_16550_FIFO_FOURTEEN_BYTES = 3,
+        UART_16550_FIFO_INVALID_TRIG_LEVEL
+    } uart_16550_rx_trig_level_t;
 
 /***************************************************************************//**
-  This enumeration specifies the Loopback configuration of the UART. It provides
-  the allowed values for the UART_16550_set_loopback() function’s loopback
-  parameter.
+ * This enumeration specifies the Loopback configuration of the UART. It provides
+ * the allowed values for the UART_16550_set_loopback() function’s loopback
+ * parameter.
  */
-typedef enum {
-    UART_16550_LOOPBACK_OFF   = 0,
-    UART_16550_LOOPBACK_ON    = 1,
-    UART_16550_INVALID_LOOPBACK
-} uart_16550_loopback_t;
+    typedef enum
+    {
+        UART_16550_LOOPBACK_OFF = 0,
+        UART_16550_LOOPBACK_ON = 1,
+        UART_16550_INVALID_LOOPBACK
+    } uart_16550_loopback_t;
 
 /***************************************************************************//**
-  This is type definition for Core16550 instance. You need to create and
-  maintain a record of this type. This holds all data regarding the Core16550
-  instance.
+ * This is type definition for Core16550 instance. You need to create and
+ * maintain a record of this type. This holds all data regarding the Core16550
+ * instance.
  */
-typedef struct uart_16550_instance uart_16550_instance_t;
+    typedef struct uart_16550_instance uart_16550_instance_t;
 
 /***************************************************************************//**
-  This typedef specifies the function prototype for Core16550 interrupt handlers.
-  All interrupt handlers registered with the Core16550 driver must be of this
-  type. The interrupt handlers are registered with the driver through the
-  UART_16550_set_rx_handler(), UART_16550_set_tx_handler(),
-  UART_16550_set_rxstatus_handler(), and UART_16550_set_modemstatus_handler()
-  functions.
-
-  The this_uart parameter is a pointer to a uart_16550_instance_t structure that
-  holds all data regarding this instance of the Core16550.
+ * This typedef specifies the function prototype for Core16550 interrupt handlers.
+ * All interrupt handlers registered with the Core16550 driver must be of this
+ * type. The interrupt handlers are registered with the driver through the
+ * UART_16550_set_rx_handler(), UART_16550_set_tx_handler(),
+ * UART_16550_set_rxstatus_handler(), and UART_16550_set_modemstatus_handler()
+ * functions.
+ *
+ * The this_uart parameter is a pointer to a uart_16550_instance_t structure that
+ * holds all data regarding this instance of the Core16550.
  */
-typedef void (*uart_16550_irq_handler_t)(uart_16550_instance_t * this_uart);
+    typedef void (* uart_16550_irq_handler_t)( uart_16550_instance_t * this_uart );
 
 /***************************************************************************//**
-  uart_16550_instance.
-  This structure is used to identify the various Core16550 hardware instances
-  in your system. Your application software should declare one instance of this
-  structure for each instance of Core16550 in your system. The function
-  UART_16550_init() initializes this structure. A pointer to an initialized
-  instance of the structure should be passed as the first parameter to the
-  Core16550 driver functions, to identify which Core16550 hardware instance
-  should perform the requested operation.
+ * uart_16550_instance.
+ * This structure is used to identify the various Core16550 hardware instances
+ * in your system. Your application software should declare one instance of this
+ * structure for each instance of Core16550 in your system. The function
+ * UART_16550_init() initializes this structure. A pointer to an initialized
+ * instance of the structure should be passed as the first parameter to the
+ * Core16550 driver functions, to identify which Core16550 hardware instance
+ * should perform the requested operation.
  */
-struct uart_16550_instance{
-    /* Core16550 instance base address: */
-    addr_t      base_address;
-    /* Accumulated status: */
-    uint8_t     status;
+    struct uart_16550_instance
+    {
+        /* Core16550 instance base address: */
+        addr_t base_address;
+        /* Accumulated status: */
+        uint8_t status;
 
-    /* transmit related info: */
-    const uint8_t*  tx_buffer;
-    uint32_t        tx_buff_size;
-    uint32_t        tx_idx;
+        /* transmit related info: */
+        const uint8_t * tx_buffer;
+        uint32_t tx_buff_size;
+        uint32_t tx_idx;
 
-    /* line status (OE, PE, FE & BI) interrupt handler:*/
-    uart_16550_irq_handler_t linests_handler;
-    /* receive interrupt handler:*/
-    uart_16550_irq_handler_t rx_handler;
-    /* transmitter holding register interrupt handler:*/
-    uart_16550_irq_handler_t tx_handler;
-    /* modem status interrupt handler:*/
-    uart_16550_irq_handler_t modemsts_handler;
-};
+        /* line status (OE, PE, FE & BI) interrupt handler:*/
+        uart_16550_irq_handler_t linests_handler;
+        /* receive interrupt handler:*/
+        uart_16550_irq_handler_t rx_handler;
+        /* transmitter holding register interrupt handler:*/
+        uart_16550_irq_handler_t tx_handler;
+        /* modem status interrupt handler:*/
+        uart_16550_irq_handler_t modemsts_handler;
+    };
 
 /***************************************************************************//**
  * The UART_16550_init() function initializes the driver’s data structures and
@@ -377,14 +381,10 @@ struct uart_16550_instance{
  *                   UART_16550_ONE_STOP_BIT) );
  * @endcode
  */
-void
-UART_16550_init
-(
-    uart_16550_instance_t* this_uart,
-    addr_t base_addr,
-    uint16_t baud_value,
-    uint8_t line_config
-);
+    void UART_16550_init( uart_16550_instance_t * this_uart,
+                          addr_t base_addr,
+                          uint16_t baud_value,
+                          uint8_t line_config );
 
 /***************************************************************************//**
  * The UART_16550_polled_tx() function is used to transmit data. It transfers
@@ -419,13 +419,10 @@ UART_16550_init
  *   UART_16550_polled_tx(&g_uart,(const uint8_t *)testmsg1,sizeof(testmsg1));
  * @endcode
  */
-void
-UART_16550_polled_tx
-(
-    uart_16550_instance_t * this_uart,
-    const uint8_t * pbuff,
-    uint32_t tx_size
-);
+    void UART_16550_polled_tx( uart_16550_instance_t * this_uart,
+                               const uint8_t * pbuff,
+                               uint32_t tx_size );
+
 /***************************************************************************//**
  * The UART_16550_polled_tx_string() function is used to transmit a NULL ('\0')
  * terminated string. It transfers the text string, from the buffer starting at
@@ -458,12 +455,8 @@ UART_16550_polled_tx
  *   UART_16550_polled_tx_string(&g_uart,(const uint8_t *)testmsg1);
  * @endcode
  */
-void
-UART_16550_polled_tx_string
-(
-    uart_16550_instance_t * this_uart,
-    const uint8_t * p_sz_string
-);
+    void UART_16550_polled_tx_string( uart_16550_instance_t * this_uart,
+                                      const uint8_t * p_sz_string );
 
 /***************************************************************************//**
  * The UART_16550_irq_tx() function is used to initiate an interrupt driven
@@ -514,13 +507,9 @@ UART_16550_polled_tx_string
  * { ; }
  * @endcode
  */
-void
-UART_16550_irq_tx
-(
-    uart_16550_instance_t * this_uart,
-    const uint8_t * pbuff,
-    uint32_t tx_size
-);
+    void UART_16550_irq_tx( uart_16550_instance_t * this_uart,
+                            const uint8_t * pbuff,
+                            uint32_t tx_size );
 
 /***************************************************************************//**
  * The UART_16550_tx_complete() function is used to find out if the interrupt
@@ -542,11 +531,7 @@ UART_16550_irq_tx
  *   See the UART_16550_irq_tx() function for an example that uses the
  *   UART_16550_tx_complete() function.
  */
-int8_t
-UART_16550_tx_complete
-(
-   uart_16550_instance_t * this_uart
-);
+    int8_t UART_16550_tx_complete( uart_16550_instance_t * this_uart );
 
 /***************************************************************************//**
  * The UART_16550_get_rx() function reads the content of the Core16550
@@ -597,13 +582,9 @@ UART_16550_tx_complete
  *   rx_size = UART_16550_get_rx( &g_uart, rx_data, sizeof(rx_data) );
  * @endcode
  */
-size_t
-UART_16550_get_rx
-(
-   uart_16550_instance_t * this_uart,
-   uint8_t * rx_buff,
-   size_t buff_size
-);
+    size_t UART_16550_get_rx( uart_16550_instance_t * this_uart,
+                              uint8_t * rx_buff,
+                              size_t buff_size );
 
 /***************************************************************************//**
  * The UART_16550_isr() function is the top level interrupt handler function for
@@ -636,11 +617,7 @@ UART_16550_get_rx
  *   }
  * @endcode
  */
-void
-UART_16550_isr
-(
-   uart_16550_instance_t * this_uart
-);
+    void UART_16550_isr( uart_16550_instance_t * this_uart );
 
 /***************************************************************************//**
  * The UART_16550_set_rx_handler() function is used to register a receive handler
@@ -699,13 +676,9 @@ UART_16550_isr
  * }
  * @endcode
  */
-void
-UART_16550_set_rx_handler
-(
-    uart_16550_instance_t * this_uart,
-    uart_16550_irq_handler_t handler,
-    uart_16550_rx_trig_level_t trigger_level
-);
+    void UART_16550_set_rx_handler( uart_16550_instance_t * this_uart,
+                                    uart_16550_irq_handler_t handler,
+                                    uart_16550_rx_trig_level_t trigger_level );
 
 /***************************************************************************//**
  * The UART_16550_set_loopback() function is used to locally loopback the Tx
@@ -748,12 +721,8 @@ UART_16550_set_rx_handler
  * }
  * @endcode
  */
-void
-UART_16550_set_loopback
-(
-    uart_16550_instance_t * this_uart,
-    uart_16550_loopback_t loopback
-);
+    void UART_16550_set_loopback( uart_16550_instance_t * this_uart,
+                                  uart_16550_loopback_t loopback );
 
 /***************************************************************************//**
  * The UART_16550_get_rx_status() function returns the receiver error status of
@@ -814,11 +783,8 @@ UART_16550_set_loopback
  *   }
  * @endcode
  */
-uint8_t
-UART_16550_get_rx_status
-(
-    uart_16550_instance_t * this_uart
-);
+    uint8_t UART_16550_get_rx_status( uart_16550_instance_t * this_uart );
+
 /***************************************************************************//**
  * The UART_16550_enable_irq() function enables the Core16550 interrupts
  * specified by the irq_mask parameter. The irq_mask parameter identifies the
@@ -852,12 +818,8 @@ UART_16550_get_rx_status
  *   UART_16550_enable_irq( &g_uart,( UART_16550_RBF_IRQ | UART_16550_TBE_IRQ ) );
  * @endcode
  */
-void
-UART_16550_enable_irq
-(
-    uart_16550_instance_t * this_uart,
-    uint8_t irq_mask
-);
+    void UART_16550_enable_irq( uart_16550_instance_t * this_uart,
+                                uint8_t irq_mask );
 
 /***************************************************************************//**
  * The UART_16550_disable_irq() function disables the Core16550 interrupts
@@ -892,12 +854,8 @@ UART_16550_enable_irq
  *   UART_16550_disable_irq( &g_uart, ( UART_16550_RBF_IRQ | UART_16550_TBE_IRQ ) );
  * @endcode
  */
-void
-UART_16550_disable_irq
-(
-    uart_16550_instance_t * this_uart,
-    uint8_t irq_mask
-);
+    void UART_16550_disable_irq( uart_16550_instance_t * this_uart,
+                                 uint8_t irq_mask );
 
 /***************************************************************************//**
  * The UART_16550_get_modem_status() function returns the modem status of the
@@ -938,11 +896,7 @@ UART_16550_disable_irq
  *   }
  * @endcode
  */
-uint8_t
-UART_16550_get_modem_status
-(
-    uart_16550_instance_t * this_uart
-);
+    uint8_t UART_16550_get_modem_status( uart_16550_instance_t * this_uart );
 
 /***************************************************************************//**
  * The UART_16550_set_rxstatus_handler() function is used to register a receiver
@@ -1001,12 +955,8 @@ UART_16550_get_modem_status
  * }
  * @endcode
  */
-void
-UART_16550_set_rxstatus_handler
-(
-    uart_16550_instance_t * this_uart,
-    uart_16550_irq_handler_t handler
-);
+    void UART_16550_set_rxstatus_handler( uart_16550_instance_t * this_uart,
+                                          uart_16550_irq_handler_t handler );
 
 /***************************************************************************//**
  * The UART_16550_set_tx_handler() function is used to register a transmit
@@ -1093,12 +1043,8 @@ UART_16550_set_rxstatus_handler
  *
  * @endcode
  */
-void
-UART_16550_set_tx_handler
-(
-    uart_16550_instance_t * this_uart,
-    uart_16550_irq_handler_t handler
-);
+    void UART_16550_set_tx_handler( uart_16550_instance_t * this_uart,
+                                    uart_16550_irq_handler_t handler );
 
 /***************************************************************************//**
  * The UART_16550_set_modemstatus_handler() function is used to register a
@@ -1148,7 +1094,7 @@ UART_16550_set_tx_handler
  * {
  *     UART_16550_init( &g_uart, UART_57600_BAUD,
  *                      UART_16550_DATA_8_BITS | UART_16550_NO_PARITY |
-                                              UART_16550_ONE_STOP_BIT);
+ *                                            UART_16550_ONE_STOP_BIT);
  *     UART_16550_set_modemstatus_handler( &g_uart, uart_modem_handler);
  *
  *     while ( 1 )
@@ -1159,12 +1105,8 @@ UART_16550_set_tx_handler
  * }
  * @endcode
  */
-void
-UART_16550_set_modemstatus_handler
-(
-    uart_16550_instance_t * this_uart,
-    uart_16550_irq_handler_t handler
-);
+    void UART_16550_set_modemstatus_handler( uart_16550_instance_t * this_uart,
+                                             uart_16550_irq_handler_t handler );
 
 /***************************************************************************//**
  * The UART_16550_fill_tx_fifo() function fills the UART's hardware transmitter
@@ -1206,13 +1148,9 @@ UART_16550_set_modemstatus_handler
  *   }
  * @endcode
  */
-size_t
-UART_16550_fill_tx_fifo
-(
-    uart_16550_instance_t * this_uart,
-    const uint8_t * tx_buffer,
-    size_t tx_size
-);
+    size_t UART_16550_fill_tx_fifo( uart_16550_instance_t * this_uart,
+                                    const uint8_t * tx_buffer,
+                                    size_t tx_size );
 
 /***************************************************************************//**
  * The UART_16550_get_tx_status() function returns the transmitter status of
@@ -1251,14 +1189,10 @@ UART_16550_fill_tx_fifo
  *   }
  * @endcode
  */
-uint8_t
-UART_16550_get_tx_status
-(
-    uart_16550_instance_t * this_uart
-);
+    uint8_t UART_16550_get_tx_status( uart_16550_instance_t * this_uart );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __CORE_16550_H */

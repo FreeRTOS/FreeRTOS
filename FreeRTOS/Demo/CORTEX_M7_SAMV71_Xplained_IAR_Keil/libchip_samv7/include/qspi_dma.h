@@ -35,107 +35,111 @@
  */
 
 #ifndef _QSPI_DMA_
-#define _QSPI_DMA_
+    #define _QSPI_DMA_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
 /*----------------------------------------------------------------------------
  *        Definitions
  *----------------------------------------------------------------------------*/
 
 /** An unspecified error has occured.*/
-#define QSPID_ERROR          1
+    #define QSPID_ERROR         1
 
 /** SPI driver is currently in use.*/
-#define QSPID_ERROR_LOCK     2
+    #define QSPID_ERROR_LOCK    2
 
 /*----------------------------------------------------------------------------
  *        Macros
  *----------------------------------------------------------------------------*/
 
 /** Calculates the value of the SCBR field of the Chip Select Register given MCK and SPCK.*/
-#define QSPID_CSR_SCBR(mck, spck)    QSPI_CSR_SCBR((mck) / (spck))
+    #define QSPID_CSR_SCBR( mck, spck )       QSPI_CSR_SCBR( ( mck ) / ( spck ) )
 
 /** Calculates the value of the DLYBS field of the Chip Select Register given delay in ns and MCK.*/
-#define QSPID_CSR_DLYBS(mck, delay)  QSPI_CSR_DLYBS((((delay) * ((mck) / 1000000)) / 1000) + 1)
+    #define QSPID_CSR_DLYBS( mck, delay )     QSPI_CSR_DLYBS( ( ( ( delay ) * ( ( mck ) / 1000000 ) ) / 1000 ) + 1 )
 
 /** Calculates the value of the DLYBCT field of the Chip Select Register given delay in ns and MCK.*/
-#define QSPID_CSR_DLYBCT(mck, delay) QSPI_CSR_DLYBCT((((delay) / 32 * ((mck) / 1000000)) / 1000) + 1)
+    #define QSPID_CSR_DLYBCT( mck, delay )    QSPI_CSR_DLYBCT( ( ( ( delay ) / 32 * ( ( mck ) / 1000000 ) ) / 1000 ) + 1 )
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
 
 /** SPI transfer complete callback. */
-typedef void (*QspidCallback)( uint8_t, void* ) ;
+    typedef void (* QspidCallback)( uint8_t,
+                                    void * );
 
 /** \brief Qspi Transfer Request prepared by the application upper layer.
  *
  * This structure is sent to the SPI_SendCommand function to start the transfer.
  * At the end of the transfer, the callback is invoked by the interrupt handler.
  */
-typedef struct _QspidCmd
-{
-    /** Pointer to the Tx data. */
-    uint8_t *pTxBuff;
-    /** Tx size in bytes. */
-    uint8_t TxSize;
-    /** Pointer to the Rx data. */
-    uint8_t *pRxBuff;
-    /** Rx size in bytes. */
-    uint16_t RxSize;
-    /** Callback function invoked at the end of transfer. */
-    QspidCallback callback;
-    /** Callback arguments. */
-    void *pArgument;
-} QspidCmd ;
+    typedef struct _QspidCmd
+    {
+        /** Pointer to the Tx data. */
+        uint8_t * pTxBuff;
+        /** Tx size in bytes. */
+        uint8_t TxSize;
+        /** Pointer to the Rx data. */
+        uint8_t * pRxBuff;
+        /** Rx size in bytes. */
+        uint16_t RxSize;
+        /** Callback function invoked at the end of transfer. */
+        QspidCallback callback;
+        /** Callback arguments. */
+        void * pArgument;
+    } QspidCmd;
 
 /** Constant structure associated with SPI port. This structure prevents
-    client applications to have access in the same time. */
-typedef struct _Qspid
-{
-    /** Pointer to SPI Hardware registers */
-    Qspi* pQspiHw ;
-    /** Current QspiCommand being processed */
-    QspidCmd *pCurrentCommand ;
-    /** Pointer to DMA driver */
-    sXdmad* pXdmad;
-    /** SPI Id as defined in the product datasheet */
-    uint8_t spiId ;
-    /** Mutual exclusion semaphore. */
-    volatile int8_t semaphore ;
-} Qspid ;
+ *  client applications to have access in the same time. */
+    typedef struct _Qspid
+    {
+        /** Pointer to SPI Hardware registers */
+        Qspi * pQspiHw;
+        /** Current QspiCommand being processed */
+        QspidCmd * pCurrentCommand;
+        /** Pointer to DMA driver */
+        sXdmad * pXdmad;
+        /** SPI Id as defined in the product datasheet */
+        uint8_t spiId;
+        /** Mutual exclusion semaphore. */
+        volatile int8_t semaphore;
+    } Qspid;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern uint32_t QSPID_Configure( Qspid* pQspid,
-                                Qspi* pQspiHw,
-                                uint8_t spiId,
-                                uint8_t QspiMode,
-                                sXdmad* pXdmad ) ;
+    extern uint32_t QSPID_Configure( Qspid * pQspid,
+                                     Qspi * pQspiHw,
+                                     uint8_t spiId,
+                                     uint8_t QspiMode,
+                                     sXdmad * pXdmad );
 
-extern void QSPID_ConfigureCS( Qspid* pQspid, uint32_t dwCS, uint32_t dwCsr ) ;
+    extern void QSPID_ConfigureCS( Qspid * pQspid,
+                                   uint32_t dwCS,
+                                   uint32_t dwCsr );
 
-extern uint32_t QSPID_SendCommand( Qspid* pQspid, QspidCmd* pCommand ) ;
+    extern uint32_t QSPID_SendCommand( Qspid * pQspid,
+                                       QspidCmd * pCommand );
 
-extern void QSPID_Handler( Qspid* pQspid ) ;
+    extern void QSPID_Handler( Qspid * pQspid );
 
-extern void QSPID_DmaHandler( Qspid *pQspid );
+    extern void QSPID_DmaHandler( Qspid * pQspid );
 
-extern uint32_t QSPID_IsBusy( const Qspid* pQspid ) ;
+    extern uint32_t QSPID_IsBusy( const Qspid * pQspid );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _SPI_DMA_ */

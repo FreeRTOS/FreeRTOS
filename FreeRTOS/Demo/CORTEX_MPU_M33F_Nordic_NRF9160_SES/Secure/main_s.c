@@ -43,10 +43,10 @@
 #endif
 
 /* Start address of non-secure application. */
-#define mainNONSECURE_APP_START_ADDRESS     ( 0x00080000UL )
+#define mainNONSECURE_APP_START_ADDRESS    ( 0x00080000UL )
 
 /* typedef for non-secure Reset Handler. */
-typedef void ( *NonSecureResetHandler_t ) ( void ) __attribute__( ( cmse_nonsecure_call ) );
+typedef void ( *NonSecureResetHandler_t )( void ) __attribute__( ( cmse_nonsecure_call ) );
 /*-----------------------------------------------------------*/
 
 /**
@@ -67,7 +67,7 @@ static void prvSetupSPU( void );
  */
 
 /* Secure main(). */
-int main(void)
+int main( void )
 {
     printf( "Booting Secure World.\r\n" );
 
@@ -97,12 +97,12 @@ static void prvBootNonSecure( uint32_t ulNonSecureStartAddress )
     /* Main Stack Pointer value for the non-secure side is the first entry in
      * the non-secure vector table. Read the first entry and assign the same to
      * the non-secure main stack pointer(MSP_NS). */
-    secureportSET_MSP_NS( *( ( uint32_t * )( ulNonSecureStartAddress ) ) );
+    secureportSET_MSP_NS( *( ( uint32_t * ) ( ulNonSecureStartAddress ) ) );
 
     /* Reset Handler for the non-secure side is the second entry in the
      * non-secure vector table. Read the second entry to get the non-secure
      * Reset Handler. */
-    pxNonSecureResetHandler = ( NonSecureResetHandler_t )( * ( ( uint32_t * ) ( ( ulNonSecureStartAddress ) + 4U ) ) );
+    pxNonSecureResetHandler = ( NonSecureResetHandler_t ) ( *( ( uint32_t * ) ( ( ulNonSecureStartAddress ) + 4U ) ) );
 
     /* Start non-secure state software application by jumping to the non-secure
      * Reset Handler. */
@@ -120,7 +120,7 @@ static void prvSetupSPU( void )
      * Region 0-15  - Secure. Last 4KiB of region 15 is Non-Secure Callable.
      * Region 16-31 - Non-Secure.
      */
-    for( i = 0; i < 16; i ++ )
+    for( i = 0; i < 16; i++ )
     {
         NRF_SPU_S->FLASHREGION[ i ].PERM = ( SPU_FLASHREGION_PERM_SECATTR_Msk |
                                              SPU_FLASHREGION_PERM_READ_Msk |
@@ -129,9 +129,9 @@ static void prvSetupSPU( void )
     }
 
     NRF_SPU_S->FLASHNSC[ 0 ].REGION = 15;
-    NRF_SPU_S->FLASHNSC[ 0 ].SIZE   = SPU_FLASHNSC_SIZE_SIZE_4096;
+    NRF_SPU_S->FLASHNSC[ 0 ].SIZE = SPU_FLASHNSC_SIZE_SIZE_4096;
 
-    for( i = 16; i < 32; i ++ )
+    for( i = 16; i < 32; i++ )
     {
         NRF_SPU_S->FLASHREGION[ i ].PERM = ( SPU_FLASHREGION_PERM_EXECUTE_Msk |
                                              SPU_FLASHREGION_PERM_READ_Msk |
@@ -146,7 +146,7 @@ static void prvSetupSPU( void )
      * Region 31 is configured in the startup sequence in the function
      * SystemStoreFICRNS, so we do not touch that.
      */
-    for( i = 0; i < 16; i ++ )
+    for( i = 0; i < 16; i++ )
     {
         NRF_SPU_S->RAMREGION[ i ].PERM = ( SPU_RAMREGION_PERM_SECATTR_Msk |
                                            SPU_RAMREGION_PERM_READ_Msk |
@@ -154,7 +154,7 @@ static void prvSetupSPU( void )
                                            SPU_RAMREGION_PERM_LOCK_Msk );
     }
 
-    for( i = 16; i < 31; i ++ )
+    for( i = 16; i < 31; i++ )
     {
         NRF_SPU_S->RAMREGION[ i ].PERM = ( SPU_RAMREGION_PERM_READ_Msk |
                                            SPU_RAMREGION_PERM_WRITE_Msk |

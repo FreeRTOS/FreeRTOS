@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -42,7 +42,7 @@
  *         Global Functions
  *------------------------------------------------------------------------------*/
 
-extern void srand( uint32_t dwSeed ) ;
-extern uint32_t rand( void ) ;
+extern void srand( uint32_t dwSeed );
+extern uint32_t rand( void );
 
 #endif /* #ifndef _RAND_ */

@@ -57,7 +57,7 @@ __asm void MemManage_Handler( void )
 
     PRESERVE8
 
-    tst lr, #4
+    tst lr, # 4
     ite eq
     mrseq r0, msp
     mrsne r0, psp

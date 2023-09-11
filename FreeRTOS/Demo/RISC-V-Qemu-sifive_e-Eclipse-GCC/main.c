@@ -109,6 +109,7 @@ void vSendString( const char * pcString );
 
 int main( void )
 {
+	/* Program mtvec with the FreeRTOS trap handler. */
 	__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
 
 	vSendString( "Starting" );

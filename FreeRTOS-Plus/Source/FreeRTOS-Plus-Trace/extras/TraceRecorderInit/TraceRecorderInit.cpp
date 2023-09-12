@@ -23,7 +23,7 @@
  *	Finally, call vTraceEnable(TRC_START) after hardware is initialized to
  *	start gathering trace events.
  */
- 
+
 #include <TraceRecorderInit.h>
 #include <trcRecorder.h>
 

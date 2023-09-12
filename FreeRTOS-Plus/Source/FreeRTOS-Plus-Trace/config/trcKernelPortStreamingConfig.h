@@ -9,16 +9,16 @@
  */
 
 #ifndef TRC_KERNEL_PORT_STREAMING_CONFIG_H
-#define TRC_KERNEL_PORT_STREAMING_CONFIG_H
+    #define TRC_KERNEL_PORT_STREAMING_CONFIG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /* Nothing yet */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* TRC_KERNEL_PORT_STREAMING_CONFIG_H */

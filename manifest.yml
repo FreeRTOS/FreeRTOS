@@ -1,6 +1,7 @@
 name : "FreeRTOS"
 version: "202212.00"
 description: "This is the standard distribution of FreeRTOS."
+license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
@@ -185,4 +186,16 @@ dependencies:
       url: "https://github.com/intel/tinycbor.git"
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
 
-license: "MIT"
+  - name: "CMock"
+    version: "afa2949"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS/Test/CMock/CMock"
+
+  - name: "CMock"
+    version: "150573c"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS-Plus/Test/CMock"

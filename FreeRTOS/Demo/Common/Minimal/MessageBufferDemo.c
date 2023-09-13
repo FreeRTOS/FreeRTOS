@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -131,7 +131,7 @@ static uint32_t ulNonBlockingRxCounter = 0;
 
 /* A message that is longer than the buffer, parts of which are written to the
  * message buffer to test writing different lengths at different offsets. */
-static const char * pc55ByteString = "One two three four five six seven eight nine ten eleve";
+static const char * pc55ByteString = "One two three four five six seven eight nine ten eleven";
 
 /* Remember the required stack size so tasks can be created at run time (after
  * initialisation time. */
@@ -238,7 +238,7 @@ static void prvSingleTaskTests( MessageBufferHandle_t xMessageBuffer )
     {
         configASSERT( xMessageBufferIsFull( xMessageBuffer ) == pdFALSE );
 
-        /* Generate recognisable data to write to the buffer.  This is just
+        /* Generate recognizable data to write to the buffer.  This is just
          * ascii characters that shows which loop iteration the data was written
          * in. The 'FromISR' version is used to give it some exercise as a block
          * time is not used.  That requires the call to be in a critical section
@@ -372,7 +372,7 @@ static void prvSingleTaskTests( MessageBufferHandle_t xMessageBuffer )
      * times will cause the data to wrap in the buffer.*/
     for( xItem = 0; xItem < 100; xItem++ )
     {
-        /* Generate recognisable data to write to the queue.  This is just
+        /* Generate recognizable data to write to the queue.  This is just
          * ascii characters that shows which loop iteration the data was written
          * in. */
         memset( ( void * ) pucData, ( ( int ) '0' ) + ( int ) xItem, x17ByteLength );

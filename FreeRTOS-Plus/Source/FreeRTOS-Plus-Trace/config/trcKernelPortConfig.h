@@ -11,11 +11,11 @@
  */
 
 #ifndef TRC_KERNEL_PORT_CONFIG_H
-#define TRC_KERNEL_PORT_CONFIG_H
+    #define TRC_KERNEL_PORT_CONFIG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /**
  * @def TRC_CFG_RECORDER_MODE
@@ -30,7 +30,7 @@ extern "C" {
  * TRC_RECORDER_MODE_SNAPSHOT
  * TRC_RECORDER_MODE_STREAMING
  */
-#define TRC_CFG_RECORDER_MODE TRC_RECORDER_MODE_STREAMING
+    #define TRC_CFG_RECORDER_MODE                    TRC_RECORDER_MODE_STREAMING
 
 /**
  * @def TRC_CFG_FREERTOS_VERSION
@@ -38,7 +38,7 @@ extern "C" {
  * trace recorder library with an older version of FreeRTOS).
  *
  * TRC_FREERTOS_VERSION_7_3_X				If using FreeRTOS v7.3.X
- * TRC_FREERTOS_VERSION_7_4_X				If using FreeRTOS v7.4.X 
+ * TRC_FREERTOS_VERSION_7_4_X				If using FreeRTOS v7.4.X
  * TRC_FREERTOS_VERSION_7_5_X				If using FreeRTOS v7.5.X
  * TRC_FREERTOS_VERSION_7_6_X				If using FreeRTOS v7.6.X
  * TRC_FREERTOS_VERSION_8_X_X				If using FreeRTOS v8.X.X
@@ -56,7 +56,7 @@ extern "C" {
  * TRC_FREERTOS_VERSION_10_4_0				If using FreeRTOS v10.4.0
  * TRC_FREERTOS_VERSION_10_4_1				If using FreeRTOS v10.4.1 or later
  */
-#define TRC_CFG_FREERTOS_VERSION TRC_FREERTOS_VERSION_10_4_1
+    #define TRC_CFG_FREERTOS_VERSION                 TRC_FREERTOS_VERSION_10_4_1
 
 /**
  * @def TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS
@@ -66,7 +66,7 @@ extern "C" {
  *
  * Default value is 0 (excluded) since dependent on event_groups.c
  */
-#define TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS 1
+    #define TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS       1
 
 /**
  * @def TRC_CFG_INCLUDE_TIMER_EVENTS
@@ -76,18 +76,18 @@ extern "C" {
  *
  * Default value is 0 since dependent on timers.c
  */
-#define TRC_CFG_INCLUDE_TIMER_EVENTS 1
+    #define TRC_CFG_INCLUDE_TIMER_EVENTS             1
 
 /**
  * @def TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS
  * @brief Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), the trace will exclude any "pending function call" 
+ * If this is zero (0), the trace will exclude any "pending function call"
  * events, such as xTimerPendFunctionCall().
  *
  * Default value is 0 since dependent on timers.c
  */
-#define TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS 1
+    #define TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS    1
 
 /**
  * @def TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS
@@ -98,7 +98,7 @@ extern "C" {
  *
  * Default value is 0 since dependent on stream_buffer.c (new in FreeRTOS v10)
  */
-#define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS 1
+    #define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS     1
 
 /**
  * @def TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND
@@ -107,10 +107,10 @@ extern "C" {
  * traceQUEUE_SEND to traceQUEUE_SET_SEND in order to tell them apart from
  * other traceQUEUE_SEND trace points. Then set this to TRC_ACKNOWLEDGED.
  */
-#define TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND  0 /* TRC_ACKNOWLEDGED */
+    #define TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND       0 /* TRC_ACKNOWLEDGED */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* TRC_KERNEL_PORT_CONFIG_H */

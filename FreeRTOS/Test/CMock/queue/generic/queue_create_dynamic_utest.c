@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -163,7 +163,7 @@ void test_macro_xQueueCreate_oneItem_zeroLength( void )
     /* Verify that new queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Valdiate that the queue has 1 space remaining */
+    /* Validate that the queue has 1 space remaining */
     TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueue ) );
 
     vQueueDelete( xQueue );
@@ -314,7 +314,7 @@ void test_macro_xQueueCreate_multiplication_overflow( void )
  *  ( xQueueSizeInBytes + sizeof(StaticQueue_t) ) > MAX(size_t)
  * @coverage xQueueGenericCreate
  */
-void test_macro_xQueueCreate_addiiton_overflow( void )
+void test_macro_xQueueCreate_addition_overflow( void )
 {
     /* Based on the formula:
      *  ( 2^x - 1 ) == ( 2^( x/2 ) + 1 ) * ( 2^( x/2 ) - 1 ) */

@@ -57,7 +57,7 @@ SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/BufferManagement/BufferAllocat
 SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
 SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
 
-CFLAGS 			:= -ggdb3 
+CFLAGS 			:= -ggdb3
 LDFLAGS			:= -ggdb3 -pthread
 
 # Get libslirp package configuration (header and library paths)

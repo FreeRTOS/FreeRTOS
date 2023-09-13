@@ -219,6 +219,7 @@ int main_full( void )
     xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( prvDemonstrateChangingTimerReloadMode, "TimerMode", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
     vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
     vStartStreamBufferTasks();
@@ -916,13 +917,15 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
 {
     TimerHandle_t xTimer;
     const char * const pcTimerName = "TestTimer";
-    const TickType_t x100ms = pdMS_TO_TICKS( 100UL );
+    const TickType_t x50ms = pdMS_TO_TICKS( 50UL );
 
     /* Avoid compiler warnings about unused parameter. */
     ( void ) pvParameters;
 
+    /* The duration of 1 period is kept at 50ms to allow IDLE task to
+     * free up this task's resources before suicidal tests can run. */
     xTimer = xTimerCreate( pcTimerName,
-                           x100ms,
+                           x50ms,
                            pdFALSE, /* Created as a one-shot timer. */
                            0,
                            prvReloadModeTestTimerCallback );
@@ -930,14 +933,14 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     configASSERT( xTimerIsTimerActive( xTimer ) == pdFALSE );
     configASSERT( xTimerGetTimerDaemonTaskHandle() != NULL );
     configASSERT( strcmp( pcTimerName, pcTimerGetName( xTimer ) ) == 0 );
-    configASSERT( xTimerGetPeriod( xTimer ) == x100ms );
+    configASSERT( xTimerGetPeriod( xTimer ) == x50ms );
 
     /* Timer was created as a one-shot timer.  Its callback just increments the
      * timer's ID - so set the ID to 0, let the timer run for a number of timeout
      * periods, then check the timer has only executed once. */
     vTimerSetTimerID( xTimer, ( void * ) 0 );
     xTimerStart( xTimer, portMAX_DELAY );
-    vTaskDelay( 3UL * x100ms );
+    vTaskDelay( 3UL * x50ms );
     configASSERT( ( ( uintptr_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
 
     /* Now change the timer to be an auto-reload timer and check it executes
@@ -945,7 +948,7 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     vTimerSetReloadMode( xTimer, pdTRUE );
     vTimerSetTimerID( xTimer, ( void * ) 0 );
     xTimerStart( xTimer, 0 );
-    vTaskDelay( ( 3UL * x100ms ) + ( x100ms / 2UL ) ); /* Three full periods. */
+    vTaskDelay( ( 3UL * x50ms ) + ( x50ms / 2UL ) ); /* Three full periods. */
     configASSERT( ( uintptr_t ) ( pvTimerGetTimerID( xTimer ) ) == 3UL );
     configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
 
@@ -954,7 +957,7 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     vTimerSetReloadMode( xTimer, pdFALSE );
     vTimerSetTimerID( xTimer, ( void * ) 0 );
     xTimerStart( xTimer, 0 );
-    vTaskDelay( 3UL * x100ms );
+    vTaskDelay( 3UL * x50ms );
     configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
     configASSERT( ( uintptr_t ) ( pvTimerGetTimerID( xTimer ) ) == 1UL );
 

@@ -883,7 +883,7 @@ static void prvDemonstrateChangingTimerReloadMode( void *pvParameters )
     vTimerSetTimerID( xTimer, ( void * ) 0 );
     xTimerStart( xTimer, portMAX_DELAY );
     vTaskDelay( 3UL * x50ms );
-    configASSERT( ( ( uintptr_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
+    configASSERT( ( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
 
     /* Now change the timer to be an auto-reload timer and check it executes
      * the expected number of times. */
@@ -891,7 +891,7 @@ static void prvDemonstrateChangingTimerReloadMode( void *pvParameters )
     vTimerSetTimerID( xTimer, ( void * ) 0 );
     xTimerStart( xTimer, 0 );
     vTaskDelay( ( 3UL * x50ms ) + ( x50ms / 2UL ) ); /* Three full periods. */
-    configASSERT( ( uintptr_t ) ( pvTimerGetTimerID( xTimer ) ) == 3UL );
+    configASSERT( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) == 3UL );
     configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
 
     /* Now change the timer back to be a one-shot timer and check it only
@@ -901,7 +901,7 @@ static void prvDemonstrateChangingTimerReloadMode( void *pvParameters )
     xTimerStart( xTimer, 0 );
     vTaskDelay( 3UL * x50ms );
     configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
-    configASSERT( ( uintptr_t ) ( pvTimerGetTimerID( xTimer ) ) == 1UL );
+    configASSERT( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) == 1UL );
 
     /* Clean up at the end. */
     xTimerDelete( xTimer, portMAX_DELAY );

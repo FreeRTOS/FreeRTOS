@@ -214,11 +214,6 @@
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 5000U )
 
 /**
- * @brief Transport timeout in milliseconds for transport send and receive.
- */
-#define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 200U )
-
-/**
  * @brief The length of the outgoing publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for outgoing publishes.
  * Number of publishes = ulMaxPublishCount * mqttexampleTOPIC_COUNT

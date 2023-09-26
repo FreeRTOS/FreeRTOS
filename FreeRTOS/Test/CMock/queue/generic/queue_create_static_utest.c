@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -138,13 +138,16 @@ void test_macro_xQueueCreateStatic_nullQueueStorage_oneItem_zeroLength( void )
     /* validate returned queue handle */
     TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
 
+    /* Verify that Queue Length is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
+
     /* Verify that Queue ItemSize is zero */
     TEST_ASSERT_EQUAL( 0, uxQueueGetQueueItemSize( xQueue ) );
 
     /* Verify that new queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Valdiate that the queue has 1 space remaining */
+    /* Validate that the queue has 1 space remaining */
     TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueue ) );
 
     /* Send a test value */
@@ -207,6 +210,9 @@ void test_macro_xQueueCreateStatic_large( void )
     uint32_t queueStorage[ MAX_QUEUE_ITEMS ];
     StaticQueue_t queueBuffer;
     QueueHandle_t xQueue = xQueueCreateStatic( MAX_QUEUE_ITEMS, sizeof( uint32_t ), ( void * ) queueStorage, &queueBuffer );
+
+    /* Verify that Queue Length is equal to the MAX_QUEUE_ITEMS */
+    TEST_ASSERT_EQUAL( MAX_QUEUE_ITEMS, uxQueueGetQueueLength( xQueue ) );
 
     /* Verify that Queue ItemSize is 4 */
     TEST_ASSERT_EQUAL( 4, uxQueueGetQueueItemSize( xQueue ) );

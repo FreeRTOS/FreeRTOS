@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -371,7 +371,7 @@ static void prvSingleTaskTests( StreamBufferHandle_t xStreamBuffer )
     {
         prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
 
-        /* Generate recognisable data to write to the buffer.  This is just
+        /* Generate recognizable data to write to the buffer.  This is just
          * ascii characters that shows which loop iteration the data was written
          * in. The 'FromISR' version is used to give it some exercise as a block
          * time is not used, so the call must be inside a critical section so it
@@ -468,7 +468,7 @@ static void prvSingleTaskTests( StreamBufferHandle_t xStreamBuffer )
 
     for( xItem = 0; xItem < 100; xItem++ )
     {
-        /* Generate recognisable data to write to the queue.  This is just
+        /* Generate recognizable data to write to the queue.  This is just
          * ascii characters that shows which loop iteration the data was written
          * in. */
         memset( ( void * ) pucData, ( ( int ) '0' ) + ( int ) xItem, x17ByteLength );
@@ -1058,7 +1058,7 @@ static void prvInterruptTriggerLevelTest( void * pvParameters )
             /* This test is very time sensitive so delay at the beginning to ensure
              * the rest of the system is up and running before starting.  Delay between
              * each loop to ensure the interrupt that sends to the stream buffer
-             * detects it needs to start sending from the start of the strin again.. */
+             * detects it needs to start sending from the start of the string again.. */
             vTaskDelay( xCycleBlockTime );
 
             /* Create the stream buffer that will be used from inside the tick

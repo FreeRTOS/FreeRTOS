@@ -32,6 +32,14 @@
 /* Include header that defines log levels. */
 #include "logging_levels.h"
 
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
+#include "FreeRTOS_DNS.h"
+
 /* Logging configuration for the Sockets. */
 #ifndef LIBRARY_LOG_NAME
     #define LIBRARY_LOG_NAME     "SocketsWrapper"
@@ -47,14 +55,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /* Standard includes. */
 #include <string.h>
-
-/* FreeRTOS includes. */
-#include "FreeRTOS.h"
-
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-#include "FreeRTOS_DNS.h"
 
 /* TCP Sockets Wrapper include.*/
 /* Let sockets wrapper know that Socket_t is defined already. */

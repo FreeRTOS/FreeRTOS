@@ -1605,6 +1605,7 @@ void test_uxTaskPriorityGetFromISR_success_null_handle( void )
 }
 
 /* ----------------------- testing uxTaskBasePriorityGet API --------------------------- */
+
 /**
  * @brief Test uxTaskBasePriorityGet with a task.
  * @details Test uxTaskBasePriorityGet returns the base priority of the task.
@@ -1650,6 +1651,7 @@ void test_uxTaskBasePriorityGet_success_null_handle( void )
 }
 
 /* ----------------------- testing uxTaskBasePriorityGetFromISR API --------------------------- */
+
 /**
  * @brief Test uxTaskBasePriorityGetFromISR with a task.
  * @details Test uxTaskBasePriorityGetFromISR returns the base priority of the task.

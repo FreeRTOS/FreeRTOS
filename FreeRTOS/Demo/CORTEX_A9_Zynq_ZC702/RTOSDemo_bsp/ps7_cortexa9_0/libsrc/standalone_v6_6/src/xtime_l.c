@@ -30,24 +30,25 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-* @file xtime_l.c
-*
-* This file contains low level functions to get/set time from the Global Timer
-* register in the ARM Cortex A9 MP core.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who    Date     Changes
-* ----- ------ -------- ---------------------------------------------------
-* 1.00a rp/sdm 11/03/09 Initial release.
-* 3.07a sgd    07/05/12 Upadted get/set time functions to make use Global Timer
-* </pre>
-*
-* @note		None.
-*
-******************************************************************************/
+ * @file xtime_l.c
+ *
+ * This file contains low level functions to get/set time from the Global Timer
+ * register in the ARM Cortex A9 MP core.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who    Date     Changes
+ * ----- ------ -------- ---------------------------------------------------
+ * 1.00a rp/sdm 11/03/09 Initial release.
+ * 3.07a sgd    07/05/12 Upadted get/set time functions to make use Global Timer
+ * </pre>
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
 /***************************** Include Files *********************************/
 
 #include "xtime_l.h"
@@ -67,56 +68,58 @@
 /************************** Function Prototypes ******************************/
 
 /****************************************************************************/
+
 /**
-* @brief	Set the time in the Global Timer Counter Register.
-*
-* @param	Xtime_Global: 64-bit Value to be written to the Global Timer
-*			Counter Register.
-*
-* @return	None.
-*
-* @note		When this function is called by any one processor in a multi-
-*			processor environment, reference time will reset/lost for all
-*			processors.
-*
-****************************************************************************/
-void XTime_SetTime(XTime Xtime_Global)
+ * @brief	Set the time in the Global Timer Counter Register.
+ *
+ * @param	Xtime_Global: 64-bit Value to be written to the Global Timer
+ *			Counter Register.
+ *
+ * @return	None.
+ *
+ * @note		When this function is called by any one processor in a multi-
+ *			processor environment, reference time will reset/lost for all
+ *			processors.
+ *
+ ****************************************************************************/
+void XTime_SetTime( XTime Xtime_Global )
 {
-	/* Disable Global Timer */
-	Xil_Out32((u32)GLOBAL_TMR_BASEADDR + (u32)GTIMER_CONTROL_OFFSET, (u32)0x0);
+    /* Disable Global Timer */
+    Xil_Out32( ( u32 ) GLOBAL_TMR_BASEADDR + ( u32 ) GTIMER_CONTROL_OFFSET, ( u32 ) 0x0 );
 
-	/* Updating Global Timer Counter Register */
-	Xil_Out32((u32)GLOBAL_TMR_BASEADDR + (u32)GTIMER_COUNTER_LOWER_OFFSET, (u32)Xtime_Global);
-	Xil_Out32((u32)GLOBAL_TMR_BASEADDR + (u32)GTIMER_COUNTER_UPPER_OFFSET,
-		(u32)((u32)(Xtime_Global>>32U)));
+    /* Updating Global Timer Counter Register */
+    Xil_Out32( ( u32 ) GLOBAL_TMR_BASEADDR + ( u32 ) GTIMER_COUNTER_LOWER_OFFSET, ( u32 ) Xtime_Global );
+    Xil_Out32( ( u32 ) GLOBAL_TMR_BASEADDR + ( u32 ) GTIMER_COUNTER_UPPER_OFFSET,
+               ( u32 ) ( ( u32 ) ( Xtime_Global >> 32U ) ) );
 
-	/* Enable Global Timer */
-	Xil_Out32((u32)GLOBAL_TMR_BASEADDR + (u32)GTIMER_CONTROL_OFFSET, (u32)0x1);
+    /* Enable Global Timer */
+    Xil_Out32( ( u32 ) GLOBAL_TMR_BASEADDR + ( u32 ) GTIMER_CONTROL_OFFSET, ( u32 ) 0x1 );
 }
 
 /****************************************************************************/
+
 /**
-* @brief	Get the time from the Global Timer Counter Register.
-*
-* @param	Xtime_Global: Pointer to the 64-bit location which will be
-*			updated with the current timer value.
-*
-* @return	None.
-*
-* @note		None.
-*
-****************************************************************************/
-void XTime_GetTime(XTime *Xtime_Global)
+ * @brief	Get the time from the Global Timer Counter Register.
+ *
+ * @param	Xtime_Global: Pointer to the 64-bit location which will be
+ *			updated with the current timer value.
+ *
+ * @return	None.
+ *
+ * @note		None.
+ *
+ ****************************************************************************/
+void XTime_GetTime( XTime * Xtime_Global )
 {
-	u32 low;
-	u32 high;
+    u32 low;
+    u32 high;
 
-	/* Reading Global Timer Counter Register */
-	do
-	{
-		high = Xil_In32(GLOBAL_TMR_BASEADDR + GTIMER_COUNTER_UPPER_OFFSET);
-		low = Xil_In32(GLOBAL_TMR_BASEADDR + GTIMER_COUNTER_LOWER_OFFSET);
-	} while(Xil_In32(GLOBAL_TMR_BASEADDR + GTIMER_COUNTER_UPPER_OFFSET) != high);
+    /* Reading Global Timer Counter Register */
+    do
+    {
+        high = Xil_In32( GLOBAL_TMR_BASEADDR + GTIMER_COUNTER_UPPER_OFFSET );
+        low = Xil_In32( GLOBAL_TMR_BASEADDR + GTIMER_COUNTER_LOWER_OFFSET );
+    } while( Xil_In32( GLOBAL_TMR_BASEADDR + GTIMER_COUNTER_UPPER_OFFSET ) != high );
 
-	*Xtime_Global = (((XTime) high) << 32U) | (XTime) low;
+    *Xtime_Global = ( ( ( XTime ) high ) << 32U ) | ( XTime ) low;
 }

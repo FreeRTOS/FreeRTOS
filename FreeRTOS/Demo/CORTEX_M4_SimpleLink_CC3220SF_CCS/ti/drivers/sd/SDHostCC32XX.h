@@ -71,29 +71,29 @@
  */
 
 #ifndef ti_drivers_sd_SDHostCC32XX__include
-#define ti_drivers_sd_SDHostCC32XX__include
+    #define ti_drivers_sd_SDHostCC32XX__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <ti/drivers/SD.h>
+    #include <stdint.h>
+    #include <ti/drivers/SD.h>
 
-#include <ti/drivers/dpl/HwiP.h>
-#include <ti/drivers/dpl/SemaphoreP.h>
-#include <ti/drivers/Power.h>
-#include <ti/drivers/dma/UDMACC32XX.h>
+    #include <ti/drivers/dpl/HwiP.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
+    #include <ti/drivers/Power.h>
+    #include <ti/drivers/dma/UDMACC32XX.h>
 
-#define SDHostCC32XX_PIN_06_SDCARD_DATA  0x0805
-#define SDHostCC32XX_PIN_07_SDCARD_CLK   0x0806
-#define SDHostCC32XX_PIN_08_SDCARD_CMD   0x0807
-#define SDHostCC32XX_PIN_01_SDCARD_CLK   0x0600
-#define SDHostCC32XX_PIN_02_SDCARD_CMD   0x0601
-#define SDHostCC32XX_PIN_64_SDCARD_DATA  0x063f
+    #define SDHostCC32XX_PIN_06_SDCARD_DATA    0x0805
+    #define SDHostCC32XX_PIN_07_SDCARD_CLK     0x0806
+    #define SDHostCC32XX_PIN_08_SDCARD_CMD     0x0807
+    #define SDHostCC32XX_PIN_01_SDCARD_CLK     0x0600
+    #define SDHostCC32XX_PIN_02_SDCARD_CMD     0x0601
+    #define SDHostCC32XX_PIN_64_SDCARD_DATA    0x063f
 
 /* SDHost function table */
-extern const SD_FxnTable sdHostCC32XX_fxnTable;
+    extern const SD_FxnTable sdHostCC32XX_fxnTable;
 
 /*!
  *  @brief  SDHostCC32XX Hardware attributes
@@ -130,73 +130,77 @@ extern const SD_FxnTable sdHostCC32XX_fxnTable;
  *  };
  *  @endcode
  */
-typedef struct SDHostCC32XX_HWAttrsV1 {
-    /*!< SD interface clock rate */
-    uint_fast32_t clkRate;
+    typedef struct SDHostCC32XX_HWAttrsV1
+    {
+        /*!< SD interface clock rate */
+        uint_fast32_t clkRate;
 
-    /*!< Internal SDHost ISR command/transfer priorty */
-    int_fast32_t intPriority;
+        /*!< Internal SDHost ISR command/transfer priorty */
+        int_fast32_t intPriority;
 
-    /*!< SDHost Peripheral base address */
-    uint_fast32_t baseAddr;
+        /*!< SDHost Peripheral base address */
+        uint_fast32_t baseAddr;
 
-    /*!< uDMA controlTable receive channel index */
-    unsigned long rxChIdx;
+        /*!< uDMA controlTable receive channel index */
+        unsigned long rxChIdx;
 
-    /*!< uDMA controlTable transmit channel index */
-    unsigned long txChIdx;
+        /*!< uDMA controlTable transmit channel index */
+        unsigned long txChIdx;
 
-    /*!< SD Host Data pin */
-    uint32_t dataPin;
+        /*!< SD Host Data pin */
+        uint32_t dataPin;
 
-    /*!< SD Host CMD pin */
-    uint32_t cmdPin;
+        /*!< SD Host CMD pin */
+        uint32_t cmdPin;
 
-    /*!< SD Host CLK pin */
-    uint32_t clkPin;
-} SDHostCC32XX_HWAttrsV1;
+        /*!< SD Host CLK pin */
+        uint32_t clkPin;
+    } SDHostCC32XX_HWAttrsV1;
 
 /*!
  *  @brief  SDHostCC32XX Object
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct SDHostCC32XX_Object {
-    /* Relative Card Address */
-    uint_fast32_t              rca;
-    /* Write data pointer */
-    const uint_fast32_t       *writeBuf;
-    /* Number of sectors written */
-    volatile uint_fast32_t     writeSecCount;
-    /* Read data pointer */
-    uint_fast32_t             *readBuf;
-    /* Number of sectors read */
-    volatile uint_fast32_t     readSecCount;
-    /*
-     *  Semaphore to suspend thread execution when waiting for SD Commands
-     *  or data transfers to complete.
-     */
-    SemaphoreP_Handle      cmdSem;
-    /*
-     *  SD Card interrupt handle.
-     */
-    HwiP_Handle            hwiHandle;
-    /* Determined from base address */
-    unsigned int           powerMgrId;
-    /* LPDS wake-up notify object */
-    Power_NotifyObj        postNotify;
-    /* UDMA Handle */
-    UDMACC32XX_Handle      dmaHandle;
-    /* SD Card command state */
-    volatile int_fast8_t   stat;
-    /* State of the driver (open or closed) */
-    bool                   isOpen;
-    /* SDCard Card Command Class(CCC) */
-    SD_CardType            cardType;
-} SDHostCC32XX_Object;
+    typedef struct SDHostCC32XX_Object
+    {
+        /* Relative Card Address */
+        uint_fast32_t rca;
+        /* Write data pointer */
+        const uint_fast32_t * writeBuf;
+        /* Number of sectors written */
+        volatile uint_fast32_t writeSecCount;
+        /* Read data pointer */
+        uint_fast32_t * readBuf;
+        /* Number of sectors read */
+        volatile uint_fast32_t readSecCount;
 
-#ifdef __cplusplus
+        /*
+         *  Semaphore to suspend thread execution when waiting for SD Commands
+         *  or data transfers to complete.
+         */
+        SemaphoreP_Handle cmdSem;
+
+        /*
+         *  SD Card interrupt handle.
+         */
+        HwiP_Handle hwiHandle;
+        /* Determined from base address */
+        unsigned int powerMgrId;
+        /* LPDS wake-up notify object */
+        Power_NotifyObj postNotify;
+        /* UDMA Handle */
+        UDMACC32XX_Handle dmaHandle;
+        /* SD Card command state */
+        volatile int_fast8_t stat;
+        /* State of the driver (open or closed) */
+        bool isOpen;
+        /* SDCard Card Command Class(CCC) */
+        SD_CardType cardType;
+    } SDHostCC32XX_Object;
+
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_sd_SDHostCC32XX__include */

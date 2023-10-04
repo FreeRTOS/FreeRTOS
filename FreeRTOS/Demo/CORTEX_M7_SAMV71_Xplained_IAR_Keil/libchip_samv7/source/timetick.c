@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -43,7 +43,7 @@
  *----------------------------------------------------------------------------*/
 
 /** Tick Counter united by ms */
-static volatile uint32_t _dwTickCount = 0 ;
+static volatile uint32_t _dwTickCount = 0;
 
 /*----------------------------------------------------------------------------
  *         Exported Functions
@@ -58,7 +58,7 @@ static volatile uint32_t _dwTickCount = 0 ;
  */
 void SysTick_Handler( void )
 {
-    _dwTickCount ++;  
+    _dwTickCount++;
 }
 
 /**
@@ -79,14 +79,16 @@ extern void TimeTick_Increment( uint32_t dwInc )
  */
 extern uint32_t TimeTick_Configure( uint32_t new_mck )
 {
-    _dwTickCount = 0 ;
+    _dwTickCount = 0;
     /* Configure systick for 1 ms. */
-    printf( "Configure system tick to get 1ms tick period.\n\r" ) ;
-    if ( SysTick_Config( new_mck ) )
+    printf( "Configure system tick to get 1ms tick period.\n\r" );
+
+    if( SysTick_Config( new_mck ) )
     {
-        TRACE_ERROR("Systick configuration error\n\r" ) ;
+        TRACE_ERROR( "Systick configuration error\n\r" );
         return 1;
     }
+
     return 0;
 }
 
@@ -95,10 +97,15 @@ extern uint32_t TimeTick_Configure( uint32_t new_mck )
  * \param startTick Start tick point.
  * \param endTick   End tick point.
  */
-extern uint32_t GetDelayInTicks(uint32_t startTick, uint32_t endTick)
+extern uint32_t GetDelayInTicks( uint32_t startTick,
+                                 uint32_t endTick )
 {
-    if (endTick >= startTick) return (endTick - startTick);
-    return (endTick + (0xFFFFFFFF - startTick) + 1);
+    if( endTick >= startTick )
+    {
+        return( endTick - startTick );
+    }
+
+    return( endTick + ( 0xFFFFFFFF - startTick ) + 1 );
 }
 
 /**
@@ -106,7 +113,7 @@ extern uint32_t GetDelayInTicks(uint32_t startTick, uint32_t endTick)
  */
 extern uint32_t GetTickCount( void )
 {
-    return _dwTickCount ;
+    return _dwTickCount;
 }
 
 /**
@@ -114,14 +121,15 @@ extern uint32_t GetTickCount( void )
  */
 extern void Wait( volatile uint32_t dwMs )
 {
-    uint32_t dwStart ;
-    uint32_t dwCurrent ;
+    uint32_t dwStart;
+    uint32_t dwCurrent;
 
-    dwStart = _dwTickCount ;
+    dwStart = _dwTickCount;
+
     do
     {
-        dwCurrent = _dwTickCount ;
-    } while ( dwCurrent - dwStart < dwMs ) ;
+        dwCurrent = _dwTickCount;
+    } while( dwCurrent - dwStart < dwMs );
 }
 
 /**
@@ -129,20 +137,21 @@ extern void Wait( volatile uint32_t dwMs )
  */
 extern void Sleep( volatile uint32_t dwMs )
 {
-    uint32_t dwStart ;
-    uint32_t dwCurrent ;
-    __ASM("CPSIE   I");
-    dwStart = _dwTickCount ;
+    uint32_t dwStart;
+    uint32_t dwCurrent;
+
+    __ASM( "CPSIE   I" );
+    dwStart = _dwTickCount;
 
     do
     {
-        dwCurrent = _dwTickCount ;
+        dwCurrent = _dwTickCount;
 
-        if ( dwCurrent - dwStart > dwMs )
+        if( dwCurrent - dwStart > dwMs )
         {
-            break ;
+            break;
         }
-        __ASM("WFI");
-    } while( 1 ) ;
-}
 
+        __ASM( "WFI" );
+    } while( 1 );
+}

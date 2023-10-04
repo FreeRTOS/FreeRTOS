@@ -32,12 +32,12 @@
  * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
  *
  ********************************************************************/
+
 /* This is a default definition of an _on_bootstrap() function.
  * It does nothing and just goes returns. If the user
  * application supplies a handler function, this function will not be
  * referenced and thus not pulled in from the library.
  */
-void 
-_on_bootstrap (void)
+void _on_bootstrap( void )
 {
 }

@@ -29,46 +29,47 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
-//*****************************************************************************
-//
-// ram.c - Driver for the ram Module.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* ram.c - Driver for the ram Module. */
+/* */
+/****************************************************************************** */
 
-//*****************************************************************************
-//
-//! \addtogroup ram_api ram
-//! @{
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/*! \addtogroup ram_api ram */
+/*! @{ */
+/* */
+/****************************************************************************** */
 
 #include "inc/hw_regaccess.h"
 #include "inc/hw_memmap.h"
 
 #ifdef __MSP430_HAS_RC_FRAM__
-#include "ram.h"
+    #include "ram.h"
 
-#include <assert.h>
+    #include <assert.h>
 
-void RAM_setSectorOff(uint8_t sector,
-                      uint8_t mode)
-{
-    uint8_t sectorPos = sector << 1;
-    uint8_t val = HWREG8(RAM_BASE + OFS_RCCTL0_L) & ~(0x3 << sectorPos);
+    void RAM_setSectorOff( uint8_t sector,
+                           uint8_t mode )
+    {
+        uint8_t sectorPos = sector << 1;
+        uint8_t val = HWREG8( RAM_BASE + OFS_RCCTL0_L ) & ~( 0x3 << sectorPos );
 
-    HWREG16(RAM_BASE + OFS_RCCTL0) = (RCKEY | val | (mode << sectorPos));
-}
+        HWREG16( RAM_BASE + OFS_RCCTL0 ) = ( RCKEY | val | ( mode << sectorPos ) );
+    }
 
-uint8_t RAM_getSectorState(uint8_t sector)
-{
-    uint8_t sectorPos = sector << 1;
-    return((HWREG8(RAM_BASE + OFS_RCCTL0_L) & (0x3 << sectorPos)) >> sectorPos);
-}
+    uint8_t RAM_getSectorState( uint8_t sector )
+    {
+        uint8_t sectorPos = sector << 1;
 
-#endif
-//*****************************************************************************
-//
-//! Close the doxygen group for ram_api
-//! @}
-//
-//*****************************************************************************
+        return( ( HWREG8( RAM_BASE + OFS_RCCTL0_L ) & ( 0x3 << sectorPos ) ) >> sectorPos );
+    }
+
+#endif /* ifdef __MSP430_HAS_RC_FRAM__ */
+/****************************************************************************** */
+/* */
+/*! Close the doxygen group for ram_api */
+/*! @} */
+/* */
+/****************************************************************************** */

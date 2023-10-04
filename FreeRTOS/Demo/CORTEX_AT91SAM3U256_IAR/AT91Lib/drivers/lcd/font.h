@@ -27,63 +27,61 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !!!Purpose
-///
-/// The font.h files declares a font structure and a LCDD_DrawChar function
-/// that must be implemented by a font definition file to be used with the
-/// LCDD_DrawString method of draw.h.
-///
-/// The font10x14.c implements the necessary variable and function for a 10x14
-/// font.
-///
-/// !!!Usage
-///
-/// -# Declare a gFont global variable with the necessary Font information.
-/// -# Implement an LCDD_DrawChar function which displays the specified
-///    character on the LCD.
-/// -# Use the LCDD_DrawString method defined in draw.h to display a complete
-///    string.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !!!Purpose */
+/*/ */
+/*/ The font.h files declares a font structure and a LCDD_DrawChar function */
+/*/ that must be implemented by a font definition file to be used with the */
+/*/ LCDD_DrawString method of draw.h. */
+/*/ */
+/*/ The font10x14.c implements the necessary variable and function for a 10x14 */
+/*/ font. */
+/*/ */
+/*/ !!!Usage */
+/*/ */
+/*/ -# Declare a gFont global variable with the necessary Font information. */
+/*/ -# Implement an LCDD_DrawChar function which displays the specified */
+/*/    character on the LCD. */
+/*/ -# Use the LCDD_DrawString method defined in draw.h to display a complete */
+/*/    string. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef FONT_H
 #define FONT_H
 
-//------------------------------------------------------------------------------
-//         Global types
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global types */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// Describes the font (width, height, supported characters, etc.) used by
-/// the LCD driver draw API.
-//------------------------------------------------------------------------------
-typedef struct _Font {
-
-	/// Font width in pixels.
-	unsigned char width;
-	/// Font height in pixels.
-	unsigned char height;
-
+/*------------------------------------------------------------------------------ */
+/*/ Describes the font (width, height, supported characters, etc.) used by */
+/*/ the LCD driver draw API. */
+/*------------------------------------------------------------------------------ */
+typedef struct _Font
+{
+    /*/ Font width in pixels. */
+    unsigned char width;
+    /*/ Font height in pixels. */
+    unsigned char height;
 } Font;
 
-//------------------------------------------------------------------------------
-//         Global variables
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global variables */
+/*------------------------------------------------------------------------------ */
 
-/// Global variable describing the font being instancied.
+/*/ Global variable describing the font being instancied. */
 extern const Font gFont;
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void LCDD_DrawChar(
-	void *pBuffer,
-	unsigned int x,
-	unsigned int y,
-	char c,
-	unsigned int color);
+extern void LCDD_DrawChar( void * pBuffer,
+                           unsigned int x,
+                           unsigned int y,
+                           char c,
+                           unsigned int color );
 
 #endif //#ifndef FONT_H

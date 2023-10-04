@@ -25,12 +25,12 @@
  */
 
 /*
-	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is
-	called.  The demo applications included in the FreeRTOS.org download switch
-	to supervisor mode prior to main being called.  If you are not using one of
-	these demo application projects then ensure Supervisor mode is used.
-*/
+ *  NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
+ *  The processor MUST be in supervisor mode when vTaskStartScheduler is
+ *  called.  The demo applications included in the FreeRTOS.org download switch
+ *  to supervisor mode prior to main being called.  If you are not using one of
+ *  these demo application projects then ensure Supervisor mode is used.
+ */
 
 
 /*
@@ -58,16 +58,16 @@
  */
 
 /*
-	Changes from V2.4.2
-
-	+ The vErrorChecks() task now dynamically creates then deletes a task each
-	  cycle.  This tests the operation of the memory allocator.
-
-	Changes from V2.5.2
-
-	+ vParTestInitialise() is called during initialisation to ensure all the
-	  LED's start off.
-*/
+ *  Changes from V2.4.2
+ *
+ + The vErrorChecks() task now dynamically creates then deletes a task each
+ +    cycle.  This tests the operation of the memory allocator.
+ +
+ +  Changes from V2.5.2
+ +
+ + vParTestInitialise() is called during initialisation to ensure all the
+ +    LED's start off.
+ */
 
 
 /* Standard includes. */
@@ -93,53 +93,53 @@
 /*-----------------------------------------------------------*/
 
 /* Constants to setup I/O. */
-#define mainTX_ENABLE	( ( unsigned long ) 0x0001 )
-#define mainRX_ENABLE	( ( unsigned long ) 0x0004 )
-#define mainP0_14		( ( unsigned long ) 0x4000 )
-#define mainJTAG_PORT	( ( unsigned long ) 0x3E0000UL )
+#define mainTX_ENABLE                ( ( unsigned long ) 0x0001 )
+#define mainRX_ENABLE                ( ( unsigned long ) 0x0004 )
+#define mainP0_14                    ( ( unsigned long ) 0x4000 )
+#define mainJTAG_PORT                ( ( unsigned long ) 0x3E0000UL )
 
 /* Constants to setup the PLL. */
-#define mainPLL_MUL_4		( ( unsigned char ) 0x0003 )
-#define mainPLL_DIV_1		( ( unsigned char ) 0x0000 )
-#define mainPLL_ENABLE		( ( unsigned char ) 0x0001 )
-#define mainPLL_CONNECT		( ( unsigned char ) 0x0003 )
-#define mainPLL_FEED_BYTE1	( ( unsigned char ) 0xaa )
-#define mainPLL_FEED_BYTE2	( ( unsigned char ) 0x55 )
-#define mainPLL_LOCK		( ( unsigned long ) 0x0400 )
+#define mainPLL_MUL_4                ( ( unsigned char ) 0x0003 )
+#define mainPLL_DIV_1                ( ( unsigned char ) 0x0000 )
+#define mainPLL_ENABLE               ( ( unsigned char ) 0x0001 )
+#define mainPLL_CONNECT              ( ( unsigned char ) 0x0003 )
+#define mainPLL_FEED_BYTE1           ( ( unsigned char ) 0xaa )
+#define mainPLL_FEED_BYTE2           ( ( unsigned char ) 0x55 )
+#define mainPLL_LOCK                 ( ( unsigned long ) 0x0400 )
 
 /* Constants to setup the MAM. */
-#define mainMAM_TIM_3		( ( unsigned char ) 0x03 )
-#define mainMAM_MODE_FULL	( ( unsigned char ) 0x02 )
+#define mainMAM_TIM_3                ( ( unsigned char ) 0x03 )
+#define mainMAM_MODE_FULL            ( ( unsigned char ) 0x02 )
 
 /* Constants to setup the peripheral bus. */
-#define mainBUS_CLK_FULL	( ( unsigned char ) 0x01 )
+#define mainBUS_CLK_FULL             ( ( unsigned char ) 0x01 )
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE	( ( unsigned long ) 115200 )
-#define mainCOM_TEST_LED		( 3 )
+#define mainCOM_TEST_BAUD_RATE       ( ( unsigned long ) 115200 )
+#define mainCOM_TEST_LED             ( 3 )
 
 /* Priorities for the demo application tasks. */
-#define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
-#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 0 )
-#define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 0 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainLED_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3 )
+#define mainCOM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_POLL_PRIORITY      ( tskIDLE_PRIORITY + 0 )
+#define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + 4 )
+#define mainSEM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 0 )
+#define mainBLOCK_Q_PRIORITY         ( tskIDLE_PRIORITY + 2 )
 
 /* The rate at which the on board LED will toggle when there is/is not an
-error. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
-#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
-#define mainON_BOARD_LED_BIT		( ( unsigned long ) 0x80 )
+ * error. */
+#define mainNO_ERROR_FLASH_PERIOD    ( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
+#define mainERROR_FLASH_PERIOD       ( ( TickType_t ) 500 / portTICK_PERIOD_MS )
+#define mainON_BOARD_LED_BIT         ( ( unsigned long ) 0x80 )
 
 /* Constants used by the vMemCheckTask() task. */
-#define mainCOUNT_INITIAL_VALUE		( ( unsigned long ) 0 )
-#define mainNO_TASK					( 0 )
+#define mainCOUNT_INITIAL_VALUE      ( ( unsigned long ) 0 )
+#define mainNO_TASK                  ( 0 )
 
 /* The size of the memory blocks allocated by the vMemCheckTask() task. */
-#define mainMEM_CHECK_SIZE_1		( ( size_t ) 51 )
-#define mainMEM_CHECK_SIZE_2		( ( size_t ) 52 )
-#define mainMEM_CHECK_SIZE_3		( ( size_t ) 151 )
+#define mainMEM_CHECK_SIZE_1         ( ( size_t ) 51 )
+#define mainMEM_CHECK_SIZE_2         ( ( size_t ) 52 )
+#define mainMEM_CHECK_SIZE_3         ( ( size_t ) 151 )
 
 /*-----------------------------------------------------------*/
 
@@ -160,14 +160,14 @@ static long prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount
  * prvCheckOtherTasksAreStillRunning().  See the description at the top
  * of the file.
  */
-static void vErrorChecks( void *pvParameters );
+static void vErrorChecks( void * pvParameters );
 
 /*
  * Dynamically created and deleted during each cycle of the vErrorChecks()
  * task.  This is done to check the operation of the memory allocator.
  * See the top of vErrorChecks for more details.
  */
-static void vMemCheckTask( void *pvParameters );
+static void vMemCheckTask( void * pvParameters );
 
 /*
  * Configure the processor for use with the Olimex demo board.  This includes
@@ -182,288 +182,291 @@ static void prvSetupHardware( void );
  */
 int main( void )
 {
-	/* Setup the hardware for use with the Olimex demo board. */
-	prvSetupHardware();
+    /* Setup the hardware for use with the Olimex demo board. */
+    prvSetupHardware();
 
-	/* Start the demo/test application tasks. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartMathTasks( tskIDLE_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    /* Start the demo/test application tasks. */
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+    vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartMathTasks( tskIDLE_PRIORITY );
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartDynamicPriorityTasks();
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 
-	/* Start the check task - which is defined in this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Start the check task - which is defined in this file. */
+    xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Now all the tasks have been started - start the scheduler.
+    /* Now all the tasks have been started - start the scheduler.
+     *
+     * NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
+     * The processor MUST be in supervisor mode when vTaskStartScheduler is
+     * called.  The demo applications included in the FreeRTOS.org download switch
+     * to supervisor mode prior to main being called.  If you are not using one of
+     * these demo application projects then ensure Supervisor mode is used here. */
+    vTaskStartScheduler();
 
-	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is
-	called.  The demo applications included in the FreeRTOS.org download switch
-	to supervisor mode prior to main being called.  If you are not using one of
-	these demo application projects then ensure Supervisor mode is used here. */
-	vTaskStartScheduler();
-
-	/* Should never reach here! */
-	return 0;
+    /* Should never reach here! */
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void vErrorChecks( void * pvParameters )
 {
-TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
-unsigned long ulMemCheckTaskRunningCount;
-TaskHandle_t xCreatedTask;
+    TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+    unsigned long ulMemCheckTaskRunningCount;
+    TaskHandle_t xCreatedTask;
 
-	/* The parameters are not used in this function. */
-	( void ) pvParameters;
+    /* The parameters are not used in this function. */
+    ( void ) pvParameters;
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error.  If an error is detected then the delay period
-	is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
-	the on board LED flash rate will increase.
+    /* Cycle for ever, delaying then checking all the other tasks are still
+     * operating without error.  If an error is detected then the delay period
+     * is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
+     * the on board LED flash rate will increase.
+     *
+     * In addition to the standard tests the memory allocator is tested through
+     * the dynamic creation and deletion of a task each cycle.  Each time the
+     * task is created memory must be allocated for its stack.  When the task is
+     * deleted this memory is returned to the heap.  If the task cannot be created
+     * then it is likely that the memory allocation failed. */
 
-	In addition to the standard tests the memory allocator is tested through
-	the dynamic creation and deletion of a task each cycle.  Each time the
-	task is created memory must be allocated for its stack.  When the task is
-	deleted this memory is returned to the heap.  If the task cannot be created
-	then it is likely that the memory allocation failed. */
+    for( ; ; )
+    {
+        /* Dynamically create a task - passing ulMemCheckTaskRunningCount as a
+         * parameter. */
+        ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;
+        xCreatedTask = mainNO_TASK;
 
-	for( ;; )
-	{
-		/* Dynamically create a task - passing ulMemCheckTaskRunningCount as a
-		parameter. */
-		ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;
-		xCreatedTask = mainNO_TASK;
+        if( xTaskCreate( vMemCheckTask, "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
+        {
+            /* Could not create the task - we have probably run out of heap. */
+            xDelayPeriod = mainERROR_FLASH_PERIOD;
+        }
 
-		if( xTaskCreate( vMemCheckTask, "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
-		{
-			/* Could not create the task - we have probably run out of heap. */
-			xDelayPeriod = mainERROR_FLASH_PERIOD;
-		}
+        /* Delay until it is time to execute again. */
+        vTaskDelay( xDelayPeriod );
 
-		/* Delay until it is time to execute again. */
-		vTaskDelay( xDelayPeriod );
+        /* Delete the dynamically created task. */
+        if( xCreatedTask != mainNO_TASK )
+        {
+            vTaskDelete( xCreatedTask );
+        }
 
-		/* Delete the dynamically created task. */
-		if( xCreatedTask != mainNO_TASK )
-		{
-			vTaskDelete( xCreatedTask );
-		}
+        /* Check all the standard demo application tasks are executing without
+         * error.  ulMemCheckTaskRunningCount is checked to ensure it was
+         * modified by the task just deleted. */
+        if( prvCheckOtherTasksAreStillRunning( ulMemCheckTaskRunningCount ) != pdPASS )
+        {
+            /* An error has been detected in one of the tasks - flash faster. */
+            xDelayPeriod = mainERROR_FLASH_PERIOD;
+        }
 
-		/* Check all the standard demo application tasks are executing without
-		error.  ulMemCheckTaskRunningCount is checked to ensure it was
-		modified by the task just deleted. */
-		if( prvCheckOtherTasksAreStillRunning( ulMemCheckTaskRunningCount ) != pdPASS )
-		{
-			/* An error has been detected in one of the tasks - flash faster. */
-			xDelayPeriod = mainERROR_FLASH_PERIOD;
-		}
-
-		prvToggleOnBoardLED();
-	}
+        prvToggleOnBoardLED();
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	#ifdef RUN_FROM_RAM
-		/* Remap the interrupt vectors to RAM if we are are running from RAM. */
-		SCB_MEMMAP = 2;
-	#endif
+    #ifdef RUN_FROM_RAM
+        /* Remap the interrupt vectors to RAM if we are are running from RAM. */
+        SCB_MEMMAP = 2;
+    #endif
 
-	/* Configure the RS2332 pins.  All other pins remain at their default of 0. */
-	PCB_PINSEL0 |= mainTX_ENABLE;
-	PCB_PINSEL0 |= mainRX_ENABLE;
+    /* Configure the RS2332 pins.  All other pins remain at their default of 0. */
+    PCB_PINSEL0 |= mainTX_ENABLE;
+    PCB_PINSEL0 |= mainRX_ENABLE;
 
-	/* Set all GPIO to output other than the P0.14 (BSL), and the JTAG pins.
-	The JTAG pins are left as input as I'm not sure what will happen if the
-	Wiggler is connected after powerup - not that it would be a good idea to
-	do that anyway. */
-	GPIO_IODIR = ~( mainP0_14 + mainJTAG_PORT );
+    /* Set all GPIO to output other than the P0.14 (BSL), and the JTAG pins.
+     * The JTAG pins are left as input as I'm not sure what will happen if the
+     * Wiggler is connected after powerup - not that it would be a good idea to
+     * do that anyway. */
+    GPIO_IODIR = ~( mainP0_14 + mainJTAG_PORT );
 
-	/* Setup the PLL to multiply the XTAL input by 4. */
-	SCB_PLLCFG = ( mainPLL_MUL_4 | mainPLL_DIV_1 );
+    /* Setup the PLL to multiply the XTAL input by 4. */
+    SCB_PLLCFG = ( mainPLL_MUL_4 | mainPLL_DIV_1 );
 
-	/* Activate the PLL by turning it on then feeding the correct sequence of
-	bytes. */
-	SCB_PLLCON = mainPLL_ENABLE;
-	SCB_PLLFEED = mainPLL_FEED_BYTE1;
-	SCB_PLLFEED = mainPLL_FEED_BYTE2;
+    /* Activate the PLL by turning it on then feeding the correct sequence of
+     * bytes. */
+    SCB_PLLCON = mainPLL_ENABLE;
+    SCB_PLLFEED = mainPLL_FEED_BYTE1;
+    SCB_PLLFEED = mainPLL_FEED_BYTE2;
 
-	/* Wait for the PLL to lock... */
-	while( !( SCB_PLLSTAT & mainPLL_LOCK ) );
+    /* Wait for the PLL to lock... */
+    while( !( SCB_PLLSTAT & mainPLL_LOCK ) )
+    {
+    }
 
-	/* ...before connecting it using the feed sequence again. */
-	SCB_PLLCON = mainPLL_CONNECT;
-	SCB_PLLFEED = mainPLL_FEED_BYTE1;
-	SCB_PLLFEED = mainPLL_FEED_BYTE2;
+    /* ...before connecting it using the feed sequence again. */
+    SCB_PLLCON = mainPLL_CONNECT;
+    SCB_PLLFEED = mainPLL_FEED_BYTE1;
+    SCB_PLLFEED = mainPLL_FEED_BYTE2;
 
-	/* Setup and turn on the MAM.  Three cycle access is used due to the fast
-	PLL used.  It is possible faster overall performance could be obtained by
-	tuning the MAM and PLL settings. */
-	MAM_TIM = mainMAM_TIM_3;
-	MAM_CR = mainMAM_MODE_FULL;
+    /* Setup and turn on the MAM.  Three cycle access is used due to the fast
+     * PLL used.  It is possible faster overall performance could be obtained by
+     * tuning the MAM and PLL settings. */
+    MAM_TIM = mainMAM_TIM_3;
+    MAM_CR = mainMAM_MODE_FULL;
 
-	/* Setup the peripheral bus to be the same as the PLL output. */
-	SCB_VPBDIV = mainBUS_CLK_FULL;
+    /* Setup the peripheral bus to be the same as the PLL output. */
+    SCB_VPBDIV = mainBUS_CLK_FULL;
 
-	/* Initialise LED outputs. */
-	vParTestInitialise();
+    /* Initialise LED outputs. */
+    vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
 void prvToggleOnBoardLED( void )
 {
-unsigned long ulState;
+    unsigned long ulState;
 
-	ulState = GPIO0_IOPIN;
-	if( ulState & mainON_BOARD_LED_BIT )
-	{
-		GPIO_IOCLR = mainON_BOARD_LED_BIT;
-	}
-	else
-	{
-		GPIO_IOSET = mainON_BOARD_LED_BIT;
-	}
+    ulState = GPIO0_IOPIN;
+
+    if( ulState & mainON_BOARD_LED_BIT )
+    {
+        GPIO_IOCLR = mainON_BOARD_LED_BIT;
+    }
+    else
+    {
+        GPIO_IOSET = mainON_BOARD_LED_BIT;
+    }
 }
 /*-----------------------------------------------------------*/
 
 static long prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount )
 {
-long lReturn = ( long ) pdPASS;
+    long lReturn = ( long ) pdPASS;
 
-	/* Check all the demo tasks (other than the flash tasks) to ensure
-	that they are all still running, and that none of them have detected
-	an error. */
+    /* Check all the demo tasks (other than the flash tasks) to ensure
+     * that they are all still running, and that none of them have detected
+     * an error. */
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreComTestTasksStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreComTestTasksStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreMathsTaskStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreMathsTaskStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( ulMemCheckTaskCount == mainCOUNT_INITIAL_VALUE )
-	{
-		/* The vMemCheckTask did not increment the counter - it must
-		have failed. */
-		lReturn = ( long ) pdFAIL;
-	}
+    if( ulMemCheckTaskCount == mainCOUNT_INITIAL_VALUE )
+    {
+        /* The vMemCheckTask did not increment the counter - it must
+         * have failed. */
+        lReturn = ( long ) pdFAIL;
+    }
 
-	return lReturn;
+    return lReturn;
 }
 /*-----------------------------------------------------------*/
 
-static void vMemCheckTask( void *pvParameters )
+static void vMemCheckTask( void * pvParameters )
 {
-unsigned long *pulMemCheckTaskRunningCounter;
-void *pvMem1, *pvMem2, *pvMem3;
-static long lErrorOccurred = pdFALSE;
+    unsigned long * pulMemCheckTaskRunningCounter;
+    void * pvMem1, * pvMem2, * pvMem3;
+    static long lErrorOccurred = pdFALSE;
 
-	/* This task is dynamically created then deleted during each cycle of the
-	vErrorChecks task to check the operation of the memory allocator.  Each time
-	the task is created memory is allocated for the stack and TCB.  Each time
-	the task is deleted this memory is returned to the heap.  This task itself
-	exercises the allocator by allocating and freeing blocks.
+    /* This task is dynamically created then deleted during each cycle of the
+     * vErrorChecks task to check the operation of the memory allocator.  Each time
+     * the task is created memory is allocated for the stack and TCB.  Each time
+     * the task is deleted this memory is returned to the heap.  This task itself
+     * exercises the allocator by allocating and freeing blocks.
+     *
+     * The task executes at the idle priority so does not require a delay.
+     *
+     * pulMemCheckTaskRunningCounter is incremented each cycle to indicate to the
+     * vErrorChecks() task that this task is still executing without error. */
 
-	The task executes at the idle priority so does not require a delay.
+    pulMemCheckTaskRunningCounter = ( unsigned long * ) pvParameters;
 
-	pulMemCheckTaskRunningCounter is incremented each cycle to indicate to the
-	vErrorChecks() task that this task is still executing without error. */
+    for( ; ; )
+    {
+        if( lErrorOccurred == pdFALSE )
+        {
+            /* We have never seen an error so increment the counter. */
+            ( *pulMemCheckTaskRunningCounter )++;
+        }
 
-	pulMemCheckTaskRunningCounter = ( unsigned long * ) pvParameters;
+        /* Allocate some memory - just to give the allocator some extra
+         * exercise.  This has to be in a critical section to ensure the
+         * task does not get deleted while it has memory allocated. */
+        vTaskSuspendAll();
+        {
+            pvMem1 = pvPortMalloc( mainMEM_CHECK_SIZE_1 );
 
-	for( ;; )
-	{
-		if( lErrorOccurred == pdFALSE )
-		{
-			/* We have never seen an error so increment the counter. */
-			( *pulMemCheckTaskRunningCounter )++;
-		}
+            if( pvMem1 == NULL )
+            {
+                lErrorOccurred = pdTRUE;
+            }
+            else
+            {
+                memset( pvMem1, 0xaa, mainMEM_CHECK_SIZE_1 );
+                vPortFree( pvMem1 );
+            }
+        }
+        xTaskResumeAll();
 
-		/* Allocate some memory - just to give the allocator some extra
-		exercise.  This has to be in a critical section to ensure the
-		task does not get deleted while it has memory allocated. */
-		vTaskSuspendAll();
-		{
-			pvMem1 = pvPortMalloc( mainMEM_CHECK_SIZE_1 );
-			if( pvMem1 == NULL )
-			{
-				lErrorOccurred = pdTRUE;
-			}
-			else
-			{
-				memset( pvMem1, 0xaa, mainMEM_CHECK_SIZE_1 );
-				vPortFree( pvMem1 );
-			}
-		}
-		xTaskResumeAll();
+        /* Again - with a different size block. */
+        vTaskSuspendAll();
+        {
+            pvMem2 = pvPortMalloc( mainMEM_CHECK_SIZE_2 );
 
-		/* Again - with a different size block. */
-		vTaskSuspendAll();
-		{
-			pvMem2 = pvPortMalloc( mainMEM_CHECK_SIZE_2 );
-			if( pvMem2 == NULL )
-			{
-				lErrorOccurred = pdTRUE;
-			}
-			else
-			{
-				memset( pvMem2, 0xaa, mainMEM_CHECK_SIZE_2 );
-				vPortFree( pvMem2 );
-			}
-		}
-		xTaskResumeAll();
+            if( pvMem2 == NULL )
+            {
+                lErrorOccurred = pdTRUE;
+            }
+            else
+            {
+                memset( pvMem2, 0xaa, mainMEM_CHECK_SIZE_2 );
+                vPortFree( pvMem2 );
+            }
+        }
+        xTaskResumeAll();
 
-		/* Again - with a different size block. */
-		vTaskSuspendAll();
-		{
-			pvMem3 = pvPortMalloc( mainMEM_CHECK_SIZE_3 );
-			if( pvMem3 == NULL )
-			{
-				lErrorOccurred = pdTRUE;
-			}
-			else
-			{
-				memset( pvMem3, 0xaa, mainMEM_CHECK_SIZE_3 );
-				vPortFree( pvMem3 );
-			}
-		}
-		xTaskResumeAll();
-	}
+        /* Again - with a different size block. */
+        vTaskSuspendAll();
+        {
+            pvMem3 = pvPortMalloc( mainMEM_CHECK_SIZE_3 );
+
+            if( pvMem3 == NULL )
+            {
+                lErrorOccurred = pdTRUE;
+            }
+            else
+            {
+                memset( pvMem3, 0xaa, mainMEM_CHECK_SIZE_3 );
+                vPortFree( pvMem3 );
+            }
+        }
+        xTaskResumeAll();
+    }
 }
-
-
-

@@ -29,129 +29,129 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
-//*****************************************************************************
-//
-// framctl.c - Driver for the framctl Module.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* framctl.c - Driver for the framctl Module. */
+/* */
+/****************************************************************************** */
 
-//*****************************************************************************
-//
-//! \addtogroup framctl_api framctl
-//! @{
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/*! \addtogroup framctl_api framctl */
+/*! @{ */
+/* */
+/****************************************************************************** */
 
 #include "inc/hw_regaccess.h"
 #include "inc/hw_memmap.h"
 
 #ifdef __MSP430_HAS_FRAM__
-#include "framctl.h"
+    #include "framctl.h"
 
-#include <assert.h>
+    #include <assert.h>
 
-void FRAMCtl_write8(uint8_t *dataPtr,
-                    uint8_t *framPtr,
-                    uint16_t numberOfBytes)
-{
-    while(numberOfBytes > 0)
+    void FRAMCtl_write8( uint8_t * dataPtr,
+                         uint8_t * framPtr,
+                         uint16_t numberOfBytes )
     {
-        //Write to Fram
-        *framPtr++ = *dataPtr++;
-        numberOfBytes--;
+        while( numberOfBytes > 0 )
+        {
+            /*Write to Fram */
+            *framPtr++ = *dataPtr++;
+            numberOfBytes--;
+        }
     }
-}
 
-void FRAMCtl_write16(uint16_t *dataPtr,
-                     uint16_t *framPtr,
-                     uint16_t numberOfWords)
-{
-    while(numberOfWords > 0)
+    void FRAMCtl_write16( uint16_t * dataPtr,
+                          uint16_t * framPtr,
+                          uint16_t numberOfWords )
     {
-        //Write to Fram
-        *framPtr++ = *dataPtr++;
-        numberOfWords--;
+        while( numberOfWords > 0 )
+        {
+            /*Write to Fram */
+            *framPtr++ = *dataPtr++;
+            numberOfWords--;
+        }
     }
-}
 
-void FRAMCtl_write32(uint32_t *dataPtr,
-                     uint32_t *framPtr,
-                     uint16_t count)
-{
-    while(count > 0)
+    void FRAMCtl_write32( uint32_t * dataPtr,
+                          uint32_t * framPtr,
+                          uint16_t count )
     {
-        //Write to Fram
-        *framPtr++ = *dataPtr++;
-        count--;
+        while( count > 0 )
+        {
+            /*Write to Fram */
+            *framPtr++ = *dataPtr++;
+            count--;
+        }
     }
-}
 
-void FRAMCtl_fillMemory32(uint32_t value,
-                          uint32_t *framPtr,
-                          uint16_t count)
-{
-    while(count > 0)
+    void FRAMCtl_fillMemory32( uint32_t value,
+                               uint32_t * framPtr,
+                               uint16_t count )
     {
-        //Write to Fram
-        *framPtr++ = value;
-        count--;
+        while( count > 0 )
+        {
+            /*Write to Fram */
+            *framPtr++ = value;
+            count--;
+        }
     }
-}
 
-void FRAMCtl_enableInterrupt(uint8_t interruptMask)
-{
-    uint8_t waitSelection;
+    void FRAMCtl_enableInterrupt( uint8_t interruptMask )
+    {
+        uint8_t waitSelection;
 
-    waitSelection = (HWREG8(FRAM_BASE + OFS_FRCTL0) & 0xFF);
-    // Clear lock in FRAM control registers
-    HWREG16(FRAM_BASE + OFS_FRCTL0) = FWPW | waitSelection;
+        waitSelection = ( HWREG8( FRAM_BASE + OFS_FRCTL0 ) & 0xFF );
+        /* Clear lock in FRAM control registers */
+        HWREG16( FRAM_BASE + OFS_FRCTL0 ) = FWPW | waitSelection;
 
-    // Enable user selected interrupt sources
-    HWREG16(FRAM_BASE + OFS_GCCTL0) |= interruptMask;
-}
+        /* Enable user selected interrupt sources */
+        HWREG16( FRAM_BASE + OFS_GCCTL0 ) |= interruptMask;
+    }
 
-uint8_t FRAMCtl_getInterruptStatus(uint16_t interruptFlagMask)
-{
-    return (HWREG16(FRAM_BASE + OFS_GCCTL1) & interruptFlagMask);
-}
+    uint8_t FRAMCtl_getInterruptStatus( uint16_t interruptFlagMask )
+    {
+        return( HWREG16( FRAM_BASE + OFS_GCCTL1 ) & interruptFlagMask );
+    }
 
-void FRAMCtl_disableInterrupt(uint16_t interruptMask)
-{
-    uint8_t waitSelection;
+    void FRAMCtl_disableInterrupt( uint16_t interruptMask )
+    {
+        uint8_t waitSelection;
 
-    waitSelection = (HWREG8(FRAM_BASE + OFS_FRCTL0) & 0xFF);
-    //Clear lock in FRAM control registers
-    HWREG16(FRAM_BASE + OFS_FRCTL0) = FWPW | waitSelection;
+        waitSelection = ( HWREG8( FRAM_BASE + OFS_FRCTL0 ) & 0xFF );
+        /*Clear lock in FRAM control registers */
+        HWREG16( FRAM_BASE + OFS_FRCTL0 ) = FWPW | waitSelection;
 
-    HWREG16(FRAM_BASE + OFS_GCCTL0) &= ~(interruptMask);
-}
+        HWREG16( FRAM_BASE + OFS_GCCTL0 ) &= ~( interruptMask );
+    }
 
-void FRAMCtl_configureWaitStateControl(uint8_t waitState)
-{
-    // Clear lock in FRAM control registers
-    HWREG16(FRAM_BASE + OFS_FRCTL0) = FWPW;
+    void FRAMCtl_configureWaitStateControl( uint8_t waitState )
+    {
+        /* Clear lock in FRAM control registers */
+        HWREG16( FRAM_BASE + OFS_FRCTL0 ) = FWPW;
 
-    HWREG8(FRAM_BASE + OFS_FRCTL0_L) &= ~NWAITS_7;
-    HWREG8(FRAM_BASE + OFS_FRCTL0_L) |= (waitState);
-}
+        HWREG8( FRAM_BASE + OFS_FRCTL0_L ) &= ~NWAITS_7;
+        HWREG8( FRAM_BASE + OFS_FRCTL0_L ) |= ( waitState );
+    }
 
-void FRAMCtl_delayPowerUpFromLPM(uint8_t delayStatus)
-{
-    uint8_t waitSelection;
+    void FRAMCtl_delayPowerUpFromLPM( uint8_t delayStatus )
+    {
+        uint8_t waitSelection;
 
-    waitSelection = (HWREG8(FRAM_BASE + OFS_FRCTL0) & 0xFF);
+        waitSelection = ( HWREG8( FRAM_BASE + OFS_FRCTL0 ) & 0xFF );
 
-    // Clear lock in FRAM control registers
-    HWREG16(FRAM_BASE + OFS_FRCTL0) = FWPW | waitSelection;
+        /* Clear lock in FRAM control registers */
+        HWREG16( FRAM_BASE + OFS_FRCTL0 ) = FWPW | waitSelection;
 
-    HWREG8(FRAM_BASE + OFS_GCCTL0_L) &= ~0x02;
-    HWREG8(FRAM_BASE + OFS_GCCTL0_L) |= delayStatus;
-}
+        HWREG8( FRAM_BASE + OFS_GCCTL0_L ) &= ~0x02;
+        HWREG8( FRAM_BASE + OFS_GCCTL0_L ) |= delayStatus;
+    }
 
-#endif
-//*****************************************************************************
-//
-//! Close the doxygen group for framctl_api
-//! @}
-//
-//*****************************************************************************
+#endif /* ifdef __MSP430_HAS_FRAM__ */
+/****************************************************************************** */
+/* */
+/*! Close the doxygen group for framctl_api */
+/*! @} */
+/* */
+/****************************************************************************** */

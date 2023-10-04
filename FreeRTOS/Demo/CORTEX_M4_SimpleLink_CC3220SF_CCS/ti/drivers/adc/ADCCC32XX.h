@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       ADCCC32XX.h
  *
@@ -47,26 +48,26 @@
  *  ============================================================================
  */
 #ifndef ti_drivers_adc_ADCMSP432__include
-#define ti_drivers_adc_ADCMSP432__include
+    #define ti_drivers_adc_ADCMSP432__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
+    #include <stdint.h>
+    #include <stdbool.h>
 
-#include <ti/drivers/ADC.h>
-#include <ti/drivers/dpl/SemaphoreP.h>
+    #include <ti/drivers/ADC.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
 
 
-#define ADCCC32XX_PIN_57_CH_0  (ADC_CH_0 << 8) | 0x38
-#define ADCCC32XX_PIN_58_CH_1  (ADC_CH_1 << 8) | 0x39
-#define ADCCC32XX_PIN_59_CH_2  (ADC_CH_2 << 8) | 0x3a
-#define ADCCC32XX_PIN_60_CH_3  (ADC_CH_3 << 8) | 0x3b
+    #define ADCCC32XX_PIN_57_CH_0    ( ADC_CH_0 << 8 ) | 0x38
+    #define ADCCC32XX_PIN_58_CH_1    ( ADC_CH_1 << 8 ) | 0x39
+    #define ADCCC32XX_PIN_59_CH_2    ( ADC_CH_2 << 8 ) | 0x3a
+    #define ADCCC32XX_PIN_60_CH_3    ( ADC_CH_3 << 8 ) | 0x3b
 
 /* ADC function table pointer */
-extern const ADC_FxnTable ADCCC32XX_fxnTable;
+    extern const ADC_FxnTable ADCCC32XX_fxnTable;
 
 /*!
  *  @brief  ADCCC32XX Hardware attributes
@@ -84,33 +85,36 @@ extern const ADC_FxnTable ADCCC32XX_fxnTable;
  *  };
  *  @endcode
  */
-typedef struct ADCCC32XX_HWAttrsV1 {
-    uint_fast16_t adcPin;
-} ADCCC32XX_HWAttrsV1;
+    typedef struct ADCCC32XX_HWAttrsV1
+    {
+        uint_fast16_t adcPin;
+    } ADCCC32XX_HWAttrsV1;
 
 /*!
  *  @brief ADCCC32XX_Status
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct ADCCC32XX_Status {
-    uint_fast32_t     baseAddr;
-    SemaphoreP_Handle adcSemaphore;
-    uint_least8_t     numOpenChannels;
-} ADCCC32XX_Status;
+    typedef struct ADCCC32XX_Status
+    {
+        uint_fast32_t baseAddr;
+        SemaphoreP_Handle adcSemaphore;
+        uint_least8_t numOpenChannels;
+    } ADCCC32XX_Status;
 
 /*!
  *  @brief  ADCCC32XX Object
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct ADCCC32XX_Object {
-    bool              isOpen;
-    bool              isProtected;  /* Flag to indicate if thread safety is ensured by the driver */
-} ADCCC32XX_Object;
+    typedef struct ADCCC32XX_Object
+    {
+        bool isOpen;
+        bool isProtected;           /* Flag to indicate if thread safety is ensured by the driver */
+    } ADCCC32XX_Object;
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_adc_ADCMSP432__include */

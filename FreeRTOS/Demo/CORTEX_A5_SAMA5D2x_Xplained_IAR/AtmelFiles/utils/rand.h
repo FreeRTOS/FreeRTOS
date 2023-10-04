@@ -44,7 +44,7 @@
 
 #include <stdint.h>
 
-void srand(uint32_t dwSeed);
-extern uint32_t rand(void);
+void srand( uint32_t dwSeed );
+extern uint32_t rand( void );
 
-#endif				/* #ifndef _RAND_ */
+#endif /* #ifndef _RAND_ */

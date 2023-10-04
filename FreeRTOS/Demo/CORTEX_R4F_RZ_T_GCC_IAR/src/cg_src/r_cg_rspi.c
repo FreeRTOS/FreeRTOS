@@ -2,15 +2,15 @@
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
 * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws. 
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
 * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
 * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
 * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
 * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
-* of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability
+* of this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_rspi.h"
@@ -42,10 +42,10 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
-const uint32_t * gp_rspi1_tx_address;         /* RSPI1 transmit buffer address */
-uint16_t         g_rspi1_tx_count;            /* RSPI1 transmit data number */
+const uint32_t * gp_rspi1_tx_address; /* RSPI1 transmit buffer address */
+uint16_t g_rspi1_tx_count;            /* RSPI1 transmit data number */
 /* Start user code for global. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
@@ -57,7 +57,7 @@ uint16_t         g_rspi1_tx_count;            /* RSPI1 transmit data number */
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_RSPI1_Create(void)
+void R_RSPI1_Create( void )
 {
     /* Disable RSPI interrupts */
     VIC.IEC2.LONG = 0x00200000UL; /* Disable SPTI1 interrupt */
@@ -68,7 +68,7 @@ void R_RSPI1_Create(void)
     VIC.PLS2.LONG |= 0x00200000UL; /* Set SPTI1 edge detection interrupt */
 
     /* Cancel RSPI module stop state */
-    MSTP(RSPI1) = 0U;
+    MSTP( RSPI1 ) = 0U;
 
     /* Disable RSPI function */
     RSPI1.SPCR.BIT.SPE = 0U;
@@ -83,29 +83,29 @@ void R_RSPI1_Create(void)
     RSPI1.SSLND.BYTE = _RSPI_SSL_NEGATION_DELAY_1;
     RSPI1.SPND.BYTE = _RSPI_NEXT_ACCESS_DELAY_1;
     RSPI1.SPCR2.BYTE = _RSPI_PARITY_DISABLE;
-    RSPI1.SPCMD0.WORD = _RSPI_RSPCK_SAMPLING_EVEN | _RSPI_RSPCK_POLARITY_HIGH | _RSPI_BASE_BITRATE_1 | 
-                        _RSPI_SIGNAL_ASSERT_SSL0 | _RSPI_SSL_KEEP_DISABLE | _RSPI_DATA_LENGTH_BITS_8 | 
-                        _RSPI_MSB_FIRST | _RSPI_NEXT_ACCESS_DELAY_DISABLE | _RSPI_NEGATION_DELAY_DISABLE | 
+    RSPI1.SPCMD0.WORD = _RSPI_RSPCK_SAMPLING_EVEN | _RSPI_RSPCK_POLARITY_HIGH | _RSPI_BASE_BITRATE_1 |
+                        _RSPI_SIGNAL_ASSERT_SSL0 | _RSPI_SSL_KEEP_DISABLE | _RSPI_DATA_LENGTH_BITS_8 |
+                        _RSPI_MSB_FIRST | _RSPI_NEXT_ACCESS_DELAY_DISABLE | _RSPI_NEGATION_DELAY_DISABLE |
                         _RSPI_RSPCK_DELAY_DISABLE;
 
     /* Set SPTI1 priority level */
     VIC.PRL85.LONG = _RSPI_PRIORITY_LEVEL6;
-    
+
     /* Set SPEI1 priority level */
     VIC.PRL86.LONG = _RSPI_PRIORITY_LEVEL5;
-    
+
     /* Set SPII1 priority level */
     VIC.PRL87.LONG = _RSPI_PRIORITY_LEVEL7;
-    
+
     /* Set SPTI1 interrupt address */
-    VIC.VAD85.LONG = (uint32_t)r_rspi1_transmit_interrupt;
-    
+    VIC.VAD85.LONG = ( uint32_t ) r_rspi1_transmit_interrupt;
+
     /* Set SPEI1 interrupt address */
-    VIC.VAD86.LONG = (uint32_t)r_rspi1_error_interrupt;
-    
+    VIC.VAD86.LONG = ( uint32_t ) r_rspi1_error_interrupt;
+
     /* Set SPII1 interrupt address */
-    VIC.VAD87.LONG = (uint32_t)r_rspi1_idle_interrupt;
-    
+    VIC.VAD87.LONG = ( uint32_t ) r_rspi1_idle_interrupt;
+
     RSPI1.SPCR.BYTE = _RSPI_MODE_SPI | _RSPI_TRANSMIT_ONLY | _RSPI_MASTER_MODE;
 }
 
@@ -115,7 +115,7 @@ void R_RSPI1_Create(void)
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_RSPI1_Start(void)
+void R_RSPI1_Start( void )
 {
     volatile uint8_t dummy;
 
@@ -139,7 +139,7 @@ void R_RSPI1_Start(void)
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_RSPI1_Stop(void)
+void R_RSPI1_Stop( void )
 {
     /* Disable RSPI interrupts */
     VIC.IEC2.LONG = 0x00200000UL; /* Disable SPTI1 interrupt */
@@ -149,6 +149,7 @@ void R_RSPI1_Stop(void)
     /* Disable RSPI function */
     RSPI1.SPCR.BIT.SPE = 0U;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_RSPI1_Send
 * Description  : This function sends RSPI1 data.
@@ -159,11 +160,12 @@ void R_RSPI1_Stop(void)
 * Return Value : status -
 *                    MD_OK or MD_ARGERROR
 ***********************************************************************************************************************/
-MD_STATUS R_RSPI1_Send(const uint32_t * tx_buf, uint16_t tx_num)
+MD_STATUS R_RSPI1_Send( const uint32_t * tx_buf,
+                        uint16_t tx_num )
 {
     MD_STATUS status = MD_OK;
 
-    if (tx_num < 1U)
+    if( tx_num < 1U )
     {
         status = MD_ARGERROR;
     }
@@ -185,10 +187,8 @@ MD_STATUS R_RSPI1_Send(const uint32_t * tx_buf, uint16_t tx_num)
         RSPI1.SPCR.BIT.SPE = 1U;
     }
 
-    return (status);
+    return( status );
 }
-
-
 
 
 

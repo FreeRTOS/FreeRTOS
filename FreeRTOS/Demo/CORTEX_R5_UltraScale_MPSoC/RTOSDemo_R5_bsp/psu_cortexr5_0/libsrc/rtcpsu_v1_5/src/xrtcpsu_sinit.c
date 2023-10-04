@@ -30,28 +30,29 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xrtcpsu_sinit.c
-* @addtogroup rtcpsu_v1_5
-* @{
-*
-* This file contains the implementation of the XRtcPsu driver's static
-* initialization functionality.
-*
-* @note		None.
-*
-* <pre>
-*
-* MODIFICATION HISTORY:
-*
-* Ver   Who    Date	Changes
-* ----- -----  -------- -----------------------------------------------
-* 1.00  kvn    04/21/15 First release.
-*
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xrtcpsu_sinit.c
+ * @addtogroup rtcpsu_v1_5
+ * @{
+ *
+ * This file contains the implementation of the XRtcPsu driver's static
+ * initialization functionality.
+ *
+ * @note		None.
+ *
+ * <pre>
+ *
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who    Date	Changes
+ * ----- -----  -------- -----------------------------------------------
+ * 1.00  kvn    04/21/15 First release.
+ *
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -71,32 +72,35 @@
 extern XRtcPsu_Config XRtcPsu_ConfigTable[];
 
 /*****************************************************************************/
+
 /**
-*
-* This function looks for the device configuration based on the unique device
-* ID. The table XRtcPsu_ConfigTable[] contains the configuration information for
-* each device in the system.
-*
-* @param	DeviceId is the unique device ID of the device being looked up.
-*
-* @return	A pointer to the configuration table entry corresponding to the
-*		given device ID, or NULL if no match is found.
-*
-* @note		None.
-*
-******************************************************************************/
-XRtcPsu_Config *XRtcPsu_LookupConfig(u16 DeviceId)
+ *
+ * This function looks for the device configuration based on the unique device
+ * ID. The table XRtcPsu_ConfigTable[] contains the configuration information for
+ * each device in the system.
+ *
+ * @param	DeviceId is the unique device ID of the device being looked up.
+ *
+ * @return	A pointer to the configuration table entry corresponding to the
+ *		given device ID, or NULL if no match is found.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+XRtcPsu_Config * XRtcPsu_LookupConfig( u16 DeviceId )
 {
-	XRtcPsu_Config *CfgPtr = NULL;
-	u32 Index;
+    XRtcPsu_Config * CfgPtr = NULL;
+    u32 Index;
 
-	for (Index = 0U; Index < (u32)XPAR_XRTCPSU_NUM_INSTANCES; Index++) {
-		if (XRtcPsu_ConfigTable[Index].DeviceId == DeviceId) {
-			CfgPtr = &XRtcPsu_ConfigTable[Index];
-			break;
-		}
-	}
+    for( Index = 0U; Index < ( u32 ) XPAR_XRTCPSU_NUM_INSTANCES; Index++ )
+    {
+        if( XRtcPsu_ConfigTable[ Index ].DeviceId == DeviceId )
+        {
+            CfgPtr = &XRtcPsu_ConfigTable[ Index ];
+            break;
+        }
+    }
 
-	return (XRtcPsu_Config *)CfgPtr;
+    return ( XRtcPsu_Config * ) CfgPtr;
 }
 /** @} */

@@ -65,23 +65,23 @@
 #include <machine/wdtcon.h>
 
 /* This constant is specific to this test application.  It allows the high
-frequency (interrupt nesting test) timer to know how often to trigger, and the
-check task to know how many iterations to expect at any given time. */
-#define tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ		( 8931UL )
+ * frequency (interrupt nesting test) timer to know how often to trigger, and the
+ * check task to know how many iterations to expect at any given time. */
+#define tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ    ( 8931UL )
 
 /*
  * The handler for the high priority timer interrupt.
  */
-static void prvPortHighFrequencyTimerHandler( int iArg ) __attribute__((longcall));
+static void prvPortHighFrequencyTimerHandler( int iArg ) __attribute__( ( longcall ) );
 
 /*
  * The task that receives messages posted to a queue by the higher priority
  * timer interrupt.
  */
-static void prvHighFrequencyTimerTask( void *pvParameters );
+static void prvHighFrequencyTimerTask( void * pvParameters );
 
 /* Constants used to configure the timer and determine how often the task
-should receive data. */
+ * should receive data. */
 static const unsigned long ulCompareMatchValue = configPERIPHERAL_CLOCK_HZ / tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ;
 static const unsigned long ulInterruptsPer10ms = tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ / 100UL;
 static const unsigned long ulSemaphoreGiveRate_ms = 10UL;
@@ -96,115 +96,115 @@ static volatile unsigned long ulHighFrequencyTaskIterations = 0UL;
 
 void vSetupInterruptNestingTest( void )
 {
-unsigned long ulCompareMatchBits;
+    unsigned long ulCompareMatchBits;
 
-	/* Create the semaphore used to communicate between the high frequency
-	interrupt and the task. */
-	vSemaphoreCreateBinary( xHighFrequencyTimerSemaphore );
-	configASSERT( xHighFrequencyTimerSemaphore );
-	
-	/* Create the task that pends on the semaphore that is given by the
-	high frequency interrupt. */
-	xTaskCreate( prvHighFrequencyTimerTask, "HFTmr", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
-	
-	/* Setup the interrupt itself.	The STM module clock divider is setup when 
-	the tick interrupt is configured - which is when the scheduler is started - 
-	so there is no need	to do it here.
+    /* Create the semaphore used to communicate between the high frequency
+     * interrupt and the task. */
+    vSemaphoreCreateBinary( xHighFrequencyTimerSemaphore );
+    configASSERT( xHighFrequencyTimerSemaphore );
 
-	The tick interrupt uses compare match 0, so this test uses compare match
-	1, which means shifting up the values by 16 before writing them to the
-	register. */
-	ulCompareMatchBits = ( 0x1fUL - __CLZ( ulCompareMatchValue ) );
-	ulCompareMatchBits <<= 16UL;
-	
-	/* Write the values to the relevant SMT registers, without changing other
-	bits. */
-	taskENTER_CRITICAL();
-	{
-		STM_CMCON.reg &= ~( 0x1fUL << 16UL );
-		STM_CMCON.reg |= ulCompareMatchBits;
-		STM_CMP1.reg = ulCompareMatchValue;
+    /* Create the task that pends on the semaphore that is given by the
+     * high frequency interrupt. */
+    xTaskCreate( prvHighFrequencyTimerTask, "HFTmr", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
-		if( 0 != _install_int_handler( configHIGH_FREQUENCY_TIMER_PRIORITY, prvPortHighFrequencyTimerHandler, 0 ) )
-		{
-			/* Set-up the interrupt. */
-			STM_SRC1.reg = ( configHIGH_FREQUENCY_TIMER_PRIORITY | 0x00005000UL );
-	
-			/* Enable the Interrupt. */
-			STM_ISRR.reg &= ~( 0x03UL << 2UL );
-			STM_ISRR.reg |= ( 0x1UL << 2UL );
-			STM_ICR.reg &= ~( 0x07UL << 4UL );
-			STM_ICR.reg |= ( 0x5UL << 4UL );
-		}
-		else
-		{
-			/* Failed to install the interrupt. */
-			configASSERT( ( ( volatile void * ) NULL ) );
-		}
-	}
-	taskEXIT_CRITICAL();
+    /* Setup the interrupt itself.	The STM module clock divider is setup when
+     * the tick interrupt is configured - which is when the scheduler is started -
+     * so there is no need	to do it here.
+     *
+     * The tick interrupt uses compare match 0, so this test uses compare match
+     * 1, which means shifting up the values by 16 before writing them to the
+     * register. */
+    ulCompareMatchBits = ( 0x1fUL - __CLZ( ulCompareMatchValue ) );
+    ulCompareMatchBits <<= 16UL;
+
+    /* Write the values to the relevant SMT registers, without changing other
+     * bits. */
+    taskENTER_CRITICAL();
+    {
+        STM_CMCON.reg &= ~( 0x1fUL << 16UL );
+        STM_CMCON.reg |= ulCompareMatchBits;
+        STM_CMP1.reg = ulCompareMatchValue;
+
+        if( 0 != _install_int_handler( configHIGH_FREQUENCY_TIMER_PRIORITY, prvPortHighFrequencyTimerHandler, 0 ) )
+        {
+            /* Set-up the interrupt. */
+            STM_SRC1.reg = ( configHIGH_FREQUENCY_TIMER_PRIORITY | 0x00005000UL );
+
+            /* Enable the Interrupt. */
+            STM_ISRR.reg &= ~( 0x03UL << 2UL );
+            STM_ISRR.reg |= ( 0x1UL << 2UL );
+            STM_ICR.reg &= ~( 0x07UL << 4UL );
+            STM_ICR.reg |= ( 0x5UL << 4UL );
+        }
+        else
+        {
+            /* Failed to install the interrupt. */
+            configASSERT( ( ( volatile void * ) NULL ) );
+        }
+    }
+    taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
-unsigned long ulInterruptNestingTestGetIterationCount( unsigned long *pulExpectedIncFrequency_ms )
+unsigned long ulInterruptNestingTestGetIterationCount( unsigned long * pulExpectedIncFrequency_ms )
 {
-unsigned long ulReturn;
+    unsigned long ulReturn;
 
-	*pulExpectedIncFrequency_ms = ulSemaphoreGiveRate_ms;
-	portENTER_CRITICAL();
-	{
-		ulReturn = ulHighFrequencyTaskIterations;
-		ulHighFrequencyTaskIterations = 0UL;
-	}
+    *pulExpectedIncFrequency_ms = ulSemaphoreGiveRate_ms;
+    portENTER_CRITICAL();
+    {
+        ulReturn = ulHighFrequencyTaskIterations;
+        ulHighFrequencyTaskIterations = 0UL;
+    }
 
-	return ulReturn;
+    return ulReturn;
 }
 /*-----------------------------------------------------------*/
 
-static void prvHighFrequencyTimerTask( void *pvParameters )
+static void prvHighFrequencyTimerTask( void * pvParameters )
 {
-	/* Just to remove compiler warnings about the unused parameter. */
-	( void ) pvParameters;
+    /* Just to remove compiler warnings about the unused parameter. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Wait for the next trigger from the high frequency timer interrupt. */
-		xSemaphoreTake( xHighFrequencyTimerSemaphore, portMAX_DELAY );
-		
-		/* Just count how many times the task has been unblocked before
-		returning to wait for the semaphore again. */
-		ulHighFrequencyTaskIterations++;
-	}
+    for( ; ; )
+    {
+        /* Wait for the next trigger from the high frequency timer interrupt. */
+        xSemaphoreTake( xHighFrequencyTimerSemaphore, portMAX_DELAY );
+
+        /* Just count how many times the task has been unblocked before
+         * returning to wait for the semaphore again. */
+        ulHighFrequencyTaskIterations++;
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvPortHighFrequencyTimerHandler( int iArg )
 {
-static volatile unsigned long ulExecutionCounter = 0UL;
-unsigned long ulHigherPriorityTaskWoken = pdFALSE;
+    static volatile unsigned long ulExecutionCounter = 0UL;
+    unsigned long ulHigherPriorityTaskWoken = pdFALSE;
 
-	/* Just to avoid compiler warnings about unused parameters. */
-	( void ) iArg;
+    /* Just to avoid compiler warnings about unused parameters. */
+    ( void ) iArg;
 
-	/* Clear the interrupt source. */
-	STM_ISRR.reg = 1UL << 2UL;
+    /* Clear the interrupt source. */
+    STM_ISRR.reg = 1UL << 2UL;
 
-	/* Reload the Compare Match register for X ticks into the future.*/
-	STM_CMP1.reg += ulCompareMatchValue;
+    /* Reload the Compare Match register for X ticks into the future.*/
+    STM_CMP1.reg += ulCompareMatchValue;
 
-	ulExecutionCounter++;
-	
-	if( ulExecutionCounter >= ulInterruptsPer10ms )
-	{
-		ulExecutionCounter = xSemaphoreGiveFromISR( xHighFrequencyTimerSemaphore, &ulHigherPriorityTaskWoken );
-		
-		/* If the semaphore was given ulExeuctionCounter will now be pdTRUE. */
-		configASSERT( ulExecutionCounter == pdTRUE );
-		
-		/* Start counting again. */
-		ulExecutionCounter = 0UL;
-	}
-	
-	/* Context switch on exit if necessary. */
-	portYIELD_FROM_ISR( ulHigherPriorityTaskWoken );
+    ulExecutionCounter++;
+
+    if( ulExecutionCounter >= ulInterruptsPer10ms )
+    {
+        ulExecutionCounter = xSemaphoreGiveFromISR( xHighFrequencyTimerSemaphore, &ulHigherPriorityTaskWoken );
+
+        /* If the semaphore was given ulExeuctionCounter will now be pdTRUE. */
+        configASSERT( ulExecutionCounter == pdTRUE );
+
+        /* Start counting again. */
+        ulExecutionCounter = 0UL;
+    }
+
+    /* Context switch on exit if necessary. */
+    portYIELD_FROM_ISR( ulHigherPriorityTaskWoken );
 }

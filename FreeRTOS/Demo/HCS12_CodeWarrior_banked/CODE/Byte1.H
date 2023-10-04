@@ -11,7 +11,7 @@
 **         This bean "ByteIO" implements an one-byte input/output.
 **         It uses one 8-bit port.
 **         Note: This bean is set to work in Output direction only.
-**         Methods of this bean are mostly implemented as a macros 
+**         Methods of this bean are mostly implemented as a macros
 **         (if supported by target langauage and compiler).
 **     Settings  :
 **         Port name                   : B
@@ -62,7 +62,7 @@
 
 #include "Cpu.h"
 
-#pragma CODE_SEG Byte1_CODE            /* Code section for this module. */
+#pragma CODE_SEG Byte1_CODE /* Code section for this module. */
 
 /*
 ** ===================================================================
@@ -79,7 +79,8 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Byte1_PutBit(byte BitNum, byte Value);
+void Byte1_PutBit( byte BitNum,
+                   byte Value );
 
 /*
 ** ===================================================================
@@ -94,17 +95,18 @@ void Byte1_PutBit(byte BitNum, byte Value);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Byte1_NegBit(byte BitNum);
+void Byte1_NegBit( byte BitNum );
 
-#pragma CODE_SEG DEFAULT               /* Change code section to DEFAULT. */
+#pragma CODE_SEG DEFAULT /* Change code section to DEFAULT. */
 
 /* END Byte1. */
 
 #endif /* __Byte1_H*/
+
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

@@ -123,7 +123,7 @@ SECTIONS
         PROVIDE_HIDDEN ( metal_destructors_end = .);
     } >ram :rom
 
- 
+
 
     .ctors : {
         KEEP (*crtbegin.o(.ctors))
@@ -262,7 +262,7 @@ SECTIONS
     PROVIDE( metal_segment_bss_target_start = ADDR(.tbss) );
     PROVIDE( metal_segment_bss_target_end = ADDR(.bss) + SIZEOF(.bss) );
 
- 
+
 
     .stack (NOLOAD) : ALIGN(16) {
         PROVIDE(metal_segment_stack_begin = .);

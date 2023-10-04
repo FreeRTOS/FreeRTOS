@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,36 +25,35 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
-// Exception(Supervisor Instruction)
+/* Exception(Supervisor Instruction) */
 #pragma interrupt (Excep_SuperVisorInst)
-void Excep_SuperVisorInst(void);
+void Excep_SuperVisorInst( void );
 
-// Exception(Undefined Instruction)
+/* Exception(Undefined Instruction) */
 #pragma interrupt (Excep_UndefinedInst)
-void Excep_UndefinedInst(void);
+void Excep_UndefinedInst( void );
 
-// Exception(Floating Point)
+/* Exception(Floating Point) */
 #pragma interrupt (Excep_FloatingPoint)
-void Excep_FloatingPoint(void);
+void Excep_FloatingPoint( void );
 
-// NMI
+/* NMI */
 #pragma interrupt (NonMaskableInterrupt)
-void NonMaskableInterrupt(void);
+void NonMaskableInterrupt( void );
 
-// Dummy
+/* Dummy */
 #pragma interrupt (Dummy)
-void Dummy(void);
+void Dummy( void );
 
-// BRK
+/* BRK */
 #pragma interrupt (Excep_BRK(vect=0))
-void Excep_BRK(void);
+void Excep_BRK( void );
 
-//;<<VECTOR DATA START (POWER ON RESET)>>
-//;Power On Reset PC
-extern void PowerON_Reset_PC(void);                                                                                                                
-//;<<VECTOR DATA END (POWER ON RESET)>>
-
+/*;<<VECTOR DATA START (POWER ON RESET)>> */
+/*;Power On Reset PC */
+extern void PowerON_Reset_PC( void );
+/*;<<VECTOR DATA END (POWER ON RESET)>> */

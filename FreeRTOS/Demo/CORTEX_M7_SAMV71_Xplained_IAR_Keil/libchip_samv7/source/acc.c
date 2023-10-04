@@ -39,7 +39,7 @@
  *      (PMC Peripheral Clock Enable Register 1)
  * </li>
  * <li> Reset the controller by asserting ACC_CR_SWRST in ACC_CR(ACC Control Register)
- </li>
+ * </li>
  * <li> Configure the mode as following steps:  </li>
  * -#   Select inputs for SELMINUS and SELPLUS in ACC_MR (ACC Mode Register).
  * -#   Enable Analog Comparator by setting ACEN in ACC_MR.
@@ -58,12 +58,14 @@
  */
 /*@{*/
 /*@}*/
+
 /**
  * \file
  *
  * Implementation of Analog Comparator Controller (ACC).
  *
  */
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -85,27 +87,34 @@
  * \param wEdge CF flag triggering mode
  * \param wInvert INVert comparator output,use pattern defined in the device header file
  */
-extern void ACC_Configure( Acc *pAcc, uint8_t idAcc, uint8_t ucSelplus, uint8_t ucSelminus,
-                           uint16_t wAc_en, uint16_t wEdge, uint16_t wInvert )
+extern void ACC_Configure( Acc * pAcc,
+                           uint8_t idAcc,
+                           uint8_t ucSelplus,
+                           uint8_t ucSelminus,
+                           uint16_t wAc_en,
+                           uint16_t wEdge,
+                           uint16_t wInvert )
 {
     /* Enable peripheral clock*/
-    PMC->PMC_PCER1 = 1 << (idAcc - 32) ;
+    PMC->PMC_PCER1 = 1 << ( idAcc - 32 );
 
     /*  Reset the controller */
-    pAcc->ACC_CR |= ACC_CR_SWRST ;
+    pAcc->ACC_CR |= ACC_CR_SWRST;
 
     /*  Write to the MR register */
     ACC_CfgModeReg( pAcc,
-                    ( (ucSelplus<<ACC_MR_SELPLUS_Pos) & ACC_MR_SELPLUS_Msk ) |
-                    ( (ucSelminus<<ACC_MR_SELMINUS_Pos) & ACC_MR_SELMINUS_Msk ) |
-                    ( (wAc_en<<8) & ACC_MR_ACEN ) |
-                    ( (wEdge<<ACC_MR_EDGETYP_Pos) & ACC_MR_EDGETYP_Msk ) |
-                    ( (wInvert<<12) & ACC_MR_INV ) ) ;
+                    ( ( ucSelplus << ACC_MR_SELPLUS_Pos ) & ACC_MR_SELPLUS_Msk ) |
+                    ( ( ucSelminus << ACC_MR_SELMINUS_Pos ) & ACC_MR_SELMINUS_Msk ) |
+                    ( ( wAc_en << 8 ) & ACC_MR_ACEN ) |
+                    ( ( wEdge << ACC_MR_EDGETYP_Pos ) & ACC_MR_EDGETYP_Msk ) |
+                    ( ( wInvert << 12 ) & ACC_MR_INV ) );
     /* set hysteresis and current option*/
-    pAcc->ACC_ACR = (ACC_ACR_ISEL_HISP | ((0x01 << ACC_ACR_HYST_Pos) & ACC_ACR_HYST_Msk));
+    pAcc->ACC_ACR = ( ACC_ACR_ISEL_HISP | ( ( 0x01 << ACC_ACR_HYST_Pos ) & ACC_ACR_HYST_Msk ) );
 
     /* Automatic Output Masking Period*/
-    while ( pAcc->ACC_ISR & (uint32_t)ACC_ISR_MASK ) ;
+    while( pAcc->ACC_ISR & ( uint32_t ) ACC_ISR_MASK )
+    {
+    }
 }
 
 /**
@@ -114,50 +123,52 @@ extern void ACC_Configure( Acc *pAcc, uint8_t idAcc, uint8_t ucSelplus, uint8_t 
  * \param selplus input applied on ACC SELPLUS
  * \param selminus input applied on ACC SELMINUS
  */
-extern void ACC_SetComparisonPair( Acc *pAcc, uint8_t ucSelplus, uint8_t ucSelminus )
+extern void ACC_SetComparisonPair( Acc * pAcc,
+                                   uint8_t ucSelplus,
+                                   uint8_t ucSelminus )
 {
-    uint32_t dwTemp ;
+    uint32_t dwTemp;
 
-    assert( ucSelplus < 8 && ucSelminus < 8 ) ;
+    assert( ucSelplus < 8 && ucSelminus < 8 );
 
-    dwTemp = pAcc->ACC_MR ;
+    dwTemp = pAcc->ACC_MR;
 
-    pAcc->ACC_MR = dwTemp & (uint32_t) ((~ACC_MR_SELMINUS_Msk) & (~ACC_MR_SELPLUS_Msk));
+    pAcc->ACC_MR = dwTemp & ( uint32_t ) ( ( ~ACC_MR_SELMINUS_Msk ) & ( ~ACC_MR_SELPLUS_Msk ) );
 
-    pAcc->ACC_MR |= ( ((ucSelplus << ACC_MR_SELPLUS_Pos) & ACC_MR_SELPLUS_Msk) |
-                      ((ucSelminus << ACC_MR_SELMINUS_Pos) & ACC_MR_SELMINUS_Msk) ) ;
-
+    pAcc->ACC_MR |= ( ( ( ucSelplus << ACC_MR_SELPLUS_Pos ) & ACC_MR_SELPLUS_Msk ) |
+                      ( ( ucSelminus << ACC_MR_SELMINUS_Pos ) & ACC_MR_SELMINUS_Msk ) );
 }
+
 /**
  * Return Comparison Result
  * \param pAcc Pointer to an Acc instance.
  * \param status value of ACC_ISR
  */
-extern uint32_t ACC_GetComparisonResult( Acc *pAcc, uint32_t dwStatus )
+extern uint32_t ACC_GetComparisonResult( Acc * pAcc,
+                                         uint32_t dwStatus )
 {
-    uint32_t dwTemp = pAcc->ACC_MR ;
+    uint32_t dwTemp = pAcc->ACC_MR;
 
-    if ( (dwTemp & ACC_MR_INV) == ACC_MR_INV )
+    if( ( dwTemp & ACC_MR_INV ) == ACC_MR_INV )
     {
-        if ( dwStatus & ACC_ISR_SCO )
+        if( dwStatus & ACC_ISR_SCO )
         {
-            return 0 ; /* inn>inp*/
+            return 0; /* inn>inp*/
         }
         else
         {
-            return 1 ;/* inp>inn*/
+            return 1; /* inp>inn*/
         }
     }
     else
     {
-        if ( dwStatus & ACC_ISR_SCO )
+        if( dwStatus & ACC_ISR_SCO )
         {
-            return 1 ; /* inp>inn*/
+            return 1; /* inp>inn*/
         }
         else
         {
-            return 0 ;/* inn>inp*/
+            return 0; /* inn>inp*/
         }
     }
 }
-

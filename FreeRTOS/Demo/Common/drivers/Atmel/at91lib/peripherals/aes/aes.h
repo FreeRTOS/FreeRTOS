@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,30 +30,28 @@
 #ifndef AES_H
 #define AES_H
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void AES_Configure(
-    unsigned char cipher,
-    unsigned int smode,
-    unsigned int opmode);
+extern void AES_Configure( unsigned char cipher,
+                           unsigned int smode,
+                           unsigned int opmode );
 
-extern void AES_SetKey(const unsigned int *pKey);
+extern void AES_SetKey( const unsigned int * pKey );
 
-extern void AES_SetVector(const unsigned int *pVector);
+extern void AES_SetVector( const unsigned int * pVector );
 
-extern void AES_SetInputData(const unsigned int *pData);
+extern void AES_SetInputData( const unsigned int * pData );
 
-extern void AES_GetOutputData(unsigned int *pData);
+extern void AES_GetOutputData( unsigned int * pData );
 
-extern void AES_SetInputBuffer(const unsigned int *pInput);
+extern void AES_SetInputBuffer( const unsigned int * pInput );
 
-extern void AES_SetOutputBuffer(unsigned int *pOutput);
+extern void AES_SetOutputBuffer( unsigned int * pOutput );
 
-extern void AES_Start(void);
+extern void AES_Start( void );
 
-extern unsigned int AES_GetStatus(void);
+extern unsigned int AES_GetStatus( void );
 
 #endif //#ifndef AES_H
-

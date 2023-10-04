@@ -39,7 +39,7 @@
 #include <board.h>
 #include <pio/pio.h>
 
-#define partestNUM_LEDS ( sizeof( xLEDPins ) / sizeof( Pin ) )
+#define partestNUM_LEDS    ( sizeof( xLEDPins ) / sizeof( Pin ) )
 
 static const Pin xLEDPins[] = { PINS_LEDS };
 
@@ -47,69 +47,67 @@ static const Pin xLEDPins[] = { PINS_LEDS };
 
 void vParTestInitialise( void )
 {
-long l;
+    long l;
 
-	for( l = 0; l < partestNUM_LEDS; l++ )
-	{
-		PIO_Configure( &( xLEDPins[ l ] ), pdTRUE );
-	}
+    for( l = 0; l < partestNUM_LEDS; l++ )
+    {
+        PIO_Configure( &( xLEDPins[ l ] ), pdTRUE );
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < partestNUM_LEDS )
-	{
-		if( xValue )
-		{
-			/* Turn the LED on. */
-			portENTER_CRITICAL();
-			{
-				if( xLEDPins[ uxLED ].type == PIO_OUTPUT_0 )
-				{			
-					PIO_Set( &( xLEDPins[ uxLED ]) );
-				}
-				else
-				{			
-					PIO_Clear( &( xLEDPins[ uxLED ] ) );
-				}
-			}
-			portEXIT_CRITICAL();
-		}
-		else
-		{
-			/* Turn the LED off. */
-			portENTER_CRITICAL();
-			{
-				if( xLEDPins[ uxLED ].type == PIO_OUTPUT_0 )
-				{			
-					PIO_Clear( &( xLEDPins[ uxLED ] ) );
-				}
-				else
-				{			
-					PIO_Set( &( xLEDPins[ uxLED ] ) );
-				}
-			}
-			portEXIT_CRITICAL();
-		}
-	}
+    if( uxLED < partestNUM_LEDS )
+    {
+        if( xValue )
+        {
+            /* Turn the LED on. */
+            portENTER_CRITICAL();
+            {
+                if( xLEDPins[ uxLED ].type == PIO_OUTPUT_0 )
+                {
+                    PIO_Set( &( xLEDPins[ uxLED ] ) );
+                }
+                else
+                {
+                    PIO_Clear( &( xLEDPins[ uxLED ] ) );
+                }
+            }
+            portEXIT_CRITICAL();
+        }
+        else
+        {
+            /* Turn the LED off. */
+            portENTER_CRITICAL();
+            {
+                if( xLEDPins[ uxLED ].type == PIO_OUTPUT_0 )
+                {
+                    PIO_Clear( &( xLEDPins[ uxLED ] ) );
+                }
+                else
+                {
+                    PIO_Set( &( xLEDPins[ uxLED ] ) );
+                }
+            }
+            portEXIT_CRITICAL();
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partestNUM_LEDS )
-	{
-		if( PIO_GetOutputDataStatus( &( xLEDPins[ uxLED ] ) ) )
-		{		
-			PIO_Clear( &( xLEDPins[ uxLED ] ) );
-		}
-		else
-		{		
-			PIO_Set( &( xLEDPins[ uxLED ] ) );
-		}		
-	}
+    if( uxLED < partestNUM_LEDS )
+    {
+        if( PIO_GetOutputDataStatus( &( xLEDPins[ uxLED ] ) ) )
+        {
+            PIO_Clear( &( xLEDPins[ uxLED ] ) );
+        }
+        else
+        {
+            PIO_Set( &( xLEDPins[ uxLED ] ) );
+        }
+    }
 }
-							
-
-

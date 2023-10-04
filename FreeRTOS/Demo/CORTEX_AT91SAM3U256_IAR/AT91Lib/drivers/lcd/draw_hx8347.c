@@ -27,9 +27,9 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "draw.h"
 #include "font.h"
@@ -39,143 +39,154 @@
 
 #include <string.h>
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// Fills the given LCD buffer with a particular color.
-/// Only works in 24-bits packed mode for now.
-/// \param pBuffer  LCD buffer to fill.
-/// \param color  Fill color.
-//------------------------------------------------------------------------------
-void LCDD_Fill(void *pBuffer, unsigned int color)
+/*------------------------------------------------------------------------------ */
+/*/ Fills the given LCD buffer with a particular color. */
+/*/ Only works in 24-bits packed mode for now. */
+/*/ \param pBuffer  LCD buffer to fill. */
+/*/ \param color  Fill color. */
+/*------------------------------------------------------------------------------ */
+void LCDD_Fill( void * pBuffer,
+                unsigned int color )
 {
     unsigned int i;
-    unsigned short color16 = RGB24ToRGB16(color);
+    unsigned short color16 = RGB24ToRGB16( color );
 
 
-    LCD_SetCursor((void *)BOARD_LCD_BASE, 0, 0);
-    LCD_WriteRAM_Prepare((void *)BOARD_LCD_BASE);
-    for (i = 0; i < (BOARD_LCD_WIDTH * BOARD_LCD_HEIGHT); i++) {
+    LCD_SetCursor( ( void * ) BOARD_LCD_BASE, 0, 0 );
+    LCD_WriteRAM_Prepare( ( void * ) BOARD_LCD_BASE );
 
-        LCD_WriteRAM((void *)BOARD_LCD_BASE, color16);
+    for( i = 0; i < ( BOARD_LCD_WIDTH * BOARD_LCD_HEIGHT ); i++ )
+    {
+        LCD_WriteRAM( ( void * ) BOARD_LCD_BASE, color16 );
     }
 }
 
-//------------------------------------------------------------------------------
-/// Sets the specified pixel to the given color.
-/// !!! Only works in 24-bits packed mode for now. !!!
-/// \param pBuffer  LCD buffer to draw on.
-/// \param x  X-coordinate of pixel.
-/// \param y  Y-coordinate of pixel.
-/// \param color  Pixel color.
-//------------------------------------------------------------------------------
-void LCDD_DrawPixel(
-    void *pBuffer,
-    unsigned int x,
-    unsigned int y,
-    unsigned int color)
+/*------------------------------------------------------------------------------ */
+/*/ Sets the specified pixel to the given color. */
+/*/ !!! Only works in 24-bits packed mode for now. !!! */
+/*/ \param pBuffer  LCD buffer to draw on. */
+/*/ \param x  X-coordinate of pixel. */
+/*/ \param y  Y-coordinate of pixel. */
+/*/ \param color  Pixel color. */
+/*------------------------------------------------------------------------------ */
+void LCDD_DrawPixel( void * pBuffer,
+                     unsigned int x,
+                     unsigned int y,
+                     unsigned int color )
 {
-    unsigned short color16 = RGB24ToRGB16(color);
+    unsigned short color16 = RGB24ToRGB16( color );
 
-    LCD_SetCursor(pBuffer, x, y);
-    LCD_WriteRAM_Prepare(pBuffer);
-    LCD_WriteRAM(pBuffer, color16);
+    LCD_SetCursor( pBuffer, x, y );
+    LCD_WriteRAM_Prepare( pBuffer );
+    LCD_WriteRAM( pBuffer, color16 );
 }
 
-//------------------------------------------------------------------------------
-/// Draws a rectangle inside a LCD buffer, at the given coordinates.
-/// \param pBuffer  LCD buffer to draw on.
-/// \param x  X-coordinate of upper-left rectangle corner.
-/// \param y  Y-coordinate of upper-left rectangle corner.
-/// \param width  Rectangle width in pixels.
-/// \param height  Rectangle height in pixels.
-/// \param color  Rectangle color.
-//------------------------------------------------------------------------------
-void LCDD_DrawRectangle(
-    void *pBuffer,
-    unsigned int x,
-    unsigned int y,
-    unsigned int width,
-    unsigned int height,
-    unsigned int color)
+/*------------------------------------------------------------------------------ */
+/*/ Draws a rectangle inside a LCD buffer, at the given coordinates. */
+/*/ \param pBuffer  LCD buffer to draw on. */
+/*/ \param x  X-coordinate of upper-left rectangle corner. */
+/*/ \param y  Y-coordinate of upper-left rectangle corner. */
+/*/ \param width  Rectangle width in pixels. */
+/*/ \param height  Rectangle height in pixels. */
+/*/ \param color  Rectangle color. */
+/*------------------------------------------------------------------------------ */
+void LCDD_DrawRectangle( void * pBuffer,
+                         unsigned int x,
+                         unsigned int y,
+                         unsigned int width,
+                         unsigned int height,
+                         unsigned int color )
 {
     unsigned int rx, ry;
 
-    for (ry=0; ry < height; ry++) {
-
-        for (rx=0; rx < width; rx++) {
-
-            LCDD_DrawPixel(pBuffer, x+rx, y+ry, color);
+    for( ry = 0; ry < height; ry++ )
+    {
+        for( rx = 0; rx < width; rx++ )
+        {
+            LCDD_DrawPixel( pBuffer, x + rx, y + ry, color );
         }
     }
 }
 
-//------------------------------------------------------------------------------
-/// Draws a string inside a LCD buffer, at the given coordinates. Line breaks
-/// will be honored.
-/// \param pBuffer  Buffer to draw on.
-/// \param x  X-coordinate of string top-left corner.
-/// \param y  Y-coordinate of string top-left corner.
-/// \param pString  String to display.
-/// \param color  String color.
-//------------------------------------------------------------------------------
-void LCDD_DrawString(
-    void *pBuffer,
-    unsigned int x,
-    unsigned int y,
-    const char *pString,
-    unsigned int color)
+/*------------------------------------------------------------------------------ */
+/*/ Draws a string inside a LCD buffer, at the given coordinates. Line breaks */
+/*/ will be honored. */
+/*/ \param pBuffer  Buffer to draw on. */
+/*/ \param x  X-coordinate of string top-left corner. */
+/*/ \param y  Y-coordinate of string top-left corner. */
+/*/ \param pString  String to display. */
+/*/ \param color  String color. */
+/*------------------------------------------------------------------------------ */
+void LCDD_DrawString( void * pBuffer,
+                      unsigned int x,
+                      unsigned int y,
+                      const char * pString,
+                      unsigned int color )
 {
     unsigned xorg = x;
 
-    while (*pString != 0) {
-        if (*pString == '\n') {
-
+    while( *pString != 0 )
+    {
+        if( *pString == '\n' )
+        {
             y += gFont.height + 2;
             x = xorg;
         }
-        else {
-
-            LCDD_DrawChar(pBuffer, x, y, *pString, color);
+        else
+        {
+            LCDD_DrawChar( pBuffer, x, y, *pString, color );
             x += gFont.width + 2;
         }
+
         pString++;
     }
 }
 
-//------------------------------------------------------------------------------
-/// Returns the width & height in pixels that a string will occupy on the screen
-/// if drawn using LCDD_DrawString.
-/// \param pString  String.
-/// \param pWidth  Pointer for storing the string width (optional).
-/// \param pHeight  Pointer for storing the string height (optional).
-/// \return String width in pixels.
-//------------------------------------------------------------------------------
-void LCDD_GetStringSize(
-    const char *pString,
-    unsigned int *pWidth,
-    unsigned int *pHeight)
+/*------------------------------------------------------------------------------ */
+/*/ Returns the width & height in pixels that a string will occupy on the screen */
+/*/ if drawn using LCDD_DrawString. */
+/*/ \param pString  String. */
+/*/ \param pWidth  Pointer for storing the string width (optional). */
+/*/ \param pHeight  Pointer for storing the string height (optional). */
+/*/ \return String width in pixels. */
+/*------------------------------------------------------------------------------ */
+void LCDD_GetStringSize( const char * pString,
+                         unsigned int * pWidth,
+                         unsigned int * pHeight )
 {
     unsigned int width = 0;
     unsigned int height = gFont.height;
 
-    while (*pString != 0) {
-
-        if (*pString == '\n') {
-
+    while( *pString != 0 )
+    {
+        if( *pString == '\n' )
+        {
             height += gFont.height + 2;
         }
-        else {
-
+        else
+        {
             width += gFont.width + 2;
         }
+
         pString++;
     }
 
-    if (width > 0) width -= 2;
+    if( width > 0 )
+    {
+        width -= 2;
+    }
 
-    if (pWidth) *pWidth = width;
-    if (pHeight) *pHeight = height;
+    if( pWidth )
+    {
+        *pWidth = width;
+    }
+
+    if( pHeight )
+    {
+        *pHeight = height;
+    }
 }

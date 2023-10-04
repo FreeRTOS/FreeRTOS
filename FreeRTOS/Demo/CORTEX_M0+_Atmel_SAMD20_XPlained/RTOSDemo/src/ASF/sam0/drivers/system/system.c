@@ -48,22 +48,21 @@
  * Dummy initialization function, used as a weak alias target for the various
  * init functions called by \ref system_init().
  */
-void _system_dummy_init(void);
-void _system_dummy_init(void)
+void _system_dummy_init( void );
+void _system_dummy_init( void )
 {
-	return;
 }
 
-#if !defined(__DOXYGEN__)
-#  if defined(__GNUC__)
-void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
-void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
-#  elif defined(__ICCARM__)
-void system_clock_init(void);
-void system_board_init(void);
-#    pragma weak system_clock_init=_system_dummy_init
-#    pragma weak system_board_init=_system_dummy_init
-#  endif
+#if !defined( __DOXYGEN__ )
+    #if defined( __GNUC__ )
+        void system_clock_init( void ) WEAK __attribute__( ( alias( "_system_dummy_init" ) ) );
+        void system_board_init( void ) WEAK __attribute__( ( alias( "_system_dummy_init" ) ) );
+    #elif defined( __ICCARM__ )
+        void system_clock_init( void );
+        void system_board_init( void );
+        #pragma weak system_clock_init=_system_dummy_init
+        #pragma weak system_board_init=_system_dummy_init
+    #endif
 #endif
 
 
@@ -71,12 +70,13 @@ void system_board_init(void);
  * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
  * attempted to a memory address.
  */
-void HardFault_Handler(void)
+void HardFault_Handler( void )
 {
-	while (1) {
-		/* Infinite loop if CPU exception is detected */
-		Assert(false);
-	}
+    while( 1 )
+    {
+        /* Infinite loop if CPU exception is detected */
+        Assert( false );
+    }
 }
 
 /**
@@ -90,12 +90,11 @@ void HardFault_Handler(void)
  *  - System clock initialization (via the SYSTEM CLOCK sub-module)
  *  - Board hardware initialization (via the Board module)
  */
-void system_init(void)
+void system_init( void )
 {
-	/* Configure GCLK and clock sources according to conf_clocks.h */
-	system_clock_init();
+    /* Configure GCLK and clock sources according to conf_clocks.h */
+    system_clock_init();
 
-	/* Initialize board hardware */
-	system_board_init();
+    /* Initialize board hardware */
+    system_board_init();
 }
-

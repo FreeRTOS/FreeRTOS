@@ -10,23 +10,21 @@
 
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- Digital to Analog Converter -------------------------*/
+
 /**
-    @addtogroup DAC Digital to Analog Converter(DAC)
-    Memory Mapped Structure for DAC Controller
-@{ */
+ *  @addtogroup DAC Digital to Analog Converter(DAC)
+ *  Memory Mapped Structure for DAC Controller
+ * @{ */
 
 
 typedef struct
 {
-
-
-
     /**
      * @var DAC_T::CTL
      * Offset: 0x00  DAC Control Register
@@ -130,73 +128,72 @@ typedef struct
      * |        |          |User software needs to write appropriate value to these bits to meet DAC conversion settling time base on PCLK (APB clock) speed.
      * |        |          |For example, DAC controller clock speed is 64MHz and DAC conversion setting time is 1 us, SETTLET value must be greater than 0x40.
      */
-    __IO uint32_t CTL;                   /*!< [0x0000] DAC Control Register                                             */
-    __IO uint32_t SWTRG;                 /*!< [0x0004] DAC Software Trigger Control Register                            */
-    __IO uint32_t DAT;                   /*!< [0x0008] DAC Data Holding Register                                        */
-    __I  uint32_t DATOUT;                /*!< [0x000c] DAC Data Output Register                                         */
-    __IO uint32_t STATUS;                /*!< [0x0010] DAC Status Register                                              */
-    __IO uint32_t TCTL;                  /*!< [0x0014] DAC Timing Control Register                                      */
-
+    __IO uint32_t CTL;    /*!< [0x0000] DAC Control Register                                             */
+    __IO uint32_t SWTRG;  /*!< [0x0004] DAC Software Trigger Control Register                            */
+    __IO uint32_t DAT;    /*!< [0x0008] DAC Data Holding Register                                        */
+    __I uint32_t DATOUT;  /*!< [0x000c] DAC Data Output Register                                         */
+    __IO uint32_t STATUS; /*!< [0x0010] DAC Status Register                                              */
+    __IO uint32_t TCTL;   /*!< [0x0014] DAC Timing Control Register                                      */
 } DAC_T;
 
 /**
-    @addtogroup DAC_CONST DAC Bit Field Definition
-    Constant Definitions for DAC Controller
-@{ */
+ *  @addtogroup DAC_CONST DAC Bit Field Definition
+ *  Constant Definitions for DAC Controller
+ * @{ */
 
-#define DAC_CTL_DACEN_Pos                (0)                                               /*!< DAC_T::CTL: DACEN Position             */
-#define DAC_CTL_DACEN_Msk                (0x1ul << DAC_CTL_DACEN_Pos)                      /*!< DAC_T::CTL: DACEN Mask                 */
+#define DAC_CTL_DACEN_Pos        ( 0 )                                                     /*!< DAC_T::CTL: DACEN Position             */
+#define DAC_CTL_DACEN_Msk        ( 0x1ul << DAC_CTL_DACEN_Pos )                            /*!< DAC_T::CTL: DACEN Mask                 */
 
-#define DAC_CTL_DACIEN_Pos               (1)                                               /*!< DAC_T::CTL: DACIEN Position            */
-#define DAC_CTL_DACIEN_Msk               (0x1ul << DAC_CTL_DACIEN_Pos)                     /*!< DAC_T::CTL: DACIEN Mask                */
+#define DAC_CTL_DACIEN_Pos       ( 1 )                                                     /*!< DAC_T::CTL: DACIEN Position            */
+#define DAC_CTL_DACIEN_Msk       ( 0x1ul << DAC_CTL_DACIEN_Pos )                           /*!< DAC_T::CTL: DACIEN Mask                */
 
-#define DAC_CTL_DMAEN_Pos                (2)                                               /*!< DAC_T::CTL: DMAEN Position             */
-#define DAC_CTL_DMAEN_Msk                (0x1ul << DAC_CTL_DMAEN_Pos)                      /*!< DAC_T::CTL: DMAEN Mask                 */
+#define DAC_CTL_DMAEN_Pos        ( 2 )                                                     /*!< DAC_T::CTL: DMAEN Position             */
+#define DAC_CTL_DMAEN_Msk        ( 0x1ul << DAC_CTL_DMAEN_Pos )                            /*!< DAC_T::CTL: DMAEN Mask                 */
 
-#define DAC_CTL_DMAURIEN_Pos             (3)                                               /*!< DAC_T::CTL: DMAURIEN Position          */
-#define DAC_CTL_DMAURIEN_Msk             (0x1ul << DAC_CTL_DMAURIEN_Pos)                   /*!< DAC_T::CTL: DMAURIEN Mask              */
+#define DAC_CTL_DMAURIEN_Pos     ( 3 )                                                     /*!< DAC_T::CTL: DMAURIEN Position          */
+#define DAC_CTL_DMAURIEN_Msk     ( 0x1ul << DAC_CTL_DMAURIEN_Pos )                         /*!< DAC_T::CTL: DMAURIEN Mask              */
 
-#define DAC_CTL_TRGEN_Pos                (4)                                               /*!< DAC_T::CTL: TRGEN Position             */
-#define DAC_CTL_TRGEN_Msk                (0x1ul << DAC_CTL_TRGEN_Pos)                      /*!< DAC_T::CTL: TRGEN Mask                 */
+#define DAC_CTL_TRGEN_Pos        ( 4 )                                                     /*!< DAC_T::CTL: TRGEN Position             */
+#define DAC_CTL_TRGEN_Msk        ( 0x1ul << DAC_CTL_TRGEN_Pos )                            /*!< DAC_T::CTL: TRGEN Mask                 */
 
-#define DAC_CTL_TRGSEL_Pos               (5)                                               /*!< DAC_T::CTL: TRGSEL Position            */
-#define DAC_CTL_TRGSEL_Msk               (0x7ul << DAC_CTL_TRGSEL_Pos)                     /*!< DAC_T::CTL: TRGSEL Mask                */
+#define DAC_CTL_TRGSEL_Pos       ( 5 )                                                     /*!< DAC_T::CTL: TRGSEL Position            */
+#define DAC_CTL_TRGSEL_Msk       ( 0x7ul << DAC_CTL_TRGSEL_Pos )                           /*!< DAC_T::CTL: TRGSEL Mask                */
 
-#define DAC_CTL_BYPASS_Pos               (8)                                               /*!< DAC_T::CTL: BYPASS Position            */
-#define DAC_CTL_BYPASS_Msk               (0x1ul << DAC_CTL_BYPASS_Pos)                     /*!< DAC_T::CTL: BYPASS Mask                */
+#define DAC_CTL_BYPASS_Pos       ( 8 )                                                     /*!< DAC_T::CTL: BYPASS Position            */
+#define DAC_CTL_BYPASS_Msk       ( 0x1ul << DAC_CTL_BYPASS_Pos )                           /*!< DAC_T::CTL: BYPASS Mask                */
 
-#define DAC_CTL_LALIGN_Pos               (10)                                              /*!< DAC_T::CTL: LALIGN Position            */
-#define DAC_CTL_LALIGN_Msk               (0x1ul << DAC_CTL_LALIGN_Pos)                     /*!< DAC_T::CTL: LALIGN Mask                */
+#define DAC_CTL_LALIGN_Pos       ( 10 )                                                    /*!< DAC_T::CTL: LALIGN Position            */
+#define DAC_CTL_LALIGN_Msk       ( 0x1ul << DAC_CTL_LALIGN_Pos )                           /*!< DAC_T::CTL: LALIGN Mask                */
 
-#define DAC_CTL_ETRGSEL_Pos              (12)                                              /*!< DAC_T::CTL: ETRGSEL Position           */
-#define DAC_CTL_ETRGSEL_Msk              (0x3ul << DAC_CTL_ETRGSEL_Pos)                    /*!< DAC_T::CTL: ETRGSEL Mask               */
+#define DAC_CTL_ETRGSEL_Pos      ( 12 )                                                    /*!< DAC_T::CTL: ETRGSEL Position           */
+#define DAC_CTL_ETRGSEL_Msk      ( 0x3ul << DAC_CTL_ETRGSEL_Pos )                          /*!< DAC_T::CTL: ETRGSEL Mask               */
 
-#define DAC_CTL_BWSEL_Pos                (14)                                              /*!< DAC_T::CTL: BWSEL Position             */
-#define DAC_CTL_BWSEL_Msk                (0x3ul << DAC_CTL_BWSEL_Pos)                      /*!< DAC_T::CTL: BWSEL Mask                 */
+#define DAC_CTL_BWSEL_Pos        ( 14 )                                                    /*!< DAC_T::CTL: BWSEL Position             */
+#define DAC_CTL_BWSEL_Msk        ( 0x3ul << DAC_CTL_BWSEL_Pos )                            /*!< DAC_T::CTL: BWSEL Mask                 */
 
-#define DAC_CTL_GRPEN_Pos                (16)                                              /*!< DAC_T::CTL: GRPEN Position             */
-#define DAC_CTL_GRPEN_Msk                (0x1ul << DAC_CTL_GRPEN_Pos)                      /*!< DAC_T::CTL: GRPEN Mask                 */
+#define DAC_CTL_GRPEN_Pos        ( 16 )                                                    /*!< DAC_T::CTL: GRPEN Position             */
+#define DAC_CTL_GRPEN_Msk        ( 0x1ul << DAC_CTL_GRPEN_Pos )                            /*!< DAC_T::CTL: GRPEN Mask                 */
 
-#define DAC_SWTRG_SWTRG_Pos              (0)                                               /*!< DAC_T::SWTRG: SWTRG Position           */
-#define DAC_SWTRG_SWTRG_Msk              (0x1ul << DAC_SWTRG_SWTRG_Pos)                    /*!< DAC_T::SWTRG: SWTRG Mask               */
+#define DAC_SWTRG_SWTRG_Pos      ( 0 )                                                     /*!< DAC_T::SWTRG: SWTRG Position           */
+#define DAC_SWTRG_SWTRG_Msk      ( 0x1ul << DAC_SWTRG_SWTRG_Pos )                          /*!< DAC_T::SWTRG: SWTRG Mask               */
 
-#define DAC_DAT_DACDAT_Pos               (0)                                               /*!< DAC_T::DAT: DACDAT Position            */
-#define DAC_DAT_DACDAT_Msk               (0xfffful << DAC_DAT_DACDAT_Pos)                  /*!< DAC_T::DAT: DACDAT Mask                */
+#define DAC_DAT_DACDAT_Pos       ( 0 )                                                     /*!< DAC_T::DAT: DACDAT Position            */
+#define DAC_DAT_DACDAT_Msk       ( 0xfffful << DAC_DAT_DACDAT_Pos )                        /*!< DAC_T::DAT: DACDAT Mask                */
 
-#define DAC_DATOUT_DATOUT_Pos            (0)                                               /*!< DAC_T::DATOUT: DATOUT Position         */
-#define DAC_DATOUT_DATOUT_Msk            (0xffful << DAC_DATOUT_DATOUT_Pos)                /*!< DAC_T::DATOUT: DATOUT Mask             */
+#define DAC_DATOUT_DATOUT_Pos    ( 0 )                                                     /*!< DAC_T::DATOUT: DATOUT Position         */
+#define DAC_DATOUT_DATOUT_Msk    ( 0xffful << DAC_DATOUT_DATOUT_Pos )                      /*!< DAC_T::DATOUT: DATOUT Mask             */
 
-#define DAC_STATUS_FINISH_Pos            (0)                                               /*!< DAC_T::STATUS: FINISH Position         */
-#define DAC_STATUS_FINISH_Msk            (0x1ul << DAC_STATUS_FINISH_Pos)                  /*!< DAC_T::STATUS: FINISH Mask             */
+#define DAC_STATUS_FINISH_Pos    ( 0 )                                                     /*!< DAC_T::STATUS: FINISH Position         */
+#define DAC_STATUS_FINISH_Msk    ( 0x1ul << DAC_STATUS_FINISH_Pos )                        /*!< DAC_T::STATUS: FINISH Mask             */
 
-#define DAC_STATUS_DMAUDR_Pos            (1)                                               /*!< DAC_T::STATUS: DMAUDR Position         */
-#define DAC_STATUS_DMAUDR_Msk            (0x1ul << DAC_STATUS_DMAUDR_Pos)                  /*!< DAC_T::STATUS: DMAUDR Mask             */
+#define DAC_STATUS_DMAUDR_Pos    ( 1 )                                                     /*!< DAC_T::STATUS: DMAUDR Position         */
+#define DAC_STATUS_DMAUDR_Msk    ( 0x1ul << DAC_STATUS_DMAUDR_Pos )                        /*!< DAC_T::STATUS: DMAUDR Mask             */
 
-#define DAC_STATUS_BUSY_Pos              (8)                                               /*!< DAC_T::STATUS: BUSY Position           */
-#define DAC_STATUS_BUSY_Msk              (0x1ul << DAC_STATUS_BUSY_Pos)                    /*!< DAC_T::STATUS: BUSY Mask               */
+#define DAC_STATUS_BUSY_Pos      ( 8 )                                                     /*!< DAC_T::STATUS: BUSY Position           */
+#define DAC_STATUS_BUSY_Msk      ( 0x1ul << DAC_STATUS_BUSY_Pos )                          /*!< DAC_T::STATUS: BUSY Mask               */
 
-#define DAC_TCTL_SETTLET_Pos             (0)                                               /*!< DAC_T::TCTL: SETTLET Position          */
-#define DAC_TCTL_SETTLET_Msk             (0x3fful << DAC_TCTL_SETTLET_Pos)                 /*!< DAC_T::TCTL: SETTLET Mask              */
+#define DAC_TCTL_SETTLET_Pos     ( 0 )                                                     /*!< DAC_T::TCTL: SETTLET Position          */
+#define DAC_TCTL_SETTLET_Msk     ( 0x3fful << DAC_TCTL_SETTLET_Pos )                       /*!< DAC_T::TCTL: SETTLET Mask              */
 
 /**@}*/ /* DAC_CONST */
 /**@}*/ /* end of DAC register group */

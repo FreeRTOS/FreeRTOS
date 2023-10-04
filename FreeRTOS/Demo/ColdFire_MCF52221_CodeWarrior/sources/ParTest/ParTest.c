@@ -25,17 +25,17 @@
  */
 
 /*
-	Changes from V2.5.2
-
-	+ All LED's are turned off to start.
-*/
+ *  Changes from V2.5.2
+ *
+ + All LED's are turned off to start.
+ */
 
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "partest.h"
 
-#define partstNUM_LEDs	4
+#define partstNUM_LEDs    4
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
@@ -45,66 +45,66 @@ void vParTestInitialise( void )
 {
     /* Enable signals as GPIO */
     MCF_GPIO_PTCPAR = 0
-        | MCF_GPIO_PTCPAR_DTIN3_GPIO
-        | MCF_GPIO_PTCPAR_DTIN2_GPIO
-        | MCF_GPIO_PTCPAR_DTIN1_GPIO
-        | MCF_GPIO_PTCPAR_DTIN0_GPIO;
-    
+                      | MCF_GPIO_PTCPAR_DTIN3_GPIO
+                      | MCF_GPIO_PTCPAR_DTIN2_GPIO
+                      | MCF_GPIO_PTCPAR_DTIN1_GPIO
+                      | MCF_GPIO_PTCPAR_DTIN0_GPIO;
+
     /* Enable signals as digital outputs */
     MCF_GPIO_DDRTC = 0
-        | MCF_GPIO_DDRTC_DDRTC3
-        | MCF_GPIO_DDRTC_DDRTC2
-        | MCF_GPIO_DDRTC_DDRTC1
-        | MCF_GPIO_DDRTC_DDRTC0;
+                     | MCF_GPIO_DDRTC_DDRTC3
+                     | MCF_GPIO_DDRTC_DDRTC2
+                     | MCF_GPIO_DDRTC_DDRTC1
+                     | MCF_GPIO_DDRTC_DDRTC0;
 
-	MCF_GPIO_PORTTC = 0x00; // TURN LEDS OFF
+    MCF_GPIO_PORTTC = 0x00; /* TURN LEDS OFF */
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxLEDMask;
+    unsigned portBASE_TYPE uxLEDMask;
 
-	if( uxLED < partstNUM_LEDs )
-	{
-		uxLEDMask = 1UL << uxLED;
-		
-		taskENTER_CRITICAL();
-		{
-			if( xValue )
-			{
-				MCF_GPIO_PORTTC |= uxLEDMask;
-			}
-			else
-			{
-				MCF_GPIO_PORTTC &= ~uxLEDMask;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDs )
+    {
+        uxLEDMask = 1UL << uxLED;
+
+        taskENTER_CRITICAL();
+        {
+            if( xValue )
+            {
+                MCF_GPIO_PORTTC |= uxLEDMask;
+            }
+            else
+            {
+                MCF_GPIO_PORTTC &= ~uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned portBASE_TYPE uxLEDMask;
+    unsigned portBASE_TYPE uxLEDMask;
 
-	if( uxLED < partstNUM_LEDs )
-	{
-		uxLEDMask = 1UL << uxLED;
-		
-		taskENTER_CRITICAL();
-		{
-			if( MCF_GPIO_PORTTC & uxLEDMask )
-			{
-				MCF_GPIO_PORTTC &= ~uxLEDMask;
-			}
-			else
-			{
-				MCF_GPIO_PORTTC |= uxLEDMask;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDs )
+    {
+        uxLEDMask = 1UL << uxLED;
+
+        taskENTER_CRITICAL();
+        {
+            if( MCF_GPIO_PORTTC & uxLEDMask )
+            {
+                MCF_GPIO_PORTTC &= ~uxLEDMask;
+            }
+            else
+            {
+                MCF_GPIO_PORTTC |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-

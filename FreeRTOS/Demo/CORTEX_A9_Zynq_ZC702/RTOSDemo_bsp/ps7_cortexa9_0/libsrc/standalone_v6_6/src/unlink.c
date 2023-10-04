@@ -35,16 +35,17 @@
 
 #ifdef __cplusplus
 extern "C" {
-	__attribute__((weak)) sint32 unlink(char8 *path);
+__attribute__( ( weak ) ) sint32 unlink( char8 * path );
 }
 #endif
+
 /*
  * unlink -- since we have no file system,
  *           we just return an error.
  */
-__attribute__((weak)) sint32 unlink(char8 *path)
+__attribute__( ( weak ) ) sint32 unlink( char8 * path )
 {
-  (void) path;
-  errno = EIO;
-  return (-1);
+    ( void ) path;
+    errno = EIO;
+    return( -1 );
 }

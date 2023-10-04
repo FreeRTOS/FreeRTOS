@@ -63,7 +63,7 @@
  * and invoked as PIN_NAME(PIN0) with PIN0 \#defined as A0 is equivalent to
  * writing "A0".
  */
-#define STRINGZ(x)                                #x
+#define STRINGZ( x )     # x
 
 /** \brief Absolute stringize.
  *
@@ -74,8 +74,8 @@
  * For example, writing ASTRINGZ(PIN0) anywhere with PIN0 \#defined as A0 is
  * equivalent to writing "A0".
  */
-#define ASTRINGZ(x)                               STRINGZ(x)
+#define ASTRINGZ( x )    STRINGZ( x )
 
 /** @} */
 
-#endif  // _STRINGZ_H_
+#endif // _STRINGZ_H_

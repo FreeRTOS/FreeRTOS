@@ -46,7 +46,7 @@
  *      calculated with ADCClock = MCK / ( (PRESCAL+1) * 2 )
  * -#   Set Startup Time,Tracking Clock cycles and Transfer Clock respectively
  *      in ADC_MR.
- </li>
+ * </li>
  * <li> Start conversion by setting ADC_CR_START in ADC_CR. </li>
  * </ul>
  *
@@ -59,12 +59,14 @@
  */
 /*@{*/
 /*@}*/
+
 /**
  * \file
  *
  * Implementation of Analog-to-Digital Converter (ADC).
  *
  */
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -89,17 +91,17 @@ static uint32_t dwAdcClock = 0;
  * \param pAdc Pointer to an Adc instance.
  * \param dwID ADC Index
  */
-extern void ADC_Initialize( Adc* pAdc, uint32_t dwID )
+extern void ADC_Initialize( Adc * pAdc,
+                            uint32_t dwID )
 {
     /* Enable peripheral clock*/
-    PMC_EnablePeripheral(dwID);
+    PMC_EnablePeripheral( dwID );
 
     /*  Reset the controller */
     pAdc->ADC_CR = ADC_CR_SWRST;
 
     /* Reset Mode Register */
     pAdc->ADC_MR = 0;
-
 }
 
 /**
@@ -112,30 +114,45 @@ extern void ADC_Initialize( Adc* pAdc, uint32_t dwID )
  * \return ADC clock
  */
 
-extern uint32_t ADC_SetClock( Adc* pAdc, uint32_t dwClk, uint32_t dwMck )
-{ 
+extern uint32_t ADC_SetClock( Adc * pAdc,
+                              uint32_t dwClk,
+                              uint32_t dwMck )
+{
     uint32_t dwPres, dwMr;
+
     /* Formula for PRESCAL is:
-       PRESCAL = (MCK / (2 * ADCCLK)) + 1
-       First, we do the division, multiplied by 10 to get higher precision
-       If the last digit is not zero, we round up to avoid generating a higher
-       than required frequency. */
-    dwPres = (dwMck * 5) / dwClk;
-    if (dwPres % 10) dwPres = dwPres / 10;
+     * PRESCAL = (MCK / (2 * ADCCLK)) + 1
+     * First, we do the division, multiplied by 10 to get higher precision
+     * If the last digit is not zero, we round up to avoid generating a higher
+     * than required frequency. */
+    dwPres = ( dwMck * 5 ) / dwClk;
+
+    if( dwPres % 10 )
+    {
+        dwPres = dwPres / 10;
+    }
     else
     {
-        if (dwPres == 0) return 0;
+        if( dwPres == 0 )
+        {
+            return 0;
+        }
+
         dwPres = dwPres / 10 - 1;
     }
 
-    dwMr = ADC_MR_PRESCAL(dwPres);
-    if (dwMr == 0) return 0;
+    dwMr = ADC_MR_PRESCAL( dwPres );
 
-    dwMr |= (pAdc->ADC_MR & ~ADC_MR_PRESCAL_Msk);
+    if( dwMr == 0 )
+    {
+        return 0;
+    }
+
+    dwMr |= ( pAdc->ADC_MR & ~ADC_MR_PRESCAL_Msk );
     pAdc->ADC_MR = dwMr;
 
-    dwAdcClock = dwMck / (dwPres + 1) / 2;
-    //dwAdcClock = dwAdcClock / 1000 * 1000;
+    dwAdcClock = dwMck / ( dwPres + 1 ) / 2;
+    /*dwAdcClock = dwAdcClock / 1000 * 1000; */
     return dwAdcClock;
 }
 
@@ -147,12 +164,15 @@ extern uint32_t ADC_SetClock( Adc* pAdc, uint32_t dwClk, uint32_t dwMck )
  * \param dwTracking tracking value
  * \param dwSettling settling value
  */
-extern void ADC_SetTiming( Adc* pAdc, uint32_t dwStartup, uint32_t dwTracking, uint32_t dwSettling )
+extern void ADC_SetTiming( Adc * pAdc,
+                           uint32_t dwStartup,
+                           uint32_t dwTracking,
+                           uint32_t dwSettling )
 {
     uint32_t dwMr;
 
     dwMr = pAdc->ADC_MR;
-    dwMr &= (~ADC_MR_STARTUP_Msk) & (~ADC_MR_TRACKTIM_Msk) & (~ADC_MR_SETTLING_Msk);
+    dwMr &= ( ~ADC_MR_STARTUP_Msk ) & ( ~ADC_MR_TRACKTIM_Msk ) & ( ~ADC_MR_SETTLING_Msk );
 
     /* Formula:
      *     Startup  Time = startup value / ADCClock
@@ -170,7 +190,8 @@ extern void ADC_SetTiming( Adc* pAdc, uint32_t dwStartup, uint32_t dwTracking, u
  * \param pAdc Pointer to an Adc instance.
  * \param dwTrgSel Trigger selection
  */
-extern void ADC_SetTrigger( Adc* pAdc, uint32_t dwTrgSel )
+extern void ADC_SetTrigger( Adc * pAdc,
+                            uint32_t dwTrgSel )
 {
     uint32_t dwMr;
 
@@ -192,9 +213,11 @@ extern void ADC_SetTrigger( Adc* pAdc, uint32_t dwTrgSel )
  * \param pAdc   Pointer to an Adc instance.
  * \param dwMode Trigger mode.
  */
-void ADC_SetTriggerMode(Adc *pAdc, uint32_t dwMode)
+void ADC_SetTriggerMode( Adc * pAdc,
+                         uint32_t dwMode )
 {
     uint32_t dwTrgr = pAdc->ADC_TRGR & ~ADC_TRGR_TRGMOD_Msk;
+
     pAdc->ADC_TRGR = dwTrgr | dwMode;
 }
 
@@ -204,9 +227,10 @@ void ADC_SetTriggerMode(Adc *pAdc, uint32_t dwMode)
  * \param pAdc Pointer to an Adc instance.
  * \param bEnDis Enable/Disable low resolution.
  */
-extern void ADC_SetLowResolution( Adc* pAdc, uint32_t bEnDis )
+extern void ADC_SetLowResolution( Adc * pAdc,
+                                  uint32_t bEnDis )
 {
-    if ( bEnDis )
+    if( bEnDis )
     {
         pAdc->ADC_MR |= ADC_MR_LOWRES;
     }
@@ -222,11 +246,12 @@ extern void ADC_SetLowResolution( Adc* pAdc, uint32_t bEnDis )
  * \param pAdc Pointer to an Adc instance.
  * \param bEnDis Enable/Disable sleep mode.
  */
-extern void ADC_SetSleepMode( Adc *pAdc, uint8_t bEnDis )
+extern void ADC_SetSleepMode( Adc * pAdc,
+                              uint8_t bEnDis )
 {
-    if ( bEnDis )
+    if( bEnDis )
     {
-        pAdc->ADC_MR |=  ADC_MR_SLEEP;
+        pAdc->ADC_MR |= ADC_MR_SLEEP;
     }
     else
     {
@@ -240,11 +265,12 @@ extern void ADC_SetSleepMode( Adc *pAdc, uint8_t bEnDis )
  * \param pAdc Pointer to an Adc instance.
  * \param bEnDis Enable/Disable fast wake up in sleep mode.
  */
-extern void ADC_SetFastWakeup( Adc *pAdc, uint8_t bEnDis )
+extern void ADC_SetFastWakeup( Adc * pAdc,
+                               uint8_t bEnDis )
 {
-    if ( bEnDis )
+    if( bEnDis )
     {
-        pAdc->ADC_MR |=  ADC_MR_FWUP;
+        pAdc->ADC_MR |= ADC_MR_FWUP;
     }
     else
     {
@@ -258,13 +284,14 @@ extern void ADC_SetFastWakeup( Adc *pAdc, uint8_t bEnDis )
  * \param pAdc  Pointer to an Adc instance.
  * \param bEnDis Enable/Disable seqnence mode.
  */
-extern void ADC_SetSequenceMode( Adc *pAdc, uint8_t bEnDis )
+extern void ADC_SetSequenceMode( Adc * pAdc,
+                                 uint8_t bEnDis )
 {
-    if ( bEnDis )
+    if( bEnDis )
     {
         /* User Sequence Mode: The sequence respects what is defined in
-        ADC_SEQR1 and ADC_SEQR2 */
-        pAdc->ADC_MR |=  ADC_MR_USEQ;
+         * ADC_SEQR1 and ADC_SEQR2 */
+        pAdc->ADC_MR |= ADC_MR_USEQ;
     }
     else
     {
@@ -280,7 +307,9 @@ extern void ADC_SetSequenceMode( Adc *pAdc, uint8_t bEnDis )
  * \param dwSEQ1 Sequence 1 ~ 8  channel number.
  * \param dwSEQ2 Sequence 9 ~ 16 channel number.
  */
-extern void ADC_SetSequence( Adc *pAdc, uint32_t dwSEQ1, uint32_t dwSEQ2 )
+extern void ADC_SetSequence( Adc * pAdc,
+                             uint32_t dwSEQ1,
+                             uint32_t dwSEQ2 )
 {
     pAdc->ADC_SEQR1 = dwSEQ1;
     pAdc->ADC_SEQR2 = dwSEQ2;
@@ -293,23 +322,35 @@ extern void ADC_SetSequence( Adc *pAdc, uint32_t dwSEQ1, uint32_t dwSEQ2 )
  * \param ucChList Channel list.
  * \param ucNumCh  Number of channels in list.
  */
-extern void ADC_SetSequenceByList( Adc *pAdc, uint8_t ucChList[], uint8_t ucNumCh )
+extern void ADC_SetSequenceByList( Adc * pAdc,
+                                   uint8_t ucChList[],
+                                   uint8_t ucNumCh )
 {
     uint8_t i;
     uint8_t ucShift;
 
     pAdc->ADC_SEQR1 = 0;
-    for (i = 0, ucShift = 0; i < 8; i ++, ucShift += 4)
-    {
-        if (i >= ucNumCh) return;
-        pAdc->ADC_SEQR1 |= ucChList[i] << ucShift;
 
-    }
-    pAdc->ADC_SEQR2 = 0;
-    for (ucShift = 0; i < 16; i ++, ucShift += 4)
+    for( i = 0, ucShift = 0; i < 8; i++, ucShift += 4 )
     {
-        if (i >= ucNumCh) return;
-        pAdc->ADC_SEQR2 |= ucChList[i] << ucShift;
+        if( i >= ucNumCh )
+        {
+            return;
+        }
+
+        pAdc->ADC_SEQR1 |= ucChList[ i ] << ucShift;
+    }
+
+    pAdc->ADC_SEQR2 = 0;
+
+    for( ucShift = 0; i < 16; i++, ucShift += 4 )
+    {
+        if( i >= ucNumCh )
+        {
+            return;
+        }
+
+        pAdc->ADC_SEQR2 |= ucChList[ i ] << ucShift;
     }
 }
 
@@ -321,11 +362,12 @@ extern void ADC_SetSequenceByList( Adc *pAdc, uint8_t ucChList[], uint8_t ucNumC
  * \param pAdc   Pointer to an Adc instance.
  * \param bEnDis Enable/Disable.
  */
-extern void ADC_SetAnalogChange( Adc *pAdc, uint8_t bEnDis )
+extern void ADC_SetAnalogChange( Adc * pAdc,
+                                 uint8_t bEnDis )
 {
-    if ( bEnDis )
+    if( bEnDis )
     {
-        pAdc->ADC_MR |=  ADC_MR_ANACH;
+        pAdc->ADC_MR |= ADC_MR_ANACH;
     }
     else
     {
@@ -339,11 +381,12 @@ extern void ADC_SetAnalogChange( Adc *pAdc, uint8_t bEnDis )
  * \param pAdc   Pointer to an Adc instance.
  * \param bEnDis Enable/Disable TAG value.
  */
-extern void ADC_SetTagEnable( Adc *pAdc, uint8_t bEnDis )
+extern void ADC_SetTagEnable( Adc * pAdc,
+                              uint8_t bEnDis )
 {
-    if ( bEnDis )
+    if( bEnDis )
     {
-        pAdc->ADC_EMR |=  ADC_EMR_TAG;
+        pAdc->ADC_EMR |= ADC_EMR_TAG;
     }
     else
     {
@@ -357,15 +400,16 @@ extern void ADC_SetTagEnable( Adc *pAdc, uint8_t bEnDis )
  * \param pAdc Pointer to an Adc instance.
  * \param dwChannel channel number to be set,16 for all channels
  */
-extern void ADC_SetCompareChannel( Adc* pAdc, uint32_t dwChannel )
+extern void ADC_SetCompareChannel( Adc * pAdc,
+                                   uint32_t dwChannel )
 {
-    assert( dwChannel <= 16 ) ;
+    assert( dwChannel <= 16 );
 
-    if ( dwChannel < 16 )
+    if( dwChannel < 16 )
     {
-        pAdc->ADC_EMR &= ~(ADC_EMR_CMPALL);
-        pAdc->ADC_EMR &= ~(ADC_EMR_CMPSEL_Msk);
-        pAdc->ADC_EMR |= (dwChannel << ADC_EMR_CMPSEL_Pos);
+        pAdc->ADC_EMR &= ~( ADC_EMR_CMPALL );
+        pAdc->ADC_EMR &= ~( ADC_EMR_CMPSEL_Msk );
+        pAdc->ADC_EMR |= ( dwChannel << ADC_EMR_CMPSEL_Pos );
     }
     else
     {
@@ -379,10 +423,11 @@ extern void ADC_SetCompareChannel( Adc* pAdc, uint32_t dwChannel )
  * \param pAdc Pointer to an Adc instance.
  * \param dwMode compare mode
  */
-extern void ADC_SetCompareMode( Adc* pAdc, uint32_t dwMode )
+extern void ADC_SetCompareMode( Adc * pAdc,
+                                uint32_t dwMode )
 {
-    pAdc->ADC_EMR &= ~(ADC_EMR_CMPMODE_Msk);
-    pAdc->ADC_EMR |= (dwMode & ADC_EMR_CMPMODE_Msk);
+    pAdc->ADC_EMR &= ~( ADC_EMR_CMPMODE_Msk );
+    pAdc->ADC_EMR |= ( dwMode & ADC_EMR_CMPMODE_Msk );
 }
 
 /**
@@ -391,9 +436,10 @@ extern void ADC_SetCompareMode( Adc* pAdc, uint32_t dwMode )
  * \param pAdc Pointer to an Adc instance.
  * \param dwHi_Lo Comparison Window
  */
-extern void ADC_SetComparisonWindow( Adc* pAdc, uint32_t dwHi_Lo )
+extern void ADC_SetComparisonWindow( Adc * pAdc,
+                                     uint32_t dwHi_Lo )
 {
-    pAdc->ADC_CWR = dwHi_Lo ;
+    pAdc->ADC_CWR = dwHi_Lo;
 }
 
 /**
@@ -404,37 +450,69 @@ static uint32_t GetStartupValue( uint32_t dwStartup )
     uint32_t dwStartupValue = 0;
 
     if( dwStartup == 0 )
+    {
         dwStartupValue = 0;
+    }
     else if( dwStartup == 1 )
+    {
         dwStartupValue = 8;
+    }
     else if( dwStartup == 2 )
+    {
         dwStartupValue = 16;
+    }
     else if( dwStartup == 3 )
+    {
         dwStartupValue = 24;
+    }
     else if( dwStartup == 4 )
+    {
         dwStartupValue = 64;
+    }
     else if( dwStartup == 5 )
+    {
         dwStartupValue = 80;
+    }
     else if( dwStartup == 6 )
+    {
         dwStartupValue = 96;
+    }
     else if( dwStartup == 7 )
+    {
         dwStartupValue = 112;
+    }
     else if( dwStartup == 8 )
+    {
         dwStartupValue = 512;
+    }
     else if( dwStartup == 9 )
+    {
         dwStartupValue = 576;
+    }
     else if( dwStartup == 10 )
+    {
         dwStartupValue = 640;
+    }
     else if( dwStartup == 11 )
+    {
         dwStartupValue = 704;
+    }
     else if( dwStartup == 12 )
+    {
         dwStartupValue = 768;
+    }
     else if( dwStartup == 13 )
+    {
         dwStartupValue = 832;
+    }
     else if( dwStartup == 14 )
+    {
         dwStartupValue = 896;
+    }
     else if( dwStartup == 15 )
+    {
         dwStartupValue = 960;
+    }
 
     return dwStartupValue;
 }
@@ -447,9 +525,10 @@ static uint32_t GetStartupValue( uint32_t dwStartup )
  *
  * \return 0 if check ok, others if not ok.
  */
-extern uint8_t ADC_CheckConfiguration( Adc* pAdc, uint32_t dwMck )
+extern uint8_t ADC_CheckConfiguration( Adc * pAdc,
+                                       uint32_t dwMck )
 {
-    uint8_t  bOk = 0;
+    uint8_t bOk = 0;
     uint32_t dwMr;
     uint32_t dwPres;
     uint32_t dwStartup;
@@ -458,25 +537,28 @@ extern uint8_t ADC_CheckConfiguration( Adc* pAdc, uint32_t dwMck )
 
     dwMr = pAdc->ADC_MR;
 
-    dwPres = (dwMr & ADC_MR_PRESCAL_Msk) >> ADC_MR_PRESCAL_Pos;
+    dwPres = ( dwMr & ADC_MR_PRESCAL_Msk ) >> ADC_MR_PRESCAL_Pos;
     /* Formula: ADCClock = MCK / ( (PRESCAL+1) * 2 ) */
-    dwClock = dwMck / ( (dwPres + 1) * 2 );
-    if (dwClock > ADC_CLOCK_MAX)
+    dwClock = dwMck / ( ( dwPres + 1 ) * 2 );
+
+    if( dwClock > ADC_CLOCK_MAX )
     {
-        printf("ADC clock is too high (out of specification: %d Hz)\r\n", (int)ADC_CLOCK_MAX);
+        printf( "ADC clock is too high (out of specification: %d Hz)\r\n", ( int ) ADC_CLOCK_MAX );
         bOk = 1;
     }
 
-    dwStartup = (dwMr & ADC_MR_STARTUP_Msk) >> ADC_MR_STARTUP_Pos;
-    if (dwMr & ADC_MR_SLEEP_SLEEP)
+    dwStartup = ( dwMr & ADC_MR_STARTUP_Msk ) >> ADC_MR_STARTUP_Pos;
+
+    if( dwMr & ADC_MR_SLEEP_SLEEP )
     {
         if( pAdc->ADC_MR & ADC_MR_FWUP_ON )
         {
             /* Fast Wake Up Sleep Mode: 12µs */
             dwTemp = ADC_STARTUP_FAST_MAX * dwClock / 1000000;
-            if( dwTemp > GetStartupValue(dwStartup) )
+
+            if( dwTemp > GetStartupValue( dwStartup ) )
             {
-                printf("Startup time too small: %d, programmed: %d\r\n", (int)dwTemp, (int)(GetStartupValue(dwStartup)));
+                printf( "Startup time too small: %d, programmed: %d\r\n", ( int ) dwTemp, ( int ) ( GetStartupValue( dwStartup ) ) );
                 bOk = 1;
             }
         }
@@ -491,15 +573,16 @@ extern uint8_t ADC_CheckConfiguration( Adc* pAdc, uint32_t dwMck )
  * \param pAdc Pointer to an Adc instance.
  * \param dwChannel channel to get converted value
  */
-extern uint32_t ADC_GetConvertedData( Adc* pAdc, uint32_t dwChannel )
+extern uint32_t ADC_GetConvertedData( Adc * pAdc,
+                                      uint32_t dwChannel )
 {
     uint32_t dwData = 0;
 
-    assert( dwChannel < 16 ) ;
+    assert( dwChannel < 16 );
 
-    dwData = pAdc->ADC_CDR[dwChannel];
+    dwData = pAdc->ADC_CDR[ dwChannel ];
 
-    return dwData ;
+    return dwData;
 }
 
 
@@ -508,39 +591,101 @@ extern uint32_t ADC_GetConvertedData( Adc* pAdc, uint32_t dwChannel )
  * \param pAdc  Pointer to an Adc instance.
  * \param dwUs  Startup time in uS.
  */
-void ADC_SetStartupTime( Adc *pAdc, uint32_t dwUs )
+void ADC_SetStartupTime( Adc * pAdc,
+                         uint32_t dwUs )
 {
     uint32_t dwStart;
     uint32_t dwMr;
 
-    if (dwAdcClock == 0) return;
+    if( dwAdcClock == 0 )
+    {
+        return;
+    }
+
     /* Formula for STARTUP is:
-       STARTUP = (time x ADCCLK) / (1000000) - 1
-       Division multiplied by 10 for higher precision */
-    
-    dwStart = (dwUs * dwAdcClock) / (100000);
-    if (dwStart % 10) dwStart /= 10;
+     * STARTUP = (time x ADCCLK) / (1000000) - 1
+     * Division multiplied by 10 for higher precision */
+
+    dwStart = ( dwUs * dwAdcClock ) / ( 100000 );
+
+    if( dwStart % 10 )
+    {
+        dwStart /= 10;
+    }
     else
     {
         dwStart /= 10;
-        if (dwStart) dwStart --;
+
+        if( dwStart )
+        {
+            dwStart--;
+        }
     }
-    if      (dwStart >  896) dwMr = ADC_MR_STARTUP_SUT960;
-    else if (dwStart >  832) dwMr = ADC_MR_STARTUP_SUT896;
-    else if (dwStart >  768) dwMr = ADC_MR_STARTUP_SUT832;
-    else if (dwStart >  704) dwMr = ADC_MR_STARTUP_SUT768;
-    else if (dwStart >  640) dwMr = ADC_MR_STARTUP_SUT704;
-    else if (dwStart >  576) dwMr = ADC_MR_STARTUP_SUT640;
-    else if (dwStart >  512) dwMr = ADC_MR_STARTUP_SUT576;
-    else if (dwStart >  112) dwMr = ADC_MR_STARTUP_SUT512;
-    else if (dwStart >   96) dwMr = ADC_MR_STARTUP_SUT112;
-    else if (dwStart >   80) dwMr = ADC_MR_STARTUP_SUT96;
-    else if (dwStart >   64) dwMr = ADC_MR_STARTUP_SUT80;
-    else if (dwStart >   24) dwMr = ADC_MR_STARTUP_SUT64;
-    else if (dwStart >   16) dwMr = ADC_MR_STARTUP_SUT24;
-    else if (dwStart >    8) dwMr = ADC_MR_STARTUP_SUT16;
-    else if (dwStart >    0) dwMr = ADC_MR_STARTUP_SUT8;
-    else                     dwMr = ADC_MR_STARTUP_SUT0;
+
+    if( dwStart > 896 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT960;
+    }
+    else if( dwStart > 832 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT896;
+    }
+    else if( dwStart > 768 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT832;
+    }
+    else if( dwStart > 704 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT768;
+    }
+    else if( dwStart > 640 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT704;
+    }
+    else if( dwStart > 576 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT640;
+    }
+    else if( dwStart > 512 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT576;
+    }
+    else if( dwStart > 112 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT512;
+    }
+    else if( dwStart > 96 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT112;
+    }
+    else if( dwStart > 80 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT96;
+    }
+    else if( dwStart > 64 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT80;
+    }
+    else if( dwStart > 24 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT64;
+    }
+    else if( dwStart > 16 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT24;
+    }
+    else if( dwStart > 8 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT16;
+    }
+    else if( dwStart > 0 )
+    {
+        dwMr = ADC_MR_STARTUP_SUT8;
+    }
+    else
+    {
+        dwMr = ADC_MR_STARTUP_SUT0;
+    }
 
     dwMr |= pAdc->ADC_MR & ~ADC_MR_STARTUP_Msk;
     pAdc->ADC_MR = dwMr;
@@ -552,24 +697,38 @@ void ADC_SetStartupTime( Adc *pAdc, uint32_t dwUs )
  * \param pAdc  Pointer to an Adc instance.
  * \param dwNs  Tracking time in nS.
  */
-void ADC_SetTrackingTime( Adc *pAdc, uint32_t dwNs )
+void ADC_SetTrackingTime( Adc * pAdc,
+                          uint32_t dwNs )
 {
     uint32_t dwShtim;
     uint32_t dwMr;
 
-    if (dwAdcClock == 0) return;
+    if( dwAdcClock == 0 )
+    {
+        return;
+    }
+
     /* Formula for SHTIM is:
-       SHTIM = (time x ADCCLK) / (1000000000) - 1
-       Since 1 billion is close to the maximum value for an integer, we first
-       divide ADCCLK by 1000 to avoid an overflow */
-    dwShtim = (dwNs * (dwAdcClock / 1000)) / 100000;
-    if (dwShtim % 10) dwShtim /= 10;
+     * SHTIM = (time x ADCCLK) / (1000000000) - 1
+     * Since 1 billion is close to the maximum value for an integer, we first
+     * divide ADCCLK by 1000 to avoid an overflow */
+    dwShtim = ( dwNs * ( dwAdcClock / 1000 ) ) / 100000;
+
+    if( dwShtim % 10 )
+    {
+        dwShtim /= 10;
+    }
     else
     {
         dwShtim /= 10;
-        if (dwShtim) dwShtim --;
+
+        if( dwShtim )
+        {
+            dwShtim--;
+        }
     }
-    dwMr  = ADC_MR_TRACKTIM(dwShtim);
+
+    dwMr = ADC_MR_TRACKTIM( dwShtim );
     dwMr |= pAdc->ADC_MR & ~ADC_MR_TRACKTIM_Msk;
     pAdc->ADC_MR = dwMr;
 }
@@ -580,24 +739,41 @@ void ADC_SetTrackingTime( Adc *pAdc, uint32_t dwNs )
  * \param pAdc   Pointer to an Adc instance.
  * \param dwPeriod Trigger period in nS.
  */
-void ADC_SetTriggerPeriod(Adc *pAdc, uint32_t dwPeriod)
+void ADC_SetTriggerPeriod( Adc * pAdc,
+                           uint32_t dwPeriod )
 {
     uint32_t dwTrgper;
     uint32_t dwDiv = 100000000;
     uint32_t dwTrgr;
-    if (dwAdcClock == 0) return;
-    while (dwPeriod >= 10 && dwDiv >= 10)
+
+    if( dwAdcClock == 0 )
     {
-        dwPeriod /= 10; dwDiv /= 10;
+        return;
     }
-    dwTrgper = (dwPeriod * dwAdcClock) / dwDiv;
-    if (dwTrgper % 10) dwTrgper /= 10;
+
+    while( dwPeriod >= 10 && dwDiv >= 10 )
+    {
+        dwPeriod /= 10;
+        dwDiv /= 10;
+    }
+
+    dwTrgper = ( dwPeriod * dwAdcClock ) / dwDiv;
+
+    if( dwTrgper % 10 )
+    {
+        dwTrgper /= 10;
+    }
     else
     {
         dwTrgper /= 10;
-        if (dwTrgper) dwTrgper --;
+
+        if( dwTrgper )
+        {
+            dwTrgper--;
+        }
     }
-    dwTrgr = ADC_TRGR_TRGPER(dwTrgper);
+
+    dwTrgr = ADC_TRGR_TRGPER( dwTrgper );
     dwTrgr |= pAdc->ADC_TRGR & ~ADC_TRGR_TRGPER_Msk;
     pAdc->ADC_TRGR = dwTrgr;
 }
@@ -607,7 +783,7 @@ void ADC_SetTriggerPeriod(Adc *pAdc, uint32_t dwPeriod)
  * Start screen calibration (VDD/GND measurement)
  * \param pAdc Pointer to an Adc instance.
  */
-void ADC_TsCalibration( Adc *pAdc )
+void ADC_TsCalibration( Adc * pAdc )
 {
     pAdc->ADC_CR = ADC_CR_TSCALIB;
 }
@@ -621,9 +797,10 @@ void ADC_TsCalibration( Adc *pAdc )
  * \param pADC   Pointer to an Adc instance.
  * \param dwMode Desired mode
  */
-void ADC_SetTsMode(Adc* pADC, uint32_t dwMode)
+void ADC_SetTsMode( Adc * pADC,
+                    uint32_t dwMode )
 {
-    pADC->ADC_TSMR = (pADC->ADC_TSMR & ~ADC_TSMR_TSMODE_Msk) | dwMode;
+    pADC->ADC_TSMR = ( pADC->ADC_TSMR & ~ADC_TSMR_TSMODE_Msk ) | dwMode;
 }
 
 /**
@@ -631,32 +808,50 @@ void ADC_SetTsMode(Adc* pADC, uint32_t dwMode)
  * \param pADC   Pointer to an Adc instance.
  * \param dwTime Debounce time in nS.
  */
-void ADC_SetTsDebounce(Adc *pADC, uint32_t dwTime)
+void ADC_SetTsDebounce( Adc * pADC,
+                        uint32_t dwTime )
 {
     uint32_t dwDiv = 1000000000;
     uint32_t dwClk = dwAdcClock;
     uint32_t dwPenbc = 0;
     uint32_t dwTarget, dwCurrent;
     uint32_t dwTsmr;
-    if (dwTime == 0 || dwAdcClock == 0) return;
+
+    if( ( dwTime == 0 ) || ( dwAdcClock == 0 ) )
+    {
+        return;
+    }
+
     /* Divide time & ADCCLK to avoid overflows */
-    while ((dwDiv > 1) && ((dwTime % 10) == 0))
+    while( ( dwDiv > 1 ) && ( ( dwTime % 10 ) == 0 ) )
     {
-        dwTime /= 10; dwDiv /= 10;
+        dwTime /= 10;
+        dwDiv /= 10;
     }
-    while ((dwDiv > 1) && ((dwClk & 10) == 0))
+
+    while( ( dwDiv > 1 ) && ( ( dwClk & 10 ) == 0 ) )
     {
-        dwClk /= 10; dwDiv /= 10;
+        dwClk /= 10;
+        dwDiv /= 10;
     }
+
     /* Compute PENDBC */
     dwTarget = dwTime * dwClk / dwDiv;
     dwCurrent = 1;
-    while (dwCurrent < dwTarget)
+
+    while( dwCurrent < dwTarget )
     {
-        dwPenbc ++; dwCurrent *= 2;
+        dwPenbc++;
+        dwCurrent *= 2;
     }
-    dwTsmr = ADC_TSMR_PENDBC(dwPenbc);
-    if (dwTsmr == 0) return;
+
+    dwTsmr = ADC_TSMR_PENDBC( dwPenbc );
+
+    if( dwTsmr == 0 )
+    {
+        return;
+    }
+
     dwTsmr |= pADC->ADC_TSMR & ~ADC_TSMR_PENDBC_Msk;
     pADC->ADC_TSMR = dwTsmr;
 }
@@ -667,12 +862,17 @@ void ADC_SetTsDebounce(Adc *pADC, uint32_t dwTime)
  * \param bEnDis If true, pen detection is enabled;
  *               in normal mode otherwise.
  */
-void ADC_SetTsPenDetect(Adc* pADC, uint8_t bEnDis)
+void ADC_SetTsPenDetect( Adc * pADC,
+                         uint8_t bEnDis )
 {
-    if (bEnDis)
-        pADC->ADC_TSMR |=  ADC_TSMR_PENDET;
+    if( bEnDis )
+    {
+        pADC->ADC_TSMR |= ADC_TSMR_PENDET;
+    }
     else
+    {
         pADC->ADC_TSMR &= ~ADC_TSMR_PENDET;
+    }
 }
 
 
@@ -685,19 +885,22 @@ void ADC_SetTsPenDetect(Adc* pADC, uint8_t bEnDis)
  * \param pADC   Pointer to an Adc instance.
  * \param dwMode Desired mode
  */
-void ADC_SetTsAverage(Adc* pADC, uint32_t dwAvg2Conv)
+void ADC_SetTsAverage( Adc * pADC,
+                       uint32_t dwAvg2Conv )
 {
     uint32_t dwMr = pADC->ADC_TSMR & ~ADC_TSMR_TSAV_Msk;
     uint32_t dwTSAV = dwAvg2Conv >> ADC_TSMR_TSAV_Pos;
-    uint32_t dwTSFREQ = (dwMr & ADC_TSMR_TSFREQ_Msk) >> ADC_TSMR_TSFREQ_Pos;
-    if (dwTSAV)
+    uint32_t dwTSFREQ = ( dwMr & ADC_TSMR_TSFREQ_Msk ) >> ADC_TSMR_TSFREQ_Pos;
+
+    if( dwTSAV )
     {
-        if (dwTSAV > dwTSFREQ)
+        if( dwTSAV > dwTSFREQ )
         {
             dwMr &= ~ADC_TSMR_TSFREQ_Msk;
-            dwMr |=  ADC_TSMR_TSFREQ(dwTSAV);
+            dwMr |= ADC_TSMR_TSFREQ( dwTSAV );
         }
     }
+
     pADC->ADC_TSMR = dwMr | dwAvg2Conv;
 }
 
@@ -705,7 +908,7 @@ void ADC_SetTsAverage(Adc* pADC, uint32_t dwAvg2Conv)
  * Return X measurement position value.
  * \param pADC   Pointer to an Adc instance.
  */
-uint32_t ADC_GetTsXPosition(Adc *pADC)
+uint32_t ADC_GetTsXPosition( Adc * pADC )
 {
     return pADC->ADC_XPOSR;
 }
@@ -714,7 +917,7 @@ uint32_t ADC_GetTsXPosition(Adc *pADC)
  * Return Y measurement position value.
  * \param pADC   Pointer to an Adc instance.
  */
-uint32_t ADC_GetTsYPosition(Adc *pADC)
+uint32_t ADC_GetTsYPosition( Adc * pADC )
 {
     return pADC->ADC_YPOSR;
 }
@@ -723,7 +926,7 @@ uint32_t ADC_GetTsYPosition(Adc *pADC)
  * Return Z measurement position value.
  * \param pADC   Pointer to an Adc instance.
  */
-uint32_t ADC_GetTsPressure(Adc *pADC)
+uint32_t ADC_GetTsPressure( Adc * pADC )
 {
     return pADC->ADC_PRESSR;
 }

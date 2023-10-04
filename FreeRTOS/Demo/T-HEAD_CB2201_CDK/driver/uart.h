@@ -16,5 +16,5 @@
 
 #ifndef UART_H
 #define UART_H
-void console_init(void);
+void console_init( void );
 #endif

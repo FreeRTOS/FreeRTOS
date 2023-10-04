@@ -39,13 +39,13 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_DeInit(GPIO_TypeDef* GPIOx)
+void GPIO_DeInit( GPIO_TypeDef * GPIOx )
 {
-  /* Reset the GPIOx registers values */
-  GPIOx->PC0 = 0xFFFFFFFF;
-  GPIOx->PC1 = 0x0;
-  GPIOx->PC2 = 0x0;
-  GPIOx->PM = 0x0;
+    /* Reset the GPIOx registers values */
+    GPIOx->PC0 = 0xFFFFFFFF;
+    GPIOx->PC1 = 0x0;
+    GPIOx->PC2 = 0x0;
+    GPIOx->PM = 0x0;
 }
 
 /*******************************************************************************
@@ -62,77 +62,78 @@ void GPIO_DeInit(GPIO_TypeDef* GPIOx)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
+void GPIO_Init( GPIO_TypeDef * GPIOx,
+                GPIO_InitTypeDef * GPIO_InitStruct )
 {
-  /* GPIOx Mode and Pins Set */
-  if((GPIOx != GPIO0) && (GPIO_InitStruct->GPIO_Pin == GPIO_Pin_All))
-  {
-    GPIO_InitStruct->GPIO_Pin = GPIO_Pin_Mask;
-  }
+    /* GPIOx Mode and Pins Set */
+    if( ( GPIOx != GPIO0 ) && ( GPIO_InitStruct->GPIO_Pin == GPIO_Pin_All ) )
+    {
+        GPIO_InitStruct->GPIO_Pin = GPIO_Pin_Mask;
+    }
 
-  switch(GPIO_InitStruct->GPIO_Mode)
-  {
-    case GPIO_Mode_AIN:
-      GPIOx->PC0 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
-      break;
+    switch( GPIO_InitStruct->GPIO_Mode )
+    {
+        case GPIO_Mode_AIN:
+            GPIOx->PC0 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    case GPIO_Mode_IN_FLOATING:
-      GPIOx->PC0 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
-      break;
+        case GPIO_Mode_IN_FLOATING:
+            GPIOx->PC0 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    case GPIO_Mode_IPD:
-      GPIOx->PM  &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC0 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PD  &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PM  |=  GPIO_InitStruct->GPIO_Pin;
-      break;
+        case GPIO_Mode_IPD:
+            GPIOx->PM &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC0 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PD &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PM |= GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    case GPIO_Mode_IPU:
-      GPIOx->PM  &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC0 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PD  |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PM  |=  GPIO_InitStruct->GPIO_Pin;
-      break;
+        case GPIO_Mode_IPU:
+            GPIOx->PM &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC0 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PD |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PM |= GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    case GPIO_Mode_Out_OD:
-      GPIOx->PC0 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 |=  GPIO_InitStruct->GPIO_Pin;
-      break;
+        case GPIO_Mode_Out_OD:
+            GPIOx->PC0 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 |= GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    case GPIO_Mode_Out_PP:
-      GPIOx->PC0 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 |=  GPIO_InitStruct->GPIO_Pin;
-      break;
+        case GPIO_Mode_Out_PP:
+            GPIOx->PC0 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 |= GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    case GPIO_Mode_AF_OD:
-      GPIOx->PD  |=  GPIO_InitStruct->GPIO_Pin;          
-      GPIOx->PC1 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC0 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 |=  GPIO_InitStruct->GPIO_Pin;
-      break;
+        case GPIO_Mode_AF_OD:
+            GPIOx->PD |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC0 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 |= GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    case GPIO_Mode_AF_PP:
-      GPIOx->PC0 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 |=  GPIO_InitStruct->GPIO_Pin;
-      break;
+        case GPIO_Mode_AF_PP:
+            GPIOx->PC0 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 |= GPIO_InitStruct->GPIO_Pin;
+            break;
 
-    default :
-      GPIOx->PC0 |=  GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
-      GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
-      break;
-  }
+        default:
+            GPIOx->PC0 |= GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC1 &= ~GPIO_InitStruct->GPIO_Pin;
+            GPIOx->PC2 &= ~GPIO_InitStruct->GPIO_Pin;
+            break;
+    }
 }
 
 /*******************************************************************************
@@ -143,11 +144,11 @@ void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_StructInit(GPIO_InitTypeDef* GPIO_InitStruct)
+void GPIO_StructInit( GPIO_InitTypeDef * GPIO_InitStruct )
 {
-  /* Reset GPIO init structure parameters values */
-  GPIO_InitStruct->GPIO_Pin  = GPIO_Pin_All;
-  GPIO_InitStruct->GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    /* Reset GPIO init structure parameters values */
+    GPIO_InitStruct->GPIO_Pin = GPIO_Pin_All;
+    GPIO_InitStruct->GPIO_Mode = GPIO_Mode_IN_FLOATING;
 }
 
 /*******************************************************************************
@@ -157,9 +158,9 @@ void GPIO_StructInit(GPIO_InitTypeDef* GPIO_InitStruct)
 * Output         : None
 * Return         : GPIO data port word value.
 *******************************************************************************/
-u32 GPIO_Read(GPIO_TypeDef* GPIOx)
+u32 GPIO_Read( GPIO_TypeDef * GPIOx )
 {
-  return GPIOx->PD;
+    return GPIOx->PD;
 }
 
 /*******************************************************************************
@@ -172,16 +173,17 @@ u32 GPIO_Read(GPIO_TypeDef* GPIOx)
 * Output         : None
 * Return         : The port pin value
 *******************************************************************************/
-u8 GPIO_ReadBit(GPIO_TypeDef* GPIOx, u32 GPIO_Pin)
+u8 GPIO_ReadBit( GPIO_TypeDef * GPIOx,
+                 u32 GPIO_Pin )
 {
-  if ((GPIOx->PD & GPIO_Pin) != Bit_RESET)
-  {
-    return Bit_SET;
-  }
-  else
-  {
-    return Bit_RESET;
-  }
+    if( ( GPIOx->PD & GPIO_Pin ) != Bit_RESET )
+    {
+        return Bit_SET;
+    }
+    else
+    {
+        return Bit_RESET;
+    }
 }
 
 /*******************************************************************************
@@ -193,9 +195,10 @@ u8 GPIO_ReadBit(GPIO_TypeDef* GPIOx, u32 GPIO_Pin)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_Write(GPIO_TypeDef* GPIOx, u32 PortVal)
+void GPIO_Write( GPIO_TypeDef * GPIOx,
+                 u32 PortVal )
 {
-  GPIOx->PD = PortVal;
+    GPIOx->PD = PortVal;
 }
 
 /*******************************************************************************
@@ -212,16 +215,18 @@ void GPIO_Write(GPIO_TypeDef* GPIOx, u32 PortVal)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_WriteBit(GPIO_TypeDef* GPIOx, u32 GPIO_Pin, BitAction BitVal)
+void GPIO_WriteBit( GPIO_TypeDef * GPIOx,
+                    u32 GPIO_Pin,
+                    BitAction BitVal )
 {
-  if(BitVal != Bit_RESET)
-  {
-    GPIOx->PD |= GPIO_Pin;
-  }
-  else
-  {
-    GPIOx->PD &= ~GPIO_Pin;
-  }
+    if( BitVal != Bit_RESET )
+    {
+        GPIOx->PD |= GPIO_Pin;
+    }
+    else
+    {
+        GPIOx->PD &= ~GPIO_Pin;
+    }
 }
 
 /*******************************************************************************
@@ -237,16 +242,18 @@ void GPIO_WriteBit(GPIO_TypeDef* GPIOx, u32 GPIO_Pin, BitAction BitVal)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_PinMaskConfig(GPIO_TypeDef* GPIOx, u32 GPIO_Pin, FunctionalState NewState)
+void GPIO_PinMaskConfig( GPIO_TypeDef * GPIOx,
+                         u32 GPIO_Pin,
+                         FunctionalState NewState )
 {
-  if(NewState == ENABLE)
-  {
-    GPIOx->PM |= GPIO_Pin;
-  }
-  else
-  {
-    GPIOx->PM &= ~GPIO_Pin;
-  }
+    if( NewState == ENABLE )
+    {
+        GPIOx->PM |= GPIO_Pin;
+    }
+    else
+    {
+        GPIOx->PM &= ~GPIO_Pin;
+    }
 }
 
 /*******************************************************************************
@@ -256,9 +263,9 @@ void GPIO_PinMaskConfig(GPIO_TypeDef* GPIOx, u32 GPIO_Pin, FunctionalState NewSt
 * Output         : None
 * Return         : GPIO port mask value.
 *******************************************************************************/
-u32 GPIO_GetPortMask(GPIO_TypeDef* GPIOx)
+u32 GPIO_GetPortMask( GPIO_TypeDef * GPIOx )
 {
-  return GPIOx->PM;
+    return GPIOx->PM;
 }
 
 /*******************************************************************************
@@ -266,10 +273,10 @@ u32 GPIO_GetPortMask(GPIO_TypeDef* GPIOx)
 * Description    : Changes the mapping of the specified pin.
 * Input          :- GPIO_Remap: selects the pin to remap.
 *                   This parameter can be one of the following values:
-*                     - GPIO_Remap_SMI_CS3_EN: Enable SMI CS3 
+*                     - GPIO_Remap_SMI_CS3_EN: Enable SMI CS3
 *                     - GPIO_Remap_SMI_CS2_EN: Enable SMI CS2
 *                     - GPIO_Remap_SMI_CS1_EN: Enable SMI CS1
-*                     - GPIO_Remap_SMI_EN: Enable SMI Alternate Functions: 
+*                     - GPIO_Remap_SMI_EN: Enable SMI Alternate Functions:
 *                       SMI_CS0, SMI_CK, SMI_DIN and SMI_DOUT
 *                     - GPIO_Remap_DBGOFF: JTAG Disable
 *                     - GPIO_Remap_UART1: UART1 Alternate Function mapping
@@ -282,39 +289,40 @@ u32 GPIO_GetPortMask(GPIO_TypeDef* GPIOx)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_PinRemapConfig(u16 GPIO_Remap, FunctionalState NewState)
+void GPIO_PinRemapConfig( u16 GPIO_Remap,
+                          FunctionalState NewState )
 {
-  u32 GPIOReg = 0;
-  u32 PinPos = 0;
+    u32 GPIOReg = 0;
+    u32 PinPos = 0;
 
-  /* Get the GPIO register index */
-  GPIOReg = GPIO_Remap >> 5;
+    /* Get the GPIO register index */
+    GPIOReg = GPIO_Remap >> 5;
 
-  /* Get the pin position */
-  PinPos = GPIO_Remap & GPIO_Remap_Mask;
+    /* Get the pin position */
+    PinPos = GPIO_Remap & GPIO_Remap_Mask;
 
-  if(GPIOReg == 1) /* The pin to remap is in REMAP0R register */
-  {
-    if(NewState == ENABLE)
+    if( GPIOReg == 1 ) /* The pin to remap is in REMAP0R register */
     {
-      GPIOREMAP->REMAP0R |= (1 << PinPos);
+        if( NewState == ENABLE )
+        {
+            GPIOREMAP->REMAP0R |= ( 1 << PinPos );
+        }
+        else
+        {
+            GPIOREMAP->REMAP0R &= ~( 1 << PinPos );
+        }
     }
-    else
+    else if( GPIOReg == 2 ) /* The pin to remap is in REMAP1R register */
     {
-      GPIOREMAP->REMAP0R &= ~(1 << PinPos);
+        if( NewState == ENABLE )
+        {
+            GPIOREMAP->REMAP1R |= ( 1 << PinPos );
+        }
+        else
+        {
+            GPIOREMAP->REMAP1R &= ~( 1 << PinPos );
+        }
     }
-  }
-  else if(GPIOReg == 2) /* The pin to remap is in REMAP1R register */
-  {
-    if(NewState == ENABLE)
-    {
-      GPIOREMAP->REMAP1R |= (1 << PinPos);
-    }
-    else
-    {
-      GPIOREMAP->REMAP1R &= ~(1 << PinPos);
-    }
-  }
 }
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

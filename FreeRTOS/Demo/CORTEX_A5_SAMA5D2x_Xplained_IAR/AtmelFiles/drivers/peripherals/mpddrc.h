@@ -32,26 +32,28 @@
 
 #include <stdint.h>
 
-enum _ram_type {
-	MPDDRC_TYPE_DDR3,
-	MPDDRC_TYPE_LPDDR3,
-	MPDDRC_TYPE_DDR2,
-	MPDDRC_TYPE_LPDDR2,
-	MPDDRC_TYPE_DDR
+enum _ram_type
+{
+    MPDDRC_TYPE_DDR3,
+    MPDDRC_TYPE_LPDDR3,
+    MPDDRC_TYPE_DDR2,
+    MPDDRC_TYPE_LPDDR2,
+    MPDDRC_TYPE_DDR
 };
 
-struct _mpddrc_desc {
-	enum _ram_type type;
-	uint32_t io_calibr;
-	uint32_t data_path;
-	uint32_t mode;
-	uint32_t control;
-	uint32_t bank;
-	uint32_t tpr0;
-	uint32_t tpr1;
-	uint32_t tpr2;
+struct _mpddrc_desc
+{
+    enum _ram_type type;
+    uint32_t io_calibr;
+    uint32_t data_path;
+    uint32_t mode;
+    uint32_t control;
+    uint32_t bank;
+    uint32_t tpr0;
+    uint32_t tpr1;
+    uint32_t tpr2;
 };
 
-extern void mpddrc_configure(struct _mpddrc_desc* desc);
+extern void mpddrc_configure( struct _mpddrc_desc * desc );
 
-#endif
+#endif /* ifndef MPDDRC_HEADER_ */

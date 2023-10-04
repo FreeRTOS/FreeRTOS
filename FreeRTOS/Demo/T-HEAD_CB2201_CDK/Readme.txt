@@ -16,4 +16,4 @@ The latest version of CDK: https://occ.t-head.cn/community/download_detail?spm=a
 3. Build project.
 4. Connect to T-HEAD Cb2201 board. (Make sure serial cable is connected correctly.)
 5. Run. 
-6. Check messages in serial window. 
+6. Check messages in serial window.

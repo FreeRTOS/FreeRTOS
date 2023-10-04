@@ -41,9 +41,9 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern WEAK void undefined_instruction_irq_handler(void);
-extern WEAK void software_interrupt_irq_handler(void);
-extern WEAK void prefetch_abort_irq_handler(void);
-extern WEAK void data_abort_irq_handler(void);
+extern WEAK void undefined_instruction_irq_handler( void );
+extern WEAK void software_interrupt_irq_handler( void );
+extern WEAK void prefetch_abort_irq_handler( void );
+extern WEAK void data_abort_irq_handler( void );
 
 #endif /* INTERRUPTS_CORTEXA5_H */

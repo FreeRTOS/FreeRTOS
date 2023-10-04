@@ -82,11 +82,13 @@
  *
  * \param pAt25  Pointer to an AT25 driver instance.
  */
-static void AT25D_Wait(At25 *pAt25)
+static void AT25D_Wait( At25 * pAt25 )
 {
     /* Wait for transfer to finish */
-    while (AT25_IsBusy(pAt25))
-        SPID_Handler(pAt25->pSpid);
+    while( AT25_IsBusy( pAt25 ) )
+    {
+        SPID_Handler( pAt25->pSpid );
+    }
 }
 
 /**
@@ -94,18 +96,18 @@ static void AT25D_Wait(At25 *pAt25)
  *
  * \param pAt25  Pointer to an AT25 driver instance.
  */
-static unsigned char AT25D_ReadStatus(At25 *pAt25)
+static unsigned char AT25D_ReadStatus( At25 * pAt25 )
 {
     unsigned char error, status;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Issue a status read command */
-    error = AT25_SendCommand(pAt25, AT25_READ_STATUS, 1, &status, 1, 0, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_READ_STATUS, 1, &status, 1, 0, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
 
     return status;
 }
@@ -116,18 +118,19 @@ static unsigned char AT25D_ReadStatus(At25 *pAt25)
  * \param pAt25  Pointer to an AT25 driver instance.
  * \param status  Status to write.
  */
-static void AT25D_WriteStatus(At25 *pAt25, unsigned char status)
+static void AT25D_WriteStatus( At25 * pAt25,
+                               unsigned char status )
 {
     unsigned char error;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Issue a write status command */
-    error = AT25_SendCommand(pAt25, AT25_WRITE_STATUS, 1, &status, 1, 0, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_WRITE_STATUS, 1, &status, 1, 0, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
 }
 
 /*----------------------------------------------------------------------------
@@ -139,16 +142,16 @@ static void AT25D_WriteStatus(At25 *pAt25, unsigned char status)
  *
  * \param pAt25  Pointer to an AT25 driver instance.
  */
-void AT25D_WaitReady(At25 *pAt25)
+void AT25D_WaitReady( At25 * pAt25 )
 {
     unsigned char ready = 0;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Read status register and check busy bit */
-    while (!ready) {
-
-        ready = ((AT25D_ReadStatus(pAt25) & AT25_STATUS_RDYBSY) == AT25_STATUS_RDYBSY_READY);
+    while( !ready )
+    {
+        ready = ( ( AT25D_ReadStatus( pAt25 ) & AT25_STATUS_RDYBSY ) == AT25_STATUS_RDYBSY_READY );
     }
 }
 
@@ -157,20 +160,20 @@ void AT25D_WaitReady(At25 *pAt25)
  *
  * \param pAt25  Pointer to an AT25 driver instance.
  */
-unsigned int AT25D_ReadJedecId(At25 *pAt25)
+unsigned int AT25D_ReadJedecId( At25 * pAt25 )
 {
     unsigned char error;
     unsigned int id = 0;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Issue a read ID command */
-    error = AT25_SendCommand(pAt25, AT25_READ_JEDEC_ID, 1,
-                             (unsigned char *) &id, 3, 0, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_READ_JEDEC_ID, 1,
+                              ( unsigned char * ) &id, 3, 0, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
 
     return id;
 }
@@ -181,18 +184,18 @@ unsigned int AT25D_ReadJedecId(At25 *pAt25)
  *
  * \para pAt25  Pointer to an AT25 driver instance.
  */
-void AT25D_EnableWrite(At25 *pAt25)
+void AT25D_EnableWrite( At25 * pAt25 )
 {
     unsigned char error;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Issue a write enable command */
-    error = AT25_SendCommand(pAt25, AT25_WRITE_ENABLE, 1, 0, 0, 0, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_WRITE_ENABLE, 1, 0, 0, 0, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
 }
 
 /**
@@ -200,18 +203,18 @@ void AT25D_EnableWrite(At25 *pAt25)
  *
  * \para pAt25  Pointer to an AT25 driver instance.
  */
-void AT25D_DisableWrite(At25 *pAt25)
+void AT25D_DisableWrite( At25 * pAt25 )
 {
     unsigned char error;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Issue a write enable command */
-    error = AT25_SendCommand(pAt25, AT25_WRITE_DISABLE, 1, 0, 0, 0, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_WRITE_DISABLE, 1, 0, 0, 0, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
 }
 
 /**
@@ -222,41 +225,43 @@ void AT25D_DisableWrite(At25 *pAt25)
  * \return 0 if the device has been unprotected; otherwise returns
  * AT25_ERROR_PROTECTED.
  */
-unsigned char AT25D_Unprotect(At25 *pAt25)
+unsigned char AT25D_Unprotect( At25 * pAt25 )
 {
     unsigned char status;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Get the status register value to check the current protection */
-    status = AT25D_ReadStatus(pAt25);
-    if ((status & AT25_STATUS_SWP) == AT25_STATUS_SWP_PROTNONE) {
+    status = AT25D_ReadStatus( pAt25 );
 
+    if( ( status & AT25_STATUS_SWP ) == AT25_STATUS_SWP_PROTNONE )
+    {
         /* Protection already disabled */
         return 0;
     }
 
     /* Check if sector protection registers are locked */
-    if ((status & AT25_STATUS_SPRL) == AT25_STATUS_SPRL_LOCKED) {
-
+    if( ( status & AT25_STATUS_SPRL ) == AT25_STATUS_SPRL_LOCKED )
+    {
         /* Unprotect sector protection registers by writing the status reg. */
-        AT25D_EnableWrite(pAt25);
-        AT25D_WriteStatus(pAt25, 0);
+        AT25D_EnableWrite( pAt25 );
+        AT25D_WriteStatus( pAt25, 0 );
     }
 
     /* Perform a global unprotect command */
-    AT25D_EnableWrite(pAt25);
+    AT25D_EnableWrite( pAt25 );
 
-    AT25D_WriteStatus(pAt25, 0);
+    AT25D_WriteStatus( pAt25, 0 );
 
     /* Check the new status */
-    status = AT25D_ReadStatus(pAt25);
-    if ((status & (AT25_STATUS_SPRL | AT25_STATUS_SWP)) != 0) {
+    status = AT25D_ReadStatus( pAt25 );
 
+    if( ( status & ( AT25_STATUS_SPRL | AT25_STATUS_SWP ) ) != 0 )
+    {
         return AT25_ERROR_PROTECTED;
     }
-    else {
-
+    else
+    {
         return 0;
     }
 }
@@ -269,30 +274,32 @@ unsigned char AT25D_Unprotect(At25 *pAt25)
  * \return 0 if the device has been unprotected; otherwise returns
  * AT25_ERROR_PROTECTED.
  */
-unsigned char AT25D_EraseChip(At25 *pAt25)
+unsigned char AT25D_EraseChip( At25 * pAt25 )
 {
     unsigned char status;
     unsigned char error;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Check that the flash is unprotected */
-    status = AT25D_ReadStatus(pAt25);
-    if ((status & AT25_STATUS_SWP) != AT25_STATUS_SWP_PROTNONE) {
+    status = AT25D_ReadStatus( pAt25 );
+
+    if( ( status & AT25_STATUS_SWP ) != AT25_STATUS_SWP_PROTNONE )
+    {
         return AT25_ERROR_PROTECTED;
     }
 
     /* Enable critical write operation */
-      AT25D_EnableWrite(pAt25);
+    AT25D_EnableWrite( pAt25 );
 
     /* Erase the chip */
-    error = AT25_SendCommand(pAt25, AT25_CHIP_ERASE_2, 1, 0, 0, 0, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_CHIP_ERASE_2, 1, 0, 0, 0, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
     /* Poll the Serial flash status register until the operation is achieved */
-    AT25D_WaitReady(pAt25);
+    AT25D_WaitReady( pAt25 );
 
     return 0;
 }
@@ -306,35 +313,39 @@ unsigned char AT25D_EraseChip(At25 *pAt25)
  * \return 0 if successful; otherwise returns AT25_ERROR_PROTECTED if the
  * device is protected or AT25_ERROR_BUSY if it is busy executing a command.
  */
-unsigned char AT25D_EraseBlock(At25 *pAt25, unsigned int address)
+unsigned char AT25D_EraseBlock( At25 * pAt25,
+                                unsigned int address )
 {
     unsigned char status;
     unsigned char error;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Check that the flash is ready and unprotected */
-    status = AT25D_ReadStatus(pAt25);
-    if ((status & AT25_STATUS_RDYBSY) != AT25_STATUS_RDYBSY_READY) {
-        TRACE_ERROR("AT25D_EraseBlock : Flash busy\n\r");
+    status = AT25D_ReadStatus( pAt25 );
+
+    if( ( status & AT25_STATUS_RDYBSY ) != AT25_STATUS_RDYBSY_READY )
+    {
+        TRACE_ERROR( "AT25D_EraseBlock : Flash busy\n\r" );
         return AT25_ERROR_BUSY;
     }
-    else if ((status & AT25_STATUS_SWP) != AT25_STATUS_SWP_PROTNONE) {
-        TRACE_ERROR("AT25D_EraseBlock : Flash protected\n\r");
+    else if( ( status & AT25_STATUS_SWP ) != AT25_STATUS_SWP_PROTNONE )
+    {
+        TRACE_ERROR( "AT25D_EraseBlock : Flash protected\n\r" );
         return AT25_ERROR_PROTECTED;
     }
 
     /* Enable critical write operation */
-      AT25D_EnableWrite(pAt25);
+    AT25D_EnableWrite( pAt25 );
 
     /* Start the block erase command */
-    error = AT25_SendCommand(pAt25, AT25_BlockEraseCmd(pAt25), 4, 0, 0, address, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_BlockEraseCmd( pAt25 ), 4, 0, 0, address, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
     /* Poll the Serial flash status register until the operation is achieved */
-    AT25D_WaitReady(pAt25);
+    AT25D_WaitReady( pAt25 );
 
     return 0;
 }
@@ -349,35 +360,39 @@ unsigned char AT25D_EraseBlock(At25 *pAt25, unsigned int address)
  * \return 0 if successful; otherwise returns AT25_ERROR_PROTECTED if the
  * device is protected or AT25_ERROR_BUSY if it is busy executing a command.
  */
-unsigned char AT25D_Erase64KBlock(At25 *pAt25, unsigned int address)
+unsigned char AT25D_Erase64KBlock( At25 * pAt25,
+                                   unsigned int address )
 {
     unsigned char status;
     unsigned char error;
 
-    assert(pAt25);
+    assert( pAt25 );
 
     /* Check that the flash is ready and unprotected */
-    status = AT25D_ReadStatus(pAt25);
-    if ((status & AT25_STATUS_RDYBSY) != AT25_STATUS_RDYBSY_READY) {
-        TRACE_ERROR("AT25D_EraseBlock : Flash busy\n\r");
+    status = AT25D_ReadStatus( pAt25 );
+
+    if( ( status & AT25_STATUS_RDYBSY ) != AT25_STATUS_RDYBSY_READY )
+    {
+        TRACE_ERROR( "AT25D_EraseBlock : Flash busy\n\r" );
         return AT25_ERROR_BUSY;
     }
-    else if ((status & AT25_STATUS_SWP) != AT25_STATUS_SWP_PROTNONE) {
-        TRACE_ERROR("AT25D_EraseBlock : Flash protected\n\r");
+    else if( ( status & AT25_STATUS_SWP ) != AT25_STATUS_SWP_PROTNONE )
+    {
+        TRACE_ERROR( "AT25D_EraseBlock : Flash protected\n\r" );
         return AT25_ERROR_PROTECTED;
     }
 
     /* Enable critical write operation */
-      AT25D_EnableWrite(pAt25);
+    AT25D_EnableWrite( pAt25 );
 
     /* Start the block erase command */
-    error = AT25_SendCommand(pAt25, AT25_BLOCK_ERASE_64K, 4, 0, 0, address, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_BLOCK_ERASE_64K, 4, 0, 0, address, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
     /* Poll the Serial flash status register until the operation is achieved */
-    AT25D_WaitReady(pAt25);
+    AT25D_WaitReady( pAt25 );
 
     return 0;
 }
@@ -396,11 +411,10 @@ unsigned char AT25D_Erase64KBlock(At25 *pAt25, unsigned int address)
  * \return 0 if successful; otherwise, returns AT25_ERROR_PROGRAM is there has
  * been an error during the data programming.
  */
-unsigned char AT25D_Write(
-    At25 *pAt25,
-    unsigned char *pData,
-    unsigned int size,
-    unsigned int address)
+unsigned char AT25D_Write( At25 * pAt25,
+                           unsigned char * pData,
+                           unsigned int size,
+                           unsigned int address )
 {
     unsigned int pageSize;
     unsigned int writeSize;
@@ -408,63 +422,65 @@ unsigned char AT25D_Write(
     unsigned char status;
     unsigned int i = 0;
 
-    assert(pAt25);
-    assert(pData);
+    assert( pAt25 );
+    assert( pData );
 
     /* Retrieve device page size */
-    pageSize = AT25_PageSize(pAt25);
+    pageSize = AT25_PageSize( pAt25 );
 
     /* Program one page after the other */
-    while (size > 0) {
+    while( size > 0 )
+    {
         /* Compute number of bytes to program in page */
-        writeSize = min(size, pageSize - (address % pageSize));
+        writeSize = min( size, pageSize - ( address % pageSize ) );
 
         /* Enable critical write operation */
-        AT25D_EnableWrite(pAt25);
+        AT25D_EnableWrite( pAt25 );
 
         /* Program page */
-        if (AT25_ManId(pAt25) == SST_SPI_FLASH) {
+        if( AT25_ManId( pAt25 ) == SST_SPI_FLASH )
+        {
+            error = AT25_SendCommand( pAt25, AT25_SEQUENTIAL_PROGRAM_1, 4,
+                                      pData, 2, address, 0, 0 );
 
-            error = AT25_SendCommand(pAt25, AT25_SEQUENTIAL_PROGRAM_1, 4,
-                               pData, 2, address, 0, 0);
-            
-            assert(!error);
-    
+            assert( !error );
+
             /* Wait for transfer to finish */
-            AT25D_Wait(pAt25);
+            AT25D_Wait( pAt25 );
             /* Poll the Serial flash status register until the operation is achieved */
-            AT25D_WaitReady(pAt25);
+            AT25D_WaitReady( pAt25 );
 
-            for (i = 2; i < pageSize; i += 2) {
-                error = AT25_SendCommand(pAt25, AT25_SEQUENTIAL_PROGRAM_1, 1,
-                                   pData + i, 2, 0, 0, 0);
+            for( i = 2; i < pageSize; i += 2 )
+            {
+                error = AT25_SendCommand( pAt25, AT25_SEQUENTIAL_PROGRAM_1, 1,
+                                          pData + i, 2, 0, 0, 0 );
 
-                assert(!error);
-        
+                assert( !error );
+
                 /* Wait for transfer to finish */
-                AT25D_Wait(pAt25);
+                AT25D_Wait( pAt25 );
                 /* Poll the Serial flash status register until the operation is achieved */
-                AT25D_WaitReady(pAt25);
+                AT25D_WaitReady( pAt25 );
             }
-        
         }
-        else {
-        error = AT25_SendCommand(pAt25, AT25_BYTE_PAGE_PROGRAM, 4,
-                           pData, writeSize, address, 0, 0);
+        else
+        {
+            error = AT25_SendCommand( pAt25, AT25_BYTE_PAGE_PROGRAM, 4,
+                                      pData, writeSize, address, 0, 0 );
 
-        assert(!error);
+            assert( !error );
 
-        /* Wait for transfer to finish */
-        AT25D_Wait(pAt25);
-        /* Poll the Serial flash status register until the operation is achieved */
-        AT25D_WaitReady(pAt25);
-
+            /* Wait for transfer to finish */
+            AT25D_Wait( pAt25 );
+            /* Poll the Serial flash status register until the operation is achieved */
+            AT25D_WaitReady( pAt25 );
         }
-        
+
         /* Make sure that write was without error */
-        status = AT25D_ReadStatus(pAt25);
-        if ((status & AT25_STATUS_EPE) == AT25_STATUS_EPE_ERROR) {
+        status = AT25D_ReadStatus( pAt25 );
 
+        if( ( status & AT25_STATUS_EPE ) == AT25_STATUS_EPE_ERROR )
+        {
             return AT25_ERROR_PROGRAM;
         }
 
@@ -474,7 +490,7 @@ unsigned char AT25D_Write(
     }
 
     /* Enable critical write operation */
-    AT25D_DisableWrite(pAt25);
+    AT25D_DisableWrite( pAt25 );
 
     return 0;
 }
@@ -489,21 +505,19 @@ unsigned char AT25D_Write(
  *
  * \return 0 if successful; otherwise, fail.
  */
-unsigned char AT25D_Read(
-    At25 *pAt25,
-    unsigned char *pData,
-    unsigned int size,
-    unsigned int address)
+unsigned char AT25D_Read( At25 * pAt25,
+                          unsigned char * pData,
+                          unsigned int size,
+                          unsigned int address )
 {
     unsigned char error;
 
     /* Start a read operation */
-    error = AT25_SendCommand(pAt25, AT25_READ_ARRAY_LF, 4, pData, size, address, 0, 0);
-    assert(!error);
+    error = AT25_SendCommand( pAt25, AT25_READ_ARRAY_LF, 4, pData, size, address, 0, 0 );
+    assert( !error );
 
     /* Wait for transfer to finish */
-    AT25D_Wait(pAt25);
+    AT25D_Wait( pAt25 );
 
     return error;
 }
-

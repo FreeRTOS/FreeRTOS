@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,14 +30,14 @@
 #ifndef SHDWC_H
 #define SHDWC_H
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void SHDWC_DoShutDown(unsigned char rtt_enable, 
-                             unsigned char wk0_mode, 
-                             unsigned char wk0_debounce);
+extern void SHDWC_DoShutDown( unsigned char rtt_enable,
+                              unsigned char wk0_mode,
+                              unsigned char wk0_debounce );
 
-unsigned int SHDWC_GetStatus(void);
+unsigned int SHDWC_GetStatus( void );
 
 #endif //#ifndef SHDWC_H

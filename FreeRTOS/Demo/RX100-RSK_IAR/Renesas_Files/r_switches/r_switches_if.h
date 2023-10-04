@@ -16,6 +16,7 @@
 *
 * Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : r_switches_if.h
 * Description  : Functions for using switches with callback functions.
@@ -31,7 +32,7 @@
 #define SWITCHES_API_HEADER_FILE
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* Fixed width integer support. */
 #include <stdint.h>
@@ -39,34 +40,34 @@ Includes   <System Includes> , "Project Includes"
 #include "r_switches_config.h"
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 /* Version Number of API. */
-#define SWITCHES_VERSION_MAJOR           (1)
-#define SWITCHES_VERSION_MINOR           (0)
+#define SWITCHES_VERSION_MAJOR    ( 1 )
+#define SWITCHES_VERSION_MINOR    ( 0 )
+
 /* The process of getting the version number is done through the macro below. The version number is encoded where the
-   top 2 bytes are the major version number and the bottom 2 bytes are the minor version number. For example,
-   Version 4.25 would be returned as 0x00040019. */
-#define R_SWITCHES_GetVersion()  ((((uint32_t)SWITCHES_VERSION_MAJOR) << 16) | (uint32_t)SWITCHES_VERSION_MINOR)
+ * top 2 bytes are the major version number and the bottom 2 bytes are the minor version number. For example,
+ * Version 4.25 would be returned as 0x00040019. */
+#define R_SWITCHES_GetVersion()    ( ( ( ( uint32_t ) SWITCHES_VERSION_MAJOR ) << 16 ) | ( uint32_t ) SWITCHES_VERSION_MINOR )
 
 /***********************************************************************************************************************
-Public Functions
+*  Public Functions
 ***********************************************************************************************************************/
-void R_SWITCHES_Init(void);
-void R_SWITCHES_Update(void);
+void R_SWITCHES_Init( void );
+void R_SWITCHES_Update( void );
 
 /* Callback prototypes. */
-#if defined(SW1_CALLBACK_FUNCTION)
-void SW1_CALLBACK_FUNCTION(void);
+#if defined( SW1_CALLBACK_FUNCTION )
+    void SW1_CALLBACK_FUNCTION( void );
 #endif
 
-#if defined(SW2_CALLBACK_FUNCTION)
-void SW2_CALLBACK_FUNCTION(void);
+#if defined( SW2_CALLBACK_FUNCTION )
+    void SW2_CALLBACK_FUNCTION( void );
 #endif
 
-#if defined(SW3_CALLBACK_FUNCTION)
-void SW3_CALLBACK_FUNCTION(void);
+#if defined( SW3_CALLBACK_FUNCTION )
+    void SW3_CALLBACK_FUNCTION( void );
 #endif
 
 #endif /* SWITCHES_API_HEADER_FILE */
-

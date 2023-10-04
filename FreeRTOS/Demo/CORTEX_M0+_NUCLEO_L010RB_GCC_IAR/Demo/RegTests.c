@@ -32,8 +32,8 @@
 #include "RegTests.h"
 
 /* Tasks that implement register tests. */
-extern void vRegisterTest1Task( void *pvParameters );
-extern void vRegisterTest2Task( void *pvParameters );
+extern void vRegisterTest1Task( void * pvParameters );
+extern void vRegisterTest2Task( void * pvParameters );
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
  * detected in any of the tasks. */
@@ -59,7 +59,7 @@ void vStartRegisterTasks( UBaseType_t uxPriority )
 
 BaseType_t xAreRegisterTasksStillRunning( void )
 {
-static uint32_t ulLastRegisterTest1Counter = 0, ulLastRegisterTest2Counter = 0;
+    static uint32_t ulLastRegisterTest1Counter = 0, ulLastRegisterTest2Counter = 0;
 
     /* If the register test task is still running then we expect the loop
      * counters to have incremented since this function was last called. */

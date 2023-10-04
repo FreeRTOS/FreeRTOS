@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       I2SCC32XXDMA.h
  *
@@ -46,37 +47,37 @@
  */
 
 #ifndef ti_drivers_i2s_I2SCC32XXDMA__include
-#define ti_drivers_i2s_I2SCC32XXDMA__include
+    #define ti_drivers_i2s_I2SCC32XXDMA__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <ti/drivers/I2S.h>
-#include <ti/drivers/dpl/HwiP.h>
-#include <ti/drivers/dpl/SemaphoreP.h>
-#include <ti/drivers/utils/List.h>
-#include <ti/drivers/dma/UDMACC32XX.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <ti/drivers/I2S.h>
+    #include <ti/drivers/dpl/HwiP.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
+    #include <ti/drivers/utils/List.h>
+    #include <ti/drivers/dma/UDMACC32XX.h>
 
-#define I2SCC32XXDMA_PIN_02_McAFSX  0x0d01
-#define I2SCC32XXDMA_PIN_03_McACLK  0x0302
-#define I2SCC32XXDMA_PIN_15_McAFSX  0x070e
-#define I2SCC32XXDMA_PIN_17_McAFSX  0x0610
-#define I2SCC32XXDMA_PIN_21_McAFSX  0x0214
-#define I2SCC32XXDMA_PIN_45_McAXR0  0x062c
-#define I2SCC32XXDMA_PIN_45_McAFSX  0x0c2c
-#define I2SCC32XXDMA_PIN_50_McAXR0  0x0431
-#define I2SCC32XXDMA_PIN_50_McAXR1  0x0631
-#define I2SCC32XXDMA_PIN_52_McACLK  0x0233
-#define I2SCC32XXDMA_PIN_52_McAXR0  0x0433
-#define I2SCC32XXDMA_PIN_53_McACLK  0x0234
-#define I2SCC32XXDMA_PIN_53_McAFSX  0x0334
-#define I2SCC32XXDMA_PIN_60_McAXR1  0x063b
-#define I2SCC32XXDMA_PIN_62_McACLKX 0x0d3d
-#define I2SCC32XXDMA_PIN_63_McAFSX  0x073e
-#define I2SCC32XXDMA_PIN_64_McAXR0  0x073f
+    #define I2SCC32XXDMA_PIN_02_McAFSX     0x0d01
+    #define I2SCC32XXDMA_PIN_03_McACLK     0x0302
+    #define I2SCC32XXDMA_PIN_15_McAFSX     0x070e
+    #define I2SCC32XXDMA_PIN_17_McAFSX     0x0610
+    #define I2SCC32XXDMA_PIN_21_McAFSX     0x0214
+    #define I2SCC32XXDMA_PIN_45_McAXR0     0x062c
+    #define I2SCC32XXDMA_PIN_45_McAFSX     0x0c2c
+    #define I2SCC32XXDMA_PIN_50_McAXR0     0x0431
+    #define I2SCC32XXDMA_PIN_50_McAXR1     0x0631
+    #define I2SCC32XXDMA_PIN_52_McACLK     0x0233
+    #define I2SCC32XXDMA_PIN_52_McAXR0     0x0433
+    #define I2SCC32XXDMA_PIN_53_McACLK     0x0234
+    #define I2SCC32XXDMA_PIN_53_McAFSX     0x0334
+    #define I2SCC32XXDMA_PIN_60_McAXR1     0x063b
+    #define I2SCC32XXDMA_PIN_62_McACLKX    0x0d3d
+    #define I2SCC32XXDMA_PIN_63_McAFSX     0x073e
+    #define I2SCC32XXDMA_PIN_64_McAXR0     0x073f
 
 /**
  *  @addtogroup I2S_STATUS
@@ -102,21 +103,21 @@ extern "C" {
  *  @{
  */
 
-#define I2SCC32XXDMA_CMD_SET_ZEROBUF_LEN      (I2S_CMD_RESERVED + 0)
-#define I2SCC32XXDMA_CMD_SET_EMPTYBUF_LEN     (I2S_CMD_RESERVED + 1)
+    #define I2SCC32XXDMA_CMD_SET_ZEROBUF_LEN     ( I2S_CMD_RESERVED + 0 )
+    #define I2SCC32XXDMA_CMD_SET_EMPTYBUF_LEN    ( I2S_CMD_RESERVED + 1 )
 
 /** @}*/
 
 /* BACKWARDS COMPATIBILITY */
-#define I2SCC32XXDMA_SET_ZEROBUF_LEN      I2SCC32XXDMA_CMD_SET_ZEROBUF_LEN
-#define I2SCC32XXDMA_SET_EMPTYBUF_LEN     I2SCC32XXDMA_CMD_SET_EMPTYBUF_LEN
+    #define I2SCC32XXDMA_SET_ZEROBUF_LEN     I2SCC32XXDMA_CMD_SET_ZEROBUF_LEN
+    #define I2SCC32XXDMA_SET_EMPTYBUF_LEN    I2SCC32XXDMA_CMD_SET_EMPTYBUF_LEN
 /* END BACKWARDS COMPATIBILITY */
 
 /* Value for Invalid Index */
-#define I2SCC32XXDMA_INDEX_INVALID      0xFF
+    #define I2SCC32XXDMA_INDEX_INVALID      0xFF
 
 /*Number of Serial data pins supported*/
-#define I2SCC32XXDMA_NUM_SERIAL_PINS    2
+    #define I2SCC32XXDMA_NUM_SERIAL_PINS    2
 
 /*!
  *  @brief
@@ -126,14 +127,15 @@ extern "C" {
  *  I2SCC32XXDMA_16bit: txBuf and rxBuf are arrays of uint16_t elements
  *  I2SCC32XXDMA_32bit: txBuf and rxBuf are arrays of uint32_t elements
  */
-typedef enum I2SCC32XXDMA_DataSize {
-    I2SCC32XXDMA_16bit = 0,
-    I2SCC32XXDMA_32bit = 1
-} I2SCC32XXDMA_DataSize;
+    typedef enum I2SCC32XXDMA_DataSize
+    {
+        I2SCC32XXDMA_16bit = 0,
+        I2SCC32XXDMA_32bit = 1
+    } I2SCC32XXDMA_DataSize;
 
 
 /* I2S function table pointer */
-extern const I2S_FxnTable I2SCC32XXDMA_fxnTable;
+    extern const I2S_FxnTable I2SCC32XXDMA_fxnTable;
 
 
 /*!
@@ -173,119 +175,120 @@ extern const I2S_FxnTable I2SCC32XXDMA_fxnTable;
  *  };
  *  @endcode
  */
-typedef struct I2SCC32XXDMA_HWAttrsV1 {
-    /*! I2S Peripheral's base address */
-    uint32_t baseAddr;
-    /*! I2S Peripheral's interrupt vector */
-    uint32_t intNum;
-    /*! I2S Peripheral's interrupt priority */
-    uint32_t intPriority;
-    /*! uDMA controlTable receive channel index */
-    unsigned long rxChannelIndex;
-    /*! uDMA controlTable transmit channel index */
-    unsigned long txChannelIndex;
-    /*! I2S audio port data 0 pin */
-    uint16_t xr0Pin;
-    /*! I2S audio port data 1 pin */
-    uint16_t xr1Pin;
-    /*! I2S audio port clock O pin */
-    uint16_t clkxPin;
-    /*! I2S audio port data pin */
-    uint16_t clkPin;
-    /*! I2S audio port frame sync */
-    uint16_t fsxPin;
-} I2SCC32XXDMA_HWAttrsV1;
+    typedef struct I2SCC32XXDMA_HWAttrsV1
+    {
+        /*! I2S Peripheral's base address */
+        uint32_t baseAddr;
+        /*! I2S Peripheral's interrupt vector */
+        uint32_t intNum;
+        /*! I2S Peripheral's interrupt priority */
+        uint32_t intPriority;
+        /*! uDMA controlTable receive channel index */
+        unsigned long rxChannelIndex;
+        /*! uDMA controlTable transmit channel index */
+        unsigned long txChannelIndex;
+        /*! I2S audio port data 0 pin */
+        uint16_t xr0Pin;
+        /*! I2S audio port data 1 pin */
+        uint16_t xr1Pin;
+        /*! I2S audio port clock O pin */
+        uint16_t clkxPin;
+        /*! I2S audio port data pin */
+        uint16_t clkPin;
+        /*! I2S audio port frame sync */
+        uint16_t fsxPin;
+    } I2SCC32XXDMA_HWAttrsV1;
 
 /*!
  *  @brief    CC32XX Serial Pin Configuration
  */
-typedef struct I2SCC32XXDMA_SerialPinConfig {
-    /*!< Pin number  */
-    unsigned char         pinNumber;
+    typedef struct I2SCC32XXDMA_SerialPinConfig
+    {
+        /*!< Pin number  */
+        unsigned char pinNumber;
 
-    /*!< Mode the pin will operate(Rx/Tx) */
-    I2S_PinMode           pinMode;
+        /*!< Mode the pin will operate(Rx/Tx) */
+        I2S_PinMode pinMode;
 
-     /*!< Pin configuration in inactive state */
-    I2S_SerInActiveConfig inActiveConfig;
-
-} I2SCC32XXDMA_SerialPinConfig;
+        /*!< Pin configuration in inactive state */
+        I2S_SerInActiveConfig inActiveConfig;
+    } I2SCC32XXDMA_SerialPinConfig;
 
 /*!
  *  @brief    CC32XX specific I2S Parameters
  */
-typedef struct I2SCC32XXDMA_SerialPinParams {
-
-    /*!< CC32XX Serial Pin Configuration */
-    I2SCC32XXDMA_SerialPinConfig serialPinConfig[I2SCC32XXDMA_NUM_SERIAL_PINS];
-
-} I2SCC32XXDMA_SerialPinParams;
+    typedef struct I2SCC32XXDMA_SerialPinParams
+    {
+        /*!< CC32XX Serial Pin Configuration */
+        I2SCC32XXDMA_SerialPinConfig serialPinConfig[ I2SCC32XXDMA_NUM_SERIAL_PINS ];
+    } I2SCC32XXDMA_SerialPinParams;
 
 /*!
  *  @brief      I2SCC32XXDMA Serial pin variables
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct I2SCC32XXDMA_SerialPinVars {
-    I2S_DataMode        readWriteMode;
-    /* Pointer to read/write callback */
-    I2S_Callback        readWriteCallback;
-    /* Timeout for read/write semaphore */
-    uint32_t            readWriteTimeout;
-
-}I2SCC32XXDMA_SerialPinVars;
+    typedef struct I2SCC32XXDMA_SerialPinVars
+    {
+        I2S_DataMode readWriteMode;
+        /* Pointer to read/write callback */
+        I2S_Callback readWriteCallback;
+        /* Timeout for read/write semaphore */
+        uint32_t readWriteTimeout;
+    } I2SCC32XXDMA_SerialPinVars;
 
 /*!
  *  @brief      I2SCC32XXDMA Object
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct I2SCC32XXDMA_Object {
-    /* I2S control variables */
-    bool                   opened;              /* Has the obj been opened */
-    uint32_t               operationMode;       /* Mode of operation of I2S */
+    typedef struct I2SCC32XXDMA_Object
+    {
+        /* I2S control variables */
+        bool opened;                            /* Has the obj been opened */
+        uint32_t operationMode;                 /* Mode of operation of I2S */
 
-    /* I2S serial pin variables */
-    I2SCC32XXDMA_SerialPinVars serialPinVars[I2SCC32XXDMA_NUM_SERIAL_PINS];
+        /* I2S serial pin variables */
+        I2SCC32XXDMA_SerialPinVars serialPinVars[ I2SCC32XXDMA_NUM_SERIAL_PINS ];
 
-    uint16_t               readIndex;           /* read channel Index */
-    uint16_t               writeIndex;          /* write channel Index */
+        uint16_t readIndex;                     /* read channel Index */
+        uint16_t writeIndex;                    /* write channel Index */
 
-    I2SCC32XXDMA_DataSize  dmaSize;             /* Config DMA word size  */
+        I2SCC32XXDMA_DataSize dmaSize;          /* Config DMA word size  */
 
-    /* I2S OSAL objects */
-    SemaphoreP_Handle      writeSem;            /* I2S write semaphore*/
-    SemaphoreP_Handle      readSem;             /* I2S read semaphore */
-    HwiP_Handle            hwiHandle;
+        /* I2S OSAL objects */
+        SemaphoreP_Handle writeSem;             /* I2S write semaphore*/
+        SemaphoreP_Handle readSem;              /* I2S read semaphore */
+        HwiP_Handle hwiHandle;
 
-    /*!< Length of zero buffer to write in case of no data */
-    unsigned long          zeroWriteBufLength;
+        /*!< Length of zero buffer to write in case of no data */
+        unsigned long zeroWriteBufLength;
 
-    /*!< Length of empty buffer to read in case of no data
-         requested */
-    unsigned long          emptyReadBufLength;
+        /*!< Length of empty buffer to read in case of no data
+         *   requested */
+        unsigned long emptyReadBufLength;
 
-    /* Current Write buffer descriptor pointer */
-    I2S_BufDesc            *currentWriteBufDesc;
+        /* Current Write buffer descriptor pointer */
+        I2S_BufDesc * currentWriteBufDesc;
 
-    /* Previous Write Buffer descriptor pointer */
-    I2S_BufDesc            *prevWriteBufDesc;
+        /* Previous Write Buffer descriptor pointer */
+        I2S_BufDesc * prevWriteBufDesc;
 
-    /* Current Read buffer descriptor pointer */
-    I2S_BufDesc            *currentReadBufDesc;
+        /* Current Read buffer descriptor pointer */
+        I2S_BufDesc * currentReadBufDesc;
 
-    /* Previous Read Buffer descriptor pointer */
-    I2S_BufDesc            *prevReadBufDesc;
+        /* Previous Read Buffer descriptor pointer */
+        I2S_BufDesc * prevReadBufDesc;
 
-    /* UDMA */
-    UDMACC32XX_Handle    dmaHandle;
+        /* UDMA */
+        UDMACC32XX_Handle dmaHandle;
 
-    /* Lists for issue-reclaim mode */
-    List_List             readActiveQueue;
-    List_List             readDoneQueue;
-    List_List             writeActiveQueue;
-    List_List             writeDoneQueue;
-} I2SCC32XXDMA_Object, *I2SCC32XXDMA_Handle;
+        /* Lists for issue-reclaim mode */
+        List_List readActiveQueue;
+        List_List readDoneQueue;
+        List_List writeActiveQueue;
+        List_List writeDoneQueue;
+    } I2SCC32XXDMA_Object, * I2SCC32XXDMA_Handle;
 
 /*!
  *  @brief  Function to initialize the I2S_Params struct to its defaults
@@ -300,10 +303,10 @@ typedef struct I2SCC32XXDMA_Object {
  *
  *  @param  params  Parameter structure to initialize
  */
-extern void I2SCC32XXDMA_Params_init(I2SCC32XXDMA_SerialPinParams *params);
+    extern void I2SCC32XXDMA_Params_init( I2SCC32XXDMA_SerialPinParams * params );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_i2s_I2SCC32XXDMA__include */

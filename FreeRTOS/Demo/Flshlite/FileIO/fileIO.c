@@ -37,64 +37,65 @@
 
 void vDisplayMessage( const char * const pcMessageToPrint )
 {
-	#ifdef USE_STDIO
-		taskENTER_CRITICAL();
-			printf( "%s", pcMessageToPrint );
-			fflush( stdout );
-		taskEXIT_CRITICAL();
-	#else
-		/* Stop warnings. */
-		( void ) pcMessageToPrint;
-	#endif
+    #ifdef USE_STDIO
+        taskENTER_CRITICAL();
+        printf( "%s", pcMessageToPrint );
+        fflush( stdout );
+        taskEXIT_CRITICAL();
+    #else
+        /* Stop warnings. */
+        ( void ) pcMessageToPrint;
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 void vWriteMessageToDisk( const char * const pcMessage )
 {
-#ifdef USE_STDIO
-const char * const pcFileName = "c:\\RTOSlog.txt";
-const char * const pcSeparator = "\r\n-----------------------\r\n";
-FILE *pf;
+    #ifdef USE_STDIO
+        const char * const pcFileName = "c:\\RTOSlog.txt";
+        const char * const pcSeparator = "\r\n-----------------------\r\n";
+        FILE * pf;
 
-	taskENTER_CRITICAL();
-	{	
-		pf = fopen( pcFileName, "a" );
-		if( pf != NULL )
-		{
-			fwrite( pcMessage, strlen( pcMessage ), ( unsigned short ) 1, pf );
-			fwrite( pcSeparator, strlen( pcSeparator ), ( unsigned short ) 1, pf );
-			fclose( pf );
-		}
-	}
-	taskEXIT_CRITICAL();
-#else
-	/* Stop warnings. */
-	( void ) pcMessage;
-#endif /*USE_STDIO*/
+        taskENTER_CRITICAL();
+        {
+            pf = fopen( pcFileName, "a" );
+
+            if( pf != NULL )
+            {
+                fwrite( pcMessage, strlen( pcMessage ), ( unsigned short ) 1, pf );
+                fwrite( pcSeparator, strlen( pcSeparator ), ( unsigned short ) 1, pf );
+                fclose( pf );
+            }
+        }
+        taskEXIT_CRITICAL();
+    #else  /* ifdef USE_STDIO */
+        /* Stop warnings. */
+        ( void ) pcMessage;
+    #endif /*USE_STDIO*/
 }
 /*-----------------------------------------------------------*/
 
-void vWriteBufferToDisk( const char * const pcBuffer, unsigned long ulBufferLength )
+void vWriteBufferToDisk( const char * const pcBuffer,
+                         unsigned long ulBufferLength )
 {
-#ifdef USE_STDIO
-const char * const pcFileName = "c:\\trace.bin";
-FILE *pf;
+    #ifdef USE_STDIO
+        const char * const pcFileName = "c:\\trace.bin";
+        FILE * pf;
 
-	taskENTER_CRITICAL();
-	{
-		pf = fopen( pcFileName, "wb" );
-		if( pf )
-		{
-			fwrite( pcBuffer, ( size_t ) ulBufferLength, ( unsigned short ) 1, pf );
-			fclose( pf );
-		}
-	}
-	taskEXIT_CRITICAL();
-#else
-	/* Stop warnings. */
-	( void ) pcBuffer;
-    ( void ) ulBufferLength;
-#endif /*USE_STDIO*/
+        taskENTER_CRITICAL();
+        {
+            pf = fopen( pcFileName, "wb" );
+
+            if( pf )
+            {
+                fwrite( pcBuffer, ( size_t ) ulBufferLength, ( unsigned short ) 1, pf );
+                fclose( pf );
+            }
+        }
+        taskEXIT_CRITICAL();
+    #else  /* ifdef USE_STDIO */
+        /* Stop warnings. */
+        ( void ) pcBuffer;
+        ( void ) ulBufferLength;
+    #endif /*USE_STDIO*/
 }
-
-

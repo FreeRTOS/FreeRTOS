@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -33,11 +33,12 @@
  * \section Purpose
  *
  *   Definitions and methods for USB composite device implement.
- * 
+ *
  */
 
 #ifndef CDCAUDDDRIVER_H
 #define CDCAUDDDRIVER_H
+
 /** \addtogroup usbd_composite_cdcaud
  *@{
  */
@@ -60,69 +61,66 @@
  *      @{
  */
 /** Number of interfaces of the device (5, can be 4 if no mic support */
-#define CDCAUDDDriverDescriptors_MaxNumInterfaces   5
+#define CDCAUDDDriverDescriptors_MaxNumInterfaces    5
 /** Number of the CDC interface. */
-#define CDCAUDDDriverDescriptors_CDC_INTERFACE      0
+#define CDCAUDDDriverDescriptors_CDC_INTERFACE       0
 /** Number of the Audio interface. */
-#define CDCAUDDDriverDescriptors_AUD_INTERFACE      2
+#define CDCAUDDDriverDescriptors_AUD_INTERFACE       2
 /** Number of Audio function channels (M,L,R) */
-#define AUDD_NumChannels                            3
+#define AUDD_NumChannels                             3
 /**     @}*/
 
 /*---------------------------------------------------------------------------
  *         Types
  *---------------------------------------------------------------------------*/
 #pragma pack(1)
-#if defined   ( __CC_ARM   ) /* Keil ¦ÌVision 4 */
-#elif defined ( __ICCARM__ ) /* IAR Ewarm */
-#define __attribute__(...)
-#define __packed__  packed
-#elif defined (  __GNUC__  ) /* GCC CS3 */
-#define __packed__  aligned(1)
+#if defined( __CC_ARM )     /* Keil ¦ÌVision 4 */
+#elif defined( __ICCARM__ ) /* IAR Ewarm */
+    #define __attribute__( ... )
+    #define __packed__    packed
+#elif defined( __GNUC__ ) /* GCC CS3 */
+    #define __packed__    aligned( 1 )
 #endif
 
 /** Audio header descriptor with 1 interface */
-typedef struct _AUDHeaderDescriptor1{
-
+typedef struct _AUDHeaderDescriptor1
+{
     /** Header descriptor.*/
     AUDHeaderDescriptor header;
     /** Id of the first grouped interface.*/
     uint8_t bInterface0;
-
-} __attribute__ ((__packed__)) AUDHeaderDescriptor1;
+} __attribute__( ( __packed__ ) ) AUDHeaderDescriptor1;
 
 /** Audio header descriptor with 2 interface */
-typedef struct _AUDHeaderDescriptor2 {
-
+typedef struct _AUDHeaderDescriptor2
+{
     /** Header descriptor. */
     AUDHeaderDescriptor header;
     /** Id of the first grouped interface - Speaker. */
     uint8_t bInterface0;
     /** Id of the second grouped interface - Speakerphone. */
     uint8_t bInterface1;
-
-} __attribute__ ((__packed__)) AUDHeaderDescriptor2; /* GCC */
+} __attribute__( ( __packed__ ) ) AUDHeaderDescriptor2; /* GCC */
 
 /**
  * Feature unit descriptor with 3 channel controls (master, right, left).
  */
-typedef struct _AUDFeatureUnitDescriptor3{
-
+typedef struct _AUDFeatureUnitDescriptor3
+{
     /** Feature unit descriptor.*/
     AUDFeatureUnitDescriptor feature;
     /** Available controls for each channel.*/
-    uint8_t bmaControls[AUDD_NumChannels];
+    uint8_t bmaControls[ AUDD_NumChannels ];
     /** Index of a string descriptor for the feature unit.*/
     uint8_t iFeature;
-
-} __attribute__ ((__packed__)) AUDFeatureUnitDescriptor3;
+} __attribute__( ( __packed__ ) ) AUDFeatureUnitDescriptor3;
 
 /**
  * List of descriptors for detailling the audio control interface of a
  * device using a USB audio speaker function.
  */
-typedef struct _AUDDSpeakerAcDescriptors{
-
+typedef struct _AUDDSpeakerAcDescriptors
+{
     /** Header descriptor (with one slave interface).*/
     AUDHeaderDescriptor1 header;
     /** Input terminal descriptor.*/
@@ -131,15 +129,14 @@ typedef struct _AUDDSpeakerAcDescriptors{
     AUDOutputTerminalDescriptor output;
     /** Feature unit descriptor.*/
     AUDFeatureUnitDescriptor3 feature;
-
-} __attribute__ ((__packed__)) AUDDSpeakerAcDescriptors;
+} __attribute__( ( __packed__ ) ) AUDDSpeakerAcDescriptors;
 
 /**
  * List of descriptors for detailling the audio control interface of a
  * device using a USB Audio Speakerphoneer function.
  */
-typedef struct _AUDDSpeakerPhoneAcDescriptors {
-
+typedef struct _AUDDSpeakerPhoneAcDescriptors
+{
     /** Header descriptor (with one slave interface). */
     AUDHeaderDescriptor2 header;
     /** Input terminal descriptor. */
@@ -154,27 +151,25 @@ typedef struct _AUDDSpeakerPhoneAcDescriptors {
     AUDOutputTerminalDescriptor outputRec;
     /** Feature unit descriptor - SpeakerPhonephone. */
     AUDFeatureUnitDescriptor3 featureRec;
-
-} __attribute__ ((__packed__)) AUDDSpeakerPhoneAcDescriptors;
+} __attribute__( ( __packed__ ) ) AUDDSpeakerPhoneAcDescriptors;
 
 /**
  * Format type I descriptor with one discrete sampling frequency.
  */
-typedef struct _AUDFormatTypeOneDescriptor1{
-
+typedef struct _AUDFormatTypeOneDescriptor1
+{
     /** Format type I descriptor.*/
     AUDFormatTypeOneDescriptor formatType;
     /** Sampling frequency in Hz.*/
-    uint8_t tSamFreq[3];
-
-} __attribute__ ((__packed__)) AUDFormatTypeOneDescriptor1;
+    uint8_t tSamFreq[ 3 ];
+} __attribute__( ( __packed__ ) ) AUDFormatTypeOneDescriptor1;
 
 /**
  * Configuration descriptor list for a device implementing
  * CDC(Serial) + Audio(Speaker) composite driver.
  */
-typedef struct _CdcAudspkdDriverConfigurationDescriptors {
-
+typedef struct _CdcAudspkdDriverConfigurationDescriptors
+{
     /** Standard configuration descriptor. */
     USBConfigurationDescriptor configuration;
 
@@ -220,15 +215,14 @@ typedef struct _CdcAudspkdDriverConfigurationDescriptors {
     AUDEndpointDescriptor audStreamingOutEndpoint;
     /** Audio class descriptor for the streaming out endpoint.*/
     AUDDataEndpointDescriptor audStreamingOutDataEndpoint;
-
-} __attribute__ ((__packed__)) CdcAudspkdDriverConfigurationDescriptors;
+} __attribute__( ( __packed__ ) ) CdcAudspkdDriverConfigurationDescriptors;
 
 /**
  * Configuration descriptor list for a device implementing
  * CDC(Serial) + Audio(SpeakerPhone) composite driver.
  */
-typedef struct _CdcAuddDriverConfigurationDescriptors {
-
+typedef struct _CdcAuddDriverConfigurationDescriptors
+{
     /** Standard configuration descriptor. */
     USBConfigurationDescriptor configuration;
 
@@ -287,8 +281,7 @@ typedef struct _CdcAuddDriverConfigurationDescriptors {
     AUDEndpointDescriptor streamingInEndpoint;
     /** Audio class descriptor for the streaming in endpoint. */
     AUDDataEndpointDescriptor streamingInDataEndpoint;
-
-} __attribute__ ((__packed__)) CdcAuddDriverConfigurationDescriptors;
+} __attribute__( ( __packed__ ) ) CdcAuddDriverConfigurationDescriptors;
 
 #pragma pack()
 
@@ -296,12 +289,11 @@ typedef struct _CdcAuddDriverConfigurationDescriptors {
  *         Exported functions
  *---------------------------------------------------------------------------*/
 
-extern void CDCAUDDDriver_Initialize(const USBDDriverDescriptors * pDescriptors);
-extern void CDCAUDDDriver_ConfigurationChangedHandler(uint8_t cfgnum);
-extern void CDCAUDDDriver_InterfaceSettingChangedHandler(
-    uint8_t interface, uint8_t setting);
-extern void CDCAUDDDriver_RequestHandler(const USBGenericRequest *request);
+extern void CDCAUDDDriver_Initialize( const USBDDriverDescriptors * pDescriptors );
+extern void CDCAUDDDriver_ConfigurationChangedHandler( uint8_t cfgnum );
+extern void CDCAUDDDriver_InterfaceSettingChangedHandler( uint8_t interface,
+                                                          uint8_t setting );
+extern void CDCAUDDDriver_RequestHandler( const USBGenericRequest * request );
 
 /**@}*/
 #endif //#ifndef CDCHIDDDRIVER_H
-

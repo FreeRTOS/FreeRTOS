@@ -35,32 +35,34 @@
  */
 
 #ifndef MSS_SEG_H
-#define MSS_SEG_H
+    #define MSS_SEG_H
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-typedef struct {
-    union {
-        struct {
-            volatile int32_t    offset : 15;
-            volatile int32_t    rsrvd  : 16;
-            volatile int32_t    locked : 1;
-        } CFG;
-        uint32_t raw;
-    } u[8u];
+    typedef struct
+    {
+        union
+        {
+            struct
+            {
+                volatile int32_t offset : 15;
+                volatile int32_t rsrvd  : 16;
+                volatile int32_t locked : 1;
+            } CFG;
+            uint32_t raw;
+        } u[ 8u ];
 
-    uint32_t fill[64U-8U];
+        uint32_t fill[ 64U - 8U ];
+    } seg_t;
 
-} seg_t;
+    #define SEG    ( ( seg_t * ) 0x20005d00 )
 
-#define SEG ((seg_t*) 0x20005d00)
-
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /*MSS_SEG_H*/

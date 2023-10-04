@@ -29,7 +29,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define partstNUM_LEDs	8
+#define partstNUM_LEDs    8
 
 static unsigned char sState[ partstNUM_LEDs ] = { pdFALSE };
 static unsigned char sState1[ partstNUM_LEDs ] = { pdFALSE };
@@ -38,100 +38,100 @@ static unsigned char sState1[ partstNUM_LEDs ] = { pdFALSE };
 /*-----------------------------------------------------------*/
 void vParTestInitialise( void )
 {
-	/* Set port for LED outputs. */
-	DDR16 = 0xFF;
-	DDR25 = 0xFF;
+    /* Set port for LED outputs. */
+    DDR16 = 0xFF;
+    DDR25 = 0xFF;
 
-	/* Start with LEDs off. */
-	PDR25 = 0x00;
-	PDR16 = 0x00;
+    /* Start with LEDs off. */
+    PDR25 = 0x00;
+    PDR16 = 0x00;
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstNUM_LEDs )
-	{
-		taskENTER_CRITICAL();
-		{		
-			/* Toggle the state of the single genuine on board LED. */
-			if( sState[ uxLED ] )
-			{
-				PDR25 |= ( 1 << uxLED );
-			}
-			else
-			{
-				PDR25 &= ~( 1 << uxLED );
-			}
-		
-			sState[uxLED] = !( sState[ uxLED ] );
-		}		
-		taskEXIT_CRITICAL();
-	}
-	else
-	{
-		uxLED -= partstNUM_LEDs;
+    if( uxLED < partstNUM_LEDs )
+    {
+        taskENTER_CRITICAL();
+        {
+            /* Toggle the state of the single genuine on board LED. */
+            if( sState[ uxLED ] )
+            {
+                PDR25 |= ( 1 << uxLED );
+            }
+            else
+            {
+                PDR25 &= ~( 1 << uxLED );
+            }
 
-		if( uxLED < partstNUM_LEDs )
-		{		
-			taskENTER_CRITICAL();
-			{		
-				/* Toggle the state of the single genuine on board LED. */
-				if( sState1[uxLED])	
-				{
-					PDR16 |= ( 1 << uxLED );
-				}
-				else
-				{
-					PDR16 &= ~( 1 << uxLED );
-				}
-			
-				sState1[ uxLED ] = !( sState1[ uxLED ] );
-			}
-			taskEXIT_CRITICAL();
-		}
-	}
+            sState[ uxLED ] = !( sState[ uxLED ] );
+        }
+        taskEXIT_CRITICAL();
+    }
+    else
+    {
+        uxLED -= partstNUM_LEDs;
+
+        if( uxLED < partstNUM_LEDs )
+        {
+            taskENTER_CRITICAL();
+            {
+                /* Toggle the state of the single genuine on board LED. */
+                if( sState1[ uxLED ] )
+                {
+                    PDR16 |= ( 1 << uxLED );
+                }
+                else
+                {
+                    PDR16 &= ~( 1 << uxLED );
+                }
+
+                sState1[ uxLED ] = !( sState1[ uxLED ] );
+            }
+            taskEXIT_CRITICAL();
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	/* Set or clear the output [in this case show or hide the '*' character. */
-	if( uxLED < partstNUM_LEDs )
-	{
-		taskENTER_CRITICAL();
-		{
-			if( xValue )
-			{
-				PDR25 |= ( 1 << uxLED );
-				sState[ uxLED ] = 1;
-			}
-			else
-			{
-				PDR25 &= ~( 1 << uxLED );
-				sState[ uxLED ] = 0;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
-	else 
-	{
-		uxLED -= partstNUM_LEDs;
+    /* Set or clear the output [in this case show or hide the '*' character. */
+    if( uxLED < partstNUM_LEDs )
+    {
+        taskENTER_CRITICAL();
+        {
+            if( xValue )
+            {
+                PDR25 |= ( 1 << uxLED );
+                sState[ uxLED ] = 1;
+            }
+            else
+            {
+                PDR25 &= ~( 1 << uxLED );
+                sState[ uxLED ] = 0;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
+    else
+    {
+        uxLED -= partstNUM_LEDs;
 
-		taskENTER_CRITICAL();
-		{
-			if( xValue )
-			{
-				PDR16 |= ( 1 << uxLED );
-				sState1[ uxLED ] = 1;
-			}
-			else
-			{
-				PDR16 &= ~( 1 << uxLED );
-				sState1[ uxLED ] = 0;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+        taskENTER_CRITICAL();
+        {
+            if( xValue )
+            {
+                PDR16 |= ( 1 << uxLED );
+                sState1[ uxLED ] = 1;
+            }
+            else
+            {
+                PDR16 &= ~( 1 << uxLED );
+                sState1[ uxLED ] = 0;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-

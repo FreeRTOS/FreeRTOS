@@ -45,20 +45,24 @@
  */
 
 /**  A single bit was incorrect but has been recovered. */
-#define Hamming_ERROR_SINGLEBIT         1
+#define Hamming_ERROR_SINGLEBIT       1
 
 /** The original code has been corrupted. */
-#define Hamming_ERROR_ECC               2
+#define Hamming_ERROR_ECC             2
 
 /** Multiple bits are incorrect in the data and they cannot be corrected. */
-#define Hamming_ERROR_MULTIPLEBITS      3
+#define Hamming_ERROR_MULTIPLEBITS    3
 
 /*------------------------------------------------------------------------------
  *         Exported functions
  *------------------------------------------------------------------------------*/
 
-extern void Hamming_Compute256x( const uint8_t* pucData, uint32_t dwSize, uint8_t* pucCode ) ;
+extern void Hamming_Compute256x( const uint8_t * pucData,
+                                 uint32_t dwSize,
+                                 uint8_t * pucCode );
 
-extern uint8_t Hamming_Verify256x( uint8_t* pucData, uint32_t dwSize, const uint8_t* pucCode ) ;
+extern uint8_t Hamming_Verify256x( uint8_t * pucData,
+                                   uint32_t dwSize,
+                                   const uint8_t * pucCode );
 
 #endif /* _HAMMING_ */

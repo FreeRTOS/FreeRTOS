@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,51 +30,50 @@
 #ifndef SUPC_H
 #define SUPC_H
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void SUPC_EnableSlcd(unsigned char internal);
+extern void SUPC_EnableSlcd( unsigned char internal );
 
-extern void SUPC_DisableSlcd(void);
+extern void SUPC_DisableSlcd( void );
 
-extern void SUPC_SetSlcdVoltage(unsigned int voltage);
-
-extern
-#ifdef __ICCARM__
-__ramfunc // IAR
-#endif
-void SUPC_EnableFlash(unsigned int time);
+extern void SUPC_SetSlcdVoltage( unsigned int voltage );
 
 extern
 #ifdef __ICCARM__
-__ramfunc // IAR
+    __ramfunc /* IAR */
 #endif
-void SUPC_DisableFlash(void);
+void SUPC_EnableFlash( unsigned int time );
 
-extern void SUPC_SetVoltageOutput(unsigned int voltage);
+extern
+#ifdef __ICCARM__
+    __ramfunc /* IAR */
+#endif
+void SUPC_DisableFlash( void );
 
-extern void SUPC_EnableDeepMode(void);
+extern void SUPC_SetVoltageOutput( unsigned int voltage );
 
-extern void SUPC_EnableSram(void);
+extern void SUPC_EnableDeepMode( void );
 
-extern void SUPC_DisableSram(void);
+extern void SUPC_EnableSram( void );
 
-extern void SUPC_EnableRtc(void);
+extern void SUPC_DisableSram( void );
 
-extern void SUPC_DisableRtc(void);
+extern void SUPC_EnableRtc( void );
 
-extern void SUPC_SetBodSampling(unsigned int mode);
+extern void SUPC_DisableRtc( void );
 
-extern void SUPC_DisableDeepMode(void);
+extern void SUPC_SetBodSampling( unsigned int mode );
 
-extern void SUPC_DisableVoltageRegulator(void);
+extern void SUPC_DisableDeepMode( void );
 
-extern void SUPC_Shutdown(void);
+extern void SUPC_DisableVoltageRegulator( void );
 
-extern void SUPC_SetWakeUpSources(unsigned int sources);
+extern void SUPC_Shutdown( void );
 
-extern void SUPC_SetWakeUpInputs(unsigned int inputs);
+extern void SUPC_SetWakeUpSources( unsigned int sources );
+
+extern void SUPC_SetWakeUpInputs( unsigned int inputs );
 
 #endif //#ifndef SUPC_H
-

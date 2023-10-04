@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*
  *  ======== MutexP_freertos.c ========
  */
@@ -43,7 +44,7 @@
 /*
  *  ======== MutexP_create ========
  */
-MutexP_Handle MutexP_create(MutexP_Params *params)
+MutexP_Handle MutexP_create( MutexP_Params * params )
 {
     SemaphoreHandle_t sem = NULL;
 
@@ -55,38 +56,38 @@ MutexP_Handle MutexP_create(MutexP_Params *params)
      */
     sem = xSemaphoreCreateRecursiveMutex();
 
-    return ((MutexP_Handle)sem);
+    return( ( MutexP_Handle ) sem );
 }
 
 /*
  *  ======== MutexP_delete ========
  */
-MutexP_Status MutexP_delete(MutexP_Handle handle)
+MutexP_Status MutexP_delete( MutexP_Handle handle )
 {
-    vSemaphoreDelete((SemaphoreHandle_t)handle);
+    vSemaphoreDelete( ( SemaphoreHandle_t ) handle );
 
-    return (MutexP_OK);
+    return( MutexP_OK );
 }
 
 /*
  *  ======== MutexP_lock ========
  */
-uintptr_t MutexP_lock(MutexP_Handle handle)
+uintptr_t MutexP_lock( MutexP_Handle handle )
 {
-    SemaphoreHandle_t xMutex = (SemaphoreHandle_t)handle;
+    SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) handle;
 
     /* Retry every 10 ticks */
-    while (xSemaphoreTakeRecursive(xMutex, (TickType_t)10) == pdFALSE) {
-        ;
+    while( xSemaphoreTakeRecursive( xMutex, ( TickType_t ) 10 ) == pdFALSE )
+    {
     }
 
-    return (0);
+    return( 0 );
 }
 
 /*
  *  ======== MutexP_Params_init ========
  */
-void MutexP_Params_init(MutexP_Params *params)
+void MutexP_Params_init( MutexP_Params * params )
 {
     params->name = NULL;
     params->callback = NULL;
@@ -95,8 +96,10 @@ void MutexP_Params_init(MutexP_Params *params)
 /*
  *  ======== MutexP_unlock ========
  */
-void MutexP_unlock(MutexP_Handle handle, uintptr_t key)
+void MutexP_unlock( MutexP_Handle handle,
+                    uintptr_t key )
 {
-    SemaphoreHandle_t xMutex = (SemaphoreHandle_t)handle;
-    xSemaphoreGiveRecursive(xMutex);
+    SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) handle;
+
+    xSemaphoreGiveRecursive( xMutex );
 }

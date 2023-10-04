@@ -1,4 +1,3 @@
-
 /******************************************************************************
 *
 * alt_watchdog.c - API for the Altera SoC FPGA watchdog timers.
@@ -55,31 +54,32 @@
 #include "alt_clock_manager.h"
 
 
-    /* Useful constants and utilities */
+/* Useful constants and utilities */
 
-bool cpu_wdog_in_gpt_mode(void)
+bool cpu_wdog_in_gpt_mode( void )
 {
-    return !(alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) & WDOG_WDT_MODE);
+    return !( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) & WDOG_WDT_MODE );
 }
 
-static inline bool cpu_wdog_in_wdt_mode(void)
+static inline bool cpu_wdog_in_wdt_mode( void )
 {
-    return (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) & WDOG_WDT_MODE);
+    return( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) & WDOG_WDT_MODE );
 }
 
 
 /* This value must be written to the Counter Restart Register of the
  * peripheral watchdog timers to restart them. */
-#define WDOG_RESET_KEY          0x00000076
+#define WDOG_RESET_KEY        0x00000076
 
-#define ALT_WDOG_RST_WIDTH      8                       /* 8 or more MPU clock cycles */
+#define ALT_WDOG_RST_WIDTH    8                         /* 8 or more MPU clock cycles */
 
 
-inline static void alt_wdog_wait(void* reg, uint32_t cnt)
+inline static void alt_wdog_wait( void * reg,
+                                  uint32_t cnt )
 {
-    for (; cnt ; cnt--)
+    for( ; cnt; cnt-- )
     {
-        (void) alt_read_word(reg);
+        ( void ) alt_read_word( reg );
     }
 }
 
@@ -88,17 +88,17 @@ inline static void alt_wdog_wait(void* reg, uint32_t cnt)
 /* Initialize the watchdog timer module before use                                      */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_init(void)
+ALT_STATUS_CODE alt_wdog_init( void )
 {
-    // put watchdog timer modules into system manager reset if not already there
+    /* put watchdog timer modules into system manager reset if not already there */
     alt_wdog_uninit();
-    // release L4 watchdog timer modules from system reset (w/ four instruction-cycle delay)
-    alt_clrbits_word(ALT_RSTMGR_PERMODRST_ADDR, ALT_RSTMGR_PERMODRST_L4WD0_SET_MSK |
-            ALT_RSTMGR_PERMODRST_L4WD1_SET_MSK);
+    /* release L4 watchdog timer modules from system reset (w/ four instruction-cycle delay) */
+    alt_clrbits_word( ALT_RSTMGR_PERMODRST_ADDR, ALT_RSTMGR_PERMODRST_L4WD0_SET_MSK |
+                      ALT_RSTMGR_PERMODRST_L4WD1_SET_MSK );
 
-    // release *both* ARM watchdog timer modules from system reset (if in reset)
-    // does not put either one into watchdog timer mode
-    alt_clrbits_word(ALT_RSTMGR_MPUMODRST_ADDR, ALT_RSTMGR_MPUMODRST_WDS_SET_MSK);
+    /* release *both* ARM watchdog timer modules from system reset (if in reset) */
+    /* does not put either one into watchdog timer mode */
+    alt_clrbits_word( ALT_RSTMGR_MPUMODRST_ADDR, ALT_RSTMGR_MPUMODRST_WDS_SET_MSK );
     return ALT_E_SUCCESS;
 }
 
@@ -107,12 +107,12 @@ ALT_STATUS_CODE alt_wdog_init(void)
 /* Return the local ARM watchdog timer back to general-purpose timer mode               */
 /****************************************************************************************/
 
-void alt_ARM_wdog_gpt_mode_set(void)
+void alt_ARM_wdog_gpt_mode_set( void )
 {
-    while (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) & WDOG_WDT_MODE)
+    while( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) & WDOG_WDT_MODE )
     {
-        alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_DISABLE_REG_OFFSET, WDOG_DISABLE_VAL0);
-        alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_DISABLE_REG_OFFSET, WDOG_DISABLE_VAL1);
+        alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_DISABLE_REG_OFFSET, WDOG_DISABLE_VAL0 );
+        alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_DISABLE_REG_OFFSET, WDOG_DISABLE_VAL1 );
     }
 }
 
@@ -121,9 +121,9 @@ void alt_ARM_wdog_gpt_mode_set(void)
 /* Set the local ARM watchdog timer to watchdog timer mode                              */
 /****************************************************************************************/
 
-void alt_ARM_wdog_wdog_mode_set(void)
+void alt_ARM_wdog_wdog_mode_set( void )
 {
-    alt_setbits_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET, WDOG_WDT_MODE);
+    alt_setbits_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET, WDOG_WDT_MODE );
 }
 
 
@@ -131,36 +131,37 @@ void alt_ARM_wdog_wdog_mode_set(void)
 /* Uninitialize the watchdog timer module & return to reset state                        */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_uninit(void)
+ALT_STATUS_CODE alt_wdog_uninit( void )
 {
-    // put L4 watchdog modules into system manager reset
-    alt_setbits_word(ALT_RSTMGR_PERMODRST_ADDR,
-            ALT_RSTMGR_PERMODRST_L4WD0_SET_MSK | ALT_RSTMGR_PERMODRST_L4WD1_SET_MSK);
+    /* put L4 watchdog modules into system manager reset */
+    alt_setbits_word( ALT_RSTMGR_PERMODRST_ADDR,
+                      ALT_RSTMGR_PERMODRST_L4WD0_SET_MSK | ALT_RSTMGR_PERMODRST_L4WD1_SET_MSK );
 
-        // using the system manager bit to reset the ARM watchdog timer
-        // resets *both* ARM watchdog timers, which is often not advisable,
-        // so we reset the local ARM watchdog timer manually:
+    /* using the system manager bit to reset the ARM watchdog timer */
+    /* resets *both* ARM watchdog timers, which is often not advisable, */
+    /* so we reset the local ARM watchdog timer manually: */
 
-        // first, stop the ARM watchdog timer & disable interrupt
-    alt_clrbits_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET, WDOG_TMR_ENABLE | WDOG_INT_EN);
-        // reset load and counter registers
-    alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET, 0);
-        // clear any pending reset and interrupt status
-    alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_RSTSTAT_REG_OFFSET, WDOG_RST_STAT_BIT);
-    alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET, WDOG_INT_STAT_BIT);
-        // return ARM watchdog timer to (initial) general-purpose timer mode
+    /* first, stop the ARM watchdog timer & disable interrupt */
+    alt_clrbits_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET, WDOG_TMR_ENABLE | WDOG_INT_EN );
+    /* reset load and counter registers */
+    alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET, 0 );
+    /* clear any pending reset and interrupt status */
+    alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_RSTSTAT_REG_OFFSET, WDOG_RST_STAT_BIT );
+    alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET, WDOG_INT_STAT_BIT );
+    /* return ARM watchdog timer to (initial) general-purpose timer mode */
     alt_ARM_wdog_gpt_mode_set();
-        // now write zeros to the control register significant bitfields
-        // and then verify that all significant bitfields return zero
-    alt_clrbits_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
-            (WDOG_PS_MASK | WDOG_WDT_MODE | WDOG_INT_EN | WDOG_AUTO_RELOAD | WDOG_TMR_ENABLE));
-    if (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET)
-            & (WDOG_PS_MASK | WDOG_WDT_MODE | WDOG_INT_EN | WDOG_AUTO_RELOAD | WDOG_TMR_ENABLE))
+    /* now write zeros to the control register significant bitfields */
+    /* and then verify that all significant bitfields return zero */
+    alt_clrbits_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
+                      ( WDOG_PS_MASK | WDOG_WDT_MODE | WDOG_INT_EN | WDOG_AUTO_RELOAD | WDOG_TMR_ENABLE ) );
+
+    if( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET )
+        & ( WDOG_PS_MASK | WDOG_WDT_MODE | WDOG_INT_EN | WDOG_AUTO_RELOAD | WDOG_TMR_ENABLE ) )
     {
         return ALT_E_ERROR;
     }
-    return ALT_E_SUCCESS;
 
+    return ALT_E_SUCCESS;
 }
 
 
@@ -168,84 +169,86 @@ ALT_STATUS_CODE alt_wdog_uninit(void)
 /* Stops the specified watchdog timer.                                                  */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_stop(ALT_WDOG_TIMER_t tmr_id)
+ALT_STATUS_CODE alt_wdog_stop( ALT_WDOG_TIMER_t tmr_id )
 {
-    ALT_STATUS_CODE         ret = ALT_E_BAD_ARG;    // return value
-    uint32_t                config;                 // the current configuration
-    uint32_t                loadreg;                // current restart value
+    ALT_STATUS_CODE ret = ALT_E_BAD_ARG; /* return value */
+    uint32_t config;                     /* the current configuration */
+    uint32_t loadreg;                    /* current restart value */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
-                (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) & ~WDOG_TMR_ENABLE));
+        alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
+                        ( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) & ~WDOG_TMR_ENABLE ) );
         ret = ALT_E_SUCCESS;
     }
 
-    // these timers can only be reset by using a system manager reset
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    /* these timers can only be reset by using a system manager reset */
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        config = alt_read_word(ALT_L4WD0_WDT_CR_ADDR);      // read current timer mode
-        loadreg = alt_read_word(ALT_L4WD0_WDT_TORR_ADDR);   // read timer restart values
-        alt_write_word(ALT_RSTMGR_PERMODRST_ADDR,
-                alt_read_word(ALT_RSTMGR_PERMODRST_ADDR) | ALT_RSTMGR_PERMODRST_L4WD0_SET_MSK);
-                        // assert reset & wait
-        alt_wdog_wait(ALT_RSTMGR_PERMODRST_ADDR, ALT_WDOG_RST_WIDTH);
-        alt_write_word(ALT_RSTMGR_PERMODRST_ADDR,
-                alt_read_word(ALT_RSTMGR_PERMODRST_ADDR) & ALT_RSTMGR_PERMODRST_L4WD0_CLR_MSK);
-                        // release peripheral reset signal by clearing bit
-        alt_write_word(ALT_L4WD0_WDT_TORR_ADDR, loadreg);   // restore timer restart value
-        alt_write_word(ALT_L4WD0_WDT_CR_ADDR, config & ALT_TMR_TMR1CTLREG_TMR1_EN_CLR_MSK);
-                          // restore previous timer mode except timer isn't started
+        config = alt_read_word( ALT_L4WD0_WDT_CR_ADDR );    /* read current timer mode */
+        loadreg = alt_read_word( ALT_L4WD0_WDT_TORR_ADDR ); /* read timer restart values */
+        alt_write_word( ALT_RSTMGR_PERMODRST_ADDR,
+                        alt_read_word( ALT_RSTMGR_PERMODRST_ADDR ) | ALT_RSTMGR_PERMODRST_L4WD0_SET_MSK );
+        /* assert reset & wait */
+        alt_wdog_wait( ALT_RSTMGR_PERMODRST_ADDR, ALT_WDOG_RST_WIDTH );
+        alt_write_word( ALT_RSTMGR_PERMODRST_ADDR,
+                        alt_read_word( ALT_RSTMGR_PERMODRST_ADDR ) & ALT_RSTMGR_PERMODRST_L4WD0_CLR_MSK );
+        /* release peripheral reset signal by clearing bit */
+        alt_write_word( ALT_L4WD0_WDT_TORR_ADDR, loadreg ); /* restore timer restart value */
+        alt_write_word( ALT_L4WD0_WDT_CR_ADDR, config & ALT_TMR_TMR1CTLREG_TMR1_EN_CLR_MSK );
+        /* restore previous timer mode except timer isn't started */
         ret = ALT_E_SUCCESS;
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        config = alt_read_word(ALT_L4WD1_WDT_CR_ADDR);      // read current timer mode
-        loadreg = alt_read_word(ALT_L4WD1_WDT_TORR_ADDR);   // read timer restart values
-        alt_write_word(ALT_RSTMGR_PERMODRST_ADDR,
-                alt_read_word(ALT_RSTMGR_PERMODRST_ADDR) | ALT_RSTMGR_PERMODRST_L4WD1_SET_MSK);
-                        // assert reset & wait
-        alt_write_word(ALT_RSTMGR_PERMODRST_ADDR,
-                alt_read_word(ALT_RSTMGR_PERMODRST_ADDR) & ALT_RSTMGR_PERMODRST_L4WD1_CLR_MSK);
-                         // release peripheral reset signal by clearing bit
-        alt_write_word(ALT_L4WD1_WDT_TORR_ADDR, loadreg);   // restore timer restart value
-        alt_write_word(ALT_L4WD1_WDT_CR_ADDR, config & ALT_TMR_TMR1CTLREG_TMR1_EN_CLR_MSK);
-                          // restore previous timer mode except timer isn't started
+        config = alt_read_word( ALT_L4WD1_WDT_CR_ADDR );    /* read current timer mode */
+        loadreg = alt_read_word( ALT_L4WD1_WDT_TORR_ADDR ); /* read timer restart values */
+        alt_write_word( ALT_RSTMGR_PERMODRST_ADDR,
+                        alt_read_word( ALT_RSTMGR_PERMODRST_ADDR ) | ALT_RSTMGR_PERMODRST_L4WD1_SET_MSK );
+        /* assert reset & wait */
+        alt_write_word( ALT_RSTMGR_PERMODRST_ADDR,
+                        alt_read_word( ALT_RSTMGR_PERMODRST_ADDR ) & ALT_RSTMGR_PERMODRST_L4WD1_CLR_MSK );
+        /* release peripheral reset signal by clearing bit */
+        alt_write_word( ALT_L4WD1_WDT_TORR_ADDR, loadreg ); /* restore timer restart value */
+        alt_write_word( ALT_L4WD1_WDT_CR_ADDR, config & ALT_TMR_TMR1CTLREG_TMR1_EN_CLR_MSK );
+        /* restore previous timer mode except timer isn't started */
         ret = ALT_E_SUCCESS;
     }
-    return  ret;
+
+    return ret;
 }
 
 /****************************************************************************************/
 /* Start the specified watchdog timer.                                                  */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_start(ALT_WDOG_TIMER_t tmr_id)
+ALT_STATUS_CODE alt_wdog_start( ALT_WDOG_TIMER_t tmr_id )
 {
-    ALT_STATUS_CODE     ret = ALT_E_BAD_ARG;    // return value
-    uint32_t            regdata;                // data
+    ALT_STATUS_CODE ret = ALT_E_BAD_ARG; /* return value */
+    uint32_t regdata;                    /* data */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        regdata = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET);
-        alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET, regdata | WDOG_TMR_ENABLE);
+        regdata = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET );
+        alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET, regdata | WDOG_TMR_ENABLE );
         ret = ALT_E_SUCCESS;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        regdata = alt_read_word(ALT_L4WD0_WDT_CR_ADDR);
-        alt_write_word(ALT_L4WD0_WDT_CR_ADDR, regdata | ALT_L4WD_CR_WDT_EN_SET_MSK);
+        regdata = alt_read_word( ALT_L4WD0_WDT_CR_ADDR );
+        alt_write_word( ALT_L4WD0_WDT_CR_ADDR, regdata | ALT_L4WD_CR_WDT_EN_SET_MSK );
         ret = ALT_E_SUCCESS;
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        regdata = alt_read_word(ALT_L4WD1_WDT_CR_ADDR);
-        alt_write_word(ALT_L4WD1_WDT_CR_ADDR, regdata | ALT_L4WD_CR_WDT_EN_SET_MSK);
+        regdata = alt_read_word( ALT_L4WD1_WDT_CR_ADDR );
+        alt_write_word( ALT_L4WD1_WDT_CR_ADDR, regdata | ALT_L4WD_CR_WDT_EN_SET_MSK );
         ret = ALT_E_SUCCESS;
     }
-    return  ret;
+
+    return ret;
 }
 
 
@@ -253,25 +256,26 @@ ALT_STATUS_CODE alt_wdog_start(ALT_WDOG_TIMER_t tmr_id)
 /* Returns whether the specified watchdog timer is currently running or not.            */
 /****************************************************************************************/
 
-bool alt_wdog_tmr_is_enabled(ALT_WDOG_TIMER_t tmr_id)
+bool alt_wdog_tmr_is_enabled( ALT_WDOG_TIMER_t tmr_id )
 {
-    bool      ret = false;          // return value
+    bool ret = false; /* return value */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        ret = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) & WDOG_TMR_ENABLE;
+        ret = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) & WDOG_TMR_ENABLE;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD0_WDT_CR_ADDR) & ALT_L4WD_CR_WDT_EN_SET_MSK;
+        ret = alt_read_word( ALT_L4WD0_WDT_CR_ADDR ) & ALT_L4WD_CR_WDT_EN_SET_MSK;
     }
 
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD1_WDT_CR_ADDR) & ALT_L4WD_CR_WDT_EN_SET_MSK;
+        ret = alt_read_word( ALT_L4WD1_WDT_CR_ADDR ) & ALT_L4WD_CR_WDT_EN_SET_MSK;
     }
-    return  ret;
+
+    return ret;
 }
 
 
@@ -281,40 +285,44 @@ bool alt_wdog_tmr_is_enabled(ALT_WDOG_TIMER_t tmr_id)
 /* waking, or walking the watchdog. Inherently clears the interrupt as well.            */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_reset(ALT_WDOG_TIMER_t tmr_id)
+ALT_STATUS_CODE alt_wdog_reset( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t                regdata;        // data read
+    uint32_t regdata; /* data read */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        regdata = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET);
-        alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET, regdata);
-                // verify operation when we have hardware,
-                // the ARM documentation is somewhat vague here
+        regdata = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET );
+        alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET, regdata );
+        /* verify operation when we have hardware, */
+        /* the ARM documentation is somewhat vague here */
 
-        if (cpu_wdog_in_wdt_mode())
+        if( cpu_wdog_in_wdt_mode() )
         {
-            alt_write_word((CPU_WDTGPT_TMR_BASE + WDOG_RSTSTAT_REG_OFFSET), WDOG_RST_STAT_BIT);
-                      // depending on current mode, clear the reset bit or...
+            alt_write_word( ( CPU_WDTGPT_TMR_BASE + WDOG_RSTSTAT_REG_OFFSET ), WDOG_RST_STAT_BIT );
+            /* depending on current mode, clear the reset bit or... */
         }
         else
         {
-            alt_write_word((CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET), WDOG_INT_STAT_BIT);
-                      // ...clear the interrupt status bit by writing one to it
+            alt_write_word( ( CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET ), WDOG_INT_STAT_BIT );
+            /* ...clear the interrupt status bit by writing one to it */
         }
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        alt_write_word(ALT_L4WD0_WDT_CRR_ADDR, WDOG_RESET_KEY);
-            //restarts the counter, also clears the watchdog timer interrupt
+        alt_write_word( ALT_L4WD0_WDT_CRR_ADDR, WDOG_RESET_KEY );
+        /*restarts the counter, also clears the watchdog timer interrupt */
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        alt_write_word(ALT_L4WD1_WDT_CRR_ADDR, WDOG_RESET_KEY);
-            //restarts the counter, also clears the watchdog timer interrupt
+        alt_write_word( ALT_L4WD1_WDT_CRR_ADDR, WDOG_RESET_KEY );
+        /*restarts the counter, also clears the watchdog timer interrupt */
     }
-    else {return  ALT_E_BAD_ARG; }
+    else
+    {
+        return ALT_E_BAD_ARG;
+    }
+
     return ALT_E_SUCCESS;
 }
 
@@ -323,56 +331,58 @@ ALT_STATUS_CODE alt_wdog_reset(ALT_WDOG_TIMER_t tmr_id)
 /* Sets the countdown value of the specified timer.                                     */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_counter_set(ALT_WDOG_TIMER_t tmr_id, uint32_t val)
+ALT_STATUS_CODE alt_wdog_counter_set( ALT_WDOG_TIMER_t tmr_id,
+                                      uint32_t val )
 {
-    ALT_STATUS_CODE         ret = ALT_E_BAD_ARG;    // return value
-    uint32_t                regdata;                // returned data
+    ALT_STATUS_CODE ret = ALT_E_BAD_ARG; /* return value */
+    uint32_t regdata;                    /* returned data */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET, val);
+        alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET, val );
         ret = ALT_E_SUCCESS;
-        // the ARM documentation is somewhat vague here, but it looks like it should be
-        // possible to rewrite this value while counter is running, and that it works in
-        // watchdog mode as well as timer mode. Verify operation when we have hardware.
+        /* the ARM documentation is somewhat vague here, but it looks like it should be */
+        /* possible to rewrite this value while counter is running, and that it works in */
+        /* watchdog mode as well as timer mode. Verify operation when we have hardware. */
     }
-    else if (val <= ALT_WDOG_TIMEOUT2G)
+    else if( val <= ALT_WDOG_TIMEOUT2G )
     {
-        if (tmr_id == ALT_WDOG0)
+        if( tmr_id == ALT_WDOG0 )
         {
-            // set regular timeout value
-            regdata = alt_read_word(ALT_L4WD0_WDT_TORR_ADDR);
-            alt_write_word(ALT_L4WD0_WDT_TORR_ADDR, (regdata & ALT_L4WD_TORR_TOP_CLR_MSK) | val);
+            /* set regular timeout value */
+            regdata = alt_read_word( ALT_L4WD0_WDT_TORR_ADDR );
+            alt_write_word( ALT_L4WD0_WDT_TORR_ADDR, ( regdata & ALT_L4WD_TORR_TOP_CLR_MSK ) | val );
             ret = ALT_E_SUCCESS;
         }
-        else if (tmr_id == ALT_WDOG1)
+        else if( tmr_id == ALT_WDOG1 )
         {
-            // set regular timeout value
-            regdata = alt_read_word(ALT_L4WD1_WDT_TORR_ADDR);
-            alt_write_word(ALT_L4WD1_WDT_TORR_ADDR, (regdata & ALT_L4WD_TORR_TOP_CLR_MSK) | val);
+            /* set regular timeout value */
+            regdata = alt_read_word( ALT_L4WD1_WDT_TORR_ADDR );
+            alt_write_word( ALT_L4WD1_WDT_TORR_ADDR, ( regdata & ALT_L4WD_TORR_TOP_CLR_MSK ) | val );
             ret = ALT_E_SUCCESS;
         }
-        else if (tmr_id == ALT_WDOG0_INIT)
+        else if( tmr_id == ALT_WDOG0_INIT )
         {
-            // set initial timeout value
-            regdata = alt_read_word(ALT_L4WD0_WDT_TORR_ADDR);
-            regdata = (regdata & ALT_L4WD_TORR_TOP_INIT_CLR_MSK) |
-                    (val << ALT_L4WD_TORR_TOP_INIT_LSB);
-            alt_write_word(ALT_L4WD0_WDT_TORR_ADDR, regdata);
+            /* set initial timeout value */
+            regdata = alt_read_word( ALT_L4WD0_WDT_TORR_ADDR );
+            regdata = ( regdata & ALT_L4WD_TORR_TOP_INIT_CLR_MSK ) |
+                      ( val << ALT_L4WD_TORR_TOP_INIT_LSB );
+            alt_write_word( ALT_L4WD0_WDT_TORR_ADDR, regdata );
             ret = ALT_E_SUCCESS;
         }
-        else if (tmr_id == ALT_WDOG1_INIT)
+        else if( tmr_id == ALT_WDOG1_INIT )
         {
-            // set initial timeout value
-            regdata = alt_read_word(ALT_L4WD1_WDT_TORR_ADDR);
-            regdata = (regdata & ALT_L4WD_TORR_TOP_INIT_CLR_MSK) |
-                    (val << ALT_L4WD_TORR_TOP_INIT_LSB);
-            alt_write_word(ALT_L4WD1_WDT_TORR_ADDR, regdata);
+            /* set initial timeout value */
+            regdata = alt_read_word( ALT_L4WD1_WDT_TORR_ADDR );
+            regdata = ( regdata & ALT_L4WD_TORR_TOP_INIT_CLR_MSK ) |
+                      ( val << ALT_L4WD_TORR_TOP_INIT_LSB );
+            alt_write_word( ALT_L4WD1_WDT_TORR_ADDR, regdata );
             ret = ALT_E_SUCCESS;
         }
     }
-    return  ret;
+
+    return ret;
 }
 
 
@@ -380,22 +390,23 @@ ALT_STATUS_CODE alt_wdog_counter_set(ALT_WDOG_TIMER_t tmr_id, uint32_t val)
 /* Returns the current counter value of the specified timer.                            */
 /****************************************************************************************/
 
-uint32_t alt_wdog_counter_get_current(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_counter_get_current( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t     ret = 0;           // return value
+    uint32_t ret = 0; /* return value */
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        ret = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CNTR_REG_OFFSET);
+        ret = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CNTR_REG_OFFSET );
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD0_WDT_CCVR_ADDR);
+        ret = alt_read_word( ALT_L4WD0_WDT_CCVR_ADDR );
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD1_WDT_CCVR_ADDR);
+        ret = alt_read_word( ALT_L4WD1_WDT_CCVR_ADDR );
     }
+
     return ret;
 }
 
@@ -406,45 +417,52 @@ uint32_t alt_wdog_counter_get_current(ALT_WDOG_TIMER_t tmr_id)
 /* setting.                                                                             */
 /****************************************************************************************/
 
-uint32_t alt_wdog_counter_get_curtime_millisecs(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_counter_get_curtime_millisecs( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t        time = 0;           // return value
-    uint64_t        bigtime;            // temp for math
-    alt_freq_t      freq;               // clock frequency
-    ALT_CLK_t       clk;                // clock ID
+    uint32_t time = 0; /* return value */
+    uint64_t bigtime;  /* temp for math */
+    alt_freq_t freq;   /* clock frequency */
+    ALT_CLK_t clk;     /* clock ID */
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
         clk = ALT_CLK_MPU_PERIPH;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG1) ||
-            (tmr_id == ALT_WDOG0_INIT) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG1 ) ||
+             ( tmr_id == ALT_WDOG0_INIT ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
         clk = ALT_CLK_OSC1;
     }
-    else { return time; }
+    else
+    {
+        return time;
+    }
 
-    if ((alt_clk_freq_get(clk, &freq) == ALT_E_SUCCESS) && (freq != 0))
-    {                               // get clock frequency & test
-        time = alt_wdog_counter_get_current(tmr_id);    // get current counter value
-        if (time != 0)
+    if( ( alt_clk_freq_get( clk, &freq ) == ALT_E_SUCCESS ) && ( freq != 0 ) )
+    {                                                  /* get clock frequency & test */
+        time = alt_wdog_counter_get_current( tmr_id ); /* get current counter value */
+
+        if( time != 0 )
         {
-            bigtime = (uint64_t) time;
-                  // the current time period is not counted, only whole periods are counted
-            if (tmr_id == ALT_WDOG_CPU)
+            bigtime = ( uint64_t ) time;
+
+            /* the current time period is not counted, only whole periods are counted */
+            if( tmr_id == ALT_WDOG_CPU )
             {
-                bigtime *= (uint64_t) (alt_wdog_core_prescaler_get() + 1);
+                bigtime *= ( uint64_t ) ( alt_wdog_core_prescaler_get() + 1 );
             }
+
             bigtime *= ALT_MILLISECS_IN_A_SEC;
-            bigtime /= freq;          // cycles-per-second becomes milliseconds-per-cycle
-            time = (bigtime > (uint64_t) UINT32_MAX) ? 0 : (uint32_t) bigtime;
+            bigtime /= freq; /* cycles-per-second becomes milliseconds-per-cycle */
+            time = ( bigtime > ( uint64_t ) UINT32_MAX ) ? 0 : ( uint32_t ) bigtime;
         }
     }
-    return  time;
+
+    return time;
 }
 
 
-// see the return value range calculations below at alt_wdog_counter_get_inittime_millisecs().
+/* see the return value range calculations below at alt_wdog_counter_get_inittime_millisecs(). */
 
 /****************************************************************************************/
 /* Returns the initial counter value of the specified timer as a 32-bit integer         */
@@ -455,35 +473,36 @@ uint32_t alt_wdog_counter_get_curtime_millisecs(ALT_WDOG_TIMER_t tmr_id)
 /* setting                                                                              */
 /****************************************************************************************/
 
-uint32_t alt_wdog_counter_get_init(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_counter_get_init( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t                ret = 0;        //    value to return
+    uint32_t ret = 0; /*    value to return */
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        ret = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET);
+        ret = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_LOAD_REG_OFFSET );
     }
-    else if (tmr_id == ALT_WDOG0)
+    else if( tmr_id == ALT_WDOG0 )
     {
-        ret = ALT_L4WD_TORR_TOP_GET(alt_read_word(ALT_L4WD0_WDT_TORR_ADDR));
-        ret = (ret >  ALT_L4WD_TORR_TOP_E_TMO2G) ? 0 : ALT_TWO_TO_POW16 << ret;
+        ret = ALT_L4WD_TORR_TOP_GET( alt_read_word( ALT_L4WD0_WDT_TORR_ADDR ) );
+        ret = ( ret > ALT_L4WD_TORR_TOP_E_TMO2G ) ? 0 : ALT_TWO_TO_POW16 << ret;
     }
-    else if (tmr_id == ALT_WDOG1)
+    else if( tmr_id == ALT_WDOG1 )
     {
-        ret = ALT_L4WD_TORR_TOP_GET(alt_read_word(ALT_L4WD1_WDT_TORR_ADDR));
-        ret = (ret >  ALT_L4WD_TORR_TOP_E_TMO2G) ? 0 : ALT_TWO_TO_POW16 << ret;
+        ret = ALT_L4WD_TORR_TOP_GET( alt_read_word( ALT_L4WD1_WDT_TORR_ADDR ) );
+        ret = ( ret > ALT_L4WD_TORR_TOP_E_TMO2G ) ? 0 : ALT_TWO_TO_POW16 << ret;
     }
-    else if (tmr_id == ALT_WDOG0_INIT)
+    else if( tmr_id == ALT_WDOG0_INIT )
     {
-        ret = ALT_L4WD_TORR_TOP_INIT_GET(alt_read_word(ALT_L4WD0_WDT_TORR_ADDR));
-        ret = (ret >  ALT_L4WD_TORR_TOP_INIT_E_TMO2G) ? 0 : ALT_TWO_TO_POW16 << ret;
+        ret = ALT_L4WD_TORR_TOP_INIT_GET( alt_read_word( ALT_L4WD0_WDT_TORR_ADDR ) );
+        ret = ( ret > ALT_L4WD_TORR_TOP_INIT_E_TMO2G ) ? 0 : ALT_TWO_TO_POW16 << ret;
     }
-    else if (tmr_id == ALT_WDOG1_INIT)
+    else if( tmr_id == ALT_WDOG1_INIT )
     {
-        ret = ALT_L4WD_TORR_TOP_INIT_GET(alt_read_word(ALT_L4WD1_WDT_TORR_ADDR));
-        ret = (ret >  ALT_L4WD_TORR_TOP_INIT_E_TMO2G) ? 0 : ALT_TWO_TO_POW16 << ret;
+        ret = ALT_L4WD_TORR_TOP_INIT_GET( alt_read_word( ALT_L4WD1_WDT_TORR_ADDR ) );
+        ret = ( ret > ALT_L4WD_TORR_TOP_INIT_E_TMO2G ) ? 0 : ALT_TWO_TO_POW16 << ret;
     }
-    return  ret;
+
+    return ret;
 }
 
 
@@ -495,39 +514,45 @@ uint32_t alt_wdog_counter_get_init(ALT_WDOG_TIMER_t tmr_id)
 /* as an unsigned 64-bit integer.                                                       */
 /****************************************************************************************/
 
-uint64_t alt_wdog_counter_get_inittime_nanosecs(ALT_WDOG_TIMER_t tmr_id)
+uint64_t alt_wdog_counter_get_inittime_nanosecs( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint64_t    time = 0;
-    alt_freq_t  freq;
-    ALT_CLK_t   clk;
+    uint64_t time = 0;
+    alt_freq_t freq;
+    ALT_CLK_t clk;
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
         clk = ALT_CLK_MPU_PERIPH;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG1) ||
-            (tmr_id == ALT_WDOG0_INIT) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG1 ) ||
+             ( tmr_id == ALT_WDOG0_INIT ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
         clk = ALT_CLK_OSC1;
     }
-    else { return time; }            // zero always indicates an error for an init time
+    else
+    {
+        return time;
+    }                                /* zero always indicates an error for an init time */
 
-    if ((alt_clk_freq_get(clk, &freq) == ALT_E_SUCCESS) && (freq != 0))
-    {                               // get clock frequency & test
-        time = (uint64_t) alt_wdog_counter_get_init(tmr_id);     // get reset value
-        if (time != 0)
+    if( ( alt_clk_freq_get( clk, &freq ) == ALT_E_SUCCESS ) && ( freq != 0 ) )
+    {                                                            /* get clock frequency & test */
+        time = ( uint64_t ) alt_wdog_counter_get_init( tmr_id ); /* get reset value */
+
+        if( time != 0 )
         {
             time += 1;
-            if (tmr_id == ALT_WDOG_CPU)
+
+            if( tmr_id == ALT_WDOG_CPU )
             {
-                time *= (uint64_t) (alt_wdog_core_prescaler_get() + 1);
+                time *= ( uint64_t ) ( alt_wdog_core_prescaler_get() + 1 );
             }
+
             time *= ALT_NANOSECS_IN_A_SEC;
-            time /= freq;              // cycles-per-second becomes nanoseconds per cycle
+            time /= freq; /* cycles-per-second becomes nanoseconds per cycle */
         }
     }
 
-    return  time;
+    return time;
 }
 
 
@@ -559,40 +584,47 @@ uint64_t alt_wdog_counter_get_inittime_nanosecs(ALT_WDOG_TIMER_t tmr_id)
 /* alt_wdog_counter_get_inittime_nanosecs().                                            */
 /****************************************************************************************/
 
-uint32_t alt_wdog_counter_get_inittime_millisecs(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_counter_get_inittime_millisecs( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t        time = 0;
-    alt_freq_t      freq;
-    ALT_CLK_t       clk;
-    uint64_t        bigtime;
+    uint32_t time = 0;
+    alt_freq_t freq;
+    ALT_CLK_t clk;
+    uint64_t bigtime;
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
         clk = ALT_CLK_MPU_PERIPH;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG1) ||
-            (tmr_id == ALT_WDOG0_INIT) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG1 ) ||
+             ( tmr_id == ALT_WDOG0_INIT ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
         clk = ALT_CLK_OSC1;
     }
-    else { return time; }                             // must be an invalid tmr_id
+    else
+    {
+        return time;
+    }                                                 /* must be an invalid tmr_id */
 
-    if ((alt_clk_freq_get(clk, &freq) == ALT_E_SUCCESS) && (freq != 0))
-    {                               // get clock frequency & test
-        time = alt_wdog_counter_get_init(tmr_id);    // get reset value
-        if (time != 0)
+    if( ( alt_clk_freq_get( clk, &freq ) == ALT_E_SUCCESS ) && ( freq != 0 ) )
+    {                                               /* get clock frequency & test */
+        time = alt_wdog_counter_get_init( tmr_id ); /* get reset value */
+
+        if( time != 0 )
         {
-            bigtime = ((uint64_t) time) + 1;
-            if (tmr_id == ALT_WDOG_CPU)         // the only watchdog with a prescaler
+            bigtime = ( ( uint64_t ) time ) + 1;
+
+            if( tmr_id == ALT_WDOG_CPU ) /* the only watchdog with a prescaler */
             {
-                bigtime *= (uint64_t) (alt_wdog_core_prescaler_get() + 1);
+                bigtime *= ( uint64_t ) ( alt_wdog_core_prescaler_get() + 1 );
             }
-            bigtime *= ALT_MILLISECS_IN_A_SEC;                         // scale value
-            bigtime /= freq;              // cycles-per-second becomes milliseconds per cycle
-            time = (bigtime > (uint64_t) UINT32_MAX) ? 0 : (uint32_t) bigtime;
+
+            bigtime *= ALT_MILLISECS_IN_A_SEC; /* scale value */
+            bigtime /= freq;                   /* cycles-per-second becomes milliseconds per cycle */
+            time = ( bigtime > ( uint64_t ) UINT32_MAX ) ? 0 : ( uint32_t ) bigtime;
         }
     }
-    return  time;
+
+    return time;
 }
 
 
@@ -619,26 +651,27 @@ uint32_t alt_wdog_counter_get_inittime_millisecs(ALT_WDOG_TIMER_t tmr_id)
 /* Sets the value of the CPU watchdog timer ALT_CPU_WATCHDOG prescaler.                 */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_core_prescaler_set(uint32_t val)
+ALT_STATUS_CODE alt_wdog_core_prescaler_set( uint32_t val )
 {
-    ALT_STATUS_CODE     ret = ALT_E_BAD_ARG;            // return value
-    uint32_t            regdata;
+    ALT_STATUS_CODE ret = ALT_E_BAD_ARG; /* return value */
+    uint32_t regdata;
 
-    if (val <= WDOG_PS_MAX)
+    if( val <= WDOG_PS_MAX )
     {
-        if (alt_wdog_tmr_is_enabled(ALT_WDOG_CPU))
+        if( alt_wdog_tmr_is_enabled( ALT_WDOG_CPU ) )
         {
             ret = ALT_E_ERROR;
         }
         else
         {
-            regdata = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET);
-            alt_write_word((CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET),
-                    (regdata & ~WDOG_PS_MASK) | (val << WDOG_PS_SHIFT));
+            regdata = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET );
+            alt_write_word( ( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ),
+                            ( regdata & ~WDOG_PS_MASK ) | ( val << WDOG_PS_SHIFT ) );
             ret = ALT_E_SUCCESS;
         }
     }
-    return  ret;
+
+    return ret;
 }
 
 
@@ -646,10 +679,10 @@ ALT_STATUS_CODE alt_wdog_core_prescaler_set(uint32_t val)
 /* Returns the value of the prescaler of the CPU core watchdog timer.                   */
 /****************************************************************************************/
 
-uint32_t alt_wdog_core_prescaler_get(void)
+uint32_t alt_wdog_core_prescaler_get( void )
 {
-    return  (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) &
-                    WDOG_PS_MASK) >> WDOG_PS_SHIFT;
+    return ( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) &
+             WDOG_PS_MASK ) >> WDOG_PS_SHIFT;
 }
 
 
@@ -660,21 +693,21 @@ uint32_t alt_wdog_core_prescaler_get(void)
 /* This does not include the effects of the prescaler available for ALT_CPU_WATCHDOG.   */
 /****************************************************************************************/
 
-uint32_t alt_wdog_counter_get_max(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_counter_get_max( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t                ret = 0;        // return value
+    uint32_t ret = 0; /* return value */
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
         ret = WDOG_TMR_MAX;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG1)
-            || (tmr_id == ALT_WDOG0_INIT) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG1 ) ||
+             ( tmr_id == ALT_WDOG0_INIT ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        ret = ((uint32_t) ALT_TWO_TO_POW16) << ALT_WDOG_TIMEOUT2G;
+        ret = ( ( uint32_t ) ALT_TWO_TO_POW16 ) << ALT_WDOG_TIMEOUT2G;
     }
 
-    return  ret;
+    return ret;
 }
 
 
@@ -685,38 +718,45 @@ uint32_t alt_wdog_counter_get_max(ALT_WDOG_TIMER_t tmr_id)
 /* alt_wdog_counter_get_max_millisecs(), though in an unsigned 64-bit integer.          */
 /****************************************************************************************/
 
-uint64_t alt_wdog_counter_get_max_nanosecs(ALT_WDOG_TIMER_t tmr_id)
+uint64_t alt_wdog_counter_get_max_nanosecs( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint64_t    time = 0;
-    alt_freq_t  freq;
-    ALT_CLK_t   clk;
+    uint64_t time = 0;
+    alt_freq_t freq;
+    ALT_CLK_t clk;
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
         clk = ALT_CLK_MPU_PERIPH;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG1) ||
-            (tmr_id == ALT_WDOG0_INIT) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG1 ) ||
+             ( tmr_id == ALT_WDOG0_INIT ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
         clk = ALT_CLK_OSC1;
     }
-    else { return time; }
+    else
+    {
+        return time;
+    }
 
-    if ((alt_clk_freq_get(clk, &freq) == ALT_E_SUCCESS) && (freq != 0))
-    {                    // get clock frequency & test
-        time = (uint64_t) alt_wdog_counter_get_max(tmr_id);     // get maximum reset value
-        if (time != 0)
+    if( ( alt_clk_freq_get( clk, &freq ) == ALT_E_SUCCESS ) && ( freq != 0 ) )
+    {                                                           /* get clock frequency & test */
+        time = ( uint64_t ) alt_wdog_counter_get_max( tmr_id ); /* get maximum reset value */
+
+        if( time != 0 )
         {
             time += 1;
-            if (tmr_id == ALT_WDOG_CPU)
+
+            if( tmr_id == ALT_WDOG_CPU )
             {
-                time *= (WDOG_PS_MAX + 1);          // maximum prescaler
+                time *= ( WDOG_PS_MAX + 1 ); /* maximum prescaler */
             }
+
             time *= ALT_NANOSECS_IN_A_SEC;
-            time /= freq;               //cycles-per-second becomes nanoseconds-per-cycle
+            time /= freq; /*cycles-per-second becomes nanoseconds-per-cycle */
         }
     }
-    return  time;
+
+    return time;
 }
 
 
@@ -728,40 +768,47 @@ uint64_t alt_wdog_counter_get_max_nanosecs(ALT_WDOG_TIMER_t tmr_id)
 /* alt_wdog_counter_get_max_nanosecs().                                                 */
 /****************************************************************************************/
 
-uint32_t alt_wdog_counter_get_max_millisecs(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_counter_get_max_millisecs( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t        time = 0;
-    alt_freq_t      freq;
-    ALT_CLK_t       clk;
-    uint64_t        bigtime;
+    uint32_t time = 0;
+    alt_freq_t freq;
+    ALT_CLK_t clk;
+    uint64_t bigtime;
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
         clk = ALT_CLK_MPU_PERIPH;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG1) ||
-            (tmr_id == ALT_WDOG0_INIT) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG1 ) ||
+             ( tmr_id == ALT_WDOG0_INIT ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
         clk = ALT_CLK_OSC1;
     }
-    else { return time; }
+    else
+    {
+        return time;
+    }
 
-    if ((alt_clk_freq_get(clk, &freq) == ALT_E_SUCCESS) && (freq != 0))
-    {                   // get clock frequency & test
-        time = alt_wdog_counter_get_max(tmr_id);     // get reset value
-        if (time != 0)
+    if( ( alt_clk_freq_get( clk, &freq ) == ALT_E_SUCCESS ) && ( freq != 0 ) )
+    {                                              /* get clock frequency & test */
+        time = alt_wdog_counter_get_max( tmr_id ); /* get reset value */
+
+        if( time != 0 )
         {
-            bigtime = ((uint64_t) time) + 1;
-            if (tmr_id == ALT_WDOG_CPU)
+            bigtime = ( ( uint64_t ) time ) + 1;
+
+            if( tmr_id == ALT_WDOG_CPU )
             {
-                bigtime *= (WDOG_PS_MAX + 1);           // maximum prescaler
+                bigtime *= ( WDOG_PS_MAX + 1 ); /* maximum prescaler */
             }
+
             bigtime *= ALT_MILLISECS_IN_A_SEC;
-            bigtime /= freq;              //cycles-per-second becomes milliseconds-per-cycle
-            time = (bigtime > (uint64_t) UINT32_MAX) ? 0 : (uint32_t) bigtime;
+            bigtime /= freq; /*cycles-per-second becomes milliseconds-per-cycle */
+            time = ( bigtime > ( uint64_t ) UINT32_MAX ) ? 0 : ( uint32_t ) bigtime;
         }
     }
-    return  time;
+
+    return time;
 }
 
 
@@ -771,27 +818,28 @@ uint32_t alt_wdog_counter_get_max_millisecs(ALT_WDOG_TIMER_t tmr_id)
 /* timer is in general-purpose timer mode, disable the interrupt.                       */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_int_disable(ALT_WDOG_TIMER_t tmr_id)
+ALT_STATUS_CODE alt_wdog_int_disable( ALT_WDOG_TIMER_t tmr_id )
 {
-    ALT_STATUS_CODE         ret = ALT_E_BAD_ARG;            // return value
+    ALT_STATUS_CODE ret = ALT_E_BAD_ARG; /* return value */
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        if (cpu_wdog_in_wdt_mode())
+        if( cpu_wdog_in_wdt_mode() )
         {
             ret = ALT_E_ERROR;
         }
         else
         {
-            alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
-                  (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) & ~WDOG_INT_EN));
+            alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
+                            ( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) & ~WDOG_INT_EN ) );
             ret = ALT_E_SUCCESS;
         }
     }
-            // returns an error for the other four watchdog timers
-            // since their interrupts cannot be disabled
-            // (this could change in v13.1)
-    return  ret;
+
+    /* returns an error for the other four watchdog timers */
+    /* since their interrupts cannot be disabled */
+    /* (this could change in v13.1) */
+    return ret;
 }
 
 
@@ -801,25 +849,26 @@ ALT_STATUS_CODE alt_wdog_int_disable(ALT_WDOG_TIMER_t tmr_id)
 /* if the timer is in general-purpose timer mode, enable the interrupt.                 */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_int_enable(ALT_WDOG_TIMER_t tmr_id)
+ALT_STATUS_CODE alt_wdog_int_enable( ALT_WDOG_TIMER_t tmr_id )
 {
-    ALT_STATUS_CODE         ret = ALT_E_BAD_ARG;            // return value
+    ALT_STATUS_CODE ret = ALT_E_BAD_ARG; /* return value */
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        if (cpu_wdog_in_wdt_mode())
+        if( cpu_wdog_in_wdt_mode() )
         {
             ret = ALT_E_ERROR;
         }
         else
         {
-            alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
-                  (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) | WDOG_INT_EN));
+            alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET,
+                            ( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) | WDOG_INT_EN ) );
             ret = ALT_E_SUCCESS;
         }
     }
-    return  ret;
-                // other watchdog timers always have interrupt enabled if they are running
+
+    return ret;
+    /* other watchdog timers always have interrupt enabled if they are running */
 }
 
 
@@ -829,22 +878,23 @@ ALT_STATUS_CODE alt_wdog_int_enable(ALT_WDOG_TIMER_t tmr_id)
 /* module is pending and FALSE otherwise.                                               */
 /****************************************************************************************/
 
-bool alt_wdog_int_is_pending(ALT_WDOG_TIMER_t tmr_id)
+bool alt_wdog_int_is_pending( ALT_WDOG_TIMER_t tmr_id )
 {
-    bool        ret = false;            //return value
+    bool ret = false; /*return value */
 
-    if ((tmr_id == ALT_WDOG_CPU) && cpu_wdog_in_gpt_mode())
+    if( ( tmr_id == ALT_WDOG_CPU ) && cpu_wdog_in_gpt_mode() )
     {
-        ret = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET) & WDOG_INT_STAT_BIT;
+        ret = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET ) & WDOG_INT_STAT_BIT;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD0_WDT_STAT_ADDR) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
+        ret = alt_read_word( ALT_L4WD0_WDT_STAT_ADDR ) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD1_WDT_STAT_ADDR) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
+        ret = alt_read_word( ALT_L4WD1_WDT_STAT_ADDR ) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
     }
+
     return ret;
 }
 
@@ -858,27 +908,28 @@ bool alt_wdog_int_is_pending(ALT_WDOG_TIMER_t tmr_id)
 /* watchdog interrupts are always enabled.                                              */
 /****************************************************************************************/
 
-bool alt_wdog_int_is_enabled(ALT_WDOG_TIMER_t tmr_id)
+bool alt_wdog_int_is_enabled( ALT_WDOG_TIMER_t tmr_id )
 {
-    bool        ret = false;            //return value
+    bool ret = false; /*return value */
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        ret = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET) &
-                    (WDOG_INT_EN | WDOG_WDT_MODE);
-            // if in watchdog mode OR if in general purpose timer mode
-            // AND the interrupt is enabled
+        ret = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ) &
+              ( WDOG_INT_EN | WDOG_WDT_MODE );
+        /* if in watchdog mode OR if in general purpose timer mode */
+        /* AND the interrupt is enabled */
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD0_WDT_CR_ADDR) & ALT_L4WD_CR_WDT_EN_SET_MSK;
-        // if these timers are running, their interrupt is enabled
+        ret = alt_read_word( ALT_L4WD0_WDT_CR_ADDR ) & ALT_L4WD_CR_WDT_EN_SET_MSK;
+        /* if these timers are running, their interrupt is enabled */
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD1_WDT_CR_ADDR) & ALT_L4WD_CR_WDT_EN_SET_MSK;
-            // if these timers are running, their interrupt is enabled
+        ret = alt_read_word( ALT_L4WD1_WDT_CR_ADDR ) & ALT_L4WD_CR_WDT_EN_SET_MSK;
+        /* if these timers are running, their interrupt is enabled */
     }
+
     return ret;
 }
 
@@ -887,27 +938,29 @@ bool alt_wdog_int_is_enabled(ALT_WDOG_TIMER_t tmr_id)
 /* Clears the pending status of the interrupt of the specified watchdog timer module.   */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_int_clear(ALT_WDOG_TIMER_t tmr_id)
+ALT_STATUS_CODE alt_wdog_int_clear( ALT_WDOG_TIMER_t tmr_id )
 {
+    if( tmr_id == ALT_WDOG_CPU )
+    {
+        alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET, WDOG_INT_STAT_BIT );
+        /* clear int by writing to status bit */
+    }
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
+    {
+        ( void ) alt_read_word( ALT_L4WD0_WDT_EOI_ADDR );
+        /* clear int by reading from end-of-interrupt register */
+        /* adding the void cast tells armcc not to throw a error for this usage */
+    }
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
+    {
+        ( void ) alt_read_word( ALT_L4WD1_WDT_EOI_ADDR );
+        /* clear int by reading from end-of-interrupt register */
+    }
+    else
+    {
+        return ALT_E_ERROR;
+    }
 
-
-    if (tmr_id == ALT_WDOG_CPU)
-    {
-        alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET, WDOG_INT_STAT_BIT);
-             // clear int by writing to status bit
-    }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
-    {
-        (void) alt_read_word(ALT_L4WD0_WDT_EOI_ADDR);
-            // clear int by reading from end-of-interrupt register
-            // adding the void cast tells armcc not to throw a error for this usage
-    }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
-    {
-        (void) alt_read_word(ALT_L4WD1_WDT_EOI_ADDR);
-            // clear int by reading from end-of-interrupt register
-    }
-    else {return  ALT_E_ERROR; }
     return ALT_E_SUCCESS;
 }
 
@@ -918,43 +971,44 @@ ALT_STATUS_CODE alt_wdog_int_clear(ALT_WDOG_TIMER_t tmr_id)
 /* module is pending and FALSE otherwise.                                               */
 /****************************************************************************************/
 
-bool alt_wdog_int_if_pending_clear(ALT_WDOG_TIMER_t tmr_id)
+bool alt_wdog_int_if_pending_clear( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t                ret = false;    //    value to return
+    uint32_t ret = false; /*    value to return */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        ret = (alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET) & WDOG_INT_STAT_BIT);
-        if (ret)
+        ret = ( alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET ) & WDOG_INT_STAT_BIT );
+
+        if( ret )
         {
-            alt_write_word(CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET, WDOG_INT_STAT_BIT);
-            // clear int by writing to status bit
+            alt_write_word( CPU_WDTGPT_TMR_BASE + WDOG_INTSTAT_REG_OFFSET, WDOG_INT_STAT_BIT );
+            /* clear int by writing to status bit */
         }
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD0_WDT_STAT_ADDR) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
-        if (ret)
-        {
-            (void) alt_read_word(ALT_L4WD0_WDT_EOI_ADDR);
-                // clear int by reading from end-of-interrupt register
-                // adding the void cast tells armcc not to throw a error for this usage
+        ret = alt_read_word( ALT_L4WD0_WDT_STAT_ADDR ) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
 
-       }
+        if( ret )
+        {
+            ( void ) alt_read_word( ALT_L4WD0_WDT_EOI_ADDR );
+            /* clear int by reading from end-of-interrupt register */
+            /* adding the void cast tells armcc not to throw a error for this usage */
+        }
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        ret = alt_read_word(ALT_L4WD1_WDT_STAT_ADDR) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
+        ret = alt_read_word( ALT_L4WD1_WDT_STAT_ADDR ) & ALT_L4WD_STAT_WDT_STAT_SET_MSK;
 
-        if (ret)
+        if( ret )
         {
-            (void) alt_read_word(ALT_L4WD1_WDT_EOI_ADDR);
-                    // clear int by reading from end-of-interrupt register
+            ( void ) alt_read_word( ALT_L4WD1_WDT_EOI_ADDR );
+            /* clear int by reading from end-of-interrupt register */
         }
     }
 
-    return  ret;
+    return ret;
 }
 
 
@@ -969,55 +1023,60 @@ bool alt_wdog_int_if_pending_clear(ALT_WDOG_TIMER_t tmr_id)
 /* as a general-purpose timer.                                                          */
 /****************************************************************************************/
 
-ALT_STATUS_CODE alt_wdog_response_mode_set(ALT_WDOG_TIMER_t tmr_id, ALT_WDOG_RESET_TYPE_t type)
+ALT_STATUS_CODE alt_wdog_response_mode_set( ALT_WDOG_TIMER_t tmr_id,
+                                            ALT_WDOG_RESET_TYPE_t type )
 {
-    ALT_STATUS_CODE         ret = ALT_E_BAD_ARG;        // return value
-    uint32_t                regdata;                    // register data
+    ALT_STATUS_CODE ret = ALT_E_BAD_ARG; /* return value */
+    uint32_t regdata;                    /* register data */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        regdata = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET);
-        if (type == ALT_WDOG_TIMER_MODE_ONESHOT)
+        regdata = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET );
+
+        if( type == ALT_WDOG_TIMER_MODE_ONESHOT )
         {
-            alt_write_word((CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET), regdata & ~WDOG_AUTO_RELOAD);
+            alt_write_word( ( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ), regdata & ~WDOG_AUTO_RELOAD );
             ret = ALT_E_SUCCESS;
         }
-        else if (type == ALT_WDOG_TIMER_MODE_FREERUN)
+        else if( type == ALT_WDOG_TIMER_MODE_FREERUN )
         {
-            alt_write_word((CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET), regdata | WDOG_AUTO_RELOAD);
+            alt_write_word( ( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET ), regdata | WDOG_AUTO_RELOAD );
             ret = ALT_E_SUCCESS;
         }
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        regdata = alt_read_word(ALT_L4WD0_WDT_CR_ADDR);
-        if (type == ALT_WDOG_WARM_RESET)
+        regdata = alt_read_word( ALT_L4WD0_WDT_CR_ADDR );
+
+        if( type == ALT_WDOG_WARM_RESET )
         {
-            alt_write_word(ALT_L4WD0_WDT_CR_ADDR, regdata & ALT_L4WD_CR_RMOD_CLR_MSK);
+            alt_write_word( ALT_L4WD0_WDT_CR_ADDR, regdata & ALT_L4WD_CR_RMOD_CLR_MSK );
             ret = ALT_E_SUCCESS;
         }
-        else if (type == ALT_WDOG_INT_THEN_RESET)
+        else if( type == ALT_WDOG_INT_THEN_RESET )
         {
-            alt_write_word(ALT_L4WD0_WDT_CR_ADDR, regdata | ALT_L4WD_CR_RMOD_SET_MSK);
+            alt_write_word( ALT_L4WD0_WDT_CR_ADDR, regdata | ALT_L4WD_CR_RMOD_SET_MSK );
             ret = ALT_E_SUCCESS;
         }
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        regdata = alt_read_word(ALT_L4WD1_WDT_CR_ADDR);
-        if (type == ALT_WDOG_WARM_RESET)
+        regdata = alt_read_word( ALT_L4WD1_WDT_CR_ADDR );
+
+        if( type == ALT_WDOG_WARM_RESET )
         {
-            alt_write_word(ALT_L4WD1_WDT_CR_ADDR, regdata & ALT_L4WD_CR_RMOD_CLR_MSK);
+            alt_write_word( ALT_L4WD1_WDT_CR_ADDR, regdata & ALT_L4WD_CR_RMOD_CLR_MSK );
             ret = ALT_E_SUCCESS;
         }
-        else if (type == ALT_WDOG_INT_THEN_RESET)
+        else if( type == ALT_WDOG_INT_THEN_RESET )
         {
-            alt_write_word(ALT_L4WD1_WDT_CR_ADDR, regdata | ALT_L4WD_CR_RMOD_SET_MSK);
+            alt_write_word( ALT_L4WD1_WDT_CR_ADDR, regdata | ALT_L4WD_CR_RMOD_SET_MSK );
             ret = ALT_E_SUCCESS;
         }
     }
-    return  ret;            // rejects a bad tmr_id argument/type argument combination
+
+    return ret; /* rejects a bad tmr_id argument/type argument combination */
 }
 
 
@@ -1025,29 +1084,29 @@ ALT_STATUS_CODE alt_wdog_response_mode_set(ALT_WDOG_TIMER_t tmr_id, ALT_WDOG_RES
 /* Returns the response mode of the specified timer.                                    */
 /****************************************************************************************/
 
-int32_t alt_wdog_response_mode_get(ALT_WDOG_TIMER_t tmr_id)
+int32_t alt_wdog_response_mode_get( ALT_WDOG_TIMER_t tmr_id )
 {
-    int32_t             ret = ALT_E_BAD_ARG;     // return value
-    uint32_t            regdata;                 // read value
+    int32_t ret = ALT_E_BAD_ARG; /* return value */
+    uint32_t regdata;            /* read value */
 
 
-    if (tmr_id == ALT_WDOG_CPU)
+    if( tmr_id == ALT_WDOG_CPU )
     {
-        regdata = alt_read_word(CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET);
-        ret = (regdata & WDOG_AUTO_RELOAD) ? ALT_WDOG_TIMER_MODE_FREERUN : ALT_WDOG_TIMER_MODE_ONESHOT;
+        regdata = alt_read_word( CPU_WDTGPT_TMR_BASE + WDOG_CTRL_REG_OFFSET );
+        ret = ( regdata & WDOG_AUTO_RELOAD ) ? ALT_WDOG_TIMER_MODE_FREERUN : ALT_WDOG_TIMER_MODE_ONESHOT;
     }
-    else if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    else if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        regdata = alt_read_word(ALT_L4WD0_WDT_CR_ADDR);
-        ret = (regdata & ALT_L4WD_CR_RMOD_SET_MSK) ? ALT_WDOG_INT_THEN_RESET : ALT_WDOG_WARM_RESET;
+        regdata = alt_read_word( ALT_L4WD0_WDT_CR_ADDR );
+        ret = ( regdata & ALT_L4WD_CR_RMOD_SET_MSK ) ? ALT_WDOG_INT_THEN_RESET : ALT_WDOG_WARM_RESET;
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        regdata = alt_read_word(ALT_L4WD1_WDT_CR_ADDR);
-        ret = (regdata & ALT_L4WD_CR_RMOD_SET_MSK) ? ALT_WDOG_INT_THEN_RESET : ALT_WDOG_WARM_RESET;
+        regdata = alt_read_word( ALT_L4WD1_WDT_CR_ADDR );
+        ret = ( regdata & ALT_L4WD_CR_RMOD_SET_MSK ) ? ALT_WDOG_INT_THEN_RESET : ALT_WDOG_WARM_RESET;
     }
 
-    return  ret;
+    return ret;
 }
 
 
@@ -1057,20 +1116,20 @@ int32_t alt_wdog_response_mode_get(ALT_WDOG_TIMER_t tmr_id)
 /* ALT_WATCHDOG0, ALT_WATCHDOG1, ALT_WATCHDOG0_INITIAL or ALT_WATCHDOG1_INITIAL.        */
 /****************************************************************************************/
 
-uint32_t alt_wdog_compcode_get(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_compcode_get( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t    component = 0;                  // component code of the module
+    uint32_t component = 0; /* component code of the module */
 
-    if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        component = alt_read_word(ALT_L4WD0_WDT_COMP_TYPE_ADDR);
+        component = alt_read_word( ALT_L4WD0_WDT_COMP_TYPE_ADDR );
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        component = alt_read_word(ALT_L4WD1_WDT_COMP_TYPE_ADDR);
+        component = alt_read_word( ALT_L4WD1_WDT_COMP_TYPE_ADDR );
+    }
 
-    }
-    return  component;
+    return component;
 }
 
 
@@ -1079,23 +1138,21 @@ uint32_t alt_wdog_compcode_get(ALT_WDOG_TIMER_t tmr_id)
 /* ALT_WATCHDOG1, ALT_WATCHDOG0_INITIAL or ALT_WATCHDOG1_INITIAL.                       */
 /****************************************************************************************/
 
-uint32_t alt_wdog_ver_get(ALT_WDOG_TIMER_t tmr_id)
+uint32_t alt_wdog_ver_get( ALT_WDOG_TIMER_t tmr_id )
 {
-    uint32_t    ver = 0;                  // revision code of the module
+    uint32_t ver = 0; /* revision code of the module */
 
-    if ((tmr_id == ALT_WDOG0) || (tmr_id == ALT_WDOG0_INIT))
+    if( ( tmr_id == ALT_WDOG0 ) || ( tmr_id == ALT_WDOG0_INIT ) )
     {
-        ver = alt_read_word(ALT_L4WD0_WDT_COMP_VER_ADDR);
+        ver = alt_read_word( ALT_L4WD0_WDT_COMP_VER_ADDR );
     }
-    else if ((tmr_id == ALT_WDOG1) || (tmr_id == ALT_WDOG1_INIT))
+    else if( ( tmr_id == ALT_WDOG1 ) || ( tmr_id == ALT_WDOG1_INIT ) )
     {
-        ver = alt_read_word(ALT_L4WD1_WDT_COMP_VER_ADDR);
+        ver = alt_read_word( ALT_L4WD1_WDT_COMP_VER_ADDR );
+    }
 
-    }
-    return  ver;
+    return ver;
 }
 
 
 /****************************************************************************************/
-
-

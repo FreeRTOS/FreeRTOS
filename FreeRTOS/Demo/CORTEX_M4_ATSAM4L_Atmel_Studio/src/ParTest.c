@@ -40,36 +40,34 @@
 #include <asf.h>
 
 /* The number of LEDs available to the user on the evaluation kit. */
-#define partestNUM_LEDS			( LED_COUNT )
+#define partestNUM_LEDS    ( LED_COUNT )
 static portBASE_TYPE xLEDState = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-	/* In this case, the LED pin is configured in the board_init() function. */
+    /* In this case, the LED pin is configured in the board_init() function. */
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < partestNUM_LEDS )
-	{
-		/* Turn the LED on. */
-		taskENTER_CRITICAL();
-		{
-			ioport_set_pin_level( LED0_GPIO, xValue );
-			xLEDState = xValue;
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partestNUM_LEDS )
+    {
+        /* Turn the LED on. */
+        taskENTER_CRITICAL();
+        {
+            ioport_set_pin_level( LED0_GPIO, xValue );
+            xLEDState = xValue;
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	vParTestSetLED( uxLED, !xLEDState );
+    vParTestSetLED( uxLED, !xLEDState );
 }
-
-
-

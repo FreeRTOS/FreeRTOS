@@ -41,86 +41,92 @@
 
 enum _act8945a_charge_level
 {
-	ACT8945A_CHARGE_LEVEL_100MA,
-	ACT8945A_CHARGE_LEVEL_450MA,
+    ACT8945A_CHARGE_LEVEL_100MA,
+    ACT8945A_CHARGE_LEVEL_450MA,
 };
 
 enum _act8945a_interrupt
 {
-	CHARGE_STATE_OUT_EOC_STATE,
-	INPUT_VOLTAGE_OUT_VALID_RANGE,
-	BATTERY_TEMPERATURE_OUT_RANGE,
-	PRECHARGE_TIME_OUT,
-	CHARGE_STATE_INTO_EOC_STATE,
-	INPUT_VOLTAGE_INTO_VALID_RANGE,
-	BATTERY_TEMPERATURE_INTO_RANGE,
-	TOTAL_CHARGE_TIME_OUT,
+    CHARGE_STATE_OUT_EOC_STATE,
+    INPUT_VOLTAGE_OUT_VALID_RANGE,
+    BATTERY_TEMPERATURE_OUT_RANGE,
+    PRECHARGE_TIME_OUT,
+    CHARGE_STATE_INTO_EOC_STATE,
+    INPUT_VOLTAGE_INTO_VALID_RANGE,
+    BATTERY_TEMPERATURE_INTO_RANGE,
+    TOTAL_CHARGE_TIME_OUT,
 };
 
-struct _act8945a_desc {
-	const struct _pin pin_chglev;
-	const struct _pin pin_irq;
-	const struct _pin pin_lbo;
+struct _act8945a_desc
+{
+    const struct _pin pin_chglev;
+    const struct _pin pin_irq;
+    const struct _pin pin_lbo;
 };
 
-struct _act8945a {
-	struct _twi_desc* twid;
-	struct _act8945a_desc desc;
+struct _act8945a
+{
+    struct _twi_desc * twid;
+    struct _act8945a_desc desc;
 
-	uint8_t sys0;
-	uint8_t apch78;
-	uint8_t apch79;
-	uint8_t apch7a;
-	uint8_t lbo_count;
+    uint8_t sys0;
+    uint8_t apch78;
+    uint8_t apch79;
+    uint8_t apch7a;
+    uint8_t lbo_count;
 };
 
 /*------------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern bool act8945a_configure(struct _act8945a *act8945a,
-		struct _twi_desc *twid);
+extern bool act8945a_configure( struct _act8945a * act8945a,
+                                struct _twi_desc * twid );
 
-extern void act8945a_set_charge_level(struct _act8945a *act8945a,
-		enum _act8945a_charge_level level);
+extern void act8945a_set_charge_level( struct _act8945a * act8945a,
+                                       enum _act8945a_charge_level level );
 
-extern bool act8945a_configure_apch_interrupt(struct _act8945a *act8945a,
-		enum _act8945a_interrupt interrupt, bool enable);
+extern bool act8945a_configure_apch_interrupt( struct _act8945a * act8945a,
+                                               enum _act8945a_interrupt interrupt,
+                                               bool enable );
 
-extern bool act8945a_disable_all_apch_interrupts(struct _act8945a *act8945a);
+extern bool act8945a_disable_all_apch_interrupts( struct _act8945a * act8945a );
 
-// Set the Programmable System Voltage Monitor
-// Input: Value in mv from 2300mv to 3800mv
-extern bool act8945a_set_system_voltage_detect_threshold(struct _act8945a *act8945a,
-		uint16_t threshold);
+/* Set the Programmable System Voltage Monitor */
+/* Input: Value in mv from 2300mv to 3800mv */
+extern bool act8945a_set_system_voltage_detect_threshold( struct _act8945a * act8945a,
+                                                          uint16_t threshold );
 
-// System Voltage Level Interrupt Mask. SYSLEV interrupt is masked by default,
-// set to 1 to unmask this interrupt.
-extern bool act8945a_enable_system_voltage_level_interrupt(
-		struct _act8945a *act8945a, bool enable);
+/* System Voltage Level Interrupt Mask. SYSLEV interrupt is masked by default, */
+/* set to 1 to unmask this interrupt. */
+extern bool act8945a_enable_system_voltage_level_interrupt( struct _act8945a * act8945a,
+                                                            bool enable );
 
-extern bool act8945a_set_regulator_voltage(struct _act8945a *act8945a,
-		uint8_t reg, uint16_t vout);
+extern bool act8945a_set_regulator_voltage( struct _act8945a * act8945a,
+                                            uint8_t reg,
+                                            uint16_t vout );
 
-extern bool act8945a_enable_regulator(struct _act8945a *act8945a,
-		uint8_t reg, bool enable);
+extern bool act8945a_enable_regulator( struct _act8945a * act8945a,
+                                       uint8_t reg,
+                                       bool enable );
 
-// Regulator Fault Mask Control.
-// Set bit to 1 enable fault-interrupts, clear bit to 0 to disable fault-interrupts
-// Input: regulator (1-7)
-bool act8945a_enable_regulator_fault_interrupt(struct _act8945a *act8945a,
-		uint8_t reg, bool enable);
+/* Regulator Fault Mask Control. */
+/* Set bit to 1 enable fault-interrupts, clear bit to 0 to disable fault-interrupts */
+/* Input: regulator (1-7) */
+bool act8945a_enable_regulator_fault_interrupt( struct _act8945a * act8945a,
+                                                uint8_t reg,
+                                                bool enable );
 
-extern bool act8945a_get_lbo_pin_state(struct _act8945a *act8945a);
+extern bool act8945a_get_lbo_pin_state( struct _act8945a * act8945a );
 
-extern void act8945a_display_voltage_settings(struct _act8945a *act8945a);
+extern void act8945a_display_voltage_settings( struct _act8945a * act8945a );
 
-extern void act8945a_dump_registers(struct _act8945a *act8945a);
+extern void act8945a_dump_registers( struct _act8945a * act8945a );
 
-extern void act8945a_display_apch_registers(struct _act8945a *act8945a);
+extern void act8945a_display_apch_registers( struct _act8945a * act8945a );
 
-extern void act8945a_display_system_registers(struct _act8945a *act8945a);
+extern void act8945a_display_system_registers( struct _act8945a * act8945a );
 
-extern void act8945a_display_charge_state(struct _act8945a *act8945a);
+extern void act8945a_display_charge_state( struct _act8945a * act8945a );
 
 #endif /* _ACT_8945A_H_ */

@@ -19,8 +19,9 @@
 *****************************************************************************/
 
 /** @file mec14xx_jtvic.c
- *MEC14xx JTVIC
+ * MEC14xx JTVIC
  */
+
 /** @defgroup MEC14xx Peripherals JTVIC
  *  @{
  */
@@ -32,44 +33,55 @@
 #include "MEC14xx/mec14xx_jtvic.h"
 
 
-void jtvic_init(const JTVIC_CFG *ih_table, uint32_t disagg_bitmap, uint32_t cflags)
+void jtvic_init( const JTVIC_CFG * ih_table,
+                 uint32_t disagg_bitmap,
+                 uint32_t cflags )
 {
     uint32_t d;
     uint8_t i, j, pidx;
 
-    JTVIC_CTRL->w = (1ul << 0);  // Soft-Reset
+    JTVIC_CTRL->w = ( 1ul << 0 ); /* Soft-Reset */
     d = 0ul;
-    if ( cflags & (1ul << 0) ) 
-    {
-        d = (1ul << 8);
-    }
-    JTVIC_CTRL->w = d;  // HW does not automatically clear Soft-Reset
 
-    for (i = 0u; i < (MEC14xx_NUM_JTVIC_INTS); i++) {
-        pidx = i << 2;
-        for (j = 0u; j < 4u; j++) {
-            JTVIC_PRI->REG32[pidx+j] = (uint32_t)(ih_table[i].pri[j]);
-        }
-        d = ih_table[i].isr_addr & ~(1ul << 0);
-        if (disagg_bitmap & (1ul << i)) {
-            d |= (1ul << 0);    // dis-aggregate this GIRQ
-        }
-        JTVIC_ACTRL->REG32[i] = d;
+    if( cflags & ( 1ul << 0 ) )
+    {
+        d = ( 1ul << 8 );
     }
-    
-    JTVIC_GROUP_EN_SET->w = 0xFFFFFFFFul;   // Enable GIRQ08 - GIRQ18 (all)
-    
+
+    JTVIC_CTRL->w = d; /* HW does not automatically clear Soft-Reset */
+
+    for( i = 0u; i < ( MEC14xx_NUM_JTVIC_INTS ); i++ )
+    {
+        pidx = i << 2;
+
+        for( j = 0u; j < 4u; j++ )
+        {
+            JTVIC_PRI->REG32[ pidx + j ] = ( uint32_t ) ( ih_table[ i ].pri[ j ] );
+        }
+
+        d = ih_table[ i ].isr_addr & ~( 1ul << 0 );
+
+        if( disagg_bitmap & ( 1ul << i ) )
+        {
+            d |= ( 1ul << 0 ); /* dis-aggregate this GIRQ */
+        }
+
+        JTVIC_ACTRL->REG32[ i ] = d;
+    }
+
+    JTVIC_GROUP_EN_SET->w = 0xFFFFFFFFul; /* Enable GIRQ08 - GIRQ18 (all) */
 }
 
 /* Clear JTVIC GIRQn source bit
  *
  */
-void jtvic_clr_source(uint8_t girq_num, uint8_t bit_num)
+void jtvic_clr_source( uint8_t girq_num,
+                       uint8_t bit_num )
 {
-    if (girq_num < (MEC14xx_NUM_JTVIC_INTS))
+    if( girq_num < ( MEC14xx_NUM_JTVIC_INTS ) )
     {
         bit_num &= 0x1Fu;
-        JTVIC_GIRQ->REGS[girq_num].SOURCE = (1ul << bit_num);
+        JTVIC_GIRQ->REGS[ girq_num ].SOURCE = ( 1ul << bit_num );
     }
 }
 
@@ -78,15 +90,18 @@ void jtvic_clr_source(uint8_t girq_num, uint8_t bit_num)
  * girq_num = [0, 18], 0=GIRQ08, 1=GIRQ09, ..., 18=GIRQ26
  * bit_num = [0, 31]
  */
-void jtvic_dis_clr_source(uint8_t girq_num, uint8_t bit_num, uint8_t clr_src)
+void jtvic_dis_clr_source( uint8_t girq_num,
+                           uint8_t bit_num,
+                           uint8_t clr_src )
 {
-    if (girq_num < (MEC14xx_NUM_JTVIC_INTS))
+    if( girq_num < ( MEC14xx_NUM_JTVIC_INTS ) )
     {
         bit_num &= 0x1Fu;
-        JTVIC_GIRQ->REGS[girq_num].EN_CLR = (1ul << bit_num);
-        if ( 0 != clr_src )
+        JTVIC_GIRQ->REGS[ girq_num ].EN_CLR = ( 1ul << bit_num );
+
+        if( 0 != clr_src )
         {
-            JTVIC_GIRQ->REGS[girq_num].SOURCE = (1ul << bit_num);
+            JTVIC_GIRQ->REGS[ girq_num ].SOURCE = ( 1ul << bit_num );
         }
     }
 }
@@ -96,21 +111,25 @@ void jtvic_dis_clr_source(uint8_t girq_num, uint8_t bit_num, uint8_t clr_src)
  * girq_num = [0, 18], 0=GIRQ08, 1=GIRQ09, ..., 18=GIRQ26
  * bit_num = [0, 31]
  */
-void jtvic_en_source(uint8_t girq_num, uint8_t bit_num, uint8_t clr_src)
+void jtvic_en_source( uint8_t girq_num,
+                      uint8_t bit_num,
+                      uint8_t clr_src )
 {
-    if (girq_num < (MEC14xx_NUM_JTVIC_INTS))
+    if( girq_num < ( MEC14xx_NUM_JTVIC_INTS ) )
     {
         bit_num &= 0x1Fu;
-        if ( 0 != clr_src )
+
+        if( 0 != clr_src )
         {
-            JTVIC_GIRQ->REGS[girq_num].SOURCE = (1ul << bit_num);
+            JTVIC_GIRQ->REGS[ girq_num ].SOURCE = ( 1ul << bit_num );
         }
-        JTVIC_GIRQ->REGS[girq_num].EN_SET = (1ul << bit_num);
+
+        JTVIC_GIRQ->REGS[ girq_num ].EN_SET = ( 1ul << bit_num );
     }
 }
 
 
 /* end mec14xx_jtvic.c */
+
 /**   @}
  */
-

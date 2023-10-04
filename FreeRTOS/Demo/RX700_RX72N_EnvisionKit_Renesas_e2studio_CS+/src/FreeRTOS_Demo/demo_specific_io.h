@@ -27,39 +27,39 @@
 #ifndef LED_IO_H
 #define LED_IO_H
 
-	#define EnvisionRX72N
+#define EnvisionRX72N
 
 /* Board support settings. */
 
-	#ifdef EnvisionRX72N
+#ifdef EnvisionRX72N
 
-		/* R5F572NDHDFB 144pin LQFP */
+/* R5F572NDHDFB 144pin LQFP */
 
-		/* General Values */
-		#define LED_ON					(0)
-		#define LED_OFF 				(1)
-		#define SW_PUSH 				(0)
-		#define SW_RELEASE				(1)
+/* General Values */
+    #define LED_ON             ( 0 )
+    #define LED_OFF            ( 1 )
+    #define SW_PUSH            ( 0 )
+    #define SW_RELEASE         ( 1 )
 
-		/* Switches (and its notation in the User's Manual) */
-		#define SW1/*(SW2)*/				(PORT0.PIDR.BIT.B7)
-		#define U_GPIO_PIN_SW1/*(SW2)*/ 	(GPIO_PORT_0_PIN_7)
+/* Switches (and its notation in the User's Manual) */
+    #define SW1                /*(SW2)*/ ( PORT0.PIDR.BIT.B7 )
+    #define U_GPIO_PIN_SW1     /*(SW2)*/ ( GPIO_PORT_0_PIN_7 )
 
-		/* LED port settings (and its notation in the User's Manual) */
-		#define LED0/*(LED2)*/				(PORT4.PODR.BIT.B0)
-		#define U_GPIO_PIN_LED0/*(LED2)*/	(GPIO_PORT_4_PIN_0)
+/* LED port settings (and its notation in the User's Manual) */
+    #define LED0               /*(LED2)*/ ( PORT4.PODR.BIT.B0 )
+    #define U_GPIO_PIN_LED0    /*(LED2)*/ ( GPIO_PORT_4_PIN_0 )
 
-		/* FreeRTOS CLI Command Console */
-		#define U_SCI_UART_CLI_PINSET()	R_SCI_PinSet_SCI2()
-		#define U_SCI_UART_CLI_SCI_CH	(SCI_CH2)
-		#define U_DTC_UART_CLI_TX_ACT	((dtc_activation_source_t)VECT(SCI2,TXI2))
-		#define U_DTC_UART_CLI_TX_DR	(SCI2.TDR)
+/* FreeRTOS CLI Command Console */
+    #define U_SCI_UART_CLI_PINSET()    R_SCI_PinSet_SCI2()
+    #define U_SCI_UART_CLI_SCI_CH    ( SCI_CH2 )
+    #define U_DTC_UART_CLI_TX_ACT    ( ( dtc_activation_source_t ) VECT( SCI2, TXI2 ) )
+    #define U_DTC_UART_CLI_TX_DR     ( SCI2.TDR )
 
-	#endif /* EnvisionRX72N */
+#endif /* EnvisionRX72N */
 
-	#ifndef LED0
-		#error The hardware platform is not defined
-	#endif
+#ifndef LED0
+    #error The hardware platform is not defined
+#endif
 
 /* Board Support Data Structures. */
 
@@ -71,7 +71,6 @@ extern dtc_transfer_data_t xSerialTxDtcInfo;
 
 /* Board Support Callback Functions. */
 
-extern void vSerialSciCallback( void *pvArgs );
+extern void vSerialSciCallback( void * pvArgs );
 
 #endif /* LED_IO_H */
-

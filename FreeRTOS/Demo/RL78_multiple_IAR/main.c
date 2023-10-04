@@ -57,7 +57,7 @@
 #include "demo_specific_io.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
+ * or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
 
 /*-----------------------------------------------------------*/
@@ -73,13 +73,14 @@ extern void main_full( void );
  * This function is called from the C startup routine to setup the processor -
  * in particular the CPU clock source.
  */
-int __low_level_init(void);
+int __low_level_init( void );
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file. */
+ * within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationTickHook( void );
 
 /* Prototype for the application-implemented timer for the OS tick */
@@ -88,18 +89,18 @@ void vApplicationSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
 /* This variable is not actually used, but provided to allow an example of how
-to write an ISR to be included in this file. */
+ * to write an ISR to be included in this file. */
 static SemaphoreHandle_t xSemaphore = NULL;
 
 /* RL78 Option Byte Definition. Watchdog disabled, LVI enabled, OCD interface
-enabled. */
-__root __far const unsigned char OptionByte[] @ 0x00C0 =
+ * enabled. */
+__root __far const unsigned char OptionByte[] @0x00C0 =
 {
     0x6eU, 0xffU, 0xe8U, 0x85U
 };
 
 /* Security byte definition */
-__root __far const unsigned char ucSecurityCode[]  @ 0x00C4 =
+__root __far const unsigned char ucSecurityCode[]  @0x00C4 =
 {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
@@ -109,7 +110,7 @@ __root __far const unsigned char ucSecurityCode[]  @ 0x00C4 =
 void main( void )
 {
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-    of this file. */
+     * of this file. */
     #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
     {
         main_blinky();
@@ -136,25 +137,25 @@ void vAnExampleISR_C_Handler( void )
      * Also see the documentation page for this demo on the FreeRTOS.org website
      * for full instructions.
      */
-short sHigherPriorityTaskWoken = pdFALSE;
+    short sHigherPriorityTaskWoken = pdFALSE;
 
     /* Handler code goes here...*/
 
     /* For purposes of demonstration, assume at some point the hander calls
-    xSemaphoreGiveFromISR().*/
+     * xSemaphoreGiveFromISR().*/
     xSemaphoreGiveFromISR( xSemaphore, &sHigherPriorityTaskWoken );
 
     /* If giving the semaphore unblocked a task, and the unblocked task has a
-    priority higher than or equal to the currently running task, then
-    sHigherPriorityTaskWoken will have been set to pdTRUE internally within the
-    xSemaphoreGiveFromISR() function.  Passing a pdTRUE    value to
-    portYIELD_FROM_ISR() will cause this interrupt to return directly to the
-    higher priority unblocked task. */
+     * priority higher than or equal to the currently running task, then
+     * sHigherPriorityTaskWoken will have been set to pdTRUE internally within the
+     * xSemaphoreGiveFromISR() function.  Passing a pdTRUE    value to
+     * portYIELD_FROM_ISR() will cause this interrupt to return directly to the
+     * higher priority unblocked task. */
     portYIELD_FROM_ISR( sHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
-int __low_level_init(void)
+int __low_level_init( void )
 {
     portDISABLE_INTERRUPTS();
 
@@ -184,14 +185,14 @@ int __low_level_init(void)
 
 void vApplicationSetupTimerInterrupt( void )
 {
-const uint16_t usClockHz = 15000UL; /* Internal clock. */
-const uint16_t usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
+    const uint16_t usClockHz = 15000UL; /* Internal clock. */
+    const uint16_t usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
 
     /* Use the internal 15 kHz clock. */
     OSMC = ( uint8_t ) 0x16;
 
     /* The clock source for the Interval Timer peripheral used for generating
-    the tick interrupt depends on the RL78 device in use. */
+     * the tick interrupt depends on the RL78 device in use. */
     #if configTICK_VECTOR == 0x38
     {
         /* Supply the interval timer clock. */
@@ -232,48 +233,55 @@ const uint16_t usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
         /* Enable INTIT interrupt. */
         TMKAMK = ( uint8_t ) 0;
     }
-    #else
-        #error "It is necessary to configure a suitable timer interrupt for the tick."
-    #endif
+    #else  /* if configTICK_VECTOR == 0x38 */
+    #error "It is necessary to configure a suitable timer interrupt for the tick."
+    #endif /* if configTICK_VECTOR == 0x38 */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
     /* Called if a call to pvPortMalloc() fails because there is insufficient
-    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-    internally by FreeRTOS API functions that create tasks, queues, software
-    timers, and semaphores.  The size of the FreeRTOS heap is set by the
-    configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+     * free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     * internally by FreeRTOS API functions that create tasks, queues, software
+     * timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     * configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
     taskDISABLE_INTERRUPTS();
-    for( ;; );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
     ( void ) pcTaskName;
     ( void ) pxTask;
 
     /* Run time stack overflow checking is performed if
-    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-    function is called if a stack overflow is detected. */
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
     taskDISABLE_INTERRUPTS();
-    for( ;; );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeHeapSpace;
+    volatile size_t xFreeHeapSpace;
 
     /* This is just a trivial example of an idle hook.  It is called on each
-    cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-    idle task just queries the amount of FreeRTOS heap that remains.  See the
-    memory management section on the http://www.FreeRTOS.org web site for memory
-    management options.  If there is a lot of heap memory free then the
-    configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-    RAM. */
+     * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+     * idle task just queries the amount of FreeRTOS heap that remains.  See the
+     * memory management section on the http://www.FreeRTOS.org web site for memory
+     * management options.  If there is a lot of heap memory free then the
+     * configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+     * RAM. */
     xFreeHeapSpace = xPortGetFreeHeapSize();
 
     /* Remove compiler warning about xFreeHeapSpace being set but never used. */

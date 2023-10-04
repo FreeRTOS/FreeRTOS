@@ -10,12 +10,12 @@
 *  14/07/2004 : V1.3
 *  01/01/2004 : V1.2
 *******************************************************************************
- THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
- CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
- AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
- OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
- OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
- CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+*  THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
+*  CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
+*  AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
+*  OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
+*  OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
+*  CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 #ifndef __gpio_H
 #define __gpio_H
@@ -24,18 +24,18 @@
 
 typedef enum
 {
-  GPIO_HI_AIN_TRI,
-  GPIO_IN_TRI_TTL,
-  GPIO_IN_TRI_CMOS,
-  GPIO_IPUPD_WP,    
-  GPIO_OUT_OD,
-  GPIO_OUT_PP,
-  GPIO_AF_OD,
-  GPIO_AF_PP
+    GPIO_HI_AIN_TRI,
+    GPIO_IN_TRI_TTL,
+    GPIO_IN_TRI_CMOS,
+    GPIO_IPUPD_WP,
+    GPIO_OUT_OD,
+    GPIO_OUT_PP,
+    GPIO_AF_OD,
+    GPIO_AF_PP
 } GpioPinMode_TypeDef;
 
-#define GPIO_LSB  0x00
-#define GPIO_MSB  0x08
+#define GPIO_LSB    0x00
+#define GPIO_MSB    0x08
 
 /*******************************************************************************
 * Function Name  : GPIO_Config
@@ -46,7 +46,9 @@ typedef enum
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_Config (GPIO_TypeDef *GPIOx, u16 Port_Pins, GpioPinMode_TypeDef GPIO_Mode);
+void GPIO_Config( GPIO_TypeDef * GPIOx,
+                  u16 Port_Pins,
+                  GpioPinMode_TypeDef GPIO_Mode );
 
 /*******************************************************************************
 * Function Name  : GPIO_BitRead
@@ -56,9 +58,10 @@ void GPIO_Config (GPIO_TypeDef *GPIOx, u16 Port_Pins, GpioPinMode_TypeDef GPIO_M
 * Output         : None
 * Return         : The selected pin value
 *******************************************************************************/
-inline u8 GPIO_BitRead(GPIO_TypeDef *GPIOx, u8 Port_Pin)
+inline u8 GPIO_BitRead( GPIO_TypeDef * GPIOx,
+                        u8 Port_Pin )
 {
-  return (GPIOx->PD >> Port_Pin) & 0x0001;
+    return ( GPIOx->PD >> Port_Pin ) & 0x0001;
 }
 
 /*******************************************************************************
@@ -69,9 +72,10 @@ inline u8 GPIO_BitRead(GPIO_TypeDef *GPIOx, u8 Port_Pin)
 * Output         : None
 * Return         : The GPIO_MSB or GPIO_LSB of the selected PD register
 *******************************************************************************/
-inline u8 GPIO_ByteRead(GPIO_TypeDef *GPIOx, u8 Port_Byte)
+inline u8 GPIO_ByteRead( GPIO_TypeDef * GPIOx,
+                         u8 Port_Byte )
 {
-  return (u8)(GPIOx->PD >> Port_Byte);
+    return ( u8 ) ( GPIOx->PD >> Port_Byte );
 }
 
 /*******************************************************************************
@@ -81,9 +85,9 @@ inline u8 GPIO_ByteRead(GPIO_TypeDef *GPIOx, u8 Port_Byte)
 * Output         : None
 * Return         : The selected PD register value
 *******************************************************************************/
-inline u16 GPIO_WordRead(GPIO_TypeDef *GPIOx)
+inline u16 GPIO_WordRead( GPIO_TypeDef * GPIOx )
 {
-  return GPIOx->PD;
+    return GPIOx->PD;
 }
 
 /*******************************************************************************
@@ -95,7 +99,9 @@ inline u16 GPIO_WordRead(GPIO_TypeDef *GPIOx)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_BitWrite(GPIO_TypeDef *GPIOx, u8 Port_Pin, u8 Port_Val);
+void GPIO_BitWrite( GPIO_TypeDef * GPIOx,
+                    u8 Port_Pin,
+                    u8 Port_Val );
 
 /*******************************************************************************
 * Function Name  : GPIO_ByteWrite
@@ -106,7 +112,9 @@ void GPIO_BitWrite(GPIO_TypeDef *GPIOx, u8 Port_Pin, u8 Port_Val);
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIO_ByteWrite(GPIO_TypeDef *GPIOx, u8 Port_Byte, u8 Port_Val);
+void GPIO_ByteWrite( GPIO_TypeDef * GPIOx,
+                     u8 Port_Byte,
+                     u8 Port_Val );
 
 /*******************************************************************************
 * Function Name  : GPIO_WordWrite
@@ -116,9 +124,10 @@ void GPIO_ByteWrite(GPIO_TypeDef *GPIOx, u8 Port_Byte, u8 Port_Val);
 * Output         : None
 * Return         : None
 *******************************************************************************/
-inline void GPIO_WordWrite(GPIO_TypeDef *GPIOx, u16 Port_Val)
+inline void GPIO_WordWrite( GPIO_TypeDef * GPIOx,
+                            u16 Port_Val )
 {
-  GPIOx->PD = Port_Val;
+    GPIOx->PD = Port_Val;
 }
 
 #endif /* __gpio_H */

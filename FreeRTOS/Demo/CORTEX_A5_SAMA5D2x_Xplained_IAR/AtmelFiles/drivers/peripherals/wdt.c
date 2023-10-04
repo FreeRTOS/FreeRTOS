@@ -80,42 +80,47 @@
  *        Local functions
  *----------------------------------------------------------------------------*/
 
-static uint32_t _wdt_compute_period(uint32_t period)
+static uint32_t _wdt_compute_period( uint32_t period )
 {
-	uint32_t value = period * (pmc_get_slow_clock() >> 7) / 1000;
-	if (value > 0xfff)
-		value = 0xfff;
-	return value;
+    uint32_t value = period * ( pmc_get_slow_clock() >> 7 ) / 1000;
+
+    if( value > 0xfff )
+    {
+        value = 0xfff;
+    }
+
+    return value;
 }
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void wdt_enable(uint32_t mode, uint32_t delta, uint32_t counter)
+void wdt_enable( uint32_t mode,
+                 uint32_t delta,
+                 uint32_t counter )
 {
-	WDT->WDT_MR = (mode & ~(WDT_MR_WDDIS | WDT_MR_WDD_Msk | WDT_MR_WDV_Msk)) |
-	              WDT_MR_WDD(_wdt_compute_period(delta)) |
-	              WDT_MR_WDV(_wdt_compute_period(counter));
+    WDT->WDT_MR = ( mode & ~( WDT_MR_WDDIS | WDT_MR_WDD_Msk | WDT_MR_WDV_Msk ) ) |
+                  WDT_MR_WDD( _wdt_compute_period( delta ) ) |
+                  WDT_MR_WDV( _wdt_compute_period( counter ) );
 }
 
-void wdt_disable(void)
+void wdt_disable( void )
 {
-	WDT->WDT_MR = WDT_MR_WDDIS;
+    WDT->WDT_MR = WDT_MR_WDDIS;
 }
 
 void wdt_restart()
 {
-	WDT->WDT_CR = WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT;
+    WDT->WDT_CR = WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT;
 }
 
-uint32_t wdt_get_status(void)
+uint32_t wdt_get_status( void )
 {
-	return WDT->WDT_SR & (WDT_SR_WDUNF | WDT_SR_WDERR);
+    return WDT->WDT_SR & ( WDT_SR_WDUNF | WDT_SR_WDERR );
 }
 
-uint32_t wdt_get_counter_value(void)
+uint32_t wdt_get_counter_value( void )
 {
-	return (WDT->WDT_MR & WDT_MR_WDV_Msk) >> WDT_MR_WDV_Pos;
+    return ( WDT->WDT_MR & WDT_MR_WDV_Msk ) >> WDT_MR_WDV_Pos;
 }
-

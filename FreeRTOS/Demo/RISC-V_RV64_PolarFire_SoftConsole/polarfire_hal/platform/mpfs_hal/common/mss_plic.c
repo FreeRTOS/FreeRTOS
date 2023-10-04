@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-const unsigned long plic_hart_lookup[5U] = {0U, 1U, 3U, 5U, 7U};
+const unsigned long plic_hart_lookup[ 5U ] = { 0U, 1U, 3U, 5U, 7U };
 
 #ifdef __cplusplus
 }

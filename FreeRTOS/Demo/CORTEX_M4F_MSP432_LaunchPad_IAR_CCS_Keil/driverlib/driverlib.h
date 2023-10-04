@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -67,4 +67,4 @@
 #include "uart.h"
 #include "wdt_a.h"
 
-#endif
+#endif /* ifndef __DRIVERLIB__H_ */

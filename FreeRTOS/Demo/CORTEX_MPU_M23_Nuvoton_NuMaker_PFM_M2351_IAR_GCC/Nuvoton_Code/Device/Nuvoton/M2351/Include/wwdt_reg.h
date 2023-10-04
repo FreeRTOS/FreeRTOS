@@ -9,22 +9,21 @@
 #define __WWDT_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- Window Watchdog Timer -------------------------*/
+
 /**
-    @addtogroup WWDT Window Watchdog Timer(WWDT)
-    Memory Mapped Structure for WWDT Controller
-@{ */
+ *  @addtogroup WWDT Window Watchdog Timer(WWDT)
+ *  Memory Mapped Structure for WWDT Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var WWDT_T::RLDCNT
      * Offset: 0x00  WWDT Reload Counter Register
@@ -98,45 +97,44 @@ typedef struct
      * |[5:0]   |CNTDAT    |WWDT Counter Value
      * |        |          |CNTDAT will be updated continuously to monitor 6-bit WWDT down counter value.
      */
-    __O  uint32_t RLDCNT;                /*!< [0x0000] WWDT Reload Counter Register                                     */
-    __IO uint32_t CTL;                   /*!< [0x0004] WWDT Control Register                                            */
-    __IO uint32_t STATUS;                /*!< [0x0008] WWDT Status Register                                             */
-    __I  uint32_t CNT;                   /*!< [0x000c] WWDT Counter Value Register                                      */
-
+    __O uint32_t RLDCNT;  /*!< [0x0000] WWDT Reload Counter Register                                     */
+    __IO uint32_t CTL;    /*!< [0x0004] WWDT Control Register                                            */
+    __IO uint32_t STATUS; /*!< [0x0008] WWDT Status Register                                             */
+    __I uint32_t CNT;     /*!< [0x000c] WWDT Counter Value Register                                      */
 } WWDT_T;
 
 
 /**
-    @addtogroup WWDT_CONST WWDT Bit Field Definition
-    Constant Definitions for WWDT Controller
-@{ */
+ *  @addtogroup WWDT_CONST WWDT Bit Field Definition
+ *  Constant Definitions for WWDT Controller
+ * @{ */
 
-#define WWDT_RLDCNT_RLDCNT_Pos           (0)                                               /*!< WWDT_T::RLDCNT: RLDCNT Position        */
-#define WWDT_RLDCNT_RLDCNT_Msk           (0xfffffffful << WWDT_RLDCNT_RLDCNT_Pos)          /*!< WWDT_T::RLDCNT: RLDCNT Mask            */
+#define WWDT_RLDCNT_RLDCNT_Pos    ( 0 )                                                    /*!< WWDT_T::RLDCNT: RLDCNT Position        */
+#define WWDT_RLDCNT_RLDCNT_Msk    ( 0xfffffffful << WWDT_RLDCNT_RLDCNT_Pos )               /*!< WWDT_T::RLDCNT: RLDCNT Mask            */
 
-#define WWDT_CTL_WWDTEN_Pos              (0)                                               /*!< WWDT_T::CTL: WWDTEN Position           */
-#define WWDT_CTL_WWDTEN_Msk              (0x1ul << WWDT_CTL_WWDTEN_Pos)                    /*!< WWDT_T::CTL: WWDTEN Mask               */
+#define WWDT_CTL_WWDTEN_Pos       ( 0 )                                                    /*!< WWDT_T::CTL: WWDTEN Position           */
+#define WWDT_CTL_WWDTEN_Msk       ( 0x1ul << WWDT_CTL_WWDTEN_Pos )                         /*!< WWDT_T::CTL: WWDTEN Mask               */
 
-#define WWDT_CTL_INTEN_Pos               (1)                                               /*!< WWDT_T::CTL: INTEN Position            */
-#define WWDT_CTL_INTEN_Msk               (0x1ul << WWDT_CTL_INTEN_Pos)                     /*!< WWDT_T::CTL: INTEN Mask                */
+#define WWDT_CTL_INTEN_Pos        ( 1 )                                                    /*!< WWDT_T::CTL: INTEN Position            */
+#define WWDT_CTL_INTEN_Msk        ( 0x1ul << WWDT_CTL_INTEN_Pos )                          /*!< WWDT_T::CTL: INTEN Mask                */
 
-#define WWDT_CTL_PSCSEL_Pos              (8)                                               /*!< WWDT_T::CTL: PSCSEL Position           */
-#define WWDT_CTL_PSCSEL_Msk              (0xful << WWDT_CTL_PSCSEL_Pos)                    /*!< WWDT_T::CTL: PSCSEL Mask               */
+#define WWDT_CTL_PSCSEL_Pos       ( 8 )                                                    /*!< WWDT_T::CTL: PSCSEL Position           */
+#define WWDT_CTL_PSCSEL_Msk       ( 0xful << WWDT_CTL_PSCSEL_Pos )                         /*!< WWDT_T::CTL: PSCSEL Mask               */
 
-#define WWDT_CTL_CMPDAT_Pos              (16)                                              /*!< WWDT_T::CTL: CMPDAT Position           */
-#define WWDT_CTL_CMPDAT_Msk              (0x3ful << WWDT_CTL_CMPDAT_Pos)                   /*!< WWDT_T::CTL: CMPDAT Mask               */
+#define WWDT_CTL_CMPDAT_Pos       ( 16 )                                                   /*!< WWDT_T::CTL: CMPDAT Position           */
+#define WWDT_CTL_CMPDAT_Msk       ( 0x3ful << WWDT_CTL_CMPDAT_Pos )                        /*!< WWDT_T::CTL: CMPDAT Mask               */
 
-#define WWDT_CTL_ICEDEBUG_Pos            (31)                                              /*!< WWDT_T::CTL: ICEDEBUG Position         */
-#define WWDT_CTL_ICEDEBUG_Msk            (0x1ul << WWDT_CTL_ICEDEBUG_Pos)                  /*!< WWDT_T::CTL: ICEDEBUG Mask             */
+#define WWDT_CTL_ICEDEBUG_Pos     ( 31 )                                                   /*!< WWDT_T::CTL: ICEDEBUG Position         */
+#define WWDT_CTL_ICEDEBUG_Msk     ( 0x1ul << WWDT_CTL_ICEDEBUG_Pos )                       /*!< WWDT_T::CTL: ICEDEBUG Mask             */
 
-#define WWDT_STATUS_WWDTIF_Pos           (0)                                               /*!< WWDT_T::STATUS: WWDTIF Position        */
-#define WWDT_STATUS_WWDTIF_Msk           (0x1ul << WWDT_STATUS_WWDTIF_Pos)                 /*!< WWDT_T::STATUS: WWDTIF Mask            */
+#define WWDT_STATUS_WWDTIF_Pos    ( 0 )                                                    /*!< WWDT_T::STATUS: WWDTIF Position        */
+#define WWDT_STATUS_WWDTIF_Msk    ( 0x1ul << WWDT_STATUS_WWDTIF_Pos )                      /*!< WWDT_T::STATUS: WWDTIF Mask            */
 
-#define WWDT_STATUS_WWDTRF_Pos           (1)                                               /*!< WWDT_T::STATUS: WWDTRF Position        */
-#define WWDT_STATUS_WWDTRF_Msk           (0x1ul << WWDT_STATUS_WWDTRF_Pos)                 /*!< WWDT_T::STATUS: WWDTRF Mask            */
+#define WWDT_STATUS_WWDTRF_Pos    ( 1 )                                                    /*!< WWDT_T::STATUS: WWDTRF Position        */
+#define WWDT_STATUS_WWDTRF_Msk    ( 0x1ul << WWDT_STATUS_WWDTRF_Pos )                      /*!< WWDT_T::STATUS: WWDTRF Mask            */
 
-#define WWDT_CNT_CNTDAT_Pos              (0)                                               /*!< WWDT_T::CNT: CNTDAT Position           */
-#define WWDT_CNT_CNTDAT_Msk              (0x3ful << WWDT_CNT_CNTDAT_Pos)                   /*!< WWDT_T::CNT: CNTDAT Mask               */
+#define WWDT_CNT_CNTDAT_Pos       ( 0 )                                                    /*!< WWDT_T::CNT: CNTDAT Position           */
+#define WWDT_CNT_CNTDAT_Msk       ( 0x3ful << WWDT_CNT_CNTDAT_Pos )                        /*!< WWDT_T::CNT: CNTDAT Mask               */
 
 /**@}*/ /* WWDT_CONST */
 /**@}*/ /* end of WWDT register group */

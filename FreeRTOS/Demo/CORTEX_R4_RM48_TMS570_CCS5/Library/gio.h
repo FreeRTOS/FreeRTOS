@@ -1,9 +1,9 @@
 /** @file gio.h
-*   @brief GIO Driver Definition File
-*   @date 11.August.2009
-*   @version 1.01.000
-*   
-*/
+ *   @brief GIO Driver Definition File
+ *   @date 11.August.2009
+ *   @version 1.01.000
+ *
+ */
 
 /* (c) Texas Instruments 2009-2010, All rights reserved. */
 
@@ -12,15 +12,16 @@
 #define __GIO_H__
 
 /** @struct gioBase
-*   @brief GIO Base Register Definition
-*
-*   This structure is used to access the GIO module egisters.
-*/
+ *   @brief GIO Base Register Definition
+ *
+ *   This structure is used to access the GIO module egisters.
+ */
+
 /** @typedef gioBASE_t
-*   @brief GIO Register Frame Type Definition
-*
-*   This type is used to access the GIO Registers.
-*/
+ *   @brief GIO Register Frame Type Definition
+ *
+ *   This type is used to access the GIO Registers.
+ */
 typedef volatile struct gioBase
 {
     unsigned GCR0;      /**< 0x0000: Global Control Register */
@@ -38,13 +39,14 @@ typedef volatile struct gioBase
 
 
 /** @struct gioPort
-*   @brief GIO Port Register Definition
-*/
+ *   @brief GIO Port Register Definition
+ */
+
 /** @typedef gioPORT_t
-*   @brief GIO Port Register Type Definition
-*
-*   This type is used to access the GIO Port Registers.
-*/
+ *   @brief GIO Port Register Type Definition
+ *
+ *   This type is used to access the GIO Port Registers.
+ */
 typedef volatile struct gioPort
 {
     unsigned DIR;    /**< 0x0000: Data Direction Register */
@@ -59,36 +61,41 @@ typedef volatile struct gioPort
 
 
 /** @def gioREG
-*   @brief GIO Register Frame Pointer
-*
-*   This pointer is used by the GIO driver to access the gio module registers.
-*/
-#define gioREG   ((gioBASE_t *)0xFFF7BC00U)
+ *   @brief GIO Register Frame Pointer
+ *
+ *   This pointer is used by the GIO driver to access the gio module registers.
+ */
+#define gioREG      ( ( gioBASE_t * ) 0xFFF7BC00U )
 
 /** @def gioPORTA
-*   @brief GIO Port (A) Register Pointer
-*
-*   Pointer used by the GIO driver to access PORTA
-*/
-#define gioPORTA ((gioPORT_t *)0xFFF7BC34U)
+ *   @brief GIO Port (A) Register Pointer
+ *
+ *   Pointer used by the GIO driver to access PORTA
+ */
+#define gioPORTA    ( ( gioPORT_t * ) 0xFFF7BC34U )
 
 /** @def gioPORTB
-*   @brief GIO Port (B) Register Pointer
-*
-*   Pointer used by the GIO driver to access PORTB
-*/
-#define gioPORTB ((gioPORT_t *)0xFFF7BC54U)
+ *   @brief GIO Port (B) Register Pointer
+ *
+ *   Pointer used by the GIO driver to access PORTB
+ */
+#define gioPORTB    ( ( gioPORT_t * ) 0xFFF7BC54U )
 
 
 /* GIO Interface Functions */
-void gioInit(void);
-void gioSetDirection(gioPORT_t *port, unsigned dir);
-void gioSetBit(gioPORT_t *port, unsigned bit, unsigned value);
-void gioSetPort(gioPORT_t *port, unsigned value);
-unsigned gioGetBit(gioPORT_t *port, unsigned bit);
-unsigned gioGetPort(gioPORT_t *port);
-void gioEnableNotification(unsigned bit);
-void gioDisableNotification(unsigned bit);
-void gioNotification(int bit);
+void gioInit( void );
+void gioSetDirection( gioPORT_t * port,
+                      unsigned dir );
+void gioSetBit( gioPORT_t * port,
+                unsigned bit,
+                unsigned value );
+void gioSetPort( gioPORT_t * port,
+                 unsigned value );
+unsigned gioGetBit( gioPORT_t * port,
+                    unsigned bit );
+unsigned gioGetPort( gioPORT_t * port );
+void gioEnableNotification( unsigned bit );
+void gioDisableNotification( unsigned bit );
+void gioNotification( int bit );
 
-#endif
+#endif /* ifndef __GIO_H__ */

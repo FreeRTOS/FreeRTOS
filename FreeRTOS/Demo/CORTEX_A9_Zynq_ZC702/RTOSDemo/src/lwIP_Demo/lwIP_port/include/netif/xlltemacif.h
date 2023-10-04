@@ -17,64 +17,68 @@
  */
 
 #ifndef __NETIF_XLLTEMACIF_H__
-#define __NETIF_XLLTEMACIF_H__
+    #define __NETIF_XLLTEMACIF_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include "lwip/netif.h"
-#include "netif/etharp.h"
-#include "netif/xadapter.h"
+    #include "lwip/netif.h"
+    #include "netif/etharp.h"
+    #include "netif/xadapter.h"
 
-#include "xparameters.h"
-#include "xstatus.h"
-#include "xlltemac.h"
-#include "xlldma.h"
-#include "xllfifo.h"
-#include "xlldma_bdring.h"
+    #include "xparameters.h"
+    #include "xstatus.h"
+    #include "xlltemac.h"
+    #include "xlldma.h"
+    #include "xllfifo.h"
+    #include "xlldma_bdring.h"
 
-#include "netif/xpqueue.h"
-#include "xlwipconfig.h"
+    #include "netif/xpqueue.h"
+    #include "xlwipconfig.h"
 
-void 	xlltemacif_setmac(u32_t index, u8_t *addr);
-u8_t*	xlltemacif_getmac(u32_t index);
-err_t 	xlltemacif_init(struct netif *netif);
-int 	xlltemacif_input(struct netif *netif);
-unsigned get_IEEE_phy_speed(XLlTemac *xlltemacp);
-unsigned Phy_Setup (XLlTemac *xlltemacp);
-unsigned configure_IEEE_phy_speed(XLlTemac *xlltemacp, unsigned speed);
+    void xlltemacif_setmac( u32_t index,
+                            u8_t * addr );
+    u8_t * xlltemacif_getmac( u32_t index );
+    err_t xlltemacif_init( struct netif * netif );
+    int xlltemacif_input( struct netif * netif );
+    unsigned get_IEEE_phy_speed( XLlTemac * xlltemacp );
+    unsigned Phy_Setup( XLlTemac * xlltemacp );
+    unsigned configure_IEEE_phy_speed( XLlTemac * xlltemacp,
+                                       unsigned speed );
 
 /* xlltemacif_hw.c */
-void 	xlltemac_error_handler(XLlTemac * Temac);
+    void xlltemac_error_handler( XLlTemac * Temac );
 
 /* structure within each netif, encapsulating all information required for
  * using a particular temac instance
  */
-typedef struct {
-	XLlDma lldma;
-	XLlFifo llfifo;
-	XLlTemac lltemac;
+    typedef struct
+    {
+        XLlDma lldma;
+        XLlFifo llfifo;
+        XLlTemac lltemac;
 
-	/* queue to store overflow packets */
-	pq_queue_t *recv_q;
-	pq_queue_t *send_q;
+        /* queue to store overflow packets */
+        pq_queue_t * recv_q;
+        pq_queue_t * send_q;
 
-	/* pointers to memory holding buffer descriptors (used only with SDMA) */
-	void *rx_bdspace;
-	void *tx_bdspace;
-} xlltemacif_s;
+        /* pointers to memory holding buffer descriptors (used only with SDMA) */
+        void * rx_bdspace;
+        void * tx_bdspace;
+    } xlltemacif_s;
 
-extern xlltemacif_s xlltemacif;
+    extern xlltemacif_s xlltemacif;
 
 /* xlltemacif_sdma.c */
-XStatus init_sdma(struct xemac_s *xemac);
-int  process_sent_bds(XLlDma_BdRing *txring);
-void lldma_send_handler(void *arg);
-XStatus lldma_sgsend(xlltemacif_s *xlltemacif, struct pbuf *p);
+    XStatus init_sdma( struct xemac_s * xemac );
+    int process_sent_bds( XLlDma_BdRing * txring );
+    void lldma_send_handler( void * arg );
+    XStatus lldma_sgsend( xlltemacif_s * xlltemacif,
+                          struct pbuf * p );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __NETIF_XLLTEMACIF_H__ */

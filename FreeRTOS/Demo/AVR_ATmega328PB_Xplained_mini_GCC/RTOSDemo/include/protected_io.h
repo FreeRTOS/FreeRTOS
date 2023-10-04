@@ -3,45 +3,45 @@
  *
  * \brief Configuration Change Protection write functions
  *
- (c) 2018 Microchip Technology Inc. and its subsidiaries.
-
-    Subject to your compliance with these terms,you may use this software and
-    any derivatives exclusively with Microchip products.It is your responsibility
-    to comply with third party license terms applicable to your use of third party
-    software (including open source software) that may accompany Microchip software.
-
-    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
-    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
-    WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
-    PARTICULAR PURPOSE.
-
-    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
-    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
-    BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
-    FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
-    ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
-    THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+ * (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ *
+ *  Subject to your compliance with these terms,you may use this software and
+ *  any derivatives exclusively with Microchip products.It is your responsibility
+ *  to comply with third party license terms applicable to your use of third party
+ *  software (including open source software) that may accompany Microchip software.
+ *
+ *  THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+ *  EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+ *  WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+ *  PARTICULAR PURPOSE.
+ *
+ *  IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+ *  INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+ *  WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+ *  BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+ *  FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+ *  ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+ *  THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  */
 
 #ifndef PROTECTED_IO_H
-#define PROTECTED_IO_H
+    #define PROTECTED_IO_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#if defined(__DOXYGEN__)
-//! \name IAR Memory Model defines.
-//@{
+    #if defined( __DOXYGEN__ )
+/*! \name IAR Memory Model defines. */
+/*@{ */
 
 /**
  * \def CONFIG_MEMORY_MODEL_TINY
  * \brief Configuration symbol to enable 8 bit pointers.
  *
  */
-#define CONFIG_MEMORY_MODEL_TINY
+        #define CONFIG_MEMORY_MODEL_TINY
 
 /**
  * \def CONFIG_MEMORY_MODEL_SMALL
@@ -49,17 +49,17 @@ extern "C" {
  * \note If no memory model is defined, SMALL is default.
  *
  */
-#define CONFIG_MEMORY_MODEL_SMALL
+        #define CONFIG_MEMORY_MODEL_SMALL
 
 /**
  * \def CONFIG_MEMORY_MODEL_LARGE
  * \brief Configuration symbol to enable 24 bit pointers.
  *
  */
-#define CONFIG_MEMORY_MODEL_LARGE
+        #define CONFIG_MEMORY_MODEL_LARGE
 
-//@}
-#endif
+/*@} */
+    #endif /* if defined( __DOXYGEN__ ) */
 
 /**
  * \brief Write to am 8-bit I/O register protected by CCP or a protection bit
@@ -72,12 +72,14 @@ extern "C" {
  *       on calling convention. The memory model is not visible to the
  *       preprocessor, so it must be defined in the Assembler preprocessor directives.
  */
-extern void protected_write_io(void *addr, uint8_t magic, uint8_t value);
+    extern void protected_write_io( void * addr,
+                                    uint8_t magic,
+                                    uint8_t value );
 
 /** @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* PROTECTED_IO_H */

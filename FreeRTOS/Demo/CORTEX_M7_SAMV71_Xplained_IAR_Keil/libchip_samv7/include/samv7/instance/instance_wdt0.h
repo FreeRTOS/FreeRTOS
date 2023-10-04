@@ -31,14 +31,14 @@
 #define _SAM_WDT0_INSTANCE_
 
 /* ========== Register definition for WDT0 peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_WDT0_CR                  (0x400E1850U) /**< \brief (WDT0) Control Register */
-  #define REG_WDT0_MR                  (0x400E1854U) /**< \brief (WDT0) Mode Register */
-  #define REG_WDT0_SR                  (0x400E1858U) /**< \brief (WDT0) Status Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_WDT0_CR    ( 0x400E1850U )                      /**< \brief (WDT0) Control Register */
+    #define REG_WDT0_MR    ( 0x400E1854U )                      /**< \brief (WDT0) Mode Register */
+    #define REG_WDT0_SR    ( 0x400E1858U )                      /**< \brief (WDT0) Status Register */
 #else
-  #define REG_WDT0_CR (*(__O  uint32_t*)0x400E1850U) /**< \brief (WDT0) Control Register */
-  #define REG_WDT0_MR (*(__IO uint32_t*)0x400E1854U) /**< \brief (WDT0) Mode Register */
-  #define REG_WDT0_SR (*(__I  uint32_t*)0x400E1858U) /**< \brief (WDT0) Status Register */
+    #define REG_WDT0_CR    ( *( __O uint32_t * ) 0x400E1850U )  /**< \brief (WDT0) Control Register */
+    #define REG_WDT0_MR    ( *( __IO uint32_t * ) 0x400E1854U ) /**< \brief (WDT0) Mode Register */
+    #define REG_WDT0_SR    ( *( __I uint32_t * ) 0x400E1858U )  /**< \brief (WDT0) Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAM_WDT0_INSTANCE_ */

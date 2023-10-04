@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,7 +25,7 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
@@ -33,32 +33,33 @@
 
 #pragma section C FIXEDVECT
 
-void* const Fixed_Vectors[] = {
-//;0xffffffd0  Exception(Supervisor Instruction)
-    (void*) Excep_SuperVisorInst,
-//;0xffffffd4  Reserved
+void * const Fixed_Vectors[] =
+{
+/*;0xffffffd0  Exception(Supervisor Instruction) */
+    ( void * ) Excep_SuperVisorInst,
+/*;0xffffffd4  Reserved */
     Dummy,
-//;0xffffffd8  Reserved
+/*;0xffffffd8  Reserved */
     Dummy,
-//;0xffffffdc  Exception(Undefined Instruction)
-    (void*) Excep_UndefinedInst,
-//;0xffffffe0  Reserved
+/*;0xffffffdc  Exception(Undefined Instruction) */
+    ( void * ) Excep_UndefinedInst,
+/*;0xffffffe0  Reserved */
     Dummy,
-//;0xffffffe4  Exception(Floating Point)
-    (void*) Excep_FloatingPoint,
-//;0xffffffe8  Reserved
+/*;0xffffffe4  Exception(Floating Point) */
+    ( void * ) Excep_FloatingPoint,
+/*;0xffffffe8  Reserved */
     Dummy,
-//;0xffffffec  Reserved
+/*;0xffffffec  Reserved */
     Dummy,
-//;0xfffffff0  Reserved
+/*;0xfffffff0  Reserved */
     Dummy,
-//;0xfffffff4  Reserved
+/*;0xfffffff4  Reserved */
     Dummy,
-//;0xfffffff8  NMI
-    (void*) NonMaskableInterrupt,
-//;0xfffffffc  RESET
-//;<<VECTOR DATA START (POWER ON RESET)>>
-//;Power On Reset PC
-PowerON_Reset_PC                                                                                                                             
-//;<<VECTOR DATA END (POWER ON RESET)>>
+/*;0xfffffff8  NMI */
+    ( void * ) NonMaskableInterrupt,
+/*;0xfffffffc  RESET */
+/*;<<VECTOR DATA START (POWER ON RESET)>> */
+/*;Power On Reset PC */
+    PowerON_Reset_PC
+/*;<<VECTOR DATA END (POWER ON RESET)>> */
 };

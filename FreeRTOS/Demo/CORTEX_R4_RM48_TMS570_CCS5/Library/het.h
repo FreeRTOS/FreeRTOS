@@ -30,15 +30,16 @@
 #include "gio.h"
 
 /** @struct hetBase
-*   @brief HET Register Definition
-*
-*   This structure is used to access the HET module egisters.
-*/
+ *   @brief HET Register Definition
+ *
+ *   This structure is used to access the HET module egisters.
+ */
+
 /** @typedef hetBASE_t
-*   @brief HET Register Frame Type Definition
-*
-*   This type is used to access the HET Registers.
-*/
+ *   @brief HET Register Frame Type Definition
+ *
+ *   This type is used to access the HET Registers.
+ */
 typedef volatile struct hetBase
 {
     unsigned GCR;     /**< 0x0000: Global control register              */
@@ -82,19 +83,19 @@ typedef volatile struct hetBase
 
 
 /** @def hetREG
-*   @brief HET Register Frame Pointer
-*
-*   This pointer is used by the HET driver to access the het module registers.
-*/
-#define hetREG ((hetBASE_t *)0xFFF7B800U)
+ *   @brief HET Register Frame Pointer
+ *
+ *   This pointer is used by the HET driver to access the het module registers.
+ */
+#define hetREG    ( ( hetBASE_t * ) 0xFFF7B800U )
 
 
 /** @def hetPORT
-*   @brief HET GIO Port Register Pointer
-*
-*   Pointer used by the GIO driver to access I/O PORT of HET
-*   (use the GIO drivers to access the port pins).
-*/
-#define hetPORT ((gioPORT_t *)0xFFF7B84CU)
+ *   @brief HET GIO Port Register Pointer
+ *
+ *   Pointer used by the GIO driver to access I/O PORT of HET
+ *   (use the GIO drivers to access the port pins).
+ */
+#define hetPORT    ( ( gioPORT_t * ) 0xFFF7B84CU )
 
-#endif
+#endif /* ifndef __HET_H__ */

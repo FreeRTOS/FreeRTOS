@@ -27,31 +27,31 @@
  * ----------------------------------------------------------------------------
  */
 
-//-----------------------------------------------------------------------------
-// Reg Reads                    Writes
-//----------------------------------------------------------------------------
-// 0   ID code                  Unpredictable
-// 0   cache type               Unpredictable
-// 0   TCM status               Unpredictable
-// 1   Control                  Control
-// 2   Translation table base   Translation table base
-// 3   Domain access control    Domain access control
-// 4                                                       (Reserved)
-// 5   Data fault status        Data fault status
-// 5   Instruction fault status Instruction fault status
-// 6   Fault address            Fault address
-// 7   cache operations         cache operations
-// 8   Unpredictable            TLB operations
-// 9   cache lockdown           cache lockdown
-// 9   TCM region               TCM region
-// 10  TLB lockdown             TLB lockdown
-// 11                                                      (Reserved)
-// 12                                                      (Reserved)
-// 13  FCSE PID                 FCSE PID
-// 13  Context ID               Context ID
-// 14                                                      (Reserved)
-// 15  Test configuration       Test configuration
-//-----------------------------------------------------------------------------
+/*----------------------------------------------------------------------------- */
+/* Reg Reads                    Writes */
+/*---------------------------------------------------------------------------- */
+/* 0   ID code                  Unpredictable */
+/* 0   cache type               Unpredictable */
+/* 0   TCM status               Unpredictable */
+/* 1   Control                  Control */
+/* 2   Translation table base   Translation table base */
+/* 3   Domain access control    Domain access control */
+/* 4                                                       (Reserved) */
+/* 5   Data fault status        Data fault status */
+/* 5   Instruction fault status Instruction fault status */
+/* 6   Fault address            Fault address */
+/* 7   cache operations         cache operations */
+/* 8   Unpredictable            TLB operations */
+/* 9   cache lockdown           cache lockdown */
+/* 9   TCM region               TCM region */
+/* 10  TLB lockdown             TLB lockdown */
+/* 11                                                      (Reserved) */
+/* 12                                                      (Reserved) */
+/* 13  FCSE PID                 FCSE PID */
+/* 13  Context ID               Context ID */
+/* 14                                                      (Reserved) */
+/* 15  Test configuration       Test configuration */
+/*----------------------------------------------------------------------------- */
 
 /** \page cp15_f CP15 Functions
  *
@@ -118,8 +118,8 @@
 
 #include "chip.h"
 
-#if defined(__ICCARM__)
-	#include <intrinsics.h>
+#if defined( __ICCARM__ )
+    #include <intrinsics.h>
 #endif
 
 #include "cortex-a/cp15.h"
@@ -135,216 +135,247 @@
  * \brief Check Instruction cache
  * \return 0 if I_cache disable, 1 if I_cache enable
  */
-unsigned int cp15_is_icached_enabled(void)
+unsigned int cp15_is_icached_enabled( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	return ((control & (1 << CP15_I_BIT)) != 0);
+    unsigned int control;
+
+    control = cp15_read_control();
+    return( ( control & ( 1 << CP15_I_BIT ) ) != 0 );
 }
 
 /**
  * \brief  Enable Instruction cache
  */
-void cp15_enable_icache(void)
+void cp15_enable_icache( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	// Check if cache is disabled
-	if ((control & (1 << CP15_I_BIT)) == 0) {
-		cp15_icache_invalidate();
-		control |= (1 << CP15_I_BIT);
-		cp15_write_control(control);
-		trace_info("I cache enabled.\n\r");
-	} else {
+    unsigned int control;
 
-		trace_info("I cache is already enabled.\n\r");
-	}
+    control = cp15_read_control();
+
+    /* Check if cache is disabled */
+    if( ( control & ( 1 << CP15_I_BIT ) ) == 0 )
+    {
+        cp15_icache_invalidate();
+        control |= ( 1 << CP15_I_BIT );
+        cp15_write_control( control );
+        trace_info( "I cache enabled.\n\r" );
+    }
+    else
+    {
+        trace_info( "I cache is already enabled.\n\r" );
+    }
 }
 
 /**
  * \brief  Disable Instruction cache
  */
-void cp15_disable_icache(void)
+void cp15_disable_icache( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	// Check if cache is enabled
-	if ((control & (1 << CP15_I_BIT)) != 0) {
+    unsigned int control;
 
-		control &= ~(1ul << CP15_I_BIT);
-		cp15_write_control(control);
-		trace_info("I cache disabled.\n\r");
-	} else {
+    control = cp15_read_control();
 
-		trace_info("I cache is already disabled.\n\r");
-	}
+    /* Check if cache is enabled */
+    if( ( control & ( 1 << CP15_I_BIT ) ) != 0 )
+    {
+        control &= ~( 1ul << CP15_I_BIT );
+        cp15_write_control( control );
+        trace_info( "I cache disabled.\n\r" );
+    }
+    else
+    {
+        trace_info( "I cache is already disabled.\n\r" );
+    }
 }
 
 /**
  * \brief  Check MMU
  * \return  0 if MMU disable, 1 if MMU enable
  */
-unsigned int cp15_is_mmu_enabled(void)
+unsigned int cp15_is_mmu_enabled( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	return ((control & (1 << CP15_M_BIT)) != 0);
+    unsigned int control;
+
+    control = cp15_read_control();
+    return( ( control & ( 1 << CP15_M_BIT ) ) != 0 );
 }
 
 /**
  * \brief  Enable MMU
  */
-void cp15_enable_mmu(void)
+void cp15_enable_mmu( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	// Check if MMU is disabled
-	if ((control & (1 << CP15_M_BIT)) == 0) {
+    unsigned int control;
 
-		control |= (1 << CP15_M_BIT);
-		cp15_write_control(control);
-		trace_info("MMU enabled.\n\r");
-	} else {
-		trace_info("MMU is already enabled.\n\r");
-	}
+    control = cp15_read_control();
+
+    /* Check if MMU is disabled */
+    if( ( control & ( 1 << CP15_M_BIT ) ) == 0 )
+    {
+        control |= ( 1 << CP15_M_BIT );
+        cp15_write_control( control );
+        trace_info( "MMU enabled.\n\r" );
+    }
+    else
+    {
+        trace_info( "MMU is already enabled.\n\r" );
+    }
 }
 
 /**
  * \brief  Disable MMU
  */
-void cp15_disable_mmu(void)
+void cp15_disable_mmu( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	// Check if MMU is enabled
-	if ((control & (1 << CP15_M_BIT)) != 0) {
+    unsigned int control;
 
-		control &= ~(1ul << CP15_M_BIT);
-		control &= ~(1ul << CP15_C_BIT);
-		cp15_write_control(control);
-		trace_info("MMU disabled.\n\r");
-	} else {
-		trace_info("MMU is already disabled.\n\r");
-	}
+    control = cp15_read_control();
+
+    /* Check if MMU is enabled */
+    if( ( control & ( 1 << CP15_M_BIT ) ) != 0 )
+    {
+        control &= ~( 1ul << CP15_M_BIT );
+        control &= ~( 1ul << CP15_C_BIT );
+        cp15_write_control( control );
+        trace_info( "MMU disabled.\n\r" );
+    }
+    else
+    {
+        trace_info( "MMU is already disabled.\n\r" );
+    }
 }
 
 /**
  * \brief  Check D_cache
  * \return  0 if D_cache disable, 1 if D_cache enable (with MMU of course)
  */
-unsigned int cp15_is_dcache_enabled(void)
+unsigned int cp15_is_dcache_enabled( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	return ((control & ((1 << CP15_C_BIT) || (1 << CP15_M_BIT))) != 0);
+    unsigned int control;
+
+    control = cp15_read_control();
+    return( ( control & ( ( 1 << CP15_C_BIT ) || ( 1 << CP15_M_BIT ) ) ) != 0 );
 }
 
 /**
  * \brief  Enable Data cache
  */
-void cp15_enable_dcache(void)
+void cp15_enable_dcache( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	if (!cp15_is_mmu_enabled()) {
-		trace_error("Do nothing: MMU not enabled\n\r");
-	} else {
-		// Check if cache is disabled
-		if ((control & (1 << CP15_C_BIT)) == 0) {
-			cp15_dcache_invalidate();
-			control |= (1 << CP15_C_BIT);
-			cp15_write_control(control);
-			trace_info("D cache enabled.\n\r");
-		} else {
-			trace_info("D cache is already enabled.\n\r");
-		}
-	}
+    unsigned int control;
+
+    control = cp15_read_control();
+
+    if( !cp15_is_mmu_enabled() )
+    {
+        trace_error( "Do nothing: MMU not enabled\n\r" );
+    }
+    else
+    {
+        /* Check if cache is disabled */
+        if( ( control & ( 1 << CP15_C_BIT ) ) == 0 )
+        {
+            cp15_dcache_invalidate();
+            control |= ( 1 << CP15_C_BIT );
+            cp15_write_control( control );
+            trace_info( "D cache enabled.\n\r" );
+        }
+        else
+        {
+            trace_info( "D cache is already enabled.\n\r" );
+        }
+    }
 }
 
 /**
  * \brief  Disable Data cache
  */
-void cp15_disable_dcache(void)
+void cp15_disable_dcache( void )
 {
-	unsigned int control;
-	control = cp15_read_control();
-	// Check if cache is enabled
-	if ((control & (1 << CP15_C_BIT)) != 0) {
+    unsigned int control;
 
-		control &= ~(1ul << CP15_C_BIT);
-		cp15_write_control(control);
-		trace_info("D cache disabled.\n\r");
-	} else {
+    control = cp15_read_control();
 
-		trace_info("D cache is already disabled.\n\r");
-	}
+    /* Check if cache is enabled */
+    if( ( control & ( 1 << CP15_C_BIT ) ) != 0 )
+    {
+        control &= ~( 1ul << CP15_C_BIT );
+        cp15_write_control( control );
+        trace_info( "D cache disabled.\n\r" );
+    }
+    else
+    {
+        trace_info( "D cache is already disabled.\n\r" );
+    }
 }
 
 /**
  * \brief  Clean Data cache
  */
-void cp15_dcache_clean(void)
+void cp15_dcache_clean( void )
 {
-	cp15_select_dcache();
-	cp15_clean_dcache_by_set_way();
-	asm("DSB");
+    cp15_select_dcache();
+    cp15_clean_dcache_by_set_way();
+    asm ( "DSB" );
 }
 
 /**
  * \brief  Invalidate Icache
  */
-void cp15_icache_invalidate(void)
+void cp15_icache_invalidate( void )
 {
-	cp15_select_icache();
-	cp15_invalid_icache_inner_sharable();
-	asm ("ISB");
+    cp15_select_icache();
+    cp15_invalid_icache_inner_sharable();
+    asm ( "ISB" );
 }
 
 /**
  * \brief  Invalidate Dcache
  */
-void cp15_dcache_invalidate(void)
+void cp15_dcache_invalidate( void )
 {
-	cp15_select_dcache();
-	cp15_invalid_dcache_by_set_way();
-	asm ("DSB");
+    cp15_select_dcache();
+    cp15_invalid_dcache_by_set_way();
+    asm ( "DSB" );
 }
 
 /**
  * \brief  Flush(Clean and invalidate) Data cache
  */
-void cp15_dcache_flush(void)
+void cp15_dcache_flush( void )
 {
-	cp15_select_dcache();
-	cp15_clean_invalid_dcache_by_set_way();
-	asm("DSB");
-
+    cp15_select_dcache();
+    cp15_clean_invalid_dcache_by_set_way();
+    asm ( "DSB" );
 }
 
 /**
  * \brief  Invalidate Data cache by address
  */
-void cp15_invalid_dcache_by_va(uint32_t S_Add, uint32_t E_Add)
+void cp15_invalid_dcache_by_va( uint32_t S_Add,
+                                uint32_t E_Add )
 {
-	cp15_select_dcache();
-	cp15_invalid_dcache_by_mva(S_Add, E_Add);
+    cp15_select_dcache();
+    cp15_invalid_dcache_by_mva( S_Add, E_Add );
 }
 
 /**
  * \brief  Clean Data cache by address
  */
-void cp15_clean_dcache_by_va(uint32_t S_Add, uint32_t E_Add)
+void cp15_clean_dcache_by_va( uint32_t S_Add,
+                              uint32_t E_Add )
 {
-	cp15_select_dcache();
-	cp15_clean_dcache_by_mva(S_Add, E_Add);
+    cp15_select_dcache();
+    cp15_clean_dcache_by_mva( S_Add, E_Add );
 }
 
 /**
  * \brief  Flush Data cache by address
  */
 
-void cp15_flush_dcache_by_va(uint32_t S_Add, uint32_t E_Add)
+void cp15_flush_dcache_by_va( uint32_t S_Add,
+                              uint32_t E_Add )
 {
-	cp15_select_dcache();
-	cp15_clean_invalid_dcache_by_mva(S_Add, E_Add);
+    cp15_select_dcache();
+    cp15_clean_invalid_dcache_by_mva( S_Add, E_Add );
 }

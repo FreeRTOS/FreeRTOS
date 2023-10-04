@@ -42,105 +42,101 @@
 #include "iodefine.h"
 #include "rskrx64mdef.h"
 
-#define IPR_PERIB_INTB128	128
-#define IPR_PERIB_INTB129	129
-#define IER_PERIB_INTB128	0x10
-#define IER_PERIB_INTB129	0x10
-#define	IEN_PERIB_INTB128	IEN0
-#define	IEN_PERIB_INTB129	IEN1
-#define IR_PERIB_INTB128	128
-#define IR_PERIB_INTB129	129
+#define IPR_PERIB_INTB128    128
+#define IPR_PERIB_INTB129    129
+#define IER_PERIB_INTB128    0x10
+#define IER_PERIB_INTB129    0x10
+#define IEN_PERIB_INTB128    IEN0
+#define IEN_PERIB_INTB129    IEN1
+#define IR_PERIB_INTB128     128
+#define IR_PERIB_INTB129     129
 
-void vIntQTimerISR0( void ) __attribute__ ((interrupt));
-void vIntQTimerISR1( void ) __attribute__ ((interrupt));
+void vIntQTimerISR0( void ) __attribute__( ( interrupt ) );
+void vIntQTimerISR1( void ) __attribute__( ( interrupt ) );
 
-#define tmrTIMER_0_1_FREQUENCY	( 2000UL )
-#define tmrTIMER_2_3_FREQUENCY	( 2001UL )
+#define tmrTIMER_0_1_FREQUENCY    ( 2000UL )
+#define tmrTIMER_2_3_FREQUENCY    ( 2001UL )
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-	/* Ensure interrupts do not start until full configuration is complete. */
-	portENTER_CRITICAL();
-	{
-		/* Give write access. */
-		SYSTEM.PRCR.WORD = 0xa502;
+    /* Ensure interrupts do not start until full configuration is complete. */
+    portENTER_CRITICAL();
+    {
+        /* Give write access. */
+        SYSTEM.PRCR.WORD = 0xa502;
 
-		/* Cascade two 8bit timer channels to generate the interrupts. 
-		8bit timer unit 1 (TMR0 and TMR1) and 8bit timer unit 2 (TMR2 and TMR3 are
-		utilised for this test. */
+        /* Cascade two 8bit timer channels to generate the interrupts.
+         * 8bit timer unit 1 (TMR0 and TMR1) and 8bit timer unit 2 (TMR2 and TMR3 are
+         * utilised for this test. */
 
-		/* Enable the timers. */
-		SYSTEM.MSTPCRA.BIT.MSTPA5 = 0;
-		SYSTEM.MSTPCRA.BIT.MSTPA4 = 0;
+        /* Enable the timers. */
+        SYSTEM.MSTPCRA.BIT.MSTPA5 = 0;
+        SYSTEM.MSTPCRA.BIT.MSTPA4 = 0;
 
-		/* Enable compare match A interrupt request. */
-		TMR0.TCR.BIT.CMIEA = 1;
-		TMR2.TCR.BIT.CMIEA = 1;
+        /* Enable compare match A interrupt request. */
+        TMR0.TCR.BIT.CMIEA = 1;
+        TMR2.TCR.BIT.CMIEA = 1;
 
-		/* Clear the timer on compare match A. */
-		TMR0.TCR.BIT.CCLR = 1;
-		TMR2.TCR.BIT.CCLR = 1;
+        /* Clear the timer on compare match A. */
+        TMR0.TCR.BIT.CCLR = 1;
+        TMR2.TCR.BIT.CCLR = 1;
 
-		/* Set the compare match value. */
-		TMR01.TCORA = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / tmrTIMER_0_1_FREQUENCY ) -1 ) / 8 );
-		TMR23.TCORA = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / tmrTIMER_0_1_FREQUENCY ) -1 ) / 8 );
+        /* Set the compare match value. */
+        TMR01.TCORA = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / tmrTIMER_0_1_FREQUENCY ) - 1 ) / 8 );
+        TMR23.TCORA = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / tmrTIMER_0_1_FREQUENCY ) - 1 ) / 8 );
 
-		/* 16 bit operation ( count from timer 1,2 ). */
-		TMR0.TCCR.BIT.CSS = 3;
-		TMR2.TCCR.BIT.CSS = 3;
-	
-		/* Use PCLK as the input. */
-		TMR1.TCCR.BIT.CSS = 1;
-		TMR3.TCCR.BIT.CSS = 1;
-	
-		/* Divide PCLK by 8. */
-		TMR1.TCCR.BIT.CKS = 2;
-		TMR3.TCCR.BIT.CKS = 2;
+        /* 16 bit operation ( count from timer 1,2 ). */
+        TMR0.TCCR.BIT.CSS = 3;
+        TMR2.TCCR.BIT.CSS = 3;
 
-		/* Enable TMR 0, 2 interrupts. */
-		TMR0.TCR.BIT.CMIEA = 1;
-		TMR2.TCR.BIT.CMIEA = 1;
+        /* Use PCLK as the input. */
+        TMR1.TCCR.BIT.CSS = 1;
+        TMR3.TCCR.BIT.CSS = 1;
 
-		/* Map TMR0 CMIA0 interrupt to vector slot B number 128 and set
-		priority above the kernel's priority, but below the max syscall
-		priority. */
-	    ICU.SLIBXR128.BYTE = 3; /* Three is TMR0 compare match A. */
-	    IPR( PERIB, INTB128 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
-		IEN( PERIB, INTB128 ) = 1;
+        /* Divide PCLK by 8. */
+        TMR1.TCCR.BIT.CKS = 2;
+        TMR3.TCCR.BIT.CKS = 2;
 
-		/* Ensure that the flag is set to 0, otherwise the interrupt will not be
-		accepted. */
-		IR( PERIB, INTB128 ) = 0;
+        /* Enable TMR 0, 2 interrupts. */
+        TMR0.TCR.BIT.CMIEA = 1;
+        TMR2.TCR.BIT.CMIEA = 1;
 
-		/* Do the same for TMR2, but to vector 129. */
-	    ICU.SLIBXR129.BYTE = 9; /* Nine is TMR2 compare match A. */
-	    IPR( PERIB, INTB129 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 2;
-		IEN( PERIB, INTB129 ) = 1;
-		IR( PERIB, INTB129 ) = 0;
-	}
-	portEXIT_CRITICAL();
+        /* Map TMR0 CMIA0 interrupt to vector slot B number 128 and set
+         * priority above the kernel's priority, but below the max syscall
+         * priority. */
+        ICU.SLIBXR128.BYTE = 3; /* Three is TMR0 compare match A. */
+        IPR( PERIB, INTB128 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
+        IEN( PERIB, INTB128 ) = 1;
+
+        /* Ensure that the flag is set to 0, otherwise the interrupt will not be
+         * accepted. */
+        IR( PERIB, INTB128 ) = 0;
+
+        /* Do the same for TMR2, but to vector 129. */
+        ICU.SLIBXR129.BYTE = 9; /* Nine is TMR2 compare match A. */
+        IPR( PERIB, INTB129 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 2;
+        IEN( PERIB, INTB129 ) = 1;
+        IR( PERIB, INTB129 ) = 0;
+    }
+    portEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
 /* On vector 128. */
 void vIntQTimerISR0( void )
 {
-	/* Enable interrupts to allow interrupt nesting. */
-	__asm volatile( "setpsw	i" );
+    /* Enable interrupts to allow interrupt nesting. */
+    __asm volatile ( "setpsw	i");
 
-	portYIELD_FROM_ISR( xFirstTimerHandler() );
+    portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
 /* On vector 129. */
 void vIntQTimerISR1( void )
 {
-	/* Enable interrupts to allow interrupt nesting. */
-	__asm volatile( "setpsw	i" );
+    /* Enable interrupts to allow interrupt nesting. */
+    __asm volatile ( "setpsw	i");
 
-	portYIELD_FROM_ISR( xSecondTimerHandler() );
+    portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-
-
-
-

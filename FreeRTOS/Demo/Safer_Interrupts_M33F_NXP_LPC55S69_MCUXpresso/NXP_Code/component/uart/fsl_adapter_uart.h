@@ -7,12 +7,12 @@
  */
 
 #ifndef __HAL_UART_ADAPTER_H__
-#define __HAL_UART_ADAPTER_H__
+    #define __HAL_UART_ADAPTER_H__
 
-#include "fsl_common.h"
-#if defined(SDK_OS_FREE_RTOS)
-#include "FreeRTOS.h"
-#endif
+    #include "fsl_common.h"
+    #if defined( SDK_OS_FREE_RTOS )
+        #include "FreeRTOS.h"
+    #endif
 
 /*!
  * @addtogroup UART_Adapter
@@ -24,71 +24,72 @@
  ******************************************************************************/
 
 /*! @brief Enable or disable UART adapter non-blocking mode (1 - enable, 0 - disable) */
-#ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
-#define UART_ADAPTER_NON_BLOCKING_MODE (1U)
-#else
-#ifndef SERIAL_MANAGER_NON_BLOCKING_MODE
-#define UART_ADAPTER_NON_BLOCKING_MODE (0U)
-#else
-#define UART_ADAPTER_NON_BLOCKING_MODE SERIAL_MANAGER_NON_BLOCKING_MODE
-#endif
-#endif
+    #ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
+        #define UART_ADAPTER_NON_BLOCKING_MODE        ( 1U )
+    #else
+        #ifndef SERIAL_MANAGER_NON_BLOCKING_MODE
+            #define UART_ADAPTER_NON_BLOCKING_MODE    ( 0U )
+        #else
+            #define UART_ADAPTER_NON_BLOCKING_MODE    SERIAL_MANAGER_NON_BLOCKING_MODE
+        #endif
+    #endif
 
-#if defined(__GIC_PRIO_BITS)
-#ifndef HAL_UART_ISR_PRIORITY
-#define HAL_UART_ISR_PRIORITY (25U)
-#endif
-#else
-#if defined(configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY)
-#ifndef HAL_UART_ISR_PRIORITY
-#define HAL_UART_ISR_PRIORITY (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY)
-#endif
-#else
+    #if defined( __GIC_PRIO_BITS )
+        #ifndef HAL_UART_ISR_PRIORITY
+            #define HAL_UART_ISR_PRIORITY    ( 25U )
+        #endif
+    #else
+        #if defined( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY )
+            #ifndef HAL_UART_ISR_PRIORITY
+                #define HAL_UART_ISR_PRIORITY    ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY )
+            #endif
+        #else
+
 /* The default value 3 is used to support different ARM Core, such as CM0P, CM4, CM7, and CM33, etc.
  * The minimum number of priority bits implemented in the NVIC is 2 on these SOCs. The value of mininum
  * priority is 3 (2^2 - 1). So, the default value is 3.
  */
-#ifndef HAL_UART_ISR_PRIORITY
-#define HAL_UART_ISR_PRIORITY (3U)
-#endif
-#endif
-#endif
+            #ifndef HAL_UART_ISR_PRIORITY
+                #define HAL_UART_ISR_PRIORITY    ( 3U )
+            #endif
+        #endif
+    #endif /* if defined( __GIC_PRIO_BITS ) */
 
-#ifndef HAL_UART_ADAPTER_LOWPOWER
-#define HAL_UART_ADAPTER_LOWPOWER (0U)
-#endif /* HAL_UART_ADAPTER_LOWPOWER */
+    #ifndef HAL_UART_ADAPTER_LOWPOWER
+        #define HAL_UART_ADAPTER_LOWPOWER    ( 0U )
+    #endif /* HAL_UART_ADAPTER_LOWPOWER */
 
-#ifndef HAL_UART_ADAPTER_FIFO
-#define HAL_UART_ADAPTER_FIFO (0U)
-#endif /* HAL_UART_ADAPTER_FIFO */
+    #ifndef HAL_UART_ADAPTER_FIFO
+        #define HAL_UART_ADAPTER_FIFO    ( 0U )
+    #endif /* HAL_UART_ADAPTER_FIFO */
 
-#ifndef HAL_UART_DMA_ENABLE
-#define HAL_UART_DMA_ENABLE (0U)
-#endif /* HAL_UART_DMA_ENABLE */
+    #ifndef HAL_UART_DMA_ENABLE
+        #define HAL_UART_DMA_ENABLE    ( 0U )
+    #endif /* HAL_UART_DMA_ENABLE */
 
 /*! @brief Definition of uart dma adapter software idleline detection timeout value in ms. */
-#ifndef HAL_UART_DMA_IDLELINE_TIMEOUT
-#define HAL_UART_DMA_IDLELINE_TIMEOUT (1U)
-#endif /* HAL_UART_DMA_IDLELINE_TIMEOUT */
+    #ifndef HAL_UART_DMA_IDLELINE_TIMEOUT
+        #define HAL_UART_DMA_IDLELINE_TIMEOUT    ( 1U )
+    #endif /* HAL_UART_DMA_IDLELINE_TIMEOUT */
 
 /*! @brief Definition of uart adapter handle size. */
-#if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
-#define HAL_UART_HANDLE_SIZE       (92U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4)
-#define HAL_UART_BLOCK_HANDLE_SIZE (8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4)
-#else
-#define HAL_UART_HANDLE_SIZE (8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4)
-#endif
+    #if ( defined( UART_ADAPTER_NON_BLOCKING_MODE ) && ( UART_ADAPTER_NON_BLOCKING_MODE > 0U ) )
+        #define HAL_UART_HANDLE_SIZE          ( 92U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4 )
+        #define HAL_UART_BLOCK_HANDLE_SIZE    ( 8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4 )
+    #else
+        #define HAL_UART_HANDLE_SIZE          ( 8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4 )
+    #endif
 
 /*! @brief Definition of uart dma adapter handle size. */
-#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
-#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && (FSL_FEATURE_SOC_DMA_COUNT > 0U))
-#define HAL_UART_DMA_HANDLE_SIZE (124U)
-#elif (defined(FSL_FEATURE_SOC_EDMA_COUNT) && (FSL_FEATURE_SOC_EDMA_COUNT > 0U))
-#define HAL_UART_DMA_HANDLE_SIZE (140U)
-#else
-#error This SOC does not have DMA or EDMA available!
-#endif
-#endif /* HAL_UART_DMA_ENABLE */
+    #if ( defined( HAL_UART_DMA_ENABLE ) && ( HAL_UART_DMA_ENABLE > 0U ) )
+        #if ( defined( FSL_FEATURE_SOC_DMA_COUNT ) && ( FSL_FEATURE_SOC_DMA_COUNT > 0U ) )
+            #define HAL_UART_DMA_HANDLE_SIZE    ( 124U )
+        #elif ( defined( FSL_FEATURE_SOC_EDMA_COUNT ) && ( FSL_FEATURE_SOC_EDMA_COUNT > 0U ) )
+            #define HAL_UART_DMA_HANDLE_SIZE    ( 140U )
+        #else
+            #error This SOC does not have DMA or EDMA available!
+        #endif
+    #endif /* HAL_UART_DMA_ENABLE */
 
 /*!
  * @brief Defines the uart handle
@@ -105,150 +106,152 @@
  *
  * @param name The name string of the uart handle.
  */
-#define UART_HANDLE_DEFINE(name) uint32_t name[((HAL_UART_HANDLE_SIZE + sizeof(uint32_t) - 1U) / sizeof(uint32_t))]
+    #define UART_HANDLE_DEFINE( name )    uint32_t name[ ( ( HAL_UART_HANDLE_SIZE + sizeof( uint32_t ) - 1U ) / sizeof( uint32_t ) ) ]
 
-#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
-#define UART_DMA_HANDLE_DEFINE(name) \
-    uint32_t name[((HAL_UART_DMA_HANDLE_SIZE + sizeof(uint32_t) - 1U) / sizeof(uint32_t))]
-#endif
+    #if ( defined( HAL_UART_DMA_ENABLE ) && ( HAL_UART_DMA_ENABLE > 0U ) )
+        #define UART_DMA_HANDLE_DEFINE( name ) \
+    uint32_t name[ ( ( HAL_UART_DMA_HANDLE_SIZE + sizeof( uint32_t ) - 1U ) / sizeof( uint32_t ) ) ]
+    #endif
 
 /*! @brief Whether enable transactional function of the UART. (0 - disable, 1 - enable) */
-#ifndef HAL_UART_TRANSFER_MODE
-#define HAL_UART_TRANSFER_MODE (0U)
-#endif
+    #ifndef HAL_UART_TRANSFER_MODE
+        #define HAL_UART_TRANSFER_MODE    ( 0U )
+    #endif
 
 /*! @brief The handle of uart adapter. */
-typedef void *hal_uart_handle_t;
+    typedef void   * hal_uart_handle_t;
 
 /*! @brief The handle of uart dma adapter. */
-typedef void *hal_uart_dma_handle_t;
+    typedef void   * hal_uart_dma_handle_t;
 
 /*! @brief UART status */
-typedef enum _hal_uart_status
-{
-    kStatus_HAL_UartSuccess = kStatus_Success,                       /*!< Successfully */
-    kStatus_HAL_UartTxBusy  = MAKE_STATUS(kStatusGroup_HAL_UART, 1), /*!< TX busy */
-    kStatus_HAL_UartRxBusy  = MAKE_STATUS(kStatusGroup_HAL_UART, 2), /*!< RX busy */
-    kStatus_HAL_UartTxIdle  = MAKE_STATUS(kStatusGroup_HAL_UART, 3), /*!< HAL UART transmitter is idle. */
-    kStatus_HAL_UartRxIdle  = MAKE_STATUS(kStatusGroup_HAL_UART, 4), /*!< HAL UART receiver is idle */
-    kStatus_HAL_UartBaudrateNotSupport =
-        MAKE_STATUS(kStatusGroup_HAL_UART, 5), /*!< Baudrate is not support in current clock source */
-    kStatus_HAL_UartProtocolError = MAKE_STATUS(
-        kStatusGroup_HAL_UART,
-        6),                                                        /*!< Error occurs for Noise, Framing, Parity, etc.
-                                                                        For transactional transfer, The up layer needs to abort the transfer and then starts again */
-    kStatus_HAL_UartError = MAKE_STATUS(kStatusGroup_HAL_UART, 7), /*!< Error occurs on HAL UART */
-} hal_uart_status_t;
+    typedef enum _hal_uart_status
+    {
+        kStatus_HAL_UartSuccess = kStatus_Success,                        /*!< Successfully */
+        kStatus_HAL_UartTxBusy = MAKE_STATUS( kStatusGroup_HAL_UART, 1 ), /*!< TX busy */
+        kStatus_HAL_UartRxBusy = MAKE_STATUS( kStatusGroup_HAL_UART, 2 ), /*!< RX busy */
+        kStatus_HAL_UartTxIdle = MAKE_STATUS( kStatusGroup_HAL_UART, 3 ), /*!< HAL UART transmitter is idle. */
+        kStatus_HAL_UartRxIdle = MAKE_STATUS( kStatusGroup_HAL_UART, 4 ), /*!< HAL UART receiver is idle */
+        kStatus_HAL_UartBaudrateNotSupport =
+            MAKE_STATUS( kStatusGroup_HAL_UART, 5 ),                      /*!< Baudrate is not support in current clock source */
+        kStatus_HAL_UartProtocolError = MAKE_STATUS(
+            kStatusGroup_HAL_UART,
+            6 ),                                                         /*!< Error occurs for Noise, Framing, Parity, etc.
+                                                                          *   For transactional transfer, The up layer needs to abort the transfer and then starts again */
+        kStatus_HAL_UartError = MAKE_STATUS( kStatusGroup_HAL_UART, 7 ), /*!< Error occurs on HAL UART */
+    } hal_uart_status_t;
 
 /*! @brief UART parity mode. */
-typedef enum _hal_uart_parity_mode
-{
-    kHAL_UartParityDisabled = 0x0U, /*!< Parity disabled */
-    kHAL_UartParityEven     = 0x2U, /*!< Parity even enabled */
-    kHAL_UartParityOdd      = 0x3U, /*!< Parity odd enabled */
-} hal_uart_parity_mode_t;
+    typedef enum _hal_uart_parity_mode
+    {
+        kHAL_UartParityDisabled = 0x0U, /*!< Parity disabled */
+        kHAL_UartParityEven = 0x2U,     /*!< Parity even enabled */
+        kHAL_UartParityOdd = 0x3U,      /*!< Parity odd enabled */
+    } hal_uart_parity_mode_t;
 
-#if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
+    #if ( defined( UART_ADAPTER_NON_BLOCKING_MODE ) && ( UART_ADAPTER_NON_BLOCKING_MODE > 0U ) )
 /*! @brief UART Block Mode. */
-typedef enum _hal_uart_block_mode
-{
-    kHAL_UartNonBlockMode = 0x0U, /*!< Uart NonBlock Mode */
-    kHAL_UartBlockMode    = 0x1U, /*!< Uart Block Mode */
-} hal_uart_block_mode_t;
-#endif /* UART_ADAPTER_NON_BLOCKING_MODE */
+        typedef enum _hal_uart_block_mode
+        {
+            kHAL_UartNonBlockMode = 0x0U, /*!< Uart NonBlock Mode */
+            kHAL_UartBlockMode = 0x1U,    /*!< Uart Block Mode */
+        } hal_uart_block_mode_t;
+    #endif /* UART_ADAPTER_NON_BLOCKING_MODE */
 
 /*! @brief UART stop bit count. */
-typedef enum _hal_uart_stop_bit_count
-{
-    kHAL_UartOneStopBit = 0U, /*!< One stop bit */
-    kHAL_UartTwoStopBit = 1U, /*!< Two stop bits */
-} hal_uart_stop_bit_count_t;
+    typedef enum _hal_uart_stop_bit_count
+    {
+        kHAL_UartOneStopBit = 0U, /*!< One stop bit */
+        kHAL_UartTwoStopBit = 1U, /*!< Two stop bits */
+    } hal_uart_stop_bit_count_t;
 
 /*! @brief UART configuration structure. */
-typedef struct _hal_uart_config
-{
-    uint32_t srcClock_Hz;                   /*!< Source clock */
-    uint32_t baudRate_Bps;                  /*!< Baud rate  */
-    hal_uart_parity_mode_t parityMode;      /*!< Parity mode, disabled (default), even, odd */
-    hal_uart_stop_bit_count_t stopBitCount; /*!< Number of stop bits, 1 stop bit (default) or 2 stop bits  */
-    uint8_t enableRx;                       /*!< Enable RX */
-    uint8_t enableTx;                       /*!< Enable TX */
-    uint8_t enableRxRTS;                    /*!< Enable RX RTS */
-    uint8_t enableTxCTS;                    /*!< Enable TX CTS */
-    uint8_t instance; /*!< Instance (0 - UART0, 1 - UART1, ...), detail information please refer to the
-                           SOC corresponding RM.
-                           Invalid instance value will cause initialization failure. */
-#if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
-    hal_uart_block_mode_t mode; /*!< Uart  block mode */
-#endif                          /* UART_ADAPTER_NON_BLOCKING_MODE */
-#if (defined(HAL_UART_ADAPTER_FIFO) && (HAL_UART_ADAPTER_FIFO > 0u))
-    uint8_t txFifoWatermark;
-    uint8_t rxFifoWatermark;
-#endif
-} hal_uart_config_t;
+    typedef struct _hal_uart_config
+    {
+        uint32_t srcClock_Hz;                   /*!< Source clock */
+        uint32_t baudRate_Bps;                  /*!< Baud rate  */
+        hal_uart_parity_mode_t parityMode;      /*!< Parity mode, disabled (default), even, odd */
+        hal_uart_stop_bit_count_t stopBitCount; /*!< Number of stop bits, 1 stop bit (default) or 2 stop bits  */
+        uint8_t enableRx;                       /*!< Enable RX */
+        uint8_t enableTx;                       /*!< Enable TX */
+        uint8_t enableRxRTS;                    /*!< Enable RX RTS */
+        uint8_t enableTxCTS;                    /*!< Enable TX CTS */
+        uint8_t instance;                       /*!< Instance (0 - UART0, 1 - UART1, ...), detail information please refer to the
+                                                 *   SOC corresponding RM.
+                                                 *   Invalid instance value will cause initialization failure. */
+        #if ( defined( UART_ADAPTER_NON_BLOCKING_MODE ) && ( UART_ADAPTER_NON_BLOCKING_MODE > 0U ) )
+            hal_uart_block_mode_t mode;         /*!< Uart  block mode */
+        #endif /* UART_ADAPTER_NON_BLOCKING_MODE */
+        #if ( defined( HAL_UART_ADAPTER_FIFO ) && ( HAL_UART_ADAPTER_FIFO > 0u ) )
+            uint8_t txFifoWatermark;
+            uint8_t rxFifoWatermark;
+        #endif
+    } hal_uart_config_t;
 
-#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+    #if ( defined( HAL_UART_DMA_ENABLE ) && ( HAL_UART_DMA_ENABLE > 0U ) )
 /*! @brief UART DMA status */
-typedef enum _hal_uart_dma_status
-{
-    kStatus_HAL_UartDmaSuccess  = 0U,
-    kStatus_HAL_UartDmaRxIdle   = (1U << 1U),
-    kStatus_HAL_UartDmaRxBusy   = (1U << 2U),
-    kStatus_HAL_UartDmaTxIdle   = (1U << 3U),
-    kStatus_HAL_UartDmaTxBusy   = (1U << 4U),
-    kStatus_HAL_UartDmaIdleline = (1U << 5U),
-    kStatus_HAL_UartDmaError    = (1U << 6U),
-} hal_uart_dma_status_t;
+        typedef enum _hal_uart_dma_status
+        {
+            kStatus_HAL_UartDmaSuccess = 0U,
+            kStatus_HAL_UartDmaRxIdle = ( 1U << 1U ),
+            kStatus_HAL_UartDmaRxBusy = ( 1U << 2U ),
+            kStatus_HAL_UartDmaTxIdle = ( 1U << 3U ),
+            kStatus_HAL_UartDmaTxBusy = ( 1U << 4U ),
+            kStatus_HAL_UartDmaIdleline = ( 1U << 5U ),
+            kStatus_HAL_UartDmaError = ( 1U << 6U ),
+        } hal_uart_dma_status_t;
 
-typedef struct _hal_uart_dma_config_t
-{
-    uint8_t uart_instance;
-    uint8_t dma_instance;
-    uint8_t rx_channel;
-    uint8_t tx_channel;
-#if defined(FSL_FEATURE_SOC_DMAMUX_COUNT) && FSL_FEATURE_SOC_DMAMUX_COUNT
-    uint8_t dma_mux_instance;
-    dma_request_source_t rx_request;
-    dma_request_source_t tx_request;
-#endif
-#if defined(FSL_FEATURE_EDMA_HAS_CHANNEL_MUX) && FSL_FEATURE_EDMA_HAS_CHANNEL_MUX
-    uint32_t dma_rx_channel_mux;
-    uint32_t dma_tx_channel_mux;
-#endif
-} hal_uart_dma_config_t;
-#endif /* HAL_UART_DMA_ENABLE */
-
-/*! @brief UART transfer callback function. */
-typedef void (*hal_uart_transfer_callback_t)(hal_uart_handle_t handle, hal_uart_status_t status, void *callbackParam);
-
-#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
-typedef struct _dma_callback_msg
-{
-    hal_uart_dma_status_t status;
-    uint8_t *data;
-    uint32_t dataSize;
-} hal_dma_callback_msg_t;
+        typedef struct _hal_uart_dma_config_t
+        {
+            uint8_t uart_instance;
+            uint8_t dma_instance;
+            uint8_t rx_channel;
+            uint8_t tx_channel;
+            #if defined( FSL_FEATURE_SOC_DMAMUX_COUNT ) && FSL_FEATURE_SOC_DMAMUX_COUNT
+                uint8_t dma_mux_instance;
+                dma_request_source_t rx_request;
+                dma_request_source_t tx_request;
+            #endif
+            #if defined( FSL_FEATURE_EDMA_HAS_CHANNEL_MUX ) && FSL_FEATURE_EDMA_HAS_CHANNEL_MUX
+                uint32_t dma_rx_channel_mux;
+                uint32_t dma_tx_channel_mux;
+            #endif
+        } hal_uart_dma_config_t;
+    #endif /* HAL_UART_DMA_ENABLE */
 
 /*! @brief UART transfer callback function. */
-typedef void (*hal_uart_dma_transfer_callback_t)(hal_uart_dma_handle_t handle,
-                                                 hal_dma_callback_msg_t *msg,
-                                                 void *callbackParam);
-#endif /* HAL_UART_DMA_ENABLE */
+    typedef void (* hal_uart_transfer_callback_t)( hal_uart_handle_t handle,
+                                                   hal_uart_status_t status,
+                                                   void * callbackParam );
+
+    #if ( defined( HAL_UART_DMA_ENABLE ) && ( HAL_UART_DMA_ENABLE > 0U ) )
+        typedef struct _dma_callback_msg
+        {
+            hal_uart_dma_status_t status;
+            uint8_t * data;
+            uint32_t dataSize;
+        } hal_dma_callback_msg_t;
+
+/*! @brief UART transfer callback function. */
+        typedef void (* hal_uart_dma_transfer_callback_t)( hal_uart_dma_handle_t handle,
+                                                           hal_dma_callback_msg_t * msg,
+                                                           void * callbackParam );
+    #endif /* HAL_UART_DMA_ENABLE */
 
 /*! @brief UART transfer structure. */
-typedef struct _hal_uart_transfer
-{
-    uint8_t *data;   /*!< The buffer of data to be transfer.*/
-    size_t dataSize; /*!< The byte count to be transfer. */
-} hal_uart_transfer_t;
+    typedef struct _hal_uart_transfer
+    {
+        uint8_t * data;  /*!< The buffer of data to be transfer.*/
+        size_t dataSize; /*!< The byte count to be transfer. */
+    } hal_uart_transfer_t;
 
 /*******************************************************************************
  * API
  ******************************************************************************/
 
-#if defined(__cplusplus)
-extern "C" {
-#endif /* _cplusplus */
+    #if defined( __cplusplus )
+    extern "C" {
+    #endif /* _cplusplus */
 
 /*!
  * @name Initialization and deinitialization
@@ -286,7 +289,8 @@ extern "C" {
  * @retval kStatus_HAL_UartBaudrateNotSupport Baudrate is not support in current clock source.
  * @retval kStatus_HAL_UartSuccess UART initialization succeed
  */
-hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, const hal_uart_config_t *config);
+    hal_uart_status_t HAL_UartInit( hal_uart_handle_t handle,
+                                    const hal_uart_config_t * config );
 
 /*!
  * @brief Deinitializes a UART instance.
@@ -296,7 +300,7 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, const hal_uart_config_t
  * @param handle UART handle pointer.
  * @retval kStatus_HAL_UartSuccess UART de-initialization succeed
  */
-hal_uart_status_t HAL_UartDeinit(hal_uart_handle_t handle);
+    hal_uart_status_t HAL_UartDeinit( hal_uart_handle_t handle );
 
 /*! @}*/
 
@@ -322,7 +326,9 @@ hal_uart_status_t HAL_UartDeinit(hal_uart_handle_t handle);
  * @retval kStatus_HAL_UartParityError A parity error occurred while receiving data.
  * @retval kStatus_HAL_UartSuccess Successfully received all data.
  */
-hal_uart_status_t HAL_UartReceiveBlocking(hal_uart_handle_t handle, uint8_t *data, size_t length);
+    hal_uart_status_t HAL_UartReceiveBlocking( hal_uart_handle_t handle,
+                                               uint8_t * data,
+                                               size_t length );
 
 /*!
  * @brief Writes to the TX register using a blocking method.
@@ -339,12 +345,14 @@ hal_uart_status_t HAL_UartReceiveBlocking(hal_uart_handle_t handle, uint8_t *dat
  * @param length Size of the data to write.
  * @retval kStatus_HAL_UartSuccess Successfully sent all data.
  */
-hal_uart_status_t HAL_UartSendBlocking(hal_uart_handle_t handle, const uint8_t *data, size_t length);
+    hal_uart_status_t HAL_UartSendBlocking( hal_uart_handle_t handle,
+                                            const uint8_t * data,
+                                            size_t length );
 
 /*! @}*/
 
-#if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
-#if (defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
+    #if ( defined( UART_ADAPTER_NON_BLOCKING_MODE ) && ( UART_ADAPTER_NON_BLOCKING_MODE > 0U ) )
+        #if ( defined( HAL_UART_TRANSFER_MODE ) && ( HAL_UART_TRANSFER_MODE > 0U ) )
 
 /*!
  * @name Transactional
@@ -366,9 +374,9 @@ hal_uart_status_t HAL_UartSendBlocking(hal_uart_handle_t handle, const uint8_t *
  * @param callbackParam The parameter of the callback function.
  * @retval kStatus_HAL_UartSuccess Successfully install the callback.
  */
-hal_uart_status_t HAL_UartTransferInstallCallback(hal_uart_handle_t handle,
-                                                  hal_uart_transfer_callback_t callback,
-                                                  void *callbackParam);
+            hal_uart_status_t HAL_UartTransferInstallCallback( hal_uart_handle_t handle,
+                                                               hal_uart_transfer_callback_t callback,
+                                                               void * callbackParam );
 
 /*!
  * @brief Receives a buffer of data using an interrupt method.
@@ -389,7 +397,8 @@ hal_uart_status_t HAL_UartTransferInstallCallback(hal_uart_handle_t handle,
  * @retval kStatus_HAL_UartRxBusy Previous receive request is not finished.
  * @retval kStatus_HAL_UartError An error occurred.
  */
-hal_uart_status_t HAL_UartTransferReceiveNonBlocking(hal_uart_handle_t handle, hal_uart_transfer_t *transfer);
+            hal_uart_status_t HAL_UartTransferReceiveNonBlocking( hal_uart_handle_t handle,
+                                                                  hal_uart_transfer_t * transfer );
 
 /*!
  * @brief Transmits a buffer of data using the interrupt method.
@@ -408,7 +417,8 @@ hal_uart_status_t HAL_UartTransferReceiveNonBlocking(hal_uart_handle_t handle, h
  * @retval kStatus_HAL_UartTxBusy Previous transmission still not finished; data not all written to TX register yet.
  * @retval kStatus_HAL_UartError An error occurred.
  */
-hal_uart_status_t HAL_UartTransferSendNonBlocking(hal_uart_handle_t handle, hal_uart_transfer_t *transfer);
+            hal_uart_status_t HAL_UartTransferSendNonBlocking( hal_uart_handle_t handle,
+                                                               hal_uart_transfer_t * transfer );
 
 /*!
  * @brief Gets the number of bytes that have been received.
@@ -420,7 +430,8 @@ hal_uart_status_t HAL_UartTransferSendNonBlocking(hal_uart_handle_t handle, hal_
  * @retval kStatus_HAL_UartError An error occurred.
  * @retval kStatus_Success Get successfully through the parameter \p count.
  */
-hal_uart_status_t HAL_UartTransferGetReceiveCount(hal_uart_handle_t handle, uint32_t *count);
+            hal_uart_status_t HAL_UartTransferGetReceiveCount( hal_uart_handle_t handle,
+                                                               uint32_t * count );
 
 /*!
  * @brief Gets the number of bytes written to the UART TX register.
@@ -433,7 +444,8 @@ hal_uart_status_t HAL_UartTransferGetReceiveCount(hal_uart_handle_t handle, uint
  * @retval kStatus_HAL_UartError An error occurred.
  * @retval kStatus_Success Get successfully through the parameter \p count.
  */
-hal_uart_status_t HAL_UartTransferGetSendCount(hal_uart_handle_t handle, uint32_t *count);
+            hal_uart_status_t HAL_UartTransferGetSendCount( hal_uart_handle_t handle,
+                                                            uint32_t * count );
 
 /*!
  * @brief Aborts the interrupt-driven data receiving.
@@ -447,7 +459,7 @@ hal_uart_status_t HAL_UartTransferGetSendCount(hal_uart_handle_t handle, uint32_
  * @param handle UART handle pointer.
  * @retval kStatus_Success Get successfully abort the receiving.
  */
-hal_uart_status_t HAL_UartTransferAbortReceive(hal_uart_handle_t handle);
+            hal_uart_status_t HAL_UartTransferAbortReceive( hal_uart_handle_t handle );
 
 /*!
  * @brief Aborts the interrupt-driven data sending.
@@ -461,11 +473,11 @@ hal_uart_status_t HAL_UartTransferAbortReceive(hal_uart_handle_t handle);
  * @param handle UART handle pointer.
  * @retval kStatus_Success Get successfully abort the sending.
  */
-hal_uart_status_t HAL_UartTransferAbortSend(hal_uart_handle_t handle);
+            hal_uart_status_t HAL_UartTransferAbortSend( hal_uart_handle_t handle );
 
 /*! @}*/
 
-#else
+        #else  /* if ( defined( HAL_UART_TRANSFER_MODE ) && ( HAL_UART_TRANSFER_MODE > 0U ) ) */
 
 /*!
  * @name Functional API with non-blocking mode.
@@ -487,9 +499,9 @@ hal_uart_status_t HAL_UartTransferAbortSend(hal_uart_handle_t handle);
  * @param callbackParam The parameter of the callback function.
  * @retval kStatus_HAL_UartSuccess Successfully install the callback.
  */
-hal_uart_status_t HAL_UartInstallCallback(hal_uart_handle_t handle,
-                                          hal_uart_transfer_callback_t callback,
-                                          void *callbackParam);
+            hal_uart_status_t HAL_UartInstallCallback( hal_uart_handle_t handle,
+                                                       hal_uart_transfer_callback_t callback,
+                                                       void * callbackParam );
 
 /*!
  * @brief Receives a buffer of data using an interrupt method.
@@ -511,7 +523,9 @@ hal_uart_status_t HAL_UartInstallCallback(hal_uart_handle_t handle,
  * @retval kStatus_HAL_UartRxBusy Previous receive request is not finished.
  * @retval kStatus_HAL_UartError An error occurred.
  */
-hal_uart_status_t HAL_UartReceiveNonBlocking(hal_uart_handle_t handle, uint8_t *data, size_t length);
+            hal_uart_status_t HAL_UartReceiveNonBlocking( hal_uart_handle_t handle,
+                                                          uint8_t * data,
+                                                          size_t length );
 
 /*!
  * @brief Transmits a buffer of data using the interrupt method.
@@ -531,7 +545,9 @@ hal_uart_status_t HAL_UartReceiveNonBlocking(hal_uart_handle_t handle, uint8_t *
  * @retval kStatus_HAL_UartTxBusy Previous transmission still not finished; data not all written to TX register yet.
  * @retval kStatus_HAL_UartError An error occurred.
  */
-hal_uart_status_t HAL_UartSendNonBlocking(hal_uart_handle_t handle, uint8_t *data, size_t length);
+            hal_uart_status_t HAL_UartSendNonBlocking( hal_uart_handle_t handle,
+                                                       uint8_t * data,
+                                                       size_t length );
 
 /*!
  * @brief Gets the number of bytes that have been received.
@@ -543,7 +559,8 @@ hal_uart_status_t HAL_UartSendNonBlocking(hal_uart_handle_t handle, uint8_t *dat
  * @retval kStatus_HAL_UartError An error occurred.
  * @retval kStatus_Success Get successfully through the parameter \p count.
  */
-hal_uart_status_t HAL_UartGetReceiveCount(hal_uart_handle_t handle, uint32_t *reCount);
+            hal_uart_status_t HAL_UartGetReceiveCount( hal_uart_handle_t handle,
+                                                       uint32_t * reCount );
 
 /*!
  * @brief Gets the number of bytes written to the UART TX register.
@@ -556,7 +573,8 @@ hal_uart_status_t HAL_UartGetReceiveCount(hal_uart_handle_t handle, uint32_t *re
  * @retval kStatus_HAL_UartError An error occurred.
  * @retval kStatus_Success Get successfully through the parameter \p count.
  */
-hal_uart_status_t HAL_UartGetSendCount(hal_uart_handle_t handle, uint32_t *seCount);
+            hal_uart_status_t HAL_UartGetSendCount( hal_uart_handle_t handle,
+                                                    uint32_t * seCount );
 
 /*!
  * @brief Aborts the interrupt-driven data receiving.
@@ -570,7 +588,7 @@ hal_uart_status_t HAL_UartGetSendCount(hal_uart_handle_t handle, uint32_t *seCou
  * @param handle UART handle pointer.
  * @retval kStatus_Success Get successfully abort the receiving.
  */
-hal_uart_status_t HAL_UartAbortReceive(hal_uart_handle_t handle);
+            hal_uart_status_t HAL_UartAbortReceive( hal_uart_handle_t handle );
 
 /*!
  * @brief Aborts the interrupt-driven data sending.
@@ -584,14 +602,14 @@ hal_uart_status_t HAL_UartAbortReceive(hal_uart_handle_t handle);
  * @param handle UART handle pointer.
  * @retval kStatus_Success Get successfully abort the sending.
  */
-hal_uart_status_t HAL_UartAbortSend(hal_uart_handle_t handle);
+            hal_uart_status_t HAL_UartAbortSend( hal_uart_handle_t handle );
 
 /*! @}*/
 
-#endif
-#endif
+        #endif /* if ( defined( HAL_UART_TRANSFER_MODE ) && ( HAL_UART_TRANSFER_MODE > 0U ) ) */
+    #endif /* if ( defined( UART_ADAPTER_NON_BLOCKING_MODE ) && ( UART_ADAPTER_NON_BLOCKING_MODE > 0U ) ) */
 
-#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+    #if ( defined( HAL_UART_DMA_ENABLE ) && ( HAL_UART_DMA_ENABLE > 0U ) )
 
 /*!
  * @brief Initializes a UART dma instance with the UART dma handle and the user configuration structure.
@@ -651,9 +669,9 @@ hal_uart_status_t HAL_UartAbortSend(hal_uart_handle_t handle);
  * @retval kStatus_HAL_UartDmaError UART dma initialization failed.
  * @retval kStatus_HAL_UartDmaSuccess UART dma initialization succeed.
  */
-hal_uart_dma_status_t HAL_UartDMAInit(hal_uart_handle_t handle,
-                                      hal_uart_dma_handle_t dmaHandle,
-                                      hal_uart_dma_config_t *dmaConfig);
+        hal_uart_dma_status_t HAL_UartDMAInit( hal_uart_handle_t handle,
+                                               hal_uart_dma_handle_t dmaHandle,
+                                               hal_uart_dma_config_t * dmaConfig );
 
 /*!
  * @brief Deinitializes a UART DMA instance.
@@ -663,7 +681,7 @@ hal_uart_dma_status_t HAL_UartDMAInit(hal_uart_handle_t handle,
  * @param handle UART handle pointer.
  * @retval kStatus_HAL_UartDmaSuccess UART DMA de-initialization succeed
  */
-hal_uart_dma_status_t HAL_UartDMADeinit(hal_uart_handle_t handle);
+        hal_uart_dma_status_t HAL_UartDMADeinit( hal_uart_handle_t handle );
 
 /*!
  * @brief Installs a callback and callback parameter.
@@ -677,9 +695,9 @@ hal_uart_dma_status_t HAL_UartDMADeinit(hal_uart_handle_t handle);
  * @param callbackParam The parameter of the callback function.
  * @retval kStatus_HAL_UartDmaSuccess Successfully install the callback.
  */
-hal_uart_dma_status_t HAL_UartDMATransferInstallCallback(hal_uart_handle_t handle,
-                                                         hal_uart_dma_transfer_callback_t callback,
-                                                         void *callbackParam);
+        hal_uart_dma_status_t HAL_UartDMATransferInstallCallback( hal_uart_handle_t handle,
+                                                                  hal_uart_dma_transfer_callback_t callback,
+                                                                  void * callbackParam );
 
 /*!
  * @brief Receives a buffer of data using an dma method.
@@ -703,10 +721,10 @@ hal_uart_dma_status_t HAL_UartDMATransferInstallCallback(hal_uart_handle_t handl
  * @retval kStatus_HAL_UartDmaSuccess Successfully start the data receive.
  * @retval kStatus_HAL_UartDmaRxBusy Previous receive request is not finished.
  */
-hal_uart_dma_status_t HAL_UartDMATransferReceive(hal_uart_handle_t handle,
-                                                 uint8_t *data,
-                                                 size_t length,
-                                                 bool receiveAll);
+        hal_uart_dma_status_t HAL_UartDMATransferReceive( hal_uart_handle_t handle,
+                                                          uint8_t * data,
+                                                          size_t length,
+                                                          bool receiveAll );
 
 /*!
  * @brief Transmits a buffer of data using an dma method.
@@ -724,7 +742,9 @@ hal_uart_dma_status_t HAL_UartDMATransferReceive(hal_uart_handle_t handle,
  * @retval kStatus_HAL_UartDmaSuccess Successfully start the data transmission.
  * @retval kStatus_HAL_UartDmaTxBusy Previous send request is not finished.
  */
-hal_uart_dma_status_t HAL_UartDMATransferSend(hal_uart_handle_t handle, uint8_t *data, size_t length);
+        hal_uart_dma_status_t HAL_UartDMATransferSend( hal_uart_handle_t handle,
+                                                       uint8_t * data,
+                                                       size_t length );
 
 /*!
  * @brief Gets the number of bytes that have been received.
@@ -736,7 +756,8 @@ hal_uart_dma_status_t HAL_UartDMATransferSend(hal_uart_handle_t handle, uint8_t 
  * @retval kStatus_HAL_UartDmaError An error occurred.
  * @retval kStatus_HAL_UartDmaSuccess Get successfully through the parameter \p reCount.
  */
-hal_uart_dma_status_t HAL_UartDMAGetReceiveCount(hal_uart_handle_t handle, uint32_t *reCount);
+        hal_uart_dma_status_t HAL_UartDMAGetReceiveCount( hal_uart_handle_t handle,
+                                                          uint32_t * reCount );
 
 /*!
  * @brief Gets the number of bytes written to the UART TX register.
@@ -749,7 +770,8 @@ hal_uart_dma_status_t HAL_UartDMAGetReceiveCount(hal_uart_handle_t handle, uint3
  * @retval kStatus_HAL_UartDmaError An error occurred.
  * @retval kStatus_HAL_UartDmaSuccess Get successfully through the parameter \p seCount.
  */
-hal_uart_dma_status_t HAL_UartDMAGetSendCount(hal_uart_handle_t handle, uint32_t *seCount);
+        hal_uart_dma_status_t HAL_UartDMAGetSendCount( hal_uart_handle_t handle,
+                                                       uint32_t * seCount );
 
 /*!
  * @brief Aborts the DMA-driven data receiving.
@@ -759,7 +781,7 @@ hal_uart_dma_status_t HAL_UartDMAGetSendCount(hal_uart_handle_t handle, uint32_t
  * @param handle UART handle pointer.
  * @retval kStatus_HAL_UartDmaSuccess Get successfully abort the receiving.
  */
-hal_uart_dma_status_t HAL_UartDMAAbortReceive(hal_uart_handle_t handle);
+        hal_uart_dma_status_t HAL_UartDMAAbortReceive( hal_uart_handle_t handle );
 
 /*!
  * @brief Aborts the DMA-driven data sending.
@@ -769,8 +791,8 @@ hal_uart_dma_status_t HAL_UartDMAAbortReceive(hal_uart_handle_t handle);
  * @param handle UART handle pointer.
  * @retval kStatus_Success Get successfully abort the sending.
  */
-hal_uart_dma_status_t HAL_UartDMAAbortSend(hal_uart_handle_t handle);
-#endif /* HAL_UART_DMA_ENABLE */
+        hal_uart_dma_status_t HAL_UartDMAAbortSend( hal_uart_handle_t handle );
+    #endif /* HAL_UART_DMA_ENABLE */
 
 /*!
  * @brief Prepares to enter low power consumption.
@@ -781,7 +803,7 @@ hal_uart_dma_status_t HAL_UartDMAAbortSend(hal_uart_handle_t handle);
  * @retval kStatus_HAL_UartSuccess Successful operation.
  * @retval kStatus_HAL_UartError An error occurred.
  */
-hal_uart_status_t HAL_UartEnterLowpower(hal_uart_handle_t handle);
+    hal_uart_status_t HAL_UartEnterLowpower( hal_uart_handle_t handle );
 
 /*!
  * @brief Restores from low power consumption.
@@ -792,9 +814,10 @@ hal_uart_status_t HAL_UartEnterLowpower(hal_uart_handle_t handle);
  * @retval kStatus_HAL_UartSuccess Successful operation.
  * @retval kStatus_HAL_UartError An error occurred.
  */
-hal_uart_status_t HAL_UartExitLowpower(hal_uart_handle_t handle);
+    hal_uart_status_t HAL_UartExitLowpower( hal_uart_handle_t handle );
 
-#if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
+    #if ( defined( UART_ADAPTER_NON_BLOCKING_MODE ) && ( UART_ADAPTER_NON_BLOCKING_MODE > 0U ) )
+
 /*!
  * @brief UART IRQ handle function.
  *
@@ -802,11 +825,11 @@ hal_uart_status_t HAL_UartExitLowpower(hal_uart_handle_t handle);
  *
  * @param handle UART handle pointer.
  */
-void HAL_UartIsrFunction(hal_uart_handle_t handle);
-#endif
+        void HAL_UartIsrFunction( hal_uart_handle_t handle );
+    #endif
 
-#if defined(__cplusplus)
+    #if defined( __cplusplus )
 }
-#endif
+    #endif
 /*! @}*/
 #endif /* __HAL_UART_ADAPTER_H__ */

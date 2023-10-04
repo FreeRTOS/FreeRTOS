@@ -218,15 +218,15 @@ int main( void )
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
      * of this file. */
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-        {
-            printf( "\nStarting the blinky demo.\r\n" );
-            main_blinky();
-        }
+    {
+        printf( "\nStarting the blinky demo.\r\n" );
+        main_blinky();
+    }
     #else
-        {
-            printf( "\nStarting the full demo.\r\n" );
-            main_full();
-        }
+    {
+        printf( "\nStarting the full demo.\r\n" );
+        main_full();
+    }
     #endif /* if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 ) */
 
     return 0;
@@ -264,11 +264,11 @@ void vApplicationIdleHook( void )
      * allocated by the kernel to any task that has since deleted itself. */
 
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-        {
-            /* Call the idle task processing used by the full demo.  The simple
-             * blinky demo does not use the idle task hook. */
-            vFullDemoIdleFunction();
-        }
+    {
+        /* Call the idle task processing used by the full demo.  The simple
+         * blinky demo does not use the idle task hook. */
+        vFullDemoIdleFunction();
+    }
     #endif
 }
 
@@ -298,9 +298,9 @@ void vApplicationTickHook( void )
     * functions can be used (those that end in FromISR()). */
 
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-        {
-            vFullDemoTickHookFunction();
-        }
+    {
+        vFullDemoTickHookFunction();
+    }
     #endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
@@ -476,6 +476,7 @@ static uint32_t prvKeyboardInterruptHandler( void )
             break;
 
         case mainOUTPUT_TRACE_KEY:
+
             /* Saving the trace file requires Windows system calls, so enter a critical
              * section to prevent deadlock or errors resulting from calling a Windows
              * system call from within the FreeRTOS simulator. */

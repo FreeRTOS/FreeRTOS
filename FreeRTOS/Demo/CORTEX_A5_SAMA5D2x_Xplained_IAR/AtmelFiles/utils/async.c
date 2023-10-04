@@ -44,11 +44,12 @@
 /*----------------------------------------------------------------------------
  *        Global functions
  *----------------------------------------------------------------------------*/
+
 /**
-* \brief Returns 1 if the given transfer has ended; otherwise returns 0.
-* \param pAsync  Pointer to an Async instance.
-*/
-uint32_t async_is_finished(struct _async * pAsync)
+ * \brief Returns 1 if the given transfer has ended; otherwise returns 0.
+ * \param pAsync  Pointer to an Async instance.
+ */
+uint32_t async_is_finished( struct _async * pAsync )
 {
-	return (pAsync->status != ASYNC_STATUS_PENDING);
+    return( pAsync->status != ASYNC_STATUS_PENDING );
 }

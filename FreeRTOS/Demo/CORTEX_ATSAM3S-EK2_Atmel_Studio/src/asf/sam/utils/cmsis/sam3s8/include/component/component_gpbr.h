@@ -48,16 +48,17 @@
 /** \addtogroup SAM3S8_GPBR General Purpose Backup Register */
 /*@{*/
 
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#if !( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
 /** \brief Gpbr hardware registers */
-typedef struct {
-  RwReg SYS_GPBR[8]; /**< \brief (Gpbr Offset: 0x0) General Purpose Backup Register */
-} Gpbr;
+    typedef struct
+    {
+        RwReg SYS_GPBR[ 8 ]; /**< \brief (Gpbr Offset: 0x0) General Purpose Backup Register */
+    } Gpbr;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- SYS_GPBR[8] : (GPBR Offset: 0x0) General Purpose Backup Register -------- */
-#define SYS_GPBR_GPBR_VALUE_Pos 0
-#define SYS_GPBR_GPBR_VALUE_Msk (0xffffffffu << SYS_GPBR_GPBR_VALUE_Pos) /**< \brief (SYS_GPBR[8]) Value of GPBR x */
-#define SYS_GPBR_GPBR_VALUE(value) ((SYS_GPBR_GPBR_VALUE_Msk & ((value) << SYS_GPBR_GPBR_VALUE_Pos)))
+#define SYS_GPBR_GPBR_VALUE_Pos    0
+#define SYS_GPBR_GPBR_VALUE_Msk    ( 0xffffffffu << SYS_GPBR_GPBR_VALUE_Pos ) /**< \brief (SYS_GPBR[8]) Value of GPBR x */
+#define SYS_GPBR_GPBR_VALUE( value )    ( ( SYS_GPBR_GPBR_VALUE_Msk & ( ( value ) << SYS_GPBR_GPBR_VALUE_Pos ) ) )
 
 /*@}*/
 

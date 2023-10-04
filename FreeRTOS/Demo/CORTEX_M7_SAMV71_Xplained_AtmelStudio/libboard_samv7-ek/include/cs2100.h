@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -28,11 +28,11 @@
  */
 
 /**
-  * \file
-  *
-  * Implementation WM8904 driver.
-  *
-  */
+ * \file
+ *
+ * Implementation WM8904 driver.
+ *
+ */
 
 #ifndef CS2100_H
 #define CS2100_H
@@ -43,51 +43,49 @@
  *         Definitions
  *----------------------------------------------------------------------------*/
 
-#define CS2100_SLAVE_ADDRESS                    0x4E
+#define CS2100_SLAVE_ADDRESS         0x4E
 
 /** ID and Rev register*/
-#define CS2100_REG_ID                           0x01
+#define CS2100_REG_ID                0x01
 
 /** VMID control 0 register*/
-#define CS2100_REG_CTRL                         0x02
+#define CS2100_REG_CTRL              0x02
 
 /** MIC Bias control 0 register*/
-#define CS2100_REG_DEV_CFG1                     0x03
+#define CS2100_REG_DEV_CFG1          0x03
 
 /** Bias control 1 register*/
-#define CS2100_REG_CFG                          0x05
+#define CS2100_REG_CFG               0x05
 
 /** Power management control 0 register*/
-#define CS2100_REG_32_BIT_RATIO_1               0x06
+#define CS2100_REG_32_BIT_RATIO_1    0x06
 /** Power management control 0 register*/
-#define CS2100_REG_32_BIT_RATIO_2               0x07
+#define CS2100_REG_32_BIT_RATIO_2    0x07
 /** Power management control 0 register*/
-#define CS2100_REG_32_BIT_RATIO_3               0x08
+#define CS2100_REG_32_BIT_RATIO_3    0x08
 /** Power management control 0 register*/
-#define CS2100_REG_32_BIT_RATIO_4               0x09
+#define CS2100_REG_32_BIT_RATIO_4    0x09
 /** Power management control 2 register*/
-#define CS2100_REG_FUNC_CFG1                    0x16
+#define CS2100_REG_FUNC_CFG1         0x16
 /** Power management control 3 register*/
-#define CS2100_REG_FUNC_CFG2                    0x17
+#define CS2100_REG_FUNC_CFG2         0x17
 /** Power management control 3 register*/
-#define CS2100_REG_FUNC_CFG3                    0x1E
+#define CS2100_REG_FUNC_CFG3         0x1E
 
 /*----------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
 
-extern uint16_t CS2100_Read(
-				Twid *pTwid,
-				uint32_t device, 
-				uint32_t regAddr);
+extern uint16_t CS2100_Read( Twid * pTwid,
+                             uint32_t device,
+                             uint32_t regAddr );
 
-extern void CS2100_Write(
-				Twid *pTwid, 
-				uint32_t device,
-				uint32_t regAddr, 
-				uint16_t data);
+extern void CS2100_Write( Twid * pTwid,
+                          uint32_t device,
+                          uint32_t regAddr,
+                          uint16_t data );
 
-extern uint8_t CS2100_Init(Twid *pTwid, uint32_t device, uint32_t PCK);
+extern uint8_t CS2100_Init( Twid * pTwid,
+                            uint32_t device,
+                            uint32_t PCK );
 #endif // CS2100_H
-
-

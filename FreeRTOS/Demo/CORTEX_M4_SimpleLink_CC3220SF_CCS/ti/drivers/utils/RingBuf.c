@@ -35,8 +35,9 @@
 /*
  *  ======== RingBuf_construct ========
  */
-void RingBuf_construct(RingBuf_Handle object, unsigned char *bufPtr,
-    size_t bufSize)
+void RingBuf_construct( RingBuf_Handle object,
+                        unsigned char * bufPtr,
+                        size_t bufSize )
 {
     object->buffer = bufPtr;
     object->length = bufSize;
@@ -49,94 +50,99 @@ void RingBuf_construct(RingBuf_Handle object, unsigned char *bufPtr,
 /*
  *  ======== RingBuf_get ========
  */
-int RingBuf_get(RingBuf_Handle object, unsigned char *data)
+int RingBuf_get( RingBuf_Handle object,
+                 unsigned char * data )
 {
     unsigned int key;
 
     key = HwiP_disable();
 
-    if (!object->count) {
-        HwiP_restore(key);
+    if( !object->count )
+    {
+        HwiP_restore( key );
         return -1;
     }
 
-    *data = object->buffer[object->tail];
-    object->tail = (object->tail + 1) % object->length;
+    *data = object->buffer[ object->tail ];
+    object->tail = ( object->tail + 1 ) % object->length;
     object->count--;
 
-    HwiP_restore(key);
+    HwiP_restore( key );
 
-    return (object->count);
+    return( object->count );
 }
 
 /*
  *  ======== RingBuf_getCount ========
  */
-int RingBuf_getCount(RingBuf_Handle object)
+int RingBuf_getCount( RingBuf_Handle object )
 {
-    return (object->count);
+    return( object->count );
 }
 
 /*
  *  ======== RingBuf_isFull ========
  */
-bool RingBuf_isFull(RingBuf_Handle object)
+bool RingBuf_isFull( RingBuf_Handle object )
 {
-    return (object->count == object->length);
+    return( object->count == object->length );
 }
 
 /*
  *  ======== RingBuf_getMaxCount ========
  */
-int RingBuf_getMaxCount(RingBuf_Handle object)
+int RingBuf_getMaxCount( RingBuf_Handle object )
 {
-    return (object->maxCount);
+    return( object->maxCount );
 }
 
 /*
  *  ======== RingBuf_peek ========
  */
-int RingBuf_peek(RingBuf_Handle object, unsigned char *data)
+int RingBuf_peek( RingBuf_Handle object,
+                  unsigned char * data )
 {
     unsigned int key;
-    int          retCount;
+    int retCount;
 
     key = HwiP_disable();
 
-    *data = object->buffer[object->tail];
+    *data = object->buffer[ object->tail ];
     retCount = object->count;
 
-    HwiP_restore(key);
+    HwiP_restore( key );
 
-    return (retCount);
+    return( retCount );
 }
 
 /*
  *  ======== RingBuf_put ========
  */
-int RingBuf_put(RingBuf_Handle object, unsigned char data)
+int RingBuf_put( RingBuf_Handle object,
+                 unsigned char data )
 {
     unsigned int key;
     unsigned int next;
 
     key = HwiP_disable();
 
-    if (object->count != object->length) {
-        next = (object->head + 1) % object->length;
-        object->buffer[next] = data;
+    if( object->count != object->length )
+    {
+        next = ( object->head + 1 ) % object->length;
+        object->buffer[ next ] = data;
         object->head = next;
         object->count++;
-        object->maxCount = (object->count > object->maxCount) ?
-                            object->count :
-                            object->maxCount;
+        object->maxCount = ( object->count > object->maxCount ) ?
+                           object->count :
+                           object->maxCount;
     }
-    else {
-
-        HwiP_restore(key);
-        return (-1);
+    else
+    {
+        HwiP_restore( key );
+        return( -1 );
     }
 
-    HwiP_restore(key);
+    HwiP_restore( key );
 
-    return (object->count);
+    return( object->count );
 }

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -35,6 +35,7 @@
  * controller.
  *
  */
+
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
@@ -61,58 +62,57 @@
  *  \param baudrate  Baudrate at which the USART should operate (in Hz).
  *  \param masterClock  Frequency of the system master clock (in Hz).
  */
-void USART_Configure(Usart *pUsart,
-                            uint32_t mode,
-                            uint32_t baudrate,
-                            uint32_t masterClock)
+void USART_Configure( Usart * pUsart,
+                      uint32_t mode,
+                      uint32_t baudrate,
+                      uint32_t masterClock )
 {
-  
-   unsigned int CD, FP, BaudError, OVER, ActualBaudRate;
-  
+    unsigned int CD, FP, BaudError, OVER, ActualBaudRate;
+
     /* Reset and disable receiver & transmitter*/
     pUsart->US_CR = US_CR_RSTRX | US_CR_RSTTX
-                  | US_CR_RXDIS | US_CR_TXDIS | US_CR_RSTSTA;
-    
+                    | US_CR_RXDIS | US_CR_TXDIS | US_CR_RSTSTA;
+
     pUsart->US_IDR = 0xFFFFFFFF;
-    
-    /* Configure baudrate*/  
+
+    /* Configure baudrate*/
     BaudError = 10;
     OVER = 0;
-    
-    // Configure baud rate
-    while (BaudError > 5)
-    {
-      
-      CD = (masterClock / (baudrate * 8*(2-OVER)));
-      FP = ((masterClock / (baudrate * (2-OVER)) ) - CD * 8);     
-      ActualBaudRate = (masterClock/(CD*8 + FP))/(2-OVER);
-      BaudError = (100-((baudrate*100/ActualBaudRate)));
-        
-      if (BaudError > 5)
-      {
-        OVER++;
-        if(OVER>=2)
-        {
-          assert( 0 ) ;
-        }
-      }
-    }
-    
-    pUsart->US_BRGR = ( US_BRGR_CD(CD) | US_BRGR_FP(FP));
-    
-    /* Configure mode*/
-    pUsart->US_MR = (mode |  (OVER << 19) );
 
-    // Enable receiver and transmitter
+    /* Configure baud rate */
+    while( BaudError > 5 )
+    {
+        CD = ( masterClock / ( baudrate * 8 * ( 2 - OVER ) ) );
+        FP = ( ( masterClock / ( baudrate * ( 2 - OVER ) ) ) - CD * 8 );
+        ActualBaudRate = ( masterClock / ( CD * 8 + FP ) ) / ( 2 - OVER );
+        BaudError = ( 100 - ( ( baudrate * 100 / ActualBaudRate ) ) );
+
+        if( BaudError > 5 )
+        {
+            OVER++;
+
+            if( OVER >= 2 )
+            {
+                assert( 0 );
+            }
+        }
+    }
+
+    pUsart->US_BRGR = ( US_BRGR_CD( CD ) | US_BRGR_FP( FP ) );
+
+    /* Configure mode*/
+    pUsart->US_MR = ( mode | ( OVER << 19 ) );
+
+    /* Enable receiver and transmitter */
     pUsart->US_CR = US_CR_RXEN | US_CR_TXEN;
-    
+
 
     /* Disable buffering for printf(). */
-#if ( defined (__GNUC__) && !defined (__SAMBA__) )
-        setvbuf(stdout, (char *)NULL, _IONBF, 0);
-#endif
-
+    #if ( defined( __GNUC__ ) && !defined( __SAMBA__ ) )
+        setvbuf( stdout, ( char * ) NULL, _IONBF, 0 );
+    #endif
 }
+
 /**
  * \brief Enables or disables the transmitter of an USART peripheral.
  *
@@ -121,14 +121,15 @@ void USART_Configure(Usart *pUsart,
  * \param enabled  If true, the transmitter is enabled; otherwise it is
  *                disabled.
  */
-void USART_SetTransmitterEnabled(Usart *usart, uint8_t enabled)
+void USART_SetTransmitterEnabled( Usart * usart,
+                                  uint8_t enabled )
 {
-    if (enabled) {
-
+    if( enabled )
+    {
         usart->US_CR = US_CR_TXEN;
     }
-    else {
-
+    else
+    {
         usart->US_CR = US_CR_TXDIS;
     }
 }
@@ -140,14 +141,15 @@ void USART_SetTransmitterEnabled(Usart *usart, uint8_t enabled)
  * \param usart  Pointer to an USART peripheral
  * \param enabled  If true, the receiver is enabled; otherwise it is disabled.
  */
-void USART_SetReceiverEnabled(Usart *usart, uint8_t enabled)
+void USART_SetReceiverEnabled( Usart * usart,
+                               uint8_t enabled )
 {
-    if (enabled) {
-
+    if( enabled )
+    {
         usart->US_CR = US_CR_RXEN;
     }
-    else {
-
+    else
+    {
         usart->US_CR = US_CR_RXDIS;
     }
 }
@@ -159,14 +161,15 @@ void USART_SetReceiverEnabled(Usart *usart, uint8_t enabled)
  * \param usart  Pointer to an USART peripheral
  * \param enabled  If true, the RTS is enabled (0); otherwise it is disabled.
  */
-void USART_SetRTSEnabled( Usart *usart, uint8_t enabled)
+void USART_SetRTSEnabled( Usart * usart,
+                          uint8_t enabled )
 {
-    if (enabled) {
-    
+    if( enabled )
+    {
         usart->US_CR = US_CR_RTSEN;
     }
-    else {
-        
+    else
+    {
         usart->US_CR = US_CR_RTSDIS;
     }
 }
@@ -182,21 +185,26 @@ void USART_SetRTSEnabled( Usart *usart, uint8_t enabled)
  *        the same format as the US_THR register in the datasheet).
  * \param timeOut  Time out value (0 = no timeout).
  */
-void USART_Write( Usart *usart, uint16_t data, volatile uint32_t timeOut)
+void USART_Write( Usart * usart,
+                  uint16_t data,
+                  volatile uint32_t timeOut )
 {
-    if (timeOut == 0) {
-
-        while ((usart->US_CSR & US_CSR_TXEMPTY) == 0);
+    if( timeOut == 0 )
+    {
+        while( ( usart->US_CSR & US_CSR_TXEMPTY ) == 0 )
+        {
+        }
     }
-    else {
-
-        while ((usart->US_CSR & US_CSR_TXEMPTY) == 0) {
-
-            if (timeOut == 0) {
-
-                TRACE_ERROR("USART_Write: Timed out.\n\r");
+    else
+    {
+        while( ( usart->US_CSR & US_CSR_TXEMPTY ) == 0 )
+        {
+            if( timeOut == 0 )
+            {
+                TRACE_ERROR( "USART_Write: Timed out.\n\r" );
                 return;
             }
+
             timeOut--;
         }
     }
@@ -213,21 +221,25 @@ void USART_Write( Usart *usart, uint16_t data, volatile uint32_t timeOut)
  * \param usart  Pointer to an USART peripheral.
  * \param timeOut  Time out value (0 -> no timeout).
  */
-uint16_t USART_Read( Usart *usart, volatile uint32_t timeOut)
+uint16_t USART_Read( Usart * usart,
+                     volatile uint32_t timeOut )
 {
-    if (timeOut == 0) {
-
-        while ((usart->US_CSR & US_CSR_RXRDY) == 0);
+    if( timeOut == 0 )
+    {
+        while( ( usart->US_CSR & US_CSR_RXRDY ) == 0 )
+        {
+        }
     }
-    else {
-
-        while ((usart->US_CSR & US_CSR_RXRDY) == 0) {
-
-            if (timeOut == 0) {
-
-                TRACE_ERROR( "USART_Read: Timed out.\n\r" ) ;
+    else
+    {
+        while( ( usart->US_CSR & US_CSR_RXRDY ) == 0 )
+        {
+            if( timeOut == 0 )
+            {
+                TRACE_ERROR( "USART_Read: Timed out.\n\r" );
                 return 0;
             }
+
             timeOut--;
         }
     }
@@ -241,14 +253,14 @@ uint16_t USART_Read( Usart *usart, volatile uint32_t timeOut)
  *
  * \param usart  Pointer to an Usart instance.
  */
-uint8_t USART_IsDataAvailable(Usart *usart)
+uint8_t USART_IsDataAvailable( Usart * usart )
 {
-    if ((usart->US_CSR & US_CSR_RXRDY) != 0) {
-
+    if( ( usart->US_CSR & US_CSR_RXRDY ) != 0 )
+    {
         return 1;
     }
-    else {
-
+    else
+    {
         return 0;
     }
 }
@@ -259,9 +271,10 @@ uint8_t USART_IsDataAvailable(Usart *usart)
  * \param pUsart  Pointer to an Usart instance.
  * \param filter  Filter value.
  */
-void USART_SetIrdaFilter(Usart *pUsart, uint8_t filter)
+void USART_SetIrdaFilter( Usart * pUsart,
+                          uint8_t filter )
 {
-    assert( pUsart != NULL ) ;
+    assert( pUsart != NULL );
 
     pUsart->US_IF = filter;
 }
@@ -274,32 +287,37 @@ void USART_SetIrdaFilter(Usart *pUsart, uint8_t filter)
  * \param usart  Pointer to an USART peripheral.
  * \param c  Character to send
  */
-void USART_PutChar( Usart *usart, uint8_t c)
+void USART_PutChar( Usart * usart,
+                    uint8_t c )
 {
     /* Wait for the transmitter to be ready*/
-    while ((usart->US_CSR & US_CSR_TXEMPTY) == 0);
+    while( ( usart->US_CSR & US_CSR_TXEMPTY ) == 0 )
+    {
+    }
 
     /* Send character*/
     usart->US_THR = c;
 
     /* Wait for the transfer to complete*/
-    while ((usart->US_CSR & US_CSR_TXEMPTY) == 0);
+    while( ( usart->US_CSR & US_CSR_TXEMPTY ) == 0 )
+    {
+    }
 }
 
 /**
  * \brief   Return 1 if a character can be read in USART
  * \param usart  Pointer to an USART peripheral.
  */
-uint32_t USART_IsRxReady(Usart *usart)
+uint32_t USART_IsRxReady( Usart * usart )
 {
-    return (usart->US_CSR & US_CSR_RXRDY);
+    return( usart->US_CSR & US_CSR_RXRDY );
 }
 
 /**
  * \brief   Get present status
  * \param usart  Pointer to an USART peripheral.
  */
-uint32_t USART_GetStatus(Usart *usart)
+uint32_t USART_GetStatus( Usart * usart )
 {
     return usart->US_CSR;
 }
@@ -309,7 +327,8 @@ uint32_t USART_GetStatus(Usart *usart)
  * \param usart  Pointer to an USART peripheral.
  * \param mode  Interrupt mode.
  */
-void USART_EnableIt(Usart *usart,uint32_t mode)
+void USART_EnableIt( Usart * usart,
+                     uint32_t mode )
 {
     usart->US_IER = mode;
 }
@@ -319,7 +338,8 @@ void USART_EnableIt(Usart *usart,uint32_t mode)
  * \param usart  Pointer to an USART peripheral.
  * \param mode  Interrupt mode.
  */
-void USART_DisableIt(Usart *usart,uint32_t mode)
+void USART_DisableIt( Usart * usart,
+                      uint32_t mode )
 {
     usart->US_IDR = mode;
 }
@@ -328,7 +348,7 @@ void USART_DisableIt(Usart *usart,uint32_t mode)
  * \brief   Return interrupt mask
  * \param usart  Pointer to an USART peripheral.
  */
-uint32_t USART_GetItMask(Usart *usart)
+uint32_t USART_GetItMask( Usart * usart )
 {
     return usart->US_IMR;
 }
@@ -340,8 +360,11 @@ uint32_t USART_GetItMask(Usart *usart)
  * \param usart  Pointer to an USART peripheral.
  * \return Character received.
  */
-uint8_t USART_GetChar(Usart *usart)
+uint8_t USART_GetChar( Usart * usart )
 {
-    while ((usart->US_CSR & US_CSR_RXRDY) == 0);
+    while( ( usart->US_CSR & US_CSR_RXRDY ) == 0 )
+    {
+    }
+
     return usart->US_RHR;
 }

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -35,24 +35,26 @@
  *----------------------------------------------------------------------------*/
 
 #include "board.h"
+
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
 
 /** DMA hardware interface */
-typedef struct _XdmaHardwareInterface {
-    uint8_t bXdmac;                  /**< DMA Controller number */
-    uint32_t bPeriphID;             /**< Peripheral ID */
-    uint8_t bTransfer;              /**< Transfer type 0: Tx, 1 :Rx*/
-    uint8_t bIfID;                  /**< DMA Interface ID */
+typedef struct _XdmaHardwareInterface
+{
+    uint8_t bXdmac;     /**< DMA Controller number */
+    uint32_t bPeriphID; /**< Peripheral ID */
+    uint8_t bTransfer;  /**< Transfer type 0: Tx, 1 :Rx*/
+    uint8_t bIfID;      /**< DMA Interface ID */
 } XdmaHardwareInterface;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern uint8_t XDMAIF_IsValidatedPeripherOnDma( uint8_t bPeriphID);
-extern uint8_t XDMAIF_Get_ChannelNumber (uint8_t bPeriphID, uint8_t bTransfer);
+extern uint8_t XDMAIF_IsValidatedPeripherOnDma( uint8_t bPeriphID );
+extern uint8_t XDMAIF_Get_ChannelNumber( uint8_t bPeriphID,
+                                         uint8_t bTransfer );
 
 #endif //#ifndef _XDMAD_IF_H
-

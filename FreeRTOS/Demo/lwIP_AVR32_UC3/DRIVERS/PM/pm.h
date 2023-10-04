@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief Power Manager driver.
@@ -59,7 +60,7 @@
  *   \arg \c AVR32_PM_SMODE_SHUTDOWN: Shutdown (DeepStop);
  *   \arg \c AVR32_PM_SMODE_STATIC: Static.
  */
-#define SLEEP(mode)   {__asm__ __volatile__ ("sleep "STRINGZ(mode));}
+#define SLEEP( mode )    { __asm__ __volatile__ ( "sleep "STRINGZ ( mode ) ); }
 
 
 /*! \brief Gets the MCU reset cause.
@@ -70,11 +71,11 @@
  *         \c AVR32_PM_RCAUSE_x_MASK bit-masks to isolate specific causes.
  */
 #if __GNUC__
-__attribute__((__always_inline__))
+    __attribute__( ( __always_inline__ ) )
 #endif
-extern __inline__ unsigned int pm_get_reset_cause(volatile avr32_pm_t *pm)
+extern __inline__ unsigned int pm_get_reset_cause( volatile avr32_pm_t * pm )
 {
-  return pm->rcause;
+    return pm->rcause;
 }
 
 
@@ -82,7 +83,7 @@ extern __inline__ unsigned int pm_get_reset_cause(volatile avr32_pm_t *pm)
  * \brief This function will enable the external clock mode of the oscillator 0.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_enable_osc0_ext_clock(volatile avr32_pm_t *pm);
+extern void pm_enable_osc0_ext_clock( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -90,7 +91,8 @@ extern void pm_enable_osc0_ext_clock(volatile avr32_pm_t *pm);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param fosc0 Oscillator 0 crystal frequency (Hz)
  */
-extern void pm_enable_osc0_crystal(volatile avr32_pm_t *pm, unsigned int fosc0);
+extern void pm_enable_osc0_crystal( volatile avr32_pm_t * pm,
+                                    unsigned int fosc0 );
 
 
 /*!
@@ -98,14 +100,15 @@ extern void pm_enable_osc0_crystal(volatile avr32_pm_t *pm, unsigned int fosc0);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param startup Clock 0 startup time. Time is expressed in term of RCOsc periods (3-bit value)
  */
-extern void pm_enable_clk0(volatile avr32_pm_t *pm, unsigned int startup);
+extern void pm_enable_clk0( volatile avr32_pm_t * pm,
+                            unsigned int startup );
 
 
 /*!
  * \brief This function will disable the oscillator 0.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_disable_clk0(volatile avr32_pm_t *pm);
+extern void pm_disable_clk0( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -113,21 +116,22 @@ extern void pm_disable_clk0(volatile avr32_pm_t *pm);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param startup Clock 0 startup time. Time is expressed in term of RCOsc periods (3-bit value) but not checked.
  */
-extern void pm_enable_clk0_no_wait(volatile avr32_pm_t *pm, unsigned int startup);
+extern void pm_enable_clk0_no_wait( volatile avr32_pm_t * pm,
+                                    unsigned int startup );
 
 
 /*!
  * \brief This function will wait until the Osc0 clock is ready.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_wait_for_clk0_ready(volatile avr32_pm_t *pm);
+extern void pm_wait_for_clk0_ready( volatile avr32_pm_t * pm );
 
 
 /*!
  * \brief This function will enable the external clock mode of the oscillator 1.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_enable_osc1_ext_clock(volatile avr32_pm_t *pm);
+extern void pm_enable_osc1_ext_clock( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -135,7 +139,8 @@ extern void pm_enable_osc1_ext_clock(volatile avr32_pm_t *pm);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param fosc1 Oscillator 1 crystal frequency (Hz)
  */
-extern void pm_enable_osc1_crystal(volatile avr32_pm_t *pm, unsigned int fosc1);
+extern void pm_enable_osc1_crystal( volatile avr32_pm_t * pm,
+                                    unsigned int fosc1 );
 
 
 /*!
@@ -143,14 +148,15 @@ extern void pm_enable_osc1_crystal(volatile avr32_pm_t *pm, unsigned int fosc1);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param startup Clock 1 startup time. Time is expressed in term of RCOsc periods (3-bit value)
  */
-extern void pm_enable_clk1(volatile avr32_pm_t *pm, unsigned int startup);
+extern void pm_enable_clk1( volatile avr32_pm_t * pm,
+                            unsigned int startup );
 
 
 /*!
  * \brief This function will disable the oscillator 1.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_disable_clk1(volatile avr32_pm_t *pm);
+extern void pm_disable_clk1( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -158,28 +164,29 @@ extern void pm_disable_clk1(volatile avr32_pm_t *pm);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param startup Clock 1 startup time. Time is expressed in term of RCOsc periods (3-bit value) but not checked.
  */
-extern void pm_enable_clk1_no_wait(volatile avr32_pm_t *pm, unsigned int startup);
+extern void pm_enable_clk1_no_wait( volatile avr32_pm_t * pm,
+                                    unsigned int startup );
 
 
 /*!
  * \brief This function will wait until the Osc1 clock is ready.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_wait_for_clk1_ready(volatile avr32_pm_t *pm);
+extern void pm_wait_for_clk1_ready( volatile avr32_pm_t * pm );
 
 
 /*!
  * \brief This function will enable the external clock mode of the 32-kHz oscillator.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_enable_osc32_ext_clock(volatile avr32_pm_t *pm);
+extern void pm_enable_osc32_ext_clock( volatile avr32_pm_t * pm );
 
 
 /*!
  * \brief This function will enable the crystal mode of the 32-kHz oscillator.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_enable_osc32_crystal(volatile avr32_pm_t *pm);
+extern void pm_enable_osc32_crystal( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -187,14 +194,15 @@ extern void pm_enable_osc32_crystal(volatile avr32_pm_t *pm);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param startup Clock 32 kHz startup time. Time is expressed in term of RCOsc periods (3-bit value)
  */
-extern void pm_enable_clk32(volatile avr32_pm_t *pm, unsigned int startup);
+extern void pm_enable_clk32( volatile avr32_pm_t * pm,
+                             unsigned int startup );
 
 
 /*!
  * \brief This function will disable the oscillator 32.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_disable_clk32(volatile avr32_pm_t *pm);
+extern void pm_disable_clk32( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -202,14 +210,15 @@ extern void pm_disable_clk32(volatile avr32_pm_t *pm);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param startup Clock 32 kHz startup time. Time is expressed in term of RCOsc periods (3-bit value) but not checked.
  */
-extern void pm_enable_clk32_no_wait(volatile avr32_pm_t *pm, unsigned int startup);
+extern void pm_enable_clk32_no_wait( volatile avr32_pm_t * pm,
+                                     unsigned int startup );
 
 
 /*!
  * \brief This function will wait until the osc32 clock is ready.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_wait_for_clk32_ready(volatile avr32_pm_t *pm);
+extern void pm_wait_for_clk32_ready( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -222,7 +231,13 @@ extern void pm_wait_for_clk32_ready(volatile avr32_pm_t *pm);
  * \param hsbdiv High Speed Bus clock divisor enable (CPU clock = HSB clock)
  * \param hsbsel High Speed Bus select (CPU clock = HSB clock )
  */
-extern void pm_cksel(volatile avr32_pm_t *pm, unsigned int pbadiv, unsigned int pbasel, unsigned int pbbdiv, unsigned int pbbsel, unsigned int hsbdiv, unsigned int hsbsel);
+extern void pm_cksel( volatile avr32_pm_t * pm,
+                      unsigned int pbadiv,
+                      unsigned int pbasel,
+                      unsigned int pbbdiv,
+                      unsigned int pbbsel,
+                      unsigned int hsbdiv,
+                      unsigned int hsbsel );
 
 
 /*!
@@ -234,7 +249,12 @@ extern void pm_cksel(volatile avr32_pm_t *pm, unsigned int pbadiv, unsigned int 
  * \param diven Generic clock divisor enable
  * \param div Generic clock divisor
  */
-extern void pm_gc_setup(volatile avr32_pm_t *pm, unsigned int gc, unsigned int osc_or_pll, unsigned int pll_osc, unsigned int diven, unsigned int div);
+extern void pm_gc_setup( volatile avr32_pm_t * pm,
+                         unsigned int gc,
+                         unsigned int osc_or_pll,
+                         unsigned int pll_osc,
+                         unsigned int diven,
+                         unsigned int div );
 
 
 /*!
@@ -242,7 +262,8 @@ extern void pm_gc_setup(volatile avr32_pm_t *pm, unsigned int gc, unsigned int o
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param gc generic clock number (0 for gc0...)
  */
-extern void pm_gc_enable(volatile avr32_pm_t *pm, unsigned int gc);
+extern void pm_gc_enable( volatile avr32_pm_t * pm,
+                          unsigned int gc );
 
 
 /*!
@@ -250,7 +271,8 @@ extern void pm_gc_enable(volatile avr32_pm_t *pm, unsigned int gc);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param gc generic clock number (0 for gc0...)
  */
-extern void pm_gc_disable(volatile avr32_pm_t *pm, unsigned int gc);
+extern void pm_gc_disable( volatile avr32_pm_t * pm,
+                           unsigned int gc );
 
 
 /*!
@@ -262,7 +284,12 @@ extern void pm_gc_disable(volatile avr32_pm_t *pm, unsigned int gc);
  * \param osc OSC number (0 for osc0, 1 for osc1)
  * \param lockcount PLL lockount
  */
-extern void pm_pll_setup(volatile avr32_pm_t *pm, unsigned int pll, unsigned int mul, unsigned int div, unsigned int osc, unsigned int lockcount);
+extern void pm_pll_setup( volatile avr32_pm_t * pm,
+                          unsigned int pll,
+                          unsigned int mul,
+                          unsigned int div,
+                          unsigned int osc,
+                          unsigned int lockcount );
 
 
 /*!
@@ -273,7 +300,11 @@ extern void pm_pll_setup(volatile avr32_pm_t *pm, unsigned int pll, unsigned int
  * \param pll_div2 Divide the PLL output frequency by 2 (this settings does not change the FVCO value)
  * \param pll_wbwdisable 1 Disable the Wide-Bandith Mode (Wide-Bandwith mode allow a faster startup time and out-of-lock time). 0 to enable the Wide-Bandith Mode.
  */
-extern void pm_pll_set_option(volatile avr32_pm_t *pm, unsigned int pll, unsigned int  pll_freq, unsigned int  pll_div2, unsigned int  pll_wbwdisable);
+extern void pm_pll_set_option( volatile avr32_pm_t * pm,
+                               unsigned int pll,
+                               unsigned int pll_freq,
+                               unsigned int pll_div2,
+                               unsigned int pll_wbwdisable );
 
 
 /*!
@@ -282,7 +313,8 @@ extern void pm_pll_set_option(volatile avr32_pm_t *pm, unsigned int pll, unsigne
  * \param pll PLL number(0 for PLL0, 1 for PLL1)
  * \return       Option
  */
-extern unsigned int pm_pll_get_option(volatile avr32_pm_t *pm, unsigned int pll);
+extern unsigned int pm_pll_get_option( volatile avr32_pm_t * pm,
+                                       unsigned int pll );
 
 
 /*!
@@ -290,7 +322,8 @@ extern unsigned int pm_pll_get_option(volatile avr32_pm_t *pm, unsigned int pll)
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param pll PLL number(0 for PLL0, 1 for PLL1)
  */
-extern void pm_pll_enable(volatile avr32_pm_t *pm, unsigned int pll);
+extern void pm_pll_enable( volatile avr32_pm_t * pm,
+                           unsigned int pll );
 
 
 /*!
@@ -298,21 +331,22 @@ extern void pm_pll_enable(volatile avr32_pm_t *pm, unsigned int pll);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param pll PLL number(0 for PLL0, 1 for PLL1)
  */
-extern void pm_pll_disable(volatile avr32_pm_t *pm, unsigned int pll);
+extern void pm_pll_disable( volatile avr32_pm_t * pm,
+                            unsigned int pll );
 
 
 /*!
  * \brief This function will wait for PLL0 locked
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_wait_for_pll0_locked(volatile avr32_pm_t *pm);
+extern void pm_wait_for_pll0_locked( volatile avr32_pm_t * pm );
 
 
 /*!
  * \brief This function will wait for PLL1 locked
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  */
-extern void pm_wait_for_pll1_locked(volatile avr32_pm_t *pm);
+extern void pm_wait_for_pll1_locked( volatile avr32_pm_t * pm );
 
 
 /*!
@@ -320,7 +354,8 @@ extern void pm_wait_for_pll1_locked(volatile avr32_pm_t *pm);
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param clock Clock to be switched on. AVR32_PM_MCSEL_SLOW for RCOsc, AVR32_PM_MCSEL_OSC0 for Osc0, AVR32_PM_MCSEL_PLL0 for PLL0.
  */
-extern void pm_switch_to_clock(volatile avr32_pm_t *pm, unsigned long clock);
+extern void pm_switch_to_clock( volatile avr32_pm_t * pm,
+                                unsigned long clock );
 
 
 /*!
@@ -329,7 +364,9 @@ extern void pm_switch_to_clock(volatile avr32_pm_t *pm, unsigned long clock);
  * \param fosc0 Oscillator 0 crystal frequency (Hz)
  * \param startup Crystal 0 startup time. Time is expressed in term of RCOsc periods (3-bit value)
  */
-extern void pm_switch_to_osc0(volatile avr32_pm_t *pm, unsigned int fosc0, unsigned int startup);
+extern void pm_switch_to_osc0( volatile avr32_pm_t * pm,
+                               unsigned int fosc0,
+                               unsigned int startup );
 
 
-#endif  // _PM_H_
+#endif // _PM_H_

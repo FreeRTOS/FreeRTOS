@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name     : siochar.h
 * Device(s)     : RZ/A1H (R7S910018)
@@ -28,6 +29,7 @@
 * H/W Platform  : RSK+T1 CPU Board
 * Description   : Sample Program - Terminal I/O header file
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History       : DD.MM.YYYY Version Description
 *               : 21.10.2014 1.00
@@ -38,20 +40,24 @@
 #define SIO_CHAR_H
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Functions Prototypes
+*  Functions Prototypes
 ***********************************************************************************************************************/
-int32_t sio_write (int32_t file_no, const char * buffer, uint32_t writing_b);
-int32_t sio_read (int32_t file_no, char * buffer, uint32_t reading_b);
+int32_t sio_write( int32_t file_no,
+                   const char * buffer,
+                   uint32_t writing_b );
+int32_t sio_read( int32_t file_no,
+                  char * buffer,
+                  uint32_t reading_b );
 
-void    io_init_scifa2 (void);
-char    io_get_char (void);
-void    io_put_char (char buffer);
+void io_init_scifa2( void );
+char io_get_char( void );
+void io_put_char( char buffer );
 
 /* SIO_CHAR_H */
-#endif  
+#endif /* ifndef SIO_CHAR_H */
 
 /* End of File */

@@ -72,12 +72,12 @@
 #include "queue.h"
 
 /* Priorities used by the tasks. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY         ( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_SEND_TASK_PRIORITY            ( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_RECEIVE_TASK_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue.  The 3000ms value is converted
  * to ticks using the pdMS_TO_TICKS() macro. */
-#define mainQUEUE_SEND_FREQUENCY_MS             pdMS_TO_TICKS( 3000 )
+#define mainQUEUE_SEND_FREQUENCY_MS        pdMS_TO_TICKS( 3000 )
 
 /* The maximum number items the queue can hold.  The priority of the receiving
  * task is above the priority of the sending task, so the receiving task will
@@ -85,7 +85,7 @@
  * writes to the queue.  Therefore the queue will never have more than one item in
  * it at any time, and even with a queue length of 1, the sending task will never
  * find the queue full. */
-#define mainQUEUE_LENGTH                        ( 1 )
+#define mainQUEUE_LENGTH                   ( 1 )
 
 /*-----------------------------------------------------------*/
 
@@ -98,8 +98,8 @@ void main_blinky( void );
 /**
  * The tasks as described in the comments at the top of this file.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvQueueReceiveTask( void * pvParameters );
+static void prvQueueSendTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -117,12 +117,12 @@ void main_blinky( void )
     {
         /* Start the two tasks as described in the comments at the top of this
          * file. */
-        xTaskCreate( prvQueueReceiveTask,               /* The function that implements the task. */
-                    "Rx",                               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-                    configMINIMAL_STACK_SIZE,           /* The size of the stack to allocate to the task. */
-                    NULL,                               /* The parameter passed to the task - not used in this case. */
-                    mainQUEUE_RECEIVE_TASK_PRIORITY,    /* The priority assigned to the task. */
-                    NULL );                             /* The task handle is not required, so NULL is passed. */
+        xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
+                     "Rx",                            /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+                     configMINIMAL_STACK_SIZE,        /* The size of the stack to allocate to the task. */
+                     NULL,                            /* The parameter passed to the task - not used in this case. */
+                     mainQUEUE_RECEIVE_TASK_PRIORITY, /* The priority assigned to the task. */
+                     NULL );                          /* The task handle is not required, so NULL is passed. */
 
         xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
@@ -136,15 +136,17 @@ void main_blinky( void )
      * timer tasks to be created.  See the memory management section on the
      * FreeRTOS web site for more details on the FreeRTOS heap
      * https://www.FreeRTOS.org/a00111.html. */
-    for( ;; );
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask( void * pvParameters )
 {
-TickType_t xNextWakeTime;
-const unsigned long ulValueToSend = 100UL;
-BaseType_t xReturned;
+    TickType_t xNextWakeTime;
+    const unsigned long ulValueToSend = 100UL;
+    BaseType_t xReturned;
 
     /* Remove compiler warning about unused parameter. */
     ( void ) pvParameters;
@@ -152,7 +154,7 @@ BaseType_t xReturned;
     /* Initialise xNextWakeTime - this only needs to be done once. */
     xNextWakeTime = xTaskGetTickCount();
 
-    for( ;; )
+    for( ; ; )
     {
         /* Place this task in the blocked state until it is time to run again. */
         vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
@@ -167,17 +169,17 @@ BaseType_t xReturned;
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void prvQueueReceiveTask( void * pvParameters )
 {
-unsigned long ulReceivedValue;
-const unsigned long ulExpectedValue = 100UL;
-extern void vToggleLED( void );
-TickType_t tickCount;
+    unsigned long ulReceivedValue;
+    const unsigned long ulExpectedValue = 100UL;
+    extern void vToggleLED( void );
+    TickType_t tickCount;
 
     /* Remove compiler warning about unused parameter. */
     ( void ) pvParameters;
 
-    for( ;; )
+    for( ; ; )
     {
         /* Wait until something arrives in the queue - this task will block
          * indefinitely provided INCLUDE_vTaskSuspend is set to 1 in

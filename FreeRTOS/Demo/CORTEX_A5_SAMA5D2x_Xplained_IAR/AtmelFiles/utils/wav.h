@@ -42,41 +42,42 @@
  *----------------------------------------------------------------------------*/
 
 /** Standard WAV file header information. */
-struct _wav_header {
-	/** Contains the letters "RIFF" in ASCII form. */
-	uint32_t chunk_id;
-	/** Size of the rest of the chunk following this number. */
-	uint32_t chunk_size;
-	/** Contains the letters "WAVE". */
-	uint32_t format;
-	/** Contains the letters "fmt ". */
-	uint32_t subchunk1_id;
-	/** 16 for PCM.  This is the size of the rest of the Subchunk which follows this number. */
-	uint32_t subchunk1_size;
-	/** PCM = 1 (i.e. Linear quantization). Values other than 1 indicate some form of compression. */
-	uint16_t audio_format;
-	/** Mono = 1, Stereo = 2, etc. */
-	uint16_t num_channels;
-	/** 8000, 44100, etc. */
-	uint32_t sample_rate;
-	/** SampleRate * NumChannels * BitsPerSample/8 */
-	uint32_t byte_rate;
-	/** NumChannels * BitsPerSample/8 */
-	uint16_t block_align;
-	/** 8 bits = 8, 16 bits = 16, etc. */
-	uint16_t bits_per_sample;
-	/** Contains the letters "data". */
-	uint32_t subchunk2_id;
-	/** Number of bytes in the data. */
-	uint32_t subchunk2_size;
+struct _wav_header
+{
+    /** Contains the letters "RIFF" in ASCII form. */
+    uint32_t chunk_id;
+    /** Size of the rest of the chunk following this number. */
+    uint32_t chunk_size;
+    /** Contains the letters "WAVE". */
+    uint32_t format;
+    /** Contains the letters "fmt ". */
+    uint32_t subchunk1_id;
+    /** 16 for PCM.  This is the size of the rest of the Subchunk which follows this number. */
+    uint32_t subchunk1_size;
+    /** PCM = 1 (i.e. Linear quantization). Values other than 1 indicate some form of compression. */
+    uint16_t audio_format;
+    /** Mono = 1, Stereo = 2, etc. */
+    uint16_t num_channels;
+    /** 8000, 44100, etc. */
+    uint32_t sample_rate;
+    /** SampleRate * NumChannels * BitsPerSample/8 */
+    uint32_t byte_rate;
+    /** NumChannels * BitsPerSample/8 */
+    uint16_t block_align;
+    /** 8 bits = 8, 16 bits = 16, etc. */
+    uint16_t bits_per_sample;
+    /** Contains the letters "data". */
+    uint32_t subchunk2_id;
+    /** Number of bytes in the data. */
+    uint32_t subchunk2_size;
 };
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern bool wav_is_valid(const struct _wav_header *header);
+extern bool wav_is_valid( const struct _wav_header * header );
 
-extern void wav_display_info(const struct _wav_header *header);
+extern void wav_display_info( const struct _wav_header * header );
 
 #endif /* #ifndef WAV_H */

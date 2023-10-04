@@ -44,16 +44,16 @@
 /**
  * \brief Low-Level chip initialization -- called by startup
  */
-extern void low_level_init(void);
+extern void low_level_init( void );
 
 /**
  * \brief Restore all IOs to default state after power-on reset.
  */
-extern void board_restore_pio_reset_state(void);
+extern void board_restore_pio_reset_state( void );
 
 /**
  * \brief Save power by disabling most peripherals
  */
-extern void board_save_misc_power(void);
+extern void board_save_misc_power( void );
 
 #endif /* BOARD_LOWLEVEL_H */

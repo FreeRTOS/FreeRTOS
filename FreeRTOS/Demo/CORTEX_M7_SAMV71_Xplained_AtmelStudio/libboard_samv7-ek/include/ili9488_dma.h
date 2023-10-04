@@ -48,16 +48,16 @@
  *        Definitions
  *----------------------------------------------------------------------------*/
 /** An unspecified error has occurred.*/
-#define ILI9488_ERROR_DMA_ALLOCATE_CHANNEL          1
-#define ILI9488_ERROR_DMA_CONFIGURE                 2
-#define ILI9488_ERROR_DMA_TRANSFER                  3
-#define ILI9488_ERROR_DMA_SIZE                      4
+#define ILI9488_ERROR_DMA_ALLOCATE_CHANNEL    1
+#define ILI9488_ERROR_DMA_CONFIGURE           2
+#define ILI9488_ERROR_DMA_TRANSFER            3
+#define ILI9488_ERROR_DMA_SIZE                4
 
-#define ILI9488_SPI                                 SPI0
-#define ILI9488_SPI_ID                              ID_SPI0
+#define ILI9488_SPI                           SPI0
+#define ILI9488_SPI_ID                        ID_SPI0
 
 /* EBI BASE ADDRESS for SMC LCD */
-#define ILI9488_BASE_ADDRESS        0x63000000
+#define ILI9488_BASE_ADDRESS                  0x63000000
 
 /*------------------------------------------------------------------------------
  *        Types
@@ -65,30 +65,30 @@
 
 typedef struct _ILI9488_dma
 {
-	/** Pointer to DMA driver */
-	sXdmad              *xdmaD;
-	/** ili9488 Tx channel */
-	uint32_t            ili9488DmaTxChannel;
-	/** ili9488 Rx channel */
-	uint32_t            ili9488DmaRxChannel;
-	/** ili9488 Tx/Rx configure descriptor */
-	sXdmadCfg           xdmadRxCfg,xdmadTxCfg;
-	/** ili9488 dma interrupt */
-	uint32_t            xdmaInt;
-	/** Pointer to SPI Hardware registers */
-	Spi*                pSpiHw ;
-	/** SPI Id as defined in the product datasheet */
-	uint8_t             spiId ;
-}sIli9488Dma;
+    /** Pointer to DMA driver */
+    sXdmad * xdmaD;
+    /** ili9488 Tx channel */
+    uint32_t ili9488DmaTxChannel;
+    /** ili9488 Rx channel */
+    uint32_t ili9488DmaRxChannel;
+    /** ili9488 Tx/Rx configure descriptor */
+    sXdmadCfg xdmadRxCfg, xdmadTxCfg;
+    /** ili9488 dma interrupt */
+    uint32_t xdmaInt;
+    /** Pointer to SPI Hardware registers */
+    Spi * pSpiHw;
+    /** SPI Id as defined in the product datasheet */
+    uint8_t spiId;
+} sIli9488Dma;
 
 typedef struct _ILI9488_ctl
 {
-	/** ili9488 Command/Data mode */
-	volatile uint32_t       cmdOrDataFlag;
-	/** ili9488 Rx done */
-	volatile uint32_t       rxDoneFlag;
-	/** ili9488 Tx done */
-	volatile uint32_t       txDoneFlag;
-}sIli9488DmaCtl;
+    /** ili9488 Command/Data mode */
+    volatile uint32_t cmdOrDataFlag;
+    /** ili9488 Rx done */
+    volatile uint32_t rxDoneFlag;
+    /** ili9488 Tx done */
+    volatile uint32_t txDoneFlag;
+} sIli9488DmaCtl;
 
 #endif /* #ifndef ILI9488_DMA */

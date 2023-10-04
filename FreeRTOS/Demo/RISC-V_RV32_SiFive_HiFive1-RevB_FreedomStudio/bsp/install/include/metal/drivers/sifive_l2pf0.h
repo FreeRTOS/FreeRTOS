@@ -13,15 +13,16 @@
 #include <stdint.h>
 
 /*! @brief L2 prefetcher configuration */
-typedef struct {
+typedef struct
+{
     /* Enable L2 hardware prefetcher */
     uint8_t HwPrefetchEnable;
 
     /* Only works when CrossPageEn === 0.
-        Cross Page optimization disable:
-        0 -> Entry goes into Pause state while crossing Page boundary.
-        Next time when the demand miss happens on the same page, it doesn’t need
-       to train again. 1 -> The entry is invalidated in case of a cross page. */
+     *  Cross Page optimization disable:
+     *  0 -> Entry goes into Pause state while crossing Page boundary.
+     *  Next time when the demand miss happens on the same page, it doesn’t need
+     * to train again. 1 -> The entry is invalidated in case of a cross page. */
     uint8_t CrossPageOptmDisable;
 
     /* Enable prefetches to cross pages */
@@ -52,27 +53,26 @@ typedef struct {
 
     /* Size of the comparison window for address matching */
     uint32_t Window;
-
 } sifive_l2pf0_config;
 
 /*! @brief Enable L2 hardware prefetcher unit.
  * @param None.
  * @return None.*/
-void sifive_l2pf0_enable(void);
+void sifive_l2pf0_enable( void );
 
 /*! @brief Disable L2 hardware prefetcher unit.
  * @param None.
  * @return None.*/
-void sifive_l2pf0_disable(void);
+void sifive_l2pf0_disable( void );
 
 /*! @brief Get currently active L2 prefetcher configuration.
  * @param config Pointer to user specified configuration structure.
  * @return None.*/
-void sifive_l2pf0_get_config(sifive_l2pf0_config *config);
+void sifive_l2pf0_get_config( sifive_l2pf0_config * config );
 
 /*! @brief Enables fine grain access to L2 prefetcher configuration.
  * @param config Pointer to user structure with values to be set.
  * @return None.*/
-void sifive_l2pf0_set_config(sifive_l2pf0_config *config);
+void sifive_l2pf0_set_config( sifive_l2pf0_config * config );
 
-#endif
+#endif /* ifndef METAL__DRIVERS__SIFIVE_L2PF0_H */

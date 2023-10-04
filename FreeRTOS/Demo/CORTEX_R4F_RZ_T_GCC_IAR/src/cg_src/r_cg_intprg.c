@@ -27,45 +27,47 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * Function Name: r_set_exception_handler
 * Description  : None
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void r_set_exception_handler(void)
+void r_set_exception_handler( void )
 {
-    uint32_t *pointer;
+    uint32_t * pointer;
 
     /* FIQ exception handler address */
-    pointer = (uint32_t *)0x1c;
+    pointer = ( uint32_t * ) 0x1c;
 
     /* Branch to next address instruction */
-    *pointer ++ = 0xeaffffff;
+    *pointer++ = 0xeaffffff;
 
     /* LDR PC,[PC, #-0x04], load r_fiq_handler address to PC */
-    *pointer ++ = 0xe51ff004;
+    *pointer++ = 0xe51ff004;
 
     /* DC32 r_fiq_handler, define the r_fiq_handler address */
-    *pointer = (uint32_t)r_fiq_handler;
+    *pointer = ( uint32_t ) r_fiq_handler;
 
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
 }
+
 /***********************************************************************************************************************
 * Function Name: r_fiq_handler
 * Description  : None
@@ -73,11 +75,14 @@ void r_set_exception_handler(void)
 * Return Value : None
 ***********************************************************************************************************************/
 #ifdef __ICCARM__
-	__irq __arm
+    __irq __arm
 #endif /* __ICCARM__ */
-void r_fiq_handler(void)
+void r_fiq_handler( void )
 {
-    while(1);
+    while( 1 )
+    {
+    }
+
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
 }

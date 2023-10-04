@@ -25,4 +25,4 @@
  */
 
 /* Placing variable at specified address. */
-#define COMPILER_ATTRIBUTE_PLACE_IN_2ND_MEMORY_BANK		 __attribute__( ( section( ".freertos_heap_2" ) ) )
+#define COMPILER_ATTRIBUTE_PLACE_IN_2ND_MEMORY_BANK    __attribute__( ( section( ".freertos_heap_2" ) ) )

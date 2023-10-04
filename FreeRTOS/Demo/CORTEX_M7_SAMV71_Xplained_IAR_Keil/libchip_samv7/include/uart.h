@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -32,36 +32,49 @@
 #define UART_H
 
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-void UART_Configure(Uart *uart, uint32_t mode, uint32_t baudrate, uint32_t masterClock);
+void UART_Configure( Uart * uart,
+                     uint32_t mode,
+                     uint32_t baudrate,
+                     uint32_t masterClock );
 
-void UART_SetTransmitterEnabled(Uart *uart, uint8_t enabled);
+void UART_SetTransmitterEnabled( Uart * uart,
+                                 uint8_t enabled );
 
-void UART_SetReceiverEnabled(Uart *uart, uint8_t enabled);
+void UART_SetReceiverEnabled( Uart * uart,
+                              uint8_t enabled );
 
-void UART_PutChar( Uart *uart, uint8_t c);
+void UART_PutChar( Uart * uart,
+                   uint8_t c );
 
-uint32_t UART_IsRxReady(Uart *uart);
+uint32_t UART_IsRxReady( Uart * uart );
 
-uint8_t UART_GetChar(Uart *uart);
+uint8_t UART_GetChar( Uart * uart );
 
-uint32_t UART_GetStatus(Uart *uart);
+uint32_t UART_GetStatus( Uart * uart );
 
-void UART_EnableIt(Uart *uart,uint32_t mode);
+void UART_EnableIt( Uart * uart,
+                    uint32_t mode );
 
-void UART_DisableIt(Uart *uart,uint32_t mode);
+void UART_DisableIt( Uart * uart,
+                     uint32_t mode );
 
-uint32_t UART_GetItMask(Uart *uart);
+uint32_t UART_GetItMask( Uart * uart );
 
-void UART_SendBuffer(Uart *uart, uint8_t *pBuffer, uint32_t BuffLen);
+void UART_SendBuffer( Uart * uart,
+                      uint8_t * pBuffer,
+                      uint32_t BuffLen );
 
-void UART_ReceiveBuffer(Uart *uart, uint8_t *pBuffer, uint32_t BuffLen);
+void UART_ReceiveBuffer( Uart * uart,
+                         uint8_t * pBuffer,
+                         uint32_t BuffLen );
 
-void UART_CompareConfig(Uart *uart, uint8_t Val1, uint8_t Val2);
+void UART_CompareConfig( Uart * uart,
+                         uint8_t Val1,
+                         uint8_t Val2 );
 
-uint32_t UART_IsTxReady(Uart *uart);
+uint32_t UART_IsTxReady( Uart * uart );
 #endif //#ifndef UART_H
-

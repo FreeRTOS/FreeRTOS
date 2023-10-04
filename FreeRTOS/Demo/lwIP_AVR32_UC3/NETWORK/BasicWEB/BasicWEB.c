@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief Basic WEB Server for AVR32 UC3.
@@ -41,15 +42,15 @@
 
 
 /*
-  Implements a simplistic WEB server.  Every time a connection is made and
-  data is received a dynamic page that shows the current FreeRTOS.org kernel
-  statistics is generated and returned.  The connection is then closed.
+ * Implements a simplistic WEB server.  Every time a connection is made and
+ * data is received a dynamic page that shows the current FreeRTOS.org kernel
+ * statistics is generated and returned.  The connection is then closed.
+ *
+ * This file was adapted from a FreeRTOS lwIP slip demo supplied by a third
+ * party.
+ */
 
-  This file was adapted from a FreeRTOS lwIP slip demo supplied by a third
-  party.
-*/
-
-#if (HTTP_USED == 1)
+#if ( HTTP_USED == 1 )
 
 
 /* Standard includes. */
@@ -80,27 +81,27 @@
 #include "ethernet.h"
 
 /*! The size of the buffer in which the dynamic WEB page is created. */
-#define webMAX_PAGE_SIZE	512
+#define webMAX_PAGE_SIZE    512
 
 /*! Standard GET response. */
-#define webHTTP_OK	"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n"
+#define webHTTP_OK          "HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n"
 
 /*! The port on which we listen. */
-#define webHTTP_PORT		( 80 )
+#define webHTTP_PORT        ( 80 )
 
 /*! Delay on close error. */
-#define webSHORT_DELAY		( 10 )
+#define webSHORT_DELAY      ( 10 )
 
 /*! Format of the dynamic page that is returned on each connection. */
 #define webHTML_START \
-"<html>\
+    "<html>\
 <head>\
 </head>\
 <BODY onLoad=\"window.setTimeout(&quot;location.href='index.html'&quot;,1000)\" bgcolor=\"#FFFFFF\" text=\"#2477E6\">\
 \r\nPage Hits = "
 
 #define webHTML_END \
-"\r\n</pre>\
+    "\r\n</pre>\
 \r\n</font></BODY>\
 </html>"
 
@@ -109,7 +110,7 @@ char cPageHits[ 11 ];
 
 
 /*! Function to process the current connection */
-static void prvweb_ParseHTMLRequest( struct netconn *pxNetCon );
+static void prvweb_ParseHTMLRequest( struct netconn * pxNetCon );
 
 
 /*! \brief WEB server main task
@@ -120,28 +121,27 @@ static void prvweb_ParseHTMLRequest( struct netconn *pxNetCon );
  */
 portTASK_FUNCTION( vBasicWEBServer, pvParameters )
 {
-struct netconn *pxHTTPListener, *pxNewConnection;
+    struct netconn * pxHTTPListener, * pxNewConnection;
 
-	/* Create a new tcp connection handle */
-	pxHTTPListener = netconn_new( NETCONN_TCP );
-	netconn_bind(pxHTTPListener, NULL, webHTTP_PORT );
-	netconn_listen( pxHTTPListener );
+    /* Create a new tcp connection handle */
+    pxHTTPListener = netconn_new( NETCONN_TCP );
+    netconn_bind( pxHTTPListener, NULL, webHTTP_PORT );
+    netconn_listen( pxHTTPListener );
 
-	/* Loop forever */
-	for( ;; )
-	{
-		/* Wait for a first connection. */
-		pxNewConnection = netconn_accept(pxHTTPListener);
-		vParTestSetLED(webCONN_LED, pdTRUE);
+    /* Loop forever */
+    for( ; ; )
+    {
+        /* Wait for a first connection. */
+        pxNewConnection = netconn_accept( pxHTTPListener );
+        vParTestSetLED( webCONN_LED, pdTRUE );
 
-		if(pxNewConnection != NULL)
-		{
-			prvweb_ParseHTMLRequest(pxNewConnection);
-		}/* end if new connection */
+        if( pxNewConnection != NULL )
+        {
+            prvweb_ParseHTMLRequest( pxNewConnection );
+        } /* end if new connection */
 
-		vParTestSetLED(webCONN_LED, pdFALSE);
-
-	} /* end infinite loop */
+        vParTestSetLED( webCONN_LED, pdFALSE );
+    } /* end infinite loop */
 }
 
 
@@ -151,55 +151,55 @@ struct netconn *pxHTTPListener, *pxNewConnection;
  *  \param pxNetCon   Input. The netconn to use to send and receive data.
  *
  */
-static void prvweb_ParseHTMLRequest( struct netconn *pxNetCon )
+static void prvweb_ParseHTMLRequest( struct netconn * pxNetCon )
 {
-struct netbuf *pxRxBuffer;
-char *pcRxString;
-unsigned short usLength;
-static unsigned long ulPageHits = 0;
+    struct netbuf * pxRxBuffer;
+    char * pcRxString;
+    unsigned short usLength;
+    static unsigned long ulPageHits = 0;
 
-	/* We expect to immediately get data. */
-	pxRxBuffer = netconn_recv( pxNetCon );
+    /* We expect to immediately get data. */
+    pxRxBuffer = netconn_recv( pxNetCon );
 
-	if( pxRxBuffer != NULL )
-	{
-		/* Where is the data? */
-		netbuf_data( pxRxBuffer, ( void * ) &pcRxString, &usLength );
+    if( pxRxBuffer != NULL )
+    {
+        /* Where is the data? */
+        netbuf_data( pxRxBuffer, ( void * ) &pcRxString, &usLength );
 
-		/* Is this a GET?  We don't handle anything else. */
-		if( !strncmp( pcRxString, "GET", 3 ) )
-		{
-			pcRxString = cDynamicPage;
+        /* Is this a GET?  We don't handle anything else. */
+        if( !strncmp( pcRxString, "GET", 3 ) )
+        {
+            pcRxString = cDynamicPage;
 
-			/* Update the hit count. */
-			ulPageHits++;
-			sprintf( cPageHits, "%d", (int)ulPageHits );
+            /* Update the hit count. */
+            ulPageHits++;
+            sprintf( cPageHits, "%d", ( int ) ulPageHits );
 
-			/* Write out the HTTP OK header. */
-			netconn_write( pxNetCon, webHTTP_OK, (u16_t) strlen( webHTTP_OK ), NETCONN_COPY );
+            /* Write out the HTTP OK header. */
+            netconn_write( pxNetCon, webHTTP_OK, ( u16_t ) strlen( webHTTP_OK ), NETCONN_COPY );
 
-			/* Generate the dynamic page... First the page header. */
-			strcpy( cDynamicPage, webHTML_START );
+            /* Generate the dynamic page... First the page header. */
+            strcpy( cDynamicPage, webHTML_START );
 
-			/* ... Then the hit count... */
-			strcat( cDynamicPage, cPageHits );
-			strcat( cDynamicPage, "<p><pre>Task          State  Priority  Stack	#<br>************************************************<br>" );
+            /* ... Then the hit count... */
+            strcat( cDynamicPage, cPageHits );
+            strcat( cDynamicPage, "<p><pre>Task          State  Priority  Stack	#<br>************************************************<br>" );
 
-			/* ... Then the list of tasks and their status... */
-			vTaskList( cDynamicPage + strlen( cDynamicPage ) );
+            /* ... Then the list of tasks and their status... */
+            vTaskList( cDynamicPage + strlen( cDynamicPage ) );
 
-			/* ... Finally the page footer. */
-			strcat( cDynamicPage, webHTML_END );
+            /* ... Finally the page footer. */
+            strcat( cDynamicPage, webHTML_END );
 
-			/* Write out the dynamically generated page. */
-			netconn_write( pxNetCon, cDynamicPage, (u16_t) strlen( cDynamicPage ), NETCONN_COPY );
-		}
-		netbuf_delete( pxRxBuffer );
-	}
+            /* Write out the dynamically generated page. */
+            netconn_write( pxNetCon, cDynamicPage, ( u16_t ) strlen( cDynamicPage ), NETCONN_COPY );
+        }
 
-	netconn_close( pxNetCon );
-	netconn_delete( pxNetCon );
+        netbuf_delete( pxRxBuffer );
+    }
+
+    netconn_close( pxNetCon );
+    netconn_delete( pxNetCon );
 }
 
-#endif
-
+#endif /* if ( HTTP_USED == 1 ) */

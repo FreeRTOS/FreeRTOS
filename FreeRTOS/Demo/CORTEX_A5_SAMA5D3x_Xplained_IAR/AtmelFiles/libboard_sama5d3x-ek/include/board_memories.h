@@ -37,30 +37,30 @@
 #ifndef BOARD_MEMORIES_H
 #define BOARD_MEMORIES_H
 
-   // Micron MT47H128M16 ?16 Meg x 16 x 8 banks = 256 MBytes
-   // => 2 chips used => 512 MBytes
-   // data bus = 32 bits => 16 Meg x 32 x 8 Banks => 256 Meg * 16 available
+/* Micron MT47H128M16 ?16 Meg x 16 x 8 banks = 256 MBytes */
+/* => 2 chips used => 512 MBytes */
+/* data bus = 32 bits => 16 Meg x 32 x 8 Banks => 256 Meg * 16 available */
 
-#define DDR2_MEM8SIZE            0x20000000
-#define DDR2_MEM16SIZE           0x10000000
-#define DDR2_MEM32SIZE           0x8000000
+#define DDR2_MEM8SIZE                            0x20000000
+#define DDR2_MEM16SIZE                           0x10000000
+#define DDR2_MEM32SIZE                           0x8000000
 
-#define EXT_32_LPDDR2_8BANK_16_32_SOD200_SIZE 0x20000000
+#define EXT_32_LPDDR2_8BANK_16_32_SOD200_SIZE    0x20000000
 
 
 
-//void  LPDDR2_AC_TIMING(LPDDR2 * st_ddr2, unsigned int f_base);
+/*void  LPDDR2_AC_TIMING(LPDDR2 * st_ddr2, unsigned int f_base); */
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
- 
+
 extern void BOARD_RemapRom( void );
 extern void BOARD_RemapRam( void );
-extern void BOARD_ConfigureVddMemSel(uint8_t VddMemSel) ;
+extern void BOARD_ConfigureVddMemSel( uint8_t VddMemSel );
 extern void BOARD_ConfigureDdram( uint8_t device );
 extern void BOARD_ConfigureSdram( void );
-extern void BOARD_ConfigureNandFlash( uint8_t busWidth ) ;
-extern void BOARD_ConfigureNorFlash( uint8_t busWidth ) ;
-extern void BOARD_ConfigureLpDdram(void);
+extern void BOARD_ConfigureNandFlash( uint8_t busWidth );
+extern void BOARD_ConfigureNorFlash( uint8_t busWidth );
+extern void BOARD_ConfigureLpDdram( void );
 #endif /* #ifndef BOARD_MEMORIES_H */
-

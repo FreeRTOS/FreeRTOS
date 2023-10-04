@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -29,32 +29,33 @@
 
 #ifndef TSADCC_H
 #define TSADCC_H
- 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
 #ifdef AT91C_BASE_TSADC
 
-extern void TSADCC_SetOperatingMode(unsigned int mode);
+    extern void TSADCC_SetOperatingMode( unsigned int mode );
 
-extern void TSADCC_SetLowResolution(unsigned char enable);
+    extern void TSADCC_SetLowResolution( unsigned char enable );
 
-extern void TSADCC_SetSleepMode(unsigned char enable);
+    extern void TSADCC_SetSleepMode( unsigned char enable );
 
-extern void TSADCC_SetPenDetect(unsigned char enable);
+    extern void TSADCC_SetPenDetect( unsigned char enable );
 
-extern void TSADCC_SetAdcFrequency(unsigned int adcclk, unsigned int mck);
+    extern void TSADCC_SetAdcFrequency( unsigned int adcclk,
+                                        unsigned int mck );
 
-extern void TSADCC_SetStartupTime(unsigned int time);
+    extern void TSADCC_SetStartupTime( unsigned int time );
 
-extern void TSADCC_SetTrackAndHoldTime(unsigned int time);
+    extern void TSADCC_SetTrackAndHoldTime( unsigned int time );
 
-extern void TSADCC_SetDebounceTime(unsigned int time);
+    extern void TSADCC_SetDebounceTime( unsigned int time );
 
-extern void TSADCC_SetTriggerMode(unsigned int mode);
+    extern void TSADCC_SetTriggerMode( unsigned int mode );
 
-extern void TSADCC_SetTriggerPeriod(unsigned int period);
+    extern void TSADCC_SetTriggerPeriod( unsigned int period );
 
 #endif //#ifdef AT91C_BASE_TSADC
 #endif //#ifndef TSADCC_H

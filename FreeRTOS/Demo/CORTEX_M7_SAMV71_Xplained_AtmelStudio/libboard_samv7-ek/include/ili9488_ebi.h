@@ -48,15 +48,19 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern uint32_t ILI9488_EbiReadChipId (void);
+extern uint32_t ILI9488_EbiReadChipId( void );
 extern uint32_t ILI9488_EbiInitialize( sXdmad * dmad );
-extern void ILI9488_EbiSetPixelFormat(uint16_t format);
-extern void ILI9488_EbiSetCursor(uint16_t x, uint16_t y);
-extern void ILI9488_EbiSetWindow( 
-		uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uint16_t dwHeight );
-extern void ILI9488_EbiSetFullWindow(void);
-extern void ILI9488_EbiOn(void );
-extern void ILI9488_EbiOff(void );
-extern void ILI9488_EbiSetDisplayLandscape( uint8_t dwRGB, uint8_t LandscaprMode );
+extern void ILI9488_EbiSetPixelFormat( uint16_t format );
+extern void ILI9488_EbiSetCursor( uint16_t x,
+                                  uint16_t y );
+extern void ILI9488_EbiSetWindow( uint16_t dwX,
+                                  uint16_t dwY,
+                                  uint16_t dwWidth,
+                                  uint16_t dwHeight );
+extern void ILI9488_EbiSetFullWindow( void );
+extern void ILI9488_EbiOn( void );
+extern void ILI9488_EbiOff( void );
+extern void ILI9488_EbiSetDisplayLandscape( uint8_t dwRGB,
+                                            uint8_t LandscaprMode );
 
 #endif /* #ifndef ILI9488_EBI */

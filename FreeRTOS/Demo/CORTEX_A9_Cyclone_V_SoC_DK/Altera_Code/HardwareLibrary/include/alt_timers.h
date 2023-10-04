@@ -33,19 +33,20 @@
 ******************************************************************************/
 
 #ifndef __ALT_GPT_H__
-#define __ALT_GPT_H__
+    #define __ALT_GPT_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "hwlib.h"
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include "hwlib.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif  /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 
 /******************************************************************************/
+
 /*! \addtogroup GPT_MGR The General Purpose Timer Manager API
  *
  *  There are nine on-chip general purpose timers. Seven timers are available
@@ -65,102 +66,104 @@ extern "C"
  */
 
 /******************************************************************************/
+
 /*!
  * This type definition enumerates the names of the timers
  * managed by the General Purpose Timers Manager.
  */
-typedef enum ALT_GPT_TIMER_e
-{
-     /*!
-      * \b CPU_GLOBAL_TMR - CPU Core Global timer - There is one 64-bit
-      * continuously incrementing counter for all CPU cores that is clocked
-      * by PERIPHCLK. CPU_GLOBAL_TMR selects the comparator value, compare
-      * enable, autoincrement value, autoincrement enable, and interrupt
-      * enable for the CPU this code is running on.
-      */
-    ALT_GPT_CPU_GLOBAL_TMR,
+    typedef enum ALT_GPT_TIMER_e
+    {
+        /*!
+         * \b CPU_GLOBAL_TMR - CPU Core Global timer - There is one 64-bit
+         * continuously incrementing counter for all CPU cores that is clocked
+         * by PERIPHCLK. CPU_GLOBAL_TMR selects the comparator value, compare
+         * enable, autoincrement value, autoincrement enable, and interrupt
+         * enable for the CPU this code is running on.
+         */
+        ALT_GPT_CPU_GLOBAL_TMR,
 
-    /*!
-     * \b CPU_PRIVATE_TMR - CPU Core 32-bit Private Timer - The private timer
-     * for the CPU this code is running on. Clocked by PERIPHCLK. Counts
-     * down to zero and can either stop or restart.
-     */
-    ALT_GPT_CPU_PRIVATE_TMR,
+        /*!
+         * \b CPU_PRIVATE_TMR - CPU Core 32-bit Private Timer - The private timer
+         * for the CPU this code is running on. Clocked by PERIPHCLK. Counts
+         * down to zero and can either stop or restart.
+         */
+        ALT_GPT_CPU_PRIVATE_TMR,
 
-    /*!
-     * \b CPU_WDTGPT_TMR - CPU Core 32-bit Watchdog Timer - The watchdog
-     * timer can be used as a general-purpose timer by calling
-     * alt_wdt_response_mode_set() to put the watchdog timer in general-purpose
-     * timer mode. It is recommended that programmers use the other available
-     * timers first before using the watchdog timer as there is more software
-     * overhead involved in using the watchdog timer in this mode. This enum is
-     * for the core watchdog timer of the CPU this code is running on. Counts
-     * down to zero and can either stop or restart.
-     */
-    ALT_GPT_CPU_WDTGPT_TMR,
+        /*!
+         * \b CPU_WDTGPT_TMR - CPU Core 32-bit Watchdog Timer - The watchdog
+         * timer can be used as a general-purpose timer by calling
+         * alt_wdt_response_mode_set() to put the watchdog timer in general-purpose
+         * timer mode. It is recommended that programmers use the other available
+         * timers first before using the watchdog timer as there is more software
+         * overhead involved in using the watchdog timer in this mode. This enum is
+         * for the core watchdog timer of the CPU this code is running on. Counts
+         * down to zero and can either stop or restart.
+         */
+        ALT_GPT_CPU_WDTGPT_TMR,
 
-    /* Peripheral Timers */
-    /* OSC1 Clock Group */
-    /*!
-     * \b osc1_timer0 - 32-bit timer connected to the L4_OSC1 bus clocked by
-     * osc1_clk. Counts down to zero and can either stop or restart.
-     */
-    ALT_GPT_OSC1_TMR0,
+        /* Peripheral Timers */
+        /* OSC1 Clock Group */
 
-    /*!
-     * \b osc1_timer1 - 32-bit timer connected to the L4_OSC1 bus clocked by
-     * osc1_clk. Counts down to zero and can either stop or restart.
-     */
-    ALT_GPT_OSC1_TMR1,
+        /*!
+         * \b osc1_timer0 - 32-bit timer connected to the L4_OSC1 bus clocked by
+         * osc1_clk. Counts down to zero and can either stop or restart.
+         */
+        ALT_GPT_OSC1_TMR0,
 
-    /* L4_SP Clock Group */
-    /*!
-     * \b sp_timer0 - 32-bit timer connected to the L4_SP bus clocked by
-     * l4_sp_clk. Counts down to zero and can either stop or restart.
-     */
-    ALT_GPT_SP_TMR0,
+        /*!
+         * \b osc1_timer1 - 32-bit timer connected to the L4_OSC1 bus clocked by
+         * osc1_clk. Counts down to zero and can either stop or restart.
+         */
+        ALT_GPT_OSC1_TMR1,
 
-    /*!
-     * \b sp_timer1 - 32-bit timer connected to the L4_SP bus clocked by
-     * l4_sp_clk. Counts down to zero and can either stop or restart.
-     */
-    ALT_GPT_SP_TMR1
+        /* L4_SP Clock Group */
 
-}  ALT_GPT_TIMER_t;
+        /*!
+         * \b sp_timer0 - 32-bit timer connected to the L4_SP bus clocked by
+         * l4_sp_clk. Counts down to zero and can either stop or restart.
+         */
+        ALT_GPT_SP_TMR0,
+
+        /*!
+         * \b sp_timer1 - 32-bit timer connected to the L4_SP bus clocked by
+         * l4_sp_clk. Counts down to zero and can either stop or restart.
+         */
+        ALT_GPT_SP_TMR1
+    } ALT_GPT_TIMER_t;
 
 
 /*!
  * This type definition enumerates the possible rollover or restart modes
  * of the general purpose timers.
  */
-typedef enum ALT_GPT_RESTART_MODE_e
-{
-     /*!
-     * \b ONE-SHOT \b MODE - \b CPU_PRIVATE_TMR,
-     * \b OSC1_TMR0, \b OSC1_TMR1, \b SP_TMR0, and \b SP_TMR1
-     * count down from the value set with alt_gpt_counter_set() to
-     * zero, trigger an interrupt and stop.\n
-     * The global timer \b CPU_GLOBAL_TMR counts up to the next compare value
-     * set by the compare value, triggers an interrupt and stops
-     * comparing.
-     */
-     ALT_GPT_RESTART_MODE_ONESHOT,
+    typedef enum ALT_GPT_RESTART_MODE_e
+    {
+        /*!
+         * \b ONE-SHOT \b MODE - \b CPU_PRIVATE_TMR,
+         * \b OSC1_TMR0, \b OSC1_TMR1, \b SP_TMR0, and \b SP_TMR1
+         * count down from the value set with alt_gpt_counter_set() to
+         * zero, trigger an interrupt and stop.\n
+         * The global timer \b CPU_GLOBAL_TMR counts up to the next compare value
+         * set by the compare value, triggers an interrupt and stops
+         * comparing.
+         */
+        ALT_GPT_RESTART_MODE_ONESHOT,
 
-    /*!
-     * \b USER-SUPPLIED \b COUNT - For \b CPU_PRIVATE_TMR,  \b OSC1_TMR0,
-     * \b OSC1_TMR1, \b SP_TMR0, and \b SP_TMR1, the timer counts down
-     * to zero and then resets to a value previously set using
-     * alt_gpt_counter_set() and continues counting.\n
-     * \b CPU_GLOBAL_TMR counts up to the comparator value, then adds
-     * the value set in alt_gpt_counter_set() to the comparator value and
-     * continues counting.
-     */
-     ALT_GPT_RESTART_MODE_PERIODIC
-
-} ALT_GPT_RESTART_MODE_t;
+        /*!
+         * \b USER-SUPPLIED \b COUNT - For \b CPU_PRIVATE_TMR,  \b OSC1_TMR0,
+         * \b OSC1_TMR1, \b SP_TMR0, and \b SP_TMR1, the timer counts down
+         * to zero and then resets to a value previously set using
+         * alt_gpt_counter_set() and continues counting.\n
+         * \b CPU_GLOBAL_TMR counts up to the comparator value, then adds
+         * the value set in alt_gpt_counter_set() to the comparator value and
+         * continues counting.
+         */
+        ALT_GPT_RESTART_MODE_PERIODIC
+    } ALT_GPT_RESTART_MODE_t;
 
 
 /******************************************************************************/
+
 /*! \addtogroup GPT_STATUS Enable, Disable, and Status
  *
  * This functional group handles enabling, disabling, and reading the
@@ -169,18 +172,21 @@ typedef enum ALT_GPT_RESTART_MODE_e
  * @{
  */
 /******************************************************************************/
+
 /*! Uninitialize all of the general-purpose timer modules
  *
  */
-ALT_STATUS_CODE alt_gpt_all_tmr_uninit(void);
+    ALT_STATUS_CODE alt_gpt_all_tmr_uninit( void );
 
 /******************************************************************************/
+
 /*! Initialize all of the general-purpose timer modules
  *
  */
-ALT_STATUS_CODE alt_gpt_all_tmr_init(void);
+    ALT_STATUS_CODE alt_gpt_all_tmr_init( void );
 
 /******************************************************************************/
+
 /*!
  * Stop and disable the specified general purpose timer or global timer.
  *
@@ -192,9 +198,10 @@ ALT_STATUS_CODE alt_gpt_all_tmr_init(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Tried to stop an invalid timer.
  */
-ALT_STATUS_CODE alt_gpt_tmr_stop(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_tmr_stop( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Enable and start the specified general purpose timer or global timer.
  *
@@ -206,9 +213,10 @@ ALT_STATUS_CODE alt_gpt_tmr_stop(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Tried to start an invalid timer.
  */
-ALT_STATUS_CODE alt_gpt_tmr_start(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_tmr_start( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns whether the specified timer is currently running or not.
  * For the free-running 64-bit global timer, returns whether its comparison
@@ -221,9 +229,10 @@ ALT_STATUS_CODE alt_gpt_tmr_start(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_FALSE     The timer is currently disabled and stopped.
  * \retval      ALT_E_BAD_ARG   Tried to access an invalid timer.
  */
-ALT_STATUS_CODE alt_gpt_tmr_is_running(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_tmr_is_running( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Restarts the specified general purpose timer with its original value. If
  * used for the global timer, it updates the comparator value with the sum of
@@ -238,11 +247,12 @@ ALT_STATUS_CODE alt_gpt_tmr_is_running(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Tried to access an invalid timer.
  */
-ALT_STATUS_CODE alt_gpt_tmr_reset(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_tmr_reset( ALT_GPT_TIMER_t tmr_id );
 
 
 /*! @} */
 /******************************************************************************/
+
 /*! \addtogroup GPT_COUNTER Counters Interface
  *
  * This functional group handles setting and reading the general purpose
@@ -251,6 +261,7 @@ ALT_STATUS_CODE alt_gpt_tmr_reset(ALT_GPT_TIMER_t tmr_id);
  * @{
  * */
 /******************************************************************************/
+
 /*!
  * For tmr_id = \b CPU_PRIVATE_TMR, \b OSC1_TMR0, \b
  * OSC1_TMR1, \b SP_TMR0, or \b SP_TMR1, sets the countdown value of the
@@ -272,10 +283,11 @@ ALT_STATUS_CODE alt_gpt_tmr_reset(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_counter_set(ALT_GPT_TIMER_t tmr_id,
-        uint32_t val);
+    ALT_STATUS_CODE alt_gpt_counter_set( ALT_GPT_TIMER_t tmr_id,
+                                         uint32_t val );
 
 /******************************************************************************/
+
 /*!
  * For tmr_id = \b CPU_PRIVATE_TMR, \b OSC1_TMR0, \b
  * OSC1_TMR1, \b SP_TMR0, or \b SP_TMR1, returns the current counter value of
@@ -290,9 +302,10 @@ ALT_STATUS_CODE alt_gpt_counter_set(ALT_GPT_TIMER_t tmr_id,
  *
  * \retval      uint32_t     The current 32-bit counter value.
  */
-uint32_t alt_gpt_counter_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_counter_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * For tmr_id = \b CPU_PRIVATE_TMR, \b OSC1_TMR0, \b
  * OSC1_TMR1, \b SP_TMR0, or \b SP_TMR1, returns the counter value that is
@@ -313,9 +326,10 @@ uint32_t alt_gpt_counter_get(ALT_GPT_TIMER_t tmr_id);
  * \retval      uint32_t    The reset counter value currently set.
  * \retval      0           An error occurred.
  */
-uint32_t alt_gpt_reset_value_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_reset_value_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns the maximum counter value available for the specified
  * timer. Valid for \b CPU_PRIVATE_TMR, \b OSC1_TMR0,
@@ -332,9 +346,10 @@ uint32_t alt_gpt_reset_value_get(ALT_GPT_TIMER_t tmr_id);
  * \retval      0           An error occurred.
  *
  */
-uint32_t alt_gpt_maxcounter_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_maxcounter_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Sets the clock prescaler value of the specified timer. Valid for \b
  * CPU_PRIVATE_TMR and \b CPU_GLOBAL_TMR. Returns an error
@@ -351,10 +366,11 @@ uint32_t alt_gpt_maxcounter_get(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_prescaler_set(ALT_GPT_TIMER_t tmr_id,
-        uint32_t val);
+    ALT_STATUS_CODE alt_gpt_prescaler_set( ALT_GPT_TIMER_t tmr_id,
+                                           uint32_t val );
 
 /******************************************************************************/
+
 /*!
  * Returns the clock prescaler value of the specified timer. Valid for \b
  * CPU_PRIVATE_TMR and \b CPU_GLOBAL_TMR. Returns one if
@@ -368,9 +384,10 @@ ALT_STATUS_CODE alt_gpt_prescaler_set(ALT_GPT_TIMER_t tmr_id,
  * \retval      uint32_t    The prescaler value. Valid range is 1-256.
  *                             Zero indicates an error.
  */
-uint32_t alt_gpt_prescaler_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_prescaler_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns the integer portion of the current countdown frequency of the
  * specified timer.
@@ -382,9 +399,10 @@ uint32_t alt_gpt_prescaler_get(ALT_GPT_TIMER_t tmr_id);
  * \retval      unint32_t    The integer portion of the repeat frequency of the
  *                             given timer, measured in Hertz (cycles per second).
  */
-uint32_t alt_gpt_freq_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_freq_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns the current period of the specified timer measured in seconds.
  * If the result is less than 64, alt_gpt_millisecs_get() will give a more
@@ -396,9 +414,10 @@ uint32_t alt_gpt_freq_get(ALT_GPT_TIMER_t tmr_id);
  * \retval      uint32_t      The current period of the given timer, measured
  *                         in seconds.
  */
-uint32_t alt_gpt_time_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_time_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns the current period of the specified timer measured in milliseconds.
  *
@@ -414,9 +433,10 @@ uint32_t alt_gpt_time_get(ALT_GPT_TIMER_t tmr_id);
  *                         alt_gpt_microsecs_get() can be used to obtain
  *                         more precise measurements of shorter periods.
  */
-uint32_t alt_gpt_time_millisecs_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_time_millisecs_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns the current period of the specified timer measured in milliseconds.
  *
@@ -431,9 +451,10 @@ uint32_t alt_gpt_time_millisecs_get(ALT_GPT_TIMER_t tmr_id);
  *                         alt_gpt_time_get() can be used to obtain
  *                         measurements of longer periods.
  */
-uint32_t alt_gpt_time_microsecs_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_time_microsecs_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns the current time until the specified timer counts
  * down to zero, measured in seconds.
@@ -444,10 +465,11 @@ uint32_t alt_gpt_time_microsecs_get(ALT_GPT_TIMER_t tmr_id);
  *
  * \retval      uint32_t     The current 32-bit counter value.
  */
-uint32_t alt_gpt_curtime_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_curtime_get( ALT_GPT_TIMER_t tmr_id );
 
 
 /******************************************************************************/
+
 /*!
  * Returns the current time until the specified timer counts
  * down to zero, measured in milliseconds. \n Returns 0xFFFFFFFF if the value
@@ -459,10 +481,11 @@ uint32_t alt_gpt_curtime_get(ALT_GPT_TIMER_t tmr_id);
  *
  * \retval      uint32_t     The current 32-bit counter value.
  */
-uint32_t alt_gpt_curtime_millisecs_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_curtime_millisecs_get( ALT_GPT_TIMER_t tmr_id );
 
 
 /******************************************************************************/
+
 /*!
  * Returns the current time until the specified timer counts
  * down to zero, measured in microseconds. \n Returns  0xFFFFFFFF if the value
@@ -474,10 +497,11 @@ uint32_t alt_gpt_curtime_millisecs_get(ALT_GPT_TIMER_t tmr_id);
  *
  * \retval      uint32_t     The current 32-bit counter value.
  */
-uint32_t alt_gpt_curtime_microsecs_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_curtime_microsecs_get( ALT_GPT_TIMER_t tmr_id );
 
 
 /******************************************************************************/
+
 /*!
  * Returns the current time until the specified timer counts
  * down to zero, measured in nanoseconds. \n Returns  0xFFFFFFFF if the value
@@ -489,10 +513,11 @@ uint32_t alt_gpt_curtime_microsecs_get(ALT_GPT_TIMER_t tmr_id);
  *
  * \retval      uint32_t     The current 32-bit counter value.
  */
-uint32_t alt_gpt_curtime_nanosecs_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_curtime_nanosecs_get( ALT_GPT_TIMER_t tmr_id );
 
 
 /******************************************************************************/
+
 /*!
  * Returns the maximum available period of the specified
  * timer measured in seconds.
@@ -505,9 +530,10 @@ uint32_t alt_gpt_curtime_nanosecs_get(ALT_GPT_TIMER_t tmr_id);
  *                         in seconds. Returns 0 if result cannot fit
  *                         in 32 bits.
  */
-uint32_t alt_gpt_maxtime_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_maxtime_get( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Returns the maximum available period of the specified
  * timer measured in milliseconds.
@@ -520,16 +546,18 @@ uint32_t alt_gpt_maxtime_get(ALT_GPT_TIMER_t tmr_id);
  *                         in milliseconds. Returns 0 if result cannot fit
  *                         in 32 bits.
  */
-uint32_t alt_gpt_maxtime_millisecs_get(ALT_GPT_TIMER_t tmr_id);
+    uint32_t alt_gpt_maxtime_millisecs_get( ALT_GPT_TIMER_t tmr_id );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup GPT_INT Interrupts
  * This functional group handles managing, setting, clearing, and disabling
  * the interrupts of the general purpose timers and the global timer.
  * @{  */
 /******************************************************************************/
+
 /*!
  * Disables the interrupt from the specified general purpose timer or
  * global timer module.
@@ -542,9 +570,10 @@ uint32_t alt_gpt_maxtime_millisecs_get(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_int_disable(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_int_disable( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Enables the interrupt of the specified general purpose timer or global
  * timer module.
@@ -557,9 +586,10 @@ ALT_STATUS_CODE alt_gpt_int_disable(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_int_enable(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_int_enable( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Return \b TRUE if the interrupt of the specified timer module is enabled
  * and \b FALSE if the interrupt is disabled or masked.
@@ -570,9 +600,10 @@ ALT_STATUS_CODE alt_gpt_int_enable(ALT_GPT_TIMER_t tmr_id);
  * \retval      TRUE            The timer interrupt is currently enabled.
  * \retval      FALSE           The timer interrupt is currently disabled.
  */
-bool alt_gpt_int_is_enabled(ALT_GPT_TIMER_t tmr_id);
+    bool alt_gpt_int_is_enabled( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Clear the pending interrupt status of the specified timer module.
  *
@@ -584,9 +615,10 @@ bool alt_gpt_int_is_enabled(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_int_clear_pending(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_int_clear_pending( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Read the state (pending or not) of the interrupt of the specified timer
  * module without changing the interrupt state.
@@ -599,9 +631,10 @@ ALT_STATUS_CODE alt_gpt_int_clear_pending(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_FALSE           The timer interrupt is not currently pending.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_int_is_pending(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_int_is_pending( ALT_GPT_TIMER_t tmr_id );
 
 /******************************************************************************/
+
 /*!
  * Read the state of the interrupt of the specified general purpose timer
  * module and if the interrupt is set, clear it.
@@ -614,10 +647,11 @@ ALT_STATUS_CODE alt_gpt_int_is_pending(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_FALSE           The timer interrupt is not currently pending.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_int_if_pending_clear(ALT_GPT_TIMER_t tmr_id);
+    ALT_STATUS_CODE alt_gpt_int_if_pending_clear( ALT_GPT_TIMER_t tmr_id );
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup GPT_MODE Mode Control
  * This functional group handles setting and reading the operational mode of
  * the general purpose timers. The module version ID read function is also
@@ -625,6 +659,7 @@ ALT_STATUS_CODE alt_gpt_int_if_pending_clear(ALT_GPT_TIMER_t tmr_id);
  * @{
  */
 /******************************************************************************/
+
 /*!
  * Sets the mode of the specified timer, the behavior that occurs when either
  * the general-purpose timer counts down to zero or when the the global timer
@@ -653,10 +688,11 @@ ALT_STATUS_CODE alt_gpt_int_if_pending_clear(ALT_GPT_TIMER_t tmr_id);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   Invalid input argument.
  */
-ALT_STATUS_CODE alt_gpt_mode_set(ALT_GPT_TIMER_t tmr_id,
-        ALT_GPT_RESTART_MODE_t mode);
+    ALT_STATUS_CODE alt_gpt_mode_set( ALT_GPT_TIMER_t tmr_id,
+                                      ALT_GPT_RESTART_MODE_t mode );
 
 /******************************************************************************/
+
 /*!
  * Reads the mode of the specified timer.
  *
@@ -668,14 +704,14 @@ ALT_STATUS_CODE alt_gpt_mode_set(ALT_GPT_TIMER_t tmr_id,
  *                                              user-defined value.
  * \retval      ALT_E_BAD_ARG               Invalid input argument.
  */
-int32_t alt_gpt_mode_get(ALT_GPT_TIMER_t tmr_id);
+    int32_t alt_gpt_mode_get( ALT_GPT_TIMER_t tmr_id );
 
 /*! @} */
 /*! @} */
 /*! @} */
 /*! @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
-#endif  /* __ALT_GPT_H__ */
+    #endif /* __cplusplus */
+#endif /* __ALT_GPT_H__ */

@@ -2,15 +2,15 @@
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
 * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws. 
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
 * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
 * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
 * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
 * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
-* of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability
+* of this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -27,25 +27,26 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_vect.h"
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
 
 #pragma section C EXCEPTVECT
 
-void (*const Excpt_Vectors[])(void) = {
+void( *const Excpt_Vectors[] )( void ) =
+{
 /*;0xffffff80  Reserved */
     r_reserved_exception,
 /*;0xffffff84  Reserved */
@@ -111,10 +112,12 @@ void (*const Excpt_Vectors[])(void) = {
 };
 
 #pragma section C RESETVECT
-void (*const Reset_Vectors[])(void) = {
+void( *const Reset_Vectors[] )( void ) =
+{
 /*;<<VECTOR DATA START (POWER ON RESET)>> */
 /*;Power On Reset PC */
-    /*(void*)*/ PowerON_Reset_PC
+    /*(void*)*/
+    PowerON_Reset_PC
 /*;<<VECTOR DATA END (POWER ON RESET)>> */
 };
 
@@ -134,7 +137,7 @@ void (*const Reset_Vectors[])(void) = {
 const unsigned long __OFS0reg = 0xFFFFFFFF;
 
 /* OFS1 register */
-#pragma address __OFS1reg = 0x0012006C              
+#pragma address __OFS1reg = 0x0012006C
 const unsigned long __OFS1reg = 0xFFFFFFFF;
 
 /* Start user code for adding. Do not edit comment generated here */
@@ -144,11 +147,12 @@ const unsigned long __SPCCreg = 0xffffffff;
 
 /* TMEF register */
 #pragma address __TMEFreg=0x00120048
-const unsigned long __TMEFreg = 0xffffffff; 
+const unsigned long __TMEFreg = 0xffffffff;
 
 /* OSIC register (ID codes) */
 #pragma address __OSISreg=0x00120050
-const unsigned long __OSISreg[4] = {
+const unsigned long __OSISreg[ 4 ] =
+{
     0xFFFFFFFF,
     0xFFFFFFFF,
     0xFFFFFFFF,
@@ -159,4 +163,3 @@ const unsigned long __OSISreg[4] = {
 #pragma address __TMINFreg=0x00120060
 const unsigned long __TMINFreg = 0xffffffff;
 /* End user code. Do not edit comment generated here */
-

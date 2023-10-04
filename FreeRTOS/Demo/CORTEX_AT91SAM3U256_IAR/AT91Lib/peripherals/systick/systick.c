@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,37 +27,35 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "systick.h"
 
-//------------------------------------------------------------------------------
-/// Configures the SysTick in .
-/// \param countEnable  Enable SysTick counting.
-/// \param reloadValue  Value used for tick counter to reload.
-/// \param handler      Interrupt handler function, 0 to disable interrupt.
-//------------------------------------------------------------------------------
-void SysTick_Configure(unsigned char countEnable,
-                           unsigned int reloadValue,
-                           void( *handler )( void ))
+/*------------------------------------------------------------------------------ */
+/*/ Configures the SysTick in . */
+/*/ \param countEnable  Enable SysTick counting. */
+/*/ \param reloadValue  Value used for tick counter to reload. */
+/*/ \param handler      Interrupt handler function, 0 to disable interrupt. */
+/*------------------------------------------------------------------------------ */
+void SysTick_Configure( unsigned char countEnable,
+                        unsigned int reloadValue,
+                        void ( * handler )( void ) )
 {
     unsigned int intEnable = handler ? AT91C_NVIC_STICKINT : 0;
 
-    // Disable the SysTick & using core source
+    /* Disable the SysTick & using core source */
     AT91C_BASE_NVIC->NVIC_STICKCSR = AT91C_NVIC_STICKCLKSOURCE;
 
-    // Reset the current value
+    /* Reset the current value */
     AT91C_BASE_NVIC->NVIC_STICKCVR &= ~AT91C_NVIC_STICKCURRENT;
 
-    // Setup the reload value
+    /* Setup the reload value */
     AT91C_BASE_NVIC->NVIC_STICKRVR = reloadValue;
 
-    // Enable the SysTick
-    AT91C_BASE_NVIC->NVIC_STICKCSR =  AT91C_NVIC_STICKCLKSOURCE
-                                    | AT91C_NVIC_STICKENABLE
-                                    | intEnable;
-
+    /* Enable the SysTick */
+    AT91C_BASE_NVIC->NVIC_STICKCSR = AT91C_NVIC_STICKCLKSOURCE
+                                     | AT91C_NVIC_STICKENABLE
+                                     | intEnable;
 }
-

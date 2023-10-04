@@ -42,13 +42,13 @@
 
 /* Check if Timer1 is available. */
 #if XCHAL_TIMER1_INTERRUPT != XTHAL_TIMER_UNCONFIGURED
-	#if XCHAL_INT_LEVEL( XCHAL_TIMER1_INTERRUPT ) <= XCHAL_EXCM_LEVEL
-		#define SECOND_TIMER_AVAILABLE		1
-	#endif
+    #if XCHAL_INT_LEVEL( XCHAL_TIMER1_INTERRUPT ) <= XCHAL_EXCM_LEVEL
+        #define SECOND_TIMER_AVAILABLE    1
+    #endif
 #endif
 
 #ifndef SECOND_TIMER_AVAILABLE
-	#define SECOND_TIMER_AVAILABLE			0
+    #define SECOND_TIMER_AVAILABLE    0
 #endif
 
 /**
@@ -57,14 +57,14 @@
  * Timer0. This ensures that systick will get interrupted by
  * this timer and hence we can test interrupt nesting.
  */
-#define SECOND_TIMER_INDEX					1
+#define SECOND_TIMER_INDEX           1
 
 /**
  * Frequency of the second timer - This timer is configured at
  * a frequency offset of 17 from the systick timer.
  */
-#define SECOND_TIMER_TICK_RATE_HZ			( configTICK_RATE_HZ + 17 )
-#define SECOND_TIMER_TICK_DIVISOR			( configCPU_CLOCK_HZ / SECOND_TIMER_TICK_RATE_HZ )
+#define SECOND_TIMER_TICK_RATE_HZ    ( configTICK_RATE_HZ + 17 )
+#define SECOND_TIMER_TICK_DIVISOR    ( configCPU_CLOCK_HZ / SECOND_TIMER_TICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 
 /* Defined in main_full.c. */
@@ -74,36 +74,36 @@ extern BaseType_t xTimerForQueueTestInitialized;
 /**
  * Interrupt handler for timer interrupt.
  */
-#if( SECOND_TIMER_AVAILABLE == 1 )
-	static void prvTimer2Handler( void *arg );
+#if ( SECOND_TIMER_AVAILABLE == 1 )
+    static void prvTimer2Handler( void * arg );
 #endif /* SECOND_TIMER_AVAILABLE */
 /*-----------------------------------------------------------*/
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-unsigned currentCycleCount, firstComparatorValue;
+    unsigned currentCycleCount, firstComparatorValue;
 
-	/* Inform the tick hook function that it can access queues now. */
-	xTimerForQueueTestInitialized = pdTRUE;
+    /* Inform the tick hook function that it can access queues now. */
+    xTimerForQueueTestInitialized = pdTRUE;
 
-	#if( SECOND_TIMER_AVAILABLE == 1 )
-	{
-		/* Install the interrupt handler for second timer. */
-		xt_set_interrupt_handler( XCHAL_TIMER1_INTERRUPT, prvTimer2Handler, NULL );
+    #if ( SECOND_TIMER_AVAILABLE == 1 )
+    {
+        /* Install the interrupt handler for second timer. */
+        xt_set_interrupt_handler( XCHAL_TIMER1_INTERRUPT, prvTimer2Handler, NULL );
 
-		/* Read the current cycle count. */
-		currentCycleCount = xthal_get_ccount();
+        /* Read the current cycle count. */
+        currentCycleCount = xthal_get_ccount();
 
-		/* Calculate time of the first timer interrupt. */
-		firstComparatorValue = currentCycleCount + SECOND_TIMER_TICK_DIVISOR;
+        /* Calculate time of the first timer interrupt. */
+        firstComparatorValue = currentCycleCount + SECOND_TIMER_TICK_DIVISOR;
 
-		/* Set the comparator. */
-		xthal_set_ccompare( SECOND_TIMER_INDEX, firstComparatorValue );
+        /* Set the comparator. */
+        xthal_set_ccompare( SECOND_TIMER_INDEX, firstComparatorValue );
 
-		/* Enable timer interrupt. */
-		xt_ints_on( ( 1 << XCHAL_TIMER1_INTERRUPT ) );
-	}
-	#endif /* SECOND_TIMER_AVAILABLE */
+        /* Enable timer interrupt. */
+        xt_ints_on( ( 1 << XCHAL_TIMER1_INTERRUPT ) );
+    }
+    #endif /* SECOND_TIMER_AVAILABLE */
 }
 /*-----------------------------------------------------------*/
 
@@ -117,47 +117,46 @@ unsigned currentCycleCount, firstComparatorValue;
  * to process multiple ticks until the new cycle count is in the future,
  * otherwise the next timer interrupt would not occur until after the
  * cycle counter had wrapped (2^32 cycles later).
+ *
+ * do {
+ *  ticks++;
+ *  old_ccompare = read_ccompare_i();
+ *  write_ccompare_i( old_ccompare + divisor );
+ *  service one tick;
+ *  diff = read_ccount() - old_ccompare;
+ * } while ( diff > divisor );
+ */
+#if ( SECOND_TIMER_AVAILABLE == 1 )
 
-do {
-    ticks++;
-    old_ccompare = read_ccompare_i();
-    write_ccompare_i( old_ccompare + divisor );
-    service one tick;
-    diff = read_ccount() - old_ccompare;
-} while ( diff > divisor );
-*/
-#if( SECOND_TIMER_AVAILABLE == 1 )
+    static void prvTimer2Handler( void * arg )
+    {
+        unsigned oldComparatorValue, newComparatorValue, currentCycleCount;
 
-	static void prvTimer2Handler( void *arg )
-	{
-	unsigned oldComparatorValue, newComparatorValue, currentCycleCount;
+        /* Unused arguments. */
+        ( void ) arg;
 
-		/* Unused arguments. */
-		( void )arg;
+        do
+        {
+            /* Read old comparator value. */
+            oldComparatorValue = xthal_get_ccompare( SECOND_TIMER_INDEX );
 
-		do
-		{
-			/* Read old comparator value. */
-			oldComparatorValue = xthal_get_ccompare( SECOND_TIMER_INDEX );
+            /* Calculate the new comparator value. */
+            newComparatorValue = oldComparatorValue + SECOND_TIMER_TICK_DIVISOR;
 
-			/* Calculate the new comparator value. */
-			newComparatorValue = oldComparatorValue + SECOND_TIMER_TICK_DIVISOR;
+            /* Update comparator and clear interrupt. */
+            xthal_set_ccompare( SECOND_TIMER_INDEX, newComparatorValue );
 
-			/* Update comparator and clear interrupt. */
-			xthal_set_ccompare( SECOND_TIMER_INDEX, newComparatorValue );
+            /* Process. */
+            portYIELD_FROM_ISR( xSecondTimerHandler() );
 
-			/* Process. */
-			portYIELD_FROM_ISR( xSecondTimerHandler() );
+            /* Ensure comparator update is complete. */
+            xthal_icache_sync();
 
-			/* Ensure comparator update is complete. */
-			xthal_icache_sync();
-
-			/* Read current cycle count to check if we need to process more
-			 * ticks to catch up. */
-			currentCycleCount = xthal_get_ccount();
-
-		} while( ( currentCycleCount - oldComparatorValue ) > SECOND_TIMER_TICK_DIVISOR );
-	}
+            /* Read current cycle count to check if we need to process more
+             * ticks to catch up. */
+            currentCycleCount = xthal_get_ccount();
+        } while( ( currentCycleCount - oldComparatorValue ) > SECOND_TIMER_TICK_DIVISOR );
+    }
 
 #endif /* SECOND_TIMER_AVAILABLE */
 /*-----------------------------------------------------------*/

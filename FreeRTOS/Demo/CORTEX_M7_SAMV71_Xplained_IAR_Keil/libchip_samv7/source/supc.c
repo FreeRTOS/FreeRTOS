@@ -58,16 +58,17 @@
  * There's no option to return to internal slow RC after switching to ext 32kHz crystal.
  */
 
-extern void SUPC_SelectExtCrystal32K(void)
+extern void SUPC_SelectExtCrystal32K( void )
 {
     PMC_EnableXT32KFME();
+
     /* Select XTAL 32k instead of internal slow RC 32k for slow clock */
-    if ( (SUPC->SUPC_SR & SUPC_SR_OSCSEL) != SUPC_SR_OSCSEL_CRYST )
+    if( ( SUPC->SUPC_SR & SUPC_SR_OSCSEL ) != SUPC_SR_OSCSEL_CRYST )
     {
         SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
 
-        while( !(SUPC->SUPC_SR & SUPC_SR_OSCSEL) );
+        while( !( SUPC->SUPC_SR & SUPC_SR_OSCSEL ) )
+        {
+        }
     }
 }
-
-

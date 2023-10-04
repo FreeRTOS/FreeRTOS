@@ -38,47 +38,48 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef SYSTEM_SAME70_H_INCLUDED
-#define SYSTEM_SAME70_H_INCLUDED
+    #define SYSTEM_SAME70_H_INCLUDED
 
 /* @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 /**INDENT-ON**/
 /* @endcond */
 
-#include <stdint.h>
+    #include <stdint.h>
 
-extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
+    extern uint32_t SystemCoreClock; /* System Clock Frequency (Core Clock) */
 
 /**
  * @brief Setup the microcontroller system.
  * Initialize the System and update the SystemCoreClock variable.
  */
-void SystemInit(void);
+    void SystemInit( void );
 
 /**
  * @brief Updates the SystemCoreClock with current core Clock
  * retrieved from cpu registers.
  */
-void SystemCoreClockUpdate(void);
+    void SystemCoreClockUpdate( void );
 
 /**
  * Initialize flash.
  */
-void system_init_flash(uint32_t dw_clk);
+    void system_init_flash( uint32_t dw_clk );
 
 /* @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 /**INDENT-ON**/
 /* @endcond */
 

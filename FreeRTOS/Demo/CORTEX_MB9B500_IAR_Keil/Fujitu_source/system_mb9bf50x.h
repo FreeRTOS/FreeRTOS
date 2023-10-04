@@ -32,32 +32,31 @@
 /************************************************************************/
 
 #ifndef _SYSTEM_MB9B5XX_H_
-#define _SYSTEM_MB9B5XX_H_
+    #define _SYSTEM_MB9B5XX_H_
 
-#ifdef __cplusplus
- extern "C" {
-#endif 
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*
  *  Clock
  */
-extern uint32_t SystemCoreClock;       /* Core Clock CMSIS V 1.3 */
-extern const uint32_t SystemFrequency; /* Master Clock           */
-extern uint32_t SysFreHCLK;            /* HCLK                   */
-extern uint32_t SysFrePCLK0;           /* PCLK0                  */
-extern uint32_t SysFrePCLK1;           /* PCLK1                  */
-extern uint32_t SysFrePCLK2;           /* PCLK2                  */
-extern uint32_t SysFreTPIU;            /* TPIU                   */
+    extern uint32_t SystemCoreClock;       /* Core Clock CMSIS V 1.3 */
+    extern const uint32_t SystemFrequency; /* Master Clock           */
+    extern uint32_t SysFreHCLK;            /* HCLK                   */
+    extern uint32_t SysFrePCLK0;           /* PCLK0                  */
+    extern uint32_t SysFrePCLK1;           /* PCLK1                  */
+    extern uint32_t SysFrePCLK2;           /* PCLK2                  */
+    extern uint32_t SysFreTPIU;            /* TPIU                   */
 
 /*
  *  Setup the microcontroller system
  */
-extern void SystemInit(void);
-extern void SystemCoreClockUpdate(void);
+    extern void SystemInit( void );
+    extern void SystemCoreClockUpdate( void );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* _SYSTEM_MB9B5XX_H_ */
-

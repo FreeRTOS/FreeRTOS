@@ -40,11 +40,11 @@
 /*         Exported functions                                                   */
 /*------------------------------------------------------------------------------*/
 
-void TRNG_Enable(uint32_t key);
-void TRNG_Disable(uint32_t key);
-void TRNG_EnableIt(void);
-void TRNG_DisableIt(void);
-uint32_t TRNG_GetStatus(void);
-uint32_t TRNG_GetRandData(void);
+void TRNG_Enable( uint32_t key );
+void TRNG_Disable( uint32_t key );
+void TRNG_EnableIt( void );
+void TRNG_DisableIt( void );
+uint32_t TRNG_GetStatus( void );
+uint32_t TRNG_GetRandData( void );
 
 #endif /* #ifndef _TRNG_ */

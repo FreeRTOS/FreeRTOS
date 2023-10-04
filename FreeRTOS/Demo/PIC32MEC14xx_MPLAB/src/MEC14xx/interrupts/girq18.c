@@ -19,8 +19,9 @@
 *****************************************************************************/
 
 /** @file girq18.c
- *Interrupt service routines for MIPS using vanilla GCC and MCHP XC32
+ * Interrupt service routines for MIPS using vanilla GCC and MCHP XC32
  */
+
 /** @defgroup MEC14xx ISR
  *  @{
  */
@@ -35,23 +36,21 @@
 
 #if GIRQ18_DISAGG == 0
 
-void __attribute__((weak, interrupt, nomips16, section(".girqs")))
-girq18_isr(void)
-{
-    JTVIC_GROUP_EN_CLR->w = (1ul<<10);
-}
+    void __attribute__( ( weak, interrupt, nomips16, section( ".girqs" ) ) ) girq18_isr( void )
+    {
+        JTVIC_GROUP_EN_CLR->w = ( 1ul << 10 );
+    }
 
 #else
 
-void __attribute__((weak, interrupt, nomips16))
-girq18_b0(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ18_ID, 0);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq18_b0( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ18_ID, 0 );
+    }
 
-#endif
+#endif /* if GIRQ18_DISAGG == 0 */
 
 /* end girq18.c */
+
 /**   @}
  */
-

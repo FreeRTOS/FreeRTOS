@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -46,6 +46,7 @@
 /** \addtogroup usbd_config
  *@{
  */
+
 /*----------------------------------------------------------------------------
  *      Constants
  *----------------------------------------------------------------------------*/
@@ -53,26 +54,26 @@
 /** \addtogroup usbd_ids USBD Device IDs
  *      @{
  */
-#define USBD_VID_ATMEL              0x03EB  /**< Vendor ID: Atmel */
+#define USBD_VID_ATMEL          0x03EB      /**< Vendor ID: Atmel */
 
-#define USBD_PID_ENUM               0x0001  /**< Product ID: Enum (Core) */
-#define USBD_PID_CDCDSERIAL         0x6119  /**< Product ID: CDC Serial */
-#define USBD_PID_HIDKEYBOARD        0x6127  /**< Product ID: HID Keyboard */
-#define USBD_PID_AUDIO              0x6128  /**< Product ID: Audio devices */
-#define USBD_PID_MSD                0x6129  /**< Product ID: Massstorage */
-#define USBD_PID_CDCHID             0x6130  /**< Product ID: composite */
-#define USBD_PID_CDCAUDIO           0x6131  /**< Product ID: composite */
-#define USBD_PID_CDCMSD             0x6132  /**< Product ID: composite */
-#define USBD_PID_CDCCDC             0x6133  /**< Product ID: composite */
-#define USBD_PID_HIDAUDIO           0x6134  /**< Product ID: composite */
-#define USBD_PID_HIDMSD             0x6135  /**< Product ID: composite */
-#define USBD_PID_HIDMOUSE           0x6200  /**< Product ID: HID Mouse */
-#define USBD_PID_HIDTRANSFER        0x6201  /**< Product ID: HID Transfer */
-#define USBD_PID_CCID               0x6203  /**< Product ID: CCID */
-#define USBD_PID_UVC                0x6136  /**< Product ID: UVC  */
+#define USBD_PID_ENUM           0x0001      /**< Product ID: Enum (Core) */
+#define USBD_PID_CDCDSERIAL     0x6119      /**< Product ID: CDC Serial */
+#define USBD_PID_HIDKEYBOARD    0x6127      /**< Product ID: HID Keyboard */
+#define USBD_PID_AUDIO          0x6128      /**< Product ID: Audio devices */
+#define USBD_PID_MSD            0x6129      /**< Product ID: Massstorage */
+#define USBD_PID_CDCHID         0x6130      /**< Product ID: composite */
+#define USBD_PID_CDCAUDIO       0x6131      /**< Product ID: composite */
+#define USBD_PID_CDCMSD         0x6132      /**< Product ID: composite */
+#define USBD_PID_CDCCDC         0x6133      /**< Product ID: composite */
+#define USBD_PID_HIDAUDIO       0x6134      /**< Product ID: composite */
+#define USBD_PID_HIDMSD         0x6135      /**< Product ID: composite */
+#define USBD_PID_HIDMOUSE       0x6200      /**< Product ID: HID Mouse */
+#define USBD_PID_HIDTRANSFER    0x6201      /**< Product ID: HID Transfer */
+#define USBD_PID_CCID           0x6203      /**< Product ID: CCID */
+#define USBD_PID_UVC            0x6136      /**< Product ID: UVC  */
 
-#define USBD_RELEASE_1_00           0x0100  /**< Release: 1.00 */
-#define USBD_RELEASE_0_01           0x0001  /**< Release: 0.01 */
+#define USBD_RELEASE_1_00       0x0100      /**< Release: 1.00 */
+#define USBD_RELEASE_0_01       0x0001      /**< Release: 0.01 */
 /**     @}*/
 
 /** \addtogroup usbd_general_config USBD General Configure
@@ -80,9 +81,10 @@
  * This page lists general configurations for all USB device drivers.
  * - \ref USBD_BMATTRIBUTES
  */
+
 /** default USB Device attributes configuration descriptor
  *  (bus or self powered, remote wakeup) */
-#define USBD_BMATTRIBUTES           BOARD_USB_BMATTRIBUTES
+#define USBD_BMATTRIBUTES    BOARD_USB_BMATTRIBUTES
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -98,9 +100,9 @@
  * - \ref MSDDriverDescriptors_BULKIN
  */
 /** Address of the Mass Storage bulk-out endpoint.*/
-#define MSDDriverDescriptors_BULKOUT                2
+#define MSDDriverDescriptors_BULKOUT    2
 /** Address of the Mass Storage bulk-in endpoint.*/
-#define MSDDriverDescriptors_BULKIN                 3
+#define MSDDriverDescriptors_BULKIN     3
 /**      @}*/
 
 /*----------------------------------------------------------------------------
@@ -117,11 +119,11 @@
  * - \ref CDCDSerialDriverDescriptors_NOTIFICATION
  */
 /** Data OUT endpoint number */
-#define CDCDSerialDriverDescriptors_DATAOUT             2
+#define CDCDSerialDriverDescriptors_DATAOUT         2
 /** Data IN endpoint number */
-#define CDCDSerialDriverDescriptors_DATAIN              3
+#define CDCDSerialDriverDescriptors_DATAIN          3
 /** Notification endpoint number */
-#define CDCDSerialDriverDescriptors_NOTIFICATION        4
+#define CDCDSerialDriverDescriptors_NOTIFICATION    4
 /**      @}*/
 
 /*----------------------------------------------------------------------------
@@ -142,16 +144,19 @@
 #define AUDDevice_BYTESPERSAMPLE    2
 
 /** Number of bits in one sample. */
-#define AUDDevice_BITSPERSAMPLE     (AUDDevice_BYTESPERSAMPLE * 8)
+#define AUDDevice_BITSPERSAMPLE     ( AUDDevice_BYTESPERSAMPLE * 8 )
 /** Number of bytes in one USB subframe. */
-#define AUDDevice_BYTESPERSUBFRAME  (AUDDevice_NUMCHANNELS * \
-                                     AUDDevice_BYTESPERSAMPLE)
+#define AUDDevice_BYTESPERSUBFRAME \
+    ( AUDDevice_NUMCHANNELS *      \
+      AUDDevice_BYTESPERSAMPLE )
 /** Number of samples in one USB frame. */
-#define AUDDevice_SAMPLESPERFRAME   (AUDDevice_SAMPLERATE / 1000 \
-                                     * AUDDevice_NUMCHANNELS)
+#define AUDDevice_SAMPLESPERFRAME \
+    ( AUDDevice_SAMPLERATE / 1000 \
+      * AUDDevice_NUMCHANNELS )
 /** Number of bytes in one USB frame. */
-#define AUDDevice_BYTESPERFRAME     (AUDDevice_SAMPLESPERFRAME * \
-                                     AUDDevice_BYTESPERSAMPLE)
+#define AUDDevice_BYTESPERFRAME   \
+    ( AUDDevice_SAMPLESPERFRAME * \
+      AUDDevice_BYTESPERSAMPLE )
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -169,11 +174,11 @@
  *       IN EPs that support DMA and High bandwidth.
  */
 /** Data out endpoint number. */
-#define AUDDSpeakerDriverDescriptors_DATAOUT            0x02
+#define AUDDSpeakerDriverDescriptors_DATAOUT        0x02
 /** Endpoint polling interval 2^(x-1) * 125us */
-#define AUDDSpeakerDriverDescriptors_HS_INTERVAL        0x04
+#define AUDDSpeakerDriverDescriptors_HS_INTERVAL    0x04
 /** Endpoint polling interval 2^(x-1) * ms */
-#define AUDDSpeakerDriverDescriptors_FS_INTERVAL        0x01
+#define AUDDSpeakerDriverDescriptors_FS_INTERVAL    0x01
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -196,9 +201,9 @@
 #define AUDDSpeakerPhoneDriverDescriptors_DATAIN         0x01
 
 /** Endpoint polling interval 2^(x-1) * 125us */
-#define AUDDSpeakerPhoneDriverDescriptors_HS_INTERVAL        0x04
+#define AUDDSpeakerPhoneDriverDescriptors_HS_INTERVAL    0x04
 /** Endpoint polling interval 2^(x-1) * ms */
-#define AUDDSpeakerPhoneDriverDescriptors_FS_INTERVAL        0x01
+#define AUDDSpeakerPhoneDriverDescriptors_FS_INTERVAL    0x01
 /**      @}*/
 
 /*----------------------------------------------------------------------------
@@ -217,13 +222,13 @@
  * - \ref HIDDKeyboardDriverDescriptors_INTERRUPTOUT_POLLING
  */
 /** Interrupt IN endpoint number */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTIN           2
+#define HIDDKeyboardDriverDescriptors_INTERRUPTIN             2
 /** Interrupt IN endpoint polling rate (in milliseconds) */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTIN_POLLING   10
+#define HIDDKeyboardDriverDescriptors_INTERRUPTIN_POLLING     10
 /** Interrupt OUT endpoint number */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT          3
+#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT            3
 /** Interrupt OUT endpoint polling rate (in milliseconds) */
-#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT_POLLING  10
+#define HIDDKeyboardDriverDescriptors_INTERRUPTOUT_POLLING    10
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -240,9 +245,9 @@
  * - \ref HIDDMouseDriverDescriptors_INTERRUPTIN_POLLING
  */
 /** Interrupt IN endpoint number */
-#define HIDDMouseDriverDescriptors_INTERRUPTIN           2
+#define HIDDMouseDriverDescriptors_INTERRUPTIN            2
 /** Interrupt IN endpoint polling rate (in milliseconds) */
-#define HIDDMouseDriverDescriptors_INTERRUPTIN_POLLING   8
+#define HIDDMouseDriverDescriptors_INTERRUPTIN_POLLING    8
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -261,13 +266,13 @@
  * - \ref HIDDTransferDriverDescriptors_INTERRUPTOUT_POLLING
  */
 /** Interrupt IN endpoint number. */
-#define HIDDTransferDriverDescriptors_INTERRUPTIN           2
+#define HIDDTransferDriverDescriptors_INTERRUPTIN             2
 /** Polling rate in ms */
-#define HIDDTransferDriverDescriptors_INTERRUPTIN_POLLING   50
+#define HIDDTransferDriverDescriptors_INTERRUPTIN_POLLING     50
 /** Interrupt IN endpoint polling rate (in milliseconds). */
-#define HIDDTransferDriverDescriptors_INTERRUPTOUT          3
+#define HIDDTransferDriverDescriptors_INTERRUPTOUT            3
 /** Polling rate in ms */
-#define HIDDTransferDriverDescriptors_INTERRUPTOUT_POLLING  50
+#define HIDDTransferDriverDescriptors_INTERRUPTOUT_POLLING    50
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -283,12 +288,12 @@
  *----------------------------------------------------------------------------*/
 
 /** Address of the HID interrupt IN endpoint. */
-#define HIDAUDD_Descriptors_INTERRUPTIN                0x03
+#define HIDAUDD_Descriptors_INTERRUPTIN     0x03
 /** Address of the HID interrupt OUT endpoint. */
-#define HIDAUDD_Descriptors_INTERRUPTOUT               0x04
+#define HIDAUDD_Descriptors_INTERRUPTOUT    0x04
 
 /** Audio data out endpoint number */
-#define HIDAUDD_Descriptors_ISO_DATAOUT                0x02
+#define HIDAUDD_Descriptors_ISO_DATAOUT     0x02
 
 
 /*----------------------------------------------------------------------------
@@ -296,32 +301,32 @@
  *----------------------------------------------------------------------------*/
 
 /** Address of the CDC interrupt-in endpoint. */
-#define CDCAUDD_Descriptors_NOTIFICATION0              0x04
+#define CDCAUDD_Descriptors_NOTIFICATION0    0x04
 /** Address of the CDC bulk-in endpoint. */
-#define CDCAUDD_Descriptors_DATAIN0                    0x03
+#define CDCAUDD_Descriptors_DATAIN0          0x03
 /** Address of the CDC bulk-out endpoint. */
-#define CDCAUDD_Descriptors_DATAOUT0                   0x02
+#define CDCAUDD_Descriptors_DATAOUT0         0x02
 /** Address of the Audio ISO-out endpoint. */
-#define CDCAUDD_Descriptors_ISO_DATAOUT                0x01
+#define CDCAUDD_Descriptors_ISO_DATAOUT      0x01
 
 
 /*----------------------------------------------------------------------------
  *      USB Device - DUAL CDC
  *----------------------------------------------------------------------------*/
 
-/// Address of the CDC0 interrupt-in endpoint.
-#define CDCD_Descriptors_NOTIFICATION0              3
-/// Address of the CDC0 bulk-in endpoint.
-#define CDCD_Descriptors_DATAIN0                    2
-/// Address of the CDC0 bulk-out endpoint.
-#define CDCD_Descriptors_DATAOUT0                   1
+/*/ Address of the CDC0 interrupt-in endpoint. */
+#define CDCD_Descriptors_NOTIFICATION0    3
+/*/ Address of the CDC0 bulk-in endpoint. */
+#define CDCD_Descriptors_DATAIN0          2
+/*/ Address of the CDC0 bulk-out endpoint. */
+#define CDCD_Descriptors_DATAOUT0         1
 
-/// Address of the CDC1 interrupt-in endpoint.
-#define CDCD_Descriptors_NOTIFICATION1              6
-/// Address of the CDC1 bulk-in endpoint.
-#define CDCD_Descriptors_DATAIN1                    5
-/// Address of the CDC1 bulk-out endpoint.
-#define CDCD_Descriptors_DATAOUT1                   4
+/*/ Address of the CDC1 interrupt-in endpoint. */
+#define CDCD_Descriptors_NOTIFICATION1    6
+/*/ Address of the CDC1 bulk-in endpoint. */
+#define CDCD_Descriptors_DATAIN1          5
+/*/ Address of the CDC1 bulk-out endpoint. */
+#define CDCD_Descriptors_DATAOUT1         4
 
 
 /*----------------------------------------------------------------------------
@@ -330,16 +335,16 @@
 
 
 /** Address of the CDC interrupt-in endpoint. */
-#define CDCD_Descriptors_NOTIFICATION0              3
+#define CDCD_Descriptors_NOTIFICATION0    3
 /** Address of the CDC bulk-in endpoint. */
-#define CDCD_Descriptors_DATAIN0                    2
+#define CDCD_Descriptors_DATAIN0          2
 /** Address of the CDC bulk-out endpoint. */
-#define CDCD_Descriptors_DATAOUT0                   1
+#define CDCD_Descriptors_DATAOUT0         1
 
 /** Address of the HID interrupt IN endpoint. */
-#define HIDD_Descriptors_INTERRUPTIN                4
+#define HIDD_Descriptors_INTERRUPTIN      4
 /** Address of the HID interrupt OUT endpoint. */
-#define HIDD_Descriptors_INTERRUPTOUT               5
+#define HIDD_Descriptors_INTERRUPTOUT     5
 
 
 
@@ -348,33 +353,31 @@
  *----------------------------------------------------------------------------*/
 
 /** Address of the Mass Storage bulk-out endpoint. */
-#define HIDMSDD_Descriptors_BULKOUT                    2
+#define HIDMSDD_Descriptors_BULKOUT         2
 /** Address of the Mass Storage bulk-in endpoint. */
-#define HIDMSDD_Descriptors_BULKIN                     3
+#define HIDMSDD_Descriptors_BULKIN          3
 
 /** Address of the HID interrupt IN endpoint. */
-#define HIDMSDD_Descriptors_INTERRUPTIN                4
+#define HIDMSDD_Descriptors_INTERRUPTIN     4
 /** Address of the HID interrupt OUT endpoint. */
-#define HIDMSDD_Descriptors_INTERRUPTOUT               5
+#define HIDMSDD_Descriptors_INTERRUPTOUT    5
 
 /*----------------------------------------------------------------------------
  *      USB Device - MSD CDC
  *----------------------------------------------------------------------------*/
 
 /** Address of the CDC interrupt-in endpoint. */
-#define CDCD_Descriptors_NOTIFICATION0              3
+#define CDCD_Descriptors_NOTIFICATION0    3
 /** Address of the CDC bulk-in endpoint. */
-#define CDCD_Descriptors_DATAIN0                    2
+#define CDCD_Descriptors_DATAIN0          2
 /** Address of the CDC bulk-out endpoint. */
-#define CDCD_Descriptors_DATAOUT0                   1
+#define CDCD_Descriptors_DATAOUT0         1
 /** Address of the Mass Storage bulk-out endpoint. */
-#define MSDD_Descriptors_BULKOUT                    4
+#define MSDD_Descriptors_BULKOUT          4
 /** Address of the Mass Storage bulk-in endpoint. */
-#define MSDD_Descriptors_BULKIN                     5
+#define MSDD_Descriptors_BULKIN           5
 
 /** @}*/
 
 /**@}*/
 #endif //#ifndef USBD_CONFIG_H
-
-

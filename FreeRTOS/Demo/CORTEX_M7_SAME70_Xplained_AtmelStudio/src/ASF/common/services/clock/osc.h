@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -50,54 +51,54 @@
 #include "conf_clock.h"
 
 #if SAM3S
-# include "sam3s/osc.h"
+    #include "sam3s/osc.h"
 #elif SAM3XA
-# include "sam3x/osc.h"
+    #include "sam3x/osc.h"
 #elif SAM3U
-# include "sam3u/osc.h"
+    #include "sam3u/osc.h"
 #elif SAM3N
-# include "sam3n/osc.h"
+    #include "sam3n/osc.h"
 #elif SAM4S
-# include "sam4s/osc.h"
+    #include "sam4s/osc.h"
 #elif SAM4E
-# include "sam4e/osc.h"
+    #include "sam4e/osc.h"
 #elif SAM4C
-# include "sam4c/osc.h"
+    #include "sam4c/osc.h"
 #elif SAM4CM
-# include "sam4cm/osc.h"
+    #include "sam4cm/osc.h"
 #elif SAM4CP
-# include "sam4cp/osc.h"
+    #include "sam4cp/osc.h"
 #elif SAM4L
-# include "sam4l/osc.h"
+    #include "sam4l/osc.h"
 #elif SAM4N
-# include "sam4n/osc.h"
+    #include "sam4n/osc.h"
 #elif SAMG
-# include "samg/osc.h"
+    #include "samg/osc.h"
 #elif SAMV71
-# include "samv71/osc.h"
+    #include "samv71/osc.h"
 #elif SAMV70
-# include "samv70/osc.h"
+    #include "samv70/osc.h"
 #elif SAME70
-# include "same70/osc.h"
+    #include "same70/osc.h"
 #elif SAMS70
-# include "sams70/osc.h"
-#elif (UC3A0 || UC3A1)
-# include "uc3a0_a1/osc.h"
+    #include "sams70/osc.h"
+#elif ( UC3A0 || UC3A1 )
+    #include "uc3a0_a1/osc.h"
 #elif UC3A3
-# include "uc3a3_a4/osc.h"
+    #include "uc3a3_a4/osc.h"
 #elif UC3B
-# include "uc3b0_b1/osc.h"
+    #include "uc3b0_b1/osc.h"
 #elif UC3C
-# include "uc3c/osc.h"
+    #include "uc3c/osc.h"
 #elif UC3D
-# include "uc3d/osc.h"
+    #include "uc3d/osc.h"
 #elif UC3L
-# include "uc3l/osc.h"
+    #include "uc3l/osc.h"
 #elif XMEGA
-# include "xmega/osc.h"
-#else
-# error Unsupported chip type
-#endif
+    #include "xmega/osc.h"
+#else  /* if SAM3S */
+    #error Unsupported chip type
+#endif /* if SAM3S */
 
 /**
  * \ingroup clk_group
@@ -118,8 +119,8 @@
  * procedure is used on all platforms, the parameter to osc_enable()
  * will be different from device to device.
  * \code
-	osc_enable(OSC_ID_XOSC);
-	osc_wait_ready(OSC_ID_XOSC); \endcode
+ *  osc_enable(OSC_ID_XOSC);
+ *  osc_wait_ready(OSC_ID_XOSC); \endcode
  *
  * \section osc_group_board Board-specific Definitions
  * If external oscillators are used, the board code must provide the
@@ -134,8 +135,9 @@
  * @{
  */
 
-//! \name Oscillator Management
-//@{
+/*! \name Oscillator Management */
+/*@{ */
+
 /**
  * \fn void osc_enable(uint8_t id)
  * \brief Enable oscillator \a id
@@ -143,10 +145,12 @@
  * The startup time and mode value is automatically determined based on
  * definitions in the board code.
  */
+
 /**
  * \fn void osc_disable(uint8_t id)
  * \brief Disable oscillator \a id
  */
+
 /**
  * \fn osc_is_ready(uint8_t id)
  * \brief Determine whether oscillator \a id is ready.
@@ -154,6 +158,7 @@
  * source.
  * \retval false Oscillator \a id is not running.
  */
+
 /**
  * \fn uint32_t osc_get_rate(uint8_t id)
  * \brief Return the frequency of oscillator \a id in Hz
@@ -169,17 +174,18 @@
  *
  * \param id A number identifying the oscillator to wait for.
  */
-static inline void osc_wait_ready(uint8_t id)
-{
-	while (!osc_is_ready(id)) {
-		/* Do nothing */
-	}
-}
+    static inline void osc_wait_ready( uint8_t id )
+    {
+        while( !osc_is_ready( id ) )
+        {
+            /* Do nothing */
+        }
+    }
 
 #endif /* __ASSEMBLY__ */
 
-//@}
+/*@} */
 
-//! @}
+/*! @} */
 
 #endif /* OSC_H_INCLUDED */

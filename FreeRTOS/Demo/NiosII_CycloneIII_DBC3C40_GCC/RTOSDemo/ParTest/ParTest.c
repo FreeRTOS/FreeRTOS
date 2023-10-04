@@ -40,7 +40,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-#define partstNUM_LEDS			( 8 )
+#define partstNUM_LEDS    ( 8 )
 
 /*---------------------------------------------------------------------------*/
 
@@ -50,41 +50,43 @@ static unsigned long ulLedStates;
 
 void vParTestInitialise( void )
 {
-	IOWR_ALTERA_AVALON_PIO_DIRECTION( LED_PIO_BASE, ALTERA_AVALON_PIO_DIRECTION_OUTPUT );
-	ulLedStates = 0;    
+    IOWR_ALTERA_AVALON_PIO_DIRECTION( LED_PIO_BASE, ALTERA_AVALON_PIO_DIRECTION_OUTPUT );
+    ulLedStates = 0;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			if ( xValue > 0 )
-			{
-				ulLedStates |= 1 << uxLED;
-			}
-			else
-			{
-				ulLedStates &= ~( 1 << uxLED );
-			}
-			IOWR_ALTERA_AVALON_PIO_DATA( LED_PIO_BASE, ulLedStates );
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            if( xValue > 0 )
+            {
+                ulLedStates |= 1 << uxLED;
+            }
+            else
+            {
+                ulLedStates &= ~( 1 << uxLED );
+            }
+
+            IOWR_ALTERA_AVALON_PIO_DATA( LED_PIO_BASE, ulLedStates );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			vParTestSetLED( uxLED, !( ulLedStates & ( 1 << uxLED ) ) );
-		}	
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            vParTestSetLED( uxLED, !( ulLedStates & ( 1 << uxLED ) ) );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/

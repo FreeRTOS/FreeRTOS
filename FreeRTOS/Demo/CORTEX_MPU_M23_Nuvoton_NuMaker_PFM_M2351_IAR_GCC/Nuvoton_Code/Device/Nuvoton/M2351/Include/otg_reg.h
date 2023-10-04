@@ -9,22 +9,21 @@
 #define __OTG_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- USB On-The-Go Controller -------------------------*/
+
 /**
-    @addtogroup OTG USB On-The-Go Controller(OTG)
-    Memory Mapped Structure for OTG Controller
-@{ */
+ *  @addtogroup OTG USB On-The-Go Controller(OTG)
+ *  Memory Mapped Structure for OTG Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var OTG_T::CTL
      * Offset: 0x00  OTG Control Register
@@ -243,147 +242,146 @@ typedef struct
      * |        |          |0: OTG not as Host
      * |        |          |1: OTG as Host
      */
-    __IO uint32_t CTL;                   /*!< [0x0000] OTG Control Register                                             */
-    __IO uint32_t PHYCTL;                /*!< [0x0004] OTG PHY Control Register                                         */
-    __IO uint32_t INTEN;                 /*!< [0x0008] OTG Interrupt Enable Register                                    */
-    __IO uint32_t INTSTS;                /*!< [0x000c] OTG Interrupt Status Register                                    */
-    __I  uint32_t STATUS;                /*!< [0x0010] OTG Status Register                                              */
-
+    __IO uint32_t CTL;    /*!< [0x0000] OTG Control Register                                             */
+    __IO uint32_t PHYCTL; /*!< [0x0004] OTG PHY Control Register                                         */
+    __IO uint32_t INTEN;  /*!< [0x0008] OTG Interrupt Enable Register                                    */
+    __IO uint32_t INTSTS; /*!< [0x000c] OTG Interrupt Status Register                                    */
+    __I uint32_t STATUS;  /*!< [0x0010] OTG Status Register                                              */
 } OTG_T;
 
 /**
-    @addtogroup OTG_CONST OTG Bit Field Definition
-    Constant Definitions for OTG Controller
-@{ */
+ *  @addtogroup OTG_CONST OTG Bit Field Definition
+ *  Constant Definitions for OTG Controller
+ * @{ */
 
-#define OTG_CTL_VBUSDROP_Pos             (0)                                               /*!< OTG_T::CTL: VBUSDROP Position          */
-#define OTG_CTL_VBUSDROP_Msk             (0x1ul << OTG_CTL_VBUSDROP_Pos)                   /*!< OTG_T::CTL: VBUSDROP Mask              */
+#define OTG_CTL_VBUSDROP_Pos        ( 0 )                                                  /*!< OTG_T::CTL: VBUSDROP Position          */
+#define OTG_CTL_VBUSDROP_Msk        ( 0x1ul << OTG_CTL_VBUSDROP_Pos )                      /*!< OTG_T::CTL: VBUSDROP Mask              */
 
-#define OTG_CTL_BUSREQ_Pos               (1)                                               /*!< OTG_T::CTL: BUSREQ Position            */
-#define OTG_CTL_BUSREQ_Msk               (0x1ul << OTG_CTL_BUSREQ_Pos)                     /*!< OTG_T::CTL: BUSREQ Mask                */
+#define OTG_CTL_BUSREQ_Pos          ( 1 )                                                  /*!< OTG_T::CTL: BUSREQ Position            */
+#define OTG_CTL_BUSREQ_Msk          ( 0x1ul << OTG_CTL_BUSREQ_Pos )                        /*!< OTG_T::CTL: BUSREQ Mask                */
 
-#define OTG_CTL_HNPREQEN_Pos             (2)                                               /*!< OTG_T::CTL: HNPREQEN Position          */
-#define OTG_CTL_HNPREQEN_Msk             (0x1ul << OTG_CTL_HNPREQEN_Pos)                   /*!< OTG_T::CTL: HNPREQEN Mask              */
+#define OTG_CTL_HNPREQEN_Pos        ( 2 )                                                  /*!< OTG_T::CTL: HNPREQEN Position          */
+#define OTG_CTL_HNPREQEN_Msk        ( 0x1ul << OTG_CTL_HNPREQEN_Pos )                      /*!< OTG_T::CTL: HNPREQEN Mask              */
 
-#define OTG_CTL_OTGEN_Pos                (4)                                               /*!< OTG_T::CTL: OTGEN Position             */
-#define OTG_CTL_OTGEN_Msk                (0x1ul << OTG_CTL_OTGEN_Pos)                      /*!< OTG_T::CTL: OTGEN Mask                 */
+#define OTG_CTL_OTGEN_Pos           ( 4 )                                                  /*!< OTG_T::CTL: OTGEN Position             */
+#define OTG_CTL_OTGEN_Msk           ( 0x1ul << OTG_CTL_OTGEN_Pos )                         /*!< OTG_T::CTL: OTGEN Mask                 */
 
-#define OTG_CTL_WKEN_Pos                 (5)                                               /*!< OTG_T::CTL: WKEN Position              */
-#define OTG_CTL_WKEN_Msk                 (0x1ul << OTG_CTL_WKEN_Pos)                       /*!< OTG_T::CTL: WKEN Mask                  */
+#define OTG_CTL_WKEN_Pos            ( 5 )                                                  /*!< OTG_T::CTL: WKEN Position              */
+#define OTG_CTL_WKEN_Msk            ( 0x1ul << OTG_CTL_WKEN_Pos )                          /*!< OTG_T::CTL: WKEN Mask                  */
 
-#define OTG_PHYCTL_OTGPHYEN_Pos          (0)                                               /*!< OTG_T::PHYCTL: OTGPHYEN Position       */
-#define OTG_PHYCTL_OTGPHYEN_Msk          (0x1ul << OTG_PHYCTL_OTGPHYEN_Pos)                /*!< OTG_T::PHYCTL: OTGPHYEN Mask           */
+#define OTG_PHYCTL_OTGPHYEN_Pos     ( 0 )                                                  /*!< OTG_T::PHYCTL: OTGPHYEN Position       */
+#define OTG_PHYCTL_OTGPHYEN_Msk     ( 0x1ul << OTG_PHYCTL_OTGPHYEN_Pos )                   /*!< OTG_T::PHYCTL: OTGPHYEN Mask           */
 
-#define OTG_PHYCTL_IDDETEN_Pos           (1)                                               /*!< OTG_T::PHYCTL: IDDETEN Position        */
-#define OTG_PHYCTL_IDDETEN_Msk           (0x1ul << OTG_PHYCTL_IDDETEN_Pos)                 /*!< OTG_T::PHYCTL: IDDETEN Mask            */
+#define OTG_PHYCTL_IDDETEN_Pos      ( 1 )                                                  /*!< OTG_T::PHYCTL: IDDETEN Position        */
+#define OTG_PHYCTL_IDDETEN_Msk      ( 0x1ul << OTG_PHYCTL_IDDETEN_Pos )                    /*!< OTG_T::PHYCTL: IDDETEN Mask            */
 
-#define OTG_PHYCTL_VBENPOL_Pos           (4)                                               /*!< OTG_T::PHYCTL: VBENPOL Position        */
-#define OTG_PHYCTL_VBENPOL_Msk           (0x1ul << OTG_PHYCTL_VBENPOL_Pos)                 /*!< OTG_T::PHYCTL: VBENPOL Mask            */
+#define OTG_PHYCTL_VBENPOL_Pos      ( 4 )                                                  /*!< OTG_T::PHYCTL: VBENPOL Position        */
+#define OTG_PHYCTL_VBENPOL_Msk      ( 0x1ul << OTG_PHYCTL_VBENPOL_Pos )                    /*!< OTG_T::PHYCTL: VBENPOL Mask            */
 
-#define OTG_PHYCTL_VBSTSPOL_Pos          (5)                                               /*!< OTG_T::PHYCTL: VBSTSPOL Position       */
-#define OTG_PHYCTL_VBSTSPOL_Msk          (0x1ul << OTG_PHYCTL_VBSTSPOL_Pos)                /*!< OTG_T::PHYCTL: VBSTSPOL Mask           */
+#define OTG_PHYCTL_VBSTSPOL_Pos     ( 5 )                                                  /*!< OTG_T::PHYCTL: VBSTSPOL Position       */
+#define OTG_PHYCTL_VBSTSPOL_Msk     ( 0x1ul << OTG_PHYCTL_VBSTSPOL_Pos )                   /*!< OTG_T::PHYCTL: VBSTSPOL Mask           */
 
-#define OTG_INTEN_ROLECHGIEN_Pos         (0)                                               /*!< OTG_T::INTEN: ROLECHGIEN Position      */
-#define OTG_INTEN_ROLECHGIEN_Msk         (0x1ul << OTG_INTEN_ROLECHGIEN_Pos)               /*!< OTG_T::INTEN: ROLECHGIEN Mask          */
+#define OTG_INTEN_ROLECHGIEN_Pos    ( 0 )                                                  /*!< OTG_T::INTEN: ROLECHGIEN Position      */
+#define OTG_INTEN_ROLECHGIEN_Msk    ( 0x1ul << OTG_INTEN_ROLECHGIEN_Pos )                  /*!< OTG_T::INTEN: ROLECHGIEN Mask          */
 
-#define OTG_INTEN_VBEIEN_Pos             (1)                                               /*!< OTG_T::INTEN: VBEIEN Position          */
-#define OTG_INTEN_VBEIEN_Msk             (0x1ul << OTG_INTEN_VBEIEN_Pos)                   /*!< OTG_T::INTEN: VBEIEN Mask              */
+#define OTG_INTEN_VBEIEN_Pos        ( 1 )                                                  /*!< OTG_T::INTEN: VBEIEN Position          */
+#define OTG_INTEN_VBEIEN_Msk        ( 0x1ul << OTG_INTEN_VBEIEN_Pos )                      /*!< OTG_T::INTEN: VBEIEN Mask              */
 
-#define OTG_INTEN_SRPFIEN_Pos            (2)                                               /*!< OTG_T::INTEN: SRPFIEN Position         */
-#define OTG_INTEN_SRPFIEN_Msk            (0x1ul << OTG_INTEN_SRPFIEN_Pos)                  /*!< OTG_T::INTEN: SRPFIEN Mask             */
+#define OTG_INTEN_SRPFIEN_Pos       ( 2 )                                                  /*!< OTG_T::INTEN: SRPFIEN Position         */
+#define OTG_INTEN_SRPFIEN_Msk       ( 0x1ul << OTG_INTEN_SRPFIEN_Pos )                     /*!< OTG_T::INTEN: SRPFIEN Mask             */
 
-#define OTG_INTEN_HNPFIEN_Pos            (3)                                               /*!< OTG_T::INTEN: HNPFIEN Position         */
-#define OTG_INTEN_HNPFIEN_Msk            (0x1ul << OTG_INTEN_HNPFIEN_Pos)                  /*!< OTG_T::INTEN: HNPFIEN Mask             */
+#define OTG_INTEN_HNPFIEN_Pos       ( 3 )                                                  /*!< OTG_T::INTEN: HNPFIEN Position         */
+#define OTG_INTEN_HNPFIEN_Msk       ( 0x1ul << OTG_INTEN_HNPFIEN_Pos )                     /*!< OTG_T::INTEN: HNPFIEN Mask             */
 
-#define OTG_INTEN_GOIDLEIEN_Pos          (4)                                               /*!< OTG_T::INTEN: GOIDLEIEN Position       */
-#define OTG_INTEN_GOIDLEIEN_Msk          (0x1ul << OTG_INTEN_GOIDLEIEN_Pos)                /*!< OTG_T::INTEN: GOIDLEIEN Mask           */
+#define OTG_INTEN_GOIDLEIEN_Pos     ( 4 )                                                  /*!< OTG_T::INTEN: GOIDLEIEN Position       */
+#define OTG_INTEN_GOIDLEIEN_Msk     ( 0x1ul << OTG_INTEN_GOIDLEIEN_Pos )                   /*!< OTG_T::INTEN: GOIDLEIEN Mask           */
 
-#define OTG_INTEN_IDCHGIEN_Pos           (5)                                               /*!< OTG_T::INTEN: IDCHGIEN Position        */
-#define OTG_INTEN_IDCHGIEN_Msk           (0x1ul << OTG_INTEN_IDCHGIEN_Pos)                 /*!< OTG_T::INTEN: IDCHGIEN Mask            */
+#define OTG_INTEN_IDCHGIEN_Pos      ( 5 )                                                  /*!< OTG_T::INTEN: IDCHGIEN Position        */
+#define OTG_INTEN_IDCHGIEN_Msk      ( 0x1ul << OTG_INTEN_IDCHGIEN_Pos )                    /*!< OTG_T::INTEN: IDCHGIEN Mask            */
 
-#define OTG_INTEN_PDEVIEN_Pos            (6)                                               /*!< OTG_T::INTEN: PDEVIEN Position         */
-#define OTG_INTEN_PDEVIEN_Msk            (0x1ul << OTG_INTEN_PDEVIEN_Pos)                  /*!< OTG_T::INTEN: PDEVIEN Mask             */
+#define OTG_INTEN_PDEVIEN_Pos       ( 6 )                                                  /*!< OTG_T::INTEN: PDEVIEN Position         */
+#define OTG_INTEN_PDEVIEN_Msk       ( 0x1ul << OTG_INTEN_PDEVIEN_Pos )                     /*!< OTG_T::INTEN: PDEVIEN Mask             */
 
-#define OTG_INTEN_HOSTIEN_Pos            (7)                                               /*!< OTG_T::INTEN: HOSTIEN Position         */
-#define OTG_INTEN_HOSTIEN_Msk            (0x1ul << OTG_INTEN_HOSTIEN_Pos)                  /*!< OTG_T::INTEN: HOSTIEN Mask             */
+#define OTG_INTEN_HOSTIEN_Pos       ( 7 )                                                  /*!< OTG_T::INTEN: HOSTIEN Position         */
+#define OTG_INTEN_HOSTIEN_Msk       ( 0x1ul << OTG_INTEN_HOSTIEN_Pos )                     /*!< OTG_T::INTEN: HOSTIEN Mask             */
 
-#define OTG_INTEN_BVLDCHGIEN_Pos         (8)                                               /*!< OTG_T::INTEN: BVLDCHGIEN Position      */
-#define OTG_INTEN_BVLDCHGIEN_Msk         (0x1ul << OTG_INTEN_BVLDCHGIEN_Pos)               /*!< OTG_T::INTEN: BVLDCHGIEN Mask          */
+#define OTG_INTEN_BVLDCHGIEN_Pos    ( 8 )                                                  /*!< OTG_T::INTEN: BVLDCHGIEN Position      */
+#define OTG_INTEN_BVLDCHGIEN_Msk    ( 0x1ul << OTG_INTEN_BVLDCHGIEN_Pos )                  /*!< OTG_T::INTEN: BVLDCHGIEN Mask          */
 
-#define OTG_INTEN_AVLDCHGIEN_Pos         (9)                                               /*!< OTG_T::INTEN: AVLDCHGIEN Position      */
-#define OTG_INTEN_AVLDCHGIEN_Msk         (0x1ul << OTG_INTEN_AVLDCHGIEN_Pos)               /*!< OTG_T::INTEN: AVLDCHGIEN Mask          */
+#define OTG_INTEN_AVLDCHGIEN_Pos    ( 9 )                                                  /*!< OTG_T::INTEN: AVLDCHGIEN Position      */
+#define OTG_INTEN_AVLDCHGIEN_Msk    ( 0x1ul << OTG_INTEN_AVLDCHGIEN_Pos )                  /*!< OTG_T::INTEN: AVLDCHGIEN Mask          */
 
-#define OTG_INTEN_VBCHGIEN_Pos           (10)                                              /*!< OTG_T::INTEN: VBCHGIEN Position        */
-#define OTG_INTEN_VBCHGIEN_Msk           (0x1ul << OTG_INTEN_VBCHGIEN_Pos)                 /*!< OTG_T::INTEN: VBCHGIEN Mask            */
+#define OTG_INTEN_VBCHGIEN_Pos      ( 10 )                                                 /*!< OTG_T::INTEN: VBCHGIEN Position        */
+#define OTG_INTEN_VBCHGIEN_Msk      ( 0x1ul << OTG_INTEN_VBCHGIEN_Pos )                    /*!< OTG_T::INTEN: VBCHGIEN Mask            */
 
-#define OTG_INTEN_SECHGIEN_Pos           (11)                                              /*!< OTG_T::INTEN: SECHGIEN Position        */
-#define OTG_INTEN_SECHGIEN_Msk           (0x1ul << OTG_INTEN_SECHGIEN_Pos)                 /*!< OTG_T::INTEN: SECHGIEN Mask            */
+#define OTG_INTEN_SECHGIEN_Pos      ( 11 )                                                 /*!< OTG_T::INTEN: SECHGIEN Position        */
+#define OTG_INTEN_SECHGIEN_Msk      ( 0x1ul << OTG_INTEN_SECHGIEN_Pos )                    /*!< OTG_T::INTEN: SECHGIEN Mask            */
 
-#define OTG_INTEN_SRPDETIEN_Pos          (13)                                              /*!< OTG_T::INTEN: SRPDETIEN Position       */
-#define OTG_INTEN_SRPDETIEN_Msk          (0x1ul << OTG_INTEN_SRPDETIEN_Pos)                /*!< OTG_T::INTEN: SRPDETIEN Mask           */
+#define OTG_INTEN_SRPDETIEN_Pos     ( 13 )                                                 /*!< OTG_T::INTEN: SRPDETIEN Position       */
+#define OTG_INTEN_SRPDETIEN_Msk     ( 0x1ul << OTG_INTEN_SRPDETIEN_Pos )                   /*!< OTG_T::INTEN: SRPDETIEN Mask           */
 
-#define OTG_INTSTS_ROLECHGIF_Pos         (0)                                               /*!< OTG_T::INTSTS: ROLECHGIF Position      */
-#define OTG_INTSTS_ROLECHGIF_Msk         (0x1ul << OTG_INTSTS_ROLECHGIF_Pos)               /*!< OTG_T::INTSTS: ROLECHGIF Mask          */
+#define OTG_INTSTS_ROLECHGIF_Pos    ( 0 )                                                  /*!< OTG_T::INTSTS: ROLECHGIF Position      */
+#define OTG_INTSTS_ROLECHGIF_Msk    ( 0x1ul << OTG_INTSTS_ROLECHGIF_Pos )                  /*!< OTG_T::INTSTS: ROLECHGIF Mask          */
 
-#define OTG_INTSTS_VBEIF_Pos             (1)                                               /*!< OTG_T::INTSTS: VBEIF Position          */
-#define OTG_INTSTS_VBEIF_Msk             (0x1ul << OTG_INTSTS_VBEIF_Pos)                   /*!< OTG_T::INTSTS: VBEIF Mask              */
+#define OTG_INTSTS_VBEIF_Pos        ( 1 )                                                  /*!< OTG_T::INTSTS: VBEIF Position          */
+#define OTG_INTSTS_VBEIF_Msk        ( 0x1ul << OTG_INTSTS_VBEIF_Pos )                      /*!< OTG_T::INTSTS: VBEIF Mask              */
 
-#define OTG_INTSTS_SRPFIF_Pos            (2)                                               /*!< OTG_T::INTSTS: SRPFIF Position         */
-#define OTG_INTSTS_SRPFIF_Msk            (0x1ul << OTG_INTSTS_SRPFIF_Pos)                  /*!< OTG_T::INTSTS: SRPFIF Mask             */
+#define OTG_INTSTS_SRPFIF_Pos       ( 2 )                                                  /*!< OTG_T::INTSTS: SRPFIF Position         */
+#define OTG_INTSTS_SRPFIF_Msk       ( 0x1ul << OTG_INTSTS_SRPFIF_Pos )                     /*!< OTG_T::INTSTS: SRPFIF Mask             */
 
-#define OTG_INTSTS_HNPFIF_Pos            (3)                                               /*!< OTG_T::INTSTS: HNPFIF Position         */
-#define OTG_INTSTS_HNPFIF_Msk            (0x1ul << OTG_INTSTS_HNPFIF_Pos)                  /*!< OTG_T::INTSTS: HNPFIF Mask             */
+#define OTG_INTSTS_HNPFIF_Pos       ( 3 )                                                  /*!< OTG_T::INTSTS: HNPFIF Position         */
+#define OTG_INTSTS_HNPFIF_Msk       ( 0x1ul << OTG_INTSTS_HNPFIF_Pos )                     /*!< OTG_T::INTSTS: HNPFIF Mask             */
 
-#define OTG_INTSTS_GOIDLEIF_Pos          (4)                                               /*!< OTG_T::INTSTS: GOIDLEIF Position       */
-#define OTG_INTSTS_GOIDLEIF_Msk          (0x1ul << OTG_INTSTS_GOIDLEIF_Pos)                /*!< OTG_T::INTSTS: GOIDLEIF Mask           */
+#define OTG_INTSTS_GOIDLEIF_Pos     ( 4 )                                                  /*!< OTG_T::INTSTS: GOIDLEIF Position       */
+#define OTG_INTSTS_GOIDLEIF_Msk     ( 0x1ul << OTG_INTSTS_GOIDLEIF_Pos )                   /*!< OTG_T::INTSTS: GOIDLEIF Mask           */
 
-#define OTG_INTSTS_IDCHGIF_Pos           (5)                                               /*!< OTG_T::INTSTS: IDCHGIF Position        */
-#define OTG_INTSTS_IDCHGIF_Msk           (0x1ul << OTG_INTSTS_IDCHGIF_Pos)                 /*!< OTG_T::INTSTS: IDCHGIF Mask            */
+#define OTG_INTSTS_IDCHGIF_Pos      ( 5 )                                                  /*!< OTG_T::INTSTS: IDCHGIF Position        */
+#define OTG_INTSTS_IDCHGIF_Msk      ( 0x1ul << OTG_INTSTS_IDCHGIF_Pos )                    /*!< OTG_T::INTSTS: IDCHGIF Mask            */
 
-#define OTG_INTSTS_PDEVIF_Pos            (6)                                               /*!< OTG_T::INTSTS: PDEVIF Position         */
-#define OTG_INTSTS_PDEVIF_Msk            (0x1ul << OTG_INTSTS_PDEVIF_Pos)                  /*!< OTG_T::INTSTS: PDEVIF Mask             */
+#define OTG_INTSTS_PDEVIF_Pos       ( 6 )                                                  /*!< OTG_T::INTSTS: PDEVIF Position         */
+#define OTG_INTSTS_PDEVIF_Msk       ( 0x1ul << OTG_INTSTS_PDEVIF_Pos )                     /*!< OTG_T::INTSTS: PDEVIF Mask             */
 
-#define OTG_INTSTS_HOSTIF_Pos            (7)                                               /*!< OTG_T::INTSTS: HOSTIF Position         */
-#define OTG_INTSTS_HOSTIF_Msk            (0x1ul << OTG_INTSTS_HOSTIF_Pos)                  /*!< OTG_T::INTSTS: HOSTIF Mask             */
+#define OTG_INTSTS_HOSTIF_Pos       ( 7 )                                                  /*!< OTG_T::INTSTS: HOSTIF Position         */
+#define OTG_INTSTS_HOSTIF_Msk       ( 0x1ul << OTG_INTSTS_HOSTIF_Pos )                     /*!< OTG_T::INTSTS: HOSTIF Mask             */
 
-#define OTG_INTSTS_BVLDCHGIF_Pos         (8)                                               /*!< OTG_T::INTSTS: BVLDCHGIF Position      */
-#define OTG_INTSTS_BVLDCHGIF_Msk         (0x1ul << OTG_INTSTS_BVLDCHGIF_Pos)               /*!< OTG_T::INTSTS: BVLDCHGIF Mask          */
+#define OTG_INTSTS_BVLDCHGIF_Pos    ( 8 )                                                  /*!< OTG_T::INTSTS: BVLDCHGIF Position      */
+#define OTG_INTSTS_BVLDCHGIF_Msk    ( 0x1ul << OTG_INTSTS_BVLDCHGIF_Pos )                  /*!< OTG_T::INTSTS: BVLDCHGIF Mask          */
 
-#define OTG_INTSTS_AVLDCHGIF_Pos         (9)                                               /*!< OTG_T::INTSTS: AVLDCHGIF Position      */
-#define OTG_INTSTS_AVLDCHGIF_Msk         (0x1ul << OTG_INTSTS_AVLDCHGIF_Pos)               /*!< OTG_T::INTSTS: AVLDCHGIF Mask          */
+#define OTG_INTSTS_AVLDCHGIF_Pos    ( 9 )                                                  /*!< OTG_T::INTSTS: AVLDCHGIF Position      */
+#define OTG_INTSTS_AVLDCHGIF_Msk    ( 0x1ul << OTG_INTSTS_AVLDCHGIF_Pos )                  /*!< OTG_T::INTSTS: AVLDCHGIF Mask          */
 
-#define OTG_INTSTS_VBCHGIF_Pos           (10)                                              /*!< OTG_T::INTSTS: VBCHGIF Position        */
-#define OTG_INTSTS_VBCHGIF_Msk           (0x1ul << OTG_INTSTS_VBCHGIF_Pos)                 /*!< OTG_T::INTSTS: VBCHGIF Mask            */
+#define OTG_INTSTS_VBCHGIF_Pos      ( 10 )                                                 /*!< OTG_T::INTSTS: VBCHGIF Position        */
+#define OTG_INTSTS_VBCHGIF_Msk      ( 0x1ul << OTG_INTSTS_VBCHGIF_Pos )                    /*!< OTG_T::INTSTS: VBCHGIF Mask            */
 
-#define OTG_INTSTS_SECHGIF_Pos           (11)                                              /*!< OTG_T::INTSTS: SECHGIF Position        */
-#define OTG_INTSTS_SECHGIF_Msk           (0x1ul << OTG_INTSTS_SECHGIF_Pos)                 /*!< OTG_T::INTSTS: SECHGIF Mask            */
+#define OTG_INTSTS_SECHGIF_Pos      ( 11 )                                                 /*!< OTG_T::INTSTS: SECHGIF Position        */
+#define OTG_INTSTS_SECHGIF_Msk      ( 0x1ul << OTG_INTSTS_SECHGIF_Pos )                    /*!< OTG_T::INTSTS: SECHGIF Mask            */
 
-#define OTG_INTSTS_SRPDETIF_Pos          (13)                                              /*!< OTG_T::INTSTS: SRPDETIF Position       */
-#define OTG_INTSTS_SRPDETIF_Msk          (0x1ul << OTG_INTSTS_SRPDETIF_Pos)                /*!< OTG_T::INTSTS: SRPDETIF Mask           */
+#define OTG_INTSTS_SRPDETIF_Pos     ( 13 )                                                 /*!< OTG_T::INTSTS: SRPDETIF Position       */
+#define OTG_INTSTS_SRPDETIF_Msk     ( 0x1ul << OTG_INTSTS_SRPDETIF_Pos )                   /*!< OTG_T::INTSTS: SRPDETIF Mask           */
 
-#define OTG_STATUS_OVERCUR_Pos           (0)                                               /*!< OTG_T::STATUS: OVERCUR Position        */
-#define OTG_STATUS_OVERCUR_Msk           (0x1ul << OTG_STATUS_OVERCUR_Pos)                 /*!< OTG_T::STATUS: OVERCUR Mask            */
+#define OTG_STATUS_OVERCUR_Pos      ( 0 )                                                  /*!< OTG_T::STATUS: OVERCUR Position        */
+#define OTG_STATUS_OVERCUR_Msk      ( 0x1ul << OTG_STATUS_OVERCUR_Pos )                    /*!< OTG_T::STATUS: OVERCUR Mask            */
 
-#define OTG_STATUS_IDSTS_Pos             (1)                                               /*!< OTG_T::STATUS: IDSTS Position          */
-#define OTG_STATUS_IDSTS_Msk             (0x1ul << OTG_STATUS_IDSTS_Pos)                   /*!< OTG_T::STATUS: IDSTS Mask              */
+#define OTG_STATUS_IDSTS_Pos        ( 1 )                                                  /*!< OTG_T::STATUS: IDSTS Position          */
+#define OTG_STATUS_IDSTS_Msk        ( 0x1ul << OTG_STATUS_IDSTS_Pos )                      /*!< OTG_T::STATUS: IDSTS Mask              */
 
-#define OTG_STATUS_SESSEND_Pos           (2)                                               /*!< OTG_T::STATUS: SESSEND Position        */
-#define OTG_STATUS_SESSEND_Msk           (0x1ul << OTG_STATUS_SESSEND_Pos)                 /*!< OTG_T::STATUS: SESSEND Mask            */
+#define OTG_STATUS_SESSEND_Pos      ( 2 )                                                  /*!< OTG_T::STATUS: SESSEND Position        */
+#define OTG_STATUS_SESSEND_Msk      ( 0x1ul << OTG_STATUS_SESSEND_Pos )                    /*!< OTG_T::STATUS: SESSEND Mask            */
 
-#define OTG_STATUS_BVLD_Pos              (3)                                               /*!< OTG_T::STATUS: BVLD Position           */
-#define OTG_STATUS_BVLD_Msk              (0x1ul << OTG_STATUS_BVLD_Pos)                    /*!< OTG_T::STATUS: BVLD Mask               */
+#define OTG_STATUS_BVLD_Pos         ( 3 )                                                  /*!< OTG_T::STATUS: BVLD Position           */
+#define OTG_STATUS_BVLD_Msk         ( 0x1ul << OTG_STATUS_BVLD_Pos )                       /*!< OTG_T::STATUS: BVLD Mask               */
 
-#define OTG_STATUS_AVLD_Pos              (4)                                               /*!< OTG_T::STATUS: AVLD Position           */
-#define OTG_STATUS_AVLD_Msk              (0x1ul << OTG_STATUS_AVLD_Pos)                    /*!< OTG_T::STATUS: AVLD Mask               */
+#define OTG_STATUS_AVLD_Pos         ( 4 )                                                  /*!< OTG_T::STATUS: AVLD Position           */
+#define OTG_STATUS_AVLD_Msk         ( 0x1ul << OTG_STATUS_AVLD_Pos )                       /*!< OTG_T::STATUS: AVLD Mask               */
 
-#define OTG_STATUS_VBUSVLD_Pos           (5)                                               /*!< OTG_T::STATUS: VBUSVLD Position        */
-#define OTG_STATUS_VBUSVLD_Msk           (0x1ul << OTG_STATUS_VBUSVLD_Pos)                 /*!< OTG_T::STATUS: VBUSVLD Mask            */
+#define OTG_STATUS_VBUSVLD_Pos      ( 5 )                                                  /*!< OTG_T::STATUS: VBUSVLD Position        */
+#define OTG_STATUS_VBUSVLD_Msk      ( 0x1ul << OTG_STATUS_VBUSVLD_Pos )                    /*!< OTG_T::STATUS: VBUSVLD Mask            */
 
-#define OTG_STATUS_ASPERI_Pos            (6)                                               /*!< OTG_T::STATUS: ASPERI Position         */
-#define OTG_STATUS_ASPERI_Msk            (0x1ul << OTG_STATUS_ASPERI_Pos)                  /*!< OTG_T::STATUS: ASPERI Mask             */
+#define OTG_STATUS_ASPERI_Pos       ( 6 )                                                  /*!< OTG_T::STATUS: ASPERI Position         */
+#define OTG_STATUS_ASPERI_Msk       ( 0x1ul << OTG_STATUS_ASPERI_Pos )                     /*!< OTG_T::STATUS: ASPERI Mask             */
 
-#define OTG_STATUS_ASHOST_Pos            (7)                                               /*!< OTG_T::STATUS: ASHOST Position         */
-#define OTG_STATUS_ASHOST_Msk            (0x1ul << OTG_STATUS_ASHOST_Pos)                  /*!< OTG_T::STATUS: ASHOST Mask             */
+#define OTG_STATUS_ASHOST_Pos       ( 7 )                                                  /*!< OTG_T::STATUS: ASHOST Position         */
+#define OTG_STATUS_ASHOST_Msk       ( 0x1ul << OTG_STATUS_ASHOST_Pos )                     /*!< OTG_T::STATUS: ASHOST Mask             */
 
 /**@}*/ /* OTG_CONST */
 /**@}*/ /* end of OTG register group */

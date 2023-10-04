@@ -36,7 +36,7 @@
 extern char _binary_soc_system_rbf_start;
 extern char _binary_soc_system_rbf_end;
 
-ALT_STATUS_CODE fpga_init(void);
+ALT_STATUS_CODE fpga_init( void );
 
 #endif /* FPGA_SUPPORT_H_ */
 /* md5sum:887b9ebee4569ce8bd823342a5ce847e 2013-09-28 20:48:16 */

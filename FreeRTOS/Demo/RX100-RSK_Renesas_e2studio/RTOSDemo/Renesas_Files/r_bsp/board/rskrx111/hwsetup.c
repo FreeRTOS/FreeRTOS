@@ -16,36 +16,39 @@
 *
 * Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name	   : hwsetup.c
 * Device(s)    : RX
 * H/W Platform : RSKRX210
 * Description  : Defines the initialization routines used each time the MCU is restarted.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 08.11.2012 0.01     Beta Release
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* I/O Register and board definitions */
 #include "platform.h"
 /* Contains delcarations for the functions defined in this file */
 #include "hwsetup.h"
 #include "r_switches_config.h"
+
 /***********************************************************************************************************************
-Private global variables and functions
+*  Private global variables and functions
 ***********************************************************************************************************************/
 /* MCU I/O port configuration function delcaration */
-static void output_ports_configure(void);
+static void output_ports_configure( void );
 
 /* Interrupt configuration function delcaration */
-static void interrupts_configure(void);
+static void interrupts_configure( void );
 
 /* MCU peripheral module configuration function declaration */
-static void peripheral_modules_enable(void);
+static void peripheral_modules_enable( void );
 
 
 /***********************************************************************************************************************
@@ -54,7 +57,7 @@ static void peripheral_modules_enable(void);
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-void hardware_setup(void)
+void hardware_setup( void )
 {
     output_ports_configure();
     interrupts_configure();
@@ -67,7 +70,7 @@ void hardware_setup(void)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-void output_ports_configure(void)
+void output_ports_configure( void )
 {
     /* Enable LEDs. */
     /* Start with LEDs off. */
@@ -94,17 +97,17 @@ void output_ports_configure(void)
     SW3_PMR = 0;
 
     /* Unlock MPC registers to enable writing to them. */
-    MPC.PWPR.BIT.B0WI = 0 ;     /* Unlock protection register */
-    MPC.PWPR.BIT.PFSWE = 1 ;    /* Unlock MPC registers */
+    MPC.PWPR.BIT.B0WI = 0;  /* Unlock protection register */
+    MPC.PWPR.BIT.PFSWE = 1; /* Unlock MPC registers */
 
     /* TXD1 is output. */
     PORT1.PDR.BIT.B6 = 1;
     PORT1.PMR.BIT.B6 = 1;
-    MPC.P16PFS.BYTE  = 0x0A;
+    MPC.P16PFS.BYTE = 0x0A;
     /* RXD1 is input. */
     PORT1.PDR.BIT.B5 = 0;
     PORT1.PMR.BIT.B5 = 1;
-    MPC.P15PFS.BYTE  = 0x0A;
+    MPC.P15PFS.BYTE = 0x0A;
 
     /* Configure the pin connected to the ADC Pot as an input */
     PORT4.PDR.BIT.B4 = 0;
@@ -128,7 +131,7 @@ void output_ports_configure(void)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-void interrupts_configure(void)
+void interrupts_configure( void )
 {
     /* Add code here to setup additional interrupts */
 }
@@ -139,11 +142,11 @@ void interrupts_configure(void)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-void peripheral_modules_enable(void)
+void peripheral_modules_enable( void )
 {
-	/* Enable triggers to start an ADC conversion. */
-	S12AD.ADCSR.BIT.TRGE = 1;
+    /* Enable triggers to start an ADC conversion. */
+    S12AD.ADCSR.BIT.TRGE = 1;
 
-	/* Only channel 4 is going to be used. */
-	S12AD.ADANSA.BIT.ANSA4 = 1;
+    /* Only channel 4 is going to be used. */
+    S12AD.ADANSA.BIT.ANSA4 = 1;
 }

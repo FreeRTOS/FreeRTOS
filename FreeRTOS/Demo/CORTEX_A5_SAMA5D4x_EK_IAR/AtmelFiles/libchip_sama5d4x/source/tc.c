@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -27,7 +27,7 @@
  * ----------------------------------------------------------------------------
  */
 
-/** \addtogroup tc_module 
+/** \addtogroup tc_module
  * The TC driver provides the Interface to configure the Timer Counter (TC).
  *
  *  \section Usage
@@ -43,9 +43,9 @@
  * Related files :\n
  * \ref tc.c\n
  * \ref tc.h.\n
-*/
+ */
 
- /**
+/**
  *  \file
  *
  *  \section Purpose
@@ -58,7 +58,7 @@
  *  -# Configure a Timer Counter in the desired mode using TC_Configure().
  *  -# Start or stop the timer clock using TC_Start() and TC_Stop().
  */
- 
+
 /**
  * \file
  *
@@ -89,24 +89,26 @@
  * \param channel Channel number.
  * \param mode  Operating mode (TC_CMR value).
  */
-extern void TC_Configure( Tc *pTc, uint32_t dwChannel, uint32_t dwMode )
+extern void TC_Configure( Tc * pTc,
+                          uint32_t dwChannel,
+                          uint32_t dwMode )
 {
-    TcChannel* pTcCh ;
+    TcChannel * pTcCh;
 
-    assert( dwChannel < (sizeof( pTc->TC_CHANNEL )/sizeof( pTc->TC_CHANNEL[0] )) ) ;
-    pTcCh = pTc->TC_CHANNEL+dwChannel ;
+    assert( dwChannel < ( sizeof( pTc->TC_CHANNEL ) / sizeof( pTc->TC_CHANNEL[ 0 ] ) ) );
+    pTcCh = pTc->TC_CHANNEL + dwChannel;
 
     /*  Disable TC clock */
-    pTcCh->TC_CCR = TC_CCR_CLKDIS ;
+    pTcCh->TC_CCR = TC_CCR_CLKDIS;
 
     /*  Disable interrupts */
-    pTcCh->TC_IDR = 0xFFFFFFFF ;
+    pTcCh->TC_IDR = 0xFFFFFFFF;
 
     /*  Clear status register */
-    pTcCh->TC_SR ;
+    pTcCh->TC_SR;
 
     /*  Set mode */
-    pTcCh->TC_CMR = dwMode ;
+    pTcCh->TC_CMR = dwMode;
 }
 
 /**
@@ -117,14 +119,15 @@ extern void TC_Configure( Tc *pTc, uint32_t dwChannel, uint32_t dwMode )
  * \param pTc  Pointer to a Tc instance.
  * \param dwChannel Channel number.
  */
-extern void TC_Start( Tc *pTc, uint32_t dwChannel )
+extern void TC_Start( Tc * pTc,
+                      uint32_t dwChannel )
 {
-    TcChannel* pTcCh ;
+    TcChannel * pTcCh;
 
-    assert( dwChannel < (sizeof( pTc->TC_CHANNEL )/sizeof( pTc->TC_CHANNEL[0] )) ) ;
+    assert( dwChannel < ( sizeof( pTc->TC_CHANNEL ) / sizeof( pTc->TC_CHANNEL[ 0 ] ) ) );
 
-    pTcCh = pTc->TC_CHANNEL+dwChannel ;
-    pTcCh->TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG ;
+    pTcCh = pTc->TC_CHANNEL + dwChannel;
+    pTcCh->TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
 }
 
 /**
@@ -135,14 +138,15 @@ extern void TC_Start( Tc *pTc, uint32_t dwChannel )
  * \param pTc     Pointer to a Tc instance.
  * \param dwChannel Channel number.
  */
-extern void TC_Stop(Tc *pTc, uint32_t dwChannel )
+extern void TC_Stop( Tc * pTc,
+                     uint32_t dwChannel )
 {
-    TcChannel* pTcCh ;
+    TcChannel * pTcCh;
 
-    assert( dwChannel < (sizeof( pTc->TC_CHANNEL )/sizeof( pTc->TC_CHANNEL[0] )) ) ;
+    assert( dwChannel < ( sizeof( pTc->TC_CHANNEL ) / sizeof( pTc->TC_CHANNEL[ 0 ] ) ) );
 
-    pTcCh = pTc->TC_CHANNEL+dwChannel ;
-    pTcCh->TC_CCR = TC_CCR_CLKDIS ;
+    pTcCh = pTc->TC_CHANNEL + dwChannel;
+    pTcCh->TC_CCR = TC_CCR_CLKDIS;
 }
 
 /**
@@ -163,45 +167,49 @@ extern void TC_Stop(Tc *pTc, uint32_t dwChannel )
  *
  * \return 1 if a proper divisor has been found, otherwise 0.
  */
-extern uint32_t TC_FindMckDivisor( uint32_t dwFreq, uint32_t dwMCk, uint32_t *dwDiv, uint32_t *dwTcClks, uint32_t dwBoardMCK )
+extern uint32_t TC_FindMckDivisor( uint32_t dwFreq,
+                                   uint32_t dwMCk,
+                                   uint32_t * dwDiv,
+                                   uint32_t * dwTcClks,
+                                   uint32_t dwBoardMCK )
 {
-    const uint32_t adwDivisors[5] = { 2, 8, 32, 128, dwBoardMCK / 32768 } ;
+    const uint32_t adwDivisors[ 5 ] = { 2, 8, 32, 128, dwBoardMCK / 32768 };
 
-    uint32_t dwIndex = 0 ;
+    uint32_t dwIndex = 0;
 
     /*  Satisfy lower bound */
-    while ( dwFreq < ((dwMCk / adwDivisors[dwIndex]) / 65536) )
+    while( dwFreq < ( ( dwMCk / adwDivisors[ dwIndex ] ) / 65536 ) )
     {
-        dwIndex++ ;
+        dwIndex++;
 
         /*  If no divisor can be found, return 0 */
-        if ( dwIndex == (sizeof( adwDivisors )/sizeof( adwDivisors[0] ))  )
+        if( dwIndex == ( sizeof( adwDivisors ) / sizeof( adwDivisors[ 0 ] ) ) )
         {
-            return 0 ;
+            return 0;
         }
     }
 
     /*  Try to maximize DIV while satisfying upper bound */
-    while ( dwIndex < 4 )
+    while( dwIndex < 4 )
     {
-
-        if ( dwFreq > (dwMCk / adwDivisors[dwIndex + 1]) )
+        if( dwFreq > ( dwMCk / adwDivisors[ dwIndex + 1 ] ) )
         {
-            break ;
+            break;
         }
-        dwIndex++ ;
+
+        dwIndex++;
     }
 
     /*  Store results */
-    if ( dwDiv )
+    if( dwDiv )
     {
-        *dwDiv = adwDivisors[dwIndex] ;
-    }
-    if ( dwTcClks )
-    {
-        *dwTcClks = dwIndex ;
+        *dwDiv = adwDivisors[ dwIndex ];
     }
 
-    return 1 ;
+    if( dwTcClks )
+    {
+        *dwTcClks = dwIndex;
+    }
+
+    return 1;
 }
-

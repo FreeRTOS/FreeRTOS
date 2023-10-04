@@ -70,27 +70,28 @@
 /*---------------------------------------------------------------------------
  *         Definitions
  *---------------------------------------------------------------------------*/
+
 /** \addtogroup gmacd_defines
-    @{*/
+ *  @{*/
 
 /** \addtogroup gmacd_buf_size GMACD Default Buffer Size
-        @{*/
-#define GMAC_RX_UNITSIZE            128  /**< RX buffer size, must be 128 */
-#define GMAC_TX_UNITSIZE            1536 /**< TX buffer size, must be multiple
-					   of 32 (cache line) */
+ *      @{*/
+#define GMAC_RX_UNITSIZE    128          /**< RX buffer size, must be 128 */
+#define GMAC_TX_UNITSIZE    1536         /**< TX buffer size, must be multiple
+                                          * of 32 (cache line) */
 /**     @}*/
 
 /** \addtogroup gmacd_rc GMACD Return Codes
-        @{*/
-#define GMACD_OK                0   /**< Operation OK */
-#define GMACD_TX_BUSY           1   /**< TX in progress */
-#define GMACD_RX_NULL           1   /**< No data received */
+ *      @{*/
+#define GMACD_OK                 0  /**< Operation OK */
+#define GMACD_TX_BUSY            1  /**< TX in progress */
+#define GMACD_RX_NULL            1  /**< No data received */
 /** Buffer size not enough */
-#define GMACD_SIZE_TOO_SMALL    2
+#define GMACD_SIZE_TOO_SMALL     2
 /** Parameter error, TX packet invalid or RX size too small */
-#define GMACD_PARAM             3
+#define GMACD_PARAM              3
 /** Transter is not initialized */
-#define GMACD_NOT_INITIALIZED   4
+#define GMACD_NOT_INITIALIZED    4
 /**     @}*/
 
 /** @}*/
@@ -98,91 +99,116 @@
 /*---------------------------------------------------------------------------
  *         Types
  *---------------------------------------------------------------------------*/
+
 /** \addtogroup gmacd_types
-    @{*/
+ *  @{*/
 
 /** RX/TX callback */
-typedef void (*gmacd_callback_t)(uint8_t queue, uint32_t status);
+typedef void (* gmacd_callback_t)( uint8_t queue,
+                                   uint32_t status );
 
 /** TX Wakeup callback */
-typedef void (*gmacd_wakeup_cb_t)(uint8_t queue);
+typedef void (* gmacd_wakeup_cb_t)( uint8_t queue );
 
 /** GMAC scatter-gather entry */
-struct _gmac_sg {
-	uint32_t         size;
-	void            *buffer;
-	struct _gmac_sg *next;
+struct _gmac_sg
+{
+    uint32_t size;
+    void * buffer;
+    struct _gmac_sg * next;
 };
 
 /** GMAC scatter-gather list */
-struct _gmac_sg_list {
-	uint32_t         size;
-	struct _gmac_sg *entries;
+struct _gmac_sg_list
+{
+    uint32_t size;
+    struct _gmac_sg * entries;
 };
 
-struct _gmacd_queue {
-	uint8_t           *rx_buffer;
-	struct _gmac_desc *rx_desc;
-	uint16_t           rx_size;
-	uint16_t           rx_head;
-	gmacd_callback_t   rx_callback;
+struct _gmacd_queue
+{
+    uint8_t * rx_buffer;
+    struct _gmac_desc * rx_desc;
+    uint16_t rx_size;
+    uint16_t rx_head;
+    gmacd_callback_t rx_callback;
 
-	uint8_t           *tx_buffer;
-	struct _gmac_desc *tx_desc;
-	uint16_t           tx_size;
-	uint16_t           tx_head;
-	uint16_t           tx_tail;
-	gmacd_callback_t  *tx_callbacks;
+    uint8_t * tx_buffer;
+    struct _gmac_desc * tx_desc;
+    uint16_t tx_size;
+    uint16_t tx_head;
+    uint16_t tx_tail;
+    gmacd_callback_t * tx_callbacks;
 
-	gmacd_wakeup_cb_t  tx_wakeup_callback;
-	uint16_t           tx_wakeup_threshold;
+    gmacd_wakeup_cb_t tx_wakeup_callback;
+    uint16_t tx_wakeup_threshold;
 };
 
 /**
  * GMAC driver struct.
  */
-struct _gmacd {
-	Gmac* gmac; /**< GMAC instance */
-	struct _gmacd_queue queues[GMAC_NUM_QUEUES];
+struct _gmacd
+{
+    Gmac * gmac; /**< GMAC instance */
+    struct _gmacd_queue queues[ GMAC_NUM_QUEUES ];
 };
 
 /** @}*/
 
 /** \addtogroup gmacd_functions
-    @{*/
+ *  @{*/
 
 /*---------------------------------------------------------------------------
  *         GMAC Exported functions
  *---------------------------------------------------------------------------*/
 
-extern void gmacd_configure(struct _gmacd* gmacd, Gmac *pHw, uint8_t enableCAF, uint8_t enableNBC);
+extern void gmacd_configure( struct _gmacd * gmacd,
+                             Gmac * pHw,
+                             uint8_t enableCAF,
+                             uint8_t enableNBC );
 
-extern uint8_t gmacd_setup_queue(struct _gmacd* gmacd, uint8_t queue,
-		uint16_t rx_size, uint8_t* rx_buffer, struct _gmac_desc* rx_desc,
-		uint16_t tx_size, uint8_t* tx_buffer, struct _gmac_desc* tx_desc,
-		gmacd_callback_t *tx_callbacks);
+extern uint8_t gmacd_setup_queue( struct _gmacd * gmacd,
+                                  uint8_t queue,
+                                  uint16_t rx_size,
+                                  uint8_t * rx_buffer,
+                                  struct _gmac_desc * rx_desc,
+                                  uint16_t tx_size,
+                                  uint8_t * tx_buffer,
+                                  struct _gmac_desc * tx_desc,
+                                  gmacd_callback_t * tx_callbacks );
 
-extern void gmacd_start(struct _gmacd* gmacd);
+extern void gmacd_start( struct _gmacd * gmacd );
 
-extern void gmacd_reset(struct _gmacd* gmacd);
+extern void gmacd_reset( struct _gmacd * gmacd );
 
-extern uint8_t gmacd_send_sg(struct _gmacd* gmacd, uint8_t queue,
-		const struct _gmac_sg_list* sgl, gmacd_callback_t callback);
+extern uint8_t gmacd_send_sg( struct _gmacd * gmacd,
+                              uint8_t queue,
+                              const struct _gmac_sg_list * sgl,
+                              gmacd_callback_t callback );
 
-extern uint8_t gmacd_send(struct _gmacd* gmacd, uint8_t queue, void *buffer,
-		uint32_t size, gmacd_callback_t callback);
+extern uint8_t gmacd_send( struct _gmacd * gmacd,
+                           uint8_t queue,
+                           void * buffer,
+                           uint32_t size,
+                           gmacd_callback_t callback );
 
-extern uint32_t gmacd_get_tx_load(struct _gmacd* gmacd, uint8_t queue);
+extern uint32_t gmacd_get_tx_load( struct _gmacd * gmacd,
+                                   uint8_t queue );
 
-extern uint8_t gmacd_poll(struct _gmacd* gmacd, uint8_t queue,
-		uint8_t* buffer, uint32_t buffer_size, uint32_t* recv_size);
+extern uint8_t gmacd_poll( struct _gmacd * gmacd,
+                           uint8_t queue,
+                           uint8_t * buffer,
+                           uint32_t buffer_size,
+                           uint32_t * recv_size );
 
-extern void gmacd_set_rx_callback(struct _gmacd *gmacd, uint8_t queue,
-		gmacd_callback_t callback);
+extern void gmacd_set_rx_callback( struct _gmacd * gmacd,
+                                   uint8_t queue,
+                                   gmacd_callback_t callback );
 
-extern uint8_t gmacd_set_tx_wakeup_callback(struct _gmacd *gmacd,
-		uint8_t queue, gmacd_wakeup_cb_t wakeup_callback,
-		uint16_t threshold);
+extern uint8_t gmacd_set_tx_wakeup_callback( struct _gmacd * gmacd,
+                                             uint8_t queue,
+                                             gmacd_wakeup_cb_t wakeup_callback,
+                                             uint16_t threshold );
 
 /** @}*/
 

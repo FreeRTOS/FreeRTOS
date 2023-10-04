@@ -14,7 +14,7 @@ cpu0.INITNSVTOR=0x0                                   # (int   , init-time) defa
 cpu0.SAU=0x8                                          # (int   , init-time) default = '0x4'    : Number of SAU regions (0 => no SAU) : [0x0..0x8]
 cpu0.SAU_CTRL.ENABLE=0                                # (bool  , init-time) default = '0'      : Enable SAU at reset
 cpu0.SAU_CTRL.ALLNS=0                                 # (bool  , init-time) default = '0'      : At reset, the SAU treats entire memory space as NS when the SAU is disabled if this is set
-idau.NUM_IDAU_REGION=0x0                              # (int   , init-time) default = '0xA'    : 
+idau.NUM_IDAU_REGION=0x0                              # (int   , init-time) default = '0xA'    :
 cpu0.LOCK_SAU=0                                       # (bool  , init-time) default = '0'      : Lock down of SAU registers write
 cpu0.LOCK_S_MPU=0                                     # (bool  , init-time) default = '0'      : Lock down of Secure MPU registers write
 cpu0.LOCK_NS_MPU=0                                    # (bool  , init-time) default = '0'      : Lock down of Non-Secure MPU registers write

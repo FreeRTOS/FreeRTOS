@@ -68,176 +68,194 @@
  * \brief Initializes MMU.
  * \param pTB  Address of the translation table.
  */
-void MMU_Initialize(uint32_t *pTB)
+void MMU_Initialize( uint32_t * pTB )
 {
     unsigned int index;
     unsigned int addr;
 
     /* Reset table entries */
-    for (index = 0; index < 4096; index++)
-        pTB[index] = 0;
+    for( index = 0; index < 4096; index++ )
+    {
+        pTB[ index ] = 0;
+    }
 
     /* section Boot (code + data)*/
     /* ROM address (after remap) 0x0000_0000*/
-    pTB[0x000] = (0x000 << 20)| // Physical Address
-                    ( 3 << 10)| // Access in supervisor mode (AP)
-                  ( 0xF <<  5)| // Domain 0xF
-                    ( 1 <<  4)| // (XN)
-                    ( 0 <<  3)| // C bit : cachable => NO
-                    ( 1 <<  2)| // B bit : write-back => YES
-                    ( 2 <<  0); // Set as 1 Mbyte section
+    pTB[ 0x000 ] = ( 0x000 << 20 ) | /* Physical Address */
+                   ( 3 << 10 ) |     /* Access in supervisor mode (AP) */
+                   ( 0xF << 5 ) |    /* Domain 0xF */
+                   ( 1 << 4 ) |      /* (XN) */
+                   ( 0 << 3 ) |      /* C bit : cachable => NO */
+                   ( 1 << 2 ) |      /* B bit : write-back => YES */
+                   ( 2 << 0 );       /* Set as 1 Mbyte section */
 
     /* section ROM (code + data) */
     /* ROM address (after remap) 0x0010_0000 */
-    pTB[0x001] = (0x001 << 20)| // Physical Address
-                    ( 3 << 10)| // Access in supervisor mode (AP)
-                  ( 0xF <<  5)| // Domain 0xF
-                    ( 1 <<  4)| // (XN)
-                    ( 0 <<  3)| // C bit : cachable => NO
-                    ( 1 <<  2)| // B bit : write-back => YES
-                    ( 2 <<  0); // Set as 1 Mbyte section
+    pTB[ 0x001 ] = ( 0x001 << 20 ) | /* Physical Address */
+                   ( 3 << 10 ) |     /* Access in supervisor mode (AP) */
+                   ( 0xF << 5 ) |    /* Domain 0xF */
+                   ( 1 << 4 ) |      /* (XN) */
+                   ( 0 << 3 ) |      /* C bit : cachable => NO */
+                   ( 1 << 2 ) |      /* B bit : write-back => YES */
+                   ( 2 << 0 );       /* Set as 1 Mbyte section */
 
     /* section NFC SRAM  */
     /* SRAM address 0x0020_0000 */
-    pTB[0x002] = (0x002 << 20)| // Physical Address
-                    ( 3 << 10)| // Access in supervisor mode (AP)
-                  ( 0xF <<  5)| // Domain 0xF
-                    ( 1 <<  4)| // (XN)
-                    ( 0 <<  3)| // C bit : cachable => NO
-                    ( 1 <<  2)| // B bit : write-back => YES
-                    ( 2 <<  0); // Set as 1 Mbyte section
+    pTB[ 0x002 ] = ( 0x002 << 20 ) | /* Physical Address */
+                   ( 3 << 10 ) |     /* Access in supervisor mode (AP) */
+                   ( 0xF << 5 ) |    /* Domain 0xF */
+                   ( 1 << 4 ) |      /* (XN) */
+                   ( 0 << 3 ) |      /* C bit : cachable => NO */
+                   ( 1 << 2 ) |      /* B bit : write-back => YES */
+                   ( 2 << 0 );       /* Set as 1 Mbyte section */
 
     /* section RAM 0 */
     /* SRAM address (after remap) 0x0030_0000 */
-    pTB[0x003] = (0x003 << 20)| // Physical Address
-                    ( 1 << 12)| // TEX[0]
-                    ( 3 << 10)| // Access in supervisor mode (AP)
-                  ( 0xF <<  5)| // Domain 0xF
-                    ( 1 <<  4)| // (XN)
-                    ( 1 <<  3)| // C bit : cachable => YES
-                    ( 1 <<  2)| // B bit : write-back => YES
-                    ( 2 <<  0); // Set as 1 Mbyte section
+    pTB[ 0x003 ] = ( 0x003 << 20 ) | /* Physical Address */
+                   ( 1 << 12 ) |     /* TEX[0] */
+                   ( 3 << 10 ) |     /* Access in supervisor mode (AP) */
+                   ( 0xF << 5 ) |    /* Domain 0xF */
+                   ( 1 << 4 ) |      /* (XN) */
+                   ( 1 << 3 ) |      /* C bit : cachable => YES */
+                   ( 1 << 2 ) |      /* B bit : write-back => YES */
+                   ( 2 << 0 );       /* Set as 1 Mbyte section */
 
     /* section NFC SRAM  */
     /* SRAM address 0x0040_0000 */
-    for(addr = 0x4; addr < 0xB; addr++)
-        pTB[addr] = (addr << 20)|   // Physical Address
-                      ( 3 << 10)|   // Access in supervisor mode (AP)
-                    ( 0xF <<  5)|   // Domain 0xF
-                      ( 1 <<  4)|   // (XN)
-                      ( 0 <<  3)|   // C bit : cachable => NO
-                      ( 1 <<  2)|   // B bit : write-back => YES
-                      ( 2 <<  0);   // Set as 1 Mbyte section
+    for( addr = 0x4; addr < 0xB; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 0xF << 5 ) |   /* Domain 0xF */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 0 << 3 ) |     /* C bit : cachable => NO */
+                      ( 1 << 2 ) |     /* B bit : write-back => YES */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
     /* section PERIPH */
     /* periph address 0xF000_0000 */
-    pTB[0xF00] = (0xF00ul << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    pTB[ 0xF00 ] = ( 0xF00ul << 20 ) | /* Physical Address */
+                   ( 3 << 10 ) |       /* Access in supervisor mode (AP) */
+                   ( 0xF << 5 ) |      /* Domain 0 */
+                   ( 1 << 4 ) |        /* (XN) */
+                   ( 0 << 3 ) |        /* C bit : cachable => NO */
+                   ( 0 << 2 ) |        /* B bit : write-back => NO */
+                   ( 2 << 0 );         /* Set as 1 Mbyte section */
 
     /* section PERIPH */
     /* periph address 0xF800_0000 */
-    pTB[0xF80] = (0xF80ul << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0xF
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    pTB[ 0xF80 ] = ( 0xF80ul << 20 ) | /* Physical Address */
+                   ( 3 << 10 ) |       /* Access in supervisor mode (AP) */
+                   ( 0xF << 5 ) |      /* Domain 0xF */
+                   ( 1 << 4 ) |        /* (XN) */
+                   ( 0 << 3 ) |        /* C bit : cachable => NO */
+                   ( 0 << 2 ) |        /* B bit : write-back => NO */
+                   ( 2 << 0 );         /* Set as 1 Mbyte section */
 
     /* section PERIPH */
     /* periph address 0xFFF0_0000 */
-    pTB[0xFFF] = (0xFFFul << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0xF
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    pTB[ 0xFFF ] = ( 0xFFFul << 20 ) | /* Physical Address */
+                   ( 3 << 10 ) |       /* Access in supervisor mode (AP) */
+                   ( 0xF << 5 ) |      /* Domain 0xF */
+                   ( 1 << 4 ) |        /* (XN) */
+                   ( 0 << 3 ) |        /* C bit : cachable => NO */
+                   ( 0 << 2 ) |        /* B bit : write-back => NO */
+                   ( 2 << 0 );         /* Set as 1 Mbyte section */
 
     /* section EBI CS0 */
     /* periph address 0x1000_0000 */
-    for(addr = 0x100; addr < 0x200; addr++)
-        pTB[addr] = (addr << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    for( addr = 0x100; addr < 0x200; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 0xF << 5 ) |   /* Domain 0 */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 0 << 3 ) |     /* C bit : cachable => NO */
+                      ( 0 << 2 ) |     /* B bit : write-back => NO */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
     /* section EBI CS1 */
     /* periph address 0x4000_0000 */
-    for(addr = 0x400; addr < 0x500; addr++)
-        pTB[addr] = (addr << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0xF
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    for( addr = 0x400; addr < 0x500; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 0xF << 5 ) |   /* Domain 0xF */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 0 << 3 ) |     /* C bit : cachable => NO */
+                      ( 0 << 2 ) |     /* B bit : write-back => NO */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
     /* section EBI CS2 */
     /* periph address 0x5000_0000 */
-    for(addr = 0x500; addr < 0x600; addr++)
-        pTB[addr] = (addr << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0xF
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    for( addr = 0x500; addr < 0x600; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 0xF << 5 ) |   /* Domain 0xF */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 0 << 3 ) |     /* C bit : cachable => NO */
+                      ( 0 << 2 ) |     /* B bit : write-back => NO */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
     /* section EBI CS3 */
     /* periph address 0x6000_0000 */
-    for(addr = 0x600; addr < 0x700; addr++)
-        pTB[addr] = (addr << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0xF
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    for( addr = 0x600; addr < 0x700; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 0xF << 5 ) |   /* Domain 0xF */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 0 << 3 ) |     /* C bit : cachable => NO */
+                      ( 0 << 2 ) |     /* B bit : write-back => NO */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
     /* section NFC */
     /* periph address 0x7000_0000 */
-    for(addr = 0x700; addr < 0x800; addr++)
-        pTB[addr] = (addr << 20)| // Physical Address
-                      ( 3 << 10)| // Access in supervisor mode (AP)
-                    ( 0xF <<  5)| // Domain 0xF
-                      ( 1 <<  4)| // (XN)
-                      ( 0 <<  3)| // C bit : cachable => NO
-                      ( 0 <<  2)| // B bit : write-back => NO
-                      ( 2 <<  0); // Set as 1 Mbyte section
+    for( addr = 0x700; addr < 0x800; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 0xF << 5 ) |   /* Domain 0xF */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 0 << 3 ) |     /* C bit : cachable => NO */
+                      ( 0 << 2 ) |     /* B bit : write-back => NO */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
     /* section SDRAM/DDRAM */
     /* periph address 0x2000_0000 */
-    for(addr = 0x200; addr < 0x230; addr++)
-        pTB[addr] = (addr << 20)|   // Physical Address
-                      ( 3 << 10)|   // Access in supervisor mode (AP)
-                      ( 1 << 12)|   // TEX[0]
-                    ( 0xF <<  5)|   // Domain 0xF
-                      ( 1 <<  4)|   // (XN)
-                      ( 1 <<  3)|   // C bit : cachable => YES
-                      ( 1 <<  2)|   // B bit : write-back => YES
-                      ( 2 <<  0);   // Set as 1 Mbyte section
+    for( addr = 0x200; addr < 0x230; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 1 << 12 ) |    /* TEX[0] */
+                      ( 0xF << 5 ) |   /* Domain 0xF */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 1 << 3 ) |     /* C bit : cachable => YES */
+                      ( 1 << 2 ) |     /* B bit : write-back => YES */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
 /* section SDRAM/DDRAM */
     /* periph address 0x2100_0000 */
-    for(addr = 0x230; addr < 0x280; addr++)
-        pTB[addr] = (addr << 20)|   // Physical Address
-                      ( 3 << 10)|   // Access in supervisor mode (AP)
-                      ( 0xF <<  5)| // Domain 0xF
-                      ( 1 <<  4)|   // (XN)
-                      ( 0 <<  3)|   // C bit : cachable => No
-                      ( 0 <<  2)|   // B bit : write-back => No
-                      ( 2 <<  0);   // Set as 1 Mbyte section
+    for( addr = 0x230; addr < 0x280; addr++ )
+    {
+        pTB[ addr ] = ( addr << 20 ) | /* Physical Address */
+                      ( 3 << 10 ) |    /* Access in supervisor mode (AP) */
+                      ( 0xF << 5 ) |   /* Domain 0xF */
+                      ( 1 << 4 ) |     /* (XN) */
+                      ( 0 << 3 ) |     /* C bit : cachable => No */
+                      ( 0 << 2 ) |     /* B bit : write-back => No */
+                      ( 2 << 0 );      /* Set as 1 Mbyte section */
+    }
 
-    CP15_WriteTTB((unsigned int)pTB);
+    CP15_WriteTTB( ( unsigned int ) pTB );
     /* Program the domain access register */
-    CP15_WriteDomainAccessControl(0xC0000000); // only domain 15: access are not checked
+    CP15_WriteDomainAccessControl( 0xC0000000 ); /* only domain 15: access are not checked */
 }

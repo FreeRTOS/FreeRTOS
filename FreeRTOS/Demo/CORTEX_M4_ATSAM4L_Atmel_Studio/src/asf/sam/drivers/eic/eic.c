@@ -45,13 +45,13 @@
 #include "sysclk.h"
 #include "sleepmgr.h"
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
 /**
  * \defgroup sam_drivers_eic_group External Interrupt Controller(EIC)
@@ -68,7 +68,7 @@ extern "C" {
  * \internal
  * \brief EIC callback function pointer array
  */
-eic_callback_t eic_callback_pointer[EIC_NUMBER_OF_LINES];
+eic_callback_t eic_callback_pointer[ EIC_NUMBER_OF_LINES ];
 
 /**
  * \brief Write the EIC hardware with specified configuration value.
@@ -78,30 +78,30 @@ eic_callback_t eic_callback_pointer[EIC_NUMBER_OF_LINES];
  * (see \ref eic_line_config)
  * \param line_number Number of line to config
  */
-void eic_line_set_config(Eic *eic, uint8_t line_number,
-	struct eic_line_config *eic_line_conf)
+void eic_line_set_config( Eic * eic,
+                          uint8_t line_number,
+                          struct eic_line_config * eic_line_conf )
 {
-		/* Set up mode level */
-		eic->EIC_MODE = (eic_line_conf->eic_mode == EIC_MODE_LEVEL_TRIGGERED)
-				? (eic->EIC_MODE | (1 << line_number))
-				: (eic->EIC_MODE & ~(1 << line_number));
-		/* Set up edge type */
-		eic->EIC_EDGE = (eic_line_conf->eic_edge == EIC_EDGE_RISING_EDGE)
-				? (eic->EIC_EDGE | (1 << line_number))
-				: (eic->EIC_EDGE & ~(1 << line_number));
-		/* Set up level */
-		eic->EIC_LEVEL = (eic_line_conf->eic_level == EIC_LEVEL_HIGH_LEVEL)
-				? (eic->EIC_LEVEL | (1 << line_number))
-				: (eic->EIC_LEVEL & ~(1 << line_number));
-		/* Set up if filter is used */
-		eic->EIC_FILTER = (eic_line_conf->eic_filter == EIC_FILTER_ENABLED)
-				? (eic->EIC_FILTER | (1 << line_number))
-				: (eic->EIC_FILTER & ~(1 << line_number));
-		/* Set up which mode is used : asynchronous mode/ synchronous mode */
-		eic->EIC_ASYNC = (eic_line_conf->eic_async == EIC_ASYNCH_MODE)
-				? (eic->EIC_ASYNC | (1 << line_number))
-				: (eic->EIC_ASYNC & ~(1 << line_number));
-
+    /* Set up mode level */
+    eic->EIC_MODE = ( eic_line_conf->eic_mode == EIC_MODE_LEVEL_TRIGGERED )
+                    ? ( eic->EIC_MODE | ( 1 << line_number ) )
+                    : ( eic->EIC_MODE & ~( 1 << line_number ) );
+    /* Set up edge type */
+    eic->EIC_EDGE = ( eic_line_conf->eic_edge == EIC_EDGE_RISING_EDGE )
+                    ? ( eic->EIC_EDGE | ( 1 << line_number ) )
+                    : ( eic->EIC_EDGE & ~( 1 << line_number ) );
+    /* Set up level */
+    eic->EIC_LEVEL = ( eic_line_conf->eic_level == EIC_LEVEL_HIGH_LEVEL )
+                     ? ( eic->EIC_LEVEL | ( 1 << line_number ) )
+                     : ( eic->EIC_LEVEL & ~( 1 << line_number ) );
+    /* Set up if filter is used */
+    eic->EIC_FILTER = ( eic_line_conf->eic_filter == EIC_FILTER_ENABLED )
+                      ? ( eic->EIC_FILTER | ( 1 << line_number ) )
+                      : ( eic->EIC_FILTER & ~( 1 << line_number ) );
+    /* Set up which mode is used : asynchronous mode/ synchronous mode */
+    eic->EIC_ASYNC = ( eic_line_conf->eic_async == EIC_ASYNCH_MODE )
+                     ? ( eic->EIC_ASYNC | ( 1 << line_number ) )
+                     : ( eic->EIC_ASYNC & ~( 1 << line_number ) );
 }
 
 /**
@@ -109,10 +109,10 @@ void eic_line_set_config(Eic *eic, uint8_t line_number,
  *
  * \param eic Base address of the EIC module
  */
-void eic_disable(Eic *eic)
+void eic_disable( Eic * eic )
 {
-	sysclk_disable_peripheral_clock(eic);
-	sleepmgr_unlock_mode(SLEEPMGR_BACKUP);
+    sysclk_disable_peripheral_clock( eic );
+    sleepmgr_unlock_mode( SLEEPMGR_BACKUP );
 }
 
 /**
@@ -120,10 +120,10 @@ void eic_disable(Eic *eic)
  *
  * \param eic Base address of the EIC module
  */
-void eic_enable(Eic *eic)
+void eic_enable( Eic * eic )
 {
-	sysclk_enable_peripheral_clock(eic);
-	sleepmgr_lock_mode(SLEEPMGR_BACKUP);
+    sysclk_enable_peripheral_clock( eic );
+    sleepmgr_lock_mode( SLEEPMGR_BACKUP );
 }
 
 /**
@@ -135,12 +135,15 @@ void eic_enable(Eic *eic)
  * \param irq_line  interrupt line.
  * \param irq_level interrupt level.
  */
-void eic_line_set_callback(Eic *eic, uint8_t line_number,
-	eic_callback_t callback, uint8_t irq_line, uint8_t irq_level)
+void eic_line_set_callback( Eic * eic,
+                            uint8_t line_number,
+                            eic_callback_t callback,
+                            uint8_t irq_line,
+                            uint8_t irq_level )
 {
-	eic_callback_pointer[line_number] = callback;
-	irq_register_handler((IRQn_Type)irq_line, irq_level);
-	eic_line_enable_interrupt(eic, line_number);
+    eic_callback_pointer[ line_number ] = callback;
+    irq_register_handler( ( IRQn_Type ) irq_line, irq_level );
+    eic_line_enable_interrupt( eic, line_number );
 }
 
 /**
@@ -152,93 +155,96 @@ void eic_line_set_callback(Eic *eic, uint8_t line_number,
  *
  * \param line_number EIC linel number to handle interrupt for
  */
-static void eic_line_interrupt(uint8_t line_number)
+static void eic_line_interrupt( uint8_t line_number )
 {
-	if (eic_callback_pointer[line_number]) {
-		eic_callback_pointer[line_number]();
-	} else {
-		Assert(false); /* Catch unexpected interrupt */
-	}
+    if( eic_callback_pointer[ line_number ] )
+    {
+        eic_callback_pointer[ line_number ]();
+    }
+    else
+    {
+        Assert( false ); /* Catch unexpected interrupt */
+    }
 }
 
 /**
  * \brief Interrupt handler for EIC NMI.
  */
-void NMI_Handler(void)
+void NMI_Handler( void )
 {
-	eic_line_interrupt(0);
+    eic_line_interrupt( 0 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 1.
  */
-void EIC_1_Handler(void)
+void EIC_1_Handler( void )
 {
-	eic_line_interrupt(1);
+    eic_line_interrupt( 1 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 2.
  */
-void EIC_2_Handler(void)
+void EIC_2_Handler( void )
 {
-	eic_line_interrupt(2);
+    eic_line_interrupt( 2 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 3.
  */
-void EIC_3_Handler(void)
+void EIC_3_Handler( void )
 {
-	eic_line_interrupt(3);
+    eic_line_interrupt( 3 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 4.
  */
-void EIC_4_Handler(void)
+void EIC_4_Handler( void )
 {
-	eic_line_interrupt(4);
+    eic_line_interrupt( 4 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 5.
  */
-void EIC_5_Handler(void)
+void EIC_5_Handler( void )
 {
-	eic_line_interrupt(5);
+    eic_line_interrupt( 5 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 6.
  */
-void EIC_6_Handler(void)
+void EIC_6_Handler( void )
 {
-	eic_line_interrupt(6);
+    eic_line_interrupt( 6 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 7.
  */
-void EIC_7_Handler(void)
+void EIC_7_Handler( void )
 {
-	eic_line_interrupt(7);
+    eic_line_interrupt( 7 );
 }
 
 /**
  * \brief Interrupt handler for EIC line 8.
  */
-void EIC_8_Handler(void)
+void EIC_8_Handler( void )
 {
-	eic_line_interrupt(8);
+    eic_line_interrupt( 8 );
 }
 
-//@}
+/*@} */
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */

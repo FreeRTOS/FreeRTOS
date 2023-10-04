@@ -25,12 +25,13 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void CRC_ResetDR(void);
-u32 CRC_CalcCRC(u32 Data);
-u32 CRC_CalcBlockCRC(u32 pBuffer[], u32 BufferLength);
-u32 CRC_GetCRC(void);
-void CRC_SetIDRegister(u8 IDValue);
-u8 CRC_GetIDRegister(void);
+void CRC_ResetDR( void );
+u32 CRC_CalcCRC( u32 Data );
+u32 CRC_CalcBlockCRC( u32 pBuffer[],
+                      u32 BufferLength );
+u32 CRC_GetCRC( void );
+void CRC_SetIDRegister( u8 IDValue );
+u8 CRC_GetIDRegister( void );
 
 #endif /* __STM32F10x_CRC_H */
 

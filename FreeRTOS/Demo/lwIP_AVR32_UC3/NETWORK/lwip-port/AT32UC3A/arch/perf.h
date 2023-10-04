@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief lwIP abstraction layer for AVR32 UC3.
@@ -42,7 +43,7 @@
 #ifndef __PERF_H__
 #define __PERF_H__
 
-#define PERF_START    /* null definition */
-#define PERF_STOP(x)  /* null definition */
+#define PERF_START     /* null definition */
+#define PERF_STOP( x ) /* null definition */
 
 #endif /* __PERF_H__ */

@@ -15,20 +15,21 @@
  */
 
 /******************************************************************************
- * @file     pin_name.h
- * @brief    header file for the pin_name
- * @version  V1.0
- * @date     23. August 2017
- ******************************************************************************/
+* @file     pin_name.h
+* @brief    header file for the pin_name
+* @version  V1.0
+* @date     23. August 2017
+******************************************************************************/
 #ifndef _PINNAMES_H
-#define _PINNAMES_H
+    #define _PINNAMES_H
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-typedef enum {
+    typedef enum
+    {
         PA0_TRIG0_ACMP1P_TCK = 0,
         PA1_TRIG1_ACMP1N_TMS,
         PA2_TXD0_SPI0MISO,
@@ -67,17 +68,17 @@ typedef enum {
 
         PC0_SCL1_CTS1_PWM10_ADC14,
         PC1_SDA1_RTS1_PWM11_ADC15,
+    }
+    pin_name_t;
 
+    typedef enum
+    {
+        PORTA = 0,
+        PORTB = 1,
+    } port_name_t;
+
+    #ifdef __cplusplus
 }
-pin_name_t;
+    #endif
 
-typedef enum {
-    PORTA = 0,
-    PORTB = 1,
-} port_name_t;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* ifndef _PINNAMES_H */

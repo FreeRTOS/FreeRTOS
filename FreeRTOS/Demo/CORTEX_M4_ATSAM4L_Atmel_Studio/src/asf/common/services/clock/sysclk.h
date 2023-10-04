@@ -47,38 +47,38 @@
 #include "conf_clock.h"
 
 #if SAM3S
-# include "sam3s/sysclk.h"
+    #include "sam3s/sysclk.h"
 #elif SAM3U
-# include "sam3u/sysclk.h"
+    #include "sam3u/sysclk.h"
 #elif SAM3N
-# include "sam3n/sysclk.h"
+    #include "sam3n/sysclk.h"
 #elif SAM3XA
-# include "sam3x/sysclk.h"
+    #include "sam3x/sysclk.h"
 #elif SAM4S
-# include "sam4s/sysclk.h"
+    #include "sam4s/sysclk.h"
 #elif SAM4E
-# include "sam4e/sysclk.h"
+    #include "sam4e/sysclk.h"
 #elif SAM4L
-# include "sam4l/sysclk.h"
-#elif (UC3A0 || UC3A1)
-# include "uc3a0_a1/sysclk.h"
+    #include "sam4l/sysclk.h"
+#elif ( UC3A0 || UC3A1 )
+    #include "uc3a0_a1/sysclk.h"
 #elif UC3A3
-# include "uc3a3_a4/sysclk.h"
+    #include "uc3a3_a4/sysclk.h"
 #elif UC3B
-# include "uc3b0_b1/sysclk.h"
+    #include "uc3b0_b1/sysclk.h"
 #elif UC3C
-# include "uc3c/sysclk.h"
+    #include "uc3c/sysclk.h"
 #elif UC3D
-# include "uc3d/sysclk.h"
+    #include "uc3d/sysclk.h"
 #elif UC3L
-# include "uc3l/sysclk.h"
+    #include "uc3l/sysclk.h"
 #elif XMEGA
-# include "xmega/sysclk.h"
+    #include "xmega/sysclk.h"
 #elif MEGA
-# include "mega/sysclk.h"
-#else
-# error Unsupported chip type
-#endif
+    #include "mega/sysclk.h"
+#else  /* if SAM3S */
+    #error Unsupported chip type
+#endif /* if SAM3S */
 
 /**
  * \defgroup clk_group Clock Management
@@ -143,8 +143,9 @@
  * @{
  */
 
-//! \name System Clock Initialization
-//@{
+/*! \name System Clock Initialization */
+/*@{ */
+
 /**
  * \fn void sysclk_init(void)
  * \brief Initialize the synchronous clock system.
@@ -166,8 +167,8 @@
  * is the responsibility of the peripheral driver to re-enable any
  * clocks that are needed for normal operation.
  */
-//@}
+/*@} */
 
-//! @}
+/*! @} */
 
 #endif /* SYSCLK_H_INCLUDED */

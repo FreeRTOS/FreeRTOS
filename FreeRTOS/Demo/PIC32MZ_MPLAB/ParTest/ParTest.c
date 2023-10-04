@@ -30,9 +30,9 @@
 /* Demo app includes. */
 #include "partest.h"
 
-#define ptOUTPUT 	0
-#define ptALL_OFF	0
-#define ptNUM_LEDS	3
+#define ptOUTPUT      0
+#define ptALL_OFF     0
+#define ptNUM_LEDS    3
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
@@ -40,50 +40,48 @@
 
 void vParTestInitialise( void )
 {
-	/* All LEDs output. */
-	TRISH = ptOUTPUT;
-	LATH = ptALL_OFF;
+    /* All LEDs output. */
+    TRISH = ptOUTPUT;
+    LATH = ptALL_OFF;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxLEDBit;
+    unsigned portBASE_TYPE uxLEDBit;
 
-	if( uxLED < ptNUM_LEDS )
-	{
-		/* Which port H bit is being modified? */
-		uxLEDBit = 1 << uxLED;
+    if( uxLED < ptNUM_LEDS )
+    {
+        /* Which port H bit is being modified? */
+        uxLEDBit = 1 << uxLED;
 
-		if( xValue )
-		{
-			/* Turn the LED on.   Use of the LATHSET register removes the need
-			to use a critical section. */
-			LATHSET = uxLEDBit;
-		}
-		else
-		{
-			/* Turn the LED off.  Use of the LATHCLR register removes the need
-			to use a critical section. */
-			LATHCLR = uxLEDBit;
-		}
-	}
+        if( xValue )
+        {
+            /* Turn the LED on.   Use of the LATHSET register removes the need
+             * to use a critical section. */
+            LATHSET = uxLEDBit;
+        }
+        else
+        {
+            /* Turn the LED off.  Use of the LATHCLR register removes the need
+             * to use a critical section. */
+            LATHCLR = uxLEDBit;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned portBASE_TYPE uxLEDBit;
+    unsigned portBASE_TYPE uxLEDBit;
 
-	if( uxLED < ptNUM_LEDS )
-	{
-		uxLEDBit = 1 << uxLED;
+    if( uxLED < ptNUM_LEDS )
+    {
+        uxLEDBit = 1 << uxLED;
 
-		/* Use of the LATHINV register removes the need to use a critical 
-		section. */
-		LATHINV = uxLEDBit;
-	}
+        /* Use of the LATHINV register removes the need to use a critical
+         * section. */
+        LATHINV = uxLEDBit;
+    }
 }
-
-
-

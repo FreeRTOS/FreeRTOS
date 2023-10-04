@@ -25,18 +25,18 @@
  */
 
 /*
-	Changes from V2.5.2
-		
-	+ All LED's are turned off to start.
-*/
+ *  Changes from V2.5.2
+ *
+ + All LED's are turned off to start.
+ */
 
 
 #include "FreeRTOS.h"
 #include "partest.h"
 
-#define partstFIRST_IO			( ( unsigned long ) 0x400 )
-#define partstNUM_LEDS			( 4 )
-#define partstALL_OUTPUTS_OFF	( ( unsigned long ) 0xffffffff )
+#define partstFIRST_IO           ( ( unsigned long ) 0x400 )
+#define partstNUM_LEDS           ( 4 )
+#define partstALL_OUTPUTS_OFF    ( ( unsigned long ) 0xffffffff )
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
@@ -44,57 +44,58 @@
 
 void vParTestInitialise( void )
 {
-	/* This is performed from main() as the io bits are shared with other setup
-	functions. */
+    /* This is performed from main() as the io bits are shared with other setup
+     * functions. */
 
-	/* Turn all outputs off. */
-	GPIO_IOSET = partstALL_OUTPUTS_OFF;
+    /* Turn all outputs off. */
+    GPIO_IOSET = partstALL_OUTPUTS_OFF;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned long ulLED = partstFIRST_IO;
+    unsigned long ulLED = partstFIRST_IO;
 
-	if( uxLED < partstNUM_LEDS )
-	{
-		/* Rotate to the wanted bit of port 0.  Only P10 to P13 have an LED
-		attached. */
-		ulLED <<= ( unsigned long ) uxLED;
+    if( uxLED < partstNUM_LEDS )
+    {
+        /* Rotate to the wanted bit of port 0.  Only P10 to P13 have an LED
+         * attached. */
+        ulLED <<= ( unsigned long ) uxLED;
 
-		/* Set of clear the output. */
-		if( xValue )
-		{
-			GPIO_IOCLR = ulLED;
-		}
-		else
-		{
-			GPIO_IOSET = ulLED;			
-		}
-	}	
+        /* Set of clear the output. */
+        if( xValue )
+        {
+            GPIO_IOCLR = ulLED;
+        }
+        else
+        {
+            GPIO_IOSET = ulLED;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned long ulLED = partstFIRST_IO, ulCurrentState;
+    unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 
-	if( uxLED < partstNUM_LEDS )
-	{
-		/* Rotate to the wanted bit of port 0.  Only P10 to P13 have an LED
-		attached. */
-		ulLED <<= ( unsigned long ) uxLED;
+    if( uxLED < partstNUM_LEDS )
+    {
+        /* Rotate to the wanted bit of port 0.  Only P10 to P13 have an LED
+         * attached. */
+        ulLED <<= ( unsigned long ) uxLED;
 
-		/* If this bit is already set, clear it, and vice versa. */
-		ulCurrentState = GPIO0_IOPIN;
-		if( ulCurrentState & ulLED )
-		{
-			GPIO_IOCLR = ulLED;
-		}
-		else
-		{
-			GPIO_IOSET = ulLED;			
-		}
-	}	
+        /* If this bit is already set, clear it, and vice versa. */
+        ulCurrentState = GPIO0_IOPIN;
+
+        if( ulCurrentState & ulLED )
+        {
+            GPIO_IOCLR = ulLED;
+        }
+        else
+        {
+            GPIO_IOSET = ulLED;
+        }
+    }
 }
-

@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       PWM.h
  *  @brief      PWM driver interface
@@ -214,19 +215,19 @@
  */
 
 #ifndef ti_drivers_PWM__include
-#define ti_drivers_PWM__include
+    #define ti_drivers_PWM__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*!
  *  @brief Maximum duty (100%) when configuring duty cycle as a fraction of
  *  period.
  */
-#define PWM_DUTY_FRACTION_MAX        ((uint32_t) ~0)
+    #define PWM_DUTY_FRACTION_MAX        ( ( uint32_t ) ~0 )
 
 /*!
  * Common PWM_control command code reservation offset.
@@ -239,7 +240,7 @@ extern "C" {
  * #define PWMXYZ_COMMAND1         (PWM_CMD_RESERVED + 1)
  * @endcode
  */
-#define PWM_CMD_RESERVED             (32)
+    #define PWM_CMD_RESERVED             ( 32 )
 
 /*!
  * Common PWM_control status code reservation offset.
@@ -253,7 +254,7 @@ extern "C" {
  * #define PWMXYZ_STATUS_ERROR2    (PWM_STATUS_RESERVED - 2)
  * @endcode
  */
-#define PWM_STATUS_RESERVED          (-32)
+    #define PWM_STATUS_RESERVED          ( -32 )
 
 /*!
  * @brief  Success status code returned by:
@@ -262,7 +263,7 @@ extern "C" {
  * Functions return PWM_STATUS_SUCCESS if the call was executed
  * successfully.
  */
-#define PWM_STATUS_SUCCESS           (0)
+    #define PWM_STATUS_SUCCESS           ( 0 )
 
 /*!
  * @brief   Generic error status code returned by PWM_control().
@@ -270,7 +271,7 @@ extern "C" {
  * PWM_control() returns PWM_STATUS_ERROR if the control code was not executed
  * successfully.
  */
-#define PWM_STATUS_ERROR             (-1)
+    #define PWM_STATUS_ERROR             ( -1 )
 
 /*!
  * @brief   An error status code returned by PWM_control() for undefined
@@ -279,7 +280,7 @@ extern "C" {
  * PWM_control() returns PWM_STATUS_UNDEFINEDCMD if the control code is not
  * recognized by the driver implementation.
  */
-#define PWM_STATUS_UNDEFINEDCMD      (-2)
+    #define PWM_STATUS_UNDEFINEDCMD      ( -2 )
 
 /*!
  * @brief   An error status code returned by PWM_setPeriod().
@@ -287,7 +288,7 @@ extern "C" {
  * PWM_setPeriod() returns PWM_STATUS_INVALID_PERIOD if the period argument is
  * invalid for the current configuration.
  */
-#define PWM_STATUS_INVALID_PERIOD    (-3)
+    #define PWM_STATUS_INVALID_PERIOD    ( -3 )
 
 /*!
  * @brief   An error status code returned by PWM_setDuty().
@@ -295,36 +296,39 @@ extern "C" {
  * PWM_setDuty() returns PWM_STATUS_INVALID_DUTY if the duty cycle argument is
  * invalid for the current configuration.
  */
-#define PWM_STATUS_INVALID_DUTY      (-4)
+    #define PWM_STATUS_INVALID_DUTY      ( -4 )
 
 /*!
  *  @brief   PWM period unit definitions.  Refer to device specific
  *  implementation if using PWM_PERIOD_COUNTS (raw PWM/Timer counts).
  */
-typedef enum PWM_Period_Units_ {
-    PWM_PERIOD_US,    /* Period in microseconds */
-    PWM_PERIOD_HZ,    /* Period in (reciprocal) Hertz
-                         (for example 2MHz = 0.5us period) */
-    PWM_PERIOD_COUNTS /* Period in timer counts */
-} PWM_Period_Units;
+    typedef enum PWM_Period_Units_
+    {
+        PWM_PERIOD_US,    /* Period in microseconds */
+        PWM_PERIOD_HZ,    /* Period in (reciprocal) Hertz
+                           * (for example 2MHz = 0.5us period) */
+        PWM_PERIOD_COUNTS /* Period in timer counts */
+    } PWM_Period_Units;
 
 /*!
  *  @brief   PWM duty cycle unit definitions.  Refer to device specific
  *  implementation if using PWM_DUTY_COUNTS (raw PWM/Timer counts).
  */
-typedef enum PWM_Duty_Units_ {
-    PWM_DUTY_US,       /* Duty cycle in microseconds */
-    PWM_DUTY_FRACTION, /* Duty as a fractional part of PWM_DUTY_FRACTION_MAX */
-    PWM_DUTY_COUNTS    /* Duty in timer counts  */
-} PWM_Duty_Units;
+    typedef enum PWM_Duty_Units_
+    {
+        PWM_DUTY_US,       /* Duty cycle in microseconds */
+        PWM_DUTY_FRACTION, /* Duty as a fractional part of PWM_DUTY_FRACTION_MAX */
+        PWM_DUTY_COUNTS    /* Duty in timer counts  */
+    } PWM_Duty_Units;
 
 /*!
  *  @brief   Idle output level when PWM is not running (stopped / not started).
  */
-typedef enum PWM_IdleLevel_ {
-    PWM_IDLE_LOW  = 0,
-    PWM_IDLE_HIGH = 1,
-} PWM_IdleLevel;
+    typedef enum PWM_IdleLevel_
+    {
+        PWM_IDLE_LOW = 0,
+        PWM_IDLE_HIGH = 1,
+    } PWM_IdleLevel;
 
 /*!
  *  @brief PWM Parameters
@@ -334,94 +338,99 @@ typedef enum PWM_IdleLevel_ {
  *
  *  @sa     PWM_Params_init()
  */
-typedef struct PWM_Params_ {
-    PWM_Period_Units periodUnits; /*!< Units in which the period is specified */
-    uint32_t         periodValue; /*!< PWM initial period */
-    PWM_Duty_Units   dutyUnits;   /*!< Units in which the duty is specified */
-    uint32_t         dutyValue;   /*!< PWM initial duty */
-    PWM_IdleLevel    idleLevel;   /*!< Pin output when PWM is stopped. */
-    void            *custom;      /*!< Custom argument used by driver
-                                       implementation */
-} PWM_Params;
+    typedef struct PWM_Params_
+    {
+        PWM_Period_Units periodUnits; /*!< Units in which the period is specified */
+        uint32_t periodValue;         /*!< PWM initial period */
+        PWM_Duty_Units dutyUnits;     /*!< Units in which the duty is specified */
+        uint32_t dutyValue;           /*!< PWM initial duty */
+        PWM_IdleLevel idleLevel;      /*!< Pin output when PWM is stopped. */
+        void * custom;                /*!< Custom argument used by driver
+                                       *   implementation */
+    } PWM_Params;
 
 /*!
  *  @brief      A handle that is returned from a PWM_open() call.
  */
-typedef struct PWM_Config_ *PWM_Handle;
+    typedef struct PWM_Config_ * PWM_Handle;
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_close().
  */
-typedef void (*PWM_CloseFxn) (PWM_Handle handle);
+    typedef void (* PWM_CloseFxn) ( PWM_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_control().
  */
-typedef int_fast16_t (*PWM_ControlFxn) (PWM_Handle handle, uint_fast16_t cmd,
-    void *arg);
+    typedef int_fast16_t (* PWM_ControlFxn) ( PWM_Handle handle,
+                                              uint_fast16_t cmd,
+                                              void * arg );
+
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_init().
  */
-typedef void (*PWM_InitFxn) (PWM_Handle handle);
+    typedef void (* PWM_InitFxn) ( PWM_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_open().
  */
-typedef PWM_Handle (*PWM_OpenFxn) (PWM_Handle handle, PWM_Params *params);
+    typedef PWM_Handle (* PWM_OpenFxn) ( PWM_Handle handle,
+                                         PWM_Params * params );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_setDuty().
  */
-typedef int_fast16_t (*PWM_SetDutyFxn) (PWM_Handle handle,
-    uint32_t duty);
+    typedef int_fast16_t (* PWM_SetDutyFxn) ( PWM_Handle handle,
+                                              uint32_t duty );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_setPeriod().
  */
-typedef int_fast16_t (*PWM_SetPeriodFxn) (PWM_Handle handle,
-    uint32_t period);
+    typedef int_fast16_t (* PWM_SetPeriodFxn) ( PWM_Handle handle,
+                                                uint32_t period );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_start().
  */
-typedef void (*PWM_StartFxn) (PWM_Handle handle);
+    typedef void (* PWM_StartFxn) ( PWM_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              PWM_stop().
  */
-typedef void (*PWM_StopFxn) (PWM_Handle handle);
+    typedef void (* PWM_StopFxn) ( PWM_Handle handle );
 
 /*!
  *  @brief      The definition of a PWM function table that contains the
  *              required set of functions to control a specific PWM driver
  *              implementation.
  */
-typedef struct PWM_FxnTable_ {
-    /*! Function to close the specified instance */
-    PWM_CloseFxn     closeFxn;
-    /*! Function to driver implementation specific control function */
-    PWM_ControlFxn   controlFxn;
-    /*! Function to initialize the given data object */
-    PWM_InitFxn      initFxn;
-    /*! Function to open the specified instance */
-    PWM_OpenFxn      openFxn;
-    /*! Function to set the duty cycle for a specific instance */
-    PWM_SetDutyFxn   setDutyFxn;
-    /*! Function to set the period for a specific instance */
-    PWM_SetPeriodFxn setPeriodFxn;
-    /*! Function to start the PWM output for a specific instance */
-    PWM_StartFxn     startFxn;
-    /*! Function to stop the PWM output for a specific instance */
-    PWM_StopFxn      stopFxn;
-} PWM_FxnTable;
+    typedef struct PWM_FxnTable_
+    {
+        /*! Function to close the specified instance */
+        PWM_CloseFxn closeFxn;
+        /*! Function to driver implementation specific control function */
+        PWM_ControlFxn controlFxn;
+        /*! Function to initialize the given data object */
+        PWM_InitFxn initFxn;
+        /*! Function to open the specified instance */
+        PWM_OpenFxn openFxn;
+        /*! Function to set the duty cycle for a specific instance */
+        PWM_SetDutyFxn setDutyFxn;
+        /*! Function to set the period for a specific instance */
+        PWM_SetPeriodFxn setPeriodFxn;
+        /*! Function to start the PWM output for a specific instance */
+        PWM_StartFxn startFxn;
+        /*! Function to stop the PWM output for a specific instance */
+        PWM_StopFxn stopFxn;
+    } PWM_FxnTable;
 
 /*!
  *  @brief  PWM Global configuration.
@@ -430,14 +439,15 @@ typedef struct PWM_FxnTable_ {
  *  the PWM driver implementation.
  *
  */
-typedef struct PWM_Config_ {
-    /*! Pointer to a table of driver-specific implementations of PWM APIs */
-    PWM_FxnTable const *fxnTablePtr;
-    /*! Pointer to a driver specific data object */
-    void               *object;
-    /*! Pointer to a driver specific hardware attributes structure */
-    void         const *hwAttrs;
-} PWM_Config;
+    typedef struct PWM_Config_
+    {
+        /*! Pointer to a table of driver-specific implementations of PWM APIs */
+        PWM_FxnTable const * fxnTablePtr;
+        /*! Pointer to a driver specific data object */
+        void * object;
+        /*! Pointer to a driver specific hardware attributes structure */
+        void const * hwAttrs;
+    } PWM_Config;
 
 /*!
  *  @brief  Function to close a PWM instance specified by the PWM handle.
@@ -451,7 +461,7 @@ typedef struct PWM_Config_ {
  *  @sa     PWM_start()
  *  @sa     PWM_stop()
  */
-extern void PWM_close(PWM_Handle handle);
+    extern void PWM_close( PWM_Handle handle );
 
 /*!
  *  @brief  Function performs implementation specific features on a given
@@ -472,8 +482,9 @@ extern void PWM_close(PWM_Handle handle);
  *
  *  @sa     PWM_open()
  */
-extern int_fast16_t PWM_control(PWM_Handle handle, uint_fast16_t cmd,
-    void *arg);
+    extern int_fast16_t PWM_control( PWM_Handle handle,
+                                     uint_fast16_t cmd,
+                                     void * arg );
 
 /*!
  *  @brief  This function initializes the PWM module.
@@ -483,7 +494,7 @@ extern int_fast16_t PWM_control(PWM_Handle handle, uint_fast16_t cmd,
  *          other PWM driver APIs.  This function does not modify any peripheral
  *          registers & should only be called once.
  */
-extern void PWM_init(void);
+    extern void PWM_init( void );
 
 /*!
  *  @brief  This function opens a given PWM instance and sets the period,
@@ -501,7 +512,8 @@ extern void PWM_init(void);
  *
  *  @sa     PWM_close()
  */
-extern PWM_Handle PWM_open(uint_least8_t index, PWM_Params *params);
+    extern PWM_Handle PWM_open( uint_least8_t index,
+                                PWM_Params * params );
 
 /*!
  *  @brief  Function to initialize the PWM_Params structure to default values.
@@ -515,7 +527,7 @@ extern PWM_Handle PWM_open(uint_least8_t index, PWM_Params *params);
  *      Duty cycle: 0%
  *      Idle level: PWM_IDLE_LOW
  */
-extern void PWM_Params_init(PWM_Params *params);
+    extern void PWM_Params_init( PWM_Params * params );
 
 /*!
  *  @brief  Function to set the duty cycle of the specified PWM handle.  PWM
@@ -537,7 +549,8 @@ extern void PWM_Params_init(PWM_Params *params);
  *
  *  @sa     PWM_open()
  */
-extern int_fast16_t PWM_setDuty(PWM_Handle handle, uint32_t duty);
+    extern int_fast16_t PWM_setDuty( PWM_Handle handle,
+                                     uint32_t duty );
 
 /*!
  *  @brief  Function to set the period of the specified PWM handle. This API
@@ -558,7 +571,8 @@ extern int_fast16_t PWM_setDuty(PWM_Handle handle, uint32_t duty);
  *
  *  @sa     PWM_open()
  */
-extern int_fast16_t PWM_setPeriod(PWM_Handle handle, uint32_t period);
+    extern int_fast16_t PWM_setPeriod( PWM_Handle handle,
+                                       uint32_t period );
 
 /*!
  *  @brief  Function to start the specified PWM handle with current settings.
@@ -570,7 +584,7 @@ extern int_fast16_t PWM_setPeriod(PWM_Handle handle, uint32_t period);
  *  @sa     PWM_open()
  *  @sa     PWM_stop()
  */
-extern void PWM_start(PWM_Handle handle);
+    extern void PWM_start( PWM_Handle handle );
 
 /*!
  *  @brief  Function to stop the specified PWM handle. Output will set to the
@@ -583,9 +597,9 @@ extern void PWM_start(PWM_Handle handle);
  *  @sa     PWM_open()
  *  @sa     PWM_start()
  */
-extern void PWM_stop(PWM_Handle handle);
+    extern void PWM_stop( PWM_Handle handle );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif /* ti_drivers_PWM__include */

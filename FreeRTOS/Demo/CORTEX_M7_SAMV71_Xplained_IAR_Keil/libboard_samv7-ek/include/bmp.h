@@ -39,10 +39,10 @@
 #define BMP_H
 
 /**  BMP magic number ('BM'). */
-#define BMP_TYPE       0x4D42
+#define BMP_TYPE            0x4D42
 
 /**  headerSize must be set to 40 */
-#define BITMAPINFOHEADER   40
+#define BITMAPINFOHEADER    40
 
 /*------------------------------------------------------------------------------
  *         Exported types
@@ -85,7 +85,6 @@ typedef struct _BMPHeader
     uint32_t ncolours;
     /*  number of important colors, or zero */
     uint32_t importantcolours;
-
 } BMPHeader;
 
 #pragma pack()
@@ -93,12 +92,22 @@ typedef struct _BMPHeader
 /*------------------------------------------------------------------------------
  *         Exported functions
  *------------------------------------------------------------------------------*/
-extern uint8_t BMP_IsValid(void *file);
-extern uint32_t BMP_GetFileSize(void *file);
-extern uint8_t BMP_Decode( void *file, uint8_t *buffer, uint32_t width, uint32_t height, uint8_t bpp );
-extern void WriteBMPheader( uint32_t* pAddressHeader, uint32_t  bmpHSize, uint32_t  bmpVSize, uint8_t nbByte_Pixels );
-extern void BMP_displayHeader(uint32_t* pAddressHeader);
-extern void RGB565toBGR555( uint8_t *fileSource, uint8_t *fileDestination, uint32_t width, uint32_t height, uint8_t bpp );
+extern uint8_t BMP_IsValid( void * file );
+extern uint32_t BMP_GetFileSize( void * file );
+extern uint8_t BMP_Decode( void * file,
+                           uint8_t * buffer,
+                           uint32_t width,
+                           uint32_t height,
+                           uint8_t bpp );
+extern void WriteBMPheader( uint32_t * pAddressHeader,
+                            uint32_t bmpHSize,
+                            uint32_t bmpVSize,
+                            uint8_t nbByte_Pixels );
+extern void BMP_displayHeader( uint32_t * pAddressHeader );
+extern void RGB565toBGR555( uint8_t * fileSource,
+                            uint8_t * fileDestination,
+                            uint32_t width,
+                            uint32_t height,
+                            uint8_t bpp );
 
 #endif //#ifndef BMP_H
-

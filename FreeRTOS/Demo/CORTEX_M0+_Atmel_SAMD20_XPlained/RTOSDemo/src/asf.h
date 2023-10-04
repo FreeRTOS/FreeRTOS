@@ -52,44 +52,44 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
-// From module: Common SAM D20 compiler driver
+/* From module: Common SAM D20 compiler driver */
 #include <compiler.h>
 #include <status_codes.h>
 
-// From module: Generic board support
+/* From module: Generic board support */
 #include <board.h>
 
-// From module: Interrupt management - SAM implementation
+/* From module: Interrupt management - SAM implementation */
 #include <interrupt.h>
 
-// From module: PORT - GPIO Pin Control
+/* From module: PORT - GPIO Pin Control */
 #include <port.h>
 
-// From module: Part identification macros
+/* From module: Part identification macros */
 #include <parts.h>
 
-// From module: SERCOM
+/* From module: SERCOM */
 #include <sercom.h>
 #include <sercom_interrupt.h>
 
-// From module: SERCOM USART - Serial Communications (Callback APIs)
+/* From module: SERCOM USART - Serial Communications (Callback APIs) */
 #include <usart.h>
 #include <usart_interrupt.h>
 
-// From module: SYSTEM - Clock Management
+/* From module: SYSTEM - Clock Management */
 #include <clock.h>
 #include <gclk.h>
 
-// From module: SYSTEM - Core System Driver
+/* From module: SYSTEM - Core System Driver */
 #include <system.h>
 
-// From module: SYSTEM - I/O Pin Multiplexer
+/* From module: SYSTEM - I/O Pin Multiplexer */
 #include <pinmux.h>
 
-// From module: SYSTEM - Interrupt Driver
+/* From module: SYSTEM - Interrupt Driver */
 #include <system_interrupt.h>
 
-// From module: USART - Serial interface- SAM implementation for devices with only USART
+/* From module: USART - Serial interface- SAM implementation for devices with only USART */
 #include <serial.h>
 
 #endif // ASF_H

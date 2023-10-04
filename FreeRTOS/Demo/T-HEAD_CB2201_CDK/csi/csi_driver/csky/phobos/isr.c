@@ -15,202 +15,202 @@
  */
 
 /******************************************************************************
- * @file     isr.c
- * @brief    source file for the interrupt server route
- * @version  V1.0
- * @date     02. June 2017
- ******************************************************************************/
+* @file     isr.c
+* @brief    source file for the interrupt server route
+* @version  V1.0
+* @date     02. June 2017
+******************************************************************************/
 #include <drv_common.h>
 #include "config.h"
 #include "soc.h"
 #ifndef CONFIG_KERNEL_NONE
-#include <csi_kernel.h>
+    #include <csi_kernel.h>
 #endif
 
-extern void dw_usart_irqhandler(int32_t idx);
-extern void dw_timer_irqhandler(int32_t idx);
-extern void dw_gpio_irqhandler(int32_t idx);
-extern void dw_iic_irqhandler(int32_t idx);
-extern void ck_rtc_irqhandler(int32_t idx);
-extern void dw_spi_irqhandler(int32_t idx);
-extern void dw_wdt_irqhandler(int32_t idx);
-extern void ck_dma_irqhandler(int32_t idx);
-extern void ck_aes_irqhandler(int32_t idx);
-extern void ck_sha_irqhandler(int32_t idx);
+extern void dw_usart_irqhandler( int32_t idx );
+extern void dw_timer_irqhandler( int32_t idx );
+extern void dw_gpio_irqhandler( int32_t idx );
+extern void dw_iic_irqhandler( int32_t idx );
+extern void ck_rtc_irqhandler( int32_t idx );
+extern void dw_spi_irqhandler( int32_t idx );
+extern void dw_wdt_irqhandler( int32_t idx );
+extern void ck_dma_irqhandler( int32_t idx );
+extern void ck_aes_irqhandler( int32_t idx );
+extern void ck_sha_irqhandler( int32_t idx );
 
-#define readl(addr) \
-    ({ unsigned int __v = (*(volatile unsigned int *) (addr)); __v; })
+#define readl( addr ) \
+    ( { unsigned int __v = ( *( volatile unsigned int * ) ( addr ) ); __v; } )
 
 #ifndef CONFIG_KERNEL_NONE
-#define  CSI_INTRPT_ENTER() csi_kernel_intrpt_enter()
-#define  CSI_INTRPT_EXIT()  csi_kernel_intrpt_exit()
+    #define  CSI_INTRPT_ENTER()    csi_kernel_intrpt_enter()
+    #define  CSI_INTRPT_EXIT()     csi_kernel_intrpt_exit()
 #else
-#define  CSI_INTRPT_ENTER()
-#define  CSI_INTRPT_EXIT()
+    #define  CSI_INTRPT_ENTER()
+    #define  CSI_INTRPT_EXIT()
 #endif
 
-ATTRIBUTE_ISR void CORET_IRQHandler(void)
+ATTRIBUTE_ISR void CORET_IRQHandler( void )
 {
-    readl(0xE000E010);
+    readl( 0xE000E010 );
 }
 
-#if defined(CONFIG_USART)
-ATTRIBUTE_ISR void USART0_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_usart_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+#if defined( CONFIG_USART )
+    ATTRIBUTE_ISR void USART0_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_usart_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 
-ATTRIBUTE_ISR void USART1_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_usart_irqhandler(1);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void USART1_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_usart_irqhandler( 1 );
+        CSI_INTRPT_EXIT();
+    }
 
-ATTRIBUTE_ISR void USART2_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_usart_irqhandler(2);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void USART2_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_usart_irqhandler( 2 );
+        CSI_INTRPT_EXIT();
+    }
 
-ATTRIBUTE_ISR void USART3_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_usart_irqhandler(3);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void USART3_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_usart_irqhandler( 3 );
+        CSI_INTRPT_EXIT();
+    }
 
-#endif
+#endif /* if defined( CONFIG_USART ) */
 
-#if defined(CONFIG_TIMER)
-ATTRIBUTE_ISR void TIMA0_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_timer_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+#if defined( CONFIG_TIMER )
+    ATTRIBUTE_ISR void TIMA0_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_timer_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 
-ATTRIBUTE_ISR void TIMA1_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_timer_irqhandler(1);
-    CSI_INTRPT_EXIT();
-}
-ATTRIBUTE_ISR void TIMB0_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_timer_irqhandler(2);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void TIMA1_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_timer_irqhandler( 1 );
+        CSI_INTRPT_EXIT();
+    }
+    ATTRIBUTE_ISR void TIMB0_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_timer_irqhandler( 2 );
+        CSI_INTRPT_EXIT();
+    }
 
-ATTRIBUTE_ISR void TIMB1_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_timer_irqhandler(3);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void TIMB1_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_timer_irqhandler( 3 );
+        CSI_INTRPT_EXIT();
+    }
 
-#endif
+#endif /* if defined( CONFIG_TIMER ) */
 
-#if defined(CONFIG_GPIO)
+#if defined( CONFIG_GPIO )
 
-ATTRIBUTE_ISR void GPIOA_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_gpio_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void GPIOA_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_gpio_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 
-ATTRIBUTE_ISR void GPIOB_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_gpio_irqhandler(1);
-    CSI_INTRPT_EXIT();
-}
-#endif
+    ATTRIBUTE_ISR void GPIOB_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_gpio_irqhandler( 1 );
+        CSI_INTRPT_EXIT();
+    }
+#endif /* if defined( CONFIG_GPIO ) */
 
-#if defined(CONFIG_IIC)
-ATTRIBUTE_ISR void I2C0_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_iic_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+#if defined( CONFIG_IIC )
+    ATTRIBUTE_ISR void I2C0_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_iic_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 
-ATTRIBUTE_ISR void I2C1_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_iic_irqhandler(1);
-    CSI_INTRPT_EXIT();
-}
-#endif
+    ATTRIBUTE_ISR void I2C1_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_iic_irqhandler( 1 );
+        CSI_INTRPT_EXIT();
+    }
+#endif /* if defined( CONFIG_IIC ) */
 
-#if defined(CONFIG_RTC)
+#if defined( CONFIG_RTC )
 
-ATTRIBUTE_ISR void RTC_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    ck_rtc_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
-
-#endif
-
-#if defined(CONFIG_AES)
-
-ATTRIBUTE_ISR void AES_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    ck_aes_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void RTC_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        ck_rtc_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 
 #endif
 
-#if defined(CONFIG_SHA)
+#if defined( CONFIG_AES )
 
-ATTRIBUTE_ISR void SHA_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    ck_sha_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void AES_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        ck_aes_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 
 #endif
 
-#if defined(CONFIG_SPI) && defined(CONFIG_GPIO)
-ATTRIBUTE_ISR void SPI0_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_spi_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+#if defined( CONFIG_SHA )
 
-ATTRIBUTE_ISR void SPI1_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_spi_irqhandler(1);
-    CSI_INTRPT_EXIT();
-}
+    ATTRIBUTE_ISR void SHA_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        ck_sha_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
+
 #endif
 
-#if defined(CONFIG_WDT)
-ATTRIBUTE_ISR void WDT_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    dw_wdt_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+#if defined( CONFIG_SPI ) && defined( CONFIG_GPIO )
+    ATTRIBUTE_ISR void SPI0_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_spi_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
+
+    ATTRIBUTE_ISR void SPI1_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_spi_irqhandler( 1 );
+        CSI_INTRPT_EXIT();
+    }
+#endif /* if defined( CONFIG_SPI ) && defined( CONFIG_GPIO ) */
+
+#if defined( CONFIG_WDT )
+    ATTRIBUTE_ISR void WDT_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        dw_wdt_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 #endif
 
-#if defined(CONFIG_DMAC)
-ATTRIBUTE_ISR void DMAC_IRQHandler(void)
-{
-    CSI_INTRPT_ENTER();
-    ck_dma_irqhandler(0);
-    CSI_INTRPT_EXIT();
-}
+#if defined( CONFIG_DMAC )
+    ATTRIBUTE_ISR void DMAC_IRQHandler( void )
+    {
+        CSI_INTRPT_ENTER();
+        ck_dma_irqhandler( 0 );
+        CSI_INTRPT_EXIT();
+    }
 #endif

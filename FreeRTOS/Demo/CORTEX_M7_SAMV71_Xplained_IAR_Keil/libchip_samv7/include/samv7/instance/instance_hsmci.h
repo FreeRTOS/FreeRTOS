@@ -31,50 +31,50 @@
 #define _SAM_HSMCI_INSTANCE_
 
 /* ========== Register definition for HSMCI peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_HSMCI_CR                       (0x40000000U) /**< \brief (HSMCI) Control Register */
-  #define REG_HSMCI_MR                       (0x40000004U) /**< \brief (HSMCI) Mode Register */
-  #define REG_HSMCI_DTOR                     (0x40000008U) /**< \brief (HSMCI) Data Timeout Register */
-  #define REG_HSMCI_SDCR                     (0x4000000CU) /**< \brief (HSMCI) SD/SDIO Card Register */
-  #define REG_HSMCI_ARGR                     (0x40000010U) /**< \brief (HSMCI) Argument Register */
-  #define REG_HSMCI_CMDR                     (0x40000014U) /**< \brief (HSMCI) Command Register */
-  #define REG_HSMCI_BLKR                     (0x40000018U) /**< \brief (HSMCI) Block Register */
-  #define REG_HSMCI_CSTOR                    (0x4000001CU) /**< \brief (HSMCI) Completion Signal Timeout Register */
-  #define REG_HSMCI_RSPR                     (0x40000020U) /**< \brief (HSMCI) Response Register */
-  #define REG_HSMCI_RDR                      (0x40000030U) /**< \brief (HSMCI) Receive Data Register */
-  #define REG_HSMCI_TDR                      (0x40000034U) /**< \brief (HSMCI) Transmit Data Register */
-  #define REG_HSMCI_SR                       (0x40000040U) /**< \brief (HSMCI) Status Register */
-  #define REG_HSMCI_IER                      (0x40000044U) /**< \brief (HSMCI) Interrupt Enable Register */
-  #define REG_HSMCI_IDR                      (0x40000048U) /**< \brief (HSMCI) Interrupt Disable Register */
-  #define REG_HSMCI_IMR                      (0x4000004CU) /**< \brief (HSMCI) Interrupt Mask Register */
-  #define REG_HSMCI_DMA                      (0x40000050U) /**< \brief (HSMCI) DMA Configuration Register */
-  #define REG_HSMCI_CFG                      (0x40000054U) /**< \brief (HSMCI) Configuration Register */
-  #define REG_HSMCI_WPMR                     (0x400000E4U) /**< \brief (HSMCI) Write Protection Mode Register */
-  #define REG_HSMCI_WPSR                     (0x400000E8U) /**< \brief (HSMCI) Write Protection Status Register */
-  #define REG_HSMCI_VERSION                  (0x400000FCU) /**< \brief (HSMCI) Version Register */
-  #define REG_HSMCI_FIFO                     (0x40000200U) /**< \brief (HSMCI) FIFO Memory Aperture0 */
-#else
-  #define REG_HSMCI_CR      (*(__O  uint32_t*)0x40000000U) /**< \brief (HSMCI) Control Register */
-  #define REG_HSMCI_MR      (*(__IO uint32_t*)0x40000004U) /**< \brief (HSMCI) Mode Register */
-  #define REG_HSMCI_DTOR    (*(__IO uint32_t*)0x40000008U) /**< \brief (HSMCI) Data Timeout Register */
-  #define REG_HSMCI_SDCR    (*(__IO uint32_t*)0x4000000CU) /**< \brief (HSMCI) SD/SDIO Card Register */
-  #define REG_HSMCI_ARGR    (*(__IO uint32_t*)0x40000010U) /**< \brief (HSMCI) Argument Register */
-  #define REG_HSMCI_CMDR    (*(__O  uint32_t*)0x40000014U) /**< \brief (HSMCI) Command Register */
-  #define REG_HSMCI_BLKR    (*(__IO uint32_t*)0x40000018U) /**< \brief (HSMCI) Block Register */
-  #define REG_HSMCI_CSTOR   (*(__IO uint32_t*)0x4000001CU) /**< \brief (HSMCI) Completion Signal Timeout Register */
-  #define REG_HSMCI_RSPR    (*(__I  uint32_t*)0x40000020U) /**< \brief (HSMCI) Response Register */
-  #define REG_HSMCI_RDR     (*(__I  uint32_t*)0x40000030U) /**< \brief (HSMCI) Receive Data Register */
-  #define REG_HSMCI_TDR     (*(__O  uint32_t*)0x40000034U) /**< \brief (HSMCI) Transmit Data Register */
-  #define REG_HSMCI_SR      (*(__I  uint32_t*)0x40000040U) /**< \brief (HSMCI) Status Register */
-  #define REG_HSMCI_IER     (*(__O  uint32_t*)0x40000044U) /**< \brief (HSMCI) Interrupt Enable Register */
-  #define REG_HSMCI_IDR     (*(__O  uint32_t*)0x40000048U) /**< \brief (HSMCI) Interrupt Disable Register */
-  #define REG_HSMCI_IMR     (*(__I  uint32_t*)0x4000004CU) /**< \brief (HSMCI) Interrupt Mask Register */
-  #define REG_HSMCI_DMA     (*(__IO uint32_t*)0x40000050U) /**< \brief (HSMCI) DMA Configuration Register */
-  #define REG_HSMCI_CFG     (*(__IO uint32_t*)0x40000054U) /**< \brief (HSMCI) Configuration Register */
-  #define REG_HSMCI_WPMR    (*(__IO uint32_t*)0x400000E4U) /**< \brief (HSMCI) Write Protection Mode Register */
-  #define REG_HSMCI_WPSR    (*(__I  uint32_t*)0x400000E8U) /**< \brief (HSMCI) Write Protection Status Register */
-  #define REG_HSMCI_VERSION (*(__I  uint32_t*)0x400000FCU) /**< \brief (HSMCI) Version Register */
-  #define REG_HSMCI_FIFO    (*(__IO uint32_t*)0x40000200U) /**< \brief (HSMCI) FIFO Memory Aperture0 */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_HSMCI_CR         ( 0x40000000U )                      /**< \brief (HSMCI) Control Register */
+    #define REG_HSMCI_MR         ( 0x40000004U )                      /**< \brief (HSMCI) Mode Register */
+    #define REG_HSMCI_DTOR       ( 0x40000008U )                      /**< \brief (HSMCI) Data Timeout Register */
+    #define REG_HSMCI_SDCR       ( 0x4000000CU )                      /**< \brief (HSMCI) SD/SDIO Card Register */
+    #define REG_HSMCI_ARGR       ( 0x40000010U )                      /**< \brief (HSMCI) Argument Register */
+    #define REG_HSMCI_CMDR       ( 0x40000014U )                      /**< \brief (HSMCI) Command Register */
+    #define REG_HSMCI_BLKR       ( 0x40000018U )                      /**< \brief (HSMCI) Block Register */
+    #define REG_HSMCI_CSTOR      ( 0x4000001CU )                      /**< \brief (HSMCI) Completion Signal Timeout Register */
+    #define REG_HSMCI_RSPR       ( 0x40000020U )                      /**< \brief (HSMCI) Response Register */
+    #define REG_HSMCI_RDR        ( 0x40000030U )                      /**< \brief (HSMCI) Receive Data Register */
+    #define REG_HSMCI_TDR        ( 0x40000034U )                      /**< \brief (HSMCI) Transmit Data Register */
+    #define REG_HSMCI_SR         ( 0x40000040U )                      /**< \brief (HSMCI) Status Register */
+    #define REG_HSMCI_IER        ( 0x40000044U )                      /**< \brief (HSMCI) Interrupt Enable Register */
+    #define REG_HSMCI_IDR        ( 0x40000048U )                      /**< \brief (HSMCI) Interrupt Disable Register */
+    #define REG_HSMCI_IMR        ( 0x4000004CU )                      /**< \brief (HSMCI) Interrupt Mask Register */
+    #define REG_HSMCI_DMA        ( 0x40000050U )                      /**< \brief (HSMCI) DMA Configuration Register */
+    #define REG_HSMCI_CFG        ( 0x40000054U )                      /**< \brief (HSMCI) Configuration Register */
+    #define REG_HSMCI_WPMR       ( 0x400000E4U )                      /**< \brief (HSMCI) Write Protection Mode Register */
+    #define REG_HSMCI_WPSR       ( 0x400000E8U )                      /**< \brief (HSMCI) Write Protection Status Register */
+    #define REG_HSMCI_VERSION    ( 0x400000FCU )                      /**< \brief (HSMCI) Version Register */
+    #define REG_HSMCI_FIFO       ( 0x40000200U )                      /**< \brief (HSMCI) FIFO Memory Aperture0 */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_HSMCI_CR         ( *( __O uint32_t * ) 0x40000000U )  /**< \brief (HSMCI) Control Register */
+    #define REG_HSMCI_MR         ( *( __IO uint32_t * ) 0x40000004U ) /**< \brief (HSMCI) Mode Register */
+    #define REG_HSMCI_DTOR       ( *( __IO uint32_t * ) 0x40000008U ) /**< \brief (HSMCI) Data Timeout Register */
+    #define REG_HSMCI_SDCR       ( *( __IO uint32_t * ) 0x4000000CU ) /**< \brief (HSMCI) SD/SDIO Card Register */
+    #define REG_HSMCI_ARGR       ( *( __IO uint32_t * ) 0x40000010U ) /**< \brief (HSMCI) Argument Register */
+    #define REG_HSMCI_CMDR       ( *( __O uint32_t * ) 0x40000014U )  /**< \brief (HSMCI) Command Register */
+    #define REG_HSMCI_BLKR       ( *( __IO uint32_t * ) 0x40000018U ) /**< \brief (HSMCI) Block Register */
+    #define REG_HSMCI_CSTOR      ( *( __IO uint32_t * ) 0x4000001CU ) /**< \brief (HSMCI) Completion Signal Timeout Register */
+    #define REG_HSMCI_RSPR       ( *( __I uint32_t * ) 0x40000020U )  /**< \brief (HSMCI) Response Register */
+    #define REG_HSMCI_RDR        ( *( __I uint32_t * ) 0x40000030U )  /**< \brief (HSMCI) Receive Data Register */
+    #define REG_HSMCI_TDR        ( *( __O uint32_t * ) 0x40000034U )  /**< \brief (HSMCI) Transmit Data Register */
+    #define REG_HSMCI_SR         ( *( __I uint32_t * ) 0x40000040U )  /**< \brief (HSMCI) Status Register */
+    #define REG_HSMCI_IER        ( *( __O uint32_t * ) 0x40000044U )  /**< \brief (HSMCI) Interrupt Enable Register */
+    #define REG_HSMCI_IDR        ( *( __O uint32_t * ) 0x40000048U )  /**< \brief (HSMCI) Interrupt Disable Register */
+    #define REG_HSMCI_IMR        ( *( __I uint32_t * ) 0x4000004CU )  /**< \brief (HSMCI) Interrupt Mask Register */
+    #define REG_HSMCI_DMA        ( *( __IO uint32_t * ) 0x40000050U ) /**< \brief (HSMCI) DMA Configuration Register */
+    #define REG_HSMCI_CFG        ( *( __IO uint32_t * ) 0x40000054U ) /**< \brief (HSMCI) Configuration Register */
+    #define REG_HSMCI_WPMR       ( *( __IO uint32_t * ) 0x400000E4U ) /**< \brief (HSMCI) Write Protection Mode Register */
+    #define REG_HSMCI_WPSR       ( *( __I uint32_t * ) 0x400000E8U )  /**< \brief (HSMCI) Write Protection Status Register */
+    #define REG_HSMCI_VERSION    ( *( __I uint32_t * ) 0x400000FCU )  /**< \brief (HSMCI) Version Register */
+    #define REG_HSMCI_FIFO       ( *( __IO uint32_t * ) 0x40000200U ) /**< \brief (HSMCI) FIFO Memory Aperture0 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAM_HSMCI_INSTANCE_ */

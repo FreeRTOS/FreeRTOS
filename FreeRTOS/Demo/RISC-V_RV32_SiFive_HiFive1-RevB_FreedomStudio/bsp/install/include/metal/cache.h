@@ -15,7 +15,8 @@
  * @brief a handle for a cache
  * Note: To be deprecated in next release.
  */
-struct metal_cache {
+struct metal_cache
+{
     uint8_t __no_empty_structs;
 };
 
@@ -25,21 +26,21 @@ struct metal_cache {
  * @param None
  * @return 0 If no error
  */
-int metal_l2cache_init(void);
+int metal_l2cache_init( void );
 
 /*!
  * @brief Get the current number of enabled L2 cache ways
  * @param None
  * @return The current number of enabled L2 cache ways
  */
-int metal_l2cache_get_enabled_ways(void);
+int metal_l2cache_get_enabled_ways( void );
 
 /*!
  * @brief Enable the requested number of L2 cache ways
  * @param ways Number of ways to enable
  * @return 0 if the ways are successfully enabled
  */
-int metal_l2cache_set_enabled_ways(int ways);
+int metal_l2cache_set_enabled_ways( int ways );
 
 /*!
  * @brief Initialize a cache
@@ -49,7 +50,9 @@ int metal_l2cache_set_enabled_ways(int ways);
  * Initializes a cache with the requested number of ways enabled.
  * Note: API to be deprecated in next release.
  */
-__inline__ void metal_cache_init(struct metal_cache *cache, int ways) {
+__inline__ void metal_cache_init( struct metal_cache * cache,
+                                  int ways )
+{
     metal_l2cache_init();
 }
 
@@ -59,7 +62,8 @@ __inline__ void metal_cache_init(struct metal_cache *cache, int ways) {
  * @return The current number of enabled cache ways
  * Note: API to be deprecated in next release.
  */
-__inline__ int metal_cache_get_enabled_ways(struct metal_cache *cache) {
+__inline__ int metal_cache_get_enabled_ways( struct metal_cache * cache )
+{
     return metal_l2cache_get_enabled_ways();
 }
 
@@ -70,9 +74,10 @@ __inline__ int metal_cache_get_enabled_ways(struct metal_cache *cache) {
  * @return 0 if the ways are successfully enabled
  * Note: API to be deprecated in next release.
  */
-__inline__ int metal_cache_set_enabled_ways(struct metal_cache *cache,
-                                            int ways) {
-    return metal_l2cache_set_enabled_ways(ways);
+__inline__ int metal_cache_set_enabled_ways( struct metal_cache * cache,
+                                             int ways )
+{
+    return metal_l2cache_set_enabled_ways( ways );
 }
 
 /*!
@@ -80,7 +85,7 @@ __inline__ int metal_cache_set_enabled_ways(struct metal_cache *cache,
  * @param hartid The core to check
  * @return 1 if dcache is present
  */
-int metal_dcache_l1_available(int hartid);
+int metal_dcache_l1_available( int hartid );
 
 /*!
  * @brief Flush dcache for L1 on the requested core with write back
@@ -88,7 +93,8 @@ int metal_dcache_l1_available(int hartid);
  * @param address The virtual address of cacheline to invalidate
  * @return None
  */
-void metal_dcache_l1_flush(int hartid, uintptr_t address);
+void metal_dcache_l1_flush( int hartid,
+                            uintptr_t address );
 
 /*!
  * @brief Discard dcache for L1 on the requested core with no write back
@@ -96,13 +102,14 @@ void metal_dcache_l1_flush(int hartid, uintptr_t address);
  * @param address The virtual address of cacheline to invalidate
  * @return None
  */
-void metal_dcache_l1_discard(int hartid, uintptr_t address);
+void metal_dcache_l1_discard( int hartid,
+                              uintptr_t address );
 
 /*!
  * @brief Check if icache is supported on the core
  * @param hartid The core to check
  * @return 1 if icache is present
  */
-int metal_icache_l1_available(int hartid);
+int metal_icache_l1_available( int hartid );
 
-#endif
+#endif /* ifndef METAL__CACHE_H */

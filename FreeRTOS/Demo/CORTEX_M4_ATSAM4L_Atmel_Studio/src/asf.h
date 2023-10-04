@@ -52,44 +52,44 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
-// From module: AST - Asynchronous Timer
+/* From module: AST - Asynchronous Timer */
 #include <ast.h>
 
-// From module: Common SAM compiler driver
+/* From module: Common SAM compiler driver */
 #include <compiler.h>
 #include <status_codes.h>
 
-// From module: EIC - External Interrupt Controller
+/* From module: EIC - External Interrupt Controller */
 #include <eic.h>
 
-// From module: FLASHCALW Controller Software Driver
+/* From module: FLASHCALW Controller Software Driver */
 #include <flashcalw.h>
 
-// From module: Generic board support
+/* From module: Generic board support */
 #include <board.h>
 
-// From module: IOPORT - General purpose I/O service
+/* From module: IOPORT - General purpose I/O service */
 #include <ioport.h>
 
-// From module: Interrupt management - SAM implementation
+/* From module: Interrupt management - SAM implementation */
 #include <interrupt.h>
 
-// From module: Part identification macros
+/* From module: Part identification macros */
 #include <parts.h>
 
-// From module: Power Management
+/* From module: Power Management */
 #include <bpm.h>
 #include <sleep.h>
 
-// From module: SAM4L startup code
+/* From module: SAM4L startup code */
 #include <exceptions.h>
 #include <system_sam4l.h>
 
-// From module: Sleep manager - SAM4L implementation
+/* From module: Sleep manager - SAM4L implementation */
 #include <sam4l/sleepmgr.h>
 #include <sleepmgr.h>
 
-// From module: System Clock Control - SAM4L implementation
+/* From module: System Clock Control - SAM4L implementation */
 #include <sysclk.h>
 
 #endif // ASF_H

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,42 +30,39 @@
 #ifndef SLCDC_H
 #define SLCDC_H
 
-//------------------------------------------------------------------------------
-//         Global definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global definitions */
+/*------------------------------------------------------------------------------ */
 
-/// Number of segments in SLCD.
-#define S7LEKLCD_NUM_SEGMENTS       40
-/// Number of commons in SLCD.
-#define S7LEKLCD_NUM_COMMONS        10
+/*/ Number of segments in SLCD. */
+#define S7LEKLCD_NUM_SEGMENTS    40
+/*/ Number of commons in SLCD. */
+#define S7LEKLCD_NUM_COMMONS     10
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void SLCDC_Configure(
-    unsigned int commons,
-    unsigned int segments,
-    unsigned int bias,
-    unsigned int timeSetting);
+extern void SLCDC_Configure( unsigned int commons,
+                             unsigned int segments,
+                             unsigned int bias,
+                             unsigned int timeSetting );
 
-extern void SLCDC_Clear(void);
+extern void SLCDC_Clear( void );
 
-extern void SLCDC_Enable(void);
+extern void SLCDC_Enable( void );
 
-extern void SLCDC_Disable(void);
+extern void SLCDC_Disable( void );
 
-extern void SLCDC_SetFrameFreq(
-    unsigned int prescalerValue,
-    unsigned int dividerValue);
+extern void SLCDC_SetFrameFreq( unsigned int prescalerValue,
+                                unsigned int dividerValue );
 
-extern void SLCDC_SetDisplayMode(unsigned int mode);
+extern void SLCDC_SetDisplayMode( unsigned int mode );
 
-extern void SLCDC_SetBlinkFreq(unsigned int frequency);
+extern void SLCDC_SetBlinkFreq( unsigned int frequency );
 
-extern void SLCDC_EnableInterrupts(unsigned int sources);
+extern void SLCDC_EnableInterrupts( unsigned int sources );
 
-extern void SLCDC_DisableInterrupts(unsigned int sources);
+extern void SLCDC_DisableInterrupts( unsigned int sources );
 
 #endif //#ifndef SLCDC_H
-

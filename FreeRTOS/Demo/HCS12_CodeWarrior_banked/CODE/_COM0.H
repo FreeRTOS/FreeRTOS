@@ -9,7 +9,7 @@
 **     Date/Time : 19/06/2005, 15:07
 **     Abstract  :
 **         This bean "AsynchroSerial" implements an asynchronous serial
-**         communication. The bean supports different settings of 
+**         communication. The bean supports different settings of
 **         parity, word width, stop-bit and communication speed,
 **         user can select interrupt or polling handler.
 **         Communication speed can be changed also in runtime.
@@ -40,7 +40,7 @@
 **             Vector name             : INT_SCI0
 **             Priority                : 1
 **
-**         Used pins                   : 
+**         Used pins                   :
 **             ----------------------------------------------------
 **               Function | On package |    Name
 **             ----------------------------------------------------
@@ -77,51 +77,56 @@
 
 #include "Cpu.h"
 
-#define COM0_Bm_38400baud         0    /* Constant for switch to mode 0 */
-#define COM0_Bm_19200baud         1    /* Constant for switch to mode 1 */
-#define COM0_Bm_9600baud          2    /* Constant for switch to mode 2 */
-#define COM0_Bm_4800baud          3    /* Constant for switch to mode 3 */
+#define COM0_Bm_38400baud    0         /* Constant for switch to mode 0 */
+#define COM0_Bm_19200baud    1         /* Constant for switch to mode 1 */
+#define COM0_Bm_9600baud     2         /* Constant for switch to mode 2 */
+#define COM0_Bm_4800baud     3         /* Constant for switch to mode 3 */
 
 
 
 #ifndef __BWUserType_tItem
-#define __BWUserType_tItem
-  typedef struct {                     /* Item of the index table for possible baudrates */
-    word div;                          /* divisior */
-    byte val;                          /* values of the prescalers */
-  } tItem;
+    #define __BWUserType_tItem
+    typedef struct                     /* Item of the index table for possible baudrates */
+    {
+        word div;                      /* divisior */
+        byte val;                      /* values of the prescalers */
+    } tItem;
 #endif
 #ifndef __BWUserType_COM0_TError
-#define __BWUserType_COM0_TError
-typedef union {
-  byte err;
-  struct {
-    bool OverRun  : 1;                 /* OverRun error flag */
-    bool Framing  : 1;                 /* Framing error flag */
-    bool Parity   : 1;                 /* Parity error flag */
-    bool RxBufOvf : 1;                 /* Rx buffer full error flag */
-    bool Noise    : 1;                 /* Noise error */
-    bool Break    : 1;                 /* Break detect */
-    bool Idle     : 1;                 /* Idle characted */
-  }errName;
-} COM0_TError;
-#endif
+    #define __BWUserType_COM0_TError
+    typedef union
+    {
+        byte err;
+        struct
+        {
+            bool OverRun  : 1;         /* OverRun error flag */
+            bool Framing  : 1;         /* Framing error flag */
+            bool Parity   : 1;         /* Parity error flag */
+            bool RxBufOvf : 1;         /* Rx buffer full error flag */
+            bool Noise    : 1;         /* Noise error */
+            bool Break    : 1;         /* Break detect */
+            bool Idle     : 1;         /* Idle characted */
+        } errName;
+    } COM0_TError;
+#endif /* ifndef __BWUserType_COM0_TError */
 #ifndef __BWUserType_TDirection
-#define __BWUserType_TDirection
-  typedef enum {                       /*  */
-    TXD_INPUT,
-    TXD_OUTPUT
-  } TDirection;
+    #define __BWUserType_TDirection
+    typedef enum                       /*  */
+    {
+        TXD_INPUT,
+        TXD_OUTPUT
+    } TDirection;
 #endif
 
 #ifndef __BWUserType_COM0_TComData
-#define __BWUserType_COM0_TComData
-  typedef byte COM0_TComData ;         /* User type for communication. Size of this type depends on the communication data witdh. */
+    #define __BWUserType_COM0_TComData
+    typedef byte COM0_TComData;        /* User type for communication. Size of this type depends on the communication data witdh. */
 #endif
 
-#pragma CODE_SEG COM0_CODE             /* Code section for this module. */
+#pragma CODE_SEG COM0_CODE /* Code section for this module. */
 
-byte COM0_SetBaudRateMode(byte Mod);
+byte COM0_SetBaudRateMode( byte Mod );
+
 /*
 ** ===================================================================
 **     Method      :  COM0_SetBaudRateMode (bean AsynchroSerial)
@@ -150,8 +155,9 @@ byte COM0_SetBaudRateMode(byte Mod);
 */
 
 #pragma CODE_SEG __NEAR_SEG NON_BANKED /* Interrupt section for this module. Placement will be in NON_BANKED area. */
-__interrupt void COM0_Interrupt(void);
+__interrupt void COM0_Interrupt( void );
 #pragma CODE_SEG COM0_CODE             /* Code section for this module. */
+
 /*
 ** ===================================================================
 **     Method      :  COM0_Interrupt (bean AsynchroSerial)
@@ -163,7 +169,8 @@ __interrupt void COM0_Interrupt(void);
 */
 
 
-void COM0_Init(void);
+void COM0_Init( void );
+
 /*
 ** ===================================================================
 **     Method      :  COM0_Init (bean AsynchroSerial)
@@ -175,14 +182,14 @@ void COM0_Init(void);
 */
 
 
-#pragma CODE_SEG DEFAULT               /* Change code section to DEFAULT. */
+#pragma CODE_SEG DEFAULT /* Change code section to DEFAULT. */
 
 /* END COM0. */
 
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

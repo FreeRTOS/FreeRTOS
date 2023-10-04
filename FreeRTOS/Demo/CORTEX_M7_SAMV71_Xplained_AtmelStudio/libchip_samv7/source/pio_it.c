@@ -46,7 +46,7 @@
 /* Maximum number of interrupt sources that can be defined. This
  * constant can be increased, but the current value is the smallest possible
  * that will be compatible with all existing projects. */
-#define MAX_INTERRUPT_SOURCES       7
+#define MAX_INTERRUPT_SOURCES    7
 
 /*----------------------------------------------------------------------------
  *        Local types
@@ -58,19 +58,19 @@
  */
 typedef struct _InterruptSource
 {
-	/* Pointer to the source pin instance. */
-	const Pin *pPin;
+    /* Pointer to the source pin instance. */
+    const Pin * pPin;
 
-	/* Interrupt handler. */
-	void (*handler)( const Pin* ) ;
-} InterruptSource ;
+    /* Interrupt handler. */
+    void ( * handler )( const Pin * );
+} InterruptSource;
 
 /*----------------------------------------------------------------------------
  *        Local variables
  *----------------------------------------------------------------------------*/
 
 /* List of interrupt sources. */
-static InterruptSource _aIntSources[MAX_INTERRUPT_SOURCES] ;
+static InterruptSource _aIntSources[ MAX_INTERRUPT_SOURCES ];
 
 /* Number of currently defined interrupt sources. */
 static uint32_t _dwNumSources = 0;
@@ -84,37 +84,44 @@ static uint32_t _dwNumSources = 0;
  * \param id  PIO controller ID.
  * \param pPio  PIO controller base address.
  */
-extern void PioInterruptHandler( uint32_t id, Pio *pPio )
+extern void PioInterruptHandler( uint32_t id,
+                                 Pio * pPio )
 {
-	uint32_t status;
-	uint32_t i;
+    uint32_t status;
+    uint32_t i;
 
-	/* Read PIO controller status */
-	status = pPio->PIO_ISR;
-	status &= pPio->PIO_IMR;
+    /* Read PIO controller status */
+    status = pPio->PIO_ISR;
+    status &= pPio->PIO_IMR;
 
-	/* Check pending events */
-	if ( status != 0 ) {
-		TRACE_DEBUG( "PIO interrupt on PIO controller #%d\n\r", id ) ;
+    /* Check pending events */
+    if( status != 0 )
+    {
+        TRACE_DEBUG( "PIO interrupt on PIO controller #%d\n\r", id );
 
-		/* Find triggering source */
-		i = 0;
-		while ( status != 0 ) {
-			/* There cannot be an un-configured source enabled. */
-			assert(i < _dwNumSources);
+        /* Find triggering source */
+        i = 0;
 
-			/* Source is configured on the same controller */
-			if (_aIntSources[i].pPin->id == id) {
-				/* Source has PIOs whose statuses have changed */
-				if ( (status & _aIntSources[i].pPin->mask) != 0 ) {
-					TRACE_DEBUG( "Interrupt source #%d triggered\n\r", i ) ;
-					_aIntSources[i].handler(_aIntSources[i].pPin);
-					status &= ~(_aIntSources[i].pPin->mask);
-				}
-			}
-			i++;
-		}
-	}
+        while( status != 0 )
+        {
+            /* There cannot be an un-configured source enabled. */
+            assert( i < _dwNumSources );
+
+            /* Source is configured on the same controller */
+            if( _aIntSources[ i ].pPin->id == id )
+            {
+                /* Source has PIOs whose statuses have changed */
+                if( ( status & _aIntSources[ i ].pPin->mask ) != 0 )
+                {
+                    TRACE_DEBUG( "Interrupt source #%d triggered\n\r", i );
+                    _aIntSources[ i ].handler( _aIntSources[ i ].pPin );
+                    status &= ~( _aIntSources[ i ].pPin->mask );
+                }
+            }
+
+            i++;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------------
@@ -127,7 +134,7 @@ extern void PioInterruptHandler( uint32_t id, Pio *pPio )
  */
 extern void PIOA_Handler( void )
 {
-	PioInterruptHandler( ID_PIOA, PIOA ) ;
+    PioInterruptHandler( ID_PIOA, PIOA );
 }
 
 /**
@@ -136,7 +143,7 @@ extern void PIOA_Handler( void )
  */
 extern void PIOB_Handler( void )
 {
-	PioInterruptHandler( ID_PIOB, PIOB ) ;
+    PioInterruptHandler( ID_PIOB, PIOB );
 }
 
 /**
@@ -145,7 +152,7 @@ extern void PIOB_Handler( void )
  */
 extern void PIOC_Handler( void )
 {
-	PioInterruptHandler( ID_PIOC, PIOC ) ;
+    PioInterruptHandler( ID_PIOC, PIOC );
 }
 
 
@@ -155,7 +162,7 @@ extern void PIOC_Handler( void )
  */
 extern void PIOD_Handler( void )
 {
-	PioInterruptHandler( ID_PIOD, PIOD ) ;
+    PioInterruptHandler( ID_PIOD, PIOD );
 }
 
 /**
@@ -164,7 +171,7 @@ extern void PIOD_Handler( void )
  */
 extern void PIOE_Handler( void )
 {
-	PioInterruptHandler( ID_PIOE, PIOE ) ;
+    PioInterruptHandler( ID_PIOE, PIOE );
 }
 
 /**
@@ -178,56 +185,56 @@ extern void PIOE_Handler( void )
  */
 extern void PIO_InitializeInterrupts( uint32_t dwPriority )
 {
-	TRACE_DEBUG( "PIO_Initialize()\n\r" ) ;
+    TRACE_DEBUG( "PIO_Initialize()\n\r" );
 
-	/* Reset sources */
-	_dwNumSources = 0 ;
+    /* Reset sources */
+    _dwNumSources = 0;
 
-	/* Configure PIO interrupt sources */
-	TRACE_DEBUG( "PIO_Initialize: Configuring PIOA\n\r" ) ;
-	PMC_EnablePeripheral( ID_PIOA ) ;
-	PIOA->PIO_ISR ;
-	PIOA->PIO_IDR = 0xFFFFFFFF ;
-	NVIC_DisableIRQ( PIOA_IRQn ) ;
-	NVIC_ClearPendingIRQ( PIOA_IRQn ) ;
-	NVIC_SetPriority( PIOA_IRQn, dwPriority ) ;
-	NVIC_EnableIRQ( PIOA_IRQn ) ;
+    /* Configure PIO interrupt sources */
+    TRACE_DEBUG( "PIO_Initialize: Configuring PIOA\n\r" );
+    PMC_EnablePeripheral( ID_PIOA );
+    PIOA->PIO_ISR;
+    PIOA->PIO_IDR = 0xFFFFFFFF;
+    NVIC_DisableIRQ( PIOA_IRQn );
+    NVIC_ClearPendingIRQ( PIOA_IRQn );
+    NVIC_SetPriority( PIOA_IRQn, dwPriority );
+    NVIC_EnableIRQ( PIOA_IRQn );
 
-	TRACE_DEBUG( "PIO_Initialize: Configuring PIOB\n\r" ) ;
-	PMC_EnablePeripheral( ID_PIOB ) ;
-	PIOB->PIO_ISR ;
-	PIOB->PIO_IDR = 0xFFFFFFFF ;
-	NVIC_DisableIRQ( PIOB_IRQn ) ;
-	NVIC_ClearPendingIRQ( PIOB_IRQn ) ;
-	NVIC_SetPriority( PIOB_IRQn, dwPriority ) ;
-	NVIC_EnableIRQ( PIOB_IRQn ) ;
+    TRACE_DEBUG( "PIO_Initialize: Configuring PIOB\n\r" );
+    PMC_EnablePeripheral( ID_PIOB );
+    PIOB->PIO_ISR;
+    PIOB->PIO_IDR = 0xFFFFFFFF;
+    NVIC_DisableIRQ( PIOB_IRQn );
+    NVIC_ClearPendingIRQ( PIOB_IRQn );
+    NVIC_SetPriority( PIOB_IRQn, dwPriority );
+    NVIC_EnableIRQ( PIOB_IRQn );
 
-	TRACE_DEBUG( "PIO_Initialize: Configuring PIOC\n\r" ) ;
-	PMC_EnablePeripheral( ID_PIOC ) ;
-	PIOC->PIO_ISR ;
-	PIOC->PIO_IDR = 0xFFFFFFFF ;
-	NVIC_DisableIRQ( PIOC_IRQn ) ;
-	NVIC_ClearPendingIRQ( PIOC_IRQn ) ;
-	NVIC_SetPriority( PIOC_IRQn, dwPriority ) ;
-	NVIC_EnableIRQ( PIOC_IRQn ) ;
+    TRACE_DEBUG( "PIO_Initialize: Configuring PIOC\n\r" );
+    PMC_EnablePeripheral( ID_PIOC );
+    PIOC->PIO_ISR;
+    PIOC->PIO_IDR = 0xFFFFFFFF;
+    NVIC_DisableIRQ( PIOC_IRQn );
+    NVIC_ClearPendingIRQ( PIOC_IRQn );
+    NVIC_SetPriority( PIOC_IRQn, dwPriority );
+    NVIC_EnableIRQ( PIOC_IRQn );
 
-	TRACE_DEBUG( "PIO_Initialize: Configuring PIOD\n\r" ) ;
-	PMC_EnablePeripheral( ID_PIOD ) ;
-	PIOD->PIO_ISR ;
-	PIOD->PIO_IDR = 0xFFFFFFFF ;
-	NVIC_DisableIRQ( PIOD_IRQn ) ;
-	NVIC_ClearPendingIRQ( PIOD_IRQn ) ;
-	NVIC_SetPriority( PIOD_IRQn, dwPriority ) ;
-	NVIC_EnableIRQ( PIOD_IRQn ) ;
+    TRACE_DEBUG( "PIO_Initialize: Configuring PIOD\n\r" );
+    PMC_EnablePeripheral( ID_PIOD );
+    PIOD->PIO_ISR;
+    PIOD->PIO_IDR = 0xFFFFFFFF;
+    NVIC_DisableIRQ( PIOD_IRQn );
+    NVIC_ClearPendingIRQ( PIOD_IRQn );
+    NVIC_SetPriority( PIOD_IRQn, dwPriority );
+    NVIC_EnableIRQ( PIOD_IRQn );
 
-	TRACE_DEBUG( "PIO_Initialize: Configuring PIOE\n\r" ) ;
-	PMC_EnablePeripheral( ID_PIOE ) ;
-	PIOE->PIO_ISR ;
-	PIOE->PIO_IDR = 0xFFFFFFFF ;
-	NVIC_DisableIRQ( PIOE_IRQn ) ;
-	NVIC_ClearPendingIRQ( PIOE_IRQn ) ;
-	NVIC_SetPriority( PIOE_IRQn, dwPriority ) ;
-	NVIC_EnableIRQ( PIOE_IRQn ) ;
+    TRACE_DEBUG( "PIO_Initialize: Configuring PIOE\n\r" );
+    PMC_EnablePeripheral( ID_PIOE );
+    PIOE->PIO_ISR;
+    PIOE->PIO_IDR = 0xFFFFFFFF;
+    NVIC_DisableIRQ( PIOE_IRQn );
+    NVIC_ClearPendingIRQ( PIOE_IRQn );
+    NVIC_SetPriority( PIOE_IRQn, dwPriority );
+    NVIC_EnableIRQ( PIOE_IRQn );
 }
 
 /**
@@ -238,47 +245,58 @@ extern void PIO_InitializeInterrupts( uint32_t dwPriority )
  * \param pPin  Pointer to a Pin instance.
  * \param handler  Interrupt handler function pointer.
  */
-extern void PIO_ConfigureIt( const Pin *pPin, void (*handler)( const Pin* ) )
+extern void PIO_ConfigureIt( const Pin * pPin,
+                             void ( * handler )( const Pin * ) )
 {
-	Pio* pio ;
-	InterruptSource* pSource ;
+    Pio * pio;
+    InterruptSource * pSource;
 
-	TRACE_DEBUG( "PIO_ConfigureIt()\n\r" ) ;
+    TRACE_DEBUG( "PIO_ConfigureIt()\n\r" );
 
-	assert( pPin ) ;
-	pio = pPin->pio ;
-	assert( _dwNumSources < MAX_INTERRUPT_SOURCES ) ;
+    assert( pPin );
+    pio = pPin->pio;
+    assert( _dwNumSources < MAX_INTERRUPT_SOURCES );
 
-	/* Define new source */
-	TRACE_DEBUG( "PIO_ConfigureIt: Defining new source #%d.\n\r", _dwNumSources ) ;
+    /* Define new source */
+    TRACE_DEBUG( "PIO_ConfigureIt: Defining new source #%d.\n\r", _dwNumSources );
 
-	pSource = &(_aIntSources[_dwNumSources]) ;
-	pSource->pPin = pPin ;
-	pSource->handler = handler ;
-	_dwNumSources++ ;
+    pSource = &( _aIntSources[ _dwNumSources ] );
+    pSource->pPin = pPin;
+    pSource->handler = handler;
+    _dwNumSources++;
 
-	/* PIO3 with additional interrupt support
-	 * Configure additional interrupt mode registers */
-	if ( pPin->attribute & PIO_IT_AIME ) {
-		// enable additional interrupt mode
-		pio->PIO_AIMER  = pPin->mask ;
+    /* PIO3 with additional interrupt support
+     * Configure additional interrupt mode registers */
+    if( pPin->attribute & PIO_IT_AIME )
+    {
+        /* enable additional interrupt mode */
+        pio->PIO_AIMER = pPin->mask;
 
-		// if bit field of selected pin is 1, set as Rising Edge/High level detection event
-		if ( pPin->attribute & PIO_IT_RE_OR_HL ) {
-			pio->PIO_REHLSR    = pPin->mask ;
-		} else {
-			pio->PIO_FELLSR     = pPin->mask;
-		}
+        /* if bit field of selected pin is 1, set as Rising Edge/High level detection event */
+        if( pPin->attribute & PIO_IT_RE_OR_HL )
+        {
+            pio->PIO_REHLSR = pPin->mask;
+        }
+        else
+        {
+            pio->PIO_FELLSR = pPin->mask;
+        }
 
-		/* if bit field of selected pin is 1, set as edge detection source */
-		if (pPin->attribute & PIO_IT_EDGE)
-			pio->PIO_ESR     = pPin->mask;
-		else
-			pio->PIO_LSR     = pPin->mask;
-	} else {
-		/* disable additional interrupt mode */
-		pio->PIO_AIMDR       = pPin->mask;
-	}
+        /* if bit field of selected pin is 1, set as edge detection source */
+        if( pPin->attribute & PIO_IT_EDGE )
+        {
+            pio->PIO_ESR = pPin->mask;
+        }
+        else
+        {
+            pio->PIO_LSR = pPin->mask;
+        }
+    }
+    else
+    {
+        /* disable additional interrupt mode */
+        pio->PIO_AIMDR = pPin->mask;
+    }
 }
 
 /**
@@ -287,28 +305,30 @@ extern void PIO_ConfigureIt( const Pin *pPin, void (*handler)( const Pin* ) )
  * the interrupt.
  * \param pPin  Interrupt source to enable.
  */
-extern void PIO_EnableIt( const Pin *pPin )
+extern void PIO_EnableIt( const Pin * pPin )
 {
-		uint32_t i = 0;
-	uint32_t dwFound = 0;
-	
-	TRACE_DEBUG( "PIO_EnableIt()\n\r" ) ;
+    uint32_t i = 0;
+    uint32_t dwFound = 0;
 
-	assert( pPin != NULL ) ;
+    TRACE_DEBUG( "PIO_EnableIt()\n\r" );
 
-#ifndef NOASSERT
+    assert( pPin != NULL );
 
-	while ( (i < _dwNumSources) && !dwFound ) {
-		if ( _aIntSources[i].pPin == pPin ) {
-			dwFound = 1 ;
-		}
-		i++ ;
-	}
-	assert( dwFound != 0 ) ;
-#endif
+    #ifndef NOASSERT
+        while( ( i < _dwNumSources ) && !dwFound )
+        {
+            if( _aIntSources[ i ].pPin == pPin )
+            {
+                dwFound = 1;
+            }
 
-	pPin->pio->PIO_ISR;
-	pPin->pio->PIO_IER = pPin->mask ;
+            i++;
+        }
+        assert( dwFound != 0 );
+    #endif /* ifndef NOASSERT */
+
+    pPin->pio->PIO_ISR;
+    pPin->pio->PIO_IER = pPin->mask;
 }
 
 /**
@@ -316,12 +336,11 @@ extern void PIO_EnableIt( const Pin *pPin )
  *
  * \param pPin  Interrupt source to disable.
  */
-extern void PIO_DisableIt( const Pin *pPin )
+extern void PIO_DisableIt( const Pin * pPin )
 {
-	assert( pPin != NULL ) ;
+    assert( pPin != NULL );
 
-	TRACE_DEBUG( "PIO_DisableIt()\n\r" ) ;
+    TRACE_DEBUG( "PIO_DisableIt()\n\r" );
 
-	pPin->pio->PIO_IDR = pPin->mask;
+    pPin->pio->PIO_IDR = pPin->mask;
 }
-

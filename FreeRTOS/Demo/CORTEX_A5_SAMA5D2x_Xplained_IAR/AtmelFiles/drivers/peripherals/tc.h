@@ -42,33 +42,44 @@
  */
 
 #ifndef _TC_
-#define _TC_
+    #define _TC_
 
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*------------------------------------------------------------------------------
  *         Global functions
  *------------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-extern void tc_configure (Tc* pTc, uint32_t channel, uint32_t mode);
-extern void tc_start (Tc * pTc, uint32_t channel);
-extern void tc_stop (Tc * pTc, uint32_t channel);
-extern void tc_enable_it(Tc* tc, uint32_t channel, uint32_t mask);
-extern uint32_t tc_find_mck_divisor (uint32_t freq, uint32_t* div, uint32_t * tc_clks);
-extern uint32_t tc_get_status(Tc* tc, uint32_t channel_num);
-extern void tc_trigger_on_freq(Tc* tc, uint32_t channel_num, uint32_t freq);
+    extern void tc_configure( Tc * pTc,
+                              uint32_t channel,
+                              uint32_t mode );
+    extern void tc_start( Tc * pTc,
+                          uint32_t channel );
+    extern void tc_stop( Tc * pTc,
+                         uint32_t channel );
+    extern void tc_enable_it( Tc * tc,
+                              uint32_t channel,
+                              uint32_t mask );
+    extern uint32_t tc_find_mck_divisor( uint32_t freq,
+                                         uint32_t * div,
+                                         uint32_t * tc_clks );
+    extern uint32_t tc_get_status( Tc * tc,
+                                   uint32_t channel_num );
+    extern void tc_trigger_on_freq( Tc * tc,
+                                    uint32_t channel_num,
+                                    uint32_t freq );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
-#endif				/* #ifndef _TC_ */
+    #endif
+#endif /* #ifndef _TC_ */

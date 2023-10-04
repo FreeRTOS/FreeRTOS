@@ -1,5 +1,5 @@
 #ifndef HAL_VERSION_H
-#define HAL_VERSION_H
+    #define HAL_VERSION_H
 
 /*******************************************************************************
  * Copyright 2019-2020 Microchip Corporation.
@@ -35,16 +35,16 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#define HAL_VERSION_MAJOR 1
-#define HAL_VERSION_MINOR 8
-#define HAL_VERSION_PATCH 0
+    #define HAL_VERSION_MAJOR    1
+    #define HAL_VERSION_MINOR    8
+    #define HAL_VERSION_PATCH    0
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif
+#endif /* ifndef HAL_VERSION_H */

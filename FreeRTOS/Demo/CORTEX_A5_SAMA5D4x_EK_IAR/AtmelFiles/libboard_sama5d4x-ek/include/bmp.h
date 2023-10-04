@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -30,19 +30,19 @@
 /**
  *  \file
  *  \section Purpose
- * 
+ *
  *  Utility for BMP
- * 
+ *
  */
 
 #ifndef BMP_H
 #define BMP_H
 
 /**  BMP magic number ('BM'). */
-#define BMP_TYPE       0x4D42
+#define BMP_TYPE            0x4D42
 
 /**  headerSize must be set to 40 */
-#define BITMAPINFOHEADER   40
+#define BITMAPINFOHEADER    40
 
 /*------------------------------------------------------------------------------
  *         Exported types
@@ -52,7 +52,7 @@
  * In case of IAR EWARM use, we define an empty macro to turn useless GCC and MDK __attribute__ keyword
  */
 #if defined __ICCARM__ || defined __CC_ARM || defined __GNUC__
-#    pragma pack( 1 )
+    #pragma pack( 1 )
 #endif
 
 /** BMP (Windows) File Header Format */
@@ -91,9 +91,9 @@ typedef struct _BMP3XHeader
     /** size of this header in bytes */
     uint32_t size;
     /** image width in pixels */
-    int32_t  width;
+    int32_t width;
     /** image height in pixels */
-    int32_t  height;
+    int32_t height;
     /** number of color planes */
     uint16_t planes;
     /** number of bits per pixel */
@@ -103,14 +103,14 @@ typedef struct _BMP3XHeader
     /** Size of bitmap in bytes */
     uint32_t sizeOfBitmap;
     /** horizontal resolution in pixels per meter */
-    int32_t  xResolution;
+    int32_t xResolution;
     /** vertical resolution in pixels per meter */
-    int32_t  yResolution;
+    int32_t yResolution;
     /** number of colors in the image */
     uint32_t colorsUsed;
     /** minimum number of important colors */
     uint32_t colorsImportant;
-}  BMP3XHeader;
+} BMP3XHeader;
 
 /** BMP (Windows 95, V4) Header, 108 bytes */
 typedef struct _BMP4Header
@@ -118,9 +118,9 @@ typedef struct _BMP4Header
     /** size of this header in bytes */
     uint32_t size;
     /** image width in pixels */
-    int32_t  width;
+    int32_t width;
     /** image height in pixels */
-    int32_t  height;
+    int32_t height;
     /** number of color planes */
     uint16_t planes;
     /** number of bits per pixel */
@@ -130,9 +130,9 @@ typedef struct _BMP4Header
     /** Size of bitmap in bytes */
     uint32_t sizeOfBitmap;
     /** horizontal resolution in pixels per meter */
-    int32_t  xResolution;
+    int32_t xResolution;
     /** vertical resolution in pixels per meter */
-    int32_t  yResolution;
+    int32_t yResolution;
     /** number of colors in the image */
     uint32_t colorsUsed;
     /** minimum number of important colors */
@@ -149,30 +149,30 @@ typedef struct _BMP4Header
     /** Color space type */
     uint32_t csType;
     /** X coordinate of red endpoint */
-    int32_t  redX;
+    int32_t redX;
     /** Y coordinate of red endpoint */
-    int32_t  redY;
+    int32_t redY;
     /** Z coordinate of red endpoint */
-    int32_t  redZ;
+    int32_t redZ;
     /** X coordinate of green endpoint */
-    int32_t  greenX;
+    int32_t greenX;
     /** Y coordinate of green endpoint */
-    int32_t  greenY;
+    int32_t greenY;
     /** Z coordinate of green endpoint */
-    int32_t  greenZ;
+    int32_t greenZ;
     /** X coordinate of blue endpoint */
-    int32_t  blueX;
+    int32_t blueX;
     /** Y coordinate of blue endpoint */
-    int32_t  blueY;
+    int32_t blueY;
     /** Z coordinate of blue endpoint */
-    int32_t  blueZ;
+    int32_t blueZ;
     /** Gamma red coordinate scale value */
     uint32_t gammaRed;
     /** Gamma green coordinate scale value */
     uint32_t gammaGreen;
     /** Gamma blue coordinate scale value */
     uint32_t gammaBlue;
-}  BMP4Header;
+} BMP4Header;
 
 /** BMP (Windows) Header Format */
 typedef struct _BMPHeader
@@ -209,42 +209,38 @@ typedef struct _BMPHeader
     uint32_t ncolours;
     /*  number of important colors, or zero */
     uint32_t importantcolours;
-
-} BMPHeader  ; // GCC
+} BMPHeader; /* GCC */
 
 #if defined __ICCARM__ || defined __CC_ARM || defined __GNUC__
-#    pragma pack()
+    #pragma pack()
 #endif
 
 /*------------------------------------------------------------------------------
  *         Exported functions
  *------------------------------------------------------------------------------*/
 
-extern uint8_t BMP_IsValid(void *file);
+extern uint8_t BMP_IsValid( void * file );
 
-extern uint32_t BMP_GetFileSize(void *file);
+extern uint32_t BMP_GetFileSize( void * file );
 
-extern uint8_t BMP_Decode(
-    void *file,
-    uint8_t*buffer,
-    uint32_t width,
-    uint32_t height,
-    unsigned char bpp);
+extern uint8_t BMP_Decode( void * file,
+                           uint8_t * buffer,
+                           uint32_t width,
+                           uint32_t height,
+                           unsigned char bpp );
 
-extern void WriteBMPheader(uint32_t* pAddressHeader,
-                    uint32_t  bmpHSize,
-                    uint32_t  bmpVSize,
-                    uint8_t bmpRgb,
-                    uint8_t nbByte_Pixels);
+extern void WriteBMPheader( uint32_t * pAddressHeader,
+                            uint32_t bmpHSize,
+                            uint32_t bmpVSize,
+                            uint8_t bmpRgb,
+                            uint8_t nbByte_Pixels );
 
-extern void BMP_displayHeader(uint32_t* pAddressHeader);
+extern void BMP_displayHeader( uint32_t * pAddressHeader );
 
-extern void RGB565toBGR555(
-    uint8_t *fileSource,
-    uint8_t *fileDestination,
-    uint32_t width,
-    uint32_t height,
-    uint8_t bpp);
+extern void RGB565toBGR555( uint8_t * fileSource,
+                            uint8_t * fileDestination,
+                            uint32_t width,
+                            uint32_t height,
+                            uint8_t bpp );
 
 #endif //#ifndef BMP_H
-

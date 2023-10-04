@@ -35,16 +35,19 @@
 
 #ifdef __cplusplus
 extern "C" {
-	__attribute__((weak)) s32 _fstat(s32 fd, struct stat *buf);
+__attribute__( ( weak ) ) s32 _fstat( s32 fd,
+                                      struct stat * buf );
 }
 #endif
+
 /*
  * fstat -- Since we have no file system, we just return an error.
  */
-__attribute__((weak)) s32 _fstat(s32 fd, struct stat *buf)
+__attribute__( ( weak ) ) s32 _fstat( s32 fd,
+                                      struct stat * buf )
 {
-  (void)fd;
-  buf->st_mode = S_IFCHR; /* Always pretend to be a tty */
+    ( void ) fd;
+    buf->st_mode = S_IFCHR; /* Always pretend to be a tty */
 
-  return (0);
+    return( 0 );
 }

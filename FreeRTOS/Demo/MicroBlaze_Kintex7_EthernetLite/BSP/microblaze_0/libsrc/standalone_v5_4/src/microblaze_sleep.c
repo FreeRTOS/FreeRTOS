@@ -30,26 +30,27 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file microblaze_sleep.c
-*
-* Contains implementation of microblaze sleep function.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date	 Changes
-* ----- ---- -------- -------------------------------------------------------
-* 4.1   hk   04/18/14 Add sleep function.
-*
-* </pre>
-*
-* @note
-*
-* This file may contain architecture-dependent code.
-*
-******************************************************************************/
+ *
+ * @file microblaze_sleep.c
+ *
+ * Contains implementation of microblaze sleep function.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date	 Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 4.1   hk   04/18/14 Add sleep function.
+ *
+ * </pre>
+ *
+ * @note
+ *
+ * This file may contain architecture-dependent code.
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -69,35 +70,36 @@
 
 
 /*****************************************************************************/
+
 /**
-*
-* Provides delay for requested duration.
-*
-* @param	Delay time in milliseconds.
-*
-* @return	None.
-*
-* @note		Instruction cache should be enabled for this to work.
-*
-******************************************************************************/
-void MB_Sleep(u32 MilliSeconds)
+ *
+ * Provides delay for requested duration.
+ *
+ * @param	Delay time in milliseconds.
+ *
+ * @return	None.
+ *
+ * @note		Instruction cache should be enabled for this to work.
+ *
+ ******************************************************************************/
+void MB_Sleep( u32 MilliSeconds )
 {
-	if (((mfmsr() & 0x20U) == 0U)) {
-		/*
-		 * Instruction cache not enabled.
-		 * Delay will be much higher than expected.
-		 */
-	}
+    if( ( ( mfmsr() & 0x20U ) == 0U ) )
+    {
+        /*
+         * Instruction cache not enabled.
+         * Delay will be much higher than expected.
+         */
+    }
 
-	asm volatile ("\n"
-			"1:               \n\t"
-			"addik r7, r0, %0 \n\t"
-			"2:               \n\t"
-			"addik r7, r7, -1 \n\t"
-			"bneid  r7, 2b    \n\t"
-			"or  r0, r0, r0   \n\t"
-			"bneid %1, 1b     \n\t"
-			"addik %1, %1, -1 \n\t"
-			:: "i"(ITERS_PER_MSEC), "d" (MilliSeconds));
-
+    asm volatile ( "\n"
+                   "1:               \n\t"
+                   "addik r7, r0, %0 \n\t"
+                   "2:               \n\t"
+                   "addik r7, r7, -1 \n\t"
+                   "bneid  r7, 2b    \n\t"
+                   "or  r0, r0, r0   \n\t"
+                   "bneid %1, 1b     \n\t"
+                   "addik %1, %1, -1 \n\t"
+                   : : "i" ( ITERS_PER_MSEC ), "d" ( MilliSeconds ) );
 }

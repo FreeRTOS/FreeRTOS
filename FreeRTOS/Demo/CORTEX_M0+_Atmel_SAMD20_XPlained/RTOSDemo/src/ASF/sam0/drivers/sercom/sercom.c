@@ -42,81 +42,86 @@
  */
 #include "sercom.h"
 
-#define SHIFT 32
+#define SHIFT    32
 
-#if !defined(__DOXYGEN__)
+#if !defined( __DOXYGEN__ )
+
 /**
  * \internal Configuration structure to save current gclk status.
  */
-struct _sercom_conf {
-	/* Status of gclk generator initialization. */
-	bool generator_is_set;
-	/* Sercom gclk generator used. */
-	enum gclk_generator generator_source;
-};
+    struct _sercom_conf
+    {
+        /* Status of gclk generator initialization. */
+        bool generator_is_set;
+        /* Sercom gclk generator used. */
+        enum gclk_generator generator_source;
+    };
 
-static struct _sercom_conf _sercom_config;
+    static struct _sercom_conf _sercom_config;
 
 /**
  * \internal Calculate synchronous baudrate value (SPI/UART)
  */
-enum status_code _sercom_get_sync_baud_val(
-		const uint32_t baudrate,
-		const uint32_t external_clock,
-		uint16_t *const baudvalue)
-{
-	/* Baud value variable */
-	uint16_t baud_calculated = 0;
+    enum status_code _sercom_get_sync_baud_val( const uint32_t baudrate,
+                                                const uint32_t external_clock,
+                                                uint16_t * const baudvalue )
+    {
+        /* Baud value variable */
+        uint16_t baud_calculated = 0;
 
-	/* Check if baudrate is outside of valid range. */
-	if (baudrate > (external_clock / 2)) {
-		/* Return with error code */
-		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
-	}
+        /* Check if baudrate is outside of valid range. */
+        if( baudrate > ( external_clock / 2 ) )
+        {
+            /* Return with error code */
+            return STATUS_ERR_BAUDRATE_UNAVAILABLE;
+        }
 
-	/* Calculate BAUD value from clock frequency and baudrate */
-	baud_calculated = (external_clock / (2 * baudrate)) - 1;
+        /* Calculate BAUD value from clock frequency and baudrate */
+        baud_calculated = ( external_clock / ( 2 * baudrate ) ) - 1;
 
-	/* Check if BAUD value is more than 255, which is maximum
-	 * for synchronous mode */
-	if (baud_calculated > 0xFF) {
-		/* Return with an error code */
-		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
-	} else {
-		*baudvalue = baud_calculated;
-		return STATUS_OK;
-	}
-}
+        /* Check if BAUD value is more than 255, which is maximum
+         * for synchronous mode */
+        if( baud_calculated > 0xFF )
+        {
+            /* Return with an error code */
+            return STATUS_ERR_BAUDRATE_UNAVAILABLE;
+        }
+        else
+        {
+            *baudvalue = baud_calculated;
+            return STATUS_OK;
+        }
+    }
 
 /**
  * \internal Calculate asynchronous baudrate value (UART)
-*/
-enum status_code _sercom_get_async_baud_val(
-		const uint32_t baudrate,
-		const uint32_t peripheral_clock,
-		uint16_t *const baudval)
-{
-	/* Temporary variables  */
-	uint64_t ratio = 0;
-	uint64_t scale = 0;
-	uint64_t baud_calculated = 0;
+ */
+    enum status_code _sercom_get_async_baud_val( const uint32_t baudrate,
+                                                 const uint32_t peripheral_clock,
+                                                 uint16_t * const baudval )
+    {
+        /* Temporary variables  */
+        uint64_t ratio = 0;
+        uint64_t scale = 0;
+        uint64_t baud_calculated = 0;
 
-	/* Check if the baudrate is outside of valid range */
-	if ((baudrate * 16) >= peripheral_clock) {
-		/* Return with error code */
-		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
-	}
+        /* Check if the baudrate is outside of valid range */
+        if( ( baudrate * 16 ) >= peripheral_clock )
+        {
+            /* Return with error code */
+            return STATUS_ERR_BAUDRATE_UNAVAILABLE;
+        }
 
-	/* Calculate the BAUD value */
-	ratio = ((16 * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
-	scale = ((uint64_t)1 << SHIFT) - ratio;
-	baud_calculated = (65536 * scale) >> SHIFT;
+        /* Calculate the BAUD value */
+        ratio = ( ( 16 * ( uint64_t ) baudrate ) << SHIFT ) / peripheral_clock;
+        scale = ( ( uint64_t ) 1 << SHIFT ) - ratio;
+        baud_calculated = ( 65536 * scale ) >> SHIFT;
 
-	*baudval = baud_calculated;
+        *baudval = baud_calculated;
 
-	return STATUS_OK;
-}
-#endif
+        return STATUS_OK;
+    }
+#endif /* if !defined( __DOXYGEN__ ) */
 
 /**
  * \brief Set GCLK channel to generator.
@@ -138,50 +143,52 @@ enum status_code _sercom_get_async_baud_val(
  *                                         and the new configuration was not
  *                                         forced.
  */
-enum status_code sercom_set_gclk_generator(
-		const enum gclk_generator generator_source,
-		const bool force_change)
+enum status_code sercom_set_gclk_generator( const enum gclk_generator generator_source,
+                                            const bool force_change )
 {
-	/* Check if valid option. */
-	if (!_sercom_config.generator_is_set || force_change) {
-		/* Create and fill a GCLK configuration structure for the new config. */
-		struct system_gclk_chan_config gclk_chan_conf;
-		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-		gclk_chan_conf.source_generator = generator_source;
-		system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
-		system_gclk_chan_enable(SERCOM_GCLK_ID);
+    /* Check if valid option. */
+    if( !_sercom_config.generator_is_set || force_change )
+    {
+        /* Create and fill a GCLK configuration structure for the new config. */
+        struct system_gclk_chan_config gclk_chan_conf;
+        system_gclk_chan_get_config_defaults( &gclk_chan_conf );
+        gclk_chan_conf.source_generator = generator_source;
+        system_gclk_chan_set_config( SERCOM_GCLK_ID, &gclk_chan_conf );
+        system_gclk_chan_enable( SERCOM_GCLK_ID );
 
-		/* Save config. */
-		_sercom_config.generator_source = generator_source;
-		_sercom_config.generator_is_set = true;
+        /* Save config. */
+        _sercom_config.generator_source = generator_source;
+        _sercom_config.generator_is_set = true;
 
-		return STATUS_OK;
-	} else if (generator_source == _sercom_config.generator_source) {
-		/* Return status OK if same config. */
-		return STATUS_OK;
-	}
+        return STATUS_OK;
+    }
+    else if( generator_source == _sercom_config.generator_source )
+    {
+        /* Return status OK if same config. */
+        return STATUS_OK;
+    }
 
-	/* Return invalid config to already initialized GCLK. */
-	return STATUS_ERR_ALREADY_INITIALIZED;
+    /* Return invalid config to already initialized GCLK. */
+    return STATUS_ERR_ALREADY_INITIALIZED;
 }
 
 /** \internal
  * Creates a switch statement case entry to convert a SERCOM instance and pad
  * index to the default SERCOM pad MUX setting.
  */
-#define _SERCOM_PAD_DEFAULTS_CASE(n, pad) \
-		case (uintptr_t)SERCOM##n: \
-			switch (pad) { \
-				case 0: \
-					return SERCOM##n##_PAD0_DEFAULT; \
-				case 1: \
-					return SERCOM##n##_PAD1_DEFAULT; \
-				case 2: \
-					return SERCOM##n##_PAD2_DEFAULT; \
-				case 3: \
-					return SERCOM##n##_PAD3_DEFAULT; \
-			} \
-			break;
+#define _SERCOM_PAD_DEFAULTS_CASE( n, pad )          \
+    case ( uintptr_t ) SERCOM ## n:                  \
+        switch( pad ) {                              \
+            case 0:                                  \
+                return SERCOM ## n ## _PAD0_DEFAULT; \
+            case 1:                                  \
+                return SERCOM ## n ## _PAD1_DEFAULT; \
+            case 2:                                  \
+                return SERCOM ## n ## _PAD2_DEFAULT; \
+            case 3:                                  \
+                return SERCOM ## n ## _PAD3_DEFAULT; \
+        }                                            \
+        break;
 
 /**
  * \internal Gets the default PAD pinout for a given SERCOM.
@@ -195,15 +202,15 @@ enum status_code sercom_set_gclk_generator(
  * \returns The default PINMUX for the given SERCOM instance and PAD
  *
  */
-uint32_t _sercom_get_default_pad(
-		Sercom *const sercom_module,
-		const uint8_t pad)
+uint32_t _sercom_get_default_pad( Sercom * const sercom_module,
+                                  const uint8_t pad )
 {
-	switch ((uintptr_t)sercom_module) {
-		/* Auto-generate a lookup table for the default SERCOM pad defaults */
-		MREPEAT(SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad)
-	}
+    switch( ( uintptr_t ) sercom_module )
+    {
+        /* Auto-generate a lookup table for the default SERCOM pad defaults */
+        MREPEAT( SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad )
+    }
 
-	Assert(false);
-	return 0;
+    Assert( false );
+    return 0;
 }

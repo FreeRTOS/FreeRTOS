@@ -95,107 +95,126 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void aes_start(void)
+void aes_start( void )
 {
-	AES->AES_CR = AES_CR_START;
+    AES->AES_CR = AES_CR_START;
 }
 
-void aes_soft_reset(void)
+void aes_soft_reset( void )
 {
-	AES->AES_CR = AES_CR_SWRST;
+    AES->AES_CR = AES_CR_SWRST;
 }
 
-void aes_configure(uint32_t mode)
+void aes_configure( uint32_t mode )
 {
-	AES->AES_MR = mode;
+    AES->AES_MR = mode;
 }
 
-void aes_enable_it(uint32_t sources)
+void aes_enable_it( uint32_t sources )
 {
-	AES->AES_IER = sources;
+    AES->AES_IER = sources;
 }
 
-void aes_disable_it(uint32_t sources)
+void aes_disable_it( uint32_t sources )
 {
-	AES->AES_IDR = sources;
+    AES->AES_IDR = sources;
 }
 
-uint32_t aes_get_status(void)
+uint32_t aes_get_status( void )
 {
-	return AES->AES_ISR;
+    return AES->AES_ISR;
 }
 
-void aes_write_key(const uint32_t * key, uint32_t len)
+void aes_write_key( const uint32_t * key,
+                    uint32_t len )
 {
-	AES->AES_KEYWR[0] = key[0];
-	AES->AES_KEYWR[1] = key[1];
-	AES->AES_KEYWR[2] = key[2];
-	AES->AES_KEYWR[3] = key[3];
+    AES->AES_KEYWR[ 0 ] = key[ 0 ];
+    AES->AES_KEYWR[ 1 ] = key[ 1 ];
+    AES->AES_KEYWR[ 2 ] = key[ 2 ];
+    AES->AES_KEYWR[ 3 ] = key[ 3 ];
 
-	if (len >= 24) {
-		AES->AES_KEYWR[4] = key[4];
-		AES->AES_KEYWR[5] = key[5];
-	}
-	if (len == 32) {
-		AES->AES_KEYWR[6] = key[6];
-		AES->AES_KEYWR[7] = key[7];
-	}
+    if( len >= 24 )
+    {
+        AES->AES_KEYWR[ 4 ] = key[ 4 ];
+        AES->AES_KEYWR[ 5 ] = key[ 5 ];
+    }
+
+    if( len == 32 )
+    {
+        AES->AES_KEYWR[ 6 ] = key[ 6 ];
+        AES->AES_KEYWR[ 7 ] = key[ 7 ];
+    }
 }
 
-void aes_set_input(uint32_t * data)
+void aes_set_input( uint32_t * data )
 {
-	uint8_t i;
-	for (i = 0; i < 4; i++)
-		AES->AES_IDATAR[i] = data[i];
+    uint8_t i;
+
+    for( i = 0; i < 4; i++ )
+    {
+        AES->AES_IDATAR[ i ] = data[ i ];
+    }
 }
 
-void aes_get_output(uint32_t * data)
+void aes_get_output( uint32_t * data )
 {
-	uint8_t i;
-	for (i = 0; i < 4; i++)
-		data[i] = AES->AES_ODATAR[i];
+    uint8_t i;
+
+    for( i = 0; i < 4; i++ )
+    {
+        data[ i ] = AES->AES_ODATAR[ i ];
+    }
 }
 
-void aes_set_vector(const uint32_t * vector)
+void aes_set_vector( const uint32_t * vector )
 {
-	AES->AES_IVR[0] = vector[0];
-	AES->AES_IVR[1] = vector[1];
-	AES->AES_IVR[2] = vector[2];
-	AES->AES_IVR[3] = vector[3];
+    AES->AES_IVR[ 0 ] = vector[ 0 ];
+    AES->AES_IVR[ 1 ] = vector[ 1 ];
+    AES->AES_IVR[ 2 ] = vector[ 2 ];
+    AES->AES_IVR[ 3 ] = vector[ 3 ];
 }
 
-void aes_set_aad_len(uint32_t len)
+void aes_set_aad_len( uint32_t len )
 {
-	AES->AES_AADLENR = len;
+    AES->AES_AADLENR = len;
 }
 
-void aes_set_data_len(uint32_t len)
+void aes_set_data_len( uint32_t len )
 {
-	AES->AES_CLENR = len;
+    AES->AES_CLENR = len;
 }
 
-void aes_set_gcm_hash(uint32_t * hash)
+void aes_set_gcm_hash( uint32_t * hash )
 {
-	uint8_t i;
-	for (i = 0; i < 4; i++)
-		AES->AES_GHASHR[i] = hash[i];
+    uint8_t i;
+
+    for( i = 0; i < 4; i++ )
+    {
+        AES->AES_GHASHR[ i ] = hash[ i ];
+    }
 }
 
-void aes_get_gcm_tag(uint32_t * tag)
+void aes_get_gcm_tag( uint32_t * tag )
 {
-	uint8_t i;
-	for (i = 0; i < 4; i++)
-		tag[i] = AES->AES_TAGR[i];
+    uint8_t i;
+
+    for( i = 0; i < 4; i++ )
+    {
+        tag[ i ] = AES->AES_TAGR[ i ];
+    }
 }
 
-void aes_get_gcm_counter(uint32_t * counter)
+void aes_get_gcm_counter( uint32_t * counter )
 {
-	*counter = AES->AES_CTRR;
+    *counter = AES->AES_CTRR;
 }
 
-void aes_get_gcm_hash_subkey(uint32_t * h)
+void aes_get_gcm_hash_subkey( uint32_t * h )
 {
-	uint8_t i;
-	for (i = 0; i < 4; i++)
-		h[i] = AES->AES_GCMHR[i];
+    uint8_t i;
+
+    for( i = 0; i < 4; i++ )
+    {
+        h[ i ] = AES->AES_GCMHR[ i ];
+    }
 }

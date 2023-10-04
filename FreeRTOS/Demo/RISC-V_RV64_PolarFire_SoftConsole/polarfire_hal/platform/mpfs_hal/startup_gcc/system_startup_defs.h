@@ -5,7 +5,7 @@
  *
  * MPFS HAL Embedded Software
  *
-*/
+ */
 
 /******************************************************************************
  * @file system_startup_defs.h
@@ -14,19 +14,19 @@
  */
 
 #ifndef SYSTEM_STARTUP_DEFS_H
-#define SYSTEM_STARTUP_DESF_H
+    #define SYSTEM_STARTUP_DESF_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*------------------------------------------------------------------------------
  * Markers used to indicate startup status of hart
  */
-#define HLS_MAIN_HART_STARTED               0x12344321U
-#define HLS_MAIN_HART_FIN_INIT              0x55555555U
-#define HLS_OTHER_HART_IN_WFI               0x12345678U
-#define HLS_OTHER_HART_PASSED_WFI           0x87654321U
+    #define HLS_MAIN_HART_STARTED        0x12344321U
+    #define HLS_MAIN_HART_FIN_INIT       0x55555555U
+    #define HLS_OTHER_HART_IN_WFI        0x12345678U
+    #define HLS_OTHER_HART_PASSED_WFI    0x87654321U
 
 /*------------------------------------------------------------------------------
  * Define the size of the HLS used
@@ -35,12 +35,12 @@ extern "C" {
  * The TLS will take memory from top of the stack if allocated
  *
  */
-#if !defined (HLS_DEBUG_AREA_SIZE)
-#define HLS_DEBUG_AREA_SIZE     64
-#endif
+    #if !defined( HLS_DEBUG_AREA_SIZE )
+        #define HLS_DEBUG_AREA_SIZE    64
+    #endif
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* SYSTEM_STARTUP_DESF_H */

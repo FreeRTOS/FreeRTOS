@@ -11,9 +11,9 @@ while($file = <FILES>) {
     if($file =~ /(CVS|~)/) {
     	next;
     }
-    
+
     chop($file);
-    
+
     open(HEADER, "> /tmp/header") || die $!;
     if($file =~ /404/) {
 	print(HEADER "HTTP/1.0 404 File not found\r\n");
@@ -32,7 +32,7 @@ while($file = <FILES>) {
     } elsif($file =~ /\.class$/) {
 	print(HEADER "Content-type: application/octet-stream\r\n");
     } elsif($file =~ /\.ram$/) {
-	print(HEADER "Content-type: audio/x-pn-realaudio\r\n");    
+	print(HEADER "Content-type: audio/x-pn-realaudio\r\n");
     } else {
 	print(HEADER "Content-type: text/plain\r\n");
     }
@@ -44,7 +44,7 @@ while($file = <FILES>) {
     } else {
 	system("cp $file /tmp/file");
     }
-    
+
     open(FILE, "/tmp/file");
     unlink("/tmp/file");
     unlink("/tmp/header");
@@ -59,8 +59,8 @@ while($file = <FILES>) {
 	printf(OUTPUT "%#02x, ", unpack("C", substr($file, $j, 1)));
     }
     printf(OUTPUT "0,\n");
-    
-    
+
+
     $i = 0;
     while(read(FILE, $data, 1)) {
         if($i == 0) {

@@ -24,10 +24,10 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Comment the line below to compile the library in release mode */
-//#define DEBUG
+/*#define DEBUG */
 
 /************************************* SMI ************************************/
-//#define _SMI
+/*#define _SMI */
 
 /************************************* CFG ************************************/
 #define _CFG
@@ -36,7 +36,7 @@
 #define _MRCC
 
 /************************************* ADC ************************************/
-//#define _ADC
+/*#define _ADC */
 
 /************************************* TB *************************************/
 #define _TB
@@ -54,15 +54,15 @@
 #define _WDG
 
 /************************************* SSP ************************************/
-//#define _SSP
-//#define _SSP0
-//#define _SSP1
+/*#define _SSP */
+/*#define _SSP0 */
+/*#define _SSP1 */
 
 /************************************* CAN ************************************/
-//#define _CAN
+/*#define _CAN */
 
 /************************************* I2C ************************************/
-//#define _I2C
+/*#define _I2C */
 
 /************************************* UART ***********************************/
 #define _UART
@@ -78,14 +78,14 @@
 #define _GPIOREMAP
 
 /************************************* DMA ************************************/
-//#define _DMA
-//#define _DMA_Stream0
-//#define _DMA_Stream1
-//#define _DMA_Stream2
-//#define _DMA_Stream3
+/*#define _DMA */
+/*#define _DMA_Stream0 */
+/*#define _DMA_Stream1 */
+/*#define _DMA_Stream2 */
+/*#define _DMA_Stream3 */
 
 /************************************* RTC ************************************/
-//#define _RTC
+/*#define _RTC */
 
 /************************************* EXTIT **********************************/
 #define _EXTIT
@@ -94,9 +94,9 @@
 #define _EIC
 
 /* Comment the following line, depending on the external Quartz oscillator used
-   in your application */
+ * in your application */
 #define Main_Oscillator    4000000   /* 4 MHz Quartz oscillator used */
-//#define Main_Oscillator    8000000   /* 8 MHz Quartz oscillator used */
+/*#define Main_Oscillator    8000000   / * 8 MHz Quartz oscillator used * / */
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

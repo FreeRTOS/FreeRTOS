@@ -54,20 +54,20 @@
  */
 
 #ifndef UTILS_H_INCLUDED
-#define UTILS_H_INCLUDED
+    #define UTILS_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /**
  * \brief Retrieve array size
  */
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+    #define ARRAY_SIZE( a )    ( sizeof( a ) / sizeof( ( a )[ 0 ] ) )
 
 /** @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif /* UTILS_H_INCLUDED */

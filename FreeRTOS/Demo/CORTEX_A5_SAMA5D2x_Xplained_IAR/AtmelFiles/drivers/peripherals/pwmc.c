@@ -90,58 +90,73 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void pwmc_configure_clocks(Pwm * p_pwm, uint32_t mode)
+void pwmc_configure_clocks( Pwm * p_pwm,
+                            uint32_t mode )
 {
-	p_pwm->PWM_CLK = mode;
+    p_pwm->PWM_CLK = mode;
 }
 
-void pwmc_enable_channel(Pwm * p_pwm, uint8_t channel)
+void pwmc_enable_channel( Pwm * p_pwm,
+                          uint8_t channel )
 {
-	p_pwm->PWM_ENA = 0x1ul << channel;
+    p_pwm->PWM_ENA = 0x1ul << channel;
 }
 
-void pwmc_disable_channel(Pwm * p_pwm, uint8_t channel)
+void pwmc_disable_channel( Pwm * p_pwm,
+                           uint8_t channel )
 {
-	p_pwm->PWM_DIS = 0x1ul << channel;
+    p_pwm->PWM_DIS = 0x1ul << channel;
 }
 
-void pwmc_enable_channel_it(Pwm * p_pwm, uint8_t channel)
+void pwmc_enable_channel_it( Pwm * p_pwm,
+                             uint8_t channel )
 {
-	p_pwm->PWM_IER1 = 0x1ul << channel;
+    p_pwm->PWM_IER1 = 0x1ul << channel;
 }
 
-void pwmc_disable_channel_it(Pwm * p_pwm, uint8_t channel)
+void pwmc_disable_channel_it( Pwm * p_pwm,
+                              uint8_t channel )
 {
-	p_pwm->PWM_IDR1 = 0x1ul << channel;
+    p_pwm->PWM_IDR1 = 0x1ul << channel;
 }
 
-void pwmc_configure_channel(Pwm * p_pwm, uint8_t channel, uint32_t mode)
+void pwmc_configure_channel( Pwm * p_pwm,
+                             uint8_t channel,
+                             uint32_t mode )
 {
-	p_pwm->PWM_CH_NUM[channel].PWM_CMR = mode;
+    p_pwm->PWM_CH_NUM[ channel ].PWM_CMR = mode;
 }
 
-void pwmc_set_period(Pwm * p_pwm, uint8_t channel, uint16_t period)
+void pwmc_set_period( Pwm * p_pwm,
+                      uint8_t channel,
+                      uint16_t period )
 {
-	/* If channel is disabled, write to CPRD */
-	if ((p_pwm->PWM_SR & (1 << channel)) == 0) {
-		p_pwm->PWM_CH_NUM[channel].PWM_CPRD = period;
-	}
-	/* Otherwise use update register */
-	else {
-		p_pwm->PWM_CH_NUM[channel].PWM_CPRDUPD = period;
-	}
+    /* If channel is disabled, write to CPRD */
+    if( ( p_pwm->PWM_SR & ( 1 << channel ) ) == 0 )
+    {
+        p_pwm->PWM_CH_NUM[ channel ].PWM_CPRD = period;
+    }
+    /* Otherwise use update register */
+    else
+    {
+        p_pwm->PWM_CH_NUM[ channel ].PWM_CPRDUPD = period;
+    }
 }
 
-void pwmc_set_duty_cycle(Pwm * p_pwm, uint8_t channel, uint16_t duty)
+void pwmc_set_duty_cycle( Pwm * p_pwm,
+                          uint8_t channel,
+                          uint16_t duty )
 {
-	assert(duty <= p_pwm->PWM_CH_NUM[channel].PWM_CPRD);
+    assert( duty <= p_pwm->PWM_CH_NUM[ channel ].PWM_CPRD );
 
-	/* If channel is disabled, write to CDTY */
-	if ((p_pwm->PWM_SR & (1 << channel)) == 0) {
-		p_pwm->PWM_CH_NUM[channel].PWM_CDTY = duty;
-	}
-	/* Otherwise use update register */
-	else {
-		p_pwm->PWM_CH_NUM[channel].PWM_CDTYUPD = duty;
-	}
+    /* If channel is disabled, write to CDTY */
+    if( ( p_pwm->PWM_SR & ( 1 << channel ) ) == 0 )
+    {
+        p_pwm->PWM_CH_NUM[ channel ].PWM_CDTY = duty;
+    }
+    /* Otherwise use update register */
+    else
+    {
+        p_pwm->PWM_CH_NUM[ channel ].PWM_CDTYUPD = duty;
+    }
 }

@@ -30,76 +30,79 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
+ *
+ * @file xenv_standalone.h
+ *
+ * Defines common services specified by xenv.h.
+ *
+ * @note
+ *  This file is not intended to be included directly by driver code.
+ *  Instead, the generic xenv.h file is intended to be included by driver
+ *  code.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -----------------------------------------------
+ * 1.00a wgr  02/28/07 Added cache handling macros.
+ * 1.00a wgr  02/27/07 Simplified code. Deprecated old-style macro names.
+ * 1.00a rmm  01/24/06 Implemented XENV_USLEEP. Assume implementation is being
+ *                     used under Xilinx standalone BSP.
+ * 1.00a xd   11/03/04 Improved support for doxygen.
+ * 1.00a rmm  03/21/02 First release
+ * 1.00a wgr  03/22/07 Converted to new coding style.
+ * 1.00a rpm  06/29/07 Added udelay macro for standalone
+ * 1.00a xd   07/19/07 Included xparameters.h as XPAR_ constants are referred
+ *                     to in MICROBLAZE section
+ * 1.00a ecm  09/19/08 updated for v7.20 of Microblaze, new functionality
+ *
+ * </pre>
+ *
+ *
+ ******************************************************************************/
+
+#ifndef XENV_STANDALONE_H
+    #define XENV_STANDALONE_H
+
+    #include "xil_types.h"
+
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
+
+/***************************** Include Files *********************************/
+
+/******************************************************************************
 *
-* @file xenv_standalone.h
-*
-* Defines common services specified by xenv.h.
-*
-* @note
-* 	This file is not intended to be included directly by driver code.
-* 	Instead, the generic xenv.h file is intended to be included by driver
-* 	code.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -----------------------------------------------
-* 1.00a wgr  02/28/07 Added cache handling macros.
-* 1.00a wgr  02/27/07 Simplified code. Deprecated old-style macro names.
-* 1.00a rmm  01/24/06 Implemented XENV_USLEEP. Assume implementation is being
-*                     used under Xilinx standalone BSP.
-* 1.00a xd   11/03/04 Improved support for doxygen.
-* 1.00a rmm  03/21/02 First release
-* 1.00a wgr  03/22/07 Converted to new coding style.
-* 1.00a rpm  06/29/07 Added udelay macro for standalone
-* 1.00a xd   07/19/07 Included xparameters.h as XPAR_ constants are referred
-*                     to in MICROBLAZE section
-* 1.00a ecm  09/19/08 updated for v7.20 of Microblaze, new functionality
-*
-* </pre>
-*
+* Get the processor dependent includes
 *
 ******************************************************************************/
 
-#ifndef XENV_STANDALONE_H
-#define XENV_STANDALONE_H
+    #include <string.h>
 
-#include "xil_types.h"
+    #if defined __MICROBLAZE__
+        #include "mb_interface.h"
+        #include "xparameters.h" /* XPAR constants used below in MB section */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/***************************** Include Files *********************************/
-/******************************************************************************
- *
- * Get the processor dependent includes
- *
- ******************************************************************************/
-
-#include <string.h>
-
-#if defined __MICROBLAZE__
-#  include "mb_interface.h"
-#  include "xparameters.h"   /* XPAR constants used below in MB section */
-
-#elif defined __PPC__
-#  include "sleep.h"
-#  include "xcache_l.h"      /* also include xcache_l.h for caching macros */
-#endif
+    #elif defined __PPC__
+        #include "sleep.h"
+        #include "xcache_l.h" /* also include xcache_l.h for caching macros */
+    #endif
 
 /******************************************************************************
- *
- * MEMCPY / MEMSET related macros.
- *
- * The following are straight forward implementations of memset and memcpy.
- *
- * NOTE: memcpy may not work if source and target memory area are overlapping.
- *
- ******************************************************************************/
+*
+* MEMCPY / MEMSET related macros.
+*
+* The following are straight forward implementations of memset and memcpy.
+*
+* NOTE: memcpy may not work if source and target memory area are overlapping.
+*
+******************************************************************************/
 /*****************************************************************************/
+
 /**
  *
  * Copies a non-overlapping block of memory.
@@ -108,28 +111,29 @@ extern "C" {
  *		Destination address to copy data to.
  *
  * @param	SrcPtr
- * 		Source address to copy data from.
+ *      Source address to copy data from.
  *
  * @param	Bytes
- * 		Number of bytes to copy.
+ *      Number of bytes to copy.
  *
  * @return	None.
  *
  * @note
- * 		The use of XENV_MEM_COPY is deprecated. Use memcpy() instead.
+ *      The use of XENV_MEM_COPY is deprecated. Use memcpy() instead.
  *
  * @note
- * 		This implemention MAY BREAK work if source and target memory
- * 		area are overlapping.
+ *      This implemention MAY BREAK work if source and target memory
+ *      area are overlapping.
  *
  *****************************************************************************/
 
-#define XENV_MEM_COPY(DestPtr, SrcPtr, Bytes) \
-	memcpy((void *) DestPtr, (const void *) SrcPtr, (size_t) Bytes)
+    #define XENV_MEM_COPY( DestPtr, SrcPtr, Bytes ) \
+    memcpy( ( void * ) DestPtr, ( const void * ) SrcPtr, ( size_t ) Bytes )
 
 
 
 /*****************************************************************************/
+
 /**
  *
  * Fills an area of memory with constant data.
@@ -138,36 +142,37 @@ extern "C" {
  *		Destination address to copy data to.
  *
  * @param	Data
- * 		Value to set.
+ *      Value to set.
  *
  * @param	Bytes
- * 		Number of bytes to copy.
+ *      Number of bytes to copy.
  *
  * @return	None.
  *
  * @note
- * 		The use of XENV_MEM_FILL is deprecated. Use memset() instead.
+ *      The use of XENV_MEM_FILL is deprecated. Use memset() instead.
  *
  *****************************************************************************/
 
-#define XENV_MEM_FILL(DestPtr, Data, Bytes) \
-	memset((void *) DestPtr, (s32) Data, (size_t) Bytes)
+    #define XENV_MEM_FILL( DestPtr, Data, Bytes ) \
+    memset( ( void * ) DestPtr, ( s32 ) Data, ( size_t ) Bytes )
 
 
 
 /******************************************************************************
- *
- * TIME related macros
- *
- ******************************************************************************/
+*
+* TIME related macros
+*
+******************************************************************************/
 
 /**
  * A structure that contains a time stamp used by other time stamp macros
  * defined below. This structure is processor dependent.
  */
-typedef s32 XENV_TIME_STAMP;
+    typedef s32 XENV_TIME_STAMP;
 
 /*****************************************************************************/
+
 /**
  *
  * Time is derived from the 64 bit PPC timebase register
@@ -183,9 +188,10 @@ typedef s32 XENV_TIME_STAMP;
  * This macro must be implemented by the user.
  *
  *****************************************************************************/
-#define XENV_TIME_STAMP_GET(StampPtr)
+    #define XENV_TIME_STAMP_GET( StampPtr )
 
 /*****************************************************************************/
+
 /**
  *
  * This macro is not yet implemented and always returns 0.
@@ -200,9 +206,10 @@ typedef s32 XENV_TIME_STAMP;
  * This macro must be implemented by the user.
  *
  *****************************************************************************/
-#define XENV_TIME_STAMP_DELTA_US(Stamp1Ptr, Stamp2Ptr)     (0)
+    #define XENV_TIME_STAMP_DELTA_US( Stamp1Ptr, Stamp2Ptr )    ( 0 )
 
 /*****************************************************************************/
+
 /**
  *
  * This macro is not yet implemented and always returns 0.
@@ -217,9 +224,10 @@ typedef s32 XENV_TIME_STAMP;
  * This macro must be implemented by the user.
  *
  *****************************************************************************/
-#define XENV_TIME_STAMP_DELTA_MS(Stamp1Ptr, Stamp2Ptr)     (0)
+    #define XENV_TIME_STAMP_DELTA_MS( Stamp1Ptr, Stamp2Ptr )    ( 0 )
 
 /*****************************************************************************/
+
 /**
  * XENV_USLEEP(unsigned delay)
  *
@@ -227,142 +235,143 @@ typedef s32 XENV_TIME_STAMP;
  * support.
  *
  * @param	delay
- * 		Number of microseconds to delay.
+ *      Number of microseconds to delay.
  *
  * @return	None.
  *
  *****************************************************************************/
 
-#ifdef __PPC__
-#define XENV_USLEEP(delay)	usleep(delay)
-#define udelay(delay)	usleep(delay)
-#else
-#define XENV_USLEEP(delay)
-#define udelay(delay)
-#endif
+    #ifdef __PPC__
+        #define XENV_USLEEP( delay )    usleep( delay )
+        #define udelay( delay )         usleep( delay )
+    #else
+        #define XENV_USLEEP( delay )
+        #define udelay( delay )
+    #endif
 
 
 /******************************************************************************
- *
- * CACHE handling macros / mappings
- *
- ******************************************************************************/
-/******************************************************************************
- *
- * Processor independent macros
- *
- ******************************************************************************/
-
-#define XCACHE_ENABLE_CACHE()	\
-		{ XCACHE_ENABLE_DCACHE(); XCACHE_ENABLE_ICACHE(); }
-
-#define XCACHE_DISABLE_CACHE()	\
-		{ XCACHE_DISABLE_DCACHE(); XCACHE_DISABLE_ICACHE(); }
-
+*
+* CACHE handling macros / mappings
+*
+******************************************************************************/
 
 /******************************************************************************
- *
- * MicroBlaze case
- *
- * NOTE: Currently the following macros will only work on systems that contain
- * only ONE MicroBlaze processor. Also, the macros will only be enabled if the
- * system is built using a xparameters.h file.
- *
- ******************************************************************************/
+*
+* Processor independent macros
+*
+******************************************************************************/
 
-#if defined __MICROBLAZE__
+    #define XCACHE_ENABLE_CACHE() \
+    { XCACHE_ENABLE_DCACHE(); XCACHE_ENABLE_ICACHE(); }
+
+    #define XCACHE_DISABLE_CACHE() \
+    { XCACHE_DISABLE_DCACHE(); XCACHE_DISABLE_ICACHE(); }
+
+
+/******************************************************************************
+*
+* MicroBlaze case
+*
+* NOTE: Currently the following macros will only work on systems that contain
+* only ONE MicroBlaze processor. Also, the macros will only be enabled if the
+* system is built using a xparameters.h file.
+*
+******************************************************************************/
+
+    #if defined __MICROBLAZE__
 
 /* Check if MicroBlaze data cache was built into the core.
  */
-#if (XPAR_MICROBLAZE_USE_DCACHE == 1)
-#  define XCACHE_ENABLE_DCACHE()		microblaze_enable_dcache()
-#  define XCACHE_DISABLE_DCACHE()		microblaze_disable_dcache()
-#  define XCACHE_INVALIDATE_DCACHE()  	microblaze_invalidate_dcache()
+        #if ( XPAR_MICROBLAZE_USE_DCACHE == 1 )
+            #define XCACHE_ENABLE_DCACHE()        microblaze_enable_dcache()
+            #define XCACHE_DISABLE_DCACHE()       microblaze_disable_dcache()
+            #define XCACHE_INVALIDATE_DCACHE()    microblaze_invalidate_dcache()
 
-#  define XCACHE_INVALIDATE_DCACHE_RANGE(Addr, Len) \
-			microblaze_invalidate_dcache_range((s32)(Addr), (s32)(Len))
+            #define XCACHE_INVALIDATE_DCACHE_RANGE( Addr, Len ) \
+    microblaze_invalidate_dcache_range( ( s32 ) ( Addr ), ( s32 ) ( Len ) )
 
-#if (XPAR_MICROBLAZE_DCACHE_USE_WRITEBACK == 1)
-#  define XCACHE_FLUSH_DCACHE()  		microblaze_flush_dcache()
-#  define XCACHE_FLUSH_DCACHE_RANGE(Addr, Len) \
-			microblaze_flush_dcache_range((s32)(Addr), (s32)(Len))
-#else
-#  define XCACHE_FLUSH_DCACHE()  		microblaze_invalidate_dcache()
-#  define XCACHE_FLUSH_DCACHE_RANGE(Addr, Len) \
-			microblaze_invalidate_dcache_range((s32)(Addr), (s32)(Len))
-#endif	/*XPAR_MICROBLAZE_DCACHE_USE_WRITEBACK*/
+            #if ( XPAR_MICROBLAZE_DCACHE_USE_WRITEBACK == 1 )
+                #define XCACHE_FLUSH_DCACHE()    microblaze_flush_dcache()
+                #define XCACHE_FLUSH_DCACHE_RANGE( Addr, Len ) \
+    microblaze_flush_dcache_range( ( s32 ) ( Addr ), ( s32 ) ( Len ) )
+            #else
+                #define XCACHE_FLUSH_DCACHE()    microblaze_invalidate_dcache()
+                #define XCACHE_FLUSH_DCACHE_RANGE( Addr, Len ) \
+    microblaze_invalidate_dcache_range( ( s32 ) ( Addr ), ( s32 ) ( Len ) )
+            #endif /*XPAR_MICROBLAZE_DCACHE_USE_WRITEBACK*/
 
-#else
-#  define XCACHE_ENABLE_DCACHE()
-#  define XCACHE_DISABLE_DCACHE()
-#  define XCACHE_INVALIDATE_DCACHE_RANGE(Addr, Len)
-#  define XCACHE_FLUSH_DCACHE_RANGE(Addr, Len)
-#endif	/*XPAR_MICROBLAZE_USE_DCACHE*/
+        #else  /* if ( XPAR_MICROBLAZE_USE_DCACHE == 1 ) */
+            #define XCACHE_ENABLE_DCACHE()
+            #define XCACHE_DISABLE_DCACHE()
+            #define XCACHE_INVALIDATE_DCACHE_RANGE( Addr, Len )
+            #define XCACHE_FLUSH_DCACHE_RANGE( Addr, Len )
+        #endif /*XPAR_MICROBLAZE_USE_DCACHE*/
 
 
 /* Check if MicroBlaze instruction cache was built into the core.
  */
-#if (XPAR_MICROBLAZE_USE_ICACHE == 1)
-#  define XCACHE_ENABLE_ICACHE()		microblaze_enable_icache()
-#  define XCACHE_DISABLE_ICACHE()		microblaze_disable_icache()
+        #if ( XPAR_MICROBLAZE_USE_ICACHE == 1 )
+            #define XCACHE_ENABLE_ICACHE()        microblaze_enable_icache()
+            #define XCACHE_DISABLE_ICACHE()       microblaze_disable_icache()
 
-#  define XCACHE_INVALIDATE_ICACHE()  	microblaze_invalidate_icache()
+            #define XCACHE_INVALIDATE_ICACHE()    microblaze_invalidate_icache()
 
-#  define XCACHE_INVALIDATE_ICACHE_RANGE(Addr, Len) \
-			microblaze_invalidate_icache_range((s32)(Addr), (s32)(Len))
+            #define XCACHE_INVALIDATE_ICACHE_RANGE( Addr, Len ) \
+    microblaze_invalidate_icache_range( ( s32 ) ( Addr ), ( s32 ) ( Len ) )
 
-#else
-#  define XCACHE_ENABLE_ICACHE()
-#  define XCACHE_DISABLE_ICACHE()
-#endif	/*XPAR_MICROBLAZE_USE_ICACHE*/
-
-
-/******************************************************************************
- *
- * PowerPC case
- *
- *   Note that the XCACHE_ENABLE_xxx functions are hardcoded to enable a
- *   specific memory region (0x80000001). Each bit (0-30) in the regions
- *   bitmask stands for 128MB of memory. Bit 31 stands for the upper 2GB
- *   range.
- *
- *   regions    --> cached address range
- *   ------------|--------------------------------------------------
- *   0x80000000  | [0, 0x7FFFFFF]
- *   0x00000001  | [0xF8000000, 0xFFFFFFFF]
- *   0x80000001  | [0, 0x7FFFFFF],[0xF8000000, 0xFFFFFFFF]
- *
- ******************************************************************************/
-
-#elif defined __PPC__
-
-#define XCACHE_ENABLE_DCACHE()		XCache_EnableDCache(0x80000001)
-#define XCACHE_DISABLE_DCACHE()		XCache_DisableDCache()
-#define XCACHE_ENABLE_ICACHE()		XCache_EnableICache(0x80000001)
-#define XCACHE_DISABLE_ICACHE()		XCache_DisableICache()
-
-#define XCACHE_INVALIDATE_DCACHE_RANGE(Addr, Len) \
-		XCache_InvalidateDCacheRange((u32)(Addr), (u32)(Len))
-
-#define XCACHE_FLUSH_DCACHE_RANGE(Addr, Len) \
-		XCache_FlushDCacheRange((u32)(Addr), (u32)(Len))
-
-#define XCACHE_INVALIDATE_ICACHE()	XCache_InvalidateICache()
+        #else
+            #define XCACHE_ENABLE_ICACHE()
+            #define XCACHE_DISABLE_ICACHE()
+        #endif /*XPAR_MICROBLAZE_USE_ICACHE*/
 
 
 /******************************************************************************
- *
- * Unknown processor / architecture
- *
- ******************************************************************************/
+*
+* PowerPC case
+*
+*   Note that the XCACHE_ENABLE_xxx functions are hardcoded to enable a
+*   specific memory region (0x80000001). Each bit (0-30) in the regions
+*   bitmask stands for 128MB of memory. Bit 31 stands for the upper 2GB
+*   range.
+*
+*   regions    --> cached address range
+*   ------------|--------------------------------------------------
+*   0x80000000  | [0, 0x7FFFFFF]
+*   0x00000001  | [0xF8000000, 0xFFFFFFFF]
+*   0x80000001  | [0, 0x7FFFFFF],[0xF8000000, 0xFFFFFFFF]
+*
+******************************************************************************/
 
-#else
+    #elif defined __PPC__
+
+        #define XCACHE_ENABLE_DCACHE()     XCache_EnableDCache( 0x80000001 )
+        #define XCACHE_DISABLE_DCACHE()    XCache_DisableDCache()
+        #define XCACHE_ENABLE_ICACHE()     XCache_EnableICache( 0x80000001 )
+        #define XCACHE_DISABLE_ICACHE()    XCache_DisableICache()
+
+        #define XCACHE_INVALIDATE_DCACHE_RANGE( Addr, Len ) \
+    XCache_InvalidateDCacheRange( ( u32 ) ( Addr ), ( u32 ) ( Len ) )
+
+        #define XCACHE_FLUSH_DCACHE_RANGE( Addr, Len ) \
+    XCache_FlushDCacheRange( ( u32 ) ( Addr ), ( u32 ) ( Len ) )
+
+        #define XCACHE_INVALIDATE_ICACHE()    XCache_InvalidateICache()
+
+
+/******************************************************************************
+*
+* Unknown processor / architecture
+*
+******************************************************************************/
+
+    #else  /* if defined __MICROBLAZE__ */
 /* #error "Unknown processor / architecture. Must be MicroBlaze or PowerPC." */
-#endif
+    #endif /* if defined __MICROBLAZE__ */
 
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif	/* #ifndef XENV_STANDALONE_H */
+#endif /* #ifndef XENV_STANDALONE_H */

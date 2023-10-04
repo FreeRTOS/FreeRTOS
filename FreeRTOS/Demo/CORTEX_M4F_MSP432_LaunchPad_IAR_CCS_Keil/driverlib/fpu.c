@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -36,80 +36,79 @@
  * --/COPYRIGHT--*/
 #include <fpu.h>
 
-void FPU_enableModule(void)
+void FPU_enableModule( void )
 {
-    //
-    // Enable the coprocessors used by the floating-point unit.
-    //
-    SCB->CPACR = ((SCB->CPACR & ~(SCB_CPACR_CP11_MASK | SCB_CPACR_CP10_MASK))
-            | SCB_CPACR_CP11_MASK | SCB_CPACR_CP10_MASK);
+    /* */
+    /* Enable the coprocessors used by the floating-point unit. */
+    /* */
+    SCB->CPACR = ( ( SCB->CPACR & ~( SCB_CPACR_CP11_MASK | SCB_CPACR_CP10_MASK ) )
+                   | SCB_CPACR_CP11_MASK | SCB_CPACR_CP10_MASK );
 }
 
-void FPU_disableModule(void)
+void FPU_disableModule( void )
 {
-    //
-    // Disable the coprocessors used by the floating-point unit.
-    //
-    SCB->CPACR = ((SCB->CPACR & ~(SCB_CPACR_CP10_MASK | SCB_CPACR_CP11_MASK)));
+    /* */
+    /* Disable the coprocessors used by the floating-point unit. */
+    /* */
+    SCB->CPACR = ( ( SCB->CPACR & ~( SCB_CPACR_CP10_MASK | SCB_CPACR_CP11_MASK ) ) );
 }
 
-void FPU_enableStacking(void)
+void FPU_enableStacking( void )
 {
-    //
-    // Enable automatic state preservation for the floating-point unit, and
-    // disable lazy state preservation (meaning that the floating-point state
-    // is always stacked when floating-point instructions are used).
-    //
-    FPU->FPCCR = (FPU->FPCCR & ~FPU_FPCCR_LSPEN_Msk) | FPU_FPCCR_ASPEN_Msk;
+    /* */
+    /* Enable automatic state preservation for the floating-point unit, and */
+    /* disable lazy state preservation (meaning that the floating-point state */
+    /* is always stacked when floating-point instructions are used). */
+    /* */
+    FPU->FPCCR = ( FPU->FPCCR & ~FPU_FPCCR_LSPEN_Msk ) | FPU_FPCCR_ASPEN_Msk;
 }
 
-void FPU_enableLazyStacking(void)
+void FPU_enableLazyStacking( void )
 {
-    //
-    // Enable automatic and lazy state preservation for the floating-point
-    // unit.
-    //
+    /* */
+    /* Enable automatic and lazy state preservation for the floating-point */
+    /* unit. */
+    /* */
     FPU->FPCCR |= FPU_FPCCR_ASPEN_Msk | FPU_FPCCR_LSPEN_Msk;
 }
 
-void FPU_disableStacking(void)
+void FPU_disableStacking( void )
 {
-    //
-    // Disable automatic and lazy state preservation for the floating-point
-    // unit.
-    //
-    FPU->FPCCR &= ~(FPU_FPCCR_ASPEN_Msk | FPU_FPCCR_LSPEN_Msk);
+    /* */
+    /* Disable automatic and lazy state preservation for the floating-point */
+    /* unit. */
+    /* */
+    FPU->FPCCR &= ~( FPU_FPCCR_ASPEN_Msk | FPU_FPCCR_LSPEN_Msk );
 }
 
-void FPU_setHalfPrecisionMode(uint32_t mode)
+void FPU_setHalfPrecisionMode( uint32_t mode )
 {
-    //
-    // Set the half-precision floating-point format.
-    //
-    FPU->FPDSCR = (FPU->FPDSCR & ~(FPU_FPDSCR_AHP_Msk)) | mode;
+    /* */
+    /* Set the half-precision floating-point format. */
+    /* */
+    FPU->FPDSCR = ( FPU->FPDSCR & ~( FPU_FPDSCR_AHP_Msk ) ) | mode;
 }
 
-void FPU_setNaNMode(uint32_t mode)
+void FPU_setNaNMode( uint32_t mode )
 {
-    //
-    // Set the NaN mode.
-    //
-    FPU->FPDSCR = (FPU->FPDSCR & ~(FPU_FPDSCR_DN_Msk)) | mode;
+    /* */
+    /* Set the NaN mode. */
+    /* */
+    FPU->FPDSCR = ( FPU->FPDSCR & ~( FPU_FPDSCR_DN_Msk ) ) | mode;
 }
 
-void FPU_setFlushToZeroMode(uint32_t mode)
+void FPU_setFlushToZeroMode( uint32_t mode )
 {
-    //
-    // Set the flush-to-zero mode.
-    //
-    FPU->FPDSCR = (FPU->FPDSCR & ~(FPU_FPDSCR_FZ_Msk)) | mode;
+    /* */
+    /* Set the flush-to-zero mode. */
+    /* */
+    FPU->FPDSCR = ( FPU->FPDSCR & ~( FPU_FPDSCR_FZ_Msk ) ) | mode;
 }
 
-void FPU_setRoundingMode(uint32_t mode)
+void FPU_setRoundingMode( uint32_t mode )
 {
-    //
-    // Set the rounding mode.
-    //
-    FPU->FPDSCR = (FPU->FPDSCR & ~(FPU_FPDSCR_RMode_Msk)) | mode;
+    /* */
+    /* Set the rounding mode. */
+    /* */
+    FPU->FPDSCR = ( FPU->FPDSCR & ~( FPU_FPDSCR_RMode_Msk ) ) | mode;
 }
-

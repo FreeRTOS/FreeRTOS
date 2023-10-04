@@ -31,14 +31,14 @@
 #define _SAMA5_WDT_INSTANCE_
 
 /* ========== Register definition for WDT peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_WDT_CR          (0xFFFFFE40U) /**< \brief (WDT) Control Register */
-#define REG_WDT_MR          (0xFFFFFE44U) /**< \brief (WDT) Mode Register */
-#define REG_WDT_SR          (0xFFFFFE48U) /**< \brief (WDT) Status Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_WDT_CR    ( 0xFFFFFE40U )              /**< \brief (WDT) Control Register */
+    #define REG_WDT_MR    ( 0xFFFFFE44U )              /**< \brief (WDT) Mode Register */
+    #define REG_WDT_SR    ( 0xFFFFFE48U )              /**< \brief (WDT) Status Register */
 #else
-#define REG_WDT_CR (*(WoReg*)0xFFFFFE40U) /**< \brief (WDT) Control Register */
-#define REG_WDT_MR (*(RwReg*)0xFFFFFE44U) /**< \brief (WDT) Mode Register */
-#define REG_WDT_SR (*(RoReg*)0xFFFFFE48U) /**< \brief (WDT) Status Register */
+    #define REG_WDT_CR    ( *( WoReg * ) 0xFFFFFE40U ) /**< \brief (WDT) Control Register */
+    #define REG_WDT_MR    ( *( RwReg * ) 0xFFFFFE44U ) /**< \brief (WDT) Mode Register */
+    #define REG_WDT_SR    ( *( RoReg * ) 0xFFFFFE48U ) /**< \brief (WDT) Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_WDT_INSTANCE_ */

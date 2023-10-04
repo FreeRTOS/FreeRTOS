@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name     : lcd_pmod.h
 * Device(s)     : RZ/T1 (R7S910017)
@@ -43,7 +44,7 @@
 *                 display. The offset is set as LEFT MARGIN and TOP MARGIN.
 *                 This offset is catered for internally, so as far as the user
 *                 is concerned, cursor position 0,0 is the top left pixel.
-* 
+*
 *                 The simplest procedure to run the display is as follows:
 *                 Init_LCD(); Initialise the serial port and set up the display.
 *
@@ -59,28 +60,29 @@
 *
 *                Note: Line 0 is the top line.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History       : DD.MM.YYYY Version Description
 *               : 21.04.2015 1.00
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-User Includes (Project Level Includes)
+*  User Includes (Project Level Includes)
 ***********************************************************************************************************************/
 /* Defines standard variable types used in this file */
 #include <stdint.h>
 #include "iodefine.h"
 
 /***********************************************************************************************************************
-Macro Definitions
+*  Macro Definitions
 ***********************************************************************************************************************/
 /* Multiple inclusion prevention macro */
 #ifndef LCD_PMOD_H
-#define LCD_PMOD_H
+    #define LCD_PMOD_H
 
 
 /***********************************************************************************************************************
-Macro Definitions for Okaya display on PMOD connector
+*  Macro Definitions for Okaya display on PMOD connector
 ***********************************************************************************************************************/
 
 
@@ -92,40 +94,40 @@ Macro Definitions for Okaya display on PMOD connector
 *
 ***********************************************************************************************************************/
 /* 16 lines @ 8 bits = 128. */
-#define SCREEN_HEIGHT             (128)            
-#define SCREEN_WIDTH              (128)
+    #define SCREEN_HEIGHT    ( 128 )
+    #define SCREEN_WIDTH     ( 128 )
 
-#ifndef USE_PMOD2
+    #ifndef USE_PMOD2
 /* DATA/COMMAND select pin */
-#define DATA_CMD_PIN              (PORT7.PODR.BIT.B6)
+        #define DATA_CMD_PIN     ( PORT7.PODR.BIT.B6 )
 /* Backlight enable pin */
-#define BL_ENABLE_PIN             (PORT7.PODR.BIT.B4)  
+        #define BL_ENABLE_PIN    ( PORT7.PODR.BIT.B4 )
 /* Reset pin */
-#define RESET_PIN                 (PORT6.PODR.BIT.B7)
-#else
+        #define RESET_PIN        ( PORT6.PODR.BIT.B7 )
+    #else
 /* DATA/COMMAND select pin */
-#define DATA_CMD_PIN              (PORTM.PODR.BIT.B2)
+        #define DATA_CMD_PIN     ( PORTM.PODR.BIT.B2 )
 /* Backlight enable pin */
-#define BL_ENABLE_PIN             (PORTM.PODR.BIT.B3) 
+        #define BL_ENABLE_PIN    ( PORTM.PODR.BIT.B3 )
 /* Reset pin */
-#define RESET_PIN                 (PORT5.PODR.BIT.B1)
-#endif
+        #define RESET_PIN        ( PORT5.PODR.BIT.B1 )
+    #endif /* ifndef USE_PMOD2 */
 
 /* Automatic calculation of parameters */
 
- /* including a space */
-#define FONT_WIDTH                (6u)
+/* including a space */
+    #define FONT_WIDTH       ( 6u )
 /* including 1 pixel space */
-#define FONT_HEIGHT               (8u)
-#define MAX_LINES                 (SCREEN_HEIGHT / FONT_HEIGHT)
-#define CHAR_PER_LINE             (SCREEN_WIDTH / FONT_WIDTH)
+    #define FONT_HEIGHT      ( 8u )
+    #define MAX_LINES        ( SCREEN_HEIGHT / FONT_HEIGHT )
+    #define CHAR_PER_LINE    ( SCREEN_WIDTH / FONT_WIDTH )
 
 /* Allow 2 pixel margin on the left and the top */
-#define LEFT_MARGIN               (2u)
-#define TOP_MARGIN                (3u)
-#define CR                        (0x0d)
-#define LF                        (0x0a)
-#define BS                        (0x08)
+    #define LEFT_MARGIN      ( 2u )
+    #define TOP_MARGIN       ( 3u )
+    #define CR               ( 0x0d )
+    #define LF               ( 0x0a )
+    #define BS               ( 0x08 )
 
 
 /***********************************************************************************************************************
@@ -134,94 +136,100 @@ Macro Definitions for Okaya display on PMOD connector
 *  Only Primary & secondary colours are defined here. Other colours can be
 *  created using RGB values.
 ***********************************************************************************************************************/
-#define COL_BLACK       (0x0000)
-#define COL_RED         (0xF800)
-#define COL_GREEN       (0x07E0)
-#define COL_BLUE        (0x001F)
-#define COL_YELLOW      (0xFFE0)
-#define COL_CYAN        (0x07FF)
-#define COL_MAGENTA     (0xF81F)
-#define COL_WHITE       (0xFFFF)
+    #define COL_BLACK         ( 0x0000 )
+    #define COL_RED           ( 0xF800 )
+    #define COL_GREEN         ( 0x07E0 )
+    #define COL_BLUE          ( 0x001F )
+    #define COL_YELLOW        ( 0xFFE0 )
+    #define COL_CYAN          ( 0x07FF )
+    #define COL_MAGENTA       ( 0xF81F )
+    #define COL_WHITE         ( 0xFFFF )
 
 /***********************************************************************************************************************
-
-  DISPLAY COMMAND SET ST7735
-
+*
+*  DISPLAY COMMAND SET ST7735
+*
 ***********************************************************************************************************************/
-#define ST7735_NOP      (0x0)
-#define ST7735_SWRESET  (0x01)
-#define ST7735_SLPIN    (0x10)
-#define ST7735_SLPOUT   (0x11)
-#define ST7735_PTLON    (0x12)
-#define ST7735_NORON    (0x13)
-#define ST7735_INVOFF   (0x20)
-#define ST7735_INVON    (0x21)
-#define ST7735_DISPOFF  (0x28)
-#define ST7735_DISPON   (0x29)
-#define ST7735_CASET    (0x2A)
-#define ST7735_RASET    (0x2B)
-#define ST7735_RAMWR    (0x2C)
-#define ST7735_COLMOD   (0x3A)
-#define ST7735_MADCTL   (0x36)
-#define ST7735_FRMCTR1  (0xB1)
-#define ST7735_INVCTR   (0xB4)
-#define ST7735_DISSET5  (0xB6)
-#define ST7735_PWCTR1   (0xC0)
-#define ST7735_PWCTR2   (0xC1)
-#define ST7735_PWCTR3   (0xC2)
-#define ST7735_VMCTR1   (0xC5)
-#define ST7735_PWCTR6   (0xFC)
-#define ST7735_GMCTRP1  (0xE0)
-#define ST7735_GMCTRN1  (0xE1)
+    #define ST7735_NOP        ( 0x0 )
+    #define ST7735_SWRESET    ( 0x01 )
+    #define ST7735_SLPIN      ( 0x10 )
+    #define ST7735_SLPOUT     ( 0x11 )
+    #define ST7735_PTLON      ( 0x12 )
+    #define ST7735_NORON      ( 0x13 )
+    #define ST7735_INVOFF     ( 0x20 )
+    #define ST7735_INVON      ( 0x21 )
+    #define ST7735_DISPOFF    ( 0x28 )
+    #define ST7735_DISPON     ( 0x29 )
+    #define ST7735_CASET      ( 0x2A )
+    #define ST7735_RASET      ( 0x2B )
+    #define ST7735_RAMWR      ( 0x2C )
+    #define ST7735_COLMOD     ( 0x3A )
+    #define ST7735_MADCTL     ( 0x36 )
+    #define ST7735_FRMCTR1    ( 0xB1 )
+    #define ST7735_INVCTR     ( 0xB4 )
+    #define ST7735_DISSET5    ( 0xB6 )
+    #define ST7735_PWCTR1     ( 0xC0 )
+    #define ST7735_PWCTR2     ( 0xC1 )
+    #define ST7735_PWCTR3     ( 0xC2 )
+    #define ST7735_VMCTR1     ( 0xC5 )
+    #define ST7735_PWCTR6     ( 0xFC )
+    #define ST7735_GMCTRP1    ( 0xE0 )
+    #define ST7735_GMCTRN1    ( 0xE1 )
 
 /* delay for delay counter */
-#define DELAY_TIMING    (0x08)
+    #define DELAY_TIMING      ( 0x08 )
 
 /***********************************************************************************************************************
 * Function Prototypes
 ***********************************************************************************************************************/
 /* Initialises the debug LCD */
-void lcd_init (void);
+    void lcd_init( void );
 
 /* Display string at specific line of display */
-void display_lcd (uint8_t const line, uint8_t const column, uint8_t const * string);
+    void display_lcd( uint8_t const line,
+                      uint8_t const column,
+                      uint8_t const * string );
 
 /* Display the string at current cursor position */
-void display_str (uint8_t const * str);
+    void display_str( uint8_t const * str );
 
 /* Display the sting at the centre of the specified line */
-void display_center (uint8_t const line_num, uint8_t * const str);
+    void display_center( uint8_t const line_num,
+                         uint8_t * const str );
 
 /* Clears the display */
-void clear_display (uint16_t colour);
+    void clear_display( uint16_t colour );
 
 /* Clear a specified line */
-void display_clear_line(uint8_t line_num);
+    void display_clear_line( uint8_t line_num );
 
 /* Set the current cursor position */
-void display_set_cursor (uint8_t const x, uint8_t const y);
+    void display_set_cursor( uint8_t const x,
+                             uint8_t const y );
 
 /* Delay function */
-void display_delay_us (uint32_t time_us);
-void display_delay_ms (uint32_t time_ms);
+    void display_delay_us( uint32_t time_us );
+    void display_delay_ms( uint32_t time_ms );
 
 /* Set Font colour */
-void display_set_font_colour (uint16_t const col);
+    void display_set_font_colour( uint16_t const col );
 
 /* Set Background colour */
-void display_set_back_colour (uint16_t const col);
+    void display_set_back_colour( uint16_t const col );
 
 /* Simple image blit */
-void display_image (uint8_t *image, uint8_t image_width,
-		                 uint8_t image_height, uint8_t loc_x, uint8_t loc_y);
+    void display_image( uint8_t * image,
+                        uint8_t image_width,
+                        uint8_t image_height,
+                        uint8_t loc_x,
+                        uint8_t loc_y );
 
 /* Enable display */
-void display_on (void);
+    void display_on( void );
 
 /* Disable display */
-void display_off (void);
+    void display_off( void );
 
 
 /* LCD_PMOD_H */
-#endif
-
+#endif /* ifndef LCD_PMOD_H */

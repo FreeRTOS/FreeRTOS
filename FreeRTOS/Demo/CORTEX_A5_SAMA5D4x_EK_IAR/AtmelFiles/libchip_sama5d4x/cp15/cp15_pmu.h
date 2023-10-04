@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License  
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -34,71 +34,75 @@
 /*----------------------------------------------------------------------------
  *        Definition
  *----------------------------------------------------------------------------*/
-   
-#define CP15_PMCNTENSET         31   
-#define CP15_PMCNTENCLEAR       31  
-#define CP15_PMCR_DIVIDER       3
-#define CP15_PMCR_RESET         2   
-#define CP15_PMCR_ENABLE        0
-   
-#define CP15_NoReset            0
-#define CP15_ResetPerCounter    1
-#define CP15_ResetCycCounter    2
-#define CP15_ResetPerCycCounter 3
 
-#define CP15_CountDividerSingle 0
-#define CP15_CountDivider64     1  
-   
-#define CP15_CounterNone        0
-#define CP15_Counter0           1     
-#define CP15_Counter1           2   
-#define CP15_BothCounter        3 
-   
-typedef enum 
+#define CP15_PMCNTENSET            31
+#define CP15_PMCNTENCLEAR          31
+#define CP15_PMCR_DIVIDER          3
+#define CP15_PMCR_RESET            2
+#define CP15_PMCR_ENABLE           0
+
+#define CP15_NoReset               0
+#define CP15_ResetPerCounter       1
+#define CP15_ResetCycCounter       2
+#define CP15_ResetPerCycCounter    3
+
+#define CP15_CountDividerSingle    0
+#define CP15_CountDivider64        1
+
+#define CP15_CounterNone           0
+#define CP15_Counter0              1
+#define CP15_Counter1              2
+#define CP15_BothCounter           3
+
+typedef enum
 {
-  L1_IC_FILL,                   // Level 1 instruction cache refill
-  L1_ITLB_FILL,                 // Level 1 instruction TLB refill
-  L1_DC_FILL,                   // Level 1 data cache refill
-  L1_DC_ACC,                    // Level 1 data cache access
-  L1_DTLB_FILL,                 // Level 1 data TLB refill
-  LOAD,                         // Load
-  STORE,                        // Store        
-  InstArchExec,                 // Instruction architecturally executed
-  ExcepetionTaken,              // Exception taken
-  ExcepetionRet,                // Exception return
-  WrCONTEXTIDR,                 // Write to CONTEXTIDR
-  SoftPCChange,                 // Software change of the PC
-  ImmBr,                        // Immediate branch
-  ProcRet,                      // Procedure return
-  UnalingedLdStr,               // Unaligned load or store
-  MispredictedBranchExec,       // Mispredicted or not predicted branch speculatively executed        
-  PredictedBranchExec,          // Predictable branch speculatively executed
-  DataMemAcc,                   // Data memory access.
-  ICAcc,                        // Instruction Cache access.
-  DCEviction,                   // Data cache eviction.
-  IRQException,                 // IRQ exception taken.
-  FIQException,                 // FIQ exception taken.
-  ExtMemReq,                    // External memory request.
-  NCExtMemReq,                  // Non-cacheable external memory request
-  PrefetchLineFill,             // Linefill because of prefetch.        
-  PrefetchLineDrop,             // Prefetch linefill dropped.  
-  EnteringRAmode,               // Entering read allocate mode.  
-  RAmode,                       // Read allocate mode.
-  reserved,                     // Reserved, do not use
-  DWstallSBFfull                // Data Write operation that stalls the pipeline because the store buffer is full.
-}PerfEventType;
+    L1_IC_FILL,                 /* Level 1 instruction cache refill */
+    L1_ITLB_FILL,               /* Level 1 instruction TLB refill */
+    L1_DC_FILL,                 /* Level 1 data cache refill */
+    L1_DC_ACC,                  /* Level 1 data cache access */
+    L1_DTLB_FILL,               /* Level 1 data TLB refill */
+    LOAD,                       /* Load */
+    STORE,                      /* Store */
+    InstArchExec,               /* Instruction architecturally executed */
+    ExcepetionTaken,            /* Exception taken */
+    ExcepetionRet,              /* Exception return */
+    WrCONTEXTIDR,               /* Write to CONTEXTIDR */
+    SoftPCChange,               /* Software change of the PC */
+    ImmBr,                      /* Immediate branch */
+    ProcRet,                    /* Procedure return */
+    UnalingedLdStr,             /* Unaligned load or store */
+    MispredictedBranchExec,     /* Mispredicted or not predicted branch speculatively executed */
+    PredictedBranchExec,        /* Predictable branch speculatively executed */
+    DataMemAcc,                 /* Data memory access. */
+    ICAcc,                      /* Instruction Cache access. */
+    DCEviction,                 /* Data cache eviction. */
+    IRQException,               /* IRQ exception taken. */
+    FIQException,               /* FIQ exception taken. */
+    ExtMemReq,                  /* External memory request. */
+    NCExtMemReq,                /* Non-cacheable external memory request */
+    PrefetchLineFill,           /* Linefill because of prefetch. */
+    PrefetchLineDrop,           /* Prefetch linefill dropped. */
+    EnteringRAmode,             /* Entering read allocate mode. */
+    RAmode,                     /* Read allocate mode. */
+    reserved,                   /* Reserved, do not use */
+    DWstallSBFfull              /* Data Write operation that stalls the pipeline because the store buffer is full. */
+} PerfEventType;
 
-extern  uint32_t CP15_CycleCounterInit(void);
-extern  uint32_t CP15_GetCycleCounter(void);
+extern uint32_t CP15_CycleCounterInit( void );
+extern uint32_t CP15_GetCycleCounter( void );
 
-extern uint32_t CP15_ReadOverflowStatus(uint8_t EventCounter);
-extern void CP15_OverflowStatus(uint8_t Enable,  uint8_t ClearCounterFlag);
-extern void CP15_SoftINCR(uint8_t IncrCounter);
+extern uint32_t CP15_ReadOverflowStatus( uint8_t EventCounter );
+extern void CP15_OverflowStatus( uint8_t Enable,
+                                 uint8_t ClearCounterFlag );
+extern void CP15_SoftINCR( uint8_t IncrCounter );
 
-extern uint32_t CP15_CountEvent(uint8_t Counter);
-extern void CP15_EnableUserMode(void);
-extern void CP15_EnableIT(uint8_t Enable, uint8_t Counter);
-extern void CP15_DisableIT(uint8_t Disable, uint8_t Counter);
-extern void CP15_PerfCounterInit(PerfEventType Event, uint8_t Counter);
+extern uint32_t CP15_CountEvent( uint8_t Counter );
+extern void CP15_EnableUserMode( void );
+extern void CP15_EnableIT( uint8_t Enable,
+                           uint8_t Counter );
+extern void CP15_DisableIT( uint8_t Disable,
+                            uint8_t Counter );
+extern void CP15_PerfCounterInit( PerfEventType Event,
+                                  uint8_t Counter );
 
-#endif
+#endif /* ifndef _CP15_PMU_H */

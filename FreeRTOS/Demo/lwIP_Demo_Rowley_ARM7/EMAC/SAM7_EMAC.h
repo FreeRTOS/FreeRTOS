@@ -25,41 +25,41 @@
  */
 
 /*
-Changes from V3.2.4
-
-	+ Modified the default MAC address as the one used previously was not liked
-	  by some routers.
-
-*/
+ * Changes from V3.2.4
+ *
+ + Modified the default MAC address as the one used previously was not liked
+ +    by some routers.
+ +
+ */
 
 #ifndef SAM_7_EMAC_H
 #define SAM_7_EMAC_H
 
 /* MAC address definition.  The MAC address must be unique on the network. */
-#define emacETHADDR0 0
-#define emacETHADDR1 0xbd
-#define emacETHADDR2 0x33
-#define emacETHADDR3 0x06
-#define emacETHADDR4 0x68
-#define emacETHADDR5 0x22
+#define emacETHADDR0         0
+#define emacETHADDR1         0xbd
+#define emacETHADDR2         0x33
+#define emacETHADDR3         0x06
+#define emacETHADDR4         0x68
+#define emacETHADDR5         0x22
 
 /* The IP address being used. */
-#define emacIPADDR0 172
-#define emacIPADDR1 25
-#define emacIPADDR2 218
-#define emacIPADDR3 205
+#define emacIPADDR0          172
+#define emacIPADDR1          25
+#define emacIPADDR2          218
+#define emacIPADDR3          205
 
 /* The gateway address being used. */
-#define emacGATEWAY_ADDR0 172
-#define emacGATEWAY_ADDR1 25
-#define emacGATEWAY_ADDR2 218
-#define emacGATEWAY_ADDR3 3
+#define emacGATEWAY_ADDR0    172
+#define emacGATEWAY_ADDR1    25
+#define emacGATEWAY_ADDR2    218
+#define emacGATEWAY_ADDR3    3
 
 /* The network mask being used. */
-#define emacNET_MASK0 255
-#define emacNET_MASK1 255
-#define emacNET_MASK2 0
-#define emacNET_MASK3 0
+#define emacNET_MASK0        255
+#define emacNET_MASK1        255
+#define emacNET_MASK2        0
+#define emacNET_MASK3        0
 
 /*
  * Initialise the EMAC driver.  If successful a semaphore is returned that
@@ -72,27 +72,31 @@ SemaphoreHandle_t xEMACInit( void );
  * Send ulLength bytes from pcFrom.  This copies the buffer to one of the
  * EMAC Tx buffers, then indicates to the EMAC that the buffer is ready.
  * If lEndOfFrame is true then the data being copied is the end of the frame
- * and the frame can be transmitted. 
+ * and the frame can be transmitted.
  */
-long lEMACSend( char *pcFrom, unsigned long ulLength, long lEndOfFrame );
+long lEMACSend( char * pcFrom,
+                unsigned long ulLength,
+                long lEndOfFrame );
 
 /*
  * Frames can be read from the EMAC in multiple sections.
- * Read ulSectionLength bytes from the EMAC receive buffers to pcTo.  
+ * Read ulSectionLength bytes from the EMAC receive buffers to pcTo.
  * ulTotalFrameLength is the size of the entire frame.  Generally vEMACRead
  * will be repeatedly called until the sum of all the ulSectionLenths totals
  * the value of ulTotalFrameLength.
  */
-void vEMACRead( char *pcTo, unsigned long ulSectionLength, unsigned long ulTotalFrameLength );
+void vEMACRead( char * pcTo,
+                unsigned long ulSectionLength,
+                unsigned long ulTotalFrameLength );
 
 /*
- * The EMAC driver and interrupt service routines are defined in different 
+ * The EMAC driver and interrupt service routines are defined in different
  * files as the driver is compiled to THUMB, and the ISR to ARM.  This function
  * simply passes the semaphore used to communicate between the two.
  */
 void vPassEMACSemaphore( SemaphoreHandle_t xCreatedSemaphore );
 
-/* 
+/*
  * Called by the Tx interrupt, this function traverses the buffers used to
  * hold the frame that has just completed transmission and marks each as
  * free again.
@@ -100,7 +104,7 @@ void vPassEMACSemaphore( SemaphoreHandle_t xCreatedSemaphore );
 void vClearEMACTxBuffer( void );
 
 /*
- * Suspend on a semaphore waiting either for the semaphore to be obtained 
+ * Suspend on a semaphore waiting either for the semaphore to be obtained
  * or a timeout.  The semaphore is used by the EMAC ISR to indicate that
  * data has been received and is ready for processing.
  */
@@ -111,4 +115,4 @@ void vEMACWaitForInput( void );
  */
 unsigned long ulEMACInputLength( void );
 
-#endif
+#endif /* ifndef SAM_7_EMAC_H */

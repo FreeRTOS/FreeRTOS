@@ -42,46 +42,42 @@
  */
 
 #ifndef SERCOM_H_INCLUDED
-#define SERCOM_H_INCLUDED
+    #define SERCOM_H_INCLUDED
 
-#include <compiler.h>
-#include <system.h>
-#include <clock.h>
-#include "sercom_interrupt.h"
-#include "sercom_pinout.h"
+    #include <compiler.h>
+    #include <system.h>
+    #include <clock.h>
+    #include "sercom_interrupt.h"
+    #include "sercom_pinout.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
-     SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
-     SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
-#  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
-#else
-#  error "SERCOM modules must share the same slow GCLK channel ID."
-#endif
+    #if ( SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
+          SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
+          SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW )
+        #define SERCOM_GCLK_ID    SERCOM0_GCLK_ID_SLOW
+    #else
+        #error "SERCOM modules must share the same slow GCLK channel ID."
+    #endif
 
-enum status_code sercom_set_gclk_generator(
-		const enum gclk_generator generator_source,
-		const bool force_change);
+    enum status_code sercom_set_gclk_generator( const enum gclk_generator generator_source,
+                                                const bool force_change );
 
-enum status_code _sercom_get_sync_baud_val(
-		const uint32_t baudrate,
-		const uint32_t external_clock,
-		uint16_t *const baudval);
+    enum status_code _sercom_get_sync_baud_val( const uint32_t baudrate,
+                                                const uint32_t external_clock,
+                                                uint16_t * const baudval );
 
-enum status_code _sercom_get_async_baud_val(
-		const uint32_t baudrate,
-		const uint32_t peripheral_clock,
-		uint16_t *const baudval);
+    enum status_code _sercom_get_async_baud_val( const uint32_t baudrate,
+                                                 const uint32_t peripheral_clock,
+                                                 uint16_t * const baudval );
 
-uint32_t _sercom_get_default_pad(
-		Sercom *const sercom_module,
-		const uint8_t pad);
+    uint32_t _sercom_get_default_pad( Sercom * const sercom_module,
+                                      const uint8_t pad );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif //__SERCOM_H_INCLUDED

@@ -16,12 +16,14 @@
 *
 * Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name	   : lcd.h
 * Device(s)    : RX
 * H/W Platform : RSKRX111
 * Description  : Provides variable and function declarations for lcd.c file
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 08.11.2012 0.01     Beta Release
@@ -32,70 +34,71 @@
 #define LCD_H
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* Defines standard integer variable types used in this file */
 #include <stdint.h>
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 /* RS register select pin */
-#define RS_PIN      PORTC.PODR.BIT.B5
-#define RS_PIN_DDR  PORTC.PDR.BIT.B5
+#define RS_PIN                 PORTC.PODR.BIT.B5
+#define RS_PIN_DDR             PORTC.PDR.BIT.B5
 /* Display enable pin */
-#define E_PIN       PORTB.PODR.BIT.B1
-#define E_PIN_DDR   PORTB.PDR.BIT.B1
+#define E_PIN                  PORTB.PODR.BIT.B1
+#define E_PIN_DDR              PORTB.PDR.BIT.B1
 /* Data write/read definition */
-#define DATA_WR 1
+#define DATA_WR                1
 /* Control write/read definition */
-#define CTRL_WR 0
+#define CTRL_WR                0
 /* Maximum characters per line of LCD display. */
-#define NUMB_CHARS_PER_LINE	8
+#define NUMB_CHARS_PER_LINE    8
 /* Number of lines on the LCD display */
-#define MAXIMUM_LINES		2
+#define MAXIMUM_LINES          2
 /* Character position of LCD line 1 */
-#define LCD_LINE1 0
+#define LCD_LINE1              0
 /* Character position of LCD line 2 */
-#define LCD_LINE2 16
+#define LCD_LINE2              16
 /* Clear LCD display and home cursor */
-#define LCD_CLEAR        0x01
+#define LCD_CLEAR              0x01
 /* Move cursor to line 1 */
-#define LCD_HOME_L1      0x80
+#define LCD_HOME_L1            0x80
 /* Move cursor to line 2 */
-#define LCD_HOME_L2      0xC0
+#define LCD_HOME_L2            0xC0
 /* Cursor auto decrement after R/W */
-#define CURSOR_MODE_DEC  0x04
+#define CURSOR_MODE_DEC        0x04
 /* Cursor auto increment after R/W */
-#define CURSOR_MODE_INC  0x06
+#define CURSOR_MODE_INC        0x06
 /* Setup, 4 bits,2 lines, 5X7 */
-#define FUNCTION_SET     0x28
+#define FUNCTION_SET           0x28
 /* Display ON with Cursor */
-#define LCD_CURSOR_ON    0x0E
+#define LCD_CURSOR_ON          0x0E
 /* Display ON with Cursor off */
-#define LCD_CURSOR_OFF   0x0C
+#define LCD_CURSOR_OFF         0x0C
 /* Display on with blinking cursor */
-#define LCD_CURSOR_BLINK 0x0D
+#define LCD_CURSOR_BLINK       0x0D
 /* Move Cursor Left One Position */
-#define LCD_CURSOR_LEFT  0x10
+#define LCD_CURSOR_LEFT        0x10
 /* Move Cursor Right One Position */
-#define LCD_CURSOR_RIGHT 0x14
+#define LCD_CURSOR_RIGHT       0x14
 /* Enable LCD display */
-#define LCD_DISPLAY_ON   0x04
+#define LCD_DISPLAY_ON         0x04
 /* Enable both LCD lines */
-#define LCD_TWO_LINE     0x08
+#define LCD_TWO_LINE           0x08
 
 /***********************************************************************************************************************
-Exported global functions (to be accessed by other files)
+*  Exported global functions (to be accessed by other files)
 ***********************************************************************************************************************/
 /* LCD initialisation function declaration */
-void lcd_initialize (void);
+void lcd_initialize( void );
 
 /* Update display function declaration */
-void lcd_display(uint8_t position, uint8_t const * string);
+void lcd_display( uint8_t position,
+                  uint8_t const * string );
 
 /* Clear LCD function delcaration */
-void lcd_clear (void);
+void lcd_clear( void );
 
 /* End of multiple inclusion prevention macro */
-#endif
+#endif /* ifndef LCD_H */

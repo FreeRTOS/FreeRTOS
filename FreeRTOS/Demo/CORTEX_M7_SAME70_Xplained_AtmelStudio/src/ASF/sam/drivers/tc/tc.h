@@ -40,18 +40,19 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef TC_H_INCLUDED
-#define TC_H_INCLUDED
+    #define TC_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam_drivers_tc_group SAM3/4S/4L/4E/4N/4CM/4C/G Timer Counter (TC) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
- * provides an interface for the configuration and management of the 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers
+ * provides an interface for the configuration and management of the
  * device's Timer Counter functionality.
  *
  * The Timer Counter (TC) includes several identical 16-bit or 32-bit
@@ -133,71 +134,94 @@
  * @{
  */
 
-#include <compiler.h>
+    #include <compiler.h>
 
-/// @cond
+/*/ @cond */
 /**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
-void tc_init(Tc *p_tc, uint32_t ul_Channel, uint32_t ul_Mode);
-void tc_sync_trigger(Tc *p_tc);
-void tc_set_block_mode(Tc *p_tc, uint32_t ul_blockmode);
+    void tc_init( Tc * p_tc,
+                  uint32_t ul_Channel,
+                  uint32_t ul_Mode );
+    void tc_sync_trigger( Tc * p_tc );
+    void tc_set_block_mode( Tc * p_tc,
+                            uint32_t ul_blockmode );
 
-#if (!SAM3U) || defined(__DOXYGEN__)
-uint32_t tc_init_2bit_gray(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_steppermode);
-#endif /* (!SAM3U) || defined(__DOXYGEN__) */
+    #if ( !SAM3U ) || defined( __DOXYGEN__ )
+        uint32_t tc_init_2bit_gray( Tc * p_tc,
+                                    uint32_t ul_channel,
+                                    uint32_t ul_steppermode );
+    #endif /* (!SAM3U) || defined(__DOXYGEN__) */
 
-void tc_start(Tc *p_tc, uint32_t ul_channel);
-void tc_stop(Tc *p_tc, uint32_t ul_channel);
+    void tc_start( Tc * p_tc,
+                   uint32_t ul_channel );
+    void tc_stop( Tc * p_tc,
+                  uint32_t ul_channel );
 
-uint32_t tc_read_cv(Tc *p_tc, uint32_t ul_channel);
-uint32_t tc_read_ra(Tc *p_tc, uint32_t ul_channel);
-uint32_t tc_read_rb(Tc *p_tc, uint32_t ul_channel);
-uint32_t tc_read_rc(Tc *p_tc, uint32_t ul_channel);
+    uint32_t tc_read_cv( Tc * p_tc,
+                         uint32_t ul_channel );
+    uint32_t tc_read_ra( Tc * p_tc,
+                         uint32_t ul_channel );
+    uint32_t tc_read_rb( Tc * p_tc,
+                         uint32_t ul_channel );
+    uint32_t tc_read_rc( Tc * p_tc,
+                         uint32_t ul_channel );
 
-void tc_write_ra(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_value);
-void tc_write_rb(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_value);
-void tc_write_rc(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_value);
+    void tc_write_ra( Tc * p_tc,
+                      uint32_t ul_channel,
+                      uint32_t ul_value );
+    void tc_write_rb( Tc * p_tc,
+                      uint32_t ul_channel,
+                      uint32_t ul_value );
+    void tc_write_rc( Tc * p_tc,
+                      uint32_t ul_channel,
+                      uint32_t ul_value );
 
-uint32_t tc_find_mck_divisor(uint32_t ul_freq, uint32_t ul_mck,
-		uint32_t *p_uldiv, uint32_t *ul_tcclks, uint32_t ul_boardmck);
-void tc_enable_interrupt(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_sources);
-void tc_disable_interrupt(Tc *p_tc, uint32_t ul_channel,
-		uint32_t ul_sources);
-uint32_t tc_get_interrupt_mask(Tc *p_tc, uint32_t ul_channel);
-uint32_t tc_get_status(Tc *p_tc, uint32_t ul_channel);
-#if (!SAM4L && !SAMG) || defined(__DOXYGEN__)
-void tc_enable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources);
-void tc_disable_qdec_interrupt(Tc *p_tc, uint32_t ul_sources);
-uint32_t tc_get_qdec_interrupt_mask(Tc *p_tc);
-uint32_t tc_get_qdec_interrupt_status(Tc *p_tc);
-#endif /* (!SAM4L && !SAMG) || defined(__DOXYGEN__) */
+    uint32_t tc_find_mck_divisor( uint32_t ul_freq,
+                                  uint32_t ul_mck,
+                                  uint32_t * p_uldiv,
+                                  uint32_t * ul_tcclks,
+                                  uint32_t ul_boardmck );
+    void tc_enable_interrupt( Tc * p_tc,
+                              uint32_t ul_channel,
+                              uint32_t ul_sources );
+    void tc_disable_interrupt( Tc * p_tc,
+                               uint32_t ul_channel,
+                               uint32_t ul_sources );
+    uint32_t tc_get_interrupt_mask( Tc * p_tc,
+                                    uint32_t ul_channel );
+    uint32_t tc_get_status( Tc * p_tc,
+                            uint32_t ul_channel );
+    #if ( !SAM4L && !SAMG ) || defined( __DOXYGEN__ )
+        void tc_enable_qdec_interrupt( Tc * p_tc,
+                                       uint32_t ul_sources );
+        void tc_disable_qdec_interrupt( Tc * p_tc,
+                                        uint32_t ul_sources );
+        uint32_t tc_get_qdec_interrupt_mask( Tc * p_tc );
+        uint32_t tc_get_qdec_interrupt_status( Tc * p_tc );
+    #endif /* (!SAM4L && !SAMG) || defined(__DOXYGEN__) */
 
-#if (!SAM3U)
-void tc_set_writeprotect(Tc *p_tc, uint32_t ul_enable);
-#endif /* (!SAM3U) */
+    #if ( !SAM3U )
+        void tc_set_writeprotect( Tc * p_tc,
+                                  uint32_t ul_enable );
+    #endif /* (!SAM3U) */
 
-#if SAM4L || defined(__DOXYGEN__)
-uint32_t tc_get_feature(Tc *p_tc);
-uint32_t tc_get_version(Tc *p_tc);
-#endif /* SAM4L || defined(__DOXYGEN__) */
+    #if SAM4L || defined( __DOXYGEN__ )
+        uint32_t tc_get_feature( Tc * p_tc );
+        uint32_t tc_get_version( Tc * p_tc );
+    #endif /* SAM4L || defined(__DOXYGEN__) */
 
-/// @cond
+/*/ @cond */
 /**INDENT-OFF**/
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
 /** @} */
 
@@ -283,7 +307,7 @@ uint32_t tc_get_version(Tc *p_tc);
  *	</tr>
  * </table>
  */
- 
+
 /**
  * \page asfdoc_sam_drivers_tc_exqsg Examples for Timer Counter
  *
@@ -317,14 +341,14 @@ uint32_t tc_get_version(Tc *p_tc);
  * </table>
  *
  */
- 
+
 /**
  * \page asfdoc_sam_drivers_tc_qsg Quick Start Guide for the TC driver
  *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_tc_group, with
  * step-by-step instructions on how to configure and use the driver for
- * a specific use case. The code examples can be copied into the main 
- * application loop or any other function that will need to control the 
+ * a specific use case. The code examples can be copied into the main
+ * application loop or any other function that will need to control the
  * AST module.
  *
  * \section asfdoc_sam_drivers_tc_qsg_use_cases Use Cases

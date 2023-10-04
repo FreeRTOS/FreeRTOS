@@ -5,21 +5,21 @@
  *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ *****************************************************************************/
 #include "NuMicro.h"
 
 
 /** @addtogroup Standard_Driver Standard Driver
-  @{
-*/
+ * @{
+ */
 
 /** @addtogroup GPIO_Driver GPIO Driver
-  @{
-*/
+ * @{
+ */
 
 /** @addtogroup GPIO_EXPORTED_FUNCTIONS GPIO Exported Functions
-  @{
-*/
+ * @{
+ */
 
 /**
  * @brief       Set GPIO operation mode
@@ -42,15 +42,17 @@
  *
  * @details     This function is used to set specified GPIO operation mode.
  */
-void GPIO_SetMode(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
+void GPIO_SetMode( GPIO_T * port,
+                   uint32_t u32PinMask,
+                   uint32_t u32Mode )
 {
     uint32_t u32Idx;
 
-    for(u32Idx = 0ul; u32Idx < GPIO_PIN_MAX; u32Idx++)
+    for( u32Idx = 0ul; u32Idx < GPIO_PIN_MAX; u32Idx++ )
     {
-        if((u32PinMask & (1ul << u32Idx)) == (1ul << u32Idx))
+        if( ( u32PinMask & ( 1ul << u32Idx ) ) == ( 1ul << u32Idx ) )
         {
-            port->MODE = (port->MODE & ~(0x3ul << (u32Idx << 1))) | (u32Mode << (u32Idx << 1));
+            port->MODE = ( port->MODE & ~( 0x3ul << ( u32Idx << 1 ) ) ) | ( u32Mode << ( u32Idx << 1 ) );
         }
     }
 }
@@ -77,20 +79,22 @@ void GPIO_SetMode(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
  *
  * @details     This function is used to enable specified GPIO pin interrupt.
  */
-void GPIO_EnableInt(GPIO_T *port, uint32_t u32Pin, uint32_t u32IntAttribs)
+void GPIO_EnableInt( GPIO_T * port,
+                     uint32_t u32Pin,
+                     uint32_t u32IntAttribs )
 {
     /* Configure interrupt mode of specified pin */
-    port->INTTYPE = (port->INTTYPE & ~(1ul << u32Pin)) | (((u32IntAttribs >> 24) & 0xFFUL) << u32Pin);
+    port->INTTYPE = ( port->INTTYPE & ~( 1ul << u32Pin ) ) | ( ( ( u32IntAttribs >> 24 ) & 0xFFUL ) << u32Pin );
 
     /* Enable interrupt function of specified pin */
-    port->INTEN = (port->INTEN & ~(0x00010001ul << u32Pin)) | ((u32IntAttribs & 0xFFFFFFUL) << u32Pin);
+    port->INTEN = ( port->INTEN & ~( 0x00010001ul << u32Pin ) ) | ( ( u32IntAttribs & 0xFFFFFFUL ) << u32Pin );
 }
 
 
 /**
  * @brief       Disable GPIO interrupt
  *
-
+ *
  * @param[in]   port        GPIO port. It could be PA, PB, PC, PD, PE, PF, PG or PH.
  * @param[in]   u32Pin      The pin of specified GPIO port. \n
  *                          It could be 0 ~ 15 for PA, PB and PE. \n
@@ -104,19 +108,20 @@ void GPIO_EnableInt(GPIO_T *port, uint32_t u32Pin, uint32_t u32IntAttribs)
  *
  * @details     This function is used to enable specified GPIO pin interrupt.
  */
-void GPIO_DisableInt(GPIO_T *port, uint32_t u32Pin)
+void GPIO_DisableInt( GPIO_T * port,
+                      uint32_t u32Pin )
 {
     /* Configure interrupt mode of specified pin */
-    port->INTTYPE &= ~(1UL << u32Pin);
+    port->INTTYPE &= ~( 1UL << u32Pin );
 
     /* Disable interrupt function of specified pin */
-    port->INTEN &= ~((0x00010001UL) << u32Pin);
+    port->INTEN &= ~( ( 0x00010001UL ) << u32Pin );
 }
 
 /**
  * @brief       Set GPIO slew rate control
  *
-
+ *
  * @param[in]   port        GPIO port. It could be PA, PB, PC, PD, PE, PF, PG or PH.
  * @param[in]   u32PinMask  The single or multiple pins of specified GPIO port. \n
  *                          It could be BIT0 ~ BIT15 for PA, PB and PE. \n
@@ -134,15 +139,17 @@ void GPIO_DisableInt(GPIO_T *port, uint32_t u32Pin)
  *
  * @details     This function is used to set specified GPIO operation mode.
  */
-void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
+void GPIO_SetSlewCtl( GPIO_T * port,
+                      uint32_t u32PinMask,
+                      uint32_t u32Mode )
 {
     uint32_t u32Idx;
 
-    for(u32Idx = 0ul; u32Idx < GPIO_PIN_MAX; u32Idx++)
+    for( u32Idx = 0ul; u32Idx < GPIO_PIN_MAX; u32Idx++ )
     {
-        if(u32PinMask & (1ul << u32Idx))
+        if( u32PinMask & ( 1ul << u32Idx ) )
         {
-            port->SLEWCTL = (port->SLEWCTL & ~(0x3ul << (u32Idx << 1))) | (u32Mode << (u32Idx << 1));
+            port->SLEWCTL = ( port->SLEWCTL & ~( 0x3ul << ( u32Idx << 1 ) ) ) | ( u32Mode << ( u32Idx << 1 ) );
         }
     }
 }
@@ -150,7 +157,7 @@ void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
 /**
  * @brief       Set GPIO Pull-up and Pull-down control
  *
-
+ *
  * @param[in]   port        GPIO port. It could be PA, PB, PC, PD, PE, PF, PG or PH.
  * @param[in]   u32PinMask  The single or multiple pins of specified GPIO port. \n
  *                          It could be BIT0 ~ BIT15 for PA, PB and PE. \n
@@ -168,15 +175,17 @@ void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
  *
  * @details     Set the pin mode of specified GPIO pin.
  */
-void GPIO_SetPullCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
+void GPIO_SetPullCtl( GPIO_T * port,
+                      uint32_t u32PinMask,
+                      uint32_t u32Mode )
 {
     uint32_t u32Idx;
 
-    for(u32Idx = 0ul; u32Idx < GPIO_PIN_MAX; u32Idx++)
+    for( u32Idx = 0ul; u32Idx < GPIO_PIN_MAX; u32Idx++ )
     {
-        if(u32PinMask & (1ul << u32Idx))
+        if( u32PinMask & ( 1ul << u32Idx ) )
         {
-            port->PUSEL = (port->PUSEL & ~(0x3ul << (u32Idx << 1))) | (u32Mode << (u32Idx << 1));
+            port->PUSEL = ( port->PUSEL & ~( 0x3ul << ( u32Idx << 1 ) ) ) | ( u32Mode << ( u32Idx << 1 ) );
         }
     }
 }

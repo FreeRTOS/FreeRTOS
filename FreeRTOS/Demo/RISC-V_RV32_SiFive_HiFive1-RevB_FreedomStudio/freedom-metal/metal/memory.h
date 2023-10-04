@@ -13,7 +13,8 @@
  * @brief API for enumerating memory blocks
  */
 
-struct _metal_memory_attributes {
+struct _metal_memory_attributes
+{
     unsigned int R : 1;
     unsigned int W : 1;
     unsigned int X : 1;
@@ -24,7 +25,8 @@ struct _metal_memory_attributes {
 /*!
  * @brief A handle for a memory block
  */
-struct metal_memory {
+struct metal_memory
+{
     const uintptr_t _base_address;
     const size_t _size;
     const struct _metal_memory_attributes _attrs;
@@ -40,15 +42,15 @@ struct metal_memory {
  * @return The memory block handle, or NULL if the address is not mapped to a
  * memory block
  */
-struct metal_memory *metal_get_memory_from_address(const uintptr_t address);
+struct metal_memory * metal_get_memory_from_address( const uintptr_t address );
 
 /*!
  * @brief Get the base address for a memory block
  * @param memory The handle for the memory block
  * @return The base address of the memory block
  */
-__inline__ uintptr_t
-metal_memory_get_base_address(const struct metal_memory *memory) {
+__inline__ uintptr_t metal_memory_get_base_address( const struct metal_memory * memory )
+{
     return memory->_base_address;
 }
 
@@ -57,7 +59,8 @@ metal_memory_get_base_address(const struct metal_memory *memory) {
  * @param memory The handle for the memory block
  * @return The size of the memory block
  */
-__inline__ size_t metal_memory_get_size(const struct metal_memory *memory) {
+__inline__ size_t metal_memory_get_size( const struct metal_memory * memory )
+{
     return memory->_size;
 }
 
@@ -66,8 +69,8 @@ __inline__ size_t metal_memory_get_size(const struct metal_memory *memory) {
  * @param memory The handle for the memory block
  * @return nonzero if the memory block supports atomic operations
  */
-__inline__ int
-metal_memory_supports_atomics(const struct metal_memory *memory) {
+__inline__ int metal_memory_supports_atomics( const struct metal_memory * memory )
+{
     return memory->_attrs.A;
 }
 
@@ -76,7 +79,8 @@ metal_memory_supports_atomics(const struct metal_memory *memory) {
  * @param memory The handle for the memory block
  * @return nonzero if the memory block is cachable
  */
-__inline__ int metal_memory_is_cachable(const struct metal_memory *memory) {
+__inline__ int metal_memory_is_cachable( const struct metal_memory * memory )
+{
     return memory->_attrs.C;
 }
 

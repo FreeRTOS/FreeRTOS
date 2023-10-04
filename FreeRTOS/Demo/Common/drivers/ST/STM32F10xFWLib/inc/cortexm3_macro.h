@@ -28,23 +28,23 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void __WFI(void);
-void __WFE(void);
-void __SEV(void);
-void __ISB(void);
-void __DSB(void);
-void __DMB(void);
-void __SVC(void);
-u32 __MRS_CONTROL(void);
-void __MSR_CONTROL(u32 Control);
-void __SETPRIMASK(void);
-void __RESETPRIMASK(void);
-void __SETFAULTMASK(void);
-void __RESETFAULTMASK(void);
-void __BASEPRICONFIG(u32 NewPriority);
-u32 __GetBASEPRI(void);
-u16 __REV_HalfWord(u16 Data);
-u32 __REV_Word(u32 Data);
+void __WFI( void );
+void __WFE( void );
+void __SEV( void );
+void __ISB( void );
+void __DSB( void );
+void __DMB( void );
+void __SVC( void );
+u32 __MRS_CONTROL( void );
+void __MSR_CONTROL( u32 Control );
+void __SETPRIMASK( void );
+void __RESETPRIMASK( void );
+void __SETFAULTMASK( void );
+void __RESETFAULTMASK( void );
+void __BASEPRICONFIG( u32 NewPriority );
+u32 __GetBASEPRI( void );
+u16 __REV_HalfWord( u16 Data );
+u32 __REV_Word( u32 Data );
 
 #endif /* __CORTEXM3_MACRO_H */
 

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -49,17 +49,17 @@
  *         Definitions
  *------------------------------------------------------------------------------*/
 /** Case for APDU commands*/
-#define CASE1  1
-#define CASE2  2
-#define CASE3  3
+#define CASE1                           1
+#define CASE2                           2
+#define CASE3                           3
 
 /** Flip flop for send and receive char */
-#define USART_SEND 0
-#define USART_RCV  1
+#define USART_SEND                      0
+#define USART_RCV                       1
 
-#if !defined(BOARD_ISO7816_BASE_USART)
-  #define BOARD_ISO7816_BASE_USART USART1
-  #define BOARD_ISO7816_ID_USART   ID_USART1
+#if !defined( BOARD_ISO7816_BASE_USART )
+    #define BOARD_ISO7816_BASE_USART    USART1
+    #define BOARD_ISO7816_ID_USART      ID_USART1
 #endif
 
 /*-----------------------------------------------------------------------------
@@ -79,41 +79,48 @@ static Pin st_pinIso7816RstMC;
  * \param pCharToReceive Pointer for store the received char
  * \return 0: if timeout else status of US_CSR
  */
-static uint32_t ISO7816_GetChar( uint8_t *pCharToReceive )
+static uint32_t ISO7816_GetChar( uint8_t * pCharToReceive )
 {
     uint32_t status;
-    uint32_t timeout=0;
+    uint32_t timeout = 0;
 
-    if( StateUsartGlobal == USART_SEND ) {
-        while((BOARD_ISO7816_BASE_USART->US_CSR & US_CSR_TXEMPTY) == 0) {}
+    if( StateUsartGlobal == USART_SEND )
+    {
+        while( ( BOARD_ISO7816_BASE_USART->US_CSR & US_CSR_TXEMPTY ) == 0 )
+        {
+        }
+
         BOARD_ISO7816_BASE_USART->US_CR = US_CR_RSTSTA | US_CR_RSTIT | US_CR_RSTNACK;
         StateUsartGlobal = USART_RCV;
     }
 
     /* Wait USART ready for reception */
-    while( ((BOARD_ISO7816_BASE_USART->US_CSR & US_CSR_RXRDY) == 0) ) {
-        if(timeout++ > 12000 * (BOARD_MCK/1000000)) {
-            TRACE_DEBUG("TimeOut\n\r");
+    while( ( ( BOARD_ISO7816_BASE_USART->US_CSR & US_CSR_RXRDY ) == 0 ) )
+    {
+        if( timeout++ > 12000 * ( BOARD_MCK / 1000000 ) )
+        {
+            TRACE_DEBUG( "TimeOut\n\r" );
             return( 0 );
         }
     }
 
-    TRACE_DEBUG("T: %u\n\r", timeout);
+    TRACE_DEBUG( "T: %u\n\r", timeout );
 
 
     /* At least one complete character has been received and US_RHR has not yet been read. */
 
     /* Get a char */
-    *pCharToReceive = ((BOARD_ISO7816_BASE_USART->US_RHR) & 0xFF);
+    *pCharToReceive = ( ( BOARD_ISO7816_BASE_USART->US_RHR ) & 0xFF );
 
-    status = (BOARD_ISO7816_BASE_USART->US_CSR&(US_CSR_OVRE|US_CSR_FRAME|
-                                      US_CSR_PARE|US_CSR_TIMEOUT|US_CSR_NACK|
-                                      (1<<10)));
+    status = ( BOARD_ISO7816_BASE_USART->US_CSR & ( US_CSR_OVRE | US_CSR_FRAME |
+                                                    US_CSR_PARE | US_CSR_TIMEOUT | US_CSR_NACK |
+                                                    ( 1 << 10 ) ) );
 
-    if (status != 0 ) {
-       /* TRACE_DEBUG("R:0x%X\n\r", status); */
-        TRACE_DEBUG("R:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_CSR);
-        TRACE_DEBUG("Nb:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_NER );
+    if( status != 0 )
+    {
+        /* TRACE_DEBUG("R:0x%X\n\r", status); */
+        TRACE_DEBUG( "R:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_CSR );
+        TRACE_DEBUG( "Nb:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_NER );
         BOARD_ISO7816_BASE_USART->US_CR = US_CR_RSTSTA;
     }
 
@@ -131,25 +138,30 @@ static uint32_t ISO7816_SendChar( uint8_t CharToSend )
 {
     uint32_t status;
 
-    if( StateUsartGlobal == USART_RCV ) {
+    if( StateUsartGlobal == USART_RCV )
+    {
         BOARD_ISO7816_BASE_USART->US_CR = US_CR_RSTSTA | US_CR_RSTIT | US_CR_RSTNACK;
         StateUsartGlobal = USART_SEND;
     }
 
     /* Wait USART ready for transmit */
-    while((BOARD_ISO7816_BASE_USART->US_CSR & US_CSR_TXRDY) == 0)  {}
+    while( ( BOARD_ISO7816_BASE_USART->US_CSR & US_CSR_TXRDY ) == 0 )
+    {
+    }
+
     /* There is no character in the US_THR */
 
     /* Transmit a char */
     BOARD_ISO7816_BASE_USART->US_THR = CharToSend;
 
-    status = (BOARD_ISO7816_BASE_USART->US_CSR&(US_CSR_OVRE|US_CSR_FRAME|
-                                      US_CSR_PARE|US_CSR_TIMEOUT|US_CSR_NACK|
-                                      (1<<10)));
+    status = ( BOARD_ISO7816_BASE_USART->US_CSR & ( US_CSR_OVRE | US_CSR_FRAME |
+                                                    US_CSR_PARE | US_CSR_TIMEOUT | US_CSR_NACK |
+                                                    ( 1 << 10 ) ) );
 
-    if (status != 0 ) {
-        TRACE_DEBUG("E:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_CSR);
-        TRACE_DEBUG("Nb:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_NER );
+    if( status != 0 )
+    {
+        TRACE_DEBUG( "E:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_CSR );
+        TRACE_DEBUG( "Nb:0x%X\n\r", BOARD_ISO7816_BASE_USART->US_NER );
         BOARD_ISO7816_BASE_USART->US_CR = US_CR_RSTSTA;
     }
 
@@ -164,7 +176,7 @@ static uint32_t ISO7816_SendChar( uint8_t CharToSend )
 static void ISO7816_IccPowerOn( void )
 {
     /* Set RESET Master Card */
-    PIO_Set(&st_pinIso7816RstMC);
+    PIO_Set( &st_pinIso7816RstMC );
 }
 
 /*----------------------------------------------------------------------------
@@ -177,7 +189,7 @@ static void ISO7816_IccPowerOn( void )
 void ISO7816_IccPowerOff( void )
 {
     /* Clear RESET Master Card */
-    PIO_Clear(&st_pinIso7816RstMC);
+    PIO_Clear( &st_pinIso7816RstMC );
 }
 
 /**
@@ -187,9 +199,9 @@ void ISO7816_IccPowerOff( void )
  * \param wLength  Block length
  * \return         Message index
  */
-uint16_t ISO7816_XfrBlockTPDU_T0(const uint8_t *pAPDU,
-                                       uint8_t *pMessage,
-                                       uint16_t wLength )
+uint16_t ISO7816_XfrBlockTPDU_T0( const uint8_t * pAPDU,
+                                  uint8_t * pMessage,
+                                  uint16_t wLength )
 {
     uint16_t NeNc;
     uint16_t indexApdu = 4;
@@ -199,121 +211,152 @@ uint16_t ISO7816_XfrBlockTPDU_T0(const uint8_t *pAPDU,
     uint8_t cmdCase;
     uint8_t ins;
 
-    TRACE_DEBUG("pAPDU[0]=0x%X\n\r",pAPDU[0]);
-    TRACE_DEBUG("pAPDU[1]=0x%X\n\r",pAPDU[1]);
-    TRACE_DEBUG("pAPDU[2]=0x%X\n\r",pAPDU[2]);
-    TRACE_DEBUG("pAPDU[3]=0x%X\n\r",pAPDU[3]);
-    TRACE_DEBUG("pAPDU[4]=0x%X\n\r",pAPDU[4]);
-    TRACE_DEBUG("pAPDU[5]=0x%X\n\r",pAPDU[5]);
-    TRACE_DEBUG("wlength=%d\n\r",wLength);
+    TRACE_DEBUG( "pAPDU[0]=0x%X\n\r", pAPDU[ 0 ] );
+    TRACE_DEBUG( "pAPDU[1]=0x%X\n\r", pAPDU[ 1 ] );
+    TRACE_DEBUG( "pAPDU[2]=0x%X\n\r", pAPDU[ 2 ] );
+    TRACE_DEBUG( "pAPDU[3]=0x%X\n\r", pAPDU[ 3 ] );
+    TRACE_DEBUG( "pAPDU[4]=0x%X\n\r", pAPDU[ 4 ] );
+    TRACE_DEBUG( "pAPDU[5]=0x%X\n\r", pAPDU[ 5 ] );
+    TRACE_DEBUG( "wlength=%d\n\r", wLength );
 
-    ISO7816_SendChar( pAPDU[0] ); /* CLA */
-    ISO7816_SendChar( pAPDU[1] ); /* INS */
-    ISO7816_SendChar( pAPDU[2] ); /* P1 */
-    ISO7816_SendChar( pAPDU[3] ); /* P2 */
-    ISO7816_SendChar( pAPDU[4] ); /* P3 */
+    ISO7816_SendChar( pAPDU[ 0 ] ); /* CLA */
+    ISO7816_SendChar( pAPDU[ 1 ] ); /* INS */
+    ISO7816_SendChar( pAPDU[ 2 ] ); /* P1 */
+    ISO7816_SendChar( pAPDU[ 3 ] ); /* P2 */
+    ISO7816_SendChar( pAPDU[ 4 ] ); /* P3 */
 
     /* Handle the four structures of command APDU */
     indexApdu = 4;
 
-    if( wLength == 4 ) {
+    if( wLength == 4 )
+    {
         cmdCase = CASE1;
         NeNc = 0;
     }
-    else if( wLength == 5) {
+    else if( wLength == 5 )
+    {
         cmdCase = CASE2;
-        NeNc = pAPDU[4]; /* C5 */
-        if (NeNc == 0) {
+        NeNc = pAPDU[ 4 ]; /* C5 */
+
+        if( NeNc == 0 )
+        {
             NeNc = 256;
         }
     }
-    else if( wLength == 6) {
-        NeNc = pAPDU[4]; /* C5 */
+    else if( wLength == 6 )
+    {
+        NeNc = pAPDU[ 4 ]; /* C5 */
         cmdCase = CASE3;
     }
-    else if( wLength == 7) {
-        NeNc = pAPDU[4]; /* C5 */
-        if( NeNc == 0 ) {
+    else if( wLength == 7 )
+    {
+        NeNc = pAPDU[ 4 ]; /* C5 */
+
+        if( NeNc == 0 )
+        {
             cmdCase = CASE2;
-            NeNc = (pAPDU[5]<<8)+pAPDU[6];
+            NeNc = ( pAPDU[ 5 ] << 8 ) + pAPDU[ 6 ];
         }
-        else {
+        else
+        {
             cmdCase = CASE3;
         }
     }
-    else {
-        NeNc = pAPDU[4]; /* C5 */
-        if( NeNc == 0 ) {
+    else
+    {
+        NeNc = pAPDU[ 4 ]; /* C5 */
+
+        if( NeNc == 0 )
+        {
             cmdCase = CASE3;
-            NeNc = (pAPDU[5]<<8)+pAPDU[6];
+            NeNc = ( pAPDU[ 5 ] << 8 ) + pAPDU[ 6 ];
         }
-        else {
+        else
+        {
             cmdCase = CASE3;
         }
     }
 
-    TRACE_DEBUG("CASE=0x%X NeNc=0x%X\n\r", cmdCase, NeNc);
+    TRACE_DEBUG( "CASE=0x%X NeNc=0x%X\n\r", cmdCase, NeNc );
 
     /* Handle Procedure Bytes */
-    do {
-        ISO7816_GetChar(&procByte);
+    do
+    {
+        ISO7816_GetChar( &procByte );
         ins = procByte ^ 0xff;
+
         /* Handle NULL */
-        if ( procByte == ISO_NULL_VAL ) {
-            TRACE_DEBUG("INS\n\r");
+        if( procByte == ISO_NULL_VAL )
+        {
+            TRACE_DEBUG( "INS\n\r" );
             continue;
         }
         /* Handle SW1 */
-        else if ( ((procByte & 0xF0) ==0x60) || ((procByte & 0xF0) ==0x90) ) {
-            TRACE_DEBUG("SW1\n\r");
+        else if( ( ( procByte & 0xF0 ) == 0x60 ) || ( ( procByte & 0xF0 ) == 0x90 ) )
+        {
+            TRACE_DEBUG( "SW1\n\r" );
             SW1 = 1;
         }
         /* Handle INS */
-        else if ( pAPDU[1] == procByte) {
-            TRACE_DEBUG("HdlINS\n\r");
-            if (cmdCase == CASE2) {
+        else if( pAPDU[ 1 ] == procByte )
+        {
+            TRACE_DEBUG( "HdlINS\n\r" );
+
+            if( cmdCase == CASE2 )
+            {
                 /* receive data from card */
-                do {
-                    ISO7816_GetChar(&pMessage[indexMessage++]);
+                do
+                {
+                    ISO7816_GetChar( &pMessage[ indexMessage++ ] );
                 } while( 0 != --NeNc );
             }
-            else {
-                 /* Send data */
-                do {
-                    ISO7816_SendChar(pAPDU[indexApdu++]);
+            else
+            {
+                /* Send data */
+                do
+                {
+                    ISO7816_SendChar( pAPDU[ indexApdu++ ] );
                 } while( 0 != --NeNc );
             }
         }
         /* Handle INS ^ 0xff */
-        else if ( pAPDU[1] == ins) {
-            TRACE_DEBUG("HdlINS+\n\r");
-            if (cmdCase == CASE2) {
+        else if( pAPDU[ 1 ] == ins )
+        {
+            TRACE_DEBUG( "HdlINS+\n\r" );
+
+            if( cmdCase == CASE2 )
+            {
                 /* receive data from card */
-                ISO7816_GetChar(&pMessage[indexMessage++]);
+                ISO7816_GetChar( &pMessage[ indexMessage++ ] );
             }
-            else {
-                ISO7816_SendChar(pAPDU[indexApdu++]);
+            else
+            {
+                ISO7816_SendChar( pAPDU[ indexApdu++ ] );
             }
+
             NeNc--;
         }
-        else {
+        else
+        {
             /* ?? */
-            TRACE_DEBUG("procByte=0x%X\n\r", procByte);
+            TRACE_DEBUG( "procByte=0x%X\n\r", procByte );
             break;
         }
-    } while (NeNc != 0);
+    } while( NeNc != 0 );
 
     /* Status Bytes */
-    if (SW1 == 0) {
-        ISO7816_GetChar(&pMessage[indexMessage++]); /* SW1 */
+    if( SW1 == 0 )
+    {
+        ISO7816_GetChar( &pMessage[ indexMessage++ ] ); /* SW1 */
     }
-    else {
-        pMessage[indexMessage++] = procByte;
+    else
+    {
+        pMessage[ indexMessage++ ] = procByte;
     }
-    ISO7816_GetChar(&pMessage[indexMessage++]); /* SW2 */
+
+    ISO7816_GetChar( &pMessage[ indexMessage++ ] ); /* SW2 */
 
     return( indexMessage );
-
 }
 
 /**
@@ -321,7 +364,7 @@ uint16_t ISO7816_XfrBlockTPDU_T0(const uint8_t *pAPDU,
  */
 void ISO7816_Escape( void )
 {
-    TRACE_DEBUG("For user, if needed\n\r");
+    TRACE_DEBUG( "For user, if needed\n\r" );
 }
 
 /**
@@ -329,7 +372,7 @@ void ISO7816_Escape( void )
  */
 void ISO7816_RestartClock( void )
 {
-    TRACE_DEBUG("ISO7816_RestartClock\n\r");
+    TRACE_DEBUG( "ISO7816_RestartClock\n\r" );
     BOARD_ISO7816_BASE_USART->US_BRGR = 13;
 }
 
@@ -338,7 +381,7 @@ void ISO7816_RestartClock( void )
  */
 void ISO7816_StopClock( void )
 {
-    TRACE_DEBUG("ISO7816_StopClock\n\r");
+    TRACE_DEBUG( "ISO7816_StopClock\n\r" );
     BOARD_ISO7816_BASE_USART->US_BRGR = 0;
 }
 
@@ -347,8 +390,8 @@ void ISO7816_StopClock( void )
  */
 void ISO7816_toAPDU( void )
 {
-    TRACE_DEBUG("ISO7816_toAPDU\n\r");
-    TRACE_DEBUG("Not supported at this time\n\r");
+    TRACE_DEBUG( "ISO7816_toAPDU\n\r" );
+    TRACE_DEBUG( "Not supported at this time\n\r" );
 }
 
 /**
@@ -356,7 +399,8 @@ void ISO7816_toAPDU( void )
  * \param pAtr    ATR buffer
  * \param pLength Pointer for store the ATR length
  */
-void ISO7816_Datablock_ATR( uint8_t* pAtr, uint8_t* pLength )
+void ISO7816_Datablock_ATR( uint8_t * pAtr,
+                            uint8_t * pLength )
 {
     uint32_t i;
     uint32_t j;
@@ -365,41 +409,50 @@ void ISO7816_Datablock_ATR( uint8_t* pAtr, uint8_t* pLength )
     *pLength = 0;
 
     /* Read ATR TS */
-    ISO7816_GetChar(&pAtr[0]);
+    ISO7816_GetChar( &pAtr[ 0 ] );
     /* Read ATR T0 */
-    ISO7816_GetChar(&pAtr[1]);
-    y = pAtr[1] & 0xF0;
+    ISO7816_GetChar( &pAtr[ 1 ] );
+    y = pAtr[ 1 ] & 0xF0;
     i = 2;
 
     /* Read ATR Ti */
-    while (y) {
+    while( y )
+    {
+        if( y & 0x10 ) /* TA[i] */
+        {
+            ISO7816_GetChar( &pAtr[ i++ ] );
+        }
 
-        if (y & 0x10) {  /* TA[i] */
-            ISO7816_GetChar(&pAtr[i++]);
+        if( y & 0x20 ) /* TB[i] */
+        {
+            ISO7816_GetChar( &pAtr[ i++ ] );
         }
-        if (y & 0x20) {  /* TB[i] */
-            ISO7816_GetChar(&pAtr[i++]);
+
+        if( y & 0x40 ) /* TC[i] */
+        {
+            ISO7816_GetChar( &pAtr[ i++ ] );
         }
-        if (y & 0x40) {  /* TC[i] */
-            ISO7816_GetChar(&pAtr[i++]);
+
+        if( y & 0x80 ) /* TD[i] */
+        {
+            ISO7816_GetChar( &pAtr[ i ] );
+            y = pAtr[ i++ ] & 0xF0;
         }
-        if (y & 0x80) {  /* TD[i] */
-            ISO7816_GetChar(&pAtr[i]);
-            y =  pAtr[i++] & 0xF0;
-        }
-        else {
+        else
+        {
             y = 0;
         }
     }
 
     /* Historical Bytes */
-    y = pAtr[1] & 0x0F;
-    for( j=0; j < y; j++ ) {
-        ISO7816_GetChar(&pAtr[i++]);
+    y = pAtr[ 1 ] & 0x0F;
+
+    for( j = 0; j < y; j++ )
+    {
+        ISO7816_GetChar( &pAtr[ i++ ] );
     }
 
     *pLength = i;
-
 }
 
 /**
@@ -407,7 +460,8 @@ void ISO7816_Datablock_ATR( uint8_t* pAtr, uint8_t* pLength )
  * \param dwClockFrequency ICC clock frequency in KHz.
  * \param dwDataRate       ICC data rate in bpd
  */
-void ISO7816_SetDataRateandClockFrequency( uint32_t dwClockFrequency, uint32_t dwDataRate )
+void ISO7816_SetDataRateandClockFrequency( uint32_t dwClockFrequency,
+                                           uint32_t dwDataRate )
 {
     uint8_t ClockFrequency;
 
@@ -416,12 +470,11 @@ void ISO7816_SetDataRateandClockFrequency( uint32_t dwClockFrequency, uint32_t d
     /* SCK = FIDI x BAUD = 372 x 9600 */
     /* BOARD_MCK */
     /* CD = MCK/(FIDI x BAUD) = 48000000 / (372x9600) = 13 */
-    BOARD_ISO7816_BASE_USART->US_BRGR = BOARD_MCK / (dwClockFrequency*1000);
+    BOARD_ISO7816_BASE_USART->US_BRGR = BOARD_MCK / ( dwClockFrequency * 1000 );
 
     ClockFrequency = BOARD_MCK / BOARD_ISO7816_BASE_USART->US_BRGR;
 
-    BOARD_ISO7816_BASE_USART->US_FIDI = (ClockFrequency)/dwDataRate;
-
+    BOARD_ISO7816_BASE_USART->US_FIDI = ( ClockFrequency ) / dwDataRate;
 }
 
 /**
@@ -430,7 +483,7 @@ void ISO7816_SetDataRateandClockFrequency( uint32_t dwClockFrequency, uint32_t d
  */
 uint8_t ISO7816_StatusReset( void )
 {
-    return PIO_Get(&st_pinIso7816RstMC);
+    return PIO_Get( &st_pinIso7816RstMC );
 }
 
 /**
@@ -441,7 +494,8 @@ void ISO7816_cold_reset( void )
     volatile uint32_t i;
 
     /* tb: wait 400 cycles*/
-    for( i=0; i<(120*(BOARD_MCK/1000000)); i++ ) {
+    for( i = 0; i < ( 120 * ( BOARD_MCK / 1000000 ) ); i++ )
+    {
     }
 
     BOARD_ISO7816_BASE_USART->US_RHR;
@@ -460,7 +514,8 @@ void ISO7816_warm_reset( void )
     ISO7816_IccPowerOff();
 
     /* tb: wait 400 cycles */
-    for( i=0; i<(120*(BOARD_MCK/1000000)); i++ ) {
+    for( i = 0; i < ( 120 * ( BOARD_MCK / 1000000 ) ); i++ )
+    {
     }
 
     BOARD_ISO7816_BASE_USART->US_RHR;
@@ -473,100 +528,133 @@ void ISO7816_warm_reset( void )
  * Decode ATR trace
  * \param pAtr pointer on ATR buffer
  */
-void ISO7816_Decode_ATR( uint8_t* pAtr )
+void ISO7816_Decode_ATR( uint8_t * pAtr )
 {
     uint32_t i;
     uint32_t j;
     uint32_t y;
     uint8_t offset;
 
-    printf("\n\r");
-    printf("ATR: Answer To Reset:\n\r");
-    printf("TS = 0x%X Initial character ",pAtr[0]);
-    if( pAtr[0] == 0x3B ) {
+    printf( "\n\r" );
+    printf( "ATR: Answer To Reset:\n\r" );
+    printf( "TS = 0x%X Initial character ", pAtr[ 0 ] );
 
-        printf("Direct Convention\n\r");
+    if( pAtr[ 0 ] == 0x3B )
+    {
+        printf( "Direct Convention\n\r" );
     }
-    else {
-        if( pAtr[0] == 0x3F ) {
-
-            printf("Inverse Convention\n\r");
+    else
+    {
+        if( pAtr[ 0 ] == 0x3F )
+        {
+            printf( "Inverse Convention\n\r" );
         }
-        else {
-            printf("BAD Convention\n\r");
+        else
+        {
+            printf( "BAD Convention\n\r" );
         }
     }
 
-    printf("T0 = 0x%X Format caracter\n\r",pAtr[1]);
-    printf("    Number of historical bytes: K = %d\n\r", pAtr[1]&0x0F);
-    printf("    Presence further interface byte:\n\r");
-    if( pAtr[1]&0x80 ) {
-        printf("TA ");
+    printf( "T0 = 0x%X Format caracter\n\r", pAtr[ 1 ] );
+    printf( "    Number of historical bytes: K = %d\n\r", pAtr[ 1 ] & 0x0F );
+    printf( "    Presence further interface byte:\n\r" );
+
+    if( pAtr[ 1 ] & 0x80 )
+    {
+        printf( "TA " );
     }
-    if( pAtr[1]&0x40 ) {
-        printf("TB ");
+
+    if( pAtr[ 1 ] & 0x40 )
+    {
+        printf( "TB " );
     }
-    if( pAtr[1]&0x20 ) {
-        printf("TC ");
+
+    if( pAtr[ 1 ] & 0x20 )
+    {
+        printf( "TC " );
     }
-    if( pAtr[1]&0x10 ) {
-        printf("TD ");
+
+    if( pAtr[ 1 ] & 0x10 )
+    {
+        printf( "TD " );
     }
-    if( pAtr[1] != 0 ) {
-        printf(" present\n\r");
+
+    if( pAtr[ 1 ] != 0 )
+    {
+        printf( " present\n\r" );
     }
 
     i = 2;
-    y = pAtr[1] & 0xF0;
+    y = pAtr[ 1 ] & 0xF0;
 
     /* Read ATR Ti */
     offset = 1;
-    while (y) {
 
-        if (y & 0x10) {  /* TA[i] */
-            printf("TA[%d] = 0x%X ", offset, pAtr[i]);
-            if( offset == 1 ) {
-                printf("FI = %d ", (pAtr[i]>>8));
-                printf("DI = %d", (pAtr[i]&0x0F));
+    while( y )
+    {
+        if( y & 0x10 ) /* TA[i] */
+        {
+            printf( "TA[%d] = 0x%X ", offset, pAtr[ i ] );
+
+            if( offset == 1 )
+            {
+                printf( "FI = %d ", ( pAtr[ i ] >> 8 ) );
+                printf( "DI = %d", ( pAtr[ i ] & 0x0F ) );
             }
-            printf("\n\r");
+
+            printf( "\n\r" );
             i++;
         }
-        if (y & 0x20) {  /* TB[i] */
-            printf("TB[%d] = 0x%X\n\r", offset, pAtr[i]);
+
+        if( y & 0x20 ) /* TB[i] */
+        {
+            printf( "TB[%d] = 0x%X\n\r", offset, pAtr[ i ] );
             i++;
         }
-        if (y & 0x40) {  /* TC[i] */
-            printf("TC[%d] = 0x%X ", offset, pAtr[i]);
-            if( offset == 1 ) {
-                printf("Extra Guard Time: N = %d", pAtr[i]);
+
+        if( y & 0x40 ) /* TC[i] */
+        {
+            printf( "TC[%d] = 0x%X ", offset, pAtr[ i ] );
+
+            if( offset == 1 )
+            {
+                printf( "Extra Guard Time: N = %d", pAtr[ i ] );
             }
-            printf("\n\r");
+
+            printf( "\n\r" );
             i++;
         }
-        if (y & 0x80) {  /* TD[i] */
-            printf("TD[%d] = 0x%X\n\r", offset, pAtr[i]);
-            y =  pAtr[i++] & 0xF0;
+
+        if( y & 0x80 ) /* TD[i] */
+        {
+            printf( "TD[%d] = 0x%X\n\r", offset, pAtr[ i ] );
+            y = pAtr[ i++ ] & 0xF0;
         }
-        else {
+        else
+        {
             y = 0;
         }
+
         offset++;
     }
 
     /* Historical Bytes */
-    printf("Historical bytes:\n\r");
-    y = pAtr[1] & 0x0F;
-    for( j=0; j < y; j++ ) {
+    printf( "Historical bytes:\n\r" );
+    y = pAtr[ 1 ] & 0x0F;
 
-        printf(" 0x%X", pAtr[i]);
-        if( (pAtr[i] > 0x21) && (pAtr[i] < 0x7D) ) {  /* ASCII */
-            printf("(%c) ", pAtr[i]);
+    for( j = 0; j < y; j++ )
+    {
+        printf( " 0x%X", pAtr[ i ] );
+
+        if( ( pAtr[ i ] > 0x21 ) && ( pAtr[ i ] < 0x7D ) ) /* ASCII */
+        {
+            printf( "(%c) ", pAtr[ i ] );
         }
+
         i++;
     }
-    printf("\n\r\n\r");
 
+    printf( "\n\r\n\r" );
 }
 
 /** Initializes a ISO driver
@@ -574,10 +662,10 @@ void ISO7816_Decode_ATR( uint8_t* pAtr )
  */
 void ISO7816_Init( const Pin pPinIso7816RstMC )
 {
-    TRACE_DEBUG("ISO_Init\n\r");
+    TRACE_DEBUG( "ISO_Init\n\r" );
 
     /* Pin ISO7816 initialize */
-    st_pinIso7816RstMC  = pPinIso7816RstMC;
+    st_pinIso7816RstMC = pPinIso7816RstMC;
 
     USART_Configure( BOARD_ISO7816_BASE_USART,
                      US_MR_USART_MODE_IS07816_T_0
@@ -586,28 +674,26 @@ void ISO7816_Init( const Pin pPinIso7816RstMC )
                      | US_MR_PAR_EVEN
                      | US_MR_CHRL_8_BIT
                      | US_MR_CLKO
-                     | (3<<24), /* MAX_ITERATION */
+                     | ( 3 << 24 ), /* MAX_ITERATION */
                      1,
-                     0);
+                     0 );
 
     /* Configure USART */
-    PMC_EnablePeripheral(BOARD_ISO7816_ID_USART);
+    PMC_EnablePeripheral( BOARD_ISO7816_ID_USART );
     /* Disable interrupts */
-    BOARD_ISO7816_BASE_USART->US_IDR = (uint32_t) -1;
+    BOARD_ISO7816_BASE_USART->US_IDR = ( uint32_t ) -1;
 
-    BOARD_ISO7816_BASE_USART->US_FIDI = 372;  /* by default */
+    BOARD_ISO7816_BASE_USART->US_FIDI = 372; /* by default */
     /* Define the baud rate divisor register */
     /* CD  = MCK / SCK */
     /* SCK = FIDI x BAUD = 372 x 9600 */
     /* BOARD_MCK */
     /* CD = MCK/(FIDI x BAUD) = 48000000 / (372x9600) = 13 */
-    BOARD_ISO7816_BASE_USART->US_BRGR = BOARD_MCK / (372*9600);
+    BOARD_ISO7816_BASE_USART->US_BRGR = BOARD_MCK / ( 372 * 9600 );
 
     /* Write the Timeguard Register */
     BOARD_ISO7816_BASE_USART->US_TTGR = 5;
 
-    USART_SetTransmitterEnabled(BOARD_ISO7816_BASE_USART, 1);
-    USART_SetReceiverEnabled(BOARD_ISO7816_BASE_USART, 1);
-
+    USART_SetTransmitterEnabled( BOARD_ISO7816_BASE_USART, 1 );
+    USART_SetReceiverEnabled( BOARD_ISO7816_BASE_USART, 1 );
 }
-

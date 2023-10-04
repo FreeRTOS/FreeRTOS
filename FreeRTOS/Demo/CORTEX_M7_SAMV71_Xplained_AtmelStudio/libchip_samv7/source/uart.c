@@ -34,6 +34,7 @@
  * controller.
  *
  */
+
 /*------------------------------------------------------------------------------
  *         Headers
  *----------------------------------------------------------------------------*/
@@ -55,26 +56,26 @@
  *  \param baudrate  Baudrate at which the UART should operate (in Hz).
  *  \param masterClock  Frequency of the system master clock (in Hz).
  */
-void UART_Configure(Uart *uart,
-		uint32_t mode,
-		uint32_t baudrate,
-		uint32_t masterClock)
+void UART_Configure( Uart * uart,
+                     uint32_t mode,
+                     uint32_t baudrate,
+                     uint32_t masterClock )
 {
-	/* Reset and disable receiver & transmitter*/
-	uart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX
-		| UART_CR_RXDIS | UART_CR_TXDIS | UART_CR_RSTSTA;
+    /* Reset and disable receiver & transmitter*/
+    uart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX
+                    | UART_CR_RXDIS | UART_CR_TXDIS | UART_CR_RSTSTA;
 
-	uart->UART_IDR = 0xFFFFFFFF;
+    uart->UART_IDR = 0xFFFFFFFF;
 
-	/* Configure mode*/
-	uart->UART_MR = mode;
+    /* Configure mode*/
+    uart->UART_MR = mode;
 
-	/* Configure baudrate*/
-	uart->UART_BRGR = (masterClock / baudrate) / 16;
+    /* Configure baudrate*/
+    uart->UART_BRGR = ( masterClock / baudrate ) / 16;
 
-	uart->UART_CR = UART_CR_TXEN | UART_CR_RXEN;
-
+    uart->UART_CR = UART_CR_TXEN | UART_CR_RXEN;
 }
+
 /**
  * \brief Enables or disables the transmitter of an UART peripheral.
  *
@@ -83,13 +84,17 @@ void UART_Configure(Uart *uart,
  * \param enabled  If true, the transmitter is enabled; otherwise it is
  *  disabled.
  */
-void UART_SetTransmitterEnabled(Uart *uart, uint8_t enabled)
+void UART_SetTransmitterEnabled( Uart * uart,
+                                 uint8_t enabled )
 {
-	if (enabled) {
-		uart->UART_CR = UART_CR_TXEN;
-	} else {
-		uart->UART_CR = UART_CR_TXDIS;
-	}
+    if( enabled )
+    {
+        uart->UART_CR = UART_CR_TXEN;
+    }
+    else
+    {
+        uart->UART_CR = UART_CR_TXDIS;
+    }
 }
 
 /**
@@ -99,22 +104,26 @@ void UART_SetTransmitterEnabled(Uart *uart, uint8_t enabled)
  * \param uart  Pointer to an UART peripheral
  * \param enabled  If true, the receiver is enabled; otherwise it is disabled.
  */
-void UART_SetReceiverEnabled(Uart *uart, uint8_t enabled)
+void UART_SetReceiverEnabled( Uart * uart,
+                              uint8_t enabled )
 {
-	if (enabled) {
-		uart->UART_CR = UART_CR_RXEN;
-	} else {
-		uart->UART_CR = UART_CR_RXDIS;
-	}
+    if( enabled )
+    {
+        uart->UART_CR = UART_CR_RXEN;
+    }
+    else
+    {
+        uart->UART_CR = UART_CR_RXDIS;
+    }
 }
 
 /**
  * \brief   Return 1 if a character can be read in UART
  * \param uart  Pointer to an UART peripheral.
  */
-uint32_t UART_IsRxReady(Uart *uart)
+uint32_t UART_IsRxReady( Uart * uart )
 {
-	return (uart->UART_SR & UART_SR_RXRDY);
+    return( uart->UART_SR & UART_SR_RXRDY );
 }
 
 /**
@@ -124,28 +133,31 @@ uint32_t UART_IsRxReady(Uart *uart)
  * \param uart  Pointer to an UART peripheral.
  * \return Character received.
  */
-uint8_t UART_GetChar(Uart *uart)
+uint8_t UART_GetChar( Uart * uart )
 {
-	while (!UART_IsRxReady(uart));
-	return uart->UART_RHR;
+    while( !UART_IsRxReady( uart ) )
+    {
+    }
+
+    return uart->UART_RHR;
 }
 
 /**
  * \brief   Return 1 if a character can be send to UART
  * \param uart  Pointer to an UART peripheral.
  */
-uint32_t UART_IsTxReady(Uart *uart)
+uint32_t UART_IsTxReady( Uart * uart )
 {
-	return (uart->UART_SR & UART_SR_TXRDY);
+    return( uart->UART_SR & UART_SR_TXRDY );
 }
 
 /**
  * \brief   Return 1 if a character can be send to UART
  * \param uart  Pointer to an UART peripheral.
  */
-static uint32_t UART_IsTxSent(Uart *uart)
+static uint32_t UART_IsTxSent( Uart * uart )
 {
-	return (uart->UART_SR & UART_SR_TXEMPTY);
+    return( uart->UART_SR & UART_SR_TXEMPTY );
 }
 
 /**
@@ -156,25 +168,30 @@ static uint32_t UART_IsTxSent(Uart *uart)
  * \param uart  Pointer to an UART peripheral.
  * \param c  Character to send
  */
-void UART_PutChar( Uart *uart, uint8_t c)
+void UART_PutChar( Uart * uart,
+                   uint8_t c )
 {
-	/* Wait for the transmitter to be ready*/
-	while (!UART_IsRxReady(uart) && !UART_IsTxSent(uart));
+    /* Wait for the transmitter to be ready*/
+    while( !UART_IsRxReady( uart ) && !UART_IsTxSent( uart ) )
+    {
+    }
 
-	/* Send character*/
-	uart->UART_THR = c;
+    /* Send character*/
+    uart->UART_THR = c;
 
-	/* Wait for the transfer to complete*/
-	while (!UART_IsTxSent(uart));
+    /* Wait for the transfer to complete*/
+    while( !UART_IsTxSent( uart ) )
+    {
+    }
 }
 
 /**
  * \brief   Get present status
  * \param uart  Pointer to an UART peripheral.
  */
-uint32_t UART_GetStatus(Uart *uart)
+uint32_t UART_GetStatus( Uart * uart )
 {
-	return uart->UART_SR;
+    return uart->UART_SR;
 }
 
 /**
@@ -182,9 +199,10 @@ uint32_t UART_GetStatus(Uart *uart)
  * \param uart  Pointer to an UART peripheral.
  * \param mode  Interrupt mode.
  */
-void UART_EnableIt(Uart *uart,uint32_t mode)
+void UART_EnableIt( Uart * uart,
+                    uint32_t mode )
 {
-	uart->UART_IER = mode;
+    uart->UART_IER = mode;
 }
 
 /**
@@ -192,42 +210,51 @@ void UART_EnableIt(Uart *uart,uint32_t mode)
  * \param uart  Pointer to an UART peripheral.
  * \param mode  Interrupt mode.
  */
-void UART_DisableIt(Uart *uart,uint32_t mode)
+void UART_DisableIt( Uart * uart,
+                     uint32_t mode )
 {
-	uart->UART_IDR = mode;
+    uart->UART_IDR = mode;
 }
 
 /**
  * \brief   Return interrupt mask
  * \param uart  Pointer to an UART peripheral.
  */
-uint32_t UART_GetItMask(Uart *uart)
+uint32_t UART_GetItMask( Uart * uart )
 {
-	return uart->UART_IMR;
+    return uart->UART_IMR;
 }
 
-void UART_SendBuffer(Uart *uart, uint8_t *pBuffer, uint32_t BuffLen)
+void UART_SendBuffer( Uart * uart,
+                      uint8_t * pBuffer,
+                      uint32_t BuffLen )
 {
-	uint8_t *pData = pBuffer;
-	uint32_t Len =0;
+    uint8_t * pData = pBuffer;
+    uint32_t Len = 0;
 
-	for(Len =0; Len<BuffLen; Len++ ) {
-		UART_PutChar(uart, *pData);
-		pData++;
-	}
+    for( Len = 0; Len < BuffLen; Len++ )
+    {
+        UART_PutChar( uart, *pData );
+        pData++;
+    }
 }
 
-void UART_ReceiveBuffer(Uart *uart, uint8_t *pBuffer, uint32_t BuffLen)
+void UART_ReceiveBuffer( Uart * uart,
+                         uint8_t * pBuffer,
+                         uint32_t BuffLen )
 {
-	uint32_t Len =0;
+    uint32_t Len = 0;
 
-	for(Len =0; Len<BuffLen; Len++ ) {
-		*pBuffer = UART_GetChar(uart);
-		pBuffer++;
-	}
+    for( Len = 0; Len < BuffLen; Len++ )
+    {
+        *pBuffer = UART_GetChar( uart );
+        pBuffer++;
+    }
 }
 
-void UART_CompareConfig(Uart *uart, uint8_t Val1, uint8_t Val2)
+void UART_CompareConfig( Uart * uart,
+                         uint8_t Val1,
+                         uint8_t Val2 )
 {
-	uart->UART_CMPR = (UART_CMPR_VAL1(Val1) | UART_CMPR_VAL2(Val2));
+    uart->UART_CMPR = ( UART_CMPR_VAL1( Val1 ) | UART_CMPR_VAL2( Val2 ) );
 }

@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -37,63 +37,62 @@
 #include <reset.h>
 #include <debug.h>
 
-void ResetCtl_initiateSoftReset(void)
+void ResetCtl_initiateSoftReset( void )
 {
-    RSTCTL->RESET_REQ |= (RESET_KEY | RESET_SOFT_RESET);
+    RSTCTL->RESET_REQ |= ( RESET_KEY | RESET_SOFT_RESET );
 }
 
-void ResetCtl_initiateSoftResetWithSource(uint32_t source)
+void ResetCtl_initiateSoftResetWithSource( uint32_t source )
 {
-    RSTCTL->SOFTRESET_SET |= (source);
+    RSTCTL->SOFTRESET_SET |= ( source );
 }
 
-uint32_t ResetCtl_getSoftResetSource(void)
+uint32_t ResetCtl_getSoftResetSource( void )
 {
     return RSTCTL->SOFTRESET_STAT;
 }
 
-void ResetCtl_clearSoftResetSource(uint32_t mask)
+void ResetCtl_clearSoftResetSource( uint32_t mask )
 {
     RSTCTL->SOFTRESET_CLR |= mask;
 }
 
-void ResetCtl_initiateHardReset(void)
+void ResetCtl_initiateHardReset( void )
 {
-    RSTCTL->RESET_REQ |= (RESET_KEY | RESET_HARD_RESET);
+    RSTCTL->RESET_REQ |= ( RESET_KEY | RESET_HARD_RESET );
 }
 
-void ResetCtl_initiateHardResetWithSource(uint32_t source)
+void ResetCtl_initiateHardResetWithSource( uint32_t source )
 {
-    RSTCTL->HARDRESET_SET |= (source);
+    RSTCTL->HARDRESET_SET |= ( source );
 }
 
-uint32_t ResetCtl_getHardResetSource(void)
+uint32_t ResetCtl_getHardResetSource( void )
 {
     return RSTCTL->HARDRESET_STAT;
 }
 
-void ResetCtl_clearHardResetSource(uint32_t mask)
+void ResetCtl_clearHardResetSource( uint32_t mask )
 {
     RSTCTL->HARDRESET_CLR |= mask;
 }
 
-uint32_t ResetCtl_getPSSSource(void)
+uint32_t ResetCtl_getPSSSource( void )
 {
     return RSTCTL->PSSRESET_STAT;
 }
 
-void ResetCtl_clearPSSFlags(void)
+void ResetCtl_clearPSSFlags( void )
 {
     RSTCTL->PSSRESET_CLR |= RSTCTL_PSSRESET_CLR_CLR;
 }
 
-uint32_t ResetCtl_getPCMSource(void)
+uint32_t ResetCtl_getPCMSource( void )
 {
     return RSTCTL->PCMRESET_STAT;
 }
 
-void ResetCtl_clearPCMFlags(void)
+void ResetCtl_clearPCMFlags( void )
 {
     RSTCTL->PCMRESET_CLR |= RSTCTL_PCMRESET_CLR_CLR;
 }
-

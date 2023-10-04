@@ -29,7 +29,7 @@
 
 /** \addtogroup afe_dma_module Working with AFE (DMA support)
  *  \ingroup peripherals_module
- * The afec driver provides the interface to configure and use the afecC 
+ * The afec driver provides the interface to configure and use the afecC
  * peripheral with DMA support.\n
  *
  * For more accurate information, please look at the AFEC section of the
@@ -41,11 +41,13 @@
  */
 /*@{*/
 /*@}*/
+
 /**
  * \file
  *
  *
  */
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -67,27 +69,32 @@ static uint32_t afeDmaRxChannel;
  * Invoked on AFE DMA reception done.
  * \param channel DMA channel.
  * \param pArg Pointer to callback argument - Pointer to AfeDma instance.
- */ 
-static void Afe_Rx_Cb(uint32_t channel, AfeDma* pArg)
+ */
+static void Afe_Rx_Cb( uint32_t channel,
+                       AfeDma * pArg )
 {
-	AfeCmd *pAfedCmd = pArg->pCurrentCommand;
-	if (channel != afeDmaRxChannel)
-		return;
+    AfeCmd * pAfedCmd = pArg->pCurrentCommand;
 
-	/* Configure and enable interrupt on RC compare */
-	NVIC_ClearPendingIRQ(XDMAC_IRQn);
-	NVIC_DisableIRQ(XDMAC_IRQn);
+    if( channel != afeDmaRxChannel )
+    {
+        return;
+    }
 
-	/* Release the DMA channels */
-	XDMAD_FreeChannel(pArg->pXdmad, afeDmaRxChannel);
-	SCB_CleanInvalidateDCache();
-	/* Release the dataflash semaphore */
-	pArg->semaphore++;
+    /* Configure and enable interrupt on RC compare */
+    NVIC_ClearPendingIRQ( XDMAC_IRQn );
+    NVIC_DisableIRQ( XDMAC_IRQn );
 
-	/* Invoke the callback associated with the current command */
-	if (pAfedCmd && pAfedCmd->callback) {
-		pAfedCmd->callback(0, pAfedCmd->pArgument);
-	}
+    /* Release the DMA channels */
+    XDMAD_FreeChannel( pArg->pXdmad, afeDmaRxChannel );
+    SCB_CleanInvalidateDCache();
+    /* Release the dataflash semaphore */
+    pArg->semaphore++;
+
+    /* Invoke the callback associated with the current command */
+    if( pAfedCmd && pAfedCmd->callback )
+    {
+        pAfedCmd->callback( 0, pAfedCmd->pArgument );
+    }
 }
 
 /**
@@ -97,27 +104,32 @@ static void Afe_Rx_Cb(uint32_t channel, AfeDma* pArg)
  * \returns 0 if the dma channel configuration successfully; otherwise returns
  * AFE_ERROR_XXX.
  */
-static uint8_t _AfeConfigureDmaChannels( AfeDma* pAfed )
+static uint8_t _AfeConfigureDmaChannels( AfeDma * pAfed )
 {
+    /* Driver initialize */
+    XDMAD_Initialize( pAfed->pXdmad, 0 );
 
-	/* Driver initialize */
-	XDMAD_Initialize( pAfed->pXdmad, 0 );
+    XDMAD_FreeChannel( pAfed->pXdmad, afeDmaRxChannel );
 
-	XDMAD_FreeChannel( pAfed->pXdmad, afeDmaRxChannel);
+    /* Allocate a DMA channel for AFE0/1 RX. */
+    afeDmaRxChannel =
+        XDMAD_AllocateChannel( pAfed->pXdmad, pAfed->afeId, XDMAD_TRANSFER_MEMORY );
 
-	/* Allocate a DMA channel for AFE0/1 RX. */
-	afeDmaRxChannel = 
-		XDMAD_AllocateChannel( pAfed->pXdmad, pAfed->afeId, XDMAD_TRANSFER_MEMORY);
-	if ( afeDmaRxChannel == XDMAD_ALLOC_FAILED ) {
-		return AFE_ERROR;
-	}
+    if( afeDmaRxChannel == XDMAD_ALLOC_FAILED )
+    {
+        return AFE_ERROR;
+    }
 
-	/* Setup callbacks for AFE0/1 RX */
-	XDMAD_SetCallback(pAfed->pXdmad, afeDmaRxChannel, 
-			(XdmadTransferCallback)Afe_Rx_Cb, pAfed);
-	if (XDMAD_PrepareChannel( pAfed->pXdmad, afeDmaRxChannel ))
-		return AFE_ERROR;
-	return AFE_OK;
+    /* Setup callbacks for AFE0/1 RX */
+    XDMAD_SetCallback( pAfed->pXdmad, afeDmaRxChannel,
+                       ( XdmadTransferCallback ) Afe_Rx_Cb, pAfed );
+
+    if( XDMAD_PrepareChannel( pAfed->pXdmad, afeDmaRxChannel ) )
+    {
+        return AFE_ERROR;
+    }
+
+    return AFE_OK;
 }
 
 /**
@@ -127,49 +139,64 @@ static uint8_t _AfeConfigureDmaChannels( AfeDma* pAfed )
  * \param AfeCmd Pointer to command
  */
 
-static uint8_t _Afe_configureLinkList(Afec *pAfeHw, void *pXdmad, AfeCmd *pCommand)
+static uint8_t _Afe_configureLinkList( Afec * pAfeHw,
+                                       void * pXdmad,
+                                       AfeCmd * pCommand )
 {
-	uint32_t xdmaCndc, xdmaInt;
-	sXdmadCfg xdmadRxCfg;
-	uint32_t afeId;
-	if ((unsigned int)pAfeHw == (unsigned int)AFEC0 ) afeId = ID_AFEC0;
-	if ((unsigned int)pAfeHw == (unsigned int)AFEC1 ) afeId = ID_AFEC1;
-	/* Setup RX Link List */
-	xdmadRxCfg.mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
-						 XDMA_UBC_NDE_FETCH_DIS|
-						 XDMA_UBC_NDEN_UPDATED |
-						 pCommand->RxSize;
+    uint32_t xdmaCndc, xdmaInt;
+    sXdmadCfg xdmadRxCfg;
+    uint32_t afeId;
 
-	xdmadRxCfg.mbr_da = (uint32_t)pCommand->pRxBuff;
-	xdmadRxCfg.mbr_sa = (uint32_t)&(pAfeHw->AFEC_LCDR);
-	xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
-						 XDMAC_CC_MBSIZE_SINGLE |
-						 XDMAC_CC_DSYNC_PER2MEM |
-						 XDMAC_CC_CSIZE_CHK_1 |
-						 XDMAC_CC_DWIDTH_WORD|
-						 XDMAC_CC_SIF_AHB_IF1 |
-						 XDMAC_CC_DIF_AHB_IF0 |
-						 XDMAC_CC_SAM_FIXED_AM |
-						 XDMAC_CC_DAM_INCREMENTED_AM |
-						 XDMAC_CC_PERID(
-							XDMAIF_Get_ChannelNumber(  afeId, XDMAD_TRANSFER_RX ));
+    if( ( unsigned int ) pAfeHw == ( unsigned int ) AFEC0 )
+    {
+        afeId = ID_AFEC0;
+    }
 
-	xdmadRxCfg.mbr_bc = 0;
-	xdmadRxCfg.mbr_sus = 0;
-	xdmadRxCfg.mbr_dus =0;
+    if( ( unsigned int ) pAfeHw == ( unsigned int ) AFEC1 )
+    {
+        afeId = ID_AFEC1;
+    }
 
-	xdmaInt =  (XDMAC_CIE_BIE   |
-				XDMAC_CIE_DIE   |
-				XDMAC_CIE_FIE   |
-				XDMAC_CIE_RBIE  |
-				XDMAC_CIE_WBIE  |
-				XDMAC_CIE_ROIE);
-	xdmaCndc = 0;
-	if (XDMAD_ConfigureTransfer( pXdmad, afeDmaRxChannel, 
-			&xdmadRxCfg, xdmaCndc, 0, xdmaInt))
-		return AFE_ERROR;
-	SCB_CleanInvalidateDCache();
-	return AFE_OK;
+    /* Setup RX Link List */
+    xdmadRxCfg.mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
+                         XDMA_UBC_NDE_FETCH_DIS |
+                         XDMA_UBC_NDEN_UPDATED |
+                         pCommand->RxSize;
+
+    xdmadRxCfg.mbr_da = ( uint32_t ) pCommand->pRxBuff;
+    xdmadRxCfg.mbr_sa = ( uint32_t ) &( pAfeHw->AFEC_LCDR );
+    xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
+                         XDMAC_CC_MBSIZE_SINGLE |
+                         XDMAC_CC_DSYNC_PER2MEM |
+                         XDMAC_CC_CSIZE_CHK_1 |
+                         XDMAC_CC_DWIDTH_WORD |
+                         XDMAC_CC_SIF_AHB_IF1 |
+                         XDMAC_CC_DIF_AHB_IF0 |
+                         XDMAC_CC_SAM_FIXED_AM |
+                         XDMAC_CC_DAM_INCREMENTED_AM |
+                         XDMAC_CC_PERID(
+        XDMAIF_Get_ChannelNumber( afeId, XDMAD_TRANSFER_RX ) );
+
+    xdmadRxCfg.mbr_bc = 0;
+    xdmadRxCfg.mbr_sus = 0;
+    xdmadRxCfg.mbr_dus = 0;
+
+    xdmaInt = ( XDMAC_CIE_BIE |
+                XDMAC_CIE_DIE |
+                XDMAC_CIE_FIE |
+                XDMAC_CIE_RBIE |
+                XDMAC_CIE_WBIE |
+                XDMAC_CIE_ROIE );
+    xdmaCndc = 0;
+
+    if( XDMAD_ConfigureTransfer( pXdmad, afeDmaRxChannel,
+                                 &xdmadRxCfg, xdmaCndc, 0, xdmaInt ) )
+    {
+        return AFE_ERROR;
+    }
+
+    SCB_CleanInvalidateDCache();
+    return AFE_OK;
 }
 
 /*----------------------------------------------------------------------------
@@ -186,20 +213,20 @@ static uint8_t _Afe_configureLinkList(Afec *pAfeHw, void *pXdmad, AfeCmd *pComma
  * \param pAfed  Pointer to a AfeDma instance.
  * \param pAfeHw Associated Afe peripheral.
  * \param AfeId  Afe peripheral identifier.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
-uint32_t Afe_ConfigureDma( AfeDma *pAfed ,
-		Afec *pAfeHw ,
-		uint8_t AfeId,
-		sXdmad *pXdmad )
+uint32_t Afe_ConfigureDma( AfeDma * pAfed,
+                           Afec * pAfeHw,
+                           uint8_t AfeId,
+                           sXdmad * pXdmad )
 {
-	/* Initialize the Afe structure */
-	pAfed->pAfeHw = pAfeHw;
-	pAfed->afeId  = AfeId;
-	pAfed->semaphore = 1;
-	pAfed->pCurrentCommand = 0;
-	pAfed->pXdmad = pXdmad;
-	return 0;
+    /* Initialize the Afe structure */
+    pAfed->pAfeHw = pAfeHw;
+    pAfed->afeId = AfeId;
+    pAfed->semaphore = 1;
+    pAfed->pCurrentCommand = 0;
+    pAfed->pXdmad = pXdmad;
+    return 0;
 }
 
 /**
@@ -212,37 +239,46 @@ uint32_t Afe_ConfigureDma( AfeDma *pAfed ,
  * AFE_ERROR_LOCK is the driver is in use, or AFE_ERROR if the command is not
  * valid.
  */
-uint32_t Afe_SendData( AfeDma *pAfed, AfeCmd *pCommand)
+uint32_t Afe_SendData( AfeDma * pAfed,
+                       AfeCmd * pCommand )
 {
-	Afec *pAfeHw = pAfed->pAfeHw;
+    Afec * pAfeHw = pAfed->pAfeHw;
 
-	/* Try to get the dataflash semaphore */
-	if (pAfed->semaphore == 0) {
+    /* Try to get the dataflash semaphore */
+    if( pAfed->semaphore == 0 )
+    {
+        return AFE_ERROR_LOCK;
+    }
 
-		return AFE_ERROR_LOCK;
-	}
-	pAfed->semaphore--;
+    pAfed->semaphore--;
 
-	// Initialize the callback
-	pAfed->pCurrentCommand = pCommand;
+    /* Initialize the callback */
+    pAfed->pCurrentCommand = pCommand;
 
-	/* Initialize DMA controller using channel 0 for RX. */
-	if (_AfeConfigureDmaChannels(pAfed) )
-		return AFE_ERROR_LOCK;
+    /* Initialize DMA controller using channel 0 for RX. */
+    if( _AfeConfigureDmaChannels( pAfed ) )
+    {
+        return AFE_ERROR_LOCK;
+    }
 
-	/* Configure and enable interrupt on RC compare */
-	NVIC_ClearPendingIRQ(XDMAC_IRQn);
-	NVIC_SetPriority( XDMAC_IRQn ,1);
-	NVIC_EnableIRQ(XDMAC_IRQn);
+    /* Configure and enable interrupt on RC compare */
+    NVIC_ClearPendingIRQ( XDMAC_IRQn );
+    NVIC_SetPriority( XDMAC_IRQn, 1 );
+    NVIC_EnableIRQ( XDMAC_IRQn );
 
-	if (_Afe_configureLinkList(pAfeHw, pAfed->pXdmad, pCommand))
-		return AFE_ERROR_LOCK;
+    if( _Afe_configureLinkList( pAfeHw, pAfed->pXdmad, pCommand ) )
+    {
+        return AFE_ERROR_LOCK;
+    }
 
-	AFEC_StartConversion(pAfeHw);
-	/* Start DMA 0(RX) */
-	SCB_CleanInvalidateDCache();
-	if (XDMAD_StartTransfer( pAfed->pXdmad, afeDmaRxChannel )) 
-		return AFE_ERROR_LOCK;
+    AFEC_StartConversion( pAfeHw );
+    /* Start DMA 0(RX) */
+    SCB_CleanInvalidateDCache();
 
-	return AFE_OK;;
+    if( XDMAD_StartTransfer( pAfed->pXdmad, afeDmaRxChannel ) )
+    {
+        return AFE_ERROR_LOCK;
+    }
+
+    return AFE_OK;
 }

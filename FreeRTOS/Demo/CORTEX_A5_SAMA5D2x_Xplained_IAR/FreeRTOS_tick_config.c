@@ -52,8 +52,8 @@ static void System_Handler( void );
 
 static void System_Handler( void )
 {
-	/* See the comments above the function prototype in this file. */
-	FreeRTOS_Tick_Handler();
+    /* See the comments above the function prototype in this file. */
+    FreeRTOS_Tick_Handler();
 }
 /*-----------------------------------------------------------*/
 
@@ -65,32 +65,31 @@ static void System_Handler( void )
  */
 void vConfigureTickInterrupt( void )
 {
-	/* NOTE:  The PIT interrupt is cleared by the configCLEAR_TICK_INTERRUPT()
-	macro in FreeRTOSConfig.h. */
+    /* NOTE:  The PIT interrupt is cleared by the configCLEAR_TICK_INTERRUPT()
+     * macro in FreeRTOSConfig.h. */
 
-	/* Enable the PIT clock. */
-	PMC->PMC_PCER0 = 1 << ID_PIT;
+    /* Enable the PIT clock. */
+    PMC->PMC_PCER0 = 1 << ID_PIT;
 
-	/* Initialize the PIT to the desired frequency - specified in uS. */
-	pit_init( 1000000UL / configTICK_RATE_HZ );
+    /* Initialize the PIT to the desired frequency - specified in uS. */
+    pit_init( 1000000UL / configTICK_RATE_HZ );
 
-	/* Configure interrupt on PIT.  Note this is on the system interrupt, which
-	is shared with other system peripherals, so System_Handler() must be
-	installed in place of FreeRTOS_Tick_Handler() if other system handlers are
-	required.  The tick must be given the lowest priority (0 in the SAMA5 AIC) */
-	aic_configure( ID_PIT, AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE );
-	aic_set_source_vector( ID_PIT, FreeRTOS_Tick_Handler );
-	/* See commend directly above IRQ_ConfigureIT( ID_PIT, 0, System_Handler ); */
-	aic_enable( ID_PIT );
-	pit_enable_it();
+    /* Configure interrupt on PIT.  Note this is on the system interrupt, which
+     * is shared with other system peripherals, so System_Handler() must be
+     * installed in place of FreeRTOS_Tick_Handler() if other system handlers are
+     * required.  The tick must be given the lowest priority (0 in the SAMA5 AIC) */
+    aic_configure( ID_PIT, AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE );
+    aic_set_source_vector( ID_PIT, FreeRTOS_Tick_Handler );
+    /* See commend directly above IRQ_ConfigureIT( ID_PIT, 0, System_Handler ); */
+    aic_enable( ID_PIT );
+    pit_enable_it();
 
-	/* Enable the pit. */
-	pit_enable();
+    /* Enable the pit. */
+    pit_enable();
 
-	/* Prevent compiler warnings in the case where System_Handler() is not used
-	as the handler.  See the comments above the System_Handler() function
-	prototype at the top of this file. */
-	( void ) System_Handler;
+    /* Prevent compiler warnings in the case where System_Handler() is not used
+     * as the handler.  See the comments above the System_Handler() function
+     * prototype at the top of this file. */
+    ( void ) System_Handler;
 }
 /*-----------------------------------------------------------*/
-

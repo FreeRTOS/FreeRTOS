@@ -83,7 +83,7 @@
 
 /* By default, all traces are output except the debug one. */
 #ifndef TRACE_LEVEL
-#define TRACE_LEVEL TRACE_LEVEL_INFO
+    #define TRACE_LEVEL    TRACE_LEVEL_INFO
 #endif
 
 /* ------------------------------------------------------------------------------
@@ -103,56 +103,58 @@ extern uint32_t trace_level;
  *  \param ...  Additional parameters depending on formatted string.
  */
 
-#if (TRACE_LEVEL >= 1)
-#define trace_fatal(...) \
-	{ if (trace_level >= TRACE_LEVEL_FATAL) { printf("-F- " __VA_ARGS__); while(1); } }
-#define trace_fatal_wp(...) \
-	{ if (trace_level >= TRACE_LEVEL_FATAL) { printf(__VA_ARGS__); while(1); } }
+#if ( TRACE_LEVEL >= 1 )
+    #define trace_fatal( ... )                                                             \
+    { if( trace_level >= TRACE_LEVEL_FATAL ) { printf( "-F- " __VA_ARGS__ ); while( 1 ); } \
+    }
+    #define trace_fatal_wp( ... )                                                   \
+    { if( trace_level >= TRACE_LEVEL_FATAL ) { printf( __VA_ARGS__ ); while( 1 ); } \
+    }
 #else
-#define trace_fatal(...) \
-	{ while (1); }
-#define trace_fatal_wp(...) \
-	{ while (1); }
+    #define trace_fatal( ... ) \
+    { while( 1 ); }
+    #define trace_fatal_wp( ... ) \
+    { while( 1 ); }
+#endif /* if ( TRACE_LEVEL >= 1 ) */
+
+#if ( TRACE_LEVEL >= 2 )
+    #define trace_error( ... ) \
+    { if( trace_level >= TRACE_LEVEL_ERROR ) { printf( "-E- " __VA_ARGS__ ); } }
+    #define trace_error_wp( ... ) \
+    { if( trace_level >= TRACE_LEVEL_ERROR ) { printf( __VA_ARGS__ ); } }
+#else
+    #define trace_error( ... )       {}
+    #define trace_error_wp( ... )    {}
 #endif
 
-#if (TRACE_LEVEL >= 2)
-#define trace_error(...) \
-	{ if (trace_level >= TRACE_LEVEL_ERROR) { printf("-E- " __VA_ARGS__); } }
-#define trace_error_wp(...) \
-	{ if (trace_level >= TRACE_LEVEL_ERROR) { printf(__VA_ARGS__); } }
+#if ( TRACE_LEVEL >= 3 )
+    #define trace_warning( ... ) \
+    { if( trace_level >= TRACE_LEVEL_WARNING ) { printf( "-W- " __VA_ARGS__ ); } }
+    #define trace_warning_wp( ... ) \
+    { if( trace_level >= TRACE_LEVEL_WARNING ) { printf( __VA_ARGS__ ); } }
 #else
-#define trace_error(...) { }
-#define trace_error_wp(...) { }
+    #define trace_warning( ... )       {}
+    #define trace_warning_wp( ... )    {}
 #endif
 
-#if (TRACE_LEVEL >= 3)
-#define trace_warning(...) \
-	{ if (trace_level >= TRACE_LEVEL_WARNING) { printf("-W- " __VA_ARGS__); } }
-#define trace_warning_wp(...) \
-	{ if (trace_level >= TRACE_LEVEL_WARNING) { printf(__VA_ARGS__); } }
+#if ( TRACE_LEVEL >= 4 )
+    #define trace_info( ... ) \
+    { if( trace_level >= TRACE_LEVEL_INFO ) { printf( "-I- " __VA_ARGS__ ); } }
+    #define trace_info_wp( ... ) \
+    { if( trace_level >= TRACE_LEVEL_INFO ) { printf( __VA_ARGS__ ); } }
 #else
-#define trace_warning(...) { }
-#define trace_warning_wp(...) { }
+    #define trace_info( ... )       {}
+    #define trace_info_wp( ... )    {}
 #endif
 
-#if (TRACE_LEVEL >= 4)
-#define trace_info(...) \
-	{ if (trace_level >= TRACE_LEVEL_INFO) { printf("-I- " __VA_ARGS__); } }
-#define trace_info_wp(...) \
-	{ if (trace_level >= TRACE_LEVEL_INFO) { printf(__VA_ARGS__); } }
+#if ( TRACE_LEVEL >= 5 )
+    #define trace_debug( ... ) \
+    { if( trace_level >= TRACE_LEVEL_DEBUG ) { printf( "-D- " __FILE__ ":" STRINGIFY( __LINE__ ) " " __VA_ARGS__ ); } }
+    #define trace_debug_wp( ... ) \
+    { if( trace_level >= TRACE_LEVEL_DEBUG ) { printf( __VA_ARGS__ ); } }
 #else
-#define trace_info(...) { }
-#define trace_info_wp(...) { }
-#endif
-
-#if (TRACE_LEVEL >= 5)
-#define trace_debug(...) \
-	{ if (trace_level >= TRACE_LEVEL_DEBUG) { printf("-D- " __FILE__ ":" STRINGIFY(__LINE__) " " __VA_ARGS__); } }
-#define trace_debug_wp(...) \
-	{ if (trace_level >= TRACE_LEVEL_DEBUG) { printf(__VA_ARGS__); } }
-#else
-#define trace_debug(...) { }
-#define trace_debug_wp(...) { }
+    #define trace_debug( ... )       {}
+    #define trace_debug_wp( ... )    {}
 #endif
 
 #endif /* _TRACE_H_ */

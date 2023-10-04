@@ -38,7 +38,7 @@
 /* Hardware specifics. */
 #include "iodefine.h"
 
-#define partestNUM_LEDS ( 4 )
+#define partestNUM_LEDS    ( 4 )
 
 long lParTestGetLEDState( unsigned long ulLED );
 
@@ -46,111 +46,138 @@ long lParTestGetLEDState( unsigned long ulLED );
 
 void vParTestInitialise( void )
 {
-	/* Port pin configuration is done by the low level set up prior to this 
-	function being called. */
+    /* Port pin configuration is done by the low level set up prior to this
+     * function being called. */
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned long ulLED, signed long xValue )
+void vParTestSetLED( unsigned long ulLED,
+                     signed long xValue )
 {
-	if( ulLED < partestNUM_LEDS )
-	{
-		if( xValue != 0 )
-		{
-			/* Turn the LED on. */
-			taskENTER_CRITICAL();
-			{
-				switch( ulLED )
-				{
-					case 0:	LED0 = LED_ON;
-							break;
-					case 1:	LED1 = LED_ON;
-							break;
-					case 2:	LED2 = LED_ON;
-							break;
-					case 3:	LED3 = LED_ON;
-							break;
-				}
-			}
-			taskEXIT_CRITICAL();
-		}
-		else
-		{
-			/* Turn the LED off. */
-			taskENTER_CRITICAL();
-			{
-				switch( ulLED )
-				{
-					case 0:	LED0 = LED_OFF;
-							break;
-					case 1:	LED1 = LED_OFF;
-							break;
-					case 2:	LED2 = LED_OFF;
-							break;
-					case 3:	LED3 = LED_OFF;
-							break;
-				}
+    if( ulLED < partestNUM_LEDS )
+    {
+        if( xValue != 0 )
+        {
+            /* Turn the LED on. */
+            taskENTER_CRITICAL();
+            {
+                switch( ulLED )
+                {
+                    case 0:
+                        LED0 = LED_ON;
+                        break;
 
-			}
-			taskEXIT_CRITICAL();
-		}
-	}
+                    case 1:
+                        LED1 = LED_ON;
+                        break;
+
+                    case 2:
+                        LED2 = LED_ON;
+                        break;
+
+                    case 3:
+                        LED3 = LED_ON;
+                        break;
+                }
+            }
+            taskEXIT_CRITICAL();
+        }
+        else
+        {
+            /* Turn the LED off. */
+            taskENTER_CRITICAL();
+            {
+                switch( ulLED )
+                {
+                    case 0:
+                        LED0 = LED_OFF;
+                        break;
+
+                    case 1:
+                        LED1 = LED_OFF;
+                        break;
+
+                    case 2:
+                        LED2 = LED_OFF;
+                        break;
+
+                    case 3:
+                        LED3 = LED_OFF;
+                        break;
+                }
+            }
+            taskEXIT_CRITICAL();
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned long ulLED )
 {
-	if( ulLED < partestNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			if( lParTestGetLEDState( ulLED ) != 0x00 )
-			{
-				vParTestSetLED( ulLED, 0 );
-			}
-			else
-			{
-				vParTestSetLED( ulLED, 1 );
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( ulLED < partestNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            if( lParTestGetLEDState( ulLED ) != 0x00 )
+            {
+                vParTestSetLED( ulLED, 0 );
+            }
+            else
+            {
+                vParTestSetLED( ulLED, 1 );
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
-							
+
 long lParTestGetLEDState( unsigned long ulLED )
 {
-long lReturn = pdTRUE;
+    long lReturn = pdTRUE;
 
-	if( ulLED < partestNUM_LEDS )
-	{
-		switch( ulLED )
-		{
-			case 0	:	if( LED0 != 0 )
-						{
-							lReturn =  pdFALSE;
-						}
-						break;					
-			case 1	:	if( LED1 != 0 )
-						{
-							lReturn =  pdFALSE;
-						}
-						break;					
-			case 2	:	if( LED2 != 0 )
-						{
-							lReturn =  pdFALSE;
-						}
-						break;					
-			case 3	:	if( LED3 != 0 )
-						{
-							lReturn =  pdFALSE;
-						}
-						break;					
-		}
-	}
-	
-	return lReturn;
+    if( ulLED < partestNUM_LEDS )
+    {
+        switch( ulLED )
+        {
+            case 0:
+
+                if( LED0 != 0 )
+                {
+                    lReturn = pdFALSE;
+                }
+
+                break;
+
+            case 1:
+
+                if( LED1 != 0 )
+                {
+                    lReturn = pdFALSE;
+                }
+
+                break;
+
+            case 2:
+
+                if( LED2 != 0 )
+                {
+                    lReturn = pdFALSE;
+                }
+
+                break;
+
+            case 3:
+
+                if( LED3 != 0 )
+                {
+                    lReturn = pdFALSE;
+                }
+
+                break;
+        }
+    }
+
+    return lReturn;
 }
 /*-----------------------------------------------------------*/
-
-							

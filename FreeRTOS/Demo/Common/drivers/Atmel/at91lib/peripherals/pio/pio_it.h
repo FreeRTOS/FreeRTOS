@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,35 +27,35 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-/// !Purpose
-/// 
-/// Configuration and handling of interrupts on PIO status changes.
-/// 
-/// !Usage
-/// 
-/// -# Configure an status change interrupt on one or more pin(s) with
-///    PIO_ConfigureIt.
-/// -# Enable & disable interrupts on pins using PIO_EnableIt and
-///    PIO_DisableIt.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ !Purpose */
+/*/ */
+/*/ Configuration and handling of interrupts on PIO status changes. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Configure an status change interrupt on one or more pin(s) with */
+/*/    PIO_ConfigureIt. */
+/*/ -# Enable & disable interrupts on pins using PIO_EnableIt and */
+/*/    PIO_DisableIt. */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "pio.h"
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void PIO_InitializeInterrupts(unsigned int priority);
+extern void PIO_InitializeInterrupts( unsigned int priority );
 
-extern void PIO_ConfigureIt(const Pin *pPin, void (*handler)(const Pin *));
+extern void PIO_ConfigureIt( const Pin * pPin,
+                             void ( * handler )( const Pin * ) );
 
-extern void PIO_EnableIt(const Pin *pPin);
+extern void PIO_EnableIt( const Pin * pPin );
 
-extern void PIO_DisableIt(const Pin *pPin);
-
+extern void PIO_DisableIt( const Pin * pPin );

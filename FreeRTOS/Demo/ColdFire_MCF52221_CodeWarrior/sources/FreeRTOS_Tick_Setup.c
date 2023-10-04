@@ -27,13 +27,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-__declspec(interrupt:0) void vPIT0InterruptHandler( void );
+__declspec( interrupt : 0 ) void vPIT0InterruptHandler( void );
 
 /* Constants used to configure the interrupts. */
-#define portPRESCALE_VALUE			64
-#define portPRESCALE_REG_SETTING	( 5 << 8 )
-#define portPIT_INTERRUPT_ENABLED	( 0x08 )
-#define configPIT0_INTERRUPT_VECTOR	( 55 )
+#define portPRESCALE_VALUE             64
+#define portPRESCALE_REG_SETTING       ( 5 << 8 )
+#define portPIT_INTERRUPT_ENABLED      ( 0x08 )
+#define configPIT0_INTERRUPT_VECTOR    ( 55 )
 
 /*
  * FreeRTOS.org requires two interrupts - a tick interrupt generated from a
@@ -72,37 +72,39 @@ __declspec(interrupt:0) void vPIT0InterruptHandler( void );
  */
 void vApplicationSetupInterrupts( void )
 {
-const unsigned short usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRESCALE_VALUE ) / configTICK_RATE_HZ );
+    const unsigned short usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRESCALE_VALUE ) / configTICK_RATE_HZ );
 
     /* Configure interrupt priority and level and unmask interrupt for PIT0. */
     MCF_INTC0_ICR55 = ( 1 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
     MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK55 );
 
     /* Do the same for vector 63 (interrupt controller 0.  I don't think the
-    write to MCF_INTC0_IMRH is actually required here but is included for
-    completeness. */
+     * write to MCF_INTC0_IMRH is actually required here but is included for
+     * completeness. */
     MCF_INTC0_ICR16 = ( 0 | configKERNEL_INTERRUPT_PRIORITY << 3 );
     MCF_INTC0_IMRL &= ~( MCF_INTC_IMRL_INT_MASK16 | 0x01 );
 
     /* Configure PIT0 to generate the RTOS tick. */
     MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;
     MCF_PIT0_PCSR = ( portPRESCALE_REG_SETTING | MCF_PIT_PCSR_PIE | MCF_PIT_PCSR_RLD | MCF_PIT_PCSR_EN );
-	MCF_PIT0_PMR = usCompareMatchValue;
+    MCF_PIT0_PMR = usCompareMatchValue;
 }
 /*-----------------------------------------------------------*/
 
-__declspec(interrupt:0) void vPIT0InterruptHandler( void )
+__declspec( interrupt : 0 ) void vPIT0InterruptHandler( void )
 {
-unsigned long ulSavedInterruptMask;
+    unsigned long ulSavedInterruptMask;
 
-	/* Clear the PIT0 interrupt. */
-	MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;
+    /* Clear the PIT0 interrupt. */
+    MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;
 
-	/* Increment the RTOS tick. */
-	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
-		if( xTaskIncrementTick() != pdFALSE )
-		{
-			taskYIELD();
-		}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
+    /* Increment the RTOS tick. */
+    ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
+
+    if( xTaskIncrementTick() != pdFALSE )
+    {
+        taskYIELD();
+    }
+
+    portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
 }

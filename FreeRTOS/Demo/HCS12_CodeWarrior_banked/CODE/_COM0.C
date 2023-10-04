@@ -9,7 +9,7 @@
 **     Date/Time : 19/06/2005, 15:07
 **     Abstract  :
 **         This bean "AsynchroSerial" implements an asynchronous serial
-**         communication. The bean supports different settings of 
+**         communication. The bean supports different settings of
 **         parity, word width, stop-bit and communication speed,
 **         user can select interrupt or polling handler.
 **         Communication speed can be changed also in runtime.
@@ -40,7 +40,7 @@
 **             Vector name             : INT_SCI0
 **             Priority                : 1
 **
-**         Used pins                   : 
+**         Used pins                   :
 **             ----------------------------------------------------
 **               Function | On package |    Name
 **             ----------------------------------------------------
@@ -80,36 +80,36 @@
 #include "Byte1.h"
 
 /* Definition of DATA and CODE segments for this bean. User can specify where
-   these segments will be located on "Build options" tab of the selected CPU bean. */
-#pragma DATA_SEG COM0_DATA             /* Data section for this module. */
-#pragma CODE_SEG COM0_CODE             /* Code section for this module. */
+ * these segments will be located on "Build options" tab of the selected CPU bean. */
+#pragma DATA_SEG COM0_DATA /* Data section for this module. */
+#pragma CODE_SEG COM0_CODE /* Code section for this module. */
 
 
-#define OVERRUN_ERR      1             /* Overrun error flag bit   */
-#define FRAMING_ERR      2             /* Framing error flag bit   */
-#define PARITY_ERR       4             /* Parity error flag bit    */
-#define CHAR_IN_RX       8             /* Char is in RX buffer     */
-#define FULL_TX          16            /* Full transmit buffer     */
-#define RUNINT_FROM_TX   32            /* Interrupt is in progress */
-#define FULL_RX          64            /* Full receive buffer      */
-#define NOISE_ERR        128           /* Noise erorr flag bit     */
-#define IDLE_ERR         256           /* Idle character flag bit  */
-#define BREAK_ERR        512           /* Break detect             */
+#define OVERRUN_ERR       1   /* Overrun error flag bit   */
+#define FRAMING_ERR       2   /* Framing error flag bit   */
+#define PARITY_ERR        4   /* Parity error flag bit    */
+#define CHAR_IN_RX        8   /* Char is in RX buffer     */
+#define FULL_TX           16  /* Full transmit buffer     */
+#define RUNINT_FROM_TX    32  /* Interrupt is in progress */
+#define FULL_RX           64  /* Full receive buffer      */
+#define NOISE_ERR         128 /* Noise erorr flag bit     */
+#define IDLE_ERR          256 /* Idle character flag bit  */
+#define BREAK_ERR         512 /* Break detect             */
 
-static word SerFlag;                   /* Flags for serial communication */
-                                       /* Bits: 0 - OverRun error */
-                                       /*       1 - Framing error */
-                                       /*       2 - Parity error */
-                                       /*       3 - Char in RX buffer */
-                                       /*       4 - Full TX buffer */
-                                       /*       5 - Running int from TX */
-                                       /*       6 - Full RX buffer */
-                                       /*       7 - Noise error */
-                                       /*       8 - Idle character  */
-                                       /*       9 - Break detected  */
-                                       /*      10 - Unused */
+static word SerFlag;          /* Flags for serial communication */
+                              /* Bits: 0 - OverRun error */
+                              /*       1 - Framing error */
+                              /*       2 - Parity error */
+                              /*       3 - Char in RX buffer */
+                              /*       4 - Full TX buffer */
+                              /*       5 - Running int from TX */
+                              /*       6 - Full RX buffer */
+                              /*       7 - Noise error */
+                              /*       8 - Idle character  */
+                              /*       9 - Break detected  */
+                              /*      10 - Unused */
 static word PrescHigh;
-static byte NumMode;                   /* Number of selected baud mode */
+static byte NumMode;          /* Number of selected baud mode */
 
 
 /*
@@ -121,11 +121,11 @@ static byte NumMode;                   /* Number of selected baud mode */
 **         only.
 ** ===================================================================
 */
-static void HWEnDi(void)
+static void HWEnDi( void )
 {
-    SCI0CR2_TE = 1;                    /* Enable transmitter */
-    SCI0CR2_RE = 1;                    /* Enable receiver */
-    SCI0CR2_RIE = 1;                   /* Enable recieve interrupt */
+    SCI0CR2_TE = 1;  /* Enable transmitter */
+    SCI0CR2_RE = 1;  /* Enable receiver */
+    SCI0CR2_RIE = 1; /* Enable recieve interrupt */
 }
 
 /*
@@ -154,16 +154,19 @@ static void HWEnDi(void)
 **                           the active speed mode
 ** ===================================================================
 */
-byte COM0_SetBaudRateMode(byte Mod)
+byte COM0_SetBaudRateMode( byte Mod )
 {
-  static const word COM0_PrescHigh[4] = {41,81,163,326};
+    static const word COM0_PrescHigh[ 4 ] = { 41, 81, 163, 326 };
 
-  if(Mod >= 4)                         /* Is mode in baud mode list */
-    return ERR_VALUE;                  /* If no then error */
-  NumMode = Mod;                       /* New baud mode */
-  PrescHigh = COM0_PrescHigh[Mod];     /* Prescaler in high speed mode */
-  SCI0BD = PrescHigh;                  /* Set prescaler bits */
-  return ERR_OK;                       /* OK */
+    if( Mod >= 4 )                     /* Is mode in baud mode list */
+    {
+        return ERR_VALUE;              /* If no then error */
+    }
+
+    NumMode = Mod;                     /* New baud mode */
+    PrescHigh = COM0_PrescHigh[ Mod ]; /* Prescaler in high speed mode */
+    SCI0BD = PrescHigh;                /* Set prescaler bits */
+    return ERR_OK;                     /* OK */
 }
 
 /*
@@ -175,20 +178,20 @@ byte COM0_SetBaudRateMode(byte Mod)
 **         only.
 ** ===================================================================
 */
-void COM0_Init(void)
+void COM0_Init( void )
 {
-  PrescHigh = 41;                      /* Precaler in high speed mode */
-  SerFlag = 0;                         /* Reset flags */
-  NumMode = 0;                         /* Number of selected baud mode */
-  /* SCI0CR1: LOOPS=0,SCISWAI=1,RSRC=0,M=0,WAKE=0,ILT=0,PE=0,PT=0 */
-  SCI0CR1 = 64;                        /* Set the SCI configuration */
-  /* SCI0SR2: ??=0,??=0,??=0,??=0,??=0,BRK13=0,TXDIR=0,RAF=0 */
-  SCI0SR2 = 0;                         /* Set the Break Character Length and Transmitter pin data direction in Single-wire mode */
-  SCI0SR1;                             /* Reset interrupt request flags */
-  /* SCI0CR2: SCTIE=0,TCIE=0,RIE=0,ILIE=0,TE=0,RE=0,RWU=0,SBK=0 */
-  SCI0CR2 = 0;                         /* Disable error interrupts */
-  SCI0BD = PrescHigh;                  /* Set prescaler bits */
-  HWEnDi();                            /* Enable/disable device according to status flags */
+    PrescHigh = 41;                    /* Precaler in high speed mode */
+    SerFlag = 0;                       /* Reset flags */
+    NumMode = 0;                       /* Number of selected baud mode */
+    /* SCI0CR1: LOOPS=0,SCISWAI=1,RSRC=0,M=0,WAKE=0,ILT=0,PE=0,PT=0 */
+    SCI0CR1 = 64;                      /* Set the SCI configuration */
+    /* SCI0SR2: ??=0,??=0,??=0,??=0,??=0,BRK13=0,TXDIR=0,RAF=0 */
+    SCI0SR2 = 0;                       /* Set the Break Character Length and Transmitter pin data direction in Single-wire mode */
+    SCI0SR1;                           /* Reset interrupt request flags */
+    /* SCI0CR2: SCTIE=0,TCIE=0,RIE=0,ILIE=0,TE=0,RE=0,RWU=0,SBK=0 */
+    SCI0CR2 = 0;                       /* Disable error interrupts */
+    SCI0BD = PrescHigh;                /* Set prescaler bits */
+    HWEnDi();                          /* Enable/disable device according to status flags */
 }
 
 
@@ -198,7 +201,7 @@ void COM0_Init(void)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

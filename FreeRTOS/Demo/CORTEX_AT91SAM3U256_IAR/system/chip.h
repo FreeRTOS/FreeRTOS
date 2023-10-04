@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -26,74 +26,73 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
-//------------------------------------------------------------------------------
-/// \unit
-/// !Purpose
-///
-/// Definition of AT91SAM3U4 characteristics and features
-///
-/// !Usage
-/// -# For ARM core feature, see "AT91SAM3U4 - ARM core features".
-/// -# For IP features, see "AT91SAM3U4 - IP features".
-/// -# For misc, see "AT91SAM3U4 - Misc".
-//------------------------------------------------------------------------------
- 
-#ifndef CHIP_H 
+
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ !Purpose */
+/*/ */
+/*/ Definition of AT91SAM3U4 characteristics and features */
+/*/ */
+/*/ !Usage */
+/*/ -# For ARM core feature, see "AT91SAM3U4 - ARM core features". */
+/*/ -# For IP features, see "AT91SAM3U4 - IP features". */
+/*/ -# For misc, see "AT91SAM3U4 - Misc". */
+/*------------------------------------------------------------------------------ */
+
+#ifndef CHIP_H
 #define CHIP_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// \page "AT91SAM3U4 - ARM core features"
-/// This page lists several characteristics related to the ARM core
-///
+/*------------------------------------------------------------------------------ */
+/*/ \page "AT91SAM3U4 - ARM core features" */
+/*/ This page lists several characteristics related to the ARM core */
+/*/ */
 
-//ARM core features
+/*ARM core features */
 
-/// ARM core definition.
+/*/ ARM core definition. */
 #define cortexm3
 
-/// family definition.
+/*/ family definition. */
 #define at91sam3u
 
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// \page "AT91SAM3U4 - IP features"
-/// This page lists several characteristics related to the embedded IP
-///
+/*------------------------------------------------------------------------------ */
+/*/ \page "AT91SAM3U4 - IP features" */
+/*/ This page lists several characteristics related to the embedded IP */
+/*/ */
 
-//IP FEATURES
+/*IP FEATURES */
 
-// EFC GPNVM number
+/* EFC GPNVM number */
 #define CHIP_EFC_NUM_GPNVMS    3
 
-/// Indicates chip has an Enhanced EFC. 
-#define CHIP_FLASH_EEFC 
+/*/ Indicates chip has an Enhanced EFC. */
+#define CHIP_FLASH_EEFC
 
-// DMA channels number
-#define CHIP_DMA_CHANNEL_NUM   4
+/* DMA channels number */
+#define CHIP_DMA_CHANNEL_NUM    4
 
-// Indicate chip has a nandflash controller. 
+/* Indicate chip has a nandflash controller. */
 #define CHIP_NAND_CTRL
- 
-//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-/// \page "AT91SAM3U4 - Misc "
-/// This page lists misc features
-///
+/*------------------------------------------------------------------------------ */
 
-//Misc 
+/*------------------------------------------------------------------------------ */
+/*/ \page "AT91SAM3U4 - Misc " */
+/*/ This page lists misc features */
+/*/ */
 
-//------------------------------------------------------------------------------
+/*Misc */
+
+/*------------------------------------------------------------------------------ */
 
 #endif //#ifndef CHIP_H
-

@@ -3,45 +3,45 @@
  */
 
 /*****************************************************************************
- *
- * Copyright 2013 Altera Corporation. All Rights Reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- * 
- * 3. The name of the author may not be used to endorse or promote products
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
- *****************************************************************************/
+*
+* Copyright 2013 Altera Corporation. All Rights Reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+* this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+* this list of conditions and the following disclaimer in the documentation
+* and/or other materials provided with the distribution.
+*
+* 3. The name of the author may not be used to endorse or promote products
+* derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
+* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
+* EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+* OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+* WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+* OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+* ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+*****************************************************************************/
 
 #ifndef __ALT_16550_UART_H__
-#define __ALT_16550_UART_H__
+    #define __ALT_16550_UART_H__
 
-#include "hwlib.h"
-#include "alt_clock_manager.h"
+    #include "hwlib.h"
+    #include "alt_clock_manager.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif
 
 /*!
  * \addtogroup UART UART Driver API
@@ -72,40 +72,40 @@ extern "C"
 /*!
  * This type definition enumerates the list of UARTs available on the system.
  */
-typedef enum ALT_16550_DEVICE_e
-{
-    /*!
-     * This option selects UART0 in the SoC FPGA.
-     */
-    ALT_16550_DEVICE_SOCFPGA_UART0 = 0,
+    typedef enum ALT_16550_DEVICE_e
+    {
+        /*!
+         * This option selects UART0 in the SoC FPGA.
+         */
+        ALT_16550_DEVICE_SOCFPGA_UART0 = 0,
 
-    /*!
-     * This option selects UART1 in the SoC FPGA.
-     */
-    ALT_16550_DEVICE_SOCFPGA_UART1 = 1,
+        /*!
+         * This option selects UART1 in the SoC FPGA.
+         */
+        ALT_16550_DEVICE_SOCFPGA_UART1 = 1,
 
-    /*!
-     * This option selects an Altera 16550 Compatible soft IP UART. The memory
-     * location of the device must be provided as part of the initialization.
-     */
-    ALT_16550_DEVICE_ALTERA_16550_UART = 0x100
-}
-ALT_16550_DEVICE_t;
+        /*!
+         * This option selects an Altera 16550 Compatible soft IP UART. The memory
+         * location of the device must be provided as part of the initialization.
+         */
+        ALT_16550_DEVICE_ALTERA_16550_UART = 0x100
+    }
+    ALT_16550_DEVICE_t;
 
 /*!
  * This structure is used to represent a handle to a specific UART on the
  * system. The internal members are undocumented and should be not altered
  * outside of this API.
  */
-typedef struct ALT_16550_HANDLE_s
-{
-    ALT_16550_DEVICE_t device;
-    void *             location;
-    alt_freq_t         clock_freq;
-    uint32_t           data;
-    uint32_t           fcr;
-}
-ALT_16550_HANDLE_t;
+    typedef struct ALT_16550_HANDLE_s
+    {
+        ALT_16550_DEVICE_t device;
+        void * location;
+        alt_freq_t clock_freq;
+        uint32_t data;
+        uint32_t fcr;
+    }
+    ALT_16550_HANDLE_t;
 
 /*!
  * Performs the initialization steps needed by the UART. This should be the
@@ -138,10 +138,10 @@ ALT_16550_HANDLE_t;
  * \retval      ALT_E_BAD_ARG   The given UART device identifier is invalid.
  * \retval      ALT_E_BAD_CLK   The required clock is not yet setup.
  */
-ALT_STATUS_CODE alt_16550_init(ALT_16550_DEVICE_t device,
-                               void * location,
-                               alt_freq_t clock_freq,
-                               ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_init( ALT_16550_DEVICE_t device,
+                                    void * location,
+                                    alt_freq_t clock_freq,
+                                    ALT_16550_HANDLE_t * handle );
 
 /*!
  * Performs the uninitialization steps for the UART. This should be the last
@@ -157,7 +157,7 @@ ALT_STATUS_CODE alt_16550_init(ALT_16550_DEVICE_t device,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_uninit(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_uninit( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Resets the UART to the default configuration. The UART will be reset and
@@ -170,7 +170,7 @@ ALT_STATUS_CODE alt_16550_uninit(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_reset(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_reset( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Starts the UART after all configuration has been completed.
@@ -182,7 +182,7 @@ ALT_STATUS_CODE alt_16550_reset(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_enable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_enable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Stops the UART. While UART configuration can be done while enabled, it is
@@ -195,7 +195,7 @@ ALT_STATUS_CODE alt_16550_enable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_disable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_disable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Reads a single character from the UART receiver buffer. This API should
@@ -212,8 +212,8 @@ ALT_STATUS_CODE alt_16550_disable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_read(ALT_16550_HANDLE_t * handle,
-                               char * item);
+    ALT_STATUS_CODE alt_16550_read( ALT_16550_HANDLE_t * handle,
+                                    char * item );
 
 /*!
  * Writes a single character to the UART transmitter buffer. This API should
@@ -229,8 +229,8 @@ ALT_STATUS_CODE alt_16550_read(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_write(ALT_16550_HANDLE_t * handle,
-                                char item);
+    ALT_STATUS_CODE alt_16550_write( ALT_16550_HANDLE_t * handle,
+                                     char item );
 
 /*!
  * @}
@@ -250,62 +250,62 @@ ALT_STATUS_CODE alt_16550_write(ALT_16550_HANDLE_t * handle,
  * This type definition enumerates the receiver FIFO level conditions that
  * will trigger the receiver FIFO to issue a receiver FIFO full event.
  */
-typedef enum ALT_16550_FIFO_TRIGGER_RX_e
-{
-    /*!
-     * 1 or more character(s) in the receiver FIFO will trigger an event.
-     */
-    ALT_16550_FIFO_TRIGGER_RX_ANY = 0,
+    typedef enum ALT_16550_FIFO_TRIGGER_RX_e
+    {
+        /*!
+         * 1 or more character(s) in the receiver FIFO will trigger an event.
+         */
+        ALT_16550_FIFO_TRIGGER_RX_ANY = 0,
 
-    /*!
-     * 25% or higher capacity usage in the receiver FIFO will trigger an
-     * event.
-     */
-    ALT_16550_FIFO_TRIGGER_RX_QUARTER_FULL = 1,
+        /*!
+         * 25% or higher capacity usage in the receiver FIFO will trigger an
+         * event.
+         */
+        ALT_16550_FIFO_TRIGGER_RX_QUARTER_FULL = 1,
 
-    /*!
-     * 50% or higher capacity usage in the receiver FIFO will trigger an
-     * event.
-     */
-    ALT_16550_FIFO_TRIGGER_RX_HALF_FULL = 2,
+        /*!
+         * 50% or higher capacity usage in the receiver FIFO will trigger an
+         * event.
+         */
+        ALT_16550_FIFO_TRIGGER_RX_HALF_FULL = 2,
 
-    /*!
-     * 2 characters less than the receiver FIFO capacity will trigger an
-     * event.
-     */
-    ALT_16550_FIFO_TRIGGER_RX_ALMOST_FULL = 3
-}
-ALT_16550_FIFO_TRIGGER_RX_t;
+        /*!
+         * 2 characters less than the receiver FIFO capacity will trigger an
+         * event.
+         */
+        ALT_16550_FIFO_TRIGGER_RX_ALMOST_FULL = 3
+    }
+    ALT_16550_FIFO_TRIGGER_RX_t;
 
 /*!
  * This type definition enumerates the transmitter FIFO level conditions that
  * will trigger the transmitter FIFO to issue a transmitter FIFO empty event.
  */
-typedef enum ALT_16550_FIFO_TRIGGER_TX_e
-{
-    /*!
-     * Transmitter FIFO being completely empty will trigger an event.
-     */
-    ALT_16550_FIFO_TRIGGER_TX_EMPTY = 0,
+    typedef enum ALT_16550_FIFO_TRIGGER_TX_e
+    {
+        /*!
+         * Transmitter FIFO being completely empty will trigger an event.
+         */
+        ALT_16550_FIFO_TRIGGER_TX_EMPTY = 0,
 
-    /*!
-     * 2 or less character(s) in the transmitter FIFO will trigger an event.
-     */
-    ALT_16550_FIFO_TRIGGER_TX_ALMOST_EMPTY = 1,
+        /*!
+         * 2 or less character(s) in the transmitter FIFO will trigger an event.
+         */
+        ALT_16550_FIFO_TRIGGER_TX_ALMOST_EMPTY = 1,
 
-    /*!
-     * 25% or less capacity usage in the transmitter FIFO will trigger an
-     * event.
-     */
-    ALT_16550_FIFO_TRIGGER_TX_QUARTER_FULL = 2,
+        /*!
+         * 25% or less capacity usage in the transmitter FIFO will trigger an
+         * event.
+         */
+        ALT_16550_FIFO_TRIGGER_TX_QUARTER_FULL = 2,
 
-    /*!
-     * 50% or less capacity usage in the transmitter FIFO will trigger an
-     * event.
-     */
-    ALT_16550_FIFO_TRIGGER_TX_HALF_FULL = 3
-}
-ALT_16550_FIFO_TRIGGER_TX_t;
+        /*!
+         * 50% or less capacity usage in the transmitter FIFO will trigger an
+         * event.
+         */
+        ALT_16550_FIFO_TRIGGER_TX_HALF_FULL = 3
+    }
+    ALT_16550_FIFO_TRIGGER_TX_t;
 
 /*!
  * Enables FIFO on the UART. This will enable both the receiver FIFO and
@@ -318,7 +318,7 @@ ALT_16550_FIFO_TRIGGER_TX_t;
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_enable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_fifo_enable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Disables FIFOs on the UART. This will disable both the receiver FIFO and
@@ -331,7 +331,7 @@ ALT_STATUS_CODE alt_16550_fifo_enable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_disable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_fifo_disable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Reads the given buffer from the receiver FIFO in the UART.
@@ -373,9 +373,9 @@ ALT_STATUS_CODE alt_16550_fifo_disable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_read(ALT_16550_HANDLE_t * handle,
-                                    char * buffer,
-                                    size_t count);
+    ALT_STATUS_CODE alt_16550_fifo_read( ALT_16550_HANDLE_t * handle,
+                                         char * buffer,
+                                         size_t count );
 
 /*!
  * Writes the given buffer to the transmitter FIFO in the UART.
@@ -415,9 +415,9 @@ ALT_STATUS_CODE alt_16550_fifo_read(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_write(ALT_16550_HANDLE_t * handle,
-                                     const char * buffer,
-                                     size_t count);
+    ALT_STATUS_CODE alt_16550_fifo_write( ALT_16550_HANDLE_t * handle,
+                                          const char * buffer,
+                                          size_t count );
 
 /*!
  * Clears the contents of the receiver FIFO. Any characters which were
@@ -433,7 +433,7 @@ ALT_STATUS_CODE alt_16550_fifo_write(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_clear_rx(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_fifo_clear_rx( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Clears the contents of the transmitter FIFO. Any characters which were
@@ -449,7 +449,7 @@ ALT_STATUS_CODE alt_16550_fifo_clear_rx(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_clear_tx(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_fifo_clear_tx( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Clears the contents of the receiver and transmitter FIFO. Any characters
@@ -465,10 +465,10 @@ ALT_STATUS_CODE alt_16550_fifo_clear_tx(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_clear_all(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_fifo_clear_all( ALT_16550_HANDLE_t * handle );
 
 /*!
- * Queries the size of the receiver FIFO. 
+ * Queries the size of the receiver FIFO.
  *
  * \param       handle
  *              The UART device handle.
@@ -481,11 +481,11 @@ ALT_STATUS_CODE alt_16550_fifo_clear_all(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_size_get_rx(ALT_16550_HANDLE_t * handle,
-                                           uint32_t * size);
+    ALT_STATUS_CODE alt_16550_fifo_size_get_rx( ALT_16550_HANDLE_t * handle,
+                                                uint32_t * size );
 
 /*!
- * Queries the size of the transmitter FIFO. 
+ * Queries the size of the transmitter FIFO.
  *
  * \param       handle
  *              The UART device handle.
@@ -498,8 +498,8 @@ ALT_STATUS_CODE alt_16550_fifo_size_get_rx(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_size_get_tx(ALT_16550_HANDLE_t * handle,
-                                           uint32_t * size);
+    ALT_STATUS_CODE alt_16550_fifo_size_get_tx( ALT_16550_HANDLE_t * handle,
+                                                uint32_t * size );
 
 /*!
  * Queries the current level of the receiver FIFO.
@@ -523,8 +523,8 @@ ALT_STATUS_CODE alt_16550_fifo_size_get_tx(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_level_get_rx(ALT_16550_HANDLE_t * handle,
-                                            uint32_t * level);
+    ALT_STATUS_CODE alt_16550_fifo_level_get_rx( ALT_16550_HANDLE_t * handle,
+                                                 uint32_t * level );
 
 /*!
  * Queries the current level of the transmitter FIFO.
@@ -548,8 +548,8 @@ ALT_STATUS_CODE alt_16550_fifo_level_get_rx(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_level_get_tx(ALT_16550_HANDLE_t * handle,
-                                            uint32_t * level);
+    ALT_STATUS_CODE alt_16550_fifo_level_get_tx( ALT_16550_HANDLE_t * handle,
+                                                 uint32_t * level );
 
 /*!
  * Sets the receiver FIFO level which will trigger the receiver FIFO to issue
@@ -570,8 +570,8 @@ ALT_STATUS_CODE alt_16550_fifo_level_get_tx(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_trigger_set_rx(ALT_16550_HANDLE_t * handle,
-                                              ALT_16550_FIFO_TRIGGER_RX_t trigger);
+    ALT_STATUS_CODE alt_16550_fifo_trigger_set_rx( ALT_16550_HANDLE_t * handle,
+                                                   ALT_16550_FIFO_TRIGGER_RX_t trigger );
 
 /*!
  * Sets the transmitter FIFO level which will trigger the transmitter FIFO to
@@ -592,8 +592,8 @@ ALT_STATUS_CODE alt_16550_fifo_trigger_set_rx(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_fifo_trigger_set_tx(ALT_16550_HANDLE_t * handle,
-                                              ALT_16550_FIFO_TRIGGER_TX_t trigger);
+    ALT_STATUS_CODE alt_16550_fifo_trigger_set_tx( ALT_16550_HANDLE_t * handle,
+                                                   ALT_16550_FIFO_TRIGGER_TX_t trigger );
 
 /*!
  * @}
@@ -616,29 +616,29 @@ ALT_STATUS_CODE alt_16550_fifo_trigger_set_tx(ALT_16550_HANDLE_t * handle,
  * ports. Not every baudrate is available for the UART due to the limits of
  * the serial clock frequency and divisor value.
  */
-typedef enum ALT_16550_BAUDRATE_e
-{
-    ALT_16550_BAUDRATE_50     =     50, /*!< 50 bps baudrate. */
-    ALT_16550_BAUDRATE_75     =     75, /*!< 75 bps baudrate. */
-    ALT_16550_BAUDRATE_150    =    150, /*!< 150 bps baudrate. */
-    ALT_16550_BAUDRATE_300    =    300, /*!< 300 bps baudrate. */
-    ALT_16550_BAUDRATE_600    =    600, /*!< 600 bps baudrate. */
-    ALT_16550_BAUDRATE_900    =    900, /*!< 900 bps baudrate. */
-    ALT_16550_BAUDRATE_1200   =   1200, /*!< 1200 bps baudrate. */
-    ALT_16550_BAUDRATE_1800   =   1800, /*!< 1800 bps baudrate. */
-    ALT_16550_BAUDRATE_2400   =   2400, /*!< 2400 bps baudrate. */
-    ALT_16550_BAUDRATE_3600   =   3600, /*!< 3600 bps baudrate. */
-    ALT_16550_BAUDRATE_4800   =   4800, /*!< 4800 bps baudrate. */
-    ALT_16550_BAUDRATE_7200   =   7200, /*!< 7200 bps baudrate. */
-    ALT_16550_BAUDRATE_9600   =   9600, /*!< 9600 bps baudrate. */
-    ALT_16550_BAUDRATE_14400  =  14400, /*!< 14400 bps baudrate. */
-    ALT_16550_BAUDRATE_19200  =  19200, /*!< 19200 bps baudrate. */
-    ALT_16550_BAUDRATE_28800  =  28800, /*!< 28800 bps baudrate. */
-    ALT_16550_BAUDRATE_38400  =  38400, /*!< 38400 bps baudrate. */
-    ALT_16550_BAUDRATE_57600  =  57600, /*!< 57600 bps baudrate. */
-    ALT_16550_BAUDRATE_115200 = 115200  /*!< 115200 bps baudrate. */
-}
-ALT_16550_BAUDRATE_t;
+    typedef enum ALT_16550_BAUDRATE_e
+    {
+        ALT_16550_BAUDRATE_50 = 50,        /*!< 50 bps baudrate. */
+        ALT_16550_BAUDRATE_75 = 75,        /*!< 75 bps baudrate. */
+        ALT_16550_BAUDRATE_150 = 150,      /*!< 150 bps baudrate. */
+        ALT_16550_BAUDRATE_300 = 300,      /*!< 300 bps baudrate. */
+        ALT_16550_BAUDRATE_600 = 600,      /*!< 600 bps baudrate. */
+        ALT_16550_BAUDRATE_900 = 900,      /*!< 900 bps baudrate. */
+        ALT_16550_BAUDRATE_1200 = 1200,    /*!< 1200 bps baudrate. */
+        ALT_16550_BAUDRATE_1800 = 1800,    /*!< 1800 bps baudrate. */
+        ALT_16550_BAUDRATE_2400 = 2400,    /*!< 2400 bps baudrate. */
+        ALT_16550_BAUDRATE_3600 = 3600,    /*!< 3600 bps baudrate. */
+        ALT_16550_BAUDRATE_4800 = 4800,    /*!< 4800 bps baudrate. */
+        ALT_16550_BAUDRATE_7200 = 7200,    /*!< 7200 bps baudrate. */
+        ALT_16550_BAUDRATE_9600 = 9600,    /*!< 9600 bps baudrate. */
+        ALT_16550_BAUDRATE_14400 = 14400,  /*!< 14400 bps baudrate. */
+        ALT_16550_BAUDRATE_19200 = 19200,  /*!< 19200 bps baudrate. */
+        ALT_16550_BAUDRATE_28800 = 28800,  /*!< 28800 bps baudrate. */
+        ALT_16550_BAUDRATE_38400 = 38400,  /*!< 38400 bps baudrate. */
+        ALT_16550_BAUDRATE_57600 = 57600,  /*!< 57600 bps baudrate. */
+        ALT_16550_BAUDRATE_115200 = 115200 /*!< 115200 bps baudrate. */
+    }
+    ALT_16550_BAUDRATE_t;
 
 /*!
  * Gets the baudrate for the UART.
@@ -658,8 +658,8 @@ ALT_16550_BAUDRATE_t;
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_baudrate_get(ALT_16550_HANDLE_t * handle,
-                                       uint32_t * baudrate);
+    ALT_STATUS_CODE alt_16550_baudrate_get( ALT_16550_HANDLE_t * handle,
+                                            uint32_t * baudrate );
 
 /*!
  * Sets the baudrate for the UART. This change will take effect when the UART
@@ -681,8 +681,8 @@ ALT_STATUS_CODE alt_16550_baudrate_get(ALT_16550_HANDLE_t * handle,
  *                              limitations of the baudrate divisor and/or
  *                              serial clock.
  */
-ALT_STATUS_CODE alt_16550_baudrate_set(ALT_16550_HANDLE_t * handle,
-                                       uint32_t baudrate);
+    ALT_STATUS_CODE alt_16550_baudrate_set( ALT_16550_HANDLE_t * handle,
+                                            uint32_t baudrate );
 
 /*!
  * Gets the baudrate divisor for the UART.
@@ -701,8 +701,8 @@ ALT_STATUS_CODE alt_16550_baudrate_set(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_divisor_get(ALT_16550_HANDLE_t * handle,
-                                      uint32_t * divisor);
+    ALT_STATUS_CODE alt_16550_divisor_get( ALT_16550_HANDLE_t * handle,
+                                           uint32_t * divisor );
 
 /*!
  * Sets the baudrate divisor for the UART. This change will take effect when
@@ -724,8 +724,8 @@ ALT_STATUS_CODE alt_16550_divisor_get(ALT_16550_HANDLE_t * handle,
  *                              specified divisor is not supported by the
  *                              UART.
  */
-ALT_STATUS_CODE alt_16550_divisor_set(ALT_16550_HANDLE_t * handle,
-                                      uint32_t divisor);
+    ALT_STATUS_CODE alt_16550_divisor_set( ALT_16550_HANDLE_t * handle,
+                                           uint32_t divisor );
 
 /*!
  * @}
@@ -734,8 +734,8 @@ ALT_STATUS_CODE alt_16550_divisor_set(ALT_16550_HANDLE_t * handle,
 /*!
  * \addtogroup UART_INT UART Interrupt Interface
  *
- * This group of APIs provides access, configuration, and control of the 
- * UART interrupts. 
+ * This group of APIs provides access, configuration, and control of the
+ * UART interrupts.
  *
  * @{
  */
@@ -746,83 +746,83 @@ ALT_STATUS_CODE alt_16550_divisor_set(ALT_16550_HANDLE_t * handle,
  *
  * Interrupts are listed in highest to lowest priority order.
  */
-typedef enum ALT_16550_INT_STATUS_e
-{
-    /*!
-     * This interrupt signals that a overrun, parity, or framing error 
-     * occurred, or a break event occured. The interrupt is cleared by reading
-     * the line status by calling alt_16550_line_status_get() or by disabling
-     * line status interrupts by calling alt_16550_int_disable_line().
-     */
-    ALT_16550_INT_STATUS_LINE = 0x6,
+    typedef enum ALT_16550_INT_STATUS_e
+    {
+        /*!
+         * This interrupt signals that a overrun, parity, or framing error
+         * occurred, or a break event occured. The interrupt is cleared by reading
+         * the line status by calling alt_16550_line_status_get() or by disabling
+         * line status interrupts by calling alt_16550_int_disable_line().
+         */
+        ALT_16550_INT_STATUS_LINE = 0x6,
 
-    /*!
-     * This interrupt signals that some data is available to be read from the
-     * UART. The definition of some depends on whether FIFOs are enabled or
-     * not.
-     *
-     * If FIFOs are disabled, this interrupt signals that the receiver
-     * contains data. In this case, the interrupt is cleared by reading the
-     * data from the UART by calling alt_16550_read().
-     *
-     * If FIFOs are enabled, this interrupt signals that the receiver FIFO
-     * level is above the receiver trigger level specified. In this case, the
-     * interrupt is cleared by reading a sufficiently large buffer from the
-     * receiver FIFO such that the FIFO is filled below the receiver trigger
-     * level specified by calling alt_16550_fifo_read() or by adjusting the
-     * receiver trigger level appropriately by calling
-     * alt_16550_fifo_trigger_set_rx().
-     *
-     * In either case, this interrupt can also be cleared by disabling
-     * receiver interrupts by calling alt_16550_int_disable_rx().
-     */
-    ALT_16550_INT_STATUS_RX_DATA = 0x4,
+        /*!
+         * This interrupt signals that some data is available to be read from the
+         * UART. The definition of some depends on whether FIFOs are enabled or
+         * not.
+         *
+         * If FIFOs are disabled, this interrupt signals that the receiver
+         * contains data. In this case, the interrupt is cleared by reading the
+         * data from the UART by calling alt_16550_read().
+         *
+         * If FIFOs are enabled, this interrupt signals that the receiver FIFO
+         * level is above the receiver trigger level specified. In this case, the
+         * interrupt is cleared by reading a sufficiently large buffer from the
+         * receiver FIFO such that the FIFO is filled below the receiver trigger
+         * level specified by calling alt_16550_fifo_read() or by adjusting the
+         * receiver trigger level appropriately by calling
+         * alt_16550_fifo_trigger_set_rx().
+         *
+         * In either case, this interrupt can also be cleared by disabling
+         * receiver interrupts by calling alt_16550_int_disable_rx().
+         */
+        ALT_16550_INT_STATUS_RX_DATA = 0x4,
 
-    /*!
-     * This interrupt signals that data is available in the receiver FIFO and
-     * that there has been no activity with the receiver FIFO for the last 4
-     * character frames. In essence, the receiver FIFO has temporarily settled
-     * thus it may be a good time to empty the receiver FIFO. This interrupt
-     * is only available if FIFOs are enabled. The interrupt is cleared by
-     * reading from the receiver FIFO by calling alt_16550_fifo_read() or by
-     * disabling receiver interrupts by calling alt_16550_int_disable_rx().
-     */
-    ALT_16550_INT_STATUS_RX_TIMEOUT = 0xC,
+        /*!
+         * This interrupt signals that data is available in the receiver FIFO and
+         * that there has been no activity with the receiver FIFO for the last 4
+         * character frames. In essence, the receiver FIFO has temporarily settled
+         * thus it may be a good time to empty the receiver FIFO. This interrupt
+         * is only available if FIFOs are enabled. The interrupt is cleared by
+         * reading from the receiver FIFO by calling alt_16550_fifo_read() or by
+         * disabling receiver interrupts by calling alt_16550_int_disable_rx().
+         */
+        ALT_16550_INT_STATUS_RX_TIMEOUT = 0xC,
 
-    /*!
-     * This interrupt signals that the transmitter is idling. The definition
-     * of idling depends on whether FIFOs are enabled or not.
-     *
-     * If FIFOs are disabled, this interrupt signals that the transmitter
-     * shift register is empty. In this case, the interrupt is cleared by
-     * writing data to the UART by calling alt_16550_write().
-     *
-     * If FIFO are enabled, this interrupt signals that the transmitter FIFO
-     * level is below the transmitter trigger level specified. In this case,
-     * the interrupt is cleared by writing a sufficiently large buffer to the
-     * transmitter FIFO such that the FIFO is filled above the transmitter
-     * trigger level specified by calling alt_16550_fifo_write() or by
-     * adjusting the transmitter trigger level appropriately by calling
-     * alt_16550_fifo_trigger_set_tx().
-     *
-     * In either case, this interrupt can also be cleared by disabling
-     * transmitter interrupts by calling alt_16550_int_disable_tx().
-     */
-    ALT_16550_INT_STATUS_TX_IDLE = 0x2,
+        /*!
+         * This interrupt signals that the transmitter is idling. The definition
+         * of idling depends on whether FIFOs are enabled or not.
+         *
+         * If FIFOs are disabled, this interrupt signals that the transmitter
+         * shift register is empty. In this case, the interrupt is cleared by
+         * writing data to the UART by calling alt_16550_write().
+         *
+         * If FIFO are enabled, this interrupt signals that the transmitter FIFO
+         * level is below the transmitter trigger level specified. In this case,
+         * the interrupt is cleared by writing a sufficiently large buffer to the
+         * transmitter FIFO such that the FIFO is filled above the transmitter
+         * trigger level specified by calling alt_16550_fifo_write() or by
+         * adjusting the transmitter trigger level appropriately by calling
+         * alt_16550_fifo_trigger_set_tx().
+         *
+         * In either case, this interrupt can also be cleared by disabling
+         * transmitter interrupts by calling alt_16550_int_disable_tx().
+         */
+        ALT_16550_INT_STATUS_TX_IDLE = 0x2,
 
-    /*!
-     * Modem status interrupt pending. The interrupt is cleared by reading the
-     * modem status by calling alt_16550_modem_status_get() or by disabling
-     * modem status interrupts by calling alt_16550_int_disable_modem().
-     */
-    ALT_16550_INT_STATUS_MODEM = 0x0,
+        /*!
+         * Modem status interrupt pending. The interrupt is cleared by reading the
+         * modem status by calling alt_16550_modem_status_get() or by disabling
+         * modem status interrupts by calling alt_16550_int_disable_modem().
+         */
+        ALT_16550_INT_STATUS_MODEM = 0x0,
 
-    /*!
-     * No interrupts pending.
-     */
-    ALT_16550_INT_STATUS_NONE = 0x1
-}
-ALT_16550_INT_STATUS_t;
+        /*!
+         * No interrupts pending.
+         */
+        ALT_16550_INT_STATUS_NONE = 0x1
+    }
+    ALT_16550_INT_STATUS_t;
 
 /*!
  * Enables the receiver FIFO to generate interrupts. Enabling this interrupt
@@ -841,7 +841,7 @@ ALT_16550_INT_STATUS_t;
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_enable_rx(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_enable_rx( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Disables the receiver FIFO from generating interrupts.
@@ -853,7 +853,7 @@ ALT_STATUS_CODE alt_16550_int_enable_rx(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_disable_rx(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_disable_rx( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Enables the transmitter FIFO to generate interrupts. Enabling this
@@ -871,7 +871,7 @@ ALT_STATUS_CODE alt_16550_int_disable_rx(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_enable_tx(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_enable_tx( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Disables the transmitter FIFO from generating interrupts.
@@ -883,7 +883,7 @@ ALT_STATUS_CODE alt_16550_int_enable_tx(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_disable_tx(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_disable_tx( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Enables the receiver to generate line status interrupts. Enabling this
@@ -899,7 +899,7 @@ ALT_STATUS_CODE alt_16550_int_disable_tx(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_enable_line(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_enable_line( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Disables the receiver from generating line status interrupts.
@@ -911,7 +911,7 @@ ALT_STATUS_CODE alt_16550_int_enable_line(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_disable_line(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_disable_line( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Enables the UART to generate modem status interrupts. Enabling this
@@ -927,7 +927,7 @@ ALT_STATUS_CODE alt_16550_int_disable_line(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_enable_modem(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_enable_modem( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Disables the UART from generate modem status interrupts.
@@ -939,7 +939,7 @@ ALT_STATUS_CODE alt_16550_int_enable_modem(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_disable_modem(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_disable_modem( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Disables all interrupts on the UART.
@@ -951,7 +951,7 @@ ALT_STATUS_CODE alt_16550_int_disable_modem(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_int_disable_all(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_int_disable_all( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Queries the interrupt status of the UART. This returns the highest priority
@@ -969,8 +969,8 @@ ALT_STATUS_CODE alt_16550_int_disable_all(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE  alt_16550_int_status_get(ALT_16550_HANDLE_t * handle,
-                                          ALT_16550_INT_STATUS_t * status);
+    ALT_STATUS_CODE alt_16550_int_status_get( ALT_16550_HANDLE_t * handle,
+                                              ALT_16550_INT_STATUS_t * status );
 
 /*!
  * @}
@@ -989,72 +989,72 @@ ALT_STATUS_CODE  alt_16550_int_status_get(ALT_16550_HANDLE_t * handle,
  * This type definition enumerates the set of UART modem status conditions as
  * register mask values.
  */
-typedef enum ALT_16550_MODEM_STATUS_e
-{
-    /*!
-     * Data Carrier Detect. This status indicates that the carrier has been
-     * detected by the modem. It corresponds to an inverted dcd_n input. DCD
-     * is unasserted when dcd_n is logic 1 and asserted when dcd_n is logic 0.
-     */
-    ALT_16550_MODEM_STATUS_DCD = 1 << 7,
+    typedef enum ALT_16550_MODEM_STATUS_e
+    {
+        /*!
+         * Data Carrier Detect. This status indicates that the carrier has been
+         * detected by the modem. It corresponds to an inverted dcd_n input. DCD
+         * is unasserted when dcd_n is logic 1 and asserted when dcd_n is logic 0.
+         */
+        ALT_16550_MODEM_STATUS_DCD = 1 << 7,
 
-    /*!
-     * Ring Indicator. This status indicates that the telephone ringing signal
-     * has been redeived by the modem. It corresponds to an inverted ri_n
-     * input. RI is unasserted when ri_n is logic 1 and asserted when ri_n is
-     * logic 0.
-     */
-    ALT_16550_MODEM_STATUS_RI = 1 << 6,
+        /*!
+         * Ring Indicator. This status indicates that the telephone ringing signal
+         * has been redeived by the modem. It corresponds to an inverted ri_n
+         * input. RI is unasserted when ri_n is logic 1 and asserted when ri_n is
+         * logic 0.
+         */
+        ALT_16550_MODEM_STATUS_RI = 1 << 6,
 
-    /*!
-     * Data Set Ready. This status indicates that the modem is ready to
-     * establish communications with the UART. It corresponds to an inverted
-     * dsr_n input. DSR is unasserted when dsr_n is logic 1 and asserted when
-     * dsr_n is logic 0.
-     */
-    ALT_16550_MODEM_STATUS_DSR = 1 << 5,
+        /*!
+         * Data Set Ready. This status indicates that the modem is ready to
+         * establish communications with the UART. It corresponds to an inverted
+         * dsr_n input. DSR is unasserted when dsr_n is logic 1 and asserted when
+         * dsr_n is logic 0.
+         */
+        ALT_16550_MODEM_STATUS_DSR = 1 << 5,
 
-    /*!
-     * Clear To Send. This status indicates the current state of the modem
-     * cts_n line. It corresponds to an inverted cts_n input. CTS is
-     * unasserted when cts_n is logic 1 and asserted when cts_n is logic 0.
-     */
-    ALT_16550_MODEM_STATUS_CTS = 1 << 4,
+        /*!
+         * Clear To Send. This status indicates the current state of the modem
+         * cts_n line. It corresponds to an inverted cts_n input. CTS is
+         * unasserted when cts_n is logic 1 and asserted when cts_n is logic 0.
+         */
+        ALT_16550_MODEM_STATUS_CTS = 1 << 4,
 
-    /*!
-     * Delta Data Carrier Detect. This status condition indicates that the
-     * Data Carrier Detect has changed since the last time the modem status
-     * was read. Reading the modem status clears this status. For more
-     * information about the Data Carrier Detect status, see
-     * ALT_16550_MODEM_STATUS_DCD.
-     */
-    ALT_16550_MODEM_STATUS_DDCD = 1 << 3,
+        /*!
+         * Delta Data Carrier Detect. This status condition indicates that the
+         * Data Carrier Detect has changed since the last time the modem status
+         * was read. Reading the modem status clears this status. For more
+         * information about the Data Carrier Detect status, see
+         * ALT_16550_MODEM_STATUS_DCD.
+         */
+        ALT_16550_MODEM_STATUS_DDCD = 1 << 3,
 
-    /*!
-     * Trailing Edge of Ring Indicator. This status indicates that the Ring
-     * Indicator has changed from asserted to unasserted. Reading the modem
-     * status will clear this status. For more information about the Ring
-     * Indicator status, reference ALT_16550_MODEM_STATUS_RI.
-     */
-    ALT_16550_MODEM_STATUS_TERI = 1 << 2,
+        /*!
+         * Trailing Edge of Ring Indicator. This status indicates that the Ring
+         * Indicator has changed from asserted to unasserted. Reading the modem
+         * status will clear this status. For more information about the Ring
+         * Indicator status, reference ALT_16550_MODEM_STATUS_RI.
+         */
+        ALT_16550_MODEM_STATUS_TERI = 1 << 2,
 
-    /*!
-     * Delta Data Set Ready. This status condition indicates that the Data Set
-     * Ready has changed since the last time the modem status was read.
-     * Reading the modem status will clear this status. For more information
-     * about the Data Set Ready status, see ALT_16550_MODEM_STATUS_DSR.
-     */
-    ALT_16550_MODEM_STATUS_DDSR = 1 << 1,
+        /*!
+         * Delta Data Set Ready. This status condition indicates that the Data Set
+         * Ready has changed since the last time the modem status was read.
+         * Reading the modem status will clear this status. For more information
+         * about the Data Set Ready status, see ALT_16550_MODEM_STATUS_DSR.
+         */
+        ALT_16550_MODEM_STATUS_DDSR = 1 << 1,
 
-    /*!
-     * Delta Clear To Send. This status condition indicates that the Clear To
-     * Send has changed since the last time the modem status was read. Reading
-     * the modem status will clear this status. For more information about the
-     * Clear To Send status, see ALT_16550_MODEM_STATUS_CTS.
-     */
-    ALT_16550_MODEM_STATUS_DCTS = 1 << 0
-}
-ALT_16550_MODEM_STATUS_t;
+        /*!
+         * Delta Clear To Send. This status condition indicates that the Clear To
+         * Send has changed since the last time the modem status was read. Reading
+         * the modem status will clear this status. For more information about the
+         * Clear To Send status, see ALT_16550_MODEM_STATUS_CTS.
+         */
+        ALT_16550_MODEM_STATUS_DCTS = 1 << 0
+    }
+    ALT_16550_MODEM_STATUS_t;
 
 /*!
  * Enables automatic flow control in the UART modem. When in this mode, the
@@ -1079,7 +1079,7 @@ ALT_16550_MODEM_STATUS_t;
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_flowcontrol_enable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_flowcontrol_enable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Disables automatic flow control in the UART modem.
@@ -1099,7 +1099,7 @@ ALT_STATUS_CODE alt_16550_flowcontrol_enable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_flowcontrol_disable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_flowcontrol_disable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Puts the UART in loopback mode. This is used for diagnostic and test
@@ -1122,7 +1122,7 @@ ALT_STATUS_CODE alt_16550_flowcontrol_disable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_loopback_enable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_loopback_enable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Takes the UART out of loopback mode.
@@ -1134,7 +1134,7 @@ ALT_STATUS_CODE alt_16550_loopback_enable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_loopback_disable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_loopback_disable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Asserts the OUT1 output. OUT1 is inverted then driven out to out1_n.
@@ -1149,7 +1149,7 @@ ALT_STATUS_CODE alt_16550_loopback_disable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_enable_out1(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_enable_out1( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Unasserts the OUT1 output.  OUT1 is inverted then driven out to out1_n.
@@ -1164,7 +1164,7 @@ ALT_STATUS_CODE alt_16550_modem_enable_out1(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_disable_out1(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_disable_out1( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Asserts the OUT2 output. OUT2 is inverted then driven out to out2_n.
@@ -1179,7 +1179,7 @@ ALT_STATUS_CODE alt_16550_modem_disable_out1(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_enable_out2(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_enable_out2( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Unasserts the OUT2 output. OUT2 is inverted then driven out to out2_n.
@@ -1194,7 +1194,7 @@ ALT_STATUS_CODE alt_16550_modem_enable_out2(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_disable_out2(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_disable_out2( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Asserts the RTS (Request To Send) output. RTS is inverted then driven out
@@ -1214,7 +1214,7 @@ ALT_STATUS_CODE alt_16550_modem_disable_out2(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_enable_rts(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_enable_rts( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Deaserts the RTS (Request To Send) output. RTS is inverted then driven out
@@ -1233,7 +1233,7 @@ ALT_STATUS_CODE alt_16550_modem_enable_rts(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_disable_rts(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_disable_rts( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Asserts the DTR (Data Terminal Ready) output. DTR is inverted then driven
@@ -1250,7 +1250,7 @@ ALT_STATUS_CODE alt_16550_modem_disable_rts(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_enable_dtr(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_enable_dtr( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Deasserts the DTR (Data Terminal Ready) output. DTR is inverted then driven
@@ -1266,7 +1266,7 @@ ALT_STATUS_CODE alt_16550_modem_enable_dtr(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_disable_dtr(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_modem_disable_dtr( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Reads the modem status from the UART.
@@ -1282,8 +1282,8 @@ ALT_STATUS_CODE alt_16550_modem_disable_dtr(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_modem_status_get(ALT_16550_HANDLE_t * handle,
-                                           uint32_t * status);
+    ALT_STATUS_CODE alt_16550_modem_status_get( ALT_16550_HANDLE_t * handle,
+                                                uint32_t * status );
 
 /*!
  * @}
@@ -1301,178 +1301,178 @@ ALT_STATUS_CODE alt_16550_modem_status_get(ALT_16550_HANDLE_t * handle,
 /*!
  * This type definition enumerates the supported databits per frame.
  */
-typedef enum ALT_16550_DATABITS_e
-{
-    /*!
-     * This option selects 5 databits per frame.
-     */
-    ALT_16550_DATABITS_5 = 0,
+    typedef enum ALT_16550_DATABITS_e
+    {
+        /*!
+         * This option selects 5 databits per frame.
+         */
+        ALT_16550_DATABITS_5 = 0,
 
-    /*!
-     * This option selects 6 databits per frame.
-     */
-    ALT_16550_DATABITS_6 = 1,
+        /*!
+         * This option selects 6 databits per frame.
+         */
+        ALT_16550_DATABITS_6 = 1,
 
-    /*!
-     * This option selects 7 databits per frame.
-     */
-    ALT_16550_DATABITS_7 = 2,
+        /*!
+         * This option selects 7 databits per frame.
+         */
+        ALT_16550_DATABITS_7 = 2,
 
-    /*!
-     * This option selects 8 databits per frame.
-     */
-    ALT_16550_DATABITS_8 = 3
-}
-ALT_16550_DATABITS_t;
+        /*!
+         * This option selects 8 databits per frame.
+         */
+        ALT_16550_DATABITS_8 = 3
+    }
+    ALT_16550_DATABITS_t;
 
 /*!
  * This type definition enumerates the supported stopbits per frame.
  */
-typedef enum ALT_16550_STOPBITS_e
-{
-    /*!
-     * This options specifies 1 stopbit per frame.
-     */
-    ALT_16550_STOPBITS_1 = 0,
+    typedef enum ALT_16550_STOPBITS_e
+    {
+        /*!
+         * This options specifies 1 stopbit per frame.
+         */
+        ALT_16550_STOPBITS_1 = 0,
 
-    /*!
-     * This options specifies 2 stopbits per frame. If the frame is
-     * configured with 5 databits, 1.5 stopbits is used instead.
-     */
-    ALT_16550_STOPBITS_2 = 1
-}
-ALT_16550_STOPBITS_t;
+        /*!
+         * This options specifies 2 stopbits per frame. If the frame is
+         * configured with 5 databits, 1.5 stopbits is used instead.
+         */
+        ALT_16550_STOPBITS_2 = 1
+    }
+    ALT_16550_STOPBITS_t;
 
 /*!
  * This type definition enumerates the possible parity to use per frame.
  */
-typedef enum ALT_16550_PARITY_e
-{
-    /*!
-     * This option disables the parity error detection bit in the data frame.
-     */
-    ALT_16550_PARITY_DISABLE = 0,
+    typedef enum ALT_16550_PARITY_e
+    {
+        /*!
+         * This option disables the parity error detection bit in the data frame.
+         */
+        ALT_16550_PARITY_DISABLE = 0,
 
-    /*!
-     * This option enables the odd parity error detection bit in the data
-     * frame.
-     */
-    ALT_16550_PARITY_ODD = 1,
+        /*!
+         * This option enables the odd parity error detection bit in the data
+         * frame.
+         */
+        ALT_16550_PARITY_ODD = 1,
 
-    /*!
-     * This option enables the even parity error detection bit in the data
-     * frame.
-     */
-    ALT_16550_PARITY_EVEN = 2
-}
-ALT_16550_PARITY_t;
+        /*!
+         * This option enables the even parity error detection bit in the data
+         * frame.
+         */
+        ALT_16550_PARITY_EVEN = 2
+    }
+    ALT_16550_PARITY_t;
 
 /*!
  * This type definition enumerates the set of UART line status conditions as
  * register mask values.
  */
-typedef enum ALT_16550_LINE_STATUS_e
-{
-    /*!
-     * Receiver FIFO Error. This status indicates that one or more parity
-     * error, framing error, or break indication exists in the receiver FIFO.
-     * It is only set when FIFO is enabled. This status cleared when line
-     * status is read, the character with the issue is at the top of the FIFO,
-     * and when no other issues exist in the FIFO.
-     */
-    ALT_16550_LINE_STATUS_RFE = 1 << 7,
+    typedef enum ALT_16550_LINE_STATUS_e
+    {
+        /*!
+         * Receiver FIFO Error. This status indicates that one or more parity
+         * error, framing error, or break indication exists in the receiver FIFO.
+         * It is only set when FIFO is enabled. This status cleared when line
+         * status is read, the character with the issue is at the top of the FIFO,
+         * and when no other issues exist in the FIFO.
+         */
+        ALT_16550_LINE_STATUS_RFE = 1 << 7,
 
-    /*!
-     * Transmitter EMpTy (Empty). This status indicates that transmitter shift
-     * register is empty. If FIFOs are enabled, the status is set when the
-     * transmitter FIFO is also empty. This status is cleared when the
-     * transmitter shift registers is loaded by writing to the UART
-     * transmitter buffer or transmitter FIFO if FIFOs are enabled. This is
-     * done by calling alt_16550_write() and alt_16550_fifo_write()
-     * respectively.
-     */
-    ALT_16550_LINE_STATUS_TEMT = 1 << 6,
+        /*!
+         * Transmitter EMpTy (Empty). This status indicates that transmitter shift
+         * register is empty. If FIFOs are enabled, the status is set when the
+         * transmitter FIFO is also empty. This status is cleared when the
+         * transmitter shift registers is loaded by writing to the UART
+         * transmitter buffer or transmitter FIFO if FIFOs are enabled. This is
+         * done by calling alt_16550_write() and alt_16550_fifo_write()
+         * respectively.
+         */
+        ALT_16550_LINE_STATUS_TEMT = 1 << 6,
 
-    /*!
-     * Transmitter Holding Register Empty. This status indicates that the 
-     * transmitter will run out of data soon. The definition of soon depends
-     * on whether the FIFOs are enabled.
-     *
-     * If FIFOs are disabled, this status indicates that the transmitter will
-     * run out of data to send after the current transmit shift register
-     * completes. In this case, this status is cleared when the data is
-     * written to the UART. This can be done by calling alt_16550_write().
-     *
-     * If FIFOs are enabled, this status indicates that the transmitter FIFO
-     * level is below the transmitter trigger level specified. In this case,
-     * this status is cleared by writing a sufficiently large buffer to the
-     * transmitter FIFO such that the FIFO is filled above the transmitter
-     * trigger level specified by calling alt_16550_fifo_write() or by
-     * adjusting the transmitter trigger level appropriately by calling 
-     * alt_16550_fifo_trigger_set_tx().
-     *
-     * \internal
-     * The implementation of the UART driver always ensures that IER[7] is
-     * set. This means that the UART always has Programmable THRE (Transmitter
-     * Holding Register Empty) Interrupt Mode Enable (PTIME) enabled.
-     * \endinternal
-     */
-    ALT_16550_LINE_STATUS_THRE = 1 << 5,
+        /*!
+         * Transmitter Holding Register Empty. This status indicates that the
+         * transmitter will run out of data soon. The definition of soon depends
+         * on whether the FIFOs are enabled.
+         *
+         * If FIFOs are disabled, this status indicates that the transmitter will
+         * run out of data to send after the current transmit shift register
+         * completes. In this case, this status is cleared when the data is
+         * written to the UART. This can be done by calling alt_16550_write().
+         *
+         * If FIFOs are enabled, this status indicates that the transmitter FIFO
+         * level is below the transmitter trigger level specified. In this case,
+         * this status is cleared by writing a sufficiently large buffer to the
+         * transmitter FIFO such that the FIFO is filled above the transmitter
+         * trigger level specified by calling alt_16550_fifo_write() or by
+         * adjusting the transmitter trigger level appropriately by calling
+         * alt_16550_fifo_trigger_set_tx().
+         *
+         * \internal
+         * The implementation of the UART driver always ensures that IER[7] is
+         * set. This means that the UART always has Programmable THRE (Transmitter
+         * Holding Register Empty) Interrupt Mode Enable (PTIME) enabled.
+         * \endinternal
+         */
+        ALT_16550_LINE_STATUS_THRE = 1 << 5,
 
-    /*!
-     * Break Interrupt. This status indicates that a break interrupt sequence
-     * is detected in the incoming serial data. This happens when the the data
-     * is 0 for longer than a frame would normally be transmitted. The break
-     * interrupt status is cleared by reading the line status by calling
-     * alt_16550_line_status_get().
-     *
-     * If FIFOs are enabled, this status will be set when the character with
-     * the break interrupt status is at the top of the receiver FIFO.
-     */
-    ALT_16550_LINE_STATUS_BI = 1 << 4,
+        /*!
+         * Break Interrupt. This status indicates that a break interrupt sequence
+         * is detected in the incoming serial data. This happens when the the data
+         * is 0 for longer than a frame would normally be transmitted. The break
+         * interrupt status is cleared by reading the line status by calling
+         * alt_16550_line_status_get().
+         *
+         * If FIFOs are enabled, this status will be set when the character with
+         * the break interrupt status is at the top of the receiver FIFO.
+         */
+        ALT_16550_LINE_STATUS_BI = 1 << 4,
 
-    /*!
-     * Framing Error. This status indicates that a framing error occurred in
-     * the receiver. This happens when the receiver detects a missing or
-     * incorrect number of stopbit(s).
-     *
-     * If FIFOs are enabled, this status will be set when the character with
-     * the framing error is at the top of the FIFO. When a framing error
-     * occurs, the UART attempts to resynchronize with the transmitting UART.
-     * This status is also set if break interrupt occurred.
-     */
-    ALT_16550_LINE_STATUS_FE = 1 << 3,
+        /*!
+         * Framing Error. This status indicates that a framing error occurred in
+         * the receiver. This happens when the receiver detects a missing or
+         * incorrect number of stopbit(s).
+         *
+         * If FIFOs are enabled, this status will be set when the character with
+         * the framing error is at the top of the FIFO. When a framing error
+         * occurs, the UART attempts to resynchronize with the transmitting UART.
+         * This status is also set if break interrupt occurred.
+         */
+        ALT_16550_LINE_STATUS_FE = 1 << 3,
 
-    /*!
-     * Parity Error. This status indicates that a parity error occurred in the
-     * receiver.
-     *
-     * If FIFOs are enabled, this status will be set when the character with
-     * the parity error is at the top of the receiver FIFO. This status is
-     * also set if a break interrupt occurred.
-     */
-    ALT_16550_LINE_STATUS_PE = 1 << 2,
+        /*!
+         * Parity Error. This status indicates that a parity error occurred in the
+         * receiver.
+         *
+         * If FIFOs are enabled, this status will be set when the character with
+         * the parity error is at the top of the receiver FIFO. This status is
+         * also set if a break interrupt occurred.
+         */
+        ALT_16550_LINE_STATUS_PE = 1 << 2,
 
-    /*!
-     * Overrun Error. This status indicates that an overrun occurred in the
-     * receiver.
-     *
-     * If FIFOs are disabled, the arriving character will overwrite the
-     * existing character in the receiver. Any previously existing
-     * character(s) will be lost.
-     *
-     * If FIFOs are disabled, the arriving character will be discarded. The
-     * buffer will continue to contain the preexisting characters.
-     */
-    ALT_16550_LINE_STATUS_OE = 1 << 1,
+        /*!
+         * Overrun Error. This status indicates that an overrun occurred in the
+         * receiver.
+         *
+         * If FIFOs are disabled, the arriving character will overwrite the
+         * existing character in the receiver. Any previously existing
+         * character(s) will be lost.
+         *
+         * If FIFOs are disabled, the arriving character will be discarded. The
+         * buffer will continue to contain the preexisting characters.
+         */
+        ALT_16550_LINE_STATUS_OE = 1 << 1,
 
-    /*!
-     * Data Ready. This status indicates that the receiver or receiver FIFO
-     * contains at least one character.
-     */
-    ALT_16550_LINE_STATUS_DR = 1 << 0
-}
-ALT_16550_LINE_STATUS_t;
+        /*!
+         * Data Ready. This status indicates that the receiver or receiver FIFO
+         * contains at least one character.
+         */
+        ALT_16550_LINE_STATUS_DR = 1 << 0
+    }
+    ALT_16550_LINE_STATUS_t;
 
 /*!
  * Sets the configuration for a given character frame.
@@ -1493,10 +1493,10 @@ ALT_16550_LINE_STATUS_t;
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_line_config_set(ALT_16550_HANDLE_t * handle,
-                                          ALT_16550_DATABITS_t databits,
-                                          ALT_16550_PARITY_t parity,
-                                          ALT_16550_STOPBITS_t stopbits);
+    ALT_STATUS_CODE alt_16550_line_config_set( ALT_16550_HANDLE_t * handle,
+                                               ALT_16550_DATABITS_t databits,
+                                               ALT_16550_PARITY_t parity,
+                                               ALT_16550_STOPBITS_t stopbits );
 
 /*!
  * Starts transmitting a break condition by transmitting a logic 0 state
@@ -1509,7 +1509,7 @@ ALT_STATUS_CODE alt_16550_line_config_set(ALT_16550_HANDLE_t * handle,
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_line_break_enable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_line_break_enable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Stops transmitting a break condition.
@@ -1521,7 +1521,7 @@ ALT_STATUS_CODE alt_16550_line_break_enable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_line_break_disable(ALT_16550_HANDLE_t * handle);
+    ALT_STATUS_CODE alt_16550_line_break_disable( ALT_16550_HANDLE_t * handle );
 
 /*!
  * Reads the line status from the UART.
@@ -1537,8 +1537,8 @@ ALT_STATUS_CODE alt_16550_line_break_disable(ALT_16550_HANDLE_t * handle);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The given UART device handle is invalid.
  */
-ALT_STATUS_CODE alt_16550_line_status_get(ALT_16550_HANDLE_t * handle,
-                                          uint32_t * status);
+    ALT_STATUS_CODE alt_16550_line_status_get( ALT_16550_HANDLE_t * handle,
+                                               uint32_t * status );
 
 /*!
  * @}
@@ -1548,8 +1548,8 @@ ALT_STATUS_CODE alt_16550_line_status_get(ALT_16550_HANDLE_t * handle,
  * @}
  */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __ALT_16550_UART_H__ */

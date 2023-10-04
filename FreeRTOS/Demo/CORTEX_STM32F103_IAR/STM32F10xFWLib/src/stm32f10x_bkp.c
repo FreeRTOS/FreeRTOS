@@ -24,46 +24,46 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* ------------ BKP registers bit address in the alias region ----------- */
-#define BKP_OFFSET        (BKP_BASE - PERIPH_BASE)
+#define BKP_OFFSET    ( BKP_BASE - PERIPH_BASE )
 
 /* --- RTCCR Register ---*/
 /* Alias word address of CCO bit */
-#define RTCCR_OFFSET      (BKP_OFFSET + 0x2C)
-#define CCO_BitNumber     0x07
-#define RTCCR_CCO_BB      (PERIPH_BB_BASE + (RTCCR_OFFSET * 32) + (CCO_BitNumber * 4))
+#define RTCCR_OFFSET     ( BKP_OFFSET + 0x2C )
+#define CCO_BitNumber    0x07
+#define RTCCR_CCO_BB     ( PERIPH_BB_BASE + ( RTCCR_OFFSET * 32 ) + ( CCO_BitNumber * 4 ) )
 
 /* --- CR Register ---*/
 /* Alias word address of TPAL bit */
-#define CR_OFFSET         (BKP_OFFSET + 0x30)
+#define CR_OFFSET         ( BKP_OFFSET + 0x30 )
 #define TPAL_BitNumber    0x01
-#define CR_TPAL_BB        (PERIPH_BB_BASE + (CR_OFFSET * 32) + (TPAL_BitNumber * 4))
+#define CR_TPAL_BB        ( PERIPH_BB_BASE + ( CR_OFFSET * 32 ) + ( TPAL_BitNumber * 4 ) )
 
 /* Alias word address of TPE bit */
 #define TPE_BitNumber     0x00
-#define CR_TPE_BB         (PERIPH_BB_BASE + (CR_OFFSET * 32) + (TPE_BitNumber * 4))
+#define CR_TPE_BB         ( PERIPH_BB_BASE + ( CR_OFFSET * 32 ) + ( TPE_BitNumber * 4 ) )
 
 /* --- CSR Register ---*/
 /* Alias word address of TPIE bit */
-#define CSR_OFFSET        (BKP_OFFSET + 0x34)
+#define CSR_OFFSET        ( BKP_OFFSET + 0x34 )
 #define TPIE_BitNumber    0x02
-#define CSR_TPIE_BB       (PERIPH_BB_BASE + (CSR_OFFSET * 32) + (TPIE_BitNumber * 4))
+#define CSR_TPIE_BB       ( PERIPH_BB_BASE + ( CSR_OFFSET * 32 ) + ( TPIE_BitNumber * 4 ) )
 
 /* Alias word address of TIF bit */
 #define TIF_BitNumber     0x09
-#define CSR_TIF_BB        (PERIPH_BB_BASE + (CSR_OFFSET * 32) + (TIF_BitNumber * 4))
+#define CSR_TIF_BB        ( PERIPH_BB_BASE + ( CSR_OFFSET * 32 ) + ( TIF_BitNumber * 4 ) )
 
 /* Alias word address of TEF bit */
 #define TEF_BitNumber     0x08
-#define CSR_TEF_BB        (PERIPH_BB_BASE + (CSR_OFFSET * 32) + (TEF_BitNumber * 4))
+#define CSR_TEF_BB        ( PERIPH_BB_BASE + ( CSR_OFFSET * 32 ) + ( TEF_BitNumber * 4 ) )
 
 
 /* ---------------------- BKP registers bit mask ------------------------ */
 /* RTCCR register bit mask */
-#define RTCCR_CAL_Mask    ((u16)0xFF80)
+#define RTCCR_CAL_Mask    ( ( u16 ) 0xFF80 )
 
 /* CSR register bit mask */
-#define CSR_CTE_Set       ((u16)0x0001)
-#define CSR_CTI_Set       ((u16)0x0002)
+#define CSR_CTE_Set       ( ( u16 ) 0x0001 )
+#define CSR_CTI_Set       ( ( u16 ) 0x0002 )
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -78,10 +78,10 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_DeInit(void)
+void BKP_DeInit( void )
 {
-  RCC_BackupResetCmd(ENABLE);
-  RCC_BackupResetCmd(DISABLE);
+    RCC_BackupResetCmd( ENABLE );
+    RCC_BackupResetCmd( DISABLE );
 }
 
 /*******************************************************************************
@@ -94,12 +94,12 @@ void BKP_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_TamperPinLevelConfig(u16 BKP_TamperPinLevel)
+void BKP_TamperPinLevelConfig( u16 BKP_TamperPinLevel )
 {
-  /* Check the parameters */
-  assert(IS_BKP_TAMPER_PIN_LEVEL(BKP_TamperPinLevel));
+    /* Check the parameters */
+    assert( IS_BKP_TAMPER_PIN_LEVEL( BKP_TamperPinLevel ) );
 
-  *(vu32 *) CR_TPAL_BB = BKP_TamperPinLevel;
+    *( vu32 * ) CR_TPAL_BB = BKP_TamperPinLevel;
 }
 
 /*******************************************************************************
@@ -110,12 +110,12 @@ void BKP_TamperPinLevelConfig(u16 BKP_TamperPinLevel)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_TamperPinCmd(FunctionalState NewState)
+void BKP_TamperPinCmd( FunctionalState NewState )
 {
-  /* Check the parameters */
-  assert(IS_FUNCTIONAL_STATE(NewState));
+    /* Check the parameters */
+    assert( IS_FUNCTIONAL_STATE( NewState ) );
 
-  *(vu32 *) CR_TPE_BB = (u32)NewState;
+    *( vu32 * ) CR_TPE_BB = ( u32 ) NewState;
 }
 
 /*******************************************************************************
@@ -126,12 +126,12 @@ void BKP_TamperPinCmd(FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_ITConfig(FunctionalState NewState)
+void BKP_ITConfig( FunctionalState NewState )
 {
-  /* Check the parameters */
-  assert(IS_FUNCTIONAL_STATE(NewState));
+    /* Check the parameters */
+    assert( IS_FUNCTIONAL_STATE( NewState ) );
 
-  *(vu32 *) CSR_TPIE_BB = (u32)NewState;
+    *( vu32 * ) CSR_TPIE_BB = ( u32 ) NewState;
 }
 
 /*******************************************************************************
@@ -142,12 +142,12 @@ void BKP_ITConfig(FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_RTCCalibrationClockOutputCmd(FunctionalState NewState)
+void BKP_RTCCalibrationClockOutputCmd( FunctionalState NewState )
 {
-  /* Check the parameters */
-  assert(IS_FUNCTIONAL_STATE(NewState));
+    /* Check the parameters */
+    assert( IS_FUNCTIONAL_STATE( NewState ) );
 
-  *(vu32 *) RTCCR_CCO_BB = (u32)NewState;
+    *( vu32 * ) RTCCR_CCO_BB = ( u32 ) NewState;
 }
 
 /*******************************************************************************
@@ -158,23 +158,23 @@ void BKP_RTCCalibrationClockOutputCmd(FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_SetRTCCalibrationValue(u8 CalibrationValue)
+void BKP_SetRTCCalibrationValue( u8 CalibrationValue )
 {
-  u16 tmpreg = 0;
+    u16 tmpreg = 0;
 
-  /* Check the parameters */
-  assert(IS_BKP_CALIBRATION_VALUE(CalibrationValue));
+    /* Check the parameters */
+    assert( IS_BKP_CALIBRATION_VALUE( CalibrationValue ) );
 
-  tmpreg = BKP->RTCCR;
+    tmpreg = BKP->RTCCR;
 
-  /* Clear CAL[6:0] bits */
-  tmpreg &= RTCCR_CAL_Mask;
+    /* Clear CAL[6:0] bits */
+    tmpreg &= RTCCR_CAL_Mask;
 
-  /* Set CAL[6:0] bits according to CalibrationValue value */
-  tmpreg |= CalibrationValue;
+    /* Set CAL[6:0] bits according to CalibrationValue value */
+    tmpreg |= CalibrationValue;
 
-  /* Store the new value */
-  BKP->RTCCR = tmpreg;
+    /* Store the new value */
+    BKP->RTCCR = tmpreg;
 }
 
 /*******************************************************************************
@@ -186,12 +186,13 @@ void BKP_SetRTCCalibrationValue(u8 CalibrationValue)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_WriteBackupRegister(u16 BKP_DR, u16 Data)
+void BKP_WriteBackupRegister( u16 BKP_DR,
+                              u16 Data )
 {
-  /* Check the parameters */
-  assert(IS_BKP_DR(BKP_DR));
+    /* Check the parameters */
+    assert( IS_BKP_DR( BKP_DR ) );
 
-  *(vu16 *) (BKP_BASE + BKP_DR) = Data;
+    *( vu16 * ) ( BKP_BASE + BKP_DR ) = Data;
 }
 
 /*******************************************************************************
@@ -202,12 +203,12 @@ void BKP_WriteBackupRegister(u16 BKP_DR, u16 Data)
 * Output         : None
 * Return         : The content of the specified Data Backup Register
 *******************************************************************************/
-u16 BKP_ReadBackupRegister(u16 BKP_DR)
+u16 BKP_ReadBackupRegister( u16 BKP_DR )
 {
-  /* Check the parameters */
-  assert(IS_BKP_DR(BKP_DR));
+    /* Check the parameters */
+    assert( IS_BKP_DR( BKP_DR ) );
 
-  return (*(vu16 *) (BKP_BASE + BKP_DR));
+    return( *( vu16 * ) ( BKP_BASE + BKP_DR ) );
 }
 
 /*******************************************************************************
@@ -217,9 +218,9 @@ u16 BKP_ReadBackupRegister(u16 BKP_DR)
 * Output         : None
 * Return         : The new state of the Tamper Pin Event flag (SET or RESET).
 *******************************************************************************/
-FlagStatus BKP_GetFlagStatus(void)
+FlagStatus BKP_GetFlagStatus( void )
 {
-  return (FlagStatus)(*(vu32 *) CSR_TEF_BB);
+    return ( FlagStatus ) ( *( vu32 * ) CSR_TEF_BB );
 }
 
 /*******************************************************************************
@@ -229,10 +230,10 @@ FlagStatus BKP_GetFlagStatus(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_ClearFlag(void)
+void BKP_ClearFlag( void )
 {
-  /* Set CTE bit to clear Tamper Pin Event flag */
-  BKP->CSR |= CSR_CTE_Set;
+    /* Set CTE bit to clear Tamper Pin Event flag */
+    BKP->CSR |= CSR_CTE_Set;
 }
 
 /*******************************************************************************
@@ -242,9 +243,9 @@ void BKP_ClearFlag(void)
 * Output         : None
 * Return         : The new state of the Tamper Pin Interrupt (SET or RESET).
 *******************************************************************************/
-ITStatus BKP_GetITStatus(void)
+ITStatus BKP_GetITStatus( void )
 {
-  return (ITStatus)(*(vu32 *) CSR_TIF_BB);
+    return ( ITStatus ) ( *( vu32 * ) CSR_TIF_BB );
 }
 
 /*******************************************************************************
@@ -254,10 +255,10 @@ ITStatus BKP_GetITStatus(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BKP_ClearITPendingBit(void)
+void BKP_ClearITPendingBit( void )
 {
-  /* Set CTI bit to clear Tamper Pin Interrupt pending bit */
-  BKP->CSR |= CSR_CTI_Set;
+    /* Set CTI bit to clear Tamper Pin Interrupt pending bit */
+    BKP->CSR |= CSR_CTI_Set;
 }
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

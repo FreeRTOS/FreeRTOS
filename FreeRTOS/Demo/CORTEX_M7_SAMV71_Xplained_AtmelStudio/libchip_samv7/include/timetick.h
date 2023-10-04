@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /**
  *  \file
  *
@@ -63,41 +63,42 @@
 
 typedef struct
 {
-	volatile uint32_t *pTimer1;
-	volatile uint32_t *pTimer2;
-	volatile uint32_t *pTimer3;
-	volatile uint32_t *pTimer4;
-}SyTickDelayCounter_t;
+    volatile uint32_t * pTimer1;
+    volatile uint32_t * pTimer2;
+    volatile uint32_t * pTimer3;
+    volatile uint32_t * pTimer4;
+} SyTickDelayCounter_t;
 
 /*----------------------------------------------------------------------------
  *         Definitions
  *----------------------------------------------------------------------------*/
 typedef struct _TimeEvent
 {
-	uint32_t event;
-	uint32_t time_tick;
-	uint32_t time_start;
-	uint32_t occur;
-	struct  _TimeEvent *pPreEvent;
-	struct  _TimeEvent *pNextEvent;
-}TimeEvent;
+    uint32_t event;
+    uint32_t time_tick;
+    uint32_t time_start;
+    uint32_t occur;
+    struct  _TimeEvent * pPreEvent;
+    struct  _TimeEvent * pNextEvent;
+} TimeEvent;
 
 /*----------------------------------------------------------------------------
  *         Global functions
  *----------------------------------------------------------------------------*/
 
-uint32_t TimeTick_Configure( void ) ;
+uint32_t TimeTick_Configure( void );
 
-void TimeTick_Increment( uint32_t dwInc ) ;
+void TimeTick_Increment( uint32_t dwInc );
 
-uint32_t GetDelayInTicks(uint32_t startTick,uint32_t endTick);
+uint32_t GetDelayInTicks( uint32_t startTick,
+                          uint32_t endTick );
 
-uint32_t GetTicks(void);
+uint32_t GetTicks( void );
 
-void Wait( volatile uint32_t dwMs ) ;
+void Wait( volatile uint32_t dwMs );
 
-void Sleep( volatile uint32_t dwMs ) ;
+void Sleep( volatile uint32_t dwMs );
 
-extern void SetTimeEvent(TimeEvent* pEvent);
+extern void SetTimeEvent( TimeEvent * pEvent );
 
 #endif /* _TIMETICK_ */

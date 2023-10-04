@@ -31,22 +31,21 @@
 /* Altera - ALT_OCRAM */
 
 #ifndef __ALTERA_ALT_OCRAM_H__
-#define __ALTERA_ALT_OCRAM_H__
+    #define __ALTERA_ALT_OCRAM_H__
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif  /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 /*
  * Component : On-chip RAM Module - ALT_OCRAM
  * On-chip RAM Module
- * 
- * 
+ *
+ *
  */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
-#endif  /* __ALTERA_ALT_OCRAM_H__ */
-
+    #endif /* __cplusplus */
+#endif /* __ALTERA_ALT_OCRAM_H__ */

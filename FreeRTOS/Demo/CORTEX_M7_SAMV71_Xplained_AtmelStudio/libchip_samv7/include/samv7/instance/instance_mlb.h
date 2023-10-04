@@ -31,44 +31,44 @@
 #define _SAMV71_MLB_INSTANCE_
 
 /* ========== Register definition for MLB peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_MLB_MLBC0                  (0x40068000U) /**< \brief (MLB) MediaLB Control 0 Register */
-  #define REG_MLB_MS0                    (0x4006800CU) /**< \brief (MLB) MediaLB Channel Status 0 Register */
-  #define REG_MLB_MS1                    (0x40068014U) /**< \brief (MLB) MediaLB Channel Status1 Register */
-  #define REG_MLB_MSS                    (0x40068020U) /**< \brief (MLB) MediaLB System Status Register */
-  #define REG_MLB_MSD                    (0x40068024U) /**< \brief (MLB) MediaLB System Data Register */
-  #define REG_MLB_MIEN                   (0x4006802CU) /**< \brief (MLB) MediaLB Interrupt Enable Register */
-  #define REG_MLB_MLBC1                  (0x4006803CU) /**< \brief (MLB) MediaLB Control 1 Register */
-  #define REG_MLB_HCTL                   (0x40068080U) /**< \brief (MLB) HBI Control Register */
-  #define REG_MLB_HCMR                   (0x40068088U) /**< \brief (MLB) HBI Channel Mask 0 Register */
-  #define REG_MLB_HCER                   (0x40068090U) /**< \brief (MLB) HBI Channel Error 0 Register */
-  #define REG_MLB_HCBR                   (0x40068098U) /**< \brief (MLB) HBI Channel Busy 0 Register */
-  #define REG_MLB_MDAT                   (0x400680C0U) /**< \brief (MLB) MIF Data 0 Register */
-  #define REG_MLB_MDWE                   (0x400680D0U) /**< \brief (MLB) MIF Data Write Enable 0 Register */
-  #define REG_MLB_MCTL                   (0x400680E0U) /**< \brief (MLB) MIF Control Register */
-  #define REG_MLB_MADR                   (0x400680E4U) /**< \brief (MLB) MIF Address Register */
-  #define REG_MLB_ACTL                   (0x400683C0U) /**< \brief (MLB) AHB Control Register */
-  #define REG_MLB_ACSR                   (0x400683D0U) /**< \brief (MLB) AHB Channel Status 0 Register */
-  #define REG_MLB_ACMR                   (0x400683D8U) /**< \brief (MLB) AHB Channel Mask 0 Register */
-#else
-  #define REG_MLB_MLBC0 (*(__IO uint32_t*)0x40068000U) /**< \brief (MLB) MediaLB Control 0 Register */
-  #define REG_MLB_MS0   (*(__IO uint32_t*)0x4006800CU) /**< \brief (MLB) MediaLB Channel Status 0 Register */
-  #define REG_MLB_MS1   (*(__IO uint32_t*)0x40068014U) /**< \brief (MLB) MediaLB Channel Status1 Register */
-  #define REG_MLB_MSS   (*(__IO uint32_t*)0x40068020U) /**< \brief (MLB) MediaLB System Status Register */
-  #define REG_MLB_MSD   (*(__I  uint32_t*)0x40068024U) /**< \brief (MLB) MediaLB System Data Register */
-  #define REG_MLB_MIEN  (*(__IO uint32_t*)0x4006802CU) /**< \brief (MLB) MediaLB Interrupt Enable Register */
-  #define REG_MLB_MLBC1 (*(__IO uint32_t*)0x4006803CU) /**< \brief (MLB) MediaLB Control 1 Register */
-  #define REG_MLB_HCTL  (*(__IO uint32_t*)0x40068080U) /**< \brief (MLB) HBI Control Register */
-  #define REG_MLB_HCMR  (*(__IO uint32_t*)0x40068088U) /**< \brief (MLB) HBI Channel Mask 0 Register */
-  #define REG_MLB_HCER  (*(__I  uint32_t*)0x40068090U) /**< \brief (MLB) HBI Channel Error 0 Register */
-  #define REG_MLB_HCBR  (*(__I  uint32_t*)0x40068098U) /**< \brief (MLB) HBI Channel Busy 0 Register */
-  #define REG_MLB_MDAT  (*(__IO uint32_t*)0x400680C0U) /**< \brief (MLB) MIF Data 0 Register */
-  #define REG_MLB_MDWE  (*(__IO uint32_t*)0x400680D0U) /**< \brief (MLB) MIF Data Write Enable 0 Register */
-  #define REG_MLB_MCTL  (*(__IO uint32_t*)0x400680E0U) /**< \brief (MLB) MIF Control Register */
-  #define REG_MLB_MADR  (*(__IO uint32_t*)0x400680E4U) /**< \brief (MLB) MIF Address Register */
-  #define REG_MLB_ACTL  (*(__IO uint32_t*)0x400683C0U) /**< \brief (MLB) AHB Control Register */
-  #define REG_MLB_ACSR  (*(__IO uint32_t*)0x400683D0U) /**< \brief (MLB) AHB Channel Status 0 Register */
-  #define REG_MLB_ACMR  (*(__IO uint32_t*)0x400683D8U) /**< \brief (MLB) AHB Channel Mask 0 Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_MLB_MLBC0    ( 0x40068000U )                      /**< \brief (MLB) MediaLB Control 0 Register */
+    #define REG_MLB_MS0      ( 0x4006800CU )                      /**< \brief (MLB) MediaLB Channel Status 0 Register */
+    #define REG_MLB_MS1      ( 0x40068014U )                      /**< \brief (MLB) MediaLB Channel Status1 Register */
+    #define REG_MLB_MSS      ( 0x40068020U )                      /**< \brief (MLB) MediaLB System Status Register */
+    #define REG_MLB_MSD      ( 0x40068024U )                      /**< \brief (MLB) MediaLB System Data Register */
+    #define REG_MLB_MIEN     ( 0x4006802CU )                      /**< \brief (MLB) MediaLB Interrupt Enable Register */
+    #define REG_MLB_MLBC1    ( 0x4006803CU )                      /**< \brief (MLB) MediaLB Control 1 Register */
+    #define REG_MLB_HCTL     ( 0x40068080U )                      /**< \brief (MLB) HBI Control Register */
+    #define REG_MLB_HCMR     ( 0x40068088U )                      /**< \brief (MLB) HBI Channel Mask 0 Register */
+    #define REG_MLB_HCER     ( 0x40068090U )                      /**< \brief (MLB) HBI Channel Error 0 Register */
+    #define REG_MLB_HCBR     ( 0x40068098U )                      /**< \brief (MLB) HBI Channel Busy 0 Register */
+    #define REG_MLB_MDAT     ( 0x400680C0U )                      /**< \brief (MLB) MIF Data 0 Register */
+    #define REG_MLB_MDWE     ( 0x400680D0U )                      /**< \brief (MLB) MIF Data Write Enable 0 Register */
+    #define REG_MLB_MCTL     ( 0x400680E0U )                      /**< \brief (MLB) MIF Control Register */
+    #define REG_MLB_MADR     ( 0x400680E4U )                      /**< \brief (MLB) MIF Address Register */
+    #define REG_MLB_ACTL     ( 0x400683C0U )                      /**< \brief (MLB) AHB Control Register */
+    #define REG_MLB_ACSR     ( 0x400683D0U )                      /**< \brief (MLB) AHB Channel Status 0 Register */
+    #define REG_MLB_ACMR     ( 0x400683D8U )                      /**< \brief (MLB) AHB Channel Mask 0 Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_MLB_MLBC0    ( *( __IO uint32_t * ) 0x40068000U ) /**< \brief (MLB) MediaLB Control 0 Register */
+    #define REG_MLB_MS0      ( *( __IO uint32_t * ) 0x4006800CU ) /**< \brief (MLB) MediaLB Channel Status 0 Register */
+    #define REG_MLB_MS1      ( *( __IO uint32_t * ) 0x40068014U ) /**< \brief (MLB) MediaLB Channel Status1 Register */
+    #define REG_MLB_MSS      ( *( __IO uint32_t * ) 0x40068020U ) /**< \brief (MLB) MediaLB System Status Register */
+    #define REG_MLB_MSD      ( *( __I uint32_t * ) 0x40068024U )  /**< \brief (MLB) MediaLB System Data Register */
+    #define REG_MLB_MIEN     ( *( __IO uint32_t * ) 0x4006802CU ) /**< \brief (MLB) MediaLB Interrupt Enable Register */
+    #define REG_MLB_MLBC1    ( *( __IO uint32_t * ) 0x4006803CU ) /**< \brief (MLB) MediaLB Control 1 Register */
+    #define REG_MLB_HCTL     ( *( __IO uint32_t * ) 0x40068080U ) /**< \brief (MLB) HBI Control Register */
+    #define REG_MLB_HCMR     ( *( __IO uint32_t * ) 0x40068088U ) /**< \brief (MLB) HBI Channel Mask 0 Register */
+    #define REG_MLB_HCER     ( *( __I uint32_t * ) 0x40068090U )  /**< \brief (MLB) HBI Channel Error 0 Register */
+    #define REG_MLB_HCBR     ( *( __I uint32_t * ) 0x40068098U )  /**< \brief (MLB) HBI Channel Busy 0 Register */
+    #define REG_MLB_MDAT     ( *( __IO uint32_t * ) 0x400680C0U ) /**< \brief (MLB) MIF Data 0 Register */
+    #define REG_MLB_MDWE     ( *( __IO uint32_t * ) 0x400680D0U ) /**< \brief (MLB) MIF Data Write Enable 0 Register */
+    #define REG_MLB_MCTL     ( *( __IO uint32_t * ) 0x400680E0U ) /**< \brief (MLB) MIF Control Register */
+    #define REG_MLB_MADR     ( *( __IO uint32_t * ) 0x400680E4U ) /**< \brief (MLB) MIF Address Register */
+    #define REG_MLB_ACTL     ( *( __IO uint32_t * ) 0x400683C0U ) /**< \brief (MLB) AHB Control Register */
+    #define REG_MLB_ACSR     ( *( __IO uint32_t * ) 0x400683D0U ) /**< \brief (MLB) AHB Channel Status 0 Register */
+    #define REG_MLB_ACMR     ( *( __IO uint32_t * ) 0x400683D8U ) /**< \brief (MLB) AHB Channel Mask 0 Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMV71_MLB_INSTANCE_ */

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,88 +27,89 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \dir
-/// !Purpose
-/// 
-/// Definitions for SPI peripheral usage.
-///
-/// !Usage
-///
-/// -# Enable the SPI pins required by the application (see pio.h).
-/// -# Configure the SPI using the SPI_Configure function. This enables the
-///    peripheral clock. The mode register is loaded with the given value.
-/// -# Configure all the necessary chip selects with SPI_ConfigureNPCS.
-/// -# Enable the SPI by calling SPI_Enable.
-/// -# Send/receive data using SPI_Write and SPI_Read. Note that SPI_Read
-///    must be called after SPI_Write to retrieve the last value read.
-/// -# Send/receive data using the PDC with the SPI_WriteBuffer and
-///    SPI_ReadBuffer functions.
-/// -# Disable the SPI by calling SPI_Disable.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \dir */
+/*/ !Purpose */
+/*/ */
+/*/ Definitions for SPI peripheral usage. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Enable the SPI pins required by the application (see pio.h). */
+/*/ -# Configure the SPI using the SPI_Configure function. This enables the */
+/*/    peripheral clock. The mode register is loaded with the given value. */
+/*/ -# Configure all the necessary chip selects with SPI_ConfigureNPCS. */
+/*/ -# Enable the SPI by calling SPI_Enable. */
+/*/ -# Send/receive data using SPI_Write and SPI_Read. Note that SPI_Read */
+/*/    must be called after SPI_Write to retrieve the last value read. */
+/*/ -# Send/receive data using the PDC with the SPI_WriteBuffer and */
+/*/    SPI_ReadBuffer functions. */
+/*/ -# Disable the SPI by calling SPI_Disable. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef SPI_H
 #define SPI_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <board.h>
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// \page "SPI configuration macros"
-/// This page lists several macros which should be used when configuring a SPI
-/// peripheral.
-/// 
-/// !Macros
-/// - SPI_PCS
-/// - SPI_SCBR
-/// - SPI_DLYBS
-/// - SPI_DLYBCT
+/*------------------------------------------------------------------------------ */
+/*/ \page "SPI configuration macros" */
+/*/ This page lists several macros which should be used when configuring a SPI */
+/*/ peripheral. */
+/*/ */
+/*/ !Macros */
+/*/ - SPI_PCS */
+/*/ - SPI_SCBR */
+/*/ - SPI_DLYBS */
+/*/ - SPI_DLYBCT */
 
-/// Calculate the PCS field value given the chip select NPCS value
-#define SPI_PCS(npcs)       ((~(1 << npcs) & 0xF) << 16)
+/*/ Calculate the PCS field value given the chip select NPCS value */
+#define SPI_PCS( npcs )    ( ( ~( 1 << npcs ) & 0xF ) << 16 )
 
-/// Calculates the value of the CSR SCBR field given the baudrate and MCK.
-#define SPI_SCBR(baudrate, masterClock) \
-            ((unsigned int) (masterClock / baudrate) << 8)
+/*/ Calculates the value of the CSR SCBR field given the baudrate and MCK. */
+#define SPI_SCBR( baudrate, masterClock ) \
+    ( ( unsigned int ) ( masterClock / baudrate ) << 8 )
 
-/// Calculates the value of the CSR DLYBS field given the desired delay (in ns)
-#define SPI_DLYBS(delay, masterClock) \
-            ((unsigned int) (((masterClock / 1000000) * delay) / 1000) << 16)
+/*/ Calculates the value of the CSR DLYBS field given the desired delay (in ns) */
+#define SPI_DLYBS( delay, masterClock ) \
+    ( ( unsigned int ) ( ( ( masterClock / 1000000 ) * delay ) / 1000 ) << 16 )
 
-/// Calculates the value of the CSR DLYBCT field given the desired delay (in ns)
-#define SPI_DLYBCT(delay, masterClock) \
-            ((unsigned int) (((masterClock / 1000000) * delay) / 32000) << 24)
-//------------------------------------------------------------------------------
+/*/ Calculates the value of the CSR DLYBCT field given the desired delay (in ns) */
+#define SPI_DLYBCT( delay, masterClock ) \
+    ( ( unsigned int ) ( ( ( masterClock / 1000000 ) * delay ) / 32000 ) << 24 )
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
-extern void SPI_Enable(AT91S_SPI *spi);
-extern void SPI_Disable(AT91S_SPI *spi);
-extern void SPI_Configure(AT91S_SPI *spi,
-                                 unsigned int id,
-                                 unsigned int configuration);
-extern void SPI_ConfigureNPCS(AT91S_SPI *spi,
-                                     unsigned int npcs,
-                                     unsigned int configuration);
-extern void SPI_Write(AT91S_SPI *spi, unsigned int npcs, unsigned short data);
-extern unsigned char SPI_WriteBuffer(AT91S_SPI *spi,
-                                            void *buffer,
-                                            unsigned int length);
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
+extern void SPI_Enable( AT91S_SPI * spi );
+extern void SPI_Disable( AT91S_SPI * spi );
+extern void SPI_Configure( AT91S_SPI * spi,
+                           unsigned int id,
+                           unsigned int configuration );
+extern void SPI_ConfigureNPCS( AT91S_SPI * spi,
+                               unsigned int npcs,
+                               unsigned int configuration );
+extern void SPI_Write( AT91S_SPI * spi,
+                       unsigned int npcs,
+                       unsigned short data );
+extern unsigned char SPI_WriteBuffer( AT91S_SPI * spi,
+                                      void * buffer,
+                                      unsigned int length );
 
-extern unsigned char SPI_IsFinished(AT91S_SPI *pSpi);
+extern unsigned char SPI_IsFinished( AT91S_SPI * pSpi );
 
-extern unsigned short SPI_Read(AT91S_SPI *spi);
-extern unsigned char SPI_ReadBuffer(AT91S_SPI *spi,
-                                           void *buffer,
-                                           unsigned int length);
+extern unsigned short SPI_Read( AT91S_SPI * spi );
+extern unsigned char SPI_ReadBuffer( AT91S_SPI * spi,
+                                     void * buffer,
+                                     unsigned int length );
 
 #endif //#ifndef SPI_H
-

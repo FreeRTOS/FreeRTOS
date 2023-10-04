@@ -31,18 +31,18 @@
 #define _SAMA5_FUSE_INSTANCE_
 
 /* ========== Register definition for FUSE peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_FUSE_CR             (0xFFFFE400U) /**< \brief (FUSE) Fuse Control Register */
-#define REG_FUSE_MR             (0xFFFFE404U) /**< \brief (FUSE) Fuse Mode Register */
-#define REG_FUSE_IR             (0xFFFFE408U) /**< \brief (FUSE) Fuse Index Register */
-#define REG_FUSE_DR             (0xFFFFE40CU) /**< \brief (FUSE) Fuse Data Register */
-#define REG_FUSE_SR             (0xFFFFE410U) /**< \brief (FUSE) Fuse Status Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_FUSE_CR    ( 0xFFFFE400U )              /**< \brief (FUSE) Fuse Control Register */
+    #define REG_FUSE_MR    ( 0xFFFFE404U )              /**< \brief (FUSE) Fuse Mode Register */
+    #define REG_FUSE_IR    ( 0xFFFFE408U )              /**< \brief (FUSE) Fuse Index Register */
+    #define REG_FUSE_DR    ( 0xFFFFE40CU )              /**< \brief (FUSE) Fuse Data Register */
+    #define REG_FUSE_SR    ( 0xFFFFE410U )              /**< \brief (FUSE) Fuse Status Register */
 #else
-#define REG_FUSE_CR    (*(WoReg*)0xFFFFE400U) /**< \brief (FUSE) Fuse Control Register */
-#define REG_FUSE_MR    (*(WoReg*)0xFFFFE404U) /**< \brief (FUSE) Fuse Mode Register */
-#define REG_FUSE_IR    (*(RwReg*)0xFFFFE408U) /**< \brief (FUSE) Fuse Index Register */
-#define REG_FUSE_DR    (*(RwReg*)0xFFFFE40CU) /**< \brief (FUSE) Fuse Data Register */
-#define REG_FUSE_SR    (*(RoReg*)0xFFFFE410U) /**< \brief (FUSE) Fuse Status Register */
+    #define REG_FUSE_CR    ( *( WoReg * ) 0xFFFFE400U ) /**< \brief (FUSE) Fuse Control Register */
+    #define REG_FUSE_MR    ( *( WoReg * ) 0xFFFFE404U ) /**< \brief (FUSE) Fuse Mode Register */
+    #define REG_FUSE_IR    ( *( RwReg * ) 0xFFFFE408U ) /**< \brief (FUSE) Fuse Index Register */
+    #define REG_FUSE_DR    ( *( RwReg * ) 0xFFFFE40CU ) /**< \brief (FUSE) Fuse Data Register */
+    #define REG_FUSE_SR    ( *( RoReg * ) 0xFFFFE410U ) /**< \brief (FUSE) Fuse Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_FUSE_INSTANCE_ */

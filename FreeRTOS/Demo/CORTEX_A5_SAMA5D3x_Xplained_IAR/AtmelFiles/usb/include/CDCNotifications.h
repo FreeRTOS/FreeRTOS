@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -33,6 +33,7 @@
 
 #ifndef _CDCNOTIFICATIONS_H_
 #define _CDCNOTIFICATIONS_H_
+
 /** \addtogroup usb_cdc
  *@{
  */
@@ -61,44 +62,45 @@
  */
 
 /** Indicates the receiver carrier signal is present */
-#define CDCSerialState_RXDRIVER         (1 << 0)
+#define CDCSerialState_RXDRIVER      ( 1 << 0 )
 /** Indicates the transmission carrier signal is present */
-#define CDCSerialState_TXCARRIER        (1 << 1)
+#define CDCSerialState_TXCARRIER     ( 1 << 1 )
 /** Indicates a break has been detected */
-#define CDCSerialState_BREAK            (1 << 2)
+#define CDCSerialState_BREAK         ( 1 << 2 )
 /** Indicates a ring signal has been detected */
-#define CDCSerialState_RINGSIGNAL       (1 << 3)
+#define CDCSerialState_RINGSIGNAL    ( 1 << 3 )
 /** Indicates a framing error has occured */
-#define CDCSerialState_FRAMING          (1 << 4)
+#define CDCSerialState_FRAMING       ( 1 << 4 )
 /** Indicates a parity error has occured */
-#define CDCSerialState_PARITY           (1 << 5)
+#define CDCSerialState_PARITY        ( 1 << 5 )
 /** Indicates a data overrun error has occured */
-#define CDCSerialState_OVERRUN          (1 << 6)
+#define CDCSerialState_OVERRUN       ( 1 << 6 )
 /**      @}*/
 
 /*----------------------------------------------------------------------------
  *         Types
  *----------------------------------------------------------------------------*/
 #pragma pack(1)
-#if defined   ( __CC_ARM   ) /* Keil ¦ÌVision 4 */
-#elif defined ( __ICCARM__ ) /* IAR Ewarm */
-#define __attribute__(...)
-#define __packed__  packed
-#elif defined (  __GNUC__  ) /* GCC CS3 */
-#define __packed__  aligned(1)
+#if defined( __CC_ARM )     /* Keil ¦ÌVision 4 */
+#elif defined( __ICCARM__ ) /* IAR Ewarm */
+    #define __attribute__( ... )
+    #define __packed__    packed
+#elif defined( __GNUC__ ) /* GCC CS3 */
+    #define __packed__    aligned( 1 )
 #endif
 /** USB CDC SerialState struct (bitmap) */
-typedef struct _CDCSerialState {
-    uint16_t bRxCarrier:1,  /**< State of receive carrier detection (V2.4 signal
-                                 109 and RS-232 signal DCD) */
-             bTxCarrier:1,  /**< State of transmission carrier */
-             bBreak:1,      /**< State of break detection */
-             bRingSignal:1, /**< State of ring signal */
-             bFraming:1,    /**< Framing error */
-             bParity:1,     /**< Parity error */
-             bOverRun:1,    /**< Received data discarded due to overrun error */
-             reserved:9;    /**< Reserved */
-} __attribute__ ((__packed__)) CDCSerialState;
+typedef struct _CDCSerialState
+{
+    uint16_t bRxCarrier : 1,  /**< State of receive carrier detection (V2.4 signal
+                               *   109 and RS-232 signal DCD) */
+             bTxCarrier : 1,  /**< State of transmission carrier */
+             bBreak : 1,      /**< State of break detection */
+             bRingSignal : 1, /**< State of ring signal */
+             bFraming : 1,    /**< Framing error */
+             bParity : 1,     /**< Parity error */
+             bOverRun : 1,    /**< Received data discarded due to overrun error */
+             reserved : 9;    /**< Reserved */
+} __attribute__( ( __packed__ ) ) CDCSerialState;
 
 #pragma pack()
 
@@ -108,4 +110,3 @@ typedef struct _CDCSerialState {
 
 /**@}*/
 #endif /* #ifndef _CDCNOTIFICATIONS_H_ */
-

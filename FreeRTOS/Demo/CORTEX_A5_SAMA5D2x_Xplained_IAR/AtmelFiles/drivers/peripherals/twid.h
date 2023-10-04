@@ -42,54 +42,57 @@
  *        Types
  *----------------------------------------------------------------------------*/
 
-#define TWID_SUCCESS         (0)
-#define TWID_INVALID_ID      (1)
-#define TWID_INVALID_BITRATE (2)
-#define TWID_ERROR_LOCK      (3)
-#define TWID_ERROR_DUPLEX    (4)
-#define TWID_ERROR_ACK       (5)
-#define TWID_ERROR_TIMEOUT   (6)
-#define TWID_ERROR_TRANSFER  (7)
+#define TWID_SUCCESS            ( 0 )
+#define TWID_INVALID_ID         ( 1 )
+#define TWID_INVALID_BITRATE    ( 2 )
+#define TWID_ERROR_LOCK         ( 3 )
+#define TWID_ERROR_DUPLEX       ( 4 )
+#define TWID_ERROR_ACK          ( 5 )
+#define TWID_ERROR_TIMEOUT      ( 6 )
+#define TWID_ERROR_TRANSFER     ( 7 )
 
 enum _twid_trans_mode
 {
-	TWID_MODE_POLLING,
-	TWID_MODE_FIFO,
-	TWID_MODE_DMA
+    TWID_MODE_POLLING,
+    TWID_MODE_FIFO,
+    TWID_MODE_DMA
 };
 
 struct _twi_desc;
 
-typedef void (*twid_callback_t)(struct _twi_desc* spid, void* args);
+typedef void (* twid_callback_t)( struct _twi_desc * spid,
+                                  void * args );
 
 struct _twi_desc
 {
-	Twi*  addr;
-	uint32_t freq;
-	uint32_t slave_addr;
-	uint32_t iaddr;
-	uint32_t isize;
-	uint8_t transfert_mode;
-	/* implicit internal padding is mandatory here */
-	mutex_t mutex;
-	uint32_t region_start;
-	uint32_t region_end;
-	twid_callback_t callback;
-	void*   cb_args;
+    Twi * addr;
+    uint32_t freq;
+    uint32_t slave_addr;
+    uint32_t iaddr;
+    uint32_t isize;
+    uint8_t transfert_mode;
+    /* implicit internal padding is mandatory here */
+    mutex_t mutex;
+    uint32_t region_start;
+    uint32_t region_end;
+    twid_callback_t callback;
+    void * cb_args;
 };
 
 /*------------------------------------------------------------------------------
  *        Functions
  *----------------------------------------------------------------------------*/
 
-extern void twid_configure(struct _twi_desc* desc);
-extern uint32_t twid_transfert(struct _twi_desc* desc, struct _buffer* rx,
-			  struct _buffer* tx, twid_callback_t cb,
-			  void* user_args);
-extern void twid_finish_transfert_callback(struct _twi_desc* desc,
-				      void* user_args);
-extern void twid_finish_transfert(struct _twi_desc* desc);
-extern uint32_t twid_is_busy(const struct _twi_desc* desc);
-extern void twid_wait_transfert(const struct _twi_desc* desc);
+extern void twid_configure( struct _twi_desc * desc );
+extern uint32_t twid_transfert( struct _twi_desc * desc,
+                                struct _buffer * rx,
+                                struct _buffer * tx,
+                                twid_callback_t cb,
+                                void * user_args );
+extern void twid_finish_transfert_callback( struct _twi_desc * desc,
+                                            void * user_args );
+extern void twid_finish_transfert( struct _twi_desc * desc );
+extern uint32_t twid_is_busy( const struct _twi_desc * desc );
+extern void twid_wait_transfert( const struct _twi_desc * desc );
 
 #endif /* TWID_HEADER__ */

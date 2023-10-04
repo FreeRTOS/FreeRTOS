@@ -51,32 +51,37 @@
  *  \param flexcom  Pointer to FLEXCOM peripheral to configure.
  *  \param protocol  Protocol to use.
  */
-void flexcom_select(Flexcom * flexcom, uint32_t protocol)
+void flexcom_select( Flexcom * flexcom,
+                     uint32_t protocol )
 {
-	assert(flexcom);
-	uint32_t current_protocol = flexcom->FLEX_MR;
+    assert( flexcom );
+    uint32_t current_protocol = flexcom->FLEX_MR;
 
-	usart_set_receiver_enabled(&flexcom->usart, 0u);
+    usart_set_receiver_enabled( &flexcom->usart, 0u );
 
-	/* Shutdown previous protocol */
-	switch (current_protocol) {
-	case FLEX_MR_OPMODE_USART:
-		usart_set_receiver_enabled(&flexcom->usart, 0u);
-		usart_set_transmitter_enabled(&flexcom->usart, 0u);
-		break;
-	case FLEX_MR_OPMODE_SPI:
-		spi_disable(&flexcom->spi);
-		break;
-	case FLEX_MR_OPMODE_TWI:
-		twi_stop(&flexcom->twi);
-	default:
-		break;
-	}
+    /* Shutdown previous protocol */
+    switch( current_protocol )
+    {
+        case FLEX_MR_OPMODE_USART:
+            usart_set_receiver_enabled( &flexcom->usart, 0u );
+            usart_set_transmitter_enabled( &flexcom->usart, 0u );
+            break;
 
-	assert(protocol & FLEX_MR_OPMODE_NO_COM ||
-	       protocol & FLEX_MR_OPMODE_USART ||
-	       FLEX_MR_OPMODE_SPI || FLEX_MR_OPMODE_TWI);
+        case FLEX_MR_OPMODE_SPI:
+            spi_disable( &flexcom->spi );
+            break;
 
-	/* Activate the new mode () */
-	flexcom->FLEX_MR = protocol;
+        case FLEX_MR_OPMODE_TWI:
+            twi_stop( &flexcom->twi );
+
+        default:
+            break;
+    }
+
+    assert( protocol & FLEX_MR_OPMODE_NO_COM ||
+            protocol & FLEX_MR_OPMODE_USART ||
+            FLEX_MR_OPMODE_SPI || FLEX_MR_OPMODE_TWI );
+
+    /* Activate the new mode () */
+    flexcom->FLEX_MR = protocol;
 }

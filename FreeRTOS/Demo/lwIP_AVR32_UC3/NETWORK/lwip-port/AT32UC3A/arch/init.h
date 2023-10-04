@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief lwIP abstraction layer for AVR32 UC3.
@@ -43,13 +44,9 @@
 #ifndef __ARCH_INIT_H__
 #define __ARCH_INIT_H__
 
-#define TCPIP_INIT_DONE(arg)  tcpip_init_done(arg)
+#define TCPIP_INIT_DONE( arg )    tcpip_init_done( arg )
 
-void tcpip_init_done(void *);
-int wait_for_tcpip_init(void);
+void tcpip_init_done( void * );
+int wait_for_tcpip_init( void );
 
 #endif /* __ARCH_INIT_H__ */
-
-
-
-

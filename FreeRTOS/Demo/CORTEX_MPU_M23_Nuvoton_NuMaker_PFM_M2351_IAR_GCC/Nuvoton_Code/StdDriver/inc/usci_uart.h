@@ -5,65 +5,65 @@
  *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ *****************************************************************************/
 #ifndef __USCI_UART_H__
-#define __USCI_UART_H__
+    #define __USCI_UART_H__
 
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif
 
 
 /** @addtogroup Standard_Driver Standard Driver
-  @{
-*/
+ * @{
+ */
 
 /** @addtogroup USCI_UART_Driver USCI_UART Driver
-  @{
-*/
+ * @{
+ */
 
 /** @addtogroup USCI_UART_EXPORTED_CONSTANTS USCI_UART Exported Constants
-  @{
-*/
+ * @{
+ */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* UUART_LINECTL constants definitions                                                                     */
 /*---------------------------------------------------------------------------------------------------------*/
-#define UUART_WORD_LEN_6     (6UL << UUART_LINECTL_DWIDTH_Pos) /*!< UUART_LINECTL setting to set UART word length to 6 bits */
-#define UUART_WORD_LEN_7     (7UL << UUART_LINECTL_DWIDTH_Pos) /*!< UUART_LINECTL setting to set UART word length to 7 bits */
-#define UUART_WORD_LEN_8     (8UL << UUART_LINECTL_DWIDTH_Pos) /*!< UUART_LINECTL setting to set UART word length to 8 bits */
-#define UUART_WORD_LEN_9     (9UL << UUART_LINECTL_DWIDTH_Pos) /*!< UUART_LINECTL setting to set UART word length to 9 bits */
+    #define UUART_WORD_LEN_6    ( 6UL << UUART_LINECTL_DWIDTH_Pos ) /*!< UUART_LINECTL setting to set UART word length to 6 bits */
+    #define UUART_WORD_LEN_7    ( 7UL << UUART_LINECTL_DWIDTH_Pos ) /*!< UUART_LINECTL setting to set UART word length to 7 bits */
+    #define UUART_WORD_LEN_8    ( 8UL << UUART_LINECTL_DWIDTH_Pos ) /*!< UUART_LINECTL setting to set UART word length to 8 bits */
+    #define UUART_WORD_LEN_9    ( 9UL << UUART_LINECTL_DWIDTH_Pos ) /*!< UUART_LINECTL setting to set UART word length to 9 bits */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* UUART_PROTCTL constants definitions                                                                     */
 /*---------------------------------------------------------------------------------------------------------*/
-#define UUART_PARITY_NONE    (0x0UL << UUART_PROTCTL_PARITYEN_Pos)    /*!< UUART_PROTCTL setting to set UART as no parity */
-#define UUART_PARITY_ODD     (0x1UL << UUART_PROTCTL_PARITYEN_Pos)    /*!< UUART_PROTCTL setting to set UART as odd parity */
-#define UUART_PARITY_EVEN    (0x3UL << UUART_PROTCTL_PARITYEN_Pos)    /*!< UUART_PROTCTL setting to set UART as even parity */
+    #define UUART_PARITY_NONE    ( 0x0UL << UUART_PROTCTL_PARITYEN_Pos ) /*!< UUART_PROTCTL setting to set UART as no parity */
+    #define UUART_PARITY_ODD     ( 0x1UL << UUART_PROTCTL_PARITYEN_Pos ) /*!< UUART_PROTCTL setting to set UART as odd parity */
+    #define UUART_PARITY_EVEN    ( 0x3UL << UUART_PROTCTL_PARITYEN_Pos ) /*!< UUART_PROTCTL setting to set UART as even parity */
 
-#define UUART_STOP_BIT_1     (0x0UL) /*!< UUART_PROTCTL setting for one stop bit */
-#define UUART_STOP_BIT_2     (0x1UL) /*!< UUART_PROTCTL setting for two stop bit */
+    #define UUART_STOP_BIT_1     ( 0x0UL )                               /*!< UUART_PROTCTL setting for one stop bit */
+    #define UUART_STOP_BIT_2     ( 0x1UL )                               /*!< UUART_PROTCTL setting for two stop bit */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* USCI UART interrupt mask definitions                                                                            */
 /*---------------------------------------------------------------------------------------------------------*/
-#define UUART_ABR_INT_MASK      (0x002UL) /*!< Auto-baud rate interrupt mask */
-#define UUART_RLS_INT_MASK      (0x004UL) /*!< Receive line status interrupt mask */
-#define UUART_BUF_RXOV_INT_MASK (0x008UL) /*!< Buffer RX overrun interrupt mask */
-#define UUART_TXST_INT_MASK     (0x010UL) /*!< TX start interrupt mask */
-#define UUART_TXEND_INT_MASK    (0x020UL) /*!< Tx end interrupt mask */
-#define UUART_RXST_INT_MASK     (0x040UL) /*!< RX start interrupt mask */
-#define UUART_RXEND_INT_MASK    (0x080UL) /*!< RX end interrupt mask */
+    #define UUART_ABR_INT_MASK         ( 0x002UL ) /*!< Auto-baud rate interrupt mask */
+    #define UUART_RLS_INT_MASK         ( 0x004UL ) /*!< Receive line status interrupt mask */
+    #define UUART_BUF_RXOV_INT_MASK    ( 0x008UL ) /*!< Buffer RX overrun interrupt mask */
+    #define UUART_TXST_INT_MASK        ( 0x010UL ) /*!< TX start interrupt mask */
+    #define UUART_TXEND_INT_MASK       ( 0x020UL ) /*!< Tx end interrupt mask */
+    #define UUART_RXST_INT_MASK        ( 0x040UL ) /*!< RX start interrupt mask */
+    #define UUART_RXEND_INT_MASK       ( 0x080UL ) /*!< RX end interrupt mask */
 
 
 /*@}*/ /* end of group USCI_UART_EXPORTED_CONSTANTS */
 
 
 /** @addtogroup USCI_UART_EXPORTED_FUNCTIONS USCI_UART Exported Functions
-  @{
-*/
+ * @{
+ */
 
 
 /**
@@ -76,7 +76,7 @@ extern "C"
  *
  *    @details      This macro write Data to Tx data register.
  */
-#define UUART_WRITE(uuart, u8Data)    ((uuart)->TXDAT = (u8Data))
+    #define UUART_WRITE( uuart, u8Data )    ( ( uuart )->TXDAT = ( u8Data ) )
 
 
 /**
@@ -88,7 +88,7 @@ extern "C"
  *
  *    @details      This macro read Rx data register.
  */
-#define UUART_READ(uuart)    ((uuart)->RXDAT)
+    #define UUART_READ( uuart )    ( ( uuart )->RXDAT )
 
 
 /**
@@ -101,7 +101,7 @@ extern "C"
  *
  *    @details      This macro get Transmitter buffer empty register value.
  */
-#define UUART_GET_TX_EMPTY(uuart)    ((uuart)->BUFSTS & UUART_BUFSTS_TXEMPTY_Msk)
+    #define UUART_GET_TX_EMPTY( uuart )    ( ( uuart )->BUFSTS & UUART_BUFSTS_TXEMPTY_Msk )
 
 
 /**
@@ -114,7 +114,7 @@ extern "C"
  *
  *    @details      This macro get Receiver buffer empty register value.
  */
-#define UUART_GET_RX_EMPTY(uuart)    ((uuart)->BUFSTS & UUART_BUFSTS_RXEMPTY_Msk)
+    #define UUART_GET_RX_EMPTY( uuart )    ( ( uuart )->BUFSTS & UUART_BUFSTS_RXEMPTY_Msk )
 
 
 /**
@@ -128,7 +128,7 @@ extern "C"
  *    @details      This macro return Transmitter Empty Flag register bit value. \n
  *                  It indicates if specified usci_uart port transmission is over nor not.
  */
-#define UUART_IS_TX_EMPTY(uuart)    (((uuart)->BUFSTS & UUART_BUFSTS_TXEMPTY_Msk) >> UUART_BUFSTS_TXEMPTY_Pos)
+    #define UUART_IS_TX_EMPTY( uuart )    ( ( ( uuart )->BUFSTS & UUART_BUFSTS_TXEMPTY_Msk ) >> UUART_BUFSTS_TXEMPTY_Pos )
 
 
 /**
@@ -142,7 +142,7 @@ extern "C"
  *    @details      This macro return Receive Empty Flag register bit value. \n
  *                  It indicates if specified usci_uart port receiver is empty nor not.
  */
-#define UUART_IS_RX_EMPTY(uuart)    (((uuart)->BUFSTS & UUART_BUFSTS_RXEMPTY_Msk) >> UUART_BUFSTS_RXEMPTY_Pos)
+    #define UUART_IS_RX_EMPTY( uuart )    ( ( ( uuart )->BUFSTS & UUART_BUFSTS_RXEMPTY_Msk ) >> UUART_BUFSTS_RXEMPTY_Pos )
 
 
 /**
@@ -154,7 +154,7 @@ extern "C"
  *
  *    @details      This macro wait specified usci_uart port transmission is over.
  */
-#define UUART_WAIT_TX_EMPTY(uuart)    while(!((((uuart)->BUFSTS) & UUART_BUFSTS_TXEMPTY_Msk) >> UUART_BUFSTS_TXEMPTY_Pos))
+    #define UUART_WAIT_TX_EMPTY( uuart )    while( !( ( ( ( uuart )->BUFSTS ) & UUART_BUFSTS_TXEMPTY_Msk ) >> UUART_BUFSTS_TXEMPTY_Pos ) )
 
 
 /**
@@ -167,7 +167,7 @@ extern "C"
  *
  *    @details      This macro check TX buffer is full or not.
  */
-#define UUART_IS_TX_FULL(uuart)    (((uuart)->BUFSTS & UUART_BUFSTS_TXFULL_Msk)>>UUART_BUFSTS_TXFULL_Pos)
+    #define UUART_IS_TX_FULL( uuart )    ( ( ( uuart )->BUFSTS & UUART_BUFSTS_TXFULL_Msk ) >> UUART_BUFSTS_TXFULL_Pos )
 
 
 /**
@@ -180,7 +180,7 @@ extern "C"
  *
  *    @details      This macro check RX buffer is full or not.
  */
-#define UUART_IS_RX_FULL(uuart)    (((uuart)->BUFSTS & UUART_BUFSTS_RXFULL_Msk)>>UUART_BUFSTS_RXFULL_Pos)
+    #define UUART_IS_RX_FULL( uuart )    ( ( ( uuart )->BUFSTS & UUART_BUFSTS_RXFULL_Msk ) >> UUART_BUFSTS_RXFULL_Pos )
 
 
 /**
@@ -193,7 +193,7 @@ extern "C"
  *
  *    @details      This macro get Tx full register value.
  */
-#define UUART_GET_TX_FULL(uuart)    ((uuart)->BUFSTS & UUART_BUFSTS_TXFULL_Msk)
+    #define UUART_GET_TX_FULL( uuart )    ( ( uuart )->BUFSTS & UUART_BUFSTS_TXFULL_Msk )
 
 
 /**
@@ -206,7 +206,7 @@ extern "C"
  *
  *    @details      This macro get Rx full register value.
  */
-#define UUART_GET_RX_FULL(uuart)    ((uuart)->BUFSTS & UUART_BUFSTS_RXFULL_Msk)
+    #define UUART_GET_RX_FULL( uuart )    ( ( uuart )->BUFSTS & UUART_BUFSTS_RXFULL_Msk )
 
 
 /**
@@ -221,7 +221,7 @@ extern "C"
  *
  *    @details      This macro enable specified USCI_UART protocol interrupt.
  */
-#define UUART_ENABLE_PROT_INT(uuart, u32IntSel)    ((uuart)->PROTIEN |= (u32IntSel))
+    #define UUART_ENABLE_PROT_INT( uuart, u32IntSel )    ( ( uuart )->PROTIEN |= ( u32IntSel ) )
 
 
 /**
@@ -236,7 +236,7 @@ extern "C"
  *
  *    @details      This macro disable specified USCI_UART protocol interrupt.
  */
-#define UUART_DISABLE_PROT_INT(uuart, u32IntSel)    ((uuart)->PROTIEN &= ~(u32IntSel))
+    #define UUART_DISABLE_PROT_INT( uuart, u32IntSel )    ( ( uuart )->PROTIEN &= ~( u32IntSel ) )
 
 
 /**
@@ -250,7 +250,7 @@ extern "C"
  *
  *    @details      This macro enable specified USCI_UART buffer interrupt.
  */
-#define UUART_ENABLE_BUF_INT(uuart, u32IntSel)    ((uuart)->BUFCTL |= (u32IntSel))
+    #define UUART_ENABLE_BUF_INT( uuart, u32IntSel )    ( ( uuart )->BUFCTL |= ( u32IntSel ) )
 
 
 /**
@@ -264,7 +264,7 @@ extern "C"
  *
  *    @details      This macro disable specified USCI_UART buffer interrupt.
  */
-#define UUART_DISABLE_BUF_INT(uuart, u32IntSel)    ((uuart)->BUFCTL &= ~ (u32IntSel))
+    #define UUART_DISABLE_BUF_INT( uuart, u32IntSel )    ( ( uuart )->BUFCTL &= ~( u32IntSel ) )
 
 
 /**
@@ -281,7 +281,7 @@ extern "C"
  *
  *    @details      This macro enable specified USCI_UART transfer interrupt.
  */
-#define UUART_ENABLE_TRANS_INT(uuart, u32IntSel)    ((uuart)->INTEN |= (u32IntSel))
+    #define UUART_ENABLE_TRANS_INT( uuart, u32IntSel )    ( ( uuart )->INTEN |= ( u32IntSel ) )
 
 
 /**
@@ -298,7 +298,7 @@ extern "C"
  *
  *    @details      This macro disable specified USCI_UART transfer interrupt.
  */
-#define UUART_DISABLE_TRANS_INT(uuart, u32IntSel)    ((uuart)->INTEN &= ~(u32IntSel))
+    #define UUART_DISABLE_TRANS_INT( uuart, u32IntSel )    ( ( uuart )->INTEN &= ~( u32IntSel ) )
 
 
 /**
@@ -310,7 +310,7 @@ extern "C"
  *
  *    @details      This macro get protocol status register value.
  */
-#define UUART_GET_PROT_STATUS(uuart)    ((uuart)->PROTSTS)
+    #define UUART_GET_PROT_STATUS( uuart )    ( ( uuart )->PROTSTS )
 
 
 /**
@@ -332,7 +332,7 @@ extern "C"
  *
  *    @details      This macro clear specified protocol interrupt flag.
  */
-#define UUART_CLR_PROT_INT_FLAG(uuart,u32IntTypeFlag)    ((uuart)->PROTSTS = (u32IntTypeFlag))
+    #define UUART_CLR_PROT_INT_FLAG( uuart, u32IntTypeFlag )    ( ( uuart )->PROTSTS = ( u32IntTypeFlag ) )
 
 
 /**
@@ -344,7 +344,7 @@ extern "C"
  *
  *    @details      This macro get buffer status register value.
  */
-#define UUART_GET_BUF_STATUS(uuart)    ((uuart)->BUFSTS)
+    #define UUART_GET_BUF_STATUS( uuart )    ( ( uuart )->BUFSTS )
 
 
 /**
@@ -358,7 +358,7 @@ extern "C"
  *
  *    @details      This macro clear specified buffer interrupt flag.
  */
-#define UUART_CLR_BUF_INT_FLAG(uuart,u32IntTypeFlag)    ((uuart)->BUFSTS = (u32IntTypeFlag))
+    #define UUART_CLR_BUF_INT_FLAG( uuart, u32IntTypeFlag )    ( ( uuart )->BUFSTS = ( u32IntTypeFlag ) )
 
 
 /**
@@ -371,7 +371,7 @@ extern "C"
  *
  *    @details      This macro get wakeup flag.
  */
-#define UUART_GET_WAKEUP_FLAG(uuart)    ((uuart)->WKSTS & UUART_WKSTS_WKF_Msk ? 1: 0 )
+    #define UUART_GET_WAKEUP_FLAG( uuart )    ( ( uuart )->WKSTS & UUART_WKSTS_WKF_Msk ? 1 : 0 )
 
 
 /**
@@ -383,22 +383,36 @@ extern "C"
  *
  *    @details      This macro clear wakeup flag.
  */
-#define UUART_CLR_WAKEUP_FLAG(uuart)    ((uuart)->WKSTS = UUART_WKSTS_WKF_Msk)
+    #define UUART_CLR_WAKEUP_FLAG( uuart )    ( ( uuart )->WKSTS = UUART_WKSTS_WKF_Msk )
 
 
-void UUART_ClearIntFlag(UUART_T* uuart, uint32_t u32Mask);
-uint32_t UUART_GetIntFlag(UUART_T* uuart, uint32_t u32Mask);
-void UUART_Close(UUART_T* uuart);
-void UUART_DisableInt(UUART_T*  uuart, uint32_t u32Mask);
-void UUART_EnableInt(UUART_T*  uuart, uint32_t u32Mask);
-uint32_t UUART_Open(UUART_T* uuart, uint32_t u32baudrate);
-uint32_t UUART_Read(UUART_T* uuart, uint8_t pu8RxBuf[], uint32_t u32ReadBytes);
-uint32_t UUART_SetLine_Config(UUART_T* uuart, uint32_t u32baudrate, uint32_t u32data_width, uint32_t u32parity, uint32_t u32stop_bits);
-uint32_t UUART_Write(UUART_T* uuart, uint8_t pu8TxBuf[], uint32_t u32WriteBytes);
-void UUART_EnableWakeup(UUART_T* uuart, uint32_t u32WakeupMode);
-void UUART_DisableWakeup(UUART_T* uuart);
-void UUART_EnableFlowCtrl(UUART_T* uuart);
-void UUART_DisableFlowCtrl(UUART_T* uuart);
+    void UUART_ClearIntFlag( UUART_T * uuart,
+                             uint32_t u32Mask );
+    uint32_t UUART_GetIntFlag( UUART_T * uuart,
+                               uint32_t u32Mask );
+    void UUART_Close( UUART_T * uuart );
+    void UUART_DisableInt( UUART_T * uuart,
+                           uint32_t u32Mask );
+    void UUART_EnableInt( UUART_T * uuart,
+                          uint32_t u32Mask );
+    uint32_t UUART_Open( UUART_T * uuart,
+                         uint32_t u32baudrate );
+    uint32_t UUART_Read( UUART_T * uuart,
+                         uint8_t pu8RxBuf[],
+                         uint32_t u32ReadBytes );
+    uint32_t UUART_SetLine_Config( UUART_T * uuart,
+                                   uint32_t u32baudrate,
+                                   uint32_t u32data_width,
+                                   uint32_t u32parity,
+                                   uint32_t u32stop_bits );
+    uint32_t UUART_Write( UUART_T * uuart,
+                          uint8_t pu8TxBuf[],
+                          uint32_t u32WriteBytes );
+    void UUART_EnableWakeup( UUART_T * uuart,
+                             uint32_t u32WakeupMode );
+    void UUART_DisableWakeup( UUART_T * uuart );
+    void UUART_EnableFlowCtrl( UUART_T * uuart );
+    void UUART_DisableFlowCtrl( UUART_T * uuart );
 
 
 /*@}*/ /* end of group USCI_UART_EXPORTED_FUNCTIONS */
@@ -407,9 +421,9 @@ void UUART_DisableFlowCtrl(UUART_T* uuart);
 
 /*@}*/ /* end of group Standard_Driver */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __USCI_UART_H__ */
 

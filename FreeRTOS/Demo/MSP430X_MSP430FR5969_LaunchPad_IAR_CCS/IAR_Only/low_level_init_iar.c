@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
-
+ *
  * This is a template for early application low-level initialization.
  *
  * The following license agreement applies to linker command files,
@@ -51,17 +51,17 @@
 #include <intrinsics.h>
 #include "msp430.h"
 
-int __low_level_init(void)
+int __low_level_init( void )
 {
-  /* Insert your low-level initializations here */
-  WDTCTL = WDTPW | WDTHOLD;
-  
-  /*
-   * Return value:
-   *
-   *  1 - Perform data segment initialization.
-   *  0 - Skip data segment initialization.
-   */
+    /* Insert your low-level initializations here */
+    WDTCTL = WDTPW | WDTHOLD;
 
-  return 1;
+    /*
+     * Return value:
+     *
+     *  1 - Perform data segment initialization.
+     *  0 - Skip data segment initialization.
+     */
+
+    return 1;
 }

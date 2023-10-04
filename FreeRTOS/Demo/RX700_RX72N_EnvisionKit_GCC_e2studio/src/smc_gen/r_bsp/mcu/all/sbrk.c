@@ -16,10 +16,12 @@
 *
 * Copyright (C) 2013 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : sbrk.c
 * Description  : Configures the MCU heap memory.  The size of the heap is defined by the macro HEAPSIZE below.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 28.02.2019 3.00     Merged processing of all devices.
@@ -29,7 +31,7 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 #include "sbrk.h"
 
@@ -37,84 +39,84 @@ Includes   <System Includes> , "Project Includes"
 #if BSP_CFG_HEAP_BYTES > 0
 
 /* When using the user startup program, disable the following code. */
-#if BSP_CFG_STARTUP_DISABLE == 0
+    #if BSP_CFG_STARTUP_DISABLE == 0
 
-#if defined(__CCRX__) || defined(__GNUC__)
+        #if defined( __CCRX__ ) || defined( __GNUC__ )
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Exported global variables (to be accessed by other files)
+*  Exported global variables (to be accessed by other files)
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Private global variables and functions
+*  Private global variables and functions
 ***********************************************************************************************************************/
 /* Declare memory heap area */
-static u_heap_type_t s_heap_area;
+            static u_heap_type_t s_heap_area;
 
 /* End address allocated by sbrk (CC-RX and GNURX+NEWLIB) */
-static int8_t *sp_brk=(int8_t *)&s_heap_area;
+            static int8_t * sp_brk = ( int8_t * ) &s_heap_area;
 
-#if defined(__GNUC__)
+            #if defined( __GNUC__ )
 /* Start address of allocated heap area (GNURX+OPTLIB only) */
-int8_t *_heap_of_memory=(int8_t *)&s_heap_area;
+                int8_t * _heap_of_memory = ( int8_t * ) &s_heap_area;
 /* End address of allocated heap area (GNURX+OPTLIB only) */
-int8_t *_last_heap_object=(int8_t *)&s_heap_area;
-#endif /* defined(__GNUC__) */
+                int8_t * _last_heap_object = ( int8_t * ) &s_heap_area;
+            #endif /* defined(__GNUC__) */
 
 /***********************************************************************************************************************
 * Function name: sbrk
 * Description  : This function configures MCU memory area allocation. (CC-RX and GNURX+NEWLIB)
-* Arguments    : size - 
+* Arguments    : size -
 *                    assigned area size
 * Return value : Start address of allocated area (pass)
 *                -1 (failure)
 ***********************************************************************************************************************/
-int8_t  *sbrk(size_t size)
-{
-    int8_t  *p_area;
+            int8_t * sbrk( size_t size )
+            {
+                int8_t * p_area;
 
-    if ((sp_brk + size) > (s_heap_area.heap + BSP_CFG_HEAP_BYTES))
-    {
-        /* Empty area size  */
-        p_area = (int8_t *)-1;
-    }
-    else
-    {
-        /* Area assignment */
-        p_area = sp_brk;
+                if( ( sp_brk + size ) > ( s_heap_area.heap + BSP_CFG_HEAP_BYTES ) )
+                {
+                    /* Empty area size  */
+                    p_area = ( int8_t * ) -1;
+                }
+                else
+                {
+                    /* Area assignment */
+                    p_area = sp_brk;
 
-        /* End address update */
-        sp_brk += size;
-    }
+                    /* End address update */
+                    sp_brk += size;
+                }
 
-    /* Return result */
-    return p_area;
-} /* End of function sbrk() */
+                /* Return result */
+                return p_area;
+            } /* End of function sbrk() */
 
-#if defined(__GNUC__)
+            #if defined( __GNUC__ )
+
 /***********************************************************************************************************************
 * Function name: _top_of_heap
 * Description  : This function returns end address of reserved heap area. (GNURX+OPTLIB only)
 * Arguments    : none
 * Return value : End address of reserved heap area
 ***********************************************************************************************************************/
-int8_t *_top_of_heap(void)
-{
-    return (int8_t *)(s_heap_area.heap + BSP_CFG_HEAP_BYTES);
-} /* End of function End of function sbrk()() */
-#endif /* defined(__GNUC__) */
+                int8_t * _top_of_heap( void )
+                {
+                    return ( int8_t * ) ( s_heap_area.heap + BSP_CFG_HEAP_BYTES );
+                } /* End of function End of function sbrk()() */
+            #endif /* defined(__GNUC__) */
 
-#endif /* defined(__CCRX__), defined(__GNUC__) */
+        #endif /* defined(__CCRX__), defined(__GNUC__) */
 
-#endif /* BSP_CFG_STARTUP_DISABLE == 0 */
+    #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
 
 #endif /* BSP_CFG_HEAP_BYTES */
-

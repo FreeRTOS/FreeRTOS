@@ -44,20 +44,20 @@
 #include "board.h"
 
 #include <stdint.h>
-typedef uint32_t LcdColor_t ;
+typedef uint32_t LcdColor_t;
 
 /*----------------------------------------------------------------------------
  *        Definitions
  *----------------------------------------------------------------------------*/
-//#define LCD_SPI_3
+/*#define LCD_SPI_3 */
 
 /* ILI9325 ID code */
-#define ILI9488_DEVICE_CODE    0x9488
+#define ILI9488_DEVICE_CODE     0x9488
 
 #define ILI9488_LCD_WIDTH       320
 #define ILI9488_LCD_HEIGHT      480
 #define ILI9488_SELF_TEST_OK    0xC0
-   
+
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
@@ -69,16 +69,17 @@ typedef volatile uint8_t REG8;
  *----------------------------------------------------------------------------*/
 
 /** LCD index register address */
-#define ILI9488_CMD(x) (uint16_t)(x & 0x00FF)
+#define ILI9488_CMD( x )      ( uint16_t ) ( x & 0x00FF )
 /** ILI9488 status register address */
-#define ILI9488_PARAM(x) (uint16_t)(x | 0x100)
-   
+#define ILI9488_PARAM( x )    ( uint16_t ) ( x | 0x100 )
 
-#define ILI9488_cs          1
+
+#define ILI9488_cs             1
 
 /* Pixel cache used to speed up communication */
-#define LCD_DATA_CACHE_SIZE BOARD_LCD_WIDTH
-//extern  LcdColor_t gLcdPixelCache[LCD_DATA_CACHE_SIZE];
+#define LCD_DATA_CACHE_SIZE    BOARD_LCD_WIDTH
+/*extern  LcdColor_t gLcdPixelCache[LCD_DATA_CACHE_SIZE]; */
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
@@ -86,22 +87,34 @@ extern void ILI9488_WriteSingle( LcdColor_t data );
 extern void ILI9488_WriteRAM_Prepare( void );
 extern void ILI9488_WriteRAM( LcdColor_t dwColor );
 extern void ILI9488_ReadRAM_Prepare( void );
-extern void ILI9488_WriteRAMBuffer( const LcdColor_t *pBuf, uint32_t size);
-extern void ILI9488_SetCursor(uint16_t x, uint16_t y);
+extern void ILI9488_WriteRAMBuffer( const LcdColor_t * pBuf,
+                                    uint32_t size );
+extern void ILI9488_SetCursor( uint16_t x,
+                               uint16_t y );
 extern uint32_t ILI9488_ReadRAM( void );
 extern uint32_t ILI9488_Initialize( void );
 extern void ILI9488_On( void );
 extern void ILI9488_Off( void );
 extern void ILI9488_PowerDown( void );
-extern void ILI9488_SetWindow( uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uint16_t dwHeight );
-extern void ILI9488_SetDisplayLandscape( uint8_t dwRGB, uint8_t LandscaprMode );
+extern void ILI9488_SetWindow( uint16_t dwX,
+                               uint16_t dwY,
+                               uint16_t dwWidth,
+                               uint16_t dwHeight );
+extern void ILI9488_SetDisplayLandscape( uint8_t dwRGB,
+                                         uint8_t LandscaprMode );
 extern void ILI9488_SetDisplayPortrait( uint8_t dwRGB );
-extern void ILI9488_SetVerticalScrollWindow( uint16_t dwStartAdd, uint16_t dwHeight );
+extern void ILI9488_SetVerticalScrollWindow( uint16_t dwStartAdd,
+                                             uint16_t dwHeight );
 extern void ILI9488_VerticalScroll( uint16_t wY );
-extern void ILI9488_SetPartialImage1( uint32_t dwDisplayPos, uint32_t dwStart, uint32_t dwEnd );
-extern void ILI9488_SetPartialImage2( uint32_t dwDisplayPos, uint32_t dwStart, uint32_t dwEnd );
+extern void ILI9488_SetPartialImage1( uint32_t dwDisplayPos,
+                                      uint32_t dwStart,
+                                      uint32_t dwEnd );
+extern void ILI9488_SetPartialImage2( uint32_t dwDisplayPos,
+                                      uint32_t dwStart,
+                                      uint32_t dwEnd );
 extern void ILI9488_TestPattern( void );
 extern uint32_t ILI9488_SetColor( uint32_t dwRgb24Bits );
-extern void ILI9488_ExitScrollMode(void );
-extern void ILI9488_SetPartialWindow( uint16_t Start, uint16_t End);
+extern void ILI9488_ExitScrollMode( void );
+extern void ILI9488_SetPartialWindow( uint16_t Start,
+                                      uint16_t End );
 #endif /* #ifndef ILI9488 */

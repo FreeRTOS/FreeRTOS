@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -51,15 +51,14 @@
  *  \param request Pointer to a USBGenericRequest instance.
  *  \return 1 if the DTE signal is present, otherwise 0.
  */
-uint8_t CDCSetControlLineStateRequest_IsDtePresent(
-    const USBGenericRequest *request)
+uint8_t CDCSetControlLineStateRequest_IsDtePresent( const USBGenericRequest * request )
 {
-    if ((USBGenericRequest_GetValue(request) & 0x0001) != 0) {
-
+    if( ( USBGenericRequest_GetValue( request ) & 0x0001 ) != 0 )
+    {
         return 1;
     }
-    else {
-
+    else
+    {
         return 0;
     }
 }
@@ -70,18 +69,16 @@ uint8_t CDCSetControlLineStateRequest_IsDtePresent(
  *  \param request Pointer to a USBGenericRequest instance.
  *  \return 1 is the device should activate its carrier, 0 otherwise.
  */
-uint8_t CDCSetControlLineStateRequest_ActivateCarrier(
-    const USBGenericRequest *request)
+uint8_t CDCSetControlLineStateRequest_ActivateCarrier( const USBGenericRequest * request )
 {
-    if ((USBGenericRequest_GetValue(request) & 0x0002) != 0) {
-
+    if( ( USBGenericRequest_GetValue( request ) & 0x0002 ) != 0 )
+    {
         return 1;
     }
-    else {
-
+    else
+    {
         return 0;
     }
 }
 
 /**@}*/
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -33,18 +33,19 @@
  * Interface for Real Time Clock calibration (RTC) .
  *
  */
- 
+
 /** RTC crystal **/
 
 
 typedef struct
 {
-  int8_t Tempr;
-  int16_t PPM;
-  uint8_t NEGPPM;
-  uint8_t HIGHPPM;
-  uint16_t CORRECTION;
-}RTC_PPMLookup;
+    int8_t Tempr;
+    int16_t PPM;
+    uint8_t NEGPPM;
+    uint8_t HIGHPPM;
+    uint16_t CORRECTION;
+} RTC_PPMLookup;
 
 
-extern void RTC_ClockCalibration( Rtc* pRtc, int32_t CurrentTempr);
+extern void RTC_ClockCalibration( Rtc * pRtc,
+                                  int32_t CurrentTempr );

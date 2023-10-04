@@ -38,6 +38,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -46,14 +47,14 @@
 #define _SAME70_RSTC_INSTANCE_
 
 /* ========== Register definition for RSTC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_RSTC_CR                  (0x400E1800U) /**< \brief (RSTC) Control Register */
-  #define REG_RSTC_SR                  (0x400E1804U) /**< \brief (RSTC) Status Register */
-  #define REG_RSTC_MR                  (0x400E1808U) /**< \brief (RSTC) Mode Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_RSTC_CR    ( 0x400E1800U )                      /**< \brief (RSTC) Control Register */
+    #define REG_RSTC_SR    ( 0x400E1804U )                      /**< \brief (RSTC) Status Register */
+    #define REG_RSTC_MR    ( 0x400E1808U )                      /**< \brief (RSTC) Mode Register */
 #else
-  #define REG_RSTC_CR (*(__O  uint32_t*)0x400E1800U) /**< \brief (RSTC) Control Register */
-  #define REG_RSTC_SR (*(__I  uint32_t*)0x400E1804U) /**< \brief (RSTC) Status Register */
-  #define REG_RSTC_MR (*(__IO uint32_t*)0x400E1808U) /**< \brief (RSTC) Mode Register */
+    #define REG_RSTC_CR    ( *( __O uint32_t * ) 0x400E1800U )  /**< \brief (RSTC) Control Register */
+    #define REG_RSTC_SR    ( *( __I uint32_t * ) 0x400E1804U )  /**< \brief (RSTC) Status Register */
+    #define REG_RSTC_MR    ( *( __IO uint32_t * ) 0x400E1808U ) /**< \brief (RSTC) Mode Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAME70_RSTC_INSTANCE_ */

@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -38,81 +38,79 @@
 #include <interrupt.h>
 #include <systick.h>
 
-void SysTick_enableModule(void)
+void SysTick_enableModule( void )
 {
-    //
-    // Enable SysTick.
-    //
+    /* */
+    /* Enable SysTick. */
+    /* */
     SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 }
 
-void SysTick_disableModule(void)
+void SysTick_disableModule( void )
 {
-    //
-    // Disable SysTick.
-    //
-    SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
+    /* */
+    /* Disable SysTick. */
+    /* */
+    SysTick->CTRL &= ~( SysTick_CTRL_ENABLE_Msk );
 }
 
-void SysTick_registerInterrupt(void (*intHandler)(void))
+void SysTick_registerInterrupt( void ( * intHandler )( void ) )
 {
-    //
-    // Register the interrupt handler, returning an error if an error occurs.
-    //
-    Interrupt_registerInterrupt(FAULT_SYSTICK, intHandler);
-
+    /* */
+    /* Register the interrupt handler, returning an error if an error occurs. */
+    /* */
+    Interrupt_registerInterrupt( FAULT_SYSTICK, intHandler );
 }
 
-void SysTick_unregisterInterrupt(void)
+void SysTick_unregisterInterrupt( void )
 {
-
-    //
-    // Unregister the interrupt handler.
-    //
-    Interrupt_unregisterInterrupt(FAULT_SYSTICK);
+    /* */
+    /* Unregister the interrupt handler. */
+    /* */
+    Interrupt_unregisterInterrupt( FAULT_SYSTICK );
 }
 
-void SysTick_enableInterrupt(void)
+void SysTick_enableInterrupt( void )
 {
-    //
-    // Enable the SysTick interrupt.
-    //
+    /* */
+    /* Enable the SysTick interrupt. */
+    /* */
     SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;
 }
 
-void SysTick_disableInterrupt(void)
+void SysTick_disableInterrupt( void )
 {
-    //
-    // Disable the SysTick interrupt.
-    //
-    SysTick->CTRL &= ~(SysTick_CTRL_TICKINT_Msk);
+    /* */
+    /* Disable the SysTick interrupt. */
+    /* */
+    SysTick->CTRL &= ~( SysTick_CTRL_TICKINT_Msk );
 }
 
-void SysTick_setPeriod(uint32_t period)
+void SysTick_setPeriod( uint32_t period )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT((period > 0) && (period <= 16777216));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( ( period > 0 ) && ( period <= 16777216 ) );
 
-    //
-    // Set the period of the SysTick counter.
-    //
+    /* */
+    /* Set the period of the SysTick counter. */
+    /* */
     SysTick->LOAD = period - 1;
 }
 
-uint32_t SysTick_getPeriod(void)
+uint32_t SysTick_getPeriod( void )
 {
-    //
-    // Return the period of the SysTick counter.
-    //
-    return (SysTick->LOAD + 1);
+    /* */
+    /* Return the period of the SysTick counter. */
+    /* */
+    return( SysTick->LOAD + 1 );
 }
 
-uint32_t SysTick_getValue(void)
+uint32_t SysTick_getValue( void )
 {
-    //
-    // Return the current value of the SysTick counter.
-    //
-    return (SysTick->VAL);
+    /* */
+    /* Return the current value of the SysTick counter. */
+    /* */
+    return( SysTick->VAL );
 }

@@ -36,19 +36,20 @@
 /** \addtogroup SAMA5_BSC Boot Sequence Controller */
 /*@{*/
 
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#if !( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
 /** \brief Bsc hardware registers */
-typedef struct {
-  RwReg BSC_CR; /**< \brief (Bsc Offset: 0x0) Boot Sequence Configuration Register */
-} Bsc;
+    typedef struct
+    {
+        RwReg BSC_CR; /**< \brief (Bsc Offset: 0x0) Boot Sequence Configuration Register */
+    } Bsc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- BSC_CR : (BSC Offset: 0x0) Boot Sequence Configuration Register -------- */
-#define BSC_CR_BOOT_Pos 0
-#define BSC_CR_BOOT_Msk (0xffu << BSC_CR_BOOT_Pos) /**< \brief (BSC_CR) Boot media sequence */
-#define BSC_CR_BOOT(value) ((BSC_CR_BOOT_Msk & ((value) << BSC_CR_BOOT_Pos)))
-#define BSC_CR_BOOTKEY_Pos 16
-#define BSC_CR_BOOTKEY_Msk (0xffffu << BSC_CR_BOOTKEY_Pos) /**< \brief (BSC_CR)  */
-#define   BSC_CR_BOOTKEY_BSC_KEY (0x6683u << 16) /**< \brief (BSC_CR) valid key to write BSC_CR register; it needs to be written at the same time as the BOOT field. */
+#define BSC_CR_BOOT_Pos             0
+#define BSC_CR_BOOT_Msk             ( 0xffu << BSC_CR_BOOT_Pos ) /**< \brief (BSC_CR) Boot media sequence */
+#define BSC_CR_BOOT( value )    ( ( BSC_CR_BOOT_Msk & ( ( value ) << BSC_CR_BOOT_Pos ) ) )
+#define BSC_CR_BOOTKEY_Pos          16
+#define BSC_CR_BOOTKEY_Msk          ( 0xffffu << BSC_CR_BOOTKEY_Pos ) /**< \brief (BSC_CR)  */
+#define   BSC_CR_BOOTKEY_BSC_KEY    ( 0x6683u << 16 )                 /**< \brief (BSC_CR) valid key to write BSC_CR register; it needs to be written at the same time as the BOOT field. */
 
 /*@}*/
 

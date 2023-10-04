@@ -40,13 +40,13 @@
  *----------------------------------------------------------------------------*/
 
 /* Function prototype for exception table items (interrupt handler). */
-typedef void( *IntFunc )( void ) ;
+typedef void ( * IntFunc )( void );
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
 /* Default empty handler */
-extern void IrqHandlerNotUsed( void ) ;
+extern void IrqHandlerNotUsed( void );
 
 #endif /* _EXCEPTIONS_ */

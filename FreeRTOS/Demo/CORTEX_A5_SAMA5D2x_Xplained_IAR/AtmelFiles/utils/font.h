@@ -42,22 +42,22 @@
 
 typedef enum
 {
-  FONT10x14 = 0,
-  FONT10x8,
-  FONT8x8,
-  FONT6x8,
+    FONT10x14 = 0,
+    FONT10x8,
+    FONT8x8,
+    FONT6x8,
 } _FONT_enum;
 
 struct _font_parameters
 {
-    uint8_t width;      /* Font width in pixels. */
-    uint8_t height;     /* Font height in pixels. */
-    uint8_t char_space; /* Inter char space */
-    const uint8_t* pfont;  /* pointer to char table */
-} ;
+    uint8_t width;         /* Font width in pixels. */
+    uint8_t height;        /* Font height in pixels. */
+    uint8_t char_space;    /* Inter char space */
+    const uint8_t * pfont; /* pointer to char table */
+};
 
-#define NB_FONT 4
-extern struct _font_parameters font_param[NB_FONT];
+#define NB_FONT    4
+extern struct _font_parameters font_param[ NB_FONT ];
 
 extern const uint8_t pCharset10x14[];
 extern const uint8_t pCharset10x8[];
@@ -65,7 +65,7 @@ extern const uint8_t pCharset8x8[];
 extern const uint8_t pCharset6x8[];
 
 
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*------------------------------------------------------------------------------ */
+/*------------------------------------------------------------------------------ */
 #endif /* _FONT_H_ */

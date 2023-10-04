@@ -31,18 +31,18 @@
 #define _SAM_EFC_INSTANCE_
 
 /* ========== Register definition for EFC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_EFC_FMR                      (0x400E0C00U) /**< \brief (EFC) EEFC Flash Mode Register */
-  #define REG_EFC_FCR                      (0x400E0C04U) /**< \brief (EFC) EEFC Flash Command Register */
-  #define REG_EFC_FSR                      (0x400E0C08U) /**< \brief (EFC) EEFC Flash Status Register */
-  #define REG_EFC_FRR                      (0x400E0C0CU) /**< \brief (EFC) EEFC Flash Result Register */
-  #define REG_EFC_VERSION                  (0x400E0C14U) /**< \brief (EFC) EEFC Version Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_EFC_FMR        ( 0x400E0C00U )                      /**< \brief (EFC) EEFC Flash Mode Register */
+    #define REG_EFC_FCR        ( 0x400E0C04U )                      /**< \brief (EFC) EEFC Flash Command Register */
+    #define REG_EFC_FSR        ( 0x400E0C08U )                      /**< \brief (EFC) EEFC Flash Status Register */
+    #define REG_EFC_FRR        ( 0x400E0C0CU )                      /**< \brief (EFC) EEFC Flash Result Register */
+    #define REG_EFC_VERSION    ( 0x400E0C14U )                      /**< \brief (EFC) EEFC Version Register */
 #else
-  #define REG_EFC_FMR     (*(__IO uint32_t*)0x400E0C00U) /**< \brief (EFC) EEFC Flash Mode Register */
-  #define REG_EFC_FCR     (*(__O  uint32_t*)0x400E0C04U) /**< \brief (EFC) EEFC Flash Command Register */
-  #define REG_EFC_FSR     (*(__I  uint32_t*)0x400E0C08U) /**< \brief (EFC) EEFC Flash Status Register */
-  #define REG_EFC_FRR     (*(__I  uint32_t*)0x400E0C0CU) /**< \brief (EFC) EEFC Flash Result Register */
-  #define REG_EFC_VERSION (*(__I  uint32_t*)0x400E0C14U) /**< \brief (EFC) EEFC Version Register */
+    #define REG_EFC_FMR        ( *( __IO uint32_t * ) 0x400E0C00U ) /**< \brief (EFC) EEFC Flash Mode Register */
+    #define REG_EFC_FCR        ( *( __O uint32_t * ) 0x400E0C04U )  /**< \brief (EFC) EEFC Flash Command Register */
+    #define REG_EFC_FSR        ( *( __I uint32_t * ) 0x400E0C08U )  /**< \brief (EFC) EEFC Flash Status Register */
+    #define REG_EFC_FRR        ( *( __I uint32_t * ) 0x400E0C0CU )  /**< \brief (EFC) EEFC Flash Result Register */
+    #define REG_EFC_VERSION    ( *( __I uint32_t * ) 0x400E0C14U )  /**< \brief (EFC) EEFC Version Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAM_EFC_INSTANCE_ */

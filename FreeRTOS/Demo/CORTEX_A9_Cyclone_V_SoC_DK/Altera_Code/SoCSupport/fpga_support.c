@@ -33,48 +33,49 @@
 
 #define printf( ... )
 
-ALT_STATUS_CODE fpga_init(void) {
+ALT_STATUS_CODE fpga_init( void )
+{
+    /* Program the FPGA */
+    uint32_t status = ALT_E_SUCCESS;
+    uint32_t i;
 
-	 // Program the FPGA
-	uint32_t status = ALT_E_SUCCESS;
-	uint32_t i;
+    /* This is the symbol name for the SOF file contents linked in. */
+    extern char _binary_soc_system_dc_rbf_start;
+    extern char _binary_soc_system_dc_rbf_end;
 
-	        // This is the symbol name for the SOF file contents linked in.
-	        extern char _binary_soc_system_dc_rbf_start;
-	        extern char _binary_soc_system_dc_rbf_end;
+    /* Use the above symbols to extract the FPGA image information. */
+    const char * fpga_image = &_binary_soc_system_dc_rbf_start;
+    const uint32_t fpga_image_size = &_binary_soc_system_dc_rbf_end - &_binary_soc_system_dc_rbf_start;
 
-	        // Use the above symbols to extract the FPGA image information.
-	        const char *   fpga_image      = &_binary_soc_system_dc_rbf_start;
-	        const uint32_t fpga_image_size = &_binary_soc_system_dc_rbf_end - &_binary_soc_system_dc_rbf_start;
+    /* Trace the FPGA image information. */
+    printf( "INFO: FPGA Image binary at %p.\n", fpga_image );
+    printf( "INFO: FPGA Image size is %u bytes.\n", ( unsigned int ) fpga_image_size );
 
-	        // Trace the FPGA image information.
-	        printf("INFO: FPGA Image binary at %p.\n", fpga_image);
-	        printf("INFO: FPGA Image size is %u bytes.\n", (unsigned int)fpga_image_size);
+    /* Try the full configuration a few times. */
+    const uint32_t full_config_retry = 5;
 
-	        // Try the full configuration a few times.
-	        const uint32_t full_config_retry = 5;
-	        for (i = 0; i < full_config_retry; ++i)
-	        {
-	            status = alt_fpga_configure(fpga_image, fpga_image_size);
-	            if (status == ALT_E_SUCCESS)
-	            {
-	                printf("INFO: alt_fpga_configure() successful on the %u of %u retry(s).\n",
-	                       (unsigned int)(i + 1),
-	                       (unsigned int)full_config_retry);
-	                break;
-	            }
-	        }
+    for( i = 0; i < full_config_retry; ++i )
+    {
+        status = alt_fpga_configure( fpga_image, fpga_image_size );
 
+        if( status == ALT_E_SUCCESS )
+        {
+            printf( "INFO: alt_fpga_configure() successful on the %u of %u retry(s).\n",
+                    ( unsigned int ) ( i + 1 ),
+                    ( unsigned int ) full_config_retry );
+            break;
+        }
+    }
 
-	    if (status == ALT_E_SUCCESS)
-	    {
-	        printf("INFO: Setup of FPGA successful.\n\n");
-	    }
-	    else
-	    {
-	        printf("ERROR: Setup of FPGA return non-SUCCESS %d.\n\n", (int)status);
-	    }
+    if( status == ALT_E_SUCCESS )
+    {
+        printf( "INFO: Setup of FPGA successful.\n\n" );
+    }
+    else
+    {
+        printf( "ERROR: Setup of FPGA return non-SUCCESS %d.\n\n", ( int ) status );
+    }
 
-	    return status;
+    return status;
 }
 /* md5sum:e268b2157060033c39e9ea2c5068165f 2013-09-28 20:48:16 */

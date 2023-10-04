@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2015, Atmel Corporation
  *
@@ -50,26 +50,27 @@
  */
 
 #ifndef _FLEXCOM_
-#define _FLEXCOM_
+    #define _FLEXCOM_
 
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
 
-#include "chip.h"
-#include <stdint.h>
+    #include "chip.h"
+    #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*------------------------------------------------------------------------------*/
 /*         Exported functions                                                   */
 /*------------------------------------------------------------------------------*/
 
-extern void flexcom_select(Flexcom * flexcom, uint32_t protocol);
+    extern void flexcom_select( Flexcom * flexcom,
+                                uint32_t protocol );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif /* #ifndef _FLEXCOM_ */

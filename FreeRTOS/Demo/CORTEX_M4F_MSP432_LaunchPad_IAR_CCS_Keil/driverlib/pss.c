@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -54,171 +54,180 @@ static void __PSSLock()
 }
 
 
-void PSS_enableForcedDCDCOperation(void)
+void PSS_enableForcedDCDCOperation( void )
 {
     __PSSUnlock();
 
-    BITBAND_PERI(PSS->CTL0, PSS_CTL0_DCDC_FORCE_OFS) = 1;
+    BITBAND_PERI( PSS->CTL0, PSS_CTL0_DCDC_FORCE_OFS ) = 1;
 
     __PSSLock();
 }
 
-void PSS_disableForcedDCDCOperation(void)
+void PSS_disableForcedDCDCOperation( void )
 {
     __PSSUnlock();
 
-    BITBAND_PERI(PSS->CTL0, PSS_CTL0_DCDC_FORCE_OFS) = 0;
+    BITBAND_PERI( PSS->CTL0, PSS_CTL0_DCDC_FORCE_OFS ) = 0;
 
     __PSSLock();
-
 }
 
-void PSS_enableHighSidePinToggle(bool activeLow)
+void PSS_enableHighSidePinToggle( bool activeLow )
 {
     __PSSUnlock();
 
-    if (activeLow)
-        PSS->CTL0 |= (PSS_CTL0_SVMHOE | PSS_CTL0_SVMHOUTPOLAL);
+    if( activeLow )
+    {
+        PSS->CTL0 |= ( PSS_CTL0_SVMHOE | PSS_CTL0_SVMHOUTPOLAL );
+    }
     else
     {
-        BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVMHOUTPOLAL_OFS) = 0;
-        BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVMHOE_OFS) = 1;
+        BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVMHOUTPOLAL_OFS ) = 0;
+        BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVMHOE_OFS ) = 1;
     }
 
     __PSSLock();
 }
 
-void PSS_disableHighSidePinToggle(void)
+void PSS_disableHighSidePinToggle( void )
 {
     __PSSUnlock();
 
-    BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVMHOE_OFS) = 0;
+    BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVMHOE_OFS ) = 0;
 
     __PSSLock();
 }
 
-void PSS_enableHighSide(void)
+void PSS_enableHighSide( void )
 {
     __PSSUnlock();
 
-    BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVSMHOFF_OFS) = 0;
+    BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVSMHOFF_OFS ) = 0;
 
     __PSSLock();
 }
 
-void PSS_disableHighSide(void)
+void PSS_disableHighSide( void )
 {
     __PSSUnlock();
 
-    BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVSMHOFF_OFS) = 1;
+    BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVSMHOFF_OFS ) = 1;
 
     __PSSLock();
 }
 
-void PSS_setHighSidePerformanceMode(uint_fast8_t powerMode)
+void PSS_setHighSidePerformanceMode( uint_fast8_t powerMode )
 {
     __PSSUnlock();
 
-    if (powerMode == PSS_FULL_PERFORMANCE_MODE)
-        BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVSMHLP_OFS) = 0;
+    if( powerMode == PSS_FULL_PERFORMANCE_MODE )
+    {
+        BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVSMHLP_OFS ) = 0;
+    }
     else
-        BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVSMHLP_OFS) = 1;
+    {
+        BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVSMHLP_OFS ) = 1;
+    }
 
     __PSSLock();
 }
 
-uint_fast8_t PSS_getHighSidePerformanceMode(void)
+uint_fast8_t PSS_getHighSidePerformanceMode( void )
 {
-    if (BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVSMHLP_OFS))
+    if( BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVSMHLP_OFS ) )
+    {
         return PSS_NORMAL_PERFORMANCE_MODE;
+    }
     else
+    {
         return PSS_FULL_PERFORMANCE_MODE;
+    }
 }
 
-void PSS_enableHighSideMonitor(void)
+void PSS_enableHighSideMonitor( void )
 {
     __PSSUnlock();
 
-    BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVSMHS_OFS) = 1;
+    BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVSMHS_OFS ) = 1;
 
     __PSSLock();
 }
 
-void PSS_disableHighSideMonitor(void)
+void PSS_disableHighSideMonitor( void )
 {
     __PSSUnlock();
 
-    BITBAND_PERI(PSS->CTL0, PSS_CTL0_SVSMHS_OFS) = 0;
+    BITBAND_PERI( PSS->CTL0, PSS_CTL0_SVSMHS_OFS ) = 0;
 
     __PSSLock();
 }
 
-void PSS_setHighSideVoltageTrigger(uint_fast8_t triggerVoltage)
+void PSS_setHighSideVoltageTrigger( uint_fast8_t triggerVoltage )
 {
     __PSSUnlock();
 
-    ASSERT(!(triggerVoltage & 0xF8))
+    ASSERT( !( triggerVoltage & 0xF8 ) )
 
     PSS->CTL0 &= ~PSS_CTL0_SVSMHTH_MASK;
-    PSS->CTL0 |= (triggerVoltage & 0x07) << PSS_CTL0_SVSMHTH_OFS;
+    PSS->CTL0 |= ( triggerVoltage & 0x07 ) << PSS_CTL0_SVSMHTH_OFS;
 
     __PSSLock();
 }
 
-uint_fast8_t PSS_getHighSideVoltageTrigger(void)
+uint_fast8_t PSS_getHighSideVoltageTrigger( void )
 {
-    return (uint_fast8_t)((PSS->CTL0 & PSS_CTL0_SVSMHTH_MASK)
-    		>> PSS_CTL0_SVSMHTH_OFS);
+    return ( uint_fast8_t ) ( ( PSS->CTL0 & PSS_CTL0_SVSMHTH_MASK )
+                              >> PSS_CTL0_SVSMHTH_OFS );
 }
 
-void PSS_enableInterrupt(void)
-{
-    __PSSUnlock();
-    BITBAND_PERI(PSS->IE,PSS_IE_SVSMHIE_OFS) = 1;
-    __PSSLock();
-}
-
-void PSS_disableInterrupt(void)
+void PSS_enableInterrupt( void )
 {
     __PSSUnlock();
-    BITBAND_PERI(PSS->IE,PSS_IE_SVSMHIE_OFS) = 0;
+    BITBAND_PERI( PSS->IE, PSS_IE_SVSMHIE_OFS ) = 1;
     __PSSLock();
 }
 
-uint32_t PSS_getInterruptStatus(void)
+void PSS_disableInterrupt( void )
+{
+    __PSSUnlock();
+    BITBAND_PERI( PSS->IE, PSS_IE_SVSMHIE_OFS ) = 0;
+    __PSSLock();
+}
+
+uint32_t PSS_getInterruptStatus( void )
 {
     return PSS->IFG;
 }
 
-void PSS_clearInterruptFlag(void)
+void PSS_clearInterruptFlag( void )
 {
     __PSSUnlock();
-    BITBAND_PERI(PSS->CLRIFG,PSS_CLRIFG_CLRSVSMHIFG_OFS) = 0;
+    BITBAND_PERI( PSS->CLRIFG, PSS_CLRIFG_CLRSVSMHIFG_OFS ) = 0;
     __PSSLock();
 }
 
-void PSS_registerInterrupt(void (*intHandler)(void))
+void PSS_registerInterrupt( void ( * intHandler )( void ) )
 {
-    //
-    // Register the interrupt handler, returning an error if an error occurs.
-    //
-    Interrupt_registerInterrupt(INT_PSS, intHandler);
+    /* */
+    /* Register the interrupt handler, returning an error if an error occurs. */
+    /* */
+    Interrupt_registerInterrupt( INT_PSS, intHandler );
 
-    //
-    // Enable the system control interrupt.
-    //
-    Interrupt_enableInterrupt(INT_PSS);
+    /* */
+    /* Enable the system control interrupt. */
+    /* */
+    Interrupt_enableInterrupt( INT_PSS );
 }
 
-void PSS_unregisterInterrupt(void)
+void PSS_unregisterInterrupt( void )
 {
-    //
-    // Disable the interrupt.
-    //
-    Interrupt_disableInterrupt(INT_PSS);
+    /* */
+    /* Disable the interrupt. */
+    /* */
+    Interrupt_disableInterrupt( INT_PSS );
 
-    //
-    // Unregister the interrupt handler.
-    //
-    Interrupt_unregisterInterrupt(INT_PSS);
+    /* */
+    /* Unregister the interrupt handler. */
+    /* */
+    Interrupt_unregisterInterrupt( INT_PSS );
 }

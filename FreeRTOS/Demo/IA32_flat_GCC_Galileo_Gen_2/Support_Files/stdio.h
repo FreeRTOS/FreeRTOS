@@ -6,6 +6,8 @@
 #ifndef STDIO_H
 #define STDIO_H
 
-int sprintf(char *out, const char *format, ...);
+int sprintf( char * out,
+             const char * format,
+             ... );
 
 #endif /* stdio_h */

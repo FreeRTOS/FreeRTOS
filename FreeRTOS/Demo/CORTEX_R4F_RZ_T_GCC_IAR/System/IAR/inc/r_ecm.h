@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_ecm.h
@@ -33,6 +34,7 @@
 * Description  : ecm function API of RZ/T1
 * Limitation   : none
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
@@ -43,13 +45,13 @@
 
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
-#define ECM_COMMAND_KEY (0x000000A5)
+#define ECM_COMMAND_KEY    ( 0x000000A5 )
 
 
 /*******************************************************************************
-Typedef definitions
+*  Typedef definitions
 *******************************************************************************/
 typedef enum
 {
@@ -60,13 +62,17 @@ typedef enum
 } ecm_reg_type_t;
 
 /*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Exported global variables and functions (to be accessed by other files)
 *******************************************************************************/
-void R_ECM_Init(void);
-void R_ECM_CompareError_Wait(void);
-uint8_t R_ECM_Write_Reg8(uint8_t reg_type, volatile unsigned char *reg, uint8_t value);
-uint8_t R_ECM_Write_Reg32(uint8_t reg_type, volatile unsigned long *reg, uint32_t value);
+void R_ECM_Init( void );
+void R_ECM_CompareError_Wait( void );
+uint8_t R_ECM_Write_Reg8( uint8_t reg_type,
+                          volatile unsigned char * reg,
+                          uint8_t value );
+uint8_t R_ECM_Write_Reg32( uint8_t reg_type,
+                           volatile unsigned long * reg,
+                           uint32_t value );
 
-#endif
+#endif /* ifndef _R_ECM_HEADER_ */
 
 /* End of File */

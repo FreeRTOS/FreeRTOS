@@ -80,56 +80,68 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void sha_start(void)
+void sha_start( void )
 {
-	SHA->SHA_CR = SHA_CR_START;
+    SHA->SHA_CR = SHA_CR_START;
 }
 
-void sha_soft_reset(void)
+void sha_soft_reset( void )
 {
-	SHA->SHA_CR = SHA_CR_SWRST;
+    SHA->SHA_CR = SHA_CR_SWRST;
 }
 
-void sha_first_block(void)
+void sha_first_block( void )
 {
-	SHA->SHA_CR = SHA_CR_FIRST;
+    SHA->SHA_CR = SHA_CR_FIRST;
 }
 
-void sha_configure(uint32_t mode)
+void sha_configure( uint32_t mode )
 {
-	SHA->SHA_MR = mode;
+    SHA->SHA_MR = mode;
 }
 
-void sha_enable_it(uint32_t sources)
+void sha_enable_it( uint32_t sources )
 {
-	SHA->SHA_IER = sources;
+    SHA->SHA_IER = sources;
 }
 
-void sha_disable_it(uint32_t sources)
+void sha_disable_it( uint32_t sources )
 {
-	SHA->SHA_IDR = sources;
+    SHA->SHA_IDR = sources;
 }
 
-uint32_t sha_get_status(void)
+uint32_t sha_get_status( void )
 {
-	return SHA->SHA_ISR;
+    return SHA->SHA_ISR;
 }
 
-void sha_set_input(uint32_t * data, uint8_t len)
+void sha_set_input( uint32_t * data,
+                    uint8_t len )
 {
-	uint8_t i;
-	uint8_t num;
-	num = len <= 16 ? len : 16;
-	for (i = 0; i < num; i++)
-		SHA->SHA_IDATAR[i] = (data[i]);
-	num = len > 16 ? len - 16 : 0;
-	for (i = 0; i < num; i++)
-		SHA->SHA_IODATAR[i] = (data[i + 16]);
+    uint8_t i;
+    uint8_t num;
+
+    num = len <= 16 ? len : 16;
+
+    for( i = 0; i < num; i++ )
+    {
+        SHA->SHA_IDATAR[ i ] = ( data[ i ] );
+    }
+
+    num = len > 16 ? len - 16 : 0;
+
+    for( i = 0; i < num; i++ )
+    {
+        SHA->SHA_IODATAR[ i ] = ( data[ i + 16 ] );
+    }
 }
 
-void sha_get_output(uint32_t * data)
+void sha_get_output( uint32_t * data )
 {
-	uint8_t i;
-	for (i = 0; i < 16; i++)
-		data[i] = SHA->SHA_IODATAR[i];
+    uint8_t i;
+
+    for( i = 0; i < 16; i++ )
+    {
+        data[ i ] = SHA->SHA_IODATAR[ i ];
+    }
 }

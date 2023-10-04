@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief Basic SMTP Client for AVR32 UC3.
@@ -40,27 +41,27 @@
  */
 
 /*
-  Implements a simplistic SMTP client. First time the task is started, connection is made and
-  email is sent. Mail flag is then reset. Each time you press the Push Button 0, a new mail will be sent.
-*/
+ * Implements a simplistic SMTP client. First time the task is started, connection is made and
+ * email is sent. Mail flag is then reset. Each time you press the Push Button 0, a new mail will be sent.
+ */
 
-#if (SMTP_USED == 1)
+#if ( SMTP_USED == 1 )
 
 #include <string.h>
 
-// Scheduler includes.
+/* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "BasicSMTP.h"
 
 
-// Demo includes.
+/* Demo includes. */
 #include "portmacro.h"
 #include "partest.h"
 #include "intc.h"
 #include "gpio.h"
 
-// lwIP includes.
+/* lwIP includes. */
 #include "lwip/api.h"
 #include "lwip/tcpip.h"
 #include "lwip/memp.h"
@@ -72,254 +73,273 @@
 #include "lwip/sockets.h"
 #include "netif/loopif.h"
 
-//! SMTP default port
-#define SMTP_PORT     25
-//! SMTP EHLO code answer
-#define SMTP_EHLO_STRING                  "220"
-//! SMTP end of transmission code answer
-#define SMTP_END_OF_TRANSMISSION_STRING   "221"
-//! SMTP OK code answer
-#define SMTP_OK_STRING                    "250"
-//! SMTP start of transmission code answer
-#define SMTP_START_OF_TRANSMISSION_STRING "354"
-//! SMTP DATA<CRLF>
-#define SMTP_DATA_STRING                  "DATA\r\n"
-//! SMTP <CRLF>.<CRLF>
-#define SMTP_MAIL_END_STRING              "\r\n.\r\n"
-//! SMTP QUIT<CRLFCRLF>
-#define SMTP_QUIT_STRING                  "QUIT\r\n"
+/*! SMTP default port */
+#define SMTP_PORT                            25
+/*! SMTP EHLO code answer */
+#define SMTP_EHLO_STRING                     "220"
+/*! SMTP end of transmission code answer */
+#define SMTP_END_OF_TRANSMISSION_STRING      "221"
+/*! SMTP OK code answer */
+#define SMTP_OK_STRING                       "250"
+/*! SMTP start of transmission code answer */
+#define SMTP_START_OF_TRANSMISSION_STRING    "354"
+/*! SMTP DATA<CRLF> */
+#define SMTP_DATA_STRING                     "DATA\r\n"
+/*! SMTP <CRLF>.<CRLF> */
+#define SMTP_MAIL_END_STRING                 "\r\n.\r\n"
+/*! SMTP QUIT<CRLFCRLF> */
+#define SMTP_QUIT_STRING                     "QUIT\r\n"
 
 
-//! Server address
+/*! Server address */
 #error configure SMTP server address
 char cServer[] = "192.168.0.1";
 
-//! Fill here the mailfrom with your mail address
+/*! Fill here the mailfrom with your mail address */
 #error configure SMTP mail sender
 char cMailfrom[] = "MAIL FROM: <sender@domain.com>\r\n";
 
-//! Fill here the mailto with your contact mail address
+/*! Fill here the mailto with your contact mail address */
 #error configure SMTP mail recipient
 char cMailto[] = "RCPT TO: <recipient@domain.com>\r\n";
 
-//! Fill here the mailcontent with the mail you want to send
+/*! Fill here the mailcontent with the mail you want to send */
 #error configure SMTP mail content
-char cMailcontent[] ="Subject: *** SPAM ***\r\nFROM: \"Your Name here\" <sender@domain.com>\r\nTO: \"Your Contact here\" <recipient@domain.com>\r\n\r\nSay what you want here.";
+char cMailcontent[] = "Subject: *** SPAM ***\r\nFROM: \"Your Name here\" <sender@domain.com>\r\nTO: \"Your Contact here\" <recipient@domain.com>\r\n\r\nSay what you want here.";
 
-//! flag to send mail
+/*! flag to send mail */
 Bool bSendMail = pdFALSE;
 
-//! buffer for SMTP response
-char cTempBuffer[200];
+/*! buffer for SMTP response */
+char cTempBuffer[ 200 ];
 
 
-//_____ D E C L A R A T I O N S ____________________________________________
-//! interrupt handler.
+/*_____ D E C L A R A T I O N S ____________________________________________ */
+/*! interrupt handler. */
 #if __GNUC__
-__attribute__((naked))
+    __attribute__( ( naked ) )
 #elif __ICCAVR32__
-#pragma shadow_registers = full   // Naked.
+    #pragma shadow_registers = full /* Naked. */
 #endif
 void vpushb_ISR( void );
 
-//! soft interrupt handler. where treatment should be done
+/*! soft interrupt handler. where treatment should be done */
 #if __GNUC__
-__attribute__((__noinline__))
+    __attribute__( ( __noinline__ ) )
 #endif
 static portBASE_TYPE prvpushb_ISR_NonNakedBehaviour( void );
 
 
 
-//! Basic SMTP client task definition
+/*! Basic SMTP client task definition */
 portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
 {
-  struct sockaddr_in stServeurSockAddr; 
-  long lRetval;
-  long lSocket = -1;
-  
-  // configure push button 0 to produce IT on falling edge
-  gpio_enable_pin_interrupt(GPIO_PUSH_BUTTON_0 , GPIO_FALLING_EDGE);
-  // Disable all interrupts
-  vPortEnterCritical();
-  // register push button 0 handler on level 3
-  INTC_register_interrupt( (__int_handler)&vpushb_ISR, AVR32_GPIO_IRQ_0 + (GPIO_PUSH_BUTTON_0/8), INT3);
-  // Enable all interrupts
-  vPortExitCritical();  
-  
-  for (;;)
-  {
-    // wait for a signal to send a mail
-    while (bSendMail != pdTRUE)   vTaskDelay(200);
+    struct sockaddr_in stServeurSockAddr;
+    long lRetval;
+    long lSocket = -1;
 
-    // Disable all interrupts
+    /* configure push button 0 to produce IT on falling edge */
+    gpio_enable_pin_interrupt( GPIO_PUSH_BUTTON_0, GPIO_FALLING_EDGE );
+    /* Disable all interrupts */
     vPortEnterCritical();
-    // clear the flag    
-    bSendMail = pdFALSE;
-    // Enable all interrupts
-    vPortExitCritical();    
-    // clear the LED
-    vParTestSetLED( 3 , pdFALSE );
-    // Set up port
-    memset(&stServeurSockAddr, 0, sizeof(stServeurSockAddr));
-    stServeurSockAddr.sin_len = sizeof(stServeurSockAddr);
-    stServeurSockAddr.sin_addr.s_addr = inet_addr(cServer);
-    stServeurSockAddr.sin_port = htons(SMTP_PORT);
-    stServeurSockAddr.sin_family = AF_INET;
- 
-    // socket as a stream
-    if ( (lSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    /* register push button 0 handler on level 3 */
+    INTC_register_interrupt( ( __int_handler ) & vpushb_ISR, AVR32_GPIO_IRQ_0 + ( GPIO_PUSH_BUTTON_0 / 8 ), INT3 );
+    /* Enable all interrupts */
+    vPortExitCritical();
+
+    for( ; ; )
     {
-      // socket failed, blink a LED and stay here
-      for (;;) {
-        vParTestToggleLED( 4 );
-        vTaskDelay( 200 );
-      }
-    }
-    // connect to the server
-    if(connect(lSocket,(struct sockaddr *)&stServeurSockAddr, sizeof(stServeurSockAddr)) < 0)
-    {
-      // connect failed, blink a LED and stay here
-      for (;;) {
-        vParTestToggleLED( 6 );
-        vTaskDelay( 200 );
-      }
-    }
-    else
-    {
-//Server: 220 SMTP Ready        
-      // wait for SMTP Server answer 
-      do
-      {
-        lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-      }while (lRetval <= 0);        
-      if (strncmp(cTempBuffer, SMTP_EHLO_STRING, sizeof(cTempBuffer)) >= 0)
-      {
-//Client: EHLO smtp.domain.com
-        // send ehlo
-        send(lSocket, "HELO ", 5, 0);
-        send(lSocket, cServer, strlen(cServer), 0);
-        send(lSocket, "\r\n", 2, 0);
-//Server: 250 
-        // wait for SMTP Server answer
-        do
+        /* wait for a signal to send a mail */
+        while( bSendMail != pdTRUE )
         {
-          lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-        }while (lRetval <= 0);          
-        if (strncmp(cTempBuffer, SMTP_OK_STRING, sizeof(cTempBuffer)) >= 0)
+            vTaskDelay( 200 );
+        }
+
+        /* Disable all interrupts */
+        vPortEnterCritical();
+        /* clear the flag */
+        bSendMail = pdFALSE;
+        /* Enable all interrupts */
+        vPortExitCritical();
+        /* clear the LED */
+        vParTestSetLED( 3, pdFALSE );
+        /* Set up port */
+        memset( &stServeurSockAddr, 0, sizeof( stServeurSockAddr ) );
+        stServeurSockAddr.sin_len = sizeof( stServeurSockAddr );
+        stServeurSockAddr.sin_addr.s_addr = inet_addr( cServer );
+        stServeurSockAddr.sin_port = htons( SMTP_PORT );
+        stServeurSockAddr.sin_family = AF_INET;
+
+        /* socket as a stream */
+        if( ( lSocket = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
         {
-//Client: MAIL FROM:<sender@domain.com>
-          // send MAIL FROM
-          send(lSocket, cMailfrom, strlen(cMailfrom), 0);            
-//Server: 250 OK
-          // wait for SMTP Server answer
-          do
-          {
-            lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-          }while (lRetval <= 0);       
-          if (strncmp(cTempBuffer, SMTP_OK_STRING, sizeof(cTempBuffer)) >= 0)
-          {
-//Client: RCPT TO:<receiver@domain.com>
-            // send RCPT TO
-            send(lSocket, cMailto, strlen(cMailto), 0);  
-//Server: 250 OK
-            // wait for SMTP Server answer
+            /* socket failed, blink a LED and stay here */
+            for( ; ; )
+            {
+                vParTestToggleLED( 4 );
+                vTaskDelay( 200 );
+            }
+        }
+
+        /* connect to the server */
+        if( connect( lSocket, ( struct sockaddr * ) &stServeurSockAddr, sizeof( stServeurSockAddr ) ) < 0 )
+        {
+            /* connect failed, blink a LED and stay here */
+            for( ; ; )
+            {
+                vParTestToggleLED( 6 );
+                vTaskDelay( 200 );
+            }
+        }
+        else
+        {
+/*Server: 220 SMTP Ready */
+            /* wait for SMTP Server answer */
             do
             {
-              lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-            }while (lRetval <= 0);
-            if (strncmp(cTempBuffer, SMTP_OK_STRING, sizeof(cTempBuffer)) >= 0)
+                lRetval = recv( lSocket, cTempBuffer, sizeof( cTempBuffer ), 0 );
+            } while( lRetval <= 0 );
+
+            if( strncmp( cTempBuffer, SMTP_EHLO_STRING, sizeof( cTempBuffer ) ) >= 0 )
             {
-//Client: DATA<CRLF>
-              // send DATA
-              send(lSocket, SMTP_DATA_STRING, 6, 0);  
-//Server: 354 Start mail input; end with <CRLF>.<CRLF>              
-              // wait for SMTP Server answer
-              do
-              {
-                lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-              }while (lRetval <= 0);
-              if (strncmp(cTempBuffer, SMTP_START_OF_TRANSMISSION_STRING, sizeof(cTempBuffer)) >= 0)
-              {
-                // send content
-                send(lSocket, cMailcontent, strlen(cMailcontent), 0);                 
-//Client: <CRLF>.<CRLF>
-                // send "<CRLF>.<CRLF>"
-                send(lSocket, SMTP_MAIL_END_STRING, 5, 0);
-//Server: 250 OK
-                // wait for SMTP Server answer
+/*Client: EHLO smtp.domain.com */
+                /* send ehlo */
+                send( lSocket, "HELO ", 5, 0 );
+                send( lSocket, cServer, strlen( cServer ), 0 );
+                send( lSocket, "\r\n", 2, 0 );
+
+/*Server: 250 */
+                /* wait for SMTP Server answer */
                 do
                 {
-                  lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-                }while (lRetval <= 0);
-                if (strncmp(cTempBuffer, SMTP_OK_STRING, sizeof(cTempBuffer)) >= 0)
+                    lRetval = recv( lSocket, cTempBuffer, sizeof( cTempBuffer ), 0 );
+                } while( lRetval <= 0 );
+
+                if( strncmp( cTempBuffer, SMTP_OK_STRING, sizeof( cTempBuffer ) ) >= 0 )
                 {
-//Client: QUIT<CRLFCRLF>
-                  // send QUIT 
-                  send(lSocket, SMTP_QUIT_STRING, 8, 0);  
-//Server: 221 smtp.domain.com closing transmission
-                  do
-                  {
-                    lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-                  }while (lRetval <= 0);                     
-                  if (strncmp(cTempBuffer, SMTP_END_OF_TRANSMISSION_STRING, sizeof(cTempBuffer)) >= 0)
-                  {
-                    vParTestSetLED( 3 , pdTRUE );
-                  }
+/*Client: MAIL FROM:<sender@domain.com> */
+                    /* send MAIL FROM */
+                    send( lSocket, cMailfrom, strlen( cMailfrom ), 0 );
+
+/*Server: 250 OK */
+                    /* wait for SMTP Server answer */
+                    do
+                    {
+                        lRetval = recv( lSocket, cTempBuffer, sizeof( cTempBuffer ), 0 );
+                    } while( lRetval <= 0 );
+
+                    if( strncmp( cTempBuffer, SMTP_OK_STRING, sizeof( cTempBuffer ) ) >= 0 )
+                    {
+/*Client: RCPT TO:<receiver@domain.com> */
+                        /* send RCPT TO */
+                        send( lSocket, cMailto, strlen( cMailto ), 0 );
+
+/*Server: 250 OK */
+                        /* wait for SMTP Server answer */
+                        do
+                        {
+                            lRetval = recv( lSocket, cTempBuffer, sizeof( cTempBuffer ), 0 );
+                        } while( lRetval <= 0 );
+
+                        if( strncmp( cTempBuffer, SMTP_OK_STRING, sizeof( cTempBuffer ) ) >= 0 )
+                        {
+/*Client: DATA<CRLF> */
+                            /* send DATA */
+                            send( lSocket, SMTP_DATA_STRING, 6, 0 );
+
+/*Server: 354 Start mail input; end with <CRLF>.<CRLF> */
+                            /* wait for SMTP Server answer */
+                            do
+                            {
+                                lRetval = recv( lSocket, cTempBuffer, sizeof( cTempBuffer ), 0 );
+                            } while( lRetval <= 0 );
+
+                            if( strncmp( cTempBuffer, SMTP_START_OF_TRANSMISSION_STRING, sizeof( cTempBuffer ) ) >= 0 )
+                            {
+                                /* send content */
+                                send( lSocket, cMailcontent, strlen( cMailcontent ), 0 );
+/*Client: <CRLF>.<CRLF> */
+                                /* send "<CRLF>.<CRLF>" */
+                                send( lSocket, SMTP_MAIL_END_STRING, 5, 0 );
+
+/*Server: 250 OK */
+                                /* wait for SMTP Server answer */
+                                do
+                                {
+                                    lRetval = recv( lSocket, cTempBuffer, sizeof( cTempBuffer ), 0 );
+                                } while( lRetval <= 0 );
+
+                                if( strncmp( cTempBuffer, SMTP_OK_STRING, sizeof( cTempBuffer ) ) >= 0 )
+                                {
+/*Client: QUIT<CRLFCRLF> */
+                                    /* send QUIT */
+                                    send( lSocket, SMTP_QUIT_STRING, 8, 0 );
+
+/*Server: 221 smtp.domain.com closing transmission */
+                                    do
+                                    {
+                                        lRetval = recv( lSocket, cTempBuffer, sizeof( cTempBuffer ), 0 );
+                                    } while( lRetval <= 0 );
+
+                                    if( strncmp( cTempBuffer, SMTP_END_OF_TRANSMISSION_STRING, sizeof( cTempBuffer ) ) >= 0 )
+                                    {
+                                        vParTestSetLED( 3, pdTRUE );
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-              }
-            }             
-          }
-        }  
-        // close socket
-        close(lSocket);
-      }
+
+                /* close socket */
+                close( lSocket );
+            }
+        }
     }
-  }
 }
 
 /*! \brief push button naked interrupt handler.
  *
  */
 #if __GNUC__
-__attribute__((naked))
+    __attribute__( ( naked ) )
 #elif __ICCAVR32__
-#pragma shadow_registers = full   // Naked.
+    #pragma shadow_registers = full /* Naked. */
 #endif
 void vpushb_ISR( void )
 {
- /* This ISR can cause a context switch, so the first statement must be a
-     call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
-     variable declarations. */
-  portENTER_SWITCHING_ISR();
+    /* This ISR can cause a context switch, so the first statement must be a
+     *  call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
+     *  variable declarations. */
+    portENTER_SWITCHING_ISR();
 
-  prvpushb_ISR_NonNakedBehaviour();
+    prvpushb_ISR_NonNakedBehaviour();
 
-  portEXIT_SWITCHING_ISR();
+    portEXIT_SWITCHING_ISR();
 }
 
 /*! \brief push button interrupt handler. Here, declarations should be done
  *
  */
 #if __GNUC__
-__attribute__((__noinline__))
+    __attribute__( ( __noinline__ ) )
 #elif __ICCAVR32__
-#pragma optimize = no_inline
+    #pragma optimize = no_inline
 #endif
 static portBASE_TYPE prvpushb_ISR_NonNakedBehaviour( void )
 {
-  if (gpio_get_pin_interrupt_flag(GPIO_PUSH_BUTTON_0))
-  {
-    // set the flag    
-    bSendMail = pdTRUE;
-    // allow new interrupt : clear the IFR flag
-    gpio_clear_pin_interrupt_flag(GPIO_PUSH_BUTTON_0);
-  }
-  // no context switch required, task is polling the flag
-  return( pdFALSE );
+    if( gpio_get_pin_interrupt_flag( GPIO_PUSH_BUTTON_0 ) )
+    {
+        /* set the flag */
+        bSendMail = pdTRUE;
+        /* allow new interrupt : clear the IFR flag */
+        gpio_clear_pin_interrupt_flag( GPIO_PUSH_BUTTON_0 );
+    }
+
+    /* no context switch required, task is polling the flag */
+    return( pdFALSE );
 }
 
 
 
-
-    
-#endif
+#endif /* if ( SMTP_USED == 1 ) */

@@ -9,18 +9,18 @@
 *  14/07/2004 : V1.3
 *  01/01/2004 : V1.2
 *******************************************************************************
- THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
- CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
- AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
- OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
- OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
- CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+*  THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
+*  CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
+*  AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
+*  OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
+*  OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
+*  CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
 #include "wdg.h"
 
 #ifndef abs
-	#define abs(x) ((x)>0 ? (x) : -(x))
+    #define abs( x )    ( ( x ) > 0 ? ( x ) : -( x ) )
 #endif
 
 /*******************************************************************************
@@ -32,35 +32,43 @@
 * Input/Output 3 : b: a pointer to the second factor
 * Return         : None
 *******************************************************************************/
-static void FindFactors(unsigned long n, unsigned int *a, unsigned long *b)
+static void FindFactors( unsigned long n,
+                         unsigned int * a,
+                         unsigned long * b )
 {
-	unsigned long b0;
-	unsigned int a0;
-	long err, err_min=n;
+    unsigned long b0;
+    unsigned int a0;
+    long err, err_min = n;
 
-	*a = a0 = ((n-1)/65536ul) + 1;
-	*b = b0 = n / *a;
+    *a = a0 = ( ( n - 1 ) / 65536ul ) + 1;
+    *b = b0 = n / *a;
 
-	for (; *a <= 256; (*a)++)
-	{
-		*b = n / *a;
-		err = (long)*a * (long)*b - (long)n;
-		if (abs(err) > (*a / 2))
-		{
-			(*b)++;
-			err = (long)*a * (long)*b - (long)n;
-		}
-		if (abs(err) < abs(err_min))
-		{
-			err_min = err;
-			a0 = *a;
-			b0 = *b;
-			if (err == 0) break;
-		}
-	}
+    for( ; *a <= 256; ( *a )++ )
+    {
+        *b = n / *a;
+        err = ( long ) *a * ( long ) *b - ( long ) n;
 
-	*a = a0;
-	*b = b0;
+        if( abs( err ) > ( *a / 2 ) )
+        {
+            ( *b )++;
+            err = ( long ) *a * ( long ) *b - ( long ) n;
+        }
+
+        if( abs( err ) < abs( err_min ) )
+        {
+            err_min = err;
+            a0 = *a;
+            b0 = *b;
+
+            if( err == 0 )
+            {
+                break;
+            }
+        }
+    }
+
+    *a = a0;
+    *b = b0;
 }
 
 /*******************************************************************************
@@ -69,13 +77,13 @@ static void FindFactors(unsigned long n, unsigned int *a, unsigned long *b)
 * Input          : Amount of time (us) needed
 * Return         : None
 *******************************************************************************/
-void WDG_PeriodValueConfig ( u32 Time )
+void WDG_PeriodValueConfig( u32 Time )
 {
-	unsigned int a;
-	unsigned long n, b;
+    unsigned int a;
+    unsigned long n, b;
 
-	n = Time * (RCCU_FrequencyValue(RCCU_PCLK) / 1000000);
-	FindFactors(n, &a, &b);
+    n = Time * ( RCCU_FrequencyValue( RCCU_PCLK ) / 1000000 );
+    FindFactors( n, &a, &b );
     WDG->PR = a - 1;
     WDG->VR = b - 1;
 }

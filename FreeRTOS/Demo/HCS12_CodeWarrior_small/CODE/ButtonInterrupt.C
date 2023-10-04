@@ -8,16 +8,16 @@
 **     Compiler  : Metrowerks HC12 C Compiler
 **     Date/Time : 19/05/2005, 19:02
 **     Abstract  :
-**         This bean "ExtInt" implements an external 
-**         interrupt, its control methods and interrupt/event 
+**         This bean "ExtInt" implements an external
+**         interrupt, its control methods and interrupt/event
 **         handling procedure.
-**         The bean uses one pin which generates interrupt on 
+**         The bean uses one pin which generates interrupt on
 **         selected edge.
 **     Settings  :
 **         Interrupt name              : INT_PortP
 **         User handling procedure     : ButtonInterrupt_OnInterrupt
 **
-**         Used pin                    : 
+**         Used pin                    :
 **             ----------------------------------------------------
 **                Number (on package)  |    Name
 **             ----------------------------------------------------
@@ -67,9 +67,9 @@
 #include "Cpu.h"
 
 /* Definition of DATA and CODE segments for this bean. User can specify where
-   these segments will be located on "Build options" tab of the selected CPU bean. */
-#pragma DATA_SEG ButtonInterrupt_DATA  /* Data section for this module. */
-#pragma CODE_SEG ButtonInterrupt_CODE  /* Code section for this module. */
+ * these segments will be located on "Build options" tab of the selected CPU bean. */
+#pragma DATA_SEG ButtonInterrupt_DATA /* Data section for this module. */
+#pragma CODE_SEG ButtonInterrupt_CODE /* Code section for this module. */
 
 /*
 ** ===================================================================
@@ -81,10 +81,10 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-void ButtonInterrupt_Enable(void)
+void ButtonInterrupt_Enable( void )
 {
-  PIFP = 1;                             /* Clear flag */
-  PIEP_PIEP0 = 1;                       /* Enable interrupt */
+    PIFP = 1;                           /* Clear flag */
+    PIEP_PIEP0 = 1;                     /* Enable interrupt */
 }
 
 /*
@@ -97,20 +97,20 @@ void ButtonInterrupt_Enable(void)
 ** ===================================================================
 */
 #pragma CODE_SEG __NEAR_SEG NON_BANKED /* Interrupt section for this module. Placement will be in NON_BANKED area. */
-__interrupt void ButtonInterrupt_Interrupt(void)
+__interrupt void ButtonInterrupt_Interrupt( void )
 {
-  PIFP = 1;                             /* Clear flag */
-  ButtonInterrupt_OnInterrupt();
+    PIFP = 1;                           /* Clear flag */
+    ButtonInterrupt_OnInterrupt();
 }
 
-#pragma CODE_SEG ButtonInterrupt_CODE  /* Code section for this module. */
+#pragma CODE_SEG ButtonInterrupt_CODE /* Code section for this module. */
 
 /* END ButtonInterrupt. */
 
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

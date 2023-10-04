@@ -41,6 +41,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -53,17 +54,18 @@
  * \{
  */
 
-volatile void *volatile stdio_base;
-int (*ptr_put)(void volatile*, char);
+volatile void * volatile stdio_base;
+int (* ptr_put)( void volatile *,
+                 char );
 
 
-#if ( defined(__ICCAVR32__) || defined(__ICCAVR__) || defined(__ICCARM__))
+#if ( defined( __ICCAVR32__ ) || defined( __ICCAVR__ ) || defined( __ICCARM__ ) )
 
-#include <yfuns.h>
+    #include <yfuns.h>
 
-_STD_BEGIN
+    _STD_BEGIN
 
-#pragma module_name = "?__write"
+    #pragma module_name = "?__write"
 
 /*! \brief Writes a number of bytes, at most \a size, from the memory area
  *         pointed to by \a buffer.
@@ -78,70 +80,88 @@ _STD_BEGIN
  *
  * \return The number of bytes written, or \c _LLIO_ERROR on failure.
  */
-size_t __write(int handle, const unsigned char *buffer, size_t size)
-{
-	size_t nChars = 0;
+    size_t __write( int handle,
+                    const unsigned char * buffer,
+                    size_t size )
+    {
+        size_t nChars = 0;
 
-	if (buffer == 0) {
-		// This means that we should flush internal buffers.
-		return 0;
-	}
+        if( buffer == 0 )
+        {
+            /* This means that we should flush internal buffers. */
+            return 0;
+        }
 
-	// This implementation only writes to stdout and stderr.
-	// For all other file handles, it returns failure.
-	if (handle != _LLIO_STDOUT && handle != _LLIO_STDERR) {
-		return _LLIO_ERROR;
-	}
+        /* This implementation only writes to stdout and stderr. */
+        /* For all other file handles, it returns failure. */
+        if( ( handle != _LLIO_STDOUT ) && ( handle != _LLIO_STDERR ) )
+        {
+            return _LLIO_ERROR;
+        }
 
-	for (; size != 0; --size) {
-		if (ptr_put(stdio_base, *buffer++) < 0) {
-			return _LLIO_ERROR;
-		}
-		++nChars;
-	}
-	return nChars;
-}
+        for( ; size != 0; --size )
+        {
+            if( ptr_put( stdio_base, *buffer++ ) < 0 )
+            {
+                return _LLIO_ERROR;
+            }
 
-_STD_END
+            ++nChars;
+        }
+
+        return nChars;
+    }
+
+    _STD_END
 
 
-#elif (defined(__GNUC__) && !XMEGA && !MEGA)
+#elif ( defined( __GNUC__ ) && !XMEGA && !MEGA )
 
-int __attribute__((weak))
-_write (int file, const char *ptr, int len);
+    int __attribute__( ( weak ) ) _write( int file,
+                                          const char * ptr,
+                                          int len );
 
-int __attribute__((weak))
-_write (int file, const char *ptr, int len)
-{
-	int nChars = 0;
+    int __attribute__( ( weak ) ) _write( int file,
+                                          const char * ptr,
+                                          int len )
+    {
+        int nChars = 0;
 
-	if ((file != 1) && (file != 2) && (file!=3)) {
-		return -1;
-	}
+        if( ( file != 1 ) && ( file != 2 ) && ( file != 3 ) )
+        {
+            return -1;
+        }
 
-	for (; len != 0; --len) {
-		if (ptr_put(stdio_base, *ptr++) < 0) {
-			return -1;
-		}
-		++nChars;
-	}
-	return nChars;
-}
+        for( ; len != 0; --len )
+        {
+            if( ptr_put( stdio_base, *ptr++ ) < 0 )
+            {
+                return -1;
+            }
 
-#elif (defined(__GNUC__) && (XMEGA || MEGA))
+            ++nChars;
+        }
 
-int _write (char c, int *f);
+        return nChars;
+    }
 
-int _write (char c, int *f)
-{
-	if (ptr_put(stdio_base, c) < 0) {
-		return -1;
-	}
-	return 1;
-}
-#endif
+#elif ( defined( __GNUC__ ) && ( XMEGA || MEGA ) )
+
+    int _write( char c,
+                int * f );
+
+    int _write( char c,
+                int * f )
+    {
+        if( ptr_put( stdio_base, c ) < 0 )
+        {
+            return -1;
+        }
+
+        return 1;
+    }
+#endif /* if ( defined( __ICCAVR32__ ) || defined( __ICCAVR__ ) || defined( __ICCARM__ ) ) */
 
 /**
  * \}
  */
-

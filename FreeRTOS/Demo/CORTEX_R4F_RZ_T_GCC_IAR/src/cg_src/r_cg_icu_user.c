@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_icu.h"
@@ -42,12 +42,12 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
 
 /* Stores switch states detected via interrupts */
-volatile uint8_t  g_switch_press_flg = 0u;
+volatile uint8_t g_switch_press_flg = 0u;
 
 /* End user code. Do not edit comment generated here */
 
@@ -58,15 +58,15 @@ volatile uint8_t  g_switch_press_flg = 0u;
 * Return Value : None
 ***********************************************************************************************************************/
 #ifdef __ICCARM__
-	__irq __arm
+    __irq __arm
 #endif /* __ICCARM__ */
-void r_icu_irq12_interrupt(void)
+void r_icu_irq12_interrupt( void )
 {
     VIC.PIC0.LONG = 0x00010000UL;
     /* Start user code. Do not edit comment generated here */
 
     /* Set global switch flag to indicate SW3 is pressed */
-    g_switch_press_flg |=  SW3_PRESS_FLG;
+    g_switch_press_flg |= SW3_PRESS_FLG;
 
     /* End user code. Do not edit comment generated here */
     VIC.HVA0.LONG = 0x00000000UL;

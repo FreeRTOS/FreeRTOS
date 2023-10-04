@@ -31,28 +31,28 @@
 #define _SAMA5_AES_INSTANCE_
 
 /* ========== Register definition for AES peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_AES_CR                 (0xF8038000U) /**< \brief (AES) Control Register */
-#define REG_AES_MR                 (0xF8038004U) /**< \brief (AES) Mode Register */
-#define REG_AES_IER                (0xF8038010U) /**< \brief (AES) Interrupt Enable Register */
-#define REG_AES_IDR                (0xF8038014U) /**< \brief (AES) Interrupt Disable Register */
-#define REG_AES_IMR                (0xF8038018U) /**< \brief (AES) Interrupt Mask Register */
-#define REG_AES_ISR                (0xF803801CU) /**< \brief (AES) Interrupt Status Register */
-#define REG_AES_KEYWR              (0xF8038020U) /**< \brief (AES) Key Word Register */
-#define REG_AES_IDATAR             (0xF8038040U) /**< \brief (AES) Input Data Register */
-#define REG_AES_ODATAR             (0xF8038050U) /**< \brief (AES) Output Data Register */
-#define REG_AES_IVR                (0xF8038060U) /**< \brief (AES) Initialization Vector Register */
-#else
-#define REG_AES_CR        (*(WoReg*)0xF8038000U) /**< \brief (AES) Control Register */
-#define REG_AES_MR        (*(RwReg*)0xF8038004U) /**< \brief (AES) Mode Register */
-#define REG_AES_IER       (*(WoReg*)0xF8038010U) /**< \brief (AES) Interrupt Enable Register */
-#define REG_AES_IDR       (*(WoReg*)0xF8038014U) /**< \brief (AES) Interrupt Disable Register */
-#define REG_AES_IMR       (*(RoReg*)0xF8038018U) /**< \brief (AES) Interrupt Mask Register */
-#define REG_AES_ISR       (*(RoReg*)0xF803801CU) /**< \brief (AES) Interrupt Status Register */
-#define REG_AES_KEYWR     (*(WoReg*)0xF8038020U) /**< \brief (AES) Key Word Register */
-#define REG_AES_IDATAR    (*(WoReg*)0xF8038040U) /**< \brief (AES) Input Data Register */
-#define REG_AES_ODATAR    (*(RoReg*)0xF8038050U) /**< \brief (AES) Output Data Register */
-#define REG_AES_IVR       (*(WoReg*)0xF8038060U) /**< \brief (AES) Initialization Vector Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_AES_CR        ( 0xF8038000U )              /**< \brief (AES) Control Register */
+    #define REG_AES_MR        ( 0xF8038004U )              /**< \brief (AES) Mode Register */
+    #define REG_AES_IER       ( 0xF8038010U )              /**< \brief (AES) Interrupt Enable Register */
+    #define REG_AES_IDR       ( 0xF8038014U )              /**< \brief (AES) Interrupt Disable Register */
+    #define REG_AES_IMR       ( 0xF8038018U )              /**< \brief (AES) Interrupt Mask Register */
+    #define REG_AES_ISR       ( 0xF803801CU )              /**< \brief (AES) Interrupt Status Register */
+    #define REG_AES_KEYWR     ( 0xF8038020U )              /**< \brief (AES) Key Word Register */
+    #define REG_AES_IDATAR    ( 0xF8038040U )              /**< \brief (AES) Input Data Register */
+    #define REG_AES_ODATAR    ( 0xF8038050U )              /**< \brief (AES) Output Data Register */
+    #define REG_AES_IVR       ( 0xF8038060U )              /**< \brief (AES) Initialization Vector Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_AES_CR        ( *( WoReg * ) 0xF8038000U ) /**< \brief (AES) Control Register */
+    #define REG_AES_MR        ( *( RwReg * ) 0xF8038004U ) /**< \brief (AES) Mode Register */
+    #define REG_AES_IER       ( *( WoReg * ) 0xF8038010U ) /**< \brief (AES) Interrupt Enable Register */
+    #define REG_AES_IDR       ( *( WoReg * ) 0xF8038014U ) /**< \brief (AES) Interrupt Disable Register */
+    #define REG_AES_IMR       ( *( RoReg * ) 0xF8038018U ) /**< \brief (AES) Interrupt Mask Register */
+    #define REG_AES_ISR       ( *( RoReg * ) 0xF803801CU ) /**< \brief (AES) Interrupt Status Register */
+    #define REG_AES_KEYWR     ( *( WoReg * ) 0xF8038020U ) /**< \brief (AES) Key Word Register */
+    #define REG_AES_IDATAR    ( *( WoReg * ) 0xF8038040U ) /**< \brief (AES) Input Data Register */
+    #define REG_AES_ODATAR    ( *( RoReg * ) 0xF8038050U ) /**< \brief (AES) Output Data Register */
+    #define REG_AES_IVR       ( *( WoReg * ) 0xF8038060U ) /**< \brief (AES) Initialization Vector Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_AES_INSTANCE_ */

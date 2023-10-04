@@ -39,16 +39,22 @@
 #include "het.h"
 
 /* Port bits connected to LEDs. */
-const unsigned long ulLEDBits[] = { 25, 18, 29, 	/* Bottom row. */
-									17, 31, 0,  	/* Top row. */
-									2, 5, 20, 		/* Red1, blue1, green1 */
-									4, 27, 16 };	/* Red2, blue2, green2 */
+const unsigned long ulLEDBits[] =
+{
+    25, 18, 29,                                     /* Bottom row. */
+    17, 31, 0,                                      /* Top row. */
+    2,  5, 20,                                      /* Red1, blue1, green1 */
+    4,  27, 16
+};                                                  /* Red2, blue2, green2 */
 
 /* 1 turns a white LED on, or a coloured LED off. */
-const unsigned long ulOnStates[] = { 1, 1, 1,
-									 1, 1, 1,
-									 0, 0, 0,
-									 0, 0, 0 };
+const unsigned long ulOnStates[] =
+{
+    1, 1, 1,
+    1, 1, 1,
+    0, 0, 0,
+    0, 0, 0
+};
 
 const unsigned long ulNumLEDs = sizeof( ulLEDBits ) / sizeof( unsigned long );
 
@@ -56,47 +62,45 @@ const unsigned long ulNumLEDs = sizeof( ulLEDBits ) / sizeof( unsigned long );
 
 void vParTestInitialise( void )
 {
-unsigned long ul;
+    unsigned long ul;
 
-	/* Initialise the IO ports that drive the LEDs */
-	gioSetDirection( hetPORT, 0xFFFFFFFF );
+    /* Initialise the IO ports that drive the LEDs */
+    gioSetDirection( hetPORT, 0xFFFFFFFF );
 
-	/* Turn all the LEDs off. */
-	for( ul = 0; ul < ulNumLEDs; ul++ )
-	{
-		gioSetBit( hetPORT, ulLEDBits[ ul ], !ulOnStates[ ul ] );
-	}
+    /* Turn all the LEDs off. */
+    for( ul = 0; ul < ulNumLEDs; ul++ )
+    {
+        gioSetBit( hetPORT, ulLEDBits[ ul ], !ulOnStates[ ul ] );
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned long ulLED, signed long xValue )
-{	
-	if( ulLED < ulNumLEDs )
-	{
-		if( xValue == pdFALSE )
-		{
-			xValue = !ulOnStates[ ulLED ];
-		}
-		else
-		{
-			xValue = ulOnStates[ ulLED ];
-		}
+void vParTestSetLED( unsigned long ulLED,
+                     signed long xValue )
+{
+    if( ulLED < ulNumLEDs )
+    {
+        if( xValue == pdFALSE )
+        {
+            xValue = !ulOnStates[ ulLED ];
+        }
+        else
+        {
+            xValue = ulOnStates[ ulLED ];
+        }
 
-		gioSetBit( hetPORT, ulLEDBits[ ulLED ], xValue );
-	}
+        gioSetBit( hetPORT, ulLEDBits[ ulLED ], xValue );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned long ulLED )
 {
-unsigned long ulBitState;
+    unsigned long ulBitState;
 
-	if( ulLED < ulNumLEDs )
-	{
-		ulBitState = gioGetBit( hetPORT, ulLEDBits[ ulLED ] );
-		gioSetBit( hetPORT, ulLEDBits[ ulLED ], !ulBitState );
-	}
+    if( ulLED < ulNumLEDs )
+    {
+        ulBitState = gioGetBit( hetPORT, ulLEDBits[ ulLED ] );
+        gioSetBit( hetPORT, ulLEDBits[ ulLED ], !ulBitState );
+    }
 }
-							
-
-

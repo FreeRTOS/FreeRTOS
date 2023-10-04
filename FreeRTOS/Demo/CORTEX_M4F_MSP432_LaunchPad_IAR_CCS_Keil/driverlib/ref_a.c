@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -37,80 +37,79 @@
 #include <ref_a.h>
 #include <debug.h>
 
-void REF_A_setReferenceVoltage(uint_fast8_t referenceVoltageSelect)
+void REF_A_setReferenceVoltage( uint_fast8_t referenceVoltageSelect )
 {
-    ASSERT(referenceVoltageSelect <= REF_A_VREF2_5V);
+    ASSERT( referenceVoltageSelect <= REF_A_VREF2_5V );
 
-    REF_A->CTL0 = (REF_A->CTL0 &  ~REF_A_CTL0_VSEL_3) | referenceVoltageSelect;
+    REF_A->CTL0 = ( REF_A->CTL0 & ~REF_A_CTL0_VSEL_3 ) | referenceVoltageSelect;
 }
 
-void REF_A_disableTempSensor(void)
+void REF_A_disableTempSensor( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_TCOFF_OFS) = 1;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_TCOFF_OFS ) = 1;
 }
 
-void REF_A_enableTempSensor(void)
+void REF_A_enableTempSensor( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_TCOFF_OFS) = 0;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_TCOFF_OFS ) = 0;
 }
 
-void REF_A_enableReferenceVoltageOutput(void)
+void REF_A_enableReferenceVoltageOutput( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_OUT_OFS) = 1;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_OUT_OFS ) = 1;
 }
 
-void REF_A_disableReferenceVoltageOutput(void)
+void REF_A_disableReferenceVoltageOutput( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_OUT_OFS) = 0;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_OUT_OFS ) = 0;
 }
 
-void REF_A_enableReferenceVoltage(void)
+void REF_A_enableReferenceVoltage( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_ON_OFS) = 1;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_ON_OFS ) = 1;
 }
 
-void REF_A_disableReferenceVoltage(void)
+void REF_A_disableReferenceVoltage( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_ON_OFS) = 0;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_ON_OFS ) = 0;
 }
 
-uint_fast8_t REF_A_getBandgapMode(void)
+uint_fast8_t REF_A_getBandgapMode( void )
 {
-    return (REF_A->CTL0 & REF_A_CTL0_BGMODE);
+    return( REF_A->CTL0 & REF_A_CTL0_BGMODE );
 }
 
-bool REF_A_isBandgapActive(void)
+bool REF_A_isBandgapActive( void )
 {
-    return BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_BGACT_OFS);
+    return BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_BGACT_OFS );
 }
 
-bool REF_A_isRefGenBusy(void)
+bool REF_A_isRefGenBusy( void )
 {
-    return BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_GENBUSY_OFS);
+    return BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_GENBUSY_OFS );
 }
 
-bool REF_A_isRefGenActive(void)
+bool REF_A_isRefGenActive( void )
 {
-    return BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_GENACT_OFS);
+    return BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_GENACT_OFS );
 }
 
-bool REF_A_getBufferedBandgapVoltageStatus(void)
+bool REF_A_getBufferedBandgapVoltageStatus( void )
 {
-    return BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_BGRDY_OFS);
+    return BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_BGRDY_OFS );
 }
 
-bool REF_A_getVariableReferenceVoltageStatus(void)
+bool REF_A_getVariableReferenceVoltageStatus( void )
 {
-    return BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_GENRDY_OFS);
+    return BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_GENRDY_OFS );
 }
 
-void REF_A_setReferenceVoltageOneTimeTrigger(void)
+void REF_A_setReferenceVoltageOneTimeTrigger( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_GENOT_OFS) = 1;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_GENOT_OFS ) = 1;
 }
 
-void REF_A_setBufferedBandgapVoltageOneTimeTrigger(void)
+void REF_A_setBufferedBandgapVoltageOneTimeTrigger( void )
 {
-    BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_BGOT_OFS) = 1;
+    BITBAND_PERI( REF_A->CTL0, REF_A_CTL0_BGOT_OFS ) = 1;
 }
-

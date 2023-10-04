@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -59,39 +59,40 @@
  */
 
 #ifndef _PIO_IT_
-#define _PIO_IT_
+    #define _PIO_IT_
 
 /*
  *         Headers
  */
 
-#include "pio.h"
+    #include "pio.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*
  *         Global functions
  */
 
-extern void PIO_InitializeInterrupts( uint32_t dwPriority ) ;
+    extern void PIO_InitializeInterrupts( uint32_t dwPriority );
 
-extern void PIO_ConfigureIt( const Pin *pPin, void (*handler)( const Pin* ) ) ;
+    extern void PIO_ConfigureIt( const Pin * pPin,
+                                 void ( * handler )( const Pin * ) );
 
-extern void PIO_EnableIt( const Pin *pPin ) ;
+    extern void PIO_EnableIt( const Pin * pPin );
 
-extern void PIO_DisableIt( const Pin *pPin ) ;
+    extern void PIO_DisableIt( const Pin * pPin );
 
-extern void PIO_IT_InterruptHandler( void ) ;
+    extern void PIO_IT_InterruptHandler( void );
 
-extern void PioInterruptHandler( uint32_t id, Pio *pPio ) ;
+    extern void PioInterruptHandler( uint32_t id,
+                                     Pio * pPio );
 
-extern void PIO_CaptureHandler( void ) ;
+    extern void PIO_CaptureHandler( void );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _PIO_IT_ */
-

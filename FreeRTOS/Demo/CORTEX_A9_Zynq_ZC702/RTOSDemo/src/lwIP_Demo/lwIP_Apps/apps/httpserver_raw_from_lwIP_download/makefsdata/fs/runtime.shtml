@@ -12,7 +12,7 @@
 <h2>Run-time statistics</h2>
 Page will refresh every 2 seconds.<p>
 <font face="courier"><pre>Task            Abs Time      % Time<br>****************************************<br>
-<!--#run_stats-->
+<!--#run_stats-->
 </pre></font>
 </font>
 </body>

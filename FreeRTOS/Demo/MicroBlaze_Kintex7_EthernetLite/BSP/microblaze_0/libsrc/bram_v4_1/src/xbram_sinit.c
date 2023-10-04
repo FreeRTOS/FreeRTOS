@@ -30,28 +30,29 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-* @file xbram_sinit.c
-* @addtogroup bram_v4_0
-* @{
-*
-* The implementation of the XBram driver's static initialzation
-* functionality.
-*
-* @note
-*
-* None
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -----------------------------------------------
-* 2.01a jvb  10/13/05 First release
-* 2.11a mta  03/21/07 Updated to new coding style
-* </pre>
-*
-*****************************************************************************/
+ * @file xbram_sinit.c
+ * @addtogroup bram_v4_0
+ * @{
+ *
+ * The implementation of the XBram driver's static initialzation
+ * functionality.
+ *
+ * @note
+ *
+ * None
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -----------------------------------------------
+ * 2.01a jvb  10/13/05 First release
+ * 2.11a mta  03/21/07 Updated to new coding style
+ * </pre>
+ *
+ *****************************************************************************/
 
 /***************************** Include Files ********************************/
 
@@ -72,33 +73,36 @@ extern XBram_Config XBram_ConfigTable[];
 
 
 /*****************************************************************************/
+
 /**
-* Lookup the device configuration based on the unique device ID.  The table
-* ConfigTable contains the configuration info for each device in the system.
-*
-* @param	DeviceId is the device identifier to lookup.
-*
-* @return
-*		 - A pointer of data type XBram_Config which
-*		points to the device configuration if DeviceID is found.
-* 		- NULL if DeviceID is not found.
-*
-* @note		None.
-*
-******************************************************************************/
-XBram_Config *XBram_LookupConfig(u16 DeviceId)
+ * Lookup the device configuration based on the unique device ID.  The table
+ * ConfigTable contains the configuration info for each device in the system.
+ *
+ * @param	DeviceId is the device identifier to lookup.
+ *
+ * @return
+ *		 - A pointer of data type XBram_Config which
+ *		points to the device configuration if DeviceID is found.
+ *      - NULL if DeviceID is not found.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+XBram_Config * XBram_LookupConfig( u16 DeviceId )
 {
-	XBram_Config *CfgPtr = NULL;
+    XBram_Config * CfgPtr = NULL;
 
-	int Index;
+    int Index;
 
-	for (Index = 0; Index < XPAR_XBRAM_NUM_INSTANCES; Index++) {
-		if (XBram_ConfigTable[Index].DeviceId == DeviceId) {
-			CfgPtr = &XBram_ConfigTable[Index];
-			break;
-		}
-	}
+    for( Index = 0; Index < XPAR_XBRAM_NUM_INSTANCES; Index++ )
+    {
+        if( XBram_ConfigTable[ Index ].DeviceId == DeviceId )
+        {
+            CfgPtr = &XBram_ConfigTable[ Index ];
+            break;
+        }
+    }
 
-	return CfgPtr;
+    return CfgPtr;
 }
 /** @} */

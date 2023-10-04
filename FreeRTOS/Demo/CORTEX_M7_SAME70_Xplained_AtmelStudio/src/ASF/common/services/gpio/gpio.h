@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -48,14 +49,14 @@
 
 #include <parts.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
-# include "sam_gpio/sam_gpio.h"
+#if ( SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70 )
+    #include "sam_gpio/sam_gpio.h"
 #elif XMEGA
-# include "xmega_gpio/xmega_gpio.h"
+    #include "xmega_gpio/xmega_gpio.h"
 #elif MEGA || MEGA_RF
-# include "mega_gpio/mega_gpio.h"
+    #include "mega_gpio/mega_gpio.h"
 #else
-# error Unsupported chip type
+    #error Unsupported chip type
 #endif
 
 /**
@@ -83,4 +84,4 @@
  *   - gpio_configure_group()
  */
 
-#endif  /* _GPIO_H_ */
+#endif /* _GPIO_H_ */

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,61 +27,70 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !!!Purpose
-///
-/// Definition of methods for HX8347 driver.
-///
-/// !!!Usage
-///
-/// -# LCD_WriteReg
-/// -# LCD_ReadReg
-/// -# LCD_ReadStatus
-/// -# LCD_DumpReg
-/// -# LCD_WriteRAM_Prepare
-/// -# LCD_WriteRAM
-/// -# LCD_ReadRAM
-/// -# LCD_Initialize
-/// -# LCD_SetCursor
-/// -# LCD_On
-/// -# LCD_Off
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !!!Purpose */
+/*/ */
+/*/ Definition of methods for HX8347 driver. */
+/*/ */
+/*/ !!!Usage */
+/*/ */
+/*/ -# LCD_WriteReg */
+/*/ -# LCD_ReadReg */
+/*/ -# LCD_ReadStatus */
+/*/ -# LCD_DumpReg */
+/*/ -# LCD_WriteRAM_Prepare */
+/*/ -# LCD_WriteRAM */
+/*/ -# LCD_ReadRAM */
+/*/ -# LCD_Initialize */
+/*/ -# LCD_SetCursor */
+/*/ -# LCD_On */
+/*/ -# LCD_Off */
+/*------------------------------------------------------------------------------ */
 
 #ifndef HX8347_H
 #define HX8347_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 #include <board.h>
 
 #ifdef BOARD_LCD_HX8347
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
-/// Convert 24-bits color to 16-bits color
-#define RGB24ToRGB16(color) (((color >> 8) & 0xF800) | \
-    ((color >> 5) & 0x7E0) | \
-    ((color >> 3) & 0x1F))
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
+/*/ Convert 24-bits color to 16-bits color */
+    #define RGB24ToRGB16( color )   \
+    ( ( ( color >> 8 ) & 0xF800 ) | \
+      ( ( color >> 5 ) & 0x7E0 ) |  \
+      ( ( color >> 3 ) & 0x1F ) )
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-void LCD_WriteReg(void *pLcdBase, unsigned char reg, unsigned short data);
-unsigned short LCD_ReadReg(void *pLcdBase, unsigned char reg);
-unsigned short LCD_ReadStatus(void *pLcdBase);
-void LCD_DumpReg(void *pLcdBase, unsigned char startAddr, unsigned char endAddr);
-void LCD_WriteRAM_Prepare(void *pLcdBase);
-void LCD_WriteRAM(void *pLcdBase, unsigned short color);
-unsigned short LCD_ReadRAM(void *pLcdBase);
-void LCD_Initialize(void *pLcdBase);
-void LCD_SetCursor(void *pLcdBase, unsigned short x, unsigned short y);
-void LCD_On(void *pLcdBase);
-void LCD_Off(void *pLcdBase);
+    void LCD_WriteReg( void * pLcdBase,
+                       unsigned char reg,
+                       unsigned short data );
+    unsigned short LCD_ReadReg( void * pLcdBase,
+                                unsigned char reg );
+    unsigned short LCD_ReadStatus( void * pLcdBase );
+    void LCD_DumpReg( void * pLcdBase,
+                      unsigned char startAddr,
+                      unsigned char endAddr );
+    void LCD_WriteRAM_Prepare( void * pLcdBase );
+    void LCD_WriteRAM( void * pLcdBase,
+                       unsigned short color );
+    unsigned short LCD_ReadRAM( void * pLcdBase );
+    void LCD_Initialize( void * pLcdBase );
+    void LCD_SetCursor( void * pLcdBase,
+                        unsigned short x,
+                        unsigned short y );
+    void LCD_On( void * pLcdBase );
+    void LCD_Off( void * pLcdBase );
 
 #endif //#ifdef BOARD_LCD_HX8347
 #endif //#ifndef HX8347_H

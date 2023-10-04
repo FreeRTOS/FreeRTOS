@@ -20,10 +20,10 @@
  */
 
 #ifndef _FSL_DEBUGCONSOLE_H_
-#define _FSL_DEBUGCONSOLE_H_
+    #define _FSL_DEBUGCONSOLE_H_
 
-#include "fsl_common.h"
-#include "serial_manager.h"
+    #include "fsl_common.h"
+    #include "serial_manager.h"
 
 /*!
  * @addtogroup debugconsole
@@ -34,23 +34,23 @@
  * Definitions
  ******************************************************************************/
 
-extern serial_handle_t g_serialHandle; /*!< serial manager handle */
+    extern serial_handle_t g_serialHandle; /*!< serial manager handle */
 
 /*! @brief Definition select redirect toolchain printf, scanf to uart or not. */
-#define DEBUGCONSOLE_REDIRECT_TO_TOOLCHAIN 0U /*!< Select toolchain printf and scanf. */
-#define DEBUGCONSOLE_REDIRECT_TO_SDK 1U       /*!< Select SDK version printf, scanf. */
-#define DEBUGCONSOLE_DISABLE 2U               /*!< Disable debugconsole function. */
+    #define DEBUGCONSOLE_REDIRECT_TO_TOOLCHAIN    0U /*!< Select toolchain printf and scanf. */
+    #define DEBUGCONSOLE_REDIRECT_TO_SDK          1U /*!< Select SDK version printf, scanf. */
+    #define DEBUGCONSOLE_DISABLE                  2U /*!< Disable debugconsole function. */
 
 /*! @brief Definition to select sdk or toolchain printf, scanf. The macro only support
  * to be redefined in project setting.
  */
-#ifndef SDK_DEBUGCONSOLE
-#define SDK_DEBUGCONSOLE 1U
-#endif
+    #ifndef SDK_DEBUGCONSOLE
+        #define SDK_DEBUGCONSOLE    1U
+    #endif
 
-#if defined(SDK_DEBUGCONSOLE) && !(SDK_DEBUGCONSOLE)
-#include <stdio.h>
-#endif
+    #if defined( SDK_DEBUGCONSOLE ) && !( SDK_DEBUGCONSOLE )
+        #include <stdio.h>
+    #endif
 
 /*! @brief Definition to select redirect toolchain printf, scanf to uart or not.
  *
@@ -58,36 +58,37 @@ extern serial_handle_t g_serialHandle; /*!< serial manager handle */
  *  if SDK_DEBUGCONSOLE defined to 1,it represents select SDK version printf, scanf.
  *  if SDK_DEBUGCONSOLE defined to 2,it represents disable debugconsole function.
  */
-#if SDK_DEBUGCONSOLE == DEBUGCONSOLE_DISABLE /* Disable debug console */
-#define PRINTF
-#define SCANF
-#define PUTCHAR
-#define GETCHAR
-#elif SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK /* Select printf, scanf, putchar, getchar of SDK version. */
-#define PRINTF DbgConsole_Printf
-#define SCANF DbgConsole_Scanf
-#define PUTCHAR DbgConsole_Putchar
-#define GETCHAR DbgConsole_Getchar
-#elif SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_TOOLCHAIN /* Select printf, scanf, putchar, getchar of toolchain. \ \
-                                                              */
-#define PRINTF printf
-#define SCANF scanf
-#define PUTCHAR putchar
-#define GETCHAR getchar
-#endif /* SDK_DEBUGCONSOLE */
+    #if SDK_DEBUGCONSOLE == DEBUGCONSOLE_DISABLE /* Disable debug console */
+        #define PRINTF
+        #define SCANF
+        #define PUTCHAR
+        #define GETCHAR
+    #elif SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK /* Select printf, scanf, putchar, getchar of SDK version. */
+        #define PRINTF     DbgConsole_Printf
+        #define SCANF      DbgConsole_Scanf
+        #define PUTCHAR    DbgConsole_Putchar
+        #define GETCHAR    DbgConsole_Getchar
+    #elif SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_TOOLCHAIN /* Select printf, scanf, putchar, getchar of toolchain. \ \
+                                                                  */
+        #define PRINTF     printf
+        #define SCANF      scanf
+        #define PUTCHAR    putchar
+        #define GETCHAR    getchar
+    #endif /* SDK_DEBUGCONSOLE */
 
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
 
-#if defined(__cplusplus)
-extern "C" {
-#endif /* __cplusplus */
+    #if defined( __cplusplus )
+    extern "C" {
+    #endif /* __cplusplus */
 
 /*! @name Initialization*/
 /* @{ */
 
-#if ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART))
+    #if ( ( SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK ) || defined( SDK_DEBUGCONSOLE_UART ) )
+
 /*!
  * @brief Initializes the peripheral used for debug messages.
  *
@@ -106,7 +107,10 @@ extern "C" {
  * @return              Indicates whether initialization was successful or not.
  * @retval kStatus_Success          Execution successfully
  */
-status_t DbgConsole_Init(uint8_t instance, uint32_t baudRate, serial_port_type_t device, uint32_t clkSrcFreq);
+        status_t DbgConsole_Init( uint8_t instance,
+                                  uint32_t baudRate,
+                                  serial_port_type_t device,
+                                  uint32_t clkSrcFreq );
 
 /*!
  * @brief De-initializes the peripheral used for debug messages.
@@ -116,34 +120,37 @@ status_t DbgConsole_Init(uint8_t instance, uint32_t baudRate, serial_port_type_t
  *
  * @return Indicates whether de-initialization was successful or not.
  */
-status_t DbgConsole_Deinit(void);
-#else
+        status_t DbgConsole_Deinit( void );
+    #else
+
 /*!
  * Use an error to replace the DbgConsole_Init when SDK_DEBUGCONSOLE is not DEBUGCONSOLE_REDIRECT_TO_SDK and
  * SDK_DEBUGCONSOLE_UART is not defined.
  */
-static inline status_t DbgConsole_Init(uint8_t instance,
-                                       uint32_t baudRate,
-                                       serial_port_type_t device,
-                                       uint32_t clkSrcFreq)
-{
-    (void)instance;
-    (void)baudRate;
-    (void)device;
-    (void)clkSrcFreq;
-    return (status_t)kStatus_Fail;
-}
+        static inline status_t DbgConsole_Init( uint8_t instance,
+                                                uint32_t baudRate,
+                                                serial_port_type_t device,
+                                                uint32_t clkSrcFreq )
+        {
+            ( void ) instance;
+            ( void ) baudRate;
+            ( void ) device;
+            ( void ) clkSrcFreq;
+            return ( status_t ) kStatus_Fail;
+        }
+
 /*!
  * Use an error to replace the DbgConsole_Deinit when SDK_DEBUGCONSOLE is not DEBUGCONSOLE_REDIRECT_TO_SDK and
  * SDK_DEBUGCONSOLE_UART is not defined.
  */
-static inline status_t DbgConsole_Deinit(void)
-{
-    return (status_t)kStatus_Fail;
-}
-#endif /* ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART)) */
+        static inline status_t DbgConsole_Deinit( void )
+        {
+            return ( status_t ) kStatus_Fail;
+        }
+    #endif /* ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART)) */
 
-#if SDK_DEBUGCONSOLE
+    #if SDK_DEBUGCONSOLE
+
 /*!
  * @brief Writes formatted output to the standard output stream.
  *
@@ -152,7 +159,8 @@ static inline status_t DbgConsole_Deinit(void)
  * @param   formatString Format control string.
  * @return  Returns the number of characters printed or a negative value if an error occurs.
  */
-int DbgConsole_Printf(const char *formatString, ...);
+        int DbgConsole_Printf( const char * formatString,
+                               ... );
 
 /*!
  * @brief Writes a character to stdout.
@@ -162,7 +170,7 @@ int DbgConsole_Printf(const char *formatString, ...);
  * @param   ch Character to be written.
  * @return  Returns the character written.
  */
-int DbgConsole_Putchar(int ch);
+        int DbgConsole_Putchar( int ch );
 
 /*!
  * @brief Reads formatted data from the standard input stream.
@@ -178,7 +186,8 @@ int DbgConsole_Putchar(int ch);
  * @param   formatString Format control string.
  * @return  Returns the number of fields successfully converted and assigned.
  */
-int DbgConsole_Scanf(char *formatString, ...);
+        int DbgConsole_Scanf( char * formatString,
+                              ... );
 
 /*!
  * @brief Reads a character from standard input.
@@ -193,7 +202,7 @@ int DbgConsole_Scanf(char *formatString, ...);
  *
  * @return Returns the character read.
  */
-int DbgConsole_Getchar(void);
+        int DbgConsole_Getchar( void );
 
 /*!
  * @brief Writes formatted output to the standard output stream with the blocking mode.
@@ -206,7 +215,8 @@ int DbgConsole_Getchar(void);
  * @param   formatString Format control string.
  * @return  Returns the number of characters printed or a negative value if an error occurs.
  */
-int DbgConsole_BlockingPrintf(const char *formatString, ...);
+        int DbgConsole_BlockingPrintf( const char * formatString,
+                                       ... );
 
 /*!
  * @brief Debug console flush.
@@ -218,9 +228,10 @@ int DbgConsole_BlockingPrintf(const char *formatString, ...);
  * 2, log is required to print to terminal immediately
  * @return Indicates whether wait idle was successful or not.
  */
-status_t DbgConsole_Flush(void);
+        status_t DbgConsole_Flush( void );
 
-#ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
+        #ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
+
 /*!
  * @brief Debug console try to get char
  * This function provides a API which will not block current task, if character is
@@ -228,16 +239,16 @@ status_t DbgConsole_Flush(void);
  * @param ch the address of char to receive
  * @return Indicates get char was successful or not.
  */
-status_t DbgConsole_TryGetchar(char *ch);
-#endif
+            status_t DbgConsole_TryGetchar( char * ch );
+        #endif
 
-#endif /* SDK_DEBUGCONSOLE */
+    #endif /* SDK_DEBUGCONSOLE */
 
 /*! @} */
 
-#if defined(__cplusplus)
+    #if defined( __cplusplus )
 }
-#endif /* __cplusplus */
+    #endif /* __cplusplus */
 
 /*! @} */
 

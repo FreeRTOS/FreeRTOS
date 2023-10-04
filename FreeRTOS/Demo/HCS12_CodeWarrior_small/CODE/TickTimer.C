@@ -12,7 +12,7 @@
 **         When the bean and its events are enabled, the "OnInterrupt"
 **         event is called periodically with the period that you specify.
 **         TimerInt supports also changing the period in runtime.
-**         The source of periodic interrupt can be timer compare or reload 
+**         The source of periodic interrupt can be timer compare or reload
 **         register or timer-overflow interrupt (of free running counter).
 **     Settings  :
 **         Timer name                  : TIM (16-bit)
@@ -72,12 +72,12 @@
 #include "TickTimer.h"
 
 /* Definition of DATA and CODE segments for this bean. User can specify where
-   these segments will be located on "Build options" tab of the selected CPU bean. */
-#pragma DATA_SEG TickTimer_DATA        /* Data section for this module. */
-#pragma CODE_SEG TickTimer_CODE        /* Code section for this module. */
+ * these segments will be located on "Build options" tab of the selected CPU bean. */
+#pragma DATA_SEG TickTimer_DATA /* Data section for this module. */
+#pragma CODE_SEG TickTimer_CODE /* Code section for this module. */
 
-static bool EnUser;                    /* Enable/Disable device by user */
-static word CmpHighVal;                /* Compare register value for high speed CPU mode */
+static bool EnUser;             /* Enable/Disable device by user */
+static word CmpHighVal;         /* Compare register value for high speed CPU mode */
 
 
 /*
@@ -89,12 +89,15 @@ static word CmpHighVal;                /* Compare register value for high speed 
 **         only.
 ** ===================================================================
 */
-static void SetCV(word Val)
+static void SetCV( word Val )
 {
-  if (Val == 0)                        /* If the given value is zero */
-    Val = 65535;                       /* then change it to the maximal one */
-  TC0 = Val;                           /* Store given value to the compare register */
-  TC7 = Val;                           /* Store given value to the modulo register */
+    if( Val == 0 )                     /* If the given value is zero */
+    {
+        Val = 65535;                   /* then change it to the maximal one */
+    }
+
+    TC0 = Val;                         /* Store given value to the compare register */
+    TC7 = Val;                         /* Store given value to the modulo register */
 }
 
 /*
@@ -106,9 +109,9 @@ static void SetCV(word Val)
 **         only.
 ** ===================================================================
 */
-static void SetPV(byte Val)
+static void SetPV( byte Val )
 {
-  TSCR2_PR = Val;                      /* Store given value to the prescaler */
+    TSCR2_PR = Val;                    /* Store given value to the prescaler */
 }
 
 /*
@@ -120,15 +123,17 @@ static void SetPV(byte Val)
 **         only.
 ** ===================================================================
 */
-static void HWEnDi(void)
+static void HWEnDi( void )
 {
-  if (EnUser) {                        /* Enable device? */
-    TFLG1 = 1;                         /* Reset interrupt request flag */
-    TIE_C0I = 1;                       /* Enable interrupt */
-  }
-  else {                               /* Disable device? */
-    TIE_C0I = 0;                       /* Disable interrupt */
-  }
+    if( EnUser )                       /* Enable device? */
+    {
+        TFLG1 = 1;                     /* Reset interrupt request flag */
+        TIE_C0I = 1;                   /* Enable interrupt */
+    }
+    else                               /* Disable device? */
+    {
+        TIE_C0I = 0;                   /* Disable interrupt */
+    }
 }
 
 /*
@@ -146,13 +151,15 @@ static void HWEnDi(void)
 **                           the active speed mode
 ** ===================================================================
 */
-byte TickTimer_Enable(void)
+byte TickTimer_Enable( void )
 {
-  if (!EnUser) {                       /* Is the device disabled by user? */
-    EnUser = TRUE;                     /* If yes then set the flag "device enabled" */
-    HWEnDi();                          /* Enable the device */
-  }
-  return ERR_OK;                       /* OK */
+    if( !EnUser )                      /* Is the device disabled by user? */
+    {
+        EnUser = TRUE;                 /* If yes then set the flag "device enabled" */
+        HWEnDi();                      /* Enable the device */
+    }
+
+    return ERR_OK;                     /* OK */
 }
 
 /*
@@ -179,20 +186,27 @@ byte TickTimer_Enable(void)
 **                           ERR_RANGE - Parameter out of range
 ** ===================================================================
 */
-byte TickTimer_SetFreqHz(word Freq)
+byte TickTimer_SetFreqHz( word Freq )
 {
-  dlong rtval;                         /* Result of two 32-bit numbers division */
-  word rtword;                         /* Result of 64-bit number division */
+    dlong rtval;                            /* Result of two 32-bit numbers division */
+    word rtword;                            /* Result of 64-bit number division */
 
-  if ((Freq > 1000) || (Freq < 100))   /* Is the given value out of range? */
-    return ERR_RANGE;                  /* If yes then error */
-  rtval[1] = 1535744000 / (dword)Freq; /* Divide high speed CPU mode coefficient by the given value */
-  rtval[0] = 0;                        /* Convert result to the type dlong */
-  if (PE_Timer_LngHi1(rtval[0],rtval[1],&rtword)) /* Is the result greater or equal than 65536 ? */
-    rtword = 65535;                    /* If yes then use maximal possible value */
-  CmpHighVal = rtword;                 /* Store result (compare register value for high speed CPU mode) to the variable CmpHighVal */
-  SetCV(CmpHighVal);                   /* Store appropriate value to the compare register according to the selected high speed CPU mode */
-  return ERR_OK;                       /* OK */
+    if( ( Freq > 1000 ) || ( Freq < 100 ) ) /* Is the given value out of range? */
+    {
+        return ERR_RANGE;                   /* If yes then error */
+    }
+
+    rtval[ 1 ] = 1535744000 / ( dword ) Freq;                /* Divide high speed CPU mode coefficient by the given value */
+    rtval[ 0 ] = 0;                                          /* Convert result to the type dlong */
+
+    if( PE_Timer_LngHi1( rtval[ 0 ], rtval[ 1 ], &rtword ) ) /* Is the result greater or equal than 65536 ? */
+    {
+        rtword = 65535;                                      /* If yes then use maximal possible value */
+    }
+
+    CmpHighVal = rtword;               /* Store result (compare register value for high speed CPU mode) to the variable CmpHighVal */
+    SetCV( CmpHighVal );               /* Store appropriate value to the compare register according to the selected high speed CPU mode */
+    return ERR_OK;                     /* OK */
 }
 
 /*
@@ -204,13 +218,13 @@ byte TickTimer_SetFreqHz(word Freq)
 **         only.
 ** ===================================================================
 */
-void TickTimer_Init(void)
+void TickTimer_Init( void )
 {
-  CmpHighVal = 5999;                   /* Compare register value for high speed CPU mode */
-  EnUser = FALSE;                      /* Disable device */
-  SetCV(CmpHighVal);                   /* Store appropriate value to the compare register according to the selected high speed CPU mode */
-  SetPV(2);                            /* Set prescaler register according to the selected high speed CPU mode */
-  HWEnDi();                            /* Enable/disable device according to status flags */
+    CmpHighVal = 5999;                 /* Compare register value for high speed CPU mode */
+    EnUser = FALSE;                    /* Disable device */
+    SetCV( CmpHighVal );               /* Store appropriate value to the compare register according to the selected high speed CPU mode */
+    SetPV( 2 );                        /* Set prescaler register according to the selected high speed CPU mode */
+    HWEnDi();                          /* Enable/disable device according to status flags */
 }
 
 /*
@@ -223,20 +237,20 @@ void TickTimer_Init(void)
 ** ===================================================================
 */
 #pragma CODE_SEG __NEAR_SEG NON_BANKED /* Interrupt section for this module. Placement will be in NON_BANKED area. */
-__interrupt void TickTimer_Interrupt(void)
+__interrupt void TickTimer_Interrupt( void )
 {
-  TFLG1 = 1;                           /* Reset interrupt request flag */
-  vTaskTickInterrupt();                /* Invoke user event */
+    TFLG1 = 1;                         /* Reset interrupt request flag */
+    vTaskTickInterrupt();              /* Invoke user event */
 }
 
-#pragma CODE_SEG TickTimer_CODE        /* Code section for this module. */
+#pragma CODE_SEG TickTimer_CODE /* Code section for this module. */
 
 /* END TickTimer. */
 
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

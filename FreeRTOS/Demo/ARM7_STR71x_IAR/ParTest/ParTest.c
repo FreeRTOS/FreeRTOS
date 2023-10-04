@@ -38,64 +38,61 @@
  * connected to the second nibble of GPIO port 1.
  *-----------------------------------------------------------*/
 
-#define partstLED_3		0x0080
-#define partstLED_2		0x0040
-#define partstLED_1		0x0020
-#define partstLED_0		0x0010
-#define partstON_BOARD	0x0100	/* The LED built onto the KickStart board. */
+#define partstLED_3            0x0080
+#define partstLED_2            0x0040
+#define partstLED_1            0x0020
+#define partstLED_0            0x0010
+#define partstON_BOARD         0x0100 /* The LED built onto the KickStart board. */
 
-#define partstALL_LEDs	( partstLED_0 | partstLED_1 | partstLED_2 | partstLED_3 | partstON_BOARD )
+#define partstALL_LEDs         ( partstLED_0 | partstLED_1 | partstLED_2 | partstLED_3 | partstON_BOARD )
 
-#define partstFIRST_LED_BIT 4
+#define partstFIRST_LED_BIT    4
 
-/* This demo application uses files that are common to all port demo 
-applications.  These files assume 6 LED's are available, whereas I have
-only 5 (including the LED built onto the development board).  To prevent
-two tasks trying to use the same LED a bit of remapping is performed. 
-The ComTest tasks will try and use LED's 6 and 7.  LED 6 is ignored and
-has no effect, LED 7 is mapped to LED3.   The LED usage is described in
-the port documentation available from the FreeRTOS.org WEB site. */
-#define partstCOM_TEST_LED	7
-#define partstRX_CHAR_LED	3
+/* This demo application uses files that are common to all port demo
+ * applications.  These files assume 6 LED's are available, whereas I have
+ * only 5 (including the LED built onto the development board).  To prevent
+ * two tasks trying to use the same LED a bit of remapping is performed.
+ * The ComTest tasks will try and use LED's 6 and 7.  LED 6 is ignored and
+ * has no effect, LED 7 is mapped to LED3.   The LED usage is described in
+ * the port documentation available from the FreeRTOS.org WEB site. */
+#define partstCOM_TEST_LED     7
+#define partstRX_CHAR_LED      3
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
-{	
+{
     /* Configure the bits used to flash LED's on port 1 as output. */
-    GPIO_Config(GPIO1, partstALL_LEDs, GPIO_OUT_OD);
+    GPIO_Config( GPIO1, partstALL_LEDs, GPIO_OUT_OD );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED == partstCOM_TEST_LED )
-	{
-		/* Remap as described above. */
-		uxLED = partstRX_CHAR_LED;
-	}
+    if( uxLED == partstCOM_TEST_LED )
+    {
+        /* Remap as described above. */
+        uxLED = partstRX_CHAR_LED;
+    }
 
-	/* Adjust the LED value to map to the port pins actually being used,
-	then write the required value to the port. */
-	uxLED += partstFIRST_LED_BIT;
+    /* Adjust the LED value to map to the port pins actually being used,
+     * then write the required value to the port. */
+    uxLED += partstFIRST_LED_BIT;
     GPIO_BitWrite( GPIO1, uxLED, !xValue );
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED == partstCOM_TEST_LED )
-	{
-		/* Remap as described above. */
-		uxLED = partstRX_CHAR_LED;
-	}
+    if( uxLED == partstCOM_TEST_LED )
+    {
+        /* Remap as described above. */
+        uxLED = partstRX_CHAR_LED;
+    }
 
-	/* Adjust the LED value to map to the port pins actually being used,
-	then write the opposite value to the current state to the port pin. */
-	uxLED += partstFIRST_LED_BIT;
-    GPIO_BitWrite(GPIO1, uxLED, ~GPIO_BitRead( GPIO1, uxLED ) );
+    /* Adjust the LED value to map to the port pins actually being used,
+     * then write the opposite value to the current state to the port pin. */
+    uxLED += partstFIRST_LED_BIT;
+    GPIO_BitWrite( GPIO1, uxLED, ~GPIO_BitRead( GPIO1, uxLED ) );
 }
-
-
-
-

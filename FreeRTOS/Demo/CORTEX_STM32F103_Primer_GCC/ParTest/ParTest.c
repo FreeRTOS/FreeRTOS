@@ -33,8 +33,8 @@
 #include "task.h"
 #include "partest.h"
 
-#define partstMAX_OUTPUT_LED	( 2 )
-#define partstFIRST_LED			GPIO_Pin_8
+#define partstMAX_OUTPUT_LED    ( 2 )
+#define partstFIRST_LED         GPIO_Pin_8
 
 static unsigned short usOutputValue = 0;
 
@@ -42,70 +42,70 @@ static unsigned short usOutputValue = 0;
 
 void vParTestInitialise( void )
 {
-GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
 
-	/* Enable LED GPIO clock. */
-	RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOB, ENABLE );
+    /* Enable LED GPIO clock. */
+    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOB, ENABLE );
 
-	/* Configure LED pins as output push-pull. */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 ;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    /* Configure LED pins as output push-pull. */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
-	GPIO_Init( GPIOB, &GPIO_InitStructure );
+    GPIO_Init( GPIOB, &GPIO_InitStructure );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned short usBit;
+    unsigned short usBit;
 
-	vTaskSuspendAll();
-	{
-		if( uxLED < partstMAX_OUTPUT_LED )
-		{
-			usBit = partstFIRST_LED << uxLED;
+    vTaskSuspendAll();
+    {
+        if( uxLED < partstMAX_OUTPUT_LED )
+        {
+            usBit = partstFIRST_LED << uxLED;
 
-			if( xValue == pdFALSE )
-			{
-				usBit ^= ( unsigned short ) 0xffff;
-				usOutputValue &= usBit;
-			}
-			else
-			{
-				usOutputValue |= usBit;
-			}
+            if( xValue == pdFALSE )
+            {
+                usBit ^= ( unsigned short ) 0xffff;
+                usOutputValue &= usBit;
+            }
+            else
+            {
+                usOutputValue |= usBit;
+            }
 
-			GPIO_Write( GPIOB, usOutputValue );
-		}	
-	}
-	xTaskResumeAll();
+            GPIO_Write( GPIOB, usOutputValue );
+        }
+    }
+    xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned short usBit;
+    unsigned short usBit;
 
-	vTaskSuspendAll();
-	{
-		if( uxLED < partstMAX_OUTPUT_LED )
-		{
-			usBit = partstFIRST_LED << uxLED;
+    vTaskSuspendAll();
+    {
+        if( uxLED < partstMAX_OUTPUT_LED )
+        {
+            usBit = partstFIRST_LED << uxLED;
 
-			if( usOutputValue & usBit )
-			{
-				usOutputValue &= ~usBit;
-			}
-			else
-			{
-				usOutputValue |= usBit;
-			}
+            if( usOutputValue & usBit )
+            {
+                usOutputValue &= ~usBit;
+            }
+            else
+            {
+                usOutputValue |= usBit;
+            }
 
-			GPIO_Write( GPIOB, usOutputValue );
-		}
-	}
-	xTaskResumeAll();
+            GPIO_Write( GPIOB, usOutputValue );
+        }
+    }
+    xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
-

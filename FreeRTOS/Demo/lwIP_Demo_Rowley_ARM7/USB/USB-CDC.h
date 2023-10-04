@@ -34,47 +34,45 @@
 /* Structure used to take a snapshot of the USB status from within the ISR. */
 typedef struct X_ISR_STATUS
 {
-	unsigned long ulISR;
-	unsigned long ulCSR0;
-	unsigned char ucFifoData[ 8 ];
+    unsigned long ulISR;
+    unsigned long ulCSR0;
+    unsigned char ucFifoData[ 8 ];
 } xISRStatus;
 
 /* Structure used to hold the received requests. */
-typedef struct 
+typedef struct
 {
-	unsigned char ucReqType;
-	unsigned char ucRequest;
-	unsigned short usValue;
-	unsigned short usIndex;
-	unsigned short usLength;
+    unsigned char ucReqType;
+    unsigned char ucRequest;
+    unsigned short usValue;
+    unsigned short usIndex;
+    unsigned short usLength;
 } xUSB_REQUEST;
 
 typedef enum
 {
-	eNOTHING,
-	eJUST_RESET,
-	eJUST_GOT_CONFIG,
-	eJUST_GOT_ADDRESS,
-	eSENDING_EVEN_DESCRIPTOR,
-	eREADY_TO_SEND
+    eNOTHING,
+    eJUST_RESET,
+    eJUST_GOT_CONFIG,
+    eJUST_GOT_ADDRESS,
+    eSENDING_EVEN_DESCRIPTOR,
+    eREADY_TO_SEND
 } eDRIVER_STATE;
 
 /* Structure used to control the data being sent to the host. */
 typedef struct
 {
-	unsigned char ucBuffer[ usbMAX_CONTROL_MESSAGE_SIZE ];
-	unsigned long ulNextCharIndex;
-	unsigned long ulTotalDataLength;
+    unsigned char ucBuffer[ usbMAX_CONTROL_MESSAGE_SIZE ];
+    unsigned long ulNextCharIndex;
+    unsigned long ulTotalDataLength;
 } xCONTROL_MESSAGE;
 
 /*-----------------------------------------------------------*/
-void vUSBCDCTask( void *pvParameters );
+void vUSBCDCTask( void * pvParameters );
 
 /* Send cByte down the USB port.  Characters are simply buffered and not
-sent unless the port is connected. */
+ * sent unless the port is connected. */
 void vUSBSendByte( char cByte );
 
 
-#endif
-
-
+#endif /* ifndef USB_CDC_H */

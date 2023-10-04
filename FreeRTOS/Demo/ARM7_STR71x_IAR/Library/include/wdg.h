@@ -10,12 +10,12 @@
 *  14/07/2004 : V1.3
 *  01/01/2004 : V1.2
 *******************************************************************************
- THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
- CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
- AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
- OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
- OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
- CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+*  THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
+*  CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
+*  AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
+*  OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
+*  OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
+*  CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 #ifndef __WDG_H
 #define __WDG_H
@@ -29,9 +29,9 @@
 * Input          : None
 * Return         : None
 *******************************************************************************/
-inline void WDG_Enable ( void )
+inline void WDG_Enable( void )
 {
-  WDG->CR |= 0x01;
+    WDG->CR |= 0x01;
 }
 
 /*******************************************************************************
@@ -40,12 +40,12 @@ inline void WDG_Enable ( void )
 * Input          : None
 * Return         : None
 *******************************************************************************/
-inline void WDG_CntRefresh ( void )
+inline void WDG_CntRefresh( void )
 {
-  //write the first value in the key register
-  WDG->KR = 0xA55A;
-  //write the consecutive value
-  WDG->KR = 0x5AA5;
+    /*write the first value in the key register */
+    WDG->KR = 0xA55A;
+    /*write the consecutive value */
+    WDG->KR = 0x5AA5;
 }
 
 /*******************************************************************************
@@ -55,9 +55,9 @@ inline void WDG_CntRefresh ( void )
 * Input          : Prescaler data value (8 bit)
 * Return         : None
 *******************************************************************************/
-inline void WDG_PrescalerConfig ( u8 Prescaler )
+inline void WDG_PrescalerConfig( u8 Prescaler )
 {
-  WDG->PR = Prescaler;
+    WDG->PR = Prescaler;
 }
 
 /*******************************************************************************
@@ -66,9 +66,9 @@ inline void WDG_PrescalerConfig ( u8 Prescaler )
 * Input          : Pre-load data value (16 bit)
 * Return         : None
 *******************************************************************************/
-inline void WDG_CntReloadUpdate ( u16 PreLoadValue )
+inline void WDG_CntReloadUpdate( u16 PreLoadValue )
 {
-  WDG->VR = PreLoadValue;
+    WDG->VR = PreLoadValue;
 }
 
 /*******************************************************************************
@@ -78,7 +78,7 @@ inline void WDG_CntReloadUpdate ( u16 PreLoadValue )
 * Input          : Amount of time (us) needed, peripheral clock2 value
 * Return         : None
 *******************************************************************************/
-void WDG_PeriodValueConfig ( u32 Time );
+void WDG_PeriodValueConfig( u32 Time );
 
 /*******************************************************************************
 * Function Name  : WDG_CntOnOffConfig
@@ -86,9 +86,16 @@ void WDG_PeriodValueConfig ( u32 Time );
 * Input          : ENABLE or DISABLE
 * Return         : None
 *******************************************************************************/
-inline void WDG_CntOnOffConfig ( FunctionalState NewState )
+inline void WDG_CntOnOffConfig( FunctionalState NewState )
 {
-  if (NewState == ENABLE) WDG->CR |= 0x0002; else WDG->CR &= ~0x0002;
+    if( NewState == ENABLE )
+    {
+        WDG->CR |= 0x0002;
+    }
+    else
+    {
+        WDG->CR &= ~0x0002;
+    }
 }
 
 /*******************************************************************************
@@ -97,9 +104,16 @@ inline void WDG_CntOnOffConfig ( FunctionalState NewState )
 * Input          : ENABLE or DISABLE
 * Return         : None
 *******************************************************************************/
-inline void WDG_ECITConfig (FunctionalState NewState)
+inline void WDG_ECITConfig( FunctionalState NewState )
 {
-  if (NewState == ENABLE) WDG->MR |= 0x0001; else WDG->MR &= ~0x0001;
+    if( NewState == ENABLE )
+    {
+        WDG->MR |= 0x0001;
+    }
+    else
+    {
+        WDG->MR &= ~0x0001;
+    }
 }
 
 /*******************************************************************************
@@ -108,9 +122,9 @@ inline void WDG_ECITConfig (FunctionalState NewState)
 * Input          : None
 * Return         : None
 *******************************************************************************/
-inline void WDG_ECFlagClear ( void )
+inline void WDG_ECFlagClear( void )
 {
-  WDG->SR = 0x0000;
+    WDG->SR = 0x0000;
 }
 
 /*******************************************************************************
@@ -119,9 +133,9 @@ inline void WDG_ECFlagClear ( void )
 * Input          : None
 * Return         : NewState value
 *******************************************************************************/
-inline u16 WDG_ECStatus ( void )
+inline u16 WDG_ECStatus( void )
 {
-  return WDG->SR;
+    return WDG->SR;
 }
 
 #endif // __WDG_H

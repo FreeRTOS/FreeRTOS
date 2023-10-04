@@ -8,7 +8,7 @@
  */
 
 #ifndef _PIN_MUX_H_
-#define _PIN_MUX_H_
+    #define _PIN_MUX_H_
 
 
 /*******************************************************************************
@@ -16,12 +16,12 @@
  ******************************************************************************/
 
 /*! @brief Direction type  */
-typedef enum _pin_mux_direction
-{
-  kPIN_MUX_DirectionInput = 0U,         /* Input direction */
-  kPIN_MUX_DirectionOutput = 1U,        /* Output direction */
-  kPIN_MUX_DirectionInputOrOutput = 2U  /* Input or output direction */
-} pin_mux_direction_t;
+    typedef enum _pin_mux_direction
+    {
+        kPIN_MUX_DirectionInput = 0U,        /* Input direction */
+        kPIN_MUX_DirectionOutput = 1U,       /* Output direction */
+        kPIN_MUX_DirectionInputOrOutput = 2U /* Input or output direction */
+    } pin_mux_direction_t;
 
 /*!
  * @addtogroup pin_mux
@@ -32,24 +32,24 @@ typedef enum _pin_mux_direction
  * API
  ******************************************************************************/
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
+    #if defined( __cplusplus )
+    extern "C" {
+    #endif
 
 /*!
  * @brief Calls initialization functions.
  *
  */
-void BOARD_InitBootPins(void);
+    void BOARD_InitBootPins( void );
 
 /*!
  *
  */
-void BOARD_InitPins(void); /* Function assigned for the Cortex-M4F */
+    void BOARD_InitPins( void ); /* Function assigned for the Cortex-M4F */
 
-#if defined(__cplusplus)
+    #if defined( __cplusplus )
 }
-#endif
+    #endif
 
 /*!
  * @}

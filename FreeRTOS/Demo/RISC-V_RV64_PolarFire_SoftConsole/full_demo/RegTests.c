@@ -33,13 +33,13 @@
 
 /* Parameters that are passed into the register check tasks solely for the
  * purpose of ensuring parameters are passed into tasks correctly. */
-#define REG_TEST_TASK_1_PARAMETER        ( ( void * ) 0x12345678 )
-#define REG_TEST_TASK_2_PARAMETER        ( ( void * ) 0x87654321 )
+#define REG_TEST_TASK_1_PARAMETER    ( ( void * ) 0x12345678 )
+#define REG_TEST_TASK_2_PARAMETER    ( ( void * ) 0x87654321 )
 /*-----------------------------------------------------------*/
 
 /* Tasks that implement register tests. */
-static void prvRegisterTest1Task( void *pvParameters );
-static void prvRegisterTest2Task( void *pvParameters );
+static void prvRegisterTest1Task( void * pvParameters );
+static void prvRegisterTest2Task( void * pvParameters );
 extern void vRegTest1Implementation( void );
 extern void vRegTest2Implementation( void );
 
@@ -53,7 +53,7 @@ volatile uint32_t ulRegisterTest1Counter = 0;
 volatile uint32_t ulRegisterTest2Counter = 0;
 /*-----------------------------------------------------------*/
 
-static void prvRegisterTest1Task( void *pvParameters )
+static void prvRegisterTest1Task( void * pvParameters )
 {
     /* Although the regtest task is written in assembler, its entry point is
      * written in C for convenience of checking the task parameter is being
@@ -71,7 +71,7 @@ static void prvRegisterTest1Task( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegisterTest2Task( void *pvParameters )
+static void prvRegisterTest2Task( void * pvParameters )
 {
     /* Although the regtest task is written in assembler, its entry point is
      * written in C for convenience of checking the task parameter is being
@@ -94,26 +94,26 @@ void vStartRegisterTasks( UBaseType_t uxPriority )
     BaseType_t ret;
 
     ret = xTaskCreate( prvRegisterTest1Task,
-                      "RegTest1",
-                      configMINIMAL_STACK_SIZE,
-                      REG_TEST_TASK_1_PARAMETER,
-                      uxPriority,
-                      NULL );
+                       "RegTest1",
+                       configMINIMAL_STACK_SIZE,
+                       REG_TEST_TASK_1_PARAMETER,
+                       uxPriority,
+                       NULL );
     configASSERT( ret == pdPASS );
 
     ret = xTaskCreate( prvRegisterTest2Task,
-                      "RegTest2",
-                      configMINIMAL_STACK_SIZE,
-                      REG_TEST_TASK_2_PARAMETER,
-                      uxPriority,
-                      NULL );
+                       "RegTest2",
+                       configMINIMAL_STACK_SIZE,
+                       REG_TEST_TASK_2_PARAMETER,
+                       uxPriority,
+                       NULL );
     configASSERT( ret == pdPASS );
 }
 /*-----------------------------------------------------------*/
 
 BaseType_t xAreRegisterTasksStillRunning( void )
 {
-static uint32_t ulLastRegisterTest1Counter = 0, ulLastRegisterTest2Counter = 0;
+    static uint32_t ulLastRegisterTest1Counter = 0, ulLastRegisterTest2Counter = 0;
 
     /* If the register test task is still running then we expect the loop
      * counters to have incremented since this function was last called. */

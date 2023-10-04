@@ -48,117 +48,142 @@
  *----------------------------------------------------------------------------*/
 
 /** Flag to indicate whether the svc is done */
-volatile uint32_t dwRaisePriDone=0;
+volatile uint32_t dwRaisePriDone = 0;
 
 /**
  * \brief Default NMI interrupt handler.
  */
 void NMI_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
-__INLINE static uint32_t StackUnwind(void)
+__INLINE static uint32_t StackUnwind( void )
 {
     uint32_t Fault_Add;
-    asm volatile (" mrs r0, msp " );
-    asm volatile (" ldr %0, [r0,#28]" :"=r" (Fault_Add));  
+
+    asm volatile ( " mrs r0, msp " );
+    asm volatile ( " ldr %0, [r0,#28]" : "=r" ( Fault_Add ) );
     return Fault_Add;
 }
 
-static void HardFault_reason(void)
+static void HardFault_reason( void )
 {
     uint32_t CFSRValue, BFAR;
-    printf("In Hard Fault Handler\n\r");
-    printf("SCB->HFSR = 0x%08x\n\r", SCB->HFSR);
 
-    if ((SCB->HFSR & SCB_HFSR_DEBUGEVT_Msk)) {
-        printf("Debug Event Hard Fault\n\r");
-        printf("SCB->DFSR = 0x%08x\n", SCB->DFSR );
+    printf( "In Hard Fault Handler\n\r" );
+    printf( "SCB->HFSR = 0x%08x\n\r", SCB->HFSR );
+
+    if( ( SCB->HFSR & SCB_HFSR_DEBUGEVT_Msk ) )
+    {
+        printf( "Debug Event Hard Fault\n\r" );
+        printf( "SCB->DFSR = 0x%08x\n", SCB->DFSR );
     }
 
-    if ((SCB->HFSR & SCB_HFSR_VECTTBL_Msk)) {
-        printf("Fault was due to vector table read on exception processing\n\r");     
+    if( ( SCB->HFSR & SCB_HFSR_VECTTBL_Msk ) )
+    {
+        printf( "Fault was due to vector table read on exception processing\n\r" );
     }
 
-    if ((SCB->HFSR & SCB_HFSR_FORCED_Msk)) {
-        printf("Forced Hard Fault\n\r");
-        printf("SCB->CFSR = 0x%08x\n\r", SCB->CFSR );
-        // Usage Fault
-        if((SCB->CFSR & SCB_CFSR_USGFAULTSR_Msk)) 
+    if( ( SCB->HFSR & SCB_HFSR_FORCED_Msk ) )
+    {
+        printf( "Forced Hard Fault\n\r" );
+        printf( "SCB->CFSR = 0x%08x\n\r", SCB->CFSR );
+
+        /* Usage Fault */
+        if( ( SCB->CFSR & SCB_CFSR_USGFAULTSR_Msk ) )
         {
             CFSRValue = SCB->CFSR;
-            printf("Usage fault: ");
-            CFSRValue >>= SCB_CFSR_USGFAULTSR_Pos;                  
-            if((CFSRValue & (1 << 9))) {
-                printf("Divide by zero\n\r");
+            printf( "Usage fault: " );
+            CFSRValue >>= SCB_CFSR_USGFAULTSR_Pos;
+
+            if( ( CFSRValue & ( 1 << 9 ) ) )
+            {
+                printf( "Divide by zero\n\r" );
             }
-            if((CFSRValue & (1 << 8))) {
-                printf("Unaligned access error\n\r");
+
+            if( ( CFSRValue & ( 1 << 8 ) ) )
+            {
+                printf( "Unaligned access error\n\r" );
             }
-            if((CFSRValue & (1 << 3))) {
-                printf("Coprocessor access error\n\r");
+
+            if( ( CFSRValue & ( 1 << 3 ) ) )
+            {
+                printf( "Coprocessor access error\n\r" );
             }
-            if((CFSRValue & (1 << 2))) {
-                printf("Integrity check error on EXC_RETURN\n\r");
+
+            if( ( CFSRValue & ( 1 << 2 ) ) )
+            {
+                printf( "Integrity check error on EXC_RETURN\n\r" );
             }
         }
 
-        // Bus Fault
-        if((SCB->CFSR & SCB_CFSR_BUSFAULTSR_Msk)) 
+        /* Bus Fault */
+        if( ( SCB->CFSR & SCB_CFSR_BUSFAULTSR_Msk ) )
         {
             CFSRValue = SCB->CFSR;
-            printf("Bus fault: ");
-            CFSRValue >>= SCB_CFSR_BUSFAULTSR_Pos;                 
+            printf( "Bus fault: " );
+            CFSRValue >>= SCB_CFSR_BUSFAULTSR_Pos;
 
-            if((CFSRValue & (1 << 7)) && (CFSRValue & (1 << 1))) {
+            if( ( CFSRValue & ( 1 << 7 ) ) && ( CFSRValue & ( 1 << 1 ) ) )
+            {
                 BFAR = SCB->BFAR;
-                printf("Precise data access error. Bus Fault Address Register is: %x \n\r", BFAR );
-            }
-            if((CFSRValue & (1 << 4))) {
-                printf("Bus fault has occurred on exception entry\n\r");
-            }
-            if((CFSRValue & (1 << 3))) {
-                printf("bus fault has occurred on exception return\n\r");
-            }
-            if((CFSRValue & (1 << 2))) {
-                printf("Imprecise data access error\n\r");
+                printf( "Precise data access error. Bus Fault Address Register is: %x \n\r", BFAR );
             }
 
-            if((CFSRValue & (1 << 0))) {
-                printf("This bit indicates a bus fault on an instruction prefetch. \n\r");
+            if( ( CFSRValue & ( 1 << 4 ) ) )
+            {
+                printf( "Bus fault has occurred on exception entry\n\r" );
             }
 
+            if( ( CFSRValue & ( 1 << 3 ) ) )
+            {
+                printf( "bus fault has occurred on exception return\n\r" );
+            }
+
+            if( ( CFSRValue & ( 1 << 2 ) ) )
+            {
+                printf( "Imprecise data access error\n\r" );
+            }
+
+            if( ( CFSRValue & ( 1 << 0 ) ) )
+            {
+                printf( "This bit indicates a bus fault on an instruction prefetch. \n\r" );
+            }
         }
     }
 
-    // MemoryFault      
-    if((SCB->CFSR & SCB_CFSR_MEMFAULTSR_Msk)) 
+    /* MemoryFault */
+    if( ( SCB->CFSR & SCB_CFSR_MEMFAULTSR_Msk ) )
     {
         CFSRValue = SCB->CFSR;
-        printf("Memory fault: ");
-        CFSRValue >>= SCB_CFSR_MEMFAULTSR_Pos;                 
-        if((CFSRValue & (1 << 9)) != 0) {
-            printf("Divide by zero\n\r");
+        printf( "Memory fault: " );
+        CFSRValue >>= SCB_CFSR_MEMFAULTSR_Pos;
+
+        if( ( CFSRValue & ( 1 << 9 ) ) != 0 )
+        {
+            printf( "Divide by zero\n\r" );
         }
     }
+
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile ( "BKPT #01" );
 }
+
 /**
  * \brief Default HardFault interrupt handler.
  */
 
 void HardFault_Handler( void )
 {
-
-    printf("HardFault at addr 0X%x\n\r", StackUnwind());
+    printf( "HardFault at addr 0X%x\n\r", StackUnwind() );
 
     __ISB();
     __DMB();
     HardFault_reason();
-
 }
 
 /**
@@ -166,11 +191,11 @@ void HardFault_Handler( void )
  */
 void MemManage_Handler( void )
 {
-    printf("MemoryMemFault (MPU fault) at addr 0X%x\n\r", StackUnwind());
+    printf( "MemoryMemFault (MPU fault) at addr 0X%x\n\r", StackUnwind() );
 
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile ( "BKPT #01" );
 }
 
 /**
@@ -178,13 +203,13 @@ void MemManage_Handler( void )
  */
 void BusFault_Handler( void )
 {
-    asm("nop");
-    asm("nop");
-    printf("Bus Fault at addr 0X%x\n\r", StackUnwind());
+    asm ( "nop" );
+    asm ( "nop" );
+    printf( "Bus Fault at addr 0X%x\n\r", StackUnwind() );
 
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile ( "BKPT #01" );
 }
 
 /**
@@ -192,11 +217,11 @@ void BusFault_Handler( void )
  */
 void UsageFault_Handler( void )
 {
-    printf("Usage fault at addr 0X%x", StackUnwind());
+    printf( "Usage fault at addr 0X%x", StackUnwind() );
 
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile ( "BKPT #01" );
 }
 
 /**
@@ -204,7 +229,9 @@ void UsageFault_Handler( void )
  */
 WEAK void SVC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -212,7 +239,9 @@ WEAK void SVC_Handler( void )
  */
 WEAK void DebugMon_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -220,7 +249,9 @@ WEAK void DebugMon_Handler( void )
  */
 void PendSV_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -228,7 +259,9 @@ void PendSV_Handler( void )
  */
 WEAK void SysTick_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -236,7 +269,9 @@ WEAK void SysTick_Handler( void )
  */
 WEAK void SUPC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -244,7 +279,9 @@ WEAK void SUPC_Handler( void )
  */
 WEAK void RSTC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -252,7 +289,9 @@ WEAK void RSTC_Handler( void )
  */
 WEAK void RTC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -260,7 +299,9 @@ WEAK void RTC_Handler( void )
  */
 WEAK void RTT_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -268,7 +309,9 @@ WEAK void RTT_Handler( void )
  */
 WEAK void WDT0_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -276,7 +319,9 @@ WEAK void WDT0_Handler( void )
  */
 WEAK void PMC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -284,7 +329,9 @@ WEAK void PMC_Handler( void )
  */
 WEAK void EFC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -292,7 +339,9 @@ WEAK void EFC_Handler( void )
  */
 WEAK void UART0_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -300,7 +349,9 @@ WEAK void UART0_Handler( void )
  */
 WEAK void UART1_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -308,7 +359,9 @@ WEAK void UART1_Handler( void )
  */
 WEAK void TC10_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -316,7 +369,9 @@ WEAK void TC10_Handler( void )
  */
 WEAK void PIOA_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -324,7 +379,9 @@ WEAK void PIOA_Handler( void )
  */
 WEAK void PIOB_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -332,7 +389,9 @@ WEAK void PIOB_Handler( void )
  */
 WEAK void PIOC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -340,7 +399,9 @@ WEAK void PIOC_Handler( void )
  */
 WEAK void USART0_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -348,7 +409,9 @@ WEAK void USART0_Handler( void )
  */
 WEAK void USART1_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -356,7 +419,9 @@ WEAK void USART1_Handler( void )
  */
 WEAK void USART2_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -364,7 +429,9 @@ WEAK void USART2_Handler( void )
  */
 WEAK void HSMCI_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -372,7 +439,9 @@ WEAK void HSMCI_Handler( void )
  */
 WEAK void TWI0_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -380,7 +449,9 @@ WEAK void TWI0_Handler( void )
  */
 WEAK void TWI1_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -388,7 +459,9 @@ WEAK void TWI1_Handler( void )
  */
 WEAK void SPI0_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -396,7 +469,9 @@ WEAK void SPI0_Handler( void )
  */
 WEAK void SSC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -404,7 +479,9 @@ WEAK void SSC_Handler( void )
  */
 WEAK void TC0_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -412,7 +489,9 @@ WEAK void TC0_Handler( void )
  */
 WEAK void TC1_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -420,7 +499,9 @@ WEAK void TC1_Handler( void )
  */
 WEAK void TC2_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -428,7 +509,9 @@ WEAK void TC2_Handler( void )
  */
 WEAK void TC3_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -436,7 +519,9 @@ WEAK void TC3_Handler( void )
  */
 WEAK void TC4_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -444,7 +529,9 @@ WEAK void TC4_Handler( void )
  */
 WEAK void TC5_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -452,7 +539,9 @@ WEAK void TC5_Handler( void )
  */
 WEAK void AFEC1_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -460,7 +549,9 @@ WEAK void AFEC1_Handler( void )
  */
 WEAK void DACC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -468,7 +559,9 @@ WEAK void DACC_Handler( void )
  */
 WEAK void PWM0_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -476,7 +569,9 @@ WEAK void PWM0_Handler( void )
  */
 WEAK void TC9_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -484,7 +579,9 @@ WEAK void TC9_Handler( void )
  */
 WEAK void ACC_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
 /**
@@ -492,11 +589,15 @@ WEAK void ACC_Handler( void )
  */
 WEAK void TC11_Handler( void )
 {
-    while ( 1 ) ;
+    while( 1 )
+    {
+    }
 }
 
-WEAK void USBHS_Handler(void)
+WEAK void USBHS_Handler( void )
 {
-    //	udd_interrupt();
-    while(1);
+    /*	udd_interrupt(); */
+    while( 1 )
+    {
+    }
 }

@@ -1,4 +1,5 @@
 /* Adapted for use with IAR Embedded Workbench */
+
 /***********************************************************************************************************************
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only
@@ -33,33 +34,33 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include <machine.h>
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
 
 
-// fixedint.c in $TOOLKIT$/rx/src/lib/src
+/* fixedint.c in $TOOLKIT$/rx/src/lib/src */
 /* Undefined exceptions for supervisor instruction, undefined instruction and floating point exceptions */
-__interrupt void __undefined_handler (void)
+__interrupt void __undefined_handler( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
 }
 
 /* NMI */
-__interrupt void __NMI_handler (void)
+__interrupt void __NMI_handler( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
@@ -68,7 +69,7 @@ __interrupt void __NMI_handler (void)
 
 /* BRK */
 #pragma vector=0
-__interrupt void r_brk_exception(void)
+__interrupt void r_brk_exception( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
@@ -76,7 +77,7 @@ __interrupt void r_brk_exception(void)
 
 /* ICU GROUPBE0 */
 #pragma vector=VECT(ICU,GROUPBE0)
-__interrupt void r_icu_group_be0_interrupt(void)
+__interrupt void r_icu_group_be0_interrupt( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
@@ -85,23 +86,25 @@ __interrupt void r_icu_group_be0_interrupt(void)
 
 /* ICU GROUPBL0 */
 #pragma vector=VECT(ICU,GROUPBL0)
-__interrupt void r_icu_group_bl0_interrupt(void)
+__interrupt void r_icu_group_bl0_interrupt( void )
 {
-    if (ICU.GRPBL0.BIT.IS14 == 1U)
+    if( ICU.GRPBL0.BIT.IS14 == 1U )
     {
         r_sci7_transmitend_interrupt();
     }
-    if (ICU.GRPBL0.BIT.IS15 == 1U)
+
+    if( ICU.GRPBL0.BIT.IS15 == 1U )
     {
         r_sci7_receiveerror_interrupt();
     }
+
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
 }
 
 /* ICU GROUPBL1 */
 #pragma vector=VECT(ICU,GROUPBL1)
-__interrupt void r_icu_group_bl1_interrupt(void)
+__interrupt void r_icu_group_bl1_interrupt( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
@@ -109,7 +112,7 @@ __interrupt void r_icu_group_bl1_interrupt(void)
 
 /* ICU GROUPAL0 */
 #pragma vector=VECT(ICU,GROUPAL0)
-__interrupt void r_icu_group_al0_interrupt(void)
+__interrupt void r_icu_group_al0_interrupt( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
@@ -117,7 +120,7 @@ __interrupt void r_icu_group_al0_interrupt(void)
 
 /* ICU GROUPAL1 */
 #pragma vector=VECT(ICU,GROUPAL1)
-__interrupt void r_icu_group_al1_interrupt(void)
+__interrupt void r_icu_group_al1_interrupt( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */

@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -52,32 +53,34 @@
  * constant can be increased, but the current value is the smallest possible one
  * that will be compatible with all existing projects.
  */
-#define MAX_INTERRUPT_SOURCES       7
+#define MAX_INTERRUPT_SOURCES    7
 
 /**
  * Describes a PIO interrupt source, including the PIO instance triggering the
  * interrupt and the associated interrupt handler.
  */
-struct s_interrupt_source {
-	uint32_t id;
-	uint32_t mask;
-	uint32_t attr;
+struct s_interrupt_source
+{
+    uint32_t id;
+    uint32_t mask;
+    uint32_t attr;
 
-	/* Interrupt handler. */
-	void (*handler) (const uint32_t, const uint32_t);
+    /* Interrupt handler. */
+    void (* handler) ( const uint32_t,
+                       const uint32_t );
 };
 
 
 /* List of interrupt sources. */
-static struct s_interrupt_source gs_interrupt_sources[MAX_INTERRUPT_SOURCES];
+static struct s_interrupt_source gs_interrupt_sources[ MAX_INTERRUPT_SOURCES ];
 
 /* Number of currently defined interrupt sources. */
 static uint32_t gs_ul_nb_sources = 0;
 
-#if (SAM3S || SAM4S || SAM4E)
+#if ( SAM3S || SAM4S || SAM4E )
 /* PIO Capture handler */
-static void (*pio_capture_handler)(Pio *) = NULL;
-extern uint32_t pio_capture_enable_flag;
+    static void ( * pio_capture_handler )( Pio * ) = NULL;
+    extern uint32_t pio_capture_enable_flag;
 #endif
 
 /**
@@ -86,44 +89,55 @@ extern uint32_t pio_capture_enable_flag;
  * \param p_pio PIO controller base address.
  * \param ul_id PIO controller ID.
  */
-void pio_handler_process(Pio *p_pio, uint32_t ul_id)
+void pio_handler_process( Pio * p_pio,
+                          uint32_t ul_id )
 {
-	uint32_t status;
-	uint32_t i;
+    uint32_t status;
+    uint32_t i;
 
-	/* Read PIO controller status */
-	status = pio_get_interrupt_status(p_pio);
-	status &= pio_get_interrupt_mask(p_pio);
+    /* Read PIO controller status */
+    status = pio_get_interrupt_status( p_pio );
+    status &= pio_get_interrupt_mask( p_pio );
 
-	/* Check pending events */
-	if (status != 0) {
-		/* Find triggering source */
-		i = 0;
-		while (status != 0) {
-			/* Source is configured on the same controller */
-			if (gs_interrupt_sources[i].id == ul_id) {
-				/* Source has PIOs whose statuses have changed */
-				if ((status & gs_interrupt_sources[i].mask) != 0) {
-					gs_interrupt_sources[i].handler(gs_interrupt_sources[i].id,
-							gs_interrupt_sources[i].mask);
-					status &= ~(gs_interrupt_sources[i].mask);
-				}
-			}
-			i++;
-			if (i >= MAX_INTERRUPT_SOURCES) {
-				break;
-			}
-		}
-	}
+    /* Check pending events */
+    if( status != 0 )
+    {
+        /* Find triggering source */
+        i = 0;
 
-	/* Check capture events */
-#if (SAM3S || SAM4S || SAM4E)
-	if (pio_capture_enable_flag) {
-		if (pio_capture_handler) {
-			pio_capture_handler(p_pio);
-		}
-	}
-#endif
+        while( status != 0 )
+        {
+            /* Source is configured on the same controller */
+            if( gs_interrupt_sources[ i ].id == ul_id )
+            {
+                /* Source has PIOs whose statuses have changed */
+                if( ( status & gs_interrupt_sources[ i ].mask ) != 0 )
+                {
+                    gs_interrupt_sources[ i ].handler( gs_interrupt_sources[ i ].id,
+                                                       gs_interrupt_sources[ i ].mask );
+                    status &= ~( gs_interrupt_sources[ i ].mask );
+                }
+            }
+
+            i++;
+
+            if( i >= MAX_INTERRUPT_SOURCES )
+            {
+                break;
+            }
+        }
+    }
+
+    /* Check capture events */
+    #if ( SAM3S || SAM4S || SAM4E )
+        if( pio_capture_enable_flag )
+        {
+            if( pio_capture_handler )
+            {
+                pio_capture_handler( p_pio );
+            }
+        }
+    #endif
 }
 
 /**
@@ -139,29 +153,35 @@ void pio_handler_process(Pio *p_pio, uint32_t ul_id)
  *
  * \return 0 if successful, 1 if the maximum number of sources has been defined.
  */
-uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
-		uint32_t ul_attr, void (*p_handler) (uint32_t, uint32_t))
+uint32_t pio_handler_set( Pio * p_pio,
+                          uint32_t ul_id,
+                          uint32_t ul_mask,
+                          uint32_t ul_attr,
+                          void ( * p_handler )( uint32_t, uint32_t ) )
 {
-	struct s_interrupt_source *pSource;
+    struct s_interrupt_source * pSource;
 
-	if (gs_ul_nb_sources >= MAX_INTERRUPT_SOURCES)
-		return 1;
+    if( gs_ul_nb_sources >= MAX_INTERRUPT_SOURCES )
+    {
+        return 1;
+    }
 
-	/* Define new source */
-	pSource = &(gs_interrupt_sources[gs_ul_nb_sources]);
-	pSource->id = ul_id;
-	pSource->mask = ul_mask;
-	pSource->attr = ul_attr;
-	pSource->handler = p_handler;
-	gs_ul_nb_sources++;
+    /* Define new source */
+    pSource = &( gs_interrupt_sources[ gs_ul_nb_sources ] );
+    pSource->id = ul_id;
+    pSource->mask = ul_mask;
+    pSource->attr = ul_attr;
+    pSource->handler = p_handler;
+    gs_ul_nb_sources++;
 
-	/* Configure interrupt mode */
-	pio_configure_interrupt(p_pio, ul_mask, ul_attr);
+    /* Configure interrupt mode */
+    pio_configure_interrupt( p_pio, ul_mask, ul_attr );
 
-	return 0;
+    return 0;
 }
 
-#if (SAM3S || SAM4S || SAM4E)
+#if ( SAM3S || SAM4S || SAM4E )
+
 /**
  * \brief Set a capture interrupt handler for all PIO.
  *
@@ -171,13 +191,14 @@ uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
  * \param p_handler Interrupt handler function pointer.
  *
  */
-void pio_capture_handler_set(void (*p_handler)(Pio *))
-{
-	pio_capture_handler = p_handler;
-}
+    void pio_capture_handler_set( void ( * p_handler )( Pio * ) )
+    {
+        pio_capture_handler = p_handler;
+    }
 #endif
 
 #ifdef ID_PIOA
+
 /**
  * \brief Set an interrupt handler for the specified pin.
  * The provided handler will be called with the triggering pin as its parameter
@@ -189,79 +210,85 @@ void pio_capture_handler_set(void (*p_handler)(Pio *))
  *
  * \return 0 if successful, 1 if the maximum number of sources has been defined.
  */
-uint32_t pio_handler_set_pin(uint32_t ul_pin, uint32_t ul_flag,
-		void (*p_handler) (uint32_t, uint32_t))
-{
-	Pio *p_pio = pio_get_pin_group(ul_pin);
-	uint32_t group_id =  pio_get_pin_group_id(ul_pin);
-	uint32_t group_mask = pio_get_pin_group_mask(ul_pin);
+    uint32_t pio_handler_set_pin( uint32_t ul_pin,
+                                  uint32_t ul_flag,
+                                  void ( * p_handler )( uint32_t, uint32_t ) )
+    {
+        Pio * p_pio = pio_get_pin_group( ul_pin );
+        uint32_t group_id = pio_get_pin_group_id( ul_pin );
+        uint32_t group_mask = pio_get_pin_group_mask( ul_pin );
 
-	return pio_handler_set(p_pio, group_id, group_mask, ul_flag, p_handler);
-}
+        return pio_handler_set( p_pio, group_id, group_mask, ul_flag, p_handler );
+    }
 
 /**
  * \brief Parallel IO Controller A interrupt handler.
  * Redefined PIOA interrupt handler for NVIC interrupt table.
  */
-void PIOA_Handler(void)
-{
-	pio_handler_process(PIOA, ID_PIOA);
-}
-#endif
+    void PIOA_Handler( void )
+    {
+        pio_handler_process( PIOA, ID_PIOA );
+    }
+#endif /* ifdef ID_PIOA */
 
 #ifdef ID_PIOB
+
 /**
  * \brief Parallel IO Controller B interrupt handler
  * Redefined PIOB interrupt handler for NVIC interrupt table.
  */
-void PIOB_Handler(void)
-{
-    pio_handler_process(PIOB, ID_PIOB);
-}
+    void PIOB_Handler( void )
+    {
+        pio_handler_process( PIOB, ID_PIOB );
+    }
 #endif
 
 #ifdef ID_PIOC
+
 /**
  * \brief Parallel IO Controller C interrupt handler.
  * Redefined PIOC interrupt handler for NVIC interrupt table.
  */
-void PIOC_Handler(void)
-{
-	pio_handler_process(PIOC, ID_PIOC);
-}
+    void PIOC_Handler( void )
+    {
+        pio_handler_process( PIOC, ID_PIOC );
+    }
 #endif
 
 #ifdef ID_PIOD
+
 /**
  * \brief Parallel IO Controller D interrupt handler.
  * Redefined PIOD interrupt handler for NVIC interrupt table.
  */
-void PIOD_Handler(void)
-{
-	pio_handler_process(PIOD, ID_PIOD);
-}
+    void PIOD_Handler( void )
+    {
+        pio_handler_process( PIOD, ID_PIOD );
+    }
 #endif
 
 #ifdef ID_PIOE
+
 /**
  * \brief Parallel IO Controller E interrupt handler.
  * Redefined PIOE interrupt handler for NVIC interrupt table.
  */
-void PIOE_Handler(void)
-{
-	pio_handler_process(PIOE, ID_PIOE);
-}
+    void PIOE_Handler( void )
+    {
+        pio_handler_process( PIOE, ID_PIOE );
+    }
 #endif
 
 #ifdef ID_PIOF
+
 /**
  * \brief Parallel IO Controller F interrupt handler.
  * Redefined PIOF interrupt handler for NVIC interrupt table.
  */
-void PIOF_Handler(void)
-{
-	pio_handler_process(PIOF, ID_PIOF);
-}
+    void PIOF_Handler( void )
+    {
+        pio_handler_process( PIOF, ID_PIOF );
+    }
 #endif
 
 /**
@@ -271,16 +298,18 @@ void PIOF_Handler(void)
  * \param ul_irqn NVIC line number.
  * \param ul_priority PIO controller interrupts priority.
  */
-void pio_handler_set_priority(Pio *p_pio, IRQn_Type ul_irqn, uint32_t ul_priority)
+void pio_handler_set_priority( Pio * p_pio,
+                               IRQn_Type ul_irqn,
+                               uint32_t ul_priority )
 {
-	uint32_t bitmask = 0;
+    uint32_t bitmask = 0;
 
-	bitmask = pio_get_interrupt_mask(p_pio);
-	pio_disable_interrupt(p_pio, 0xFFFFFFFF);
-	pio_get_interrupt_status(p_pio);
-	NVIC_DisableIRQ(ul_irqn);
-	NVIC_ClearPendingIRQ(ul_irqn);
-	NVIC_SetPriority(ul_irqn, ul_priority);
-	NVIC_EnableIRQ(ul_irqn);
-	pio_enable_interrupt(p_pio, bitmask);
+    bitmask = pio_get_interrupt_mask( p_pio );
+    pio_disable_interrupt( p_pio, 0xFFFFFFFF );
+    pio_get_interrupt_status( p_pio );
+    NVIC_DisableIRQ( ul_irqn );
+    NVIC_ClearPendingIRQ( ul_irqn );
+    NVIC_SetPriority( ul_irqn, ul_priority );
+    NVIC_EnableIRQ( ul_irqn );
+    pio_enable_interrupt( p_pio, bitmask );
 }

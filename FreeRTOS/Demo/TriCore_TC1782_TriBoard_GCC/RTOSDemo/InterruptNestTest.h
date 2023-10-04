@@ -28,7 +28,6 @@
 #define INTERRUPT_NEST_TEST_H
 
 void vSetupInterruptNestingTest( void );
-unsigned long ulInterruptNestingTestGetIterationCount( unsigned long *pulExpectedIncFrequency_ms );
+unsigned long ulInterruptNestingTestGetIterationCount( unsigned long * pulExpectedIncFrequency_ms );
 
 #endif /* INTERRUPT_NEST_TEST_H */
-

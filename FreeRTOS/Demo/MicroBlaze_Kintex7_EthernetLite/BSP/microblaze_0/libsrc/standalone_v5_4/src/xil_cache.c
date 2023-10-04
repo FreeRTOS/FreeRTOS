@@ -30,65 +30,68 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xil_cache.c
-*
-* This contains implementation of cache related driver functions.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -------------------------------------------------------
-* 1.00  hbm  07/28/09 Initial release
-* 3.10  asa  05/04/13 This version of MicroBlaze BSP adds support for system
-*					  cache/L2 cache. Existing APIs in this file are modified
-*					  to add support for L2 cache.
-*					  These changes are done for implementing PR #697214.
-* </pre>
-*
-* @note
-*
-* None.
-*
-******************************************************************************/
+ *
+ * @file xil_cache.c
+ *
+ * This contains implementation of cache related driver functions.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 1.00  hbm  07/28/09 Initial release
+ * 3.10  asa  05/04/13 This version of MicroBlaze BSP adds support for system
+ *					  cache/L2 cache. Existing APIs in this file are modified
+ *					  to add support for L2 cache.
+ *					  These changes are done for implementing PR #697214.
+ * </pre>
+ *
+ * @note
+ *
+ * None.
+ *
+ ******************************************************************************/
 
 #include "xil_cache.h"
 
 
 /****************************************************************************/
+
 /**
-*
-* Disable the data cache.
-*
-* @param    None
-*
-* @return   None.
-*
-****************************************************************************/
-void Xil_DCacheDisable(void)
+ *
+ * Disable the data cache.
+ *
+ * @param    None
+ *
+ * @return   None.
+ *
+ ****************************************************************************/
+void Xil_DCacheDisable( void )
 {
-	Xil_DCacheFlush();
-	Xil_DCacheInvalidate();
-	Xil_L1DCacheDisable();
+    Xil_DCacheFlush();
+    Xil_DCacheInvalidate();
+    Xil_L1DCacheDisable();
 }
 
 /****************************************************************************/
+
 /**
-*
-* Disable the instruction cache.
-*
-* @param    None
-*
-* @return   None.
-*
-* @note
-*
-*
-****************************************************************************/
-void Xil_ICacheDisable(void)
+ *
+ * Disable the instruction cache.
+ *
+ * @param    None
+ *
+ * @return   None.
+ *
+ * @note
+ *
+ *
+ ****************************************************************************/
+void Xil_ICacheDisable( void )
 {
-	Xil_ICacheInvalidate();
-	Xil_L1ICacheDisable();
+    Xil_ICacheInvalidate();
+    Xil_L1ICacheDisable();
 }

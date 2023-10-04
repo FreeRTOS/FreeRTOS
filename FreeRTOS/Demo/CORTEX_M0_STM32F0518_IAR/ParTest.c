@@ -39,7 +39,7 @@
 #include "stm320518_eval.h"
 
 /* Only the LEDs on one of the two seven segment displays are used. */
-#define partstMAX_LEDS		4
+#define partstMAX_LEDS    4
 
 static const Led_TypeDef xLEDs[ partstMAX_LEDS ] = { LED1, LED2, LED3, LED4 };
 
@@ -47,40 +47,40 @@ static const Led_TypeDef xLEDs[ partstMAX_LEDS ] = { LED1, LED2, LED3, LED4 };
 
 void vParTestInitialise( void )
 {
-	/* Initialise all four LEDs that are built onto the starter kit. */
-	STM_EVAL_LEDInit( LED1 );
-	STM_EVAL_LEDInit( LED2 );
-	STM_EVAL_LEDInit( LED3 );
-	STM_EVAL_LEDInit( LED4 );
+    /* Initialise all four LEDs that are built onto the starter kit. */
+    STM_EVAL_LEDInit( LED1 );
+    STM_EVAL_LEDInit( LED2 );
+    STM_EVAL_LEDInit( LED3 );
+    STM_EVAL_LEDInit( LED4 );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned long ulLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( ulLED < partstMAX_LEDS )
-	{
-		if( xValue == pdTRUE )
-		{
-			STM_EVAL_LEDOn( xLEDs[ ulLED ] );
-		}
-		else
-		{
-			STM_EVAL_LEDOff( xLEDs[ ulLED ] );
-		}
-	}
+    if( ulLED < partstMAX_LEDS )
+    {
+        if( xValue == pdTRUE )
+        {
+            STM_EVAL_LEDOn( xLEDs[ ulLED ] );
+        }
+        else
+        {
+            STM_EVAL_LEDOff( xLEDs[ ulLED ] );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned long ulLED )
 {
-	if( ulLED < partstMAX_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			STM_EVAL_LEDToggle( xLEDs[ ulLED ] );
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( ulLED < partstMAX_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            STM_EVAL_LEDToggle( xLEDs[ ulLED ] );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
-

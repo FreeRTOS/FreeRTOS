@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # This script takes an xml file which describes hardware options and produces
 # header files in the target directory which are used by the embedded
-# software. 
+# software.
 #-------------------------------------------------------------------------------
 
 import datetime
@@ -15,31 +15,31 @@ from pathlib import Path
 # --------------------------------------------------------------------------------------------
 # mpfs_configuration_generator.py version
 #
-# 0.6.3 bug fix related to multiple xml file selection. and added libero design information 
+# 0.6.3 bug fix related to multiple xml file selection. and added libero design information
 # constants in fpga_design_config.h/ removed date,version and design information from all the files
 # except fpga_design_config.h
 #
 # 0.6.2 added support for multiple xml file found in input folder
 #       /empty xml file check/ xml filename arg in current folder/
-#       if multiple files are there then the file with the latest time stamp will 
-#       be selected. 
+#       if multiple files are there then the file with the latest time stamp will
+#       be selected.
 # 0.6.1 changed target folder name from soc_config to fpga_design_config
 #
 # 0.5.2 Aries Embedded Feedback: remove trailing spaces.
 # 0.5.1 Added check that the source XML document is more recent than content of already existing
 # SoC configuration files.
 #
-# 0.4.2 Allowed to only specify the folder where the input XML 
+# 0.4.2 Allowed to only specify the folder where the input XML
 #       file is located. Use file ending with _mss_cfg.xml if one exists, any other .xml file in
 #        the input folder otherwise.
 #
-# 0.4.1 Modified the arguments to allow specifying 
+# 0.4.1 Modified the arguments to allow specifying
 #       the folder where the soc_config folder should be generated.
 #
 # 0.3.4 fixed comment formatting bug in hw_memory.h generation
 # 0.3.3 updated copyright format
 # 0.3.2 removed leading zeros from decimal values ( clock rates)
-# -------------------------------------------------------------------------------------------------------   
+# -------------------------------------------------------------------------------------------------------
 def get_script_ver():
     '''
     This changes anytime anytime the mpfs_configuration_generator.py script
@@ -428,38 +428,38 @@ def generate_header( file, real_root, root, file_name, tags):
 
 
 # -----------------------------------------------------------------------------
-# fpga_design_config.h header file generation. 
+# fpga_design_config.h header file generation.
 # -----------------------------------------------------------------------------
 
 def write_libero_config_info(root,theFile):
     script_version = get_script_ver().split('.')
     tags_dic = {"design_name":"LIBERO_SETTING_DESIGN_NAME","libero_version":"LIBERO_SETTING_MSS_CONFIGURATOR_VERSION","mpfs_part_no" :"LIBERO_SETTING_MPFS_PART "\
         ,"creation_date_time":"LIBERO_SETTING_GENERATION_DATE","xml_format_version":"LIBERO_SETTING_XML_VERSION"}
-    
-    #max constant name size + some extra buffer space  
+
+    #max constant name size + some extra buffer space
     max_gap = max([len(v) for k,v in tags_dic.items()]) + 8
 
-    fixed_gap = 12 
+    fixed_gap = 12
     xml_version = []
     for child in root:
             if child.tag == "design_information":
                 for child1 in child:
                     if child1.tag in tags_dic:
                         gap = max_gap - (len(tags_dic[child1.tag]))
-                        theFile.write('#define  '+ tags_dic[child1.tag].ljust(4,' ') + " "*(gap + fixed_gap)  + "\"" + child1.text.strip() + "\"" + "\n")  
+                        theFile.write('#define  '+ tags_dic[child1.tag].ljust(4,' ') + " "*(gap + fixed_gap)  + "\"" + child1.text.strip() + "\"" + "\n")
                         if child1.tag == "xml_format_version":
                             xml_version = child1.text.strip().split('.')
-    
+
     const = {"LIBERO_SETTING_XML_VERSION_MAJOR": xml_version[0],"LIBERO_SETTING_XML_VERSION_MINOR":xml_version[1],"LIBERO_SETTING_XML_VERSION_PATCH":xml_version[2], "LIBERO_SETTING_HEADER_GENERATOR_VERSION":'.'.join(script_version),"LIBERO_SETTING_HEADER_GENERATOR_VERSION_MAJOR":script_version[0],"LIBERO_SETTING_HEADER_GENERATOR_VERSION_MINOR":script_version[1],"LIBERO_SETTING_HEADER_GENERATOR_VERSION_PATCH":script_version[2]}
-    
+
     # write hard coded constants in the fpga_design_config.h file.
-    for k,v in const.items(): 
+    for k,v in const.items():
         gap = max_gap - len(k)
         if k == "LIBERO_SETTING_HEADER_GENERATOR_VERSION":
-            theFile.write('#define  '+ k.ljust(4,' ') + " "*(gap + fixed_gap)  + "\"" + v + "\"" + "\n")  
+            theFile.write('#define  '+ k.ljust(4,' ') + " "*(gap + fixed_gap)  + "\"" + v + "\"" + "\n")
         else:
-            theFile.write('#define  '+ k + " "*(gap + fixed_gap)  + v  + "\n")  
-    #new line 
+            theFile.write('#define  '+ k + " "*(gap + fixed_gap)  + v  + "\n")
+    #new line
     theFile.write("\n")
 
 
@@ -477,7 +477,7 @@ def generate_reference_header_file(ref_header_file, root, header_files):
         start_define(headerFile, file_name)
         # include all the headers
 
-        #define Libero design information constants 
+        #define Libero design information constants
         write_libero_config_info(root,headerFile)
         index = 0
         for child in header_files:
@@ -548,15 +548,15 @@ def get_full_path(in_path):
         path_comp = in_path.split('/')
         last = len(path_comp) - 1
         filename = path_comp[last]
-        
+
         in_path = in_path.replace(filename, '')
         print(in_path)
     if in_path == '':
-        filename = temp 
+        filename = temp
         in_path = os.getcwd()
         print(in_path)
     else:
-        xml_list = [] 
+        xml_list = []
         dir_entries = os.listdir(in_path)
         for dir_entry in dir_entries:
 
@@ -564,21 +564,21 @@ def get_full_path(in_path):
                 xml_list.append(dir_entry)
             else:
                 if dir_entry.endswith('_mss_cfg.xml'):
-                    xml_list.append(dir_entry) 
+                    xml_list.append(dir_entry)
                     break
-       #This section  will sort the xml file by the latest timestamp  
+       #This section  will sort the xml file by the latest timestamp
         if len(xml_list) > 1:
 
             xml_list = sort_by_timestamp(xml_list,in_path)
             filename = xml_list[-1]
-            #prompt the selected filename 
+            #prompt the selected filename
             print("selected xml file is : {}".format(filename))
         else:
             if len(xml_list) != 0:
                 filename = xml_list[0]
 
         print(in_path)
-        
+
     try:
         print("trying to change directory")
         os.chdir(in_path)
@@ -597,20 +597,20 @@ def get_full_path(in_path):
 
 
 # -------------------------------------------------------
-# check is fpath is a file and empty 
+# check is fpath is a file and empty
 # -------------------------------------------------------
-def is_empty_file(fpath):  
+def is_empty_file(fpath):
     return os.path.isfile(fpath) and os.path.getsize(fpath) == 0
 
 # -------------------------------------------------------
-# sort file names on the basis of time stamp 
+# sort file names on the basis of time stamp
 # -------------------------------------------------------
 def sort_by_timestamp(file_name,file_path):
     cwd = os.getcwd()
     try :
         os.chdir(file_path)
         path = os.getcwd()
-    except IOError : 
+    except IOError :
         print("not a valid folder name--------------")
         sys.exit()
 
@@ -620,7 +620,7 @@ def sort_by_timestamp(file_name,file_path):
     s_file_name = []
     for i in range(len(Files)):
         s_file_name.append(Files[i].split('/')[-1])
-    
+
     print("sorted list of files\n",s_file_name)
     os.chdir(cwd)
     return s_file_name
@@ -648,10 +648,10 @@ def main_config_generator():
     header files in the target directory which are used by the embedded
     software.
     Currently there are Two command line arguments
-    arg0: path to the folder containing xml file. 
+    arg0: path to the folder containing xml file.
     arg1: path of the folder where the fpga_design_config will be generated.
-    Note - If multiple xml files are present then the one with the latest time stamp 
-    will be selected. 
+    Note - If multiple xml files are present then the one with the latest time stamp
+    will be selected.
 
     '''
 
@@ -693,7 +693,7 @@ def main_config_generator():
     else:
     #    # Python 2 code in this block
         print ('python interpreter running is version 2')
-    
+
     # Create directory structure for the header files
     #
     root_folder = 'fpga_design_config'

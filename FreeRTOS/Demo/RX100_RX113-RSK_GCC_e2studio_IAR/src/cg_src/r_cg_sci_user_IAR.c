@@ -27,7 +27,7 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 
@@ -43,7 +43,7 @@ Pragma directive
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_sci.h"
@@ -57,13 +57,13 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
-extern uint8_t * gp_sci1_tx_address;         /* SCI1 send buffer address */
-extern uint16_t  g_sci1_tx_count;            /* SCI1 send data number */
-extern uint8_t * gp_sci1_rx_address;         /* SCI1 receive buffer address */
-extern uint16_t  g_sci1_rx_count;            /* SCI1 receive data number */
-extern uint16_t  g_sci1_rx_length;           /* SCI1 receive data length */
+extern uint8_t * gp_sci1_tx_address; /* SCI1 send buffer address */
+extern uint16_t g_sci1_tx_count;     /* SCI1 send data number */
+extern uint8_t * gp_sci1_rx_address; /* SCI1 receive buffer address */
+extern uint16_t g_sci1_rx_count;     /* SCI1 receive data number */
+extern uint16_t g_sci1_rx_length;    /* SCI1 receive data length */
 /* Start user code for global. Do not edit comment generated here */
 
 /* Global used to receive a character from the PC terminal */
@@ -73,20 +73,20 @@ uint8_t g_rx_char;
 volatile uint8_t g_tx_flag = FALSE;
 
 /* Characters received from the UART are stored in this queue, ready to be
-received by the application.  ***NOTE*** Using a queue in this way is very
-convenient, but also very inefficient.  It can be used here because characters
-will only arrive slowly.  In a higher bandwidth system a circular RAM buffer or
-DMA should be used in place of this queue. */
+ * received by the application.  ***NOTE*** Using a queue in this way is very
+ * convenient, but also very inefficient.  It can be used here because characters
+ * will only arrive slowly.  In a higher bandwidth system a circular RAM buffer or
+ * DMA should be used in place of this queue. */
 static QueueHandle_t xRxQueue = NULL;
 
 /* When a task calls vSerialPutString() its handle is stored in xSendingTask,
-before being placed into the Blocked state (so does not use any CPU time) to
-wait for the transmission to end.  The task handle is then used from the UART
-transmit end interrupt to remove the task from the Blocked state. */
+ * before being placed into the Blocked state (so does not use any CPU time) to
+ * wait for the transmission to end.  The task handle is then used from the UART
+ * transmit end interrupt to remove the task from the Blocked state. */
 static TaskHandle_t xSendingTask = NULL;
 
 /* Flag used locally to detect transmission complete.  This is used by the
-auto generated API only. */
+ * auto generated API only. */
 static volatile uint8_t sci1_txdone;
 
 /* End user code. Do not edit comment generated here */
@@ -99,12 +99,12 @@ static volatile uint8_t sci1_txdone;
 ***********************************************************************************************************************/
 #pragma vector = VECT_SCI1_TXI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_TXI1
-__fast_interrupt static void r_sci1_transmit_interrupt(void)
+    __fast_interrupt static void r_sci1_transmit_interrupt( void )
 #else
-__interrupt static void r_sci1_transmit_interrupt(void)
+    __interrupt static void r_sci1_transmit_interrupt( void )
 #endif
 {
-    if (g_sci1_tx_count > 0U)
+    if( g_sci1_tx_count > 0U )
     {
         SCI1.TDR = *gp_sci1_tx_address;
         gp_sci1_tx_address++;
@@ -116,6 +116,7 @@ __interrupt static void r_sci1_transmit_interrupt(void)
         SCI1.SCR.BIT.TEIE = 1U;
     }
 }
+
 /***********************************************************************************************************************
 * Function Name: r_sci1_transmitend_interrupt
 * Description  : None
@@ -124,9 +125,9 @@ __interrupt static void r_sci1_transmit_interrupt(void)
 ***********************************************************************************************************************/
 #pragma vector = VECT_SCI1_TEI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_TEI1
-__fast_interrupt static void r_sci1_transmitend_interrupt(void)
+    __fast_interrupt static void r_sci1_transmitend_interrupt( void )
 #else
-__interrupt static void r_sci1_transmitend_interrupt(void)
+    __interrupt static void r_sci1_transmitend_interrupt( void )
 #endif
 {
     /* Set TXD1 pin */
@@ -137,6 +138,7 @@ __interrupt static void r_sci1_transmitend_interrupt(void)
 
     r_sci1_callback_transmitend();
 }
+
 /***********************************************************************************************************************
 * Function Name: r_sci1_receive_interrupt
 * Description  : None
@@ -145,23 +147,24 @@ __interrupt static void r_sci1_transmitend_interrupt(void)
 ***********************************************************************************************************************/
 #pragma vector = VECT_SCI1_RXI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_RXI1
-__fast_interrupt static void r_sci1_receive_interrupt(void)
+    __fast_interrupt static void r_sci1_receive_interrupt( void )
 #else
-__interrupt static void r_sci1_receive_interrupt(void)
+    __interrupt static void r_sci1_receive_interrupt( void )
 #endif
 {
-    if (g_sci1_rx_length > g_sci1_rx_count)
+    if( g_sci1_rx_length > g_sci1_rx_count )
     {
         *gp_sci1_rx_address = SCI1.RDR;
         gp_sci1_rx_address++;
         g_sci1_rx_count++;
 
-        if (g_sci1_rx_length == g_sci1_rx_count)
+        if( g_sci1_rx_length == g_sci1_rx_count )
         {
             r_sci1_callback_receiveend();
         }
     }
 }
+
 /***********************************************************************************************************************
 * Function Name: r_sci1_receiveerror_interrupt
 * Description  : None
@@ -170,9 +173,9 @@ __interrupt static void r_sci1_receive_interrupt(void)
 ***********************************************************************************************************************/
 #pragma vector = VECT_SCI1_ERI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_ERI1
-__fast_interrupt static void r_sci1_receiveerror_interrupt(void)
+    __fast_interrupt static void r_sci1_receiveerror_interrupt( void )
 #else
-__interrupt static void r_sci1_receiveerror_interrupt(void)
+    __interrupt static void r_sci1_receiveerror_interrupt( void )
 #endif
 {
     uint8_t err_type;
@@ -183,13 +186,14 @@ __interrupt static void r_sci1_receiveerror_interrupt(void)
     err_type = SCI1.SSR.BYTE;
     SCI1.SSR.BYTE = err_type & ( uint8_t ) 0xC7;
 }
+
 /***********************************************************************************************************************
 * Function Name: r_sci1_callback_transmitend
 * Description  : This function is a callback function when SCI1 finishes transmission.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void r_sci1_callback_transmitend(void)
+void r_sci1_callback_transmitend( void )
 {
     /* Start user code. Do not edit comment generated here */
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -200,21 +204,23 @@ void r_sci1_callback_transmitend(void)
     if( xSendingTask != NULL )
     {
         /* A task is waiting for the end of the Tx, unblock it now.
-        http://www.freertos.org/vTaskNotifyGiveFromISR.html */
+         * http://www.freertos.org/vTaskNotifyGiveFromISR.html */
         vTaskNotifyGiveFromISR( xSendingTask, &xHigherPriorityTaskWoken );
         xSendingTask = NULL;
 
         portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
     }
+
     /* End user code. Do not edit comment generated here */
 }
+
 /***********************************************************************************************************************
 * Function Name: r_sci1_callback_receiveend
 * Description  : This function is a callback function when SCI1 finishes reception.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void r_sci1_callback_receiveend(void)
+void r_sci1_callback_receiveend( void )
 {
     /* Start user code. Do not edit comment generated here */
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -222,51 +228,54 @@ void r_sci1_callback_receiveend(void)
     configASSERT( xRxQueue );
 
     /* Transmitting generates an interrupt for each character, which consumes
-    CPU time, and can cause standard demo RTOS tasks that monitor their own
-    performance to fail asserts - so don't receive new CLI commands if a
-    transmit is not already in progress. */
+     * CPU time, and can cause standard demo RTOS tasks that monitor their own
+     * performance to fail asserts - so don't receive new CLI commands if a
+     * transmit is not already in progress. */
     if( sci1_txdone == TRUE )
     {
         /* Characters received from the UART are stored in this queue, ready to be
-        received by the application.  ***NOTE*** Using a queue in this way is very
-        convenient, but also very inefficient.  It can be used here because
-        characters will only arrive slowly.  In a higher bandwidth system a circular
-        RAM buffer or DMA should be used in place of this queue. */
+         * received by the application.  ***NOTE*** Using a queue in this way is very
+         * convenient, but also very inefficient.  It can be used here because
+         * characters will only arrive slowly.  In a higher bandwidth system a circular
+         * RAM buffer or DMA should be used in place of this queue. */
         xQueueSendFromISR( xRxQueue, &g_rx_char, &xHigherPriorityTaskWoken );
     }
 
     /* Set up SCI1 receive buffer again */
-    R_SCI1_Serial_Receive((uint8_t *) &g_rx_char, 1);
+    R_SCI1_Serial_Receive( ( uint8_t * ) &g_rx_char, 1 );
 
     /* See http://www.freertos.org/xQueueOverwriteFromISR.html for information
-    on the semantics of this ISR. */
+     * on the semantics of this ISR. */
     portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
     /* End user code. Do not edit comment generated here */
 }
+
 /***********************************************************************************************************************
 * Function Name: r_sci1_callback_receiveerror
 * Description  : This function is a callback function when SCI1 reception encounters error.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void r_sci1_callback_receiveerror(void)
+void r_sci1_callback_receiveerror( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
 }
 
 /* Start user code for adding. Do not edit comment generated here */
+
 /***********************************************************************************************************************
- * Function Name: R_SCI1_AsyncTransmit
- * Description  : This function sends SCI1 data and waits for the transmit end flag.
- * Arguments    : tx_buf -
- *                    transfer buffer pointer
- *                tx_num -
- *                    buffer size
- * Return Value : status -
- *                    MD_OK or MD_ARGERROR
- ***********************************************************************************************************************/
-MD_STATUS R_SCI1_AsyncTransmit (uint8_t * const tx_buf, const uint16_t tx_num)
+* Function Name: R_SCI1_AsyncTransmit
+* Description  : This function sends SCI1 data and waits for the transmit end flag.
+* Arguments    : tx_buf -
+*                    transfer buffer pointer
+*                tx_num -
+*                    buffer size
+* Return Value : status -
+*                    MD_OK or MD_ARGERROR
+***********************************************************************************************************************/
+MD_STATUS R_SCI1_AsyncTransmit( uint8_t * const tx_buf,
+                                const uint16_t tx_num )
 {
     MD_STATUS status = MD_OK;
 
@@ -274,54 +283,59 @@ MD_STATUS R_SCI1_AsyncTransmit (uint8_t * const tx_buf, const uint16_t tx_num)
     sci1_txdone = FALSE;
 
     /* Send the data using the API */
-    status = R_SCI1_Serial_Send(tx_buf, tx_num);
+    status = R_SCI1_Serial_Send( tx_buf, tx_num );
 
     /* Wait for the transmit end flag */
-    while (FALSE == sci1_txdone)
+    while( FALSE == sci1_txdone )
     {
         /* Wait */
     }
-    return (status);
+
+    return( status );
 }
+
 /***********************************************************************************************************************
- * End of function R_SCI1_AsyncTransmit
- ***********************************************************************************************************************/
+* End of function R_SCI1_AsyncTransmit
+***********************************************************************************************************************/
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+ * multiple different demo application. */
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud,
+                                       unsigned portBASE_TYPE uxQueueLength )
 {
     ( void ) ulWantedBaud;
     ( void ) uxQueueLength;
 
     /* Characters received from the UART are stored in this queue, ready to be
-    received by the application.  ***NOTE*** Using a queue in this way is very
-    convenient, but also very inefficient.  It can be used here because
-    characters will only arrive slowly.  In a higher bandwidth system a circular
-    RAM buffer or DMA should be used in place of this queue. */
+     * received by the application.  ***NOTE*** Using a queue in this way is very
+     * convenient, but also very inefficient.  It can be used here because
+     * characters will only arrive slowly.  In a higher bandwidth system a circular
+     * RAM buffer or DMA should be used in place of this queue. */
     xRxQueue = xQueueCreate( uxQueueLength, sizeof( char ) );
     configASSERT( xRxQueue );
 
     /* Set up SCI1 receive buffer */
-    R_SCI1_Serial_Receive((uint8_t *) &g_rx_char, 1);
+    R_SCI1_Serial_Receive( ( uint8_t * ) &g_rx_char, 1 );
 
     /* Ensure the interrupt priority is at or below
-    configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+     * configMAX_SYSCALL_INTERRUPT_PRIORITY. */
     IPR( SCI1, ERI1 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
 
     /* Enable SCI1 operations */
     R_SCI1_Start();
 
     /* Only one UART is supported, so it doesn't matter what is returned
-    here. */
+     * here. */
     return 0;
 }
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
+ * multiple different demo application. */
+void vSerialPutString( xComPortHandle pxPort,
+                       const signed char * const pcString,
+                       unsigned short usStringLength )
 {
-const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
+    const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
 
     /* Only one port is supported. */
     ( void ) pxPort;
@@ -333,37 +347,41 @@ const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
     if( ( xSendingTask == NULL ) && ( usStringLength > 0 ) )
     {
         /* Ensure the calling task's notification state is not already
-        pending. */
+         * pending. */
         xTaskNotifyStateClear( NULL );
 
         /* Store the handle of the transmitting task.  This is used to unblock
-        the task when the transmission has completed. */
+         * the task when the transmission has completed. */
         xSendingTask = xTaskGetCurrentTaskHandle();
 
         /* Send the string using the auto-generated API. */
         R_SCI1_Serial_Send( ( uint8_t * ) pcString, usStringLength );
 
         /* Wait in the Blocked state (so not using any CPU time) until the
-        transmission has completed. */
+         * transmission has completed. */
         ulTaskNotifyTake( pdTRUE, xMaxBlockTime );
     }
 }
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
+ * multiple different demo application. */
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort,
+                                     signed char * pcRxedChar,
+                                     TickType_t xBlockTime )
 {
     /* Only one UART is supported. */
     ( void ) pxPort;
 
     /* Return a received character, if any are available.  Otherwise block to
-    wait for a character. */
+     * wait for a character. */
     return xQueueReceive( xRxQueue, pcRxedChar, xBlockTime );
 }
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
+ * multiple different demo application. */
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort,
+                                     signed char cOutChar,
+                                     TickType_t xBlockTime )
 {
     /* Just mapped to vSerialPutString() so the block time is not used. */
     ( void ) xBlockTime;

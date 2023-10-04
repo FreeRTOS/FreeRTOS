@@ -31,32 +31,32 @@
 #define _SAMA5_DBGU_INSTANCE_
 
 /* ========== Register definition for DBGU peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_DBGU_CR            (0xFFFFEE00U) /**< \brief (DBGU) Control Register */
-#define REG_DBGU_MR            (0xFFFFEE04U) /**< \brief (DBGU) Mode Register */
-#define REG_DBGU_IER           (0xFFFFEE08U) /**< \brief (DBGU) Interrupt Enable Register */
-#define REG_DBGU_IDR           (0xFFFFEE0CU) /**< \brief (DBGU) Interrupt Disable Register */
-#define REG_DBGU_IMR           (0xFFFFEE10U) /**< \brief (DBGU) Interrupt Mask Register */
-#define REG_DBGU_SR            (0xFFFFEE14U) /**< \brief (DBGU) Status Register */
-#define REG_DBGU_RHR           (0xFFFFEE18U) /**< \brief (DBGU) Receive Holding Register */
-#define REG_DBGU_THR           (0xFFFFEE1CU) /**< \brief (DBGU) Transmit Holding Register */
-#define REG_DBGU_BRGR          (0xFFFFEE20U) /**< \brief (DBGU) Baud Rate Generator Register */
-#define REG_DBGU_CIDR          (0xFFFFEE40U) /**< \brief (DBGU) Chip ID Register */
-#define REG_DBGU_EXID          (0xFFFFEE44U) /**< \brief (DBGU) Chip ID Extension Register */
-#define REG_DBGU_FNR           (0xFFFFEE48U) /**< \brief (DBGU) Force NTRST Register */
-#else
-#define REG_DBGU_CR   (*(WoReg*)0xFFFFEE00U) /**< \brief (DBGU) Control Register */
-#define REG_DBGU_MR   (*(RwReg*)0xFFFFEE04U) /**< \brief (DBGU) Mode Register */
-#define REG_DBGU_IER  (*(WoReg*)0xFFFFEE08U) /**< \brief (DBGU) Interrupt Enable Register */
-#define REG_DBGU_IDR  (*(WoReg*)0xFFFFEE0CU) /**< \brief (DBGU) Interrupt Disable Register */
-#define REG_DBGU_IMR  (*(RoReg*)0xFFFFEE10U) /**< \brief (DBGU) Interrupt Mask Register */
-#define REG_DBGU_SR   (*(RoReg*)0xFFFFEE14U) /**< \brief (DBGU) Status Register */
-#define REG_DBGU_RHR  (*(RoReg*)0xFFFFEE18U) /**< \brief (DBGU) Receive Holding Register */
-#define REG_DBGU_THR  (*(WoReg*)0xFFFFEE1CU) /**< \brief (DBGU) Transmit Holding Register */
-#define REG_DBGU_BRGR (*(RwReg*)0xFFFFEE20U) /**< \brief (DBGU) Baud Rate Generator Register */
-#define REG_DBGU_CIDR (*(RoReg*)0xFFFFEE40U) /**< \brief (DBGU) Chip ID Register */
-#define REG_DBGU_EXID (*(RoReg*)0xFFFFEE44U) /**< \brief (DBGU) Chip ID Extension Register */
-#define REG_DBGU_FNR  (*(RwReg*)0xFFFFEE48U) /**< \brief (DBGU) Force NTRST Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_DBGU_CR      ( 0xFFFFEE00U )              /**< \brief (DBGU) Control Register */
+    #define REG_DBGU_MR      ( 0xFFFFEE04U )              /**< \brief (DBGU) Mode Register */
+    #define REG_DBGU_IER     ( 0xFFFFEE08U )              /**< \brief (DBGU) Interrupt Enable Register */
+    #define REG_DBGU_IDR     ( 0xFFFFEE0CU )              /**< \brief (DBGU) Interrupt Disable Register */
+    #define REG_DBGU_IMR     ( 0xFFFFEE10U )              /**< \brief (DBGU) Interrupt Mask Register */
+    #define REG_DBGU_SR      ( 0xFFFFEE14U )              /**< \brief (DBGU) Status Register */
+    #define REG_DBGU_RHR     ( 0xFFFFEE18U )              /**< \brief (DBGU) Receive Holding Register */
+    #define REG_DBGU_THR     ( 0xFFFFEE1CU )              /**< \brief (DBGU) Transmit Holding Register */
+    #define REG_DBGU_BRGR    ( 0xFFFFEE20U )              /**< \brief (DBGU) Baud Rate Generator Register */
+    #define REG_DBGU_CIDR    ( 0xFFFFEE40U )              /**< \brief (DBGU) Chip ID Register */
+    #define REG_DBGU_EXID    ( 0xFFFFEE44U )              /**< \brief (DBGU) Chip ID Extension Register */
+    #define REG_DBGU_FNR     ( 0xFFFFEE48U )              /**< \brief (DBGU) Force NTRST Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_DBGU_CR      ( *( WoReg * ) 0xFFFFEE00U ) /**< \brief (DBGU) Control Register */
+    #define REG_DBGU_MR      ( *( RwReg * ) 0xFFFFEE04U ) /**< \brief (DBGU) Mode Register */
+    #define REG_DBGU_IER     ( *( WoReg * ) 0xFFFFEE08U ) /**< \brief (DBGU) Interrupt Enable Register */
+    #define REG_DBGU_IDR     ( *( WoReg * ) 0xFFFFEE0CU ) /**< \brief (DBGU) Interrupt Disable Register */
+    #define REG_DBGU_IMR     ( *( RoReg * ) 0xFFFFEE10U ) /**< \brief (DBGU) Interrupt Mask Register */
+    #define REG_DBGU_SR      ( *( RoReg * ) 0xFFFFEE14U ) /**< \brief (DBGU) Status Register */
+    #define REG_DBGU_RHR     ( *( RoReg * ) 0xFFFFEE18U ) /**< \brief (DBGU) Receive Holding Register */
+    #define REG_DBGU_THR     ( *( WoReg * ) 0xFFFFEE1CU ) /**< \brief (DBGU) Transmit Holding Register */
+    #define REG_DBGU_BRGR    ( *( RwReg * ) 0xFFFFEE20U ) /**< \brief (DBGU) Baud Rate Generator Register */
+    #define REG_DBGU_CIDR    ( *( RoReg * ) 0xFFFFEE40U ) /**< \brief (DBGU) Chip ID Register */
+    #define REG_DBGU_EXID    ( *( RoReg * ) 0xFFFFEE44U ) /**< \brief (DBGU) Chip ID Extension Register */
+    #define REG_DBGU_FNR     ( *( RwReg * ) 0xFFFFEE48U ) /**< \brief (DBGU) Force NTRST Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_DBGU_INSTANCE_ */

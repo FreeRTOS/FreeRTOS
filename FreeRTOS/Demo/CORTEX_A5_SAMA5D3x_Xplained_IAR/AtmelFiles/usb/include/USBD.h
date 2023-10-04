@@ -63,20 +63,20 @@
  *------------------------------------------------------------------------------*/
 
 /* Define attribute */
-#if defined   ( __CC_ARM   ) /* Keil ¦ÌVision 4 */
-    #define WEAK __attribute__ ((weak))
-#elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
-    #define WEAK __weak
-#elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
-    #define WEAK __attribute__ ((weak))
+#if defined( __CC_ARM )     /* Keil ¦ÌVision 4 */
+    #define WEAK    __attribute__( ( weak ) )
+#elif defined( __ICCARM__ ) /* IAR Ewarm 5.41+ */
+    #define WEAK    __weak
+#elif defined( __GNUC__ )   /* GCC CS3 2009q3-68 */
+    #define WEAK    __attribute__( ( weak ) )
 #endif
 
 /* Define NO_INIT attribute */
-#if defined   ( __CC_ARM   )
+#if defined( __CC_ARM )
     #define NO_INIT
-#elif defined ( __ICCARM__ )
-    #define NO_INIT __no_init
-#elif defined (  __GNUC__  )
+#elif defined( __ICCARM__ )
+    #define NO_INIT    __no_init
+#elif defined( __GNUC__ )
     #define NO_INIT
 #endif
 
@@ -95,25 +95,25 @@
  */
 
 /** Indicates the operation was successful. */
-#define USBD_STATUS_SUCCESS             USBRC_SUCCESS
+#define USBD_STATUS_SUCCESS              USBRC_SUCCESS
 /** Endpoint/device is already busy. */
-#define USBD_STATUS_LOCKED              USBRC_BUSY
+#define USBD_STATUS_LOCKED               USBRC_BUSY
 /** Operation has been aborted (error or stall). */
-#define USBD_STATUS_ABORTED             USBRC_ABORTED
+#define USBD_STATUS_ABORTED              USBRC_ABORTED
 /** Operation has been canceled (by user). */
-#define USBD_STATUS_CANCELED            USBRC_CANCELED
+#define USBD_STATUS_CANCELED             USBRC_CANCELED
 /** Operation has been aborted because the device init/reset/un-configure. */
-#define USBD_STATUS_RESET               USBRC_RESET
+#define USBD_STATUS_RESET                USBRC_RESET
 /** Part ot operation successfully done. */
-#define USBD_STATUS_PARTIAL_DONE        USBRC_PARTIAL_DONE
+#define USBD_STATUS_PARTIAL_DONE         USBRC_PARTIAL_DONE
 /** Operation failed because parameter error */
-#define USBD_STATUS_INVALID_PARAMETER   USBRC_PARAM_ERR
+#define USBD_STATUS_INVALID_PARAMETER    USBRC_PARAM_ERR
 /** Operation failed because in unexpected state */
-#define USBD_STATUS_WRONG_STATE         USBRC_STATE_ERR
+#define USBD_STATUS_WRONG_STATE          USBRC_STATE_ERR
 /** Operation failed because SW not supported */
-#define USBD_STATUS_SW_NOT_SUPPORTED    USBRC_SW_NOT_SUPPORTED
+#define USBD_STATUS_SW_NOT_SUPPORTED     USBRC_SW_NOT_SUPPORTED
 /** Operation failed because HW not supported */
-#define USBD_STATUS_HW_NOT_SUPPORTED    USBRC_HW_NOT_SUPPORTED
+#define USBD_STATUS_HW_NOT_SUPPORTED     USBRC_HW_NOT_SUPPORTED
 /** @}*/
 
 /** \addtogroup usbd_states USB device states
@@ -128,17 +128,17 @@
  */
 
 /** The device is currently suspended. */
-#define USBD_STATE_SUSPENDED            0
+#define USBD_STATE_SUSPENDED     0
 /** USB cable is plugged into the device. */
-#define USBD_STATE_ATTACHED             1
+#define USBD_STATE_ATTACHED      1
 /** Host is providing +5V through the USB cable. */
-#define USBD_STATE_POWERED              2
+#define USBD_STATE_POWERED       2
 /** Device has been reset. */
-#define USBD_STATE_DEFAULT              3
+#define USBD_STATE_DEFAULT       3
 /** The device has been given an address on the bus. */
-#define USBD_STATE_ADDRESS              4
+#define USBD_STATE_ADDRESS       4
 /** A valid configuration has been selected. */
-#define USBD_STATE_CONFIGURED           5
+#define USBD_STATE_CONFIGURED    5
 /**  @}*/
 
 /*----------------------------------------------------------------------------
@@ -150,7 +150,8 @@
  *
  * The driver can process 255 bytes of buffers or buffer list window.
  */
-typedef struct _USBDTransferBuffer {
+typedef struct _USBDTransferBuffer
+{
     /** Pointer to frame buffer */
     uint8_t * pBuffer;
     /** Size of the frame (up to 64K-1) */
@@ -164,10 +165,10 @@ typedef struct _USBDTransferBuffer {
 } USBDTransferBuffer;
 
 #pragma pack(1)
-#if defined   ( __CC_ARM   ) /* Keil ¦ÌVision 4 */
-#elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
-#define __attribute__(...)
-#elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
+#if defined( __CC_ARM )     /* Keil ¦ÌVision 4 */
+#elif defined( __ICCARM__ ) /* IAR Ewarm 5.41+ */
+    #define __attribute__( ... )
+#elif defined( __GNUC__ )   /* GCC CS3 2009q3-68 */
 #endif
 
 /**
@@ -176,18 +177,19 @@ typedef struct _USBDTransferBuffer {
  *
  * (For USB, DMA transfer is linked to EPs and FIFO address is EP defined)
  */
-typedef struct _USBDDmaDescriptor {
+typedef struct _USBDDmaDescriptor
+{
     /** Pointer to Next Descriptor */
-    void* pNxtDesc;
+    void * pNxtDesc;
     /** Pointer to data buffer address */
-    void* pDataAddr;
+    void * pDataAddr;
     /** DMA Control setting register value */
-    uint32_t   ctrlSettings:8,      /** Control settings */
-                   reserved:8,      /** Not used */
-                   bufferLength:16; /** Length of buffer */
+    uint32_t ctrlSettings : 8,  /** Control settings */
+             reserved : 8,      /** Not used */
+             bufferLength : 16; /** Length of buffer */
     /** Loaded to DMA register, OK to modify */
     uint32_t used;
-} __attribute__((aligned(16))) USBDDmaDescriptor;
+} __attribute__( ( aligned( 16 ) ) ) USBDDmaDescriptor;
 
 #pragma pack()
 
@@ -195,10 +197,10 @@ typedef struct _USBDDmaDescriptor {
  * Callback used by transfer functions (USBD_Read & USBD_Write) to notify
  * that a transaction is complete.
  */
-typedef void (*TransferCallback)(void *pArg,
-                                 uint8_t status,
-                                 uint32_t transferred,
-                                 uint32_t remaining);
+typedef void (* TransferCallback)( void * pArg,
+                                   uint8_t status,
+                                   uint32_t transferred,
+                                   uint32_t remaining );
 
 /**
  * Callback used by MBL transfer functions (USBD_Read & USBD_Write) to notify
@@ -206,8 +208,8 @@ typedef void (*TransferCallback)(void *pArg,
  * \param pArg     Pointer to callback arguments.
  * \param status   USBD status.
  */
-typedef void (*MblTransferCallback)(void *pArg,
-                                    uint8_t status);
+typedef void (* MblTransferCallback)( void * pArg,
+                                      uint8_t status );
 
 /**@}*/
 
@@ -215,64 +217,61 @@ typedef void (*MblTransferCallback)(void *pArg,
  *         Exported functions
  *------------------------------------------------------------------------------*/
 
-//extern void USBD_IrqHandler(void);
+/*extern void USBD_IrqHandler(void); */
 
-extern void USBD_Init(void);
+extern void USBD_Init( void );
 
-extern void USBD_ConfigureSpeed(uint8_t forceFS);
+extern void USBD_ConfigureSpeed( uint8_t forceFS );
 
-extern void USBD_Connect(void);
+extern void USBD_Connect( void );
 
-extern void USBD_Disconnect(void);
+extern void USBD_Disconnect( void );
 
-extern uint8_t USBD_Write(
-    uint8_t bEndpoint,
-    const void *pData,
-    uint32_t size,
-    TransferCallback callback,
-    void *pArg);
+extern uint8_t USBD_Write( uint8_t bEndpoint,
+                           const void * pData,
+                           uint32_t size,
+                           TransferCallback callback,
+                           void * pArg );
 
-extern uint8_t USBD_Read(
-    uint8_t bEndpoint,
-    void *pData,
-    uint32_t dLength,
-    TransferCallback fCallback,
-    void *pArg);
+extern uint8_t USBD_Read( uint8_t bEndpoint,
+                          void * pData,
+                          uint32_t dLength,
+                          TransferCallback fCallback,
+                          void * pArg );
 
-extern uint8_t USBD_Stall(uint8_t bEndpoint);
+extern uint8_t USBD_Stall( uint8_t bEndpoint );
 
-extern void USBD_Halt(uint8_t bEndpoint);
+extern void USBD_Halt( uint8_t bEndpoint );
 
-extern void USBD_Unhalt(uint8_t bEndpoint);
+extern void USBD_Unhalt( uint8_t bEndpoint );
 
-extern void USBD_ConfigureEndpoint(const USBEndpointDescriptor *pDescriptor);
+extern void USBD_ConfigureEndpoint( const USBEndpointDescriptor * pDescriptor );
 
-extern uint8_t USBD_IsHalted(uint8_t bEndpoint);
+extern uint8_t USBD_IsHalted( uint8_t bEndpoint );
 
-extern void USBD_RemoteWakeUp(void);
+extern void USBD_RemoteWakeUp( void );
 
-extern void USBD_SetAddress(uint8_t address);
+extern void USBD_SetAddress( uint8_t address );
 
-extern void USBD_SetConfiguration(uint8_t cfgnum);
+extern void USBD_SetConfiguration( uint8_t cfgnum );
 
-extern uint8_t USBD_GetState(void);
+extern uint8_t USBD_GetState( void );
 
-extern uint8_t USBD_IsHighSpeed(void);
+extern uint8_t USBD_IsHighSpeed( void );
 
-extern void USBD_Test(uint8_t bIndex);
+extern void USBD_Test( uint8_t bIndex );
 
-extern void USBD_SuspendHandler(void);
-extern void USBD_ResumeHandler(void);
-extern void USBD_ResetHandler(void);
-extern void USBD_RequestHandler(uint8_t bEndpoint,
-                                const USBGenericRequest * pRequest);
+extern void USBD_SuspendHandler( void );
+extern void USBD_ResumeHandler( void );
+extern void USBD_ResetHandler( void );
+extern void USBD_RequestHandler( uint8_t bEndpoint,
+                                 const USBGenericRequest * pRequest );
 
 
-extern void USBDCallbacks_Initialized(void);
-extern void USBDCallbacks_Reset(void);
-extern void USBDCallbacks_Suspended(void);
-extern void USBDCallbacks_Resumed(void);
-extern void USBDCallbacks_RequestReceived(const USBGenericRequest *request);
+extern void USBDCallbacks_Initialized( void );
+extern void USBDCallbacks_Reset( void );
+extern void USBDCallbacks_Suspended( void );
+extern void USBDCallbacks_Resumed( void );
+extern void USBDCallbacks_RequestReceived( const USBGenericRequest * request );
 
 #endif /*#ifndef USBD_H*/
-

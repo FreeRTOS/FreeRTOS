@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,13 +26,13 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /**
-  * \file syscalls.c
-  *
-  * Implementation of newlib syscall.
-  *
-  */
+ * \file syscalls.c
+ *
+ * Implementation of newlib syscall.
+ *
+ */
 
 /*----------------------------------------------------------------------------
  *        Headers
@@ -51,91 +51,103 @@
  *----------------------------------------------------------------------------*/
 
 #undef errno
-extern int errno ;
-extern int  _heap ;
+extern int errno;
+extern int _heap;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern void _exit( int status ) ;
-extern void _kill( int pid, int sig ) ;
-extern int _getpid ( void ) ;
+extern void _exit( int status );
+extern void _kill( int pid,
+                   int sig );
+extern int _getpid( void );
 
-extern caddr_t _sbrk ( int incr )
+extern caddr_t _sbrk( int incr )
 {
-    static unsigned char *heap = NULL ;
-    unsigned char *prev_heap ;
+    static unsigned char * heap = NULL;
+    unsigned char * prev_heap;
 
-    if ( heap == NULL )
+    if( heap == NULL )
     {
-        heap = (unsigned char *)&_heap ;
+        heap = ( unsigned char * ) &_heap;
     }
+
     prev_heap = heap;
 
-    heap += incr ;
+    heap += incr;
 
-    return (caddr_t) prev_heap ;
+    return ( caddr_t ) prev_heap;
 }
 
-extern int link( char *old, char *new )
+extern int link( char * old,
+                 char * new )
 {
-    return -1 ;
+    return -1;
 }
 
 extern int _close( int file )
 {
-    return -1 ;
+    return -1;
 }
 
-extern int _fstat( int file, struct stat *st )
+extern int _fstat( int file,
+                   struct stat * st )
 {
-    st->st_mode = S_IFCHR ;
+    st->st_mode = S_IFCHR;
 
-    return 0 ;
+    return 0;
 }
 
 extern int _isatty( int file )
 {
-    return 1 ;
+    return 1;
 }
 
-extern int _lseek( int file, int ptr, int dir )
+extern int _lseek( int file,
+                   int ptr,
+                   int dir )
 {
-    return 0 ;
+    return 0;
 }
 
-extern int _read(int file, char *ptr, int len)
+extern int _read( int file,
+                  char * ptr,
+                  int len )
 {
-    return 0 ;
+    return 0;
 }
 
-extern int _write( int file, char *ptr, int len )
+extern int _write( int file,
+                   char * ptr,
+                   int len )
 {
-    int iIndex ;
-    
-    
-//    for ( ; *ptr != 0 ; ptr++ )
-    for ( iIndex=0 ; iIndex < len ; iIndex++, ptr++ )
+    int iIndex;
+
+
+/*    for ( ; *ptr != 0 ; ptr++ ) */
+    for( iIndex = 0; iIndex < len; iIndex++, ptr++ )
     {
-        DBG_PutChar( *ptr ) ;
+        DBG_PutChar( *ptr );
     }
 
-    return iIndex ;
+    return iIndex;
 }
 
 extern void _exit( int status )
 {
-    printf( "Exiting with status %d.\n", status ) ;
+    printf( "Exiting with status %d.\n", status );
 
-    for ( ; ; ) ;
+    for( ; ; )
+    {
+    }
 }
 
-extern void _kill( int pid, int sig )
+extern void _kill( int pid,
+                   int sig )
 {
-    return ; 
 }
 
-extern int _getpid ( void )
+extern int _getpid( void )
 {
-    return -1 ;
+    return -1;
 }

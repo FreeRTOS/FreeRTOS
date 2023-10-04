@@ -30,27 +30,28 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xtmrctr_l.c
-* @addtogroup tmrctr_v4_0
-* @{
-*
-* This file contains low-level driver functions that can be used to access the
-* device.  The user should refer to the hardware device specification for more
-* details of the device operation.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -----------------------------------------------
-* 1.00b jhl  04/24/02 First release
-* 1.10b mta  03/21/07 Updated to new coding style
-* 2.00a ktn  10/30/09 Updated to use HAL API's
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xtmrctr_l.c
+ * @addtogroup tmrctr_v4_0
+ * @{
+ *
+ * This file contains low-level driver functions that can be used to access the
+ * device.  The user should refer to the hardware device specification for more
+ * details of the device operation.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -----------------------------------------------
+ * 1.00b jhl  04/24/02 First release
+ * 1.10b mta  03/21/07 Updated to new coding style
+ * 2.00a ktn  10/30/09 Updated to use HAL API's
+ * </pre>
+ *
+ ******************************************************************************/
 
 
 /***************************** Include Files *********************************/

@@ -26,22 +26,22 @@
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-#define CFG_BootSpace_FLASH     0x00000000
-#define CFG_BootSpace_SRAM      0x00000002
-#define CFG_BootSpace_ExtSMI    0x00000003
+#define CFG_BootSpace_FLASH       0x00000000
+#define CFG_BootSpace_SRAM        0x00000002
+#define CFG_BootSpace_ExtSMI      0x00000003
 
 #define CFG_FLASHBurst_Disable    0xFFFFFEFF
 #define CFG_FLASHBurst_Enable     0x00000100
 
-#define CFG_USBFilter_Disable    0xFFFFFDFF
-#define CFG_USBFilter_Enable     0x00000200
+#define CFG_USBFilter_Disable     0xFFFFFDFF
+#define CFG_USBFilter_Enable      0x00000200
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void CFG_BootSpaceConfig(u32 CFG_BootSpace);
-void CFG_FLASHBurstConfig(u32 CFG_FLASHBurst);
-void CFG_USBFilterConfig(u32 CFG_USBFilter);
-FlagStatus CFG_GetFlagStatus(void);
+void CFG_BootSpaceConfig( u32 CFG_BootSpace );
+void CFG_FLASHBurstConfig( u32 CFG_FLASHBurst );
+void CFG_USBFilterConfig( u32 CFG_USBFilter );
+FlagStatus CFG_GetFlagStatus( void );
 
 #endif /* __75x_CFG_H */
 

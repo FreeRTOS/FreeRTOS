@@ -30,23 +30,24 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xresetps_sinit.c
-* @addtogroup xresetps_v1_0
-* @{
-*
-* This file contains method for static initialization (compile-time) of the
-* driver.
-*
-* <pre>
-* MODIFICATION HISTORY:
-* Ver   Who    Date     Changes
-* ----- ------ -------- ----------------------------------------------
-* 1.00  cjp    09/05/17 First release
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xresetps_sinit.c
+ * @addtogroup xresetps_v1_0
+ * @{
+ *
+ * This file contains method for static initialization (compile-time) of the
+ * driver.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ * Ver   Who    Date     Changes
+ * ----- ------ -------- ----------------------------------------------
+ * 1.00  cjp    09/05/17 First release
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -61,34 +62,38 @@
 /***************** Macros (Inline Functions) Definitions *********************/
 
 /*************************** Variable Definitions ****************************/
-extern XResetPs_Config XResetPs_ConfigTable[XPAR_XRESETPS_NUM_INSTANCES];
+extern XResetPs_Config XResetPs_ConfigTable[ XPAR_XRESETPS_NUM_INSTANCES ];
 
 /************************** Function Prototypes ******************************/
 
 /*****************************************************************************/
-/**
-* Lookup the device configuration based on the unique device ID. The table
-* contains the configuration info for each device in the system.
-*
-* @param	DeviceId is the unique device ID of the device being looked up.
-*
-* @return	A pointer to the configuration table entry corresponding to the
-*		given device ID, or NULL if no match is found.
-*
-* @note		None.
-*
-******************************************************************************/
-XResetPs_Config *XResetPs_LookupConfig(u16 DeviceId)
-{
-	XResetPs_Config *CfgPtr = NULL;
-	u32 Index;
 
-	for (Index = 0U; Index < (u32)XPAR_XRESETPS_NUM_INSTANCES; Index++) {
-		if (XResetPs_ConfigTable[Index].DeviceId == DeviceId) {
-			CfgPtr = &XResetPs_ConfigTable[Index];
-			break;
-		}
-	}
-	return (XResetPs_Config *)CfgPtr;
+/**
+ * Lookup the device configuration based on the unique device ID. The table
+ * contains the configuration info for each device in the system.
+ *
+ * @param	DeviceId is the unique device ID of the device being looked up.
+ *
+ * @return	A pointer to the configuration table entry corresponding to the
+ *		given device ID, or NULL if no match is found.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+XResetPs_Config * XResetPs_LookupConfig( u16 DeviceId )
+{
+    XResetPs_Config * CfgPtr = NULL;
+    u32 Index;
+
+    for( Index = 0U; Index < ( u32 ) XPAR_XRESETPS_NUM_INSTANCES; Index++ )
+    {
+        if( XResetPs_ConfigTable[ Index ].DeviceId == DeviceId )
+        {
+            CfgPtr = &XResetPs_ConfigTable[ Index ];
+            break;
+        }
+    }
+
+    return ( XResetPs_Config * ) CfgPtr;
 }
 /** @} */

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,48 +27,49 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-/// !Purpose
-///
-/// Configuration and handling of PIT.
-///
-/// !Usage
-///
-/// -# Initialize System timer for a period in µsecond with
-///    PIT_Init
-/// -# Set the PIT Periodic Interval Value with PIT_SetPIV
-/// -# Enable the PIT with PIT_Enable
-/// -# Enable & disable PIT interrupts using PIT_EnableInt and
-///    PIT_DisableInt
-/// -# Read PIT mode register
-///    PIT_GetMode
-/// -# Read PIT status register
-///    PIT_GetStatus
-/// -# Read PIT CPIV and PICNT without ressetting the counters
-///    PIT_GetPIIR
-/// -# Read System timer CPIV and PICNT without ressetting the counters
-///    PIT_GetPIVR
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ !Purpose */
+/*/ */
+/*/ Configuration and handling of PIT. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Initialize System timer for a period in µsecond with */
+/*/    PIT_Init */
+/*/ -# Set the PIT Periodic Interval Value with PIT_SetPIV */
+/*/ -# Enable the PIT with PIT_Enable */
+/*/ -# Enable & disable PIT interrupts using PIT_EnableInt and */
+/*/    PIT_DisableInt */
+/*/ -# Read PIT mode register */
+/*/    PIT_GetMode */
+/*/ -# Read PIT status register */
+/*/    PIT_GetStatus */
+/*/ -# Read PIT CPIV and PICNT without ressetting the counters */
+/*/    PIT_GetPIIR */
+/*/ -# Read System timer CPIV and PICNT without ressetting the counters */
+/*/    PIT_GetPIVR */
+/*------------------------------------------------------------------------------ */
 
 #ifndef PIT_H
 #define PIT_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
-extern void PIT_Init(unsigned int period, unsigned int pit_frequency);
-extern void PIT_SetPIV(unsigned int piv);
-extern void PIT_Enable(void);
-extern void PIT_EnableIT(void);
-extern void PIT_DisableIT(void);
-extern unsigned int PIT_GetMode(void);
-extern unsigned int PIT_GetStatus(void);
-extern unsigned int PIT_GetPIIR(void);
-extern unsigned int PIT_GetPIVR(void);
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
+extern void PIT_Init( unsigned int period,
+                      unsigned int pit_frequency );
+extern void PIT_SetPIV( unsigned int piv );
+extern void PIT_Enable( void );
+extern void PIT_EnableIT( void );
+extern void PIT_DisableIT( void );
+extern unsigned int PIT_GetMode( void );
+extern unsigned int PIT_GetStatus( void );
+extern unsigned int PIT_GetPIIR( void );
+extern unsigned int PIT_GetPIVR( void );
 
 #endif //#ifndef PIT_H

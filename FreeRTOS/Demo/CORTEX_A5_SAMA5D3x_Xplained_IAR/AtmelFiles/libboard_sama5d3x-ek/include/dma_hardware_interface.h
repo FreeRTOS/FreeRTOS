@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -41,19 +41,22 @@
  *----------------------------------------------------------------------------*/
 
 /** DMA hardware interface */
-typedef struct _DmaHardwareInterface {
-    uint8_t bDmac;                  /**< DMA Controller number */
-    uint32_t bPeriphID;             /**< Peripheral ID */
-    uint8_t bTransfer;              /**< Transfer type 0: Tx, 1 :Rx*/
-    uint8_t bIfID;                  /**< DMA Interface ID */
+typedef struct _DmaHardwareInterface
+{
+    uint8_t bDmac;      /**< DMA Controller number */
+    uint32_t bPeriphID; /**< Peripheral ID */
+    uint8_t bTransfer;  /**< Transfer type 0: Tx, 1 :Rx*/
+    uint8_t bIfID;      /**< DMA Interface ID */
 } DmaHardwareInterface;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern uint8_t DMAIF_IsValidatedPeripherOnDma( uint8_t bDmac, uint8_t bPeriphID);
-extern uint8_t DMAIF_Get_ChannelNumber (uint8_t bDmac, uint8_t bPeriphID, uint8_t bTransfer);
+extern uint8_t DMAIF_IsValidatedPeripherOnDma( uint8_t bDmac,
+                                               uint8_t bPeriphID );
+extern uint8_t DMAIF_Get_ChannelNumber( uint8_t bDmac,
+                                        uint8_t bPeriphID,
+                                        uint8_t bTransfer );
 
 #endif //#ifndef _DMAD_IF_H
-

@@ -613,4 +613,3 @@ lfw19:
 
     .end    rom_launch_fw
     .size   rom_launch_fw, .-rom_launch_fw
-    

@@ -17,37 +17,39 @@
  */
 
 #ifndef __NETIF_XEMACLITEIF_H__
-#define __NETIF_XEMACLITEIF_H__
+    #define __NETIF_XEMACLITEIF_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include "lwip/netif.h"
-#include "netif/etharp.h"
-#include "netif/xpqueue.h"
-#include "xemaclite.h"
-#include "xemaclite_i.h"
-#include "xstatus.h"
+    #include "lwip/netif.h"
+    #include "netif/etharp.h"
+    #include "netif/xpqueue.h"
+    #include "xemaclite.h"
+    #include "xemaclite_i.h"
+    #include "xstatus.h"
 
-/* structure within each netif, encapsulating all information required for 
+/* structure within each netif, encapsulating all information required for
  * using a particular emaclite instance
  */
-typedef struct {
-        XEmacLite *instance;
+    typedef struct
+    {
+        XEmacLite * instance;
 
-	/* queue to store overflow packets */
-	pq_queue_t *recv_q;
-	pq_queue_t *send_q;
-} xemacliteif_s;
+        /* queue to store overflow packets */
+        pq_queue_t * recv_q;
+        pq_queue_t * send_q;
+    } xemacliteif_s;
 
-void 	xemacliteif_setmac(u32_t index, u8_t *addr);
-u8_t*	xemacliteif_getmac(u32_t index);
-err_t 	xemacliteif_init(struct netif *netif);
-int 	xemacliteif_input(struct netif *netif);
-   
-#ifdef __cplusplus
+    void xemacliteif_setmac( u32_t index,
+                             u8_t * addr );
+    u8_t * xemacliteif_getmac( u32_t index );
+    err_t xemacliteif_init( struct netif * netif );
+    int xemacliteif_input( struct netif * netif );
+
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __NETIF_XEMACLITEIF_H__ */

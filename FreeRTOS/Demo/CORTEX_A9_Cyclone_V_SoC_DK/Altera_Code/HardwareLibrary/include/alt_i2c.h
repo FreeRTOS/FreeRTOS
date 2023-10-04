@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 /*! \file
@@ -33,21 +33,22 @@
  */
 
 #ifndef __ALT_I2C_H__
-#define __ALT_I2C_H__
+    #define __ALT_I2C_H__
 
-#include "hwlib.h"
-#include "alt_clock_manager.h"
-#include "socal/alt_i2c.h"
-#include "socal/alt_rstmgr.h"
-#include "socal/hps.h"
-#include "socal/socal.h"
+    #include "hwlib.h"
+    #include "alt_clock_manager.h"
+    #include "socal/alt_i2c.h"
+    #include "socal/alt_rstmgr.h"
+    #include "socal/hps.h"
+    #include "socal/socal.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif  /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_I2C I2C Controller API
  *
  * This module defines an API for configuring and managing the HPS I2C controllers.
@@ -64,7 +65,7 @@ extern "C"
  * kilobits per second (Kbps) or fast mode of up to 400 Kbps. These I2C
  * controllers are instances of the Synopsys DesignWare APB I2C (DW_apb_i2c)
  * controller.
- * 
+ *
  * NOTE: Each I2C controller must be programmed to operate in either master or
  *       slave mode only. Operating as a master and slave simultaneously is not
  *       supported.
@@ -88,19 +89,20 @@ extern "C"
  */
 
 /******************************************************************************/
+
 /*!
  * This type definition enumerates the operational state of I2C by
  * transfer operation.
  */
-typedef enum ALT_I2C_TRANSFER_TYPE_e
-{
-    ALT_I2C_TRANSFER_NONE     = 0, /*!< No transfer operation */
-    ALT_I2C_TRANSFER_START    = 1, /*!< Start detect */
-    ALT_I2C_TRANSFER_COMPLETE = 2, /*!< All operations done */
-    ALT_I2C_TRANSFER_READ     = 3, /*!< Read operation is active */
-    ALT_I2C_TRANSFER_WRITE    = 4, /*!< Write operation is active */
-}
-ALT_I2C_TRANSFER_TYPE_t;
+    typedef enum ALT_I2C_TRANSFER_TYPE_e
+    {
+        ALT_I2C_TRANSFER_NONE = 0,     /*!< No transfer operation */
+        ALT_I2C_TRANSFER_START = 1,    /*!< Start detect */
+        ALT_I2C_TRANSFER_COMPLETE = 2, /*!< All operations done */
+        ALT_I2C_TRANSFER_READ = 3,     /*!< Read operation is active */
+        ALT_I2C_TRANSFER_WRITE = 4,    /*!< Write operation is active */
+    }
+    ALT_I2C_TRANSFER_TYPE_t;
 
 
 /*
@@ -114,24 +116,24 @@ ALT_I2C_TRANSFER_TYPE_t;
  * implementation.
  * \endinternal
  */
-typedef struct ALT_I2C_DEV_s
-{
-    void *                  location;    /*!< HPS address of I2C instance. */
-    alt_freq_t              clock_freq;  /*!< Input clock frequency. */
-    uint32_t                last_target; /*!< Last issued target address. */
-}
-ALT_I2C_DEV_t;
+    typedef struct ALT_I2C_DEV_s
+    {
+        void * location;                 /*!< HPS address of I2C instance. */
+        alt_freq_t clock_freq;           /*!< Input clock frequency. */
+        uint32_t last_target;            /*!< Last issued target address. */
+    }
+    ALT_I2C_DEV_t;
 
 /*!
  * This type enumerates the HPS I2C controller instances.
  */
-typedef enum ALT_I2C_CTLR_e
-{
-    ALT_I2C_I2C0        = (int)ALT_I2C0_OFST,  /*!< I2C0 instance. */
-    ALT_I2C_I2C1        = (int)ALT_I2C1_OFST,  /*!< I2C1 instance. */
-    ALT_I2C_I2C2        = (int)ALT_I2C2_OFST,  /*!< I2C2 instance. */
-    ALT_I2C_I2C3        = (int)ALT_I2C3_OFST,  /*!< I2C3 instance. */
-} ALT_I2C_CTLR_t;
+    typedef enum ALT_I2C_CTLR_e
+    {
+        ALT_I2C_I2C0 = ( int )ALT_I2C0_OFST,   /*!< I2C0 instance. */
+        ALT_I2C_I2C1 = ( int )ALT_I2C1_OFST,   /*!< I2C1 instance. */
+        ALT_I2C_I2C2 = ( int )ALT_I2C2_OFST,   /*!< I2C2 instance. */
+        ALT_I2C_I2C3 = ( int )ALT_I2C3_OFST,   /*!< I2C3 instance. */
+    } ALT_I2C_CTLR_t;
 
 /*!
  * This type enumerates the modes that the I2C controller may operate in.
@@ -140,11 +142,11 @@ typedef enum ALT_I2C_CTLR_e
  *       slave mode only. Operating as a master and slave simultaneously is not
  *       supported.
  */
-typedef enum ALT_I2C_MODE_e
-{
-    ALT_I2C_MODE_SLAVE     = ALT_I2C_CON_MST_MOD_E_DIS,  /*!< Slave Mode  */
-    ALT_I2C_MODE_MASTER    = ALT_I2C_CON_MST_MOD_E_EN    /*!< Master Mode */
-} ALT_I2C_MODE_t;
+    typedef enum ALT_I2C_MODE_e
+    {
+        ALT_I2C_MODE_SLAVE = ALT_I2C_CON_MST_MOD_E_DIS,  /*!< Slave Mode  */
+        ALT_I2C_MODE_MASTER = ALT_I2C_CON_MST_MOD_E_EN   /*!< Master Mode */
+    } ALT_I2C_MODE_t;
 
 /*!
  * This type enumerates the I2C controller operational speed modes.
@@ -159,13 +161,13 @@ typedef enum ALT_I2C_MODE_e
  *
  * This setting is relevant only if one is operating the I2C in master mode.
  */
-typedef enum ALT_I2C_SPEED_e
-{
-    ALT_I2C_SPEED_STANDARD   = ALT_I2C_CON_SPEED_E_STANDARD,
-                                    /*!< Standard mode (0 to 100 Kbps) */
-    ALT_I2C_SPEED_FAST       = ALT_I2C_CON_SPEED_E_FAST
-                                    /*!< Fast mode (<= 400 Kbps)       */
-} ALT_I2C_SPEED_t;
+    typedef enum ALT_I2C_SPEED_e
+    {
+        ALT_I2C_SPEED_STANDARD = ALT_I2C_CON_SPEED_E_STANDARD,
+        /*!< Standard mode (0 to 100 Kbps) */
+        ALT_I2C_SPEED_FAST = ALT_I2C_CON_SPEED_E_FAST
+                             /*!< Fast mode (<= 400 Kbps)       */
+    } ALT_I2C_SPEED_t;
 
 /*!
  * This type enumerates the two addressing modes formats supported by the I2C
@@ -175,163 +177,176 @@ typedef enum ALT_I2C_SPEED_e
  * address transaction followed by a 10-bit address transaction or vice versa -
  * combined format transactions.
  */
-typedef enum ALT_I2C_ADDR_MODE_e
-{
-    ALT_I2C_ADDR_MODE_7_BIT     = ALT_I2C_TAR_IC_10BITADDR_MST_E_START7,
-                                    /*!< 7-Bit Address Format  */
-    ALT_I2C_ADDR_MODE_10_BIT    = ALT_I2C_TAR_IC_10BITADDR_MST_E_START10
-                                    /*!< 10-Bit Address Format */
-} ALT_I2C_ADDR_MODE_t;
+    typedef enum ALT_I2C_ADDR_MODE_e
+    {
+        ALT_I2C_ADDR_MODE_7_BIT = ALT_I2C_TAR_IC_10BITADDR_MST_E_START7,
+        /*!< 7-Bit Address Format  */
+        ALT_I2C_ADDR_MODE_10_BIT = ALT_I2C_TAR_IC_10BITADDR_MST_E_START10
+                                   /*!< 10-Bit Address Format */
+    } ALT_I2C_ADDR_MODE_t;
 
 /*!
  * This type enumerates interrupt status conditions for the I2C controller.
  */
-typedef enum ALT_I2C_STATUS_e
-{
-    ALT_I2C_STATUS_RX_UNDER     = 1UL << 0,
-                                /*!< Set if the processor attempts to read the
-                                 *   receive buffer when it is empty. If the I2C
-                                 *   controller is disabled, this status keeps
-                                 *   maintains its state until the master or slave
-                                 *   state machines go into idle, then this
-                                 *   interrupt is cleared.
-                                 */
-    ALT_I2C_STATUS_RX_OVER      = 1UL << 1,
-                                /*!< Set if the receive buffer is completely
-                                 *   filled to capacity and an additional byte is
-                                 *   received from an external I2C device. The I2C
-                                 *   controller acknowledges this, but any data
-                                 *   bytes received after the FIFO is full are
-                                 *   discarded. If the I2C controller is disabled,
-                                 *   this status maintains its statue until the
-                                 *   master or slave state machines go into idle,
-                                 *   then this interrupt is cleared.
-                                 */
-    ALT_I2C_STATUS_RX_FULL      = 1UL << 2,
-                                /*!< Set when the receive buffer reaches or goes
-                                 *   above the RX_TL threshold. It is
-                                 *   automatically cleared by hardware when buffer
-                                 *   level goes below the threshold. If the I2C
-                                 *   controller is disabled, the RX FIFO is
-                                 *   flushed and held in reset; therefore the RX
-                                 *   FIFO is not full. So this bit is cleared once
-                                 *   the I2C controller is disabled, regardless of
-                                 *   the activity that continues.
-                                 */
-    ALT_I2C_STATUS_TX_OVER     = 1UL << 3,
-                                /*!< Set during transmit if the transmit buffer is
-                                 *   filled to capacity and the processor attempts
-                                 *   to issue another I2C command. When the I2C
-                                 *   controller is disabled, this bit maintains
-                                 *   its state until the master or slave state
-                                 *   machines go into idle, then this interrupt is
-                                 *   cleared.
-                                 */
-    ALT_I2C_STATUS_TX_EMPTY     = 1UL << 4,
-                                /*!< This bit is set to 1 when the transmit buffer
-                                 *   is at or below the configured threshold
-                                 *   value. It is automatically cleared by
-                                 *   hardware when the buffer level goes above the
-                                 *   threshold. When the I2C controller is
-                                 *   disabled, the TX FIFO is flushed and held in
-                                 *   reset. The TX FIFO appears as if it has no
-                                 *   data in it, so this bit is set to 1, provided
-                                 *   there is activity in the master or slave
-                                 *   state machines. When there is no longer
-                                 *   activity, then this bit is set to 0.
-                                 *
-                                 */
-    ALT_I2C_STATUS_RD_REQ       = 1UL << 5,
-                                /*!< This bit is set to 1 when I2C is acting as a
-                                 *   slave and another I2C master is attempting to
-                                 *   read data from the I2C. The I2C holds the bus
-                                 *   in a wait state until this interrupt is
-                                 *   serviced, which means that the slave has been
-                                 *   addressed by a remote master that is asking
-                                 *   for data to be transferred. The processor
-                                 *   must respond to this interrupt and then write
-                                 *   the requested data. This bit is set to 0 just
-                                 *   after the processor by calling
-                                 *   alt_i2c_int_clear() with
-                                 *   ALT_I2C_STATUS_RD_REQ in the mask..
-                                 */
-    ALT_I2C_STATUS_TX_ABORT     = 1UL << 6,
-                                /*!< This bit indicates if I2C, as an I2C
-                                 *   transmitter, is unable to complete the
-                                 *   intended actions on the contents of the
-                                 *   transmit FIFO. This situation can occur both
-                                 *   as an I2C master or an I2C slave, and is
-                                 *   referred to as a 'transmit abort'. When this
-                                 *   bit is set to 1, the IC_TX_ABRT_SOURCE
-                                 *   register indicates the reason why the
-                                 *   transmit abort takes places.
-                                 *
-                                 *   NOTE: The I2C flushes/resets/empties the TX
-                                 *   FIFO whenever this bit is set. The TX FIFO
-                                 *   remains in this flushed state until the
-                                 *   register alt_i2c_int_clear() with
-                                 *   ALT_I2C_STATUS_TX_ABORT in the mask is
-                                 *   called. Once this happens, the TX FIFO is
-                                 *   then ready to accept more data bytes from the
-                                 *   APB interface.
-                                 */
-    ALT_I2C_STATUS_RX_DONE      = 1UL << 7,
-                                /*!< When the I2C is acting as a
-                                 *   slave-transmitter, this bit is set to 1 if
-                                 *   the master does not acknowledge a transmitted
-                                 *   byte. This occurs on the last byte of the
-                                 *   transmission, indicating that the
-                                 *   transmission is done.
-                                 */
-    ALT_I2C_STATUS_ACTIVITY     = 1UL << 8,
-                                /*!< This bit captures I2C activity and stays set
-                                 *   until it is cleared. There are four ways to
-                                 *   clear it:
-                                 *   * Disabling the I2C controller
-                                 *   * Calling alt_i2c_int_clear() with
-                                 *     ALT_I2C_STATUS_ACTIVITY in the mask.
-                                 *   * Calling alt_i2c_int_clear() with
-                                 *     ALT_I2C_STATUS_ALL in the mask.
-                                 *   * System reset
-                                 * 
-                                 *   Once this bit is set, it stays set unless one
-                                 *   of the four methods is used to clear it. Even
-                                 *   if the I2C module is idle, this bit remains
-                                 *   set until cleared, indicating that there was
-                                 *   activity on the bus.
-                                 */
-    ALT_I2C_STATUS_STOP_DET     = 1UL << 9,
-                                /*!< Indicates whether a STOP condition has
-                                 *   occurred on the I2C interface regardless of
-                                 *   whether I2C is operating in slave or master
-                                 *   mode.
-                                 */
-    ALT_I2C_STATUS_START_DET    = 1UL << 10,
-                                /*!< Indicates whether a START or RESTART
-                                 *   condition has occurred on the I2C interface
-                                 *   regardless of whether I2C is operating in
-                                 *   slave or master mode.
-                                 */
-    ALT_I2C_STATUS_INT_CALL     = 1UL << 11,
-                                /*!< Set only when a General Call address is
-                                 *   received and it is acknowledged. It stays set
-                                 *   until it is cleared either by disabling I2C
-                                 *   or when alt_i2c_int_clear() with
-                                 *   ALT_I2C_STATUS_CALL in the mask is
-                                 *   called. I2C stores the received data in the
-                                 *   Rx buffer.
-                                 */
-    ALT_I2C_STATUS_INT_ALL      = 0xFFF,
-                                /*!< All Combined and Individual Interrupts. This
-                                 *   enumeration value can be used to clear,
-                                 *   disable, and enable the combined interrupt
-                                 *   and all individual interrupt status
-                                 *   conditions. As a side effect, when passed to
-                                 *   alt_i2c_int_clear(), clears the source causes
-                                 *   (\ref ALT_I2C_TX_ABORT_CAUSE_t) of the
-                                 *   ALT_I2C_STATUS_TX_ABORT condition.
-                                 */
-} ALT_I2C_STATUS_t;
+    typedef enum ALT_I2C_STATUS_e
+    {
+        ALT_I2C_STATUS_RX_UNDER = 1UL << 0,
+
+        /*!< Set if the processor attempts to read the
+         *   receive buffer when it is empty. If the I2C
+         *   controller is disabled, this status keeps
+         *   maintains its state until the master or slave
+         *   state machines go into idle, then this
+         *   interrupt is cleared.
+         */
+        ALT_I2C_STATUS_RX_OVER = 1UL << 1,
+
+        /*!< Set if the receive buffer is completely
+         *   filled to capacity and an additional byte is
+         *   received from an external I2C device. The I2C
+         *   controller acknowledges this, but any data
+         *   bytes received after the FIFO is full are
+         *   discarded. If the I2C controller is disabled,
+         *   this status maintains its statue until the
+         *   master or slave state machines go into idle,
+         *   then this interrupt is cleared.
+         */
+        ALT_I2C_STATUS_RX_FULL = 1UL << 2,
+
+        /*!< Set when the receive buffer reaches or goes
+         *   above the RX_TL threshold. It is
+         *   automatically cleared by hardware when buffer
+         *   level goes below the threshold. If the I2C
+         *   controller is disabled, the RX FIFO is
+         *   flushed and held in reset; therefore the RX
+         *   FIFO is not full. So this bit is cleared once
+         *   the I2C controller is disabled, regardless of
+         *   the activity that continues.
+         */
+        ALT_I2C_STATUS_TX_OVER = 1UL << 3,
+
+        /*!< Set during transmit if the transmit buffer is
+         *   filled to capacity and the processor attempts
+         *   to issue another I2C command. When the I2C
+         *   controller is disabled, this bit maintains
+         *   its state until the master or slave state
+         *   machines go into idle, then this interrupt is
+         *   cleared.
+         */
+        ALT_I2C_STATUS_TX_EMPTY = 1UL << 4,
+
+        /*!< This bit is set to 1 when the transmit buffer
+         *   is at or below the configured threshold
+         *   value. It is automatically cleared by
+         *   hardware when the buffer level goes above the
+         *   threshold. When the I2C controller is
+         *   disabled, the TX FIFO is flushed and held in
+         *   reset. The TX FIFO appears as if it has no
+         *   data in it, so this bit is set to 1, provided
+         *   there is activity in the master or slave
+         *   state machines. When there is no longer
+         *   activity, then this bit is set to 0.
+         *
+         */
+        ALT_I2C_STATUS_RD_REQ = 1UL << 5,
+
+        /*!< This bit is set to 1 when I2C is acting as a
+         *   slave and another I2C master is attempting to
+         *   read data from the I2C. The I2C holds the bus
+         *   in a wait state until this interrupt is
+         *   serviced, which means that the slave has been
+         *   addressed by a remote master that is asking
+         *   for data to be transferred. The processor
+         *   must respond to this interrupt and then write
+         *   the requested data. This bit is set to 0 just
+         *   after the processor by calling
+         *   alt_i2c_int_clear() with
+         *   ALT_I2C_STATUS_RD_REQ in the mask..
+         */
+        ALT_I2C_STATUS_TX_ABORT = 1UL << 6,
+
+        /*!< This bit indicates if I2C, as an I2C
+         *   transmitter, is unable to complete the
+         *   intended actions on the contents of the
+         *   transmit FIFO. This situation can occur both
+         *   as an I2C master or an I2C slave, and is
+         *   referred to as a 'transmit abort'. When this
+         *   bit is set to 1, the IC_TX_ABRT_SOURCE
+         *   register indicates the reason why the
+         *   transmit abort takes places.
+         *
+         *   NOTE: The I2C flushes/resets/empties the TX
+         *   FIFO whenever this bit is set. The TX FIFO
+         *   remains in this flushed state until the
+         *   register alt_i2c_int_clear() with
+         *   ALT_I2C_STATUS_TX_ABORT in the mask is
+         *   called. Once this happens, the TX FIFO is
+         *   then ready to accept more data bytes from the
+         *   APB interface.
+         */
+        ALT_I2C_STATUS_RX_DONE = 1UL << 7,
+
+        /*!< When the I2C is acting as a
+         *   slave-transmitter, this bit is set to 1 if
+         *   the master does not acknowledge a transmitted
+         *   byte. This occurs on the last byte of the
+         *   transmission, indicating that the
+         *   transmission is done.
+         */
+        ALT_I2C_STATUS_ACTIVITY = 1UL << 8,
+
+        /*!< This bit captures I2C activity and stays set
+         *   until it is cleared. There are four ways to
+         *   clear it:
+         *   * Disabling the I2C controller
+         *   * Calling alt_i2c_int_clear() with
+         *     ALT_I2C_STATUS_ACTIVITY in the mask.
+         *   * Calling alt_i2c_int_clear() with
+         *     ALT_I2C_STATUS_ALL in the mask.
+         *   * System reset
+         *
+         *   Once this bit is set, it stays set unless one
+         *   of the four methods is used to clear it. Even
+         *   if the I2C module is idle, this bit remains
+         *   set until cleared, indicating that there was
+         *   activity on the bus.
+         */
+        ALT_I2C_STATUS_STOP_DET = 1UL << 9,
+
+        /*!< Indicates whether a STOP condition has
+         *   occurred on the I2C interface regardless of
+         *   whether I2C is operating in slave or master
+         *   mode.
+         */
+        ALT_I2C_STATUS_START_DET = 1UL << 10,
+
+        /*!< Indicates whether a START or RESTART
+         *   condition has occurred on the I2C interface
+         *   regardless of whether I2C is operating in
+         *   slave or master mode.
+         */
+        ALT_I2C_STATUS_INT_CALL = 1UL << 11,
+
+        /*!< Set only when a General Call address is
+         *   received and it is acknowledged. It stays set
+         *   until it is cleared either by disabling I2C
+         *   or when alt_i2c_int_clear() with
+         *   ALT_I2C_STATUS_CALL in the mask is
+         *   called. I2C stores the received data in the
+         *   Rx buffer.
+         */
+        ALT_I2C_STATUS_INT_ALL = 0xFFF,
+
+        /*!< All Combined and Individual Interrupts. This
+         *   enumeration value can be used to clear,
+         *   disable, and enable the combined interrupt
+         *   and all individual interrupt status
+         *   conditions. As a side effect, when passed to
+         *   alt_i2c_int_clear(), clears the source causes
+         *   (\ref ALT_I2C_TX_ABORT_CAUSE_t) of the
+         *   ALT_I2C_STATUS_TX_ABORT condition.
+         */
+    } ALT_I2C_STATUS_t;
 
 /*!
  * This type enumerates the source causes of a ALT_I2C_STATUS_TX_ABORT condition.
@@ -344,171 +359,187 @@ typedef enum ALT_I2C_STATUS_e
  * Discuss special handling of abrt_sbyte_norstrt TX_ABRT source required in ???() function.
  * \endinternal
  */
-typedef enum ALT_I2C_TX_ABORT_CAUSE_e
-{
-    ALT_I2C_TX_ABORT_CAUSE_7B_ADDR_NOACK        = 1UL << 0,
-                                /*!< Master Abort 7 Bit Address - If set (1),
-                                 *   Master is in 7-bit addressing mode and the
-                                 *   address sent was not acknowledged by any
-                                 *   slave.
-                                 *   
-                                 *   Role of I2C: Master-Transmitter or
-                                 *   Master-Receiver
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_10ADDR1_NOACK        = 1UL << 1,
-                                /*!< Master Abort 10 Bit Address Byte 1 - If set
-                                 *   (1), Master is in 10-bit address mode and the
-                                 *   first 10-bit address byte was not
-                                 *   acknowledged by any slave.
-                                 *   
-                                 *   Role of I2C: Master-Transmitter or
-                                 *   Master-Receiver
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_10ADDR2_NOACK        = 1UL << 2,
-                                /*!< Master Abort 10 Bit Address Byte 2 - If set
-                                 *   (1), Master is in 10-bit address mode and the
-                                 *   second address byte of the 10-bit address was
-                                 *   not acknowledged by any slave
-                                 *   
-                                 *   Role of I2C: Master-Transmitter or
-                                 *   Master-Receiver
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_TXDATA_NOACK         = 1UL << 3,
-                                /*!< Master Abort TX NOACK Bit - If set (1),
-                                 *   Master has received an acknowledgement for
-                                 *   the address, but when it sent data byte(s)
-                                 *   following the address, it did not receive an
-                                 *   acknowledge from the remote slave(s). This is
-                                 *   a master-mode only bit.
-                                 *   
-                                 *   Role of I2C: Master-Transmitter.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_GCALL_NOACK          = 1UL << 4,
-                                /*!< Master Abort GC Noack Bit - If set (1), I2C
-                                 *   controller in master mode sent a General Call
-                                 *   and no slave on the bus acknowledged the
-                                 *   General Call.
-                                 *   
-                                 *   Role of I2C: Master-Transmitter.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_GCALL_RD             = 1UL << 5,
-                                /*!< Master Abort GC Read Bit - If set (1), I2C
-                                 *   controller in master mode sent a General Call
-                                 *   but the user programmed the byte following
-                                 *   the General Call to be a read from the bus
-                                 *   (IC_DATA_CMD[9] is set to 1).
-                                 *   
-                                 *   Role of I2C: Master-Transmitter.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_HS_ACKDET            = 1UL << 6,
-                                /*!< Master HS MC Ack - If set (1), Master is in
-                                 *   High Speed mode and the High Speed Master
-                                 *   code was acknowledged (wrong behavior).
-                                 *   
-                                 *   Role of I2C: Master.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_SBYTE_ACKDET         = 1UL << 7,
-                                /*!< Master Abort START Byte - If set (1), Master
-                                 *   has sent a START Byte and the START Byte was
-                                 *   acknowledged (wrong behavior).
-                                 *   
-                                 *   Role of I2C: Master.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_HS_NORSTRT           = 1UL << 8,
-                                /*!< Master HS Restart Disabled - If set (1), the
-                                 *   restart is disabled (IC_RESTART_EN bit
-                                 *   (IC_CON[5]) = 0) and the user is trying to
-                                 *   use the master to transfer data in High Speed
-                                 *   mode.
-                                 *   
-                                 *   Role of I2C: Master-Transmitter or
-                                 *   Master-Receiver
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_SBYTE_NORSTRT        = 1UL << 9,
-                                /*!< Master Abort START No Restart - To clear, the
-                                 *   source of the ABRT_SBYTE_NORSTRT must be
-                                 *   fixed first; restart must be enabled
-                                 *   (IC_CON[5]=1), the SPECIAL bit must be
-                                 *   cleared (IC_TAR[11]), or the GC_OR_START bit
-                                 *   must be cleared (IC_TAR[10]). Once the source
-                                 *   of the ABRT_SBYTE_NORSTRT is fixed, then this
-                                 *   bit can be cleared in the same manner as
-                                 *   other bits in this register. If the source of
-                                 *   the ABRT_SBYTE_NORSTRT is not fixed before
-                                 *   attempting to clear this bit, bit 9 clears
-                                 *   for one cycle and then gets re-asserted.
-                                 *
-                                 *   If set (1), the restart is disabled
-                                 *   (IC_RESTART_EN bit (IC_CON[5]) = 0) and the
-                                 *   user is trying to send a START Byte.
-                                 *   
-                                 *   Role of I2C: Master.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_10B_RD_NORSTRT       = 1UL << 10,
-                                /*!< Master Abort 10 Bit No Restart - If set (1),
-                                 *   the restart is disabled (IC_RESTART_EN bit
-                                 *   (IC_CON[5]) = 0) and the master sends a read
-                                 *   command in 10-bit addressing mode.
-                                 *   
-                                 *   Role of I2C: Master Receiver.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_MST_DIS              = 1UL << 11,
-                                /*!< Master Operation with Master Disabled - If set
-                                 *   (1), user tries to initiate a Master
-                                 *   operation with the Master mode disabled.
-                                 *   
-                                 *   Role of I2C: Master or Slave-Receiver.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_ARB_LOST             = 1UL << 12,
-                                /*!< Master Abort Arbitration Lost - If set (1),
-                                 *   master has lost arbitration, or if
-                                 *   IC_TX_ABRT_SOURCE[14] is also set, then the
-                                 *   slave transmitter has lost arbitration. Note:
-                                 *   I2C can be both master and slave at the same
-                                 *   time.
-                                 *   
-                                 *   Role of I2C: Master or Slave-Transmitter.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_SLVFLUSH_TXFIFO      = 1UL << 13,
-                                /*!< Slave Abort Flush TXFIFO - If set (1), Slave
-                                 *   has received a read command and some data
-                                 *   exists in the TX FIFO so the slave issues a
-                                 *   TX_ABRT interrupt to flush old data in TX
-                                 *   FIFO.
-                                 *
-                                 *   Role of I2C: Slave-Transmitter.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_SLV_ARBLOST          = 1UL << 14,
-                                /*!< Slave Abort Arbitration Lost - If set (1),
-                                 *   Slave lost the bus while transmitting data to
-                                 *   a remote master. IC_TX_ABRT_SOURCE[12] is set
-                                 *   at the same time.
-                                 *  
-                                 *   Note: Even though the slave never owns the
-                                 *   bus, something could go wrong on the
-                                 *   bus. This is a fail safe check. For instance,
-                                 *   during a data transmission at the low-to-high
-                                 *   transition of SCL, if what is on the data bus
-                                 *   is not what is supposed to be transmitted,
-                                 *   then DW_apb_i2c no longer own the bus.
-                                 *
-                                 *   Role of I2C: Slave-Transmitter.
-                                 */
-    ALT_I2C_TX_ABORT_CAUSE_SLVRD_INTX           = 1UL << 15
-                                /*!< Slave Abort Read TX - If set (1), 
-                                 *   when the processor side responds to a
-                                 *   slave mode request for data to be transmitted
-                                 *   to a remote master and user writes a 1 in CMD
-                                 *   (bit 8) of IC_DATA_CMD register.
-                                 *
-                                 *   Role of I2C: Slave-Transmitter.
-                                 */
-} ALT_I2C_TX_ABORT_CAUSE_t;
+    typedef enum ALT_I2C_TX_ABORT_CAUSE_e
+    {
+        ALT_I2C_TX_ABORT_CAUSE_7B_ADDR_NOACK = 1UL << 0,
+
+        /*!< Master Abort 7 Bit Address - If set (1),
+         *   Master is in 7-bit addressing mode and the
+         *   address sent was not acknowledged by any
+         *   slave.
+         *
+         *   Role of I2C: Master-Transmitter or
+         *   Master-Receiver
+         */
+        ALT_I2C_TX_ABORT_CAUSE_10ADDR1_NOACK = 1UL << 1,
+
+        /*!< Master Abort 10 Bit Address Byte 1 - If set
+         *   (1), Master is in 10-bit address mode and the
+         *   first 10-bit address byte was not
+         *   acknowledged by any slave.
+         *
+         *   Role of I2C: Master-Transmitter or
+         *   Master-Receiver
+         */
+        ALT_I2C_TX_ABORT_CAUSE_10ADDR2_NOACK = 1UL << 2,
+
+        /*!< Master Abort 10 Bit Address Byte 2 - If set
+         *   (1), Master is in 10-bit address mode and the
+         *   second address byte of the 10-bit address was
+         *   not acknowledged by any slave
+         *
+         *   Role of I2C: Master-Transmitter or
+         *   Master-Receiver
+         */
+        ALT_I2C_TX_ABORT_CAUSE_TXDATA_NOACK = 1UL << 3,
+
+        /*!< Master Abort TX NOACK Bit - If set (1),
+         *   Master has received an acknowledgement for
+         *   the address, but when it sent data byte(s)
+         *   following the address, it did not receive an
+         *   acknowledge from the remote slave(s). This is
+         *   a master-mode only bit.
+         *
+         *   Role of I2C: Master-Transmitter.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_GCALL_NOACK = 1UL << 4,
+
+        /*!< Master Abort GC Noack Bit - If set (1), I2C
+         *   controller in master mode sent a General Call
+         *   and no slave on the bus acknowledged the
+         *   General Call.
+         *
+         *   Role of I2C: Master-Transmitter.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_GCALL_RD = 1UL << 5,
+
+        /*!< Master Abort GC Read Bit - If set (1), I2C
+         *   controller in master mode sent a General Call
+         *   but the user programmed the byte following
+         *   the General Call to be a read from the bus
+         *   (IC_DATA_CMD[9] is set to 1).
+         *
+         *   Role of I2C: Master-Transmitter.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_HS_ACKDET = 1UL << 6,
+
+        /*!< Master HS MC Ack - If set (1), Master is in
+         *   High Speed mode and the High Speed Master
+         *   code was acknowledged (wrong behavior).
+         *
+         *   Role of I2C: Master.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_SBYTE_ACKDET = 1UL << 7,
+
+        /*!< Master Abort START Byte - If set (1), Master
+         *   has sent a START Byte and the START Byte was
+         *   acknowledged (wrong behavior).
+         *
+         *   Role of I2C: Master.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_HS_NORSTRT = 1UL << 8,
+
+        /*!< Master HS Restart Disabled - If set (1), the
+         *   restart is disabled (IC_RESTART_EN bit
+         *   (IC_CON[5]) = 0) and the user is trying to
+         *   use the master to transfer data in High Speed
+         *   mode.
+         *
+         *   Role of I2C: Master-Transmitter or
+         *   Master-Receiver
+         */
+        ALT_I2C_TX_ABORT_CAUSE_SBYTE_NORSTRT = 1UL << 9,
+
+        /*!< Master Abort START No Restart - To clear, the
+         *   source of the ABRT_SBYTE_NORSTRT must be
+         *   fixed first; restart must be enabled
+         *   (IC_CON[5]=1), the SPECIAL bit must be
+         *   cleared (IC_TAR[11]), or the GC_OR_START bit
+         *   must be cleared (IC_TAR[10]). Once the source
+         *   of the ABRT_SBYTE_NORSTRT is fixed, then this
+         *   bit can be cleared in the same manner as
+         *   other bits in this register. If the source of
+         *   the ABRT_SBYTE_NORSTRT is not fixed before
+         *   attempting to clear this bit, bit 9 clears
+         *   for one cycle and then gets re-asserted.
+         *
+         *   If set (1), the restart is disabled
+         *   (IC_RESTART_EN bit (IC_CON[5]) = 0) and the
+         *   user is trying to send a START Byte.
+         *
+         *   Role of I2C: Master.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_10B_RD_NORSTRT = 1UL << 10,
+
+        /*!< Master Abort 10 Bit No Restart - If set (1),
+         *   the restart is disabled (IC_RESTART_EN bit
+         *   (IC_CON[5]) = 0) and the master sends a read
+         *   command in 10-bit addressing mode.
+         *
+         *   Role of I2C: Master Receiver.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_MST_DIS = 1UL << 11,
+
+        /*!< Master Operation with Master Disabled - If set
+         *   (1), user tries to initiate a Master
+         *   operation with the Master mode disabled.
+         *
+         *   Role of I2C: Master or Slave-Receiver.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_ARB_LOST = 1UL << 12,
+
+        /*!< Master Abort Arbitration Lost - If set (1),
+         *   master has lost arbitration, or if
+         *   IC_TX_ABRT_SOURCE[14] is also set, then the
+         *   slave transmitter has lost arbitration. Note:
+         *   I2C can be both master and slave at the same
+         *   time.
+         *
+         *   Role of I2C: Master or Slave-Transmitter.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_SLVFLUSH_TXFIFO = 1UL << 13,
+
+        /*!< Slave Abort Flush TXFIFO - If set (1), Slave
+         *   has received a read command and some data
+         *   exists in the TX FIFO so the slave issues a
+         *   TX_ABRT interrupt to flush old data in TX
+         *   FIFO.
+         *
+         *   Role of I2C: Slave-Transmitter.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_SLV_ARBLOST = 1UL << 14,
+
+        /*!< Slave Abort Arbitration Lost - If set (1),
+         *   Slave lost the bus while transmitting data to
+         *   a remote master. IC_TX_ABRT_SOURCE[12] is set
+         *   at the same time.
+         *
+         *   Note: Even though the slave never owns the
+         *   bus, something could go wrong on the
+         *   bus. This is a fail safe check. For instance,
+         *   during a data transmission at the low-to-high
+         *   transition of SCL, if what is on the data bus
+         *   is not what is supposed to be transmitted,
+         *   then DW_apb_i2c no longer own the bus.
+         *
+         *   Role of I2C: Slave-Transmitter.
+         */
+        ALT_I2C_TX_ABORT_CAUSE_SLVRD_INTX = 1UL << 15
+
+                                            /*!< Slave Abort Read TX - If set (1),
+                                             *   when the processor side responds to a
+                                             *   slave mode request for data to be transmitted
+                                             *   to a remote master and user writes a 1 in CMD
+                                             *   (bit 8) of IC_DATA_CMD register.
+                                             *
+                                             *   Role of I2C: Slave-Transmitter.
+                                             */
+    } ALT_I2C_TX_ABORT_CAUSE_t;
 
 /*!
  * This type defines a structure for configuration of the SCL high and low counts
  * to ensure proper I/O timing with the device interface.
- *      
+ *
  * The SCL count values are only relevant if the I2C controller is enabled to as
  * an I2C master. The SCL count values are ignored when the I2C controller is
  * enabled as an I2C slave.
@@ -518,68 +549,76 @@ typedef enum ALT_I2C_TX_ABORT_CAUSE_e
  *      Processor System Technical Reference Manual</em> for a complete discussion
  *      of calculation of the proper SCL clock high and low times.
  */
-typedef struct ALT_I2C_MASTER_CONFIG_s
-{
-    ALT_I2C_ADDR_MODE_t addr_mode;
-                                    /*!< The address mode (7 or 10 bit) when
-                                     *   acting as a master.
-                                     */
-    bool                restart_enable;
-                                    /*!< This setting determines whether RESTART
-                                     *   conditions may be sent when acting as a
-                                     *   master. When the \e restart_enable is
-                                     *   false, the I2C controller master is
-                                     *   incapable of performing the following
-                                     *   functions:
-                                     *   * Sending a START BYTE
-                                     *   * Performing any high-speed mode
-                                     *     operation
-                                     *   * Performing direction changes in
-                                     *     combined format mode
-                                     *   * Performing a read operation with a
-                                     *     10-bit address
-                                     */
-    ALT_I2C_SPEED_t     speed_mode;
-                                    /*!< The speed mode of the I2C operation.
-                                     */
-    uint16_t            ss_scl_hcnt;
-                                    /*!< The SCL clock high-period count for
-                                     *   standard speed.
-                                     */
-    uint16_t            ss_scl_lcnt;    
-                                    /*!< The SCL clock low-period count for
-                                     *   standard speed.
-                                     */
-    uint16_t            fs_scl_hcnt;    
-                                    /*!< The SCL clock high-period count for fast
-                                     *   speed.
-                                     */
-    uint16_t            fs_scl_lcnt;    
-                                    /*!< The SCL clock low-period count for fast
-                                     *   speed.
-                                     */
-    uint8_t             fs_spklen;
-                                    /*!< The duration, measured in ic_clk cycles,
-                                     *   of the longest spike that is filtered out
-                                     *   by the spike suppression logic when the
-                                     *   component is operating in SS or FS modes.
-                                     */
-} ALT_I2C_MASTER_CONFIG_t;
+    typedef struct ALT_I2C_MASTER_CONFIG_s
+    {
+        ALT_I2C_ADDR_MODE_t addr_mode;
+
+        /*!< The address mode (7 or 10 bit) when
+         *   acting as a master.
+         */
+        bool restart_enable;
+
+        /*!< This setting determines whether RESTART
+         *   conditions may be sent when acting as a
+         *   master. When the \e restart_enable is
+         *   false, the I2C controller master is
+         *   incapable of performing the following
+         *   functions:
+         *   * Sending a START BYTE
+         *   * Performing any high-speed mode
+         *     operation
+         *   * Performing direction changes in
+         *     combined format mode
+         *   * Performing a read operation with a
+         *     10-bit address
+         */
+        ALT_I2C_SPEED_t speed_mode;
+
+        /*!< The speed mode of the I2C operation.
+         */
+        uint16_t ss_scl_hcnt;
+
+        /*!< The SCL clock high-period count for
+         *   standard speed.
+         */
+        uint16_t ss_scl_lcnt;
+
+        /*!< The SCL clock low-period count for
+         *   standard speed.
+         */
+        uint16_t fs_scl_hcnt;
+
+        /*!< The SCL clock high-period count for fast
+         *   speed.
+         */
+        uint16_t fs_scl_lcnt;
+
+        /*!< The SCL clock low-period count for fast
+         *   speed.
+         */
+        uint8_t fs_spklen;
+
+        /*!< The duration, measured in ic_clk cycles,
+         *   of the longest spike that is filtered out
+         *   by the spike suppression logic when the
+         *   component is operating in SS or FS modes.
+         */
+    } ALT_I2C_MASTER_CONFIG_t;
 
 /*!
  * This type defines a structure for configuration of the I2C controller when it
  * is operating in slave mode.
  */
-typedef struct ALT_I2C_SLAVE_CONFIG_s
-{
-    ALT_I2C_ADDR_MODE_t addr_mode;      /*!< The address mode (7 or 10 bit) when
+    typedef struct ALT_I2C_SLAVE_CONFIG_s
+    {
+        ALT_I2C_ADDR_MODE_t addr_mode;  /*!< The address mode (7 or 10 bit) when
                                          *   acting as a slave.
                                          */
-    uint32_t            addr;           /*!< The slave address to which the I2C
+        uint32_t addr;                  /*!< The slave address to which the I2C
                                          *   controller responds when acting as a
                                          *   slave.
                                          */
-    bool                nack_enable;    /*!< Enable generation of a NACK. when the
+        bool nack_enable;               /*!< Enable generation of a NACK. when the
                                          *   I2C controller is a
                                          *   slave-receiver. If \b true, it can
                                          *   only generate a NACK after a data
@@ -589,11 +628,11 @@ typedef struct ALT_I2C_SLAVE_CONFIG_s
                                          *   receive buffer. When \b false, it
                                          *   generates NACK/ACK, depending on
                                          *   normal criteria.
-                                         *   * \b true = generate NACK after data 
+                                         *   * \b true = generate NACK after data
                                          *               byte received
                                          *   * \b false = generate NACK/ACK normally
                                          */
-} ALT_I2C_SLAVE_CONFIG_t;
+    } ALT_I2C_SLAVE_CONFIG_t;
 
 /*!
  * Initialize the specified I2C controller instance for use and return a device
@@ -617,7 +656,8 @@ typedef struct ALT_I2C_SLAVE_CONFIG_s
  * * Setup and initialize any expected initial I2C controller state
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_init(const ALT_I2C_CTLR_t i2c, ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_init( const ALT_I2C_CTLR_t i2c,
+                                  ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Reset the specified I2C controller instance for use.
@@ -639,7 +679,7 @@ ALT_STATUS_CODE alt_i2c_init(const ALT_I2C_CTLR_t i2c, ALT_I2C_DEV_t *i2c_dev);
  *  * Enable controller
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_reset(ALT_I2C_DEV_t * i2c_dev);
+    ALT_STATUS_CODE alt_i2c_reset( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Uninitialize the I2C controller referenced by the \e i2c_dev handle.
@@ -657,7 +697,7 @@ ALT_STATUS_CODE alt_i2c_reset(ALT_I2C_DEV_t * i2c_dev);
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_uninit(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_uninit( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Disables the I2C controller.
@@ -683,7 +723,7 @@ ALT_STATUS_CODE alt_i2c_uninit(ALT_I2C_DEV_t *i2c_dev);
  * Follow the procedure in section 3.8.3 Disabling DW_apb_i2c of the DW Databook.
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_disable(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_disable( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Enables the I2C controller.
@@ -698,7 +738,7 @@ ALT_STATUS_CODE alt_i2c_disable(ALT_I2C_DEV_t *i2c_dev);
  * IC_ENABLE.ENABLE = 1
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_enable(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_enable( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Returns ALT_E_TRUE if the I2C controller is enabled.
@@ -713,7 +753,7 @@ ALT_STATUS_CODE alt_i2c_enable(ALT_I2C_DEV_t *i2c_dev);
  * IC_ENABLE.ENABLE == 1
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_is_enabled(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_is_enabled( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Gets the current configuration of the I2C controller when operating in master
@@ -732,8 +772,8 @@ ALT_STATUS_CODE alt_i2c_is_enabled(ALT_I2C_DEV_t *i2c_dev);
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_master_config_get(ALT_I2C_DEV_t *i2c_dev,
-                                          ALT_I2C_MASTER_CONFIG_t* cfg);
+    ALT_STATUS_CODE alt_i2c_master_config_get( ALT_I2C_DEV_t * i2c_dev,
+                                               ALT_I2C_MASTER_CONFIG_t * cfg );
 
 /*!
  * Sets the configuration of the I2C controller with operational parameters for
@@ -752,8 +792,8 @@ ALT_STATUS_CODE alt_i2c_master_config_get(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_master_config_set(ALT_I2C_DEV_t *i2c_dev,
-                                          const ALT_I2C_MASTER_CONFIG_t* cfg);
+    ALT_STATUS_CODE alt_i2c_master_config_set( ALT_I2C_DEV_t * i2c_dev,
+                                               const ALT_I2C_MASTER_CONFIG_t * cfg );
 
 /*!
  * This is a utility function that returns the speed based on parameters of the
@@ -771,9 +811,9 @@ ALT_STATUS_CODE alt_i2c_master_config_set(ALT_I2C_DEV_t *i2c_dev,
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_i2c_master_config_speed_get(ALT_I2C_DEV_t *i2c_dev,
-                                                const ALT_I2C_MASTER_CONFIG_t* cfg,
-                                                uint32_t * speed_in_hz);
+    ALT_STATUS_CODE alt_i2c_master_config_speed_get( ALT_I2C_DEV_t * i2c_dev,
+                                                     const ALT_I2C_MASTER_CONFIG_t * cfg,
+                                                     uint32_t * speed_in_hz );
 
 /*!
  * This is a utility function that computes parameters for the I2C master
@@ -794,19 +834,19 @@ ALT_STATUS_CODE alt_i2c_master_config_speed_get(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_master_config_speed_set(ALT_I2C_DEV_t *i2c_dev,
-                                                ALT_I2C_MASTER_CONFIG_t * cfg,
-                                                uint32_t speed_in_hz);
+    ALT_STATUS_CODE alt_i2c_master_config_speed_set( ALT_I2C_DEV_t * i2c_dev,
+                                                     ALT_I2C_MASTER_CONFIG_t * cfg,
+                                                     uint32_t speed_in_hz );
 
 /*!
  * Definition included for backwards compatibility.
  */
-#define alt_i2c_cfg_to_speed(i2c_dev, speed_in_hz, cfg) alt_i2c_master_config_speed_get((i2c_dev), (cfg), (speed_in_hz))
+    #define alt_i2c_cfg_to_speed( i2c_dev, speed_in_hz, cfg )    alt_i2c_master_config_speed_get( ( i2c_dev ), ( cfg ), ( speed_in_hz ) )
 
 /*!
  * Definition included for backwards compatibility.
  */
-#define alt_i2c_speed_to_cfg(i2c_dev, speed_in_hz, cfg) alt_i2c_master_config_speed_set((i2c_dev), (cfg), (speed_in_hz))
+    #define alt_i2c_speed_to_cfg( i2c_dev, speed_in_hz, cfg )    alt_i2c_master_config_speed_set( ( i2c_dev ), ( cfg ), ( speed_in_hz ) )
 
 /*!
  * Gets the current configuration of the I2C controller when operating in slave
@@ -825,8 +865,8 @@ ALT_STATUS_CODE alt_i2c_master_config_speed_set(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_slave_config_get(ALT_I2C_DEV_t *i2c_dev,
-                                         ALT_I2C_SLAVE_CONFIG_t* cfg);
+    ALT_STATUS_CODE alt_i2c_slave_config_get( ALT_I2C_DEV_t * i2c_dev,
+                                              ALT_I2C_SLAVE_CONFIG_t * cfg );
 
 /*!
  * Sets the configuration of the I2C controller with operational parameters for
@@ -845,8 +885,8 @@ ALT_STATUS_CODE alt_i2c_slave_config_get(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_slave_config_set(ALT_I2C_DEV_t *i2c_dev,
-                                         const ALT_I2C_SLAVE_CONFIG_t* cfg);
+    ALT_STATUS_CODE alt_i2c_slave_config_set( ALT_I2C_DEV_t * i2c_dev,
+                                              const ALT_I2C_SLAVE_CONFIG_t * cfg );
 
 /*! \addtogroup ALT_I2C_SDA_HOLD SDA Hold Time Configuration
  *
@@ -880,8 +920,8 @@ ALT_STATUS_CODE alt_i2c_slave_config_set(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_sda_hold_time_get(ALT_I2C_DEV_t *i2c_dev, 
-                                          uint16_t *hold_time);
+    ALT_STATUS_CODE alt_i2c_sda_hold_time_get( ALT_I2C_DEV_t * i2c_dev,
+                                               uint16_t * hold_time );
 
 /*!
  * Sets the configured value for the SDA hold time in terms of I2C controller
@@ -900,8 +940,8 @@ ALT_STATUS_CODE alt_i2c_sda_hold_time_get(ALT_I2C_DEV_t *i2c_dev,
  * IC_SDA_HOLD is 16 bits wide. hold_time must be in range 0..65535.
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_sda_hold_time_set(ALT_I2C_DEV_t *i2c_dev, 
-                                          const uint16_t hold_time);
+    ALT_STATUS_CODE alt_i2c_sda_hold_time_set( ALT_I2C_DEV_t * i2c_dev,
+                                               const uint16_t hold_time );
 
 /*! @} */
 
@@ -921,8 +961,8 @@ ALT_STATUS_CODE alt_i2c_sda_hold_time_set(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_op_mode_get(ALT_I2C_DEV_t *i2c_dev,
-                                    ALT_I2C_MODE_t* mode);
+    ALT_STATUS_CODE alt_i2c_op_mode_get( ALT_I2C_DEV_t * i2c_dev,
+                                         ALT_I2C_MODE_t * mode );
 
 /*!
  * Sets the operational mode of the I2C controller.
@@ -939,9 +979,9 @@ ALT_STATUS_CODE alt_i2c_op_mode_get(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_op_mode_set(ALT_I2C_DEV_t *i2c_dev,
-                                    const ALT_I2C_MODE_t mode);
-  
+    ALT_STATUS_CODE alt_i2c_op_mode_set( ALT_I2C_DEV_t * i2c_dev,
+                                         const ALT_I2C_MODE_t mode );
+
 /*!
  * Returns ALT_E_TRUE if the I2C controller is busy. The I2C controller is busy if
  * either the Slave Finite State Machine (FSM) is not in the IDLE state or the
@@ -959,7 +999,7 @@ ALT_STATUS_CODE alt_i2c_op_mode_set(ALT_I2C_DEV_t *i2c_dev,
  * MST_ACTIVITY bits.
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_is_busy(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_is_busy( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * This function reads a single data byte from the receive FIFO.
@@ -986,7 +1026,8 @@ ALT_STATUS_CODE alt_i2c_is_busy(ALT_I2C_DEV_t *i2c_dev);
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_read(ALT_I2C_DEV_t *i2c_dev, uint8_t *val);
+    ALT_STATUS_CODE alt_i2c_read( ALT_I2C_DEV_t * i2c_dev,
+                                  uint8_t * val );
 
 /*!
  * This function writes a single data byte to the transmit FIFO.
@@ -1013,7 +1054,8 @@ ALT_STATUS_CODE alt_i2c_read(ALT_I2C_DEV_t *i2c_dev, uint8_t *val);
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_write(ALT_I2C_DEV_t *i2c_dev, const uint8_t val);
+    ALT_STATUS_CODE alt_i2c_write( ALT_I2C_DEV_t * i2c_dev,
+                                   const uint8_t val );
 
 /*!
  * This function acts in the role of a slave-receiver by receiving a single data
@@ -1037,8 +1079,8 @@ ALT_STATUS_CODE alt_i2c_write(ALT_I2C_DEV_t *i2c_dev, const uint8_t val);
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_slave_receive(ALT_I2C_DEV_t *i2c_dev,
-                                      uint8_t *data);
+    ALT_STATUS_CODE alt_i2c_slave_receive( ALT_I2C_DEV_t * i2c_dev,
+                                           uint8_t * data );
 
 /*!
  * This function acts in the role of a slave-transmitter by transmitting a single
@@ -1062,8 +1104,8 @@ ALT_STATUS_CODE alt_i2c_slave_receive(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_slave_transmit(ALT_I2C_DEV_t *i2c_dev,
-                                       const uint8_t data);
+    ALT_STATUS_CODE alt_i2c_slave_transmit( ALT_I2C_DEV_t * i2c_dev,
+                                            const uint8_t data );
 
 /*!
  * This function acts in the role of a slave-transmitter by transmitting data in
@@ -1121,9 +1163,9 @@ ALT_STATUS_CODE alt_i2c_slave_transmit(ALT_I2C_DEV_t *i2c_dev,
  * Databook for details of implementation and error conditions that may occur.
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_slave_bulk_transmit(ALT_I2C_DEV_t *i2c_dev,
-                                            const void * data,
-                                            const size_t size);
+    ALT_STATUS_CODE alt_i2c_slave_bulk_transmit( ALT_I2C_DEV_t * i2c_dev,
+                                                 const void * data,
+                                                 const size_t size );
 
 /*!
  * This function returns the current target address.
@@ -1139,7 +1181,8 @@ ALT_STATUS_CODE alt_i2c_slave_bulk_transmit(ALT_I2C_DEV_t *i2c_dev,
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code.
  */
-ALT_STATUS_CODE alt_i2c_master_target_get(ALT_I2C_DEV_t * i2c_dev, uint32_t * target_addr);
+    ALT_STATUS_CODE alt_i2c_master_target_get( ALT_I2C_DEV_t * i2c_dev,
+                                               uint32_t * target_addr );
 
 /*!
  * This function updates the target slave address for any upcoming I2C bus IO.
@@ -1160,7 +1203,8 @@ ALT_STATUS_CODE alt_i2c_master_target_get(ALT_I2C_DEV_t * i2c_dev, uint32_t * ta
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code.
  */
-ALT_STATUS_CODE alt_i2c_master_target_set(ALT_I2C_DEV_t * i2c_dev, uint32_t target_addr);
+    ALT_STATUS_CODE alt_i2c_master_target_set( ALT_I2C_DEV_t * i2c_dev,
+                                               uint32_t target_addr );
 
 /*!
  * This function acts in the role of a master-transmitter by issuing a write
@@ -1193,7 +1237,7 @@ ALT_STATUS_CODE alt_i2c_master_target_set(ALT_I2C_DEV_t * i2c_dev, uint32_t targ
  *                is \b true, a RESTART is issued only if the transfer direction
  *                is changing from the previous command; if \e restart_enabled is
  *                \b false, a STOP followed by a START is issued instead.
- *              
+ *
  * \param       issue_stop
  *              This parameter controls whether a STOP is issued after the byte is
  *              sent or received. If:
@@ -1215,11 +1259,11 @@ ALT_STATUS_CODE alt_i2c_master_target_set(ALT_I2C_DEV_t * i2c_dev, uint32_t targ
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_master_transmit(ALT_I2C_DEV_t *i2c_dev,
-                                        const void * data,
-                                        const size_t size,
-                                        const bool issue_restart,
-                                        const bool issue_stop);
+    ALT_STATUS_CODE alt_i2c_master_transmit( ALT_I2C_DEV_t * i2c_dev,
+                                             const void * data,
+                                             const size_t size,
+                                             const bool issue_restart,
+                                             const bool issue_stop );
 
 /*!
  * This function acts in the role of a master-receiver by receiving one or more
@@ -1260,7 +1304,7 @@ ALT_STATUS_CODE alt_i2c_master_transmit(ALT_I2C_DEV_t *i2c_dev,
  *                is \b true, a RESTART is issued only if the transfer direction
  *                is changing from the previous command; if \e restart_enabled is
  *                \b false, a STOP followed by a START is issued instead.
- *              
+ *
  * \param       issue_stop
  *              This parameter controls whether a STOP is issued after the byte is
  *              sent or received. If:
@@ -1282,11 +1326,11 @@ ALT_STATUS_CODE alt_i2c_master_transmit(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_master_receive(ALT_I2C_DEV_t *i2c_dev,
-                                       void * data,
-                                       const size_t size,
-                                       const bool issue_restart,
-                                       const bool issue_stop);
+    ALT_STATUS_CODE alt_i2c_master_receive( ALT_I2C_DEV_t * i2c_dev,
+                                            void * data,
+                                            const size_t size,
+                                            const bool issue_restart,
+                                            const bool issue_stop );
 
 /*!
  * This function causes the I2C controller master to issue a READ request on the
@@ -1310,7 +1354,7 @@ ALT_STATUS_CODE alt_i2c_master_receive(ALT_I2C_DEV_t *i2c_dev,
  *                is \b true, a RESTART is issued only if the transfer direction
  *                is changing from the previous command; if \e restart_enabled is
  *                \b false, a STOP followed by a START is issued instead.
- *              
+ *
  * \param       issue_stop
  *              This parameter controls whether a STOP is issued after the byte is
  *              sent or received. If:
@@ -1335,9 +1379,9 @@ ALT_STATUS_CODE alt_i2c_master_receive(ALT_I2C_DEV_t *i2c_dev,
  * I2C controller .
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_issue_read(ALT_I2C_DEV_t *i2c_dev,
-                                   const bool issue_restart,
-                                   const bool issue_stop);
+    ALT_STATUS_CODE alt_i2c_issue_read( ALT_I2C_DEV_t * i2c_dev,
+                                        const bool issue_restart,
+                                        const bool issue_stop );
 
 /*!
  * This function causes the I2C controller master to issue a send byte on the
@@ -1365,7 +1409,7 @@ ALT_STATUS_CODE alt_i2c_issue_read(ALT_I2C_DEV_t *i2c_dev,
  *                is \b true, a RESTART is issued only if the transfer direction
  *                is changing from the previous command; if \e restart_enabled is
  *                \b false, a STOP followed by a START is issued instead.
- *              
+ *
  * \param       issue_stop
  *              This parameter controls whether a STOP is issued after the byte is
  *              sent or received. If:
@@ -1385,19 +1429,20 @@ ALT_STATUS_CODE alt_i2c_issue_read(ALT_I2C_DEV_t *i2c_dev,
  * \retval      ALT_E_ERROR     Details about error status code
  *
  * \internal
- * Write IC_DATA_CMD.CMD = 0 (write request). 
+ * Write IC_DATA_CMD.CMD = 0 (write request).
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_issue_write(ALT_I2C_DEV_t *i2c_dev,
-                                    const uint8_t value,
-                                    const bool issue_restart,
-                                    const bool issue_stop);
+    ALT_STATUS_CODE alt_i2c_issue_write( ALT_I2C_DEV_t * i2c_dev,
+                                         const uint8_t value,
+                                         const bool issue_restart,
+                                         const bool issue_stop );
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_I2C_GEN_CALL General Call
  *
  * The functions in this group support General Call addresses.
- * 
+ *
  * The general call address is for addressing every device connected to the I2C
  * bus at the same time. However, if a device does not need any of the data
  * supplied within the general call structure, it can ignore this address by not
@@ -1450,7 +1495,7 @@ ALT_STATUS_CODE alt_i2c_issue_write(ALT_I2C_DEV_t *i2c_dev,
  *                is \b true, a RESTART is issued only if the transfer direction
  *                is changing from the previous command; if \e restart_enabled is
  *                \b false, a STOP followed by a START is issued instead.
- *              
+ *
  * \param       issue_stop
  *              This parameter controls whether a STOP is issued after the byte is
  *              sent or received. If:
@@ -1472,11 +1517,11 @@ ALT_STATUS_CODE alt_i2c_issue_write(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_master_general_call(ALT_I2C_DEV_t *i2c_dev,
-                                            const void * data,
-                                            const size_t size,
-                                            const bool issue_restart,
-                                            const bool issue_stop);
+    ALT_STATUS_CODE alt_i2c_master_general_call( ALT_I2C_DEV_t * i2c_dev,
+                                                 const void * data,
+                                                 const size_t size,
+                                                 const bool issue_restart,
+                                                 const bool issue_stop );
 
 /*!
  * Disables the I2C controller from responding to a General Call address. The
@@ -1493,7 +1538,7 @@ ALT_STATUS_CODE alt_i2c_master_general_call(ALT_I2C_DEV_t *i2c_dev,
  * IC_ACK_GENERAL_CALL.ACK_GEN_CALL = 0
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_general_call_ack_disable(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_general_call_ack_disable( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Enables the I2C controller to respond with an ACK when it receives a General
@@ -1509,7 +1554,7 @@ ALT_STATUS_CODE alt_i2c_general_call_ack_disable(ALT_I2C_DEV_t *i2c_dev);
  * IC_ACK_GENERAL_CALL.ACK_GEN_CALL = 1
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_general_call_ack_enable(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_general_call_ack_enable( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Returns ALT_E_TRUE if the I2C controller is enabled to respond to General Call
@@ -1525,11 +1570,12 @@ ALT_STATUS_CODE alt_i2c_general_call_ack_enable(ALT_I2C_DEV_t *i2c_dev);
  * IC_ACK_GENERAL_CALL.ACK_GEN_CALL == 1
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_general_call_ack_is_enabled(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_general_call_ack_is_enabled( ALT_I2C_DEV_t * i2c_dev );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_I2C_INT Interrupt and Status Conditions
  *
  * The functions in this group provide management for the I2C controller status
@@ -1583,8 +1629,8 @@ ALT_STATUS_CODE alt_i2c_general_call_ack_is_enabled(ALT_I2C_DEV_t *i2c_dev);
  * IC_INTR_STAT
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_int_status_get(ALT_I2C_DEV_t *i2c_dev,
-                                       uint32_t *status);
+    ALT_STATUS_CODE alt_i2c_int_status_get( ALT_I2C_DEV_t * i2c_dev,
+                                            uint32_t * status );
 
 /*!
  * Returns the I2C controller raw interrupt status conditions irrespective of
@@ -1608,8 +1654,8 @@ ALT_STATUS_CODE alt_i2c_int_status_get(ALT_I2C_DEV_t *i2c_dev,
  * IC_INTR_STAT
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_int_raw_status_get(ALT_I2C_DEV_t *i2c_dev,
-                                           uint32_t *status);
+    ALT_STATUS_CODE alt_i2c_int_raw_status_get( ALT_I2C_DEV_t * i2c_dev,
+                                                uint32_t * status );
 
 /*!
  * Clears the specified I2C controller interrupt status conditions identified
@@ -1632,7 +1678,8 @@ ALT_STATUS_CODE alt_i2c_int_raw_status_get(ALT_I2C_DEV_t *i2c_dev,
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_int_clear(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask);
+    ALT_STATUS_CODE alt_i2c_int_clear( ALT_I2C_DEV_t * i2c_dev,
+                                       const uint32_t mask );
 
 /*!
  * Disable the specified I2C controller interrupt status conditions identified in
@@ -1661,7 +1708,8 @@ ALT_STATUS_CODE alt_i2c_int_clear(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask);
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_int_disable(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask);
+    ALT_STATUS_CODE alt_i2c_int_disable( ALT_I2C_DEV_t * i2c_dev,
+                                         const uint32_t mask );
 
 /*!
  * Enable the specified I2C controller interrupt status conditions identified in
@@ -1690,7 +1738,8 @@ ALT_STATUS_CODE alt_i2c_int_disable(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask)
  * \internal
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_int_enable(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask);
+    ALT_STATUS_CODE alt_i2c_int_enable( ALT_I2C_DEV_t * i2c_dev,
+                                        const uint32_t mask );
 
 /*!
  * Gets the cause of I2C transmission abort. A I2C transmission abort indicates
@@ -1715,12 +1764,13 @@ ALT_STATUS_CODE alt_i2c_int_enable(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask);
  * IC_TX_ABRT_SOURCE
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_tx_abort_cause_get(ALT_I2C_DEV_t *i2c_dev,
-                                           ALT_I2C_TX_ABORT_CAUSE_t *cause);
+    ALT_STATUS_CODE alt_i2c_tx_abort_cause_get( ALT_I2C_DEV_t * i2c_dev,
+                                                ALT_I2C_TX_ABORT_CAUSE_t * cause );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_I2C_RX_FIFO RX FIFO Management
  *
  * The receive FIFO has a configurable threshold value that controls the level of
@@ -1738,7 +1788,7 @@ ALT_STATUS_CODE alt_i2c_tx_abort_cause_get(ALT_I2C_DEV_t *i2c_dev,
 /*!
  * The number of entries (depth) of the I2C controller receive FIFO.
  */
-#define ALT_I2C_RX_FIFO_NUM_ENTRIES     64
+    #define ALT_I2C_RX_FIFO_NUM_ENTRIES    64
 
 /*!
  * Returns ALT_E_TRUE when the receive FIFO is empty.
@@ -1753,7 +1803,7 @@ ALT_STATUS_CODE alt_i2c_tx_abort_cause_get(ALT_I2C_DEV_t *i2c_dev,
  * IC_STATUS.RFNE == 0
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_rx_fifo_is_empty(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_rx_fifo_is_empty( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Returns ALT_E_TRUE when the receive FIFO is completely full.
@@ -1768,7 +1818,7 @@ ALT_STATUS_CODE alt_i2c_rx_fifo_is_empty(ALT_I2C_DEV_t *i2c_dev);
  * IC_STATUS.RFF == 1
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_rx_fifo_is_full(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_rx_fifo_is_full( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Returns the number of valid entries in the receive FIFO.
@@ -1786,8 +1836,8 @@ ALT_STATUS_CODE alt_i2c_rx_fifo_is_full(ALT_I2C_DEV_t *i2c_dev);
  * IC_RXFLR.RXFLR
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_rx_fifo_level_get(ALT_I2C_DEV_t *i2c_dev,
-                                          uint32_t *num_entries);
+    ALT_STATUS_CODE alt_i2c_rx_fifo_level_get( ALT_I2C_DEV_t * i2c_dev,
+                                               uint32_t * num_entries );
 
 /*!
  * Gets the current receive FIFO threshold level value.
@@ -1805,8 +1855,8 @@ ALT_STATUS_CODE alt_i2c_rx_fifo_level_get(ALT_I2C_DEV_t *i2c_dev,
  * IC_RX_TL.RX_TL
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_rx_fifo_threshold_get(ALT_I2C_DEV_t *i2c_dev,
-                                              uint8_t *threshold);
+    ALT_STATUS_CODE alt_i2c_rx_fifo_threshold_get( ALT_I2C_DEV_t * i2c_dev,
+                                                   uint8_t * threshold );
 
 /*!
  * Sets the current receive FIFO threshold level value.
@@ -1824,12 +1874,13 @@ ALT_STATUS_CODE alt_i2c_rx_fifo_threshold_get(ALT_I2C_DEV_t *i2c_dev,
  * IC_RX_TL.RX_TL = threshold
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_rx_fifo_threshold_set(ALT_I2C_DEV_t *i2c_dev,
-                                              const uint8_t threshold);
+    ALT_STATUS_CODE alt_i2c_rx_fifo_threshold_set( ALT_I2C_DEV_t * i2c_dev,
+                                                   const uint8_t threshold );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_I2C_TX_FIFO TX FIFO Management
  *
  * The transmit FIFO has a configurable threshold value that controls the level of
@@ -1847,7 +1898,7 @@ ALT_STATUS_CODE alt_i2c_rx_fifo_threshold_set(ALT_I2C_DEV_t *i2c_dev,
 /*!
  * The number of entries (depth) of the I2C controller transmit FIFO.
  */
-#define ALT_I2C_TX_FIFO_NUM_ENTRIES     64
+    #define ALT_I2C_TX_FIFO_NUM_ENTRIES    64
 
 /*!
  * Returns ALT_E_TRUE when the transmit FIFO is empty.
@@ -1862,7 +1913,7 @@ ALT_STATUS_CODE alt_i2c_rx_fifo_threshold_set(ALT_I2C_DEV_t *i2c_dev,
  * IC_STATUS.TFE == 1
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_tx_fifo_is_empty(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_tx_fifo_is_empty( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Returns ALT_E_TRUE when the transmit FIFO is completely full.
@@ -1877,7 +1928,7 @@ ALT_STATUS_CODE alt_i2c_tx_fifo_is_empty(ALT_I2C_DEV_t *i2c_dev);
  * IC_STATUS.TFNF == 0
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_tx_fifo_is_full(ALT_I2C_DEV_t *i2c_dev);
+    ALT_STATUS_CODE alt_i2c_tx_fifo_is_full( ALT_I2C_DEV_t * i2c_dev );
 
 /*!
  * Returns the number of valid entries in the transmit FIFO.
@@ -1895,8 +1946,8 @@ ALT_STATUS_CODE alt_i2c_tx_fifo_is_full(ALT_I2C_DEV_t *i2c_dev);
  * IC_TXFLR.TXFLR
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_tx_fifo_level_get(ALT_I2C_DEV_t *i2c_dev,
-                                          uint32_t *num_entries);
+    ALT_STATUS_CODE alt_i2c_tx_fifo_level_get( ALT_I2C_DEV_t * i2c_dev,
+                                               uint32_t * num_entries );
 
 /*!
  * Gets the current transmit FIFO threshold level value.
@@ -1914,8 +1965,8 @@ ALT_STATUS_CODE alt_i2c_tx_fifo_level_get(ALT_I2C_DEV_t *i2c_dev,
  * IC_TX_TL.TX_TL
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_tx_fifo_threshold_get(ALT_I2C_DEV_t *i2c_dev,
-                                              uint8_t *threshold);
+    ALT_STATUS_CODE alt_i2c_tx_fifo_threshold_get( ALT_I2C_DEV_t * i2c_dev,
+                                                   uint8_t * threshold );
 
 /*!
  * Sets the current transmit FIFO threshold level value.
@@ -1933,12 +1984,13 @@ ALT_STATUS_CODE alt_i2c_tx_fifo_threshold_get(ALT_I2C_DEV_t *i2c_dev,
  * IC_TX_TL.TX_TL = threshold
  * \endinternal
  */
-ALT_STATUS_CODE alt_i2c_tx_fifo_threshold_set(ALT_I2C_DEV_t *i2c_dev,
-                                              const uint8_t threshold);
+    ALT_STATUS_CODE alt_i2c_tx_fifo_threshold_set( ALT_I2C_DEV_t * i2c_dev,
+                                                   const uint8_t threshold );
 
 /*! @} */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_I2C_DMA DMA Interface
  *
  * The DMA interface has a configurable threshold value that controls the
@@ -1970,7 +2022,8 @@ ALT_STATUS_CODE alt_i2c_tx_fifo_threshold_set(ALT_I2C_DEV_t *i2c_dev,
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_i2c_rx_dma_threshold_get(ALT_I2C_DEV_t * i2c_dev, uint8_t * threshold);
+    ALT_STATUS_CODE alt_i2c_rx_dma_threshold_get( ALT_I2C_DEV_t * i2c_dev,
+                                                  uint8_t * threshold );
 
 /*!
  * Sets the current RX DMA threshold level value.
@@ -1984,7 +2037,8 @@ ALT_STATUS_CODE alt_i2c_rx_dma_threshold_get(ALT_I2C_DEV_t * i2c_dev, uint8_t * 
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_i2c_rx_dma_threshold_set(ALT_I2C_DEV_t * i2c_dev, uint8_t threshold);
+    ALT_STATUS_CODE alt_i2c_rx_dma_threshold_set( ALT_I2C_DEV_t * i2c_dev,
+                                                  uint8_t threshold );
 
 /*!
  * Gets the current TX DMA threshold level value.
@@ -1998,7 +2052,8 @@ ALT_STATUS_CODE alt_i2c_rx_dma_threshold_set(ALT_I2C_DEV_t * i2c_dev, uint8_t th
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_i2c_tx_dma_threshold_get(ALT_I2C_DEV_t * i2c_dev, uint8_t * threshold);
+    ALT_STATUS_CODE alt_i2c_tx_dma_threshold_get( ALT_I2C_DEV_t * i2c_dev,
+                                                  uint8_t * threshold );
 
 /*!
  * Sets the current TX DMA threshold level value.
@@ -2012,13 +2067,14 @@ ALT_STATUS_CODE alt_i2c_tx_dma_threshold_get(ALT_I2C_DEV_t * i2c_dev, uint8_t * 
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_i2c_tx_dma_threshold_set(ALT_I2C_DEV_t * i2c_dev, uint8_t threshold);
+    ALT_STATUS_CODE alt_i2c_tx_dma_threshold_set( ALT_I2C_DEV_t * i2c_dev,
+                                                  uint8_t threshold );
 
 /*! @} */
 
 /*! @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
-#endif  /* __ALT_I2C_H__ */
+    #endif /* __cplusplus */
+#endif /* __ALT_I2C_H__ */

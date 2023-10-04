@@ -43,13 +43,13 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_DeInit(void)
+void EIC_DeInit( void )
 {
-  EIC->ICR = 0x00;
-  EIC->CIPR = 0x00;
-  EIC->FIR = 0x0C;
-  EIC->IER = 0x00;
-  EIC->IPR = 0xFFFFFFFF;
+    EIC->ICR = 0x00;
+    EIC->CIPR = 0x00;
+    EIC->FIR = 0x0C;
+    EIC->IER = 0x00;
+    EIC->IPR = 0xFFFFFFFF;
 }
 
 /*******************************************************************************
@@ -60,28 +60,28 @@ void EIC_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_IRQInit(EIC_IRQInitTypeDef* EIC_IRQInitStruct)
+void EIC_IRQInit( EIC_IRQInitTypeDef * EIC_IRQInitStruct )
 {
-  u32 Tmp = 0;
+    u32 Tmp = 0;
 
-  if(EIC_IRQInitStruct->EIC_IRQChannelCmd == ENABLE)
-  {
-    /* Enable the selected IRQ channel */
-    EIC->IER |= 1 << EIC_IRQInitStruct->EIC_IRQChannel;
+    if( EIC_IRQInitStruct->EIC_IRQChannelCmd == ENABLE )
+    {
+        /* Enable the selected IRQ channel */
+        EIC->IER |= 1 << EIC_IRQInitStruct->EIC_IRQChannel;
 
-    /* Configure the selected IRQ channel priority ***************************/
-    /* Clear SIPL[3:0] bits */
-    EIC->SIRn[EIC_IRQInitStruct->EIC_IRQChannel] &= EIC_SIPL_Reset_Mask;
+        /* Configure the selected IRQ channel priority ***************************/
+        /* Clear SIPL[3:0] bits */
+        EIC->SIRn[ EIC_IRQInitStruct->EIC_IRQChannel ] &= EIC_SIPL_Reset_Mask;
 
-    /* Configure SIPL[3:0] bits according to EIC_IRQChannelPriority parameter */
-    Tmp = EIC_IRQInitStruct->EIC_IRQChannelPriority & EIC_SIPL_Mask;
-    EIC->SIRn[EIC_IRQInitStruct->EIC_IRQChannel] |= Tmp;
-  }
-  else
-  {
-    /* Disable the select IRQ channel */
-    EIC->IER &=~ (1 << EIC_IRQInitStruct->EIC_IRQChannel);
-  }
+        /* Configure SIPL[3:0] bits according to EIC_IRQChannelPriority parameter */
+        Tmp = EIC_IRQInitStruct->EIC_IRQChannelPriority & EIC_SIPL_Mask;
+        EIC->SIRn[ EIC_IRQInitStruct->EIC_IRQChannel ] |= Tmp;
+    }
+    else
+    {
+        /* Disable the select IRQ channel */
+        EIC->IER &= ~( 1 << EIC_IRQInitStruct->EIC_IRQChannel );
+    }
 }
 
 /*******************************************************************************
@@ -92,18 +92,18 @@ void EIC_IRQInit(EIC_IRQInitTypeDef* EIC_IRQInitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_FIQInit(EIC_FIQInitTypeDef* EIC_FIQInitStruct)
+void EIC_FIQInit( EIC_FIQInitTypeDef * EIC_FIQInitStruct )
 {
-  if(EIC_FIQInitStruct->EIC_FIQChannelCmd == ENABLE)
-  {
-    /* Enable the selected FIQ channel */
-    EIC->FIER |= EIC_FIQInitStruct->EIC_FIQChannel ;
-  }
-  else
-  {
-    /* Disable the selected FIQ channel */
-    EIC->FIER &= ~EIC_FIQInitStruct->EIC_FIQChannel;
-  }
+    if( EIC_FIQInitStruct->EIC_FIQChannelCmd == ENABLE )
+    {
+        /* Enable the selected FIQ channel */
+        EIC->FIER |= EIC_FIQInitStruct->EIC_FIQChannel;
+    }
+    else
+    {
+        /* Disable the selected FIQ channel */
+        EIC->FIER &= ~EIC_FIQInitStruct->EIC_FIQChannel;
+    }
 }
 
 /*******************************************************************************
@@ -114,11 +114,11 @@ void EIC_FIQInit(EIC_FIQInitTypeDef* EIC_FIQInitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_IRQStructInit(EIC_IRQInitTypeDef* EIC_IRQInitStruct)
+void EIC_IRQStructInit( EIC_IRQInitTypeDef * EIC_IRQInitStruct )
 {
-  EIC_IRQInitStruct->EIC_IRQChannel = 0x1F;
-  EIC_IRQInitStruct->EIC_IRQChannelPriority = 0;
-  EIC_IRQInitStruct->EIC_IRQChannelCmd = DISABLE;
+    EIC_IRQInitStruct->EIC_IRQChannel = 0x1F;
+    EIC_IRQInitStruct->EIC_IRQChannelPriority = 0;
+    EIC_IRQInitStruct->EIC_IRQChannelCmd = DISABLE;
 }
 
 /*******************************************************************************
@@ -129,10 +129,10 @@ void EIC_IRQStructInit(EIC_IRQInitTypeDef* EIC_IRQInitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_FIQStructInit(EIC_FIQInitTypeDef* EIC_FIQInitStruct)
+void EIC_FIQStructInit( EIC_FIQInitTypeDef * EIC_FIQInitStruct )
 {
-  EIC_FIQInitStruct->EIC_FIQChannel = 0x03;
-  EIC_FIQInitStruct->EIC_FIQChannelCmd = DISABLE;
+    EIC_FIQInitStruct->EIC_FIQChannel = 0x03;
+    EIC_FIQInitStruct->EIC_FIQChannelCmd = DISABLE;
 }
 
 /*******************************************************************************
@@ -143,18 +143,18 @@ void EIC_FIQStructInit(EIC_FIQInitTypeDef* EIC_FIQInitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_IRQCmd(FunctionalState NewState)
+void EIC_IRQCmd( FunctionalState NewState )
 {
-  if(NewState == ENABLE)
-  {
-    /* Enable EIC IRQ output request to CPU */
-    EIC->ICR |= EIC_IRQEnable_Mask;
-  }
-  else
-  {
-    /* Disable EIC IRQ output request to CPU */
-    EIC->ICR &= EIC_IRQDisable_Mask;
-  }
+    if( NewState == ENABLE )
+    {
+        /* Enable EIC IRQ output request to CPU */
+        EIC->ICR |= EIC_IRQEnable_Mask;
+    }
+    else
+    {
+        /* Disable EIC IRQ output request to CPU */
+        EIC->ICR &= EIC_IRQDisable_Mask;
+    }
 }
 
 /*******************************************************************************
@@ -165,18 +165,18 @@ void EIC_IRQCmd(FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_FIQCmd(FunctionalState NewState)
+void EIC_FIQCmd( FunctionalState NewState )
 {
-  if(NewState == ENABLE)
-  {
-    /* Enable EIC FIQ output request to CPU */
-    EIC->ICR |= EIC_FIQEnable_Mask;
-  }
-  else
-  {
-    /* Disable EIC FIQ output request to CPU */
-    EIC->ICR &= EIC_FIQDisable_Mask;
-  }
+    if( NewState == ENABLE )
+    {
+        /* Enable EIC FIQ output request to CPU */
+        EIC->ICR |= EIC_FIQEnable_Mask;
+    }
+    else
+    {
+        /* Disable EIC FIQ output request to CPU */
+        EIC->ICR &= EIC_FIQDisable_Mask;
+    }
 }
 
 /*******************************************************************************
@@ -186,10 +186,10 @@ void EIC_FIQCmd(FunctionalState NewState)
 * Output         : None
 * Return         : The current served IRQ channel.
 *******************************************************************************/
-u8 EIC_GetCurrentIRQChannel(void)
+u8 EIC_GetCurrentIRQChannel( void )
 {
-  /* Read and return the CIC[4:0] bits of CICR register */
-  return ((u8) (EIC->CICR));
+    /* Read and return the CIC[4:0] bits of CICR register */
+    return( ( u8 ) ( EIC->CICR ) );
 }
 
 /*******************************************************************************
@@ -199,10 +199,10 @@ u8 EIC_GetCurrentIRQChannel(void)
 * Output         : None
 * Return         : The priority level of the current served IRQ channel.
 *******************************************************************************/
-u8 EIC_GetCurrentIRQChannelPriority(void)
+u8 EIC_GetCurrentIRQChannelPriority( void )
 {
-  /* Read and return the CIP[3:0] bits of CIPR register */
-  return ((u8) (EIC->CIPR));
+    /* Read and return the CIP[3:0] bits of CIPR register */
+    return( ( u8 ) ( EIC->CIPR ) );
 }
 
 /*******************************************************************************
@@ -216,16 +216,16 @@ u8 EIC_GetCurrentIRQChannelPriority(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_CurrentIRQPriorityConfig(u8 NewPriority)
+void EIC_CurrentIRQPriorityConfig( u8 NewPriority )
 {
-  /* Disable EIC IRQ output request to CPU */
-  EIC->ICR &= EIC_IRQDisable_Mask;
+    /* Disable EIC IRQ output request to CPU */
+    EIC->ICR &= EIC_IRQDisable_Mask;
 
-  /* Change the current priority */
-  EIC->CIPR = NewPriority;
+    /* Change the current priority */
+    EIC->CIPR = NewPriority;
 
-  /* Enable EIC IRQ output request to CPU  */
-  EIC->ICR |= EIC_IRQEnable_Mask;
+    /* Enable EIC IRQ output request to CPU  */
+    EIC->ICR |= EIC_IRQEnable_Mask;
 }
 
 /*******************************************************************************
@@ -235,10 +235,10 @@ void EIC_CurrentIRQPriorityConfig(u8 NewPriority)
 * Output         : None
 * Return         : The current served FIQ channel.
 *******************************************************************************/
-u8 EIC_GetCurrentFIQChannel(void)
+u8 EIC_GetCurrentFIQChannel( void )
 {
-  /* Read and return the FIP[1:0] bits of FIPR register */
-  return ((u8) (EIC->FIPR));
+    /* Read and return the FIP[1:0] bits of FIPR register */
+    return( ( u8 ) ( EIC->FIPR ) );
 }
 
 /*******************************************************************************
@@ -249,10 +249,10 @@ u8 EIC_GetCurrentFIQChannel(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EIC_ClearFIQPendingBit(u8 EIC_FIQChannel)
+void EIC_ClearFIQPendingBit( u8 EIC_FIQChannel )
 {
-  /* Clear the correspondent FIQ pending bit */
-  EIC->FIPR = EIC_FIQChannel ;
+    /* Clear the correspondent FIQ pending bit */
+    EIC->FIPR = EIC_FIQChannel;
 }
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

@@ -5,9 +5,10 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
-!!GlobalInfo
-product: Peripherals v1.0
+ * !!GlobalInfo
+ * product: Peripherals v1.0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 /*******************************************************************************
@@ -18,6 +19,6 @@ product: Peripherals v1.0
 /*******************************************************************************
  * BOARD_InitBootPeripherals function
  ******************************************************************************/
-void BOARD_InitBootPeripherals(void)
+void BOARD_InitBootPeripherals( void )
 {
 }

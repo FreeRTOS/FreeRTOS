@@ -22,12 +22,12 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* SMI_CR1 mask bits */
-#define SMI_HOLDPRESCTCS_RESET_Mask  0xFF00800F
-#define SMI_Prescaler_MaxValue       0x7F
-#define SMI_DeselectTime_MaxValue    0x0F
-#define SMI_ClockHold_Mask           0x00
-#define SMI_Prescaler_Mask           0x02
-#define SMI_DeselectTime_Mask        0x5
+#define SMI_HOLDPRESCTCS_RESET_Mask    0xFF00800F
+#define SMI_Prescaler_MaxValue         0x7F
+#define SMI_DeselectTime_MaxValue      0x0F
+#define SMI_ClockHold_Mask             0x00
+#define SMI_Prescaler_Mask             0x02
+#define SMI_DeselectTime_Mask          0x5
 
 /* SMI_CR2 mask bits */
 #define SMI_BS_RESET_Mask              0xFFFFCFFF
@@ -40,7 +40,7 @@
 #define SMI_TRARECLENGTH_RESET_Mask    0xFFFFFF88
 
 /* SMI_SR mask bits */
-#define SMI_STATUSREGISTER_Mask    0xFF
+#define SMI_STATUSREGISTER_Mask        0xFF
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -56,12 +56,12 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_DeInit(void)
+void SMI_DeInit( void )
 {
-  SMI->CR1 = 0x00000250;
-  SMI->CR2 = 0x00;
-  SMI->SR &= 0xFFFFF0FF;
-  SMI->TR = 0x00;
+    SMI->CR1 = 0x00000250;
+    SMI->CR2 = 0x00;
+    SMI->SR &= 0xFFFFF0FF;
+    SMI->TR = 0x00;
 }
 
 /*******************************************************************************
@@ -74,30 +74,30 @@ void SMI_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_Init(SMI_InitTypeDef* SMI_InitStruct)
+void SMI_Init( SMI_InitTypeDef * SMI_InitStruct )
 {
-  u32 Temp = 0;
- 
-  /* Clear HOLD[7:0], PRESC[6:0] and TCS[3:0] bits */
-  Temp = SMI->CR1 & SMI_HOLDPRESCTCS_RESET_Mask;
+    u32 Temp = 0;
 
-  /* Set HOLD[7:0] bits according to SMI_ClockHold value */
-  Temp |= SMI_InitStruct->SMI_ClockHold << 16;
+    /* Clear HOLD[7:0], PRESC[6:0] and TCS[3:0] bits */
+    Temp = SMI->CR1 & SMI_HOLDPRESCTCS_RESET_Mask;
 
-  if(SMI_InitStruct->SMI_Prescaler <= SMI_Prescaler_MaxValue)
-  {
-    /* Set PRESC[6:0] bits according to SMI_Prescaler value */
-    Temp |= SMI_InitStruct->SMI_Prescaler << 8;
-  }
+    /* Set HOLD[7:0] bits according to SMI_ClockHold value */
+    Temp |= SMI_InitStruct->SMI_ClockHold << 16;
 
-  if(SMI_InitStruct->SMI_DeselectTime <= SMI_DeselectTime_MaxValue)
-  {
-    /* Set TCS[3:0] bits according to SMI_DeselectTime value */
-    Temp |= SMI_InitStruct->SMI_DeselectTime << 4;
-  }
+    if( SMI_InitStruct->SMI_Prescaler <= SMI_Prescaler_MaxValue )
+    {
+        /* Set PRESC[6:0] bits according to SMI_Prescaler value */
+        Temp |= SMI_InitStruct->SMI_Prescaler << 8;
+    }
 
-  /* Store the new value */
-  SMI->CR1 = Temp; 
+    if( SMI_InitStruct->SMI_DeselectTime <= SMI_DeselectTime_MaxValue )
+    {
+        /* Set TCS[3:0] bits according to SMI_DeselectTime value */
+        Temp |= SMI_InitStruct->SMI_DeselectTime << 4;
+    }
+
+    /* Store the new value */
+    SMI->CR1 = Temp;
 }
 
 /*******************************************************************************
@@ -108,16 +108,16 @@ void SMI_Init(SMI_InitTypeDef* SMI_InitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_StructInit(SMI_InitTypeDef* SMI_InitStruct)
+void SMI_StructInit( SMI_InitTypeDef * SMI_InitStruct )
 {
-  /* SMI_CK is sent continuously */
-  SMI_InitStruct->SMI_ClockHold = SMI_ClockHold_Mask;
-  
-  /* SMI_CK = HCLK/2 */
-  SMI_InitStruct->SMI_Prescaler = SMI_Prescaler_Mask;
-  
-  /* Deselect Time set to 6*SMI_CK periods */
-  SMI_InitStruct->SMI_DeselectTime = SMI_DeselectTime_Mask;
+    /* SMI_CK is sent continuously */
+    SMI_InitStruct->SMI_ClockHold = SMI_ClockHold_Mask;
+
+    /* SMI_CK = HCLK/2 */
+    SMI_InitStruct->SMI_Prescaler = SMI_Prescaler_Mask;
+
+    /* Deselect Time set to 6*SMI_CK periods */
+    SMI_InitStruct->SMI_DeselectTime = SMI_DeselectTime_Mask;
 }
 
 /*******************************************************************************
@@ -130,16 +130,16 @@ void SMI_StructInit(SMI_InitTypeDef* SMI_InitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_ModeConfig(u32 SMI_Mode)
+void SMI_ModeConfig( u32 SMI_Mode )
 {
-  if(SMI_Mode == SMI_Mode_SW)
-  {   
-    SMI->CR1 |= SMI_Mode_SW;
-  }
-  else
-  {
-    SMI->CR1 &= SMI_Mode_HW;
-  }
+    if( SMI_Mode == SMI_Mode_SW )
+    {
+        SMI->CR1 |= SMI_Mode_SW;
+    }
+    else
+    {
+        SMI->CR1 &= SMI_Mode_HW;
+    }
 }
 
 /*******************************************************************************
@@ -150,7 +150,7 @@ void SMI_ModeConfig(u32 SMI_Mode)
 * Input          : - SMI_TxLength: specifies the number of bytes to be transmitted
 *                    to external memory.
 *                    This parameter can be one of the following values:
-*                          - SMI_TxLength_0Bytes: No bytes transmitted  
+*                          - SMI_TxLength_0Bytes: No bytes transmitted
 *                          - SMI_TxLength_1Byte: 1 byte transmitted
 *                          - SMI_TxLength_2Bytes: 2 bytes transmitted
 *                          - SMI_TxLength_3Bytes: 3 bytes transmitted
@@ -158,7 +158,7 @@ void SMI_ModeConfig(u32 SMI_Mode)
 *                  - SMI_RxLength: specifies the number of bytes to be received
 *                    from external memory.
 *                    This parameter can be one of the following values:
-*                          - SMI_RxLength_0Bytes: No bytes received  
+*                          - SMI_RxLength_0Bytes: No bytes received
 *                          - SMI_RxLength_1Byte: 1 byte received
 *                          - SMI_RxLength_2Bytes: 2 bytes received
 *                          - SMI_RxLength_3Bytes: 3 bytes received
@@ -166,18 +166,19 @@ void SMI_ModeConfig(u32 SMI_Mode)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_TxRxLengthConfig(u32 SMI_TxLength, u32 SMI_RxLength) 
+void SMI_TxRxLengthConfig( u32 SMI_TxLength,
+                           u32 SMI_RxLength )
 {
-  u32 Temp = 0;
- 
-  /* Clear TRA_LENGTH[2:0] and REC_LENGTH[2:0] bits */
-  Temp = SMI->CR2 & SMI_TRARECLENGTH_RESET_Mask;
- 
-  /* Set TRA_LENGTH[2:0] and REC_LENGTH[2:0] bits according to function parameters */
-  Temp |= SMI_TxLength | SMI_RxLength;
- 
-  /* Store the new value */
-  SMI->CR2 = Temp;
+    u32 Temp = 0;
+
+    /* Clear TRA_LENGTH[2:0] and REC_LENGTH[2:0] bits */
+    Temp = SMI->CR2 & SMI_TRARECLENGTH_RESET_Mask;
+
+    /* Set TRA_LENGTH[2:0] and REC_LENGTH[2:0] bits according to function parameters */
+    Temp |= SMI_TxLength | SMI_RxLength;
+
+    /* Store the new value */
+    SMI->CR2 = Temp;
 }
 
 /*******************************************************************************
@@ -194,16 +195,17 @@ void SMI_TxRxLengthConfig(u32 SMI_TxLength, u32 SMI_RxLength)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_BankCmd(u32 SMI_Bank, FunctionalState NewState)
+void SMI_BankCmd( u32 SMI_Bank,
+                  FunctionalState NewState )
 {
-  if(NewState == ENABLE)
-  {
-    SMI->CR1 |= SMI_Bank;
-  }
-  else
-  {
-    SMI->CR1 &= ~SMI_Bank;
-  }
+    if( NewState == ENABLE )
+    {
+        SMI->CR1 |= SMI_Bank;
+    }
+    else
+    {
+        SMI->CR1 &= ~SMI_Bank;
+    }
 }
 
 /*******************************************************************************
@@ -219,16 +221,17 @@ void SMI_BankCmd(u32 SMI_Bank, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_ITConfig(u32 SMI_IT, FunctionalState NewState)
+void SMI_ITConfig( u32 SMI_IT,
+                   FunctionalState NewState )
 {
-  if(NewState == ENABLE)
-  {
-    SMI->CR2 |= SMI_IT;
-  }
-  else
-  {
-    SMI->CR2 &= ~SMI_IT;
-  }
+    if( NewState == ENABLE )
+    {
+        SMI->CR2 |= SMI_IT;
+    }
+    else
+    {
+        SMI->CR2 &= ~SMI_IT;
+    }
 }
 
 /*******************************************************************************
@@ -244,31 +247,31 @@ void SMI_ITConfig(u32 SMI_IT, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_SelectBank(u32 SMI_Bank)
+void SMI_SelectBank( u32 SMI_Bank )
 {
-  /* Clear BS[1:0] bits (Bank0 is selected)*/
-  SMI->CR2 &= SMI_BS_RESET_Mask;
+    /* Clear BS[1:0] bits (Bank0 is selected)*/
+    SMI->CR2 &= SMI_BS_RESET_Mask;
 
-  switch(SMI_Bank)
-  {
-    case SMI_Bank_1:
-      /* Select Bank1 */
-      SMI->CR2 |= SMI_BS_Bank1_Mask;
-      break;
+    switch( SMI_Bank )
+    {
+        case SMI_Bank_1:
+            /* Select Bank1 */
+            SMI->CR2 |= SMI_BS_Bank1_Mask;
+            break;
 
-    case SMI_Bank_2:
-      /* Select Bank2 */
-      SMI->CR2 |= SMI_BS_Bank2_Mask;
-      break;
+        case SMI_Bank_2:
+            /* Select Bank2 */
+            SMI->CR2 |= SMI_BS_Bank2_Mask;
+            break;
 
-    case SMI_Bank_3:
-      /* Select Bank3 */
-      SMI->CR2 |= SMI_BS_Bank3_Mask;
-      break;
-      
-    default:
-      break;      
-  }
+        case SMI_Bank_3:
+            /* Select Bank3 */
+            SMI->CR2 |= SMI_BS_Bank3_Mask;
+            break;
+
+        default:
+            break;
+    }
 }
 
 /*******************************************************************************
@@ -279,9 +282,9 @@ void SMI_SelectBank(u32 SMI_Bank)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_SendWENCmd(void)
+void SMI_SendWENCmd( void )
 {
-  SMI->CR2 |= SMI_WEN_Mask;
+    SMI->CR2 |= SMI_WEN_Mask;
 }
 
 /*******************************************************************************
@@ -292,9 +295,9 @@ void SMI_SendWENCmd(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_SendRSRCmd(void)
+void SMI_SendRSRCmd( void )
 {
-  SMI->CR2 |= SMI_RSR_Mask;
+    SMI->CR2 |= SMI_RSR_Mask;
 }
 
 /*******************************************************************************
@@ -305,13 +308,13 @@ void SMI_SendRSRCmd(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_SendCmd(u32 Command)
+void SMI_SendCmd( u32 Command )
 {
-  /* Load the command in the Transmit Register */
-  SMI->TR = Command;
+    /* Load the command in the Transmit Register */
+    SMI->TR = Command;
 
-  /* Start transfer */    
-  SMI->CR2 |= SMI_SEND_Mask;
+    /* Start transfer */
+    SMI->CR2 |= SMI_SEND_Mask;
 }
 
 /*******************************************************************************
@@ -325,16 +328,16 @@ void SMI_SendCmd(u32 Command)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_FastReadConfig(u32 SMI_FastRead)
+void SMI_FastReadConfig( u32 SMI_FastRead )
 {
-  if(SMI_FastRead == SMI_FastRead_Enable)
-  {
-    SMI->CR1 |= SMI_FastRead_Enable;
-  }
-  else
-  {
-    SMI->CR1 &= SMI_FastRead_Disable;
-  }
+    if( SMI_FastRead == SMI_FastRead_Enable )
+    {
+        SMI->CR1 |= SMI_FastRead_Enable;
+    }
+    else
+    {
+        SMI->CR1 &= SMI_FastRead_Disable;
+    }
 }
 
 /*******************************************************************************
@@ -348,23 +351,23 @@ void SMI_FastReadConfig(u32 SMI_FastRead)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_WriteBurstConfig(u32 SMI_WriteBurst)
+void SMI_WriteBurstConfig( u32 SMI_WriteBurst )
 {
-  if(SMI_WriteBurst == SMI_WriteBurst_Enable)
-  {
-    SMI->CR1 |= SMI_WriteBurst_Enable;
-  }
-  else
-  {
-    SMI->CR1 &= SMI_WriteBurst_Disable;
-  }
+    if( SMI_WriteBurst == SMI_WriteBurst_Enable )
+    {
+        SMI->CR1 |= SMI_WriteBurst_Enable;
+    }
+    else
+    {
+        SMI->CR1 &= SMI_WriteBurst_Disable;
+    }
 }
 
 /*******************************************************************************
 * Function Name  : SMI_WriteByte
 * Description    : Writes a Byte to the selected memory Bank. This function is
 *                  used in Hardware mode only.
-*                  Before calling this function, send a Write Enable command to 
+*                  Before calling this function, send a Write Enable command to
 *                  the selected memory Bank using SMI_SendWENCmd() function.
 * Input          : - WriteAddr: external memory address from which the data will
 *                    be written.
@@ -372,17 +375,18 @@ void SMI_WriteBurstConfig(u32 SMI_WriteBurst)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_WriteByte(u32 WriteAddr, u8 Data)
+void SMI_WriteByte( u32 WriteAddr,
+                    u8 Data )
 {
-  /* Transfer data to the memory */
-  *(u8 *) WriteAddr = Data;
+    /* Transfer data to the memory */
+    *( u8 * ) WriteAddr = Data;
 }
 
 /*******************************************************************************
 * Function Name  : SMI_WriteHalfWord
 * Description    : Writes a Half Word to the selected memory Bank. This function
 *                  is used in Hardware mode only.
-*                  Before calling this function, send a Write Enable command to 
+*                  Before calling this function, send a Write Enable command to
 *                  the selected memory Bank using SMI_SendWENCmd() function.
 * Input          : - WriteAddr: external memory address from which the data will
 *                    be written.
@@ -390,17 +394,18 @@ void SMI_WriteByte(u32 WriteAddr, u8 Data)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_WriteHalfWord(u32 WriteAddr, u16 Data)
+void SMI_WriteHalfWord( u32 WriteAddr,
+                        u16 Data )
 {
-  /* Transfer data to the memory */
-  *(u16 *) WriteAddr = Data;
+    /* Transfer data to the memory */
+    *( u16 * ) WriteAddr = Data;
 }
 
 /*******************************************************************************
 * Function Name  : SMI_WriteWord
 * Description    : Writes a Word to the selected memory Bank. This function is
 *                  used in Hardware mode only.
-*                  Before calling this function, send a Write Enable command to 
+*                  Before calling this function, send a Write Enable command to
 *                  the selected memory Bank using SMI_SendWENCmd() function.
 * Input          : - WriteAddr: external memory address from which the data will
 *                    be written.
@@ -408,10 +413,11 @@ void SMI_WriteHalfWord(u32 WriteAddr, u16 Data)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_WriteWord(u32 WriteAddr, u32 Data)
+void SMI_WriteWord( u32 WriteAddr,
+                    u32 Data )
 {
-  /* Transfer data to the memory */
-  *(u32 *) WriteAddr = Data;
+    /* Transfer data to the memory */
+    *( u32 * ) WriteAddr = Data;
 }
 
 /*******************************************************************************
@@ -422,9 +428,9 @@ void SMI_WriteWord(u32 WriteAddr, u32 Data)
 * Output         : None
 * Return         : Data read from the external memory.
 *******************************************************************************/
-u8 SMI_ReadByte(u32 ReadAddr)
+u8 SMI_ReadByte( u32 ReadAddr )
 {
-  return(*(u8 *) ReadAddr);
+    return( *( u8 * ) ReadAddr );
 }
 
 /*******************************************************************************
@@ -435,9 +441,9 @@ u8 SMI_ReadByte(u32 ReadAddr)
 * Output         : None
 * Return         : Data read from the external memory.
 *******************************************************************************/
-u16 SMI_ReadHalfWord(u32 ReadAddr)
+u16 SMI_ReadHalfWord( u32 ReadAddr )
 {
-  return(*(u16 *) ReadAddr);
+    return( *( u16 * ) ReadAddr );
 }
 
 /*******************************************************************************
@@ -448,9 +454,9 @@ u16 SMI_ReadHalfWord(u32 ReadAddr)
 * Output         : None
 * Return         : Data read from the external memory.
 *******************************************************************************/
-u32 SMI_ReadWord(u32 ReadAddr)
+u32 SMI_ReadWord( u32 ReadAddr )
 {
-  return(*(u32 *) ReadAddr);
+    return( *( u32 * ) ReadAddr );
 }
 
 /*******************************************************************************
@@ -461,9 +467,9 @@ u32 SMI_ReadWord(u32 ReadAddr)
 * Output         : None
 * Return         : External memory status register value.
 *******************************************************************************/
-u8 SMI_ReadMemoryStatusRegister(void)
+u8 SMI_ReadMemoryStatusRegister( void )
 {
- return((u8) (SMI->SR & SMI_STATUSREGISTER_Mask));
+    return( ( u8 ) ( SMI->SR & SMI_STATUSREGISTER_Mask ) );
 }
 
 /*******************************************************************************
@@ -482,16 +488,16 @@ u8 SMI_ReadMemoryStatusRegister(void)
 * Output         : None
 * Return         : The new state of SMI_FLAG (SET or RESET).
 *******************************************************************************/
-FlagStatus SMI_GetFlagStatus(u32 SMI_FLAG)
+FlagStatus SMI_GetFlagStatus( u32 SMI_FLAG )
 {
-  if((SMI->SR & SMI_FLAG) != RESET)
-  {
-    return SET;
-  }
-  else
-  {
-    return RESET;
-  }
+    if( ( SMI->SR & SMI_FLAG ) != RESET )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
@@ -506,9 +512,9 @@ FlagStatus SMI_GetFlagStatus(u32 SMI_FLAG)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_ClearFlag(u32 SMI_FLAG)
+void SMI_ClearFlag( u32 SMI_FLAG )
 {
-  SMI->SR &= ~SMI_FLAG;
+    SMI->SR &= ~SMI_FLAG;
 }
 
 /*******************************************************************************
@@ -521,16 +527,16 @@ void SMI_ClearFlag(u32 SMI_FLAG)
 * Output         : None
 * Return         : The new state of SMI_IT (SET or RESET).
 *******************************************************************************/
-ITStatus SMI_GetITStatus(u32 SMI_IT)
+ITStatus SMI_GetITStatus( u32 SMI_IT )
 {
-  if(((SMI->CR2 & SMI_IT) != RESET) && ((SMI->SR & SMI_IT) != RESET))
-  {
-    return SET;
-  }
-  else
-  {
-    return RESET;
-  }
+    if( ( ( SMI->CR2 & SMI_IT ) != RESET ) && ( ( SMI->SR & SMI_IT ) != RESET ) )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
@@ -543,9 +549,9 @@ ITStatus SMI_GetITStatus(u32 SMI_IT)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_ClearITPendingBit(u32 SMI_IT)
+void SMI_ClearITPendingBit( u32 SMI_IT )
 {
-  SMI->SR &= ~SMI_IT;
+    SMI->SR &= ~SMI_IT;
 }
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

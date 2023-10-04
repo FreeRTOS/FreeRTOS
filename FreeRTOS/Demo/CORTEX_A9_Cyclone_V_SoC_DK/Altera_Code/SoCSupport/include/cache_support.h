@@ -33,23 +33,23 @@
 
 #include "hwlib.h"
 
-#define ALT_MPUL2_AUX_CONTROL_OFST          0x104
-#define ALT_MPUL2_TAG_RAM_CONTROL_OFST      0x108
-#define ALT_MPUL2_DATA_RAM_CONTROL_OFST     0x10c
+#define ALT_MPUL2_AUX_CONTROL_OFST               0x104
+#define ALT_MPUL2_TAG_RAM_CONTROL_OFST           0x108
+#define ALT_MPUL2_DATA_RAM_CONTROL_OFST          0x10c
 
-#define ALT_MPUL2_AUX_CONTROL_ADDR          ALT_CAST(void *, (ALT_CAST(char *, ALT_MPUL2_ADDR) + ALT_MPUL2_AUX_CONTROL_OFST))
-#define ALT_MPUL2_TAG_RAM_CONTROL_ADDR      ALT_CAST(void *, (ALT_CAST(char *, ALT_MPUL2_ADDR) + ALT_MPUL2_TAG_RAM_CONTROL_OFST))
-#define ALT_MPUL2_DATA_RAM_CONTROL_ADDR     ALT_CAST(void *, (ALT_CAST(char *, ALT_MPUL2_ADDR) + ALT_MPUL2_DATA_RAM_CONTROL_OFST))
+#define ALT_MPUL2_AUX_CONTROL_ADDR               ALT_CAST( void *, ( ALT_CAST( char *, ALT_MPUL2_ADDR ) + ALT_MPUL2_AUX_CONTROL_OFST ) )
+#define ALT_MPUL2_TAG_RAM_CONTROL_ADDR           ALT_CAST( void *, ( ALT_CAST( char *, ALT_MPUL2_ADDR ) + ALT_MPUL2_TAG_RAM_CONTROL_OFST ) )
+#define ALT_MPUL2_DATA_RAM_CONTROL_ADDR          ALT_CAST( void *, ( ALT_CAST( char *, ALT_MPUL2_ADDR ) + ALT_MPUL2_DATA_RAM_CONTROL_OFST ) )
 
-#define ALT_MPUL2_TAG_RAM_CONTROL_VALUE      0x00000000
-#define ALT_MPUL2_DATA_RAM_CONTROL_VALUE     0x00000010
+#define ALT_MPUL2_TAG_RAM_CONTROL_VALUE          0x00000000
+#define ALT_MPUL2_DATA_RAM_CONTROL_VALUE         0x00000010
 
-#define SHARED_ATTRIBUTE_OVERRIDE_ENABLE_MASK 0x00400000
+#define SHARED_ATTRIBUTE_OVERRIDE_ENABLE_MASK    0x00400000
 
-ALT_STATUS_CODE cache_init(void);
-ALT_STATUS_CODE cache_uninit(void);
-void enable_shared_attribute_override_enable(void);
-void configure_L2_ram_latency(void);
+ALT_STATUS_CODE cache_init( void );
+ALT_STATUS_CODE cache_uninit( void );
+void enable_shared_attribute_override_enable( void );
+void configure_L2_ram_latency( void );
 
 #endif /* CACHE_SUPPORT_H_ */
 /* md5sum:58fb245f969aec44340df388edf9806b 2013-09-28 20:48:16 */

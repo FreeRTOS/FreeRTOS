@@ -32,9 +32,9 @@
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-#define partstALL_BITS_OUTPUT   ( ( unsigned char ) 0xff )
-#define partstALL_OUTPUTS_OFF   ( ( unsigned char ) 0xff )
-#define partstMAX_OUTPUT_LED    ( ( unsigned char ) 7 )
+#define partstALL_BITS_OUTPUT    ( ( unsigned char ) 0xff )
+#define partstALL_OUTPUTS_OFF    ( ( unsigned char ) 0xff )
+#define partstMAX_OUTPUT_LED     ( ( unsigned char ) 7 )
 
 /*-----------------------------------------------------------*/
 
@@ -45,9 +45,10 @@ void vParTestInitialise( void )
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
+void vParTestSetLED( UBaseType_t uxLED,
+                     BaseType_t xValue )
 {
-unsigned char ucBit = ( unsigned char ) 1;
+    unsigned char ucBit = ( unsigned char ) 1;
 
     if( uxLED <= partstMAX_OUTPUT_LED )
     {
@@ -63,7 +64,6 @@ unsigned char ucBit = ( unsigned char ) 1;
             {
                 PORTF.OUTCLR = ucBit;
             }
-
         }
         xTaskResumeAll();
     }
@@ -72,7 +72,7 @@ unsigned char ucBit = ( unsigned char ) 1;
 
 void vParTestToggleLED( UBaseType_t uxLED )
 {
-unsigned char ucBit;
+    unsigned char ucBit;
 
     if( uxLED <= partstMAX_OUTPUT_LED )
     {

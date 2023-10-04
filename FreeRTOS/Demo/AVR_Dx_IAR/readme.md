@@ -1,7 +1,7 @@
 
 # Overview
 
-This directory contains a IAR EWAVR demo project (IAR compiler) for AVR128DA48 Curiosity Nano board equipped with AVR128DA48 microcontroller (128 KB Flash, 16 KB SRAM, 512 bytes EEPROM).  
+This directory contains a IAR EWAVR demo project (IAR compiler) for AVR128DA48 Curiosity Nano board equipped with AVR128DA48 microcontroller (128 KB Flash, 16 KB SRAM, 512 bytes EEPROM).
 
 The project comes as three different demos, selectable by a define in the main.c file. Each demo has its own main-***demo_name***.c file. Follow the instructions on the RTOS port documentation page for details about how to setup the target hardware, download and execute the demo application.
 
@@ -28,7 +28,7 @@ This demo includes a higher number of tasks than the **Blinky demo**, but the co
 
 This demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling roughly every second, then the check task has not discovered any problems. If the LED stops toggling, then the check task has discovered a problem in one or more tasks.
 
-To see the console output from serial communication tasks, serial port could be configured as: 
+To see the console output from serial communication tasks, serial port could be configured as:
  - baud rate 9600
  - data 8-bit
  - parity none

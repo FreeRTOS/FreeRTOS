@@ -9,21 +9,20 @@
 #define __HDIV_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- Hardware Divider --------------------------------*/
+
 /**
-    @addtogroup HDIV Hardware Divider(HDIV)
-    Memory Mapped Structure for HDIV Controller
-@{ */
+ *  @addtogroup HDIV Hardware Divider(HDIV)
+ *  Memory Mapped Structure for HDIV Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var HDIV_T::DIVIDEND
      * Offset: 0x00  Dividend Source Register
@@ -72,36 +71,35 @@ typedef struct
      * |        |          |Note: The DIV0 flag is used to indicate divide-by-zero situation and updated whenever DIVISOR is written
      * |        |          |This register is read only.
      */
-    __IO uint32_t DIVIDEND;              /*!< [0x0000] Dividend Source Register                                         */
-    __IO uint32_t DIVISOR;               /*!< [0x0004] Divisor Source Resister                                          */
-    __IO uint32_t DIVQUO;                /*!< [0x0008] Quotient Result Resister                                         */
-    __IO uint32_t DIVREM;                /*!< [0x000c] Remainder Result Register                                        */
-    __I  uint32_t DIVSTS;                /*!< [0x0010] Divider Status Register                                          */
-
+    __IO uint32_t DIVIDEND; /*!< [0x0000] Dividend Source Register                                         */
+    __IO uint32_t DIVISOR;  /*!< [0x0004] Divisor Source Resister                                          */
+    __IO uint32_t DIVQUO;   /*!< [0x0008] Quotient Result Resister                                         */
+    __IO uint32_t DIVREM;   /*!< [0x000c] Remainder Result Register                                        */
+    __I uint32_t DIVSTS;    /*!< [0x0010] Divider Status Register                                          */
 } HDIV_T;
 
 /**
-    @addtogroup HDIV_CONST HDIV Bit Field Definition
-    Constant Definitions for HDIV Controller
-@{ */
+ *  @addtogroup HDIV_CONST HDIV Bit Field Definition
+ *  Constant Definitions for HDIV Controller
+ * @{ */
 
-#define HDIV_DIVIDEND_DIVIDEND_Pos       (0)                                               /*!< HDIV_T::DIVIDEND: DIVIDEND Position    */
-#define HDIV_DIVIDEND_DIVIDEND_Msk       (0xfffffffful << HDIV_DIVIDEND_DIVIDEND_Pos)      /*!< HDIV_T::DIVIDEND: DIVIDEND Mask        */
+#define HDIV_DIVIDEND_DIVIDEND_Pos    ( 0 )                                                /*!< HDIV_T::DIVIDEND: DIVIDEND Position    */
+#define HDIV_DIVIDEND_DIVIDEND_Msk    ( 0xfffffffful << HDIV_DIVIDEND_DIVIDEND_Pos )       /*!< HDIV_T::DIVIDEND: DIVIDEND Mask        */
 
-#define HDIV_DIVISOR_DIVISOR_Pos         (0)                                               /*!< HDIV_T::DIVISOR: DIVISOR Position      */
-#define HDIV_DIVISOR_DIVISOR_Msk         (0xfffful << HDIV_DIVISOR_DIVISOR_Pos)            /*!< HDIV_T::DIVISOR: DIVISOR Mask          */
+#define HDIV_DIVISOR_DIVISOR_Pos      ( 0 )                                                /*!< HDIV_T::DIVISOR: DIVISOR Position      */
+#define HDIV_DIVISOR_DIVISOR_Msk      ( 0xfffful << HDIV_DIVISOR_DIVISOR_Pos )             /*!< HDIV_T::DIVISOR: DIVISOR Mask          */
 
-#define HDIV_DIVQUO_QUOTIENT_Pos         (0)                                               /*!< HDIV_T::DIVQUO: QUOTIENT Position      */
-#define HDIV_DIVQUO_QUOTIENT_Msk         (0xfffffffful << HDIV_DIVQUO_QUOTIENT_Pos)        /*!< HDIV_T::DIVQUO: QUOTIENT Mask          */
+#define HDIV_DIVQUO_QUOTIENT_Pos      ( 0 )                                                /*!< HDIV_T::DIVQUO: QUOTIENT Position      */
+#define HDIV_DIVQUO_QUOTIENT_Msk      ( 0xfffffffful << HDIV_DIVQUO_QUOTIENT_Pos )         /*!< HDIV_T::DIVQUO: QUOTIENT Mask          */
 
-#define HDIV_DIVREM_REMAINDER_Pos        (0)                                               /*!< HDIV_T::DIVREM: REMAINDER Position     */
-#define HDIV_DIVREM_REMAINDER_Msk        (0xfffffffful << HDIV_DIVREM_REMAINDER_Pos)       /*!< HDIV_T::DIVREM: REMAINDER Mask         */
+#define HDIV_DIVREM_REMAINDER_Pos     ( 0 )                                                /*!< HDIV_T::DIVREM: REMAINDER Position     */
+#define HDIV_DIVREM_REMAINDER_Msk     ( 0xfffffffful << HDIV_DIVREM_REMAINDER_Pos )        /*!< HDIV_T::DIVREM: REMAINDER Mask         */
 
-#define HDIV_DIVSTS_FINISH_Pos           (0)                                               /*!< HDIV_T::DIVSTS: FINISH Position        */
-#define HDIV_DIVSTS_FINISH_Msk           (0x1ul << HDIV_DIVSTS_FINISH_Pos)                 /*!< HDIV_T::DIVSTS: FINISH Mask            */
+#define HDIV_DIVSTS_FINISH_Pos        ( 0 )                                                /*!< HDIV_T::DIVSTS: FINISH Position        */
+#define HDIV_DIVSTS_FINISH_Msk        ( 0x1ul << HDIV_DIVSTS_FINISH_Pos )                  /*!< HDIV_T::DIVSTS: FINISH Mask            */
 
-#define HDIV_DIVSTS_DIV0_Pos             (1)                                               /*!< HDIV_T::DIVSTS: DIV0 Position          */
-#define HDIV_DIVSTS_DIV0_Msk             (0x1ul << HDIV_DIVSTS_DIV0_Pos)                   /*!< HDIV_T::DIVSTS: DIV0 Mask              */
+#define HDIV_DIVSTS_DIV0_Pos          ( 1 )                                                /*!< HDIV_T::DIVSTS: DIV0 Position          */
+#define HDIV_DIVSTS_DIV0_Msk          ( 0x1ul << HDIV_DIVSTS_DIV0_Pos )                    /*!< HDIV_T::DIVSTS: DIV0 Mask              */
 
 /**@}*/ /* HDIV_CONST */
 /**@}*/ /* end of HDIV register group */

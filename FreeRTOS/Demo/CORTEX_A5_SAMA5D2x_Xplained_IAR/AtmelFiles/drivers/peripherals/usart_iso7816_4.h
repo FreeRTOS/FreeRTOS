@@ -27,7 +27,8 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+
 /** \addtogroup iso7816_4 ISO7816-4 Driver
  *  \section Purpose
  *
@@ -65,67 +66,76 @@
  *----------------------------------------------------------------------------*/
 
 /** Size max of Answer To Reset */
-#define ATR_SIZE_MAX            55
+#define ATR_SIZE_MAX     55
 
 /** NULL byte to restart byte procedure */
-#define ISO_NULL_VAL            0x60
+#define ISO_NULL_VAL     0x60
 
 /* MOD_VCC The signal present on this pin programs the SIM_VCC value */
-#define MOD_VCC_1V8		0
-#define MOD_VCC_3V3		1
+#define MOD_VCC_1V8      0
+#define MOD_VCC_3V3      1
 
 /* STOP pin, Power Down Mode pin */
-#define STOP_SHUTDOWN	0
-#define	STOP_NORMAL		1
+#define STOP_SHUTDOWN    0
+#define STOP_NORMAL      1
 
-struct _iso7816_opt {
-	uint32_t protocol_type; /* Which protocol is used 0: T = 0, 1: T = 1*/
-	uint32_t clock_sel;		/* Clock Selection */
-	uint32_t char_length;	/* Character Length*/
-	uint32_t sync;			/* Synchronous Mode Select */
-	uint32_t parity_type;	/* Parity Type*/
-	uint32_t num_stop_bits;	/* Number of Stop Bits*/
-	uint32_t bit_order; 	/* Bit order in transmitted characters 0: LSB first 1: MSB first.*/
-	uint32_t inhibit_nack;	/* Inhibit Non Acknowledge*/
-	uint32_t dis_suc_nack;	/* Disable Successive NACK*/
+struct _iso7816_opt
+{
+    uint32_t protocol_type;  /* Which protocol is used 0: T = 0, 1: T = 1*/
+    uint32_t clock_sel;      /* Clock Selection */
+    uint32_t char_length;    /* Character Length*/
+    uint32_t sync;           /* Synchronous Mode Select */
+    uint32_t parity_type;    /* Parity Type*/
+    uint32_t num_stop_bits;  /* Number of Stop Bits*/
+    uint32_t bit_order;      /* Bit order in transmitted characters 0: LSB first 1: MSB first.*/
+    uint32_t inhibit_nack;   /* Inhibit Non Acknowledge*/
+    uint32_t dis_suc_nack;   /* Disable Successive NACK*/
 
-	uint32_t max_iterations;/* */
-	uint32_t iso7816_hz;	/* Set the frequency of the ISO7816 clock. */
-	uint32_t fidi_ratio;	/* */
-	uint32_t time_guard;	/* */
+    uint32_t max_iterations; /* */
+    uint32_t iso7816_hz;     /* Set the frequency of the ISO7816 clock. */
+    uint32_t fidi_ratio;     /* */
+    uint32_t time_guard;     /* */
 };
 
 
-struct _iso7816_desc {
-	const struct _pin pin_stop;
-	const struct _pin pin_mod_vcc;
-	const struct _pin pin_rst;
+struct _iso7816_desc
+{
+    const struct _pin pin_stop;
+    const struct _pin pin_mod_vcc;
+    const struct _pin pin_rst;
 
-	Usart* addr;
-	uint8_t id;
+    Usart * addr;
+    uint8_t id;
 };
 
 /*------------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void iso7816_icc_power_off(const struct _pin* pinrst);
-extern uint16_t iso7816_xfr_block_TPDU_T0(const struct _iso7816_desc* iso7816, const uint8_t* pAPDU, uint8_t* pMessage, uint16_t length);
-extern void iso7816_escape(void);
-extern void iso7816_restart_clock(struct _iso7816_desc* iso7816);
-extern void iso7816_stop_clock(struct _iso7816_desc* iso7816);
-extern void iso7816_to_APDU(void);
-extern void iso7816_get_data_block_ATR(struct _iso7816_desc* iso7816, uint8_t * pAtr, uint8_t * plength);
-extern void iso7816_set_data_rate_and_clock_frequency(struct _iso7816_desc* iso7816, uint32_t clock_frequency, uint32_t data_rate);
+extern void iso7816_icc_power_off( const struct _pin * pinrst );
+extern uint16_t iso7816_xfr_block_TPDU_T0( const struct _iso7816_desc * iso7816,
+                                           const uint8_t * pAPDU,
+                                           uint8_t * pMessage,
+                                           uint16_t length );
+extern void iso7816_escape( void );
+extern void iso7816_restart_clock( struct _iso7816_desc * iso7816 );
+extern void iso7816_stop_clock( struct _iso7816_desc * iso7816 );
+extern void iso7816_to_APDU( void );
+extern void iso7816_get_data_block_ATR( struct _iso7816_desc * iso7816,
+                                        uint8_t * pAtr,
+                                        uint8_t * plength );
+extern void iso7816_set_data_rate_and_clock_frequency( struct _iso7816_desc * iso7816,
+                                                       uint32_t clock_frequency,
+                                                       uint32_t data_rate );
 
-extern uint8_t iso7816_get_status_pin_reset(const struct _pin* pinrst);
-extern void iso7816_cold_reset(struct _iso7816_desc* iso7816);
-extern void iso7816_warm_reset(struct _iso7816_desc* iso7816);
-extern void iso7816_decode_ATR(uint8_t * pAtr);
+extern uint8_t iso7816_get_status_pin_reset( const struct _pin * pinrst );
+extern void iso7816_cold_reset( struct _iso7816_desc * iso7816 );
+extern void iso7816_warm_reset( struct _iso7816_desc * iso7816 );
+extern void iso7816_decode_ATR( uint8_t * pAtr );
 
-extern uint8_t iso7816_init(struct _iso7816_desc* iso7816, const struct _iso7816_opt* opt);
+extern uint8_t iso7816_init( struct _iso7816_desc * iso7816,
+                             const struct _iso7816_opt * opt );
 
 
 
-
-#endif				/* ISO7816_4_H */
+#endif /* ISO7816_4_H */

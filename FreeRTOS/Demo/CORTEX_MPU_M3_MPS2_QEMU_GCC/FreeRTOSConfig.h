@@ -41,7 +41,7 @@
 
 #define configASSERT_DEFINED                             1
 extern void vAssertCalled( void );
-#define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled()
+#define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( )
 #define configQUEUE_REGISTRY_SIZE                        20
 
 #define configUSE_PREEMPTION                             1

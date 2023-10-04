@@ -25,69 +25,69 @@
  */
 
 /*
-Changes from V3.0.0
-	+ ISRcode pulled inline to reduce stack-usage.
-
-	+ Added functionality to only call vTaskSwitchContext() once
-	  when handling multiple interruptsources in a single interruptcall.
-
-	+ Filename changed to a .c extension to allow stepping through code
-	  using F7.
-
-Changes from V3.0.1
-*/
+ * Changes from V3.0.0
+ + ISRcode pulled inline to reduce stack-usage.
+ +
+ + Added functionality to only call vTaskSwitchContext() once
+ +    when handling multiple interruptsources in a single interruptcall.
+ +
+ + Filename changed to a .c extension to allow stepping through code
+ +    using F7.
+ +
+ + Changes from V3.0.1
+ */
 
 #ifndef _FREERTOS_SERIAL_ISRSERIALTX_C
 #define _FREERTOS_SERIAL_ISRSERIALTX_C
 
-#define serINTERRUPT_DISABLED	( 0 )
+#define serINTERRUPT_DISABLED    ( 0 )
 
 
 {
-	/*
-	 * Was the interrupt the Tx register becoming empty?
-	 */
-	if( bTXIF && bTXIE)
-	{
-		/*
-		 * Queue to interface between comms API and interrupt routine.
-		*/
-		extern QueueHandle_t xCharsForTx;
+    /*
+     * Was the interrupt the Tx register becoming empty?
+     */
+    if( bTXIF && bTXIE )
+    {
+        /*
+         * Queue to interface between comms API and interrupt routine.
+         */
+        extern QueueHandle_t xCharsForTx;
 
-		/*
-		 * Because we are not allowed to use local variables here,
-		 * PRODL and PRODH are (ab)used as temporary storage. This
-		 * is allowed because these SFR's will be restored before
-		 * exiting the ISR.
-		 */
-		extern char				cChar;
-		#pragma locate cChar		&PRODL
-		extern portBASE_TYPE		pxTaskWoken;
-		#pragma locate pxTaskWoken	&PRODH
+        /*
+         * Because we are not allowed to use local variables here,
+         * PRODL and PRODH are (ab)used as temporary storage. This
+         * is allowed because these SFR's will be restored before
+         * exiting the ISR.
+         */
+        extern char cChar;
+        #pragma locate cChar		&PRODL
+        extern portBASE_TYPE pxTaskWoken;
+        #pragma locate pxTaskWoken	&PRODH
 
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &pxTaskWoken ) == pdTRUE )
-		{
-			/*
-			 * Send the next character queued for Tx.
-			 */
-			TXREG = cChar;
-		}
-		else
-		{
-			/*
-			 * Queue empty, nothing to send.
-			 */
-			bTXIE = serINTERRUPT_DISABLED;
-		}
+        if( xQueueReceiveFromISR( xCharsForTx, &cChar, &pxTaskWoken ) == pdTRUE )
+        {
+            /*
+             * Send the next character queued for Tx.
+             */
+            TXREG = cChar;
+        }
+        else
+        {
+            /*
+             * Queue empty, nothing to send.
+             */
+            bTXIE = serINTERRUPT_DISABLED;
+        }
 
-		/*
-		 * If we woke another task, ask for a contextswitch
-		 */
-		if( pxTaskWoken == pdTRUE )
-		{
-			uxSwitchRequested = pdTRUE;
-		}
-	}
+        /*
+         * If we woke another task, ask for a contextswitch
+         */
+        if( pxTaskWoken == pdTRUE )
+        {
+            uxSwitchRequested = pdTRUE;
+        }
+    }
 }
 
-#endif	/* _FREERTOS_SERIAL_ISRSERIALTX_C */
+#endif /* _FREERTOS_SERIAL_ISRSERIALTX_C */

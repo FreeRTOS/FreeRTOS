@@ -27,7 +27,6 @@
 #ifndef HTTP_TASK_H
 #define HTTP_TASK_H
 
-void vHTTPTask( void *pvParameters );
+void vHTTPTask( void * pvParameters );
 
 #endif
-

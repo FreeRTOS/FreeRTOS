@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,61 +30,56 @@
 #ifndef RTC_H
 #define RTC_H
 
-//------------------------------------------------------------------------------
-//         Macro used
-//------------------------------------------------------------------------------
-#define RTC_HOUR_BIT_LEN_MASK   0x3F
-#define RTC_MIN_BIT_LEN_MASK    0x7F
-#define RTC_SEC_BIT_LEN_MASK    0x7F
-#define RTC_CENT_BIT_LEN_MASK   0x7F
-#define RTC_YEAR_BIT_LEN_MASK   0xFF
-#define RTC_MONTH_BIT_LEN_MASK  0x1F
-#define RTC_DATE_BIT_LEN_MASK   0x3F
-#define RTC_WEEK_BIT_LEN_MASK   0x07
+/*------------------------------------------------------------------------------ */
+/*         Macro used */
+/*------------------------------------------------------------------------------ */
+#define RTC_HOUR_BIT_LEN_MASK     0x3F
+#define RTC_MIN_BIT_LEN_MASK      0x7F
+#define RTC_SEC_BIT_LEN_MASK      0x7F
+#define RTC_CENT_BIT_LEN_MASK     0x7F
+#define RTC_YEAR_BIT_LEN_MASK     0xFF
+#define RTC_MONTH_BIT_LEN_MASK    0x1F
+#define RTC_DATE_BIT_LEN_MASK     0x3F
+#define RTC_WEEK_BIT_LEN_MASK     0x07
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
 
-extern void RTC_SetHourMode(unsigned int mode);
+extern void RTC_SetHourMode( unsigned int mode );
 
 extern unsigned int RTC_GetHourMode();
 
-extern void RTC_EnableIt(unsigned int sources);
+extern void RTC_EnableIt( unsigned int sources );
 
-extern void RTC_DisableIt(unsigned int sources);
+extern void RTC_DisableIt( unsigned int sources );
 
-extern int RTC_SetTime(
-	unsigned char hour,
-	unsigned char minute,
-	unsigned char second);
+extern int RTC_SetTime( unsigned char hour,
+                        unsigned char minute,
+                        unsigned char second );
 
-extern void RTC_GetTime(
-	unsigned char *pHour,
-	unsigned char *pMinute,
-	unsigned char *pSecond);
+extern void RTC_GetTime( unsigned char * pHour,
+                         unsigned char * pMinute,
+                         unsigned char * pSecond );
 
-extern int RTC_SetTimeAlarm(
-	unsigned char *pHour,
-	unsigned char *pMinute,
-	unsigned char *pSecond);
+extern int RTC_SetTimeAlarm( unsigned char * pHour,
+                             unsigned char * pMinute,
+                             unsigned char * pSecond );
 
-void RTC_GetDate(
-    unsigned short *pYear,
-    unsigned char *pMonth,
-    unsigned char *pDay,
-    unsigned char *pWeek);
+void RTC_GetDate( unsigned short * pYear,
+                  unsigned char * pMonth,
+                  unsigned char * pDay,
+                  unsigned char * pWeek );
 
-extern int RTC_SetDate(
-    unsigned short year,
-    unsigned char month,
-    unsigned char day,
-    unsigned char week);
+extern int RTC_SetDate( unsigned short year,
+                        unsigned char month,
+                        unsigned char day,
+                        unsigned char week );
 
-extern int RTC_SetDateAlarm(unsigned char *pMonth, unsigned char *pDay);
+extern int RTC_SetDateAlarm( unsigned char * pMonth,
+                             unsigned char * pDay );
 
-extern void RTC_ClearSCCR(unsigned int mask);
+extern void RTC_ClearSCCR( unsigned int mask );
 
-extern unsigned int RTC_GetSR(unsigned int mask);
+extern unsigned int RTC_GetSR( unsigned int mask );
 #endif //#ifndef RTC_H
-

@@ -31,22 +31,21 @@
 /* Altera - ALT_LWFPGASLVS */
 
 #ifndef __ALTERA_ALT_LWFPGASLVS_H__
-#define __ALTERA_ALT_LWFPGASLVS_H__
+    #define __ALTERA_ALT_LWFPGASLVS_H__
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif  /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 /*
  * Component : FPGA Slaves Accessed Via Lightweight HPS2FPGA AXI Bridge - ALT_LWFPGASLVS
  * FPGA Slaves Accessed Via Lightweight HPS2FPGA AXI Bridge
- * 
- * 
+ *
+ *
  */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
-#endif  /* __ALTERA_ALT_LWFPGASLVS_H__ */
-
+    #endif /* __cplusplus */
+#endif /* __ALTERA_ALT_LWFPGASLVS_H__ */

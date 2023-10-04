@@ -54,13 +54,13 @@
 #include "xscugic.h"
 
 /* The frequencies at which the first two timers expire are slightly offset to
-ensure they don't remain synchronised.  The frequency of the interrupt that
-operates above the max syscall interrupt priority is 10 times faster so really
-hammers the interrupt entry and exit code. */
-#define tmrTIMERS_USED	3
-#define tmrTIMER_0_FREQUENCY	( 2000UL )
-#define tmrTIMER_1_FREQUENCY	( 2001UL )
-#define tmrTIMER_2_FREQUENCY	( 20000UL )
+ * ensure they don't remain synchronised.  The frequency of the interrupt that
+ * operates above the max syscall interrupt priority is 10 times faster so really
+ * hammers the interrupt entry and exit code. */
+#define tmrTIMERS_USED          3
+#define tmrTIMER_0_FREQUENCY    ( 2000UL )
+#define tmrTIMER_1_FREQUENCY    ( 2001UL )
+#define tmrTIMER_2_FREQUENCY    ( 20000UL )
 
 /*-----------------------------------------------------------*/
 
@@ -68,7 +68,7 @@ hammers the interrupt entry and exit code. */
  * The single interrupt service routines that is used to service all three
  * timers.
  */
-static void prvTimerHandler( void *CallBackRef );
+static void prvTimerHandler( void * CallBackRef );
 
 /*-----------------------------------------------------------*/
 
@@ -79,176 +79,176 @@ static const BaseType_t xInterruptIDs[ tmrTIMERS_USED ] = { XPAR_XTTCPS_0_INTR, 
 /* Timer configuration settings. */
 typedef struct
 {
-	uint32_t OutputHz;	/* Output frequency. */
-	uint16_t Interval;	/* Interval value. */
-	uint8_t Prescaler;	/* Prescaler value. */
-	uint16_t Options;	/* Option settings. */
+    uint32_t OutputHz; /* Output frequency. */
+    uint16_t Interval; /* Interval value. */
+    uint8_t Prescaler; /* Prescaler value. */
+    uint16_t Options;  /* Option settings. */
 } TmrCntrSetup;
 
 static TmrCntrSetup xTimerSettings[ tmrTIMERS_USED ] =
 {
-	{ tmrTIMER_0_FREQUENCY, 0, 0, XTTCPS_OPTION_INTERVAL_MODE | XTTCPS_OPTION_WAVE_DISABLE },
-	{ tmrTIMER_1_FREQUENCY, 0, 0, XTTCPS_OPTION_INTERVAL_MODE | XTTCPS_OPTION_WAVE_DISABLE },
-	{ tmrTIMER_2_FREQUENCY, 0, 0, XTTCPS_OPTION_INTERVAL_MODE | XTTCPS_OPTION_WAVE_DISABLE }
+    { tmrTIMER_0_FREQUENCY, 0, 0, XTTCPS_OPTION_INTERVAL_MODE | XTTCPS_OPTION_WAVE_DISABLE },
+    { tmrTIMER_1_FREQUENCY, 0, 0, XTTCPS_OPTION_INTERVAL_MODE | XTTCPS_OPTION_WAVE_DISABLE },
+    { tmrTIMER_2_FREQUENCY, 0, 0, XTTCPS_OPTION_INTERVAL_MODE | XTTCPS_OPTION_WAVE_DISABLE }
 };
 
 /* Lower priority number means higher logical priority, so
-configMAX_API_CALL_INTERRUPT_PRIORITY - 1 is above the maximum system call
-interrupt priority. */
+ * configMAX_API_CALL_INTERRUPT_PRIORITY - 1 is above the maximum system call
+ * interrupt priority. */
 static const UBaseType_t uxInterruptPriorities[ tmrTIMERS_USED ] =
 {
-	configMAX_API_CALL_INTERRUPT_PRIORITY + 1,
-	configMAX_API_CALL_INTERRUPT_PRIORITY,
-	configMAX_API_CALL_INTERRUPT_PRIORITY - 1
+    configMAX_API_CALL_INTERRUPT_PRIORITY + 1,
+    configMAX_API_CALL_INTERRUPT_PRIORITY,
+    configMAX_API_CALL_INTERRUPT_PRIORITY - 1
 };
 
 static XTtcPs xTimerInstances[ tmrTIMERS_USED ];
 
 /* Used to provide a means of ensuring the intended interrupt nesting depth is
-actually being reached. */
+ * actually being reached. */
 extern uint32_t ulPortInterruptNesting;
 static uint32_t ulMaxRecordedNesting = 0;
 
 /* Used to ensure the high frequency timer is running at the expected
-frequency. */
+ * frequency. */
 static volatile uint32_t ulHighFrequencyTimerCounts = 0;
 
 /*-----------------------------------------------------------*/
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-BaseType_t xStatus;
-TmrCntrSetup *pxTimerSettings;
-extern XScuGic xInterruptController;
-BaseType_t xTimer;
-XTtcPs *pxTimerInstance;
-XTtcPs_Config *pxTimerConfiguration;
-const uint8_t ucRisingEdge = 3;
+    BaseType_t xStatus;
+    TmrCntrSetup * pxTimerSettings;
+    extern XScuGic xInterruptController;
+    BaseType_t xTimer;
+    XTtcPs * pxTimerInstance;
+    XTtcPs_Config * pxTimerConfiguration;
+    const uint8_t ucRisingEdge = 3;
 
-	for( xTimer = 0; xTimer < tmrTIMERS_USED; xTimer++ )
-	{
-		/* Look up the timer's configuration. */
-		pxTimerInstance = &( xTimerInstances[ xTimer ] );
-		pxTimerConfiguration = XTtcPs_LookupConfig( xDeviceIDs[ xTimer ] );
-		configASSERT( pxTimerConfiguration );
+    for( xTimer = 0; xTimer < tmrTIMERS_USED; xTimer++ )
+    {
+        /* Look up the timer's configuration. */
+        pxTimerInstance = &( xTimerInstances[ xTimer ] );
+        pxTimerConfiguration = XTtcPs_LookupConfig( xDeviceIDs[ xTimer ] );
+        configASSERT( pxTimerConfiguration );
 
-		pxTimerSettings = &( xTimerSettings[ xTimer ] );
+        pxTimerSettings = &( xTimerSettings[ xTimer ] );
 
-		/* Initialise the device. */
-		xStatus = XTtcPs_CfgInitialize( pxTimerInstance, pxTimerConfiguration, pxTimerConfiguration->BaseAddress );
-		if( xStatus != XST_SUCCESS )
-		{
-			/* Not sure how to do this before XTtcPs_CfgInitialize is called
-			as pxTimerInstance is set within XTtcPs_CfgInitialize(). */
-			XTtcPs_Stop( pxTimerInstance );
-			xStatus = XTtcPs_CfgInitialize( pxTimerInstance, pxTimerConfiguration, pxTimerConfiguration->BaseAddress );
-			configASSERT( xStatus == XST_SUCCESS );
-		}
+        /* Initialise the device. */
+        xStatus = XTtcPs_CfgInitialize( pxTimerInstance, pxTimerConfiguration, pxTimerConfiguration->BaseAddress );
 
-		/* Set the options. */
-		XTtcPs_SetOptions( pxTimerInstance, pxTimerSettings->Options );
+        if( xStatus != XST_SUCCESS )
+        {
+            /* Not sure how to do this before XTtcPs_CfgInitialize is called
+             * as pxTimerInstance is set within XTtcPs_CfgInitialize(). */
+            XTtcPs_Stop( pxTimerInstance );
+            xStatus = XTtcPs_CfgInitialize( pxTimerInstance, pxTimerConfiguration, pxTimerConfiguration->BaseAddress );
+            configASSERT( xStatus == XST_SUCCESS );
+        }
 
-		/* The timer frequency is preset in the pxTimerSettings structure.
-		Derive the values for the other structure members. */
-		XTtcPs_CalcIntervalFromFreq( pxTimerInstance, pxTimerSettings->OutputHz, &( pxTimerSettings->Interval ), &( pxTimerSettings->Prescaler ) );
+        /* Set the options. */
+        XTtcPs_SetOptions( pxTimerInstance, pxTimerSettings->Options );
 
-		/* Set the interval and prescale. */
-		XTtcPs_SetInterval( pxTimerInstance, pxTimerSettings->Interval );
-		XTtcPs_SetPrescaler( pxTimerInstance, pxTimerSettings->Prescaler );
+        /* The timer frequency is preset in the pxTimerSettings structure.
+         * Derive the values for the other structure members. */
+        XTtcPs_CalcIntervalFromFreq( pxTimerInstance, pxTimerSettings->OutputHz, &( pxTimerSettings->Interval ), &( pxTimerSettings->Prescaler ) );
 
-		/* The priority must be the lowest possible. */
-		XScuGic_SetPriorityTriggerType( &xInterruptController, xInterruptIDs[ xTimer ], uxInterruptPriorities[ xTimer ] << portPRIORITY_SHIFT, ucRisingEdge );
+        /* Set the interval and prescale. */
+        XTtcPs_SetInterval( pxTimerInstance, pxTimerSettings->Interval );
+        XTtcPs_SetPrescaler( pxTimerInstance, pxTimerSettings->Prescaler );
 
-		/* Connect to the interrupt controller. */
-		xStatus = XScuGic_Connect( &xInterruptController, xInterruptIDs[ xTimer ], ( Xil_InterruptHandler ) prvTimerHandler, ( void * ) pxTimerInstance );
-		configASSERT( xStatus == XST_SUCCESS);
+        /* The priority must be the lowest possible. */
+        XScuGic_SetPriorityTriggerType( &xInterruptController, xInterruptIDs[ xTimer ], uxInterruptPriorities[ xTimer ] << portPRIORITY_SHIFT, ucRisingEdge );
 
-		/* Enable the interrupt in the GIC. */
-		XScuGic_Enable( &xInterruptController, xInterruptIDs[ xTimer ] );
+        /* Connect to the interrupt controller. */
+        xStatus = XScuGic_Connect( &xInterruptController, xInterruptIDs[ xTimer ], ( Xil_InterruptHandler ) prvTimerHandler, ( void * ) pxTimerInstance );
+        configASSERT( xStatus == XST_SUCCESS );
 
-		/* Enable the interrupts in the timer. */
-		XTtcPs_EnableInterrupts( pxTimerInstance, XTTCPS_IXR_INTERVAL_MASK );
+        /* Enable the interrupt in the GIC. */
+        XScuGic_Enable( &xInterruptController, xInterruptIDs[ xTimer ] );
 
-		/* Start the timer. */
-		XTtcPs_Start( pxTimerInstance );
-	}
+        /* Enable the interrupts in the timer. */
+        XTtcPs_EnableInterrupts( pxTimerInstance, XTTCPS_IXR_INTERVAL_MASK );
+
+        /* Start the timer. */
+        XTtcPs_Start( pxTimerInstance );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvTimerHandler( void *pvCallBackRef )
+static void prvTimerHandler( void * pvCallBackRef )
 {
-uint32_t ulInterruptStatus;
-XTtcPs *pxTimer = ( XTtcPs * ) pvCallBackRef;
-BaseType_t xYieldRequired;
+    uint32_t ulInterruptStatus;
+    XTtcPs * pxTimer = ( XTtcPs * ) pvCallBackRef;
+    BaseType_t xYieldRequired;
 
-#if( configASSERT_DEFINED == 1 )
-	/* Test floating point access within nested interrupts. */
-	volatile long double d1, d2;
-#endif
+    #if ( configASSERT_DEFINED == 1 )
+        /* Test floating point access within nested interrupts. */
+        volatile long double d1, d2;
+    #endif
 
 
-	/* Read the interrupt status, then write it back to clear the interrupt. */
-	ulInterruptStatus = XTtcPs_GetInterruptStatus( pxTimer );
-	XTtcPs_ClearInterruptStatus( pxTimer, ulInterruptStatus );
+    /* Read the interrupt status, then write it back to clear the interrupt. */
+    ulInterruptStatus = XTtcPs_GetInterruptStatus( pxTimer );
+    XTtcPs_ClearInterruptStatus( pxTimer, ulInterruptStatus );
 
-	/* Only one interrupt event type is expected. */
-	configASSERT( ( XTTCPS_IXR_INTERVAL_MASK & ulInterruptStatus ) != 0 );
+    /* Only one interrupt event type is expected. */
+    configASSERT( ( XTTCPS_IXR_INTERVAL_MASK & ulInterruptStatus ) != 0 );
 
-	/* Check the device ID to know which IntQueue demo to call. */
-	if( pxTimer->Config.DeviceId == xDeviceIDs[ 0 ] )
-	{
-		#if( configASSERT_DEFINED == 1 )
-		{
-			/* Test floating point access within nested interrupts. */
-			d1 = 1.5L;
-			d2 = 5.25L;
-		}
-		#endif /* configASSERT_DEFINED */
+    /* Check the device ID to know which IntQueue demo to call. */
+    if( pxTimer->Config.DeviceId == xDeviceIDs[ 0 ] )
+    {
+        #if ( configASSERT_DEFINED == 1 )
+        {
+            /* Test floating point access within nested interrupts. */
+            d1 = 1.5L;
+            d2 = 5.25L;
+        }
+        #endif /* configASSERT_DEFINED */
 
-		xYieldRequired = xFirstTimerHandler();
+        xYieldRequired = xFirstTimerHandler();
 
-		/* Will fail eventually if flop context switch is not correct in
-		interrupts.  Keep calculation simple so the answer is exact even when
-		using flop. */
-		configASSERT( ( d1 * d2 ) == ( 1.5L * 5.25L ) );
-	}
-	else if( pxTimer->Config.DeviceId == xDeviceIDs[ 1 ] )
-	{
-		#if( configASSERT_DEFINED == 1 )
-		{
-			/* Test floating point access within nested interrupts. */
-			d1 = 10.5L;
-			d2 = 5.5L;
-		}
-		#endif /* configASSERT_DEFINED */
+        /* Will fail eventually if flop context switch is not correct in
+         * interrupts.  Keep calculation simple so the answer is exact even when
+         * using flop. */
+        configASSERT( ( d1 * d2 ) == ( 1.5L * 5.25L ) );
+    }
+    else if( pxTimer->Config.DeviceId == xDeviceIDs[ 1 ] )
+    {
+        #if ( configASSERT_DEFINED == 1 )
+        {
+            /* Test floating point access within nested interrupts. */
+            d1 = 10.5L;
+            d2 = 5.5L;
+        }
+        #endif /* configASSERT_DEFINED */
 
-		xYieldRequired = xSecondTimerHandler();
+        xYieldRequired = xSecondTimerHandler();
 
-		/* Will fail eventually if flop context switch is not correct in
-		interrupts.  Keep calculation simple so the answer is exact even when
-		using flop. */
-		configASSERT( ( d1 / d2 ) == ( 10.5L / 5.5L ) );
-	}
-	else
-	{
-		/* Used to check the timer is running at the expected frequency. */
-		ulHighFrequencyTimerCounts++;
+        /* Will fail eventually if flop context switch is not correct in
+         * interrupts.  Keep calculation simple so the answer is exact even when
+         * using flop. */
+        configASSERT( ( d1 / d2 ) == ( 10.5L / 5.5L ) );
+    }
+    else
+    {
+        /* Used to check the timer is running at the expected frequency. */
+        ulHighFrequencyTimerCounts++;
 
-		/* Latch the highest interrupt nesting count detected. */
-		if( ulPortInterruptNesting > ulMaxRecordedNesting )
-		{
-			ulMaxRecordedNesting = ulPortInterruptNesting;
-		}
+        /* Latch the highest interrupt nesting count detected. */
+        if( ulPortInterruptNesting > ulMaxRecordedNesting )
+        {
+            ulMaxRecordedNesting = ulPortInterruptNesting;
+        }
 
-		xYieldRequired = pdFALSE;
-	}
+        xYieldRequired = pdFALSE;
+    }
 
-	/* If xYieldRequired is not pdFALSE then calling either xFirstTimerHandler()
-	or xSecondTimerHandler() resulted in a task leaving the blocked state and
-	the task that left the blocked state had a priority higher than the currently
-	running task (the task this interrupt interrupted) - so a context switch
-	should be performed so the interrupt returns directly to the higher priority
-	task.  xYieldRequired is tested inside the following macro. */
-	portYIELD_FROM_ISR( xYieldRequired );
+    /* If xYieldRequired is not pdFALSE then calling either xFirstTimerHandler()
+     * or xSecondTimerHandler() resulted in a task leaving the blocked state and
+     * the task that left the blocked state had a priority higher than the currently
+     * running task (the task this interrupt interrupted) - so a context switch
+     * should be performed so the interrupt returns directly to the higher priority
+     * task.  xYieldRequired is tested inside the following macro. */
+    portYIELD_FROM_ISR( xYieldRequired );
 }
-

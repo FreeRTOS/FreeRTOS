@@ -1,15 +1,16 @@
 /*This file is prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
- *
- * \brief Preprocessor stringizing utils.
- *
- * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
- * - Supported devices:  All AVR32 devices can be used.
- *
- * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support and FAQ: http://support.atmel.no/
- *
- ******************************************************************************/
+*
+* \brief Preprocessor stringizing utils.
+*
+* - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+* - Supported devices:  All AVR32 devices can be used.
+*
+* \author               Atmel Corporation: http://www.atmel.com \n
+*                       Support and FAQ: http://support.atmel.no/
+*
+******************************************************************************/
 
 /* Copyright (c) 2007, Atmel Corporation All rights reserved.
  *
@@ -53,7 +54,7 @@
  * and invoked as PIN_NAME(PIN0) with PIN0 \#defined as A0 is equivalent to
  * writing "A0".
  */
-#define STRINGZ(x)                                #x
+#define STRINGZ( x )     # x
 
 /*! \brief Absolute stringize.
  *
@@ -64,7 +65,7 @@
  * For example, writing ASTRINGZ(PIN0) anywhere with PIN0 \#defined as A0 is
  * equivalent to writing "A0".
  */
-#define ASTRINGZ(x)                               STRINGZ(x)
+#define ASTRINGZ( x )    STRINGZ( x )
 
 
-#endif  // _STRINGZ_H_
+#endif // _STRINGZ_H_

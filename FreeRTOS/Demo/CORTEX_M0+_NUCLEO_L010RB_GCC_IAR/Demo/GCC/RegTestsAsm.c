@@ -25,11 +25,11 @@
  */
 
 /* Tasks that implement register tests. */
-void vRegisterTest1Task( void *pvParameters ) __attribute__((naked));
-void vRegisterTest2Task( void *pvParameters ) __attribute__((naked));
+void vRegisterTest1Task( void * pvParameters ) __attribute__( ( naked ) );
+void vRegisterTest2Task( void * pvParameters ) __attribute__( ( naked ) );
 /*-----------------------------------------------------------*/
 
-void vRegisterTest1Task( void *pvParameters )
+void vRegisterTest1Task( void * pvParameters )
 {
     __asm volatile
     (
@@ -110,7 +110,7 @@ void vRegisterTest1Task( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-void vRegisterTest2Task( void *pvParameters )
+void vRegisterTest2Task( void * pvParameters )
 {
     __asm volatile
     (

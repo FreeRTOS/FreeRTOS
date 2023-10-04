@@ -85,38 +85,38 @@
 #include "partest.h"
 
 /* Priorities at which the Rx and Tx tasks are created. */
-#define configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
-#define	configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define configQUEUE_RECEIVE_TASK_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define configQUEUE_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 2 )
 
 /* The number of items the queue can hold.  This is 1 as the Rx task will
-remove items as they are added so the Tx task should always find the queue
-empty. */
-#define mainQUEUE_LENGTH					( 1 )
+ * remove items as they are added so the Tx task should always find the queue
+ * empty. */
+#define mainQUEUE_LENGTH                     ( 1 )
 
 /* The LED used to indicate that a value has been received on the queue. */
-#define mainQUEUE_LED						( 0 )
+#define mainQUEUE_LED                        ( 0 )
 
 /* The rate at which the Tx task sends to the queue. */
-#define mainTX_DELAY						( 500UL / portTICK_PERIOD_MS )
+#define mainTX_DELAY                         ( 500UL / portTICK_PERIOD_MS )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0 )
+#define mainDONT_BLOCK                       ( 0 )
 
 /* The value that is sent from the Tx task to the Rx task on the queue. */
-#define mainQUEUED_VALUE					( 100UL )
+#define mainQUEUED_VALUE                     ( 100UL )
 
 /* The length of time the LED will remain on for.  It is on just long enough
-to be able to see with the human eye so as not to distort the power readings too
-much. */
-#define mainLED_TOGGLE_DELAY				( 20 / portTICK_PERIOD_MS )
+ * to be able to see with the human eye so as not to distort the power readings too
+ * much. */
+#define mainLED_TOGGLE_DELAY                 ( 20 / portTICK_PERIOD_MS )
 
 /*-----------------------------------------------------------*/
 
 /*
  * The Rx and Tx tasks as described at the top of this file.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvQueueReceiveTask( void * pvParameters );
+static void prvQueueSendTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -127,93 +127,94 @@ static QueueHandle_t xQueue = NULL;
 
 void main_low_power( void )
 {
-	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
-	configASSERT( xQueue );
+    /* Create the queue. */
+    xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+    configASSERT( xQueue );
 
-	/* Start the two tasks as described at the top of this file. */
-	xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-	xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
+    /* Start the two tasks as described at the top of this file. */
+    xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+    xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler running running. */
-	vTaskStartScheduler();
+    /* Start the scheduler running running. */
+    vTaskStartScheduler();
 
-	/* If all is well the next line of code will not be reached as the
-	scheduler will be running.  If the next line is reached then it is likely
-	there was insufficient FreeRTOS heap available for the idle task and/or
-	timer task to be created.  See http://www.freertos.org/a00111.html. */
-	for( ;; );
+    /* If all is well the next line of code will not be reached as the
+     * scheduler will be running.  If the next line is reached then it is likely
+     * there was insufficient FreeRTOS heap available for the idle task and/or
+     * timer task to be created.  See http://www.freertos.org/a00111.html. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask( void * pvParameters )
 {
-const unsigned long ulValueToSend = mainQUEUED_VALUE;
+    const unsigned long ulValueToSend = mainQUEUED_VALUE;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+    /* Remove compiler warning about unused parameter. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Place this task into the blocked state until it is time to run again.
-		The kernel will place the MCU into the Retention low power sleep state
-		when the idle task next runs. */
-		vTaskDelay( mainTX_DELAY );
+    for( ; ; )
+    {
+        /* Place this task into the blocked state until it is time to run again.
+         * The kernel will place the MCU into the Retention low power sleep state
+         * when the idle task next runs. */
+        vTaskDelay( mainTX_DELAY );
 
-		/* Send to the queue - causing the queue receive task to flash its LED.
-		It should not be necessary to block on the queue send because the Rx
-		task will already have removed the last queued item. */
-		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
-	}
+        /* Send to the queue - causing the queue receive task to flash its LED.
+         * It should not be necessary to block on the queue send because the Rx
+         * task will already have removed the last queued item. */
+        xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void prvQueueReceiveTask( void * pvParameters )
 {
-unsigned long ulReceivedValue;
+    unsigned long ulReceivedValue;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+    /* Remove compiler warning about unused parameter. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Wait until something arrives in the queue. */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+    for( ; ; )
+    {
+        /* Wait until something arrives in the queue. */
+        xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have arrived, but is it the expected
-		value?  If it is, turn the LED on for a short while. */
-		if( ulReceivedValue == mainQUEUED_VALUE )
-		{
-			vParTestSetLED( mainQUEUE_LED, pdTRUE );
-			vTaskDelay( mainLED_TOGGLE_DELAY );
-			vParTestSetLED( mainQUEUE_LED, pdFALSE );
-		}
-	}
+        /*  To get here something must have arrived, but is it the expected
+         * value?  If it is, turn the LED on for a short while. */
+        if( ulReceivedValue == mainQUEUED_VALUE )
+        {
+            vParTestSetLED( mainQUEUE_LED, pdTRUE );
+            vTaskDelay( mainLED_TOGGLE_DELAY );
+            vParTestSetLED( mainQUEUE_LED, pdFALSE );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vPreSleepProcessing( unsigned long ulExpectedIdleTime )
 {
-	/* Called by the kernel before it places the MCU into a sleep mode because
-	configPRE_SLEEP_PROCESSING() is #defined to vPreSleepProcessing().
+    /* Called by the kernel before it places the MCU into a sleep mode because
+     * configPRE_SLEEP_PROCESSING() is #defined to vPreSleepProcessing().
+     *
+     * NOTE:  Additional actions can be taken here to get the power consumption
+     * even lower.  For example, peripherals can be turned	off here, and then back
+     * on again in the post sleep processing function.  For maximum power saving
+     * ensure all unused pins are in their lowest power state. */
 
-	NOTE:  Additional actions can be taken here to get the power consumption
-	even lower.  For example, peripherals can be turned	off here, and then back
-	on again in the post sleep processing function.  For maximum power saving
-	ensure all unused pins are in their lowest power state. */
-
-	/* Avoid compiler warnings about the unused parameter. */
-	( void ) ulExpectedIdleTime;
+    /* Avoid compiler warnings about the unused parameter. */
+    ( void ) ulExpectedIdleTime;
 }
 /*-----------------------------------------------------------*/
 
 void vPostSleepProcessing( unsigned long ulExpectedIdleTime )
 {
-	/* Called by the kernel when the MCU exits a sleep mode because
-	configPOST_SLEEP_PROCESSING is #defined to vPostSleepProcessing(). */
+    /* Called by the kernel when the MCU exits a sleep mode because
+     * configPOST_SLEEP_PROCESSING is #defined to vPostSleepProcessing(). */
 
-	/* Avoid compiler warnings about the unused parameter. */
-	( void ) ulExpectedIdleTime;
+    /* Avoid compiler warnings about the unused parameter. */
+    ( void ) ulExpectedIdleTime;
 }
 /*-----------------------------------------------------------*/
-

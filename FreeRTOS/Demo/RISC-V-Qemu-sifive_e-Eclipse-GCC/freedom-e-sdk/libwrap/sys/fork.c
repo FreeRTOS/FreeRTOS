@@ -3,7 +3,7 @@
 #include <errno.h>
 #include "stub.h"
 
-int fork(void)
+int fork( void )
 {
-  return _stub(EAGAIN);
+    return _stub( EAGAIN );
 }

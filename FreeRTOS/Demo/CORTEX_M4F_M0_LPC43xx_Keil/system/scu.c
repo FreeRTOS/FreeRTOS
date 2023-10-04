@@ -20,18 +20,22 @@
  **********************************************************************/
 
 #if defined CORE_M4
-#include "LPC43xx.h"                    /* LPC43xx definitions                */
+    #include "LPC43xx.h"                /* LPC43xx definitions                */
 #endif
 
 #ifdef CORE_M0
-#include "LPC43xx_M0.h"                /* LPC43xx definitions                */
+    #include "LPC43xx_M0.h"            /* LPC43xx definitions                */
 #endif
 
 #include "type.h"
 #include "scu.h"
 
-void scu_pinmux(unsigned port, unsigned pin, unsigned mode, unsigned func)
+void scu_pinmux( unsigned port,
+                 unsigned pin,
+                 unsigned mode,
+                 unsigned func )
 {
-  volatile unsigned int * const scu_base=(unsigned int*)(LPC_SCU_BASE);
-  scu_base[(PORT_OFFSET*port+PIN_OFFSET*pin)/4]=mode+func;
+    volatile unsigned int * const scu_base = ( unsigned int * ) ( LPC_SCU_BASE );
+
+    scu_base[ ( PORT_OFFSET * port + PIN_OFFSET * pin ) / 4 ] = mode + func;
 } /* scu_pinmux */

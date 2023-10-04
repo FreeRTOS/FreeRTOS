@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       ADCBuf.h
  *
@@ -50,7 +51,7 @@
  *  application. The specific peripheral implementations are responsible to
  *  create all the SYS/BIOS specific primitives to allow for thread-safe
  *  operation.
-
+ *
  *  User can use the ADC driver or the ADCBuf driver. But both ADC and ADCBuf
  *  cannot be used together in an application.
  *
@@ -128,15 +129,15 @@
  */
 
 #ifndef ti_drivers_adcbuf__include
-#define ti_drivers_adcbuf__include
+    #define ti_drivers_adcbuf__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <stddef.h>
 
 /**
  *  @defgroup ADCBUF_CONTROL ADCBuf_control command and status codes
@@ -155,7 +156,7 @@ extern "C" {
  * #define ADCXYZ_COMMAND1         ADCBuf_CMD_RESERVED + 1
  * @endcode
  */
-#define ADCBuf_CMD_RESERVED             (32)
+    #define ADCBuf_CMD_RESERVED           ( 32 )
 
 /*!
  * Common ADCBuf_control status code reservation offset.
@@ -169,7 +170,7 @@ extern "C" {
  * #define ADCXYZ_STATUS_ERROR2    ADCBuf_STATUS_RESERVED - 2
  * @endcode
  */
-#define ADCBuf_STATUS_RESERVED          (-32)
+    #define ADCBuf_STATUS_RESERVED        ( -32 )
 
 /*!
  * \brief  Success status code returned by:
@@ -180,7 +181,7 @@ extern "C" {
  *  @{
  *  @ingroup ADCBUF_CONTROL
  */
-#define ADCBuf_STATUS_SUCCESS           (0)
+    #define ADCBuf_STATUS_SUCCESS         ( 0 )
 
 /*!
  * \brief   Generic error status code returned by ADCBuf_control().
@@ -188,7 +189,7 @@ extern "C" {
  * ADCBuf_control() returns ADCBuf_STATUS_ERROR if the control code was not executed
  * successfully.
  */
-#define ADCBuf_STATUS_ERROR             (-1)
+    #define ADCBuf_STATUS_ERROR           ( -1 )
 
 /*!
  * \brief   An error status code returned by ADCBuf_control() for undefined
@@ -197,7 +198,7 @@ extern "C" {
  * ADCBuf_control() returns ADCBuf_STATUS_UNDEFINEDCMD if the control code is not
  * recognized by the driver implementation.
  */
-#define ADCBuf_STATUS_UNDEFINEDCMD      (-2)
+    #define ADCBuf_STATUS_UNDEFINEDCMD    ( -2 )
 
 /*!
  * \brief   An error status code returned by ADCBuf_adjustRawValues() if the
@@ -206,7 +207,7 @@ extern "C" {
  * ADCBuf_adjustRawValues() returns ADCBuf_STATUS_UNSUPPORTED if the function is
  * not supported by the driver implementation.
  */
-#define ADCBuf_STATUS_UNSUPPORTED      (-3)
+    #define ADCBuf_STATUS_UNSUPPORTED     ( -3 )
 /** @}*/
 
 /**
@@ -227,7 +228,7 @@ extern "C" {
 /*!
  *  @brief      A handle that is returned from an ADCBuf_open() call.
  */
-typedef struct ADCBuf_Config_              *ADCBuf_Handle;
+    typedef struct ADCBuf_Config_ * ADCBuf_Handle;
 
 /*!
  *  @brief
@@ -236,43 +237,47 @@ typedef struct ADCBuf_Config_              *ADCBuf_Handle;
  *  The arg variable is an user-definable argument which gets passed to the
  *  ::ADCBuf_Callback when the ADC driver is in ::ADCBuf_RETURN_MODE_CALLBACK.
  */
-typedef struct ADCBuf_Conversion_ {
-    uint16_t            samplesRequestedCount;      /*!< Number of samples to convert and return */
-    void                *sampleBuffer;              /*!< Buffer the results of the conversions are stored in */
-    void                *sampleBufferTwo;           /*!< A second buffer that is filled in ::ADCBuf_RECURRENCE_MODE_CONTINUOUS mode while
-                                                        the first buffer is processed by the application. The value is not used in
-                                                        ::ADCBuf_RECURRENCE_MODE_ONE_SHOT mode. */
-    void                *arg;                       /*!< Argument to be passed to the callback function in ::ADCBuf_RETURN_MODE_CALLBACK */
-    uint32_t            adcChannel;                 /*!< Channel to perform the ADC conversion on. Mapping of channel to pin or internal signal is device specific. */
-} ADCBuf_Conversion;
+    typedef struct ADCBuf_Conversion_
+    {
+        uint16_t samplesRequestedCount;             /*!< Number of samples to convert and return */
+        void * sampleBuffer;                        /*!< Buffer the results of the conversions are stored in */
+        void * sampleBufferTwo;                     /*!< A second buffer that is filled in ::ADCBuf_RECURRENCE_MODE_CONTINUOUS mode while
+                                                     *  the first buffer is processed by the application. The value is not used in
+                                                     *  ::ADCBuf_RECURRENCE_MODE_ONE_SHOT mode. */
+        void * arg;                                 /*!< Argument to be passed to the callback function in ::ADCBuf_RETURN_MODE_CALLBACK */
+        uint32_t adcChannel;                        /*!< Channel to perform the ADC conversion on. Mapping of channel to pin or internal signal is device specific. */
+    } ADCBuf_Conversion;
 
 /*!
  *  @brief      The definition of a callback function used by the ADC driver
  *              when used in ::ADCBuf_RETURN_MODE_CALLBACK. It is called in a HWI or SWI context depending on the device specific implementation.
  */
-typedef void (*ADCBuf_Callback)            (ADCBuf_Handle handle,
-                                            ADCBuf_Conversion *conversion,
-                                            void *completedADCBuffer,
-                                            uint32_t completedChannel);
+    typedef void (* ADCBuf_Callback)            ( ADCBuf_Handle handle,
+                                                  ADCBuf_Conversion * conversion,
+                                                  void * completedADCBuffer,
+                                                  uint32_t completedChannel );
+
 /*!
  *  @brief     ADC trigger mode settings
  *
  *  This enum defines if the driver should make n conversions and return
  *  or run indefinitely and run a callback function every n conversions.
  */
-typedef enum ADCBuf_Recurrence_Mode_ {
-    /*!
-     *  The driver makes n measurements and returns or runs a callback function depending
-     *  on the ::ADCBuf_Return_Mode setting.
-     */
-    ADCBuf_RECURRENCE_MODE_ONE_SHOT,
-    /*!
-     *  The driver makes n measurements and then runs a callback function. This process happens
-     *  until the application calls ::ADCBuf_ConvertCancelFxn(). This setting can only be used in
-     *  ::ADCBuf_RETURN_MODE_CALLBACK.
-     */
-    ADCBuf_RECURRENCE_MODE_CONTINUOUS
-} ADCBuf_Recurrence_Mode;
+    typedef enum ADCBuf_Recurrence_Mode_
+    {
+        /*!
+         *  The driver makes n measurements and returns or runs a callback function depending
+         *  on the ::ADCBuf_Return_Mode setting.
+         */
+        ADCBuf_RECURRENCE_MODE_ONE_SHOT,
+
+        /*!
+         *  The driver makes n measurements and then runs a callback function. This process happens
+         *  until the application calls ::ADCBuf_ConvertCancelFxn(). This setting can only be used in
+         *  ::ADCBuf_RETURN_MODE_CALLBACK.
+         */
+        ADCBuf_RECURRENCE_MODE_CONTINUOUS
+    } ADCBuf_Recurrence_Mode;
 
 /*!
  *  @brief      ADC return mode settings
@@ -280,21 +285,22 @@ typedef enum ADCBuf_Recurrence_Mode_ {
  *  This enum defines how the ADCBuf_convert() function returns.
  *  It either blocks or returns immediately and calls a callback function when the provided buffer has been filled.
  */
-typedef enum ADCBuf_Return_Mode_ {
-    /*!
-      *  Uses a semaphore to block while ADC conversions are performed.  Context of the call
-      *  must be a Task.
-      *
-      *  @note   Blocking return mode cannot be used in combination with ::ADCBuf_RECURRENCE_MODE_CONTINUOUS
-      */
-    ADCBuf_RETURN_MODE_BLOCKING,
+    typedef enum ADCBuf_Return_Mode_
+    {
+        /*!
+         *  Uses a semaphore to block while ADC conversions are performed.  Context of the call
+         *  must be a Task.
+         *
+         *  @note   Blocking return mode cannot be used in combination with ::ADCBuf_RECURRENCE_MODE_CONTINUOUS
+         */
+        ADCBuf_RETURN_MODE_BLOCKING,
 
-    /*!
-     *  Non-blocking and will return immediately.  When the conversion
-     *  is finished the configured callback function is called.
-     */
-    ADCBuf_RETURN_MODE_CALLBACK
-} ADCBuf_Return_Mode;
+        /*!
+         *  Non-blocking and will return immediately.  When the conversion
+         *  is finished the configured callback function is called.
+         */
+        ADCBuf_RETURN_MODE_CALLBACK
+    } ADCBuf_Return_Mode;
 
 
 /*!
@@ -305,105 +311,109 @@ typedef enum ADCBuf_Return_Mode_ {
  *
  *  @sa     ADCBuf_Params_init()
  */
-typedef struct ADCBuf_Params_ {
-    uint32_t                    blockingTimeout;    /*!< Timeout for semaphore in ::ADCBuf_RETURN_MODE_BLOCKING */
-    uint32_t                    samplingFrequency;  /*!< The frequency at which the ADC will produce a sample */
-    ADCBuf_Return_Mode          returnMode;         /*!< Return mode for all conversions */
-    ADCBuf_Callback             callbackFxn;        /*!< Pointer to callback function */
-    ADCBuf_Recurrence_Mode      recurrenceMode;     /*!< One-shot or continuous conversion  */
-    void                        *custom;            /*!< Pointer to a device specific extension of the ADCBuf_Params */
-} ADCBuf_Params;
+    typedef struct ADCBuf_Params_
+    {
+        uint32_t blockingTimeout;                   /*!< Timeout for semaphore in ::ADCBuf_RETURN_MODE_BLOCKING */
+        uint32_t samplingFrequency;                 /*!< The frequency at which the ADC will produce a sample */
+        ADCBuf_Return_Mode returnMode;              /*!< Return mode for all conversions */
+        ADCBuf_Callback callbackFxn;                /*!< Pointer to callback function */
+        ADCBuf_Recurrence_Mode recurrenceMode;      /*!< One-shot or continuous conversion  */
+        void * custom;                              /*!< Pointer to a device specific extension of the ADCBuf_Params */
+    } ADCBuf_Params;
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_close().
  */
-typedef void (*ADCBuf_CloseFxn)                  (ADCBuf_Handle handle);
+    typedef void (* ADCBuf_CloseFxn)                  ( ADCBuf_Handle handle );
 
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_open().
  */
-typedef ADCBuf_Handle (*ADCBuf_OpenFxn)          (ADCBuf_Handle handle,
-                                                  const ADCBuf_Params *params);
+    typedef ADCBuf_Handle (* ADCBuf_OpenFxn)          ( ADCBuf_Handle handle,
+                                                        const ADCBuf_Params * params );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_control().
  */
-typedef int_fast16_t (*ADCBuf_ControlFxn)        (ADCBuf_Handle handle,
-                                                  uint_fast8_t cmd,
-                                                  void *arg);
+    typedef int_fast16_t (* ADCBuf_ControlFxn)        ( ADCBuf_Handle handle,
+                                                        uint_fast8_t cmd,
+                                                        void * arg );
+
 /*
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_init().
  */
-typedef void (*ADCBuf_InitFxn)                   (ADCBuf_Handle handle);
+    typedef void (* ADCBuf_InitFxn)                   ( ADCBuf_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_convert().
  */
-typedef int_fast16_t (*ADCBuf_ConvertFxn)     (ADCBuf_Handle handle,
-                                               ADCBuf_Conversion conversions[],
-                                               uint_fast8_t channelCount);
+    typedef int_fast16_t (* ADCBuf_ConvertFxn)     ( ADCBuf_Handle handle,
+                                                     ADCBuf_Conversion conversions[],
+                                                     uint_fast8_t channelCount );
+
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_convertCancel().
  */
-typedef int_fast16_t (*ADCBuf_ConvertCancelFxn)(ADCBuf_Handle handle);
+    typedef int_fast16_t (* ADCBuf_ConvertCancelFxn)( ADCBuf_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_GetResolution();
  */
-typedef uint_fast8_t (*ADCBuf_GetResolutionFxn)     (ADCBuf_Handle handle);
+    typedef uint_fast8_t (* ADCBuf_GetResolutionFxn)     ( ADCBuf_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_adjustRawValues();
  */
-typedef int_fast16_t (*ADCBuf_adjustRawValuesFxn)(ADCBuf_Handle handle,
-                                                void *sampleBuffer,
-                                                uint_fast16_t sampleCount,
-                                                uint32_t adcChannel);
+    typedef int_fast16_t (* ADCBuf_adjustRawValuesFxn)( ADCBuf_Handle handle,
+                                                        void * sampleBuffer,
+                                                        uint_fast16_t sampleCount,
+                                                        uint32_t adcChannel );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              ADCBuf_convertAdjustedToMicroVolts();
  */
-typedef int_fast16_t (*ADCBuf_convertAdjustedToMicroVoltsFxn)  (ADCBuf_Handle handle,
-                                                            uint32_t  adcChannel,
-                                                            void *adjustedSampleBuffer,
-                                                            uint32_t outputMicroVoltBuffer[],
-                                                            uint_fast16_t sampleCount);
+    typedef int_fast16_t (* ADCBuf_convertAdjustedToMicroVoltsFxn)  ( ADCBuf_Handle handle,
+                                                                      uint32_t adcChannel,
+                                                                      void * adjustedSampleBuffer,
+                                                                      uint32_t outputMicroVoltBuffer[],
+                                                                      uint_fast16_t sampleCount );
 
 /*!
  *  @brief      The definition of an ADCBuf function table that contains the
  *              required set of functions to control a specific ADC driver
  *              implementation.
  */
-typedef struct ADCBuf_FxnTable_ {
-    /*! Function to close the specified peripheral */
-    ADCBuf_CloseFxn            closeFxn;
-    /*! Function to driver implementation specific control function */
-    ADCBuf_ControlFxn          controlFxn;
-    /*! Function to initialize the given data object */
-    ADCBuf_InitFxn             initFxn;
-    /*! Function to open the specified peripheral */
-    ADCBuf_OpenFxn             openFxn;
-    /*! Function to start an ADC conversion with the specified peripheral */
-    ADCBuf_ConvertFxn          convertFxn;
-    /*! Function to abort a conversion being carried out by the specified peripheral */
-    ADCBuf_ConvertCancelFxn    convertCancelFxn;
-    /*! Function to get the resolution in bits of the ADC */
-    ADCBuf_GetResolutionFxn    getResolutionFxn;
-    /*! Function to adjust raw ADC return bit values to values comparable between devices of the same type */
-    ADCBuf_adjustRawValuesFxn   adjustRawValuesFxn;
-    /*! Function to convert adjusted ADC values to microvolts */
-    ADCBuf_convertAdjustedToMicroVoltsFxn   convertAdjustedToMicroVoltsFxn;
-} ADCBuf_FxnTable;
+    typedef struct ADCBuf_FxnTable_
+    {
+        /*! Function to close the specified peripheral */
+        ADCBuf_CloseFxn closeFxn;
+        /*! Function to driver implementation specific control function */
+        ADCBuf_ControlFxn controlFxn;
+        /*! Function to initialize the given data object */
+        ADCBuf_InitFxn initFxn;
+        /*! Function to open the specified peripheral */
+        ADCBuf_OpenFxn openFxn;
+        /*! Function to start an ADC conversion with the specified peripheral */
+        ADCBuf_ConvertFxn convertFxn;
+        /*! Function to abort a conversion being carried out by the specified peripheral */
+        ADCBuf_ConvertCancelFxn convertCancelFxn;
+        /*! Function to get the resolution in bits of the ADC */
+        ADCBuf_GetResolutionFxn getResolutionFxn;
+        /*! Function to adjust raw ADC return bit values to values comparable between devices of the same type */
+        ADCBuf_adjustRawValuesFxn adjustRawValuesFxn;
+        /*! Function to convert adjusted ADC values to microvolts */
+        ADCBuf_convertAdjustedToMicroVoltsFxn convertAdjustedToMicroVoltsFxn;
+    } ADCBuf_FxnTable;
 
 /*!
  *  @brief ADCBuf Global configuration
@@ -416,16 +426,17 @@ typedef struct ADCBuf_FxnTable_ {
  *
  *  @sa     ADCBuf_init()
  */
-typedef struct ADCBuf_Config_ {
-    /*! Pointer to a table of driver-specific implementations of ADC APIs */
-    const ADCBuf_FxnTable   *fxnTablePtr;
+    typedef struct ADCBuf_Config_
+    {
+        /*! Pointer to a table of driver-specific implementations of ADC APIs */
+        const ADCBuf_FxnTable * fxnTablePtr;
 
-    /*! Pointer to a driver specific data object */
-    void                    *object;
+        /*! Pointer to a driver specific data object */
+        void * object;
 
-    /*! Pointer to a driver specific hardware attributes structure */
-    void const              *hwAttrs;
-} ADCBuf_Config;
+        /*! Pointer to a driver specific hardware attributes structure */
+        void const * hwAttrs;
+    } ADCBuf_Config;
 
 /*!
  *  @brief  Function to close an ADC peripheral specified by the ADC handle
@@ -438,7 +449,7 @@ typedef struct ADCBuf_Config_ {
  *
  *  @sa     ADCBuf_open()
  */
-extern void ADCBuf_close(ADCBuf_Handle handle);
+    extern void ADCBuf_close( ADCBuf_Handle handle );
 
 
 /*!
@@ -460,7 +471,9 @@ extern void ADCBuf_close(ADCBuf_Handle handle);
  *
  *  @sa     ADCBuf_open()
  */
-extern int_fast16_t ADCBuf_control(ADCBuf_Handle handle, uint_fast16_t cmd, void *cmdArg);
+    extern int_fast16_t ADCBuf_control( ADCBuf_Handle handle,
+                                        uint_fast16_t cmd,
+                                        void * cmdArg );
 
 /*!
  *  @brief  This function initializes the ADC module. This function must
@@ -470,7 +483,7 @@ extern int_fast16_t ADCBuf_control(ADCBuf_Handle handle, uint_fast16_t cmd, void
  *          This function call does not modify any peripheral registers.
  *          Function should only be called once.
  */
-extern void ADCBuf_init(void);
+    extern void ADCBuf_init( void );
 
 /*!
  *  @brief  This function sets all fields of a specified ADCBuf_Params structure to their
@@ -489,7 +502,7 @@ extern void ADCBuf_init(void);
  *  ADCBuf_Params::blockingTimeout should be set large enough to allow for the desired number of samples to be
  *  collected with the specified frequency.
  */
-extern void ADCBuf_Params_init(ADCBuf_Params *params);
+    extern void ADCBuf_Params_init( ADCBuf_Params * params );
 
 /*!
  *  @brief  This function opens a given ADCBuf peripheral.
@@ -506,7 +519,8 @@ extern void ADCBuf_Params_init(ADCBuf_Params *params);
  *
  *  @sa     ADCBuf_close()
  */
-extern ADCBuf_Handle ADCBuf_open(uint_least8_t index, ADCBuf_Params *params);
+    extern ADCBuf_Handle ADCBuf_open( uint_least8_t index,
+                                      ADCBuf_Params * params );
 
 /*!
  *  @brief  This function starts a set of conversions on one or more channels.
@@ -526,7 +540,9 @@ extern ADCBuf_Handle ADCBuf_open(uint_least8_t index, ADCBuf_Params *params);
  *
  *  @sa     ADCBuf_convertCancel()
  */
-extern int_fast16_t ADCBuf_convert(ADCBuf_Handle handle, ADCBuf_Conversion conversions[],  uint_fast8_t channelCount);
+    extern int_fast16_t ADCBuf_convert( ADCBuf_Handle handle,
+                                        ADCBuf_Conversion conversions[],
+                                        uint_fast8_t channelCount );
 
 /*!
  *  @brief  This function cancels an ADC conversion that is in progress.
@@ -539,7 +555,7 @@ extern int_fast16_t ADCBuf_convert(ADCBuf_Handle handle, ADCBuf_Conversion conve
  *
  *  @sa     ADCBuf_convert()
  */
-extern int_fast16_t ADCBuf_convertCancel(ADCBuf_Handle handle);
+    extern int_fast16_t ADCBuf_convertCancel( ADCBuf_Handle handle );
 
 /*!
  *  @brief  This function returns the resolution in bits of the specified ADC.
@@ -550,9 +566,9 @@ extern int_fast16_t ADCBuf_convertCancel(ADCBuf_Handle handle);
  *
  *  @pre    ADCBuf_open() must have been called prior.
  */
-extern uint_fast8_t ADCBuf_getResolution(ADCBuf_Handle handle);
+    extern uint_fast8_t ADCBuf_getResolution( ADCBuf_Handle handle );
 
- /*!
+/*!
  *  @brief  This function adjusts a raw ADC output buffer such that the result is comparable between devices of the same make.
  *          The function does the adjustment in-place.
  *
@@ -570,9 +586,12 @@ extern uint_fast8_t ADCBuf_getResolution(ADCBuf_Handle handle);
  *
  *  @pre    ADCBuf_open() must have been called prior.
  */
-extern int_fast16_t ADCBuf_adjustRawValues(ADCBuf_Handle handle, void *sampleBuf, uint_fast16_t sampleCount, uint32_t adcChan);
+    extern int_fast16_t ADCBuf_adjustRawValues( ADCBuf_Handle handle,
+                                                void * sampleBuf,
+                                                uint_fast16_t sampleCount,
+                                                uint32_t adcChan );
 
- /*!
+/*!
  *  @brief  This function converts a raw ADC output value to a value scaled in micro volts.
  *
  *  @param  handle      An ADCBuf handle returned from ADCBuf_open()
@@ -594,9 +613,13 @@ extern int_fast16_t ADCBuf_adjustRawValues(ADCBuf_Handle handle, void *sampleBuf
  *
  *  @pre    ADCBuf_adjustRawValues() must be called on adjustedSampleBuffer prior.
  */
-extern int_fast16_t ADCBuf_convertAdjustedToMicroVolts(ADCBuf_Handle handle, uint32_t  adcChan, void *adjustedSampleBuffer, uint32_t outputMicroVoltBuffer[], uint_fast16_t sampleCount);
+    extern int_fast16_t ADCBuf_convertAdjustedToMicroVolts( ADCBuf_Handle handle,
+                                                            uint32_t adcChan,
+                                                            void * adjustedSampleBuffer,
+                                                            uint32_t outputMicroVoltBuffer[],
+                                                            uint_fast16_t sampleCount );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif /* ti_drivers_adcbuf__include */

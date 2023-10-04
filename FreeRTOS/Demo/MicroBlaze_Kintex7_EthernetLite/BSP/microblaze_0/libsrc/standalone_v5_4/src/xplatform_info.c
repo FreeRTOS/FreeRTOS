@@ -30,23 +30,24 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xplatform_info.c
-*
-* This file contains information about hardware for which the code is built
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who    Date   Changes
-* ----- ---- -------- -------------------------------------------------------
-* 5.00  pkp  12/15/14 Initial release
-* 5.04  pkp  01/12/16 Added platform information support for Cortex-A53 32bit
-*					  mode
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xplatform_info.c
+ *
+ * This file contains information about hardware for which the code is built
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who    Date   Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 5.00  pkp  12/15/14 Initial release
+ * 5.04  pkp  01/12/16 Added platform information support for Cortex-A53 32bit
+ *					  mode
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -65,69 +66,75 @@
 /************************** Function Prototypes ******************************/
 
 /*****************************************************************************/
+
 /**
-*
-* This API is used to provide information about platform
-*
-* @param    None.
-*
-* @return   The information about platform defined in xplatform_info.h
-*
-* @note     None.
-*
-******************************************************************************/
+ *
+ * This API is used to provide information about platform
+ *
+ * @param    None.
+ *
+ * @return   The information about platform defined in xplatform_info.h
+ *
+ * @note     None.
+ *
+ ******************************************************************************/
 u32 XGetPlatform_Info()
 {
-	u32 reg;
-#if defined (ARMR5) || (__aarch64__) || (ARMA53_32)
-	return XPLAT_ZYNQ_ULTRA_MP;
-#elif (__microblaze__)
-	return XPLAT_MICROBLAZE;
-#else
-	return XPLAT_ZYNQ;
-#endif
+    u32 reg;
+
+    #if defined( ARMR5 ) || ( __aarch64__ ) || ( ARMA53_32 )
+        return XPLAT_ZYNQ_ULTRA_MP;
+    #elif ( __microblaze__ )
+        return XPLAT_MICROBLAZE;
+    #else
+        return XPLAT_ZYNQ;
+    #endif
 }
 
 /*****************************************************************************/
+
 /**
-*
-* This API is used to provide information about zynq ultrascale MP platform
-*
-* @param    None.
-*
-* @return   The information about zynq ultrascale MP platform defined in
-*			xplatform_info.h
-*
-* @note     None.
-*
-******************************************************************************/
-#if defined (ARMR5) || (__aarch64__) || (ARMA53_32)
-u32 XGet_Zynq_UltraMp_Platform_info()
-{
-	u32 reg;
-	reg = ((Xil_In32(XPAR_CSU_BASEADDR + XPAR_CSU_VER_OFFSET) >> 12U )& XPLAT_INFO_MASK);
-	return reg;
-}
+ *
+ * This API is used to provide information about zynq ultrascale MP platform
+ *
+ * @param    None.
+ *
+ * @return   The information about zynq ultrascale MP platform defined in
+ *			xplatform_info.h
+ *
+ * @note     None.
+ *
+ ******************************************************************************/
+#if defined( ARMR5 ) || ( __aarch64__ ) || ( ARMA53_32 )
+    u32 XGet_Zynq_UltraMp_Platform_info()
+    {
+        u32 reg;
+
+        reg = ( ( Xil_In32( XPAR_CSU_BASEADDR + XPAR_CSU_VER_OFFSET ) >> 12U ) & XPLAT_INFO_MASK );
+        return reg;
+    }
 #endif
 
 /*****************************************************************************/
+
 /**
-*
-* This API is used to provide information about PS Silicon version
-*
-* @param    None.
-*
-* @return   The information about PS Silicon version.
-*
-* @note     None.
-*
-******************************************************************************/
-#if defined (ARMR5) || (__aarch64__) || (ARMA53_32)
-u32 XGetPSVersion_Info()
-{
-	u32 reg;
-	reg = (Xil_In32(XPAR_CSU_BASEADDR + XPAR_CSU_VER_OFFSET)
-			& XPS_VERSION_INFO_MASK);
-	return reg;
-}
+ *
+ * This API is used to provide information about PS Silicon version
+ *
+ * @param    None.
+ *
+ * @return   The information about PS Silicon version.
+ *
+ * @note     None.
+ *
+ ******************************************************************************/
+#if defined( ARMR5 ) || ( __aarch64__ ) || ( ARMA53_32 )
+    u32 XGetPSVersion_Info()
+    {
+        u32 reg;
+
+        reg = ( Xil_In32( XPAR_CSU_BASEADDR + XPAR_CSU_VER_OFFSET )
+                & XPS_VERSION_INFO_MASK );
+        return reg;
+    }
 #endif

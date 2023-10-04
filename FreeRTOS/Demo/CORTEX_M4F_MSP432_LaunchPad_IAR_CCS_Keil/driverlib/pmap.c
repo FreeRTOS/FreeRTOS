@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -38,29 +38,30 @@
 #include <pmap.h>
 #include <hw_memmap.h>
 
-void PMAP_configurePorts(const uint8_t *portMapping, uint8_t pxMAPy,
-        uint8_t numberOfPorts, uint8_t portMapReconfigure)
+void PMAP_configurePorts( const uint8_t * portMapping,
+                          uint8_t pxMAPy,
+                          uint8_t numberOfPorts,
+                          uint8_t portMapReconfigure )
 {
     uint_fast16_t i;
 
     ASSERT(
-            (portMapReconfigure == PMAP_ENABLE_RECONFIGURATION)
-                    || (portMapReconfigure == PMAP_DISABLE_RECONFIGURATION));
+        ( portMapReconfigure == PMAP_ENABLE_RECONFIGURATION ) ||
+        ( portMapReconfigure == PMAP_DISABLE_RECONFIGURATION ) );
 
-    //Get write-access to port mapping registers:
+    /*Get write-access to port mapping registers: */
     PMAP->KEYID = PMAP_KEYID_VAL;
 
-    //Enable/Disable reconfiguration during runtime
-    PMAP->CTL = (PMAP->CTL & ~PMAP_CTL_PRECFG) | portMapReconfigure;
+    /*Enable/Disable reconfiguration during runtime */
+    PMAP->CTL = ( PMAP->CTL & ~PMAP_CTL_PRECFG ) | portMapReconfigure;
 
-    //Configure Port Mapping:
-    
-    for (i = 0; i < numberOfPorts * 8; i++)
+    /*Configure Port Mapping: */
+
+    for( i = 0; i < numberOfPorts * 8; i++ )
     {
-        HWREG8(PMAP_BASE + i + pxMAPy) = portMapping[i];
+        HWREG8( PMAP_BASE + i + pxMAPy ) = portMapping[ i ];
     }
 
-    //Disable write-access to port mapping registers:
+    /*Disable write-access to port mapping registers: */
     PMAP->KEYID = 0;
 }
-

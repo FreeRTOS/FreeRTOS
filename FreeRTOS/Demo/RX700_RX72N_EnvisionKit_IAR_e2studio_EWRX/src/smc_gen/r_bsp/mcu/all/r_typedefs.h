@@ -16,11 +16,13 @@
 *
 * Copyright (C) 2013 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : r_typedefs.h
 * Description  : This has fixed-width integer and bool support for compilers that are not C99 compliant and do not have
 *                the header files stdint.h, stdbool.h, and stddef.h.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 18.09.2012 1.00     First Release
@@ -30,30 +32,29 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 /* Multiple inclusion prevention macro */
 #ifndef R_TYPEDEFS_H
 #define R_TYPEDEFS_H
 
-#define bool  (_Bool)
-#define false (0)
-#define true  (1)
-#define NULL  (0)
+#define bool     ( _Bool )
+#define false    ( 0 )
+#define true     ( 1 )
+#define NULL     ( 0 )
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
-typedef signed char int8_t;
-typedef unsigned char uint8_t;
-typedef signed short int16_t;
-typedef unsigned short uint16_t;
-typedef signed long int32_t;
-typedef unsigned long uint32_t;
-typedef signed long long int64_t;
-typedef unsigned long long uint64_t;
-typedef unsigned int _Bool;
-typedef unsigned long size_t;
+typedef signed char          int8_t;
+typedef unsigned char        uint8_t;
+typedef signed short         int16_t;
+typedef unsigned short       uint16_t;
+typedef signed long          int32_t;
+typedef unsigned long        uint32_t;
+typedef signed long long     int64_t;
+typedef unsigned long long   uint64_t;
+typedef unsigned int         _Bool;
+typedef unsigned long        size_t;
 
-#endif  /* End of multiple inclusion prevention macro */
-
+#endif /* End of multiple inclusion prevention macro */

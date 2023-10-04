@@ -49,59 +49,61 @@
 #include "compiler.h"
 
 /* These defines should be part of the auto-generated header files */
-#if (!defined FLASH_PAGE_SIZE)
-#   define FLASH_PAGE_SIZE     512UL
+#if ( !defined FLASH_PAGE_SIZE )
+    #define FLASH_PAGE_SIZE        512UL
 #endif
-#if (!defined FLASH_NB_OF_REGIONS)
-#   define FLASH_NB_OF_REGIONS 16
+#if ( !defined FLASH_NB_OF_REGIONS )
+    #define FLASH_NB_OF_REGIONS    16
 #endif
 
 
 /* ! Number of flash regions defined by the FLASHCALW. */
-#define FLASHCALW_REGIONS  FLASH_NB_OF_REGIONS
+#define FLASHCALW_REGIONS                    FLASH_NB_OF_REGIONS
 
 /** \brief Maximum operating frequency when FWS is 1 in PS0 mode and
- the Fast wakeup is enabled */
-#define FLASH_FREQ_PS1_FWS_1_FWU_MAX_FREQ    (12000000UL)
+ * the Fast wakeup is enabled */
+#define FLASH_FREQ_PS1_FWS_1_FWU_MAX_FREQ    ( 12000000UL )
 /** \brief Maximum operating frequency when FWS is 0 in PS0 mode */
-#define FLASH_FREQ_PS0_FWS_0_MAX_FREQ        (18000000UL)
+#define FLASH_FREQ_PS0_FWS_0_MAX_FREQ        ( 18000000UL )
 /** \brief Maximum operating frequency when FWS is 1 in PS0 mode */
-#define FLASH_FREQ_PS0_FWS_1_MAX_FREQ        (36000000UL)
+#define FLASH_FREQ_PS0_FWS_1_MAX_FREQ        ( 36000000UL )
 /** \brief Maximum operating frequency when FWS is 0 in PS1 mode */
-#define FLASH_FREQ_PS1_FWS_0_MAX_FREQ        (8000000UL)
+#define FLASH_FREQ_PS1_FWS_0_MAX_FREQ        ( 8000000UL )
 /** \brief Maximum operating frequency when FWS is 1 in PS1 mode */
-#define FLASH_FREQ_PS1_FWS_1_MAX_FREQ        (12000000UL)
+#define FLASH_FREQ_PS1_FWS_1_MAX_FREQ        ( 12000000UL )
 /** \brief Maximum operating frequency when FWS is 0 in PS2 mode */
-#define FLASH_FREQ_PS2_FWS_0_MAX_FREQ        (24000000UL)
+#define FLASH_FREQ_PS2_FWS_0_MAX_FREQ        ( 24000000UL )
 /** \brief Maximum operating frequency when FWS is 1 in PS2 mode */
-#define FLASH_FREQ_PS2_FWS_1_MAX_FREQ        (48000000UL)
+#define FLASH_FREQ_PS2_FWS_1_MAX_FREQ        ( 48000000UL )
+
 /*! \name Flash Properties
  */
-//! @{
+/*! @{ */
 
-uint32_t flashcalw_get_flash_size(void);
+uint32_t flashcalw_get_flash_size( void );
 
-uint32_t flashcalw_get_page_count(void);
+uint32_t flashcalw_get_page_count( void );
 
-uint32_t flashcalw_get_page_count_per_region(void);
+uint32_t flashcalw_get_page_count_per_region( void );
 
-uint32_t flashcalw_get_page_region(int32_t page_number);
+uint32_t flashcalw_get_page_region( int32_t page_number );
 
-uint32_t flashcalw_get_region_first_page_number(uint32_t region);
+uint32_t flashcalw_get_region_first_page_number( uint32_t region );
 
-//! @}
+/*! @} */
 
 
 /*! \name FLASHCALW Control
  */
-//! @{
+/*! @{ */
 
-uint32_t flashcalw_get_wait_state(void);
+uint32_t flashcalw_get_wait_state( void );
 
-void flashcalw_set_wait_state(uint32_t wait_state);
+void flashcalw_set_wait_state( uint32_t wait_state );
 
-void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
-		uint32_t ps_value, bool is_fwu_enabled);
+void flashcalw_set_flash_waitstate_and_readmode( uint32_t cpu_f_hz,
+                                                 uint32_t ps_value,
+                                                 bool is_fwu_enabled );
 
 /*! \brief Alias on the flashcalw_set_flash_waitstate_and_readmode() function.
  *
@@ -109,161 +111,183 @@ void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
  * \param ps_value (boolean), Power Scaling mode
  * \param is_fwu_enabled (boolean), Fast wakeup mode
  */
-#define flash_set_bus_freq(cpu_f_hz, ps_value, is_fwu_enabled) \
-	flashcalw_set_flash_waitstate_and_readmode(cpu_f_hz, ps_value, is_fwu_enabled)
+#define flash_set_bus_freq( cpu_f_hz, ps_value, is_fwu_enabled ) \
+    flashcalw_set_flash_waitstate_and_readmode( cpu_f_hz, ps_value, is_fwu_enabled )
 
-bool flashcalw_is_ready_int_enabled(void);
+bool flashcalw_is_ready_int_enabled( void );
 
-void flashcalw_enable_ready_int(bool enable);
+void flashcalw_enable_ready_int( bool enable );
 
-bool flashcalw_is_lock_error_int_enabled(void);
+bool flashcalw_is_lock_error_int_enabled( void );
 
-void flashcalw_enable_lock_error_int(bool enable);
+void flashcalw_enable_lock_error_int( bool enable );
 
-bool flashcalw_is_prog_error_int_enabled(void);
+bool flashcalw_is_prog_error_int_enabled( void );
 
-void flashcalw_enable_prog_error_int(bool enable);
+void flashcalw_enable_prog_error_int( bool enable );
 
-//! @}
+/*! @} */
 
 
 /*! \name FLASHCALW Status
  */
-//! @{
+/*! @{ */
 
-bool flashcalw_is_ready(void);
+bool flashcalw_is_ready( void );
 
-void flashcalw_default_wait_until_ready(void);
+void flashcalw_default_wait_until_ready( void );
 
-extern void (*volatile flashcalw_wait_until_ready)(void);
+extern void( *volatile flashcalw_wait_until_ready )( void );
 
-bool flashcalw_is_lock_error(void);
+bool flashcalw_is_lock_error( void );
 
-bool flashcalw_is_programming_error(void);
+bool flashcalw_is_programming_error( void );
 
-//! @}
+/*! @} */
 
 
 /*! \name FLASHCALW Command Control
  */
-//! @{
+/*! @{ */
 
-uint32_t flashcalw_get_command(void);
+uint32_t flashcalw_get_command( void );
 
-uint32_t flashcalw_get_page_number(void);
+uint32_t flashcalw_get_page_number( void );
 
-void flashcalw_issue_command(uint32_t command, int page_number);
+void flashcalw_issue_command( uint32_t command,
+                              int page_number );
 
-//! @}
+/*! @} */
 
 
 /*! \name FLASHCALW Global Commands
  */
-//! @{
+/*! @{ */
 
-void flashcalw_no_operation(void);
+void flashcalw_no_operation( void );
 
-void flashcalw_erase_all(void);
+void flashcalw_erase_all( void );
 
-//! @}
+/*! @} */
 
 
 /*! \name FLASHCALW Protection Mechanisms
  */
-//! @{
+/*! @{ */
 
-bool flashcalw_is_security_bit_active(void);
+bool flashcalw_is_security_bit_active( void );
 
-void flashcalw_set_security_bit(void);
+void flashcalw_set_security_bit( void );
 
-bool flashcalw_is_page_region_locked(uint32_t page_number);
+bool flashcalw_is_page_region_locked( uint32_t page_number );
 
-bool flashcalw_is_region_locked(uint32_t region);
+bool flashcalw_is_region_locked( uint32_t region );
 
-void flashcalw_lock_page_region(int page_number, bool lock);
+void flashcalw_lock_page_region( int page_number,
+                                 bool lock );
 
-void flashcalw_lock_region(uint32_t region, bool lock);
+void flashcalw_lock_region( uint32_t region,
+                            bool lock );
 
-void flashcalw_lock_all_regions(bool lock);
+void flashcalw_lock_all_regions( bool lock );
 
-//! @}
+/*! @} */
 
 
 /*! \name Access to General-Purpose Fuses
  */
-//! @{
+/*! @{ */
 
-bool flashcalw_read_gp_fuse_bit(uint32_t gp_fuse_bit);
+bool flashcalw_read_gp_fuse_bit( uint32_t gp_fuse_bit );
 
-uint64_t flashcalw_read_gp_fuse_bitfield(uint32_t pos, uint32_t width);
+uint64_t flashcalw_read_gp_fuse_bitfield( uint32_t pos,
+                                          uint32_t width );
 
-uint8_t flashcalw_read_gp_fuse_byte(uint32_t gp_fuse_byte);
+uint8_t flashcalw_read_gp_fuse_byte( uint32_t gp_fuse_byte );
 
-uint64_t flashcalw_read_all_gp_fuses(void);
+uint64_t flashcalw_read_all_gp_fuses( void );
 
-bool flashcalw_erase_gp_fuse_bit(uint32_t gp_fuse_bit, bool check);
+bool flashcalw_erase_gp_fuse_bit( uint32_t gp_fuse_bit,
+                                  bool check );
 
-bool flashcalw_erase_gp_fuse_bitfield(uint32_t pos, uint32_t width,
-		bool check);
+bool flashcalw_erase_gp_fuse_bitfield( uint32_t pos,
+                                       uint32_t width,
+                                       bool check );
 
-bool flashcalw_erase_gp_fuse_byte(uint32_t gp_fuse_byte, bool check);
+bool flashcalw_erase_gp_fuse_byte( uint32_t gp_fuse_byte,
+                                   bool check );
 
-bool flashcalw_erase_all_gp_fuses(bool check);
+bool flashcalw_erase_all_gp_fuses( bool check );
 
-void flashcalw_write_gp_fuse_bit(uint32_t gp_fuse_bit, bool value);
+void flashcalw_write_gp_fuse_bit( uint32_t gp_fuse_bit,
+                                  bool value );
 
-void flashcalw_write_gp_fuse_bitfield(uint32_t pos, uint32_t width,
-		uint64_t value);
+void flashcalw_write_gp_fuse_bitfield( uint32_t pos,
+                                       uint32_t width,
+                                       uint64_t value );
 
-void flashcalw_write_gp_fuse_byte(uint32_t gp_fuse_byte, uint8_t value);
+void flashcalw_write_gp_fuse_byte( uint32_t gp_fuse_byte,
+                                   uint8_t value );
 
-void flashcalw_write_all_gp_fuses(uint64_t value);
+void flashcalw_write_all_gp_fuses( uint64_t value );
 
-void flashcalw_set_gp_fuse_bit(uint32_t gp_fuse_bit, bool value);
+void flashcalw_set_gp_fuse_bit( uint32_t gp_fuse_bit,
+                                bool value );
 
-void flashcalw_set_gp_fuse_bitfield(uint32_t pos, uint32_t width,
-		uint64_t value);
+void flashcalw_set_gp_fuse_bitfield( uint32_t pos,
+                                     uint32_t width,
+                                     uint64_t value );
 
-void flashcalw_set_gp_fuse_byte(uint32_t gp_fuse_byte, uint8_t value);
+void flashcalw_set_gp_fuse_byte( uint32_t gp_fuse_byte,
+                                 uint8_t value );
 
-void flashcalw_set_all_gp_fuses(uint64_t value);
+void flashcalw_set_all_gp_fuses( uint64_t value );
 
-//! @}
+/*! @} */
 
 
 /*! \name Access to Flash Pages
  */
-//! @{
+/*! @{ */
 
-void flashcalw_clear_page_buffer(void);
+void flashcalw_clear_page_buffer( void );
 
-bool flashcalw_is_page_erased(void);
+bool flashcalw_is_page_erased( void );
 
-bool flashcalw_quick_page_read(int page_number);
+bool flashcalw_quick_page_read( int page_number );
 
-bool flashcalw_erase_page(int page_number, bool check);
+bool flashcalw_erase_page( int page_number,
+                           bool check );
 
-bool flashcalw_erase_all_pages(bool check);
+bool flashcalw_erase_all_pages( bool check );
 
-void flashcalw_write_page(int page_number);
+void flashcalw_write_page( int page_number );
 
-bool flashcalw_quick_user_page_read(void);
+bool flashcalw_quick_user_page_read( void );
 
-bool flashcalw_erase_user_page(bool check);
+bool flashcalw_erase_user_page( bool check );
 
-void flashcalw_write_user_page(void);
+void flashcalw_write_user_page( void );
 
-volatile void *flashcalw_memset8(volatile void *dst, uint8_t src,
-		size_t nbytes, bool erase);
+volatile void * flashcalw_memset8( volatile void * dst,
+                                   uint8_t src,
+                                   size_t nbytes,
+                                   bool erase );
 
-volatile void *flashcalw_memset16(volatile void *dst, uint16_t src,
-		size_t nbytes, bool erase);
+volatile void * flashcalw_memset16( volatile void * dst,
+                                    uint16_t src,
+                                    size_t nbytes,
+                                    bool erase );
 
-volatile void *flashcalw_memset32(volatile void *dst, uint32_t src,
-		size_t nbytes, bool erase);
+volatile void * flashcalw_memset32( volatile void * dst,
+                                    uint32_t src,
+                                    size_t nbytes,
+                                    bool erase );
 
-volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
-		size_t nbytes, bool erase);
+volatile void * flashcalw_memset64( volatile void * dst,
+                                    uint64_t src,
+                                    size_t nbytes,
+                                    bool erase );
 
 /*! \brief Copies \a nbytes bytes to the flash destination pointed to by \a dst
  *         from the repeated \a src big-endian source pattern.
@@ -290,33 +314,35 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
  * \note The FLASHCALW error status returned by \ref flashcalw_is_lock_error and
  *       \ref flashcalw_is_programming_error is updated.
  */
-#define flashcalw_memset(dst, src, src_width, nbytes, erase) \
-	TPASTE2(flashcalw_memset, src_width) ((dst), (src), (nbytes), (erase))
+#define flashcalw_memset( dst, src, src_width, nbytes, erase ) \
+    TPASTE2( flashcalw_memset, src_width ) ( ( dst ), ( src ), ( nbytes ), ( erase ) )
 
-volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
-		size_t nbytes, bool erase);
+volatile void * flashcalw_memcpy( volatile void * dst,
+                                  const void * src,
+                                  size_t nbytes,
+                                  bool erase );
 
-//! @}
+/*! @} */
 
 /*! \name PicoCache interfaces.
  */
-//! @{
+/*! @{ */
 
-void flashcalw_picocache_enable(void);
+void flashcalw_picocache_enable( void );
 
-void flashcalw_picocache_disable(void);
+void flashcalw_picocache_disable( void );
 
-uint32_t flashcalw_picocache_get_status(void);
+uint32_t flashcalw_picocache_get_status( void );
 
-void flashcalw_picocache_invalid_all(void);
+void flashcalw_picocache_invalid_all( void );
 
-void flashcalw_picocache_invalid_line(uint32_t index);
+void flashcalw_picocache_invalid_line( uint32_t index );
 
-void flashcalw_picocache_set_monitor_mode(uint32_t mode);
+void flashcalw_picocache_set_monitor_mode( uint32_t mode );
 
-void flashcalw_picocache_enable_monitor(void);
+void flashcalw_picocache_enable_monitor( void );
 
-void flashcalw_picocache_disable_monitor(void);
+void flashcalw_picocache_disable_monitor( void );
 
 void flashcalw_picocache_reset_monitor( void );
 
@@ -324,7 +350,7 @@ uint32_t flashcalw_picocache_get_monitor_cnt( void );
 
 uint32_t flashcalw_picocache_get_version( void );
 
-//! @}
+/*! @} */
 
 /**
  * \page sam_flashcalw_quickstart Quickstart guide for SAM FLASHCALW driver
@@ -396,4 +422,4 @@ uint32_t flashcalw_picocache_get_version( void );
  * \endcode
  *
  */
-#endif  /* FLASHCALW_H_INCLUDED */
+#endif /* FLASHCALW_H_INCLUDED */

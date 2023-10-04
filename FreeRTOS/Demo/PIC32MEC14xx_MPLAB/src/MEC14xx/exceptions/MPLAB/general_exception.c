@@ -19,8 +19,9 @@
 *****************************************************************************/
 
 /** @file general_exception.c
- *MEC14xx General Exception Handler
+ * MEC14xx General Exception Handler
  */
+
 /** @defgroup MEC14xx Exceptions
  *  @{
  */
@@ -46,10 +47,10 @@ typedef struct gen_except_capture
 
 GEN_EXCEPT_CAPTURE gexc_cap;
 
-void 
-__attribute__((nomips16, noreturn)) _general_exception_handler (void)
+void
+__attribute__( ( nomips16, noreturn ) ) _general_exception_handler( void )
 {
-    /* 
+    /*
      *  MEC14xx Application General Exception handler
      */
     uint32_t e;
@@ -60,13 +61,13 @@ __attribute__((nomips16, noreturn)) _general_exception_handler (void)
      * modified SP. Wrapper allocates 88 bytes for context
      * save. Original SP = SPcurrent + 88.
      */
-    __asm__ __volatile (
-      "move %0,$sp \n\t"
-      "nop        \n\t" 
-      :"=r" (e) 
-      ::);
+    __asm__ __volatile(
+        "move %0,$sp \n\t"
+        "nop        \n\t"
+        : "=r" ( e )
+        ::);
     gexc_cap.stack_ptr = e;
-    
+
     gexc_cap.cp0_status = _CP0_GET_STATUS();
     gexc_cap.cp0_cause = _CP0_GET_CAUSE();
     gexc_cap.cp0_epc = _CP0_GET_EPC();
@@ -75,23 +76,24 @@ __attribute__((nomips16, noreturn)) _general_exception_handler (void)
     gexc_cap.cp0_nepc = _CP0_GET_NESTEDEPC();
     gexc_cap.cp0_badvaddr = _CP0_GET_BADVADDR();
 
-    trace0(0, AP3GENEXCEPT, 0, "Application General Exception Handler (BEV=0)");
-    TRACE11(601, AP3GENEXCEPT, 0, "Current SP   = 0x%08x",gexc_cap.stack_ptr);
-    TRACE11(602, AP3GENEXCEPT, 0, "CP0 STATUS   = 0x%08x",gexc_cap.cp0_status);
-    TRACE11(603, AP3GENEXCEPT, 0, "CP0 CAUSE    = 0x%08x",gexc_cap.cp0_cause);
-    TRACE11(604, AP3GENEXCEPT, 0, "CP0 EPC      = 0x%08x",gexc_cap.cp0_epc);
-    TRACE11(605, AP3GENEXCEPT, 0, "CP0 ERROREPC = 0x%08x",gexc_cap.cp0_error_epc);
-    TRACE11(606, AP3GENEXCEPT, 0, "CP0 NEXC     = 0x%08x",gexc_cap.cp0_nexc);
-    TRACE11(607, AP3GENEXCEPT, 0, "CP0 NEPC     = 0x%08x",gexc_cap.cp0_nepc);
-    TRACE11(608, AP3GENEXCEPT, 0, "CP0 BADVADDR = 0x%08x",gexc_cap.cp0_badvaddr);
+    trace0( 0, AP3GENEXCEPT, 0, "Application General Exception Handler (BEV=0)" );
+    TRACE11( 601, AP3GENEXCEPT, 0, "Current SP   = 0x%08x", gexc_cap.stack_ptr );
+    TRACE11( 602, AP3GENEXCEPT, 0, "CP0 STATUS   = 0x%08x", gexc_cap.cp0_status );
+    TRACE11( 603, AP3GENEXCEPT, 0, "CP0 CAUSE    = 0x%08x", gexc_cap.cp0_cause );
+    TRACE11( 604, AP3GENEXCEPT, 0, "CP0 EPC      = 0x%08x", gexc_cap.cp0_epc );
+    TRACE11( 605, AP3GENEXCEPT, 0, "CP0 ERROREPC = 0x%08x", gexc_cap.cp0_error_epc );
+    TRACE11( 606, AP3GENEXCEPT, 0, "CP0 NEXC     = 0x%08x", gexc_cap.cp0_nexc );
+    TRACE11( 607, AP3GENEXCEPT, 0, "CP0 NEPC     = 0x%08x", gexc_cap.cp0_nepc );
+    TRACE11( 608, AP3GENEXCEPT, 0, "CP0 BADVADDR = 0x%08x", gexc_cap.cp0_badvaddr );
 
-    for (;;) {
-        __asm__ __volatile ("%(ssnop%)" : :);
-    } 
+    for( ; ; )
+    {
+        __asm__ __volatile( "%(ssnop%)" : : );
+    }
 }
 
 
 /* end general_exception.c */
+
 /**   @}
  */
-

@@ -30,26 +30,27 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xil_exception.c
-*
-* This file contains implementation of exception related driver functions.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -------------------------------------------------------
-* 1.00  hbm  07/28/09 Initial release
-*
-* </pre>
-*
-* @note
-*
-* None.
-*
-******************************************************************************/
+ *
+ * @file xil_exception.c
+ *
+ * This file contains implementation of exception related driver functions.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 1.00  hbm  07/28/09 Initial release
+ *
+ * </pre>
+ *
+ * @note
+ *
+ * None.
+ *
+ ******************************************************************************/
 
 #include "xil_types.h"
 #include "xil_exception.h"
@@ -61,25 +62,26 @@
 extern "C" {
 #endif
 
-extern void microblaze_enable_exceptions(void);
-extern void microblaze_disable_exceptions(void);
-extern void microblaze_enable_interrupts(void);
-extern void microblaze_disable_interrupts(void);
+extern void microblaze_enable_exceptions( void );
+extern void microblaze_disable_exceptions( void );
+extern void microblaze_enable_interrupts( void );
+extern void microblaze_disable_interrupts( void );
 
 /**
-* Currently HAL is an augmented part of standalone BSP, so the old definition
-* of MB_ExceptionVectorTableEntry is used here.
-*/
+ * Currently HAL is an augmented part of standalone BSP, so the old definition
+ * of MB_ExceptionVectorTableEntry is used here.
+ */
 
-typedef struct {
-   Xil_ExceptionHandler Handler;
-   void *CallBackRef;
+typedef struct
+{
+    Xil_ExceptionHandler Handler;
+    void * CallBackRef;
 } MB_ExceptionVectorTableEntry;
 
 /*typedef struct {
-   Xil_ExceptionHandler Handler,
-   void *CallBackRef,
-} MB_InterruptVectorTableEntry, */
+ * Xil_ExceptionHandler Handler,
+ * void *CallBackRef,
+ * } MB_InterruptVectorTableEntry, */
 
 #ifdef __cplusplus
 }
@@ -87,7 +89,7 @@ typedef struct {
 
 
 /************************** Variable Definitions *****************************/
-extern MB_ExceptionVectorTableEntry MB_ExceptionVectorTable[XIL_EXCEPTION_ID_INT];
+extern MB_ExceptionVectorTableEntry MB_ExceptionVectorTable[ XIL_EXCEPTION_ID_INT ];
 extern MB_InterruptVectorTableEntry MB_InterruptVectorTable;
 
 /**
@@ -108,137 +110,145 @@ extern MB_InterruptVectorTableEntry MB_InterruptVectorTable;
  * None.
  *
  *****************************************************************************/
-static void Xil_ExceptionNullHandler(void *Data)
+static void Xil_ExceptionNullHandler( void * Data )
 {
-	(void *) Data;
+    ( void * ) Data;
 }
 
 /****************************************************************************/
-/**
-*
-* Initialize exception handling for the processor. The exception vector table
-* is setup with the stub handler for all exceptions.
-*
-* @param    None.
-*
-* @return   None.
-*
-* @note
-*
-* None.
-*
-*****************************************************************************/
-void Xil_ExceptionInit(void)
-{
-	/*
-	 * there is no need to setup the exception table here
-	 */
 
+/**
+ *
+ * Initialize exception handling for the processor. The exception vector table
+ * is setup with the stub handler for all exceptions.
+ *
+ * @param    None.
+ *
+ * @return   None.
+ *
+ * @note
+ *
+ * None.
+ *
+ *****************************************************************************/
+void Xil_ExceptionInit( void )
+{
+    /*
+     * there is no need to setup the exception table here
+     */
 }
 
 /****************************************************************************/
+
 /**
-* Enable Exceptions.
-*
-* @return   None.
-*
-* @note     None.
-*
-******************************************************************************/
-void Xil_ExceptionEnable(void)
+ * Enable Exceptions.
+ *
+ * @return   None.
+ *
+ * @note     None.
+ *
+ ******************************************************************************/
+void Xil_ExceptionEnable( void )
 {
-#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
-	microblaze_enable_exceptions();
-#endif
-	microblaze_enable_interrupts();
+    #ifdef MICROBLAZE_EXCEPTIONS_ENABLED
+        microblaze_enable_exceptions();
+    #endif
+    microblaze_enable_interrupts();
 }
 
 /****************************************************************************/
+
 /**
-* Disable Exceptions.
-*
-* @param    None.
-*
-* @return   None.
-*
-* @note     None.
-*
-******************************************************************************/
-void Xil_ExceptionDisable(void)
+ * Disable Exceptions.
+ *
+ * @param    None.
+ *
+ * @return   None.
+ *
+ * @note     None.
+ *
+ ******************************************************************************/
+void Xil_ExceptionDisable( void )
 {
-#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
-	microblaze_disable_exceptions();
-#endif
-	microblaze_disable_interrupts();
+    #ifdef MICROBLAZE_EXCEPTIONS_ENABLED
+        microblaze_disable_exceptions();
+    #endif
+    microblaze_disable_interrupts();
 }
 
 /*****************************************************************************/
+
 /**
-*
-* Makes the connection between the Id of the exception source and the
-* associated handler that is to run when the exception is recognized. The
-* argument provided in this call as the DataPtr is used as the argument
-* for the handler when it is called.
-*
-* @param    Id contains the ID of the exception source and should
-*           be XIL_EXCEPTION_INT or be in the range of 0 to XIL_EXCEPTION_LAST.
-*	    See xil_mach_exception.h for further information.
-* @param    Handler to the handler for that exception.
-* @param    Data is a reference to data that will be passed to the handler
-*           when it gets called.
-*
-* @return   None.
-*
-* @note
-*
-* None.
-*
-****************************************************************************/
-void Xil_ExceptionRegisterHandler(u32 Id, Xil_ExceptionHandler Handler,
-				  void *Data)
+ *
+ * Makes the connection between the Id of the exception source and the
+ * associated handler that is to run when the exception is recognized. The
+ * argument provided in this call as the DataPtr is used as the argument
+ * for the handler when it is called.
+ *
+ * @param    Id contains the ID of the exception source and should
+ *           be XIL_EXCEPTION_INT or be in the range of 0 to XIL_EXCEPTION_LAST.
+ *	    See xil_mach_exception.h for further information.
+ * @param    Handler to the handler for that exception.
+ * @param    Data is a reference to data that will be passed to the handler
+ *           when it gets called.
+ *
+ * @return   None.
+ *
+ * @note
+ *
+ * None.
+ *
+ ****************************************************************************/
+void Xil_ExceptionRegisterHandler( u32 Id,
+                                   Xil_ExceptionHandler Handler,
+                                   void * Data )
 {
-	if (Id == XIL_EXCEPTION_ID_INT) {
-		MB_InterruptVectorTable.Handler = Handler;
-		MB_InterruptVectorTable.CallBackRef = Data;
-	}
-	else {
-#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
-		MB_ExceptionVectorTable[Id].Handler = Handler;
-		MB_ExceptionVectorTable[Id].CallBackRef = Data;
-#endif
-	}
+    if( Id == XIL_EXCEPTION_ID_INT )
+    {
+        MB_InterruptVectorTable.Handler = Handler;
+        MB_InterruptVectorTable.CallBackRef = Data;
+    }
+    else
+    {
+        #ifdef MICROBLAZE_EXCEPTIONS_ENABLED
+            MB_ExceptionVectorTable[ Id ].Handler = Handler;
+            MB_ExceptionVectorTable[ Id ].CallBackRef = Data;
+        #endif
+    }
 }
 
 
 /*****************************************************************************/
-/**
-*
-* Removes the handler for a specific exception Id. The stub handler is then
-* registered for this exception Id.
-*
-* @param    Id contains the ID of the exception source and should
-*           be XIL_EXCEPTION_INT or in the range of 0 to XIL_EXCEPTION_LAST.
-*	    See xexception_l.h for further information.
-*
-* @return   None.
-*
-* @note
-*
-* None.
-*
-****************************************************************************/
-void Xil_ExceptionRemoveHandler(u32 Id)
-{
-	if (Id == XIL_EXCEPTION_ID_INT) {
-		MB_InterruptVectorTable.Handler = Xil_ExceptionNullHandler;
-		MB_InterruptVectorTable.CallBackRef = NULL;
-	}
-	else {
 
-#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
-		MB_ExceptionVectorTable[Id].Handler =
-			Xil_ExceptionNullHandler;
-		MB_ExceptionVectorTable[Id].CallBackRef = NULL;
-#endif
-	}
+/**
+ *
+ * Removes the handler for a specific exception Id. The stub handler is then
+ * registered for this exception Id.
+ *
+ * @param    Id contains the ID of the exception source and should
+ *           be XIL_EXCEPTION_INT or in the range of 0 to XIL_EXCEPTION_LAST.
+ *	    See xexception_l.h for further information.
+ *
+ * @return   None.
+ *
+ * @note
+ *
+ * None.
+ *
+ ****************************************************************************/
+void Xil_ExceptionRemoveHandler( u32 Id )
+{
+    if( Id == XIL_EXCEPTION_ID_INT )
+    {
+        MB_InterruptVectorTable.Handler = Xil_ExceptionNullHandler;
+        MB_InterruptVectorTable.CallBackRef = NULL;
+    }
+    else
+    {
+        #ifdef MICROBLAZE_EXCEPTIONS_ENABLED
+            MB_ExceptionVectorTable[ Id ].Handler =
+                Xil_ExceptionNullHandler;
+            MB_ExceptionVectorTable[ Id ].CallBackRef = NULL;
+        #endif
+    }
 }

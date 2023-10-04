@@ -27,56 +27,55 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-///
-/// Methods and definitions for configuring interrupts.
-///
-/// !Usage
-///
-/// -# Configure an interrupt source using IRQ_ConfigureIT
-/// -# Enable or disable interrupt generation of a particular source with
-///    IRQ_EnableIT and IRQ_DisableIT.
-///
-/// \note Most of the time, peripheral interrupts must be also configured
-/// inside the peripheral itself.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Methods and definitions for configuring interrupts. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Configure an interrupt source using IRQ_ConfigureIT */
+/*/ -# Enable or disable interrupt generation of a particular source with */
+/*/    IRQ_EnableIT and IRQ_DisableIT. */
+/*/ */
+/*/ \note Most of the time, peripheral interrupts must be also configured */
+/*/ inside the peripheral itself. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef IRQ_H
 #define IRQ_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <board.h>
-#if defined(cortexm3)
-#include <cmsis/core_cm3.h>
+#if defined( cortexm3 )
+    #include <cmsis/core_cm3.h>
 #endif
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
-#if defined(cortexm3)
-#ifdef __NVIC_PRIO_BITS
-#undef __NVIC_PRIO_BITS
-#define __NVIC_PRIO_BITS           ((SCB->AIRCR & 0x700) >> 8)
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
+#if defined( cortexm3 )
+    #ifdef __NVIC_PRIO_BITS
+        #undef __NVIC_PRIO_BITS
+        #define __NVIC_PRIO_BITS    ( ( SCB->AIRCR & 0x700 ) >> 8 )
+    #endif
 #endif
-#endif
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void IRQ_ConfigureIT(unsigned int source,
-                            unsigned int mode,         // mode for AIC, priority for NVIC
-                            void( *handler )( void )); // ISR
+extern void IRQ_ConfigureIT( unsigned int source,
+                             unsigned int mode,            /* mode for AIC, priority for NVIC */
+                             void ( * handler )( void ) ); /* ISR */
 
-extern void IRQ_EnableIT(unsigned int source);
+extern void IRQ_EnableIT( unsigned int source );
 
-extern void IRQ_DisableIT(unsigned int source);
+extern void IRQ_DisableIT( unsigned int source );
 
 #endif //#ifndef IRQ_H
-

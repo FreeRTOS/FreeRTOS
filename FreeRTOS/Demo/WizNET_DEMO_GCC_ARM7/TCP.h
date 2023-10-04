@@ -27,7 +27,7 @@
 #ifndef TCP_H
 #define TCP_H
 
-#define htonl(A) ((((A) & 0xff000000) >> 24) | (((A) & 0x00ff0000) >> 8) | (((A) & 0x0000ff00) << 8) | (((A) & 0x000000ff) << 24))
+#define htonl( A )    ( ( ( ( A ) & 0xff000000 ) >> 24 ) | ( ( ( A ) & 0x00ff0000 ) >> 8 ) | ( ( ( A ) & 0x0000ff00 ) << 8 ) | ( ( ( A ) & 0x000000ff ) << 24 ) )
 
 void vTCPHardReset( void );
 long lTCPSoftReset( void );
@@ -36,4 +36,4 @@ long lTCPListen( void );
 long lProcessConnection( void );
 void vTCPListen( void );
 
-#endif
+#endif /* ifndef TCP_H */

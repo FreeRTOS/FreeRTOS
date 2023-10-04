@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -43,496 +43,520 @@
 #include <interrupt.h>
 #include <hw_memmap.h>
 
-//*****************************************************************************
-//
-// This is a mapping between priority grouping encodings and the number of
-// preemption priority bits.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* This is a mapping between priority grouping encodings and the number of */
+/* preemption priority bits. */
+/* */
+/****************************************************************************** */
 static const uint32_t g_pulPriority[] =
-{ NVIC_APINT_PRIGROUP_0_8, NVIC_APINT_PRIGROUP_1_7, NVIC_APINT_PRIGROUP_2_6,
-NVIC_APINT_PRIGROUP_3_5, NVIC_APINT_PRIGROUP_4_4,
-NVIC_APINT_PRIGROUP_5_3, NVIC_APINT_PRIGROUP_6_2,
-NVIC_APINT_PRIGROUP_7_1 };
+{
+    NVIC_APINT_PRIGROUP_0_8, NVIC_APINT_PRIGROUP_1_7, NVIC_APINT_PRIGROUP_2_6,
+    NVIC_APINT_PRIGROUP_3_5, NVIC_APINT_PRIGROUP_4_4,
+    NVIC_APINT_PRIGROUP_5_3, NVIC_APINT_PRIGROUP_6_2,
+    NVIC_APINT_PRIGROUP_7_1
+};
 
-//*****************************************************************************
-//
-// This is a mapping between interrupt number and the register that contains
-// the priority encoding for that interrupt.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* This is a mapping between interrupt number and the register that contains */
+/* the priority encoding for that interrupt. */
+/* */
+/****************************************************************************** */
 static const uint32_t g_pulRegs[] =
-{ 0, NVIC_SYS_PRI1_R, NVIC_SYS_PRI2_R, NVIC_SYS_PRI3_R, NVIC_PRI0_R,
-NVIC_PRI1_R, NVIC_PRI2_R, NVIC_PRI3_R, NVIC_PRI4_R, NVIC_PRI5_R,
-NVIC_PRI6_R, NVIC_PRI7_R, NVIC_PRI8_R, NVIC_PRI9_R, NVIC_PRI10_R,
-NVIC_PRI11_R, NVIC_PRI12_R, NVIC_PRI13_R, NVIC_PRI14_R, NVIC_PRI15_R };
+{
+    0,            NVIC_SYS_PRI1_R, NVIC_SYS_PRI2_R, NVIC_SYS_PRI3_R, NVIC_PRI0_R,
+    NVIC_PRI1_R,  NVIC_PRI2_R,     NVIC_PRI3_R,     NVIC_PRI4_R,     NVIC_PRI5_R,
+    NVIC_PRI6_R,  NVIC_PRI7_R,     NVIC_PRI8_R,     NVIC_PRI9_R,     NVIC_PRI10_R,
+    NVIC_PRI11_R, NVIC_PRI12_R,    NVIC_PRI13_R,    NVIC_PRI14_R,    NVIC_PRI15_R
+};
 
-//*****************************************************************************
-//
-// This is a mapping between interrupt number (for the peripheral interrupts
-// only) and the register that contains the interrupt enable for that
-// interrupt.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* This is a mapping between interrupt number (for the peripheral interrupts */
+/* only) and the register that contains the interrupt enable for that */
+/* interrupt. */
+/* */
+/****************************************************************************** */
 static const uint32_t g_pulEnRegs[] =
 { NVIC_EN0_R, NVIC_EN1_R };
 
-//*****************************************************************************
-//
-// This is a mapping between interrupt number (for the peripheral interrupts
-// only) and the register that contains the interrupt disable for that
-// interrupt.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* This is a mapping between interrupt number (for the peripheral interrupts */
+/* only) and the register that contains the interrupt disable for that */
+/* interrupt. */
+/* */
+/****************************************************************************** */
 static const uint32_t g_pulDisRegs[] =
 { NVIC_DIS0_R, NVIC_DIS1_R };
 
-//*****************************************************************************
-//
-// This is a mapping between interrupt number (for the peripheral interrupts
-// only) and the register that contains the interrupt pend for that interrupt.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* This is a mapping between interrupt number (for the peripheral interrupts */
+/* only) and the register that contains the interrupt pend for that interrupt. */
+/* */
+/****************************************************************************** */
 static const uint32_t g_pulPendRegs[] =
 { NVIC_PEND0_R, NVIC_PEND1_R };
 
-//*****************************************************************************
-//
-// This is a mapping between interrupt number (for the peripheral interrupts
-// only) and the register that contains the interrupt unpend for that
-// interrupt.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* This is a mapping between interrupt number (for the peripheral interrupts */
+/* only) and the register that contains the interrupt unpend for that */
+/* interrupt. */
+/* */
+/****************************************************************************** */
 static const uint32_t g_pulUnpendRegs[] =
 { NVIC_UNPEND0_R, NVIC_UNPEND1_R };
 
-//*****************************************************************************
-//
-//! \internal
-//! The default interrupt handler.
-//!
-//! This is the default interrupt handler for all interrupts.  It simply loops
-//! forever so that the system state is preserved for observation by a
-//! debugger.  Since interrupts should be disabled before unregistering the
-//! corresponding handler, this should never be called.
-//!
-//! \return None.
-//
-//*****************************************************************************
-static void IntDefaultHandler(void)
+/****************************************************************************** */
+/* */
+/*! \internal */
+/*! The default interrupt handler. */
+/*! */
+/*! This is the default interrupt handler for all interrupts.  It simply loops */
+/*! forever so that the system state is preserved for observation by a */
+/*! debugger.  Since interrupts should be disabled before unregistering the */
+/*! corresponding handler, this should never be called. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+static void IntDefaultHandler( void )
 {
-    //
-    // Go into an infinite loop.
-    //
-    while (1)
+    /* */
+    /* Go into an infinite loop. */
+    /* */
+    while( 1 )
     {
     }
 }
 
-//*****************************************************************************
-//
-// The processor vector table.
-//
-// This contains a list of the handlers for the various interrupt sources in
-// the system.  The layout of this list is defined by the hardware; assertion
-// of an interrupt causes the processor to start executing directly at the
-// address given in the corresponding location in this list.
-//
-//*****************************************************************************
-#if defined(ewarm)
-#pragma data_alignment=1024
-static __no_init void (*g_pfnRAMVectors[NUM_INTERRUPTS+1])(void) @ "VTABLE";
-#elif defined(ccs)
-#pragma DATA_ALIGN(g_pfnRAMVectors, 1024)
-#pragma DATA_SECTION(g_pfnRAMVectors, ".vtable")
-void (*g_pfnRAMVectors[NUM_INTERRUPTS + 1])(void);
+/****************************************************************************** */
+/* */
+/* The processor vector table. */
+/* */
+/* This contains a list of the handlers for the various interrupt sources in */
+/* the system.  The layout of this list is defined by the hardware; assertion */
+/* of an interrupt causes the processor to start executing directly at the */
+/* address given in the corresponding location in this list. */
+/* */
+/****************************************************************************** */
+#if defined( ewarm )
+    #pragma data_alignment=1024
+    static __no_init void ( * g_pfnRAMVectors[ NUM_INTERRUPTS + 1 ] )( void ) @"VTABLE";
+#elif defined( ccs )
+    #pragma DATA_ALIGN(g_pfnRAMVectors, 1024)
+    #pragma DATA_SECTION(g_pfnRAMVectors, ".vtable")
+    void ( * g_pfnRAMVectors[ NUM_INTERRUPTS + 1 ] )( void );
 #else
-static __attribute__((section("vtable")))
-void (*g_pfnRAMVectors[NUM_INTERRUPTS+1])(void) __attribute__((aligned(1024)));
+    static __attribute__( ( section( "vtable" ) ) )
+    void ( * g_pfnRAMVectors[ NUM_INTERRUPTS + 1 ] )( void ) __attribute__( ( aligned( 1024 ) ) );
 #endif
 
-bool Interrupt_enableMaster(void)
+bool Interrupt_enableMaster( void )
 {
-    //
-    // Enable processor interrupts.
-    //
-    return (CPU_cpsie());
+    /* */
+    /* Enable processor interrupts. */
+    /* */
+    return( CPU_cpsie() );
 }
 
-bool Interrupt_disableMaster(void)
+bool Interrupt_disableMaster( void )
 {
-    //
-    // Disable processor interrupts.
-    //
-    return (CPU_cpsid());
+    /* */
+    /* Disable processor interrupts. */
+    /* */
+    return( CPU_cpsid() );
 }
 
-void Interrupt_registerInterrupt(uint32_t interruptNumber,
-        void (*intHandler)(void))
+void Interrupt_registerInterrupt( uint32_t interruptNumber,
+                                  void ( * intHandler )( void ) )
 {
     uint32_t ulIdx, ulValue;
 
-    //
-    // Check the arguments.
-    //
-    ASSERT(interruptNumber < (NUM_INTERRUPTS+1));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( interruptNumber < ( NUM_INTERRUPTS + 1 ) );
 
-    //
-    // Make sure that the RAM vector table is correctly aligned.
-    //
-    ASSERT(((uint32_t) g_pfnRAMVectors & 0x000000ff) == 0);
+    /* */
+    /* Make sure that the RAM vector table is correctly aligned. */
+    /* */
+    ASSERT( ( ( uint32_t ) g_pfnRAMVectors & 0x000000ff ) == 0 );
 
-    //
-    // See if the RAM vector table has been initialized.
-    //
-    if (SCB->VTOR != (uint32_t) g_pfnRAMVectors)
+    /* */
+    /* See if the RAM vector table has been initialized. */
+    /* */
+    if( SCB->VTOR != ( uint32_t ) g_pfnRAMVectors )
     {
-        //
-        // Copy the vector table from the beginning of FLASH to the RAM vector
-        // table.
-        //
+        /* */
+        /* Copy the vector table from the beginning of FLASH to the RAM vector */
+        /* table. */
+        /* */
         ulValue = SCB->VTOR;
-        for (ulIdx = 0; ulIdx < (NUM_INTERRUPTS + 1); ulIdx++)
+
+        for( ulIdx = 0; ulIdx < ( NUM_INTERRUPTS + 1 ); ulIdx++ )
         {
-            g_pfnRAMVectors[ulIdx] = (void (*)(void)) HWREG32(
-                    (ulIdx * 4) + ulValue);
+            g_pfnRAMVectors[ ulIdx ] = ( void ( * )( void ) )HWREG32(
+                ( ulIdx * 4 ) + ulValue );
         }
 
-        //
-        // Point the NVIC at the RAM vector table.
-        //
-        SCB->VTOR = (uint32_t) g_pfnRAMVectors;
+        /* */
+        /* Point the NVIC at the RAM vector table. */
+        /* */
+        SCB->VTOR = ( uint32_t ) g_pfnRAMVectors;
     }
 
-    //
-    // Save the interrupt handler.
-    //
-    g_pfnRAMVectors[interruptNumber] = intHandler;
+    /* */
+    /* Save the interrupt handler. */
+    /* */
+    g_pfnRAMVectors[ interruptNumber ] = intHandler;
 }
 
-void Interrupt_unregisterInterrupt(uint32_t interruptNumber)
+void Interrupt_unregisterInterrupt( uint32_t interruptNumber )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(interruptNumber < (NUM_INTERRUPTS+1));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( interruptNumber < ( NUM_INTERRUPTS + 1 ) );
 
-    //
-    // Reset the interrupt handler.
-    //
-    g_pfnRAMVectors[interruptNumber] = IntDefaultHandler;
+    /* */
+    /* Reset the interrupt handler. */
+    /* */
+    g_pfnRAMVectors[ interruptNumber ] = IntDefaultHandler;
 }
 
-void Interrupt_setPriorityGrouping(uint32_t bits)
+void Interrupt_setPriorityGrouping( uint32_t bits )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(bits < NUM_PRIORITY);
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( bits < NUM_PRIORITY );
 
-    //
-    // Set the priority grouping.
-    //
-    SCB->AIRCR = SCB_AIRCR_VECTKEY_Msk | g_pulPriority[bits];
+    /* */
+    /* Set the priority grouping. */
+    /* */
+    SCB->AIRCR = SCB_AIRCR_VECTKEY_Msk | g_pulPriority[ bits ];
 }
 
-uint32_t Interrupt_getPriorityGrouping(void)
+uint32_t Interrupt_getPriorityGrouping( void )
 {
     uint32_t ulLoop, ulValue;
 
-    //
-    // Read the priority grouping.
-    //
+    /* */
+    /* Read the priority grouping. */
+    /* */
     ulValue = SCB->AIRCR & NVIC_APINT_PRIGROUP_M;
 
-    //
-    // Loop through the priority grouping values.
-    //
-    for (ulLoop = 0; ulLoop < NUM_PRIORITY; ulLoop++)
+    /* */
+    /* Loop through the priority grouping values. */
+    /* */
+    for( ulLoop = 0; ulLoop < NUM_PRIORITY; ulLoop++ )
     {
-        //
-        // Stop looping if this value matches.
-        //
-        if (ulValue == g_pulPriority[ulLoop])
+        /* */
+        /* Stop looping if this value matches. */
+        /* */
+        if( ulValue == g_pulPriority[ ulLoop ] )
         {
             break;
         }
     }
 
-    //
-    // Return the number of priority bits.
-    //
-    return (ulLoop);
+    /* */
+    /* Return the number of priority bits. */
+    /* */
+    return( ulLoop );
 }
 
-void Interrupt_setPriority(uint32_t interruptNumber, uint8_t priority)
+void Interrupt_setPriority( uint32_t interruptNumber,
+                            uint8_t priority )
 {
     uint32_t ulTemp;
 
-    //
-    // Check the arguments.
-    //
-    ASSERT((interruptNumber >= 4) && (interruptNumber < (NUM_INTERRUPTS+1)));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( ( interruptNumber >= 4 ) && ( interruptNumber < ( NUM_INTERRUPTS + 1 ) ) );
 
-    //
-    // Set the interrupt priority.
-    //
-    ulTemp = HWREG32(g_pulRegs[interruptNumber >> 2]);
-    ulTemp &= ~(0xFF << (8 * (interruptNumber & 3)));
-    ulTemp |= priority << (8 * (interruptNumber & 3));
-    HWREG32 (g_pulRegs[interruptNumber >> 2]) = ulTemp;
+    /* */
+    /* Set the interrupt priority. */
+    /* */
+    ulTemp = HWREG32( g_pulRegs[ interruptNumber >> 2 ] );
+    ulTemp &= ~( 0xFF << ( 8 * ( interruptNumber & 3 ) ) );
+    ulTemp |= priority << ( 8 * ( interruptNumber & 3 ) );
+    HWREG32( g_pulRegs[ interruptNumber >> 2 ] ) = ulTemp;
 }
 
-uint8_t Interrupt_getPriority(uint32_t interruptNumber)
+uint8_t Interrupt_getPriority( uint32_t interruptNumber )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT((interruptNumber >= 4) && (interruptNumber < (NUM_INTERRUPTS+1)));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( ( interruptNumber >= 4 ) && ( interruptNumber < ( NUM_INTERRUPTS + 1 ) ) );
 
-    //
-    // Return the interrupt priority.
-    //
-    return ((HWREG32(g_pulRegs[interruptNumber >> 2])
-            >> (8 * (interruptNumber & 3))) & 0xFF);
+    /* */
+    /* Return the interrupt priority. */
+    /* */
+    return( ( HWREG32( g_pulRegs[ interruptNumber >> 2 ] )
+              >> ( 8 * ( interruptNumber & 3 ) ) ) & 0xFF );
 }
 
-void Interrupt_enableInterrupt(uint32_t interruptNumber)
+void Interrupt_enableInterrupt( uint32_t interruptNumber )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(interruptNumber < (NUM_INTERRUPTS+1));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( interruptNumber < ( NUM_INTERRUPTS + 1 ) );
 
-    //
-    // Determine the interrupt to enable.
-    //
-    if (interruptNumber == FAULT_MPU)
+    /* */
+    /* Determine the interrupt to enable. */
+    /* */
+    if( interruptNumber == FAULT_MPU )
     {
-        //
-        // Enable the MemManage interrupt.
-        //
+        /* */
+        /* Enable the MemManage interrupt. */
+        /* */
         SCB->SHCSR |= SCB_SHCSR_MEMFAULTENA_Msk;
-    } else if (interruptNumber == FAULT_BUS)
+    }
+    else if( interruptNumber == FAULT_BUS )
     {
-        //
-        // Enable the bus fault interrupt.
-        //
+        /* */
+        /* Enable the bus fault interrupt. */
+        /* */
         SCB->SHCSR |= SCB_SHCSR_BUSFAULTENA_Msk;
-    } else if (interruptNumber == FAULT_USAGE)
+    }
+    else if( interruptNumber == FAULT_USAGE )
     {
-        //
-        // Enable the usage fault interrupt.
-        //
+        /* */
+        /* Enable the usage fault interrupt. */
+        /* */
         SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk;
-    } else if (interruptNumber == FAULT_SYSTICK)
+    }
+    else if( interruptNumber == FAULT_SYSTICK )
     {
-        //
-        // Enable the System Tick interrupt.
-        //
+        /* */
+        /* Enable the System Tick interrupt. */
+        /* */
         SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-    } else if (interruptNumber >= 16)
+    }
+    else if( interruptNumber >= 16 )
     {
-        //
-        // Enable the general interrupt.
-        //
-        HWREG32 (g_pulEnRegs[(interruptNumber - 16) / 32]) = 1
-                << ((interruptNumber - 16) & 31);
+        /* */
+        /* Enable the general interrupt. */
+        /* */
+        HWREG32( g_pulEnRegs[ ( interruptNumber - 16 ) / 32 ] ) = 1
+                                                                  << ( ( interruptNumber - 16 ) & 31 );
     }
 }
 
-void Interrupt_disableInterrupt(uint32_t interruptNumber)
+void Interrupt_disableInterrupt( uint32_t interruptNumber )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(interruptNumber < (NUM_INTERRUPTS+1));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( interruptNumber < ( NUM_INTERRUPTS + 1 ) );
 
-    //
-    // Determine the interrupt to disable.
-    //
-    if (interruptNumber == FAULT_MPU)
+    /* */
+    /* Determine the interrupt to disable. */
+    /* */
+    if( interruptNumber == FAULT_MPU )
     {
-        //
-        // Disable the MemManage interrupt.
-        //
-        SCB->SHCSR &= ~(SCB_SHCSR_MEMFAULTENA_Msk);
-    } else if (interruptNumber == FAULT_BUS)
+        /* */
+        /* Disable the MemManage interrupt. */
+        /* */
+        SCB->SHCSR &= ~( SCB_SHCSR_MEMFAULTENA_Msk );
+    }
+    else if( interruptNumber == FAULT_BUS )
     {
-        //
-        // Disable the bus fault interrupt.
-        //
-        SCB->SHCSR &= ~(SCB_SHCSR_BUSFAULTENA_Msk);
-    } else if (interruptNumber == FAULT_USAGE)
+        /* */
+        /* Disable the bus fault interrupt. */
+        /* */
+        SCB->SHCSR &= ~( SCB_SHCSR_BUSFAULTENA_Msk );
+    }
+    else if( interruptNumber == FAULT_USAGE )
     {
-        //
-        // Disable the usage fault interrupt.
-        //
-        SCB->SHCSR &= ~(SCB_SHCSR_USGFAULTENA_Msk);
-    } else if (interruptNumber == FAULT_SYSTICK)
+        /* */
+        /* Disable the usage fault interrupt. */
+        /* */
+        SCB->SHCSR &= ~( SCB_SHCSR_USGFAULTENA_Msk );
+    }
+    else if( interruptNumber == FAULT_SYSTICK )
     {
-        //
-        // Disable the System Tick interrupt.
-        //
-        SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
-    } else if (interruptNumber >= 16)
+        /* */
+        /* Disable the System Tick interrupt. */
+        /* */
+        SysTick->CTRL &= ~( SysTick_CTRL_ENABLE_Msk );
+    }
+    else if( interruptNumber >= 16 )
     {
-        //
-        // Disable the general interrupt.
-        //
-        HWREG32 (g_pulDisRegs[(interruptNumber - 16) / 32]) = 1
-                << ((interruptNumber - 16) & 31);
+        /* */
+        /* Disable the general interrupt. */
+        /* */
+        HWREG32( g_pulDisRegs[ ( interruptNumber - 16 ) / 32 ] ) = 1
+                                                                   << ( ( interruptNumber - 16 ) & 31 );
     }
 }
 
-bool Interrupt_isEnabled(uint32_t interruptNumber)
+bool Interrupt_isEnabled( uint32_t interruptNumber )
 {
     uint32_t ulRet;
 
-    //
-    // Check the arguments.
-    //
-    ASSERT(interruptNumber < (NUM_INTERRUPTS+1));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( interruptNumber < ( NUM_INTERRUPTS + 1 ) );
 
-    //
-    // Initialize the return value.
-    //
+    /* */
+    /* Initialize the return value. */
+    /* */
     ulRet = 0;
 
-    //
-    // Determine the interrupt to disable.
-    //
-    if (interruptNumber == FAULT_MPU)
+    /* */
+    /* Determine the interrupt to disable. */
+    /* */
+    if( interruptNumber == FAULT_MPU )
     {
-        //
-        // Check the MemManage interrupt.
-        //
+        /* */
+        /* Check the MemManage interrupt. */
+        /* */
         ulRet = SCB->SHCSR & SCB_SHCSR_MEMFAULTENA_Msk;
-    } else if (interruptNumber == FAULT_BUS)
+    }
+    else if( interruptNumber == FAULT_BUS )
     {
-        //
-        // Check the bus fault interrupt.
-        //
+        /* */
+        /* Check the bus fault interrupt. */
+        /* */
         ulRet = SCB->SHCSR & SCB_SHCSR_BUSFAULTENA_Msk;
-    } else if (interruptNumber == FAULT_USAGE)
+    }
+    else if( interruptNumber == FAULT_USAGE )
     {
-        //
-        // Check the usage fault interrupt.
-        //
+        /* */
+        /* Check the usage fault interrupt. */
+        /* */
         ulRet = SCB->SHCSR & SCB_SHCSR_USGFAULTENA_Msk;
-    } else if (interruptNumber == FAULT_SYSTICK)
+    }
+    else if( interruptNumber == FAULT_SYSTICK )
     {
-        //
-        // Check the System Tick interrupt.
-        //
+        /* */
+        /* Check the System Tick interrupt. */
+        /* */
         ulRet = SysTick->CTRL & SysTick_CTRL_ENABLE_Msk;
-    } else if (interruptNumber >= 16)
-    {
-        //
-        // Check the general interrupt.
-        //
-        ulRet = HWREG32(g_pulEnRegs[(interruptNumber - 16) / 32])
-                & (1 << ((interruptNumber - 16) & 31));
     }
-    return (ulRet);
+    else if( interruptNumber >= 16 )
+    {
+        /* */
+        /* Check the general interrupt. */
+        /* */
+        ulRet = HWREG32( g_pulEnRegs[ ( interruptNumber - 16 ) / 32 ] )
+                & ( 1 << ( ( interruptNumber - 16 ) & 31 ) );
+    }
+
+    return( ulRet );
 }
 
-void Interrupt_pendInterrupt(uint32_t interruptNumber)
+void Interrupt_pendInterrupt( uint32_t interruptNumber )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(interruptNumber < (NUM_INTERRUPTS+1));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( interruptNumber < ( NUM_INTERRUPTS + 1 ) );
 
-    //
-    // Determine the interrupt to pend.
-    //
-    if (interruptNumber == FAULT_NMI)
+    /* */
+    /* Determine the interrupt to pend. */
+    /* */
+    if( interruptNumber == FAULT_NMI )
     {
-        //
-        // Pend the NMI interrupt.
-        //
+        /* */
+        /* Pend the NMI interrupt. */
+        /* */
         SCB->ICSR |= SCB_ICSR_NMIPENDSET_Msk;
-    } else if (interruptNumber == FAULT_PENDSV)
+    }
+    else if( interruptNumber == FAULT_PENDSV )
     {
-        //
-        // Pend the PendSV interrupt.
-        //
+        /* */
+        /* Pend the PendSV interrupt. */
+        /* */
         SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
-    } else if (interruptNumber == FAULT_SYSTICK)
+    }
+    else if( interruptNumber == FAULT_SYSTICK )
     {
-        //
-        // Pend the SysTick interrupt.
-        //
+        /* */
+        /* Pend the SysTick interrupt. */
+        /* */
         SCB->ICSR |= SCB_ICSR_PENDSTSET_Msk;
-    } else if (interruptNumber >= 16)
+    }
+    else if( interruptNumber >= 16 )
     {
-        //
-        // Pend the general interrupt.
-        //
-        HWREG32 (g_pulPendRegs[(interruptNumber - 16) / 32]) = 1
-                << ((interruptNumber - 16) & 31);
+        /* */
+        /* Pend the general interrupt. */
+        /* */
+        HWREG32( g_pulPendRegs[ ( interruptNumber - 16 ) / 32 ] ) = 1
+                                                                    << ( ( interruptNumber - 16 ) & 31 );
     }
 }
 
-void Interrupt_unpendInterrupt(uint32_t interruptNumber)
+void Interrupt_unpendInterrupt( uint32_t interruptNumber )
 {
-    //
-    // Check the arguments.
-    //
-    ASSERT(interruptNumber < (NUM_INTERRUPTS+1));
+    /* */
+    /* Check the arguments. */
+    /* */
+    ASSERT( interruptNumber < ( NUM_INTERRUPTS + 1 ) );
 
-    //
-    // Determine the interrupt to unpend.
-    //
-    if (interruptNumber == FAULT_PENDSV)
+    /* */
+    /* Determine the interrupt to unpend. */
+    /* */
+    if( interruptNumber == FAULT_PENDSV )
     {
-        //
-        // Unpend the PendSV interrupt.
-        //
+        /* */
+        /* Unpend the PendSV interrupt. */
+        /* */
         SCB->ICSR |= SCB_ICSR_PENDSVCLR_Msk;
-    } else if (interruptNumber == FAULT_SYSTICK)
+    }
+    else if( interruptNumber == FAULT_SYSTICK )
     {
-        //
-        // Unpend the SysTick interrupt.
-        //
+        /* */
+        /* Unpend the SysTick interrupt. */
+        /* */
         SCB->ICSR |= SCB_ICSR_PENDSTCLR_Msk;
-    } else if (interruptNumber >= 16)
+    }
+    else if( interruptNumber >= 16 )
     {
-        //
-        // Unpend the general interrupt.
-        //
-        HWREG32 (g_pulUnpendRegs[(interruptNumber - 16) / 32]) = 1
-                << ((interruptNumber - 16) & 31);
+        /* */
+        /* Unpend the general interrupt. */
+        /* */
+        HWREG32( g_pulUnpendRegs[ ( interruptNumber - 16 ) / 32 ] ) = 1
+                                                                      << ( ( interruptNumber - 16 ) & 31 );
     }
 }
 
-void Interrupt_setPriorityMask(uint8_t priorityMask)
+void Interrupt_setPriorityMask( uint8_t priorityMask )
 {
-    CPU_basepriSet(priorityMask);
+    CPU_basepriSet( priorityMask );
 }
 
-uint8_t Interrupt_getPriorityMask(void)
+uint8_t Interrupt_getPriorityMask( void )
 {
-    return (CPU_basepriGet());
+    return( CPU_basepriGet() );
 }
 
-void Interrupt_setVectorTableAddress(uint32_t addr)
+void Interrupt_setVectorTableAddress( uint32_t addr )
 {
     SCB->VTOR = addr;
 }
 
-uint32_t Interrupt_getVectorTableAddress(void)
+uint32_t Interrupt_getVectorTableAddress( void )
 {
     return SCB->VTOR;
 }
 
-void Interrupt_enableSleepOnIsrExit(void)
+void Interrupt_enableSleepOnIsrExit( void )
 {
     SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 }
 
-void Interrupt_disableSleepOnIsrExit(void)
+void Interrupt_disableSleepOnIsrExit( void )
 {
     SCB->SCR &= ~SCB_SCR_SLEEPONEXIT_Msk;
 }

@@ -394,7 +394,8 @@
 
         return xReturn;
     }
-    
+
+
     #if ( ipconfigUSE_DHCP_HOOK != 0 )
 
         #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
